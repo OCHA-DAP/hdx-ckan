@@ -72,7 +72,7 @@ a.test:focus {
 /* Body Background */
 body {
   background-size: cover;
-  background: #1ebfb3 url("/images/homepage/map.png") fixed;
+  background: #1ebfb3;
   min-width: 1260px;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
@@ -503,6 +503,9 @@ body {
 }
 .btn-danger {
   background-color: #f2645a;
+}
+.btn-green {
+  background-color: #1ebfb3;
 }
 .btn-empty,
 .btn-empty-black {
@@ -2896,17 +2899,20 @@ ul.list-horizontal li:first-child:before {
   margin: 10px 0;
   margin-right: 10px;
 }
-.hdx-footer .social-footer .service .service-details .license {
+.hdx-footer .social-footer .service .service-details .license-group {
+  display: flex;
+}
+.hdx-footer .social-footer .service .service-details .license-group .license {
   width: 290px;
   text-align: right;
   margin: 10px 0;
   margin-left: auto;
   margin-right: 10px;
 }
-.hdx-footer .social-footer .service .service-details .license-cc {
+.hdx-footer .social-footer .service .service-details .license-group .license-cc {
   margin: 10px 0;
 }
-.hdx-footer .social-footer .service .service-details .license-cc > svg {
+.hdx-footer .social-footer .service .service-details .license-group .license-cc > svg {
   margin-top: 10px;
   fill: #fff;
 }
@@ -3279,11 +3285,6 @@ ul.list-horizontal li:first-child:before {
 /* END HDX Version display */
 nav.mobile-only {
   display: none;
-}
-@media (max-width: 767px) {
-  body.home .search-ahead {
-    width: 120%;
-  }
 }
 label.terms-of-service {
   font-weight: 400;
