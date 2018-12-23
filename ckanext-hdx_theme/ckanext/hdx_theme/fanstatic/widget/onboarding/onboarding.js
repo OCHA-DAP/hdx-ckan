@@ -18,9 +18,15 @@ function notYou(){
 }
 
 function showOnboardingWidget(id, elid, val){
+    if (id === '#loginPopup') {
+      window.open("/user/login", "Login Window", "width=700,height=700");
+      return;
+    }
     if (id == "#signupPopup") {
         // we only want to send the analytics event for the sign-up widget
         hdxUtil.analytics.sendUserRegisteredEvent("start user register");
+        window.open("/user/register", "Register Window", "width=700,height=700");
+        return;
     }
     $(id).show();
     $(id).find("input[type!='button']:visible:first").focus();

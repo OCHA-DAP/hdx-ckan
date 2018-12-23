@@ -21,7 +21,12 @@ def get_default_extras():
 
 def get_initial_extras():
     result = get_default_extras()
-    result = update_extras(result, {user_model.HDX_ONBOARDING_USER_REGISTERED: 'True'})
+    result = update_extras(result, {
+        user_model.HDX_ONBOARDING_USER_REGISTERED: 'True',
+        user_model.HDX_ONBOARDING_USER_VALIDATED: 'True',
+        user_model.HDX_ONBOARDING_DETAILS: 'True',
+        # user_model.HDX_ONBOARDING_FIRST_LOGIN: 'True'
+    })
     return result
 
 
