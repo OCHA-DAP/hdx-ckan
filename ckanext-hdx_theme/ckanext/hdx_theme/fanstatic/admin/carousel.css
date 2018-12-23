@@ -55,7 +55,7 @@
   width: 100%;
   border: 1px solid #888888;
   background-size: cover;
-  background: #1ebfb3 url("/images/homepage/map.png") fixed;
+  background: #fff;
 }
 #carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item {
   width: 215px;
@@ -66,9 +66,25 @@
   width: 215px;
   margin-right: 40px;
   float: left;
+  position: relative;
 }
 #carousel-config-main .carousel-item .sub-item:last-child {
   margin-right: 0;
+}
+#carousel-config-main .carousel-item .sub-item .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 8px;
+  padding: 5px 15px;
+  background-color: #333333;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  text-transform: uppercase;
+  line-height: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-image {
   position: relative;
@@ -103,14 +119,8 @@
   height: 100%;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption {
-  text-align: center;
-  color: #fff;
-}
-#carousel-config-main .carousel-item .sub-item .sub-item-caption .title {
-  font-family: 'Gotham-Bold', sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  margin: 0;
+  text-align: left;
+  color: #333333;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;

@@ -7,8 +7,8 @@
 @carouselItemMargin: 40px;
 .homepage-carousel(){
     .carousel {
-        position: absolute;
-        bottom: 80px;
+        //position: absolute;
+        //bottom: 80px;
         width: 100%;
 
         .carousel-inner{
@@ -21,6 +21,12 @@
 
         .carousel-indicators {
             bottom: 0;
+            li {
+              background-color: @lightGreenColor;
+              &.active {
+                background-color: @greenColor;
+              }
+            }
         }
 
         .item {
@@ -37,9 +43,24 @@
     width: @carouselItemWidth;
     margin-right: @carouselItemMargin;
     float: left;
+    position: relative;
 
     &:last-child{
       margin-right: 0;
+    }
+
+    .title {
+      .gothamBoldFont(8px);
+      padding: 5px 15px;
+      background-color: @darkGrayColor;
+      color: @whiteColor;
+      position: absolute;
+      top: 0;
+      text-transform: uppercase;
+      line-height: 1;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
     }
 
     .sub-item-image{
@@ -82,12 +103,8 @@
     }
 
     .sub-item-caption {
-      text-align: center;
-      color: @whiteColor;
-      .title {
-        .gothamBoldFont(12px);
-        margin: 0;
-      }
+      text-align: left;
+      color: @darkGrayColor;
       .description {
         .gothamBookFont(12px);
         margin: 0;

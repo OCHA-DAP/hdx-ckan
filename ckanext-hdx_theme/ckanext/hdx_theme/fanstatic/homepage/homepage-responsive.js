@@ -1,6 +1,16 @@
 $(document).ready(function(){
     initMobileCarousel();
+    mobileToolTabChange();
 });
+
+function mobileToolTabChange(){
+
+  $("input[name='mobile-tool-categories']").change(function() {
+    $('.tool.mobile-show').removeClass("mobile-show");
+    $('#'+this.value).addClass("mobile-show");
+  });
+
+}
 
 function initMobileCarousel(){
     var carousel = document.getElementById('mobileCarousel');
