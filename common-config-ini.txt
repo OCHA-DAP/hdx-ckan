@@ -80,7 +80,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = dcat dcat_json_interface structured_data hdx_hxl_preview ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
+ckan.plugins = oauth2 dcat dcat_json_interface structured_data hdx_hxl_preview ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -148,6 +148,23 @@ ckan.resource_proxy.max_file_size = 2097152
 #ckan.activity_list_limit = 31
 #ckan.activity_streams_email_notifications = true
 #ckan.email_notifications_since = 2 days
+
+## OAuth2 configuration
+
+ckan.oauth2.register_url = https://api.staging.humanitarian.id/register
+ckan.oauth2.reset_url = https://api.staging.humanitarian.id/password
+ckan.oauth2.edit_url = https://app.staging.humanitarian.id/users
+ckan.oauth2.authorization_endpoint = https://api.staging.humanitarian.id/oauth/authorize
+ckan.oauth2.token_endpoint = https://api.staging.humanitarian.id/oauth/access_token
+ckan.oauth2.profile_api_url = https://api.staging.humanitarian.id/account.json
+ckan.oauth2.client_id = data_humdata_local_test
+ckan.oauth2.client_secret = test_test
+ckan.oauth2.scope = profile other.scope
+ckan.oauth2.rememberer_name = auth_tkt
+ckan.oauth2.profile_api_user_field = email
+ckan.oauth2.profile_api_fullname_field = name
+ckan.oauth2.profile_api_mail_field = email
+ckan.oauth2.authorization_header = OAUTH2_HEADER
 
 
 ## Email settings
@@ -301,4 +318,4 @@ hdx.reindexing.batch_size = 200
 hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%20grid%20recipe%20-%20{iso}.yml
 
 # if true, caching will be enabled and the "master" branch from the github repo will be used
-hdx.datagrid.prod = true
+hdx.datagrid.prod = false

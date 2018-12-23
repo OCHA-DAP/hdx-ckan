@@ -97,3 +97,7 @@ git+https://github.com/geomet/geomet.git
 -e git+https://github.com/ckan/ckanext-dcat.git@v0.0.8#egg=ckanext-dcat
 
 PyYAML==3.13
+
+# reqs fo ckanext-oauth2
+requests-oauthlib==0.8.0
+-e git+https://github.com/alexandru-m-g/ckanext-oauth2.git@master#egg=ckanext-oauth2

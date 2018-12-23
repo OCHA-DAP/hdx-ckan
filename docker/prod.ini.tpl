@@ -37,6 +37,11 @@ ckan.recaptcha.privatekey = ${HDX_CKAN_RECAPTCHA_KEY}
 
 ckan.tracking_enabled = true
 
+## OAuth2 configuration
+
+ckan.oauth2.client_id = data_humdata_stag_test
+
+
 ## Email settings
 
 email_to         = ${HDX_PREFIX}ckan@${HDX_DOMAIN}
