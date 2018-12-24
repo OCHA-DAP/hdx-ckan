@@ -165,6 +165,7 @@ ckan.oauth2.profile_api_user_field = email
 ckan.oauth2.profile_api_fullname_field = name
 ckan.oauth2.profile_api_mail_field = email
 ckan.oauth2.authorization_header = OAUTH2_HEADER
+hdx.oauth2.force_https = false
 
 
 ## Email settings

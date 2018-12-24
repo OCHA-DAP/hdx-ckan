@@ -40,6 +40,7 @@ ckan.tracking_enabled = true
 ## OAuth2 configuration
 
 ckan.oauth2.client_id = data_humdata_stag_test
+hdx.oauth2.force_https = true
 
 
 ## Email settings
