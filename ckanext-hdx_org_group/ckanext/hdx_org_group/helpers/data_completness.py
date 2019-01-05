@@ -65,10 +65,10 @@ class DataCompletness(object):
                     for dataset in ds['datasets']:
                         FreshnessCalculator(dataset).populate_with_freshness()
                         self.__replace_org_name_with_title(dataset)
-                        self.__add_metadata_overrides(dataset, overrides_map)
+                        self.__compute_goodness_flag(dataset, overrides_map)
+                        self.__add_general_comments(dataset, overrides_map)
                         self.__add_dataset_to_map(category_dataset_map, dataset)
                         self.__add_dataset_to_map(all_dataset_map, dataset)
-
 
                     self.__calculate_stats_for_dataseries(ds)
             self.__calculate_stats_for_category(category, category_dataset_map)
@@ -114,7 +114,7 @@ class DataCompletness(object):
         dataset['organization_acronym'] = org_info.get('org_acronym')
 
     @staticmethod
-    def __add_metadata_overrides(dataset, overrides_map):
+    def __compute_goodness_flag(dataset, overrides_map):
         '''
         This needs to be called only after freshness is populated on the dataset
 
@@ -125,11 +125,21 @@ class DataCompletness(object):
         override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
 
         if override and override.get('display_state'):
-            dataset['completeness_comment'] = override.get('comments')
             dataset['is_complete'] = override.get('display_state') == 'complete'
             dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False) and dataset.get('is_complete')
         else:
             dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False)
+
+    @staticmethod
+    def __add_general_comments(dataset, overrides_map):
+        comments = []
+        override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
+        if override and override.get('comments'):
+            comments.append(override.get('comments'))
+        if not dataset.get(FRESHNESS_PROPERTY):
+            comments.append('The dataset is not up-to-date.')
+
+        dataset['general_comment'] = ' '.join(comments)
 
     @staticmethod
     def __add_dataset_to_map(map, dataset):
