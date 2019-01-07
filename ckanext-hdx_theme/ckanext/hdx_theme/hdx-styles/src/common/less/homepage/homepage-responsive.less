@@ -46,11 +46,25 @@
       .homepage-main {
         .hero-section {
           margin-bottom: 0;
+
+          .hero-section-content {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .hero-description {
+            margin-bottom: 50px;
+            text-align: center;
+            .section-title {
+              text-align: center;
+            }
+          }
+
           .hero-boxes {
             flex-direction: column;
             align-items: center;
             justify-content: space-evenly;
-            margin-bottom: @homepage-hanging-actions-height;
+            margin-bottom: 50px;
 
 
             .action-box ~ .action-box {

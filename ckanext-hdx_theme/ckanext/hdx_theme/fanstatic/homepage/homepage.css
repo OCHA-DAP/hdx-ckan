@@ -74,7 +74,7 @@ header .homepage-header-nav-border > div {
 .homepage-main .homepage-section .section-description {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 22px;
+  font-size: 18px;
   max-width: 580px;
   text-align: center;
   color: #fff;
@@ -93,7 +93,7 @@ header .homepage-header-nav-border > div {
   flex-direction: column;
   align-items: center;
   background-color: #1ebfb3;
-  margin-bottom: 80px;
+  margin-top: 50px;
 }
 .homepage-main .hero-section .btn-faq {
   font-family: 'Gotham-Bold', sans-serif;
@@ -104,27 +104,47 @@ header .homepage-header-nav-border > div {
   line-height: 36px;
   background-color: #fff;
   padding: 0;
-  margin-bottom: 50px;
+}
+.homepage-main .hero-section .container {
+  display: block;
+}
+.homepage-main .hero-section .hero-section-content {
+  display: flex;
+  align-items: center;
+}
+.homepage-main .hero-section .hero-description {
+  color: #fff;
+  flex-basis: 50%;
+  text-align: left;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}
+.homepage-main .hero-section .hero-description .section-title {
+  text-align: left;
+  width: 440px;
 }
 .homepage-main .hero-section .hero-boxes {
   display: flex;
-  margin-bottom: -80px;
-  width: 100%;
+  flex-direction: column;
+  flex-basis: 50%;
+  align-items: flex-end;
+  flex-shrink: 1;
 }
 .homepage-main .hero-section .hero-boxes .action-box {
-  width: 449px;
+  width: 445px;
   min-height: 200px;
   background-color: #eeeeee;
   border-radius: 6px;
 }
 .homepage-main .hero-section .hero-boxes .action-box ~ .action-box {
-  margin-left: 30px;
+  margin-top: 20px;
 }
 .homepage-main .hero-section .hero-boxes .action-box .box-header {
   background-color: #fff;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  padding: 22px;
+  padding: 20px;
   color: #007CE0;
   font-size: 16px;
   text-transform: uppercase;
@@ -134,7 +154,7 @@ header .homepage-header-nav-border > div {
   color: #f2645a;
 }
 .homepage-main .hero-section .hero-boxes .action-box .first-search {
-  padding: 22px;
+  padding: 20px;
 }
 .homepage-main .hero-section .hero-boxes .action-box .first-search .form-search {
   position: relative;
@@ -156,7 +176,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .hero-section .hero-boxes .action-box .count-items {
   text-align: center;
-  padding: 22px;
+  padding: 0 20px 20px;
 }
 .homepage-main .hero-section .hero-boxes .action-box .count-items .col-xs-4 {
   border-right: 1px solid #cccccc;
@@ -196,7 +216,7 @@ header .homepage-header-nav-border > div {
   align-items: center;
 }
 .homepage-main .hero-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content img {
-  height: 80px;
+  height: 50px;
 }
 .homepage-main .hero-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content .description {
   margin: 5px 0;
@@ -208,13 +228,19 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .hero-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content .action {
   color: #f2645a;
+  text-transform: uppercase;
+}
+.homepage-main .carousel-section {
+  background-color: #1ebfb3;
 }
 .homepage-main .carousel-section .carousel-title {
   margin-top: 40px;
   margin-bottom: 30px;
   text-align: center;
-  font-size: 16px;
-  color: #333333;
+  color: #fff;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
 }
 .homepage-main .carousel-section .carousel {
   width: 100%;
@@ -226,10 +252,10 @@ header .homepage-header-nav-border > div {
   bottom: 0;
 }
 .homepage-main .carousel-section .carousel .carousel-indicators li {
-  background-color: #b6f3ef;
+  background-color: #cccccc;
 }
 .homepage-main .carousel-section .carousel .carousel-indicators li.active {
-  background-color: #1ebfb3;
+  background-color: #fff;
 }
 .homepage-main .carousel-section .carousel .item .item-center {
   margin: auto;
@@ -293,7 +319,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-caption {
   text-align: left;
-  color: #333333;
+  color: #fff;
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;
@@ -324,6 +350,9 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .learn-section .learn-photo .btn-learn .icon-external-link {
   margin-left: 5px;
+}
+.homepage-main .tools-section {
+  background-color: #eeeeee;
 }
 .homepage-main .tools-section,
 .homepage-main .tools-section .section-title,
@@ -359,7 +388,8 @@ header .homepage-header-nav-border > div {
   display: inline;
   padding: 0 40px;
   color: #888888;
-  background-color: #fff;
+  background-color: #eeeeee;
+  text-transform: uppercase;
 }
 .homepage-main .tools-section .tool-categories .tool-category .caret {
   margin-top: 20px;
