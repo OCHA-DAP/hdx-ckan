@@ -183,11 +183,22 @@
   body.home .homepage-main .hero-section {
     margin-bottom: 0;
   }
+  body.home .homepage-main .hero-section .hero-section-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  body.home .homepage-main .hero-section .hero-description {
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  body.home .homepage-main .hero-section .hero-description .section-title {
+    text-align: center;
+  }
   body.home .homepage-main .hero-section .hero-boxes {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    margin-bottom: 80px;
+    margin-bottom: 50px;
   }
   body.home .homepage-main .hero-section .hero-boxes .action-box ~ .action-box {
     margin-left: 0;

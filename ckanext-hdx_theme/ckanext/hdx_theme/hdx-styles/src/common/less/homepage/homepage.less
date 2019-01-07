@@ -63,7 +63,7 @@ header {
       }
     }
     .section-description {
-      .sourceSansProFont(400, 22px);
+      .sourceSansProFont(400, 18px);
       max-width: 580px;
       text-align: center;
       color: @whiteColor;
@@ -88,7 +88,7 @@ header {
     flex-direction: column;
     align-items: center;
     background-color: @greenColor;
-    margin-bottom: @homepage-hanging-actions-height;
+    margin-top: 50px;
 
     .btn-faq {
       .gothamBoldFont(14px);
@@ -97,15 +97,37 @@ header {
       line-height: 36px; //without 2*border of 1px
       background-color: @whiteColor;
       padding: 0;
-      margin-bottom: 50px;
+    }
+
+    .container {
+      display: block;
+    }
+
+    .hero-section-content {
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-description {
+      color: @whiteColor;
+      flex-basis: 50%;
+      text-align: left;
+      .sourceSansProFont(400, 18px);
+
+      .section-title {
+        text-align: left;
+        width: 440px;
+      }
     }
 
     .hero-boxes {
       display: flex;
-      margin-bottom: -@homepage-hanging-actions-height;
-      width: 100%;
+      flex-direction: column;
+      flex-basis: 50%;
+      align-items: flex-end;
+      flex-shrink: 1;
 
-      @searchBoxPadding: 22px;
+      @searchBoxPadding: 20px;
       @searchBoxRadius: 6px;
       @searchBoxSize: 405px; //size of the actual search box inside the whole widget
       .action-box {
@@ -115,7 +137,7 @@ header {
         border-radius: @searchBoxRadius;
 
         ~ .action-box {
-          margin-left: 30px;
+          margin-top: 20px;
         }
 
         .box-header {
@@ -159,7 +181,7 @@ header {
 
         .count-items {
           text-align: center;
-          padding: @searchBoxPadding;
+          padding: 0 @searchBoxPadding @searchBoxPadding;
 
           .col-xs-4 {
             border-right: 1px solid @lightGrayColor;
@@ -198,7 +220,7 @@ header {
               align-items: center;
 
               img {
-                height: 80px;
+                height: 50px;
               }
 
               .description {
@@ -212,6 +234,7 @@ header {
 
               .action {
                 color: @orangeColor;
+                text-transform: uppercase;
               }
             }
           }
@@ -222,12 +245,14 @@ header {
   }
 
   .carousel-section {
+    background-color: @greenColor;
+
     .carousel-title {
       margin-top: 40px;
       margin-bottom: 30px;
       text-align: center;
-      font-size: 16px;
-      color: @darkGrayColor;
+      color: @whiteColor;
+      .gothamBookFont(24px);
     }
     .homepage-carousel();
   }
@@ -262,6 +287,8 @@ header {
     }
   }
   .tools-section {
+    background-color: @extraLightGrayColor;
+
     &, .section-title, .section-description {
       color: @darkGrayColor;
     }
