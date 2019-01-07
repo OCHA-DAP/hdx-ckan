@@ -617,6 +617,8 @@ def hdx_member_list(context, data_dict):
 
 
 def hdx_send_mail_contributor(context, data_dict):
+    _check_access('hdx_send_mail_contributor', context, data_dict)
+
     subject = u'[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
     html = u"""\
@@ -631,6 +633,7 @@ def hdx_send_mail_contributor(context, data_dict):
     if org_members:
         admins = org_members.get('admins')
         for admin in admins:
+            context['keep_email'] = True
             user = get_action("user_show")(context, {'id': admin})
             if user.get('email'):
                 recipients_list.append({'email': user.get('email'), 'display_name': user.get('display_name')})
