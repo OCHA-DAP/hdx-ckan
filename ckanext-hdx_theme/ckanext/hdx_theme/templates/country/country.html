@@ -438,10 +438,16 @@
                         </div>
                         <div class="completeness-progress">
                             <div class="progress-breakdown">
-                              <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_good_percentage }}%;">
+                              <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
+                                 data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.good_dataseries_text }}">
                               </span>
-                              <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_good_percentage }}%;"></span>
-
+                              <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
+                                 data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.not_good_dataseries_text }}"></span>
+                              <span class="progress-empty"
+                                 style="width: {{ 100*(1 - category.stats.dataseries_good_percentage - category.stats.dataseries_not_good_percentage) }}%;"
+                                    data-module="bs_tooltip" data-module-placement="top"
+                                 data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.empty_dataseries_text }}">
+                              </span>
                             </div>
                         </div>
                       </div>
