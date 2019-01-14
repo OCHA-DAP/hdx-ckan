@@ -52,9 +52,16 @@ class TestContactContributor(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
 
         self._get_action('hdx_send_mail_contributor')(context, data_dict)
 
-        args, kw_args = mocked_mail_recipient.call_args
+        assert len(mocked_mail_recipient.call_args_list) == 2, '2 separate emails should be sent'
 
-        recipient_emails = [recipient.get('email') for recipient in kw_args.get('recipients_list', [])]
+        args0, kw_args0 = mocked_mail_recipient.call_args_list[0]
+        first_email_addresses = [recipient.get('email') for recipient in kw_args0.get('recipients_list', [])]
 
-        assert len(recipient_emails) == 2, 'Org admin and the requesting user should be receiving the email'
-        assert 'test@test.com' in recipient_emails, 'Org admin email needs to be in recipient email list'
+        assert len(first_email_addresses) == 1, 'Just 1 org admin should be receiving the 1st email email'
+        assert 'test@test.com' in first_email_addresses, 'Org admin email needs to be in recipient email list'
+
+        args1, kw_args1 = mocked_mail_recipient.call_args_list[1]
+        second_email_addresses = [recipient.get('email') for recipient in kw_args1.get('recipients_list', [])]
+
+        assert len(second_email_addresses) == 1, 'Just the requester should be receiving the 2nd email'
+        assert data_dict.get('email') in second_email_addresses, 'Requester email needs to be in recipient email list'
