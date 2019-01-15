@@ -99,11 +99,13 @@
             </div>
           </div>
           <div class="action-box">
+            {% set add_data_obj = h.hdx_check_add_data() %}
             <div class="box-header orange">
               {{ _("Add data") }}
             </div>
             <div class="add-data-actions">
-              <a class="add-data-item" onclick="contributeAddDetails(null, 'homepage-widget')">
+              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
+                 data-module="{{ add_data_obj.data_module }}" data-module-link_type="{{ add_data_obj.data_module_link_type }}">
                 <div class="add-data-item-content">
                   <img src="/images/add-fulldataset.svg" />
                   <div class="description">
@@ -113,7 +115,8 @@
                 </div>
               </a>
 
-              <a class="add-data-item" onclick="contributeAddDetails(null, 'homepage-widget')">
+              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
+                 data-module="{{ add_data_obj.data_module }}" data-module-link_type="{{ add_data_obj.data_module_link_type }}">
                 <div class="add-data-item-content">
                   <img src="/images/add-metadata-only.svg" />
                   <div class="description">
@@ -287,14 +290,14 @@
               <img src="/images/homepage/tools/hxl-assist.svg" class="tool-image">
             </a>
             <div class="tool-content">
-              <a href="examples/hxl/">
+              <a href="https://tools.humdata.org/examples/hxl/">
                 <div class="tool-title">HXL Tag Assist</div>
               </a>
               <p class="description">
                 Get help finding the right HXL hashtags for your data
               </p>
               <div class="bottom">
-                <a href="examples/hxl/" class="btn btn-primary">Learn more</a>
+                <a href="https://tools.humdata.org/examples/hxl/" class="btn btn-primary">Learn more</a>
                 <div class="secondary-actions">
                   <a href="http://hxlstandard.org" target="_blank">About HXL Standard</a>
                 </div>
@@ -303,7 +306,7 @@
           </div>
 
           <div id="tool-category-refine" class="tool with-image">
-            <a href="wizard/#datacheck">
+            <a href="https://tools.humdata.org/wizard/#datacheck">
               <img src="/images/homepage/tools/data-check.svg" class="tool-image">
             </a>
             <div class="tool-content">
@@ -312,7 +315,7 @@
                 Upload your data and get a report back highlighting potential errors
               </p>
               <div class="bottom">
-                <a href="wizard/#datacheck" class="btn btn-primary">GET STARTED</a>
+                <a href="https://tools.humdata.org/wizard/#datacheck" class="btn btn-primary">GET STARTED</a>
                 <div class="secondary-actions">
                   <a class="learn-more" onclick="showPresentationModal('#learn-data-check');">Learn more</a>
                 </div>
@@ -321,11 +324,11 @@
           </div>
 
           <div id="tool-category-visualise" class="tool with-image">
-            <a href="/wizard/#quickcharts">
+            <a href="https://tools.humdata.org/wizard/#quickcharts">
               <img src="/images/homepage/tools/quick-chart.svg" class="tool-image">
             </a>
             <div class="tool-content">
-              <a href="/wizard/#quickcharts">
+              <a href="https://tools.humdata.org/wizard/#quickcharts">
                 <div class="tool-title">Quick Charts</div>
               </a>
               <p class="description">
@@ -354,7 +357,25 @@
       </div>
     </div>
   </div>
+  <div class="modal presentation-modal" id="learn-quick-charts" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-content">
+        <iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vR-gSY38muZE9SA27NjAcueKoobhKi_Dc3jN4BIDPTp7FJjOCiWIkhPU4ZkPyHvfR0pBdNpfswmKZ4p/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal presentation-modal" id="learn-data-check" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-content">
+        <iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQmqK3qgUchHmZ5YQ8M-ktJ0UccIDeBeuqAqjIAbZ2HIXfmZ5OdqFRb7AM1YJI6N1vmimBAbOVa7QMe/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 {% endblock %}
 

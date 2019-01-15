@@ -183,6 +183,9 @@
   body.home .homepage-main .hero-section {
     margin-bottom: 0;
   }
+  body.home .homepage-main .hero-section .section-title {
+    width: 100%;
+  }
   body.home .homepage-main .hero-section .hero-section-content {
     flex-direction: column;
     align-items: center;
@@ -425,6 +428,9 @@
   body.home .homepage-main .homepage-section .hero-boxes .action-box {
     width: 380px;
   }
+  body.home .homepage-main .tools-section .tool-list .tool .secondary-actions {
+    visibility: hidden;
+  }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
     left: 15px;
   }
@@ -482,7 +488,7 @@
     height: 60px;
   }
   body.home .homepage-main .homepage-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content img {
-    height: 60px;
+    height: 40px;
   }
   body.home .homepage-main .homepage-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content .action {
     font-size: 12px;

@@ -54,3 +54,12 @@ function setMobileCarouselPagination(id){
     $(carousel).find('.carousel-indicators li:nth-child('+id+')').addClass('active');
 
 }
+
+function showPresentationModal(id){
+  var modal = $(id);
+  var iframe = $(id + ' iframe');
+  iframe.attr('src', '');
+  modal.modal('show');
+  iframe.attr('src', iframe.attr('load-src'));
+  iframe.focus();
+}

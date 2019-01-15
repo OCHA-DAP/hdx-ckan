@@ -47,6 +47,10 @@
         .hero-section {
           margin-bottom: 0;
 
+          .section-title {
+            width: 100%;
+          }
+
           .hero-section-content {
             flex-direction: column;
             align-items: center;
@@ -65,7 +69,6 @@
             align-items: center;
             justify-content: space-evenly;
             margin-bottom: 50px;
-
 
             .action-box ~ .action-box {
               margin-left: 0;
@@ -343,6 +346,16 @@
             }
           }
         }
+
+        .tools-section {
+          .tool-list {
+            .tool {
+              .secondary-actions {
+                visibility: hidden;
+              }
+            }
+          }
+        }
         .carousel{
           &.mobile-carousel{
             .mobile-carousel-inner{
@@ -413,7 +426,7 @@
                     height: 60px;
                   }
                   img {
-                    height: 60px;
+                    height: 40px;
                   }
                   .action {
                     font-size: 12px;
@@ -422,7 +435,6 @@
               }
             }
           }
-
         }
         .carousel{
           &.mobile-carousel{
