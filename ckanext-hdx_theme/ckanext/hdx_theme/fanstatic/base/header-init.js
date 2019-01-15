@@ -14,7 +14,7 @@ $(document).ready(function(){
       var cookie = $.cookie(SURVEY_COOKIE);
       if (!cookie) {
         $("#surveyPopup a.btn-primary").click(function (e) {
-          window.open("https://www.surveymonkey.com/r/R2NBJLZ", "_blank");
+          window.open("https://www.surveymonkey.com/r/FWXQ6W2", "_blank");
           $("#surveyPopup").hide();
           $.cookie(SURVEY_COOKIE, true, {
             expires: 200 //days
