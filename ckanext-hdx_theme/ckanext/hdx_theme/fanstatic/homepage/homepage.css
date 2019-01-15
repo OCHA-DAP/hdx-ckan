@@ -499,6 +499,9 @@ header .homepage-header-nav-border > div {
   font-weight: 400;
   font-size: 14px;
 }
+.homepage-main .tools-section .tool .tool-content .secondary-actions .learn-more {
+  cursor: pointer;
+}
 .homepage-main .tools-section .tool .tool-content .btn-primary {
   margin: 15px 0;
 }
@@ -512,6 +515,22 @@ header .homepage-header-nav-border > div {
   font-weight: 400;
   font-size: 16px;
   color: #333333;
+}
+.homepage-main .presentation-modal.in .modal-dialog .close {
+  position: absolute;
+  right: -30px;
+  top: -40px;
+  font-size: 40px;
+  opacity: 1;
+  color: white;
+}
+.homepage-main .presentation-modal.in .modal-dialog .modal-content {
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  min-height: auto;
+  min-width: auto;
+  height: 560px;
 }
 .homepageHeaderFooterBackground {
   background-color: #ffffff;
