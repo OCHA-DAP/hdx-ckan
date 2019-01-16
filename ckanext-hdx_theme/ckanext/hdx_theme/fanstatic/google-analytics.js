@@ -557,6 +557,24 @@ $(
     hdxUtil.analytics.sendTopBarSearchEvents = sendTopBarSearchEvents;
 
     /**
+     *
+     * @param {string} actionType
+     */
+    function sendSurveyEvent(interactionType) {
+        var mixpanelData = {
+            "eventName": "popup interaction",
+            "eventMeta": {
+                "popup title": "Data Literacy Survey",
+                "popup type": "general",
+                "interaction type": interactionType
+            }
+        };
+        return sendAnalyticsEventsAsync(mixpanelData);
+
+    }
+    hdxUtil.analytics.sendSurveyEvent = sendSurveyEvent;
+
+    /**
      * This function will send the analytics events to the server async and will return a promise
      * which is fulfilled when the events are successfully sent OR when "timeout" seconds have passed
      *
