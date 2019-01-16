@@ -1,0 +1,29 @@
+{#
+Done widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/survey.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "Data Literacy Survey" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+  <div class="survey-widget">
+    <div class="center">
+      <div style="text-align: justify;">
+        Want to improve your data skills? Take this 5 minute survey to help the Centre shape its data literacy resources for humanitarians.
+      </div>
+
+    </div>
+    <div class="right-side-actions">
+      <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Close">
+      <a href="#"  class="mL35 btn btn-primary btn-large pull-right" type="button" value="Take survey">Take the survey</a>
+    </div>
+  </div>
+{% endblock %}

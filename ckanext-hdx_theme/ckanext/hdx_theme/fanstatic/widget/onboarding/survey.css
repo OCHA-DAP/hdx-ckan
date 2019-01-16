@@ -1,0 +1,40 @@
+.notification-widget {
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.notification-widget .notification-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007CE0;
+  letter-spacing: 0.01em;
+  line-height: 20px;
+  padding: 20px;
+}
+.notification-widget .notification-title .close {
+  margin-left: 20px;
+  float: right;
+  top: 0;
+  color: #fff;
+  opacity: 1;
+}
+.notification-widget .notification-message {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #007CE0;
+  letter-spacing: 0.01em;
+}
+.survey-widget {
+  padding: 20px;
+  height: 200px;
+  background-color: #fff;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+}
+.survey-widget .right-side-actions {
+  margin-top: auto;
+}
