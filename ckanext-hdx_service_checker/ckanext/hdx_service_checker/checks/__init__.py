@@ -53,7 +53,7 @@ class Check(object):
         '''
         if not headers:
             headers = self._get_basic_header()
-        r = requests.get(url, verify=verify, headers=headers)
+        r = requests.get(url, verify=verify, headers=headers, timeout=5)
         return r
 
     def run_check(self):

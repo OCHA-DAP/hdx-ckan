@@ -70,7 +70,7 @@ class Checker(object):
     def run_checks(self):
         result_list = []
         for check in self.checks:
-            log.debug('Running check: {}'.format(str(check.config)))
+            log.info('Running check: {}'.format(str(check.config)))
             result = check.run_check()
             result_list.append(result)
             log.info(str(result))
