@@ -180,18 +180,23 @@ class DataCompletness(object):
 
         dataseries = category.get('data_series', [])
         total_dataseries_num  = len(dataseries)
-        good_dataseries_num = 0
-        not_good_dataseries_num = 0
-        empty_dataseries_num = 0
+
+        good_dataseries = []
+        not_good_dataseries = []
+        empty_dataseries = []
 
         for ds in dataseries:
             state = ds.get('stats', {}).get('state')
             if state == 'empty':
-                empty_dataseries_num += 1
+                empty_dataseries.append(ds.get('title'))
             elif state == 'not_good':
-                not_good_dataseries_num += 1
+                not_good_dataseries.append(ds.get('title'))
             elif state == 'good':
-                good_dataseries_num += 1
+                good_dataseries.append(ds.get('title'))
+
+        good_dataseries_num = len(good_dataseries)
+        not_good_dataseries_num = len(not_good_dataseries)
+        empty_dataseries_num = len(empty_dataseries)
 
         dataseries_good_percentage = 0 if total_dataseries_num == 0 else \
                         float(good_dataseries_num) / total_dataseries_num
@@ -208,6 +213,9 @@ class DataCompletness(object):
             'good_dataseries_num': good_dataseries_num,
             'not_good_dataseries_num': not_good_dataseries_num,
             'empty_dataseries_num': empty_dataseries_num,
+            'good_dataseries_text': ', '.join(good_dataseries),
+            'not_good_dataseries_text': ', '.join(not_good_dataseries),
+            'empty_dataseries_text': ', '.join(empty_dataseries),
             'dataseries_good_percentage': dataseries_good_percentage,
             'dataseries_not_good_percentage': dataseries_not_good_percentage,
             'dataseries_empty_percentage': dataseries_empty_percentage,
