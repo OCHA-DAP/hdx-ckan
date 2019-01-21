@@ -1,6 +1,16 @@
 $(document).ready(function(){
     initMobileCarousel();
+    mobileToolTabChange();
 });
+
+function mobileToolTabChange(){
+
+  $("input[name='mobile-tool-categories']").change(function() {
+    $('.tool.mobile-show').removeClass("mobile-show");
+    $('#'+this.value).addClass("mobile-show");
+  });
+
+}
 
 function initMobileCarousel(){
     var carousel = document.getElementById('mobileCarousel');
@@ -43,4 +53,13 @@ function setMobileCarouselPagination(id){
     $(carousel).find('.carousel-indicators li').removeClass('active');
     $(carousel).find('.carousel-indicators li:nth-child('+id+')').addClass('active');
 
+}
+
+function showPresentationModal(id){
+  var modal = $(id);
+  var iframe = $(id + ' iframe');
+  iframe.attr('src', '');
+  modal.modal('show');
+  iframe.attr('src', iframe.attr('load-src'));
+  iframe.focus();
 }

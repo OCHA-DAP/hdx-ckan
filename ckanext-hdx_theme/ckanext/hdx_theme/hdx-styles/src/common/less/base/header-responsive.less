@@ -1,0 +1,228 @@
+@import "../base/variables";
+
+
+@media (max-width: 320px) {
+  body{
+    .hdx-footer {
+      .social-footer .service .service-details .license-group .license {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 414px) {
+  body{
+    .hdx-footer {
+      .mailChimpForm {
+        form {
+          input[type="submit"].btn.btn-primary {
+            margin-left: 0;
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+      .social-footer {
+        .service {
+          .service-details {
+            .ocha-service {
+              flex-wrap: wrap;
+            }
+            .spacer {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media(max-width: 767px) {
+  body {
+    .hdx-footer {
+      .mailChimpForm {
+        form {
+          input[type="submit"].btn.btn-primary {
+            margin-left: 7px;
+            margin-top: -3px;
+          }
+        }
+        margin-bottom: 10px;
+      }
+
+      .match-logo-margin {
+        margin-top: 30px;
+      }
+      .social-footer {
+        .terms {
+          flex-direction: column;
+          align-items: center;
+          .separator {
+            display: none;
+          }
+          a {
+            flex-shrink: 0;
+            margin-right: 0;
+            margin-bottom: 10px;
+          }
+          .social-actions {
+            margin-top: 30px;
+            a:first-child {
+              margin-right: 30px;
+            }
+          }
+        }
+
+        .service {
+          .provided-by {
+            text-align: center;
+          }
+          .service-details {
+            flex-direction: column;
+            align-items: center;
+
+            .ocha-service {
+              flex-direction: column;
+              align-items: center;
+              .spacer {
+                display: none;
+              }
+              .ocha-text {
+                flex: auto;
+                text-align: center;
+              }
+            }
+            .license-group {
+              .license {
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+
+  .home .search-ahead {
+    width: 120%;
+  }
+
+
+
+}
+
+@media (max-width: 992px) {
+  body {
+    .hdxLogo{
+      width: 45px;
+      .logo{
+        .logo-img{
+          background-image: url("@{imagePath}/homepage/logo-hdx-mobile.svg");
+          background-repeat: no-repeat;
+          background-size: 29px 35px;
+          height: 35px;
+          margin-left: 0;
+          margin-top: 5px;
+          min-width: 29px;
+          min-height: 35px;
+          width: 29px;
+        }
+      }
+    }
+    .new-header{
+      .submitData{
+        padding: 10px;
+      }
+      .header-nav{
+        span{
+          margin-left: 0;
+          &.header-nav-search{
+            width: 25%;
+            .icon-search{
+              position: absolute;
+            }
+            .header-search-form{
+              input{
+                text-indent: 44px;
+                width: 100%;
+              }
+            }
+          }
+        }
+        .table-valign{
+          margin-left: 0px !important;
+        }
+      }
+    }
+
+    .hdx-footer {
+      .footer-wrapper {
+        text-align: center;
+        .other-services:nth-child(-n+3) {
+          margin-bottom: 20px;
+        }
+      }
+
+      .links-list {
+        width:100%;
+
+        .logo-tools-gray {
+          height: auto;
+          width: 100%;
+        }
+      }
+
+      .mailChimpForm {
+        form {
+          .six.columns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          input[type="submit"].btn.btn-primary {
+            margin-left: 0;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .new-header{
+    .homepage-header-nav-border{
+      > .container{
+        padding: 0;
+      }
+    }
+    .submitData{
+      padding: 10px 20px;
+    }
+  }
+  .header-nav-search{
+    width: 239px;
+    .header-search-form{
+      .icon-search{
+        margin: 0 10px;
+        position: absolute;
+      }
+      input{
+        text-indent: 44px;
+        width: 197px;
+      }
+    }
+  }
+  .mainLinks{
+    > li{
+      > a:after{
+        margin-left: 10px;
+      }
+    }
+  }
+}
