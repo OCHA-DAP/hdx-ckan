@@ -232,6 +232,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .carousel-section {
   background-color: #1ebfb3;
+  padding-bottom: 20px;
 }
 .homepage-main .carousel-section .carousel-title {
   margin-top: 40px;
@@ -287,7 +288,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-image {
   position: relative;
-  height: 150px;
+  height: 215px;
   margin-bottom: 5px;
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-image:hover.disabled .sub-item-action {
