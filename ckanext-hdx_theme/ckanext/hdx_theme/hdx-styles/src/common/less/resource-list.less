@@ -1,0 +1,48 @@
+@import "base/variables";
+@import "base/mixins";
+
+/* Style Resources List */
+.resource-list{
+  list-style: none;
+}
+
+.resource-item .description{
+  text-align: justify;
+  max-width: 450px;
+}
+
+.format-filesize-label{
+  font-size: 14px;
+  font-weight: normal;
+  color: #000;
+}
+/* END Style Resources List*/
+
+.data-check-modal.modal.in {
+  button.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: @whiteColor;
+    font-size: 40px;
+    opacity: 0.9;
+    z-index: 100;
+
+  }
+  .modal-content {
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    .modal-header {
+      background-color: @blueColor;
+      color: @whiteColor;
+      .gothamLightFont(14px);
+      .large {
+        font-size: 18px;
+      }
+    }
+  }
+  .modal-dialog {
+    width: @containerSize + 2*@gutterSize;
+  }
+}

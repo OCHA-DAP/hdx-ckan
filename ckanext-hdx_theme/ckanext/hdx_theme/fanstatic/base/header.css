@@ -3131,11 +3131,11 @@ ul.list-horizontal li:first-child:before {
   text-transform: uppercase;
   white-space: nowrap;
 }
-.new-header .hdx-header .crises-menu {
+.crises-menu {
   padding: 0;
   width: 250px;
 }
-.new-header .hdx-header .crises-menu li.crises-group {
+.crises-menu li.crises-group {
   text-transform: uppercase;
   color: #888888;
   font-family: 'Gotham-Book', sans-serif;
@@ -3144,10 +3144,10 @@ ul.list-horizontal li:first-child:before {
   padding: 10px 20px;
   border-bottom: 1px solid #eeeeee;
 }
-.new-header .hdx-header .crises-menu li.crises-group:last-child {
+.crises-menu li.crises-group:last-child {
   border-bottom: none;
 }
-.new-header .hdx-header .crises-menu li.crises-group ul {
+.crises-menu li.crises-group ul {
   padding: 0;
   list-style: none;
   text-transform: none;
@@ -3155,18 +3155,18 @@ ul.list-horizontal li:first-child:before {
   font-weight: 400;
   font-size: 14px;
 }
-.new-header .hdx-header .crises-menu li.crises-group ul li {
+.crises-menu li.crises-group ul li {
   padding-top: 5px;
   font-size: 12px;
 }
-.new-header .hdx-header .crises-menu li.crises-group ul li a {
+.crises-menu li.crises-group ul li a {
   color: #000;
   font-size: 14px;
 }
-.new-header .hdx-header .crises-menu li.crises-group ul li a:hover {
+.crises-menu li.crises-group ul li a:hover {
   text-decoration: none;
 }
-.new-header .hdx-header .crises-menu li.crises-group ul li .crises-datasets {
+.crises-menu li.crises-group ul li .crises-datasets {
   line-height: 1;
 }
 .header-message {
