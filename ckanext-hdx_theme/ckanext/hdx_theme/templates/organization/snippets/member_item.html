@@ -31,13 +31,13 @@ Example:
 						{% if not disable_change %}
 							{% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
 							  <div class="">
-								<a class="" href="#edit-member-div-{{member.name}}" data-toggle="modal"
+								<a class="" href="#edit-member-div-{{member.id}}" data-toggle="modal"
 									title="{{ _('Change role') }}">
 								  {{ _('Change role') }}
 								</a>
 								<span class="mLR10">|</span>
 								<a class=""
-									href="#confirm-del-member-div-{{member.name}}"
+									href="#confirm-del-member-div-{{member.id}}"
 									data-toggle="modal" title="{{ _('Remove from this organization') }}">
 									{% block delete_button_text %}{{ _('Remove from this organization') }}{% endblock %}
 								</a>
@@ -45,7 +45,7 @@ Example:
 							  {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
 							  {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
 									action='member_delete', id=group_id, user=id),
-									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.name %}
+									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id %}
 							  </div>
 						{% else %}
 							<div><small>Please add another admin to be able to change this user</small></div>
