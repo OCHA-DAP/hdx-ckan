@@ -55,7 +55,7 @@ RUN apt-get -qq -y update && \
     apt-get -qq -y install nodejs && \
     npm install -g less && \
     easy_install pip && \
-    pip -q install --upgrade --no-cache-dir \
+    pip -q install --upgrade \
         gevent \
         gunicorn \
         lxml && \
@@ -68,8 +68,8 @@ RUN apt-get -qq -y update && \
     ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
     python setup.py develop && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir newrelic && \
+    pip install -r requirements.txt && \
+    pip install newrelic && \
     hdxckantool plugins dev && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     chown -R www-data ckan/public/base/i18n && \
