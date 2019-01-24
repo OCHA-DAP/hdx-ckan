@@ -104,7 +104,7 @@
               {{ _("Add data") }}
             </div>
             <div class="add-data-actions">
-              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="contributeAddDetails(null, 'homepage')">
+              <a class="add-data-item" href="{{ add_data_obj.href }}" {% if c.userobj %}onclick="contributeAddDetails(null, 'homepage')"{%else%}data-module="hdx_click_stopper" data-module-link_type="homepage add data"{% endif %}>
                 <div class="add-data-item-content">
                   <img src="/images/add-fulldataset.svg" />
                   <div class="description">
@@ -114,7 +114,7 @@
                 </div>
               </a>
 
-              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="contributeAddDetails(null, 'homepage metadata')">
+              <a class="add-data-item" href="{{ add_data_obj.href }}" {% if c.userobj %}onclick="contributeAddDetails(null, 'homepage metadata')"{%else%}data-module="hdx_click_stopper" data-module-link_type="homepage metadata add data"{% endif %}>
                 <div class="add-data-item-content">
                   <img src="/images/add-metadata-only-2.svg" />
                   <div class="description">
