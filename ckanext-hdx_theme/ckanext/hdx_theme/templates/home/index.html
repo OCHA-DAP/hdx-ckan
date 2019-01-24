@@ -104,8 +104,7 @@
               {{ _("Add data") }}
             </div>
             <div class="add-data-actions">
-              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
-                 data-module="{{ add_data_obj.data_module }}" data-module-link_type="{{ add_data_obj.data_module_link_type }}">
+              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="contributeAddDetails(null, 'homepage')">
                 <div class="add-data-item-content">
                   <img src="/images/add-fulldataset.svg" />
                   <div class="description">
@@ -115,14 +114,13 @@
                 </div>
               </a>
 
-              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
-                 data-module="{{ add_data_obj.data_module }}" data-module-link_type="{{ add_data_obj.data_module_link_type }}">
+              <a class="add-data-item" href="{{ add_data_obj.href }}" onclick="contributeAddDetails(null, 'homepage metadata')">
                 <div class="add-data-item-content">
-                  <img src="/images/add-metadata-only.svg" />
+                  <img src="/images/add-metadata-only-2.svg" />
                   <div class="description">
-                    Let others know your data is available
+                    HDX Connect: let others request your data
                   </div>
-                  <div class="action">Upload Metadata</div>
+                  <div class="action">Add Metadata</div>
                 </div>
               </a>
 
