@@ -43,5 +43,5 @@ $(document).ready(function(){
     // initCookiePopup();
 
 
-    showSurveyPopup();
+    // showSurveyPopup();
 });
