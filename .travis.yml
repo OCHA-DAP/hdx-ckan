@@ -26,7 +26,7 @@ script:
   - docker-compose restart solr
   - sleep 20
   - docker-compose restart ckan
-  - docker-compose exec ckan pip install --no-cache-dir -r /srv/ckan/dev-requirements.txt
+  - docker-compose exec ckan pip install -r /srv/ckan/dev-requirements.txt
   - docker-compose exec ckan python setup.py develop
   - docker-compose exec ckan hdxckantool plugins dev
   - docker-compose exec ckan hdxckantool pgpass

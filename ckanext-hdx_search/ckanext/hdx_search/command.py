@@ -124,6 +124,8 @@ def buildIndex(path):
                   'url': '//data.humdata.org/visualization/somalia-monitoring/ ', 'type': 'visualization'})
     index.append({'title': 'Somalia Cash 3w',
                   'url': 'https://data.humdata.org/visualization/somalia-cash-programing-v3/ ', 'type': 'visualization'})
+    index.append({'title': 'A journey of 1000 kilometers',
+                  'url': 'https://data.humdata.org/visualization/a-journey-of-1000km/ ', 'type': 'visualization'})
     # index.append({'title': 'Chattam House Refugee Data',
     #               'url': '//baripembo.github.io/chathamhouse-refugeedata/ ', 'type': 'visualization'})
     # index.append({'title': 'Education Above All 3W',

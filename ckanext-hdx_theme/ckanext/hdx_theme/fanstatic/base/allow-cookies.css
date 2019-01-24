@@ -1,0 +1,44 @@
+/**
+ * HDX Allow Cookies Banner
+ * - used on CKAN, Tools
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.allow-cookies-container {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  bottom: 0;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 30px 0;
+}
+.allow-cookies-container a {
+  color: #fff;
+  text-decoration: underline;
+}
+.allow-cookies-container .allow-cookies-continue {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translate(0, -50%);
+  height: 50px;
+  width: 180px;
+  background-color: #eeeeee;
+  color: #000;
+  border: 0;
+  border-radius: 6px;
+  font-size: 18px;
+  text-transform: uppercase;
+}

@@ -1,0 +1,177 @@
+@import "../base/variables";
+@import "../base/mixins";
+@import "_variables";
+
+.tool-category-title-common() {
+  .gothamMediumFont(18px);
+  .uppercase();
+}
+
+.tools() {
+  .tool-categories {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+
+    .blue-line {
+      border-bottom: 1px solid @blueColor;
+      width: 60%;
+      margin-left: 20%;
+      margin-right: auto;
+      position:absolute;
+      top: 10px;
+
+    }
+    .tool-category {
+      text-align: center;
+      .category-title {
+        margin-left: auto;
+        margin-right: auto;
+        display: inline;
+        padding: 0 40px;
+        color: @grayColor;
+        background-color: @extraLightGrayColor;
+        text-transform: uppercase;
+      }
+      .caret {
+        margin-top: 20px;
+        border-top: 10px solid @grayColor;
+        border-right-width: 8px;
+        border-left-width: 8px;
+      }
+    }
+  }
+
+  .tool-set {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: @tool-set-margin-top;
+    padding: @tool-set-padding;
+    background-color: @lightGrayColor;
+  }
+  .tool-list {
+    display: flex;
+  }
+
+  .mobile-tool-categories {
+    @mobile-tool-categ-spacing: 5px;
+    display: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: @mobile-tool-categ-spacing;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+
+      li.category-title {
+        display: inline;
+        flex-grow: 1;
+
+        ~ .category-title {
+          margin-left: @mobile-tool-categ-spacing;
+        }
+
+        input[type=radio] {
+          display: none;
+        }
+
+        input[type=radio]:checked ~ label {
+          background-color: @lightGrayColor;
+          color: @darkGrayColor;
+        }
+
+
+        label {
+          padding: 5px;
+          margin: 0;
+          background-color: @whiteColor;
+          color: @grayColor;
+          width: 100%;
+          .tool-category-title-common();
+          text-align: center;
+          font-size: 14px;
+
+          &:after {
+            content: '';
+          }
+        }
+      }
+    }
+  }
+
+  .tool {
+    position: relative;
+    margin-bottom: 50px;
+    flex-basis: 33.33%;
+    ~ .tool {
+      margin-left: 30px;
+    }
+
+    &.with-image{
+      .tool-content {
+        height: 355px;
+        padding-top: 50px;
+      }
+    }
+
+    .tool-image {
+      position: absolute;
+      top: -@tool-image-top-extend;
+      left: 50%;
+      transform: translate(-50%, 0);
+      margin-left: -7px; //hack to adjust for optical illusion due to second circle on the left
+      height: @tool-image-size;
+    }
+    .tool-content {
+      height: 305px;
+      padding: 1px 50px 50px;
+      background-color: @whiteColor;
+      text-align: center;
+
+      .description {
+        margin-top: 30px;
+        margin-bottom: 0;
+        .sourceSansProFont(400, 16px);
+        color: @blackColor;
+        height: 100px;
+      }
+
+      .tool-title {
+        margin: 30px 0;
+        .gothamMediumFont(24px);
+        color: @darkGrayColor;
+        text-align: center;
+      }
+
+      .secondary-actions {
+        .sourceSansProFont(400, 14px);
+
+        .learn-more {
+          cursor: pointer;
+        }
+      }
+
+      .btn-primary {
+        margin: 15px 0;
+      }
+    }
+  }
+
+  .join-hdx {
+    text-align: center;
+    p {
+      white-space: pre-line;
+      margin-bottom: 15px;
+      .gothamBookFont(16px);
+      color: @darkGrayColor;
+    }
+  }
+
+
+}
+

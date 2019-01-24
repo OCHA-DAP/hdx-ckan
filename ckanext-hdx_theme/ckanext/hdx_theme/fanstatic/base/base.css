@@ -18,7 +18,7 @@ a.test:focus {
 /* Body Background */
 body {
   background-size: cover;
-  background: #1ebfb3 url("/images/homepage/map.png") fixed;
+  background: #1ebfb3;
   min-width: 1260px;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;

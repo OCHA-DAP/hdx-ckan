@@ -426,7 +426,15 @@ h1.country-title {
   font-weight: 300;
   font-size: 12px;
 }
-.data-completeness i.icon-questionmark:hover ~ .completeness-legend {
+.data-completeness .completeness-header-actions {
+  color: #333333;
+}
+.data-completeness .show-completeness-legend {
+  color: #007CE0;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.data-completeness .show-completeness-legend:hover ~ .completeness-legend {
   display: block;
 }
 .data-completeness .completeness-legend {
@@ -435,7 +443,7 @@ h1.country-title {
   width: 880px;
   z-index: 100;
   top: -140px;
-  left: 210px;
+  left: 90px;
   border: 1px solid #cccccc;
   border-radius: 10px;
   padding: 15px;
@@ -446,13 +454,13 @@ h1.country-title {
   content: " ";
   position: absolute;
   top: 155px;
-  left: 0;
+  right: -16px;
   border-left: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
   height: 15px;
   width: 15px;
   background-color: #333333;
-  transform: translate(-50%, 0) rotateZ(-45deg);
+  transform: translate(-50%, 0) rotateZ(135deg);
 }
 .data-completeness .completeness-legend .legend-title {
   color: #eeeeee;

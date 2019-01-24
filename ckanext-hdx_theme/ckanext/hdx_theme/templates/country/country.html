@@ -344,7 +344,23 @@
         <div class="list-header crisis-list-header">
           <span class="mL15 mR30 list-header-title">
               {{ _("Data Completeness") }}
-              <i class="icon-questionmark"></i>
+          </span>
+
+
+          <div class="progress-breakdown progress-header">
+            <span class="progress-blue" style="width: {{100*data.data_completness.stats.dataseries_good_percentage}}%;">
+            </span>
+            <span class="progress-striped" style="width: {{100*data.data_completness.stats.dataseries_not_good_percentage}}%;"></span>
+          </div>
+
+          <span class="mL45 list-header-showall list-completeness">
+            <span>{{data.data_completness.stats.good_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
+            <span>{{ data.data_completness.stats.total_datasets_num }} Datasets</span>
+            <span>{{ data.data_completness.stats.org_num }} Organisations</span>
+          </span>
+
+          <span class="mL45 pull-right completeness-header-actions">
+              <a class="show-completeness-legend">Show legend</a>
               <div class="completeness-legend">
                 <div class="hdx-arrow-wrapper"></div>
                 <div class="row">
@@ -381,25 +397,10 @@
                   </div>
                 </div>
               </div>
-          </span>
 
-
-          <div class="progress-breakdown progress-header">
-            <span class="progress-blue" style="width: {{100*data.data_completness.stats.dataseries_good_percentage}}%;">
-            </span>
-            <span class="progress-striped" style="width: {{100*data.data_completness.stats.dataseries_not_good_percentage}}%;"></span>
-          </div>
-
-          <span class="mL45 list-header-showall list-completeness">
-            <span>{{data.data_completness.stats.good_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
-            <span>{{ data.data_completness.stats.total_datasets_num }} Datasets</span>
-            <span>{{ data.data_completness.stats.org_num }} Organisations</span>
-          </span>
-
-          <span class="mL45 list-header-showall pull-right">
-              Expand
+              <span>Expand</span>
               <span>
-                <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
+                <span class="checkbox-slider" style="display: inline-block; top: 5px; margin-left: 3px;">
                   <input id="expand-data-completeness" type="checkbox" class="checkbox-slider-checkbox" autocomplete="off" />
                   <label class="checkbox-slider-label" for="expand-data-completeness">
                     <span class="checkbox-slider-inner"></span>

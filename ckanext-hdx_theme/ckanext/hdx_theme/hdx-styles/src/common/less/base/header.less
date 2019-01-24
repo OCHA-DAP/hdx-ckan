@@ -19,7 +19,7 @@
 
 @hdxLogoUrl: "@{imagePath}/homepage/logo-hdx.svg";
 
-@headerNavHeight: 55px;
+@headerNavHeight: 57px;
 @headerNavBorderHeight: @navBorderHeight;
 @headerNavBackgroundColor: @whiteColor;
 @headerNavBorderColor: @lightGrayColor;
@@ -172,6 +172,10 @@
               margin: 0 20px;
             }
           }
+        }
+        a.action {
+          display: flex;
+          align-items: center;
         }
 
         .dropdown-menu {
@@ -412,14 +416,6 @@ nav{
     display: none;
   }
 }
-
-@media(max-width: 767px) {
-  body.home .search-ahead {
-    width: 120%;
-  }
-}
-
-
 
 label.terms-of-service {
   font-weight: 400;

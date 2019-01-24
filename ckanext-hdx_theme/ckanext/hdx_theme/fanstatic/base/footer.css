@@ -189,17 +189,20 @@
   margin: 10px 0;
   margin-right: 10px;
 }
-.hdx-footer .social-footer .service .service-details .license {
+.hdx-footer .social-footer .service .service-details .license-group {
+  display: flex;
+}
+.hdx-footer .social-footer .service .service-details .license-group .license {
   width: 290px;
   text-align: right;
   margin: 10px 0;
   margin-left: auto;
   margin-right: 10px;
 }
-.hdx-footer .social-footer .service .service-details .license-cc {
+.hdx-footer .social-footer .service .service-details .license-group .license-cc {
   margin: 10px 0;
 }
-.hdx-footer .social-footer .service .service-details .license-cc > svg {
+.hdx-footer .social-footer .service .service-details .license-group .license-cc > svg {
   margin-top: 10px;
   fill: #fff;
 }
