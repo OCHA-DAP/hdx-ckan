@@ -5,7 +5,7 @@
 # [ -f /etc/ckan/prod.ini.tpl ] || cp -a /srv/ckan/docker/prod.ini.tpl /etc/ckan
 
 # configure prod.ini
-[ -f /etc/ckan/prod.ini ] || envsubst < /etc/ckan/prod.ini.tpl > /etc/ckan/prod.ini
+[ -f /etc/ckan/prod.ini ] || envsubst < /srv/ckan/docker/prod.ini.tpl > /etc/ckan/prod.ini
 # and a copy of it to be used by less compile verbose mode
 [ -f /etc/ckan/less.ini ] || cat /etc/ckan/prod.ini | sed 's/level = WARNING/level = INFO/' > /etc/ckan/less.ini;
 #configure test ini
