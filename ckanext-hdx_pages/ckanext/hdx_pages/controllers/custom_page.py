@@ -20,6 +20,7 @@ parse_params = logic.parse_params
 get_action = logic.get_action
 check_access = logic.check_access
 NotAuthorized = logic.NotAuthorized
+NotFound = logic.NotFound
 abort = base.abort
 checked = 'checked="checked"'
 
@@ -148,6 +149,8 @@ class PagesController(HDXSearchController):
             page_dict = logic.get_action('page_show')(context, {'id': id})
         except NotAuthorized:
             abort(403, _('Not authorized to see this page'))
+        except NotFound:
+            abort(404, _('Page not found'))
 
         if page_dict.get('sections'):
             sections = json.loads(page_dict['sections'])
@@ -176,7 +179,7 @@ class PagesController(HDXSearchController):
         }
 
         if not type or type != page_dict.get('type'):
-            base.abort(404, _('Wrong page type'))
+            abort(404, _('Page not found'))
         else:
             return base.render('pages/read_page.html', extra_vars=vars)
 
