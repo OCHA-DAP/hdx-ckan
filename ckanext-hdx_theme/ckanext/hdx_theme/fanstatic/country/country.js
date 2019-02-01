@@ -106,6 +106,22 @@ function drawMap() {
 
 }
 
+function c3ActiveSparklineRedraw() {
+  $('.carousel-inner .item.active .sparkline').each(function() {
+    var th = $(this);
+    var chart = th.data("chart");
+    th.css("overflow", "hidden");
+    var width = th.width();
+    console.log("width: " + width);
+    chart.resize({
+      height: 74,
+      width: width
+    });
+    th.css("visibility", "visible");
+    th.css("overflow", "visible");
+  });
+}
+
 function c3Sparklines(){
   $('.sparkline').each(function() {
     var th = $(this),
@@ -149,11 +165,12 @@ function c3Sparklines(){
         format: {
           value: d3.format(",")
         }
-      },
-      size: {
-        width: 103
       }
     });
+    th.data("chart", chart);
+    if (th.parents(".item.active").length === 0) {
+      th.css("visibility", "hidden");
+    }
   });
 }
 
@@ -228,5 +245,11 @@ $(document).ready(function() {
     drawMap();
     buildGraphs();
     c3Sparklines();
+    c3ActiveSparklineRedraw(); //reset visibility / overflow
     $("#expand-data-completeness").change(onDataCompletenessExpand);
+    $('#key-figures-carousel').bind('slid.bs.carousel', function (e) {
+      console.log('after');
+      c3ActiveSparklineRedraw();
+    });
+
 });
