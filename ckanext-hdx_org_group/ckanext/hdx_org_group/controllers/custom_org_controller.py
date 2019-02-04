@@ -193,6 +193,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         except Exception, e:
             log.warning(e)
             hdx_helpers.add_error('Fetching data problem', str(e), errors)
+            abort(404, 'Page not found')
 
         allow_basic_user_info = self.check_access('hdx_basic_user_info')
         allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
