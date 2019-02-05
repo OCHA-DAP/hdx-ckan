@@ -294,19 +294,36 @@ def resource_view_create(context, data_dict):
 
     '''
 
-    from ckan.lib.search import rebuild
-
     result = core_create.resource_view_create(context, data_dict)
 
-    if data_dict.get('view_type') == 'hdx_hxl_preview':
-        resource = context.get('resource')
-        package_id = resource.package_id
+    reindex_package_on_hdx_hxl_preview_view(data_dict.get('view_type'), context, data_dict)
 
+    return result
+
+
+def reindex_package_on_hdx_hxl_preview_view(view_type, context, data_dict):
+
+    from ckan.lib.search import rebuild
+
+    if view_type == 'hdx_hxl_preview':
+        resource = context.get('resource')
+
+        # resource is in context only when the auth is run. But that doesn't happen for sysadmins
+        if resource:
+            package_id = resource.package_id
+        else:
+            resource_id = _get_or_bust(data_dict, 'resource_id')
+            model = context['model']
+            resource = model.Resource.get(resource_id)
+            if resource:
+                package_id = resource.package_id
+            else:
+                package_id = None
         try:
-            rebuild(package_id)
+            if package_id:
+                rebuild(package_id)
         except NotFound:
             log.error("Error: package {} not found.".format(package_id))
         except Exception, e:
             log.error(str(e))
 
-    return result
