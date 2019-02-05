@@ -112,11 +112,11 @@
 	{% if pkg_dict.is_requestdata_type %}
         <tr>
             <th scope="row" class="dataset-label">{{ _('Field Names') }}</th>
-            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.field_names }}</td>
+            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.field_names | replace(",", ", ") }}</td>
         </tr>
         <tr>
             <th scope="row" class="dataset-label">{{ _('File Types') }}</th>
-            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.file_types }}</td>
+            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.file_types | replace(",", ", ")  }}</td>
         </tr>
         <tr>
             <th scope="row" class="dataset-label">{{ _('Number of Rows') }}</th>
