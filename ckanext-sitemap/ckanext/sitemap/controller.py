@@ -3,13 +3,14 @@ Controller for sitemap
 '''
 import logging
 
-from ckan.lib.base import BaseController
-from ckan.model import Session, Package
-from ckan.lib.helpers import url_for
+import math
 from lxml import etree
 from pylons import config, response
 from pylons.decorators.cache import beaker_cache
-import math
+
+from ckan.lib.base import BaseController
+from ckan.lib.helpers import url_for
+from ckan.model import Session, Package
 
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
@@ -31,13 +32,20 @@ class SitemapController(BaseController):
             pkg_url = url_for(controller='package', action="read", id = pkg.name)
             loc.text = config.get('ckan.site_url') + pkg_url
             lastmod = etree.SubElement(url, 'lastmod')
-            lastmod.text = pkg.latest_related_revision.timestamp.strftime('%Y-%m-%d')
+            try:
+                lastmod.text = pkg.latest_related_revision.timestamp.strftime('%Y-%m-%d')
+            except:
+                pass
+
             for res in pkg.resources:
                 url = etree.SubElement(root, 'url')
                 loc = etree.SubElement(url, 'loc')
                 loc.text = config.get('ckan.site_url') + url_for(controller="package", action="resource_read", id = pkg.name, resource_id = res.id)
                 lastmod = etree.SubElement(url, 'lastmod')
-                lastmod.text = res.created.strftime('%Y-%m-%d')
+                try:
+                    lastmod.text = res.created.strftime('%Y-%m-%d')
+                except:
+                    pass
         response.headers['Content-type'] = 'text/xml'
         return etree.tostring(root, pretty_print=True)
 
