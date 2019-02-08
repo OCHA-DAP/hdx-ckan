@@ -148,7 +148,7 @@ class PagesController(HDXSearchController):
         try:
             page_dict = logic.get_action('page_show')(context, {'id': id})
         except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
+            abort(404, _('Page not found'))
         except NotFound:
             abort(404, _('Page not found'))
 

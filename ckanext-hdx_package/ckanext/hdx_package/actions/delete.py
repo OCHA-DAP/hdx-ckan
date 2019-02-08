@@ -5,6 +5,7 @@ import logging
 import ckan.logic.action.delete as core_delete
 
 from ckanext.hdx_package.actions.update import process_batch_mode
+from ckanext.hdx_package.actions.create import reindex_package_on_hdx_hxl_preview_view
 from ckan.lib import uploader
 
 _check_access = logic.check_access
@@ -123,12 +124,7 @@ def resource_view_delete(context, data_dict):
 
     core_delete.resource_view_delete(context, data_dict)
 
-    try:
-        if context.get('resource_view').view_type == 'hdx_hxl_preview':
-            resource = context.get('resource')
-            package_id = resource.package_id
-            rebuild(package_id)
-    except NotFound:
-        log.error("Error: package {} not found.".format(package_id))
-    except Exception, e:
-        log.error(str(e))
+    resource_view = context.get('resource_view')
+    if resource_view:
+        reindex_package_on_hdx_hxl_preview_view(resource_view.view_type, context, data_dict)
+

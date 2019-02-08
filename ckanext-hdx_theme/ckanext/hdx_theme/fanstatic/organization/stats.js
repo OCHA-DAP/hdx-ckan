@@ -80,7 +80,7 @@ $(document).ready(function(){
                 // augment tick contents with link
                 var self = d3.select(this);
                 var text = self.text();
-                var dataIndex = parseInt(text) % dataTopDownloads.length;
+                var dataIndex = (parseInt(text) - 1) % dataTopDownloads.length;
                 var item = dataTopDownloads[dataIndex];
                 self.html("<a xlink:href='"+ item['url'] +"' target='_blank' style='fill: #0077ce; cursor: pointer;'>"+ item['trimName'] +"</a>");
             });

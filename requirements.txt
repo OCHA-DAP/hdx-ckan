@@ -94,6 +94,6 @@ rdflib-jsonld==0.4.0
 git+https://github.com/geomet/geomet.git
 #ckantoolkit==0.0.3 already installed for ckanext-powerview
 # ckanext-dcat
--e git+https://github.com/ckan/ckanext-dcat.git@v0.0.8#egg=ckanext-dcat
+-e git+https://github.com/OCHA-DAP/ckanext-dcat.git@v0.0.10#egg=ckanext-dcat
 
 PyYAML==3.13
