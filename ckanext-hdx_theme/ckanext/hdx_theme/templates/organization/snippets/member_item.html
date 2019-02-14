@@ -31,7 +31,7 @@ Example:
 						{% if not disable_change %}
 							{% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
 							  <div class="">
-								<a class="" href="#edit-member-div-{{member.id}}" data-toggle="modal"
+								<a class="" href="#edit-member-div-{{member.name}}" data-toggle="modal"
 									title="{{ _('Change role') }}">
 								  {{ _('Change role') }}
 								</a>
