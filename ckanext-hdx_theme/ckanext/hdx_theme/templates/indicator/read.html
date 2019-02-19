@@ -130,17 +130,23 @@
     {% endblock %}
   </div>
   <div class="mL30">
+    <ul class="nav nav-tabs nav-tabs-upper">
+      <li class="active"><a href="#data-resources" data-toggle="tab" class="hdx-tab-button">Data and Resources</a></li>
+      <li><a href="#metadata" data-toggle="tab" class="hdx-tab-button">Metadata</a></li>
+    </ul>
+  </div>
+  <div class="tab-content clearfix mL30">
+    <div class="tab-pane active" id="data-resources">
       {% block package_resources %}
         {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
       {% endblock %}
+    </div>
+    <div class="tab-pane" id="metadata">
+      {% block indicator_additional_info %}
+        {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
+      {% endblock %}
+    </div>
   </div>
-  <div class="mL30">
-    {% block indicator_additional_info %}
-	    {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
-  	{% endblock %}
-  	
-  </div>
-  
 {% endblock %}
 
 {% block post_primary %}
