@@ -56,12 +56,6 @@
     <div class="hdx-btn-group">
         {% block resource_item_explore_links %}
 
-            {% if res.has_views and is_not_zipped %}
-                <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview resource-btn">
-                    {{ _('Preview') }}
-                </a>
-            {% endif %}
-
             {# Commented out with the new contribute flow
                 {%  if can_edit %}
                     <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit resource-btn">
@@ -70,11 +64,40 @@
                 {% endif %}
              #}
 
-            <a href="{{ res.hdx_rel_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download resource-btn resource-icon-btn" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
-                <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
+            <a href="{{ res.hdx_rel_url }}" class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
+                <img src="/images/homepage/download.svg" alt="{{ _('Download') }}" />
+                {{ _('Download') }}
                 <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                 <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
             </a>
+
+            {% if (res.has_views and is_not_zipped) or h.hdx_dataset_is_hxl(pkg.tags) %}
+            <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
+              {{ _('More') }}
+            </a>
+            {% endif %}
+            <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">
+              <li class="crises-group">
+                On HDX and HDX Tools
+                <ul>
+                  {% if res.has_views and is_not_zipped %}
+                    <li>
+                      <a href="{{ url }}" class="ga-preview">
+                        {{ _('Preview on HDX') }}
+                      </a>
+                    </li>
+                  {% endif %}
+                  {% if h.hdx_dataset_is_hxl(pkg.tags) %}
+                    <li>
+                      <a href="#" class="ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
+                        {{ _('Validate with Data Check') }}
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </li>
+            </ul>
+
 
             {% set button_id = 'social-btn-' + res.id %}
             {% set social_div_id = 'social-' + res.id %}

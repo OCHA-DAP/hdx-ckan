@@ -1,16 +1,15 @@
 
-import ckan.logic as logic
-import ckan.lib.helpers as h
 import ckanext.hdx_org_group.dao.common_functions as common_functions
 
-from ckanext.hdx_theme.helpers.top_line_items_formatter import TopLineItemsWithDateFormatter
+import ckan.lib.helpers as h
+import ckan.logic as logic
 
 _get_action = logic.get_action
 
 class RwAccess(object):
     def __init__(self, resource_dict, location_iso):
         self.resource_dict = resource_dict
-        self.dataset_link = h.url_for('dataset_read', id=resource_dict['package_id'])
+        self.dataset_link = h.url_for('dataset_read', id=resource_dict['package_id'], qualified=True)
         self.location_iso = location_iso
 
     def fetch_data(self):

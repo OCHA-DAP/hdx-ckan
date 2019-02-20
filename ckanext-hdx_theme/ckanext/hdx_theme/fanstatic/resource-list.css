@@ -1,0 +1,41 @@
+/* Style Resources List */
+.resource-list {
+  list-style: none;
+}
+.resource-item .description {
+  text-align: justify;
+  max-width: 450px;
+}
+.format-filesize-label {
+  font-size: 14px;
+  font-weight: normal;
+  color: #000;
+}
+/* END Style Resources List*/
+.data-check-modal.modal.in button.close {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  color: #fff;
+  font-size: 40px;
+  opacity: 0.9;
+  z-index: 100;
+}
+.data-check-modal.modal.in .modal-content {
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+.data-check-modal.modal.in .modal-content .modal-header {
+  background-color: #007CE0;
+  color: #fff;
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.data-check-modal.modal.in .modal-content .modal-header .large {
+  font-size: 18px;
+}
+.data-check-modal.modal.in .modal-dialog {
+  width: 1260px;
+}
