@@ -675,7 +675,7 @@ def __create_body_for_contributor(data_dict, for_admins):
     if for_admins:
         org_members_url = h.url_for(controller='organization', action='members', id=data_dict.get('pkg_owner_org'),
                                     qualified=True)
-        org_members_url.replace('http://', 'https://')
+        org_members_url = org_members_url.replace('http://', 'https://')
         html += '<br />' \
                 '<p>Please use your email\'s REPLY ALL function so that other administrators of your ' \
                 '<a href="{org_members_url}" target="_blank">HDX organization</a> ' \
