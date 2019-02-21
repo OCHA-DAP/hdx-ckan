@@ -47,6 +47,8 @@ smtp.user        = ${HDX_SMTP_USER}
 smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
 
+hdx_smtp.mail_from_please_reply   = please-reply@${HDX_DOMAIN}
+
 hdx.cache.onstartup = true
 hdx.caching.base_dir = ${HDX_CACHE_DIR}
 

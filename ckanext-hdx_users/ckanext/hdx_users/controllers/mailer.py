@@ -59,8 +59,8 @@ def add_msg_niceties(body, footer=None):
 
 
 def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=None, footer=None, headers={},
-                    sender_email=None):
-    mail_from = config.get('smtp.mail_from')
+                    sender_email=None, reply_wanted=False):
+    mail_from = config.get('hdx_smtp.mail_from_please_reply') if reply_wanted else config.get('smtp.mail_from')
     body = add_msg_niceties(body=body, footer=footer)
     msg = MIMEMultipart('alternative')
     for k, v in headers.items(): msg[k] = v
@@ -142,8 +142,8 @@ def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_
 
 
 def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_email=None, bcc_recipients_list=None,
-                   footer=None, headers={}):
+                   footer=None, headers={}, reply_wanted=False):
     if recipients_list is None and bcc_recipients_list is None:
         raise MailerException('There are no recipients to send email')
     return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list,
-                           footer=footer, headers=headers, sender_email=sender_email)
+                           footer=footer, headers=headers, sender_email=sender_email, reply_wanted=reply_wanted)

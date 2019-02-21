@@ -15,6 +15,7 @@ import ckan.logic.action.get as logic_get
 import ckan.lib.plugins as lib_plugins
 import ckan.authz as authz
 import ckan.lib.base as base
+import ckan.lib.helpers as h
 
 import sqlalchemy
 import logging
@@ -621,12 +622,9 @@ def hdx_send_mail_contributor(context, data_dict):
 
     subject = u'[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
-    html = u"""\
-            <p>{fullname} sent the following message: </p>
-            <p>{msg}</p>
-            <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
-        """.format(fullname=data_dict.get('fullname'), msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'),
-                   pkg_title=data_dict.get('pkg_title'))
+    requester_body_html = __create_body_for_contributor(data_dict, False)
+
+    admins_body_html = __create_body_for_contributor(data_dict, True)
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
@@ -640,16 +638,50 @@ def hdx_send_mail_contributor(context, data_dict):
 
     bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
 
-    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=html,
+    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=admins_body_html,
                               sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              bcc_recipients_list=bcc_recipients_list, footer=_FOOTER_CONTACT_CONTRIBUTOR)
+                              bcc_recipients_list=bcc_recipients_list, footer=_FOOTER_CONTACT_CONTRIBUTOR,
+                              reply_wanted=True)
 
     requester_list = [{'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')}]
-    hdx_mailer.mail_recipient(recipients_list=requester_list, subject=subject, body=html,
+    hdx_mailer.mail_recipient(recipients_list=requester_list, subject=subject, body=requester_body_html,
                               sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
                               footer=_FOOTER_CONTACT_CONTRIBUTOR)
 
     return None
+
+
+def __create_body_for_contributor(data_dict, for_admins):
+    '''
+    :param data_dict:
+    :type data_dict: dict
+    :param for_admins: True for the email that should go to org admins. Some additional info is added in this case.
+    :type for_admins: boolean
+    :return: the html body for the email
+    :rtype: str
+    '''
+
+    fullname = data_dict.get('fullname') if for_admins else 'You'
+
+    html = u"""\
+            <p>{fullname} sent the following message: </p>
+            <br />
+            <p><em>{msg}</em></p>
+            <br />
+            <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a></p>
+        """.format(fullname=fullname, msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'),
+                   pkg_title=data_dict.get('pkg_title'))
+
+    if for_admins:
+        org_members_url = h.url_for(controller='organization', action='members', id=data_dict.get('pkg_owner_org'),
+                                    qualified=True)
+        org_members_url = org_members_url.replace('http://', 'https://')
+        html += '<br />' \
+                '<p>Please use your email\'s REPLY ALL function so that other administrators of your ' \
+                '<a href="{org_members_url}" target="_blank">HDX organization</a> ' \
+                'are aware that you are responding.</p>'.format(org_members_url=org_members_url)
+
+    return html
 
 
 def hdx_send_mail_members(context, data_dict):
