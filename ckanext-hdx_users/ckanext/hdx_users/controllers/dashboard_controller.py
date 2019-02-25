@@ -264,42 +264,42 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
             return render('user/dashboard_datasets.html')
 
-    def dashboard_visualizations(self):
-        """
-        Dashboard tab for visualizations.
-        """
-
-        context = {'model': model, 'session': model.Session, 'for_view': True,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   }
-        if c.userobj:
-            id = c.userobj.id
-        else:
-            id = None
-        data_dict = {'id': id, 'user_obj': c.userobj}
-
-        user_dict = None
-        powerviews = None
-        #check if user can access this link
-        try:
-            user_dict = get_action('user_show')(context, data_dict)
-        except NotFound:
-            came_from = h.url_for(controller='user', action='dashboard_visualizations', __ckan_no_root=True)
-            h.redirect_to(controller='user', action='login', came_from=came_from)
-
-        try:
-            powerviews = get_action('powerview_list')(context, data_dict)
-        except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
-
-        template_data = {
-            'data': {
-                'user_dict': user_dict,
-                'powerviews': powerviews,
-                'mpx_url_template': config.get('ckan.site_url') + config.get('hdx.explorer.url')+mpx.get_powerview_load_url("")
-            }
-        }
-        return render('user/dashboard_visualizations.html', extra_vars=template_data)
+    # def dashboard_visualizations(self):
+    #     """
+    #     Dashboard tab for visualizations.
+    #     """
+    #
+    #     context = {'model': model, 'session': model.Session, 'for_view': True,
+    #                'user': c.user or c.author, 'auth_user_obj': c.userobj,
+    #                }
+    #     if c.userobj:
+    #         id = c.userobj.id
+    #     else:
+    #         id = None
+    #     data_dict = {'id': id, 'user_obj': c.userobj}
+    #
+    #     user_dict = None
+    #     powerviews = None
+    #     #check if user can access this link
+    #     try:
+    #         user_dict = get_action('user_show')(context, data_dict)
+    #     except NotFound:
+    #         came_from = h.url_for(controller='user', action='dashboard_visualizations', __ckan_no_root=True)
+    #         h.redirect_to(controller='user', action='login', came_from=came_from)
+    #
+    #     try:
+    #         powerviews = get_action('powerview_list')(context, data_dict)
+    #     except NotAuthorized:
+    #         abort(403, _('Not authorized to see this page'))
+    #
+    #     template_data = {
+    #         'data': {
+    #             'user_dict': user_dict,
+    #             'powerviews': powerviews,
+    #             'mpx_url_template': config.get('ckan.site_url') + config.get('hdx.explorer.url')+mpx.get_powerview_load_url("")
+    #         }
+    #     }
+    #     return render('user/dashboard_visualizations.html', extra_vars=template_data)
 
     def hdx_delete_powerview(self, id):
         """

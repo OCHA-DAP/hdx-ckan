@@ -973,14 +973,14 @@ class ValidationController(ckan.controllers.user.UserController):
         return self._new_login(_('In order to contact the contributor, you need to login below or register on HDX'),
                                _('Login to contact HDX'), error=error)
 
-    def save_mapexplorer_config(self, error=None):
-        """
-        If the user tries to save a map explorer configuration, we direct
-        them to a specific login page.
-        """
-        return self._new_login(
-            _('In order to save a custom map explorer view, you need to login below or register on HDX'),
-            _('Login to save map explorer view'), error=error)
+    # def save_mapexplorer_config(self, error=None):
+    #     """
+    #     If the user tries to save a map explorer configuration, we direct
+    #     them to a specific login page.
+    #     """
+    #     return self._new_login(
+    #         _('In order to save a custom map explorer view, you need to login below or register on HDX'),
+    #         _('Login to save map explorer view'), error=error)
 
     def request_reset(self):
         """
