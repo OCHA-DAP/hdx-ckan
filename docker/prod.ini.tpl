@@ -47,6 +47,8 @@ smtp.user        = ${HDX_SMTP_USER}
 smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
 
+hdx_smtp.mail_from_please_reply   = please-reply@${HDX_DOMAIN}
+
 hdx.cache.onstartup = true
 hdx.caching.base_dir = ${HDX_CACHE_DIR}
 
@@ -77,7 +79,7 @@ hdx.gis.layer_import_url = http://gislayer:5000/api/add-layer/dataset/{dataset_i
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
 # at Alex suggestion, i made this proto unaware
-hdx.gis.resource_pbf_url = //${HDX_PREFIX}data.${HDX_DOMAIN}/gis/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
+hdx.gis.resource_pbf_url = //${HDX_PREFIX}data.${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resource_id}/wkb_geometry/{z}/{x}/{y}.pbf
 
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
 hdx.analytics.mixpanel.secret = ${HDX_MIXPANEL_SECRET}
