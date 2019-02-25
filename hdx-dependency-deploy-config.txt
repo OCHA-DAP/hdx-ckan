@@ -22,3 +22,6 @@ HDX_SNAP_SERVICE_TAG=v1.1.0
 
 HDX_DATAPROXY_URL=https://hub.docker.com/r/unocha/hdx-dataproxy/tags/
 HDX_DATAPROXY_TAG=2.2
+
+HDX_MAP_EXPLORER_URL=https://hub.docker.com/r/unocha/hdx-map-explorer/tags/
+HDX_MAP_EXPLORER_TAG=0.0.13
