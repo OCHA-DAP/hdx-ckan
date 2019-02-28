@@ -6,7 +6,6 @@ list_class     - The class name for the list item.
 item_class     - The class name to use on each item.
 truncate       - The length to trucate the description to (default: 180)
 truncate_title - The length to truncate the title to (default: 80).
-show_remove    - If True, show the remove button to remove the showcase/dataset association.
 
 #}
 {% block package_list %}
@@ -17,7 +16,7 @@ show_remove    - If True, show the remove button to remove the showcase/dataset 
             <div class="row">
                 {% block package_list_inner %}
                     {% for package in packages %}
-                        {% snippet 'showcase/snippets/showcase_item.html', package=package, item_class=item_class, truncate=truncate, truncate_title=truncate_title, show_remove=show_remove, dataset=dataset %}
+                        {% snippet 'showcase/snippets/showcase_item.html', package=package, item_class=item_class, truncate=truncate, truncate_title=truncate_title, dataset=dataset %}
                     {% endfor %}
                 {% endblock %}
             </div>

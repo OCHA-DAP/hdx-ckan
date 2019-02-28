@@ -88,7 +88,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
-    plugins.implements(plugins.IResourceController, inherit=True)
+    # plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
 
     __startup_tasks_done = False
@@ -342,13 +342,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list
         }
 
-    def before_show(self, resource_dict):
-        '''
-            This is run before a resource is displayed.
-            We use it to show the correct tracking summary
-        '''
-        tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
-        return resource_dict
+    # def before_show(self, resource_dict):
+    #     '''
+    #         This is run before a resource is displayed.
+    #         We use it to show the correct tracking summary
+    #     '''
+    #     tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
+    #     return resource_dict
 
     # IValidators
     def get_validators(self):
