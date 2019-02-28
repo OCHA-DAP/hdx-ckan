@@ -358,10 +358,34 @@ def package_search(context, data_dict):
 @logic.side_effect_free
 def resource_show(context, data_dict):
     '''
-    Wraps the default resource_show and adds additional information like:
+    Tries to load the resource directly from solr via package_search() for more effciency
+    Also adds additional information like:
     resource size (for uploaded files) and resource revision timestamp
     '''
-    resource_dict = logic_get.resource_show(context, data_dict)
+
+    use_cache = context.get('use_cache', True)
+    resource_dict = None
+    if use_cache:
+        try:
+            search_dict = {
+                'q': '',
+                'fq': 'res_ids:{}'.format(data_dict.get('id')),
+                'rows': 1
+            }
+            search_result = logic_get.package_search(context, search_dict)
+            results = search_result['results']
+
+            if results and results[0] and not results[0].get('private', True):
+                pkg_dict = search_result['results'][0]
+                for r in pkg_dict['resources']:
+                    if r['id'] == data_dict.get('id'):
+                        resource_dict = r
+                        break
+        except Exception, e:
+            log.error(str(e))
+
+    if not resource_dict:
+        resource_dict = logic_get.resource_show(context, data_dict)
 
     # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
     _additional_hdx_resource_show_processing(context, resource_dict)
@@ -445,6 +469,9 @@ def _additional_hdx_package_show_processing(context, package_dict, check_maintai
             if num_of_showcases > 0:
                 package_dict['has_showcases'] = True
                 package_dict['num_of_showcases'] = num_of_showcases
+
+        if _should_manually_load_property_value(context, package_dict, 'res_ids'):
+            package_dict['res_ids'] = [r['id'] for r in package_dict.get('resources', [])]
 
 
 @logic.side_effect_free
