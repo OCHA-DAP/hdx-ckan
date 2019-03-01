@@ -203,7 +203,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                 tk.get_validator('not_empty'),
                                 tk.get_converter('convert_to_extras')],
             'groups_list': [vd.groups_not_empty],
-            'is_requestdata_type': [tk.get_validator('boolean_validator'), tk.get_converter('convert_to_extras')],
+            'is_requestdata_type': [tk.get_validator('hdx_boolean_string_converter'), tk.get_converter('convert_to_extras')],
             'indicator': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'last_data_update_date': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'last_metadata_update_date': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -363,7 +363,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp,
             'hdx_convert_list_item_to_extras': vd.hdx_convert_list_item_to_extras,
             'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
-            'hdx_is_url':  vd.hdx_is_url
+            'hdx_is_url':  vd.hdx_is_url,
+            'hdx_boolean_string_converter': vd.hdx_boolean_string_converter
         }
 
     def get_auth_functions(self):
