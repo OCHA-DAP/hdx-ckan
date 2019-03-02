@@ -126,6 +126,9 @@
   display: inline-block;
   vertical-align: middle;
 }
+.resource-item .hdx-btn-group.hdx-btn-group-fixed {
+  width: 235px;
+}
 .btn.hdx-btn.resource-btn {
   background-color: #888888;
   color: white;
