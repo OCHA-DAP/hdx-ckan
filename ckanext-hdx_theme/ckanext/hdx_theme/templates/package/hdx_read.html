@@ -1,8 +1,27 @@
-{% extends "indicator/read.html" %}
+{% extends "page.html" %}
 
-{% block breadcrum_parent_item %}
-  <li>{{ h.nav_link(_('Datasets'), 
-  	controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
+{% set pkg = c.pkg_dict or pkg_dict %}
+
+{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
+
+{# The line below is for google analytics #}
+{% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ c.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ c.analytics_is_indicator }}{% endblock %}
+{% block analytics_group_names %}{{ c.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ c.analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}
+{% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}
+{% block analytics_dataset_availability %}{{ c.analytics_dataset_availability }}{% endblock %}
+
+{% block breadcrumb_content %}
+	{% block breadcrum_parent_item %}
+    <li>{{ h.nav_link(_('Datasets'),
+      controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
+	{% endblock %}
+    <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
+
 {% endblock %}
 
 {% block pre_primary %}
@@ -24,7 +43,7 @@
                 <div class="row mBottom15">
                     <div class="col-xs-12">
                         {% if pkg.notes %}
-                        <div class="notes embedded-content">
+                        <div data-module="hdx_show_more" style="visibility:hidden" class="notes embedded-content">
                             {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
                         </div>
                         {% endif %}
@@ -61,31 +80,110 @@
       <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
       </div>
     </div>
-    {{ self.pre_primary_content2() }}
+    {% block pre_primary_content %}
+    {% endblock %}
+
+    {% block pre_primary_content2 %}
+      {% if pkg.customviz %}
+        {% snippet "indicator/snippets/custom_viz.html", customviz = pkg.customviz %}
+      {% endif %}
+    {% endblock %}
 </div>
 {% endblock %}
 
-{% block package_notes %}
+{% block secondary %}
+    {% if not pkg.is_requestdata_type %}
+    <div >
+        <div id="dataset-downloads-data" style="display: none">
+            {{ h.json_dumps(c.stats_downloads_last_weeks) }}
+        </div>
+        <h2 class="uppercase">{{_('Downloads')}}</h2>
+        <div id="dataset-downloads-chart">
+            <div id="dataset-downloads-chart-no-data" style="display: none;">
+                <div class="title">NO DATA</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div>
+        <h2 class="uppercase">{{_('Related Showcases')}}</h2>
+        {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
+
+    </div>
+  <div>
+        <h2 class="uppercase">{{_('Activity')}}</h2>
+        {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
+     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     <br>
+    {% if h.follow_status('dataset', pkg.name) %}
+      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span>
+    {% endif %}
+  </div>
 {% endblock %}
 
-{% block package_resources %}
-	<div class="dataset-res-wraper">
-	{{ super() }}
-    {% resource 'hdx_theme/explorer' %}
-	</div>
+{% block primary %}
+  <div class="mL30 mTop20">
+    {% block package_notes %}
+    {% endblock %}
+  </div>
+  <div class="mL30">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#data-resources" data-toggle="tab" class="hdx-tab-button">Data and Resources</a></li>
+      <li><a href="#metadata" data-toggle="tab" class="hdx-tab-button">Metadata</a></li>
+    </ul>
+  </div>
+  <div class="tab-content clearfix mL30">
+    <div class="tab-pane active" id="data-resources">
+      {% block package_resources %}
+        <div class="dataset-res-wraper">
+          {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+          {% resource 'hdx_theme/explorer' %}
+        </div>
+      {% endblock %}
+    </div>
+    <div class="tab-pane" id="metadata">
+      {% block indicator_additional_info %}
+        {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
+      {% endblock %}
+    </div>
+  </div>
 {% endblock %}
+
+{% block post_primary %}
+  {# Removed for now as per HDX-4927
+  <div class="row paddingRowHack whiteBackground">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      {% snippet "indicator/snippets/continuous_browsing.html", type="dataset", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
+    </div>
+  </div>
+  #}
+{% endblock %}
+
 
 {% block styles %}
- {{ super() }}
- {% resource 'hdx_theme/requestdata/request-data.css' %}
-<link rel="alternate" type="application/ld+json" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='jsonld', profiles='schemaorg', qualified=True) }}"/>
-<link rel="alternate" type="text/n3" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='n3', qualified=True) }}"/>
-<link rel="alternate" type="text/ttl" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='ttl', qualified=True) }}"/>
-<link rel="alternate" type="application/rdf+xml" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='xml', qualified=True) }}"/>
+  {{ super() }}
+  {% resource 'hdx_theme/requestdata/request-data.css' %}
+  <link rel="alternate" type="application/ld+json" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='jsonld', profiles='schemaorg', qualified=True) }}"/>
+  <link rel="alternate" type="text/n3" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='n3', qualified=True) }}"/>
+  <link rel="alternate" type="text/ttl" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='ttl', qualified=True) }}"/>
+  <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='xml', qualified=True) }}"/>
+
 {% endblock %}
 
 {% block scripts %}
   {{ super() }}
+  {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/indicator/indicator_downloads.js' %}
+  {% resource 'hdx_theme/activity-stream' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/hdx_autocomplete.js' %}
+  {% resource 'hdx_theme/confirm-ajax.js' %}
+  {% resource 'hdx_theme/indicator/additional_info.js' %}
+  {% resource 'hdx_theme/datasets/related.css' %}
+  {% resource 'hdx_theme/explorer' %}
   <script type="application/ld+json">
     {{ h.structured_data(pkg.id, ['schemaorg'])|safe }}
   </script>
