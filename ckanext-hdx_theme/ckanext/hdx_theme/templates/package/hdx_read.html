@@ -172,6 +172,17 @@
 
 {% block scripts %}
   {{ super() }}
+  {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/indicator/indicator_downloads.js' %}
+  {% resource 'hdx_theme/activity-stream' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/hdx_autocomplete.js' %}
+  {% resource 'hdx_theme/confirm-ajax.js' %}
+  {% resource 'hdx_theme/indicator/additional_info.js' %}
+  {% resource 'hdx_theme/datasets/related.css' %}
   <script type="application/ld+json">
     {{ h.structured_data(pkg.id, ['schemaorg'])|safe }}
   </script>
