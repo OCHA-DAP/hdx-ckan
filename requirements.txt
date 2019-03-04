@@ -85,8 +85,8 @@ timeago==1.0.7
 
 -e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.1.12#egg=ckanext-requestdata
 
-# ckanext-showcase v1.0.9
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.0.9#egg=ckanext-showcase
+# ckanext-showcase v1.0.10
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.0.10#egg=ckanext-showcase
 
 # reqs for ckanext-dcat
 rdflib==4.2.1

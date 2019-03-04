@@ -154,7 +154,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=batch}subnational'] = _('Subnational')
         facets_dict['{!ex=batch}has_quickcharts'] = _('Quick charts')
         facets_dict['{!ex=batch}has_geodata'] = _('Geodata')
-        facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request')
+        facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request(HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
 
         return facets_dict

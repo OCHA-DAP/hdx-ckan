@@ -130,10 +130,13 @@ def buildIndex(path):
     #               'url': '//baripembo.github.io/chathamhouse-refugeedata/ ', 'type': 'visualization'})
     # index.append({'title': 'Education Above All 3W',
     #               'url': '//ndongamadu.github.io/hdx-3w-education-above-all/ ', 'type': 'visualization'})
-    index.append({'title': 'South Sudan Map Explorer',
-                  'url': '//data.humdata.org/mpx/#/name/south-sudan/ ', 'type': 'visualization'})
-    index.append({'title': 'Lake Chad Map Explorer',
-                  'url': '//data.humdata.org/mpx/#/name/lake-chad ', 'type': 'visualization'})
+
+    # HDX-6332
+    # index.append({'title': 'South Sudan Map Explorer',
+    #               'url': '//data.humdata.org/mpx/#/name/south-sudan/ ', 'type': 'visualization'})
+    # index.append({'title': 'Lake Chad Map Explorer',
+    #               'url': '//data.humdata.org/mpx/#/name/lake-chad ', 'type': 'visualization'})
+
     index.append({'title': 'WFP Food Market Prices',
                   'url': '//data.humdata.org/widget/WFP?type=WFP&datastore_id=bd88a565-bf6f-4827-b07b-fb3a65bbb01a&data_link_url=https%3A%2F%2Fdata.humdata.org%2Fdataset%2Fwfp-food-prices&embedded=true&title=Food+Market+Prices  ', 'type': 'visualization'})
 

@@ -1,9 +1,9 @@
 INITIAL_CAROUSEL_DATA = [
     {
-        "title": "New Feature",
-        "description": "Explore",
-        "graphic": "/images/homepage/map-explorer.png",
-        "url": "/explore"
+        "title": "Data Visualization",
+        "description": "Yemen - WFP mVAM, Food Security Monitoring",
+        "graphic": "/images/homepage/mVAM.png",
+        "url": "//data.humdata.org/visualization/wfp-indicators/"
     },
     {
         "title": "Data Visualization",

@@ -315,3 +315,19 @@ def hdx_convert_from_extras_to_list_item(key, data, errors, context):
     for k in keys_to_remove:
         remove_from_extras(data, k)
 
+
+def hdx_boolean_string_converter(value, context):
+    '''
+    Return a boolean for value.
+    Return value when value is a python bool type.
+    Return True for strings 'true', 'yes', 't', 'y', and '1'.
+    Return False in all other cases, including when value is an empty string or
+    None
+    '''
+    if value is missing or value is None:
+        return "false"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if value.lower() in ['true', 'yes', 't', 'y', '1']:
+        return "true"
+    return "false"

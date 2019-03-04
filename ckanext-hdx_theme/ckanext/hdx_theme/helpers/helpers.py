@@ -7,7 +7,7 @@ import re
 # from ckan.common import _
 import urlparse as urlparse
 
-import ckanext.hdx_theme.helpers.explorer_data as explorer
+# import ckanext.hdx_theme.helpers.explorer_data as explorer
 import ckanext.hdx_theme.version as version
 import pylons.config as config
 
@@ -659,9 +659,9 @@ def hdx_get_frequency_by_value(value):
     return ''
 
 
-def hdx_get_layer_info(id=None):
-    layer = explorer.explorer_data.get(id)
-    return layer
+# def hdx_get_layer_info(id=None):
+#     layer = explorer.explorer_data.get(id)
+#     return layer
 
 
 def hdx_get_carousel_list():
