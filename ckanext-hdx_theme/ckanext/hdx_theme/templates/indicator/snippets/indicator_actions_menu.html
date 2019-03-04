@@ -16,17 +16,17 @@
 {% block user_actions %}
     {% if h.check_access('package_update', {'id':pkg.id }) %}
         {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
-        <li>
+        <li class="hide-text">
             <a title="Edit {{ base_type | capitalize }}" onclick="contributeAddDetails('{{ pkg.id }}', 'dataset')"
                {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
                 href="#">
                 <i class="icon-edit"></i>
-                {{ _('Edit') }}
+                <span>{{ _('Edit') }}</span>
             </a>
         </li>
     {% endif %}
     {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
-        <li class="delete-override">
+        <li class="delete-override hide-text">
             {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=False, icon="icon-rubbish-bin" %}
         </li>
     {% endif %}

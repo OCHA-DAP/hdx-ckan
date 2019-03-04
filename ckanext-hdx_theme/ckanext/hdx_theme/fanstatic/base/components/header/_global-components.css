@@ -46,6 +46,16 @@
   color: #f2645a;
   text-transform: none;
 }
+.base-actions-menu ul li.hide-text i {
+  margin-right: 0;
+}
+.base-actions-menu ul li.hide-text span {
+  display: none;
+  margin-left: 5px;
+}
+.base-actions-menu ul li.hide-text:hover span {
+  display: inline;
+}
 .base-actions-menu ul li a i {
   margin-right: 5px;
 }
@@ -223,6 +233,9 @@
   right: 10px;
   display: inline-block;
   vertical-align: middle;
+}
+.resource-item .hdx-btn-group.hdx-btn-group-fixed {
+  width: 235px;
 }
 .btn.hdx-btn.resource-btn {
   background-color: #888888;
