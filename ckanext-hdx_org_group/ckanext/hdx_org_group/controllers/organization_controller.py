@@ -106,10 +106,13 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         #     context['user_is_admin'] = c.userobj.sysadmin
         #     context['auth_user_obj'] = c.userobj
 
-        q = c.q = request.params.get('q', '')
-        page = request.params.get('page', 1)
-        limit = int(request.params.get('limit', 25))
-        sort_option = request.params.get('sort', 'title asc')
+        try:
+            q = c.q = request.params.get('q', '')
+            page = int(request.params.get('page', 1))
+            limit = int(request.params.get('limit', 25))
+            sort_option = request.params.get('sort', 'title asc')
+        except ValueError:
+            abort(404, 'Page not found')
 
         reset_thumbnails = request.params.get('reset_thumbnails', 'false')
 
