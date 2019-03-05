@@ -9,7 +9,9 @@
     {% if h.check_access('ckanext_showcase_create') %}
       <br/>
       <div class="more">
-        {% link_for _('Add Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='new', class_="btn btn-primary" %}
+        <div class="mTop15">
+          {% link_for _('Add Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='new', class_="btn btn-primary" %}
+        </div>
       </div>
     {% endif %}
 {% endblock %}

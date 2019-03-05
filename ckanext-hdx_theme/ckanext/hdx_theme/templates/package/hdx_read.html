@@ -89,7 +89,11 @@
 
     {% block pre_primary_content2 %}
       {% if pkg.customviz %}
-        {% snippet "indicator/snippets/custom_viz.html", customviz = pkg.customviz %}
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+          <div class="row">
+            {% snippet "indicator/snippets/custom_viz.html", customviz = pkg.customviz %}
+          </div>
+        </div>
       {% endif %}
     {% endblock %}
 </div>
