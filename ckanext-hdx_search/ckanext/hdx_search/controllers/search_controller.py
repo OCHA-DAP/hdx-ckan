@@ -316,7 +316,7 @@ class HDXSearchController(PackageController):
                             c.fields_grouped[param].append(value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
-                                     'ext_hxl', 'ext_showcases']:
+                                     'ext_hxl', 'ext_showcases', 'ext_archived']:
                             featured_filters_set = True
                         search_extras[param] = value
 
@@ -633,7 +633,7 @@ class HDXSearchController(PackageController):
         result['filters_selected'] = False
 
         checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
-                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases']
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive']
 
         for param in checkboxes:
             if param in search_extras:

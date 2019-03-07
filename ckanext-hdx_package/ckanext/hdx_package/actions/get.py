@@ -5,6 +5,12 @@ Created on Sep 02, 2015
 '''
 
 import os
+import dateutil.parser
+import sqlalchemy
+import logging
+import json
+
+from paste.deploy.converters import asbool
 import ckan.logic.schema
 import ckan.logic as logic
 import ckan.model as model
@@ -17,18 +23,11 @@ import ckan.authz as authz
 import ckan.lib.base as base
 import ckan.lib.helpers as h
 
-import sqlalchemy
-import logging
-import json
-
 from ckan.lib import uploader
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
-from paste.deploy.converters import asbool
-
-
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 
@@ -445,6 +444,14 @@ def _additional_hdx_package_show_processing(context, package_dict, check_maintai
             if num_of_showcases > 0:
                 package_dict['has_showcases'] = True
                 package_dict['num_of_showcases'] = num_of_showcases
+
+        if _should_manually_load_property_value(context, package_dict, 'last_modified'):
+            package_dict['last_modified'] = None
+            all_dates = [dateutil.parser.parse(r.get('last_modified', r.get('revision_last_updated')))
+                         for r in package_dict.get('resources', [])
+                         if r.get('last_modified', r.get('revision_last_updated'))]
+            if all_dates:
+                package_dict['last_modified'] = max(all_dates).isoformat()
 
 
 @logic.side_effect_free

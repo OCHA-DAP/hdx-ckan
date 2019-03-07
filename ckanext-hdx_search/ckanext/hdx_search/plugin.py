@@ -101,6 +101,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
         adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
+        adapt_solr_fq('archived', ' +extras_archived:true', ' -extras_archived:true')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
