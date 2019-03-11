@@ -30,6 +30,7 @@ import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 
 _validate = ckan.lib.navl.dictization_functions.validate
@@ -391,17 +392,19 @@ def package_show(context, data_dict):
     return package_dict
 
 
-def _additional_hdx_package_show_processing(context, package_dict, check_maintainer_email=True):
+def _additional_hdx_package_show_processing(context, package_dict, just_for_reindexing=False):
     # added because showcase schema validation is generating "ckan.lib.navl.dictization_functions.Missing"
     if 'tracking_summary' in package_dict and not package_dict.get('tracking_summary'):
         del package_dict['tracking_summary']
     # this shouldn't be executed from showcases
     if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
 
-        if check_maintainer_email:
+        if not just_for_reindexing:
             member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
             if member_list and not member_list.get('is_member'):
                 del package_dict['maintainer_email']
+
+            FreshnessCalculator(package_dict).populate_with_freshness()
 
         for resource_dict in package_dict.get('resources', []):
             _additional_hdx_resource_show_processing(context, resource_dict)

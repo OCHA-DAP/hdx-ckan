@@ -237,7 +237,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'url': [tk.get_validator('hdx_is_url'), tk.get_validator('hdx_convert_list_item_to_extras')],
             },
             'archived': [tk.get_validator('hdx_boolean_string_converter'), tk.get_converter('convert_to_extras')],
-            'review_date': [tk.get_validator('isodate'), tk.get_validator('hdx_isodate_to_string_converter'),
+            'review_date': [tk.get_validator('ignore_missing'),
+                            tk.get_validator('isodate'),
+                            tk.get_validator('hdx_isodate_to_string_converter'),
                             tk.get_converter('convert_to_extras')]
         })
 

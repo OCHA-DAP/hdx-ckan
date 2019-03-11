@@ -39,7 +39,8 @@ class FreshnessCalculator(object):
             review_date = dateutil.parser.parse(reviewed)
             last_change_date = last_modified_date if last_modified_date > review_date else review_date
 
-        return  last_change_date
+        last_change_date = last_change_date.replace(tzinfo=None) if last_change_date else None
+        return last_change_date
 
     def __init__(self, dataset_dict):
         self.surely_not_fresh = True
@@ -49,8 +50,6 @@ class FreshnessCalculator(object):
         try:
             self.modified = FreshnessCalculator.dataset_last_change_date(dataset_dict)
             if self.modified and update_freq and UPDATE_FREQ_INFO.get(update_freq):
-                # if modified.endswith('Z'):
-                #     modified = modified.replace('Z', '')
                 # if '.' not in modified:
                 #     modified += '.000'
                 # self.modified = datetime.datetime.strptime(modified, "%Y-%m-%dT%H:%M:%S.%f")

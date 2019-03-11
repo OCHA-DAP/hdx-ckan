@@ -3,7 +3,7 @@ import requests
 import logging
 import ckan.logic as logic
 
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator, FRESHNESS_PROPERTY
+from ckanext.hdx_package.helpers.freshness_calculator import FRESHNESS_PROPERTY
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +15,9 @@ class DataCompletness(object):
         'start': 0,
         'rows': 500,
         'fl': ['id', 'name', 'title', 'organization',
-               'metadata_modified', 'extras_data_update_frequency']
+               'extras_data_update_frequency',
+               'last_modified', 'review_date'],
+        'ext_compute_freshness': 'true'
     }
 
     def __init__(self, location_code, config_url):
@@ -60,10 +62,9 @@ class DataCompletness(object):
                 if query_string:
                     query_params = {'fq': query_string}
                     query_params.update(self.basic_query_params)
-                    search_result = logic.get_action('package_search')({},query_params)
+                    search_result = logic.get_action('package_search')({}, query_params)
                     ds['datasets'] = search_result.get('results', [])
                     for dataset in ds['datasets']:
-                        FreshnessCalculator(dataset).populate_with_freshness()
                         self.__replace_org_name_with_title(dataset)
                         self.__compute_goodness_flag(dataset, overrides_map)
                         self.__add_general_comments(dataset, overrides_map)
