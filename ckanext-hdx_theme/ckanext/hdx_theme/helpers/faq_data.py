@@ -61,7 +61,13 @@ getting_started = {
                  'Only registered users have the ability to contact the organisation through the request access module. '
                  'The administrator for the contributing organisation can decide whether to accept or deny the request. '
                  'Once the connection is made, HDX is not involved in the decision to share the data. '
-                 'Learn more about HDX Connect <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>. Find all \'by request\' datasets <a target="_blank"  href="https://data.humdata.org/search?ext_requestdata=1&q=&ext_page_size=25">here</a>.',
+                 'Learn more about HDX Connect '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-hdx-connect">here</a>.'
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-hdx-connect" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQY05J7cbuRbbFyFGQ43dhPr6TfVjk0oXfdzqREIyFmkMAfZxjjiWofjhuYYieRvfHUBdRwQWqBpWov/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>',
         },
         {
             'q': 'How do I contact a data contributor?',
@@ -149,7 +155,7 @@ organizations = {
                  'If you have previously created an organisation and no longer see it on the site, this is because you '
                  'have not yet shared a public dataset. Once you share a dataset, your organisation will become active and visible on the site. '
                  'For details on how to upload a dataset, see '
-                 '<a target="_blank" href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_add_a_dataset_-a">"How do I add a dataset?"</a>. ',
+                 '<a target="_blank" href="#auto-faq-Sharing_and_Using_Data-How_do_I_add_a_dataset_-a">"How do I add a dataset?"</a>. ',
 
         },
         {
@@ -191,6 +197,7 @@ sharing_data = {
             'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with '
                  'appropriate privileges) before you can contribute data. If you have data to share, you can either '
                  'request to create a new organisation or ask to join an existing one. (See the <a href="#body-faq-Organisations">Organisations section</a> above.)'
+                 '<br/><br/>'
                  'There are three ways to share data on HDX: '
                  '<br/><br/>'
                  'Public - Data shared publicly is accessible to all users of the HDX platform, whether or not they are '
@@ -202,9 +209,15 @@ sharing_data = {
                  'To make data accessible to HDX users, the contributing organisation needs to change the visibility to public. '
                  '<br/><br/>'
                  'By Request - Organisations can share the metadata of a dataset and grant access to the underlying data when requested by a registered user. '
-                 ' Learn more about the HDX Connect feature <a target="_blank" href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>.'
+                 ' See how to share and request metadata only datasets through '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-hdx-connect-2">these walkthrough slides</a>.'
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-hdx-connect-2" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQY05J7cbuRbbFyFGQ43dhPr6TfVjk0oXfdzqREIyFmkMAfZxjjiWofjhuYYieRvfHUBdRwQWqBpWov/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
                  '<br/><br/>'
-                 'Learn more about how HDX handles sensitive data below.'
+                 'Learn more about how HDX handles <a href="#body-faq-Sensitive_Data">sensitive data below</a>.'
             ,
         },
         {
@@ -223,10 +236,31 @@ sharing_data = {
                  ''
                  '<div class="modal presentation-modal" id="faq-google-embed-1" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vRP0LWovuIaa-sMwZwm8rATZhAO7ahq2IvO3zvHtZxFiQ_r438s8VLvfVraNmit642ETm8uZlC02I6I/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
                  'provide a walkthrough of how to add a dataset. Here are more details on the '
                  '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field.',
+        },
+        {
+            'q': 'Can I just share metadata?',
+            'a': 'Let others know your data is available by publishing your metadata without '
+                 'uploading any file(s) via HDX Connect. Once users request access, you decide what to share. '
+                 '<br/><br/>'
+                 'This is a good option if:'
+                 '<ul>'
+                 '<li>You are in the process of collecting data but you are not finished.</li>'
+                 '<li>Your data contains personally identifiable information.</li>'
+                 '<li>You need to restrict access to your data.</li>'
+                 '</ul>'
+                 'Learn more about HDX Connect through '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-hdx-connect-3">these walkthrough slides</a>. '
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-hdx-connect-3" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQY05J7cbuRbbFyFGQ43dhPr6TfVjk0oXfdzqREIyFmkMAfZxjjiWofjhuYYieRvfHUBdRwQWqBpWov/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
+                 '<a target="_blank" href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">Read this blog</a> '
+                 'to understand the research and rationale behind HDX Connect.'
         },
         {
             'q': 'How can I add links and formatting to my dataset page?',
@@ -272,7 +306,7 @@ sharing_data = {
                  ''
                  '<div class="modal presentation-modal" id="faq-google-embed-2" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQmqnqUg3wQqxWgQgRfwYP9aiqQU8LiIqODYzSJisKHIHf3E5H1xIDqWZJ6nlAjUpbyOKkHzlewhCko/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
                  'provide a walk-through of how to edit a dataset.',
         },
@@ -306,8 +340,38 @@ sharing_data = {
                  ''
                  '<div class="modal presentation-modal" id="faq-google-embed-3" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vS1A1i-fg5PucF0hIRWDc_4_IUC_TXomWho8POCefSYuNHl9wN1SvS3_EM4jOsiWY4XvzZZDzquisgk/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vS1A1i-fg5PucF0hIRWDc_4_IUC_TXomWho8POCefSYuNHl9wN1SvS3_EM4jOsiWY4XvzZZDzquisgk/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>',
+        },
+        {
+            'q': 'How can I check errors in my HXL-tagged spreadsheet?',
+            'a': 'Data Check automatically detects and highlights common humanitarian data errors including validation '
+                 'against <a target="_blank" href="https://public.tableau.com/profile/ocha.field.information.services#!/vizhome/COD-Status_1/DetailedEvaluation">CODs</a> '
+                 'and other vocabularies from your <a target="_blank" href="https://tools.humdata.org/examples/hxl/">HXL-tagged spreadsheet</a>. You can access Data Check from:'
+                 '<ol>'
+                 '<li>HDX via dataset pages (The "Validate with Data Check" option will appear under "More" button under HXL-tagged resources)</li>'
+                 '<li><a target="_blank" href="https://tools.humdata.org/wizard/#datacheck">HDX Tools</a>, for datasets '
+                 'that exist outside of HDX. For this option, you should not use Data Check to process personal or otherwise '
+                 '<a target="_blank" href="https://data.humdata.org/faq#body-faq-Sensitive_Data">sensitive data</a>.</li>'
+                 '</ol>'
+                 'Data uploaded to HDX Tools is not retained within the HDX infrastructure, while data downloaded by HDX '
+                 'Tools from public URLs is cached only as long as necessary for processing.'
+                 '<br/><br/>'
+                 'You can access both versions of Data Check without being a registered user of HDX. For instructions on '
+                 'how to use Data Check, review '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-data-check">these walkthrough slides</a>.'
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-data-check" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQmqK3qgUchHmZ5YQ8M-ktJ0UccIDeBeuqAqjIAbZ2HIXfmZ5OdqFRb7AM1YJI6N1vmimBAbOVa7QMe/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
+                 '<br/><br/>'
+                 'Data Check uses a generic schema that detects many kinds of common errors like possible spelling '
+                 'mistakes or atypical numeric values, but in some cases, an organisation will want to validate against '
+                 'its own more-specific rules. In that case, you can write your own, custom HXL schema and validate using '
+                 'the <a target="_blank" href="https://proxy.hxlstandard.org/">HXL Proxy</a> (Data Check\'s backend engine) '
+                 'directly. Information is available on these pages in the '
+                 'HXL Proxy wiki: <a target="_blank" href="">HXL schemas</a>, <a target="_blank" href="">Validation page</a>, and <a target="_blank" href="">Validation service</a>.',
         },
         {
             'q': 'What are the recommended data formats?',
@@ -379,7 +443,7 @@ sharing_data = {
                  ''
                  '<div class="modal presentation-modal" id="faq-google-embed-4" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/17ihVuVlVfw3K2_L9u4cL-Lp-RaZNcBw6BJgxGjbWu4o/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vTDF-Dg5MNt9XobuQo4TPlSQ7FkRl7ksZXC6CQ2i-YYOjvoUITQgtvqTIidhr1ewWFG61kX-ogvTYFf/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
                  'You can click on \'Add Data\' and choose the option to import files from \'Google Drive\'. A \'Google '
                  'Drive\' pop-up will show and help you choose the file/files from your account. The files will not be '
@@ -598,7 +662,7 @@ hxl = {
                  ''
                  '<div class="modal presentation-modal" id="faq-google-embed-5" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/12MVgXAbxL_8eLYz2SxZe3wJrGNjBaX8A231Wed7avj8/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vR-gSY38muZE9SA27NjAcueKoobhKi_Dc3jN4BIDPTp7FJjOCiWIkhPU4ZkPyHvfR0pBdNpfswmKZ4p/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
 
         },
@@ -637,7 +701,7 @@ hxl = {
                  ''
                  '<div class="modal presentation-modal" id="faq-google-embed-6" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/1AiRDyEBe_56_b8KL0r4_a5W96Q3ZE2m56IT-r29nZFo/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vQmqK3qgUchHmZ5YQ8M-ktJ0UccIDeBeuqAqjIAbZ2HIXfmZ5OdqFRb7AM1YJI6N1vmimBAbOVa7QMe/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
 
         },
@@ -649,7 +713,7 @@ data_policy = {
     'questions': [
         {
             'q': 'How does HDX define sensitive data?',
-            'a': 'For the purpose of sharing data through HDX, we have developed the following categories to '
+            'a': 'For the purpose of sharing data through HDX, we have <a target="_blank" href="https://centre.humdata.org/three-ways-to-share-data-on-hdx/">developed the following categories</a> to '
                  'communicate data sensitivity: '
                  '<ol>'
                  '<li>Non-Sensitive - This includes datasets containing country statistics, roadmaps, weather data and '
@@ -682,7 +746,7 @@ data_policy = {
                  'In cases where we suspect that survey data may have a high risk of re-identification of affected people, we run '
                  'an internal statistical disclosure control process using SDCmicro. If the risk level is high (>2%), '
                  'HDX will make the dataset private and notify the data contributor who can then further anonymize the data or '
-                 'share only the metadata through HDX Connect.'
+                 'share only the metadata through <a href="#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a">HDX Connect</a>.'
                  '<br/><br/>'
                  'We invite HDX users to notify us should they become aware of this type of data being shared through the site. '
                  'Data contributors can request HDX to analyze the risk of data before it is shared. '

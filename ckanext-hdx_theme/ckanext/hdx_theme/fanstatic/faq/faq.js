@@ -129,19 +129,22 @@
         //   showPresentationModal("#learn-add-viz-dataset");
         // });
 
-        var clickCallbackCreator = function (index) {
+        var clickCallbackCreator = function (sufix) {
           var callback = function () {
-            var strDiv = "#faq-google-embed-" + index;
+            var strDiv = "#faq-google-embed-" + sufix;
             showPresentationModal(strDiv);
           };
           return callback;
         };
 
         var nrEmbeds = $('.faq-google-embed-marker');
-        for (var i = 1; i <= nrEmbeds.length; i++) {
-          var strLnk = "#faq-google-embed-link-" + i;
-
-          $(strLnk).click(clickCallbackCreator(i));
+        var faqEmbedPrefix = "faq-google-embed-link-";
+        for (var i = 0; i < nrEmbeds.length; i++) {
+          var embedLinkEl = nrEmbeds[i];
+          var embedLinkId = $(embedLinkEl).attr("id");
+          var embedLinkSufix = embedLinkId.substr(faqEmbedPrefix.length);
+          console.log(embedLinkSufix);
+          $(embedLinkEl).click(clickCallbackCreator(embedLinkSufix));
 
       }
 
