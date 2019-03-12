@@ -371,7 +371,7 @@ sharing_data = {
                  'its own more-specific rules. In that case, you can write your own, custom HXL schema and validate using '
                  'the <a target="_blank" href="https://proxy.hxlstandard.org/">HXL Proxy</a> (Data Check\'s backend engine) '
                  'directly. Information is available on these pages in the '
-                 'HXL Proxy wiki: <a target="_blank" href="">HXL schemas</a>, <a target="_blank" href="">Validation page</a>, and <a target="_blank" href="">Validation service</a>.',
+                 'HXL Proxy wiki: <a target="_blank" href="https://github.com/HXLStandard/hxl-proxy/wiki/HXL-schemas">HXL schemas</a>, <a target="_blank" href="https://github.com/HXLStandard/hxl-proxy/wiki/Validation-page">Validation page</a>, and <a target="_blank" href="https://github.com/HXLStandard/hxl-proxy/wiki/Validation-service">Validation service</a>.',
         },
         {
             'q': 'What are the recommended data formats?',
