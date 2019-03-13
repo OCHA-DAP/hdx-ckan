@@ -227,19 +227,10 @@ def general_not_empty_if_other_selected(other_key, other_compare_value):
     return not_empty_if_other_selected
 
 
-def hdx_convert_to_timestamp(key, data, errors, context):
+def hdx_convert_values_to_boolean_for_dataset_preview(key, data, errors, context):
     '''
-    value set to true will be changed to timestamp, otherwise none
+    convert values to boolean and also sets the dataset_preview to false for the other resources
     '''
-
-    # value = data.get(key)
-    # if value and value in ('1', 1):
-    #     data[key] = datetime.datetime.utcnow().isoformat()
-    # elif value and value in ('0', 0):
-    #     data[key] = None
-    # # else:
-    # #     data[key] = None
-    # return data[key]
 
     value = data.get(key)
     if value in (True, False, 'True', 'False'):
