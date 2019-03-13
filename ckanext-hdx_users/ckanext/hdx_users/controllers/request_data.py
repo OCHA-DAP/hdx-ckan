@@ -40,7 +40,7 @@ def _get_email_configuration(
         user_name, data_owner, dataset_name, email, message, organization,
         data_maintainers, data_maintainers_ids, only_org_admins=False):
     schema = logic.schema.update_configuration_schema()
-    avaiable_terms = ['{name}', '{data_maintainers}', '{dataset}',
+    available_terms = ['{name}', '{data_maintainers}', '{dataset}',
                       '{organization}', '{message}', '{email}']
     new_terms = [user_name, data_maintainers, dataset_name, organization,
                  message, email]
@@ -62,16 +62,16 @@ def _get_email_configuration(
     if '{message}' not in email_body and not email_body and not email_footer:
         email_body += message
         return email_body
-    for i in range(0, len(avaiable_terms)):
-        if avaiable_terms[i] == '{dataset}' and new_terms[i]:
+    for i in range(0, len(available_terms)):
+        if available_terms[i] == '{dataset}' and new_terms[i]:
             url = toolkit.url_for(
                                     controller='package',
                                     action='read',
                                     id=new_terms[i], qualified=True)
             new_terms[i] = '<a href="' + url + '">' + new_terms[i] + '</a>'
-        elif avaiable_terms[i] == '{organization}' and is_user_sysadmin:
+        elif available_terms[i] == '{organization}' and is_user_sysadmin:
             new_terms[i] = config.get('ckan.site_title')
-        elif avaiable_terms[i] == '{data_maintainers}':
+        elif available_terms[i] == '{data_maintainers}':
             if len(new_terms[i]) == 1:
                 new_terms[i] = new_terms[i][0]
             else:
@@ -85,10 +85,13 @@ def _get_email_configuration(
                         maintainers += ', '
 
                 new_terms[i] = maintainers
-
-        email_header = email_header.replace(avaiable_terms[i], new_terms[i])
-        email_body = email_body.replace(avaiable_terms[i], new_terms[i])
-        email_footer = email_footer.replace(avaiable_terms[i], new_terms[i])
+        elif available_terms[i] == '{email}':
+            # display a mask of the email
+            email_list = new_terms[i].split('@')
+            new_terms[i] = "@".join([email_list[0].replace(email_list[0][1:len(email_list[0])-1], '********'),email_list[1]])
+        email_header = email_header.replace(available_terms[i], new_terms[i])
+        email_body = email_body.replace(available_terms[i], new_terms[i])
+        email_footer = email_footer.replace(available_terms[i], new_terms[i])
 
     if only_org_admins:
         owner_org = _get_action('package_show',
