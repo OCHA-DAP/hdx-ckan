@@ -116,7 +116,7 @@ ul.hdx-bs3 {
 .popup label:after {
   content: "";
 }
-.popup .content {
+.popup .content.content-white {
   background-color: #FFFFFF;
 }
 .preview-container {

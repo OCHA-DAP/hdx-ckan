@@ -94,7 +94,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         result = self.app.post(
             test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert '200' in str(result)
-        assert '<a class="heading"  title="hdx_test.csv">' in str(result)
+        assert '<a class="heading" title="hdx_test.csv">' in str(result)
 
     def test_hdx_package_delete_redirect(self):
 

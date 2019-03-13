@@ -4,7 +4,7 @@
  */
 .org-logo-large {
   width: 185px;
-  height: 100px;
+  height: 100%;
   text-align: center;
 }
 .org-logo-large img {

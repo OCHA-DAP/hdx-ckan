@@ -6,15 +6,16 @@ import logging
 from string import lower
 
 import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
-from ckanext.hdx_theme.util.mail import simple_validate_email
-from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
-import ckanext.hdx_package.helpers.custom_validator as vd
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
+from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
+from ckanext.hdx_theme.util.mail import simple_validate_email
 from pylons import config
 
+import ckan.authz as authz
 import ckan.authz as new_authz
 import ckan.lib.base as base
 import ckan.lib.datapreview as datapreview
@@ -23,8 +24,6 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.plugins
 import ckan.logic as logic
 import ckan.model as model
-import ckan.authz as authz
-
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckan.controllers.home import CACHE_PARAMETERS
@@ -774,6 +773,12 @@ class DatasetController(PackageController):
         if 'resources' in c.pkg_dict:
             _dataset_preview = c.pkg_dict.get('dataset_preview', vd._DATASET_PREVIEW_FIRST_RESOURCE)
         try:
+            org_dict = c.pkg_dict.get('organization') or {}
+            org_id = org_dict.get('id', None)
+            org_info_dict = self._get_org_extras(org_id)
+            if org_info_dict.get('custom_org', False):
+                self._process_customizations(org_info_dict.get('customization', None))
+
             if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
                 view_enabled_resources = [r for r in c.pkg_dict['resources'] if r.get('no_preview') != 'true']
                 dataset_preview_enabled_list = []
@@ -792,7 +797,7 @@ class DatasetController(PackageController):
                         continue
                     if _res_view.get('type') == 'hdx_geo_preview':
                         c.shapes = json.dumps(DatasetController.process_shapes(c.pkg_dict['resources'], r.get('id')))
-                        return render('indicator/hdx-shape-read.html')
+                        return render('package/hdx-read-shape.html')
                     if _res_view.get('type') == 'hdx_hxl_preview':
                         c.default_view = _res_view
                         has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': c.pkg_dict['id']})
@@ -810,18 +815,13 @@ class DatasetController(PackageController):
                             #     'hxl_preview_mode': 'edit'
                             # })
                         }
-                        return render('indicator/hdx-hxl-read.html')
+                        return render('package/hdx-read-hxl.html')
 
             cps_off = config.get('hdx.cps.off', 'false')
 
             if cps_off == 'false' and int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
-                org_dict = c.pkg_dict.get('organization') or {}
-                org_id = org_dict.get('id', None)
-                org_info_dict = self._get_org_extras(org_id)
-                if org_info_dict.get('custom_org', False):
-                    self._process_customizations(org_info_dict.get('customization', None))
                 if org_info_dict.get('custom_org', False):
                     return render('package/custom_hdx_read.html')
                 return render('package/hdx_read.html')

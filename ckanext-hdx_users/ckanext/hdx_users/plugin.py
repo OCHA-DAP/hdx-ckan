@@ -130,10 +130,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard_datasets',
                     ckan_icon='sitemap')
-        map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='dashboard_visualizations',
-                    ckan_icon='sitemap')
+        # map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
+        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+        #             action='dashboard_visualizations',
+        #             ckan_icon='sitemap')
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
@@ -145,8 +145,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     action='contribute')
         map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contact_hdx')
-        map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='save_mapexplorer_config')
+        # map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        #             action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
         map.connect('/user/edit', controller='user', action='edit')
         map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
@@ -215,10 +215,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard_datasets',
                     ckan_icon='sitemap')
-        map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='dashboard_visualizations',
-                    ckan_icon='sitemap')
+        # map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
+        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+        #             action='dashboard_visualizations',
+        #             ckan_icon='sitemap')
         return map
 
     def get_actions(self):

@@ -148,7 +148,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
-        map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
+        # map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
@@ -225,7 +225,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_organisation_list': hdx_helpers.hdx_organisation_list,
             'hdx_tag_list': hdx_helpers.hdx_tag_list,
             'hdx_frequency_list': hdx_helpers.hdx_frequency_list,
-            'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
+            # 'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
             'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list,
             'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
             'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,

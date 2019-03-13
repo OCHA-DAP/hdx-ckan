@@ -492,7 +492,7 @@ def _should_manually_load_property_value(context, data_dict, property_name):
     use_cache = context.get('use_cache', True)
     current_value = data_dict.get(property_name)
 
-    return not (use_cache and current_value)
+    return not (use_cache and current_value is not None)
 
 
 @logic.side_effect_free

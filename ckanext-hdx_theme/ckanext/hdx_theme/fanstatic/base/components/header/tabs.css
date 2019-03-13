@@ -22,6 +22,9 @@
 .nav-tabs {
   border-bottom: 3px solid #eeeeee;
 }
+.nav-tabs.nav-tabs-upper {
+  text-transform: uppercase;
+}
 .nav-tabs.nav-tabs-gray {
   border-bottom-color: #cccccc;
 }
