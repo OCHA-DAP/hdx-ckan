@@ -244,7 +244,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
-                'dataset_preview_enabled': [tk.get_validator('hdx_convert_to_timestamp'), tk.get_validator('ignore_missing')]
+                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'), tk.get_validator('ignore_missing')]
             }
         )
 
@@ -360,7 +360,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_show_subnational': vd.hdx_show_subnational,
             'hdx_find_package_maintainer': vd.hdx_find_package_maintainer,
             'hdx_dataset_preview_validator': vd.hdx_dataset_preview_validator,
-            'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp,
+            'hdx_convert_values_to_boolean_for_dataset_preview': vd.hdx_convert_values_to_boolean_for_dataset_preview,
             'hdx_convert_list_item_to_extras': vd.hdx_convert_list_item_to_extras,
             'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
             'hdx_is_url':  vd.hdx_is_url,
