@@ -6,12 +6,8 @@ Created on March 19, 2019
 
 '''
 import logging as logging
-import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckan.tests.legacy as tests
-import json
-import ckanext.hdx_search.actions.actions as actions
 import ckan.logic as logic
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -25,6 +21,7 @@ page_elnino = {
     'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'ongoing',
+    'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
@@ -34,6 +31,18 @@ page_elpico = {
     'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'ongoing',
+    'state': 'active',
+    'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
+}
+
+page_elgroupo = {
+    'name': 'elgroupo',
+    'title': 'El Groupo',
+    'groups': ['roger'],
+    'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+    'type': 'event',
+    'status': 'ongoing',
+    'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
@@ -106,3 +115,28 @@ class TestHDXPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         assert True
+
+    def test_page_with_groups(self):
+        context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        page_dict = self._get_action('page_create')(context_sysadmin, page_elgroupo)
+
+        try:
+            self._get_action('page_create')(context_sysadmin, page_elgroupo)
+        except Exception, ex:
+            log.info(ex)
+            assert True
+
+        elgroupo = self._get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+
+        page_group_list = self._get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('id')})
+        assert page_group_list
+
+        page_list = self._get_action('page_list')(context_sysadmin, {})
+        assert page_list
+
+        grp_dict = self._get_action('group_show')(context_sysadmin, {'id':'roger'})
+        group_page_list = self._get_action('group_page_list')(context_sysadmin, {'id': grp_dict.get('id')})
+        assert group_page_list
+
