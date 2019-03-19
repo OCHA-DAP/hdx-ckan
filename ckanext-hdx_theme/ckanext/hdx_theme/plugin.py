@@ -260,7 +260,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
             'hdx_general_statistics': hdx_actions.hdx_general_statistics,
-            'hdx_user_statistics': hdx_actions.hdx_user_statistics
+            'hdx_user_statistics': hdx_actions.hdx_user_statistics,
+            'hdx_organization_statistics': hdx_actions.hdx_organization_statistics,
         }
 
     def get_auth_functions(self):
