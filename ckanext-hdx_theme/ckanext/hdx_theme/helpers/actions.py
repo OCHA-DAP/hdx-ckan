@@ -757,3 +757,23 @@ def get_activities_by_user_by_date(user_id, start_date=None, end_date=None):
         result = q.count()
     return result
 
+
+@logic.side_effect_free
+def hdx_organization_statistics(context, data_dict):
+    _check_access('hdx_user_statistics', context, data_dict)
+
+    org_list = tk.get_action('organization_list')(context, {"all_fields": True})
+
+    query = model.Session.query(model.Group.id)
+    query = query.filter(model.Group.state != 'active')
+    query = query.filter(model.Group.is_organization == True)
+    query = query.filter(model.Group.type == 'organization')
+    orgs = query.all()
+    inactive_org_list = []
+    for org in orgs:
+        inactive_org_list.append(logic.get_action('organization_show')(context, {'id': org.id, 'include_extras': True}))
+
+    return {
+        'active_organizations': org_list,
+        'inactive_organizations': inactive_org_list
+    }
