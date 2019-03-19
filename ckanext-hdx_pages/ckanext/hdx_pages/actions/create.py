@@ -4,8 +4,6 @@ import ckanext.hdx_pages.model as pages_model
 import ckanext.hdx_pages.helpers.dictize as dictize
 import ckanext.hdx_pages.actions.validation as validation
 
-from ckan.common import _
-
 
 def page_create(context, data_dict):
     model = context['model']
