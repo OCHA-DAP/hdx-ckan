@@ -6,6 +6,7 @@ Created on Apr 11, 2014
 
 import bisect
 import re
+import datetime
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
@@ -322,3 +323,9 @@ def hdx_boolean_string_converter(value, context):
     if value.lower() in ['true', 'yes', 't', 'y', '1']:
         return "true"
     return "false"
+
+
+def hdx_isodate_to_string_converter(value, context):
+    if isinstance(value, datetime.datetime):
+        return value.isoformat()
+    return None

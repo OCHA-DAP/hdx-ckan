@@ -9,7 +9,6 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
 from ckanext.hdx_theme.util.mail import simple_validate_email
@@ -653,7 +652,6 @@ class DatasetController(PackageController):
                            'auth_user_obj': c.userobj}
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
-                FreshnessCalculator(c.pkg_dict).populate_with_freshness()
             else:
                 abort(404, _('Package type is not dataset'))
         except (NotFound, NotAuthorized):

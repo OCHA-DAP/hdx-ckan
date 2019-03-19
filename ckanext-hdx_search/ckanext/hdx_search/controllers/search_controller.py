@@ -23,7 +23,6 @@ from ckan.controllers.api import CONTENT_TYPES
 
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -316,7 +315,7 @@ class HDXSearchController(PackageController):
                             c.fields_grouped[param].append(value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
-                                     'ext_hxl', 'ext_showcases']:
+                                     'ext_hxl', 'ext_showcases', 'ext_archived']:
                             featured_filters_set = True
                         search_extras[param] = value
 
@@ -422,7 +421,8 @@ class HDXSearchController(PackageController):
             'rows': limit,
             'start': (page - 1) * limit,
             'sort': sort_by,
-            'extras': search_extras
+            'extras': search_extras,
+            'ext_compute_freshness': 'true'
         }
 
         include_private = context.pop('ignore_capacity_check', None)
@@ -467,8 +467,6 @@ class HDXSearchController(PackageController):
             if dataset.get('organization'):
                 dataset['batch_url'] = h.url_for('organization_read', id=dataset['organization'].get('name'),
                                              ext_batch=dataset.get('batch'))
-
-            dataset['is_fresh'] = FreshnessCalculator(dataset).is_fresh()
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
@@ -633,7 +631,7 @@ class HDXSearchController(PackageController):
         result['filters_selected'] = False
 
         checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
-                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases']
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive']
 
         for param in checkboxes:
             if param in search_extras:
