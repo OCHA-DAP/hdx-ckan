@@ -199,6 +199,9 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             self._get_action('page_create')(context_sysadmin, page_elpico)
         except logic.ValidationError:
             assert True
+        except Exception, ex:
+            log.info(ex)
+            assert True
 
 
     def test_page_show(self):
@@ -213,6 +216,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             self._get_action('page_show')(context, {'id': page.get('id')})
         except Exception, ex:
+            log.info(ex)
             assert True
 
 
