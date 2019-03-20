@@ -140,3 +140,19 @@ class TestHDXPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         group_page_list = self._get_action('group_page_list')(context_sysadmin, {'id': grp_dict.get('id')})
         assert group_page_list
 
+        try:
+            page_elgroupo['name'] = 'elgroupo2'
+            page_elgroupo['groups'] = [grp_dict.get('id'), grp_dict.get('id')]
+            self._get_action('page_create')(context_sysadmin, page_elgroupo)
+        except Exception, ex:
+            log.info(ex)
+            assert True
+
+        try:
+            page_elgroupo['name'] = 'elgroupo3'
+            page_elgroupo['title'] = 'None'
+            page_elgroupo['groups'] = [grp_dict.get('id')]
+            self._get_action('page_create')(context_sysadmin, page_elgroupo)
+        except Exception, ex:
+            log.info(ex)
+            assert True
