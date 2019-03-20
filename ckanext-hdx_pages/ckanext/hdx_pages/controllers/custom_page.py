@@ -290,6 +290,7 @@ class PagesController(HDXSearchController):
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
                 }
                 sections.append(section)
+
         page_dict = {"name": request.params.get("name"),
                      "title": request.params.get("title"),
                      "type": request.params.get("type"),

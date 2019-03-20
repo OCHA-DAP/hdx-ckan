@@ -113,6 +113,9 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'hdx_page_ongoing' in page.body
         assert 'field_name' in page.body
 
+
+
+
     def test_page_edit(self):
 
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
