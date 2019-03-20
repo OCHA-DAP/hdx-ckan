@@ -16,6 +16,7 @@ def page_show(context, data_dict):
     :return: dictized page
     :rtype: dict
     '''
+    logic.check_access('page_show', context, data_dict)
 
     page = pages_model.Page.get_by_id(id=data_dict['id'])
     if page is None:
