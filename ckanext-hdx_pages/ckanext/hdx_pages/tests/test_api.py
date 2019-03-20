@@ -46,6 +46,17 @@ page_elgroupo = {
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
+page_eldeleted = {
+    'name': 'eldeleted',
+    'title': 'El Deleted',
+    'groups': ['roger'],
+    'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+    'type': 'event',
+    'status': 'archive',
+    'state': 'deleted',
+    'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
+}
+
 
 class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
@@ -85,11 +96,19 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'ongoing' == elnino.get('status')
         assert 'https://data.humdata.org/dataset/wfp-and-fao-overview' in elnino.get('sections')
 
+        try:
+            self._get_action('page_update')(context_sysadmin, {'id': page_dict.get('id')})
+        except Exception, ex:
+            assert True
 
+        grp_dict = self._get_action('group_show')(context_sysadmin, {'id': 'roger'})
         new_page_dict = self._get_action('page_update')(context_sysadmin, {'name': page_dict.get('name'),
                                                                            'id': page_dict.get('id'),
                                                                            'title': page_dict.get('title'),
-                                                                           'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'})
+                                                                           'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+                                                                           'groups': [grp_dict.get('id')]
+                                                                           }
+                                                        )
         assert new_page_dict
         assert 'El Pico' in new_page_dict.get('description')
 
@@ -106,6 +125,20 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             self._get_action('page_delete')(context, {'id': page_dict.get('id') or page_dict.get('name')})
         except logic.NotAuthorized:
+            assert True
+
+        try:
+            self._get_action('page_update')(context_sysadmin, {'id': 'nopageid'})
+        except logic.NotFound:
+            assert True
+        except logic.ValidationError:
+            assert True
+
+        try:
+            self._get_action('page_delete')(context_sysadmin, {'id': 'nopageid'})
+        except logic.NotFound:
+            assert True
+        except logic.ValidationError:
             assert True
 
         self._get_action('page_delete')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
@@ -157,7 +190,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             log.info(ex)
             assert True
 
-    def test_page_with_groups(self):
+    def test_validation_page(self):
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
@@ -166,3 +199,20 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             self._get_action('page_create')(context_sysadmin, page_elpico)
         except logic.ValidationError:
             assert True
+
+
+    def test_page_show(self):
+        context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        page = self._get_action('page_create')(context_sysadmin, page_eldeleted)
+
+        eldeleted = self._get_action('page_show')(context_sysadmin, {'id': page.get('id')})
+        assert 'deleted' == eldeleted.get('state')
+
+        try:
+            self._get_action('page_show')(context, {'id': page.get('id')})
+        except Exception, ex:
+            assert True
+
+
