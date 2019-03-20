@@ -56,8 +56,19 @@ page_dashbo = {
     'groups': ['roger'],
     'description': 'El Dashbo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'dashboards',
-    'status': 'archive',
+    'status': 'archived',
     'state': 'active',
+    'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
+}
+
+page_eldeleted = {
+    'name': 'eldeleted',
+    'title': 'El Deleted',
+    'groups': ['roger'],
+    'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+    'type': 'event',
+    'status': 'archived',
+    'state': 'deleted',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
@@ -161,11 +172,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         elnino_result = self._get_url(url, user.apikey)
         assert '200' in elnino_result.status
 
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards',
+        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                        action='read_dashboards',
                         id=eldashbo.get('id'))
         eldashbo_result = self._get_url(url, user.apikey)
         assert '200' in eldashbo_result.status
-
 
         try:
             url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',
@@ -173,4 +184,52 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             eldashbo_result = self._get_url(url, user.apikey)
         except Exception, ex:
             assert '404' in ex.message
+            assert True
+
+    def test_page_delete(self):
+
+        context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        try:
+            eldeleted_dict = self._get_action('page_create')(context_sysadmin, page_eldeleted)
+            assert eldeleted_dict
+            assert 'El Nino' in eldeleted_dict.get('description')
+            assert 'Lorem Ipsum is simply dummy text' in eldeleted_dict.get('description')
+        except Exception, ex:
+            # page already exists
+            assert True
+
+        eldeleted_page = self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
+        context['user'] = 'tester'
+        user = model.User.by_name('tester')
+        try:
+            url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                            action='delete',
+                            id=eldeleted_page.get('id'))
+            self._get_url(url, user.apikey)
+        except logic.NotAuthorized:
+            assert True
+
+        context['user'] = 'testsysadmin'
+        user = model.User.by_name('testsysadmin')
+
+        try:
+            url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                            action='delete',
+                            id='nopageid')
+            self._get_url(url, user.apikey)
+        except logic.NotFound:
+            assert True
+
+        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                        action='delete',
+                        id=eldeleted_page.get('id'))
+        result = self._get_url(url, user.apikey)
+        assert '200' in result.status
+
+        try:
+            self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
+            assert False
+        except logic.NotFound:
             assert True
