@@ -48,7 +48,7 @@ class PagesController(HDXSearchController):
         try:
             check_access('page_create', context, {})
         except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
+            abort(404, _('Page not found'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
@@ -62,7 +62,7 @@ class PagesController(HDXSearchController):
                 try:
                     check_access('page_create', context, {})
                 except NotAuthorized:
-                    abort(403, _('Not authorized to see this page'))
+                    abort(404, _('Page not found'))
                 except Exception, e:
                     error_summary = e.error_summary
                     return self.error_message(error_summary)
@@ -93,7 +93,7 @@ class PagesController(HDXSearchController):
         try:
             check_access('page_update', context, {})
         except NotAuthorized:
-            abort(403, _('Not authorized to edit this page'))
+            abort(404, _('Page not found'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
@@ -107,7 +107,7 @@ class PagesController(HDXSearchController):
                 try:
                     check_access('page_update', context, {})
                 except NotAuthorized:
-                    abort(403, _('Not authorized to edit this page'))
+                    abort(404, _('Page not found'))
                 except Exception, e:
                     error_summary = e.error_summary
                     return self.error_message(error_summary)

@@ -47,7 +47,7 @@ page_elgroupo = {
 }
 
 
-class TestHDXPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
@@ -63,7 +63,7 @@ class TestHDXPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXPage, cls)._create_test_data(create_datasets=True, create_members=True)
+        super(TestHDXApiPage, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_page_api(self):
 
@@ -155,4 +155,14 @@ class TestHDXPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             self._get_action('page_create')(context_sysadmin, page_elgroupo)
         except Exception, ex:
             log.info(ex)
+            assert True
+
+    def test_page_with_groups(self):
+        context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        page_elpico['name'] = None
+        try:
+            self._get_action('page_create')(context_sysadmin, page_elpico)
+        except logic.ValidationError:
             assert True
