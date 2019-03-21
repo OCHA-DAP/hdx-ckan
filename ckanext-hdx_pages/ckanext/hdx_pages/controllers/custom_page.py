@@ -59,10 +59,6 @@ class PagesController(HDXSearchController):
         if request.POST and state and not data:
 
             if state:
-                try:
-                    check_access('page_create', context, {})
-                except NotAuthorized:
-                    abort(404, _('Page not found'))
 
                 page_dict = self._populate_sections()
 
