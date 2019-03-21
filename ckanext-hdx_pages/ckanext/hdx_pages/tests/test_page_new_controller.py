@@ -68,7 +68,6 @@ class TestHDXPageController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_page_create(self):
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
         user = model.User.by_name('tester')
         user.email = 'test@test.com'
