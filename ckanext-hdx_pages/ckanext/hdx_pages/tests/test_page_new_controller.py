@@ -101,7 +101,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         elnino = self._get_action('page_show')(context, {'id': 'elnino'})
         assert elnino
         assert 'El Nino Lorem Ipsum' in elnino.get('title')
-        assert 'elnino' in elnino.get('title')
+        assert 'elnino' in elnino.get('name')
 
         del post_params['name']
         try:
