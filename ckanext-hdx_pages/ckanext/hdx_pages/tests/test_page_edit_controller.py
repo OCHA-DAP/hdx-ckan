@@ -111,6 +111,6 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         del post_params['name']
         try:
-            res = self.app.post('/page/new', params=post_params, extra_environ=auth)
+            res = self.app.post('/page/edit/'+page_elnino.get('name'), params=post_params, extra_environ=auth)
         except Exception, ex:
             assert True
