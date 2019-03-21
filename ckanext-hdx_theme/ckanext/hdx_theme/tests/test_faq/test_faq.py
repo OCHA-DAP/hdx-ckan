@@ -6,7 +6,7 @@ Created on March 21, 2019
 
 import unicodedata
 import logging as logging
-
+import mock
 import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
@@ -23,23 +23,40 @@ contact_form = {
     'faq-mesg': 'my question',
 }
 
-class TestFaqController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestFaqController(hdx_test_base.HdxBaseTest):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
+    # @classmethod
+    # def _load_plugins(cls):
+    #     try:
+    #         # hdx_pages hdx_package hdx_search hdx_org_group
+    #         hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
+    #     except Exception as e:
+    #         log.warn('Module already loaded')
+    #         log.info(str(e))
 
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
 
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestFaqController, cls)._create_test_data(create_datasets=False, create_members=True)
+    @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
+    def test_faq_contact_us(self, mocked_mail_recipient):
+        # context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        # context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        # user = model.User.by_name('tester')
+        # user.email = 'test@test.com'
+        # auth = {'Authorization': str(user.apikey)}
+
+        # post_params = self._get_page_post_param()
+
+        try:
+            res = self.app.post('/faq/contact_us', params=contact_form)
+        except Exception, ex:
+            assert False
+        assert '200 OK' in res.status
+        assert "success" in res.body and "true" in res.body
+        assert True
+
 
 
 
