@@ -247,7 +247,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
             # 'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
-            'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
+            # 'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
             # 'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             # 'hdx_user_show': hdx_actions.hdx_user_show,
@@ -289,7 +289,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         return {
             'hdx_basic_user_info': auth.hdx_basic_user_info,
             'group_member_create': auth.group_member_create,
-            'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+            # 'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
             'invalidate_cache_for_groups': auth.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,

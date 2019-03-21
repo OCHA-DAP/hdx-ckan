@@ -1,13 +1,60 @@
-# import logging
-# import ckan.plugins.toolkit as tk
-# import ckan.lib.dictization.model_dictize as model_dictize
-#
-# import ckan.logic as logic
-#
-# log = logging.getLogger(__name__)
-# _check_access = tk.check_access
-# _get_or_bust = tk.get_or_bust
-# NotFound = logic.NotFound
+import logging
+import ckan.plugins.toolkit as tk
+import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.logic as logic
+import pylons.configuration as configuration
+import ckanext.hdx_theme.util.mail as hdx_mail
+import datetime
+
+from pylons import config
+from ckan.common import c, _
+
+log = logging.getLogger(__name__)
+_check_access = tk.check_access
+_get_or_bust = tk.get_or_bust
+NotFound = logic.NotFound
+
+
+def hdx_send_new_org_request(context, data_dict):
+    _check_access('hdx_send_new_org_request', context, data_dict)
+
+    email = config.get('hdx.orgrequest.email', None)
+    if not email:
+        email = 'hdx@un.org'
+    display_name = 'HDX Feedback'
+
+    ckan_username = c.user
+    ckan_email = ''
+    if c.userobj:
+        ckan_email = c.userobj.email
+
+    subject = _('New organisation request:') + ' ' \
+              + data_dict.get('name')
+    body = _('<h3>New organisation request </h3><br/>' \
+             'Organisation Name: {org_name}<br/>' \
+             'Organisation Description: {org_description}<br/>' \
+             'Organisation Data Description: {org_description_data}<br/>' \
+             'Work email: {org_work_email}<br/>' \
+             'Organisation URL: {org_url}<br/>' \
+             'Organisation Type: {hdx_org_type}<br/>' \
+             'Organisation Acronym: {org_acronym}<br/>' \
+             'Person requesting: {person_name}<br/>' \
+             'Person\'s email: {person_email}<br/>' \
+             'Person\'s ckan username: {ckan_username}<br/>' \
+             'Person\'s ckan email: {ckan_email}<br/>' \
+             'Request time: {request_time}<br/>' \
+             '(This is an automated mail)<br/><br/>' \
+             '').format(org_name=data_dict.get('name',''), org_description=data_dict.get('description',''),
+                        org_description_data=data_dict.get('description_data',''),
+                        org_work_email=data_dict.get('work_email', ''),
+                        org_url=data_dict.get('org_url',''), org_acronym=data_dict.get('acronym',''),
+                        hdx_org_type=data_dict.get('org_type',''),
+                        person_name=data_dict.get('your_name',''),
+                        person_email=data_dict.get('your_email',''),
+                        ckan_username=ckan_username, ckan_email=ckan_email,
+                        request_time=datetime.datetime.now().isoformat())
+    if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
+        hdx_mail.send_mail([{'display_name': display_name, 'email': email}], subject, body)
 
 # replaced with hdx_user_show from actions.py from hdx_theme
 # def hdx_user_show(context, data_dict):
