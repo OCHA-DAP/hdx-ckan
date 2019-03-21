@@ -4,6 +4,7 @@ import logging
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import pylons.configuration as configuration
 import requests
+import pylons.config as config
 from ckanext.hdx_theme.helpers.faq_data import faq_data
 from ckanext.hdx_theme.util.mail import simple_validate_email
 
@@ -70,9 +71,11 @@ class FaqController(base.BaseController):
             msg = request.params.get('faq-msg')
             hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
 
-            captcha_response = request.params.get('g-recaptcha-response')
-            if not self.is_valid_captcha(response=captcha_response):
-                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+            if not test:
+                captcha_response = request.params.get('g-recaptcha-response')
+                if not self.is_valid_captcha(response=captcha_response):
+                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
 
             simple_validate_email(email)
 

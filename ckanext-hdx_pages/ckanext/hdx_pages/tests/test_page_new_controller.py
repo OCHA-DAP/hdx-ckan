@@ -8,9 +8,6 @@ Created on March 19, 2019
 import logging as logging
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckan.logic as logic
-import unicodedata
-import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -28,7 +25,7 @@ page_elnino = {
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
-class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestHDXPageController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
@@ -44,7 +41,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXControllerPage, cls)._create_test_data(create_datasets=True, create_members=True)
+        super(TestHDXPageController, cls)._create_test_data(create_datasets=True, create_members=True)
 
     @staticmethod
     def _get_page_post_param():
