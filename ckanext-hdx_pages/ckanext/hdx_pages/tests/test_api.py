@@ -83,12 +83,12 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         page_dict = self._get_action('page_create')(context_sysadmin, page_elnino)
         assert page_dict
-        assert 'El Pico' not in page_dict.get('description')
+        assert 'El Pico' not in page_dict.get('title')
         assert 'Lorem Ipsum is simply dummy text' in page_dict.get('description')
 
         elnino = self._get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
         assert elnino
-        assert 'El Pico' not in elnino.get('description')
+        assert 'El Pico' not in elnino.get('title')
         assert 'El Nino' == elnino.get('title')
         assert 'elnino' == elnino.get('name')
         assert 'Lorem Ipsum is simply dummy text' in elnino.get('description')
@@ -111,7 +111,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                                                                            }
                                                         )
         assert new_page_dict
-        assert 'El Pico' in new_page_dict.get('description')
+        assert 'El Pico' in new_page_dict.get('title')
 
         try:
             self._get_action('page_create')(context, page_elpico)
@@ -120,7 +120,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         try:
-            self._get_action('page_update')(context, {'description': 'El Pico Lorem Ipsum'})
+            self._get_action('page_update')(context, {'title': 'El Pico Lorem Ipsum'})
             assert False
         except logic.NotAuthorized:
             assert True

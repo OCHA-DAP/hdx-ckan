@@ -51,7 +51,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         return {
             'name': 'elnino',
-            'title': 'El Nino',
+            'title': 'El Nino Lorem Ipsum',
             'description': 'El Nino Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
             'type': 'event',
             'status': 'ongoing',
@@ -100,8 +100,8 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         elnino = self._get_action('page_show')(context, {'id': 'elnino'})
         assert elnino
-        assert 'El Nino Lorem Ipsum' in elnino.get('description')
-        assert 'El Nino' in elnino.get('title')
+        assert 'El Nino Lorem Ipsum' in elnino.get('title')
+        assert 'elnino' in elnino.get('title')
 
         del post_params['name']
         try:

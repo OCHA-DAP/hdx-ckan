@@ -124,7 +124,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         page_dict = self._get_action('page_create')(context_sysadmin, page_elpico)
         assert page_dict
-        assert 'El Pico' in page_dict.get('description')
+        assert 'El Pico' in page_dict.get('title')
         assert 'Lorem Ipsum is simply dummy text' in page_dict.get('description')
 
         url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='edit',
