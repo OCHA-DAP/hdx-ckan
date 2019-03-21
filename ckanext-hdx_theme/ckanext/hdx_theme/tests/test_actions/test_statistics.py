@@ -45,3 +45,10 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert len(org_stats) == 2
         assert 'active_organizations' in org_stats
         assert 'inactive_organizations' in org_stats
+
+        hdx_general_statistics = self._get_action('hdx_general_statistics')(context_sysadmin, {})
+        assert hdx_general_statistics
+        assert len(hdx_general_statistics) == 3
+        assert 'datasets' in hdx_general_statistics
+        assert 'organizations' in hdx_general_statistics
+        assert 'users' in hdx_general_statistics
