@@ -103,9 +103,9 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         grp_dict = self._get_action('group_show')(context_sysadmin, {'id': 'roger'})
-        new_page_dict = self._get_action('page_update')(context_sysadmin, {'name': page_dict.get('name'),
+        new_page_dict = self._get_action('page_update')(context_sysadmin, {'name': page_elpico.get('name'),
                                                                            'id': page_dict.get('id'),
-                                                                           'title': page_dict.get('title'),
+                                                                           'title': page_elpico.get('title'),
                                                                            'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
                                                                            'groups': [grp_dict.get('id')]
                                                                            }
