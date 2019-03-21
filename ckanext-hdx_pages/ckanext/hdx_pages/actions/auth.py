@@ -22,7 +22,7 @@ def page_delete(context, data_dict):
 def page_show(context, data_dict):
     id = data_dict.get('id')
     if not id or id == '':
-        return {'success': False, 'msg': _('Page not found')}
+        return {'success': False, 'msg': _('Id: missing value')}
 
     page = pages_model.Page.get_by_id(id=data_dict.get('id'))
     if page and page.state == 'active':

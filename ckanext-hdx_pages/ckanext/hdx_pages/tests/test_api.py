@@ -228,4 +228,10 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             log.info(ex)
             assert True
 
+        try:
+            self._get_action('page_show')(context_sysadmin, {})
+            assert False
+        except logic.ValidationError:
+            assert True
+
 
