@@ -59,9 +59,7 @@ class PagesController(HDXSearchController):
         if request.POST and state and not data:
 
             if state:
-
                 page_dict = self._populate_sections()
-
                 try:
                     created_page = get_action('page_create')(context, page_dict)
                     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False

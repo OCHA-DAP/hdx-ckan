@@ -48,6 +48,13 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
             (including the admin that created the org)
             instead it returned {num}'''.format(num=len(result_members3))
 
+        result_basic_user_info = self._query_basic_user_info(admin)
+        assert u'example-admin@example.com' == result_basic_user_info.get('email')
+        assert u'test123admin' == result_basic_user_info.get('display_name')
+        assert 'ds_num' in result_basic_user_info
+        assert 'org_num' in result_basic_user_info
+        assert 'grp_num' in result_basic_user_info
+        assert len(result_basic_user_info) == 9
 
     def _admin_create(self):
         context = {'ignore_auth': True,
@@ -87,3 +94,8 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
                               id=org['id'], object_type='user', q=query, user_info=show_user_name,
                               apikey=user['apikey'], status=200)
         return members
+
+    def _query_basic_user_info(self, user):
+        basic_info = tests.call_action_api(self.app, 'hdx_basic_user_info', id=user.get('id'), status=200,
+                                           apikey=user.get('apikey'))
+        return basic_info

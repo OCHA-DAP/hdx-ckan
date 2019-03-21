@@ -93,7 +93,6 @@ log = logging.getLogger(__name__)
 #     return orgs_list
 
 
-
 def member_list(context, data_dict=None):
     '''Return the members of a group.
 
@@ -193,13 +192,12 @@ def hdx_basic_user_info(context, data_dict):
             org_num = counting.count_user_orgs(id)
             grp_num = counting.count_user_grps(id)
             result = _create_user_dict(user_obj, ds_num=ds_num, org_num=org_num, grp_num=grp_num)
-
     return result
 
 
 def _create_user_dict(user_obj, **kw):
     result = {'display_name': user_obj.fullname or user_obj.name,
-              'created': user_obj.created,
+              'created': user_obj.created.isoformat(),
               'name': user_obj.name,
               'email': user_obj.email,
               'email_hash': user_obj.email_hash,
