@@ -99,6 +99,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='new')
         try:
             self._get_url(url)
+            assert False
         except Exception, ex:
             assert '404 Not Found' in ex.message
 
@@ -130,6 +131,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                         id=page_dict.get('id'))
         try:
             self._get_url(url)
+            assert False
         except Exception, ex:
             assert '404 Not Found' in ex.message
 
@@ -185,6 +187,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',
                             id='nopageid')
             eldashbo_result = self._get_url(url, user.apikey)
+            assert False
         except Exception, ex:
             assert '404' in ex.message
             assert True
@@ -211,6 +214,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                             action='delete',
                             id=eldeleted_page.get('id'))
             self._get_url(url, user.apikey)
+            assert False
         except logic.NotAuthorized:
             assert True
 
@@ -222,6 +226,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                             action='delete',
                             id='nopageid')
             self._get_url(url, user.apikey)
+            assert False
         except logic.NotFound:
             assert True
 

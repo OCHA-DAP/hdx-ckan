@@ -98,6 +98,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             self._get_action('page_update')(context_sysadmin, {'id': page_dict.get('id')})
+            assert False
         except Exception, ex:
             assert True
 
@@ -114,21 +115,25 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             self._get_action('page_create')(context, page_elpico)
+            assert False
         except logic.NotAuthorized:
             assert True
 
         try:
             self._get_action('page_update')(context, {'description': 'El Pico Lorem Ipsum'})
+            assert False
         except logic.NotAuthorized:
             assert True
 
         try:
             self._get_action('page_delete')(context, {'id': page_dict.get('id') or page_dict.get('name')})
+            assert False
         except logic.NotAuthorized:
             assert True
 
         try:
             self._get_action('page_update')(context_sysadmin, {'id': 'nopageid'})
+            assert False
         except logic.NotFound:
             assert True
         except logic.ValidationError:
@@ -136,6 +141,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             self._get_action('page_delete')(context_sysadmin, {'id': 'nopageid'})
+            assert False
         except logic.NotFound:
             assert True
         except logic.ValidationError:
@@ -144,6 +150,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         self._get_action('page_delete')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
         try:
             self._get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+            assert False
         except logic.NotFound:
             assert True
 
@@ -177,6 +184,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             page_elgroupo['name'] = 'elgroupo2'
             page_elgroupo['groups'] = [grp_dict.get('id'), grp_dict.get('id')]
             self._get_action('page_create')(context_sysadmin, page_elgroupo)
+            assert False
         except Exception, ex:
             log.info(ex)
             assert True
@@ -186,6 +194,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             page_elgroupo['title'] = 'None'
             page_elgroupo['groups'] = [grp_dict.get('id')]
             self._get_action('page_create')(context_sysadmin, page_elgroupo)
+            assert False
         except Exception, ex:
             log.info(ex)
             assert True
