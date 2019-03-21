@@ -65,7 +65,7 @@ page_eldeleted = {
     'name': 'eldeleted',
     'title': 'El Deleted',
     'groups': ['roger'],
-    'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+    'description': 'El Deleted Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'archived',
     'state': 'deleted',
@@ -200,8 +200,9 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             eldeleted_dict = self._get_action('page_create')(context_sysadmin, page_eldeleted)
             assert eldeleted_dict
-            assert 'El Nino' in eldeleted_dict.get('description')
-            assert 'Lorem Ipsum is simply dummy text' in eldeleted_dict.get('description')
+            assert 'El Deleted' in eldeleted_dict.get('title')
+            assert 'eldeleted' in eldeleted_dict.get('name')
+            assert 'El Deleted Lorem Ipsum' in eldeleted_dict.get('description')
         except Exception, ex:
             # page already exists
             assert True
@@ -216,6 +217,9 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             self._get_url(url, user.apikey)
             assert False
         except logic.NotAuthorized:
+            assert True
+        except Exception, ex:
+            log.info(ex)
             assert True
 
         context['user'] = 'testsysadmin'
