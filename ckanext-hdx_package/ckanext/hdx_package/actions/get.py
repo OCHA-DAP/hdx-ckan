@@ -399,13 +399,6 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
     # this shouldn't be executed from showcases
     if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
 
-        if not just_for_reindexing:
-            member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
-            if member_list and not member_list.get('is_member'):
-                del package_dict['maintainer_email']
-
-            FreshnessCalculator(package_dict).populate_with_freshness()
-
         for resource_dict in package_dict.get('resources', []):
             _additional_hdx_resource_show_processing(context, resource_dict)
 
@@ -450,11 +443,19 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
 
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
             package_dict['last_modified'] = None
-            all_dates = [dateutil.parser.parse(r.get('last_modified', r.get('revision_last_updated')))
+            all_dates = [dateutil.parser.parse(r.get('last_modified') or r.get('revision_last_updated'))
                          for r in package_dict.get('resources', [])
-                         if r.get('last_modified', r.get('revision_last_updated'))]
+                         if r.get('last_modified') or r.get('revision_last_updated')]
             if all_dates:
                 package_dict['last_modified'] = max(all_dates).isoformat()
+
+        if not just_for_reindexing:
+            member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
+            if member_list and not member_list.get('is_member'):
+                del package_dict['maintainer_email']
+
+            # Freshness should be computed after the last_modified field
+            FreshnessCalculator(package_dict).populate_with_freshness()
 
 
 @logic.side_effect_free

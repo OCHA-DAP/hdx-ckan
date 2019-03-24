@@ -301,7 +301,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')],
             'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'), tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
-            'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
+            'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'has_showcases': [tk.get_validator('ignore_missing')],
+            'last_modified': [tk.get_validator('ignore_missing')]
         })
         return schema
 
