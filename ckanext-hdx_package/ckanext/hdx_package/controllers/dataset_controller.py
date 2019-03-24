@@ -75,16 +75,6 @@ def find_approx_download(exact_downloads):
     return (exact_downloads / divider) * divider
 
 
-def clone_dict(old_dict):
-    """
-    Creates a copy of the data dictionary
-    """
-    data = dict()
-    for k, v in old_dict.iteritems():
-        data[k] = v
-    return data
-
-
 class DatasetController(PackageController):
     def _finish(self, status_int, response_data=None,
                 content_type='text'):
