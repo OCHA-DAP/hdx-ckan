@@ -40,10 +40,6 @@ class PageBaseModel(DomainObject):
         return instance
 
     @classmethod
-    def count(cls):
-        return meta.Session.query(cls).count()
-
-    @classmethod
     def exists(cls, **kwargs):
         if cls.filter(**kwargs).first():
             return True
@@ -128,7 +124,7 @@ class PageGroupAssociation(PageBaseModel):
 
 
 def define_page_group_association_table():
-    global  page_group_association_table
+    global page_group_association_table
 
     page_group_association_table = Table(
         'page_group_association',
@@ -147,7 +143,6 @@ def define_page_group_association_table():
                 })
 
 
-
 def create_table():
     if model.group_table.exists():
         if not page_table.exists():
@@ -157,31 +152,31 @@ def create_table():
             page_group_association_table.create()
             print "page group association table created"
 
-
-def delete_table():
-    if page_table.exists():
-        page_table.delete()
-        log.debug('Page table deleted')
-
-
-def patch_table():
-    if page_table.exists():
-        try:
-            print 'Starting to patch table'
-            model.Session.connection().execute('''alter table page add column status text''')
-            model.Session.commit()
-            print 'Finish to patch table'
-        except Exception as e:
-            print "There was an error during patching page table: " + str(e.message)
-
-    else:
-        print 'page table not exist'
-
-
-def drop_table():
-    '''
-    Drop page table
-    '''
-    if page_table.exists():
-        page_table.drop()
-        log.debug('Page table dropped')
+#
+# def delete_table():
+#     if page_table.exists():
+#         page_table.delete()
+#         log.debug('Page table deleted')
+#
+#
+# def patch_table():
+#     if page_table.exists():
+#         try:
+#             print 'Starting to patch table'
+#             model.Session.connection().execute('''alter table page add column status text''')
+#             model.Session.commit()
+#             print 'Finish to patch table'
+#         except Exception as e:
+#             print "There was an error during patching page table: " + str(e.message)
+#
+#     else:
+#         print 'page table not exist'
+#
+#
+# def drop_table():
+#     '''
+#     Drop page table
+#     '''
+#     if page_table.exists():
+#         page_table.drop()
+#         log.debug('Page table dropped')

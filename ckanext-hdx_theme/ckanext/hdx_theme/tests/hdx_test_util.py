@@ -61,7 +61,7 @@ def count_string_occurences(text, search_item,
     return count
 
 
-def test_page_create():
+def test_string_checks():
     page = 'lorep ipsum <section class="search-list list-items">lorep ipsumlorep name="q" ipsumlorep ipsum</section>'
 
     begin_str = '<section class="search-list list-items">'
