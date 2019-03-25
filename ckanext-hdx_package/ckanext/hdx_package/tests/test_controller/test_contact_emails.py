@@ -39,3 +39,4 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert post_params['msg'] in kw_args.get('body')
         assert kw_args.get('sender_name') == post_params['fullname']
         assert kw_args.get('sender_email') == post_params['email']
+        assert post_params['title'] in kw_args.get('subject')

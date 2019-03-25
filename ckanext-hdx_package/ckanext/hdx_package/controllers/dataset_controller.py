@@ -1337,7 +1337,7 @@ class DatasetController(PackageController):
                 data_dict['pkg_owner_org'] = owner_org.get("display_name") or owner_org.get("title")
             except Exception, e:
                 data_dict['pkg_owner_org'] = org_id
-            data_dict['title'] = request.params.get('title')
+            data_dict['pkg_title'] = request.params.get('title')
             if source_type == 'dataset':
                 data_dict['pkg_id'] = request.params.get('pkg_id')
                 data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
