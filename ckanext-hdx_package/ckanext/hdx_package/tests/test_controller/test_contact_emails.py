@@ -10,9 +10,12 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_contact_members(self, mocked_mail_recipient):
-        user = model.User.by_name('testsysadmin')
-        user.email = 'test@test.com'
-        auth = {'Authorization': str(user.apikey)}
+        member = model.User.by_name('tester')
+        member.email = 'tester@test.com'
+
+        sysadmin = model.User.by_name('testsysadmin')
+        sysadmin.email = 'testsysadmin@test.com'
+        auth = {'Authorization': str(sysadmin.apikey)}
 
         post_params = {
             'source_type': 'dataset',
@@ -35,7 +38,7 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         args, kw_args = mocked_mail_recipient.call_args
 
-        assert len(kw_args.get('recipients_list', [])) >=2, 'mail goes to sender and at least 1 org member'
+        assert len(kw_args.get('recipients_list', [])) == 3, 'mail goes to sender, org admin and 1 other member'
         assert post_params['msg'] in kw_args.get('body')
         assert kw_args.get('sender_name') == post_params['fullname']
         assert kw_args.get('sender_email') == post_params['email']

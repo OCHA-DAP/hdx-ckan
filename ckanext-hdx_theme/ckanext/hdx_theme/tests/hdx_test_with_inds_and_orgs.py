@@ -89,7 +89,7 @@ def get_organization():
                     'org_acronym': 'HTO',
                     'org_url': 'http://test-org.test',
                     'description': 'This is a test organization',
-                    'users': [{'name': 'testsysadmin','capacity': 'admin'}, {'name':'janedoe3','capacity': 'member'}]}
+                    'users': [{'name': 'testsysadmin','capacity': 'admin'}, {'name': 'tester', 'capacity': 'member'}]}
     return organization
 
 
