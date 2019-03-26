@@ -9,7 +9,7 @@ Example:
 #}
 
 <div id="{{ id }}" class="popup {{ class }}" {% block popup_attributes %}style="display: none;" {% endblock %}>
-    <div class="content container-fluid">
+    <div class="content {{ content_class }} container-fluid">
         {% block all_content %}
             <div class="row">
                 {% block titlebar %}
