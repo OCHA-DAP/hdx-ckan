@@ -7,9 +7,28 @@ Created on Jun 17, 2014
 import ckan.tests.legacy as tests
 import ckan.plugins.toolkit as tk
 import ckan.model as model
+import mock
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
+contact_form = {
+    'display_name': 'Jane Doe3',
+    'name': 'janedoe3',
+    'fullname': 'johnfoo',
+    'email': 'janedoe3@test.test',
+    'organization': 'Test Organization',
+    'message': 'Lorep Ipsum',
+    'admins': [{'display_name': 'Admin 1', 'email': 'admin1@hdx.org'},
+               {'display_name': 'Admin 1', 'email': 'admin1@hdx.org'}]
+}
+
+janedoe3 = {
+    'name': 'janedoe3',
+    'fullname': 'Jane Doe3',
+    'email': 'janedoe3@test.test',
+    'password': 'password',
+    'about': 'Jane Doe3, 3rd user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
+}
 
 class TestMemberActions(hdx_test_base.HdxBaseTest):
 
@@ -99,3 +118,18 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
         basic_info = tests.call_action_api(self.app, 'hdx_basic_user_info', id=user.get('id'), status=200,
                                            apikey=user.get('apikey'))
         return basic_info
+
+    @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
+    def test_hdx_send_editor_request_for_org(self, mocked_mail_recipient):
+
+        context_sysadmin = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        user = self._get_action('user_create')(context_sysadmin, janedoe3)
+        assert user
+
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'janedoe3'}
+        try:
+            res = self._get_action('hdx_send_editor_request_for_org')(context, contact_form)
+        except Exception, ex:
+            assert False
+        assert True
