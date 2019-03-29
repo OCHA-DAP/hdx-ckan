@@ -18,7 +18,6 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
-import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 import ijson
 import pylons.config as config
 from routes.mapper import SubMapper
@@ -88,7 +87,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
-    # plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
 
     __startup_tasks_done = False
@@ -350,14 +348,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
             'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list
         }
-
-    # def before_show(self, resource_dict):
-    #     '''
-    #         This is run before a resource is displayed.
-    #         We use it to show the correct tracking summary
-    #     '''
-    #     tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
-    #     return resource_dict
 
     # IValidators
     def get_validators(self):
