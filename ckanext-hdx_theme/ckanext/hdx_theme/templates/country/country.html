@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-    <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
+    {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
     <li class="active">{% link_for data.country_dict.display_name, controller='group', action='read', id=data.country_dict.name %}</li>
 {% endblock %}
 

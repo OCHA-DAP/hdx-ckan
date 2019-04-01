@@ -18,15 +18,12 @@
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
       {% if pkg.indicator %}
-        <li>{{ h.nav_link(_('Indicators'),
-          controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', ext_indicator=1) }}</li>
+        {% snippet "snippets/other_breadcrumb_item.html", title=_('Indicators'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
       {% else %}
-      <li>{{ h.nav_link(_('Datasets'),
-        controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
+        {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
       {% endif %}
 	{% endblock %}
-    <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
-
+  <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block pre_primary %}

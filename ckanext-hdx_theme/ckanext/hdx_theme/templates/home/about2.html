@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _('About') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li >{% link_for _('About'), controller='home', action='about' %}</li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('About'), controller='home', action='about', position=2 %}
   <li class="active">{% link_for title, controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page=page %}</li>
 
 {% endblock %}

@@ -1,0 +1,7 @@
+{# Used to insert the home icon into a breadcrumb #}
+<li property="itemListElement" typeof="ListItem">
+  <a href="{% if id %} {{ h.url_for(controller=controller, action=action, id=id) }} {% else %} {{ h.url_for(controller=controller, action=action) }} {% endif %}" property="item" typeof="WebPage">
+    <span property="name">{{ title }}</span>
+  </a>
+  <meta property="position" content="{{ position }}">
+</li>

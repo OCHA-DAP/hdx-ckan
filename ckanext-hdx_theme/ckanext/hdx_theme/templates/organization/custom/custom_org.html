@@ -7,7 +7,7 @@
 {% block subtitle %}{{ data.org_info.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
   <li class="active"><a>{{data.org_info.name}}</a></li>
 {% endblock %}
 

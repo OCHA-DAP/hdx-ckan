@@ -17,10 +17,9 @@
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
-    <li>{{ h.nav_link(_('Datasets'),
-      controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
+    {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
 	{% endblock %}
-    <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
+  <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
 
 {% endblock %}
 
