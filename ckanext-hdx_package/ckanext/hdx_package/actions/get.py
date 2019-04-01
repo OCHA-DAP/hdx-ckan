@@ -377,6 +377,9 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
     if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
         resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
 
+    if not resource_dict.get('last_modified'):
+        resource_dict['last_modified'] = resource_dict['revision_last_updated']
+
 
 @logic.side_effect_free
 def package_show(context, data_dict):
@@ -443,9 +446,9 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
 
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
             package_dict['last_modified'] = None
-            all_dates = [dateutil.parser.parse(r.get('last_modified') or r.get('revision_last_updated'))
+            all_dates = [dateutil.parser.parse(r.get('last_modified'))
                          for r in package_dict.get('resources', [])
-                         if r.get('last_modified') or r.get('revision_last_updated')]
+                         if r.get('last_modified')]
             if all_dates:
                 package_dict['last_modified'] = max(all_dates).isoformat()
 
