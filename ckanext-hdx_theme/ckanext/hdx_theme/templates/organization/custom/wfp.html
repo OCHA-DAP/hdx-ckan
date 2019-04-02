@@ -2,7 +2,7 @@
 
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organisations'), controller='organization', action='index', position=2 %}
   <li class="active"><a>{{ _("WFP - World Food Programme") }}</a></li>
 {% endblock %}
 

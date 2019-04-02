@@ -1,2 +1,7 @@
 {# Used to insert the home icon into a breadcrumb #}
-<li class="home"><a href="{{ h.url('home') }}">{{ _('Home') }}</a></li>
+<li class="home" property="itemListElement" typeof="ListItem">
+  <a href="{{ h.url('home') }}" property="item" typeof="WebPage">
+    <span property="name">{{ _('Home') }}</span>
+  </a>
+  <meta property="position" content="1">
+</li>

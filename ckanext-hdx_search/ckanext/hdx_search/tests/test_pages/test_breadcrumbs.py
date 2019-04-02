@@ -4,11 +4,11 @@ Created on Nov 12, 2014
 @author: alexandru-m-g
 '''
 
-import ckan.lib.helpers as h
-
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_util as hdx_test_util
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
+
+import ckan.lib.helpers as h
 
 
 class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
@@ -24,7 +24,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     #     result = self.app.get(url)
     #     page = str(result.response)
     #
-    #     begin_str = '<ol class="breadcrumb">'
+    #     begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
     #     end_str = '</ol>'
     #     search_strings = ['<a href="/search">Search</a>']
     #
@@ -37,7 +37,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         result = self.app.get(url)
         page = str(result.response)
 
-        begin_str = '<ol class="breadcrumb">'
+        begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'
         search_strings = ['<a href="/dataset">Datasets</a>']
 
