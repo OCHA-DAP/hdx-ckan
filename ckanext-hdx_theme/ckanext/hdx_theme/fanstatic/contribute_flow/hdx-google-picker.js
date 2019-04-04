@@ -74,7 +74,15 @@
 
     _authApiLoaded: function() {
       // Called when the Google Drive API has finished loading.
-      this._doAuth(true);
+      this._doAuth(true, function(response) {
+          if (response.error) {
+            //when the user didn't authorize HDX to use the Google Drive API the auth will fail with an error
+            //popup to login to Google and authorize will be shown when the user will try to use the uploader, but error is converted to warning
+            console.warn("Problem while trying to auth to Google Drive API: " + JSON.stringify(response));
+            return;
+          }
+        }
+      );
     },
 
     _doAuth: function(immediate, callback) {
