@@ -74,7 +74,7 @@
                 <ul class="pull-left dataset-resources ">
                     {% snippet 'search/snippets/package_icons.html', package=pkg%}
                 </ul>
-                {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right' %}
+                {% snippet "package/snippets/package_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right' %}
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@
       {% if pkg.customviz %}
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
           <div class="row">
-            {% snippet "indicator/snippets/custom_viz.html", customviz = pkg.customviz %}
+            {% snippet "package/snippets/custom_viz.html", customviz = pkg.customviz %}
           </div>
         </div>
       {% endif %}
@@ -114,13 +114,12 @@
     {% endif %}
     <div>
         <h2 class="uppercase">{{_('Related Showcases')}}</h2>
-        {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
+        {% snippet "package/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
 
     </div>
   <div>
         <h2 class="uppercase">{{_('Activity')}}</h2>
-        {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
-     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     {% snippet "package/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
      <br>
     {% if h.follow_status('dataset', pkg.name) %}
       <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span>
@@ -160,20 +159,14 @@
     </div>
     <div class="tab-pane" id="metadata">
       {% block indicator_additional_info %}
-        {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
+        {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
       {% endblock %}
     </div>
   </div>
 {% endblock %}
 
 {% block post_primary %}
-  {# Removed for now as per HDX-4927
-  <div class="row paddingRowHack whiteBackground">
-    <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      {% snippet "indicator/snippets/continuous_browsing.html", type="dataset", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
-    </div>
-  </div>
-  #}
+
 {% endblock %}
 
 
@@ -189,16 +182,14 @@
 
 {% block scripts %}
   {{ super() }}
-  {% resource 'hdx_theme/indicator' %}
-  {% resource 'hdx_theme/indicator/indicator_downloads.js' %}
+  {% resource 'hdx_theme/dataset' %}
+  {% resource 'hdx_theme/datasets/stats-chart.js' %}
   {% resource 'hdx_theme/activity-stream' %}
   {% resource 'hdx_theme/jquery.expander' %}
-  {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/bs_popover.js' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/hdx_autocomplete.js' %}
   {% resource 'hdx_theme/confirm-ajax.js' %}
-  {% resource 'hdx_theme/indicator/additional_info.js' %}
   {% resource 'hdx_theme/datasets/related.css' %}
   <script type="application/ld+json">
     {{ h.structured_data(pkg.id, ['schemaorg'])|safe }}

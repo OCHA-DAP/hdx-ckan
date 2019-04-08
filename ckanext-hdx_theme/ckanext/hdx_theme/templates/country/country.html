@@ -520,18 +520,6 @@
                         <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
                     </div>
                 {% endif %}
-{#        		<div class="col-xs-3 wrapper-secondary">#}
-{#        			<div class="row">#}
-{#        				<div class="col-xs-12">#}
-{#							<h2 class="uppercase">{{_('Activity')}}</h2>#}
-{#						    {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_group_activities['activities'], offset = c.hdx_group_activities['offset'] %}#}
-{#						    <br>#}
-{#						    {% if h.follow_status('group', c.group_dict.id) %}#}
-{#						      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> #}
-{#						    {% endif %}#}
-{#						</div>#}
-{#					</div>#}
-{#	        	</div>#}
 	        	<div class="col-xs-12">
                     {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=c %}
 	        	</div>
@@ -539,13 +527,6 @@
         </div>
     </div>
 
-    {# Removed for now as per HDX-4927
-    <div class="row">
-        <div class="col-xs-12 country-cb">
-            {% snippet "indicator/snippets/continuous_browsing.html", type="group", pkg = c.group_dict, followers=c.cont_browsing.followers, topics = c.cont_browsing.topics, related_urls = c.cont_browsing.websites, downloads_count = c.cont_browsing.downloads_count %}
-        </div>
-    </div>
-    #}
 {% endblock %}
 
 {% block package_search_results %}

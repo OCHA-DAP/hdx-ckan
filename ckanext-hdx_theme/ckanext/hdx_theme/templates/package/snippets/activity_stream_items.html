@@ -10,7 +10,7 @@
       {% endif %}
   {% for activity in activities %}
       {% if loop.index <= has_more_length %}
-          {% snippet 'indicator/snippets/activity_item.html', activity=activity %}
+          {% snippet 'package/snippets/activity_item.html', activity=activity %}
       {% endif %}
   {% endfor %}
       {% if has_more %}
