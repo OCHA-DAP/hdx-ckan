@@ -807,10 +807,12 @@ class DatasetController(PackageController):
 
             cps_off = config.get('hdx.cps.off', 'false')
 
-
-            if org_info_dict.get('custom_org', False):
-                return render('package/custom_hdx_read.html')
-            return render('package/hdx_read.html')
+            if cps_off == 'false' and int(c.pkg_dict['indicator']):
+                return render('indicator/read.html')
+            else:
+                if org_info_dict.get('custom_org', False):
+                    return render('package/custom_hdx_read.html')
+                return render('package/hdx_read.html')
 
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
