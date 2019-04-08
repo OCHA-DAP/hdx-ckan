@@ -5,7 +5,7 @@
 {% set resource_display_name = h.resource_display_name(res) %}
 
 {# This should be included via page.html but it's not loading for me. Investigate after template upgrade to 2.3 in complete and delete this #}
-{% resource 'hdx_theme/indicator/tracking.js' %}
+{% resource 'hdx_theme/package/tracking.js' %}
 {# #}
 {% resource 'hdx_theme/bs_popover.js' %}
 {% resource 'hdx_theme/jquery.expander' %}
@@ -89,7 +89,7 @@
 
 
             {#
-            {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
+            {% snippet 'package/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
               target_url=res.url,
               icon=true,
               class="btn btn-secondary hdx-btn resource-url-analytics ga-share resource-btn resource-icon-btn", button_id=button_id %}
