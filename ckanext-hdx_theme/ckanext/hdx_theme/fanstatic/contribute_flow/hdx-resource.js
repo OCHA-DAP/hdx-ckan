@@ -298,7 +298,7 @@ $(function(){
         },
 
         generateDatasetPreviewOptions: function(options) {
-            if(!options.changed.dataset_preview_enabled){
+            if(options.changed && !options.changed.dataset_preview_enabled){
                 this.contribute_global.generateDatasetPreviewOptions(this.collection);
             }
         },
