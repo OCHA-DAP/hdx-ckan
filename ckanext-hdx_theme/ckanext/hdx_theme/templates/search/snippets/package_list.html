@@ -15,9 +15,8 @@ Example:
 
 #}
 {% resource 'hdx_theme/dataset-search' %}
-{% resource 'hdx_theme/indicator' %}
+{% resource 'hdx_theme/dataset' %}
 {% resource 'hdx_theme/jquery.highlight' %}
-{% resource 'hdx_theme/bs_tooltip.js' %}
 
 {% set min_version = full_facet_info.get("filters_selected") or full_facet_info.get("query_selected") if "filters_selected" in full_facet_info or "query_selected" in full_facet_info %}
 
@@ -185,11 +184,7 @@ Example:
             <div class="search-list">
                 <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
                     {% for package in packages %}
-                        {% if package.indicator and package.indicator == "1" %}
-                            {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
-                        {% else %}
-                            {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
-                        {% endif %}
+                        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
                     {% endfor %}
                 </ul>
             </div>

@@ -3,17 +3,12 @@
 {% block secondary %}{% endblock %}
 
 {% block primary_content_inner %}
-
     <section class="module module-narrow">
         {% if c.showcase_pkgs %}
             <div class="search-list">
                 <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
                     {% for package in c.showcase_pkgs %}
-                        {% if package.indicator and package.indicator == "1" %}
-                            {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
-                        {% else %}
-                            {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
-                        {% endif %}
+                        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
                     {% endfor %}
                 </ul>
             </div>
@@ -120,7 +115,6 @@
 
 {% block styles %}
     {{ super() }}
-    {% resource 'hdx_theme/indicator/indicator.css' %}
     {% resource 'hdx_theme/jquery.highlight' %}
     {% resource 'hdx_theme/jquery.expander' %}
     {% resource 'hdx_theme/hdx_show_more.js' %}

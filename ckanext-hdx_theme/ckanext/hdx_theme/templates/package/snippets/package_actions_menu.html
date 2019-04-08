@@ -1,4 +1,4 @@
-{% extends "indicator/snippets/base_actions_menu.html" %}
+{% extends "package/snippets/base_actions_menu.html" %}
 
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
 {% set title = pkg.title %}
@@ -15,10 +15,8 @@
 
 {% block user_actions %}
     {% if h.check_access('package_update', {'id':pkg.id }) %}
-        {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
         <li class="hide-text">
             <a title="Edit {{ base_type | capitalize }}" onclick="contributeAddDetails('{{ pkg.id }}', 'dataset')"
-               {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
                 href="#">
                 <i class="icon-edit"></i>
                 <span>{{ _('Edit') }}</span>
