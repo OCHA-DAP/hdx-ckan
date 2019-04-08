@@ -23,7 +23,7 @@ def page_update(context, data_dict):
         populate_page(page, data_dict)
 
         groups = data_dict.get('groups')
-        process_groups(page, groups)
+        process_groups(context, page, groups)
 
         session.add(page)
         session.commit()
@@ -34,7 +34,7 @@ def page_update(context, data_dict):
         raise logic.ValidationError({'message': message}, error_summary=message)
 
 
-def process_groups(page, groups):
+def process_groups(context, page, groups):
     # the original id list
     grp_ids = pages_model.PageGroupAssociation.get_group_ids_for_page(page.id)
 
@@ -44,8 +44,10 @@ def process_groups(page, groups):
         assoc.delete()
 
     # add new ids
-    for grp_id in groups:
-        pages_model.PageGroupAssociation.create(page=page, group_id=grp_id, defer_commit=True)
+    if groups:
+        for grp_id in groups:
+            group_dict = logic.get_action('group_show')(context, {'id': grp_id})
+            pages_model.PageGroupAssociation.create(page=page, group_id=group_dict.get('id'), defer_commit=True)
 
 
 def populate_page(page, data_dict):

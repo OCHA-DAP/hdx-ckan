@@ -18,8 +18,8 @@
     </span>
 {% endblock %}
 {% block breadcrumb_content %}
-<li>{% link_for _('Groups'), controller='group', action='index' %}</li>
-<li class="active">{{ h.nav_link(data.country_title,
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
+  <li class="active">{{ h.nav_link(data.country_title,
     controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
     action='read', id=data.country_name, highlight_actions = 'new index') }}</li>
 {% endblock %}

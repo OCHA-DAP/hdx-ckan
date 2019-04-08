@@ -1,7 +1,9 @@
 import ckanext.hdx_users.actions.create as create
 import ckanext.hdx_users.actions.get as get
+import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
+import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
@@ -92,12 +94,14 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'token_create': create.token_create,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list,
-            'hdx_send_reset_link': get.hdx_send_reset_link
+            'hdx_send_reset_link': get.hdx_send_reset_link,
+            'hdx_send_new_org_request': misc.hdx_send_new_org_request
         }
 
     def get_auth_functions(self):
         return {'user_can_register': authorize.user_can_register,
-                'user_can_validate': authorize.user_can_validate}
+                'user_can_validate': authorize.user_can_validate,
+                'hdx_send_new_org_request': auth.hdx_send_new_org_request}
 
     # IConfigurable
     def configure(self, config):

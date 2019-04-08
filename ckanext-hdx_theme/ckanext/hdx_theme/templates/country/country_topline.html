@@ -5,12 +5,16 @@
 {%- block page %}
 {% if data.widgets.top_line_data_list %}
 
-    {% resource 'hdx_theme/activity-stream' %}
-    {% resource 'hdx_theme/country' %}
-    {% resource 'hdx_theme/indicator' %}
-    {% resource 'hdx_theme/hdx_show_more.js' %}
-    {% resource 'hdx_theme/crisis/topline.css' %}
-    {% resource 'hdx_theme/country/topline.css' %}
+{#  {% resource 'hdx_theme/crisis/topline.css' %}#}
+{#  {% resource 'hdx_theme/country/country.css' %}#}
+{#  {% resource 'hdx_theme/country/topline.css' %}#}
+{#  {% resource 'hdx_theme/country/country.js' %}#}
+{#  {% resource 'hdx_theme/vendor/c3/c3.css' %}#}
+{#  {% resource 'hdx_theme/vendor/d3/d3.js' %}#}
+{#  {% resource 'hdx_theme/vendor/c3/c3.js' %}#}
+
+  {% resource 'hdx_theme/country-topline' %}
+
 
     {% set country_active = data.country_dict.activity_level == 'active' %}
     <div class="row">

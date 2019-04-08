@@ -247,20 +247,21 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
             # 'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
-            'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
+            # 'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
             # 'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             # 'hdx_user_show': hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values,
             # 'hdx_get_shape_geojson': hdx_actions.hdx_get_shape_geojson,
             # 'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
-            'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
+            # 'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
             'hdx_carousel_settings_show': hdx_actions.hdx_carousel_settings_show,
             'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update,
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
             'hdx_general_statistics': hdx_actions.hdx_general_statistics,
-            'hdx_user_statistics': hdx_actions.hdx_user_statistics
+            'hdx_user_statistics': hdx_actions.hdx_user_statistics,
+            'hdx_organization_statistics': hdx_actions.hdx_organization_statistics,
         }
 
     def get_auth_functions(self):
@@ -288,7 +289,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         return {
             'hdx_basic_user_info': auth.hdx_basic_user_info,
             'group_member_create': auth.group_member_create,
-            'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+            # 'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
             'invalidate_cache_for_groups': auth.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,

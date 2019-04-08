@@ -26,11 +26,8 @@
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
- <li>{{ h.nav_link(_('Datasets'), 
-    controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
-    <li><a href="{{ h.url_for(controller='package',
-                                               action='read',
-                                               id=pkg.id) }}">{{pkg.title|truncate(30)}}</a></li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
+  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), controller='package', action='read', id=pkg.id, position=3 %}
   <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 

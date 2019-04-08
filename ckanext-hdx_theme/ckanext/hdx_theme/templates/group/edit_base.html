@@ -5,9 +5,9 @@
 {% block subtitle %}{{ c.group_dict.display_name }} - {{ _('Organizations') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
   {% block breadcrumb_content_inner %}
-    <li>{% link_for organization.display_name|truncate(35), controller='organization', action='read', id=organization.name %}</li>
+    {% snippet "snippets/other_breadcrumb_item.html", title=organization.display_name|truncate(35), controller='organization', action='read', id=organization.name, position=3 %}
     <li class="active">{% link_for _('Manage'), controller='organization', action='edit', id=organization.name %}</li>
   {% endblock %}
 {% endblock %}

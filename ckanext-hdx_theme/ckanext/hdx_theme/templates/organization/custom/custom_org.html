@@ -7,7 +7,7 @@
 {% block subtitle %}{{ data.org_info.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
   <li class="active"><a>{{data.org_info.name}}</a></li>
 {% endblock %}
 
@@ -59,6 +59,7 @@
             {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger",
                 title="Embed data",
                 embed_url=data.visualization.embed_url,
+                content_class="content-white",
                 data=data.visualization.config_url,
                 sizes=[{"width": "800", "height": "500"},
                        {"width": "1000","height": "500"},

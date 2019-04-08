@@ -9,7 +9,6 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
 from ckanext.hdx_theme.util.mail import simple_validate_email
@@ -74,16 +73,6 @@ def find_approx_download(exact_downloads):
         return 0
 
     return (exact_downloads / divider) * divider
-
-
-def clone_dict(old_dict):
-    """
-    Creates a copy of the data dictionary
-    """
-    data = dict()
-    for k, v in old_dict.iteritems():
-        data[k] = v
-    return data
 
 
 class DatasetController(PackageController):
@@ -653,7 +642,6 @@ class DatasetController(PackageController):
                            'auth_user_obj': c.userobj}
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
-                FreshnessCalculator(c.pkg_dict).populate_with_freshness()
             else:
                 abort(404, _('Package type is not dataset'))
         except (NotFound, NotAuthorized):
@@ -1349,7 +1337,7 @@ class DatasetController(PackageController):
                 data_dict['pkg_owner_org'] = owner_org.get("display_name") or owner_org.get("title")
             except Exception, e:
                 data_dict['pkg_owner_org'] = org_id
-            data_dict['title'] = request.params.get('title')
+            data_dict['pkg_title'] = request.params.get('title')
             if source_type == 'dataset':
                 data_dict['pkg_id'] = request.params.get('pkg_id')
                 data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),

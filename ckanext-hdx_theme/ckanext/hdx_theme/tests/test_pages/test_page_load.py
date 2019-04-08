@@ -22,6 +22,7 @@ pages = [
     {'controller': 'group', 'action': 'index', 'usertype': 'all'},
     {'controller': 'organization', 'action': 'index', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'about', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
     {'controller': 'user', 'action': 'dashboard_organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
@@ -85,5 +86,5 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
                 'NFKD', user.apikey).encode('ascii', 'ignore')})
         else:
             result = self.app.get(url)
-        assert '200' in result.response.status, 'HTTP OK'
+        assert ('200' in result.response.status or '302' in result.response.status), 'HTTP OK'
         assert 'server error' not in str(result.body).lower()

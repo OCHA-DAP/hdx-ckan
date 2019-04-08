@@ -3,6 +3,7 @@ from ckan.model import meta
 import ckanext.hdx_pages.model as pages_model
 import ckanext.hdx_pages.helpers.dictize as dictize
 from ckanext.hdx_pages.model import PageGroupAssociation
+from ckan.common import _
 
 NotFound = logic.NotFound
 
@@ -16,8 +17,11 @@ def page_show(context, data_dict):
     :return: dictized page
     :rtype: dict
     '''
-
-    page = pages_model.Page.get_by_id(id=data_dict['id'])
+    logic.check_access('page_show', context, data_dict)
+    id = data_dict.get('id')
+    if not id:
+        raise logic.ValidationError({'id': _('Missing value')})
+    page = pages_model.Page.get_by_id(id=id)
     if page is None:
         raise NotFound
     page_dict = dictize.page_dictize(page)

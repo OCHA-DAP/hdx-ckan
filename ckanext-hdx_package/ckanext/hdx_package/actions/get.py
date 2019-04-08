@@ -5,6 +5,12 @@ Created on Sep 02, 2015
 '''
 
 import os
+import dateutil.parser
+import sqlalchemy
+import logging
+import json
+
+from paste.deploy.converters import asbool
 import ckan.logic.schema
 import ckan.logic as logic
 import ckan.model as model
@@ -17,20 +23,14 @@ import ckan.authz as authz
 import ckan.lib.base as base
 import ckan.lib.helpers as h
 
-import sqlalchemy
-import logging
-import json
-
 from ckan.lib import uploader
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
-from paste.deploy.converters import asbool
-
-
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 
 _validate = ckan.lib.navl.dictization_functions.validate
@@ -364,16 +364,21 @@ def resource_show(context, data_dict):
     resource_dict = logic_get.resource_show(context, data_dict)
 
     # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
+    _additional_hdx_resource_show_processing(context, resource_dict)
+
+    return resource_dict
+
+
+def _additional_hdx_resource_show_processing(context, resource_dict):
     if _should_manually_load_property_value(context, resource_dict, 'size'):
         resource_dict['size'] = _get_resource_filesize(resource_dict)
-
     if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
         resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
-
     if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
         resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
 
-    return resource_dict
+    if not resource_dict.get('last_modified'):
+        resource_dict['last_modified'] = resource_dict['revision_last_updated']
 
 
 @logic.side_effect_free
@@ -385,41 +390,20 @@ def package_show(context, data_dict):
     # data_dict['include_tracking'] = True
     package_dict = logic_get.package_show(context, data_dict)
 
+    _additional_hdx_package_show_processing(context, package_dict)
+
+    return package_dict
+
+
+def _additional_hdx_package_show_processing(context, package_dict, just_for_reindexing=False):
     # added because showcase schema validation is generating "ckan.lib.navl.dictization_functions.Missing"
     if 'tracking_summary' in package_dict and not package_dict.get('tracking_summary'):
         del package_dict['tracking_summary']
-
     # this shouldn't be executed from showcases
     if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
 
-        member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
-        if member_list and not member_list.get('is_member'):
-            del package_dict['maintainer_email']
-
-        if 'resources' in package_dict:
-            # max_time = 0
-            # j = None
-            # i = 0
-            for resource_dict in package_dict.get('resources', []):
-                if _should_manually_load_property_value(context, resource_dict, 'size'):
-                    resource_dict['size'] = _get_resource_filesize(resource_dict)
-
-                if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-                    resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
-
-                if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
-                    resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
-
-            #     if _check_dataset_preview_selected_value(context, resource_dict, 'dataset_preview_enabled'):
-            #         if resource_dict.get('dataset_preview_enabled') > max_time:
-            #             max_time = resource_dict.get('dataset_preview_enabled')
-            #             j = i
-            #         package_dict['resources'][i]['dataset_preview_enabled'] = False
-            #     i = i + 1
-            #
-            # if j is not None:
-            #     package_dict['resources'][j]['dataset_preview_enabled'] = True
-
+        for resource_dict in package_dict.get('resources', []):
+            _additional_hdx_resource_show_processing(context, resource_dict)
 
         # downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
         #                   res.get('tracking_summary', {}).get('total'))
@@ -432,7 +416,8 @@ def package_show(context, data_dict):
 
         if _should_manually_load_property_value(context, package_dict, 'pageviews_last_14_days'):
             pageviews_last_14_days = jql.pageviews_per_dataset_last_14_days_cached().get(package_dict['id'], 0)
-            log.debug('Dataset {} has {} page views in the last 14 days'.format(package_dict['id'], pageviews_last_14_days))
+            log.debug(
+                'Dataset {} has {} page views in the last 14 days'.format(package_dict['id'], pageviews_last_14_days))
             package_dict['pageviews_last_14_days'] = pageviews_last_14_days
 
         if _should_manually_load_property_value(context, package_dict, 'has_quickcharts'):
@@ -459,7 +444,21 @@ def package_show(context, data_dict):
                 package_dict['has_showcases'] = True
                 package_dict['num_of_showcases'] = num_of_showcases
 
-    return package_dict
+        if _should_manually_load_property_value(context, package_dict, 'last_modified'):
+            package_dict['last_modified'] = None
+            all_dates = [dateutil.parser.parse(r.get('last_modified'))
+                         for r in package_dict.get('resources', [])
+                         if r.get('last_modified')]
+            if all_dates:
+                package_dict['last_modified'] = max(all_dates).isoformat()
+
+        if not just_for_reindexing:
+            member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
+            if member_list and not member_list.get('is_member'):
+                del package_dict['maintainer_email']
+
+            # Freshness should be computed after the last_modified field
+            FreshnessCalculator(package_dict).populate_with_freshness()
 
 
 @logic.side_effect_free

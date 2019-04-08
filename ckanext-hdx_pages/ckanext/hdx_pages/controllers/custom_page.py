@@ -48,7 +48,7 @@ class PagesController(HDXSearchController):
         try:
             check_access('page_create', context, {})
         except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
+            abort(404, _('Page not found'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
@@ -59,16 +59,7 @@ class PagesController(HDXSearchController):
         if request.POST and state and not data:
 
             if state:
-                try:
-                    check_access('page_create', context, {})
-                except NotAuthorized:
-                    abort(403, _('Not authorized to see this page'))
-                except Exception, e:
-                    error_summary = e.error_summary
-                    return self.error_message(error_summary)
-
                 page_dict = self._populate_sections()
-
                 try:
                     created_page = get_action('page_create')(context, page_dict)
                     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
@@ -93,7 +84,7 @@ class PagesController(HDXSearchController):
         try:
             check_access('page_update', context, {})
         except NotAuthorized:
-            abort(403, _('Not authorized to edit this page'))
+            abort(404, _('Page not found'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
@@ -104,14 +95,6 @@ class PagesController(HDXSearchController):
         # saving a new page
         if request.POST and (state or delete_page) and not data:
             if state:
-                try:
-                    check_access('page_update', context, {})
-                except NotAuthorized:
-                    abort(403, _('Not authorized to edit this page'))
-                except Exception, e:
-                    error_summary = e.error_summary
-                    return self.error_message(error_summary)
-
                 page_dict = self._populate_sections()
                 try:
                     updated_page = get_action('page_update')(context, page_dict)
@@ -188,6 +171,12 @@ class PagesController(HDXSearchController):
             'model': model, 'session': model.Session,
             'user': c.user or c.author
         }
+
+        try:
+            check_access('page_delete', context, {})
+        except NotAuthorized:
+            abort(404, _('Page not found'))
+
         page_dict = logic.get_action('page_delete')(context, {'id': id})
         test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
         if not test:
@@ -290,6 +279,7 @@ class PagesController(HDXSearchController):
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
                 }
                 sections.append(section)
+
         page_dict = {"name": request.params.get("name"),
                      "title": request.params.get("title"),
                      "type": request.params.get("type"),

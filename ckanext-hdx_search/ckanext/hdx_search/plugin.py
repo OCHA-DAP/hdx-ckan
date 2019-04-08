@@ -9,6 +9,8 @@ import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+
 
 NotFound = ckan.logic.NotFound
 
@@ -101,6 +103,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
         adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
+        adapt_solr_fq('archived', ' +extras_archived:true', ' -extras_archived:true')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
@@ -119,6 +122,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return search_params
 
     def after_search(self, search_results, search_params):
+        if search_params.get('extras', {}).get('ext_compute_freshness') == 'true':
+            for dataset in search_results.get('results', []):
+                FreshnessCalculator(dataset).populate_with_freshness()
         return search_results
 
     def before_view(self, pkg_dict):
