@@ -2,9 +2,9 @@ import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
-import ckan.logic.schema as core_schema
 
 import ckanext.hdx_org_group.actions.get as get_actions
+import ckanext.hdx_org_group.actions.update as update_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
 import ckanext.hdx_org_group.model as org_group_model
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
@@ -70,12 +70,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'group_delete': hdx_org_actions.hdx_group_delete,
             'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
             'hdx_get_locations_info_from_rw': get_actions.hdx_get_locations_info_from_rw,
+            'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location
         }
 
     def get_auth_functions(self):
         return {
             'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
-            'member_delete': authorize.member_delete
+            'member_delete': authorize.member_delete,
+            'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location
         }
 
     # def get_auth_functions(self):
@@ -288,11 +290,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def create(self, org):
         OrganizationCreateAnalyticsSender(org.name,
                                           org.hdx_org_type if hasattr(org, 'hdx_org_type') else None).send_to_queue()
-        tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+        from ckanext.hdx_package.helpers.caching import add_org_in_cache_organization_list
+        add_org_in_cache_organization_list(org.id)
 
     # IOrganizationController
     def edit(self, org):
-        tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+        # tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+        from ckanext.hdx_package.helpers.caching import replace_org_in_cache_organization_list
+        replace_org_in_cache_organization_list(org.id)
 
     # IOrganizationController
     def delete(self, org):

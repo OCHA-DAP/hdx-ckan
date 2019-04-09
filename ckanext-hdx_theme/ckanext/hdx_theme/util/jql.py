@@ -1,6 +1,6 @@
 import requests
 import logging
-import beaker.cache as bcache
+from dogpile.cache import make_region
 import pylons.config as config
 
 from datetime import datetime, timedelta
@@ -8,19 +8,23 @@ from collections import OrderedDict
 
 import ckanext.hdx_theme.util.jql_queries as jql_queries
 
-bcache.cache_regions.update({
-    'hdx_jql_cache': {
-        'expire': int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
-        'type': 'file',
-        'data_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/jql_cache/data',
-        'lock_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/jql_cache/lock',
-        'key_length': 250
-    }
-})
-
-CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 
 log = logging.getLogger(__name__)
+
+dogpile_jql_region = make_region(key_mangler=lambda key: 'jql-' + key)\
+    .configure(
+        'dogpile.cache.redis',
+        expiration_time=int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
+        arguments={
+            'host': config.get('hdx.caching.redis_host', 'gisredis'),
+            'port': int(config.get('hdx.caching.redis_port', '6379')),
+            'db': int(config.get('hdx.caching.redis_db', '3')),
+            'redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - we make sure it's higher than the expiration time
+            'distributed_lock': True
+        }
+    )
+
+CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 
 
 class JqlQueryExecutor(object):
@@ -162,7 +166,7 @@ class MultipleValueMandatoryMappingResultTransformer(MappingResultTransformer):
         return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_all_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_dataset_all_cached():
     return downloads_per_dataset()
 
@@ -174,7 +178,7 @@ def downloads_per_dataset(hours_since_now=None):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_per_week_last_24_weeks')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_dataset_per_week_last_24_weeks_cached():
     return downloads_per_dataset_per_week(24)
 
@@ -191,7 +195,7 @@ def downloads_per_dataset_per_week(weeks=24):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_last_30_days_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_last_30_days_cached():
     return downloads_per_organization(30)
 
@@ -203,7 +207,7 @@ def downloads_per_organization(days_since_now=30):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_per_week_last_24_weeks_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_per_week_last_24_weeks_cached():
     return downloads_per_organization_per_week(24)
 
@@ -220,7 +224,7 @@ def downloads_per_organization_per_week(weeks=24):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_per_dataset_last_24_weeks_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_per_dataset_last_24_weeks_cached():
     return downloads_per_organization_per_dataset(24)
 
@@ -235,7 +239,7 @@ def downloads_per_organization_per_dataset(weeks=24):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'pageviews_per_dataset_last_14_days_cached')
+@dogpile_jql_region.cache_on_arguments()
 def pageviews_per_dataset_last_14_days_cached():
     hours = 14 * 24
     return pageviews_per_dataset(hours)
@@ -248,7 +252,7 @@ def pageviews_per_dataset(hours_since_now=None):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'pageviews_per_organization_last_30_days_cached')
+@dogpile_jql_region.cache_on_arguments()
 def pageviews_per_organization_last_30_days_cached():
     return pageviews_per_organization(30)
 
@@ -260,7 +264,7 @@ def pageviews_per_organization(days_since_now=30):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'pageviews_per_organization_per_week_last_24_weeks_cached')
+@dogpile_jql_region.cache_on_arguments()
 def pageviews_per_organization_per_week_last_24_weeks_cached():
     return pageviews_per_organization_per_week(24)
 

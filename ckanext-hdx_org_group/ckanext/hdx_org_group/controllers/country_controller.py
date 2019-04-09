@@ -6,11 +6,10 @@ Created on Jan 13, 2015
 import collections
 import json
 import logging
-import beaker.cache as bcache
 from operator import itemgetter
 
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_org_group.helpers.data_completness as data_completness
+import ckanext.hdx_org_group.helpers.caching as caching
 import ckanext.hdx_package.helpers.screenshot as screenshot
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
@@ -86,7 +85,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         log.info("The id of the page is: " + id)
 
         country_dict = self.get_country(id)
-        top_line_data_list = self._get_topline_numbers(id)
+        top_line_data_list = caching.cached_topline_numbers(id)
         template_data = {
             'data': {
                 'country_dict': country_dict,
@@ -106,7 +105,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {'id': country_dict['id']}
         )
 
-        top_line_data_list = self._get_topline_numbers(country_dict['id'], country_dict.get('activity_level'))
+        top_line_data_list = caching.cached_topline_numbers(country_dict['id'], country_dict.get('activity_level'))
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
         f_event_list = self._get_event_list_for_featured(country_dict['id'])
@@ -265,39 +264,16 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
     @staticmethod
     def _get_data_completeness(location_code):
-        url_pattern = config.get('hdx.datagrid.config_url_pattern')
-        for_prod = config.get('hdx.datagrid.prod') == 'true'
-        branch = 'master' if for_prod else location_code
-        url = url_pattern.format(branch=branch, iso=location_code)
 
-        cached = for_prod
+        cached = config.get('hdx.datagrid.prod') == 'true'
 
         data = None
         if cached:
-            data = CountryController._get_data_completeness_cached(location_code, url)
+            data = caching.cached_data_completeness(location_code)
         else:
-            data = data_completness.DataCompletness(location_code, url).get_config()
+            data = caching.cached_data_completeness.original(location_code)
 
         return data
-
-    @staticmethod
-    @bcache.cache_region('hdx_memory_cache', '_get_data_completness_cached')
-    def _get_data_completeness_cached(location_code, url):
-        return data_completness.DataCompletness(location_code, url).get_config()
-
-    @staticmethod
-    @bcache.cache_region('hdx_memory_cache', '_get_topline_numbers')
-    def _get_topline_numbers(id, activity_level=None):
-        '''
-        :param id:
-        :type id: string
-        :param activity_level: used to invalidate cache for one group (activity_level) - relief web
-        :type activity_level: string
-
-        :return: list with topline numbers for a group
-        :rtype: list
-        '''
-        return get_action('hdx_topline_num_for_group')({}, {'id': id, 'common_format': 'false'})
 
 
     def get_country(self, id):

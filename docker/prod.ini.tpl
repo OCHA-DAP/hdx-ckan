@@ -50,7 +50,9 @@ smtp.starttls    = ${HDX_SMTP_TLS}
 hdx_smtp.mail_from_please_reply   = please-reply@${HDX_DOMAIN}
 
 hdx.cache.onstartup = true
-hdx.caching.base_dir = ${HDX_CACHE_DIR}
+hdx.caching.redis_host = ${HDX_REDIS_HOST}
+hdx.caching.redis_port = ${HDX_REDIS_PORT}
+hdx.caching.redis_db = ${HDX_REDIS_DB}
 
 hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true

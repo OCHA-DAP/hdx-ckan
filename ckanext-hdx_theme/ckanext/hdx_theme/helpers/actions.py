@@ -1,10 +1,8 @@
 import logging
 import json
 
-import requests
 from pylons import config
 import sqlalchemy
-import beaker.cache as bcache
 
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
@@ -110,6 +108,33 @@ def cached_organization_list(context, data_dict):
 def invalidate_cache_for_organizations(context, data_dict):
     _check_access('invalidate_cache_for_organizations', context, data_dict)
     caching.invalidate_cached_organization_list()
+
+
+def invalidate_region(context, data_dict):
+    _check_access('invalidate_region', context, data_dict)
+
+    from ckanext.hdx_theme.util.jql import dogpile_jql_region
+    from ckanext.hdx_package.helpers.caching import dogpile_org_group_lists_region
+    from ckanext.hdx_org_group.helpers.caching import dogpile_country_region
+    from ckanext.hdx_theme.helpers.caching import dogpile_requests_region
+
+    region_map = {
+        'jql': dogpile_jql_region,
+        'org_group': dogpile_org_group_lists_region,
+        'country': dogpile_country_region,
+        'requests': dogpile_requests_region
+    }
+
+    region_name = data_dict.get('name', '')
+    region = region_map.get(region_name)
+    message = 'Couldn\'t invalidate cache for region ' + region_name
+    if region:
+        region.invalidate()
+        message = 'Successfully invalidated cache for region ' + region_name
+
+    return {
+        'message': message
+    }
 
 
 def hdx_basic_user_info(context, data_dict):
@@ -241,24 +266,6 @@ def hdx_get_indicator_values(context, data_dict):
 #     url = endpoint + "&".join(filter_list)
 #
 #     return _make_rest_api_request(url)
-
-
-@bcache.cache_region('hdx_memory_cache', 'cached_make_rest_api_request')
-def _make_rest_api_request(url):
-    '''
-    Makes a GET response and expect a JSON response
-    :param url:
-    :type url: str
-    :return: json transformed into a dict
-    :rtype: dict
-    '''
-    log.info("Requesting indicators:" + url)
-
-    response = requests.get(url)
-
-    response.raise_for_status()
-
-    return response.json()
 
 
 def _add_to_filter_list(src, param_name, filter_list):

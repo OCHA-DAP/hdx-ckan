@@ -5,31 +5,35 @@ Created on Jun 2, 2014
 '''
 
 import logging
-import beaker.cache as bcache
 import pylons.config as config
 import unicodedata
+from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 
 log = logging.getLogger(__name__)
 
-bcache.cache_regions.update({
-    'hdx_memory_cache': {
-        'expire': 86400,  # 1 days
-        'type': 'file',
-        'data_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/main_cache/data',
-        'lock_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/main_cache/lock',
-        'key_length': 250
-    }
-})
+
+dogpile_org_group_lists_region = make_region(key_mangler=lambda key: 'org_group-' + key)\
+    .configure(
+        'dogpile.cache.redis',
+        expiration_time=60 * 60 * 24,
+        arguments={
+            'host': config.get('hdx.caching.redis_host', 'gisredis'),
+            'port': int(config.get('hdx.caching.redis_port', '6379')),
+            'db': int(config.get('hdx.caching.redis_db', '3')),
+            'redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - we make sure it's higher than the expiration time
+            'distributed_lock': True
+        }
+    )
 
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 
 
-@bcache.cache_region('hdx_memory_cache', 'cached_grp_iso_to_title')
+@dogpile_org_group_lists_region.cache_on_arguments()
 def cached_group_iso_to_title():
     log.info("Creating cache for group iso to title mapping")
     groups = cached_group_list()
@@ -39,7 +43,7 @@ def cached_group_iso_to_title():
     return result
 
 
-@bcache.cache_region('hdx_memory_cache', 'cached_grp_list')
+@dogpile_org_group_lists_region.cache_on_arguments()
 def cached_group_list():
     log.info("Creating cache for group list ")
     groups = tk.get_action('group_list')({'user': '127.0.0.1'},
@@ -59,8 +63,10 @@ def cached_group_list():
 
 def invalidate_cached_group_list():
     log.info("Invalidating cache for group list")
-    bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_list')
-    bcache.region_invalidate(cached_group_iso_to_title, 'hdx_memory_cache', 'cached_grp_iso_to_title')
+    # bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_list')
+    # bcache.region_invalidate(cached_group_iso_to_title, 'hdx_memory_cache', 'cached_grp_iso_to_title')
+    cached_group_list.invalidate()
+    cached_group_iso_to_title.invalidate()
 
 
 def filter_focus_countries(group_package_stuff):
@@ -72,18 +78,18 @@ def filter_focus_countries(group_package_stuff):
     return focus_group_package_stuff
 
 
-@bcache.cache_region('hdx_memory_cache', 'focus_countries_list')
+@dogpile_org_group_lists_region.cache_on_arguments()
 def cached_get_group_package_stuff():
     log.info("Creating cache for focus countries")
     group_package_stuff = tk.get_action('cached_group_list')()
     focus_group_package_stuff = filter_focus_countries(group_package_stuff)
 
     return sorted(focus_group_package_stuff, key=lambda k: k['title'])
-
-
-def invalidate_cached_get_group_package_stuff():
-    log.info("Invalidating cache for focus countries")
-    bcache.region_invalidate(cached_get_group_package_stuff, 'hdx_memory_cache', 'focus_countries_list')
+#
+#
+# def invalidate_cached_get_group_package_stuff():
+#     log.info("Invalidating cache for focus countries")
+#     bcache.region_invalidate(cached_get_group_package_stuff, 'hdx_memory_cache', 'focus_countries_list')
 
 
 def invalidate_group_caches():
@@ -91,10 +97,10 @@ def invalidate_group_caches():
         invalidate_func()
 
 
-group_invalidation_functions = [invalidate_cached_group_list, invalidate_cached_get_group_package_stuff]
+group_invalidation_functions = [invalidate_cached_group_list]
 
 
-@bcache.cache_region('hdx_memory_cache', 'cached_organization_list')
+@dogpile_org_group_lists_region.cache_on_arguments()
 def cached_organization_list():
     log.info("Creating cache for organization list")
     orgs = tk.get_action('organization_list')({'user': '127.0.0.1'},
@@ -103,9 +109,48 @@ def cached_organization_list():
                                                   'include_extras': True
                                               })
 
+    return _sort_orgs_by_display_name(orgs)
+
+
+def _sort_orgs_by_display_name(orgs):
     return sorted(orgs, key=lambda k: strip_accents(k['display_name']))
 
 
 def invalidate_cached_organization_list():
     log.info("Invalidating cache for org list")
-    bcache.region_invalidate(cached_organization_list, 'hdx_memory_cache', 'cached_organization_list')
+    # bcache.region_invalidate(cached_organization_list, 'hdx_memory_cache', 'cached_organization_list')
+    cached_organization_list.invalidate()
+
+
+def replace_org_in_cache_organization_list(org_id):
+    modified_org = tk.get_action('organization_show')(
+        {},{
+            'id': org_id,
+            'include_extras': True,
+            'include_tags': False,
+            'include_users': False,
+            'include_groups': False,
+            'include_followers': False
+        })
+    orgs = cached_organization_list()
+    index = next((i for i, o in enumerate(orgs) if o['id'] == modified_org['id']))
+    if index:
+        orgs[index] = modified_org
+        orgs = _sort_orgs_by_display_name(orgs)
+        cached_organization_list.set(orgs)
+
+
+def add_org_in_cache_organization_list(org_id):
+    modified_org = tk.get_action('organization_show')(
+        {},{
+            'id': org_id,
+            'include_extras': True,
+            'include_tags': False,
+            'include_users': False,
+            'include_groups': False,
+            'include_followers': False
+        })
+    orgs = cached_organization_list()
+    orgs.append(modified_org)
+    orgs = _sort_orgs_by_display_name(orgs)
+    cached_organization_list.set(orgs)
