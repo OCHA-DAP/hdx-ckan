@@ -7,8 +7,10 @@ import sqlalchemy
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.lib.search as search
 import ckan.authz as new_authz
 import ckan.model as model
+
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
@@ -102,7 +104,27 @@ def invalidate_cache_for_groups(context, data_dict):
 @logic.side_effect_free
 def cached_organization_list(context, data_dict):
     orgs = caching.cached_organization_list()
+
+    _refresh_pkg_count_on_org_list(orgs)
+
     return orgs
+
+
+def _refresh_pkg_count_on_org_list(orgs):
+    query_params = {
+        'start': 0,
+        'rows': 1,
+        # 'fl': ['id', 'name'],
+        'fl': 'id name',
+        'facet.field': ['organization'],
+        'facet.limit': 2000,
+    }
+    # search_result = tk.get_action('package_search')({}, query_params)
+    query = search.query_for(model.Package)
+    query.run(query_params)
+    org_name_to_pkg_count = query.facets.get('organization', {})
+    for org in orgs:
+        org['package_count'] = org_name_to_pkg_count.get(org['name'], 0)
 
 
 def invalidate_cache_for_organizations(context, data_dict):

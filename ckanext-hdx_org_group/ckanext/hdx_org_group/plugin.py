@@ -303,14 +303,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def delete(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
 
-    # IDomainObjectModification
-    def notify(self, entity, operation):
-        try:
-            if entity and entity.__class__ and 'Package' == entity.__class__.__name__:
-                tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
-        except:
-            log.warn('Problem occured while trying to invalidate cache for org list')
-
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     '''
