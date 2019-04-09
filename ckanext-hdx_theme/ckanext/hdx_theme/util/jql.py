@@ -7,22 +7,18 @@ from datetime import datetime, timedelta
 from collections import OrderedDict
 
 import ckanext.hdx_theme.util.jql_queries as jql_queries
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
 
 
 log = logging.getLogger(__name__)
 
-dogpile_jql_region = make_region(key_mangler=lambda key: 'jql-' + key)\
-    .configure(
-        'dogpile.cache.redis',
-        expiration_time=int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
-        arguments={
-            'host': config.get('hdx.caching.redis_host', 'gisredis'),
-            'port': int(config.get('hdx.caching.redis_port', '6379')),
-            'db': int(config.get('hdx.caching.redis_db', '3')),
-            'redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - we make sure it's higher than the expiration time
-            'distributed_lock': True
-        }
-    )
+dogpile_config = {
+    'cache.redis.expiration_time': int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
+}
+dogpile_config.update(dogpile_standard_config)
+
+dogpile_jql_region = make_region(key_mangler=lambda key: 'jql-' + key)
+dogpile_jql_region.configure_from_config(dogpile_config, dogpile_config_filter)
 
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 

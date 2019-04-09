@@ -4,21 +4,17 @@ from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.data_completness as data_completness
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
 
 log = logging.getLogger(__name__)
 
-dogpile_country_region = make_region(key_mangler=lambda key: 'country-' + key)\
-    .configure(
-        'dogpile.cache.redis',
-        expiration_time=60 * 60 * 24,
-        arguments={
-            'host': config.get('hdx.caching.redis_host', 'gisredis'),
-            'port': int(config.get('hdx.caching.redis_port', '6379')),
-            'db': int(config.get('hdx.caching.redis_db', '3')),
-            'redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - we make sure it's higher than the expiration time
-            'distributed_lock': True
-        }
-    )
+dogpile_config = {
+    'cache.redis.expiration_time': 60 * 60 * 24,
+}
+dogpile_config.update(dogpile_standard_config)
+
+dogpile_country_region = make_region(key_mangler=lambda key: 'country-' + key)
+dogpile_country_region.configure_from_config(dogpile_config, dogpile_config_filter)
 
 
 @dogpile_country_region.cache_on_arguments()

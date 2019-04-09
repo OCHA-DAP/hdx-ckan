@@ -5,29 +5,22 @@ Created on Jun 2, 2014
 '''
 
 import logging
-import pylons.config as config
 import unicodedata
 from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
 
 log = logging.getLogger(__name__)
 
+dogpile_config = {
+    'cache.redis.expiration_time': 60 * 60 * 24,
+}
+dogpile_config.update(dogpile_standard_config)
 
-dogpile_org_group_lists_region = make_region(key_mangler=lambda key: 'org_group-' + key)\
-    .configure(
-        'dogpile.cache.redis',
-        expiration_time=60 * 60 * 24,
-        arguments={
-            'host': config.get('hdx.caching.redis_host', 'gisredis'),
-            'port': int(config.get('hdx.caching.redis_port', '6379')),
-            'db': int(config.get('hdx.caching.redis_db', '3')),
-            'redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - we make sure it's higher than the expiration time
-            'distributed_lock': True
-        }
-    )
-
+dogpile_org_group_lists_region = make_region(key_mangler=lambda key: 'org_group-' + key)
+dogpile_org_group_lists_region.configure_from_config(dogpile_config, dogpile_config_filter)
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
