@@ -98,32 +98,32 @@ class TestGroupsCaching(hdx_test_base.HdxBaseTest):
         assert num_cached_group_list_called == 1, \
             'number of calls to group_list should be 1 , instead {num}'.format(num=num_cached_group_list_called)
 
-    def test_cached_get_group_package_stuff(self):
-        global num_filter_focus_countries
-
-        # calling the function to make sure it's cached
-        caching.cached_get_group_package_stuff()
-        # resetting counter
-        num_filter_focus_countries = 0
-
-        # the result should have been cached so filter_focus_countries should not be called
-        caching.cached_get_group_package_stuff()
-        assert num_filter_focus_countries == 0, \
-            'number of calls to filter_focus_countries should be 0 , instead {num}'.format(
-                num=num_filter_focus_countries)
-
-        caching.invalidate_group_caches()
-        # the result should have been removed from cache so filter_focus_countries should be called
-        caching.cached_get_group_package_stuff()
-        assert num_filter_focus_countries == 1, \
-            'number of calls to filter_focus_countries should be 1 , instead {num}'.format(
-                num=num_filter_focus_countries)
-
-        # the result should have been cached so the num of calls to filter_focus_countries shouldn't increase
-        caching.cached_get_group_package_stuff()
-        assert num_filter_focus_countries == 1, \
-            'number of calls to filter_focus_countries should be 1 , instead {num}'.format(
-                num=num_filter_focus_countries)
+    # def test_cached_get_group_package_stuff(self):
+    #     global num_filter_focus_countries
+    #
+    #     # calling the function to make sure it's cached
+    #     caching.cached_get_group_package_stuff()
+    #     # resetting counter
+    #     num_filter_focus_countries = 0
+    #
+    #     # the result should have been cached so filter_focus_countries should not be called
+    #     caching.cached_get_group_package_stuff()
+    #     assert num_filter_focus_countries == 0, \
+    #         'number of calls to filter_focus_countries should be 0 , instead {num}'.format(
+    #             num=num_filter_focus_countries)
+    #
+    #     caching.invalidate_group_caches()
+    #     # the result should have been removed from cache so filter_focus_countries should be called
+    #     caching.cached_get_group_package_stuff()
+    #     assert num_filter_focus_countries == 1, \
+    #         'number of calls to filter_focus_countries should be 1 , instead {num}'.format(
+    #             num=num_filter_focus_countries)
+    #
+    #     # the result should have been cached so the num of calls to filter_focus_countries shouldn't increase
+    #     caching.cached_get_group_package_stuff()
+    #     assert num_filter_focus_countries == 1, \
+    #         'number of calls to filter_focus_countries should be 1 , instead {num}'.format(
+    #             num=num_filter_focus_countries)
 
     def test_group_cache_invalidation_on_change(self):
         global num_invalidate_group_caches

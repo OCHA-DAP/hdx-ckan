@@ -71,13 +71,13 @@ def filter_focus_countries(group_package_stuff):
     return focus_group_package_stuff
 
 
-@dogpile_org_group_lists_region.cache_on_arguments()
-def cached_get_group_package_stuff():
-    log.info("Creating cache for focus countries")
-    group_package_stuff = tk.get_action('cached_group_list')()
-    focus_group_package_stuff = filter_focus_countries(group_package_stuff)
-
-    return sorted(focus_group_package_stuff, key=lambda k: k['title'])
+# @dogpile_org_group_lists_region.cache_on_arguments()
+# def cached_get_group_package_stuff():
+#     log.info("Creating cache for focus countries")
+#     group_package_stuff = tk.get_action('cached_group_list')()
+#     focus_group_package_stuff = filter_focus_countries(group_package_stuff)
+#
+#     return sorted(focus_group_package_stuff, key=lambda k: k['title'])
 #
 #
 # def invalidate_cached_get_group_package_stuff():
