@@ -42,19 +42,17 @@ class SplashPageController(HomeController):
             context['user_id'] = c.userobj.id
             context['user_is_admin'] = c.userobj.sysadmin
 
-        c.group_package_stuff = caching.cached_get_group_package_stuff()
-
-        ##Removing groups without geojson for the map
-        c.group_map = []
-        for gp in c.group_package_stuff:
-            '''
-                Removed check for geojson data because in the new version this information 
-                does not come from the group_list action and for now we are not using the map.
-                If we'll need this we should implement some caching functionality for this too.
-            '''
-            c.group_map.append(gp)
-
-        # print c.group_package_stuff
+        # c.group_package_stuff = caching.cached_get_group_package_stuff()
+        #
+        # ##Removing groups without geojson for the map
+        # c.group_map = []
+        # for gp in c.group_package_stuff:
+        #     '''
+        #         Removed check for geojson data because in the new version this information
+        #         does not come from the group_list action and for now we are not using the map.
+        #         If we'll need this we should implement some caching functionality for this too.
+        #     '''
+        #     c.group_map.append(gp)
 
         if c.userobj is not None:
             site_title = config.get('ckan.site_title', 'CKAN')

@@ -1,26 +1,26 @@
 import requests
 import logging
-import beaker.cache as bcache
+from dogpile.cache import make_region
 import pylons.config as config
 
 from datetime import datetime, timedelta
 from collections import OrderedDict
 
 import ckanext.hdx_theme.util.jql_queries as jql_queries
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
 
-bcache.cache_regions.update({
-    'hdx_jql_cache': {
-        'expire': int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
-        'type': 'file',
-        'data_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/jql_cache/data',
-        'lock_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/jql_cache/lock',
-        'key_length': 250
-    }
-})
-
-CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 
 log = logging.getLogger(__name__)
+
+dogpile_config = {
+    'cache.redis.expiration_time': int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
+}
+dogpile_config.update(dogpile_standard_config)
+
+dogpile_jql_region = make_region(key_mangler=lambda key: 'jql-' + key)
+dogpile_jql_region.configure_from_config(dogpile_config, dogpile_config_filter)
+
+CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 
 
 class JqlQueryExecutor(object):
@@ -162,7 +162,7 @@ class MultipleValueMandatoryMappingResultTransformer(MappingResultTransformer):
         return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_all_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_dataset_all_cached():
     return downloads_per_dataset()
 
@@ -174,7 +174,7 @@ def downloads_per_dataset(hours_since_now=None):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_per_week_last_24_weeks')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_dataset_per_week_last_24_weeks_cached():
     return downloads_per_dataset_per_week(24)
 
@@ -191,7 +191,7 @@ def downloads_per_dataset_per_week(weeks=24):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_last_30_days_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_last_30_days_cached():
     return downloads_per_organization(30)
 
@@ -203,7 +203,7 @@ def downloads_per_organization(days_since_now=30):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_per_week_last_24_weeks_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_per_week_last_24_weeks_cached():
     return downloads_per_organization_per_week(24)
 
@@ -220,7 +220,7 @@ def downloads_per_organization_per_week(weeks=24):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_per_dataset_last_24_weeks_cached')
+@dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_per_dataset_last_24_weeks_cached():
     return downloads_per_organization_per_dataset(24)
 
@@ -235,7 +235,7 @@ def downloads_per_organization_per_dataset(weeks=24):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'pageviews_per_dataset_last_14_days_cached')
+@dogpile_jql_region.cache_on_arguments()
 def pageviews_per_dataset_last_14_days_cached():
     hours = 14 * 24
     return pageviews_per_dataset(hours)
@@ -248,7 +248,7 @@ def pageviews_per_dataset(hours_since_now=None):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'pageviews_per_organization_last_30_days_cached')
+@dogpile_jql_region.cache_on_arguments()
 def pageviews_per_organization_last_30_days_cached():
     return pageviews_per_organization(30)
 
@@ -260,7 +260,7 @@ def pageviews_per_organization(days_since_now=30):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'pageviews_per_organization_per_week_last_24_weeks_cached')
+@dogpile_jql_region.cache_on_arguments()
 def pageviews_per_organization_per_week_last_24_weeks_cached():
     return pageviews_per_organization_per_week(24)
 

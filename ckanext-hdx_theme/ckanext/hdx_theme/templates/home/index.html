@@ -406,23 +406,6 @@
   </form>
 {% endblock %}
 
-{% block group_select %}
-    <div class="dropdown selectCountryDropdown">
-      <button class="dropdown-toggle selectCountry" data-toggle="dropdown">
-        {{ _("Choose Location") }}
-        <b class="caret"></b>
-      </button>
-      <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
-        {% for group in c.group_package_stuff %}
-          {% if group.type is defined %}
-            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
-              <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
-            {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-{% endblock %}
-
 {% block scripts %}
    {{ super() }}
    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>

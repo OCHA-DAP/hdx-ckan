@@ -117,6 +117,8 @@ hdx.cache.onstartup = false
 
 ckan.storage_path = /srv/filestore
 
+# hdx.caching.dogpile_filename = /tmp/hdx_dogpile_cache.dbm
+
 # Logging configuration
 [loggers]
 keys = root, ckan, sqlalchemy

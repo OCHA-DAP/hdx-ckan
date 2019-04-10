@@ -97,3 +97,4 @@ git+https://github.com/geomet/geomet.git
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@v0.0.10#egg=ckanext-dcat
 
 PyYAML==3.13
+dogpile.cache==0.7.1
