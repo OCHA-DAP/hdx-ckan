@@ -2,6 +2,11 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
+.contentBackground.twoColumnBackground {
+  background-image: none;
+  background-color: #ffffff;
+  min-height: auto;
+}
 .org-logo-large {
   width: 185px;
   height: 100%;
