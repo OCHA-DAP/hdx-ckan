@@ -13,8 +13,8 @@ dogpile_standard_config = {
 
     'cache.redis.backend': 'dogpile.cache.redis',
     'cache.redis.arguments.host': config.get('hdx.caching.redis_host', 'gisredis'),
-    'cache.redis.arguments.port': int(config.get('hdx.caching.redis_port', '6379')),
-    'cache.redis.arguments.db': int(config.get('hdx.caching.redis_db', '3')),
+    'cache.redis.arguments.port': int(config.get('hdx.caching.redis_port', '6379') or 6379),
+    'cache.redis.arguments.db': int(config.get('hdx.caching.redis_db', '3') or 3),
     'cache.redis.arguments.redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - higher than the expiration time
     'cache.redis.arguments.distributed_lock': True
 }
