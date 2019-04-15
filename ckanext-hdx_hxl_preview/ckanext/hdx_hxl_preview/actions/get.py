@@ -49,7 +49,7 @@ def hxl_preview_iframe_url_show(context, data_dict):
         'has_modify_permission': urllib.urlencode({'has_modify_permission': has_modify_permission}),
         'embedded_source': urllib.urlencode({'embeddedSource': urllib.quote(package_source.encode('utf-8'))}),
         'embedded_url': urllib.urlencode({'embeddedUrl': package_url}),
-        'embedded_date': urllib.urlencode({'embeddedDate': urllib.quote(resource_last_modified)})
+        'embedded_date': urllib.urlencode({'embeddedDate': urllib.quote(resource_last_modified).encode('utf-8')})
         # 'edit_mode': urllib.urlencode({'editMode': start_edit_mode}),
         # 'only_view_mode': urllib.urlencode({'onlyViewMode': only_view_mode}),
     }
