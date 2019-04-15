@@ -26,3 +26,7 @@ def member_delete(context, data_dict):
             return {'success': True}
 
     return _auth_create.member_create(context, data_dict)
+
+
+def invalidate_data_completeness_for_location(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can invalidate data completeness for location')}

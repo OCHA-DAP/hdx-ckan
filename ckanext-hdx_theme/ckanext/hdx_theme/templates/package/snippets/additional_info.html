@@ -53,18 +53,6 @@
 					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
                     <a onclick="contributeAddDetails('{{ pkg_dict.id }}', 'make private')" href="#">{{ _('make it private') }}</a></div>
 				{% endif %}
-<!-- changed as per #4056
-				{% set locale = h.dump_json({'content': _('Are you sure? This will affect whether this data is visible to everyone')}) %}
-				{% if pkg_dict.private %}
-					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
-					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
-					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it public') }}</a></div>
-				{% else %}
-					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
-					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
-					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it private') }}</a></div>
-				{% endif %}
--->
 			</td>
 		</tr>
 	{% else %}

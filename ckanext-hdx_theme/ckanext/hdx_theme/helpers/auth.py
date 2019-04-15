@@ -52,8 +52,13 @@ def hdx_send_editor_request_for_org(context, data_dict):
 def invalidate_cache_for_groups(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate group cache')}
 
+
 def invalidate_cache_for_organizations(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate organization cache')}
+
+
+def invalidate_region(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can invalidate region cache')}
 
 
 def _is_editor():

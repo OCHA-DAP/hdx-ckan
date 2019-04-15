@@ -12,7 +12,7 @@
 {% set analytics_shared_item = analytics_shared_item or 'dataset' %}
 
 {% resource 'hdx_theme/css/hdx-icons.css' %}
-{% resource 'hdx_theme/indicator/share_button.js' %}
+{% resource 'hdx_theme/package/share_button.js' %}
 {% if direct %}
 	<span class="{% if not disable_pull_left %}pull-left {% endif %} direct-share-links" style="font-size: 28px; min-width: 130px;" id="{{ dataset_social }}" target-url="{{url}}" short-path="{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}">
 		<a style="font-size:{{icon_font_size}};" href="https://twitter.com/share?url=data.humdata.org" target="_blank" title="Twitter"

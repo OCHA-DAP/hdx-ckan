@@ -19,7 +19,7 @@ import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
-from ckanext.hdx_theme.helpers.actions import _make_rest_api_request as make_rest_api_request
+from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
 
 import shlex
 import subprocess
@@ -283,7 +283,7 @@ def hdx_get_locations_info_from_rw(context, data_dict):
     try:
         url = data_dict.get('rw_url')
         if url:
-            return make_rest_api_request(url)
+            return cached_make_rest_api_request(url)
         return None
     except:
         log.error("RW file was not found or can not be accessed")
