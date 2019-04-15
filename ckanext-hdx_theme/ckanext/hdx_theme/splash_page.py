@@ -1,23 +1,44 @@
 import re
+from rdflib import Graph, Literal, BNode, RDF
+from rdflib.namespace import Namespace
+
 import ckan.lib.base as base
 from ckan.lib.base import request
 from ckan.lib.base import c, h
 from ckan.lib.base import model
-from ckan.lib.base import render
 from ckan.lib.base import _
 import ckan.logic as logic
-import ckan.plugins.toolkit as tk
 
-from ckan.controllers.group import GroupController as gc
 from ckan.controllers.home import HomeController
 from ckan.common import config
 
-import ckanext.hdx_package.helpers.caching as caching
 
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
 get_action = logic.get_action
 abort = base.abort
+
+
+def google_searchbox_data():
+    SCHEMA = Namespace('http://schema.org/')
+    ckan_url = config.get('ckan.site_url', 'https://data.humdata.org').replace('http://', 'https://')
+    search_action_url = ckan_url + '/search?q={search_term_string}'
+
+    website_node = BNode()
+    g = Graph()
+    g.bind('schema', SCHEMA)
+    g.add((website_node, RDF.type, SCHEMA.WebSite))
+    g.add((website_node, SCHEMA.url, Literal(ckan_url)))
+    search_action = BNode()
+
+    g.add((website_node, SCHEMA.potentialAction, search_action))
+    g.add((search_action, RDF.type, SCHEMA.SearchAction))
+    g.add((search_action, SCHEMA.target, Literal(search_action_url)))
+    g.add((search_action, SCHEMA['query-input'], Literal('required name=search_term_string')))
+    return g.serialize(format='json-ld', auto_compact=True)
+
+
+structured_data = google_searchbox_data()
 
 
 class SplashPageController(HomeController):
@@ -83,7 +104,7 @@ class SplashPageController(HomeController):
         #         'hdx.carousel.config': logic.get_action('hdx_carousel_settings_show')({}, {})
         #     }
         # }
-
+        c.structured_data = structured_data
         return base.render('home/index.html', cache_force=True)
 
     def _check_access(self, action_name, *args, **kw):
