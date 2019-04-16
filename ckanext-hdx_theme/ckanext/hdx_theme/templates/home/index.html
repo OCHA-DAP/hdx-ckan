@@ -410,6 +410,9 @@
    {{ super() }}
    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
    {% resource 'hdx_theme/homepage' %}
+   <script type="application/ld+json">
+    {{ c.structured_data | safe }}
+   </script>
 {% endblock %}
 
 {# Remove the toolbar. #}
