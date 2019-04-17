@@ -55,7 +55,7 @@
                 <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
             </a>
 
-            {% if (res.has_views and is_not_zipped) or h.hdx_dataset_is_hxl(pkg.tags) %}
+            {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) %}
             <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
               {{ _('More') }}
             </a>
@@ -65,13 +65,14 @@
                 On HDX and HDX Tools
                 <ul>
                   {% if res.has_views and is_not_zipped %}
+
                     <li>
                       <a href="{{ url }}" class="ga-preview">
                         {{ _('Preview on HDX') }}
                       </a>
                     </li>
                   {% endif %}
-                  {% if h.hdx_dataset_is_hxl(pkg.tags) %}
+                  {% if h.hdx_dataset_is_hxl(pkg.tags)  and is_not_zipped and not h.is_not_hxl_format(res.format) %}
                     <li>
                       <a href="#" class="ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
                         {{ _('Validate with Data Check') }}

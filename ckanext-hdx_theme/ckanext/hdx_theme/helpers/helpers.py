@@ -51,6 +51,20 @@ def is_not_zipped(res):
     return True
 
 
+NOT_HXL_FORMAT_LIST = ['zipped shapefile', 'zip', 'geojson', 'json', 'kml', 'kmz', 'rar', 'pdf', 'excel',
+                       'zipped', 'docx', 'doc', '7z']
+
+
+def _any(item, ext_list=NOT_HXL_FORMAT_LIST):
+    return any(i in item for i in ext_list)
+
+
+def is_not_hxl_format(res_format):
+    if not res_format:
+        return False
+    return _any([res_format.lower()], NOT_HXL_FORMAT_LIST)
+
+
 def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
         facet, limit, exclude_active=exclude_active)
