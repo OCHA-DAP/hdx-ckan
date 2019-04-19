@@ -25,6 +25,8 @@ fl_notes.txt
 *.ini
 .noseids
 *~
+.idea
+.vscode
 
 # custom style
 ckan/public/base/less/custom.less
@@ -43,7 +45,9 @@ ckan_deb/DEBIAN/prerm
 
 # node.js
 node_modules/
-.idea/
 
 # HDX-4956 - git ignore SOURCES.txt
 **/*.egg-info
+
+# docker
+contrib/docker/.env

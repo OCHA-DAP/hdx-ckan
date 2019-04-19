@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from paste.deploy.converters import asbool
+from six import text_type
 
 import ckan.model as model
 from ckan.common import g, request, config, session
@@ -97,8 +98,11 @@ def identify_user():
     if authenticators:
         for item in authenticators:
             item.identify()
-            if g.user:
-                break
+            try:
+                if g.user:
+                    break
+            except AttributeError:
+                continue
 
     # We haven't identified the user so try the default methods
     if not getattr(g, u'user', None):
@@ -115,7 +119,7 @@ def identify_user():
         g.author = g.user
     else:
         g.author = g.remote_addr
-    g.author = unicode(g.author)
+    g.author = text_type(g.author)
 
 
 def _identify_user_default():
@@ -178,3 +182,14 @@ def _get_user_for_apikey():
     query = model.Session.query(model.User)
     user = query.filter_by(apikey=apikey).first()
     return user
+
+
+def set_controller_and_action():
+    try:
+        controller, action = request.endpoint.split(u'.')
+    except ValueError:
+        log.debug(
+            u'Endpoint does not contain dot: {}'.format(request.endpoint)
+        )
+        controller = action = request.endpoint
+    g.controller, g.action = controller, action

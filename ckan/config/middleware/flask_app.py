@@ -10,28 +10,59 @@ from flask import Flask, Blueprint
 from flask.ctx import _AppCtxGlobals
 from flask.sessions import SessionInterface
 
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import default_exceptions, HTTPException
 from werkzeug.routing import Rule
 
+from flask_babel import Babel
 
 from beaker.middleware import SessionMiddleware
 from paste.deploy.converters import asbool
 from fanstatic import Fanstatic
+from repoze.who.config import WhoConfig
+from repoze.who.middleware import PluggableAuthenticationMiddleware
 
+import ckan.model as model
+from ckan.lib import base
 from ckan.lib import helpers
 from ckan.lib import jinja_extensions
-from ckan.common import config, g
+from ckan.common import config, g, request, ungettext
 import ckan.lib.app_globals as app_globals
 from ckan.plugins import PluginImplementations
-from ckan.plugins.interfaces import IBlueprint, IMiddleware
+from ckan.plugins.interfaces import IBlueprint, IMiddleware, ITranslation
 from ckan.views import (identify_user,
                         set_cors_headers_for_response,
                         check_session_cookie,
+                        set_controller_and_action
                         )
 
 
 import logging
 log = logging.getLogger(__name__)
+
+
+class CKANBabel(Babel):
+    def __init__(self, *pargs, **kwargs):
+        super(CKANBabel, self).__init__(*pargs, **kwargs)
+        self._i18n_path_idx = 0
+
+    @property
+    def domain(self):
+        default = super(CKANBabel, self).domain
+        multiple = self.app.config.get('BABEL_MULTIPLE_DOMAINS')
+        if not multiple:
+            return default
+        domains = multiple.split(';')
+        try:
+            return domains[self._i18n_path_idx]
+        except IndexError:
+            return default
+
+    @property
+    def translation_directories(self):
+        self._i18n_path_idx = 0
+        for path in super(CKANBabel, self).translation_directories:
+            yield path
+            self._i18n_path_idx += 1
 
 
 def make_flask_stack(conf, **app_conf):
@@ -41,7 +72,7 @@ def make_flask_stack(conf, **app_conf):
     root = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-    debug = asbool(app_conf.get('debug', app_conf.get('DEBUG', False)))
+    debug = asbool(conf.get('debug', conf.get('DEBUG', False)))
     testing = asbool(app_conf.get('testing', app_conf.get('TESTING', False)))
 
     app = flask_app = CKANFlask(__name__)
@@ -51,6 +82,7 @@ def make_flask_stack(conf, **app_conf):
     app.app_ctx_globals_class = CKAN_AppCtxGlobals
     app.url_rule_class = CKAN_Rule
 
+    app.jinja_options = jinja_extensions.get_jinja_env_options()
     # Update Flask config with the CKAN values. We use the common config
     # object as values might have been modified on `load_environment`
     if config:
@@ -96,18 +128,6 @@ def make_flask_stack(conf, **app_conf):
     app.session_interface = BeakerSessionInterface()
 
     # Add Jinja2 extensions and filters
-    extensions = [
-        'jinja2.ext.do', 'jinja2.ext.with_',
-        jinja_extensions.SnippetExtension,
-        jinja_extensions.CkanExtend,
-        jinja_extensions.CkanInternationalizationExtension,
-        jinja_extensions.LinkForExtension,
-        jinja_extensions.ResourceExtension,
-        jinja_extensions.UrlForStaticExtension,
-        jinja_extensions.UrlForExtension
-    ]
-    for extension in extensions:
-        app.jinja_env.add_extension(extension)
     app.jinja_env.filters['empty_and_escape'] = \
         jinja_extensions.empty_and_escape
 
@@ -119,6 +139,30 @@ def make_flask_stack(conf, **app_conf):
     app.context_processor(helper_functions)
     app.context_processor(c_object)
 
+    @app.context_processor
+    def ungettext_alias():
+        u'''
+        Provide `ungettext` as an alias of `ngettext` for backwards
+        compatibility
+        '''
+        return dict(ungettext=ungettext)
+
+    # Babel
+    pairs = [(os.path.join(root, u'i18n'), 'ckan')] + [
+        (p.i18n_directory(), p.i18n_domain())
+        for p in PluginImplementations(ITranslation)
+    ]
+
+    i18n_dirs, i18n_domains = zip(*pairs)
+
+    app.config[u'BABEL_TRANSLATION_DIRECTORIES'] = ';'.join(i18n_dirs)
+    app.config[u'BABEL_DOMAIN'] = 'ckan'
+    app.config[u'BABEL_MULTIPLE_DOMAINS'] = ';'.join(i18n_domains)
+
+    babel = CKANBabel(app)
+
+    babel.localeselector(get_locale)
+
     @app.route('/hello', methods=['GET'])
     def hello_world():
         return 'Hello World, this is served by Flask'
@@ -129,14 +173,34 @@ def make_flask_stack(conf, **app_conf):
 
     # Auto-register all blueprints defined in the `views` folder
     _register_core_blueprints(app)
+    _register_error_handler(app)
 
     # Set up each IBlueprint extension as a Flask Blueprint
     for plugin in PluginImplementations(IBlueprint):
         if hasattr(plugin, 'get_blueprint'):
-            app.register_extension_blueprint(plugin.get_blueprint())
+            plugin_blueprints = plugin.get_blueprint()
+            if not isinstance(plugin_blueprints, list):
+                plugin_blueprints = [plugin_blueprints]
+            for blueprint in plugin_blueprints:
+                app.register_extension_blueprint(blueprint)
+
+    # Set flask routes in named_routes
+    for rule in app.url_map.iter_rules():
+        if '.' not in rule.endpoint:
+            continue
+        controller, action = rule.endpoint.split('.')
+        needed = list(rule.arguments - set(rule.defaults or {}))
+        route = {
+            rule.endpoint: {
+                'action': action,
+                'controller': controller,
+                'highlight_actions': action,
+                'needed': needed
+                }
+            }
+        config['routes.named_routes'].update(route)
 
     # Start other middleware
-
     for plugin in PluginImplementations(IMiddleware):
         app = plugin.make_middleware(app, config)
 
@@ -171,6 +235,23 @@ def make_flask_stack(conf, **app_conf):
                          'make_error_log_middleware.'
                          .format(plugin.__class__.__name__))
 
+    # Initialize repoze.who
+    who_parser = WhoConfig(conf['here'])
+    who_parser.parse(open(app_conf['who.config_file']))
+
+    app = PluggableAuthenticationMiddleware(
+        app,
+        who_parser.identifiers,
+        who_parser.authenticators,
+        who_parser.challengers,
+        who_parser.mdproviders,
+        who_parser.request_classifier,
+        who_parser.challenge_decider,
+        logging.getLogger('repoze.who'),
+        logging.WARN,  # ignored
+        who_parser.remote_user_key
+    )
+
     # Update the main CKAN config object with the Flask specific keys
     # that were set here or autogenerated
     flask_config_keys = set(flask_app.config.keys()) - set(config.keys())
@@ -183,6 +264,17 @@ def make_flask_stack(conf, **app_conf):
     return app
 
 
+def get_locale():
+    u'''
+    Return the value of the `CKAN_LANG` key of the WSGI environ,
+    set by the I18nMiddleware based on the URL.
+    If no value is defined, it defaults to `ckan.locale_default` or `en`.
+    '''
+    return request.environ.get(
+        u'CKAN_LANG',
+        config.get(u'ckan.locale_default', u'en'))
+
+
 def ckan_before_request():
     u'''Common handler executed before all Flask requests'''
 
@@ -193,9 +285,16 @@ def ckan_before_request():
     # Sets g.user and g.userobj
     identify_user()
 
+    # Provide g.controller and g.action for backward compatibility
+    # with extensions
+    set_controller_and_action()
+
 
 def ckan_after_request(response):
     u'''Common handler executed after all Flask requests'''
+
+    # Dispose of the SQLALchemy session
+    model.Session.remove()
 
     # Check session cookie
     response = check_session_cookie(response)
@@ -208,7 +307,8 @@ def ckan_after_request(response):
 
 def helper_functions():
     u'''Make helper functions (`h`) available to Flask templates'''
-    helpers.load_plugin_helpers()
+    if not helpers.helper_functions:
+        helpers.load_plugin_helpers()
     return dict(h=helpers.helper_functions)
 
 
@@ -305,8 +405,30 @@ def _register_core_blueprints(app):
     def is_blueprint(mm):
         return isinstance(mm, Blueprint)
 
-    for loader, name, _ in pkgutil.iter_modules(['ckan/views'], 'ckan.views.'):
+    path = os.path.join(os.path.dirname(__file__), '..', '..', 'views')
+
+    for loader, name, _ in pkgutil.iter_modules([path], 'ckan.views.'):
         module = loader.find_module(name).load_module(name)
         for blueprint in inspect.getmembers(module, is_blueprint):
             app.register_blueprint(blueprint[1])
             log.debug(u'Registered core blueprint: {0!r}'.format(blueprint[0]))
+
+
+def _register_error_handler(app):
+    u'''Register error handler'''
+
+    def error_handler(e):
+        if isinstance(e, HTTPException):
+            extra_vars = {u'code': [e.code], u'content': e.description}
+            # TODO: Remove
+            g.code = [e.code]
+
+            return base.render(
+                u'error_document_template.html', extra_vars), e.code
+        extra_vars = {u'code': [500], u'content': u'Internal server error'}
+        return base.render(u'error_document_template.html', extra_vars), 500
+
+    for code in default_exceptions:
+        app.register_error_handler(code, error_handler)
+    if not app.debug and not app.testing:
+        app.register_error_handler(Exception, error_handler)

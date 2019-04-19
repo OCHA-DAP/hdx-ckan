@@ -19,7 +19,7 @@ connection, the Solr server URL, etc. Sometimes it can be useful to define them 
 automate and orchestrate deployments without having to first modify the `CKAN configuration file`_.
 
 These options are only read at startup time to update the ``config`` object used by CKAN,
-but they won't we accessed any more during the lifetime of the application.
+but they won't be accessed any more during the lifetime of the application.
 
 CKAN environment variables names match the options in the configuration file, but they are always uppercase
 and prefixed with `CKAN_` (this prefix is added even if
@@ -110,6 +110,17 @@ files, and enables CKAN templates' debugging features.
    With debug mode enabled, a visitor to your site could execute malicious
    commands.
 
+ckan.legacy_route_mappings
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+    ckan.legacy_route_mappings = {"home":"home.index", "about": "home.about",
+                                  "search": "dataset.search"}
+
+This will prevent extensions from having broken routes if used older (pylons) route namings.
+
+  .. warning:: This configuration will be removed when migration to flask will be finished
 
 Repoze.who Settings
 -------------------
@@ -326,23 +337,6 @@ Default value: 0
 
 This sets ``Cache-Control`` header's max-age value.
 
-.. _ckan.page_cache_enabled:
-
-ckan.page_cache_enabled
-^^^^^^^^^^^^^^^^^^^^^^^
-
-Example::
-
-  ckan.page_cache_enabled = True
-
-Default value: ``False``
-
-This enables CKAN's built-in page caching.
-
-.. warning::
-
-   Page caching is an experimental feature.
-
 .. _ckan.cache_enabled:
 
 ckan.cache_enabled
@@ -547,7 +541,7 @@ Example::
 Default value: ``False``
 
 
-Allow new user accounts to be created via the API.
+Allow new user accounts to be created via the API by anyone. When ``False`` only sysadmins are authorised.
 
 .. _ckan.auth.create_user_via_web:
 
@@ -578,6 +572,25 @@ Default value: ``admin``
 Makes role permissions apply to all the groups down the hierarchy from the groups that the role is applied to.
 
 e.g. a particular user has the 'admin' role for group 'Department of Health'. If you set the value of this option to 'admin' then the user will automatically have the same admin permissions for the child groups of 'Department of Health' such as 'Cancer Research' (and its children too and so on).
+
+
+.. _ckan.auth.public_user_details:
+
+ckan.auth.public_user_details
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.auth.public_user_details = False
+
+Default value: ``True``
+
+Restricts anonymous access to user information. If is set to ``False`` accessing users details when not logged in will raise a ``Not Authorized`` exception.
+
+.. note:: This setting should be used when user registration is disabled (``ckan.auth.create_user_via_web = False``), otherwise users
+    can just create an account to see other users details.
+
+
 
 .. end_config-authorization
 
@@ -654,12 +667,16 @@ ckan.search.show_all_types
 
 Example::
 
- ckan.search.show_all_types = true
+ ckan.search.show_all_types = dataset
 
 Default value:  ``false``
 
-Controls whether the default search page (``/dataset``) should show only
-standard datasets or also custom dataset types.
+Controls whether a search page (e.g. ``/dataset``) should also show
+custom dataset types. The default is ``false`` meaning that no search
+page for any type will show other types. ``true`` will show other types
+on the ``/dataset`` search page. Any other value (e.g. ``dataset`` or
+``document`` will be treated as a dataset type and that type's search
+page will show datasets of all types.
 
 .. _ckan.search.default_include_private:
 
@@ -668,7 +685,7 @@ ckan.search.default_include_private
 
 Example::
 
- ckan.search.defalt_include_private = false
+ ckan.search.default_include_private = false
 
 Default value:  ``true``
 
@@ -1045,36 +1062,23 @@ web interface. ``dumps_format`` is just a string for display. Example::
 
   ckan.dumps_format = CSV/JSON
 
-.. _ckan.recaptcha.version:
-
-ckan.recaptcha.version
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-The version of Recaptcha to use, for example::
-
- ckan.recaptcha.version = 1
-
-Default Value: 1
-
-Valid options: 1, 2
-
 .. _ckan.recaptcha.publickey:
 
 ckan.recaptcha.publickey
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The public key for your Recaptcha account, for example::
+The public key for your reCAPTCHA account, for example::
 
  ckan.recaptcha.publickey = 6Lc...-KLc
 
-To get a Recaptcha account, sign up at: http://www.google.com/recaptcha
+To get a reCAPTCHA account, sign up at: http://www.google.com/recaptcha
 
 .. _ckan.recaptcha.privatekey:
 
 ckan.recaptcha.privatekey
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The private key for your Recaptcha account, for example::
+The private key for your reCAPTCHA account, for example::
 
  ckan.recaptcha.privatekey = 6Lc...-jP
 
@@ -1315,6 +1319,50 @@ Example::
 To customise the display of CKAN you can supply replacements for static files such as HTML, CSS, script and PNG files. Use this option to specify where CKAN should look for additional files, before reverting to the ``ckan/public`` folder. You can supply more than one folder, separating the paths with a comma (,).
 
 For more information on theming, see :doc:`/theming/index`.
+
+.. _ckan.base_public_folder:
+
+ckan.base_public_folder
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+ ckan.base_public_folder = public
+
+Default value:  ``public``
+
+This config option is used to configure the base folder for static files used
+by CKAN core. It's used to determine which version of Bootstrap to be used.
+It accepts two values: ``public`` (Bootstrap 3, the default value from CKAN
+2.8 onwards) and ``public-bs2`` (Bootstrap 2, used until CKAN 2.7).
+
+It must be used in conjunction with :ref:`ckan.base_templates_folder` in order
+for it to properly function. Also, you can't use for example Bootstrap 3 for
+static files and Bootstrap 2 for templates or vice versa.
+
+.. note:: Starting with CKAN 2.8, Bootstrap 3 will be used as a default.
+
+.. _ckan.base_templates_folder:
+
+ckan.base_templates_folder
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+ ckan.base_templates_folder = templates
+
+Default value:  ``templates``
+
+This config option is used to configure the base folder for templates used
+by CKAN core. It's used to determine which version of Bootstrap to be used.
+It accepts two values: ``templates`` (Bootstrap 3, the default value from CKAN
+2.8 onwards) and ``templates-bs2`` (Bootstrap 2, used until CKAN 2.7).
+
+It must be used in conjunction with :ref:`ckan.base_public_folder` in order
+for it to properly function. Also, you can't use for example Bootstrap 3 for
+templates and Bootstrap 2 for static files or vice versa.
+
+.. note:: Starting with CKAN 2.8, Bootstrap 3 will be used as a default.
 
 .. end_config-theming
 

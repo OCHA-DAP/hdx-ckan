@@ -12,29 +12,26 @@ import ckan.lib.create_test_data as ctd
 import ckan.model as model
 import ckan.tests.legacy as tests
 from ckan.tests import helpers
-from ckan.common import config
 from ckan.plugins.toolkit import ValidationError
 import ckan.tests.factories as factories
-import ckan.tests.helpers as helpers
 from ckan.logic import NotFound
-
 import ckanext.datastore.backend.postgres as db
 from ckanext.datastore.tests.helpers import (
-    rebuild_all_dbs, set_url_type, DatastoreFunctionalTestBase)
+    rebuild_all_dbs, set_url_type,
+    DatastoreFunctionalTestBase, DatastoreLegacyTestBase)
 
 assert_raises = nose.tools.assert_raises
 
 
-class TestDatastoreDelete(tests.WsgiAppCase):
+class TestDatastoreDelete(DatastoreLegacyTestBase):
     sysadmin_user = None
     normal_user = None
     Session = None
 
     @classmethod
     def setup_class(cls):
-        if not tests.is_datastore_supported():
-            raise nose.SkipTest("Datastore not supported")
-        p.load('datastore')
+        cls.app = helpers._get_test_app()
+        super(TestDatastoreDelete, cls).setup_class()
         ctd.CreateTestData.create()
         cls.sysadmin_user = model.User.get('testsysadmin')
         cls.normal_user = model.User.get('annafan')
@@ -56,11 +53,6 @@ class TestDatastoreDelete(tests.WsgiAppCase):
         cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
         set_url_type(
             model.Package.get('annakarenina').resources, cls.sysadmin_user)
-
-    @classmethod
-    def teardown_class(cls):
-        rebuild_all_dbs(cls.Session)
-        p.unload('datastore')
 
     def _create(self):
         postparams = '%s=1' % json.dumps(self.data)
@@ -117,6 +109,7 @@ class TestDatastoreDelete(tests.WsgiAppCase):
                 'package_id': package['id']
             },
         }
+
         result = helpers.call_action('datastore_create', **data)
         resource_id = result['resource_id']
         helpers.call_action('resource_delete', id=resource_id)
