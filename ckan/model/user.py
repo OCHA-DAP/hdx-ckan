@@ -53,7 +53,6 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
     def get(cls, user_reference):
         query = meta.Session.query(cls).autoflush(False)
         query = query.filter(or_(cls.name == user_reference,
-                                 cls.id == user_reference))
                                  cls.id == user_reference,
                                  cls.email == user_reference))
         return query.first()
