@@ -84,7 +84,7 @@ class SplashPageController(HomeController):
         #     }
         # }
 
-        return base.render('home/index.html', cache_force=True)
+        return base.render('home/index.html')
 
     def _check_access(self, action_name, *args, **kw):
         ''' select the correct group/org check_access '''

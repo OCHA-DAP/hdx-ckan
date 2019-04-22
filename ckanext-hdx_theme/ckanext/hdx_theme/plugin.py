@@ -113,7 +113,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     def before_map(self, map):
         map.connect(
-            'home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
+            'hdx_home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
         map.connect(
             '/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
         map.connect(
