@@ -32,6 +32,7 @@ from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
+import ckanext.hdx_package.helpers.caching as pkg_caching
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -380,6 +381,7 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
     if not resource_dict.get('last_modified'):
         resource_dict['last_modified'] = resource_dict['revision_last_updated']
 
+    resource_dict['api_highways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
 
 @logic.side_effect_free
 def package_show(context, data_dict):
@@ -542,6 +544,16 @@ def _get_resource_hdx_relative_url(resource_dict):
         return helpers.make_url_relative(resource_dict.get('url', ''))
 
     return resource_dict.get('url', '')
+
+
+def _get_resource_id_apihighways(resource_id):
+    ah_dict = pkg_caching.cached_resource_id_apihighways()
+    if ah_dict:
+        for res in ah_dict.get('data'):
+            id = res.get('attributes', {}).get('metadata', {})[0].get('attributes', {}).get('resource_id', None)
+            if id and resource_id == id:
+                return res.get('id')
+    return None
 
 @logic.side_effect_free
 def package_validate(context, data_dict):

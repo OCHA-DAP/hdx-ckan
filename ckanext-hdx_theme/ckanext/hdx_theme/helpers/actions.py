@@ -136,7 +136,7 @@ def invalidate_region(context, data_dict):
     _check_access('invalidate_region', context, data_dict)
 
     from ckanext.hdx_theme.util.jql import dogpile_jql_region
-    from ckanext.hdx_package.helpers.caching import dogpile_org_group_lists_region
+    from ckanext.hdx_package.helpers.caching import dogpile_org_group_lists_region, dogpile_pkg_external_region
     from ckanext.hdx_org_group.helpers.caching import dogpile_country_region
     from ckanext.hdx_theme.helpers.caching import dogpile_requests_region
 
@@ -144,7 +144,8 @@ def invalidate_region(context, data_dict):
         'jql': dogpile_jql_region,
         'org_group': dogpile_org_group_lists_region,
         'country': dogpile_country_region,
-        'requests': dogpile_requests_region
+        'requests': dogpile_requests_region,
+        'pkg_external': dogpile_pkg_external_region
     }
 
     region_name = data_dict.get('name', '')
