@@ -307,3 +307,4 @@ hdx.caching.use_redis = true
 
 hdx.apihighways.enabled = true
 hdx.apihighways.url = https://api.apihighways.org/dataset?vocabulary[legacy]=hdx-full&page[size]=10000&includes=metadata
+hdx.apihighways.baseurl = https://apihighways.org/data-sets/

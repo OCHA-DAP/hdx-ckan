@@ -33,6 +33,7 @@ from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 import ckanext.hdx_package.helpers.caching as pkg_caching
+from pylons import config
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -381,7 +382,9 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
     if not resource_dict.get('last_modified'):
         resource_dict['last_modified'] = resource_dict['revision_last_updated']
 
-    resource_dict['api_highways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
+    resource_dict['apihighways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
+    if resource_dict['apihighways_id']:
+        resource_dict['apihighways_url'] = config.get('hdx.apihighways.baseurl') + resource_dict.get('apihighways_id')
 
 @logic.side_effect_free
 def package_show(context, data_dict):

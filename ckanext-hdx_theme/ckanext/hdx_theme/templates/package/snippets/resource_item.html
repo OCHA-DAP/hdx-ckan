@@ -55,33 +55,54 @@
                 <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
             </a>
 
-            {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) %}
-            <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
-              {{ _('More') }}
-            </a>
-            {% endif %}
-            <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">
-              <li class="crises-group">
-                On HDX and HDX Tools
-                <ul>
-                  {% if res.has_views and is_not_zipped %}
+            {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) or res.api_highways_id %}
+              <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
+                {{ _('More') }}
+              </a>
 
-                    <li>
-                      <a href="{{ url }}" class="ga-preview">
-                        {{ _('Preview on HDX') }}
-                      </a>
-                    </li>
-                  {% endif %}
-                  {% if h.hdx_dataset_is_hxl(pkg.tags)  and is_not_zipped and not h.is_not_hxl_format(res.format) %}
-                    <li>
-                      <a href="#" class="ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
-                        {{ _('Validate with Data Check') }}
-                      </a>
-                    </li>
-                  {% endif %}
+
+
+                <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">
+                {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) %}
+                  <li class="crises-group">
+                    On HDX and HDX Tools
+                    <ul>
+                      {% if res.has_views and is_not_zipped %}
+
+                        <li>
+                          <a href="{{ url }}" class="ga-preview">
+                            {{ _('Preview on HDX') }}
+                          </a>
+                        </li>
+                      {% endif %}
+                      {% if h.hdx_dataset_is_hxl(pkg.tags)  and is_not_zipped and not h.is_not_hxl_format(res.format) %}
+                        <li>
+                          <a href="#" class="ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
+                            {{ _('Validate with Data Check') }}
+                          </a>
+                        </li>
+                      {% endif %}
+                    </ul>
+                  </li>
+                {% endif %}
+                {% if res.apihighways_id %}
+                  <li class="crises-group">
+                    On Our Partner Sites
+                    <ul>
+  {#                    {% if res.apihighways_id %}#}
+                        <li>
+                          <a href="{{ res.apihighways_url }}" class="ga-preview" target="_blank">
+                            {{ _('Query on API Highways') }}
+                          </a>
+                        </li>
+  {#                    {% endif %}#}
+                    </ul>
+                  </li>
+                {% endif %}
                 </ul>
-              </li>
-            </ul>
+
+            {% endif %}
+
 
 
             {% set button_id = 'social-btn-' + res.id %}
