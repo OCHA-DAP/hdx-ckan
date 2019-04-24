@@ -553,8 +553,8 @@ def _get_resource_id_apihighways(resource_id):
     ah_dict = pkg_caching.cached_resource_id_apihighways()
     if ah_dict:
         for res in ah_dict.get('data'):
-            id = res.get('attributes', {}).get('metadata', {})[0].get('attributes', {}).get('resource_id', None)
-            if id and resource_id == id:
+            _id = res.get('attributes', {}).get('metadata', {})[0].get('attributes', {}).get('info', {}).get('resourceId', None)
+            if _id and resource_id == _id:
                 return res.get('id')
     return None
 

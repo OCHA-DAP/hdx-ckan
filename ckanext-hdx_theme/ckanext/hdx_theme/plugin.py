@@ -245,6 +245,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'cached_organization_list': hdx_actions.cached_organization_list,
             'invalidate_cache_for_groups': hdx_actions.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': hdx_actions.invalidate_cache_for_organizations,
+            'invalidate_cached_resource_id_apihighways': hdx_actions.invalidate_cached_resource_id_apihighways,
             'invalidate_region': hdx_actions.invalidate_region,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
@@ -295,6 +296,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
             'invalidate_cache_for_groups': auth.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,
+            'invalidate_cached_resource_id_apihighways': auth.invalidate_cached_resource_id_apihighways,
             'invalidate_region': auth.invalidate_region,
             'hdx_user_statistics': auth.hdx_user_statistics,
 

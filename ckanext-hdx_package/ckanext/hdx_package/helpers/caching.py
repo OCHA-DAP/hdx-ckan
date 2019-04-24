@@ -170,3 +170,8 @@ def cached_resource_id_apihighways():
         response.raise_for_status()
         result = response.json()
     return result
+
+
+def invalidate_cached_resource_id_apihighways():
+    log.info("Invalidating cache for apihighways")
+    cached_resource_id_apihighways.invalidate()

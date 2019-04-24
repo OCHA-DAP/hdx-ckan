@@ -132,6 +132,11 @@ def invalidate_cache_for_organizations(context, data_dict):
     caching.invalidate_cached_organization_list()
 
 
+def invalidate_cached_resource_id_apihighways(context, data_dict):
+    _check_access('invalidate_cached_resource_id_apihighways', context, data_dict)
+    caching.invalidate_cached_resource_id_apihighways()
+
+
 def invalidate_region(context, data_dict):
     _check_access('invalidate_region', context, data_dict)
 
