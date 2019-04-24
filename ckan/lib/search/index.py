@@ -264,6 +264,8 @@ class PackageSearchIndex(SearchIndex):
             # See http://lucene.apache.org/solr/api/org/apache/solr/schema/DateField.html
             pkg_dict['metadata_created'] += 'Z'
             pkg_dict['metadata_modified'] += 'Z'
+            if pkg_dict.get('last_modified'):
+                pkg_dict['last_modified'] += 'Z'
 
             # mark this CKAN instance as data source:
             pkg_dict['site_id'] = config.get('ckan.site_id')
@@ -472,6 +474,8 @@ class PackageSearchIndex(SearchIndex):
         # See http://lucene.apache.org/solr/api/org/apache/solr/schema/DateField.html
         pkg_dict['metadata_created'] += 'Z'
         pkg_dict['metadata_modified'] += 'Z'
+        if pkg_dict.get('last_modified'):
+            pkg_dict['last_modified'] += 'Z'
 
         # mark this CKAN instance as data source:
         pkg_dict['site_id'] = config.get('ckan.site_id')
