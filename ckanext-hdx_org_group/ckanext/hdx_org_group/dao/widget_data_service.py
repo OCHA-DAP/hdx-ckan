@@ -62,9 +62,8 @@ class WidgetDataService(object):
         formatters.TopLineItemsWithDateFormatter(top_line_data, getter_setter_class=CustomFormatters,
                                                  src_date_format='%Y-%m-%d').format_results()
 
-
-
         return top_line_data
+
 
 class RWWidgetDataService(WidgetDataService):
     '''
@@ -93,11 +92,9 @@ class RWWidgetDataService(WidgetDataService):
                     super(RWGettersSetteres, RWGettersSetteres).top_line_date_set(r, value)
                     r[u'datasetUpdateDate'] = value
 
-
                 @staticmethod
                 def spark_line_date_set(r, value):
                     r['formatted_date'] = value
-
 
             formatters.TopLineItemsWithDateFormatter(top_line_data, getter_setter_class=RWGettersSetteres,
                                                      src_date_format='%Y-%m-%dT%H:%M:%SZ').format_results()
@@ -106,5 +103,3 @@ class RWWidgetDataService(WidgetDataService):
             log.error('No value found for hdx.active_locations_toplines.url in ini file')
 
         return top_line_data
-
-
