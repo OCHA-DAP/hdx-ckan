@@ -166,9 +166,12 @@ def cached_resource_id_apihighways():
 
     result = {}
     if config.get('hdx.apihighways.enabled'):
-        response = requests.get(config.get('hdx.apihighways.url'))
-        response.raise_for_status()
-        result = response.json()
+        try:
+            response = requests.get(config.get('hdx.apihighways.url'))
+            response.raise_for_status()
+            result = response.json()
+        except Exception, ex:
+            log.error(ex)
     return result
 
 
