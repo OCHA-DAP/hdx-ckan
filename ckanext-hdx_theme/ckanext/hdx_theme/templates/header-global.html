@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row paddingRowHack global-header-bg">
             <div class="col-xs-12 paddingLeftHack paddingRightHack global-header-content">
-              <a href="#" data-toggle="dropdown" class="ocha-services">
+              <a href="#" data-toggle="dropdown" class="ocha-services" aria-label="OCHA services">
                 <span class="ocha-logo"></span>
                 <span class="ocha-services-text">OCHA Services</span>
 
@@ -112,7 +112,7 @@
                 {% if c.userobj %}
                   <ul class="separated-list">
                     <li>
-                      <a class="action" href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">
+                      <a class="action" href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="faq link">
                         <svg class="icon-o-help" viewBox="0 0 48 48"><path d="M29,43a5,5,0,0,1-5,5,5,5,0,1,1,3.53-8.53A4.82,4.82,0,0,1,29,43Z"/><path d="M24,0A11,11,0,0,0,13,11a4,4,0,0,0,8,0,3,3,0,0,1,6,0h0c0,2-.64,3-2.33,4.67-2,2-4.67,4.67-4.67,9.33v5a4,4,0,0,0,8,0V25c0-1.23.64-2,2.33-3.67A14.43,14.43,0,0,0,35,11h0A11,11,0,0,0,24,0Z"/></svg>
                         <span class="action-text">
                           {{ _('FAQ') }}
@@ -193,7 +193,7 @@
                   {% block header_account_notlogged %}
                     <ul class="separated-list">
                       <li>
-                        <a class="action" href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">
+                        <a class="action" href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="FAQ link">
                           <svg class="icon-o-help" viewBox="0 0 48 48"><path d="M29,43a5,5,0,0,1-5,5,5,5,0,1,1,3.53-8.53A4.82,4.82,0,0,1,29,43Z"/><path d="M24,0A11,11,0,0,0,13,11a4,4,0,0,0,8,0,3,3,0,0,1,6,0h0c0,2-.64,3-2.33,4.67-2,2-4.67,4.67-4.67,9.33v5a4,4,0,0,0,8,0V25c0-1.23.64-2,2.33-3.67A14.43,14.43,0,0,0,35,11h0A11,11,0,0,0,24,0Z"/></svg>
                           <span class="action-text">
                             {{ _('FAQ') }}
@@ -201,7 +201,7 @@
                         </a>
                       </li>
                       <li>
-                        <a class="action" class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#">
+                        <a class="action" class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">
                           <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
                           <span class="action-text">
                             {{ _('Log in') }}
@@ -210,7 +210,7 @@
                         </a>
                       </li>
                       <li>
-                        <a class="action" onclick="spawnRecaptcha('#signupPopup');showOnboardingWidget('#signupPopup');" href="#">
+                        <a class="action" onclick="spawnRecaptcha('#signupPopup');showOnboardingWidget('#signupPopup');" href="#" aria-label="sign up">
                           <svg class="icon-o-checked" viewBox="0 0 48 48"><path d="M24,2A22,22,0,1,0,46,24,22,22,0,0,0,24,2ZM38.06,18.37,23,33.83a2.92,2.92,0,0,1-2.9.8,3,3,0,0,1-1.6-.83L10,25.29A3,3,0,0,1,14.2,21l6.5,6.5L33.77,14.17a3,3,0,1,1,4.29,4.19Z"/></svg>
                           <span class="action-text">
                             {{_('Sign up')}}
