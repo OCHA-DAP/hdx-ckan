@@ -208,7 +208,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         # Mark the user's new activities as old whenever they view their
         # dashboard page.
         get_action('dashboard_mark_activities_old')(context, {})
-        return render('user/dashboard.html')
+        return render('user/dashboard.html', extra_vars={'user_dict': user_dict})
 
     def dashboard_datasets(self):
         """
