@@ -272,7 +272,9 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
             c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
 
-            return render('user/dashboard_datasets.html')
+            return render('user/dashboard_datasets.html', extra_vars={
+                'user_dict': user_dict
+            })
 
     # def dashboard_visualizations(self):
     #     """
