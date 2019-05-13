@@ -386,6 +386,11 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
         resource_dict['apihighways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
         if resource_dict['apihighways_id']:
             resource_dict['apihighways_url'] = config.get('hdx.apihighways.baseurl') + resource_dict.get('apihighways_id')
+    else:
+        if 'apihighways_id' in resource_dict:
+            del resource_dict['apihighways_id']
+        if 'apihighways_url' in resource_dict:
+            del resource_dict['apihighways_url']
 
 @logic.side_effect_free
 def package_show(context, data_dict):
