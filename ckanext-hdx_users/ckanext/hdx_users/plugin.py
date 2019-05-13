@@ -153,15 +153,15 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         #             action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
         map.connect('/user/edit', controller='user', action='edit')
-        map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
-        map.connect('user_activity_stream', '/user/activity/{id}',
-                    controller='user', action='activity', ckan_icon='time')
+        # map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
+        # map.connect('user_activity_stream', '/user/activity/{id}',
+        #             controller='user', action='activity', ckan_icon='time')
         map.connect('user_follow', '/user/follow/{id}', controller='user', action='follow')
         map.connect('/user/unfollow/{id}', controller='user', action='unfollow')
         map.connect('user_followers', '/user/followers/{id:.*}',
                     controller='user', action='followers', ckan_icon='group')
-        map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
-                    ckan_icon='cog')
+        # map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
+        #             ckan_icon='cog')
         map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
         map.connect('register', '/user/register', controller='user', action='register')
         map.connect('login', '/user/login', controller='user', action='login')
@@ -203,7 +203,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
 
         #######
-        map.connect('user_datasets', '/user/{id:.*}',
+        map.connect('user_datasets', '/user/{id:[^/]*}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
         map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
