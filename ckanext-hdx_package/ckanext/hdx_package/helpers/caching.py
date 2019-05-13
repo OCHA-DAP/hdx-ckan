@@ -6,7 +6,9 @@ Created on Jun 2, 2014
 
 import logging
 import unicodedata
+import requests
 from dogpile.cache import make_region
+from pylons import config
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
@@ -14,13 +16,22 @@ from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_c
 
 log = logging.getLogger(__name__)
 
-dogpile_config = {
+dogpile_org_group_config = {
     'cache.redis.expiration_time': 60 * 60 * 24,
 }
-dogpile_config.update(dogpile_standard_config)
+dogpile_org_group_config.update(dogpile_standard_config)
 
 dogpile_org_group_lists_region = make_region(key_mangler=lambda key: 'org_group-' + key)
-dogpile_org_group_lists_region.configure_from_config(dogpile_config, dogpile_config_filter)
+dogpile_org_group_lists_region.configure_from_config(dogpile_org_group_config, dogpile_config_filter)
+
+# API HIGHWAYS cache config
+dogpile_external_config = {
+    'cache.redis.expiration_time': 60 * 60 * 24 * 3,
+}
+dogpile_external_config.update(dogpile_standard_config)
+dogpile_pkg_external_region = make_region(key_mangler=lambda key: 'pkg_external-' + key)
+dogpile_pkg_external_region.configure_from_config(dogpile_external_config, dogpile_config_filter)
+
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
@@ -31,7 +42,7 @@ def cached_group_iso_to_title():
     log.info("Creating cache for group iso to title mapping")
     groups = cached_group_list()
 
-    result = {g.get('name'):g.get('title') for g in groups}
+    result = {g.get('name'): g.get('title') for g in groups}
 
     return result
 
@@ -147,3 +158,23 @@ def add_org_in_cache_organization_list(org_id):
     orgs.append(modified_org)
     orgs = _sort_orgs_by_display_name(orgs)
     cached_organization_list.set(orgs)
+
+
+@dogpile_pkg_external_region.cache_on_arguments()
+def cached_resource_id_apihighways():
+    log.info("Creating cache for HDX resource_id to apihighways dataset_id mapping")
+
+    result = {}
+    if config.get('hdx.apihighways.enabled'):
+        try:
+            response = requests.get(config.get('hdx.apihighways.url'))
+            response.raise_for_status()
+            result = response.json()
+        except Exception, ex:
+            log.error(ex)
+    return result
+
+
+def invalidate_cached_resource_id_apihighways():
+    log.info("Invalidating cache for apihighways")
+    cached_resource_id_apihighways.invalidate()

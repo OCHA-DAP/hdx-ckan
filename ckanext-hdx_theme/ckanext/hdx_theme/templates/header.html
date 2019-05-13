@@ -147,7 +147,7 @@
     <div class="container">
         <div class="navbar-header">
             <div class="hdxLogo">
-                <a class="logo" href="/"><div class="logo-img" alt="Humanitarian Data Exchange Logo"></div></a>
+                <a class="logo" href="/" aria-label="Humanitarian Data Exchange Logo"><div class="logo-img"></div></a>
             </div>
                 <div class="header-nav-search table-valign pull-left">
                     <span class="table-valign-content">
@@ -156,7 +156,7 @@
                                 <div id="input-search">
                                     <div class="input-prepend input-append">
                                         <i class="icon-search"></i>
-                                        <input type="text" class="searchInput" id="qMobile" name="q" value="" autocomplete="off" placeholder="Search Datasets">
+                                        <input type="text" class="searchInput" id="qMobile" name="q" value="" autocomplete="off" placeholder="Search Datasets" aria-label="Search Datasets">
                                         <input type="hidden" value="main-nav" name="ext_search_source" />
                                     </div>
                                     <div class="search-ahead"></div>
@@ -197,7 +197,7 @@
                 <li class="sub-nav">{% link_for _('Terms'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
                 <li class="sub-nav"><a href="https://centre.humdata.org/category/blog/">Blog</a></li>
                 <li class="sub-nav"><a href="https://centre.humdata.org/get-involved/">Contact</a></li>
-                <li class="sub-nav login top-pad"><a onclick="showOnboardingWidget('#loginPopup');" href="#">Login</a> | <a onclick="showOnboardingWidget('#signupPopup');" href="#">Sign up</a></li>
+                <li class="sub-nav login top-pad"><a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">Login</a> | <a onclick="showOnboardingWidget('#signupPopup');" href="#" aria-label="sign up">Sign up</a></li>
             </ul>
         </div>
     </div>

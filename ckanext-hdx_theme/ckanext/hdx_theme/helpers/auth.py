@@ -57,6 +57,10 @@ def invalidate_cache_for_organizations(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate organization cache')}
 
 
+def invalidate_cached_resource_id_apihighways(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can invalidate apihighways cache')}
+
+
 def invalidate_region(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate region cache')}
 
