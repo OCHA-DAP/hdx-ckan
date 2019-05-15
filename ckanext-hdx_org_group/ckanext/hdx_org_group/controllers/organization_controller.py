@@ -284,7 +284,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         return render(self._new_template(group_type))
 
     def edit(self, id, data=None, errors=None, error_summary=None):
-        group_type = self._guess_group_type()
+        group_type = 'organization'
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'save': 'save' in request.params,
