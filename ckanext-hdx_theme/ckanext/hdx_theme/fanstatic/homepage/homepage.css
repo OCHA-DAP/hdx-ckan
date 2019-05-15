@@ -186,6 +186,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .hero-section .hero-boxes .action-box .count-items .item-count a {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 34px;
   color: #888888;
@@ -198,6 +199,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .hero-section .hero-boxes .action-box .count-items .item-name {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;
@@ -240,6 +242,7 @@ header .homepage-header-nav-border > div {
   text-align: center;
   color: #fff;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 24px;
 }
@@ -324,6 +327,7 @@ header .homepage-header-nav-border > div {
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 12px;
   margin: 0;
@@ -513,6 +517,7 @@ header .homepage-header-nav-border > div {
   white-space: pre-line;
   margin-bottom: 15px;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 16px;
   color: #333333;

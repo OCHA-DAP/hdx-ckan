@@ -9,6 +9,7 @@
 }
 .hdx-form .label-title-style {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 13px;
   line-height: 14px;
@@ -29,6 +30,7 @@
 }
 .hdx-form .form-section .sample-text {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 13px;
   text-transform: uppercase;
@@ -49,6 +51,7 @@
   padding: 20px 0;
   background-color: #007CE0;
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 20px;
   color: #fff;
@@ -99,6 +102,7 @@
 }
 .hdx-form .form-group .control-label {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 13px;
   line-height: 14px;

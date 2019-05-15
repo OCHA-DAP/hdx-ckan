@@ -132,6 +132,7 @@ html > .contribute-body > .contribute-main > div {
 }
 .contribute-splash-box .drop-here .drop-description {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 15px;
   margin-top: 14px;
@@ -146,6 +147,7 @@ html > .contribute-body > .contribute-main > div {
 }
 .contribute-splash-box .drop-here .drop-browse span {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 15px;
   z-index: 1;
@@ -158,17 +160,20 @@ html > .contribute-body > .contribute-main > div {
 .contribute-splash-box .drop-here .drop-size {
   margin-top: 10px;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 16px;
 }
 .contribute-splash-box .drop-here .drop-separator {
   margin: 20px 0;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 16px;
 }
 .contribute-splash-box .drop-here .drop-alternatives {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 15px;
   margin-top: 10px;

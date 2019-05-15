@@ -203,15 +203,9 @@
       {% endblock %}
     #}
     {%- block scripts %}
-      {% resource 'vendor/jquery.js' %}
-      {% resource 'hdx_theme/vendor/lazysizes/lazysizes.js' %}
-      {% resource 'hdx_theme/vendor/jquery.cookie/jquery.cookie.js' %}
+      {# Keep this block to a minimum, use resource.config instead #}
       {% resource 'hdx_theme/ckan' %}
       {% resource 'hdx_theme/bootstrap' %}
-      {% resource 'hdx_theme/external-links.js' %}
-      {% resource 'vendor/vendor' %}
-      {% resource 'hdx_theme/google-analytics' %}
-
     {% endblock -%}
 
 

@@ -26,6 +26,7 @@
   list-style: none;
   padding-left: 10px;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 12px;
 }

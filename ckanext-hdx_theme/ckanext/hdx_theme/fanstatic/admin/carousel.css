@@ -124,6 +124,7 @@
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 12px;
   margin: 0;
