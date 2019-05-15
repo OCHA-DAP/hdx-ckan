@@ -69,14 +69,7 @@ def fits(self, resource):
     # a resource fits if it's like the resources already inside
     bundle_resource = self._resources[0]
     return (resource.library is bundle_resource.library and
-            resource.renderer is bundle_resource.renderer and
-
-            # MONKEY PATCH
-            # We allow .js files to be bundled even if they are in different
-            # directories as the directory location doesn't actually matter
-            # to javascript files just css files.
-            (resource.ext == '.js' or
-             resource.dirname == bundle_resource.dirname))
+            resource.renderer is bundle_resource.renderer)
 
 core.Bundle.fits = fits
 
