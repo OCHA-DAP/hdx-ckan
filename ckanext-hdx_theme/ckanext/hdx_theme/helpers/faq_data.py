@@ -877,7 +877,6 @@ faq_data = [
     data_policy,
     licenses,
     contact,
-
     # popular,
     # about,
     # user_registration,
