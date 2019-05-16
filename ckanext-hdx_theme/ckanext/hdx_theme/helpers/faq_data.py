@@ -135,7 +135,8 @@ organizations = {
         },
         {
             'q': 'I\'m an organisation admin. How do I add/remove members?',
-            'a': 'For full details on managing members, please read '
+            'a': '<p>Please be aware that anyone added to your organisation on HDX can view the organisation\'s private datasets.</p>'
+                 'If you can confirm that this user works for your organisation or is in your trusted network, then you may approve the request. If you cannot verify who the user is, you should decline the request. Please do not approve membership requests for people outside your organisation or working group. For full details on managing members, please read '
                  '<a target="_blank" href="http://drive.google.com/open?id=1MR3_pVVCwxqZV2RVYKBYpQom1K0yuO866_VwltSa1vM">this document</a>.',
         },
         {
