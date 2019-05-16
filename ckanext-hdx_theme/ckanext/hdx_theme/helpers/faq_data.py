@@ -553,6 +553,10 @@ search = {
                  'HumanitarianResponse.info to HDX. Each of these datasets has a \'cod\' tag. To limit search results '
                  'to only CODs, use the \'CODs\' filter in the filter panel on the left side of the dataset list.'
                  'You can also find all CODs datasets <a target="_blank"  href="https://data.humdata.org/cod">here</a>. '
+        },
+        {
+            'q': 'How do I find a set of high quality datasets for a specific country?',
+            'a': 'The Data Grid  is the latest prototype feature we have added to HDX to help our users find useful data. The Data Grid provides a quick way to find datasets that meet or partially meet the criteria for a set of core data categories, like internally displaced persons and refugee numbers, conflict events, transportation status, food prices, administrative divisions, health facilities, and baseline population. These categories of core data determined from research with our users  may be customized to meet the needs of specific countries and the evolving data needs of humanitarian response. The small square to the left of the dataset name indicates if the dataset fully (solid blue) or partially (hashed blue and white) meets the criteria for the Data Grid category in which it appears.  In the latter case, hovering on a dataset name displays some comments about the limitations of the dataset.'
         }
     ]
 }
@@ -591,7 +595,7 @@ metadata_and_data_quality = {
         {
             'q': 'What does the green leaf symbol mean?',
             'a': 'The green leaf symbol indicates that a dataset is up to date - that there has been an update to '
-                 'the metadata or the data in the dataset within the expected update frequency plus some leeway. '
+                 'the data in the dataset(not the dataset metadata) within the expected update frequency plus some leeway. '
                  'For more information on the expected update frequency metadata field and the number of days '
                  'a dataset qualifies as being fresh, see '
                  '<a target="_blank"  href="https://humanitarian.atlassian.net/wiki/spaces/HDX/pages/442826919/Expected+Update+Frequency+vs+Freshness+Status">here</a>.',
@@ -740,18 +744,22 @@ data_policy = {
 
         },
         {
+            'q': 'How can I assess and manage the sensitivity of data before sharing on HDX?',
+            'a': '<p>The <a target="_blank" href="https://centre.humdata.org/wp-content/uploads/2019/03/OCHA-DR-Guidelines-working-draft-032019.pdf">Working Draft of the OCHA Data Responsibility Guidelines</a> (\'the Guidelines\') helps staff better assess and manage the sensitivity of the data they handle in different crisis contexts. We recommend that HDX users familiarize themselves with the Guidelines.</p>'
+                 '<p>Different data can have different levels of sensitivity depending on the context. For example, locations of medical facilities in conflict settings can expose patients and staff to risk of attacks, whereas the same facility location data would likely not be considered sensitive in a natural disaster setting.</p>'
+                 '<p>Recognizing this complexity, the Guidelines include an <a target="_blank" href="https://centre.humdata.org/wp-content/uploads/2019/03/image1-768x596.png">Information and Data Sensitivity Classification model</a> to help colleagues assess and manage sensitivity in a standardized way.</p>'
+                 '<p>For microdata (survey and needs-assessment data), you can manage the sensitivity level by applying a Statistical Disclosure Control (SDC) process. There are several tools available online to do SDC - we use <a target="_blank" href="http://surveys.worldbank.org/sdcmicro">sdcMicro</a>.</p>'
+
+        }
+        ,
+        {
             'q': 'How does HDX assess the sensitivity of data?',
             'a': 'HDX endeavors not to allow publicly shared data that includes community identifiable information (CII) '
                  'or demographically identifiable information (DII) that may put affected people at risk. However, this type '
                  'of data is more challenging to identify within datasets during our quality assurance process without deeper analysis. '
                  'In cases where we suspect that survey data may have a high risk of re-identification of affected people, we run '
-                 'an internal statistical disclosure control process using SDCmicro. If the risk level is high (>2%), '
-                 'HDX will make the dataset private and notify the data contributor who can then further anonymize the data or '
-                 'share only the metadata through <a href="#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a">HDX Connect</a>.'
-                 '<br/><br/>'
-                 'We invite HDX users to notify us should they become aware of this type of data being shared through the site. '
-                 'Data contributors can request HDX to analyze the risk of data before it is shared. '
-                 'Send an e-mail to <a href="mailto:hdx@un.org">hdx@un.org</a> to request this support. '
+                 'an internal statistical disclosure control process using sdcMicro. Data is made private while we run this process. '
+                 'If the risk level is found to be too high for public sharing on HDX given the particular context to which the data relates, HDX will notify the data contributor to determine a course of action.'
         },
     ]
 }
