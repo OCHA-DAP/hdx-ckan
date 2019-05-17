@@ -61,17 +61,22 @@ def package_update(context, data_dict):
     You must be authorized to edit the dataset and the groups that it belongs
     to.
 
-    Plugins may change the parameters of this function depending on the value
-    of the dataset's ``type`` attribute, see the ``IDatasetForm`` plugin
-    interface.
+    It is recommended to call
+    :py:func:`ckan.logic.action.get.package_show`, make the desired changes to
+    the result, and then call ``package_update()`` with it.
 
-    For further parameters see ``package_create()``.
+    Plugins may change the parameters of this function depending on the value
+    of the dataset's ``type`` attribute, see the
+    :py:class:`~ckan.plugins.interfaces.IDatasetForm` plugin interface.
+
+    For further parameters see
+    :py:func:`~ckan.logic.action.create.package_create`.
 
     :param id: the name or id of the dataset to update
     :type id: string
 
-    :returns: the updated dataset (if 'return_package_dict' is True in the
-              context, which is the default. Otherwise returns just the
+    :returns: the updated dataset (if ``'return_package_dict'`` is ``True`` in
+              the context, which is the default. Otherwise returns just the
               dataset id)
     :rtype: dictionary
 
