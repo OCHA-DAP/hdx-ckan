@@ -1902,9 +1902,8 @@ msgid "Passwords must be strings"
 msgstr "Passwords must be strings"
 
 #: ckan/logic/validators.py:589
-#, fuzzy
 msgid "Your password must be 8 characters or longer"
-msgstr "Your password must be 4 characters or longer"
+msgstr "Your password must be 8 characters or longer"
 
 #: ckan/logic/validators.py:598
 msgid "The passwords you entered do not match"
@@ -4839,9 +4838,8 @@ msgid "Search Users"
 msgstr "Search Users"
 
 #: ckan/views/user.py:588
-#, fuzzy
 msgid "Your password must be 8 characters or longer."
-msgstr "Your password must be 4 characters or longer."
+msgstr "Your password must be 8 characters or longer."
 
 #~ msgid "Cannot list entity of this type: %s"
 #~ msgstr "Cannot list entity of this type: %s"
