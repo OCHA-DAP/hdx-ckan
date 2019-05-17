@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "en_AU", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "Dashboard (%(num)d new item)", 
+    "Dashboard (%(num)d new items)"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Add Filter"
@@ -152,5 +167,20 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "You are uploading a file. Are you sure you want to navigate away and stop this upload?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "organisation", 
+    ""
   ]
 }
