@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 import os
+import sys
 import re
 import inspect
 import itertools
@@ -418,6 +419,7 @@ def _register_error_handler(app):
     u'''Register error handler'''
 
     def error_handler(e):
+        log.error(e, exc_info=sys.exc_info)
         if isinstance(e, HTTPException):
             extra_vars = {u'code': [e.code], u'content': e.description}
             # TODO: Remove
