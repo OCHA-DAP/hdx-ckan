@@ -1,3 +1,5 @@
+@import "../base/variables";
+@import "../base/mixins";
 /**
  OLD Dataset CSS
 **/
@@ -36,11 +38,12 @@
 
 /* hdx_tags theming */
 .tag-wrapper {
-  margin-right: 7px;
   float: left;
-
    .tag{
      background-color: #f2645a;
+     font-weight: 400;
+     font-size: 14px;
+     letter-spacing: 0.03em;
      &:hover, &:focus {
        background-color: #ce554d;
        border: none;
@@ -63,38 +66,20 @@
 }
 
 .resource-item {
-  margin-top:10px;
-  .heading{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
+  .heading {
+    color: @darkGrayColor;
+    font-size: 14px;
+    font-weight: bold;
   }
   .description{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    max-width: 550px;
+    text-align: justify;
+    max-width: 450px;
   }
 }
 /* END Style Resources List*/
 
 /* Style Additional Info */
 .additional-info {
-  table, table th, table td, table tr {
-    border: 0;
-    border-radius: 0 !important;
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
-    vertical-align: top;
-  }
-
-  table th {
-    padding-left: 20px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-  }
-
   table tr {
     height: 38px;
     font-family: 'Source Sans Pro', sans-serif;
@@ -103,26 +88,12 @@
   }
 
   td {
-    width: 70%;
+    text-align: justify;
   }
 
   th {
-    width: 30%;
-  }
-
-  .table-bordered > thead > tr > th,
-  .table-bordered > tbody > tr > th,
-  .table-bordered > tfoot > tr > th,
-  .table-bordered > thead > tr > td,
-  .table-bordered > tbody > tr > td,
-  .table-bordered > tfoot > tr > td {
-    border: none;
-  }
-
-  .table-condensed > thead > tr > th,
-  .table-condensed > tbody > tr > th,
-  .table-condensed > tfoot > tr > th {
-    padding-left: 20px;
+    max-width: 200px;
+    width: 175px;
   }
 }
 /* END Style Additional Info */

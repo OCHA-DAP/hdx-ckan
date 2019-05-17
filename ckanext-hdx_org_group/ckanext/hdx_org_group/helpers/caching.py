@@ -9,7 +9,7 @@ from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_c
 log = logging.getLogger(__name__)
 
 dogpile_config = {
-    'cache.redis.expiration_time': 60 * 60 * 24,
+    'cache.redis.expiration_time': 60 * 60,
 }
 dogpile_config.update(dogpile_standard_config)
 

@@ -15,7 +15,6 @@ def get_latest_cod_datatset(country_name):
 
     fq = 'groups:"{}" tags:cod +dataset_type:dataset'.format(country_name)
     query_result = search._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'metadata_modified desc', None,
-                                           None, context)
-
+                                             None, context)
 
     return next(iter(query_result.get('results', [])), None)

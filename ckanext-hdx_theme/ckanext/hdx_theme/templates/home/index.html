@@ -33,7 +33,7 @@
         <div class="hero-description">
           <h1 class="section-title">The Humanitarian Data Exchange</h1>
           <p class="mTB30">Find, share and use humanitarian data all in one place</p>
-          <a data-module="hdx_click_stopper" data-module-link_type="learn more faq" href="/faq" class="btn btn-faq">{{_("LEARN MORE")}}</a>
+          <a data-module="hdx_click_stopper" data-module-link_type="learn more faq" href="/faq" class="btn btn-faq" aria-label="learn more">{{_("LEARN MORE")}}</a>
         </div>
 
         <div class="hero-boxes">
@@ -106,7 +106,7 @@
             <div class="add-data-actions">
               <a class="add-data-item" href="{{ add_data_obj.href }}" {% if c.userobj %}onclick="contributeAddDetails(null, 'homepage')"{%else%}data-module="hdx_click_stopper" data-module-link_type="homepage add data"{% endif %}>
                 <div class="add-data-item-content">
-                  <img src="/images/add-fulldataset.svg" />
+                  <img src="/images/add-fulldataset.svg" alt="Add full dataset"/>
                   <div class="description">
                     Make your dataset available on HDX
                   </div>
@@ -116,7 +116,7 @@
 
               <a class="add-data-item" href="{{ add_data_obj.href }}" {% if c.userobj %}onclick="contributeAddDetails(null, 'homepage metadata')"{%else%}data-module="hdx_click_stopper" data-module-link_type="homepage metadata add data"{% endif %}>
                 <div class="add-data-item-content">
-                  <img src="/images/add-metadata-only-2.svg" />
+                  <img src="/images/add-metadata-only-2.svg" alt="Add metadata only dataset"/>
                   <div class="description">
                     HDX Connect: let others request your data
                   </div>
@@ -145,7 +145,7 @@
                     <div class="item-center">
                       <div class="sub-item">
                         <div class="sub-item-image">
-                          <img class="graphic lazyload" data-src="{{ item.graphic }}">
+                          <img class="graphic lazyload" data-src="{{ item.graphic }}" alt="Highlight item">
                           <div class="sub-item-action">
                             {% if item.embed %}
                             <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
@@ -284,18 +284,18 @@
         </div>
         <div class="tool-list">
           <div id="tool-category-standardise" class="tool with-image mobile-show">
-            <a target="_blank" href="https://tools.humdata.org/examples/hxl/">
-              <img src="/images/homepage/tools/hxl-assist.svg" class="tool-image">
+            <a target="_blank" href="https://tools.humdata.org/examples/hxl/" aria-label="HXL assist">
+              <img data-src="/images/homepage/tools/hxl-assist.svg" class="tool-image lazyload" alt="HXL assist">
             </a>
             <div class="tool-content">
-              <a target="_blank" href="https://tools.humdata.org/examples/hxl/">
+              <a target="_blank" href="https://tools.humdata.org/examples/hxl/" aria-label="HXL assist">
                 <div class="tool-title">HXL Tag Assist</div>
               </a>
               <p class="description">
                 Get help finding the right HXL hashtags for your data
               </p>
               <div class="bottom">
-                <a target="_blank" href="https://tools.humdata.org/examples/hxl/" class="btn btn-primary">Learn more <i class="icon icon-external-link"></i></a>
+                <a target="_blank" href="https://tools.humdata.org/examples/hxl/" class="btn btn-primary" aria-label="learn more">Learn more <i class="icon icon-external-link"></i></a>
                 <div class="secondary-actions">
                   <a target="_blank" href="http://hxlstandard.org">About HXL Standard <i class="icon icon-external-link"></i></a>
                 </div>
@@ -305,7 +305,7 @@
 
           <div id="tool-category-refine" class="tool with-image">
             <a target="_blank" href="https://tools.humdata.org/wizard/#datacheck">
-              <img src="/images/homepage/tools/data-check.svg" class="tool-image">
+              <img data-src="/images/homepage/tools/data-check.svg" class="tool-image lazyload" alt="Data check">
             </a>
             <div class="tool-content">
               <a target="_blank" href="https://tools.humdata.org/wizard/#datacheck">
@@ -325,7 +325,7 @@
 
           <div id="tool-category-visualise" class="tool with-image">
             <a target="_blank" href="https://tools.humdata.org/wizard/#quickcharts">
-              <img src="/images/homepage/tools/quick-chart.svg" class="tool-image">
+              <img data-src="/images/homepage/tools/quick-chart.svg" class="tool-image lazyload" alt="Quick charts">
             </a>
             <div class="tool-content">
               <a target="_blank" href="https://tools.humdata.org/wizard/#quickcharts">
@@ -397,8 +397,8 @@
 {% block home_search %}
   <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
     <div class="input-append">
-      <input type="text" class="searchInput" id="q2" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
-      <button type="submit" class="button">
+      <input type="text" class="searchInput" id="q2" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}" aria-label="Search Datasets">
+      <button type="submit" class="button" aria-label="search">
         <i class="glyphicon glyphicon-search"></i>
       </button>
     </div>
@@ -410,6 +410,9 @@
    {{ super() }}
    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
    {% resource 'hdx_theme/homepage' %}
+   <script type="application/ld+json">
+    {{ c.structured_data | safe }}
+   </script>
 {% endblock %}
 
 {# Remove the toolbar. #}
