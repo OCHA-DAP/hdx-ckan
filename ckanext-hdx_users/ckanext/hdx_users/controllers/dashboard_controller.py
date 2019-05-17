@@ -112,7 +112,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
         context['with_related'] = True
 
-        self._setup_template_variables(context, data_dict)
+        extra_vars = self._extra_template_variables(context, data_dict)
 
         # The legacy templates have the user's activity stream on the user
         # profile page, new templates do not.
@@ -120,14 +120,17 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             c.user_activity_stream = get_action('user_activity_list_html')(
                 context, {'id': c.user_dict['id']})
 
-        return render('user/read.html')
+        return render('user/read.html', extra_vars=extra_vars)
 
-    def _setup_template_variables(self, context, data_dict):
+    def _extra_template_variables(self, context, data_dict):
         """
         Sets up template variables. If the user is deleted, throws a 404
         unless the user is logged in as sysadmin.
+
+        This is no longer inspied from ckan's UserController -> _setup_template_variables()
+        but from the new flask controller views/users -> _extra_template_variables()
         """
-        c.is_sysadmin = new_authz.is_sysadmin(c.user)
+        is_sysadmin = new_authz.is_sysadmin(c.user)
         try:
             user_dict = get_action('user_show')(context, data_dict)
         except NotFound:
@@ -136,9 +139,16 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             abort(403, _('Not authorized to see this page'))
         if user_dict['state'] == 'deleted' and not c.is_sysadmin:
             abort(404, _('User not found'))
-        c.user_dict = user_dict
-        c.is_myself = user_dict['name'] == c.user
-        c.about_formatted = h.render_markdown(user_dict['about'])
+        is_myself = user_dict['name'] == g.user
+        about_formatted = h.render_markdown(user_dict['about'])
+
+        extra = {
+            u'is_sysadmin': is_sysadmin,
+            u'user_dict': user_dict,
+            u'is_myself': is_myself,
+            u'about_formatted': about_formatted
+        }
+        return extra
 
     def dashboard_activity_stream(self, user_id, filter_type=None, filter_id=None,
                                   offset=0):
@@ -208,7 +218,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         # Mark the user's new activities as old whenever they view their
         # dashboard page.
         get_action('dashboard_mark_activities_old')(context, {})
-        return render('user/dashboard.html')
+        return render('user/dashboard.html', extra_vars={'user_dict': user_dict})
 
     def dashboard_datasets(self):
         """
@@ -262,7 +272,9 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
             c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
 
-            return render('user/dashboard_datasets.html')
+            return render('user/dashboard_datasets.html', extra_vars={
+                'user_dict': user_dict
+            })
 
     # def dashboard_visualizations(self):
     #     """

@@ -151,7 +151,7 @@ class TestValidators(object):
             # Non-string names aren't allowed as names.
             13,
             23.7,
-            100L,
+            100,
             1.0j,
             None,
             True,
@@ -229,7 +229,7 @@ class TestValidators(object):
         non_string_values = [
             13,
             23.7,
-            100L,
+            100,
             1.0j,
             None,
             True,
@@ -583,5 +583,32 @@ class TestExistsValidator(helpers.FunctionalTestBase):
     def test_role_exists_empty(self):
         ctx = self._make_context()
         v = validators.role_exists('', ctx)
+
+
+class TestPasswordValidator(object):
+
+    def test_ok(self):
+        passwords = ['MyPassword1', 'my1Password', '1PasswordMY']
+        key = ('password',)
+
+        @t.does_not_modify_errors_dict
+        def call_validator(*args, **kwargs):
+            return validators.user_password_validator(*args, **kwargs)
+        for password in passwords:
+            errors = factories.validator_errors_dict()
+            errors[key] = []
+            call_validator(key, {key: password}, errors, None)
+
+    def test_too_short(self):
+        password = 'MyPass1'
+        key = ('password',)
+
+        @adds_message_to_errors_dict('Your password must be 8 characters or '
+                                     'longer')
+        def call_validator(*args, **kwargs):
+            return validators.user_password_validator(*args, **kwargs)
+        errors = factories.validator_errors_dict()
+        errors[key] = []
+        call_validator(key, {key: password}, errors, None)
 
 # TODO: Need to test when you are not providing owner_org and the validator queries for the dataset with package_show

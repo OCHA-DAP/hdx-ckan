@@ -80,24 +80,12 @@ class TestUpdate(object):
 
         # 1. Setup.
         user = factories.User()
+        user['name'] = 'updated'
 
-        # 2. Call the function that's being tested, once only.
-        # FIXME we have to pass the email address and password to user_update
-        # even though we're not updating those fields, otherwise validation
-        # fails.
-        helpers.call_action('user_update', id=user['name'],
-                            email=user['email'],
-                            password=factories.User.attributes()['password'],
-                            name='updated',
-                            )
-
-        # 3. Make assertions about the return value and/or side-effects.
-        updated_user = helpers.call_action('user_show', id=user['id'])
-        # Note that we check just the field we were trying to update, not the
-        # entire dict, only assert what we're actually testing.
-        assert updated_user['name'] == 'updated'
-
-        # 4. Do nothing else!
+        # 2. Make assertions about the return value and/or side-effects.
+        assert_raises(logic.ValidationError,
+                      helpers.call_action, 'user_update',
+                      **user)
 
     # END-BEFORE
 
@@ -267,7 +255,7 @@ class TestUpdate(object):
         helpers.call_action('user_update', id=user['name'],
                             email=user['email'],
                             password=factories.User.attributes()['password'],
-                            name='updated',
+                            fullname='updated full name',
                             )
 
         activity_stream = helpers.call_action('user_activity_list',
@@ -310,7 +298,7 @@ class TestUpdate(object):
         helpers.call_action('user_update', context={'schema': schema},
                             id=user['name'], email=user['email'],
                             password=factories.User.attributes()['password'],
-                            name='updated',
+                            fullname='updated full name',
                             )
 
         # Since we passed user['name'] to user_update as the 'id' param,
@@ -325,7 +313,6 @@ class TestUpdate(object):
 
         params = {
             'id': user['id'],
-            'name': 'updated_name',
             'fullname': 'updated full name',
             'about': 'updated about',
             # FIXME: We shouldn't have to put email here since we're not
@@ -339,7 +326,6 @@ class TestUpdate(object):
         helpers.call_action('user_update', **params)
 
         updated_user = helpers.call_action('user_show', id=user['id'])
-        assert updated_user['name'] == 'updated_name'
         assert updated_user['fullname'] == 'updated full name'
         assert updated_user['about'] == 'updated about'
 
@@ -351,7 +337,6 @@ class TestUpdate(object):
 
         params = {
             'id': user['id'],
-            'name': 'updated_name',
             'fullname': 'updated full name',
             'about': 'updated about',
             'email': user['email'],
@@ -369,7 +354,6 @@ class TestUpdate(object):
 
         params = {
             'id': user['id'],
-            'name': 'updated_name',
             'fullname': 'updated full name',
             'about': 'updated about',
             'email': user['email'],
@@ -391,7 +375,6 @@ class TestUpdate(object):
 
         params = {
             'id': user['id'],
-            'name': 'updated_name',
             'fullname': 'updated full name',
             'about': 'updated about',
             'email': user['email'],
@@ -1072,10 +1055,12 @@ class TestResourceUpdate(object):
         ''')
         update_resource = TestResourceUpdate.FakeFileStorage(update_file, 'update_test')
 
-        res_update = helpers.call_action('resource_update',
-                                         id=resource['id'],
-                                         url='http://localhost',
-                                         upload=update_resource)
+        # Mock url_for as using a test request context interferes with the FS mocking
+        with mock.patch('ckan.lib.helpers.url_for'):
+            res_update = helpers.call_action('resource_update',
+                                             id=resource['id'],
+                                             url='http://localhost',
+                                             upload=update_resource)
 
         org_mimetype = resource.pop('mimetype')
         upd_mimetype = res_update.pop('mimetype')
@@ -1115,10 +1100,13 @@ class TestResourceUpdate(object):
         ''')
         test_resource = TestResourceUpdate.FakeFileStorage(test_file, 'test.json')
         dataset = factories.Dataset()
-        resource = factories.Resource(package=dataset,
-                                      url='http://localhost',
-                                      name='Test',
-                                      upload=test_resource)
+
+        # Mock url_for as using a test request context interferes with the FS mocking
+        with mock.patch('ckan.lib.helpers.url_for'):
+            resource = factories.Resource(package=dataset,
+                                          url='http://localhost',
+                                          name='Test',
+                                          upload=test_resource)
 
         update_file = StringIO.StringIO()
         update_file.write('''
@@ -1129,10 +1117,11 @@ class TestResourceUpdate(object):
         ''')
         update_resource = TestResourceUpdate.FakeFileStorage(update_file, 'update_test.csv')
 
-        res_update = helpers.call_action('resource_update',
-                                         id=resource['id'],
-                                         url='http://localhost',
-                                         upload=update_resource)
+        with mock.patch('ckan.lib.helpers.url_for'):
+            res_update = helpers.call_action('resource_update',
+                                             id=resource['id'],
+                                             url='http://localhost',
+                                             upload=update_resource)
 
         org_mimetype = resource.pop('mimetype')
         upd_mimetype = res_update.pop('mimetype')
@@ -1191,10 +1180,13 @@ class TestResourceUpdate(object):
         ''')
         test_resource = TestResourceUpdate.FakeFileStorage(test_file, 'test.json')
         dataset = factories.Dataset()
-        resource = factories.Resource(package=dataset,
-                                      url='http://localhost',
-                                      name='Test',
-                                      upload=test_resource)
+
+        # Mock url_for as using a test request context interferes with the FS mocking
+        with mock.patch('ckan.lib.helpers.url_for'):
+            resource = factories.Resource(package=dataset,
+                                          url='http://localhost',
+                                          name='Test',
+                                          upload=test_resource)
 
         update_file = StringIO.StringIO()
         update_file.write('''
@@ -1205,10 +1197,11 @@ class TestResourceUpdate(object):
         ''')
         update_resource = TestResourceUpdate.FakeFileStorage(update_file, 'update_test.csv')
 
-        res_update = helpers.call_action('resource_update',
-                                         id=resource['id'],
-                                         url='http://localhost',
-                                         upload=update_resource)
+        with mock.patch('ckan.lib.helpers.url_for'):
+            res_update = helpers.call_action('resource_update',
+                                             id=resource['id'],
+                                             url='http://localhost',
+                                             upload=update_resource)
 
         org_size = int(resource.pop('size'))  # 669 bytes
         upd_size = int(res_update.pop('size'))  # 358 bytes

@@ -78,7 +78,7 @@ def resource_view_update(context, data_dict):
     return authz.is_authorized('resource_update', context, {'id': data_dict['resource_id']})
 
 def resource_view_reorder(context, data_dict):
-    return authz.is_authorized('resource_update', context, {'id': data_dict['resource_id']})
+    return authz.is_authorized('resource_update', context, {'id': data_dict['id']})
 
 def package_relationship_update(context, data_dict):
     return authz.is_authorized('package_relationship_create',
@@ -250,28 +250,6 @@ def dashboard_mark_activities_old(context, data_dict):
 def send_email_notifications(context, data_dict):
     # Only sysadmins are authorized to send email notifications.
     return {'success': False}
-
-
-## Modifications for rest api
-
-def package_update_rest(context, data_dict):
-    model = context['model']
-    user = context['user']
-    if not user:
-        return {'success': False,
-                'msg': _('Valid API key needed to edit a package')}
-
-    return authz.is_authorized('package_update', context, data_dict)
-
-
-def group_update_rest(context, data_dict):
-    model = context['model']
-    user = context['user']
-    if not user:
-        return {'success': False,
-                'msg': _('Valid API key needed to edit a group')}
-
-    return authz.is_authorized('group_update', context, data_dict)
 
 
 def package_owner_org_update(context, data_dict):
