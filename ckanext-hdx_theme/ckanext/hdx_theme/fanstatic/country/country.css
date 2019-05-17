@@ -211,6 +211,7 @@ h1.country-title {
 .featured-section .featured-thumbnail .overlay .featured-thumbnail-content .type {
   text-transform: capitalize;
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 10px;
 }
@@ -376,6 +377,7 @@ h1.country-title {
 .data-completeness .data-item .data-item-details .sub-category a.add-data {
   color: #f2645a;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;

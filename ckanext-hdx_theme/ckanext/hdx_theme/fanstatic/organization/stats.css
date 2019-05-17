@@ -22,6 +22,7 @@
 }
 .topline .indicator-value {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 56px;
   letter-spacing: 0.01em;
@@ -55,6 +56,7 @@
 }
 .topline .small {
   font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-weight: 400;
   font-size: 37px;
   letter-spacing: 0.01em;

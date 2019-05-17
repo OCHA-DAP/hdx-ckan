@@ -1,6 +1,7 @@
 .spinner-message {
   color: #fff;
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 14px;
 }

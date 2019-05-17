@@ -233,3 +233,24 @@
 .contentBackground {
     background-color: #ffffff;
 }
+
+
+/**
+ * Hide elements visually, but keep them available for screen-readers.
+ * (from page-new-basis.css)
+ */
+  .element-invisible {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    height: 1px;
+  }
+
+  .hdx-visible-element{
+    display: inherit;
+  }
+
+  .hdx-invisible-element{
+    display: none;
+  }
+
