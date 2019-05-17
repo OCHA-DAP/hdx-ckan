@@ -86,5 +86,5 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
                 'NFKD', user.apikey).encode('ascii', 'ignore')})
         else:
             result = self.app.get(url)
-        assert ('200' in result.response.status or '302' in result.response.status), 'HTTP OK'
+        assert ('200' in result.status or '302' in result.status), 'HTTP OK'
         assert 'server error' not in str(result.body).lower()

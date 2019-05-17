@@ -79,7 +79,7 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
         context = {'ignore_auth': True,
                         'model': model, 'session': model.Session, 'user': 'nouser'}
         u = self._get_action('user_create')(context,
-                {'name': 'test123admin', 'email': 'example-admin@example.com', 'password': 'abcd'})
+                {'name': 'test123admin', 'email': 'example-admin@example.com', 'password': 'abcdefgh'})
         user = model.Session.query(model.User).filter(model.User.id == u['id']).first()
         user.sysadmin = True
         model.Session.commit()
@@ -89,13 +89,13 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
 
     def _users_create(self, apikey):
         u1 = tests.call_action_api(self.app, 'user_create', name='johnfoo', fullname='John Foo',
-                email='example@example.com', password='abcd',
+                email='example@example.com', password='abcdefgh',
                 apikey=apikey, status=200)
         u2 = tests.call_action_api(self.app, 'user_create', name='adambar',
-                email='example2@example.com', password='abcd',
+                email='example2@example.com', password='abcdefgh',
                 apikey=apikey, status=200)
         u3 = tests.call_action_api(self.app, 'user_create', name='username1', fullname='George Foobar',
-                email='example3@example.com', password='abcd',
+                email='example3@example.com', password='abcdefgh',
                 apikey=apikey, status=200)
 
         return [u1['name'], u2['name'], u3['name']]

@@ -40,7 +40,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         cls._get_action('user_create')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
             {'name': 'johnfoo', 'fullname': 'John Foo',
-             'email': 'example@example.com', 'password': 'abcd'})
+             'email': 'example@example.com', 'password': 'abcdefgh'})
 
     @classmethod
     def _get_action(cls, action_name):
@@ -250,7 +250,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email(self):
         '''Editing an existing user's email is successful.'''
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcd')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
@@ -267,7 +267,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert_equal(form['password1'].value, '')
         assert_equal(form['password2'].value, '')
 
-        form['old_password'].value = 'abcd'
+        form['old_password'].value = 'abcdefgh'
 
         # new email value
         form['email'] = 'new@example.com'
@@ -279,7 +279,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email_to_existing(self):
         '''Editing to an existing user's email is unsuccessful.'''
         factories.User(name='existing', email='existing@example.com')
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcd')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
@@ -292,7 +292,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         # new email value
         form['email'] = 'existing@example.com'
-        form['old_password'] = 'abcd'
+        form['old_password'] = 'abcdefgh'
 
         response = webtest_submit(form, 'save', extra_environ=env)
 
@@ -305,7 +305,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email_invalid_format(self):
         '''Editing with an invalid email format is unsuccessful.'''
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcd')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
@@ -318,7 +318,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         # new invalid email value
         form['email'] = 'invalid.com'
-        form['old_password'] = 'abcd'
+        form['old_password'] = 'abcdefgh'
         response = webtest_submit(form, 'save', extra_environ=env)
 
         # error message in response
@@ -330,7 +330,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email_saved_as_lowercase(self):
         '''Editing with an email in uppercase will be saved as lowercase.'''
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcd')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
@@ -343,7 +343,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         # new invalid email value
         form['email'] = 'UPPER@example.com'
-        form['old_password'] = 'abcd'
+        form['old_password'] = 'abcdefgh'
 
         response = webtest_submit(form, 'save', extra_environ=env)
 
@@ -355,7 +355,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         '''Editing with an existing user's email will be unsuccessful, even is
         differently cased.'''
         factories.User(name='existing', email='existing@example.com')
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcd')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
@@ -368,7 +368,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         # new email value
         form['email'] = 'EXISTING@example.com'
-        form['old_password'] = 'abcd'
+        form['old_password'] = 'abcdefgh'
         response = webtest_submit(form, 'save', extra_environ=env)
 
         # error message in response
