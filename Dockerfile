@@ -58,7 +58,9 @@ RUN apt-get -qq -y update && \
     pip -q install --upgrade \
         gevent \
         gunicorn \
-        lxml && \
+        lxml \
+        pip \
+        setuptools==36.1 && \
     mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
     cp -a docker/prod.ini.tpl /etc/ckan && \
     cp -a docker/run_ckan /etc/services.d/ckan/run && \
