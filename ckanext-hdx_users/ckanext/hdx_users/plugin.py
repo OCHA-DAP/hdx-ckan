@@ -152,7 +152,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         # map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
-        map.connect('/user/edit', controller='user', action='edit')
+        # map.connect('/user/edit', controller='user', action='edit')
         # map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
         # map.connect('user_activity_stream', '/user/activity/{id}',
         #             controller='user', action='activity', ckan_icon='time')
@@ -203,7 +203,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
 
         #######
-        map.connect('user_datasets', '/user/{id:[^/]*}',
+        map.connect('user_datasets', '/user/{id:((?!edit)[^/])*}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
         map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',

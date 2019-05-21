@@ -253,8 +253,9 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        url_for = h.url_for('user.edit')
         response = self.app.get(
-            url=h.url_for(controller='user', action='edit'),
+            url=url_for,
             extra_environ=env,
         )
         # existing values in the form
@@ -283,7 +284,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
-            url=h.url_for(controller='user', action='edit'),
+            url=h.url_for('user.edit'),
             extra_environ=env,
         )
         # existing email in the form
@@ -309,7 +310,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
-            url=h.url_for(controller='user', action='edit'),
+            url=h.url_for('user.edit'),
             extra_environ=env,
         )
         # existing email in the form
@@ -334,7 +335,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
-            url=h.url_for(controller='user', action='edit'),
+            url=h.url_for('user.edit'),
             extra_environ=env,
         )
         # existing email in the form
@@ -359,7 +360,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         response = self.app.get(
-            url=h.url_for(controller='user', action='edit'),
+            url=h.url_for('user.edit'),
             extra_environ=env,
         )
         # existing email in the form
@@ -570,3 +571,4 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         #     token = umodel.ValidationToken.get(user.id)
         #     assert token.valid is True
+
