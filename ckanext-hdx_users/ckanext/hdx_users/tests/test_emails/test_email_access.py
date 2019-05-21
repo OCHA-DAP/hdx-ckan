@@ -49,7 +49,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
     def test_email_access_by_page(self):
         admin = model.User.by_name('testsysadmin')
 
-        url = h.url_for(controller='user', action='index')
+        url = h.url_for('user.index')[:-1]
         profile_url = h.url_for(controller='user', action='read', id='johnfoo')
 
         result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
@@ -58,8 +58,8 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
 
-        assert 'example@example.com' in str(result.response)
-        assert 'example@example.com' in str(profile_result.response)
+        assert 'example@example.com' in str(result.body)
+        assert 'example@example.com' in str(profile_result.body)
 
         user = model.User.by_name('tester')
         result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
@@ -68,17 +68,17 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
             'NFKD', user.apikey).encode('ascii', 'ignore')})
 
         assert 'example@example.com' not in str(
-            result.response), 'emails should not be visible for normal users'
+            result.body), 'emails should not be visible for normal users'
         assert 'example@example.com' not in str(
-            profile_result.response), 'emails should not be visible for normal users'
+            profile_result.body), 'emails should not be visible for normal users'
 
         result = self.app.get(url)
         profile_result = self.app.get(profile_url)
 
         assert 'example@example.com' not in str(
-            result.response), 'emails should not be visible for guests'
+            result.body), 'emails should not be visible for guests'
         assert 'example@example.com' not in str(
-            profile_result.response), 'emails should not be visible for guests'
+            profile_result.body), 'emails should not be visible for guests'
 
     def test_email_access_by_api(self):
 
@@ -134,8 +134,8 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         user = model.User.get('valid@example.com')
         admin = model.User.by_name('testsysadmin')
-        offset2 = h.url_for(controller='user', action='delete', id=user.id)
-        res2 = self.app.get(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
+        offset2 = h.url_for('user.delete', id=user.id)
+        res2 = self.app.post(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
 
         profile_url = h.url_for(controller='user', action='read', id='valid@example.com')

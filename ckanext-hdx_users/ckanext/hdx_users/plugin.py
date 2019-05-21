@@ -162,7 +162,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='user', action='followers', ckan_icon='group')
         # map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
         #             ckan_icon='cog')
-        map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
+        # map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
         map.connect('register', '/user/register', controller='user', action='register')
         map.connect('login', '/user/login', controller='user', action='login')
         map.connect('/user/_logout', controller='user', action='logout')

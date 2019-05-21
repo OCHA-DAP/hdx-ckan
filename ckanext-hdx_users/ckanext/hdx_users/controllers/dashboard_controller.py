@@ -137,7 +137,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             abort(404, _('User not found'))
         except NotAuthorized:
             abort(403, _('Not authorized to see this page'))
-        if user_dict['state'] == 'deleted' and not c.is_sysadmin:
+        if user_dict['state'] == 'deleted' and not is_sysadmin:
             abort(404, _('User not found'))
         is_myself = user_dict['name'] == g.user
         about_formatted = h.render_markdown(user_dict['about'])
