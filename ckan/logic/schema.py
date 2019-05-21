@@ -395,7 +395,7 @@ def default_user_schema(
         user_password_validator, user_password_not_empty,
         ignore_not_sysadmin, not_empty, email_validator,
         user_about_validator, ignore):
-    return {
+    schema = {
         'id': [ignore_missing, unicode_safe],
         'name': [
             not_empty, name_validator, user_name_validator, unicode_safe],
