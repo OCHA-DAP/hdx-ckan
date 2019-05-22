@@ -556,7 +556,18 @@ search = {
         },
         {
             'q': 'How do I find a set of high quality datasets for a specific country?',
-            'a': 'The Data Grid is the latest prototype feature we have added to HDX to help our users find useful data. The Data Grid provides a quick way to find datasets that meet or partially meet the criteria for a set of core data categories, like internally displaced persons and refugee numbers, conflict events, transportation status, food prices, administrative divisions, health facilities, and baseline population. These categories of core data, determined from research with our users, may be customized to meet the needs of specific countries and the evolving data needs of humanitarian response. The small square to the left of the dataset name indicates if the dataset fully (solid blue) or partially (hashed blue and white) meets the criteria for the Data Grid category in which it appears.  In the latter case, hovering on a dataset name displays some comments about the limitations of the dataset.'
+            'a': 'The Data Grid is a prototype feature to help our users find the most critical and useful data. '
+                 'The Data Grid provides a quick way to find datasets that meet or partially meet the criteria for a set '
+                 'of core data categories, like internally displaced persons and refugee numbers, conflict events, '
+                 'transportation status, food prices, administrative divisions, health facilities, and baseline '
+                 'population. These categories of core data, determined from research with our users, may be customized 
+                 'to meet the needs of specific countries and the evolving data needs of humanitarian response. The small '
+                 'square to the left of the dataset name indicates if the dataset fully (solid blue) or partially (hashed '
+                 'blue and white) meets the criteria for the Data Grid category in which it appears.  In the latter case, '
+                 'hovering on a dataset name displays some comments about the limitations of the dataset.'
+                 '</ul>'
+                 'Data Grid is not available for all countries.  Here is an <a target="_blank" href="https://data.humdata.org/group/som">example</a>.  '
+                 'Click the "expand" button under "Data Completeness" to see the Data Grid.'
         }
     ]
 }
@@ -587,7 +598,7 @@ metadata_and_data_quality = {
                  '<li>Live - for datasets where updates are continuous and ongoing</li>'
                  '<li>As needed - for datasets with an unpredictable, widely varying update frequency</li>'
                  '<li>Never - for datasets with data that will never be changed</li>'
-                 '</ul'
+                 '</ul>'
                  'We recommend you choose the nearest less frequent regular value instead of As needed or Never as '
                  'this helps with our monitoring of data freshness. For example, if your data will be updated '
                  'every 1-6 days, pick Every week, or if every 2 to 9 weeks, choose Every three months.',
