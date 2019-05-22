@@ -560,7 +560,7 @@ search = {
                  'The Data Grid provides a quick way to find datasets that meet or partially meet the criteria for a set '
                  'of core data categories, like internally displaced persons and refugee numbers, conflict events, '
                  'transportation status, food prices, administrative divisions, health facilities, and baseline '
-                 'population. These categories of core data, determined from research with our users, may be customized 
+                 'population. These categories of core data, determined from research with our users, may be customized '
                  'to meet the needs of specific countries and the evolving data needs of humanitarian response. The small '
                  'square to the left of the dataset name indicates if the dataset fully (solid blue) or partially (hashed '
                  'blue and white) meets the criteria for the Data Grid category in which it appears.  In the latter case, '
