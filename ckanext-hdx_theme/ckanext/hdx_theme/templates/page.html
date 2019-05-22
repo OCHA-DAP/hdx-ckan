@@ -200,14 +200,14 @@
 {%- block scripts %}
   {# Keep this block to a minimum, use resource.config instead #}
 
-    {% resource 'hdx_theme/page-scripts' %}
-    {% if g.tracking_enabled %}
-        {% resource 'hdx_theme/package/tracking.js' %}
-    {% endif %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    {{ super() }}
-    {% resource 'hdx_theme/search' %}
-  {% endblock -%}
+  {% resource 'hdx_theme/page-scripts' %}
+  {% if g.tracking_enabled %}
+      {% resource 'hdx_theme/package/tracking.js' %}
+  {% endif %}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  {{ super() }}
+  {% resource 'hdx_theme/search' %}
+{% endblock -%}
 
 {%- block styles %}
   {{ super() }}
