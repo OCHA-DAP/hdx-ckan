@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "sq", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Shtoni filterin"
@@ -152,5 +167,20 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "Ju jeni duke ngarkuar një skedar. A jeni të sigurt që doni të largoheni dhe t'a ndalni këtë ngarkim?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    ""
   ]
 }

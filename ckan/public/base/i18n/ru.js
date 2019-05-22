@@ -2,8 +2,29 @@
   "": {
     "domain": "ckan", 
     "lang": "ru", 
-    "plural-forms": "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
+    "plural-forms": "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Добавить фильтр"
@@ -52,6 +73,10 @@
     null, 
     "График"
   ], 
+  "Grid": [
+    null, 
+    "Сетка"
+  ], 
   "Hide": [
     null, 
     "Спрятать"
@@ -94,6 +119,10 @@
   "Resource uploaded": [
     null, 
     "Ресурс загружен"
+  ], 
+  "Save order": [
+    null, 
+    "Сохранить порядок"
   ], 
   "Saving...": [
     null, 
@@ -151,8 +180,29 @@
     null, 
     "Вы загружаете файл. Вы уверены что хотите прервать ?"
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "Ошибка при загрузке просмотра"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    "", 
+    "", 
+    ""
   ]
 }

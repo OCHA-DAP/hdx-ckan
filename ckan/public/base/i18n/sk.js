@@ -2,8 +2,29 @@
   "": {
     "domain": "ckan", 
     "lang": "sk", 
-    "plural-forms": "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+    "plural-forms": "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Pridať filter"
@@ -58,6 +79,7 @@
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
     "", 
     "", 
     ""
@@ -153,5 +175,26 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "Nahrávate súbor. Chcete odísť preč a prerušiť nahrávanie?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    "", 
+    "", 
+    ""
   ]
 }

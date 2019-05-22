@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "mn_MN", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Шүүлтүүр нэмэх"
@@ -173,8 +188,23 @@
     null, 
     "Та яг одоо файл хуулж байна. Хуулж байгаа файлаа зогсоогоод гарахдаа итгэлтэй байна уу."
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "харагдацыг ачаалах үеийн алдаа"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    ""
   ]
 }

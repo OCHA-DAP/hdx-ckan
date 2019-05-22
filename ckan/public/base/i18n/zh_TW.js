@@ -2,8 +2,20 @@
   "": {
     "domain": "ckan", 
     "lang": "zh_TW", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "plural-forms": "nplurals=1; plural=0"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s 襯衫"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d 個數"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d 沒有被翻譯"
+  ], 
   "Add Filter": [
     null, 
     "新增篩選條件"
@@ -23,6 +35,18 @@
   "Confirm": [
     null, 
     "確認"
+  ], 
+  "Could not load view": [
+    null, 
+    "無法載入檢視器"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "DataProxy 錯誤"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "DataStore 錯誤"
   ], 
   "Edit": [
     null, 
@@ -48,6 +72,10 @@
     null, 
     "圖表"
   ], 
+  "Grid": [
+    null, 
+    "網格"
+  ], 
   "Hide": [
     null, 
     "隱藏"
@@ -58,7 +86,7 @@
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    ""
+    "輸入內容必須至少要 %(num)d 字元"
   ], 
   "Link": [
     null, 
@@ -99,6 +127,10 @@
   "Saving...": [
     null, 
     "儲存中..."
+  ], 
+  "Select a field": [
+    null, 
+    "選擇1個欄位"
   ], 
   "Show more": [
     null, 
@@ -152,8 +184,28 @@
     null, 
     "你現在正在上傳一個檔案，確定要離開當前頁面及停止上傳檔案嗎？"
   ], 
+  "bar": [
+    "bars", 
+    "bars"
+  ], 
   "error loading view": [
     null, 
     "讀取資料檢視發生錯誤"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "hello %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    " %(attr)s 無翻譯"
+  ], 
+  "no translation": [
+    "no translations", 
+    "無翻譯"
   ]
 }

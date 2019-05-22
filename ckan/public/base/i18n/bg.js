@@ -2,8 +2,27 @@
   "": {
     "domain": "ckan", 
     "lang": "bg", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
+  "Add Filter": [
+    null, 
+    "Добави филтър "
+  ], 
   "An Error Occurred": [
     null, 
     "Възникна грешка"
@@ -136,5 +155,20 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "В момента качвате файл. Сигурни ли сте, че искате да излезете от страницата и да прекъснете качването?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    ""
   ]
 }

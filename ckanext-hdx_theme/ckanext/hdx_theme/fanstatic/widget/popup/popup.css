@@ -63,9 +63,14 @@ ul.hdx-bs3 {
 }
 /* Style pagination */
 .pagination {
-  display: block;
+  display: flex;
+  justify-content: center;
   text-align: center;
   height: 45px;
+}
+.pagination > li:first-child a,
+.pagination > li:last-child a {
+  border-radius: 0;
 }
 /* END Style pagination */
 /* END Change the default style for ul items */

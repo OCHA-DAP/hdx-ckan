@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "fr", 
-    "plural-forms": "nplurals=2; plural=(n > 1);"
+    "plural-forms": "nplurals=2; plural=(n > 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d traduction manquante", 
+    "%(num)d traductions manquantes"
+  ], 
   "Add Filter": [
     null, 
     "Ajouter un filtre"
@@ -75,7 +90,7 @@
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
     "Saisie trop courte, au moins un caractère est nécessaire", 
-    "Saisie trop courte, au moins %(num)d caractères sont nécessaires"
+    "Saisie trop courte, au moins %(num)d caractères  sont nécessaires"
   ], 
   "Link": [
     null, 
@@ -173,8 +188,23 @@
     null, 
     "Vous êtes en train de transférer un fichier. Êtes-vous sûr de vouloir naviguer ailleurs et interrompre ce transfert ?"
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "erreur lors du chargement de la vue"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "pas de traduction", 
+    "pas de traduction"
   ]
 }

@@ -2,7 +2,7 @@ $(document).ready(function(){
     $(".embed-link").on("click", function(){
        $(this).select();
     });
-    $(".popup").each(function(){
+    $(".popup.popup-embed").each(function(){
         var popup = $(this);
         var config = popup.find(".config").first();
         var frameSize = $(".frame-size");

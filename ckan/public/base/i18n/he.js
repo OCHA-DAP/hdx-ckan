@@ -2,8 +2,29 @@
   "": {
     "domain": "ckan", 
     "lang": "he", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "הוספת מסנן"
@@ -62,6 +83,8 @@
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
+    "", 
     "", 
     ""
   ], 
@@ -161,8 +184,29 @@
     null, 
     "אתם מעלים קובץ. האם אתם בטוחים שברצונכם לצאת מהעמוד ולהפסיק את ההעלאה?"
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "טעינת התצוגה נכשלה"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    "", 
+    "", 
+    ""
   ]
 }

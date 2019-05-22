@@ -2,8 +2,20 @@
   "": {
     "domain": "ckan", 
     "lang": "ja", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "plural-forms": "nplurals=1; plural=0"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s シャツ"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d アイテム"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d 翻訳がありません。"
+  ], 
   "Add Filter": [
     null, 
     "フィルター追加"
@@ -172,8 +184,28 @@
     null, 
     "ファイルをアップロードしています。ナビゲートを離れてこのアップロードを終了しても良いですか？"
   ], 
+  "bar": [
+    "bars", 
+    "bars"
+  ], 
   "error loading view": [
     null, 
     "エラーローディングビュー"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "ハロー %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "%(attr)s の翻訳なし"
+  ], 
+  "no translation": [
+    "no translations", 
+    "翻訳なし"
   ]
 }
