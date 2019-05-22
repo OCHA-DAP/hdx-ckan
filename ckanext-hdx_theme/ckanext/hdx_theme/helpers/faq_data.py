@@ -567,7 +567,7 @@ search = {
                  'hovering on a dataset name displays some comments about the limitations of the dataset. Learn more in '
                  'our <a target="_blank" href="https://centre.humdata.org/introducing-the-hdx-data-grid-a-way-to-find-and-fill-data-gaps/">blog post</a> '
                  'about it.'
-                 '</ul>'
+                 '<br/><br/>'
                  'Data Grid is not available for all countries.  Here is an <a target="_blank" href="https://data.humdata.org/group/som">example</a>.  '
                  'Click the "expand" button under "Data Completeness" to see the Data Grid.'
         }
