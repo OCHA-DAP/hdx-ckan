@@ -83,4 +83,12 @@ body {
   margin: 1px 0 0;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
+  background: none;
+  min-width: unset;
+}
+.widget-container {
+  padding: 0;
+}
+#wfp-visualization-wrapper #header {
+  height: 20px !important;
 }
