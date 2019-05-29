@@ -122,7 +122,7 @@
      {% snippet "package/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
      <br>
     {% if h.follow_status('dataset', pkg.name) %}
-      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span>
+      <span class="more">See more in <a href="{{ h.url_for('user_dashboard') }}">your dashboard</a></span>
     {% endif %}
   </div>
 {% endblock %}

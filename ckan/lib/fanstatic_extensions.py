@@ -34,7 +34,7 @@ class CkanCustomRenderer(object):
 
 # HDX-6456 - defer js scripts
 def render_js(url):
-    return '<script src="%s" defer></script>' % (url,)
+    return '<script src="%s"></script>' % (url,)
 #    __  __             _                ____       _       _
 #   |  \/  | ___  _ __ | | _____ _   _  |  _ \ __ _| |_ ___| |__
 #   | |\/| |/ _ \| '_ \| |/ / _ \ | | | | |_) / _` | __/ __| '_ \

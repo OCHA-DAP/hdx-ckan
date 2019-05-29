@@ -195,7 +195,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
                 # h.flash_success(_(message), True)
 
-                return h.redirect_to(controller='user', action='dashboard_organizations')
+                return h.redirect_to('dashboard.organizations')
             else:
                 userobj = c.userobj if c.userobj else model.User.get(c.user)
                 login_dict = {'display_name': userobj.display_name, 'email': userobj.email,

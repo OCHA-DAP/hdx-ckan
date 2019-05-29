@@ -1101,7 +1101,7 @@ class DatasetController(PackageController):
             if request.method == 'POST':
                 get_action('hdx_dataset_purge')(context, {'id': id})  # Create new action to fully delete
                 h.flash_notice(_('Dataset has been deleted.'))
-                h.redirect_to(controller='user', action='dashboard_datasets')
+                h.redirect_to('dashboard.datasets')
             c.pkg_dict = get_action('package_show')(context, {'id': id})
             dataset_type = c.pkg_dict['type'] or 'dataset'
         except NotAuthorized:
