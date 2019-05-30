@@ -73,6 +73,7 @@
 }
 .additional-info td {
   text-align: justify;
+  word-break: break-word;
 }
 .additional-info th {
   max-width: 200px;
