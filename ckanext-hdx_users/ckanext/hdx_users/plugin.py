@@ -34,7 +34,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return False
 
     def before_map(self, map):
-        map.redirect('/user/', '/user')
+        # map.redirect('/user/', '/user')
         map.connect('user_generate_apikey', '/user/generate_key/{id}', action='generate_apikey', controller='user')
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
@@ -203,7 +203,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
 
         #######
-        map.connect('user_datasets', '/user/{id:((?!edit)[^/])*}',
+        map.connect('user_datasets', '/user/{id:((?!edit)[^/])+}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
         map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
