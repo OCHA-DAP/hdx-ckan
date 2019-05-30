@@ -1,3 +1,6 @@
+#contactContributorPopup {
+  position: relative;
+}
 #contactContributorPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;
   height: 560px;
@@ -5,6 +8,19 @@
 #contactContributorPopup .two-column-widget .two-column-right {
   height: 560px;
   padding: 60px;
+}
+#contactContributorPopup .two-column-widget .two-column-right .right-side-actions {
+  width: 257px;
+  right: 60px;
+}
+#contactContributorPopup .two-column-widget .two-column-right .right-side-actions .grecaptcha-badge {
+  position: absolute;
+  top: -75px;
+}
+#contactContributorPopup .two-column-widget .two-column-right .right-side-actions .btn-primary {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 #contactContributorPopup textarea {
   height: 100px;

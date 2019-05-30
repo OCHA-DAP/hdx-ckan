@@ -16,7 +16,8 @@
 @textAreaHeight: 100px;
 
 #contactContributorPopup{
-  .two-column-widget {
+  position: relative;
+    .two-column-widget {
     .two-column-left {
       background-color: #1ebfb3;
       height: @widgetHeight;
@@ -26,6 +27,22 @@
     .two-column-right {
       height: @widgetHeight;
       padding: @paddingLarge;
+
+      .right-side-actions{
+        width: 257px;
+        right: 60px;
+
+        .grecaptcha-badge {
+          position: absolute;
+          top: -75px;
+        }
+
+        .btn-primary {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+      }
     }
   }
 

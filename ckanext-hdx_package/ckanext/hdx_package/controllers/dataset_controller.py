@@ -17,6 +17,7 @@ from pylons import config
 import ckan.authz as authz
 import ckan.authz as new_authz
 import ckan.lib.base as base
+import ckan.lib.captcha as captcha
 import ckan.lib.datapreview as datapreview
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
@@ -1271,6 +1272,7 @@ class DatasetController(PackageController):
         data_dict = {}
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
+            captcha.check_recaptcha(request)
             check_access('hdx_send_mail_contributor', context, data_dict)
             # for k, v in membership_data.get('contributor_topics').iteritems():
             #     if v == request.params.get('topic'):
@@ -1291,6 +1293,9 @@ class DatasetController(PackageController):
         except NotAuthorized:
             return json.dumps(
                 {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
+        except captcha.CaptchaError:
+            return json.dumps(
+                {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
         except Exception, e:
             error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
@@ -1320,6 +1325,7 @@ class DatasetController(PackageController):
         data_dict = {}
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
+            captcha.check_recaptcha(request)
             source_type = request.params.get('source_type')
             data_dict['source_type'] = source_type
             org_id = request.params.get('org_id')
@@ -1347,9 +1353,13 @@ class DatasetController(PackageController):
         except NotAuthorized:
             return json.dumps(
                 {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
+        except captcha.CaptchaError:
+            return json.dumps(
+                {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
         except Exception, e:
             error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
+
         try:
             get_action('hdx_send_mail_members')(context, data_dict)
         except Exception, e:

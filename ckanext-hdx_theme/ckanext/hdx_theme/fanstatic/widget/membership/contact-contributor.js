@@ -1,8 +1,8 @@
 $(document).ready(function(){
     var $contact = $('#contact-contributor-form');
     $contact.find("select").select2();
-    $contact.on('submit', function(){
-        $this = $(this);
+    contactContributorOnSubmit = function(){
+        $this = $('#contact-contributor-form');
         var toMessage = $("#membershipDonePopup").find(".to-message ");
         toMessage.hide();
 
@@ -21,6 +21,7 @@ $(document).ready(function(){
                     if (result.error) {
                         alert("Can't send your request: " + result.error.message);
                     }
+                    grecaptcha.reset();
                 }
             },
             function(){
@@ -29,6 +30,5 @@ $(document).ready(function(){
         );
 
         return false;
-    });
-
+    }
 });
