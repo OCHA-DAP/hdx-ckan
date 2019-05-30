@@ -3096,6 +3096,9 @@ ul.list-horizontal li:first-child:before {
   background-color: #cccccc;
   color: #007CE0;
 }
+.new-header .global-header .global-header-content .onboarding-step {
+  margin-left: 40px;
+}
 .new-header .global-header .global-header-content .header-user-box {
   margin-left: auto;
   color: #eeeeee;
