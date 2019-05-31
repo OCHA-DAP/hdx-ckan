@@ -482,7 +482,7 @@ body {
   display: none;
   margin-left: 5px;
 }
-.base-actions-menu ul li.hide-text:hover span {
+.base-actions-menu ul li.hide-text.hovering span {
   display: inline;
 }
 .base-actions-menu ul li a i {
