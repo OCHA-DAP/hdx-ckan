@@ -17,7 +17,7 @@
     {% if h.check_access('package_update', {'id':pkg.id }) %}
         <li class="hide-text">
             <a title="Edit {{ base_type | capitalize }}" onclick="contributeAddDetails('{{ pkg.id }}', 'dataset')"
-                href="#">
+                href="#" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-delay='{"show":"700"}' >
                 <i class="icon-edit"></i>
                 <span>{{ _('Edit') }}</span>
             </a>

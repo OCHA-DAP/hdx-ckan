@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     var LS_FILTER_CONFIG = "/search:filterConfig";
     var filterConfig = window.localStorage.getItem(LS_FILTER_CONFIG);
     if (!filterConfig) {
