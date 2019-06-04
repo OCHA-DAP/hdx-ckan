@@ -217,7 +217,7 @@ class ValidationController(ckan.controllers.user.UserController):
                     h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                h.redirect_to(locale=None, controller='user', action='dashboard')
+                h.redirect_to("user_dashboard", locale=None)
         else:
             err = _('Login failed. Bad username or password.')
             try:
