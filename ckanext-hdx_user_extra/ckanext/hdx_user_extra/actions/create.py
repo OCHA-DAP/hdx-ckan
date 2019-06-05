@@ -13,15 +13,15 @@ def user_extra_create(context, data_dict):
     '''
     Creates an  user extra in database
     :param context:
-    :param data_dict: contains 'user_id' and a dictionary 'extras' with pairs (key,value) to be added in db
+    :param data_dict: contains 'user_id' and a list 'extras' with pairs (key,value) to be added in db
     :return: list of user_extra objects added in db
     '''
     result = []
     model = context['model']
     _check_access('user_extra_create', context, data_dict)
-    for extras in data_dict['extras']:
-        user_extra = ue_model.UserExtra(user_id=data_dict['user_id'], key=extras['key'], value=extras['value'])
+    for extra in data_dict['extras']:
+        user_extra = ue_model.UserExtra(user_id=data_dict['user_id'], key=extra['key'], value=extra['value'])
         model.Session.add(user_extra)
         model.Session.commit()
-        result.append(user_extra)
+        result.append(user_extra.as_dict())
     return result
