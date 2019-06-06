@@ -172,7 +172,8 @@ def _create_member_request(context, data_dict):
         .filter(model.Member.group_id == group.id).first()
 
     if not member:
-        member = model.Member(table_name="user", table_id=userobj.id, group_id=group.id, capacity=role, state='pending')
+        member = model.Member(table_name="user", table_id=userobj.id,
+                              group=group, group_id=group.id, capacity=role, state='pending')
         changed = True
 
     locale = _get_safe_locale()
