@@ -1,12 +1,12 @@
 from ckan.lib.base import _
 
-from ckanext.hdx_users.helpers.permissions import USER_EXTRA_FIELD
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 import logging
 
 log = logging.getLogger(__name__)
 
-SYSADMIN_PROPERTIES = {USER_EXTRA_FIELD}
+SYSADMIN_PROPERTIES = {Permissions.USER_EXTRA_FIELD}
 
 
 def user_extra_create(context, data_dict):
@@ -31,6 +31,7 @@ def user_extra_create(context, data_dict):
             'success': False,
             'msg': _('Not authorized to perform this request')
         }
+
 
 def user_extra_update(context, data_dict):
 

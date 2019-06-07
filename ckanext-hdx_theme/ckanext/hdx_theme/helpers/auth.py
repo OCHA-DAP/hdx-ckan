@@ -6,6 +6,7 @@ from ckan.lib.base import _
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.helpers.helpers as helpers
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 
 ## ORGS
@@ -102,8 +103,15 @@ def showcase_package_association_create(context, data_dict):
 def showcase_package_association_delete(context, data_dict):
     return {'success': _is_editor()}
 
+
 def hdx_user_statistics(context, data_dict):
     '''
     Only sysadmins are allowed to call this action
     '''
     return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
+
+
+def hdx_carousel_update(context, data_dict):
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CAROUSEL)
+    return {'success': result}

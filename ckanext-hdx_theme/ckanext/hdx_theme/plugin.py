@@ -299,6 +299,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'invalidate_cached_resource_id_apihighways': auth.invalidate_cached_resource_id_apihighways,
             'invalidate_region': auth.invalidate_region,
             'hdx_user_statistics': auth.hdx_user_statistics,
+            'hdx_carousel_update':auth.hdx_carousel_update,
 
         }
 

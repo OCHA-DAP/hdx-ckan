@@ -7,7 +7,7 @@ from ckanext.hdx_theme.helpers.uploader import GlobalUpload
 import ckan.lib.base as base
 import ckan.lib.helpers as helpers
 import ckan.logic as logic
-from ckan.common import _, request, response
+from ckan.common import _, request, response, g
 from ckan.controllers.api import CONTENT_TYPES
 
 log = logging.getLogger(__name__)
@@ -15,8 +15,8 @@ log = logging.getLogger(__name__)
 
 class CustomSettingsController(base.BaseController):
     def show(self):
-
-        logic.check_access('config_option_show', {}, {})
+        context = {u'user': g.user}
+        logic.check_access('hdx_carousel_update', context, {})
 
         setting_value = logic.get_action('hdx_carousel_settings_show')({}, {})
         template_data = {
@@ -28,7 +28,8 @@ class CustomSettingsController(base.BaseController):
         return base.render('admin/carousel.html', extra_vars=template_data)
 
     def delete(self, id):
-        logic.check_access('config_option_update', {}, {})
+        context = {u'user': g.user}
+        logic.check_access('hdx_carousel_update', context, {})
         # delete_id = request.params.get('id')
         existing_setting_list = logic.get_action('hdx_carousel_settings_show')({'not_initial': True}, {})
         remove_index, remove_element = self._find_carousel_item_by_id(existing_setting_list, id)
@@ -49,7 +50,8 @@ class CustomSettingsController(base.BaseController):
         return settings_json
 
     def update(self):
-        logic.check_access('config_option_update', {}, {})
+        context = {u'user': g.user}
+        logic.check_access('hdx_carousel_update', context, {})
 
         item = self._process_request()
 

@@ -9,7 +9,7 @@ import ckan.logic as logic
 
 NotFound = logic.NotFound
 
-
+@logic.side_effect_free
 def user_extra_show(context, data_dict):
     '''
     Retrieves user extra list based on 'user_id'

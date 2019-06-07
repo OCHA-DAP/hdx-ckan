@@ -1,13 +1,17 @@
 import ckan.logic as logic
-import ckanext.hdx_pages.model as pages_model
 from ckan.lib.base import _
+
+import ckanext.hdx_pages.model as pages_model
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 
 def page_create(context, data_dict):
     '''
     Only sysadmins are allowed to call this action
     '''
-    return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CRISIS)
+    return {'success': result}
 
 
 def page_update(context, data_dict):
