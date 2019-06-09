@@ -148,3 +148,11 @@
   margin-bottom: 5px;
 }
 /* END Button style*/
+.btn-download {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.btn-download img {
+  height: 11px;
+  margin-right: 5px;
+}

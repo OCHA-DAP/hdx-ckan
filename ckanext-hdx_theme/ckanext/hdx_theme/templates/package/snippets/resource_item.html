@@ -19,7 +19,9 @@
     {% if res.size %}
     <span class="format-filesize-label">({{ h.filesize_format(res.size) }})</span>
     {% endif %}
-    {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
+    {% if res.tracking_summary %}
+      {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
+    {% endif %}
   </a>
   {% endblock %}
 
