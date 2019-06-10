@@ -95,7 +95,7 @@ ckan.module('hdx-modal-form', function($) {
                 element.modal({
                     show: false
                 });
-                this.modalFormError = this.modal.find('.alert-error')
+                this.modalFormError = this.modal.find('.alert-danger')
             }
             return this.modal;
         },

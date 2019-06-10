@@ -163,7 +163,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         # map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
         #             ckan_icon='cog')
         # map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
-        map.connect('register', '/user/register', controller='user', action='register')
+        # map.connect('register', '/user/register', controller='user', action='register')
         map.connect('login', '/user/login', controller='user', action='login')
         map.connect('/user/_logout', controller='user', action='logout')
         map.connect('/user/logged_in', controller='user', action='logged_in')
