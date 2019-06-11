@@ -3,6 +3,7 @@ import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
+import ckanext.hdx_users.helpers.helpers as hdx_h
 import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
@@ -121,7 +122,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     def get_helpers(self):
         return {'get_user_extra': h_user_extra.get_user_extra,
-                'get_login': h_user_extra.get_login}
+                'get_login': h_user_extra.get_login,
+                'find_first_global_settings_url': hdx_h.find_first_global_settings_url}
 
     def is_fallback(self):
         return False

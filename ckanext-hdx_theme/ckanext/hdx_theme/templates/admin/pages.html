@@ -1,0 +1,61 @@
+{% import 'macros/autoform.html' as autoform %}
+{% import 'macros/form.html' as form %}
+
+
+{% extends "admin/base.html" %}
+
+{% block primary_content_module_margin %}{% endblock %}
+{% block primary_content_inner %}
+
+  <div id="carousel-config-main" data-module="hdx_custom_pages" class="paddingLeftHack">
+    <div style="float:right" class="mBottom20"><a class="btn" href="/page/new">Create New Page</a></div>
+    <table class="table table-header table-hover table-bordered">
+      <tr>
+        <th>Title</th>
+        <th>Slug</th>
+        <th>Type</th>
+        <th>Archived/Ongoing</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      {% for p in page_list %}
+        <tr>
+          <td><a href="/{{p.type}}/{{p.id}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ p.title }}</a></td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.type }}</td>
+          <td>{{ p.status }}</td>
+          <td>{{ p.state }}</td>
+          <td><a href="/page/edit/{{p.id}}" >Edit</a> |
+            <a href="/page/delete/{{p.id}}" >Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+
+    </table>
+  </div>
+
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      {{ _('Events/Custom pages') }}
+    </h2>
+    <div class="module-content">
+      {% block admin_form_help %}
+
+        {% trans %}
+          <h3>A custom page ....</h3>
+          <p>Lorep ipsum</p>
+        {% endtrans %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts2 %}
+    {{ super() }}
+{#    {% resource 'hdx_theme/custom-pages' %}#}
+{#    {% resource 'hdx_theme/carousel-admin' %}#}
+{% endblock %}

@@ -21,7 +21,7 @@ NotFound = logic.NotFound
 
 permission = {
     'permission_manage_carousel': 'permission_manage_carousel',
-    'permission_manage_cod': 'El permission_manage_cod',
+    'permission_manage_cod': 'permission_manage_cod',
     'permission_manage_crisis': 'permission_manage_crisis',
     'permission_view_request_data': 'permission_view_request_data',
     'update_permissions': 'update'
@@ -79,7 +79,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert False
 
         assert ('200' in res.status), 'HTTP OK'
-        for key, value in ph.Permissions.ALL_PERMISSIONS_DICT.items():
+        for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             assert key in res.body
             assert value in res.body
 
@@ -120,7 +120,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             log.info(ex)
             assert False
 
-        for key, value in ph.Permissions.ALL_PERMISSIONS_DICT.items():
+        for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             assert key in res.body
             assert value in res.body
         assert res.body.count(' checked ') == 4
@@ -140,7 +140,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             log.info(ex)
             assert False
 
-        for key, value in ph.Permissions.ALL_PERMISSIONS_DICT.items():
+        for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             assert key in res.body
             assert value in res.body
         assert res.body.count(' checked ') == 1

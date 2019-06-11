@@ -5,10 +5,21 @@
 {% block breadcrumb_content %}{% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('admin.index', _('Sysadmins')) }}
-  {{ h.build_nav_icon('admin.config', _('Config')) }}
-  {{ h.build_nav_icon('carousel_settings', _('Carousel')) }}
-  {{ h.build_nav_icon('admin.trash', _('Trash')) }}
-  {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
-  {{ h.build_nav_icon('ckanadmin_requests_data', _('Requested Data')) }}
+
+  {% set user_is_sysadmin = h.check_access('sysadmin') %}
+  {% if user_is_sysadmin %}
+    {{ h.build_nav_icon('admin.index', _('Sysadmins')) }}
+    {{ h.build_nav_icon('admin.config', _('Config')) }}
+    {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+    {{ h.build_nav_icon('admin.trash', _('Trash')) }}
+  {% endif %}
+  {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
+    {{ h.build_nav_icon('carousel_settings', _('Carousel')) }}
+  {% endif %}
+  {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
+    {{ h.build_nav_icon('ckanadmin_requests_data', _('Requested Data')) }}
+  {% endif %}
+  {% if user_is_sysadmin or h.check_access('admin_page_list') %}
+    {{ h.build_nav_icon('pages_show', _('Pages')) }}
+  {% endif %}
 {% endblock %}

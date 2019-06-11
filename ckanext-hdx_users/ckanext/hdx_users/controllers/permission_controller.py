@@ -53,7 +53,7 @@ class PermissionController(dashboard_controller.DashboardController):
         perm_obj = Permissions(id)
         crt_perm = perm_obj.get_permission_list()
         perm_list = []
-        for key, value in ph.Permissions.ALL_PERMISSIONS_DICT.items():
+        for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             _p = {
                 'key': key,
                 'label': value,

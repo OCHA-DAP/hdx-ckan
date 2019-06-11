@@ -14,6 +14,13 @@ def page_create(context, data_dict):
     return {'success': result}
 
 
+def admin_page_list(context, data_dict):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return page_create(context, data_dict)
+
+
 def page_update(context, data_dict):
     return page_create(context, data_dict)
 

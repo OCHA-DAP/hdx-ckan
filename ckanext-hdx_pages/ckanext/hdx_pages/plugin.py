@@ -56,7 +56,8 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_show': get.page_show,
             'page_group_list': get.page_group_list,
             'group_page_list': get.group_page_list,
-            'page_list': get.page_list
+            'page_list': get.page_list,
+            'admin_page_list': get.admin_page_list
         }
 
     def get_auth_functions(self):
@@ -64,7 +65,8 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_create': auth.page_create,
             'page_update': auth.page_update,
             'page_delete': auth.page_delete,
-            'page_show': auth.page_show
+            'page_show': auth.page_show,
+            'admin_page_list': auth.admin_page_list
         }
 
     def get_helpers(self):

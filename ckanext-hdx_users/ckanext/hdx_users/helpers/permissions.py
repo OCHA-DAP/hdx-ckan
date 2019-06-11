@@ -20,13 +20,13 @@ class WrongPermissionNameException(Exception):
 class Permissions(object):
 
     PERMISSION_MANAGE_CAROUSEL = 'permission_manage_carousel'
-    PERMISSION_MANAGE_CAROUSEL_LABEL = 'Manage Carousel'
+    LABEL_PERMISSION_MANAGE_CAROUSEL = 'Manage Carousel'
     PERMISSION_MANAGE_COD = 'permission_manage_cod'
-    PERMISSION_MANAGE_COD_LABEL = 'Manage COD'
+    LABEL_PERMISSION_MANAGE_COD = 'Manage COD'
     PERMISSION_MANAGE_CRISIS = 'permission_manage_crisis'
-    PERMISSION_MANAGE_CRISIS_LABEL = 'Manage Events/Crisis'
+    LABEL_PERMISSION_MANAGE_CRISIS = 'Manage Events/Crisis'
     PERMISSION_VIEW_REQUEST_DATA = 'permission_view_request_data'
-    PERMISSION_VIEW_REQUEST_DATA_LABEL = 'View Request Data Dashboard'
+    LABEL_PERMISSION_VIEW_REQUEST_DATA = 'View Request Data Dashboard'
 
     ALL_PERMISSIONS = [
         PERMISSION_MANAGE_CAROUSEL,
@@ -35,11 +35,11 @@ class Permissions(object):
         PERMISSION_VIEW_REQUEST_DATA
     ]
 
-    ALL_PERMISSIONS_DICT = {
-        PERMISSION_MANAGE_CAROUSEL: PERMISSION_MANAGE_CAROUSEL_LABEL,
-        PERMISSION_MANAGE_COD: PERMISSION_MANAGE_COD_LABEL,
-        PERMISSION_MANAGE_CRISIS: PERMISSION_MANAGE_CRISIS_LABEL,
-        PERMISSION_VIEW_REQUEST_DATA: PERMISSION_VIEW_REQUEST_DATA_LABEL
+    ALL_PERMISSIONS_LABELS_DICT = {
+        PERMISSION_MANAGE_CAROUSEL: LABEL_PERMISSION_MANAGE_CAROUSEL,
+        PERMISSION_MANAGE_COD: LABEL_PERMISSION_MANAGE_COD,
+        PERMISSION_MANAGE_CRISIS: LABEL_PERMISSION_MANAGE_CRISIS,
+        PERMISSION_VIEW_REQUEST_DATA: LABEL_PERMISSION_VIEW_REQUEST_DATA
     }
 
     USER_EXTRA_FIELD = 'hdx_permissions'
@@ -95,9 +95,32 @@ class Permissions(object):
         return False
 
     def has_permission(self, permission):
-        self._check_existing_permission(permission)
-        permission_list = self.get_permission_list()
-        return permission in permission_list
+        # self._check_existing_permission(permission)
+        # permission_list = self.get_permission_list()
+        # return permission in permission_list
+        return self.has_permissions([permission])
+
+    def has_permissions(self, permissions, all=True):
+        '''
+
+        :param permissions: list of permissions to be checked
+        :type permissions: list of str
+        :param all: True if all permissions should be in the list, False if any permission is in the list
+        :type all: bool
+        :return:
+        :rtype: bool
+        '''
+        for p in permissions:
+            self._check_existing_permission(p)
+        permission_set = set(permissions)
+
+        existing_permission_list = self.get_permission_list()
+        existing_permission_set = set(existing_permission_list)
+
+        if all:
+            return permission_set.issubset(existing_permission_set)
+
+        return not permission_set.isdisjoint(existing_permission_set)
 
     def _find_user_id(self):
         user = user_model.User.get(self.target_username_or_id)
