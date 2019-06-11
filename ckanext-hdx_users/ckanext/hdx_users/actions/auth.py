@@ -1,4 +1,5 @@
 import ckan.authz as new_authz
+from ckan.common import _
 
 
 ## ORGS
@@ -8,3 +9,7 @@ def hdx_send_new_org_request(context, data_dict):
         return {'success': True}
     else:
         return {'success': False, 'msg': _("You must be logged in to send a new organization request.")}
+
+
+def manage_permissions(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can view user permission page')}

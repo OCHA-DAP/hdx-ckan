@@ -101,7 +101,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_auth_functions(self):
         return {'user_can_register': authorize.user_can_register,
                 'user_can_validate': authorize.user_can_validate,
-                'hdx_send_new_org_request': auth.hdx_send_new_org_request}
+                'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+                'manage_permissions': auth.manage_permissions}
 
     # IConfigurable
     def configure(self, config):

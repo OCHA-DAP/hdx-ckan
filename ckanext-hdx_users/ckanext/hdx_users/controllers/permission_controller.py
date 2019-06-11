@@ -23,11 +23,21 @@ clean_dict = logic.clean_dict
 tuplize_dict = logic.tuplize_dict
 parse_params = logic.parse_params
 redirect = h.redirect_to
+check_access = logic.check_access
+abort = base.abort
 
 
 class PermissionController(dashboard_controller.DashboardController):
 
     def permission(self, id):
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user, 'auth_user_obj': c.userobj,
+                   'for_view': True, 'with_related': True}
+        try:
+            check_access('manage_permissions', context, {})
+        except Exception, ex:
+            abort(404, 'page not found')
 
         if request.method == 'POST':
             data = clean_dict(
@@ -40,15 +50,6 @@ class PermissionController(dashboard_controller.DashboardController):
                     h.url_for(controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
                               action='permission', id=id))
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user, 'auth_user_obj': c.userobj,
-                   'for_view': True, 'with_related': True}
-        data_dict = {'id': id,
-                     'user_obj': c.userobj,
-                     'include_datasets': True,
-                     'include_num_followers': True}
-        extra_vars = self._extra_template_variables(context, data_dict)
-
         perm_obj = Permissions(id)
         crt_perm = perm_obj.get_permission_list()
         perm_list = []
@@ -59,6 +60,11 @@ class PermissionController(dashboard_controller.DashboardController):
                 'checked': True if key in crt_perm else False
             }
             perm_list.append(_p)
+        data_dict = {'id': id,
+                     'user_obj': c.userobj,
+                     'include_datasets': True,
+                     'include_num_followers': True}
+        extra_vars = self._extra_template_variables(context, data_dict)
         extra_vars['permissions'] = perm_list
 
         return base.render('user/permission.html', extra_vars=extra_vars)
