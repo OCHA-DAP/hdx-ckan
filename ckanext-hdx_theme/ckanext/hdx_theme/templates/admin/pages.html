@@ -21,7 +21,7 @@
       {% for p in page_list %}
         <tr>
           <td><a href="/{{p.type}}/{{p.id}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ p.title }}</a></td>
-          <td>{{ p.name }}</td>
+          <td><a href="/{{p.type}}/{{p.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ p.name }}</a></td>
           <td>{{ p.type }}</td>
           <td>{{ p.status }}</td>
           <td>{{ p.state }}</td>
