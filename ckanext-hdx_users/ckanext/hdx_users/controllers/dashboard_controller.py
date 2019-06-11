@@ -22,7 +22,7 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckan.common import _, c, g, request
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
-import ckanext.hdx_theme.controllers.explorer as mpx
+# import ckanext.hdx_theme.controllers.explorer as mpx
 
 log = logging.getLogger(__name__)
 

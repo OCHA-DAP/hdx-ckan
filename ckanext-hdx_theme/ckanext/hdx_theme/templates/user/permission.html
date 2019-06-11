@@ -1,0 +1,16 @@
+{% extends "user/read.html" %}
+
+{% block subtitle %}{{ _('User Permission') }}{% endblock %}
+
+{% block primary_content_inner %}
+{% import 'macros/form.html' as form %}
+  <h2 class="hide-heading">{% block page_heading %}{{ _('User Permission') }}{% endblock %}</h2>
+  <div class="paddingLeftHack">
+    <form method="POST" data-module="basic-form">
+      {% for p in permissions %}
+        {{ form.checkbox(p.key, id='field_'+ p.key , label=p.label, value=p.key, checked=p.checked, classes=["control-full"]) }}
+      {% endfor %}
+      <button class="btn btn-primary" type="submit" name="update_permissions" value="update">{{ _("Update Permissions") }}</button>
+    </form>
+  </div>
+{% endblock %}

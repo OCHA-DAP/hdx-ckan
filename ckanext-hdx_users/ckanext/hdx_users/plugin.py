@@ -141,6 +141,9 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
+        map.connect('user_permission', '/user/permission/{id}',
+                    controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
+                    action='permission')
         # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='logged_in')
         map.connect('/user/reset', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',

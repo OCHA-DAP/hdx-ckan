@@ -20,9 +20,13 @@ class WrongPermissionNameException(Exception):
 class Permissions(object):
 
     PERMISSION_MANAGE_CAROUSEL = 'permission_manage_carousel'
+    PERMISSION_MANAGE_CAROUSEL_LABEL = 'Manage Carousel'
     PERMISSION_MANAGE_COD = 'permission_manage_cod'
+    PERMISSION_MANAGE_COD_LABEL = 'Manage COD'
     PERMISSION_MANAGE_CRISIS = 'permission_manage_crisis'
+    PERMISSION_MANAGE_CRISIS_LABEL = 'Manage Events/Crisis'
     PERMISSION_VIEW_REQUEST_DATA = 'permission_view_request_data'
+    PERMISSION_VIEW_REQUEST_DATA_LABEL = 'View Request Data Dashboard'
 
     ALL_PERMISSIONS = [
         PERMISSION_MANAGE_CAROUSEL,
@@ -30,6 +34,13 @@ class Permissions(object):
         PERMISSION_MANAGE_CRISIS,
         PERMISSION_VIEW_REQUEST_DATA
     ]
+
+    ALL_PERMISSIONS_DICT = {
+        PERMISSION_MANAGE_CAROUSEL: PERMISSION_MANAGE_CAROUSEL_LABEL,
+        PERMISSION_MANAGE_COD: PERMISSION_MANAGE_COD_LABEL,
+        PERMISSION_MANAGE_CRISIS: PERMISSION_MANAGE_CRISIS_LABEL,
+        PERMISSION_VIEW_REQUEST_DATA: PERMISSION_VIEW_REQUEST_DATA_LABEL
+    }
 
     USER_EXTRA_FIELD = 'hdx_permissions'
 
@@ -71,7 +82,7 @@ class Permissions(object):
     def get_permission_list(self):
         if self.target_user_id:
             user_extra = ue_model.UserExtra.get(self.target_user_id, Permissions.USER_EXTRA_FIELD)
-            if user_extra.value:
+            if user_extra and user_extra.value:
                 permission_list = user_extra.value.split(' ')
                 return permission_list
         return []
