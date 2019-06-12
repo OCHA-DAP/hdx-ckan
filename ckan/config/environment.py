@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 '''CKAN environment configuration'''
+import json
 import os
 import logging
 import warnings
@@ -69,9 +70,21 @@ def load_environment(global_conf, app_conf):
 
     # Pylons paths
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    valid_base_public_folder_names = ['public', 'public-bs2']
+    static_files = app_conf.get('ckan.base_public_folder', 'public')
+    app_conf['ckan.base_public_folder'] = static_files
+
+    if static_files not in valid_base_public_folder_names:
+        raise CkanConfigurationException(
+            'You provided an invalid value for ckan.base_public_folder. '
+            'Possible values are: "public" and "public-bs2".'
+        )
+
+    log.info('Loading static files from %s' % static_files)
     paths = dict(root=root,
                  controllers=os.path.join(root, 'controllers'),
-                 static_files=os.path.join(root, 'public'),
+                 static_files=os.path.join(root, static_files),
                  templates=[])
 
     # Initialize main CKAN config object
@@ -133,7 +146,8 @@ CONFIG_FROM_ENV_VARS = {
     'smtp.starttls': 'CKAN_SMTP_STARTTLS',
     'smtp.user': 'CKAN_SMTP_USER',
     'smtp.password': 'CKAN_SMTP_PASSWORD',
-    'smtp.mail_from': 'CKAN_SMTP_MAIL_FROM'
+    'smtp.mail_from': 'CKAN_SMTP_MAIL_FROM',
+    'ckan.max_resource_size': 'CKAN_MAX_UPLOAD_SIZE_MB'
 }
 # End CONFIG_FROM_ENV_VARS
 
@@ -216,20 +230,33 @@ def update_config():
     # routes.named_routes is a CKAN thing
     config['routes.named_routes'] = routing.named_routes
     config['pylons.app_globals'] = app_globals.app_globals
+
     # initialise the globals
     app_globals.app_globals._init()
 
     helpers.load_plugin_helpers()
     config['pylons.h'] = helpers.helper_functions
 
-    jinja2_templates_path = os.path.join(root, 'templates')
+    # Templates and CSS loading from configuration
+    valid_base_templates_folder_names = ['templates', 'templates-bs2']
+    templates = config.get('ckan.base_templates_folder', 'templates')
+    config['ckan.base_templates_folder'] = templates
+
+    if templates not in valid_base_templates_folder_names:
+        raise CkanConfigurationException(
+            'You provided an invalid value for ckan.base_templates_folder. '
+            'Possible values are: "templates" and "templates-bs2".'
+        )
+
+    jinja2_templates_path = os.path.join(root, templates)
+    log.info('Loading templates from %s' % jinja2_templates_path)
     template_paths = [jinja2_templates_path]
 
     extra_template_paths = config.get('extra_template_paths', '')
     if extra_template_paths:
         # must be first for them to override defaults
         template_paths = extra_template_paths.split(',') + template_paths
-    config['pylons.app_globals'].template_paths = template_paths
+    config['computed_template_paths'] = template_paths
 
     # Set the default language for validation messages from formencode
     # to what is set as the default locale in the config
@@ -244,17 +271,7 @@ def update_config():
 
     # Create Jinja2 environment
     env = jinja_extensions.Environment(
-        loader=jinja_extensions.CkanFileSystemLoader(template_paths),
-        autoescape=True,
-        extensions=['jinja2.ext.do', 'jinja2.ext.with_',
-                    jinja_extensions.SnippetExtension,
-                    jinja_extensions.CkanExtend,
-                    jinja_extensions.CkanInternationalizationExtension,
-                    jinja_extensions.LinkForExtension,
-                    jinja_extensions.ResourceExtension,
-                    jinja_extensions.UrlForStaticExtension,
-                    jinja_extensions.UrlForExtension]
-    )
+        **jinja_extensions.get_jinja_env_options())
     env.install_gettext_callables(_, ungettext, newstyle=True)
     # custom filters
     env.filters['empty_and_escape'] = jinja_extensions.empty_and_escape

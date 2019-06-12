@@ -34,7 +34,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return False
 
     def before_map(self, map):
-        map.redirect('/user/', '/user')
+        # map.redirect('/user/', '/user')
         map.connect('user_generate_apikey', '/user/generate_key/{id}', action='generate_apikey', controller='user')
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
@@ -152,18 +152,18 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         # map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
-        map.connect('/user/edit', controller='user', action='edit')
-        map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
-        map.connect('user_activity_stream', '/user/activity/{id}',
-                    controller='user', action='activity', ckan_icon='time')
+        # map.connect('/user/edit', controller='user', action='edit')
+        # map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
+        # map.connect('user_activity_stream', '/user/activity/{id}',
+        #             controller='user', action='activity', ckan_icon='time')
         map.connect('user_follow', '/user/follow/{id}', controller='user', action='follow')
         map.connect('/user/unfollow/{id}', controller='user', action='unfollow')
         map.connect('user_followers', '/user/followers/{id:.*}',
                     controller='user', action='followers', ckan_icon='group')
-        map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
-                    ckan_icon='cog')
-        map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
-        map.connect('register', '/user/register', controller='user', action='register')
+        # map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
+        #             ckan_icon='cog')
+        # map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
+        # map.connect('register', '/user/register', controller='user', action='register')
         map.connect('login', '/user/login', controller='user', action='login')
         map.connect('/user/_logout', controller='user', action='logout')
         map.connect('/user/logged_in', controller='user', action='logged_in')
@@ -171,7 +171,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
         # map.connect('/user/reset', controller='user', action='request_reset')
         map.connect('/user/me', controller='user', action='me')
-        map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
+        # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
 
         # requestdata mapping
@@ -203,7 +203,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
 
         #######
-        map.connect('user_datasets', '/user/{id:.*}',
+        map.connect('user_datasets', '/user/{id:((?!edit)[^/])+}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
         map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
@@ -233,5 +233,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     def get_validators(self):
         return {
-            'user_email_validator': hdx_validators.user_email_validator
+            'user_email_validator': hdx_validators.user_email_validator,
+            'user_name_validator': hdx_validators.user_name_validator
         }

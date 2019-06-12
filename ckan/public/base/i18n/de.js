@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "de", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s Hemd", 
+    "%(color)s Hemden"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d Stück", 
+    "%(num)d Stücke"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d fehlende Übersetzung", 
+    "%(num)d fehlende Übersetzungen"
+  ], 
   "Add Filter": [
     null, 
     "Filter hinzufügen"
@@ -173,8 +188,31 @@
     null, 
     "Eine Datei wird hochgeladen. Soll das wirklich abgebrochen werden?"
   ], 
+  "bar": [
+    "bars", 
+    "bar", 
+    "bars"
+  ], 
   "error loading view": [
     null, 
     "Fehler beim Laden der Ansicht"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "Hallo %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "Keine Übersetzung für \"%(attr)s\"", 
+    "Keine Übersetzungen für \"%(attr)s\""
+  ], 
+  "no translation": [
+    "no translations", 
+    "keine Übersetzung", 
+    "keine Übersetzungen"
   ]
 }

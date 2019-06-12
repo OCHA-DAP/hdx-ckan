@@ -5,7 +5,7 @@
   top: 2px;
   width: 16px;
   height: 16px;
-  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-image: url("/base/images/sprite-ckan-icons.png");
   background-repeat: no-repeat;
   background-position: 16px 16px;
 }
@@ -154,11 +154,11 @@ ul.dataset-resources li + li.label-icons {
   top: 2px;
   width: 16px;
   height: 16px;
-  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-image: url("/base/images/sprite-ckan-icons.png");
   background-repeat: no-repeat;
   background-position: 16px 16px;
   text-indent: -900em;
-  background: url("../../../../base/images/sprite-resource-icons.png") no-repeat 0 0;
+  background: url("/base/images/sprite-resource-icons.png") no-repeat 0 0;
 }
 .format-label {
   width: 32px;

@@ -149,16 +149,16 @@
                                 <span>{{ _('Profile') }}</span>
                               </a>
                             </li>
-                            <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
+                            <li class="notifications">
                               {# CKAN 2.2 DOES NOT LIKE THIS #}
                               {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
-                              <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{# notifications_tooltip #}">
+                              <a href="{{ h.url_for('user_dashboard') }}" title="{# notifications_tooltip #}">
                                 <i class="icon-dashboard"></i>
                                 <span> {{ _('Dashboard') }} </span>
                               </a>
                             </li>
                             <li>
-                              <a href="{{ h.url_for(controller='user', action='dashboard_organizations') }}" title="{{ _('My Organisations') }}">
+                              <a href="{{ h.url_for('dashboard.organizations') }}" title="{{ _('My Organisations') }}">
                                 <i class="icon-user"></i>
                                 <span>{{ _('My Organisations') }}</span>
                               </a>

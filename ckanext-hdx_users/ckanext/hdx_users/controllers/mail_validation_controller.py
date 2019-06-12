@@ -195,7 +195,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
                 # h.flash_success(_(message), True)
 
-                return h.redirect_to(controller='user', action='dashboard_organizations')
+                return h.redirect_to('dashboard.organizations')
             else:
                 userobj = c.userobj if c.userobj else model.User.get(c.user)
                 login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
@@ -217,7 +217,7 @@ class ValidationController(ckan.controllers.user.UserController):
                     h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                h.redirect_to(locale=None, controller='user', action='dashboard')
+                h.redirect_to("user_dashboard", locale=None)
         else:
             err = _('Login failed. Bad username or password.')
             try:

@@ -23,6 +23,7 @@
 .pagination li a:focus,
 .module .pagination li a:focus {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 16px;
   color: #000;

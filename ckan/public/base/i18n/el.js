@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "el", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s πουκάμισο", 
+    "%(color)s πουκάμισα"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d αντικείμενο", 
+    "%(num)d αντικείμενα"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d υπολειπόμενη μετάφραση", 
+    "%(num)d υπολειπόμενες μεταφράσεις"
+  ], 
   "Add Filter": [
     null, 
     "Προσθήκη φίλτρου"
@@ -173,8 +188,31 @@
     null, 
     "Αυτή τη στιγμή μεταφορτώνετε ένα αρχείο. Είσαστε σίγουρος/η ό,τι θέλετε να μεταβείτε σε άλλη σελίδα και να διακόψετε τη μεταφόρτωση;"
   ], 
+  "bar": [
+    "bars", 
+    "μπάρα", 
+    "μπάρες"
+  ], 
   "error loading view": [
     null, 
     "Σφάλμα κατά τη φόρτωση της προβολής"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "Γειά σου %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "Δεν υπάρχει μετάφραση του %(attr)s", 
+    "Δεν υπάρχουν μεταφράσεις του %(attr)s"
+  ], 
+  "no translation": [
+    "no translations", 
+    "καμία μετάφραση", 
+    "χωρίς μεταφράσεις"
   ]
 }

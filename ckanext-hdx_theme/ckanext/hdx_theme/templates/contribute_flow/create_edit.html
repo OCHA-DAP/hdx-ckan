@@ -142,7 +142,7 @@
                     {% endif %}
                     <div class="background-gray">
                         <div class="paddingLeftHack paddingRightHack">
-                                <div id="hdx_error" class="error-explanation alert alert-error hdx-invisible-element" data-module="hdx_error_block_manager">
+                                <div id="hdx_error" class="error-explanation alert alert-danger hdx-invisible-element" data-module="hdx_error_block_manager">
                                     <p>{{ _('The form contains invalid entries. These are highlighted below. Please scroll down and correct them.') }}</p>
                                     <!--<ul>-->
                                       <!--<li data-field-label="type of error">type of error: error</li>-->
@@ -645,6 +645,10 @@
 </div>
 {% endblock %}
 
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css">
+{% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="2ixptqvj5hknpzs"></script>
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>

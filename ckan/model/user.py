@@ -10,6 +10,7 @@ from passlib.hash import pbkdf2_sha512
 from sqlalchemy.sql.expression import or_
 from sqlalchemy.orm import synonym
 from sqlalchemy import types, Column, Table, func
+from six import text_type
 import vdm.sqlalchemy
 
 import meta
@@ -22,7 +23,6 @@ user_table = Table('user', meta.metadata,
         Column('id', types.UnicodeText, primary_key=True,
                default=_types.make_uuid),
         Column('name', types.UnicodeText, nullable=False, unique=True),
-        Column('openid', types.UnicodeText),
         Column('password', types.UnicodeText),
         Column('fullname', types.UnicodeText),
         Column('email', types.UnicodeText),
@@ -43,11 +43,6 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
 
     VALID_NAME = re.compile(r"^[a-zA-Z0-9_\-]{3,255}$")
     DOUBLE_SLASH = re.compile(':\/([^/])')
-
-    @classmethod
-    def by_openid(cls, openid):
-        obj = meta.Session.query(cls).autoflush(False)
-        return obj.filter_by(openid=openid).first()
 
     @classmethod
     def by_email(cls, email):
@@ -86,17 +81,14 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
         return md5(e).hexdigest()
 
     def get_reference_preferred_for_uri(self):
-        '''Returns a reference (e.g. name, id, openid) for this user
+        '''Returns a reference (e.g. name, id) for this user
         suitable for the user\'s URI.
         When there is a choice, the most preferable one will be
-        given, based on readability. This is expected when repoze.who can
-        give a more friendly name for an openid user.
+        given, based on readability.
         The result is not escaped (will get done in url_for/redirect_to).
         '''
         if self.name:
             ref = self.name
-        elif self.openid:
-            ref = self.openid
         else:
             ref = self.id
         return ref
@@ -112,7 +104,7 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
         '''
         hashed_password = pbkdf2_sha512.encrypt(password)
 
-        if not isinstance(hashed_password, unicode):
+        if not isinstance(hashed_password, text_type):
             hashed_password = hashed_password.decode('utf-8')
         self._password = hashed_password
 
@@ -120,7 +112,7 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
         return self._password
 
     def _verify_and_upgrade_from_sha1(self, password):
-        if isinstance(password, unicode):
+        if isinstance(password, text_type):
             password_8bit = password.encode('ascii', 'ignore')
         else:
             password_8bit = password
@@ -284,7 +276,7 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
 
     @classmethod
     def search(cls, querystr, sqlalchemy_query=None, user_name=None):
-        '''Search name, fullname, email and openid. '''
+        '''Search name, fullname, email. '''
         if sqlalchemy_query is None:
             query = meta.Session.query(cls)
         else:
@@ -293,7 +285,6 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
         filters = [
             cls.name.ilike(qstr),
             cls.fullname.ilike(qstr),
-            cls.openid.ilike(qstr),
         ]
         # sysadmins can search on user emails
         import ckan.authz as authz

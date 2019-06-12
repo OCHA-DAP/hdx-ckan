@@ -10,7 +10,7 @@ ckan.module('hdx-hxl-preview', function ($, _) {
             };
             var iframeEl = this.el[0];
             var iBodyHeight;
-            $('iframe.hxl-preview-iframe').load(function () {
+            $('iframe.hxl-preview-iframe').on('load', function () {
                     var iBody = iframeEl.contentWindow.document.body;
                     var iBodyHeight = iBody.offsetHeight;
                     setHeight(iframeEl, iBodyHeight);

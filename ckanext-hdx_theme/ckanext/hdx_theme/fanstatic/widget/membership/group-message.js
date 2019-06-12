@@ -1,8 +1,8 @@
 $(document).ready(function(){
     var $group = $('#group-message-form');
     $group.find("select").select2();
-    $group.on('submit', function(){
-        $this = $(this);
+    groupMessageOnSubmit = function(){
+        $this = $("#group-message-form");
         var toMessage = $("#membershipDonePopup").find(".to-message ");
         toMessage.hide();
 
@@ -23,6 +23,7 @@ $(document).ready(function(){
                     if (result.error) {
                         alert("Can't send your request: " + result.error.message);
                     }
+                    grecaptcha.reset();
                 }
             },
             function(){
@@ -31,6 +32,5 @@ $(document).ready(function(){
         );
 
         return false;
-    });
-
+    }
 });

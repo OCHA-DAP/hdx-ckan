@@ -2,8 +2,20 @@
   "": {
     "domain": "ckan", 
     "lang": "th", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "plural-forms": "nplurals=1; plural=0"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    ""
+  ], 
   "An Error Occurred": [
     null, 
     "เกิดข้อผิดพลาด"
@@ -20,6 +32,10 @@
     null, 
     "ยืนยัน"
   ], 
+  "Could not load view": [
+    null, 
+    "ไม่สามารถโหลดวิวได้"
+  ], 
   "Edit": [
     null, 
     "แก้ไข"
@@ -35,6 +51,10 @@
   "Follow": [
     null, 
     "ติดตาม"
+  ], 
+  "Graph": [
+    null, 
+    "กราฟ"
   ], 
   "Hide": [
     null, 
@@ -59,6 +79,10 @@
   "Loading...": [
     null, 
     "กำลังโหลด..."
+  ], 
+  "Map": [
+    null, 
+    "แผนที่"
   ], 
   "No matches found": [
     null, 
@@ -135,5 +159,17 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "คุณกำลังอัพโหลดไฟล์อยู่ กรุณายืนยันว่าคุณต้องการเปลี่ยนไปหน้าอื่น และหยุดการอัพโหลดนี้"
+  ], 
+  "bar": [
+    "bars", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    ""
   ]
 }

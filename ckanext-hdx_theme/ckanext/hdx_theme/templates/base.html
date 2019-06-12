@@ -91,7 +91,21 @@
       }());
 
     </script>
+    <!-- Hotjar Tracking Code for https://data.humdata.org -->
 
+    {% set hotjar_site_id = h.hdx_get_ckan_config('hdx.analytics.hotjar.site_id') %}
+    {% if hotjar_site_id %}
+      <script>
+          (function(h,o,t,j,a,r){
+              h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+              h._hjSettings={hjid:{{ hotjar_site_id }},hjsv:6};
+              a=o.getElementsByTagName('head')[0];
+              r=o.createElement('script');r.async=1;
+              r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+              a.appendChild(r);
+          })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+      </script>
+    {% endif %}
     {#
     Add custom meta tags to the page. Call super() to get the default tags
     such as charset, viewport and generator.
@@ -131,7 +145,7 @@
       Images for Facebook shares
     #}
 
-    <meta property="og:image" content="{{app_globals.site_url}}/images/hxl_fb-01.png">
+    <meta property="og:image" content="{{g.site_url}}/images/hxl_fb-01.png">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -203,15 +217,9 @@
       {% endblock %}
     #}
     {%- block scripts %}
-      {% resource 'vendor/jquery.js' %}
-      {% resource 'hdx_theme/vendor/lazysizes/lazysizes.js' %}
-      {% resource 'hdx_theme/vendor/jquery.cookie/jquery.cookie.js' %}
+      {# Keep this block to a minimum, use resource.config instead #}
       {% resource 'hdx_theme/ckan' %}
       {% resource 'hdx_theme/bootstrap' %}
-      {% resource 'hdx_theme/external-links.js' %}
-      {% resource 'vendor/vendor' %}
-      {% resource 'hdx_theme/google-analytics' %}
-
     {% endblock -%}
 
 

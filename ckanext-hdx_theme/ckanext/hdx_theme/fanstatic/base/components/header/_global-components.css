@@ -53,7 +53,7 @@
   display: none;
   margin-left: 5px;
 }
-.base-actions-menu ul li.hide-text:hover span {
+.base-actions-menu ul li.hide-text.hovering span {
   display: inline;
 }
 .base-actions-menu ul li a i {
@@ -282,7 +282,7 @@
   top: 2px;
   width: 16px;
   height: 16px;
-  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-image: url("/base/images/sprite-ckan-icons.png");
   background-repeat: no-repeat;
   background-position: 16px 16px;
 }
@@ -431,11 +431,11 @@ ul.dataset-resources li + li.label-icons {
   top: 2px;
   width: 16px;
   height: 16px;
-  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-image: url("/base/images/sprite-ckan-icons.png");
   background-repeat: no-repeat;
   background-position: 16px 16px;
   text-indent: -900em;
-  background: url("../../../../base/images/sprite-resource-icons.png") no-repeat 0 0;
+  background: url("/base/images/sprite-resource-icons.png") no-repeat 0 0;
 }
 .format-label {
   width: 32px;
@@ -559,14 +559,14 @@ ul.dataset-resources li + li.label-icons {
 }
 .module-heading.facet-title {
   cursor: pointer;
-  font-family: 'Gotham-Black', sans-serif;
+  font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
   color: #888888;
   border: 0;
 }
 .module-heading .facet-title-counter {
-  font-family: 'Gotham-Black', sans-serif;
+  font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
   color: #ffffff;
@@ -655,6 +655,7 @@ ul.dataset-resources li + li.label-icons {
 }
 .mainLinks.mainLinks-gray > li > a {
   font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
   font-weight: 400;
   font-size: 12px;
   color: #cccccc;

@@ -4,6 +4,10 @@ import datetime
 
 import nose.tools
 
+from six import text_type
+from six.moves import xrange
+
+from ckan import __version__
 import ckan.logic as logic
 import ckan.plugins as p
 import ckan.tests.helpers as helpers
@@ -671,7 +675,7 @@ class TestUserShow(helpers.FunctionalTestBase):
 
     def test_user_show_sysadmin_password_hash(self):
 
-        user = factories.User(password='test')
+        user = factories.User(password='TestPassword1')
 
         sysadmin = factories.User(sysadmin=True)
 
@@ -1953,7 +1957,7 @@ class TestRevisionList(helpers.FunctionalTestBase):
         rev_ids = []
         for i in xrange(num_revisions):
             rev = model.repo.new_revision()
-            rev.id = unicode(i)
+            rev.id = text_type(i)
             model.Session.commit()
             rev_ids.append(rev.id)
         return rev_ids
@@ -2147,6 +2151,22 @@ class TestFollow(helpers.FunctionalTestBase):
 
         eq(len(followee_list), 1)
         eq(followee_list[0]['display_name'], 'Environment')
+
+
+class TestStatusShow(helpers.FunctionalTestBase):
+
+    def test_status_show(self):
+
+        status = helpers.call_action(u'status_show')
+
+        eq(status[u'ckan_version'], __version__)
+        eq(status[u'site_url'], u'http://test.ckan.net')
+        eq(status[u'site_title'], u'CKAN')
+        eq(status[u'site_description'], u'')
+        eq(status[u'locale_default'], u'en')
+
+        eq(type(status[u'extensions']), list)
+        eq(status[u'extensions'], [u'stats'])
 
 
 class TestJobList(helpers.FunctionalRQTestBase):

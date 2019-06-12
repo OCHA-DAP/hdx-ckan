@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "it", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Aggiungi Filtro"
@@ -153,8 +168,23 @@
     null, 
     "Stai caricando un file. Sei sicuro che vuoi abbandonare questa pagina e interrompere il caricamento?"
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "Errore nel caricamento della vista"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    ""
   ]
 }

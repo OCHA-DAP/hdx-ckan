@@ -63,9 +63,14 @@ ul.hdx-bs3 {
 }
 /* Style pagination */
 .pagination {
-  display: block;
+  display: flex;
+  justify-content: center;
   text-align: center;
   height: 45px;
+}
+.pagination > li:first-child a,
+.pagination > li:last-child a {
+  border-radius: 0;
 }
 /* END Style pagination */
 /* END Change the default style for ul items */
@@ -78,4 +83,12 @@ body {
   margin: 1px 0 0;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
+  background: none;
+  min-width: unset;
+}
+.widget-container {
+  padding: 0;
+}
+#wfp-visualization-wrapper #header {
+  height: 20px !important;
 }

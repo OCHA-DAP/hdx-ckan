@@ -13,6 +13,7 @@ import re
 import pysolr
 from ckan.common import config
 from paste.deploy.converters import asbool
+from six import text_type
 
 from common import SearchIndexError, make_connection
 from ckan.model import PackageRelationship
@@ -50,11 +51,11 @@ def clear_index():
     query = "+site_id:\"%s\"" % (config.get('ckan.site_id'))
     try:
         conn.delete(q=query)
-    except socket.error, e:
+    except socket.error as e:
         err = 'Could not connect to SOLR %r: %r' % (conn.url, e)
         log.error(err)
         raise SearchIndexError(err)
-    except pysolr.SolrError, e:
+    except pysolr.SolrError as e:
         err = 'SOLR %r exception: %r' % (conn.url, e)
         log.error(err)
         raise SearchIndexError(err)
@@ -359,7 +360,7 @@ class PackageSearchIndex(SearchIndex):
         for extra in extras:
             key, value = extra['key'], extra['value']
             if isinstance(value, (tuple, list)):
-                value = " ".join(map(unicode, value))
+                value = " ".join(map(text_type, value))
             key = ''.join([c for c in key if c in KEY_CHARS])
             pkg_dict['extras_' + key] = value
             if key not in index_fields:
@@ -514,12 +515,12 @@ class PackageSearchIndex(SearchIndex):
             if not asbool(config.get('ckan.search.solr_commit', 'true')):
                 commit = False
             conn.add(docs=[pkg_dict], commit=commit)
-        except pysolr.SolrError, e:
+        except pysolr.SolrError as e:
             msg = 'Solr returned an error: {0}'.format(
                 e[:1000] # limit huge responses
             )
             raise SearchIndexError(msg)
-        except socket.error, e:
+        except socket.error as e:
             err = 'Could not connect to Solr using {0}: {1}'.format(conn.url, str(e))
             log.error(err)
             raise SearchIndexError(err)
@@ -531,7 +532,7 @@ class PackageSearchIndex(SearchIndex):
         try:
             conn = make_connection()
             conn.commit(waitSearcher=False)
-        except Exception, e:
+        except Exception as e:
             log.exception(e)
             raise SearchIndexError(e)
 
@@ -542,6 +543,6 @@ class PackageSearchIndex(SearchIndex):
         try:
             commit = asbool(config.get('ckan.search.solr_commit', 'true'))
             conn.delete(q=query, commit=commit)
-        except Exception, e:
+        except Exception as e:
             log.exception(e)
             raise SearchIndexError(e)

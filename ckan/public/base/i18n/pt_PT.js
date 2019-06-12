@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "pt_PT", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d item", 
+    "%(num)d itens"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Adicionar Filtro"
@@ -23,6 +38,10 @@
   "Confirm": [
     null, 
     "Confirmar"
+  ], 
+  "Could not load view": [
+    null, 
+    "Não foi possível carregar a vista"
   ], 
   "Edit": [
     null, 
@@ -47,6 +66,10 @@
   "Graph": [
     null, 
     "Gráfico"
+  ], 
+  "Grid": [
+    null, 
+    "Grelha"
   ], 
   "Hide": [
     null, 
@@ -101,6 +124,10 @@
     null, 
     "A guardar ..."
   ], 
+  "Select a field": [
+    null, 
+    "Selecione um campo"
+  ], 
   "Show more": [
     null, 
     "Mostrar mais"
@@ -152,5 +179,28 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "Está a enviar um ficheiro. Tem a certeza de que deseja sair e parar o envio?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
+  "error loading view": [
+    null, 
+    "erro a carregar a vista"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "olá %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "sem tradução", 
+    "sem traduções"
   ]
 }

@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "es_AR", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "camisa %(color)s", 
+    " camisas %(color)s"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d item", 
+    "%(num)d items"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "Falta %(num)d traducción", 
+    "Faltan %(num)d traducciones"
+  ], 
   "Add Filter": [
     null, 
     "Agregar Filtro"
@@ -23,6 +38,18 @@
   "Confirm": [
     null, 
     "Confirmar"
+  ], 
+  "Could not load view": [
+    null, 
+    "No se pudo cargar la vista"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "DataProxy ha retornado un error"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "DataStore ha retornado un error"
   ], 
   "Edit": [
     null, 
@@ -48,6 +75,10 @@
     null, 
     "Gráfico"
   ], 
+  "Grid": [
+    null, 
+    "Tabla"
+  ], 
   "Hide": [
     null, 
     "Esconder"
@@ -58,8 +89,8 @@
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    "", 
-    ""
+    "Ingreso es demasiado corto, debe tener al menos un carácter", 
+    "Ingreso es demasiado corto, debe tener al menos %(num)d carácteres"
   ], 
   "Link": [
     null, 
@@ -100,6 +131,10 @@
   "Saving...": [
     null, 
     "Guardando..."
+  ], 
+  "Select a field": [
+    null, 
+    "Seleccionar un campo"
   ], 
   "Show more": [
     null, 
@@ -152,5 +187,32 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "Estás subiendo un archivo. ¿Estás seguro que quieres salir y detener esta subida?"
+  ], 
+  "bar": [
+    "bars", 
+    "barra", 
+    "barras"
+  ], 
+  "error loading view": [
+    null, 
+    "error cargando la vista"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "Hola %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "%(attr)s sin traducción", 
+    "%(attr)s sin traducciones"
+  ], 
+  "no translation": [
+    "no translations", 
+    "sin traducción", 
+    "sin traducciones"
   ]
 }

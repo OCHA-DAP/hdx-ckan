@@ -17,6 +17,7 @@
 
 
 #groupMessagePopup{
+  position: relative;
   .two-column-widget {
     .two-column-left {
       background-color: #1ebfb3;
@@ -27,6 +28,22 @@
     .two-column-right {
       height: @widgetHeight;
       padding: @paddingLarge;
+
+      .right-side-actions{
+        width: 257px;
+        right: 60px;
+
+        .grecaptcha-badge {
+          position: absolute;
+          top: -75px;
+        }
+
+        .btn-primary {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+      }
     }
   }
   textarea{

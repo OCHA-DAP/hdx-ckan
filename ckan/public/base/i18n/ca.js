@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "ca", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s shirt", 
+    "%(color)s shirts"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d item", 
+    "%(num)d items"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d missing translation", 
+    "%(num)d missing translations"
+  ], 
   "Add Filter": [
     null, 
     "Afegir filtre"
@@ -173,8 +188,31 @@
     null, 
     "Esteu pujant un arxiu. Esteu segurs que voleu marxar de la pàgina i aturar la pujada?"
   ], 
+  "bar": [
+    "bars", 
+    "bar", 
+    "bars"
+  ], 
   "error loading view": [
     null, 
     "Error carregant la vista"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "hola %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "no %(attr)s translation", 
+    "no %(attr)s translations"
+  ], 
+  "no translation": [
+    "no translations", 
+    "no translation", 
+    "no translations"
   ]
 }

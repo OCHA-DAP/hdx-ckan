@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "fi", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Lisää suodatin"
@@ -173,8 +188,23 @@
     null, 
     "Olet parhaillaan lataamassa tiedostoa palvelimelle. Oletko varma, että haluat poistua sivulta ja keskeyttää lataamisen?"
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "virhe ladattaessa näkymää"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    ""
   ]
 }

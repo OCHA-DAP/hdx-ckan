@@ -4,9 +4,13 @@ function closeCurrentWidget(self){
 
 function spawnRecaptcha(id){
     var container = $(id);
-    container.find(".hdx-recaptcha").each(function (idx, el) {
+    var init = container.attr("hdx-recaptcha");
+    if (!init){
+      container.attr("hdx-recaptcha", true);
+      container.find(".hdx-recaptcha").each(function (idx, el) {
         grecaptcha.render(el);
-    });
+      });
+    }
 }
 
 function notYou(){

@@ -210,6 +210,7 @@ hdx.google.dev_key =
 
 # Analytics
 hdx.analytics.ga.token = UA-48221887-3
+hdx.analytics.hotjar.site_id =
 # This should be overriden in your own prod.ini
 # hdx.analytics.enqueue_url = http://localhost:1234/api/send-analytics
 hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165

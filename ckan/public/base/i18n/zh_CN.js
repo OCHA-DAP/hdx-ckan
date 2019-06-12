@@ -2,8 +2,20 @@
   "": {
     "domain": "ckan", 
     "lang": "zh_CN", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "plural-forms": "nplurals=1; plural=0"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "增加筛选条件"
@@ -147,5 +159,17 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "你正在上传文件。你是否确定要放弃上传而浏览别处？"
+  ], 
+  "bar": [
+    "bars", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    ""
   ]
 }

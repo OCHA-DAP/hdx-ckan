@@ -873,7 +873,7 @@ CKAN.View.ResourceAddUpload = Backbone.View.extend({
 
   setMessage: function(msg, category) {
     var category = category || 'alert-info';
-    this.$messages.removeClass('alert-info alert-success alert-error');
+    this.$messages.removeClass('alert-info alert-success alert-danger');
     this.$messages.addClass(category);
     this.$messages.show();
     this.$messages.html(msg);
@@ -1163,7 +1163,7 @@ CKAN.Utils = function($, my) {
     $('[rel=popover]').popover();
 
     function addAlert(msg) {
-      $('<div class="alert alert-error" />').html(msg).hide().prependTo(form).fadeIn();
+      $('<div class="alert alert-danger" />').html(msg).hide().prependTo(form).fadeIn();
     }
 
     function relatedRequest(action, method, data) {
@@ -1559,7 +1559,7 @@ CKAN.DataPreview = function ($, my) {
       msg = msg || CKAN.Strings.errorLoadingPreview;
       return $('#ckanext-datapreview')
         .append('<div></div>')
-        .addClass('alert alert-error fade in')
+        .addClass('alert alert-danger fade in')
         .html(msg);
     }
 
@@ -1827,7 +1827,7 @@ CKAN.DataPreview = function ($, my) {
 
   my.showError = function (error) {
     var _html = _.template(
-        '<div class="alert alert-error"><strong><%= title %></strong><br /><%= message %></div>',
+        '<div class="alert alert-danger"><strong><%= title %></strong><br /><%= message %></div>',
         error
     );
     my.$dialog.html(_html);

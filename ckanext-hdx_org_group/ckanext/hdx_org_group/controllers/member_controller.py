@@ -92,9 +92,9 @@ class HDXOrgMemberController(org.OrganizationController):
             log.error(str(ex))
             base.abort(404, _('Server error'))
         if org_meta.is_custom:
-            return self._render_template('group/custom_members.html', self._guess_group_type())
+            return self._render_template('group/custom_members.html', 'organization')
         else:
-            return self._render_template('group/members.html', self._guess_group_type())
+            return self._render_template('group/members.html', 'organization')
 
     def _get_member_requests_for_org(self, org_id):
         context = self._get_context()
@@ -138,6 +138,10 @@ class HDXOrgMemberController(org.OrganizationController):
         q = c.q = request.params.get('q', '')
         sort = request.params.get('sort', '')
         return q, sort
+
+    def _redirect_to_this_controller(self, *args, **kw):
+        kw['controller'] = 'ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController'
+        return h.redirect_to(*args, **kw)
 
     def member_new(self, id):
         '''

@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {%- block page -%}
@@ -197,29 +198,19 @@
 {% endblock %}
 
 {%- block scripts %}
+  {# Keep this block to a minimum, use resource.config instead #}
 
-  {% resource 'hdx_theme/bs_popover.js' %}
-  {% resource 'hdx_theme/hdx-icons' %}
-    {% if g.tracking_enabled %}
-        {% resource 'hdx_theme/package/tracking.js' %}
-    {% endif %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
-    {% resource 'hdx_theme/mailchimp' %}
-    {{ super() }}
-  {% endblock -%}
-
-{%- block scripts2 %}
+  {% resource 'hdx_theme/page-scripts' %}
+  {% if g.tracking_enabled %}
+      {% resource 'hdx_theme/package/tracking.js' %}
+  {% endif %}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   {{ super() }}
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css">
-    {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/search' %}
 {% endblock -%}
 
 {%- block styles %}
   {{ super() }}
-  {% resource 'hdx_theme/page-new-basis' %}
-  {% resource 'hdx_theme/base/header.css' %}
-  {% resource 'hdx_theme/base/header-init.js' %}
+  {% resource 'hdx_theme/page-styles' %}
   {% resource 'requestdata/css/main.css' %}
 {% endblock %}

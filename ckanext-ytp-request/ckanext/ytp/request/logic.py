@@ -101,11 +101,11 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
 
 
 def _mail_process_status(locale, member_user, approve, group_name, capacity):
-    current_locale = get_lang()
-    if locale == 'en':
-        _reset_lang()
-    else:
-        set_lang(locale)
+    # current_locale = get_lang()
+    # if locale == 'en':
+    #     _reset_lang()
+    # else:
+    #     set_lang(locale)
 
     role_name = _(capacity)
 
@@ -122,8 +122,8 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity):
             subject, message)
     except MailerException, e:
         log.error(e)
-    finally:
-        set_lang(current_locale)
+    # finally:
+    #     set_lang(current_locale)
 
 
 def _member_list_dictize(obj_list, context, sort_key=lambda x: x['group_id'], reverse=False):
@@ -172,7 +172,8 @@ def _create_member_request(context, data_dict):
         .filter(model.Member.group_id == group.id).first()
 
     if not member:
-        member = model.Member(table_name="user", table_id=userobj.id, group_id=group.id, capacity=role, state='pending')
+        member = model.Member(table_name="user", table_id=userobj.id,
+                              group=group, group_id=group.id, capacity=role, state='pending')
         changed = True
 
     locale = _get_safe_locale()

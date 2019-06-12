@@ -2,8 +2,29 @@
   "": {
     "domain": "ckan", 
     "lang": "cs_CZ", 
-    "plural-forms": "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+    "plural-forms": "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s košile", 
+    "%(color)s košile", 
+    "%(color)s košil", 
+    "%(color)s košil"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d položka", 
+    "%(num)d položky", 
+    "%(num)d položek", 
+    "%(num)d položek"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d chybějící překlad", 
+    "%(num)d chybějící překlady", 
+    "%(num)d chybějících překladů", 
+    "%(num)d chybějících překladů"
+  ], 
   "Add Filter": [
     null, 
     "Přidat filtr"
@@ -76,6 +97,7 @@
     "Input is too short, must be at least %(num)d characters", 
     "Vstup je příliš krátky, musí mít alespoň jeden znak", 
     "Vstup je příliš krátky, musí mít alespoň %(num)d znaky", 
+    "Vstup je příliš krátky, musí mít alespoň %(num)d znaků", 
     "Vstup je příliš krátky, musí mít alespoň %(num)d znaků"
   ], 
   "Link": [
@@ -174,8 +196,37 @@
     null, 
     "Právě nahráváte soubor. Jste si opravdu jistí, že chcete tuto stránku opustit a ukončit tak nahrávání?"
   ], 
+  "bar": [
+    "bars", 
+    "něco", 
+    "něco", 
+    "něco", 
+    "něco"
+  ], 
   "error loading view": [
     null, 
     "Chyba při načítání pohledu"
+  ], 
+  "foo": [
+    null, 
+    "něco"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "Vítejte %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "chybí překlad %(attr)s", 
+    "chybí překlady %(attr)s", 
+    "chybí překlady %(attr)s", 
+    "chybí překlady %(attr)s"
+  ], 
+  "no translation": [
+    "no translations", 
+    "žádný překlad", 
+    "žádné překlady", 
+    "žádné překlady", 
+    "žádné překlady"
   ]
 }

@@ -2,8 +2,26 @@
   "": {
     "domain": "ckan", 
     "lang": "hr", 
-    "plural-forms": "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
+    "plural-forms": "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Dodaj filter"
@@ -153,5 +171,23 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "U tijeku je učitavanje datoteke. Jeste li sigurni da želite otići sa ove stranice i prekinuti učitavanje?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    "", 
+    ""
   ]
 }

@@ -1,12 +1,12 @@
 {% extends "page.html" %}
 
-{% set user = c.user_dict %}
+{% set user = user_dict %}
 
 {% block subtitle %}{{ user.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
-  {{ h.build_nav('user_index', _('Users')) }}
-  {{ h.build_nav('user_datasets', user.display_name|truncate(35), id=user.name) }}
+  {{ h.build_nav('user.index', _('Users')) }}
+  {{ h.build_nav('user.read', user.display_name|truncate(35), id=user.name) }}
 {% endblock %}
 
 {% block content_action %}
@@ -16,8 +16,8 @@
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('user_datasets', _('Datasets'), id=user.name) }}
-  {{ h.build_nav_icon('user_activity_stream', _('Activity Stream'), id=user.name) }}
+  {{ h.build_nav_icon('user.read', _('Datasets'), id=user.name) }}
+  {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=user.name) }}
 {% endblock %}
 
 {% block secondary_content %}
@@ -31,11 +31,11 @@
       <span class="label label-important">{{ _('Deleted') }}</span>
       {% endif %}
       
-      {% if c.user_dict['about'] %}
-        {{ c.user_dict['about'] }}
+      {% if user_dict['about'] %}
+        {{ user_dict['about'] }}
       {% else %}
         <p class="empty">
-          {% if c.is_myself %}
+          {% if is_myself %}
             {% trans %}You have not provided a biography.{% endtrans %}
           {% else %}
             {% trans %}This user has no biography.{% endtrans %}
@@ -47,7 +47,7 @@
         <dl>
           <dt class="uppercase">{{ _('Followers') }}</dt>
           <dd class="followersNumber followers-count">{{ h.SI_number_span(user.num_followers) }}</dd>
-          {% if c.is_myself == false %}
+          {% if is_myself == false %}
         	<dd>
           	{{ h.follow_button('user', user.id) }}</li>
         	</dd>

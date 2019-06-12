@@ -2,8 +2,20 @@
   "": {
     "domain": "ckan", 
     "lang": "ko_KR", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "plural-forms": "nplurals=1; plural=0"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "필터 추가"
@@ -172,8 +184,20 @@
     null, 
     "파일을 업로드중입니다. 탐색을 위해 업로드를 중지하겠습니까?"
   ], 
+  "bar": [
+    "bars", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "오류 로딩 뷰"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    ""
   ]
 }

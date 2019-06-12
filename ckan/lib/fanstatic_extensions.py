@@ -32,9 +32,9 @@ class CkanCustomRenderer(object):
                            self.end)
 
 
+# HDX-6456 - defer js scripts
 def render_js(url):
     return '<script src="%s"></script>' % (url,)
-
 #    __  __             _                ____       _       _
 #   |  \/  | ___  _ __ | | _____ _   _  |  _ \ __ _| |_ ___| |__
 #   | |\/| |/ _ \| '_ \| |/ / _ \ | | | | |_) / _` | __/ __| '_ \
@@ -42,6 +42,8 @@ def render_js(url):
 #   |_|  |_|\___/|_| |_|_|\_\___|\__, | |_|   \__,_|\__\___|_| |_|
 #                                |___/
 
+# HDX-6456 - add custom .js renderer
+core.inclusion_renderers.register('.js', render_js, 20)
 def render(self, library_url):
 
     paths = [resource.relpath for resource in self._resources]
@@ -68,15 +70,10 @@ def fits(self, resource):
         return True
     # a resource fits if it's like the resources already inside
     bundle_resource = self._resources[0]
-    return (resource.library is bundle_resource.library and
-            resource.renderer is bundle_resource.renderer and
 
-            # MONKEY PATCH
-            # We allow .js files to be bundled even if they are in different
-            # directories as the directory location doesn't actually matter
-            # to javascript files just css files.
-            (resource.ext == '.js' or
-             resource.dirname == bundle_resource.dirname))
+    # HDX - 6456 - remove Monkey Patch that was only bundling css files in the same directory
+    return (resource.library is bundle_resource.library and
+            resource.renderer is bundle_resource.renderer)
 
 core.Bundle.fits = fits
 

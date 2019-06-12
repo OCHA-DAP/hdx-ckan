@@ -2,8 +2,26 @@
   "": {
     "domain": "ckan", 
     "lang": "lv", 
-    "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
+    "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Pievienot filtru"
@@ -154,8 +172,26 @@
     null, 
     "Jūs augšupielādējat failu. Vai tiešām vēlaties doties prom, un apturēt šo augšupielādi?"
   ], 
+  "bar": [
+    "bars", 
+    "", 
+    "", 
+    ""
+  ], 
   "error loading view": [
     null, 
     "kļūda ielādējot skatu"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    "", 
+    ""
   ]
 }

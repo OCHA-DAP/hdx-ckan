@@ -2,8 +2,23 @@
   "": {
     "domain": "ckan", 
     "lang": "sv", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n != 1)"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "", 
+    ""
+  ], 
   "Add Filter": [
     null, 
     "Lägg till filter"
@@ -152,5 +167,20 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "Du laddar upp en fil. Är du säker på att du vill lämna sidan och avbryta uppladdningen?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    ""
   ]
 }

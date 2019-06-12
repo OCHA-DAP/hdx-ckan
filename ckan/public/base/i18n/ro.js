@@ -2,8 +2,26 @@
   "": {
     "domain": "ckan", 
     "lang": "ro", 
-    "plural-forms": "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));"
+    "plural-forms": "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1))"
   }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d traducere lipsă", 
+    "%(num)d traduceri lipsă", 
+    "%(num)d de traduceri lipsă"
+  ], 
   "An Error Occurred": [
     null, 
     "Eroare"
@@ -109,5 +127,23 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
     "Sunteți în proces de încărcare a fișierului. Sunteți sigur să doriți să navigați mai departe și să opriți încărcarea fișierului?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "", 
+    "", 
+    ""
   ]
 }
