@@ -171,7 +171,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
         # map.connect('/user/reset', controller='user', action='request_reset')
         map.connect('/user/me', controller='user', action='me')
-        map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
+        # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
 
         # requestdata mapping
