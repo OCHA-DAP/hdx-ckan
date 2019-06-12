@@ -7,16 +7,18 @@ from ckanext.hdx_theme.helpers.uploader import GlobalUpload
 import ckan.lib.base as base
 import ckan.lib.helpers as helpers
 import ckan.logic as logic
-from ckan.common import _, request, response
+import ckan.model as model
+from ckan.common import _, request, response, g, c
 from ckan.controllers.api import CONTENT_TYPES
 
 log = logging.getLogger(__name__)
+abort = base.abort
 
 
 class CustomSettingsController(base.BaseController):
     def show(self):
-
-        logic.check_access('config_option_show', {}, {})
+        context = {u'user': g.user}
+        logic.check_access('hdx_carousel_update', context, {})
 
         setting_value = logic.get_action('hdx_carousel_settings_show')({}, {})
         template_data = {
@@ -28,7 +30,8 @@ class CustomSettingsController(base.BaseController):
         return base.render('admin/carousel.html', extra_vars=template_data)
 
     def delete(self, id):
-        logic.check_access('config_option_update', {}, {})
+        context = {u'user': g.user}
+        logic.check_access('hdx_carousel_update', context, {})
         # delete_id = request.params.get('id')
         existing_setting_list = logic.get_action('hdx_carousel_settings_show')({'not_initial': True}, {})
         remove_index, remove_element = self._find_carousel_item_by_id(existing_setting_list, id)
@@ -49,7 +52,8 @@ class CustomSettingsController(base.BaseController):
         return settings_json
 
     def update(self):
-        logic.check_access('config_option_update', {}, {})
+        context = {u'user': g.user}
+        logic.check_access('hdx_carousel_update', context, {})
 
         item = self._process_request()
 
@@ -156,3 +160,21 @@ class CustomSettingsController(base.BaseController):
                 item['buttonText'] = request.params.get('buttonText')
 
         return item
+
+    def show_pages(self):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user, 'auth_user_obj': c.userobj,
+                   'for_view': True, 'with_related': True}
+
+        try:
+            logic.check_access('admin_page_list', context, {})
+        except Exception, ex:
+            abort(404, 'Page not found')
+
+        page_list = logic.get_action('admin_page_list')(context, {})
+
+        template_data = {
+            'page_list': page_list
+        }
+
+        return base.render('admin/pages.html', extra_vars=template_data)

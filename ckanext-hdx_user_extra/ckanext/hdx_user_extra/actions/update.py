@@ -4,12 +4,17 @@ Created on July 2nd, 2015
 @author: dan
 '''
 
-import ckanext.hdx_user_extra.model as ue_model
-import ckan.logic as logic
 import sys
+
+import ckan.logic as logic
+
+from ckan.plugins import toolkit as tk
+
+import ckanext.hdx_user_extra.model as ue_model
 
 NotFound = logic.NotFound
 
+check_access = tk.check_access
 
 def user_extra_update(context, data_dict):
     '''
@@ -22,6 +27,7 @@ def user_extra_update(context, data_dict):
     session = context['session']
     # model = context['model']
     result = []
+    check_access('user_extra_update', context, data_dict)
     for ue in data_dict['extras']:
         try:
             user_extra = ue_model.UserExtra.get(user_id=data_dict['user_id'], key=ue['key'])
@@ -30,7 +36,7 @@ def user_extra_update(context, data_dict):
             user_extra.value = ue['new_value']
             session.add(user_extra)
             session.commit()
-            result.append(user_extra)
+            result.append(user_extra.as_dict())
         except:
             print sys.exc_info()[0]
     return result

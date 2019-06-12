@@ -81,7 +81,7 @@ def get_current_step_dict(step, success=True, message=None):
 def get_current_step(extra):
     us_dict = {}
     for ex in extra:
-        us_dict[ex.key] = ex.value
+        us_dict[ex.get('key')] = ex.get('value')
     for step in user_model.USER_STATUSES:
         if us_dict.get(step) == 'False':
             return step

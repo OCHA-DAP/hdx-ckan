@@ -37,25 +37,45 @@ class UserExtra(DomainObject):
         self.key = key
         self.value = value
 
-    @classmethod
-    def get(self, user_id, key):
+    @staticmethod
+    def get(user_id, key):
+        '''
+
+        :param user_id:
+        :type user_id: str
+        :param key:
+        :type key: str
+        :return:
+        :rtype: UserExtra
+        '''
         query = meta.Session.query(UserExtra)
         return query.filter_by(user_id=user_id, key=key).first()
 
-    @classmethod
-    def get_by_user(self, user_id):
+    @staticmethod
+    def get_by_user(user_id):
+        '''
+        :param user_id:
+        :type user_id: str
+        :return:
+        :rtype: list of UserExtra
+        '''
         query = meta.Session.query(UserExtra).filter_by(user_id=user_id)
         result = query.all()
         return result
 
-    @classmethod
-    def get_by_key(self, key):
+    @staticmethod
+    def get_by_key( key):
         query = meta.Session.query(UserExtra)
         return query.filter_by(key=key).all()
 
-    @classmethod
-    def check_exists(self):
+    @staticmethod
+    def check_exists():
         return user_extra_table.exists()
+
+    def as_dict(self):
+        d = {k: v for k, v in vars(self).items() if not k.startswith('_')}
+        return d
+
 
 
 def define_user_extra_table():

@@ -3,6 +3,7 @@ import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
+import ckanext.hdx_users.helpers.helpers as hdx_h
 import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
@@ -101,7 +102,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_auth_functions(self):
         return {'user_can_register': authorize.user_can_register,
                 'user_can_validate': authorize.user_can_validate,
-                'hdx_send_new_org_request': auth.hdx_send_new_org_request}
+                'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+                'manage_permissions': auth.manage_permissions}
 
     # IConfigurable
     def configure(self, config):
@@ -120,7 +122,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     def get_helpers(self):
         return {'get_user_extra': h_user_extra.get_user_extra,
-                'get_login': h_user_extra.get_login}
+                'get_login': h_user_extra.get_login,
+                'find_first_global_settings_url': hdx_h.find_first_global_settings_url}
 
     def is_fallback(self):
         return False
@@ -141,6 +144,9 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
+        map.connect('user_permission', '/user/permission/{id}',
+                    controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
+                    action='permission')
         # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='logged_in')
         map.connect('/user/reset', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
