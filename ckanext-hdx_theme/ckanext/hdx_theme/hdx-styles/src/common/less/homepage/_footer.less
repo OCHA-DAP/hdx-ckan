@@ -1,0 +1,41 @@
+/* Footer Homepage */
+/* Set page background to white - on large screens footer was to short - green was showing :) */
+/*body{*/
+/*background-color: #ffffff;*/
+/*}*/
+
+.newFooter {
+  height: 100px;
+  vertical-align: middle;
+
+  .text {
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #888888;
+    text-transform: uppercase;
+    margin-left: 40px;
+    line-height: 28px;
+
+    &:first-child{
+      margin-left: 0;
+    }
+  }
+
+  img{
+    height: 28px;
+    margin-left: 15px;
+    background-color: white;
+    opacity: 0.5;
+
+    -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 0.3s;
+
+    &:hover, &:focus {
+      opacity: 1;
+      -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+      transition: opacity 0.3s;
+    }
+  }
+}
+/* END Footer Homepage */

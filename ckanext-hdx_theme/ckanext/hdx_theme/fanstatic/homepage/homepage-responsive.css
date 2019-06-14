@@ -374,13 +374,13 @@
   body.home .navbar-toggle.collapsed .icon-bar + .icon-bar {
     margin-top: 4px;
   }
-  body.home .nav {
+  body.home .navbar.mobile-only .nav {
     margin-bottom: 150px;
   }
-  body.home .nav > li {
+  body.home .navbar.mobile-only .nav > li {
     margin-top: 6px;
   }
-  body.home .nav > li > a {
+  body.home .navbar.mobile-only .nav > li > a {
     color: #FFF;
     font-family: 'Gotham-Medium', sans-serif;
     font-size: 18px;
@@ -388,29 +388,29 @@
     padding: 3px 30px;
     text-transform: uppercase;
   }
-  body.home .nav > li.crisis {
+  body.home .navbar.mobile-only .nav > li.crisis {
     margin-top: 0px;
   }
-  body.home .nav > li.crisis span {
+  body.home .navbar.mobile-only .nav > li.crisis span {
     font-size: 9px;
     line-height: 14px;
   }
-  body.home .nav > li.sub-nav a {
+  body.home .navbar.mobile-only .nav > li.sub-nav a {
     font-family: 'Gotham-Book', sans-serif;
     font-size: 15px;
     text-transform: none;
   }
-  body.home .nav > li.top-pad {
+  body.home .navbar.mobile-only .nav > li.top-pad {
     margin-top: 40px;
   }
-  body.home .nav > li.login a {
+  body.home .navbar.mobile-only .nav > li.login a {
     display: inline-block;
     font-family: 'Gotham-Medium', sans-serif;
     font-size: 12px;
     padding-right: 5px;
     text-transform: uppercase;
   }
-  body.home .nav > li.login a:last-child {
+  body.home .navbar.mobile-only .nav > li.login a:last-child {
     padding-left: 5px;
   }
   body.home .container > .navbar-collapse {

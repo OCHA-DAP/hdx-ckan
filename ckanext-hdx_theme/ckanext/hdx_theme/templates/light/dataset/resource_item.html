@@ -1,0 +1,57 @@
+{% set url_action = 'resource_read' %}
+{% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
+{% set is_downloadable = h.is_downloadable(res) %}
+{% set is_not_zipped = h.is_not_zipped(res) %}
+{% set resource_display_name = h.resource_display_name(res) %}
+
+{# This should be included via page.html but it's not loading for me. Investigate after template upgrade to 2.3 in complete and delete this #}
+{% resource 'hdx_theme/package/tracking.js' %}
+{# #}
+{% resource 'hdx_theme/bs_popover.js' %}
+{% resource 'hdx_theme/jquery.expander' %}
+{% resource 'hdx_theme/hdx_show_more.js' %}
+{% resource 'hdx_theme/resource-list' %}
+
+<li class="resource-item">
+  {% block resource_item_title %}
+  <div class="resource-item-title">
+    <span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
+    <span class="heading" title="{{ res.name or res.description }}">
+      {{ h.resource_display_name(res) | truncate(50) }}
+      {% if res.size %}
+        <span class="format-filesize-label">({{ h.filesize_format(res.size) }})</span>
+      {% endif %}
+      {% if res.tracking_summary %}
+        {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
+      {% endif %}
+    </span>
+    <span class="spacer"></span>
+    <a class="toggle-show"><i class="glyphicon glyphicon-plus"></i></a>
+  </div>
+  {% endblock %}
+
+  <div class="content" style="display: none;">
+    <div class="description">
+      {% if res.description %}
+        <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>
+      {% else %}
+        <p><span class="empty">{{ _('No description for this resource') }}</span></p>
+      {% endif %}
+    </div>
+    {% block resource_item_explore %}
+      {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
+      <div class="actions">
+        {% block resource_item_explore_links %}
+          <a href="{{ res.hdx_rel_url }}" class="btn btn-primary btn-download hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
+            <img src="/images/homepage/download-white.svg" alt="{{ _('Download') }}" />
+            {{ _('Download') }}
+            <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
+            <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
+          </a>
+        {% endblock %}
+      </div>
+    {% endblock %}
+  </div>
+
+
+</li>

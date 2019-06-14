@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block bodytag %}{{ super() }} class="home"{% endblock %}
+
+{%- block page -%}
+
+  {#
+  Override the header on a page by page basis by extending this block. If
+  making sitewide header changes it is preferable to override the header.html
+  file.
+  #}
+  {%- block header %}
+    {% include "header-mobile.html" %}
+  {% endblock -%}
+
+  {# The content block allows you to replace the content of the page if needed #}
+  {%- block page_content %}
+    <div role="main">
+      {% block toolbar %}
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12 toolbarRow">
+              <div class="toolbar">
+                {% block breadcrumb %}
+                {% if self.breadcrumb_content() | trim %}
+                <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
+                  {% snippet 'snippets/home_breadcrumb_item.html' %}
+                  {% block breadcrumb_content %}{% endblock %}
+                </ol>
+                {% endif %}
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endblock %}
+
+      {%- block content %}
+      {% endblock -%}
+
+    </div>
+  {% endblock -%}
+
+
+  {#
+  Override the footer on a page by page basis by extending this block. If
+  making sitewide header changes it is preferable to override the footer.html-u
+  file.
+  #}
+  {%- block footer %}
+    {% include "footer-wide.html" %}
+  {% endblock -%}
+{%- endblock -%}
+
+{%- block scripts %}
+  {# Keep this block to a minimum, use resource.config instead #}
+
+  {% if g.tracking_enabled %}
+      {% resource 'hdx_theme/package/tracking.js' %}
+  {% endif %}
+  {{ super() }}
+{% endblock -%}
+
+{%- block styles %}
+  {{ super() }}
+  {% resource 'hdx_theme/page-light' %}
+{% endblock %}

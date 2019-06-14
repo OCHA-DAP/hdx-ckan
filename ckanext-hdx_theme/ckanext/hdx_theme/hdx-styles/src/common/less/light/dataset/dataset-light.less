@@ -1,0 +1,98 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+@import "../../datasets/dataset";
+
+.dataset-light {
+  .nav-tabs {
+    margin: 0 -@gutterSmallSize;
+    padding: 0 @gutterSmallSize;
+  }
+
+  .table-condensed > tbody > tr {
+    & > td, & > th {
+      display: block;
+      color: @grayColor;
+    }
+    & > th {
+      padding-bottom: 0;
+      max-width: unset;
+      width: 100%;
+    }
+    & > td {
+      padding-top: 0;
+    }
+  }
+
+  @resourceItemPadding: 10px;
+  .resource-list {
+    margin: 0;
+    padding: 10px 0 0;
+
+    .resource-item {
+      background-color: @whiteColor;
+      margin-bottom: 3px;
+      border: 1px solid @extraLightGrayColor;
+      padding: 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .resource-item-title {
+        padding: @resourceItemPadding;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 40px;
+      }
+
+      .spacer {
+        flex-grow: 1;
+      }
+      .toggle-show {
+        justify-self: flex-end;
+        .glyphicon {
+          color: @blueColor;
+        }
+      }
+
+      .format-label {
+        transform: scale(0.6);
+        position: initial;
+      }
+
+      .content {
+        border-top: 1px solid @extraLightGrayColor;
+        padding: @resourceItemPadding;
+
+        .actions {
+          a.btn {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    background-color: #fafafa;
+    margin: 0 -@gutterSmallSize;
+    padding: 5px @gutterSmallSize;
+
+    .tab-pane-background {
+      margin: @resourceItemPadding 0;
+      padding: @resourceItemPadding;
+
+      background-color: @whiteColor;
+      border: 1px solid @extraLightGrayColor;
+    }
+
+    .btn-primary {
+      width: 100%;
+    }
+  }
+
+  .lines {
+    overflow: hidden;
+  }
+}

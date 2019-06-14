@@ -23,7 +23,6 @@
   border-top-right-radius: 6px;
   color: #eeeeee;
 }
-/* Homepage */
 header {
   position: relative;
   z-index: 10000;
@@ -43,6 +42,7 @@ header .homepage-header-nav-border {
 header .homepage-header-nav-border > div {
   margin-bottom: -3px;
 }
+/* Homepage */
 .homepage-main {
   background-color: #fff;
   background-size: auto 100%;

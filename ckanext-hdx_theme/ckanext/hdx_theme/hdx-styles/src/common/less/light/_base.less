@@ -1,0 +1,24 @@
+@import "../base/variables";
+@import "../base/components/_mixins";
+
+/* Default link style */
+    a, .dataset-heading a, a.test {
+        color: @defaultLinkColor;
+        text-decoration: none;
+        &:hover, &:focus {
+            color: darken(@defaultLinkColor, 20%);
+            text-decoration: none;
+        }
+    }
+/* END Default link style */
+
+/* Body Background */
+body {
+  font-family: @sourceSansProFont;
+}
+/* END Body Background */
+
+h1 {
+  .new-h1-style();
+  display: inherit;
+}
