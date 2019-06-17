@@ -170,6 +170,21 @@
     padding-right: 15px;
   }
 }
+@media (min-width: 1200px) {
+  body nav.new-header.mobile-only.navbar-static-top .global-header .global-header-bg {
+    margin: 0;
+  }
+  body.responsive .toolbar {
+    width: 1170px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  body.responsive .navbar-collapse .nav {
+    width: 1170px;
+    margin: 0 auto;
+    float: none;
+  }
+}
 @media (max-width: 992px) {
   body.home .mainLinks {
     padding-left: 5px;
@@ -180,32 +195,9 @@
   body.home .mainLinks > li > a:after {
     margin-left: 5px;
   }
-  body.home .homepage-main .hero-section {
-    margin-bottom: 0;
-  }
-  body.home .homepage-main .hero-section .section-title {
-    width: 100%;
-  }
   body.home .homepage-main .hero-section .hero-section-content {
     flex-direction: column;
     align-items: center;
-  }
-  body.home .homepage-main .hero-section .hero-description {
-    margin-bottom: 50px;
-    text-align: center;
-  }
-  body.home .homepage-main .hero-section .hero-description .section-title {
-    text-align: center;
-  }
-  body.home .homepage-main .hero-section .hero-boxes {
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-bottom: 50px;
-  }
-  body.home .homepage-main .hero-section .hero-boxes .action-box ~ .action-box {
-    margin-left: 0;
-    margin-top: 30px;
   }
   body.home .homepage-main .tools-section .tool-categories {
     display: none;
@@ -272,9 +264,143 @@
   body.home .homepage-main .carousel.mobile-carousel .carousel-indicators li {
     margin-right: 5px;
   }
-  body .allow-cookies-container {
-    padding: 20px 0;
+  body.home .homepage-main .hero-section {
+    margin-bottom: 0;
   }
+  body.home .homepage-main .hero-section .section-title {
+    width: 100%;
+  }
+  body.home .homepage-main .hero-section .hero-description {
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  body.home .homepage-main .hero-section .hero-description .section-title {
+    text-align: center;
+  }
+  body.home .homepage-main .hero-section .hero-boxes {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 50px;
+  }
+  body.home .homepage-main .hero-section .hero-boxes .action-box ~ .action-box {
+    margin-left: 0;
+    margin-top: 30px;
+  }
+}
+body.home nav.new-header.mobile-only .global-header .container {
+  width: 100%;
+  padding: 0;
+}
+body.home nav.new-header.mobile-only .container > .navbar-collapse {
+  background-color: rgba(0, 0, 3, 0.8);
+  display: none !important;
+  left: 0;
+  top: 90px;
+  margin: 3px 0 0;
+  position: absolute;
+  width: 100%;
+}
+body.home nav.new-header.mobile-only .container > .navbar-collapse.in,
+body.home nav.new-header.mobile-only .container > .navbar-collapse.collapsing {
+  display: block !important;
+}
+body.home nav.new-header.mobile-only .container > .navbar-collapse.in {
+  min-height: 100vh !important;
+}
+body .allow-cookies-container {
+  padding: 20px 0;
+}
+body nav.new-header.mobile-only.navbar-static-top {
+  border-color: #c3cbcb;
+  border-width: 0 0 3px;
+}
+body nav.new-header.mobile-only .container > .navbar-header {
+  display: flex;
+  margin: 0;
+  width: 100%;
+}
+body nav.new-header.mobile-only .container > .navbar-header .hdxLogo {
+  width: 15%;
+}
+body nav.new-header.mobile-only .container > .navbar-header .hdxLogo .logo .logo-img {
+  margin-top: 12px;
+}
+body nav.new-header.mobile-only .navbar-toggle {
+  margin: 6px 0 0;
+  padding: 16px;
+  position: absolute;
+  right: 0;
+  width: auto;
+}
+body nav.new-header.mobile-only .navbar-toggle .icon-bar {
+  background-color: #333;
+  border-radius: 0;
+  height: 3px;
+  margin-left: 6px;
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+  width: 20px;
+}
+body nav.new-header.mobile-only .navbar-toggle .icon-bar:last-child {
+  margin-top: -3px;
+  transform: rotate(-45deg);
+}
+body nav.new-header.mobile-only .navbar-toggle.collapsed .icon-bar {
+  transform: rotate(0deg);
+}
+body nav.new-header.mobile-only .navbar-toggle.collapsed .icon-bar + .icon-bar {
+  margin-top: 4px;
+}
+body nav.new-header.mobile-only .header-nav-search {
+  height: 58px;
+  margin-left: 0;
+  width: 70%;
+  margin-bottom: -3px;
+}
+body nav.new-header.mobile-only .header-nav-search .header-search-form input {
+  text-indent: 56px;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav {
+  margin-bottom: 150px;
+  margin-top: 20px;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li {
+  margin-top: 6px;
+  float: none;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li > a {
+  color: #FFF;
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 18px;
+  line-height: 18px;
+  padding: 3px 30px;
+  text-transform: uppercase;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li.crisis {
+  margin-top: 0px;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li.crisis span {
+  font-size: 9px;
+  line-height: 14px;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li.sub-nav a {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 15px;
+  text-transform: none;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li.top-pad {
+  margin-top: 40px;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li.login a {
+  display: inline-block;
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 12px;
+  padding-right: 5px;
+  text-transform: uppercase;
+}
+body nav.new-header.mobile-only .navbar-collapse .nav > li.login a:last-child {
+  padding-left: 5px;
 }
 @media (max-width: 767px) {
   body.home {
@@ -317,101 +443,10 @@
     width: auto;
     padding: 0 15px;
   }
-  body.home .navbar-static-top {
-    border-color: #c3cbcb;
-    border-width: 0 0 3px;
-  }
-  body.home .container > .navbar-header {
-    display: flex;
-    margin: 0;
-  }
-  body.home .container > .navbar-header .hdxLogo {
-    width: 15%;
-  }
-  body.home .container > .navbar-header .hdxLogo .logo .logo-img {
-    margin-top: 12px;
-  }
   body.home .navbar-header,
   body.home .navbar {
     background-color: #FFF;
     min-height: 55px;
-  }
-  body.home .navbar-nav {
-    margin-top: 20px;
-  }
-  body.home .header-nav-search {
-    height: 58px;
-    margin-left: 0;
-    width: 70%;
-    margin-bottom: -3px;
-  }
-  body.home .header-nav-search .header-search-form input {
-    text-indent: 56px;
-  }
-  body.home .navbar-toggle {
-    margin: 6px 0 0;
-    padding: 16px;
-    position: absolute;
-    right: 0;
-    width: auto;
-  }
-  body.home .navbar-toggle .icon-bar {
-    background-color: #333;
-    border-radius: 0;
-    height: 3px;
-    margin-left: 6px;
-    transform: rotate(45deg);
-    transition: transform 0.3s ease;
-    width: 20px;
-  }
-  body.home .navbar-toggle .icon-bar:last-child {
-    margin-top: -3px;
-    transform: rotate(-45deg);
-  }
-  body.home .navbar-toggle.collapsed .icon-bar {
-    transform: rotate(0deg);
-  }
-  body.home .navbar-toggle.collapsed .icon-bar + .icon-bar {
-    margin-top: 4px;
-  }
-  body.home .navbar.mobile-only .nav {
-    margin-bottom: 150px;
-  }
-  body.home .navbar.mobile-only .nav > li {
-    margin-top: 6px;
-  }
-  body.home .navbar.mobile-only .nav > li > a {
-    color: #FFF;
-    font-family: 'Gotham-Medium', sans-serif;
-    font-size: 18px;
-    line-height: 18px;
-    padding: 3px 30px;
-    text-transform: uppercase;
-  }
-  body.home .navbar.mobile-only .nav > li.crisis {
-    margin-top: 0px;
-  }
-  body.home .navbar.mobile-only .nav > li.crisis span {
-    font-size: 9px;
-    line-height: 14px;
-  }
-  body.home .navbar.mobile-only .nav > li.sub-nav a {
-    font-family: 'Gotham-Book', sans-serif;
-    font-size: 15px;
-    text-transform: none;
-  }
-  body.home .navbar.mobile-only .nav > li.top-pad {
-    margin-top: 40px;
-  }
-  body.home .navbar.mobile-only .nav > li.login a {
-    display: inline-block;
-    font-family: 'Gotham-Medium', sans-serif;
-    font-size: 12px;
-    padding-right: 5px;
-    text-transform: uppercase;
-  }
-  body.home .navbar.mobile-only .nav > li.login a:last-child {
-    padding-left: 5px;
   }
   body.home .container > .navbar-collapse {
     background-color: rgba(0, 0, 3, 0.8);

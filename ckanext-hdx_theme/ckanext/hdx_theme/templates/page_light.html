@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
-{% block bodytag %}{{ super() }} class="home"{% endblock %}
+{% block bodytag %}{{ super() }} class="home responsive"{% endblock %}
 
 {%- block page -%}
 
@@ -22,22 +22,18 @@
   {%- block page_content %}
     <div role="main">
       {% block toolbar %}
-        <div class="container">
-          <div class="row">
-            <div class="col-xs-12 toolbarRow">
-              <div class="toolbar">
-                {% block breadcrumb %}
-                {% if self.breadcrumb_content() | trim %}
-                <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
-                  {% snippet 'snippets/home_breadcrumb_item.html' %}
-                  {% block breadcrumb_content %}{% endblock %}
-                </ol>
-                {% endif %}
-                {% endblock %}
-              </div>
-            </div>
-          </div>
+      <div class="col-xs-12 toolbarRow">
+        <div class="toolbar">
+          {% block breadcrumb %}
+          {% if self.breadcrumb_content() | trim %}
+          <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
+            {% snippet 'snippets/home_breadcrumb_item.html' %}
+            {% block breadcrumb_content %}{% endblock %}
+          </ol>
+          {% endif %}
+          {% endblock %}
         </div>
+      </div>
       {% endblock %}
 
       {%- block content %}
