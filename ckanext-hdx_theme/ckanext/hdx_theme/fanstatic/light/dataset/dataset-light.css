@@ -129,13 +129,23 @@
 .dataset-light .resource-list .resource-item .toggle-show .glyphicon {
   color: #007CE0;
 }
+.dataset-light .resource-list .resource-item .heading {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-grow: 0;
+}
 .dataset-light .resource-list .resource-item .format-label {
   transform: scale(0.6);
   position: initial;
+  min-width: 32px;
 }
 .dataset-light .resource-list .resource-item .content {
   border-top: 1px solid #eeeeee;
   padding: 10px;
+}
+.dataset-light .resource-list .resource-item .content .actions {
+  margin-top: 10px;
 }
 .dataset-light .resource-list .resource-item .content .actions a.btn {
   width: 100%;

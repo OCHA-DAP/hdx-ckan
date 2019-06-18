@@ -1,12 +1,5 @@
-{% set dataLink = "/dataset" %}
-{% set locationLink = "/group" %}
-{% set orgLink = "/organization" %}
-{% set elNinoLink = h.url_for('read_event', id='elnino') %}
-{% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
-{% set ebolaLink = "/ebola" %}
-{% set faqLink = "/faq" %}
-{% set events = h.hdx_events_list() %}
-
+{% extends "header_base.html" %}
+{% block header_content %}
 {% block header_wrapper %}
 <div>
 </div>
@@ -136,6 +129,5 @@
 </div>
 </header>
 
-{% include "header-mobile.html" %}
-
+{% endblock %}
 {% endblock %}
