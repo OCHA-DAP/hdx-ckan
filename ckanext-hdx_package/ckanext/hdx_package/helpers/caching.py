@@ -137,9 +137,12 @@ def replace_org_in_cache_organization_list(org_id):
             'include_followers': False
         })
     orgs = cached_organization_list()
-    index = next((i for i, o in enumerate(orgs) if o['id'] == modified_org['id']))
+    index = next((i for i, o in enumerate(orgs) if o['id'] == modified_org['id']), None)
     if index:
         orgs[index] = modified_org
+    else:
+        orgs.append(modified_org)
+
         orgs = _sort_orgs_by_display_name(orgs)
         cached_organization_list.set(orgs)
 
