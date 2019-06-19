@@ -84,7 +84,7 @@ ckantoolkit==0.0.3
 email_validator==1.0.2
 timeago==1.0.7
 
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.1.12#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.1.13#egg=ckanext-requestdata
 
 # ckanext-showcase v1.0.10
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.0.10#egg=ckanext-showcase

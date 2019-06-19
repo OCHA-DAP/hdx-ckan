@@ -2,7 +2,7 @@
   {% set org_link = h.url_for(controller='organization', action='read', id=org_name) %}
   <div class="requests-header__title" title="{{ title }}">{{ title|truncate(27) }} [{{ total_requests }}]</div>
 
-  {% if type == 'organization' or type == 'admin' %}
+  {% if type == 'organization' %}
     <div class="requests-header-counters">
       <span>
         <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
