@@ -167,3 +167,6 @@
 .dataset-light .lines {
   overflow: hidden;
 }
+.dataset-light .details .dataset-resources .label-icons:first-child {
+  margin-left: -10px;
+}

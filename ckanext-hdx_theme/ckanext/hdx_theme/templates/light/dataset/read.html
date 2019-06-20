@@ -1,6 +1,8 @@
 {% extends "page_light.html" %}
 
 {% set pkg = dataset_dict %}
+{% set org_title = pkg.organization.title %}
+{% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
@@ -15,9 +17,17 @@
     <div class="row">
       <div class="col-xs-12">
         <h1>{{ dataset_dict.title }}</h1>
+        <div style="display: flex;">
+          <a href="{{url_org}}">
+            {{ org_title }}
+          </a>
+        </div>
         {% if pkg.notes %}
           <div data-module="hdx_show_more" data-module-points="70" style="visibility:hidden" class="notes embedded-content">
               {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
+            <ul class="dataset-resources ">
+              {% snippet 'search/snippets/package_icons.html', package=pkg%}
+            </ul>
           </div>
         {% endif %}
         <ul class="nav nav-tabs">
