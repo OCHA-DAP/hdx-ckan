@@ -1827,9 +1827,6 @@ label.terms-of-service:after {
   body .hdx-footer .social-footer .service .service-details .license-group .license {
     text-align: center;
   }
-  .home .search-ahead {
-    width: 120%;
-  }
 }
 @media (max-width: 992px) {
   body .hdxLogo {

@@ -275,63 +275,96 @@
     position:relative;
 
 }
+
+@media (max-width: 465px){
+  .header-search-form .search-ahead {
+    width: 100%;
+    position: fixed;
+    top: @headerNavHeight + @global-header-height - 2px;
+    li {
+      font-size: 16px;
+    }
+    .ahead-type{
+      font-size: 14px;
+    }
+  }
+}
+
+@media(max-width: 767px) {
+  .header-search-form .search-ahead {
+    width: 100%;
+    position: fixed;
+    top: @headerNavHeight + @global-header-height - 2px;
+
+    .ahead-type{
+      font-size: 14px;
+    }
+  }
+}
 .search-ahead{
-    position:absolute;
-    z-index: 99999999;
-    top:42px;
-    left:0px;
-    background: rgba(255,255,255,1);
-    width: 500px;
-    border-top: 3px solid @blueColor; /*@blueColor*/
-    box-shadow: 5px 5px 5px #ccc;
-    display:none;
+  position:absolute;
+  z-index: 99999999;
+  top:42px;
+  left:0px;
+  background: rgba(255,255,255,1);
+  width: 500px;
+  border-top: 3px solid @blueColor; /*@blueColor*/
+  box-shadow: 5px 5px 5px #ccc;
+  display:none;
 
-    ul{
-        list-style: none;
-        margin-bottom: 0;
-        padding: 0;
+  ul{
+    list-style: none;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  li{
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    white-space: nowrap;
+
+    &:hover{
+      background: @extraLightGrayColor;
+    }
+  }
+
+  .ahead-link {
+    text-align:left;
+    color: @darkGrayColor; /* @darkGrayColor */
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    i.empty {
+      margin-left: 30px;
+    }
+    i.icon, i.glyphicon {
+      margin: 0;
+      margin-right: 5px;
+      color: @grayColor;
+      font-size: 26px;
+      position: relative;
+      top: 5px;
     }
 
-    li{
-        padding: 10px;
-        font-size: 18px;
-        cursor: pointer;
-
-        &:hover{
-            background: @extraLightGrayColor;
-        }
+    i.icon.icon-search {
+      font-size: 20px;
+      margin-left: 4px;
+      margin-right: 8px;
     }
 
-    .ahead-link {
-        text-align:left;
-        color: @darkGrayColor; /* @darkGrayColor */
+  }
 
-        i.empty {
-            margin-left: 30px;
-        }
-        i.icon, i.glyphicon {
-            margin: 0;
-            margin-right: 5px;
-            color: @grayColor;
-            font-size: 26px;
-            position: relative;
-            top: 5px;
-        }
-
-        i.icon.icon-search {
-            font-size: 20px;
-            margin-left: 4px;
-            margin-right: 8px;
-        }
-
-    }
+  .ahead-type{
+    justify-self: flex-end;
+  }
 
 
 }
 
-.ahead-type{
-    float:right;
-    text-align: right;
-    margin-top:-20px;
-}
+
 /* END - Styling predictive search */
