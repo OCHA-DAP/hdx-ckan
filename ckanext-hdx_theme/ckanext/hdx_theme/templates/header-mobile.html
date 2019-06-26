@@ -35,29 +35,33 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="{{ dataLink }}">Data</a></li>
-                <li><a href="{{ locationLink }}">Locations</a></li>
-                <li><a href="{{ orgLink }}">Organisations</a></li>
+                <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Data</a></li>
+                <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Locations</a></li>
+                <li><a href="{{ orgLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Organisations</a></li>
                 <li class="crisis"><a><span>Quicklinks / Ongoing</span></a></li>
                 {% for ev in events.ongoing %}
-                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}">{{ ev.title }}</a></li>
+                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></li>
                 {% endfor %}
-                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}">South Sudan</a></li>
-                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}">Syria</a></li>
-                <li class="crisis"><a href="{{h.url_for('group_read', id='yem')}}">Yemen</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></li>
+                <li class="crisis"><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></li>
                 <li class="crisis"><a><span>Quicklinks / Archived</span></a></li>
                 {% for ev in events.archived %}
-                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}">{{ ev.title }}</a></li>
+                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></li>
                 {% endfor %}
-                <li class="crisis"><a href="{{ nepalLink }}">Nepal Earthquake</a></li>
-                <li class="crisis"><a href="{{ ebolaLink }}">Ebola 2014</a></li>
+                <li class="crisis"><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></li>
+                <li class="crisis"><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></li>
 
-                <li class="sub-nav"><a href="{{ faqLink }}">FAQ</a></li>
-                <li class="sub-nav top-pad">{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
-                <li class="sub-nav">{% link_for _('Terms'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
-                <li class="sub-nav"><a href="https://centre.humdata.org/category/blog/">Blog</a></li>
-                <li class="sub-nav"><a href="https://centre.humdata.org/get-involved/">Contact</a></li>
-                <li class="sub-nav login top-pad"><a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">Login</a> | <a onclick="showOnboardingWidget('#signupPopup');" href="#" aria-label="sign up">Sign up</a></li>
+                <li class="sub-nav"><a href="{{ faqLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">FAQ</a></li>
+                <li class="sub-nav top-pad"><a href="{{ h.url_for(controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license') }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Data Licenses') }}</a></li>
+                <li class="sub-nav"><a href="{{ h.url_for(controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms') }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Terms') }}</a></li>
+                <li class="sub-nav"><a href="https://centre.humdata.org/category/blog/" data-module="hdx_click_stopper" data-module-link_type="main nav">Blog</a></li>
+                <li class="sub-nav"><a href="https://centre.humdata.org/get-involved/" data-module="hdx_click_stopper" data-module-link_type="main nav">Contact</a></li>
+                <li class="sub-nav login top-pad">
+                  <a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">Login</a> |
+                  <a onclick="showOnboardingWidget('#signupPopup');" href="#" aria-label="sign up">Sign up</a>
+                </li>
             </ul>
         </div>
     </div>
