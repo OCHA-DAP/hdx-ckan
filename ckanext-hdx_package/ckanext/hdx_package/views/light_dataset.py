@@ -5,12 +5,15 @@ import ckan.plugins.toolkit as tk
 
 from ckan.common import g
 
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+
 get_action = tk.get_action
 render = tk.render
 
 hdx_light_dataset = Blueprint(u'hdx_light_dataset', __name__, url_prefix=u'/m/dataset')
 
 
+@check_redirect_needed
 def read(id):
     context = {
         u'model': model,
