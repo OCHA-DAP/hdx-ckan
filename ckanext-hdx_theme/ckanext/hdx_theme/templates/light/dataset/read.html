@@ -56,7 +56,7 @@
             {% endblock %}
           </div>
           <div class="mTB15">
-            <a href="{{ h.url_for(controller='package', action='read', id=pkg.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
+            <a href="{{ h.url_for(controller='package', action='read', id=pkg.name, force_layout='desktop') }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
               {{_("View this page in the desktop version")}}
             </a>
           </div>
