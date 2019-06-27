@@ -1,5 +1,10 @@
 {% extends "page_light.html" %}
 
+{% block links %}
+  <link rel="canonical" href="{{ h.url_for(controller='package', action='read', id=pkg.name) }}">
+  {{ super() }}
+{% endblock %}
+
 {% set pkg = dataset_dict %}
 {% set org_title = pkg.organization.title %}
 {% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}

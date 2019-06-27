@@ -1,6 +1,10 @@
 {% extends "page.html" %}
 
 {% set pkg = c.pkg_dict or pkg_dict %}
+{% block links %}
+  <link rel="alternate" media="only screen and (max-width: 640px)" href="{{ h.url_for('hdx_light_dataset.read', id=pkg.name) }}">
+  {{ super() }}
+{% endblock %}
 
 {% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 
