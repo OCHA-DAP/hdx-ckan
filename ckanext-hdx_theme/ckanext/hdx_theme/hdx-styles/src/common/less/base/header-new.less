@@ -127,11 +127,13 @@
         a {
           color: @extraLightGrayColor;
           i {
-            display: none;
+            &[class^="icon-"], &[class*=" icon-"] {
+              display: none;
+            }
           }
         }
 
-        svg[class^='icon-o-'] {
+        svg[class^='icon-o-'], .glyphicon {
           height: 14px;
           fill: @extraLightGrayColor;
           margin-right: 10px;
@@ -408,3 +410,18 @@ label.terms-of-service {
   }
 }
 
+
+
+@media (max-width: @cut-point-mobile-l) {
+  .new-header {
+    .global-header {
+      .global-header-content {
+        .header-user-box {
+          .logout-action a > span {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
