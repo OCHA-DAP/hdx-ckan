@@ -11,7 +11,8 @@
     height: @widgetHeight;
 
     .envelope {
-      height: 200px;
+      max-height: 200px;
+      max-width: 100%;
     }
   }
   @extraPaddingTwoColumnRight: 50px;
@@ -30,7 +31,7 @@
       position: absolute;
       bottom: @paddingNormal + @extraPaddingTwoColumnRight;
       height: @listItemHeight/2;
-      width: @bigColumnWidth - 2*@paddingNormal;
+      max-width: @bigColumnWidth - 2*@paddingNormal;
     }
 
     .selectable-list {
@@ -89,5 +90,12 @@
         }
       }
     }
+  }
+}
+
+
+@media (max-width: @cut-point-tablet) {
+  .two-column-follow .two-column-left {
+    height: unset;
   }
 }

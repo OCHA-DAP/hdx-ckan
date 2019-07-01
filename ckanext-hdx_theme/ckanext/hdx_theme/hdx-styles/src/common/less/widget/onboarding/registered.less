@@ -7,19 +7,30 @@
 
 .registered-widget {
   position: relative;
-  width: @popupWidth;
+  width: @popupContentWidth;
   height: @registeredHeight;
   background-color: @whiteColor;
 
   padding: @notificationPaddingSize;
 
   img {
-    height: 150px;
+    max-height: 150px;
+    max-width: 100%;
   }
 
   .bottom-actions {
     position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 0 @notificationPaddingSize;
     bottom: @notificationPaddingSize;
-    width: @popupWidth - 2*@notificationPaddingSize;
+  }
+}
+
+@media (max-width: @cut-point-mobile-s) {
+  .registered-widget {
+    .bottom-actions {
+      padding: 0 @notificationPaddingSize/2;
+    }
   }
 }

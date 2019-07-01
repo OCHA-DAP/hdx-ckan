@@ -48,11 +48,22 @@
   content: "*";
 }
 .signup-widget .signup-box {
-  width: 370px;
+  width: 100%;
   height: 320px;
   padding: 35px;
   background-color: #eeeeee;
   border-radius: 6px;
+}
+.signup-widget .signup-box .checkbox-row {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+.signup-widget .signup-box .checkbox-row input[type="checkbox"] {
+  margin: 0;
+}
+.signup-widget .signup-box .checkbox-row input[type="checkbox"] ~ label {
+  margin: 0 0 0 5px;
 }
 .signup-widget .signup-action {
   text-transform: none;
@@ -64,4 +75,28 @@
 .signup-widget .grecaptcha-badge {
   transform: scale(0.8);
   transform-origin: 0;
+}
+@media (max-width: 1024px) {
+  .signup-widget {
+    width: 768px;
+  }
+}
+@media (max-width: 768px) {
+  .signup-widget {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .signup-widget .signup-box {
+    margin-top: 20px;
+    height: auto;
+  }
+}
+@media (max-width: 375px) {
+  .signup-widget {
+    margin: 0 -15px;
+  }
+  .signup-widget .inner-bg {
+    padding: 15px;
+  }
 }

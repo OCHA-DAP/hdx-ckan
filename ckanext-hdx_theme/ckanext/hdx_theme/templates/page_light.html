@@ -15,6 +15,49 @@
   file.
   #}
   {%- block header %}
+    {% if data %}
+      {% set step = data.current_step %}
+      {% if step == "hdx_login" %}
+        <div id="user-login" style="display: none;">User login</div>
+        {% if not data.success %}
+          <div id="login-error" style="display: none;">{{ data.message }}</div>
+        {% endif %}
+        {% if data.info_message %}
+          <div id="login-info" style="display: none;">{{ data.info_message }}</div>
+        {% endif %}
+      {% endif %}
+      {% if step == "hdx_logout" %}
+        <div id="user-logout" style="display: none;">{{data.message}}</div>
+      {% endif %}
+      {% if step == "hdx_register" %}
+        <div id="user-register" style="display: none;">User Register</div>
+      {% endif %}
+    {% endif %}
+    {% if c.userobj %}
+      {% set data = h.get_user_extra(c.userobj.id) %}
+      {% if data is not string %}
+        {% set step = data.data.current_step %}
+      {% else %}
+          {% set step = 'hdx_onboarding_details' %}
+      {% endif %}
+      {% if step %}
+        {{ h.snippet('widget/onboarding/registered.html', id="registeredPopup") }}
+        {{ h.snippet('widget/onboarding/follow.html', id="followPopup") }}
+        {{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
+        {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
+      {% endif %}
+        {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
+        {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
+    {% else %}
+      {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
+      {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+      {{ h.snippet('widget/onboarding/recover.html', id="recoverPopup") }}
+      {{ h.snippet('widget/onboarding/recoverSuccess.html', id="recoverSuccessPopup") }}
+      {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
+      {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
+    {% endif %}
+    {{ h.snippet('widget/onboarding/survey.html', id="surveyPopup") }}
+
     {% include "header-mobile.html" %}
   {% endblock -%}
 
@@ -59,6 +102,7 @@
   {% if g.tracking_enabled %}
       {% resource 'hdx_theme/package/tracking.js' %}
   {% endif %}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   {{ super() }}
 {% endblock -%}
 

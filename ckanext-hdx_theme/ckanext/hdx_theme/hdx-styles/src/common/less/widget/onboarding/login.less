@@ -3,7 +3,7 @@
 @import "onboarding-variables";
 
 @loginTopHeight: 145px;
-@loginTopWidth: @popupWidth;
+@loginTopWidth: @popupContentWidth;
 @loginPhotoSize: 105px;
 @loginPhotoBorderSize: 5px;
 @loginPhotoTotalSize: (@loginPhotoSize + 2*@loginPhotoBorderSize);
@@ -29,7 +29,8 @@
 
       position: absolute;
       top: @loginTopHeight - @loginPhotoTotalSize/2;
-      left: @loginTopWidth/2 - @loginPhotoSize/2;
+      left: 50%;
+      transform: translate(-50%, 0);
 
       img {
         height: 100%;
@@ -62,6 +63,15 @@
 
     .email-text {
       .gothamBookFont(14px);
+    }
+  }
+}
+
+@media (max-width: @cut-point-mobile-s) {
+  .login-widget {
+    .login-top, .login-content {
+      width: unset;
+      max-width: @loginTopWidth;
     }
   }
 }

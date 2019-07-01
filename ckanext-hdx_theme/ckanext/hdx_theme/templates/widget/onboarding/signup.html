@@ -22,7 +22,7 @@ Example:
         <i class="close glyphicon glyphicon-remove" ></i>
         <div class="inner-bg">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-sm-6 col-xs-12">
 
                     <div class="large-title">
                         Sign up with HDX <strong>to join the community</strong> and <strong>access more features</strong>
@@ -40,7 +40,7 @@ Example:
                     </ul>
                     <!--<a class="btn btn-demo signup-action" type="button" href="https://www.youtube.com/watch?v=P8XDNmcQI0o" target="_blank"> {{_('See HDX in action')}} <i class="glyphicon glyphicon-play"></i></a>-->
                 </div>
-                <div class="col-xs-6">
+                <div class="col-sm-6 col-xs-12">
                     <form id="signup-form">
                         <div class="signup-box">
                             <div class="control">
@@ -49,10 +49,10 @@ Example:
                             </div>
                             <div class="error-message" style="display: none;line-height: 15px;"></div>
                             <div class="mTop10 mBottom10">
-                                <div>
+                                <div class="checkbox-row">
                                     <input id="signup-send-updates" name="signup-send-updates" type="checkbox" checked="checked"><label for="signup-send-updates">{{_('I\'d like to sign up for the Centre for Humanitarian Data Newsletter')}}</label>
                                 </div>
-                                <div data-module="hdx_terms_checkbox" data-module-button="recaptcha">
+                                <div class="checkbox-row" data-module="hdx_terms_checkbox" data-module-button="recaptcha">
                                     <input id="signup-terms" name="signup-terms" type="checkbox" checked="checked"><label for="signup-terms">{{_('I have read and accept the')}} <a target="_blank" href="/about/terms">HDX Terms of Service</a></label>
                                 </div>
                             </div>

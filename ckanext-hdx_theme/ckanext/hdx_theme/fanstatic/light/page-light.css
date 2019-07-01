@@ -1525,10 +1525,12 @@ hr.dotted {
 .new-header .global-header .global-header-content .header-user-box a {
   color: #eeeeee;
 }
-.new-header .global-header .global-header-content .header-user-box a i {
+.new-header .global-header .global-header-content .header-user-box a i[class^="icon-"],
+.new-header .global-header .global-header-content .header-user-box a i[class*=" icon-"] {
   display: none;
 }
-.new-header .global-header .global-header-content .header-user-box svg[class^='icon-o-'] {
+.new-header .global-header .global-header-content .header-user-box svg[class^='icon-o-'],
+.new-header .global-header .global-header-content .header-user-box .glyphicon {
   height: 14px;
   fill: #eeeeee;
   margin-right: 10px;
@@ -1758,6 +1760,11 @@ label.terms-of-service {
 }
 label.terms-of-service:after {
   content: none;
+}
+@media (max-width: 425px) {
+  .new-header .global-header .global-header-content .header-user-box .logout-action a > span {
+    display: none;
+  }
 }
 @media (max-width: 320px) {
   body .hdx-footer .social-footer .service .service-details .license-group .license {
