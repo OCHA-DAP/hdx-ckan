@@ -1,3 +1,5 @@
+import logging
+
 from flask import make_response
 from decorator import decorator
 
@@ -15,16 +17,17 @@ DESKTOP_LAYOUT = 'desktop'
 LIGHT_LAYOUT = 'light'
 LAYOUTS = {DESKTOP_LAYOUT, LIGHT_LAYOUT}
 
+log = logging.getLogger(__name__)
 
 @decorator
 def check_redirect_needed(original_action, *args, **kw):
     if hasattr(request, 'blueprint'): # flask controller
-        os = request.user_agent.platform  # type: str
+        ua_dict = useragent.Parse(request.user_agent.string)
         is_flask = True
     else: # pylons controller
         ua_dict = useragent.Parse( request.user_agent if request.user_agent else '')
-        os = ua_dict.get('os', {}).get('family')
         is_flask = False
+    os = ua_dict.get('os', {}).get('family') # type: str
     path = request.full_path if is_flask else request.path_qs
     ua_is_mobile = os and os.lower() in {'android', 'ios'}
     should_redirect = __should_redirect(path, ua_is_mobile)
