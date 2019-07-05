@@ -1,0 +1,16 @@
+<div id="{{ banner_id }}" class="bottom-banner" style="display: none;">
+  <div class="container content {{ content_class }} container-fluid">
+    {% block all_content %}
+      <div class="row">
+          <div class="content">
+            {% block content %}
+            {% endblock %}
+            <i class="close glyphicon glyphicon-remove"></i>
+          </div>
+      </div>
+    {% endblock %}
+  </div>
+</div>
+
+{% resource 'hdx_theme/base/components/banner.css' %}
+{% resource 'hdx_theme/base/components/banner.js' %}
