@@ -29,7 +29,7 @@
                 </li>
             {% endif %}
             {% if not hide_contact_contributor %}
-                <li class="hide-text">
+                <li>
                     <a href="#" onclick="{% if is_current_user_a_maintainer %}if (confirm('{{contact_confirm_text}}')){ {% endif %}closeCurrentWidget(this);spawnRecaptcha('#contactContributorPopup');showOnboardingWidget('#contactContributorPopup');{% if is_current_user_a_maintainer %} } {% endif %}" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
                         <i class="icon-envelope"></i>
                         <span>Contact the contributor</span>
@@ -38,7 +38,7 @@
             {% endif %}
         {% else %}
             {% if not hide_contact_contributor%}
-                <li class="hide-text">
+                <li>
                     <a href="/contact_hdx" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
                         <i class="icon-envelope"></i>
                       <span>Contact the contributor</span>
