@@ -484,6 +484,12 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         :type org_meta: org_meta_dao.OrgMetaDao
         :return:
         '''
+
+        try:
+            int(offset)
+        except ValueError:
+            offset = 0
+
         if not org_meta:
             org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         c.org_meta = org_meta
