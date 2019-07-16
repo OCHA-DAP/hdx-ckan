@@ -236,7 +236,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     action='activity_stream'
                     # conditions={'function': organization_controller.is_not_custom}
                     )
-        map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
+        map.connect('organization_activity_offset', '/organization/activity/{id}/{offset:([0-9]+)}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='activity_stream')
         # map.connect('custom_org_activity', '/organization/activity/{id}',
