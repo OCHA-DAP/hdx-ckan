@@ -1,8 +1,11 @@
+@import "../base/mixins";
+@import "../base/variables";
+
 .modal.request-data-modal, .modal.in.request-data-modal{
   display: block;
   //position: relative;
   height: 610px;
-  width: 890px;
+  max-width: 890px;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -12,10 +15,8 @@
 
     .request-data-modal-body {
       padding: 0px 0px 0px;
-      position: absolute;
 
       .request-data-two-cols {
-        width: 890px;
         height: 610px;
         overflow: hidden;
         margin-left: 0px;
@@ -698,6 +699,22 @@
 
 }
 
+@media (max-width: @cut-point-tablet) {
+  .modal.in.request-data-modal {
+    height: max-content;
+    max-height: 100vh;
+    .request-data-modal-content .request-data-modal-body .request-data-two-cols {
+      height: auto;
+      .left-col {
+        padding: 20px 40px;
+      }
+      .right-col {
+        padding: 20px;
+        padding-bottom: 60px;
+      }
+    }
+  }
 
+}
 
 

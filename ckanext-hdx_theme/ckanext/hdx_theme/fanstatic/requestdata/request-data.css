@@ -2,7 +2,7 @@
 .modal.in.request-data-modal {
   display: block;
   height: 610px;
-  width: 890px;
+  max-width: 890px;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -14,11 +14,9 @@
 .modal.request-data-modal .request-data-modal-content .request-data-modal-body,
 .modal.in.request-data-modal .request-data-modal-content .request-data-modal-body {
   padding: 0px 0px 0px;
-  position: absolute;
 }
 .modal.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols,
 .modal.in.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols {
-  width: 890px;
   height: 610px;
   overflow: hidden;
   margin-left: 0px;
@@ -677,4 +675,20 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+  .modal.in.request-data-modal {
+    height: max-content;
+    max-height: 100vh;
+  }
+  .modal.in.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols {
+    height: auto;
+  }
+  .modal.in.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .left-col {
+    padding: 20px 40px;
+  }
+  .modal.in.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .right-col {
+    padding: 20px;
+    padding-bottom: 60px;
+  }
 }
