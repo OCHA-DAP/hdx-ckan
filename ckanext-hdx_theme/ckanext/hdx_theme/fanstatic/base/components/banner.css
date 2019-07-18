@@ -1,0 +1,27 @@
+.bottom-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  z-index: 1000;
+  min-height: 100px;
+  padding: 20px;
+}
+.bottom-banner .content {
+  position: relative;
+  padding-right: 20px;
+}
+.bottom-banner .content .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  opacity: .7;
+}
+.bottom-banner a,
+.bottom-banner a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
