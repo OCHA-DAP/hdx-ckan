@@ -1,8 +1,11 @@
-
 from ckan.common import g
+from ckan.logic import NotFound
+
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 import ckan.authz as authz
+import ckan.model.user as user_model
+
 
 get_action = toolkit.get_action
 check_access = toolkit.check_access
@@ -36,3 +39,11 @@ def find_first_global_settings_url():
         except NotAuthorized as e:
             pass
     return url
+
+
+def find_user_id(username_or_id):
+    user = user_model.User.get(username_or_id)
+    if not user:
+        raise NotFound()
+    user_id = user.id
+    return user_id

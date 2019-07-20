@@ -302,7 +302,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
-            'last_modified': [tk.get_validator('ignore_missing')]
+            'last_modified': [tk.get_validator('ignore_missing')],
+            'due_daterange': [tk.get_validator('ignore_missing')],
+            'overdue_daterange': [tk.get_validator('ignore_missing')]
         })
         return schema
 

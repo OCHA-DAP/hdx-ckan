@@ -463,13 +463,19 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
             if all_dates:
                 package_dict['last_modified'] = max(all_dates).isoformat()
 
+        freshness_calculator = FreshnessCalculator(package_dict)
+        if _should_manually_load_property_value(context, package_dict, 'due_daterange'):
+            package_dict.pop('due_daterange', None)
+            package_dict.pop('overdue_daterange', None)
+            freshness_calculator.populate_with_date_ranges()
+
         if not just_for_reindexing:
             member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
             if member_list and not member_list.get('is_member'):
                 del package_dict['maintainer_email']
 
             # Freshness should be computed after the last_modified field
-            FreshnessCalculator(package_dict).populate_with_freshness()
+            freshness_calculator.populate_with_freshness()
 
 
 @logic.side_effect_free
