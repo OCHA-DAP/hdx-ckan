@@ -52,29 +52,27 @@ class FreshnessNotificationsChecker(object):
 
         now = datetime.datetime.now().replace(minute=0, second=0, microsecond=0)
         second_from_now = now + datetime.timedelta(seconds=1)
-        query_string = '(maintainer:{} AND overdue_daterange:[{}Z TO {}Z])'.format(self.user_id, now.isoformat(),
+        query_string = 'maintainer:{} AND overdue_daterange:[{}Z TO {}Z]'.format(self.user_id, now.isoformat(),
                                                                                  second_from_now.isoformat())
+        viewed_date = self.get_dashboard_viewed()
+        if viewed_date:
+            # eliminate the datasets that were already overdue last time the user looked
+            second_from_viewed_date = viewed_date + datetime.timedelta(seconds=1)
+            query_string += ' AND -overdue_daterange:[{}Z TO {}Z]'.format(viewed_date.isoformat(),
+                                                                          second_from_viewed_date.isoformat())
+        query_string = '(' + query_string + ')'
         query_params = {
             'start': 0,
-            'rows': 500,
+            'rows': 1,
             'fq': query_string
         }
         search_result = get_action('package_search')({}, query_params)
-        datasets = search_result.get('results', [])
+        num_of_datasets = search_result.get('count', 0)
 
-        viewed_date = self.get_dashboard_viewed()
-        if viewed_date:
-            for d in datasets:
-                # if it was already overdue when last seen means it's not unseen and overdue
-                if not FreshnessCalculator(d).is_overdue(viewed_date):
-                    return True
-        elif datasets:
+        if num_of_datasets > 0:
             return True
 
         return False
-
-    def __get_current_time(self):
-        now = datetime.datetime.now().replace(minute=0,microsecond=0)
 
 
 class NotificationsInfo(object):
