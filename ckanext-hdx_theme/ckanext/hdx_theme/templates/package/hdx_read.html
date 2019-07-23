@@ -19,6 +19,11 @@
 {% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}
 {% block analytics_dataset_availability %}{{ c.analytics_dataset_availability }}{% endblock %}
 
+{% block header_core %}
+    {% snippet "header.html", page_has_mobile_version=True %}
+    {% snippet "header-mobile.html" %}
+  {%  endblock %}
+
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}

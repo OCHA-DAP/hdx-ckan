@@ -5,9 +5,10 @@
 {% block content %}
 <div>
 You are viewing this page in HDX Lite(beta)<br>
-- recommended for mobile and low bandwidth connections.
+- recommended for mobile and low bandwidth connections<br>
+- switching can be done from the top-right menu
 </div>
-<a href="{{ h.url_for(controller='package', action='read', id=pkg.name, force_layout='desktop') }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">View this page in the desktop version</a>
+<a href="{{ h.hdx_switch_url_path() }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">View this page as the full desktop site</a>
 {% endblock %}
 
 

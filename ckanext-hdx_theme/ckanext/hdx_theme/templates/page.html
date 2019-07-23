@@ -52,8 +52,10 @@
     {% endif %}
     {{ h.snippet('widget/onboarding/survey.html', id="surveyPopup") }}
 
-    {% include "header.html" %}
-    {% include "header-mobile.html" %}
+    {% block header_core %}
+      {% snippet "header.html", page_has_mobile_version=False %}
+      {% snippet "header-mobile.html" %}
+    {%  endblock %}
   {% endblock -%}
 
   {# The content block allows you to replace the content of the page if needed #}

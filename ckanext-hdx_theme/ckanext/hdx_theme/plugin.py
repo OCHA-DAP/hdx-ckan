@@ -237,7 +237,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_organization_list_for_user': hdx_helpers.hdx_organization_list_for_user,
             'hdx_is_sysadmin': hdx_helpers.hdx_is_sysadmin,
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
-            'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl
+            'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
+            'hdx_switch_url_path': hdx_helpers.switch_url_path
         }
 
     def get_actions(self):

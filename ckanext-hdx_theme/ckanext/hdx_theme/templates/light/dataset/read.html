@@ -9,6 +9,10 @@
 {% set org_title = pkg.organization.title %}
 {% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}
 
+{% block header_core %}
+  {% snippet "header-mobile.html", page_has_desktop_version=True %}
+{% endblock %}
+
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
@@ -59,11 +63,6 @@
             {% block indicator_additional_info %}
             {% snippet "light/dataset/additional_info.html", pkg_dict=pkg %}
             {% endblock %}
-          </div>
-          <div class="mTB15">
-            <a href="{{ h.url_for(controller='package', action='read', id=pkg.name, force_layout='desktop') }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
-              {{_("View this page in the desktop version")}}
-            </a>
           </div>
         </div>
       </div>

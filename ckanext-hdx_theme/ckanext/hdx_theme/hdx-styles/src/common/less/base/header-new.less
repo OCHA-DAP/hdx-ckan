@@ -131,6 +131,9 @@
               display: none;
             }
           }
+          span.single-icon {
+            padding-right: 5px;
+          }
         }
 
         svg[class^='icon-o-'], .glyphicon {
@@ -147,6 +150,10 @@
           > li {
             display: inline-flex;
             align-items: center;
+
+            &.less-important {
+              font-size: 12px;
+            }
 
             &:last-child:after {
               content: none;

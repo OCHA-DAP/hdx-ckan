@@ -1,4 +1,5 @@
 import logging
+import urlparse
 
 from flask import make_response
 from decorator import decorator
@@ -19,6 +20,7 @@ LAYOUTS = {DESKTOP_LAYOUT, LIGHT_LAYOUT}
 
 log = logging.getLogger(__name__)
 
+
 @decorator
 def check_redirect_needed(original_action, *args, **kw):
     if hasattr(request, 'blueprint'): # flask controller
@@ -31,12 +33,9 @@ def check_redirect_needed(original_action, *args, **kw):
     path = request.full_path if is_flask else request.path_qs
     ua_is_mobile = os and os.lower() in {'android', 'ios'}
     should_redirect = __should_redirect(path, ua_is_mobile)
-    if should_redirect and not path.startswith('/m'):
-        light_url = '/m' + path
+    if should_redirect:
+        light_url = switch_url_path(path, False)
         return redirect(light_url)
-    elif should_redirect and path.startswith('/m'):
-        standard_url = path[2:]
-        return redirect(standard_url)
     else:
         result = original_action(*args, **kw)
         new_cookie_value = __cookie_value_to_set()
@@ -81,3 +80,30 @@ def __cookie_value_to_set():
     if new_value in LAYOUTS and new_value != existing_value:
         return new_value
     return None
+
+
+def switch_url_path(path=None, force=True):
+    if not path:
+        path = request.path_qs if hasattr(request, 'path_qs') else request.full_path
+    if path.startswith('/m'):
+        new_path = path[2:]
+        going_to = DESKTOP_LAYOUT
+    else:
+        new_path = '/m' + path
+        going_to = LIGHT_LAYOUT
+    if force:
+        parsed_url = urlparse.urlparse(new_path)
+        query = parsed_url.query
+        if FORCE_REDIRECT_URL_PARAM in query:
+            query = '&'.join(
+                filter(lambda p: not p.startswith(FORCE_REDIRECT_URL_PARAM), parsed_url.query.split('&'))
+            )
+
+        force_query = '{}={}'.format(FORCE_REDIRECT_URL_PARAM, going_to)
+        if len(query) > 0:
+            force_query = '&' + force_query
+        new_path = urlparse.urlunparse(
+            parsed_url[0:4] + (query + force_query,) + parsed_url[5:]
+        )
+
+    return new_path
