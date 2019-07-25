@@ -9,7 +9,7 @@
     {% snippet 'snippets/package_list.html', packages=user.datasets %}
   {% else %}
 
-    {% if c.is_myself %}
+    {% if is_myself %}
       <p class="empty">
         {{ _('You haven\'t created any datasets.') }}
         {# Users must go to a country before creating a new collection so I commented out the part below.
