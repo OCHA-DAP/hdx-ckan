@@ -109,6 +109,9 @@
 {% endblock -%}
 
 {%- block styles %}
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
+  </style>
   {{ super() }}
   {% resource 'hdx_theme/page-light' %}
 {% endblock %}
