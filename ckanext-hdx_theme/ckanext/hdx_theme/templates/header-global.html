@@ -221,6 +221,14 @@
                       </a>
                     </li>
                   {% endif %}
+                  {% if page_has_desktop_version %}
+                    <li class="less-important">
+                      <a class="action" href="{{ h.hdx_switch_url_path() }}">
+                        <span class="single-icon icon-laptop"></span>
+                        <span class="action-text">{{ _('Switch to full desktop site') }}</span>
+                      </a>
+                    </li>
+                  {% endif %}
                   {% endblock %}
                 </ul>
               </div>

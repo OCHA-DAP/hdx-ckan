@@ -151,8 +151,10 @@
             display: inline-flex;
             align-items: center;
 
-            &.less-important {
-              font-size: 12px;
+            @media (min-width: 768px) {
+              &.less-important {
+                font-size: 12px;
+              }
             }
 
             &:last-child:after {

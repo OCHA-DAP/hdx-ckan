@@ -1519,8 +1519,10 @@ hr.dotted {
   display: inline-flex;
   align-items: center;
 }
-.new-header .global-header .global-header-content .header-user-box ul.separated-list > li.less-important {
-  font-size: 12px;
+@media (min-width: 768px) {
+  .new-header .global-header .global-header-content .header-user-box ul.separated-list > li.less-important {
+    font-size: 12px;
+  }
 }
 .new-header .global-header .global-header-content .header-user-box ul.separated-list > li:last-child:after {
   content: none;
