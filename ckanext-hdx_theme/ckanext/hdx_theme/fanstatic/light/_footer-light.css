@@ -1,0 +1,296 @@
+/**
+ * HDX Footer
+ */
+/**
+ * HDX Allow Cookies Banner
+ * - used on CKAN, Tools
+ */
+.allow-cookies-container {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 30px 0;
+}
+.allow-cookies-container a {
+  color: #fff;
+  text-decoration: underline;
+}
+.allow-cookies-container .allow-cookies-continue {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translate(0, -50%);
+  height: 50px;
+  width: 180px;
+  background-color: #eeeeee;
+  color: #000;
+  border: 0;
+  border-radius: 6px;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+.hdx-footer {
+  position: relative;
+  z-index: 100;
+}
+.hdx-footer .titlePlusVersion {
+  color: #888888;
+  font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+}
+.hdx-footer .logo-gray {
+  height: 40px;
+  margin-bottom: 10px;
+}
+.hdx-footer .match-logo-margin {
+  margin-top: 50px;
+}
+.hdx-footer .other-services {
+  text-align: center;
+}
+.hdx-footer .other-services img {
+  max-height: 40px;
+  max-width: 100%;
+}
+.hdx-footer .other-services img.logo-hdx {
+  max-height: 30px;
+}
+.hdx-footer .other-services img.logo-centre {
+  margin-bottom: -8px;
+}
+.hdx-footer .other-services img.logo-hxl {
+  max-height: 30px;
+  max-width: 137px;
+}
+.hdx-footer .mailChimpForm .subscribeText {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #eeeeee;
+}
+.hdx-footer .mailChimpForm input[type="email"] {
+  height: 44px;
+  border-color: #ffffff;
+  box-shadow: none;
+  line-height: 14px;
+  border: 0;
+  border-radius: 3px;
+  width: 280px;
+  margin: 0;
+  padding: 5px;
+}
+.hdx-footer .mailChimpForm form {
+  margin: 0;
+}
+.hdx-footer .mailChimpForm .response {
+  color: #ffffff;
+}
+.hdx-footer .mailChimpForm .btn.btn-primary {
+  height: 45px;
+  margin-left: 7px;
+  margin-top: -3px;
+  padding: 0 20px;
+}
+.hdx-footer .links-list {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: #888888;
+}
+.hdx-footer .links-list:after {
+  content: none;
+}
+.hdx-footer .links-list ul {
+  list-style: none;
+  padding: 0;
+}
+.hdx-footer .links-list ul li,
+.hdx-footer .links-list ul a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #eeeeee;
+}
+.hdx-footer .links-list ul li .glyphicon-new-window,
+.hdx-footer .links-list ul a .glyphicon-new-window,
+.hdx-footer .links-list ul li .icon-external-link,
+.hdx-footer .links-list ul a .icon-external-link {
+  color: #888888;
+  margin-left: 3px;
+  font-weight: 400;
+}
+.hdx-footer .links-list ul li svg,
+.hdx-footer .links-list ul a svg {
+  fill: #888888;
+  margin-bottom: -1px;
+  margin-left: 3px;
+  height: 12px;
+  width: 12px;
+}
+.hdx-footer .links-list .logo-tools-gray {
+  height: 24px;
+  margin: 10px 0;
+}
+.hdx-footer .social-footer {
+  position: relative;
+}
+.hdx-footer .social-footer .terms {
+  margin: 30px 0;
+  display: flex;
+}
+.hdx-footer .social-footer .terms .separator {
+  margin-left: auto;
+}
+.hdx-footer .social-footer .terms a {
+  text-transform: uppercase;
+  margin-right: 30px;
+  color: #eeeeee;
+}
+.hdx-footer .social-footer .terms a:hover {
+  text-decoration: underline;
+}
+.hdx-footer .social-footer .terms a:last-child {
+  margin-right: 0;
+}
+.hdx-footer .social-footer .terms a .icon-external-link {
+  color: #888888;
+}
+.hdx-footer .social-footer .service {
+  margin-bottom: 45px;
+  color: #fff;
+}
+.hdx-footer .social-footer .service .service-details {
+  display: flex;
+  font-size: 12px;
+}
+.hdx-footer .social-footer .service .service-details .ocha-service {
+  display: flex;
+}
+.hdx-footer .social-footer .service .service-details .ocha-service .ocha-logo {
+  height: 40px;
+  margin: 10px 0;
+}
+.hdx-footer .social-footer .service .service-details .ocha-service .spacer {
+  border-right: 1px solid #fff;
+  height: 40px;
+  margin: 10px;
+}
+.hdx-footer .social-footer .service .service-details .ocha-service .ocha-text {
+  flex: 510px 1 1;
+  margin: 10px 0;
+  margin-right: 10px;
+}
+.hdx-footer .social-footer .service .service-details .license-group {
+  display: flex;
+}
+.hdx-footer .social-footer .service .service-details .license-group .license {
+  width: 290px;
+  text-align: right;
+  margin: 10px 0;
+  margin-left: auto;
+  margin-right: 10px;
+}
+.hdx-footer .social-footer .service .service-details .license-group .license-cc {
+  margin: 10px 0;
+}
+.hdx-footer .social-footer .service .service-details .license-group .license-cc > svg {
+  margin-top: 10px;
+  fill: #fff;
+}
+.hdx-footer .footer-wrapper {
+  vertical-align: middle;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+.hdx-footer .mainLinks {
+  margin: 0;
+  padding-left: 0;
+}
+.hdx-footer .mainLinks li a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.hdx-footer .otherLicenseText {
+  /*width: 320px;*/
+  color: #ffffff;
+  font-weight: 300;
+}
+.hdx-footer a.social-icon {
+  background-image: url("/images/homepage/socialBlog.png");
+  background-size: 250px 64px;
+  background-color: #404040;
+  border-radius: 3px;
+  float: left;
+  height: 25px;
+  list-style: none;
+  margin-left: 4px;
+  width: 25px;
+}
+.hdx-footer a.social-icon:hover {
+  background-color: #007ce0;
+}
+.hdx-footer a.social-icon.twitter {
+  background-position: -163px -3px;
+}
+.hdx-footer a.social-icon.github {
+  background-position: -3px -3px;
+}
+.hdx-footer a.social-icon.email {
+  background-position: -67px -36px;
+}
+.hdx-footer a.social-icon.rss {
+  background-position: -224px -4px;
+}
+/* Footer Homepage */
+/* Set page background to white - on large screens footer was to short - green was showing :) */
+/*body{*/
+/*background-color: #ffffff;*/
+/*}*/
+.newFooter {
+  height: 100px;
+  vertical-align: middle;
+}
+.newFooter .text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #888888;
+  text-transform: uppercase;
+  margin-left: 40px;
+  line-height: 28px;
+}
+.newFooter .text:first-child {
+  margin-left: 0;
+}
+.newFooter img {
+  height: 28px;
+  margin-left: 15px;
+  background-color: white;
+  opacity: 0.5;
+  -webkit-transition: opacity 0.3s;
+  /* For Safari 3.1 to 6.0 */
+  transition: opacity 0.3s;
+}
+.newFooter img:hover,
+.newFooter img:focus {
+  opacity: 1;
+  -webkit-transition: opacity 0.3s;
+  /* For Safari 3.1 to 6.0 */
+  transition: opacity 0.3s;
+}
+/* END Footer Homepage */

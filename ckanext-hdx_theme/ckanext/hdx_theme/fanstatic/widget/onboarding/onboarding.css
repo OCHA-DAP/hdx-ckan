@@ -1,5 +1,6 @@
 .popup.popup-onboarding .content {
-  padding: 0;
+  min-width: 370px;
+  padding: 0 15px;
 }
 .popup.popup-onboarding .error-message {
   color: red;
@@ -174,4 +175,22 @@
   color: white;
   letter-spacing: 0.01em;
   line-height: 24px;
+}
+@media (max-width: 375px) {
+  .popup.popup-onboarding .content {
+    left: 0;
+    transform: translate(0, -50%);
+    min-width: 100%;
+    padding: 0 15px;
+  }
+}
+@media (max-width: 425px) {
+  #incomplete-profile {
+    display: none;
+  }
+}
+@media (max-width: 1024px) {
+  #incomplete-profile > span {
+    display: none;
+  }
 }

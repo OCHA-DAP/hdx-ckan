@@ -2,7 +2,8 @@
   height: 560px;
 }
 .two-column-follow .two-column-left .envelope {
-  height: 200px;
+  max-height: 200px;
+  max-width: 100%;
 }
 .two-column-follow .two-column-right {
   height: 560px;
@@ -19,7 +20,7 @@
   position: absolute;
   bottom: 85px;
   height: 32px;
-  width: 375px;
+  max-width: 375px;
 }
 .two-column-follow .two-column-right .selectable-list {
   list-style: none;
@@ -70,4 +71,9 @@
   font-size: 10px;
   color: #333333;
   letter-spacing: 0.01em;
+}
+@media (max-width: 768px) {
+  .two-column-follow .two-column-left {
+    height: unset;
+  }
 }

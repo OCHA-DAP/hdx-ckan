@@ -28,6 +28,8 @@ from ckan.common import (
 )
 from ckan.plugins import toolkit
 
+from ckanext.hdx_theme.util.light_redirect import switch_url_path
+
 # import ckanext.hdx_theme.helpers.counting_actions as counting
 
 log = logging.getLogger(__name__)
@@ -716,6 +718,7 @@ def hdx_is_sysadmin(user_id):
     user = user_obj.name
     return authz.is_sysadmin(user)
 
+
 def hdx_organization_list_for_user(user_id):
     orgs = []
     if user_id:
@@ -731,8 +734,13 @@ def hdx_organization_list_for_user(user_id):
         return tk.get_action('hdx_organization_list_for_user')(_get_context(), {'id': user_id})
     return orgs
 
+
 def hdx_dataset_is_hxl(tag_list):
     for tag in tag_list:
         if tag.get('name') == 'hxl' and tag.get('display_name') == 'hxl':
             return True
     return False
+
+
+def hdx_switch_url_path():
+    return switch_url_path()

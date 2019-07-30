@@ -1,0 +1,32 @@
+@import "../variables";
+@import "../mixins";
+
+.bottom-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0,0,0,0.6);
+  color: @whiteColor;
+  z-index: 5000;
+  min-height: 100px;
+  padding: 20px;
+
+  .content {
+    position: relative;
+    padding-right: 20px;
+
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: @whiteColor;
+      opacity: .7;
+    }
+  }
+
+  a, a:hover {
+    color: @whiteColor;
+    text-decoration: underline;
+  }
+}

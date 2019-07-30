@@ -1,3 +1,5 @@
+@import "_mixins"; //new mixins, part of the refactor
+
 /*These styles will be probably be deprecated after next sprint*/
 
 /* style the filter items present in the left side dark section*/
@@ -131,14 +133,11 @@
 
 
 /* datasets and orgs view&list */
+//DEPRECATED - please start using the mixin
 .itemTitle{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 600;
-    font-size: 28px;
-    display: inline;
-    line-height: 28px;
-    color: #333333;
+  .new-h1-style();
 }
+
 
 .notes.embedded-content{
     font-family: 'Source Sans Pro', sans-serif;

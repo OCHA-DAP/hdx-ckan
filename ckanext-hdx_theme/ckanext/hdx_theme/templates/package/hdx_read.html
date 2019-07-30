@@ -1,6 +1,10 @@
 {% extends "page.html" %}
 
 {% set pkg = c.pkg_dict or pkg_dict %}
+{% block links %}
+  <link rel="alternate" media="only screen and (max-width: 640px)" href="{{ h.url_for('hdx_light_dataset.read', id=pkg.name) }}">
+  {{ super() }}
+{% endblock %}
 
 {% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 
@@ -14,6 +18,11 @@
 {% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}
 {% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}
 {% block analytics_dataset_availability %}{{ c.analytics_dataset_availability }}{% endblock %}
+
+{% block header_core %}
+    {% snippet "header.html", page_has_mobile_version=True %}
+    {% snippet "header-mobile.html" %}
+  {%  endblock %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
@@ -163,6 +172,8 @@
       {% endblock %}
     </div>
   </div>
+  {% snippet "widget/banner/hdx-dataset-banner.html", pkg=pkg %}
+
 {% endblock %}
 
 {% block post_primary %}

@@ -155,6 +155,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('carousel_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
+        map.connect('pages_show', '/ckan-admin/pages/show',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show_pages')
+
         map.connect('global_file_download', '/global/{filename}',
                     controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
                     action='global_file_download')
@@ -234,7 +237,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_organization_list_for_user': hdx_helpers.hdx_organization_list_for_user,
             'hdx_is_sysadmin': hdx_helpers.hdx_is_sysadmin,
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
-            'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl
+            'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
+            'hdx_switch_url_path': hdx_helpers.switch_url_path
         }
 
     def get_actions(self):
@@ -299,7 +303,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'invalidate_cached_resource_id_apihighways': auth.invalidate_cached_resource_id_apihighways,
             'invalidate_region': auth.invalidate_region,
             'hdx_user_statistics': auth.hdx_user_statistics,
-
+            'hdx_carousel_update': auth.hdx_carousel_update,
+            'hdx_request_data_admin_list': auth.hdx_request_data_admin_list
         }
 
     def make_middleware(self, app, config):

@@ -6,7 +6,7 @@
   background-position: 15px -97px;
   background-repeat: no-repeat;
   height: 145px;
-  width: 370px;
+  width: 100%;
 }
 .login-widget .login-top .login-photo {
   background-color: #007CE0;
@@ -16,7 +16,8 @@
   border: 5px solid #fff;
   position: absolute;
   top: 87.5px;
-  left: 132.5px;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 .login-widget .login-top .login-photo img {
   height: 100%;
@@ -31,7 +32,7 @@
 .login-widget .login-content {
   background-color: #eeeeee;
   height: 355px;
-  width: 370px;
+  width: 100%;
   padding: 57.5px 15px 35px;
 }
 .login-widget .login-content .username-text {
@@ -47,4 +48,11 @@
   font-display: block;
   font-weight: 400;
   font-size: 14px;
+}
+@media (max-width: 320px) {
+  .login-widget .login-top,
+  .login-widget .login-content {
+    width: unset;
+    max-width: 100%;
+  }
 }

@@ -231,6 +231,29 @@
 #input-search {
   position: relative;
 }
+@media (max-width: 465px) {
+  .header-search-form .search-ahead {
+    width: 100%;
+    position: fixed;
+    top: 90px;
+  }
+  .header-search-form .search-ahead li {
+    font-size: 16px;
+  }
+  .header-search-form .search-ahead .ahead-type {
+    font-size: 14px;
+  }
+}
+@media (max-width: 767px) {
+  .header-search-form .search-ahead {
+    width: 100%;
+    position: fixed;
+    top: 90px;
+  }
+  .header-search-form .search-ahead .ahead-type {
+    font-size: 14px;
+  }
+}
 .search-ahead {
   position: absolute;
   z-index: 99999999;
@@ -252,6 +275,10 @@
   padding: 10px;
   font-size: 18px;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  white-space: nowrap;
 }
 .search-ahead li:hover {
   background: #eeeeee;
@@ -260,6 +287,8 @@
   text-align: left;
   color: #333333;
   /* @darkGrayColor */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .search-ahead .ahead-link i.empty {
   margin-left: 30px;
@@ -278,9 +307,7 @@
   margin-left: 4px;
   margin-right: 8px;
 }
-.ahead-type {
-  float: right;
-  text-align: right;
-  margin-top: -20px;
+.search-ahead .ahead-type {
+  justify-self: flex-end;
 }
 /* END - Styling predictive search */

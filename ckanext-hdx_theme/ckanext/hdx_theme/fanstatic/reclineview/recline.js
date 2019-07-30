@@ -12,7 +12,8 @@ this.recline.Backend.DataProxy = this.recline.Backend.DataProxy || {};
   my.dataproxy_url = $('#datapreview-url-div').text(); // MODIFIED BY HDX
   // Timeout for dataproxy (after this time if no response we error)
   // Needed because use JSONP so do not receive e.g. 500 errors
-  my.timeout = 5000;
+  //increased timeout
+  my.timeout = 120000;
 
 
   // use either jQuery or Underscore Deferred depending on what is available

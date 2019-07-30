@@ -8,6 +8,11 @@
   padding: 0;
 }
 .toolbarRow .toolbar .breadcrumb {
+  height: 20px;
+  max-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   border: none;
   background: none;
   margin: 0;

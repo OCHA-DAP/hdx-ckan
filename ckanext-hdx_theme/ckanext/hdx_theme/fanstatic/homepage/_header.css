@@ -1,0 +1,19 @@
+header {
+  position: relative;
+  z-index: 10000;
+  /* Header Homepage */
+  /* END Header Homepage */
+}
+header .global-header {
+  background-color: #333333;
+}
+header .global-header .header-message {
+  max-width: 100%;
+}
+header .homepage-header-nav-border {
+  background-color: #ffffff;
+  border-bottom: 3px solid #cccccc;
+}
+header .homepage-header-nav-border > div {
+  margin-bottom: -3px;
+}

@@ -341,7 +341,7 @@ def hdx_carousel_settings_update(context, data_dict):
     :rtype: str
     '''
 
-    logic.check_access('config_option_update', {}, {})
+    logic.check_access('hdx_carousel_update', context, {})
 
     settings = data_dict.get('hdx.carousel.config')
     settings_json = json.dumps(settings)

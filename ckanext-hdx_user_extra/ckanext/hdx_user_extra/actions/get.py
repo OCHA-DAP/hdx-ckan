@@ -9,7 +9,7 @@ import ckan.logic as logic
 
 NotFound = logic.NotFound
 
-
+@logic.side_effect_free
 def user_extra_show(context, data_dict):
     '''
     Retrieves user extra list based on 'user_id'
@@ -21,4 +21,6 @@ def user_extra_show(context, data_dict):
     user_extra_list = ue_model.UserExtra.get_by_user(user_id=user_id)
     if user_extra_list is None:
         raise NotFound
-    return user_extra_list
+    user_extra_dict_list = [ue.as_dict() for ue in user_extra_list]
+
+    return user_extra_dict_list

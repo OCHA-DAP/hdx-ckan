@@ -40,3 +40,9 @@
 .two-column-select-organisation .two-column-right #org-description-data.input-content ~ label {
   bottom: 6px;
 }
+@media (max-width: 425px) {
+  .two-column-widget.two-column-select-organisation .two-column-left,
+  .two-column-widget.two-column-select-organisation .two-column-right {
+    padding: 35px;
+  }
+}

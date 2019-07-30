@@ -74,6 +74,11 @@
   padding: 0;
 }
 .toolbarRow .toolbar .breadcrumb {
+  height: 20px;
+  max-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   border: none;
   background: none;
   margin: 0;
@@ -256,6 +261,14 @@
   margin-bottom: 5px;
 }
 /* END Button style*/
+.btn-download {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.btn-download img {
+  height: 11px;
+  margin-right: 5px;
+}
 /* Style Dataset Item */
 .dataset-item {
   border-bottom: 0;

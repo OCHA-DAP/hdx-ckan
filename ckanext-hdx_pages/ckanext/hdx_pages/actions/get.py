@@ -95,6 +95,29 @@ def page_list(context, data_dict):
 
 
 @logic.side_effect_free
+def admin_page_list(context, data_dict):
+    '''List all pages.
+    :rtype: list of dictionaries
+    '''
+
+    logic.check_access('admin_page_list', context, data_dict)
+
+    query = meta.Session.query(pages_model.Page)
+
+    pages = query.all()
+
+    page_dicts = []
+    for p in pages:
+        try:
+            logic.check_access('page_show', context, {'id': p.id, 'state': p.state})
+        except logic.NotAuthorized:
+            pass
+        else:
+            page_dicts.append(p.as_dict())
+    return page_dicts
+
+
+@logic.side_effect_free
 def group_page_list(context, data_dict):
     '''List pages associated with a group.
     :param id: id of the group

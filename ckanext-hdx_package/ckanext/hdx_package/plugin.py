@@ -88,6 +88,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
     __startup_tasks_done = False
 
@@ -484,6 +485,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore_missing')]
         })
 
+    def get_blueprint(self):
+        import ckanext.hdx_package.views.light_dataset as light_dataset
+        return light_dataset.hdx_light_dataset
 
 class HDXAnalyticsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IMiddleware, inherit=True)

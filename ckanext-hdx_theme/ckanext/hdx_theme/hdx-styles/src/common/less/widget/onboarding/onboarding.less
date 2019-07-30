@@ -4,7 +4,8 @@
 
 .popup.popup-onboarding {
   .content {
-    padding: 0;
+    min-width: @popupWidth;
+    padding: 0 15px;
   }
 
   .error-message {
@@ -156,4 +157,29 @@
   color: white;
   .letter-spacing-1();
   line-height: 24px;
+}
+
+@media (max-width: @cut-point-mobile-m) {
+  .popup {
+    &.popup-onboarding .content {
+      left: 0;
+      transform: translate(0, -50%);
+      min-width: 100%;
+      padding: 0 15px;
+    }
+  }
+}
+
+@media (max-width: @cut-point-mobile-l) {
+  #incomplete-profile {
+    display: none;
+  }
+}
+
+@media (max-width: @cut-point-laptop-s) {
+  #incomplete-profile {
+    > span {
+      display: none;
+    }
+  }
 }

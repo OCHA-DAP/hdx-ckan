@@ -1,0 +1,14 @@
+{% extends "widget/banner/banner.html" %}
+
+{% set banner_id = "hdx-dataset-banner"%}
+
+{% block content %}
+<div>
+Try viewing this page in HDX Lite(beta)<br>
+- recommended for mobile and low bandwidth connections <br>
+- switching can be done from the top-right menu
+</div>
+<a href="{{ h.hdx_switch_url_path() }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">View this page in HDX Lite(beta)</a>
+{% endblock %}
+
+

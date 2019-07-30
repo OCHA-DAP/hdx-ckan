@@ -1,7 +1,15 @@
 @import "../base/variables";
 
+nav.new-header.mobile-only .navbar-collapse .nav {
+  li {
+    a:hover {
+      background-color: inherit;
+    }
+  }
 
-@media (max-width: 320px) {
+}
+
+@media (max-width: @cut-point-mobile-s) {
   body{
     .hdx-footer {
       .social-footer .service .service-details .license-group .license {
@@ -107,12 +115,6 @@
   }
 
 
-  .home .search-ahead {
-    width: 120%;
-  }
-
-
-
 }
 
 @media (max-width: 992px) {
@@ -194,7 +196,7 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: @cut-point-laptop-m) {
   .new-header{
     .homepage-header-nav-border{
       > .container{

@@ -18,6 +18,9 @@
 {% block content_primary_nav %}
   {{ h.build_nav_icon('user.read', _('Datasets'), id=user.name) }}
   {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=user.name) }}
+  {% if h.check_access('sysadmin') %}
+    {{ h.build_nav_icon('user_permission', _('User Permission'), id=user.name) }}
+  {% endif %}
 {% endblock %}
 
 {% block secondary_content %}
@@ -30,7 +33,7 @@
       {% if user.state == 'deleted' %}
       <span class="label label-important">{{ _('Deleted') }}</span>
       {% endif %}
-      
+
       {% if user_dict['about'] %}
         {{ user_dict['about'] }}
       {% else %}
@@ -74,7 +77,7 @@
             <dd>{{ user.name }}</dd>
           {% endif %}
         </dl>
-        {% if c.is_myself %}
+        {% if is_myself %}
         <dl>
           <dt>{{ _('Email') }} <span class="label" title="{{ _('This means only you can see this') }}">{{ _('Private') }}</span></dt>
           <dd>{{ user.email }}</dd>
@@ -84,7 +87,7 @@
           <dt>{{ _('Member Since') }}</dt>
           <dd>{{ h.render_datetime(user.created) }}</dd>
         </dl>
-        {% if c.is_myself %}
+        {% if is_myself %}
         <dl>
           <dt class="key">{{ _('API Key') }} <span class="label" title="{{ _('This means only you can see this') }}">{{ _('Private') }}</span></dt>
           <dd class="value"><code>{{ user.apikey }}</code></dd>

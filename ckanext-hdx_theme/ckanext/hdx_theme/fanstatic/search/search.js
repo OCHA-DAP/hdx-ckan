@@ -98,17 +98,12 @@ $('document').ready(function(){
 
     $('#q, #q2, #qMobile').blur(function(){
         var $results = $(this).parents("form").find('.search-ahead');
-        $results.html('');
-        $results.hide();
+        // $results.html('');
+        // $results.hide();
     });
 });
 
 function process_title(title, q){
-    var max_length = 30;
-    if(title.length>max_length){
-        title = title.substring(0, max_length);
-        title = title+'...'
-    }
     var re = new RegExp(q, "gi");
     title = title.replace(re, '<strong>$&</strong>');
     return title

@@ -1,13 +1,25 @@
 import ckan.logic as logic
-import ckanext.hdx_pages.model as pages_model
 from ckan.lib.base import _
 
+import ckanext.hdx_pages.model as pages_model
+from ckanext.hdx_users.helpers.permissions import Permissions
+
+NotFound = logic.NotFound
 
 def page_create(context, data_dict):
     '''
     Only sysadmins are allowed to call this action
     '''
-    return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CRISIS)
+    return {'success': result}
+
+
+def admin_page_list(context, data_dict):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return page_create(context, data_dict)
 
 
 def page_update(context, data_dict):
@@ -25,6 +37,8 @@ def page_show(context, data_dict):
         return {'success': False, 'msg': _('Id: missing value')}
 
     page = pages_model.Page.get_by_id(id=data_dict.get('id'))
+    if not page:
+        raise NotFound
     if page and page.state == 'active':
         return {'success': True}
     else:

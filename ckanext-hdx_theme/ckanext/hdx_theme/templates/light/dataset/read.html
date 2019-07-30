@@ -1,0 +1,81 @@
+{% extends "page_light.html" %}
+
+{% block links %}
+  <link rel="canonical" href="{{ h.url_for(controller='package', action='read', id=pkg.name) }}">
+  {{ super() }}
+{% endblock %}
+
+{% set pkg = dataset_dict %}
+{% set org_title = pkg.organization.title %}
+{% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}
+
+{% block header_core %}
+  {% snippet "header-mobile.html", page_has_desktop_version=True %}
+{% endblock %}
+
+{% block breadcrumb_content %}
+	{% block breadcrum_parent_item %}
+    {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
+	{% endblock %}
+  <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="dataset-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>{{ dataset_dict.title }}</h1>
+        <div style="display: flex;">
+          <a href="{{url_org}}">
+            {{ org_title }}
+          </a>
+        </div>
+        {% if pkg.notes %}
+          <div data-module="hdx_show_more" data-module-points="70" style="visibility:hidden" class="notes embedded-content">
+              {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
+            <ul class="dataset-resources ">
+              {% snippet 'search/snippets/package_icons.html', package=pkg%}
+            </ul>
+          </div>
+        {% endif %}
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a href="#data-resources"
+               data-module="hdx_click_stopper" data-module-link_type="dataset resources tab" data-module-just_send_event="true"
+               data-toggle="tab" class="hdx-tab-button">Data and Resources
+            </a>
+          </li>
+          <li>
+            <a href="#metadata"
+               data-module="hdx_click_stopper" data-module-link_type="dataset metadata tab" data-module-just_send_event="true"
+               data-toggle="tab" class="hdx-tab-button">Metadata
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="data-resources">
+            {% block package_resources %}
+              {% snippet "light/dataset/resources_list.html", pkg=pkg, resources=pkg.resources %}
+            {% endblock %}
+          </div>
+          <div class="tab-pane" id="metadata">
+            {% block indicator_additional_info %}
+            {% snippet "light/dataset/additional_info.html", pkg_dict=pkg %}
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% snippet "widget/banner/hdx-light-banner.html", pkg=pkg %}
+{% endblock %}
+
+{%- block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/dataset-light' %}
+{% endblock -%}
+

@@ -1,5 +1,8 @@
+import logging
 import ckan.logic as logic
 from ckan.common import _
+
+log = logging.getLogger(__name__)
 
 
 def page_name_validator(page_dict, context):
@@ -11,7 +14,7 @@ def page_name_validator(page_dict, context):
         raise logic.ValidationError({'name': [message]})
 
     try:
-        existing_page = logic.get_action('page_show')(context, {'id': page_dict['name']})
+        existing_page = logic.get_action('page_show')(context, {'id': page_dict.get('id') or page_dict.get('name'), 'name': page_dict.get('name')})
         if existing_page and existing_page['id'] != page_dict.get('id', ''):
             message = _('Page name already exists')
             ex = logic.ValidationError({'name': [message]})

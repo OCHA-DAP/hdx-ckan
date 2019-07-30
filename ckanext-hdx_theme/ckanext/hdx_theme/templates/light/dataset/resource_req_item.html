@@ -1,0 +1,47 @@
+{% if pkg.is_requestdata_type %}
+  {% if c.userobj %}
+   {% set is_logged_in = 'true' %}
+  {% else %}
+   {% set is_logged_in = 'false' %}
+  {% endif %}
+  {% set is_hdx = h.requestdata_is_hdx_portal() %}
+  {% set redirect_url = h.url_for(controller='user', action='login') %}
+  {% set requestdata_action = h.url_for('requestdata_send_request') %}
+  {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name, 'package_title':pkg.title}) %}
+  {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
+  {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
+    <p class="empty">The contributor has only shared the metadata for this dataset. To access the data, please use the request button.</p>
+    <div class="container-subpanel">
+
+      <div class="circle gray-bg"></div>
+      <div class="lines">
+        <div class="upper gray-bg"></div>
+        <div class="lower gray-bg"></div>
+      </div>
+    </div>
+    <span data-module="bs_tooltip"
+         data-module-placement="top"
+         data-toggle="tooltip"
+         title="Request data directly from the maintainer of this dataset."
+         class=""
+         style="margin-top: 10px;"
+    >
+      <a href="#" class="btn btn-primary"
+         data-module="hdx-modal-form"
+         data-module-template_file="request_contact.html"
+         data-module-submit_action="{{ requestdata_action }}"
+         data-module-post_data="{{ request_post_data }}"
+         data-module-is_logged_in="{{ is_logged_in }}"
+         data-module-is_hdx="{{ is_hdx }}"
+         data-module-redirect_url="{{ redirect_url }}"
+         data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+      >Request data</a>
+    </span>
+  {% endtrans %}
+{% else %}
+  {# Comment out "add some" as action doesn't exist yet #}
+  <p class="empty mTop20">This dataset has no data,
+    <a class="info-item-name" href="#" onclick="contributeAddDetails('{{pkg.id}}', 'resource list')" >why not add some?</a>
+  </p>
+{% endif %}
+

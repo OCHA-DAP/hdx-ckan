@@ -57,11 +57,25 @@
   }
 
   .signup-box {
-    width: @popupWidth;
+    width: @popupContentWidth;
     height: 320px;
     padding: @paddingNormal;
     background-color: @extraLightGrayColor;
     border-radius: 6px;
+
+    .checkbox-row {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      input[type="checkbox"] {
+        margin: 0;
+        ~ label {
+          margin: 0 0 0 5px;
+        }
+      }
+    }
+
+
   }
 
   .signup-action {
@@ -76,5 +90,35 @@
   .grecaptcha-badge{
     transform: scale(0.80);
     transform-origin: 0;
+  }
+}
+
+@media (max-width: @cut-point-laptop-s) {
+  .signup-widget {
+    width: @cut-point-tablet;
+  }
+}
+
+@media (max-width: @cut-point-tablet) {
+  .signup-widget {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+
+    .signup-box {
+      margin-top: 20px;
+      height: auto;
+    }
+  }
+
+}
+
+@media (max-width: @cut-point-mobile-m) {
+  .signup-widget {
+    margin: 0 -@gutterSmallSize;
+
+    .inner-bg {
+      padding: 15px;
+    }
   }
 }

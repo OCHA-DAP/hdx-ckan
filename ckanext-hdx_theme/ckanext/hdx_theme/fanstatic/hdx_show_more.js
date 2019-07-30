@@ -14,7 +14,9 @@ ckan.module('hdx_show_more', function ($, _) {
           expandPrefix:     ' ',
           expandText:       ' ... More',
           userCollapsePrefix: ' ',
-          userCollapseText: 'Less'
+          userCollapseText: 'Less',
+          expandSpeed: 0,
+          collapseSpeed: 0,
         }
       );
     }
