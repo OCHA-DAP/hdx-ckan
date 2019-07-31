@@ -28,6 +28,9 @@
   .resource-list {
     margin: 0;
     padding: 10px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    grid-gap: 1rem;
 
     .resource-item {
       background-color: @whiteColor;
@@ -36,6 +39,16 @@
       padding: 0;
       &:last-child {
         margin-bottom: 0;
+      }
+
+      .animation-wrapper {
+        padding: 0;
+        max-height: 500px;
+        transition: max-height 1s;
+        overflow: hidden;
+        &.hidden {
+          max-height: 0;
+        }
       }
 
       .resource-item-title {
