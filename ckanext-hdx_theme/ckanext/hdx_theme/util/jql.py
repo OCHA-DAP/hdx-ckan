@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 from collections import OrderedDict
 
 import ckanext.hdx_theme.util.jql_queries as jql_queries
-from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
+    HDXRedisInvalidationStrategy
 
 
 log = logging.getLogger(__name__)
@@ -18,7 +19,9 @@ dogpile_config = {
 dogpile_config.update(dogpile_standard_config)
 
 dogpile_jql_region = make_region(key_mangler=lambda key: 'jql-' + key)
+invalidation_strategy = HDXRedisInvalidationStrategy(dogpile_jql_region)
 dogpile_jql_region.configure_from_config(dogpile_config, dogpile_config_filter)
+dogpile_jql_region.region_invalidator =  invalidation_strategy
 
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 
