@@ -46,7 +46,7 @@
         max-height: 500px;
         transition: max-height 1s;
         overflow: hidden;
-        &.hidden {
+        &.closed {
           max-height: 0;
         }
       }
@@ -97,7 +97,7 @@
   .tab-content {
     background-color: #fafafa;
     margin: 0 -@gutterSmallSize;
-    padding: 5px @gutterSmallSize;
+    padding: 5px @gutterSmallSize 15px @gutterSmallSize;
 
     .tab-pane-background {
       margin: @resourceItemPadding 0;

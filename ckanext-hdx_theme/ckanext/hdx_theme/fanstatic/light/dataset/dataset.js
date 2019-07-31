@@ -8,13 +8,13 @@ $(document).ready(function() {
     // icon.toggleClass("glyphicon-plus");
     // icon.toggleClass("glyphicon-minus");
     // content.toggle();resour
-    if (animation_wrapper.hasClass("hidden")) {
-      animation_wrapper.removeClass("hidden");
+    if (animation_wrapper.hasClass("closed")) {
+      animation_wrapper.removeClass("closed");
       icon.addClass("glyphicon-minus");
       icon.removeClass("glyphicon-plus");
     }
     else {
-      animation_wrapper.addClass("hidden");
+      animation_wrapper.addClass("closed");
       icon.addClass("glyphicon-plus");
       icon.removeClass("glyphicon-minus");
     }

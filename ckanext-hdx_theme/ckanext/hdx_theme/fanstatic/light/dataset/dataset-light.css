@@ -122,7 +122,7 @@
   transition: max-height 1s;
   overflow: hidden;
 }
-.dataset-light .resource-list .resource-item .animation-wrapper.hidden {
+.dataset-light .resource-list .resource-item .animation-wrapper.closed {
   max-height: 0;
 }
 .dataset-light .resource-list .resource-item .resource-item-title {
@@ -165,7 +165,7 @@
 .dataset-light .tab-content {
   background-color: #fafafa;
   margin: 0 -15px;
-  padding: 5px 15px;
+  padding: 5px 15px 15px 15px;
 }
 .dataset-light .tab-content .tab-pane-background {
   margin: 10px 0;
