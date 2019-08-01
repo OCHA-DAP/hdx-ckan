@@ -1,6 +1,5 @@
 import re
 import urlparse
-import uuid
 
 import json
 import logging
@@ -22,6 +21,8 @@ from pylons import config
 from ckan.common import _, c, request
 from ckanext.hdx_package.exceptions import NoOrganization
 from ckanext.hdx_package.helpers.caching import cached_group_iso_to_title
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+
 import ckanext.hdx_package.helpers.custom_validator as vd
 
 get_action = logic.get_action
@@ -470,3 +471,7 @@ def hdx_check_add_data():
     data_dict['onclick'] = 'contributeAddDetails(null, "header")'
 
     return data_dict
+
+
+def hdx_get_last_modification_date(dataset_dict):
+    return FreshnessCalculator.dataset_last_change_date(dataset_dict)
