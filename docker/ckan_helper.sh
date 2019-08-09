@@ -4,6 +4,20 @@
 # mkdir -p /etc/ckan
 # [ -f /etc/ckan/prod.ini.tpl ] || cp -a /srv/ckan/docker/prod.ini.tpl /etc/ckan
 
+# enable s3 config if needed
+S3F=''
+if [ ! -f /etc/ckan/prod.ini ]; then
+    if [ "$S3_FILESTORE" == "enabled" ]; then
+        S3F=${SF}'ckanext.s3filestore.aws_access_key_id = '${AWS_ACCESS_KEY_ID}'\n'
+        S3F=${SF}'ckanext.s3filestore.aws_secret_access_key = '${AWS_SECRET_ACCESS_KEY}'\n'
+        S3F=${SF}'ckanext.s3filestore.aws_bucket_name = '${AWS_BUCKET_NAME}'\n'
+        S3F=${SF}'ckanext.s3filestore.host_name = http://s3.'${REGION_NAME}'.amazonaws.com\n'
+        S3F=${SF}'ckanext.s3filestore.region_name= '${REGION_NAME}'\n'
+        S3F=${SF}'ckanext.s3filestore.signature_version = s3v4\n'
+        S3F=${SF}$(cat /srv/ckan/common-config.txt | grep -E "^ckan.plugins =")' s3filestore\n'
+    fi
+fi
+
 # configure prod.ini
 [ -f /etc/ckan/prod.ini ] || envsubst < /srv/ckan/docker/prod.ini.tpl > /etc/ckan/prod.ini
 # and a copy of it to be used by less compile verbose mode
