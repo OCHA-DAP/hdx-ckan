@@ -78,7 +78,7 @@ RUN apt-get -qq -y update && \
     rm -f s3f.tgz && \
     cd ckanext-s3filestore-0.1.1 && \
     python setup.py develop && \
-    pip -q install --upgrade requirements.txt && \
+    pip -q install --upgrade -r requirements.txt && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     chown -R www-data ckan/public/base/i18n && \
