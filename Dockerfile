@@ -62,7 +62,6 @@ RUN apt-get -qq -y update && \
         pip \
         setuptools==36.1 && \
     mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
-    cp -a docker/prod.ini.tpl /etc/ckan && \
     cp -a docker/run_ckan /etc/services.d/ckan/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
     curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-infra-tools/master/hdxckantool.py && \
