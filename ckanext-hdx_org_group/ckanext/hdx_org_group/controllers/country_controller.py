@@ -20,8 +20,11 @@ import ckan.lib.helpers as h
 import ckan.lib.helpers as helpers
 import ckan.logic as logic
 import ckan.model as model
+
 from ckan.controllers.api import CONTENT_TYPES
 from ckan.common import config
+
+from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 
 render = base.render
 abort = base.abort
@@ -156,7 +159,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 2, 1, 'metadata_modified desc', None,
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 2, 1, DEFAULT_SORTING, None,
                                                None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
                                                             {'tags': 'tags', 'organization': 'organization'},

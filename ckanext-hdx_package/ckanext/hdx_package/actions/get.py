@@ -29,8 +29,9 @@ import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
-from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
+from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 
 import ckanext.hdx_package.helpers.caching as pkg_caching
 from pylons import config
@@ -68,6 +69,7 @@ def package_search(context, data_dict):
 
     THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN
     IT'S CHANGED TO RETURN MORE DATA FROM THE SOLR QUERY (collapse/expand)
+    ALSO CHANGED DEFAULT SORTING
 
     Searches for packages satisfying a given search criteria.
 
@@ -224,7 +226,7 @@ def package_search(context, data_dict):
     abort = data_dict.get('abort_search', False)
 
     if data_dict.get('sort') in (None, 'rank'):
-        data_dict['sort'] = 'score desc, metadata_modified desc'
+        data_dict['sort'] = 'score desc, ' + DEFAULT_SORTING
 
     results = []
     if not abort:
