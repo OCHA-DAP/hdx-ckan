@@ -4,7 +4,8 @@ from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.data_completness as data_completness
-from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
+    HDXRedisInvalidationStrategy
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +15,9 @@ dogpile_config = {
 dogpile_config.update(dogpile_standard_config)
 
 dogpile_country_region = make_region(key_mangler=lambda key: 'country-' + key)
+invalidation_strategy = HDXRedisInvalidationStrategy(dogpile_country_region)
 dogpile_country_region.configure_from_config(dogpile_config, dogpile_config_filter)
+dogpile_country_region.region_invalidator =  invalidation_strategy
 
 
 @dogpile_country_region.cache_on_arguments()
