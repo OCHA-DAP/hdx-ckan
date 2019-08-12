@@ -1748,6 +1748,9 @@ label.terms-of-service:after {
 nav.new-header.mobile-only .navbar-collapse .nav li a:hover {
   background-color: inherit;
 }
+body .hdx-footer {
+  margin-top: 20px;
+}
 @media (max-width: 320px) {
   body .hdx-footer .social-footer .service .service-details .license-group .license {
     width: 100%;
