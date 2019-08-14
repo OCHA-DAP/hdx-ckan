@@ -1,0 +1,39 @@
+{% set notifications = h.hdx_get_user_notifications() %}
+
+<li class="hdx-notification-wrapper">
+    <div class="dropdown" style="position: relative;">
+        <a class="icon-bell dropdown-toggle" href="javascript:void(0)"
+           data-toggle="dropdown" aria-label="Notifications {{ notifications|length }}">
+{#           data-module="hdx_visibility_toggler" data-module-target_element_id="hdx-notification-panel">#}
+            <span class="badge">{{ notifications|length }}</span>
+        </a>
+        <div class="panel panel-default dropdown-menu dropdown-menu-right" id="hdx-notification-panel">
+            <div class="panel-heading">
+                <button type="button" class="close" data-dismiss="panel" aria-label="Close">
+                    <i aria-hidden="true" class="glyphicon glyphicon-remove"
+{#                   data-module="hdx_visibility_toggler" data-module-target_element_id="hdx-notification-panel" #}
+                   style="color: #0c0c0c"></i>
+                </button>
+                <span class="notification-dot"></span>
+                Notifications [{{ notifications|length }}]
+                {% if notifications|length > 0 and notifications[0].is_sysadmin %}
+                <div class="btn-group btn-group-sm" role="group" aria-label="Large button group" style="padding: 0px 15px;"
+                    data-module="hdx_visibility_toggler" data-module-target_element_selector=".list-group-item.for-sysadmin"
+                    data-module-all_button_selector=".no-filter-button" data-module-filter_button_selector=".filter-button">
+                    <button type="button" class="btn btn-primary no-filter-button">All</button>
+                    <button type="button" class="btn btn-default filter-button">Personal</button>
+                </div>
+                {% endif %}
+            </div>
+
+            <ul class="list-group">
+                {% for notification in notifications %}
+                    <li class="list-group-item {{ 'for-sysadmin' if notification.for_sysadmin else '' }}">
+                        {% snippet notification.html_template, notification=notification %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+</li>

@@ -121,9 +121,12 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config, 'templates')
 
     def get_helpers(self):
-        return {'get_user_extra': h_user_extra.get_user_extra,
-                'get_login': h_user_extra.get_login,
-                'find_first_global_settings_url': hdx_h.find_first_global_settings_url}
+        return {
+            'get_user_extra': h_user_extra.get_user_extra,
+            'get_login': h_user_extra.get_login,
+            'find_first_global_settings_url': hdx_h.find_first_global_settings_url,
+            'hdx_get_user_notifications': hdx_h.hdx_get_user_notifications
+        }
 
     def is_fallback(self):
         return False

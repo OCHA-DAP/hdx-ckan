@@ -430,6 +430,10 @@ body nav.new-header.mobile-only .navbar-collapse .nav > li.login a:last-child {
   body.home nav.mobile-only .global-header .container .separated-list a.action .action-text {
     display: none;
   }
+  body.home nav.mobile-only .global-header .container .separated-list svg[class^='icon-o-'],
+  body.home nav.mobile-only .global-header .container .separated-list .glyphicon {
+    margin-right: 0;
+  }
   body.home nav.mobile-only .global-header .container .ocha-services-menu .section-spacing {
     margin-bottom: 20px;
   }

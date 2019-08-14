@@ -121,6 +121,7 @@
                     </a>
                   </li>
                   {% if c.userobj %}
+                      {% snippet 'light/notifications/notification_snippet.html' %}
                     <li>
                       <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
                       <span class="dropdown">

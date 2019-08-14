@@ -130,11 +130,12 @@ def _member_list_dictize(obj_list, context, sort_key=lambda x: x['group_id'], re
     """ Helper to convert member list to dictionary """
     result_list = []
     for obj in obj_list:
-        member_dict = model_dictize.member_dictize(obj, context)
-        member_dict['group_name'] = obj.group.name
-        user = model.Session.query(model.User).get(obj.table_id)
-        member_dict['user_name'] = user.name
-        result_list.append(member_dict)
+        if obj.group:
+            member_dict = model_dictize.member_dictize(obj, context)
+            member_dict['group_name'] = obj.group.name
+            user = model.Session.query(model.User).get(obj.table_id)
+            member_dict['user_name'] = user.name
+            result_list.append(member_dict)
     return sorted(result_list, key=sort_key, reverse=reverse)
 
 
