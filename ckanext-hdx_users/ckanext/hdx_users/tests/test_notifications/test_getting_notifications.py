@@ -1,3 +1,6 @@
+import mock
+import dateutil.parser as date_parser
+
 import ckan.tests.factories as factories
 import ckan.plugins.toolkit as tk
 import ckan.authz as authz
@@ -9,6 +12,8 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 from ckanext.hdx_users.helpers.notification_service import MembershipRequestsService,\
     RequestDataService, SysadminRequestDataService
 from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, RequestDataDao
+
+from ckanext.hdx_users.helpers.helpers import hdx_get_user_notifications
 
 get_action = tk.get_action
 
@@ -82,6 +87,80 @@ class TestGettingNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTes
         assert request_list_for_sysadmin[0].get('count') == 1
 
         self._delete_request_data_request(pkg_dict['id'])
+
+    @mock.patch('ckanext.hdx_users.helpers.notification_service.MembershipRequestsService')
+    @mock.patch('ckanext.hdx_users.helpers.notification_service.RequestDataService')
+    @mock.patch('ckanext.hdx_users.helpers.notification_service.g')
+    def test_get_user_notifications_helper(self, mock_g, MockRequestDataService, MockMembershipRequestService):
+        dates = [
+            {'datestr': '2019-08-01T08:35:01'},
+            {'datestr': '2019-08-04T08:35:01'},
+            {'datestr': '2019-08-03T08:35:01'},
+            {'datestr': '2019-08-02T08:35:01'},
+        ]
+        for date in dates:
+            date['date'] = date_parser.parse(date['datestr'])
+            date['formatted_date'] = date['date'].strftime('%b %-d, %Y')
+
+        sorted_dates = sorted(dates, key=lambda d: d['date'], reverse=True)
+
+        mock_g.user = self.ADMIN_USER
+        MockMembershipRequestService.return_value.get_org_membership_requests.return_value = [
+            {
+                'org_title': 'Org 1',
+                'org_name': 'org1',
+                'org_hdx_url': '',
+                'html_template': 'light/notifications/org_membership_snippet.html',
+                'last_date': dates[0]['date'],
+                'count': 1,
+                'for_sysadmin': False,
+                'is_sysadmin': False
+            },
+            {
+                'org_title': 'Org 2',
+                'org_name': 'org2',
+                'org_hdx_url': '',
+                'html_template': 'light/notifications/org_membership_snippet.html',
+                'last_date': dates[1]['date'],
+                'count': 1,
+                'for_sysadmin': False,
+                'is_sysadmin': False
+            }
+        ]
+
+        MockRequestDataService.return_value.get_requestdata_requests.return_value = [
+            {
+                'last_date': dates[2]['date'],
+                'count': 1,
+                'html_template': 'light/notifications/requestdata_snippet.html',
+                'my_requests_url': '',
+                'for_sysadmin': False,
+                'is_sysadmin': False
+            },
+            {
+                'last_date': dates[3]['date'],
+                'count': 1,
+                'html_template': 'light/notifications/requestdata_snippet.html',
+                'my_requests_url': '',
+                'for_sysadmin': False,
+                'is_sysadmin': False
+            }
+        ]
+        result = hdx_get_user_notifications()
+
+        assert len(result) == 4
+        assert result[0]['last_date'] == sorted_dates[0]['formatted_date']
+        assert 'org_hdx_url' in result[0], 'The notification should be of type membership request'
+
+        assert result[1]['last_date'] == sorted_dates[1]['formatted_date']
+        assert 'my_requests_url' in result[1], 'The notification should be of type requestdata'
+
+        assert result[2]['last_date'] == sorted_dates[2]['formatted_date']
+        assert 'my_requests_url' in result[2], 'The notification should be of type requestdata'
+
+        assert result[3]['last_date'] == sorted_dates[3]['formatted_date']
+        assert 'org_hdx_url' in result[3], 'The notification should be of type membership request'
+
 
     @staticmethod
     def get_membership_request_service(username):
