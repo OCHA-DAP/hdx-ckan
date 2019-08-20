@@ -1,5 +1,5 @@
 {% set notifications = h.hdx_get_user_notifications() %}
-
+{% if notifications %}
 <li class="hdx-notification-wrapper">
     <div class="dropdown" style="position: relative;">
         <a class="icon-bell dropdown-toggle" href="javascript:void(0)"
@@ -37,3 +37,4 @@
 
     </div>
 </li>
+{% endif %}
