@@ -15,9 +15,10 @@ dogpile_config = {
 dogpile_config.update(dogpile_standard_config)
 
 dogpile_country_region = make_region(key_mangler=lambda key: 'country-' + key)
-invalidation_strategy = HDXRedisInvalidationStrategy(dogpile_country_region)
 dogpile_country_region.configure_from_config(dogpile_config, dogpile_config_filter)
-dogpile_country_region.region_invalidator =  invalidation_strategy
+
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_country_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_country_region)
 
 
 @dogpile_country_region.cache_on_arguments()

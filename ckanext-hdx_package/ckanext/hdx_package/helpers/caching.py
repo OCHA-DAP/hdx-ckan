@@ -23,9 +23,10 @@ dogpile_org_group_config = {
 dogpile_org_group_config.update(dogpile_standard_config)
 
 dogpile_org_group_lists_region = make_region(key_mangler=lambda key: 'org_group-' + key)
-invalidation_strategy = HDXRedisInvalidationStrategy(dogpile_org_group_lists_region)
 dogpile_org_group_lists_region.configure_from_config(dogpile_org_group_config, dogpile_config_filter)
-dogpile_org_group_lists_region.region_invalidator = invalidation_strategy
+
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_org_group_lists_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_org_group_lists_region)
 
 # API HIGHWAYS cache config
 dogpile_external_config = {
@@ -34,7 +35,9 @@ dogpile_external_config = {
 dogpile_external_config.update(dogpile_standard_config)
 dogpile_pkg_external_region = make_region(key_mangler=lambda key: 'pkg_external-' + key)
 dogpile_pkg_external_region.configure_from_config(dogpile_external_config, dogpile_config_filter)
-dogpile_pkg_external_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_pkg_external_region)
+
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_pkg_external_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_pkg_external_region)
 
 
 def strip_accents(s):

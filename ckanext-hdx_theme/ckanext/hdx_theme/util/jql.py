@@ -19,9 +19,9 @@ dogpile_config = {
 dogpile_config.update(dogpile_standard_config)
 
 dogpile_jql_region = make_region(key_mangler=lambda key: 'jql-' + key)
-invalidation_strategy = HDXRedisInvalidationStrategy(dogpile_jql_region)
 dogpile_jql_region.configure_from_config(dogpile_config, dogpile_config_filter)
-dogpile_jql_region.region_invalidator =  invalidation_strategy
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_jql_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_jql_region)
 
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 

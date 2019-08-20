@@ -123,9 +123,9 @@ class HDXRedisInvalidationStrategy(RegionInvalidationStrategy):
 
         return False
 
-invalidation_strategy = HDXRedisInvalidationStrategy(dogpile_requests_region)
-dogpile_requests_region.region_invalidator =  invalidation_strategy
 
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_requests_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_requests_region)
 
 
 @dogpile_requests_region.cache_on_arguments()
