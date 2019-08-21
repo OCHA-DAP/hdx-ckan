@@ -83,6 +83,7 @@ hdx.gis.layer_import_url = http://gislayer:5000/api/add-layer/dataset/{dataset_i
 # at Alex suggestion, i made this proto unaware
 hdx.gis.resource_pbf_url = //${HDX_PREFIX}data.${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resource_id}/wkb_geometry/{z}/{x}/{y}.pbf
 
+hdx.analytics.hotjar.site_id = ${HDX_HOTJAR_SITEID}
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
 hdx.analytics.mixpanel.secret = ${HDX_MIXPANEL_SECRET}
 hdx.analytics.enqueue_url    = http://gislayer:5000/api/send-analytics
