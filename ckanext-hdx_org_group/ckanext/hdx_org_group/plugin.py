@@ -1,20 +1,18 @@
 import logging
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as tk
-import ckan.lib.plugins as lib_plugins
 
+import ckanext.hdx_org_group.actions.authorize as authorize
 import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.update as update_actions
-import ckanext.hdx_org_group.actions.authorize as authorize
-import ckanext.hdx_org_group.model as org_group_model
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
-
+import ckanext.hdx_org_group.model as org_group_model
 import ckanext.hdx_package.helpers.screenshot as screenshot
-
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
-
 from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
+
+import ckan.lib.plugins as lib_plugins
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
 
@@ -108,6 +106,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
             'fts_id': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'custom_org': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'request_membership': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'less': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'visualization_config': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -147,6 +146,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'request_membership': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
