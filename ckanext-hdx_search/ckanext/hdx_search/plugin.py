@@ -4,6 +4,7 @@ import ckan.logic
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 from ckan.common import _
+from ckan.lib.helpers import DEFAULT_FACET_NAMES
 
 import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
@@ -148,7 +149,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
     def dataset_facets(self, facets_dict, package_type):
 
-        tagged_facets = ['groups', 'res_format', 'organization', 'tags', 'license_id']
+        tagged_facets = tk.config.get(u'search.facets', DEFAULT_FACET_NAMES).split()
 
         # adding exclusion directive for tagged facets
         for f in tagged_facets:

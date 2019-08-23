@@ -56,7 +56,8 @@ def get_default_facet_titles():
     return {
         'organization': _('Organizations'),
         'groups': _('Groups'),
-        'tags': _('Tags'),
+        # 'tags': _('Tags'),
+        'vocab_Topics': _('Tags'),
         'res_format': _('Formats'),
         'license_id': _('Licenses'),
     }
