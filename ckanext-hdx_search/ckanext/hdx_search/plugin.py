@@ -68,10 +68,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             except:
                 search_params['sort'] = parts[0]+' desc'
 
-        #search_params['q'] = convert_country(search_params['q'])
-        if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
-            search_params['facet.field'].append('vocab_Topics')
-
         def adapt_solr_fq(param_name, fq_filter_1=None, fq_filter_0=None):
             '''
             :param param_name: request param name without the "ext_" part, for example "indicator"
