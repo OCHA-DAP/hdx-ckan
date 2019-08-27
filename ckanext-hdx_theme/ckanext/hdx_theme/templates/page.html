@@ -52,9 +52,9 @@
     {% endif %}
     {{ h.snippet('widget/onboarding/survey.html', id="surveyPopup") }}
 
-    {% block header_core %}
-      {% snippet "header.html", page_has_mobile_version=False %}
-      {% snippet "header-mobile.html" %}
+    {% block header_core scoped %}
+      {% snippet "header.html", page_has_mobile_version=False, step=step %}
+      {% snippet "header-mobile.html", step=step %}
     {%  endblock %}
   {% endblock -%}
 
