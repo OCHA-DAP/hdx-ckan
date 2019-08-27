@@ -1,4 +1,4 @@
-/* This is based on the autocomplete js module from core ckan. It was just modified 
+/* This is based on the autocomplete js module from core ckan. It was just modified
  * to not show the search term as possible result
  *
  * source   - A url pointing to an API autocomplete endpoint.
@@ -39,7 +39,8 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
       nonEmailSelectionClass: null,
       includeTokenizer: false,
       emailSelectionClass: null,
-      extraParams: null
+      extraParams: null,
+      multiple: null,
     },
 
     /* Sets up the module, binding methods, creating elements etc. Called
@@ -64,6 +65,7 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
         formatInputTooShort: this.formatInputTooShort,
         dropdownCssClass: this.options.dropdownClass,
         containerCssClass: this.options.containerClass,
+        multiple: this.options.multiple,
       };
 
       if (this.options.placeholder) {
