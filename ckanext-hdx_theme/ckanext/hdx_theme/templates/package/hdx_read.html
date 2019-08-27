@@ -20,7 +20,7 @@
 {% block analytics_dataset_availability %}{{ c.analytics_dataset_availability }}{% endblock %}
 
 {% block header_core %}
-    {% snippet "header.html", page_has_mobile_version=True %}
+    {% snippet "header.html", page_has_mobile_version=True, step=step %}
     {% snippet "header-mobile.html" %}
   {%  endblock %}
 
