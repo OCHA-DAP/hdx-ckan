@@ -65,8 +65,11 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
         formatInputTooShort: this.formatInputTooShort,
         dropdownCssClass: this.options.dropdownClass,
         containerCssClass: this.options.containerClass,
-        multiple: this.options.multiple,
       };
+
+      if (this.options.multiple) {
+        settings.multiple = this.options.multiple;
+      }
 
       if (this.options.placeholder) {
         settings.placeholder = this.options.placeholder;
@@ -302,7 +305,7 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
       var value = jQuery.trim(element.val() || '');
       var formatted;
 
-      if (this.options.tags) {
+      if (this.options.tags || this.options.multiple === 'multiple') {
         formatted = jQuery.map(value.split(","), this.formatTerm);
       } else {
         formatted = this.formatTerm(value);

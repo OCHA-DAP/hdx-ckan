@@ -29,7 +29,15 @@
       {% endblock %}
 
       {% block package_basic_fields_tags %}
-        {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?', 'class': 'form-control'} %}
+        {% set tag_attrs = {
+                'data-module': 'hdx_autocomplete',
+                'data-module-tags': 'false',
+                'data-module-multiple': 'multiple',
+                'data-module-include-tokenizer': 'true',
+                'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?',
+                'class': 'form-control'
+            }
+        %}
         {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
       {% endblock %}
 
@@ -69,3 +77,5 @@
     </div>
   {% endblock %}
 </form>
+
+{% resource 'hdx_theme/hdx_autocomplete.js' %}
