@@ -2,11 +2,14 @@ import ckan.lib.helpers as h
 import ckan.authz as authz
 import ckan.model as model
 
+from ckan.logic import NotFound
 from ckan.common import g
 from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, RequestDataDao
 
 
 def get_notification_service():
+    if not g.user:
+        raise NotFound('Seems like user is not logged in so no notification service can be created')
     userobj = model.User.get(g.user)
     is_sysadmin = authz.is_sysadmin(g.user)
     membership_request_dao = MembershipRequestsDao(model, userobj, is_sysadmin)
