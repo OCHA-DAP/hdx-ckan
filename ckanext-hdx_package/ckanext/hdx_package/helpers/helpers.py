@@ -475,3 +475,20 @@ def hdx_check_add_data():
 
 def hdx_get_last_modification_date(dataset_dict):
     return FreshnessCalculator.dataset_last_change_date(dataset_dict)
+
+
+def get_extra_from_dataset(field_name, dataset_dict):
+    ALLOWED_EXTRAS = {'review_date', 'data_update_frequency', 'is_requestdata_type'}
+    result = None
+    if field_name in dataset_dict:
+        result = dataset_dict[field_name]
+
+    # When a dataset is indexed in solr the package dict returned by package_show
+    # leaves the extras fields unprocessed in an extras list so that they get indexed as extras_* fields in solr
+    elif 'extras' in dataset_dict and field_name in ALLOWED_EXTRAS:
+        result = next(
+            (extra.get('value') for extra in dataset_dict.get('extras')
+             if extra.get('state') == 'active' and extra.get('key') == field_name),
+            {})
+
+    return result
