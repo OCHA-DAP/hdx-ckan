@@ -1,0 +1,36 @@
+/* HDX Version display */
+.hdxLogo {
+  position: relative;
+}
+.hdxLogo .logo #hdxVersion {
+  color: #888888;
+  position: absolute;
+  font-size: 10px;
+  left: 99px;
+  bottom: 0;
+  display: none;
+  line-height: 10px;
+}
+.hdxLogo .logo .logo-img:hover ~ #hdxVersion {
+  display: block;
+}
+.hdxLogo .logo .logo-img {
+  background-image: url("/images/homepage/logo-hdx.svg");
+  background-repeat: no-repeat;
+  background-size: 126px 31px;
+  width: 126px;
+  height: 31px;
+  min-width: 126px;
+  min-height: 31px;
+}
+@media (max-width: 1024px) {
+  .hdxLogo {
+    width: 45px;
+  }
+  .hdxLogo .logo .logo-img {
+    background-image: url("/images/homepage/logo-hdx-mobile.svg");
+    background-size: 28px 31px;
+    width: 28px;
+  }
+}
+/* END HDX Version display */
