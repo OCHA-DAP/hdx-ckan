@@ -1,20 +1,5 @@
 @import "../base/variables";
 
-nav.new-header.mobile-only .navbar-collapse .nav {
-  li {
-    a:hover {
-      background-color: inherit;
-    }
-  }
-
-}
-
-body {
-  .hdx-footer {
-    margin-top: 20px;
-  }
-}
-
 @media (max-width: @cut-point-mobile-s) {
   body{
     .hdx-footer {
@@ -53,7 +38,7 @@ body {
   }
 }
 
-@media(max-width: 767px) {
+@media(max-width: @cut-point-tablet) {
   body {
     .hdx-footer {
       .mailChimpForm {
@@ -119,28 +104,16 @@ body {
 
     }
   }
-
-
+  .new-header{
+    .mainLinks {
+      display: none;
+    }
+  }
 }
 
 @media (max-width: 992px) {
   body {
-    .hdxLogo{
-      width: 45px;
-      .logo{
-        .logo-img{
-          background-image: url("@{imagePath}/homepage/logo-hdx-mobile.svg");
-          background-repeat: no-repeat;
-          background-size: 29px 35px;
-          height: 35px;
-          margin-left: 0;
-          margin-top: 5px;
-          min-width: 29px;
-          min-height: 35px;
-          width: 29px;
-        }
-      }
-    }
+
     .new-header{
       .submitData{
         padding: 10px;
@@ -148,18 +121,6 @@ body {
       .header-nav{
         span{
           margin-left: 0;
-          &.header-nav-search{
-            width: 25%;
-            .icon-search{
-              position: absolute;
-            }
-            .header-search-form{
-              input{
-                text-indent: 44px;
-                width: 100%;
-              }
-            }
-          }
         }
         .table-valign{
           margin-left: 0px !important;
@@ -202,6 +163,12 @@ body {
   }
 }
 
+@media (max-width: @cut-point-laptop-s) {
+  .new-header .hdx-header .navbar-header .submit-data .submitData {
+    display: none;
+  }
+}
+
 @media (max-width: @cut-point-laptop-m) {
   .new-header{
     .homepage-header-nav-border{
@@ -209,23 +176,11 @@ body {
         padding: 0;
       }
     }
-    .submitData{
-      padding: 10px 20px;
-    }
+    //.submitData{
+    //  padding: 10px 20px;
+    //}
   }
-  .header-nav-search{
-    width: 239px;
-    .header-search-form{
-      .icon-search{
-        margin: 0 10px;
-        position: absolute;
-      }
-      input{
-        text-indent: 44px;
-        width: 197px;
-      }
-    }
-  }
+
   .mainLinks{
     > li{
       > a:after{

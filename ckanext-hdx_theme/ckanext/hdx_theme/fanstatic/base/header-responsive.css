@@ -1,9 +1,3 @@
-nav.new-header.mobile-only .navbar-collapse .nav li a:hover {
-  background-color: inherit;
-}
-body .hdx-footer {
-  margin-top: 20px;
-}
 @media (max-width: 320px) {
   body .hdx-footer .social-footer .service .service-details .license-group .license {
     width: 100%;
@@ -22,7 +16,7 @@ body .hdx-footer {
     display: none;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   body .hdx-footer .mailChimpForm {
     margin-bottom: 10px;
   }
@@ -72,37 +66,16 @@ body .hdx-footer {
   body .hdx-footer .social-footer .service .service-details .license-group .license {
     text-align: center;
   }
+  .new-header .mainLinks {
+    display: none;
+  }
 }
 @media (max-width: 992px) {
-  body .hdxLogo {
-    width: 45px;
-  }
-  body .hdxLogo .logo .logo-img {
-    background-image: url("/images/homepage/logo-hdx-mobile.svg");
-    background-repeat: no-repeat;
-    background-size: 29px 35px;
-    height: 35px;
-    margin-left: 0;
-    margin-top: 5px;
-    min-width: 29px;
-    min-height: 35px;
-    width: 29px;
-  }
   body .new-header .submitData {
     padding: 10px;
   }
   body .new-header .header-nav span {
     margin-left: 0;
-  }
-  body .new-header .header-nav span.header-nav-search {
-    width: 25%;
-  }
-  body .new-header .header-nav span.header-nav-search .icon-search {
-    position: absolute;
-  }
-  body .new-header .header-nav span.header-nav-search .header-search-form input {
-    text-indent: 44px;
-    width: 100%;
   }
   body .new-header .header-nav .table-valign {
     margin-left: 0px !important;
@@ -130,23 +103,14 @@ body .hdx-footer {
     margin-top: 10px;
   }
 }
+@media (max-width: 1024px) {
+  .new-header .hdx-header .navbar-header .submit-data .submitData {
+    display: none;
+  }
+}
 @media (max-width: 1200px) {
   .new-header .homepage-header-nav-border > .container {
     padding: 0;
-  }
-  .new-header .submitData {
-    padding: 10px 20px;
-  }
-  .header-nav-search {
-    width: 239px;
-  }
-  .header-nav-search .header-search-form .icon-search {
-    margin: 0 10px;
-    position: absolute;
-  }
-  .header-nav-search .header-search-form input {
-    text-indent: 44px;
-    width: 197px;
   }
   .mainLinks > li > a:after {
     margin-left: 10px;
