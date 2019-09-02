@@ -1985,9 +1985,6 @@ label {
   cursor: pointer;
   font-size: 14px;
 }
-label:after {
-  content: ":";
-}
 label.radio:after,
 label.checkbox:after {
   content: "";
