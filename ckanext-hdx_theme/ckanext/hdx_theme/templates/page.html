@@ -52,11 +52,11 @@
     {% endif %}
     {{ h.snippet('widget/onboarding/survey.html', id="surveyPopup") }}
 
-    {% block header_core %}
+    {% block header_core scoped %}
       {# Override this block as in the homepage section to get the fullwidth header #}
       <div class="container">
         <div class="paddingRowHack">
-          {% snippet "header-mobile.html", page_has_desktop_version=(page_has_desktop_version or False) %}
+          {% snippet "header-mobile.html", page_has_desktop_version=(page_has_desktop_version or False), step=step %}
         </div>
       </div>
     {%  endblock %}
