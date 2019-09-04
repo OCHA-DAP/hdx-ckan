@@ -1905,9 +1905,6 @@ label {
   cursor: pointer;
   font-size: 14px;
 }
-label:after {
-  content: ":";
-}
 label.radio:after,
 label.checkbox:after {
   content: "";
@@ -2964,6 +2961,10 @@ ul.list-horizontal li:first-child:before {
 }
 .new-header .global-header .global-header-content .header-user-box .hdx-notification-wrapper .panel .list-group .list-group-item.for-sysadmin {
   background-color: lightyellow;
+}
+.new-header .global-header .global-header-content .header-user-box .hdx-notification-wrapper .panel .list-group .list-group-item.fake-item {
+  background-color: #fff;
+  text-align: center;
 }
 .new-header .global-header .global-header-content .header-user-box .hdx-notification-wrapper .panel .list-group .list-group-item .date {
   color: #888888;

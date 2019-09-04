@@ -62,7 +62,6 @@ RUN apt-get -qq -y update && \
         pip \
         setuptools==36.1 && \
     mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
-    cp -a docker/prod.ini.tpl /etc/ckan && \
     cp -a docker/run_ckan /etc/services.d/ckan/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
     curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-infra-tools/master/hdxckantool.py && \
@@ -73,7 +72,18 @@ RUN apt-get -qq -y update && \
     pip install -r requirements.txt && \
     pip install newrelic && \
     hdxckantool plugins dev && \
+    # curl https://codeload.github.com/okfn/ckanext-s3filestore/tar.gz/v0.1.1 -o s3f.tgz && \
+    # tar xvzf s3f.tgz && \
+    # rm -f s3f.tgz && \
+    # cd ckanext-s3filestore-0.1.1 && \
+    # python setup.py develop && \
+    pip -q install --upgrade -r requirements.txt && \
+    cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
+    pip install git+git://github.com/okfn/ckanext-s3filestore.git@33d4b60ba86c4524c394575cff4e90dfe1418081 && \
+    pip install \
+        boto3 \
+        ckantoolkit && \
     chown -R www-data ckan/public/base/i18n && \
     apt-get -qq -y remove \
         build-essential \

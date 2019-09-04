@@ -25,7 +25,8 @@ Example:
             Data can be shared publicly or privately with members of an organisation.
         </div>
         <div class="mTop20 star-text star-box">
-            *Approved organisations will remain inactive until at least one dataset has been shared through HDX.
+          <span id="onboard-org-join-text">*Please note that you need to work for the organisation to request membership.</span>
+          <span id="onboard-org-request-new-text" style="display: none;">*Approved organisations will remain inactive and not displayed under "Organisations" until at least one dataset has been shared through HDX.</span>
         </div>
     </div>
 {% endblock %}
@@ -39,21 +40,32 @@ Example:
             <select class="mTop20" id="existing-org-selector" name="org_id">
                 <option id="">{{_('Select an organisation...')}}</option>
             </select>
+            <div class="control">
+                <label class="mTop10 vertically-center" data-module="hdx_terms_checkbox" data-module-button="join-org-action">
+                    <input type="checkbox">
+                    <span class="red">*</span>I confirm that I work for this organization.
+                </label>
+            </div>
 
-            <div class="regular-text mTop20">Don't see your organisation? <a href="#" onclick="$('#select-organisation').hide();$('#create-organisation').show();">Request a new organisation</a></div>
+            <div class="regular-text mTop20">Don't see your organisation? <a href="#" onclick="$('#select-organisation, #onboard-org-join-text').hide();$('#create-organisation, #onboard-org-request-new-text').show();">Request a new organisation</a></div>
             <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.</div>
             <div class="regular-text mTop20">If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
 
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+                <input id="join-org-action" class="btn btn-primary btn-large mL45" type="submit" value="Submit">
             </div>
         </form>
     </div>
 
     <div id="create-organisation" style="display: none;">
         <div class="bold-regular-text">Create a new organisation: </div>
-        <div class="regular-text">Please tell us more about your organisation. We will review your request and get back to you within 24 hours to discuss the data you would like to share. Please confirm that your organisation does not already exist by checking the current organisation list <a href="#" onclick="$('#create-organisation').hide();$('#select-organisation').show();">here</a>.</div>
+        <div class="regular-text">
+          Please tell us more about your organisation. We will review your request and get back to you within 24 hours
+          to discuss the data you would like to share. Please confirm that your organisation does not already exist by
+          checking the current organisation list
+          <a href="#" onclick="$('#create-organisation, #onboard-org-request-new-text').hide();$('#select-organisation, #onboard-org-join-text').show();">here</a>.
+        </div>
         <form id="create-organisation-form">
             <div class="mTop20 control">
                 <input id="org-name" name="name" class="full-width required" type="text">
