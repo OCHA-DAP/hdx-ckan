@@ -179,6 +179,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     def get_helpers(self):
         from ckanext.hdx_theme.helpers import helpers as hdx_helpers
+        from ckanext.hdx_theme.helpers.constants import const
         return {
             'is_downloadable': hdx_helpers.is_downloadable,
             'is_not_zipped': hdx_helpers.is_not_zipped,
@@ -238,7 +239,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_is_sysadmin': hdx_helpers.hdx_is_sysadmin,
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
             'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
-            'hdx_switch_url_path': hdx_helpers.switch_url_path
+            'hdx_switch_url_path': hdx_helpers.switch_url_path,
+            'HDX_CONST': const
         }
 
     def get_actions(self):

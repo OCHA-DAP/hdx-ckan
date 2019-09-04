@@ -103,6 +103,9 @@
 .dataset-light .resource-list {
   margin: 0;
   padding: 10px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-gap: 1rem;
 }
 .dataset-light .resource-list .resource-item {
   background-color: #fff;
@@ -112,6 +115,15 @@
 }
 .dataset-light .resource-list .resource-item:last-child {
   margin-bottom: 0;
+}
+.dataset-light .resource-list .resource-item .animation-wrapper {
+  padding: 0;
+  max-height: 500px;
+  transition: max-height 1s;
+  overflow: hidden;
+}
+.dataset-light .resource-list .resource-item .animation-wrapper.closed {
+  max-height: 0;
 }
 .dataset-light .resource-list .resource-item .resource-item-title {
   padding: 10px;
@@ -153,7 +165,7 @@
 .dataset-light .tab-content {
   background-color: #fafafa;
   margin: 0 -15px;
-  padding: 5px 15px;
+  padding: 5px 15px 15px 15px;
 }
 .dataset-light .tab-content .tab-pane-background {
   margin: 10px 0;

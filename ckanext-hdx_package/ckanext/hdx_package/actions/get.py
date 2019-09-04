@@ -29,8 +29,9 @@ import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
-from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
+from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 
 import ckanext.hdx_package.helpers.caching as pkg_caching
 from pylons import config
@@ -68,6 +69,7 @@ def package_search(context, data_dict):
 
     THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN
     IT'S CHANGED TO RETURN MORE DATA FROM THE SOLR QUERY (collapse/expand)
+    ALSO CHANGED DEFAULT SORTING
 
     Searches for packages satisfying a given search criteria.
 
@@ -224,7 +226,7 @@ def package_search(context, data_dict):
     abort = data_dict.get('abort_search', False)
 
     if data_dict.get('sort') in (None, 'rank'):
-        data_dict['sort'] = 'score desc, metadata_modified desc'
+        data_dict['sort'] = 'score desc, ' + DEFAULT_SORTING
 
     results = []
     if not abort:
@@ -456,12 +458,15 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 package_dict['num_of_showcases'] = num_of_showcases
 
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
-            package_dict['last_modified'] = None
-            all_dates = [dateutil.parser.parse(r.get('last_modified'))
-                         for r in package_dict.get('resources', [])
-                         if r.get('last_modified')]
-            if all_dates:
-                package_dict['last_modified'] = max(all_dates).isoformat()
+            if helpers.get_extra_from_dataset('is_requestdata_type', package_dict):
+                package_dict['last_modified'] = package_dict.get('metadata_modified')
+            else:
+                package_dict['last_modified'] = None
+                all_dates = [dateutil.parser.parse(r.get('last_modified'))
+                             for r in package_dict.get('resources', [])
+                             if r.get('last_modified')]
+                if all_dates:
+                    package_dict['last_modified'] = max(all_dates).isoformat()
 
         if not just_for_reindexing:
             member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})

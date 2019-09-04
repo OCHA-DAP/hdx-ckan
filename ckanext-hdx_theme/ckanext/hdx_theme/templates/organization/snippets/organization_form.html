@@ -87,11 +87,22 @@
 
 {% set custom_org_checked = 'checked="checked"' if custom_org else '' %}
 <div id="customization-trigger" class="org-control-container">
-      <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom organisation page") }}</label>
-     <div class="controls" style="display:inline-block">
-        <input type="checkbox" {{ custom_org_checked }} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
-        </div>
-    </div>
+  <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom organisation page") }}</label>
+  <div class="controls" style="display:inline-block">
+    <input type="checkbox" {{ custom_org_checked }} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+  </div>
+</div>
+
+
+{% set request_membership = h.hdx_get_extras_element(data, value_key="request_membership") or "true" %}
+{% set request_membership_checked = 'checked="checked"' if request_membership=='true' else '' %}
+<div id="request-membership-trigger" class="org-control-container">
+  <label class="control-label" for="field-request_membership" style="display: inline-block;">{{ _('Display "Request Membership" option on organization page') }}</label>
+  <div class="controls" style="display:inline-block">
+    <input type="hidden" name="request_membership" id="hidden-field-request_membership" value="{{ request_membership }}" />
+    <input type="checkbox" {{ request_membership_checked }} id="field-request_membership" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+  </div>
+</div>
 
 
 <div id="customization-fields" class="{% if not custom_org %}element-invisible{% endif %}">
@@ -114,7 +125,7 @@
 {% endif %}
 
 <div class="image-upload-wrapper-sq">
-<div class="image-upload-wrapper">    
+<div class="image-upload-wrapper">
     {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', field_clear='clear_image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 75x75'), upload_label=_('Logo 75x75')) }}
   </div>
 <div class="image-upload-preview"><img src="{{ image_preview }}" style="width: 75px !important; height:75px !important;"></div>

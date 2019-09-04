@@ -1,0 +1,46 @@
+{% set notifications_dict = h.hdx_get_user_notifications() %}
+{% if notifications_dict.count > 0 %}
+<li class="hdx-notification-wrapper">
+    <div class="dropdown" style="position: relative;">
+        <a class="icon-bell dropdown-toggle" href="javascript:void(0)"
+           data-toggle="dropdown" aria-label="Notifications {{ notifications_dict.count }}">
+{#           data-module="hdx_visibility_toggler" data-module-target_element_id="hdx-notification-panel">#}
+            <span class="badge">{{ notifications_dict.count }}</span>
+        </a>
+        <div class="panel panel-default dropdown-menu dropdown-menu-right" id="hdx-notification-panel">
+            <div class="panel-heading">
+                <button type="button" class="close" data-dismiss="panel" aria-label="Close">
+                    <i aria-hidden="true" class="glyphicon glyphicon-remove"
+{#                   data-module="hdx_visibility_toggler" data-module-target_element_id="hdx-notification-panel" #}
+                   style="color: #0c0c0c"></i>
+                </button>
+                <span class="notification-dot"></span>
+                Notifications [{{ notifications_dict.count }}]
+                {% if notifications_dict.is_sysadmin %}
+                <div class="btn-group btn-group-sm" role="group" aria-label="Large button group" style="padding: 0px 15px;"
+                    data-module="hdx_visibility_toggler"
+                    data-module-elements_to_hide_selector=".list-group-item.for-sysadmin"
+                    data-module-elements_to_show_selector=".list-group-item.fake-item"
+                    data-module-all_button_selector=".no-filter-button" data-module-filter_button_selector=".filter-button">
+                    <button type="button" class="btn btn-primary no-filter-button">All</button>
+                    <button type="button" class="btn btn-default filter-button">Personal</button>
+                </div>
+                {% endif %}
+            </div>
+            <ul class="list-group">
+                {% for notification in notifications_dict.list %}
+                    <li class="list-group-item {{ 'for-sysadmin' if notification.for_sysadmin else '' }}">
+                        {% snippet notification.html_template, notification=notification %}
+                    </li>
+                {% endfor %}
+                {% if not notifications_dict.any_personal_notifications %}
+                    <li class="list-group-item fake-item" style="display: none">
+                        There is no personal notification
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</li>
+{% endif %}

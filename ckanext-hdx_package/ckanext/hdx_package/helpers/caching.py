@@ -12,7 +12,8 @@ from pylons import config
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
-from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
+    HDXRedisInvalidationStrategy
 
 log = logging.getLogger(__name__)
 
@@ -24,6 +25,9 @@ dogpile_org_group_config.update(dogpile_standard_config)
 dogpile_org_group_lists_region = make_region(key_mangler=lambda key: 'org_group-' + key)
 dogpile_org_group_lists_region.configure_from_config(dogpile_org_group_config, dogpile_config_filter)
 
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_org_group_lists_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_org_group_lists_region)
+
 # API HIGHWAYS cache config
 dogpile_external_config = {
     'cache.redis.expiration_time': 60 * 60 * 24 * 3,
@@ -31,6 +35,9 @@ dogpile_external_config = {
 dogpile_external_config.update(dogpile_standard_config)
 dogpile_pkg_external_region = make_region(key_mangler=lambda key: 'pkg_external-' + key)
 dogpile_pkg_external_region.configure_from_config(dogpile_external_config, dogpile_config_filter)
+
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_pkg_external_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_pkg_external_region)
 
 
 def strip_accents(s):

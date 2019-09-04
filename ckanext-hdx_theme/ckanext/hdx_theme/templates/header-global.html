@@ -121,21 +121,14 @@
                     </a>
                   </li>
                   {% if c.userobj %}
+                      {% snippet 'light/notifications/notification_snippet.html' %}
                     <li>
-                      <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
-                      <span class="dropdown">
-                          {% block header_request_data_notification %}
-                            {% set notification_seen = h.requestdata_get_notification() %}
-                            {% if not notification_seen %}
-                              <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}" title="{{ _('New data request') }}">
-                                <div class="request-data-notification"></div>
-                              </a>
-                            {% endif %}
-                          {% endblock %}
+                      <div class="dropdown">
                           <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
-                            <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
+                            <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
+                            <div class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</div>
                           </a>
-                          <ul class="dropdown-menu" role="menu">
+                          <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             {% block header_account_logged %}
                             {% set def_url = h.find_first_global_settings_url() %}
                             {% if def_url %}
@@ -184,7 +177,7 @@
                             {% endblock %}
                             {% endblock %}
                           </ul>
-                        </span>
+                        </div>
                     </li>
                     <li class="logout-action">
                       <a class="action" href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">

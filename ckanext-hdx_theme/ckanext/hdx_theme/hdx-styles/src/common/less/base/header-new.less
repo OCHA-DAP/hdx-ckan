@@ -185,6 +185,77 @@
             }
           }
         }
+
+        .header-user-name {
+          display: inline-flex;
+          svg {
+            margin-top: 4px;
+          }
+          .username {
+            padding-top: 1px;
+          }
+        }
+
+        .hdx-notification-wrapper {
+          .dropdown {
+            margin-top: 3px;
+          }
+          .panel {
+
+            width: 400px;
+            color: @darkGrayColor;
+
+            .panel-heading{
+              background-color: @whiteColor;
+              text-transform: uppercase;
+              font-weight: bold;
+              .btn-primary:hover{
+                background-color: @blueColor;
+              }
+            }
+            .list-group{
+              max-height: 300px;
+              overflow: auto;
+              -webkit-overflow-scrolling: touch;
+              .list-group-item {
+                background-color: @extraLightBlueColor;
+                &.for-sysadmin {
+                  background-color: lightyellow;
+                }
+                &.fake-item {
+                  background-color: @whiteColor;
+                  text-align: center;
+                }
+                .date {
+                  color: @grayColor
+                }
+              }
+            }
+
+            .notification-dot {
+              width: 10px;
+              height: 10px;
+              background: red;
+              border-radius: 50%;
+              display: inline-block;
+              margin-right: 5px;
+            }
+
+            a {
+              color: @blueColor;
+            }
+          }
+          .badge {
+            //transform: translate(-13px, -6px);
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 13px;
+            position: absolute;
+            top: -6px;
+            left: 8px;
+            padding: 3px 6px;
+            background-color: red;
+          }
+        }
       }
 
     }
@@ -427,6 +498,21 @@ label.terms-of-service {
       .global-header-content {
         .header-user-box {
           .logout-action a > span {
+            display: none;
+          }
+
+          .hdx-notification-wrapper {
+            .panel {
+              position: fixed;
+              top: 20px;
+              left: 5px;
+              right: 5px;
+              //transform: translateX(-55%);
+              width: auto;
+              font-size: 16px;
+            }
+          }
+          .username {
             display: none;
           }
         }

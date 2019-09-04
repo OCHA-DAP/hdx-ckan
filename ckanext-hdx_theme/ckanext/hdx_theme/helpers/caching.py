@@ -1,7 +1,14 @@
 import logging
 import requests
+import time
+# import datetime
+# import dateutil.parser
 import pylons.config as config
+
 from dogpile.cache import make_region
+from dogpile.cache.region import RegionInvalidationStrategy, CacheRegion
+
+from redis import StrictRedis
 
 log = logging.getLogger(__name__)
 
@@ -24,8 +31,101 @@ dogpile_config = {
 dogpile_config.update(dogpile_standard_config)
 
 dogpile_requests_region = make_region(key_mangler=lambda key: 'requests-' + key)
-
 dogpile_requests_region.configure_from_config(dogpile_config, dogpile_config_filter)
+
+
+class HDXRedisInvalidationStrategy(RegionInvalidationStrategy):
+
+    def __init__(self, dogpile_region):
+        '''
+
+        :param dogpile_region:
+        :type dogpile_region: CacheRegion
+        '''
+        self.dogpile_region = dogpile_region
+
+    def invalidate(self, hard=None):
+        mangler, redis = self._find_backend_info()
+        # time = datetime.datetime.utcnow().isoformat()
+        current_time = time.time()
+        type = 'hard' if hard else 'soft'
+        key = self._create_key(mangler)
+        value = type + '__' + str(current_time)
+
+        redis.set(key, value)
+
+    @classmethod
+    def _create_key(self, mangler):
+        '''
+        :param mangler:
+        :type mangler: (str) -> str
+        :return:
+        :rtype: str
+        '''
+        key = mangler('invalidate_key') if mangler else 'default-invalidate_key'
+        return key
+
+    def _find_backend_info(self):
+        '''
+        :return:
+        :rtype: ((str) -> str, StrictRedis)
+        '''
+        mangler = self.dogpile_region.key_mangler  # type: str
+        redis = self.dogpile_region.backend.client  # type: StrictRedis
+        return mangler, redis
+
+    def _get_invalidation_info(self):
+        mangler, redis = self._find_backend_info()
+        key = self._create_key(mangler)
+
+        value = redis.get(key) # type: str
+
+        if value:
+            parts = value.split('__')
+            if len(parts) == 2:
+                hard = True if parts[0] == 'hard' else False
+                # time = dateutil.parser.parse(parts[1])
+                current_time = float(parts[1])
+                return hard, current_time
+
+        return False, None
+
+    def is_invalidated(self, timestamp):
+        hard, invalidation_timestamp = self._get_invalidation_info()
+        if invalidation_timestamp:
+            return timestamp < invalidation_timestamp
+
+        return False
+
+    def was_hard_invalidated(self):
+        hard, invalidation_timestamp = self._get_invalidation_info()
+        if invalidation_timestamp:
+            return hard
+        return False
+
+    def is_hard_invalidated(self, timestamp):
+        hard, invalidation_timestamp = self._get_invalidation_info()
+        if hard and invalidation_timestamp:
+            return timestamp < invalidation_timestamp
+
+        return False
+
+    def was_soft_invalidated(self):
+        hard, invalidation_timestamp = self._get_invalidation_info()
+        if invalidation_timestamp:
+            return not hard
+        return False
+
+    def is_soft_invalidated(self, timestamp):
+        hard, invalidation_timestamp = self._get_invalidation_info()
+        if not hard and invalidation_timestamp:
+            return timestamp < invalidation_timestamp
+
+        return False
+
+
+if dogpile_config_filter == 'cache.redis.':
+    dogpile_requests_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_requests_region)
 
 
 @dogpile_requests_region.cache_on_arguments()
