@@ -690,9 +690,9 @@ class HDXSearchController(PackageController):
                             'selected': selected
                         }
                         sorted_item_list.append(new_item)
-                        if category_key == 'tags' and new_item['name'] == 'cod':
+                        if category_key == 'vocab_Topics' and new_item['name'] == 'cod':
                             num_of_cods = new_item['count']
-                        if category_key == 'tags' and new_item['name'] == 'hxl':
+                        if category_key == 'vocab_Topics' and new_item['name'] == 'hxl':
                             num_of_hxl = new_item['count']
 
                 sorted_item_list.sort(key=lambda x: x.get('display_name'))

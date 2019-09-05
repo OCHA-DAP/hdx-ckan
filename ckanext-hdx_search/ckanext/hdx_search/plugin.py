@@ -94,8 +94,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # If indicator flag is set, search only that type
         adapt_solr_fq('indicator')
         adapt_solr_fq('subnational')
-        adapt_solr_fq('cod', ' +tags:cod', ' -tags:cod')
-        adapt_solr_fq('hxl', ' +tags:hxl', ' -tags:hxl')
+        adapt_solr_fq('cod', ' +vocab_Topics:cod', ' -vocab_Topics:cod')
+        adapt_solr_fq('hxl', ' +vocab_Topics:hxl', ' -vocab_Topics:hxl')
         adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
         adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
