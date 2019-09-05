@@ -149,18 +149,18 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
         ]
         result = hdx_get_user_notifications()
 
-        assert len(result) == 4
-        assert result[0]['last_date'] == sorted_dates[0]['formatted_date']
-        assert 'org_hdx_url' in result[0], 'The notification should be of type membership request'
+        assert result['count'] == 4
+        assert result['list'][0]['last_date'] == sorted_dates[0]['formatted_date']
+        assert 'org_hdx_url' in result['list'][0], 'The notification should be of type membership request'
 
-        assert result[1]['last_date'] == sorted_dates[1]['formatted_date']
-        assert 'my_requests_url' in result[1], 'The notification should be of type requestdata'
+        assert result['list'][1]['last_date'] == sorted_dates[1]['formatted_date']
+        assert 'my_requests_url' in result['list'][1], 'The notification should be of type requestdata'
 
-        assert result[2]['last_date'] == sorted_dates[2]['formatted_date']
-        assert 'my_requests_url' in result[2], 'The notification should be of type requestdata'
+        assert result['list'][2]['last_date'] == sorted_dates[2]['formatted_date']
+        assert 'my_requests_url' in result['list'][2], 'The notification should be of type requestdata'
 
-        assert result[3]['last_date'] == sorted_dates[3]['formatted_date']
-        assert 'org_hdx_url' in result[3], 'The notification should be of type membership request'
+        assert result['list'][3]['last_date'] == sorted_dates[3]['formatted_date']
+        assert 'org_hdx_url' in result['list'][3], 'The notification should be of type membership request'
 
 
     @staticmethod

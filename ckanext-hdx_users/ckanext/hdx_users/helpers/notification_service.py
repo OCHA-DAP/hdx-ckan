@@ -19,13 +19,13 @@ def get_notification_service():
     request_data_service = SysadminRequestDataService(request_data_dao, g.user) \
         if is_sysadmin else RequestDataService(request_data_dao, g.user)
 
-    notification_service = NotificationService(membership_request_service, request_data_service)
+    notification_service = NotificationService(membership_request_service, request_data_service, is_sysadmin)
     return notification_service
 
 
 class NotificationService(object):
 
-    def __init__(self, membership_request_service, request_data_service):
+    def __init__(self, membership_request_service, request_data_service, is_sysadmin):
         '''
         :param membership_request_service:
         :type membership_request_service: MembershipRequestsService
@@ -34,17 +34,27 @@ class NotificationService(object):
         '''
         self.request_data_service = request_data_service
         self.membership_request_service = membership_request_service
+        self.is_sysadmin = is_sysadmin
 
     def get_notifications(self):
         notifications = self.membership_request_service.get_org_membership_requests() \
                         + self.request_data_service.get_requestdata_requests()
 
         notifications.sort(key=lambda n: n.get('last_date'), reverse=True)
+        any_personal_notifications = False
         for notification in notifications:
             notification['last_date'] = notification.get('last_date').strftime('%b %-d, %Y') \
                 if notification.get('last_date') else ''
+            if not any_personal_notifications and not notification['for_sysadmin']:
+                any_personal_notifications = True
 
-        return notifications
+
+        return {
+            'any_personal_notifications': any_personal_notifications,
+            'count': len(notifications),
+            'list': notifications,
+            'is_sysadmin': self.is_sysadmin
+        }
 
 
 class MembershipRequestsService(object):
@@ -96,6 +106,7 @@ class RequestDataService(object):
         '''
         self.request_data_dao = request_data_dao
         self.username = username
+        self.is_sysadmin = False
 
     def get_requestdata_requests(self):
         notifications = []
@@ -108,7 +119,7 @@ class RequestDataService(object):
                     'html_template': 'light/notifications/requestdata_snippet.html',
                     'my_requests_url': h.url_for('requestdata_my_requests', id=self.username),
                     'for_sysadmin': False,
-                    'is_sysadmin': False
+                    'is_sysadmin': self.is_sysadmin
 
                 }
             )
@@ -116,6 +127,12 @@ class RequestDataService(object):
 
 
 class SysadminRequestDataService(RequestDataService):
+
+
+
+    def __init__(self, request_data_dao, username):
+        super(SysadminRequestDataService, self).__init__(request_data_dao, username)
+        self.is_sysadmin = True
 
     def get_requestdata_requests(self):
         notifications = super(SysadminRequestDataService, self).get_requestdata_requests()
@@ -130,7 +147,7 @@ class SysadminRequestDataService(RequestDataService):
                     'org_title': request.title,
                     'org_name': request.name,
                     'for_sysadmin': True,
-                    'is_sysadmin': True
+                    'is_sysadmin': self.is_sysadmin
 
                 }
             )

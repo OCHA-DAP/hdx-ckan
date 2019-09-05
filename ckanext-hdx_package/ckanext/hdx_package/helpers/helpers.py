@@ -478,7 +478,11 @@ def hdx_get_last_modification_date(dataset_dict):
 
 
 def get_extra_from_dataset(field_name, dataset_dict):
-    ALLOWED_EXTRAS = {'review_date', 'data_update_frequency', 'is_requestdata_type'}
+    ALLOWED_EXTRAS = {
+        'review_date': None,
+        'data_update_frequency': None,
+        'is_requestdata_type': [tk.get_validator('boolean_validator')],
+    }
     result = None
     if field_name in dataset_dict:
         result = dataset_dict[field_name]
@@ -490,5 +494,8 @@ def get_extra_from_dataset(field_name, dataset_dict):
             (extra.get('value') for extra in dataset_dict.get('extras')
              if extra.get('state') == 'active' and extra.get('key') == field_name),
             {})
+        if result and ALLOWED_EXTRAS[field_name]:
+            for func in ALLOWED_EXTRAS[field_name]:
+                result = func(result, {})
 
     return result
