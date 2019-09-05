@@ -690,7 +690,7 @@ class HDXSearchController(PackageController):
                             'selected': selected
                         }
                         sorted_item_list.append(new_item)
-                        if category_key == 'vocab_Topics' and new_item['name'] == 'cod':
+                        if category_key == 'vocab_Topics' and new_item['name'] == 'common operational dataset - cod':
                             num_of_cods = new_item['count']
                         if category_key == 'vocab_Topics' and new_item['name'] == 'hxl':
                             num_of_hxl = new_item['count']
