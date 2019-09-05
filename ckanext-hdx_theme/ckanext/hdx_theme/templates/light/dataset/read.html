@@ -8,7 +8,7 @@
 {% set pkg = dataset_dict %}
 {% set org_title = pkg.organization.title %}
 {% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}
-{% set page_has_desktop_version = True %}
+{% set page_has_mobile_version = True %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}

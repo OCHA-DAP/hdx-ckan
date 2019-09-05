@@ -45,6 +45,9 @@
     >a:after{
       content: "|";
       margin-left: 15px;
+      @media (max-width: @cut-point-laptop-m) {
+        margin-left: 10px;
+      }
     }
 
     >a:focus {
@@ -72,5 +75,10 @@
   >li:last-child > a:after {
     content: "";
     margin: 0;
+  }
+
+  @media(max-width: @cut-point-tablet) {
+    //in header we need the mainLinks to disappear
+    display: none;
   }
 }

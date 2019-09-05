@@ -146,6 +146,10 @@
           color: @whiteColor;
           .uppercase;
           white-space: nowrap;
+
+          @media (max-width: @cut-point-laptop-s) {
+            display: none;
+          }
         }
       }
     }

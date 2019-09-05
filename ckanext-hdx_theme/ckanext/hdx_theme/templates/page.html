@@ -56,7 +56,7 @@
       {# Override this block as in the homepage section to get the fullwidth header #}
       <div class="container">
         <div class="paddingRowHack">
-          {% snippet "header-mobile.html", page_has_desktop_version=(page_has_desktop_version or False), step=step %}
+          {% snippet "header-mobile.html", page_has_mobile_version=(page_has_mobile_version or False), step=step %}
         </div>
       </div>
     {%  endblock %}
