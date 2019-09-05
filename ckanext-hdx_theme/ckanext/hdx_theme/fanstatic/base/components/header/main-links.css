@@ -38,6 +38,11 @@
   content: "|";
   margin-left: 15px;
 }
+@media (max-width: 1200px) {
+  .mainLinks > li > a:after {
+    margin-left: 10px;
+  }
+}
 .mainLinks > li > a:focus {
   text-decoration: none;
   cursor: pointer;
@@ -58,4 +63,9 @@
 .mainLinks > li:last-child > a:after {
   content: "";
   margin: 0;
+}
+@media (max-width: 768px) {
+  .mainLinks {
+    display: none;
+  }
 }
