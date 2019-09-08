@@ -8,7 +8,9 @@ Example:
 {% if notification.for_sysadmin %}
     There
     {{ 'are' if notification.count > 1 else 'is' }}
-    <a href="{{ notification.org_hdx_url }}">
+    <a href="{{ notification.org_hdx_url }}"
+       data-module="hdx_notifications_main" data-module-personal="false" data-module-type="item">
+
         {{ notification.count }} membership
         {{ 'requests' if notification.count > 1 else 'request' }}
     </a>
@@ -17,7 +19,9 @@ Example:
     <span class="date">{{ notification.last_date }}</span>
 {% else %}
     You have
-    <a href="{{ notification.org_hdx_url }}">
+    <a href="{{ notification.org_hdx_url }}"
+       data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
+
         {{ notification.count }} membership
         {{ 'requests' if notification.count > 1 else 'request' }}
     </a>

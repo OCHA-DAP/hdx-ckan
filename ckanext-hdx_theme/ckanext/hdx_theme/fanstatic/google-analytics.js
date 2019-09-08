@@ -384,6 +384,53 @@ $(
     /**
      *
      * @param {object} data
+     * @param {'header icon' | 'item'} data.type The type of notification interaction (header icon /item)
+     * @param {?string} data.destinationUrl The url where the link was supposed to navigate, only for type == "item"
+     * @param {?boolean} data.personal false for global notifications, true for personal ones, only for type == "item"
+     * @param {?number} data.count number of notifications, only for type == "header icon"
+     * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded
+     */
+    function sendNotificationInteractionEvent(data) {
+
+        var eventName = "notification interaction";
+
+        var metadata = {
+            "page title": analyticsInfo.pageTitle,
+            "authenticated": analyticsInfo.authenticated
+        };
+        if (data.destinationUrl) {
+            metadata["destination url"] = data.destinationUrl;
+        }
+        if (data.type) {
+            metadata["type"] = data.type;
+        }
+        if (typeof data.personal === 'boolean') {
+            metadata["personal"] = data.personal;
+        }
+        if (data.count) {
+            metadata["count"] = data.count;
+        }
+
+        var mixpanelData = {
+            "eventName": eventName,
+            "eventMeta": metadata
+        };
+
+        var gaData = {
+            "eventCategory": (metadata["type"] || "") + " " + eventName,
+            "eventAction": metadata["destination url"] || metadata["count"],
+            "eventLabel": metadata["page title"] || ""
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+
+    }
+
+    hdxUtil.analytics.sendNotificationInteractionEvent = sendNotificationInteractionEvent;
+
+    /**
+     *
+     * @param {object} data
      * @param {?string} data.destinationUrl The url where the link was supposed to navigate
      * @param {?string} data.linkType One of: carousel, learn more faq, find data box, trending topic, main nav, footer
      * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded
@@ -394,7 +441,10 @@ $(
             "page title": analyticsInfo.pageTitle
         };
         if (data.destinationUrl) {
+            /* This was a spelling mistake. For historical reasons we need to keep it for a while.
+            * It's deprecated by the correct spelling below */
             metadata["destionation url"] = data.destinationUrl;
+            metadata["destination url"] = data.destinationUrl;
         }
         if (data.linkType) {
             metadata["link type"] = data.linkType;
@@ -407,7 +457,7 @@ $(
 
         var gaData = {
             "eventCategory": (metadata["link type"] || "") + " link",
-            "eventAction": metadata["destionation url"],
+            "eventAction": metadata["destination url"],
             "eventLabel": metadata["page title"] || ""
         };
 
