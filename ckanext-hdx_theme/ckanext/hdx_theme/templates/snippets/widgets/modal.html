@@ -26,8 +26,10 @@ Example:
               </div>
               <div class="modal-footer">
                   {% block footer %}
-                      <button class="btn modal-submit" type="submit">{{ _('Submit') }}</button>
                       <button class="btn modal-cancel" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+                      <button {% if modal_submit_id %} id="{{ modal_submit_id }}"{% endif %}
+                              class="btn btn-primary modal-submit" type="submit"
+                              onclick="$(this).closest('form').submit(); $(this).attr('disabled', true);">{{ _('Submit') }}</button>
                   {% endblock %}
               </div>
           {% endblock %}

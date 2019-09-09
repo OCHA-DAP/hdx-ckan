@@ -1,0 +1,35 @@
+{#
+Example:
+
+  {% snippet 'light/notifications/requestdata_snippet.html', notification=notification %}
+
+#}
+
+{% if notification.is_sysadmin %} [HDX connect] {% endif %}
+{% if notification.for_sysadmin %}
+    There
+    {{ 'are' if notification.count > 1 else 'is' }}
+    <a href="{{ notification.my_requests_url }}"
+       data-module="hdx_notifications_main" data-module-personal="false" data-module-type="item">
+        {{ notification.count }} pending HDX connect dataset
+        {{ 'requests' if notification.count > 1 else 'request' }}.
+    </a>
+    for {{ notification.org_title }} organisation.
+    <br />
+    <span class="date">{{ notification.last_date }}</span>
+{% else %}
+    You have
+    <a href="{{ notification.my_requests_url }}"
+       data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
+        {{ notification.count }} pending HDX connect dataset
+        {{ 'requests' if notification.count > 1 else 'request' }}.
+    </a>
+    Please accept or decline the request as soon as you can by visiting the
+    <a href="{{ notification.my_requests_url }}"
+       data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
+        My Requests
+    </a>
+    page.
+    <br />
+    <span class="date">{{ notification.last_date }}</span>
+{% endif %}

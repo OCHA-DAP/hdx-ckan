@@ -20,6 +20,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
+{% block header_core %}
+  {# Override to get the fullwidth header #}
+  {% snippet "header-mobile.html", page_has_desktop_version=False %}
+{%  endblock %}
+
 {% block content %}
 
 {% if (data and data.current_step == 'hdx_onboarding_details') %}

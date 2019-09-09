@@ -9,250 +9,342 @@
 
 
 .hdx-footer {
-    position: relative;
-    z-index: 100;
-    .titlePlusVersion{
-        color: #888888;
-        .gothamBookFont(12px);
-        line-height: 20px;
+  position: relative;
+  z-index: 100;
+  .titlePlusVersion{
+    color: #888888;
+    .gothamBookFont(12px);
+    line-height: 20px;
+  }
+
+  @logo-gray-height: 40px;
+  @logo-gray-margin: 10px;
+  .logo-gray {
+    height: @logo-gray-height;
+    margin-bottom: @logo-gray-margin;
+  }
+  .match-logo-margin {
+    margin-top: @logo-gray-margin + @logo-gray-height;
+    @media(max-width: @cut-point-tablet) {
+      margin-top: 30px;
+    }
+  }
+  .other-services {
+    text-align: center;
+    img {
+      max-height: @logo-gray-height;
+      max-width: 100%;
+
+      &.logo-hdx {
+        //used on tools
+        max-height: 30px;
+      }
+      &.logo-centre {
+        margin-bottom: -8px;
+      }
+      &.logo-hxl {
+        max-height: 30px;
+        max-width: 137px;
+      }
+    }
+  }
+
+  .mailChimpForm {
+    @media(max-width: @cut-point-tablet) {
+      margin-bottom: 10px;
     }
 
-    @logo-gray-height: 40px;
-    @logo-gray-margin: 10px;
-    .logo-gray {
-        height: @logo-gray-height;
-        margin-bottom: @logo-gray-margin;
+    .subscribeText {
+      .gothamMediumFont(12px);
+      margin-bottom: 10px;
+      color: @extraLightGrayColor;
     }
-    .match-logo-margin {
-        margin-top: @logo-gray-margin + @logo-gray-height;
-    }
-    .other-services {
-      text-align: center;
-      img {
-        max-height: @logo-gray-height;
-        max-width: 100%;
 
-        &.logo-hdx {
-          //used on tools
-          max-height: 30px;
-        }
-        &.logo-centre {
-          margin-bottom: -8px;
-        }
-        &.logo-hxl {
-          max-height: 30px;
-          max-width: 137px;
+    input[type="email"] {
+      height: 44px;
+      border-color: #ffffff;
+      box-shadow: none;
+      line-height: 14px;
+      border: 0;
+      border-radius: 3px;
+      width: 280px;
+      margin: 0;
+      padding: 5px;
+    }
+
+    input[type="submit"].btn.btn-primary {
+      @media (max-width: @cut-point-mobile-l) {
+        margin-left: 0;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      @media(max-width: @cut-point-tablet) {
+        margin-left: 7px;
+        margin-top: -3px;
+      }
+      @media (max-width: @cut-point-laptop-s) {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+
+    form{
+      margin: 0;
+      @media (max-width: @cut-point-laptop-s) {
+        .six.columns {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
       }
     }
 
-    .mailChimpForm {
-        .subscribeText {
-            .gothamMediumFont(12px);
-            margin-bottom: 10px;
-            color: @extraLightGrayColor;
-        }
-
-        input[type="email"] {
-            height: 44px;
-            border-color: #ffffff;
-            box-shadow: none;
-            line-height: 14px;
-            border: 0;
-            border-radius: 3px;
-            width: 280px;
-            margin: 0;
-            padding: 5px;
-        }
-
-        form{
-            margin: 0;
-        }
-
-        .response{
-            color: #ffffff;
-        }
-
-        .btn.btn-primary {
-            height: 45px;
-            margin-left: 7px;
-            margin-top: -3px;
-            padding: 0 20px;
-        }
+    .response{
+      color: #ffffff;
     }
 
-    .links-list {
-        .sourceSansProFont(400, 15px);
-        color: @grayColor;
+    .btn.btn-primary {
+      height: 45px;
+      margin-left: 7px;
+      margin-top: -3px;
+      padding: 0 20px;
+    }
+  }
 
-        &:after{
-            content: none;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-
-            li, a {
-                .gothamBoldFont(12px);
-                color: @extraLightGrayColor;
-
-                .glyphicon-new-window, .icon-external-link {
-                    color: @grayColor;
-                    margin-left: 3px;
-                    font-weight: 400;
-                }
-                svg {
-                    fill: @grayColor;
-                    margin-bottom: -1px;
-                    margin-left: 3px;
-                    height: 12px;
-                    width: 12px;
-                }
-            }
-        }
-
-        .logo-tools-gray {
-            height: 24px;
-            margin: 10px 0;
-        }
+  .links-list {
+    .sourceSansProFont(400, 15px);
+    color: @grayColor;
+    @media (max-width: @cut-point-laptop-s) {
+      width:100%;
     }
 
+    &:after{
+      content: none;
+    }
 
-    .social-footer {
-        position: relative;
+    ul {
+      list-style: none;
+      padding: 0;
 
-        .terms {
-            margin: 30px 0;
-            display: flex;
+      li, a {
+        .gothamBoldFont(12px);
+        color: @extraLightGrayColor;
 
-            .separator {
-              margin-left: auto;
-            }
-            a {
-                text-transform: uppercase;
-                margin-right: 30px;
-                color: @extraLightGrayColor;
-
-                &:hover {
-                  text-decoration: underline;
-                }
-
-                &:last-child {
-                  margin-right: 0;
-                }
-
-                .icon-external-link {
-                  color: @grayColor;
-                }
-            }
+        .glyphicon-new-window, .icon-external-link {
+          color: @grayColor;
+          margin-left: 3px;
+          font-weight: 400;
         }
-        .service {
-          margin-bottom: 45px;
-          color: @whiteColor;
+        svg {
+          fill: @grayColor;
+          margin-bottom: -1px;
+          margin-left: 3px;
+          height: 12px;
+          width: 12px;
+        }
+      }
+    }
 
-          .provided-by {
-          }
-          .service-details {
-            display: flex;
-            font-size: 12px;
-            .ocha-service {
-              display: flex;
-              @ochaLogoHeight: 40px;
-              .ocha-logo {
-                height: @ochaLogoHeight;
-                margin: 10px 0;
-              }
-              .spacer {
-                border-right: 1px solid @whiteColor;
-                height: @ochaLogoHeight;
-                margin: 10px;
-              }
-              .ocha-text {
-                //width: 510px;
-                flex: 510px 1 1;
-                margin: 10px 0;
-                margin-right: 10px;
-              }
-            }
-            .license-group {
-              display: flex;
-              .license {
-                width: 290px;
-                text-align: right;
-                margin: 10px 0;
-                margin-left: auto;
-                margin-right: 10px;
-              }
-              .license-cc {
-                margin: 10px 0;
-                > svg {
-                  margin-top: 10px;
-                  fill: @whiteColor;
-                }
-              }
-            }
+    .logo-tools-gray {
+      height: 24px;
+      margin: 10px 0;
+      @media (max-width: @cut-point-laptop-s) {
+        height: auto;
+        width: 100%;
+      }
+    }
+  }
 
+
+  .social-footer {
+    position: relative;
+
+    .terms {
+      margin: 30px 0;
+      display: flex;
+      @media(max-width: @cut-point-tablet) {
+        flex-direction: column;
+        align-items: center;
+        .social-actions {
+          margin-top: 30px;
+          a:first-child {
+            margin-right: 30px;
           }
         }
+      }
 
-    }
-
-
-    .footer-wrapper {
-        vertical-align: middle;
-        padding-top: 60px;
-        padding-bottom: 60px;
-    }
-    .mainLinks{
-        margin: 0;
-        padding-left: 0;
-    }
-
-    .mainLinks li a{
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        color: #ffffff;
+      .separator {
+        margin-left: auto;
+        @media(max-width: @cut-point-tablet) {
+          display: none;
+        }
+      }
+      a {
         text-transform: uppercase;
+        margin-right: 30px;
+        color: @extraLightGrayColor;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .icon-external-link {
+          color: @grayColor;
+        }
+
+        @media(max-width: @cut-point-tablet) {
+          flex-shrink: 0;
+          margin-right: 0;
+          margin-bottom: 10px;
+        }
+      }
+    }
+    .service {
+      margin-bottom: 45px;
+      color: @whiteColor;
+
+      @media(max-width: @cut-point-tablet) {
+        .provided-by {
+          text-align: center;
+        }
+      }
+      .service-details {
+        display: flex;
+        font-size: 12px;
+        @media(max-width: @cut-point-tablet) {
+          flex-direction: column;
+          align-items: center;
+        }
+        .ocha-service {
+          display: flex;
+          @media (max-width: @cut-point-mobile-l) {
+            flex-wrap: wrap;
+          }
+          @media(max-width: @cut-point-tablet) {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          @ochaLogoHeight: 40px;
+          .ocha-logo {
+            height: @ochaLogoHeight;
+            margin: 10px 0;
+          }
+          .spacer {
+            border-right: 1px solid @whiteColor;
+            height: @ochaLogoHeight;
+            margin: 10px;
+            @media (max-width: @cut-point-tablet) {
+              display: none;
+            }
+          }
+          .ocha-text {
+            //width: 510px;
+            flex: 510px 1 1;
+            margin: 10px 0;
+            margin-right: 10px;
+
+            @media(max-width: @cut-point-tablet) {
+              flex: auto;
+              text-align: center;
+            }
+          }
+        }
+        .license-group {
+          display: flex;
+          .license {
+            width: 290px;
+            text-align: right;
+            margin: 10px 0;
+            margin-left: auto;
+            margin-right: 10px;
+            @media (max-width: @cut-point-mobile-s) {
+              width: 100%;
+            }
+            @media(max-width: @cut-point-tablet) {
+              text-align: center;
+            }
+          }
+          .license-cc {
+            margin: 10px 0;
+            > svg {
+              margin-top: 10px;
+              fill: @whiteColor;
+            }
+          }
+        }
+
+      }
     }
 
+  }
 
-    .otherLicenseText{
-        /*width: 320px;*/
-        color: #ffffff;
-        font-weight: 300;
-    }
 
-    a.social-icon {
-        background-image: url("@{imagePath}/homepage/socialBlog.png");
-        background-size: 250px 64px;
-        background-color: #404040;
-        border-radius: 3px;
-        float: left;
-        height: 25px;
-        list-style: none;
-        margin-left: 4px;
-        width: 25px;
-    }
+  .footer-wrapper {
+    vertical-align: middle;
+    padding-top: 60px;
+    padding-bottom: 60px;
 
-    a.social-icon:hover{
-        background-color: #007ce0;
+    @media (max-width: @cut-point-laptop-s) {
+      text-align: center;
+      .other-services:nth-child(-n+3) {
+        margin-bottom: 20px;
+      }
     }
-    a.social-icon.twitter{
-        background-position: -163px -3px;
-    }
+  }
+  //.mainLinks{
+  //    margin: 0;
+  //    padding-left: 0;
+  //}
+  //
+  //.mainLinks li a{
+  //    font-family: 'Gotham-Bold', sans-serif;
+  //    font-weight: 400;
+  //    font-size: 12px;
+  //    color: #ffffff;
+  //    text-transform: uppercase;
+  //}
 
-    a.social-icon.github{
-        background-position:  -3px -3px;
-    }
 
-    a.social-icon.email{
-        background-position: -67px -36px;
-    }
+  .otherLicenseText{
+    /*width: 320px;*/
+    color: #ffffff;
+    font-weight: 300;
+  }
 
-    a.social-icon.rss{
-        background-position: -224px -4px;
-    }
+  a.social-icon {
+    background-image: url("@{imagePath}/homepage/socialBlog.png");
+    background-size: 250px 64px;
+    background-color: #404040;
+    border-radius: 3px;
+    float: left;
+    height: 25px;
+    list-style: none;
+    margin-left: 4px;
+    width: 25px;
+  }
+
+  a.social-icon:hover{
+    background-color: #007ce0;
+  }
+  a.social-icon.twitter{
+    background-position: -163px -3px;
+  }
+
+  a.social-icon.github{
+    background-position:  -3px -3px;
+  }
+
+  a.social-icon.email{
+    background-position: -67px -36px;
+  }
+
+  a.social-icon.rss{
+    background-position: -224px -4px;
+  }
 
 }

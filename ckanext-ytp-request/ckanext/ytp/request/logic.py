@@ -65,12 +65,12 @@ def _reset_lang():
 
 
 def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=None, admin_list=None):
-    current_locale = get_lang()
-
-    if locale == 'en':
-        _reset_lang()
-    else:
-        set_lang(locale)
+    # current_locale = get_lang()
+    #
+    # if locale == 'en':
+    #     _reset_lang()
+    # else:
+    #     set_lang(locale)
     subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(**{
         'user_fullname': user_obj.display_name
     })
@@ -96,8 +96,8 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
 
     except MailerException, e:
         log.error(e)
-    finally:
-        set_lang(current_locale)
+    # finally:
+    #     set_lang(current_locale)
 
 
 def _mail_process_status(locale, member_user, approve, group_name, capacity):
@@ -130,11 +130,12 @@ def _member_list_dictize(obj_list, context, sort_key=lambda x: x['group_id'], re
     """ Helper to convert member list to dictionary """
     result_list = []
     for obj in obj_list:
-        member_dict = model_dictize.member_dictize(obj, context)
-        member_dict['group_name'] = obj.group.name
-        user = model.Session.query(model.User).get(obj.table_id)
-        member_dict['user_name'] = user.name
-        result_list.append(member_dict)
+        if obj.group:
+            member_dict = model_dictize.member_dictize(obj, context)
+            member_dict['group_name'] = obj.group.name
+            user = model.Session.query(model.User).get(obj.table_id)
+            member_dict['user_name'] = user.name
+            result_list.append(member_dict)
     return sorted(result_list, key=sort_key, reverse=reverse)
 
 

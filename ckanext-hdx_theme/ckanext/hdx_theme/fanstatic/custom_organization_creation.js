@@ -16,15 +16,25 @@ $(document).ready(function(){
 		}
 	});
 
-    $('#visualization-select').change(function(){
-        var this_div = $(this).val();
-        $('.visualization-div').hide();
-        $('#'+this_div).show();
-    });
+	$('#field-request_membership').change(function(e){
+    const $req_membership = $('#field-request_membership');
+    const $hidden_membership = $("#hidden-field-request_membership");
+    if ($req_membership.is(':checked')){
+      $hidden_membership.val('true');
+    } else {
+      $hidden_membership.val('false');
+    }
+  });
+
+  $('#visualization-select').change(function(){
+    var this_div = $(this).val();
+    $('.visualization-div').hide();
+    $('#'+this_div).show();
+  });
 
 	$('#field-highlight-color').change(function(){
 		color = this.value;
-		var rainbow = new Rainbow(); 
+		var rainbow = new Rainbow();
 		rainbow.setNumberRange(1, 9);
 		rainbow.setSpectrum(lighterColor(color, .5), darkerColor(color, .5));
 		for (var i = 1; i <= 9; i++) {

@@ -458,12 +458,15 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 package_dict['num_of_showcases'] = num_of_showcases
 
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
-            package_dict['last_modified'] = None
-            all_dates = [dateutil.parser.parse(r.get('last_modified'))
-                         for r in package_dict.get('resources', [])
-                         if r.get('last_modified')]
-            if all_dates:
-                package_dict['last_modified'] = max(all_dates).isoformat()
+            if helpers.get_extra_from_dataset('is_requestdata_type', package_dict):
+                package_dict['last_modified'] = package_dict.get('metadata_modified')
+            else:
+                package_dict['last_modified'] = None
+                all_dates = [dateutil.parser.parse(r.get('last_modified'))
+                             for r in package_dict.get('resources', [])
+                             if r.get('last_modified')]
+                if all_dates:
+                    package_dict['last_modified'] = max(all_dates).isoformat()
 
         if not just_for_reindexing:
             member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
