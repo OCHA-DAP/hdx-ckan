@@ -36,6 +36,19 @@
   font-weight: 400;
   font-size: 14px;
   letter-spacing: 0.03em;
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 375px) {
+  .tag-wrapper .tag {
+    max-width: 280px;
+  }
+}
+@media (max-width: 320px) {
+  .tag-wrapper .tag {
+    max-width: 170px;
+  }
 }
 .tag-wrapper .tag:hover,
 .tag-wrapper .tag:focus {
