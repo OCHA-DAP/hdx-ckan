@@ -356,7 +356,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             params['page'] = page
             return h.url_for('user_dashboard_datasets', **params) + suffix
 
-        fq = 'creator_user_id:"{}"'.format(user_id)
+        fq = 'maintainer:"{}"'.format(user_id)
 
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
                                        ignore_capacity_check=ignore_capacity_check)
