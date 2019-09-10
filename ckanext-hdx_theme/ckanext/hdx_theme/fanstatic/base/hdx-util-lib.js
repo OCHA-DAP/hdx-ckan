@@ -50,7 +50,7 @@
      */
     hdxUtil.eventUtil.postponeClickDefaultIfNotNewTab = function (clickEvent, promise, href) {
 
-        var aElement = $(clickEvent.target);
+        var aElement = $(clickEvent.delegateTarget);
         var isBlankTarget = aElement.attr('target') === '_blank';
         var target = aElement.attr('target');
         var linkUrl = href ? href : aElement.attr('href');

@@ -44,6 +44,17 @@
      font-weight: 400;
      font-size: 14px;
      letter-spacing: 0.03em;
+     max-width: 340px;
+     overflow: hidden;
+     text-overflow: ellipsis;
+
+     @media (max-width: @cut-point-mobile-m) {
+       max-width: 280px;
+     }
+     @media (max-width: @cut-point-mobile-s) {
+       max-width: 170px;
+     }
+
      &:hover, &:focus {
        background-color: #ce554d;
        border: none;
