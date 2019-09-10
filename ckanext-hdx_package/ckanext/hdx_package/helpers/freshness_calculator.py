@@ -2,6 +2,8 @@ import datetime
 import dateutil.parser
 import logging
 
+from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
+
 log = logging.getLogger(__name__)
 
 UPDATE_FREQ_INFO = {
@@ -17,23 +19,6 @@ UPDATE_FREQ_INFO = {
 FRESHNESS_PROPERTY = 'is_fresh'
 
 
-def get_extra_from_dataset(field_name, dataset_dict):
-    ALLOWED_EXTRAS = {'review_date', 'data_update_frequency'}
-    result = None
-    if field_name in dataset_dict:
-        result = dataset_dict[field_name]
-
-    # When a dataset is indexed in solr the package dict returned by package_show
-    # leaves the extras fields unprocessed in an extras list so that they get indexed as extras_* fields in solr
-    elif 'extras' in dataset_dict and field_name in ALLOWED_EXTRAS:
-        result = next(
-            (extra.get('value') for extra in dataset_dict.get('extras')
-             if extra.get('state') == 'active' and extra.get('key') == field_name),
-            {})
-
-    return result
-
-
 class FreshnessCalculator(object):
 
     @staticmethod
@@ -45,7 +30,7 @@ class FreshnessCalculator(object):
         :rtype: datetime.datetime
         '''
         last_change_date = None
-        last_modified = dataset_dict.get('last_modified') # last_modified is not an extra; only stored in solr
+        last_modified = dataset_dict.get('last_modified')  # last_modified is not an extra; only stored in solr
         reviewed = get_extra_from_dataset('review_date', dataset_dict) # dataset_dict.get('review_date')
         if not last_modified or not reviewed:
             last = last_modified or reviewed
