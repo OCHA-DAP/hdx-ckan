@@ -125,9 +125,9 @@
               {% for tag in pkg_dict.tags %}
                 <div class="tag-wrapper">
                   {% if tag.vocabulary_id %}
-                    <a class="label tag" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+                    <a class="label tag" title="{{tag.display_name}}" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ tag.display_name }}</a>
                   {% else %}
-                    <a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+                    <a class="label tag" title="{{tag.display_name}}" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ tag.display_name }}</a>
                   {% endif %}
                 </div>
               {% endfor %}

@@ -2,6 +2,7 @@
     var hdxUtil = {
         'ui': {},
         'compute': {},
+        'eventUtil': {},
         'analytics': {} // This will be populated from analytics.js
     };
     window.hdxUtil = hdxUtil;
@@ -36,6 +37,51 @@
             }
         }
         return hash;
+    };
+
+    /**
+     * If the link is not meant to be opened in a new tag then the actual opening of a new page is being postponed
+     * until the promise is being fulfilled.
+     *
+     * @param {MouseEvent} clickEvent
+     * @param {Promise} promise
+     * @param {?string} href url to override the one found in the <a> element
+     * @returns {boolean} True if event was prevented
+     */
+    hdxUtil.eventUtil.postponeClickDefaultIfNotNewTab = function (clickEvent, promise, href) {
+
+        var aElement = $(clickEvent.target);
+        var isBlankTarget = aElement.attr('target') === '_blank';
+        var target = aElement.attr('target');
+        var linkUrl = href ? href : aElement.attr('href');
+
+        var ctrlCmdKey = clickEvent.ctrlKey || clickEvent.metaKey;
+        var isNewTab = isBlankTarget || ctrlCmdKey;
+        var prevented = false;
+        if (!isNewTab) {
+            clickEvent.preventDefault();
+            prevented = true;
+        }
+
+        promise.done(
+            /**
+             * The callback function opens the link after the analytics events are sent.
+             */
+            function () {
+                /* If it was a newTab-click the new tab was already opened */
+                if (linkUrl && prevented) {
+                    console.log("Executing original click action " + clickEvent.ctrlKey + " " + clickEvent.metaKey);
+
+                    if (!target) {
+                        window.location.href = linkUrl;
+                    } else {
+                        window.open(linkUrl, target);
+                    }
+                }
+            }
+        );
+
+        return prevented;
     };
 
 })();

@@ -1,0 +1,48 @@
+@import "_mixins";
+
+@hdxLogoUrl: "@{imagePath}/homepage/logo-hdx.svg";
+
+/* HDX Version display */
+.hdxLogo {
+  position: relative;
+  .logo {
+    #hdxVersion{
+      color: @grayColor;
+      position: absolute;
+      font-size: 10px;
+      left: 99px;
+      bottom: 0;
+      display: none;
+      line-height: 10px;
+    }
+    .logo-img:hover ~ #hdxVersion{
+      display: block;
+    }
+
+    @logoImageHeight: 31px;
+    @logoImageWidth: 126px;
+    .logo-img {
+      background-image: url(@hdxLogoUrl);
+      background-repeat: no-repeat;
+      background-size: @logoImageWidth @logoImageHeight;
+      width: @logoImageWidth;
+      height: @logoImageHeight;
+      min-width: @logoImageWidth;
+      min-height: @logoImageHeight;
+    }
+  }
+
+  @media (max-width: @cut-point-laptop-s) {
+    width: 45px;
+    .logo{
+      .logo-img{
+        background-image: url("@{imagePath}/homepage/logo-hdx-mobile.svg");
+        background-size: 28px 31px;
+        width: 28px;
+      }
+    }
+  }
+}
+
+/* END HDX Version display */
+

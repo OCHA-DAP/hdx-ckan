@@ -1,6 +1,8 @@
 {% set notifications_dict = h.hdx_get_user_notifications() %}
 {% if notifications_dict.count > 0 %}
-<li class="hdx-notification-wrapper">
+<li class="hdx-notification-wrapper" data-module="hdx_notifications_main"
+    data-module-count="{{ notifications_dict.count }}" data-module-type="header icon">
+
     <div class="dropdown" style="position: relative;">
         <a class="icon-bell dropdown-toggle" href="javascript:void(0)"
            data-toggle="dropdown" aria-label="Notifications {{ notifications_dict.count }}">

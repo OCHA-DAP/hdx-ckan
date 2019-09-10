@@ -1,6 +1,6 @@
 <section class="additional-info info-wrapper mTop35">
   <table class="table-condensed mTop20">
-   
+
     <tbody>
 
 {% block package_additional_info %}
@@ -8,7 +8,7 @@
 		<th scope="row" class="dataset-label">{{ _('Source') }}</th>
 		<td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
 	</tr>
-	
+
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
 		<td class="dataset-details metadata-link">
@@ -78,7 +78,7 @@
 				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
 				: <span data-module="hdx_show_more" style="visibility:hidden">{{h.render_markdown(pkg_dict.license_other)}}</span>
 				{% endif %}
-				
+
 				{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
 		            {% if 'license_url' in pkg_dict %}
 		                <a class="info-item-name" href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
@@ -91,7 +91,7 @@
 		                </a>
 		            {% endif %}
            		 #}
-            
+
           {% endif %}
       </td>
     </tr>
@@ -134,10 +134,10 @@
 			{% for tag in pkg_dict.tags %}
 	    		<div class="tag-wrapper">
 	    			{% if tag.vocabulary_id %}
-	      				<a class="label tag" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-	      			{% else %}
-	      				<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-	      			{% endif %}
+              <a class="label tag" title="{{tag.display_name}}" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ tag.display_name }}</a>
+            {% else %}
+              <a class="label tag" title="{{tag.display_name}}" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ tag.display_name }}</a>
+            {% endif %}
 	    		</div>
 	  		{% endfor %}
 		</td>

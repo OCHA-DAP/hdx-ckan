@@ -17,7 +17,20 @@
 
     color: @whiteColor;
     background-color: rgba(0,0,0,0.5);
-    padding: 30px 0;
+    padding: 20px 0;
+
+    @media (max-width: @cut-point-tablet) {
+      height: auto;
+      padding-bottom: 60px;
+      .allow-cookies-continue {
+        position: fixed;
+        top: auto;
+        bottom: 10px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        height: 40px;
+      }
+    }
 
     a {
         color: @whiteColor;

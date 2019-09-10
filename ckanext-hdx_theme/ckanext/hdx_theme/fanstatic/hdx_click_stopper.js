@@ -5,8 +5,7 @@ ckan.module('hdx_click_stopper', function ($, _) {
         initialize: function () {
             var aElement = this.options.selector ? $(this.options.selector) : this.el;
             var href = this.options.href ? this.options.href : aElement.attr('href');
-            var target = aElement.attr('target');
-            var isNewTab = "_blank" === target;
+
             aElement.click(function (e) {
 
               var data = {
@@ -18,30 +17,9 @@ ckan.module('hdx_click_stopper', function ($, _) {
                 hdxUtil.analytics.sendLinkClickEvent(data);
               }
               else {
+                  var promise = hdxUtil.analytics.sendLinkClickEvent(data);
 
-                var ctrlCmdKey = e.ctrlKey || e.metaKey;
-                if (!isNewTab && !ctrlCmdKey) {
-                  e.preventDefault();
-                }
-
-
-                var promise = hdxUtil.analytics.sendLinkClickEvent(data);
-                promise.done(
-                  /**
-                   * The callback function opens the link after the analytics events are sent.
-                   */
-                  function () {
-                    if (data.destinationUrl && !ctrlCmdKey) {
-                      console.log("Executing original click action " + e.ctrlKey + " " + e.metaKey);
-
-                      if (target) {
-                        window.open(data.destinationUrl, target);
-                      } else {
-                        window.location.href = data.destinationUrl;
-                      }
-                    }
-                  }
-                );
+                  hdxUtil.eventUtil.postponeClickDefaultIfNotNewTab(e, promise, this.options.href);
               }
 
             }.bind(this));
