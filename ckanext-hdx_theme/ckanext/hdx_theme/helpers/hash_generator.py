@@ -1,5 +1,8 @@
 import sys
 
+from ckanext.hdx_theme.helpers.exception import BaseHdxException
+
+
 def generate_hash_dict(src_dict_list, dict_identifier, field_list):
     '''
     Works only on simple dictionaries (not nested). At least the specified fields need to not be nested.
@@ -46,11 +49,5 @@ class HashCodeGenerator(object):
         return hash(frozenset(self.__inner_dict.items()))
 
 
-class HashGenerationException(Exception):
+class HashGenerationException(BaseHdxException):
     type = 'hashing-generation'
-
-    def __init__(self, message, exceptions=[]):
-
-        super(Exception, self).__init__(message)
-
-        self.errors = exceptions

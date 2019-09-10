@@ -1,8 +1,11 @@
-
 from ckan.common import g
+from ckan.logic import NotFound
+
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 import ckan.authz as authz
+import ckan.model.user as user_model
+
 
 from ckanext.hdx_users.helpers.notification_service import get_notification_service
 
@@ -51,3 +54,11 @@ def hdx_get_user_notifications():
         g.hdx_user_notifications = get_notification_service().get_notifications()
 
     return g.hdx_user_notifications
+
+
+def find_user_id(username_or_id):
+    user = user_model.User.get(username_or_id)
+    if not user:
+        raise NotFound()
+    user_id = user.id
+    return user_id

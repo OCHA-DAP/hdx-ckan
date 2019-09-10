@@ -1,20 +1,15 @@
-import ckan.model.user as user_model
 import ckan.plugins.toolkit as tk
-
-from ckan.logic import NotFound
 
 import ckanext.hdx_user_extra.model as ue_model
 
+from ckanext.hdx_users.helpers.helpers import find_user_id
+from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 get_action = tk.get_action
 
 
-class WrongPermissionNameException(Exception):
-    def __init__(self, message, exceptions=[]):
-
-        super(Exception, self).__init__(message)
-
-        self.errors = exceptions
+class WrongPermissionNameException(BaseHdxException):
+    pass
 
 
 class Permissions(object):
@@ -46,8 +41,7 @@ class Permissions(object):
 
     def __init__(self, target_username_or_id):
         super(Permissions, self).__init__()
-        self.target_username_or_id = target_username_or_id
-        self.target_user_id = self._find_user_id()
+        self.target_user_id = find_user_id(target_username_or_id)
 
     def set_permissions(self, context, permissions_list):
         '''
@@ -95,9 +89,6 @@ class Permissions(object):
         return False
 
     def has_permission(self, permission):
-        # self._check_existing_permission(permission)
-        # permission_list = self.get_permission_list()
-        # return permission in permission_list
         return self.has_permissions([permission])
 
     def has_permissions(self, permissions, all=True):
@@ -121,13 +112,6 @@ class Permissions(object):
             return permission_set.issubset(existing_permission_set)
 
         return not permission_set.isdisjoint(existing_permission_set)
-
-    def _find_user_id(self):
-        user = user_model.User.get(self.target_username_or_id)
-        if not user:
-            raise NotFound()
-        user_id = user.id
-        return user_id
 
     def _check_existing_permission(self, permission):
         if permission not in Permissions.ALL_PERMISSIONS:

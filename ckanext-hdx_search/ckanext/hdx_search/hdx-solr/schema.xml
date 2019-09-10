@@ -48,6 +48,8 @@ schema. In this case the version should be set to the next CKAN version number.
     <fieldType name="tlongs" class="solr.TrieLongField" precisionStep="8" positionIncrementGap="0" multiValued="true"/>
     <fieldType name="tdoubles" class="solr.TrieDoubleField" precisionStep="8" positionIncrementGap="0" multiValued="true"/>
 
+    <fieldType name="daterange" class="solr.DateRangeField"/>
+
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
         <analyzer type="index">
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
@@ -179,6 +181,8 @@ schema. In this case the version should be set to the next CKAN version number.
     <field name="_version_" type="string" indexed="true" stored="true"/>
 
     <dynamicField name="*_date" type="date" indexed="true" stored="true" multiValued="false"/>
+
+    <dynamicField name="*_daterange" type="daterange" indexed="true" stored="true" multiValued="false"/>
 
     <dynamicField name="extras_*" type="text" indexed="true" stored="true" multiValued="false"/>
     <dynamicField name="res_extras_*" type="text" indexed="true" stored="true" multiValued="true"/>
