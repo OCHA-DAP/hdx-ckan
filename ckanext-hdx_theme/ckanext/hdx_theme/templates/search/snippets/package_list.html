@@ -63,7 +63,7 @@ Example:
         {% set sorting = [
         (_('Last Modified'), h.HDX_CONST('DEFAULT_SORTING')),
         (_('Last Created'), 'metadata_created desc'),
-        (_('Relevance'), 'score desc, metadata_modified desc'),
+        (_('Relevance'), 'score desc, ' + h.HDX_CONST('DEFAULT_SORTING')),
         (_('Name Ascending'), 'title_case_insensitive asc'),
         (_('Name Descending'), 'title_case_insensitive desc'),
         (_('Trending'), 'pageviews_last_14_days desc'),
