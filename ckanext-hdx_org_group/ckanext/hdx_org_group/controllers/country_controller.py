@@ -64,7 +64,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             latest_cod_dataset = country_helper.get_latest_cod_datatset(country_dict.get('name'))
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
-            vocab_topics_list = c.full_facet_info.get('facets', {}).pop('vocab_Topics', {}).get('items', [])
 
             # Removed for now as per HDX-4927
             # c.cont_browsing = self.get_cont_browsing(
@@ -380,10 +379,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             return h.url_for('country_read', id=country_code, **params) + suffix
 
         fq = 'groups:"{}"'.format(country_code)
-        facets = {
-            'vocab_Topics': _('Topics')
-        }
-        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets)
+
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
         locations = full_facet_info.get('facets', {}).get('groups', {}).get('items', [])
         locations[:] = [loc for loc in locations if loc.get('name', '') != country_code]
 

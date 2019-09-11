@@ -4,6 +4,7 @@ import ckan.logic
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 from ckan.common import _
+from ckan.lib.helpers import DEFAULT_FACET_NAMES
 
 import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
@@ -67,10 +68,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             except:
                 search_params['sort'] = parts[0]+' desc'
 
-        #search_params['q'] = convert_country(search_params['q'])
-        if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
-            search_params['facet.field'].append('vocab_Topics')
-
         def adapt_solr_fq(param_name, fq_filter_1=None, fq_filter_0=None):
             '''
             :param param_name: request param name without the "ext_" part, for example "indicator"
@@ -97,8 +94,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # If indicator flag is set, search only that type
         adapt_solr_fq('indicator')
         adapt_solr_fq('subnational')
-        adapt_solr_fq('cod', ' +tags:cod', ' -tags:cod')
-        adapt_solr_fq('hxl', ' +tags:hxl', ' -tags:hxl')
+        adapt_solr_fq('cod', ' +vocab_Topics:"common operational dataset - cod"',
+                      ' -vocab_Topics:"common operational dataset - cod"')
+        adapt_solr_fq('hxl', ' +vocab_Topics:hxl', ' -vocab_Topics:hxl')
         adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
         adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
@@ -148,7 +146,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
     def dataset_facets(self, facets_dict, package_type):
 
-        tagged_facets = ['groups', 'res_format', 'organization', 'tags', 'license_id']
+        tagged_facets = tk.config.get(u'search.facets', DEFAULT_FACET_NAMES).split()
 
         # adding exclusion directive for tagged facets
         for f in tagged_facets:

@@ -63,6 +63,7 @@ ckanext.powerview.allow_user_create = true
 
 
 ## Search Settings
+search.facets = groups res_format organization vocab_Topics license_id
 
 ckan.site_id = default
 #!solr_url = http://127.0.0.1:8983/solr

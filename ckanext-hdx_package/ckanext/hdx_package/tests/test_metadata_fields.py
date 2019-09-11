@@ -28,21 +28,21 @@ log = logging.getLogger(__name__)
 
 
 class TestMetadataFields(hdx_test_base.HdxBaseTest):
-        
+
     def test_cannot_create_dataset_wo_source(self):
         try:
             p.load('hdx_package')
         except Exception as e:
             log.warn('Module already loaded')
             log.info(str(e))
-            
+
         testsysadmin = model.User.by_name('testsysadmin')
         result = legacy_tests.call_action_api(self.app, 'package_create', name='test-dataset',
                 private=False, package_creator='test-creator',
                 apikey=testsysadmin.apikey, status=409)
 
 #         result = tk.get_action('package_create')({'user':'testsysadmin'},{'name': 'test-dataset', 'private':False})
-        
+
         assert 'dataset_source' in result, 'The error needs to be related to the source'
         assert 'Missing value' in result['dataset_source'], 'The problem needs to be that the source info is missing'
 
@@ -53,7 +53,7 @@ class TestMetadataFields(hdx_test_base.HdxBaseTest):
     #     except Exception as e:
     #         log.warn('Module already loaded')
     #         log.info(str(e))
-    
+
     #     tester = model.User.by_name('tester')
     #     tests.call_action_api(self.app, 'organization_create',
     #                                     name='test_org_2',
@@ -69,6 +69,16 @@ class TestMetadataFields(hdx_test_base.HdxBaseTest):
 
 
     def test_tags_autocomplete(self):
+        data_dict = {
+            'name': 'Topics',
+            'tags': [
+                {
+                    'name': 'health'
+                }
+            ]
+        }
+        logic.get_action('vocabulary_create')({'ignore_auth': True}, data_dict)
+
         offset = '/api/2/util/tag/autocomplete?incomplete=a'
 
         res = self.app.get(offset, status=[200,302])
