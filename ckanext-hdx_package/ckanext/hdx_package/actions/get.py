@@ -393,6 +393,8 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
             del resource_dict['apihighways_id']
         if 'apihighways_url' in resource_dict:
             del resource_dict['apihighways_url']
+    if resource_dict.get('url'):
+        resource_dict['download_url'] = resource_dict.get('url')
 
 @logic.side_effect_free
 def package_show(context, data_dict):
