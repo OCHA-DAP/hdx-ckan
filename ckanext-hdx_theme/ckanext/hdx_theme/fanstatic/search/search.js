@@ -99,7 +99,7 @@ $('document').ready(function(){
     $('#q, #q2, #qMobile').blur(function(){
         var $results = $(this).parents("form").find('.search-ahead');
         // $results.html('');
-        // $results.hide();
+        $results.hide();
     });
 });
 

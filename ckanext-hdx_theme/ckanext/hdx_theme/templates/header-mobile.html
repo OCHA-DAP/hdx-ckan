@@ -11,6 +11,9 @@
               <a class="logo" href="/" aria-label="Humanitarian Data Exchange Logo"><div class="logo-img"></div><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
           </div>
           <div class="header-nav-search table-valign pull-left">
+            <div id="previous-searches" style="display: none;">
+                {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) }}
+            </div>
             <form class="header-search-form" method="get" action="/search?sort=metadata_modified+desc">
               <div id="input-search">
                 <div class="input-prepend input-append">
