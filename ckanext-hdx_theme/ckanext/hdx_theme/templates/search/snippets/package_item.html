@@ -10,7 +10,6 @@
             {% endblock %}
             <span class="pull-left">
             <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
-                AAAAA {{ h.hdx_get_due_overdue_date(package) }}
               {% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
               {% if popular %}
                 <span class="popular icon-trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>

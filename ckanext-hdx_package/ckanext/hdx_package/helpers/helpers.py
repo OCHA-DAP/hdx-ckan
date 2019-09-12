@@ -475,3 +475,17 @@ def hdx_check_add_data():
 
 def hdx_get_last_modification_date(dataset_dict):
     return FreshnessCalculator.dataset_last_change_date(dataset_dict)
+
+
+def hdx_get_due_overdue_date(dataset_dict, type='overdue', format='%B %-d %Y'):
+    due_date, overdue_date = FreshnessCalculator(dataset_dict).read_from_range_due_overdue_dates()
+    if type == 'due':
+        d = due_date
+    else:
+        d = overdue_date
+
+    if d:
+        return d.strftime(format)
+    else:
+        return ''
+
