@@ -4,20 +4,20 @@ Created on Jul 07, 2015
 @author: alexandru-m-g
 '''
 
-import logging
 import datetime
+import logging
 
-import ckan.logic.action.update as core_update
-import ckan.logic as logic
-import ckan.plugins as plugins
-import ckan.lib.plugins as lib_plugins
-import ckan.lib.dictization.model_save as model_save
-
-import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_package.helpers.geopreview as geopreview
-
-from ckan.common import _
+import ckanext.hdx_package.helpers.helpers as helpers
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
+from rq.utils import utcnow
+
+import ckan.lib.dictization.model_save as model_save
+import ckan.lib.plugins as lib_plugins
+import ckan.logic as logic
+import ckan.logic.action.update as core_update
+import ckan.plugins as plugins
+from ckan.common import _
 
 _check_access = logic.check_access
 _get_action = logic.get_action
@@ -99,6 +99,9 @@ def package_update(context, data_dict):
     data_dict['type'] = pkg.type
     if 'groups' in data_dict:
        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
+
+    if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
+        data_dict['review_date'] = utcnow()
 
     _check_access('package_update', context, data_dict)
 

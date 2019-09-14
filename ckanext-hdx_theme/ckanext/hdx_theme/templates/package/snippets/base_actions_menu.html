@@ -1,4 +1,5 @@
 {% set url = request.url %}
+{% import 'package/snippets/base_actions_macros.html' as macro %}
 
 {% set panel_title = panel_title or "panel title" %}
 {% set title = title or "title" %}
@@ -10,7 +11,6 @@
 
 {% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) if pkg else false %}
 {% set follow_confirm_text = "WARNING: You are maintainer of the dataset which you want to follow. Do you wish to continue?" if is_current_user_a_maintainer else None %}
-{% set contact_confirm_text = "WARNING: you are the contributor of this dataset. Do you wish to continue contacting the contributor?" if is_current_user_a_maintainer else None %}
 
 {% if not hide_membership %}
     {% set membership_data = membership.data %}
@@ -30,7 +30,7 @@
             {% endif %}
             {% if not hide_contact_contributor %}
                 <li>
-                    <a href="#" onclick="{% if is_current_user_a_maintainer %}if (confirm('{{contact_confirm_text}}')){ {% endif %}closeCurrentWidget(this);spawnRecaptcha('#contactContributorPopup');showOnboardingWidget('#contactContributorPopup');{% if is_current_user_a_maintainer %} } {% endif %}" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
+                    <a href="#" onclick="{{macro.contributor_action(pkg, h)}}" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
                         <i class="icon-envelope"></i>
                         <span>Contact the contributor</span>
                     </a>

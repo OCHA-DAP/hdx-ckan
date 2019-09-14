@@ -98,6 +98,9 @@ ckan.module('contribute_flow_main', function($, _) {
                                 var formDataArray;
                                 if (datasetId) { // updating existing dataset
                                     formDataArray = contributeGlobal.getFormValues('update-dataset-json');
+                                    var special = $("#confirm-resource-freshness").find(':input').serializeArray();
+                                    formDataArray = formDataArray.concat(special);
+
                                     formDataArray.push({'name': 'id', 'value': datasetId});
 
                                     analyticsPromise = {};

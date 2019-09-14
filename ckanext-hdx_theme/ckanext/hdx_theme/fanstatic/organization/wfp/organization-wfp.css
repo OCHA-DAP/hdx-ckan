@@ -363,6 +363,11 @@ body {
   border-radius: 100px;
 }
 /* END Style Dashboard - Newsfeed list */
+.alert-danger {
+  color: #f2645a;
+  border-color: #f2645a;
+  background-color: #fde9e8;
+}
 /* Actions */
 .base-actions-menu a.btn.hdx-btn {
   margin-left: 12px;
@@ -636,6 +641,27 @@ body {
   color: #007CE0;
 }
 /* END Style Dataset Item */
+.info-label {
+  background-color: #f2645a;
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.info-label i {
+  font-size: 12px;
+  font-weight: 400;
+}
+.info-label.inverted {
+  background-color: #eeeeee;
+  color: #888888;
+}
+.plain-list {
+  list-style: none;
+  padding: 0;
+}
 .ckan-icon {
   display: inline-block;
   vertical-align: text-bottom;
@@ -2384,6 +2410,15 @@ textarea {
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }
+.hdx-form .alert {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+.hdx-form u a {
+  color: inherit;
+}
 .hdx-form .background-white {
   background-color: #fff;
 }
@@ -2468,6 +2503,10 @@ textarea {
   content: ">";
   float: left;
   color: #fff;
+}
+.hdx-form .confirm-resources-label {
+  color: #f2645a;
+  margin-bottom: 15px;
 }
 .hdx-form label.control-label {
   color: #333333;
@@ -2660,6 +2699,24 @@ textarea {
 .hdx-form input[type=radio],
 .hdx-form input[type=checkbox] {
   top: auto;
+}
+.dataset-overdue {
+  margin: 0 -20px;
+  padding: 20px;
+  background-color: #fde9e8;
+  border: 1px solid #f2645a;
+  border-radius: 4px;
+}
+.dataset-overdue.margin-fix {
+  margin-bottom: 15px;
+}
+.dataset-overdue.margin-fix .form-group {
+  margin-bottom: 0;
+}
+.dataset-overdue .overdue-title {
+  color: #f2645a;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 ul.list-horizontal {
   list-style: none;
