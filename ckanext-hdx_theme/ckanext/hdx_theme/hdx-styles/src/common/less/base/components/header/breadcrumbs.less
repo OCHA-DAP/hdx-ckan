@@ -28,6 +28,7 @@
       > li {
         text-shadow: none;
         white-space: nowrap;
+        display: inline; //in order ofr the text-overflow: ellipsis to work correctly on the last element
         &:after{
           content: " / ";
         }
