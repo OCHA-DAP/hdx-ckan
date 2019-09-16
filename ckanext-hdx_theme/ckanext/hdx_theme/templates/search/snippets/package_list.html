@@ -183,8 +183,32 @@ Example:
         {% if packages %}
             <div class="search-list">
                 <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+
+                    {% if admin_view %}
+                      <li class="list-items dataset-item ">
+                        <div class="dataset-pre-content">
+                          <div class="list-items dataset-content dataset-content2">
+                            <div class="row">
+                              <div class="col-xs-6">
+                              </div>
+                              <div class="col-xs-6">
+                                <div class="row">
+                                  <div class="col-xs-6">Expected dataset update:</div>
+                                  <div class="col-xs-6">Actions:</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    {% endif %}
+
                     {% for package in packages %}
-                        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
+                        {% set package_item_snippet = 'search/snippets/package_item.html' %}
+                        {% if admin_view %}
+                            {% set package_item_snippet = 'search/snippets/package_item_admin.html' %}
+                        {% endif %}
+                        {% snippet package_item_snippet, query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
                     {% endfor %}
                 </ul>
             </div>

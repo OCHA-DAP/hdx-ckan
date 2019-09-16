@@ -15,6 +15,11 @@
   border-radius: 100px;
 }
 /* END Style Dashboard - Newsfeed list */
+.alert-danger {
+  color: #f2645a;
+  border-color: #f2645a;
+  background-color: #fde9e8;
+}
 /* Actions */
 .base-actions-menu a.btn.hdx-btn {
   margin-left: 12px;
@@ -288,6 +293,27 @@
   color: #007CE0;
 }
 /* END Style Dataset Item */
+.info-label {
+  background-color: #f2645a;
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.info-label i {
+  font-size: 12px;
+  font-weight: 400;
+}
+.info-label.inverted {
+  background-color: #eeeeee;
+  color: #888888;
+}
+.plain-list {
+  list-style: none;
+  padding: 0;
+}
 .ckan-icon {
   display: inline-block;
   vertical-align: text-bottom;

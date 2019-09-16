@@ -302,7 +302,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
-            'last_modified': [tk.get_validator('ignore_missing')]
+            'last_modified': [tk.get_validator('ignore_missing')],
+            'due_daterange': [tk.get_validator('ignore_missing')],
+            'overdue_daterange': [tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -313,6 +315,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'filesize_format': hdx_helpers.filesize_format,
             'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
             'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
+            'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
             'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date
         }
 

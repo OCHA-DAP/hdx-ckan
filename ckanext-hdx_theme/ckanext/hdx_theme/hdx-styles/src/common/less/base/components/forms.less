@@ -19,6 +19,14 @@
   .background-gray {
     background-color: @extraLightGrayColor;
   }
+  .alert {
+    .sourceSansProFont(600, 14px);
+    margin: 0;
+  }
+
+  u a {
+    color: inherit;
+  }
 
   .background-white {
     background-color: @whiteColor;
@@ -106,6 +114,11 @@
         color: @whiteColor;
       }
     }
+  }
+
+  .confirm-resources-label {
+    color: @orangeColor;
+    margin-bottom: 15px;
   }
 
   label.control-label{
@@ -321,13 +334,33 @@
       padding-top: 0;
     }
   }
-  
+
   //override old radio style
   input[type=radio], input[type=checkbox] {
     top: auto;
   }
 }
 
+.dataset-overdue {
+  margin: 0 -20px;
+  padding: 20px;
+  background-color: @extraLightOrangeColor;
+  border: 1px solid @orangeColor;
+  border-radius: 4px;
+
+  &.margin-fix {
+    margin-bottom: 15px;
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  .overdue-title {
+    color: @orangeColor;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+}
 
 ul.list-horizontal {
   list-style: none;

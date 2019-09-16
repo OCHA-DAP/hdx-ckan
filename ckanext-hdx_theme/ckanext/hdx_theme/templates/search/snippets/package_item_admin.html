@@ -1,0 +1,31 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% block dataset_right_side %}
+<div class="row">
+  <div class="col-xs-6">
+    <div>
+      <span class="info-label {% if package.is_fresh %}inverted{% endif %}">
+        <i class="glyphicon glyphicon-time"></i>
+        {% set due_date = h.hdx_get_due_overdue_date(package)  %}
+        {{ due_date | default("N/A", True) }}
+      </span>
+    </div>
+    <div class="mTop8">
+      {% if package.is_fresh %}
+        The dataset is up to date.
+      {% else %}
+        The dataset is due for update. Please <a href="#" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">edit dataset</a>.
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <ul class="plain-list">
+      <li><a href="#" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a></li>
+      {% if (h.check_access('package_delete', {'id':package.id }) )and (not package.get('state', '').startswith('deleted')) %}
+        {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset?'), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
+        <li><a href="{% url_for controller='package', action='delete', id=package.id %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">Delete dataset</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

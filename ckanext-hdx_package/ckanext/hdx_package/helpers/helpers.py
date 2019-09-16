@@ -1,29 +1,24 @@
+import json
+import logging
 import re
 import urlparse
 
-import json
-import logging
-
-import ckan.lib.helpers as h
-import ckan.model as model
-import ckan.lib.base as base
-import ckan.logic as logic
-
-import ckan.plugins.toolkit as tk
-import ckan.authz as new_authz
-import ckan.lib.activity_streams as activity_streams
-import ckan.model.package as package
-import ckan.model.misc as misc
-
-from pylons import config
-
-
-from ckan.common import _, c, request
+import ckanext.hdx_package.helpers.custom_validator as vd
 from ckanext.hdx_package.exceptions import NoOrganization
 from ckanext.hdx_package.helpers.caching import cached_group_iso_to_title
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from pylons import config
 
-import ckanext.hdx_package.helpers.custom_validator as vd
+import ckan.authz as new_authz
+import ckan.lib.activity_streams as activity_streams
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.model as model
+import ckan.model.misc as misc
+import ckan.model.package as package
+import ckan.plugins.toolkit as tk
+from ckan.common import _, c, request
 
 get_action = logic.get_action
 log = logging.getLogger(__name__)
@@ -481,25 +476,15 @@ def hdx_get_last_modification_date(dataset_dict):
     return FreshnessCalculator.dataset_last_change_date(dataset_dict)
 
 
-def get_extra_from_dataset(field_name, dataset_dict):
-    ALLOWED_EXTRAS = {
-        'review_date': None,
-        'data_update_frequency': None,
-        'is_requestdata_type': [tk.get_validator('boolean_validator')],
-    }
-    result = None
-    if field_name in dataset_dict:
-        result = dataset_dict[field_name]
+def hdx_get_due_overdue_date(dataset_dict, type='overdue', format='%b %-d %Y'):
+    due_date, overdue_date = FreshnessCalculator(dataset_dict).read_from_range_due_overdue_dates()
+    if type == 'due':
+        d = due_date
+    else:
+        d = overdue_date
 
-    # When a dataset is indexed in solr the package dict returned by package_show
-    # leaves the extras fields unprocessed in an extras list so that they get indexed as extras_* fields in solr
-    elif 'extras' in dataset_dict and field_name in ALLOWED_EXTRAS:
-        result = next(
-            (extra.get('value') for extra in dataset_dict.get('extras')
-             if extra.get('state') == 'active' and extra.get('key') == field_name),
-            {})
-        if result and ALLOWED_EXTRAS[field_name]:
-            for func in ALLOWED_EXTRAS[field_name]:
-                result = func(result, {})
+    if d:
+        return d.strftime(format)
+    else:
+        return None
 
-    return result

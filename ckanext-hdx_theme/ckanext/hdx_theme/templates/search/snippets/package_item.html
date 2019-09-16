@@ -135,71 +135,72 @@
           </span>
           </div>
           <div class="col-xs-6">
+            {% block dataset_right_side %}
             <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
               {% block description %}
-              {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
-              {% if notes %}
-              <span data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"><div>{{ notes|urlize }}</div></span>
-              {% else %}
-              <p class="empty">{{ _("This dataset has no description") }}</p>
-              {% endif %}
+                {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
+                {% if notes %}
+                  <span data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"><div>{{ notes|urlize }}</div></span>
+                {% else %}
+                  <p class="empty">{{ _("This dataset has no description") }}</p>
+                {% endif %}
               {% endblock %}
             </div>
             <div class="dataset-others">
               {% block others %}
               {% if package.is_requestdata_type %}
-              {% if c.userobj %}
-              {% set is_logged_in = 'true' %}
-              {% else %}
-              {% set is_logged_in = 'false' %}
-              {% endif %}
-              {% set is_hdx = h.requestdata_is_hdx_portal() %}
-              {% set redirect_url = h.url_for(controller='user', action='login') %}
-              {% set requestdata_action = h.url_for('requestdata_send_request') %}
-              {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
-              {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
-              <a href="#" class="btn btn-primary" style="margin-top: 10px;"
-                 data-module="hdx-modal-form"
-                 data-module-template_file="request_contact.html"
-                 data-module-submit_action="{{ requestdata_action }}"
-                 data-module-post_data="{{ request_post_data }}"
-                 data-module-is_logged_in="{{ is_logged_in }}"
-                 data-module-is_hdx="{{ is_hdx }}"
-                 data-module-redirect_url="{{ redirect_url }}"
-                 data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
-                 data-module-analytics="{{ package.hdx_analytics }}"
-              >Request access</a>
-              <div class="requested-data-message"></div>
-              {% else %}
-              <ul class="hdx-bs3 list-items dataset-resources unstyled">
-                {% if package.resources and not hide_resources %}
-
-                {% for resource in h.dict_list_reduce(package.resources, 'format') %}
-                <li>
-                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
-                </li>
-                {% endfor %}
-                {# set size="32Kb" #}
-                {% if size %}
-                <li class="label-size">
-                  {{ size }}
-                </li>
+                {% if c.userobj %}
+                  {% set is_logged_in = 'true' %}
+                {% else %}
+                  {% set is_logged_in = 'false' %}
                 {% endif %}
-                {% endif %}
-                <!-- load package icons -->
-                {% snippet 'search/snippets/package_icons_base.html', package=package %}
-              </ul>
+                {% set is_hdx = h.requestdata_is_hdx_portal() %}
+                {% set redirect_url = h.url_for(controller='user', action='login') %}
+                {% set requestdata_action = h.url_for('requestdata_send_request') %}
+                {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
+                {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
+                <a href="#" class="btn btn-primary" style="margin-top: 10px;"
+                   data-module="hdx-modal-form"
+                   data-module-template_file="request_contact.html"
+                   data-module-submit_action="{{ requestdata_action }}"
+                   data-module-post_data="{{ request_post_data }}"
+                   data-module-is_logged_in="{{ is_logged_in }}"
+                   data-module-is_hdx="{{ is_hdx }}"
+                   data-module-redirect_url="{{ redirect_url }}"
+                   data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+                   data-module-analytics="{{ package.hdx_analytics }}"
+                >Request access</a>
+                <div class="requested-data-message"></div>
+              {% else %}
+                <ul class="hdx-bs3 list-items dataset-resources unstyled">
+                  {% if package.resources and not hide_resources %}
+                    {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                      <li>
+                        <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
+                      </li>
+                    {% endfor %}
+                    {# set size="32Kb" #}
+                    {% if size %}
+                      <li class="label-size">
+                        {{ size }}
+                      </li>
+                    {% endif %}
+                  {% endif %}
+                  <!-- load package icons -->
+                  {% snippet 'search/snippets/package_icons_base.html', package=package %}
+                </ul>
               {% endif %}
               {% endblock %}
             </div>
+            {% endblock %}
           </div>
           {% if package.batch_length and package.batch_length > 0 %}
-          <div class="col-xs-12 stacked-info">
-            <a href="{{package.batch_url}}" target="_blank">
-                Show {{  h.hdx_show_singular_plural(package.batch_length, _('other update'), _('other updates')) }} from
-                {{ package.organization.title or package.organization.name }} <i class="icon icon-external-link"></i>
-            </a>
-          </div>
+            <div class="col-xs-12 stacked-info">
+              <a href="{{package.batch_url}}" target="_blank">
+                  Show {{  h.hdx_show_singular_plural(package.batch_length, _('other update'), _('other updates')) }} from
+                  {{ package.organization.title or package.organization.name }} <i class="icon icon-external-link"></i>
+              </a>
+            </div>
           {% endif %}
         </div>
       </div>

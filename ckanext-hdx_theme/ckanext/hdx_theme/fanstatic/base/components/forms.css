@@ -4,6 +4,15 @@
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }
+.hdx-form .alert {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+.hdx-form u a {
+  color: inherit;
+}
 .hdx-form .background-white {
   background-color: #fff;
 }
@@ -88,6 +97,10 @@
   content: ">";
   float: left;
   color: #fff;
+}
+.hdx-form .confirm-resources-label {
+  color: #f2645a;
+  margin-bottom: 15px;
 }
 .hdx-form label.control-label {
   color: #333333;
@@ -280,6 +293,24 @@
 .hdx-form input[type=radio],
 .hdx-form input[type=checkbox] {
   top: auto;
+}
+.dataset-overdue {
+  margin: 0 -20px;
+  padding: 20px;
+  background-color: #fde9e8;
+  border: 1px solid #f2645a;
+  border-radius: 4px;
+}
+.dataset-overdue.margin-fix {
+  margin-bottom: 15px;
+}
+.dataset-overdue.margin-fix .form-group {
+  margin-bottom: 0;
+}
+.dataset-overdue .overdue-title {
+  color: #f2645a;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 ul.list-horizontal {
   list-style: none;
