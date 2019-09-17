@@ -467,7 +467,7 @@ def hdx_check_add_data():
         return data_dict
 
     data_dict['href'] = '#'
-    data_dict['onclick'] = 'contributeAddDetails(null, "header")'
+    data_dict['onclick'] = 'contributeAddDetails(null, \'header\')'
 
     return data_dict
 

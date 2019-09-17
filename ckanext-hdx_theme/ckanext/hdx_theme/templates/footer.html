@@ -3,6 +3,7 @@
 {% set secondContainerClass = secondContainerClass | default("") %}
 {% set thirdContainerClass = thirdContainerClass | default("") %}
 
+{% resource 'hdx_theme/mailchimp' %}
 {% set events = h.hdx_events_list() %}
 
 <div class="allow-cookies-container" style="display: none;">
