@@ -5,7 +5,9 @@ $(document).ready(function(){
     $.getJSON(url, {}, function(result){
         if (result.success){
             $.each(result.result, function(idx, el){
-                $('#existing-org-selector').append("<option value='"+ el.id +"'>"+ el.title +"</option>");
+                if (el.request_membership !== "false") {
+                  $('#existing-org-selector').append("<option value='"+ el.id +"'>"+ el.title +"</option>");
+                }
             });
             $('#existing-org-selector').select2();
         }
