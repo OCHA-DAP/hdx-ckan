@@ -8,7 +8,7 @@
         <i class="glyphicon glyphicon-time"></i>
         {% set due_date = h.hdx_get_due_overdue_date(package)  %}
         {{ due_date | default("N/A", True) }}
-      </span>
+      </span> ---{{ package.get('update_status')  }}
     </div>
     <div class="mTop8">
       {% if package.is_fresh %}

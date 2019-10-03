@@ -19,6 +19,12 @@ UPDATE_FREQ_INFO = {
 
 FRESHNESS_PROPERTY = 'is_fresh'
 
+UPDATE_STATUS_PROPERTY = 'update_status'
+
+UPDATE_STATUS_FRESH = 'fresh'
+UPDATE_STATUS_UNKNOWN = 'unknown'
+UPDATE_STATUS_NEEDS_UPDATE = 'needs_update'
+
 
 class FreshnessCalculator(object):
 
@@ -92,7 +98,15 @@ class FreshnessCalculator(object):
             return False
 
     def populate_with_freshness(self):
-        self.dataset_dict[FRESHNESS_PROPERTY] = self.is_fresh()
+        is_fresh = self.is_fresh()
+        self.dataset_dict[FRESHNESS_PROPERTY] = is_fresh
+
+        if is_fresh:
+            self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_FRESH
+        elif self.dataset_dict.get('due_daterange'):
+            self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_NEEDS_UPDATE
+        else:
+            self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_UNKNOWN
 
     def populate_with_date_ranges(self):
         start_of_due_range, start_of_overdue_range = self.compute_range_beginnings()
