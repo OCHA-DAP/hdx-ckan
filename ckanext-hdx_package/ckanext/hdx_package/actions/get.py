@@ -31,6 +31,7 @@ import ckanext.hdx_package.helpers.helpers as helpers
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 
@@ -766,3 +767,15 @@ def recently_changed_packages_activity_list(context, data_dict):
                     del _package_dict['maintainer_email']
 
     return result
+
+
+@logic.side_effect_free
+def hdx_recommend_tags(context, data_dict):
+    tag_recommender = TagRecommender(data_dict.get('title'), data_dict.get('organization'))
+    return tag_recommender.find_recommended_tags()
+
+
+@logic.side_effect_free
+def hdx_test_recommend_tags(context, data_dict):
+    tag_recommender = TagRecommenderTest(**data_dict)
+    return tag_recommender.run_test()
