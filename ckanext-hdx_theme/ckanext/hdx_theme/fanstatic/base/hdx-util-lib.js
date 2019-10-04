@@ -84,4 +84,21 @@
         return prevented;
     };
 
+    hdxUtil.eventUtil.debouncer = function (originalFunction, timeout) {
+
+      var timeout = timeout || 500;
+      var timeoutId = null;
+
+      return function () {
+        var originalArgs = arguments;
+        var originalFunctionCaller = function() {
+          originalFunction.apply(this, originalArgs);
+        }.bind(this);
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(originalFunctionCaller, timeout);
+      };
+    };
+
 })();
