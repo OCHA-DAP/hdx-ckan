@@ -28,66 +28,66 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.topic-icon-activity_needs_assessment:before {
-	content: "\e600";
-}
-.topic-icon-activity_policy:before {
-	content: "\e601";
-}
+/*.topic-icon-activity_needs_assessment:before {*/
+/*	content: "\e600";*/
+/*}*/
+/*.topic-icon-activity_policy:before {*/
+/*	content: "\e601";*/
+/*}*/
 .topic-icon-activity_financing:before {
 	content: "\e602";
 }
-.topic-icon-activity_information_management:before {
-	content: "\e603";
-}
-.topic-icon-activity_information_technology:before {
-	content: "\e604";
-}
-.topic-icon-activity_analysis:before {
-	content: "\e605";
-}
+/*.topic-icon-activity_information_management:before {*/
+/*	content: "\e603";*/
+/*}*/
+/*.topic-icon-activity_information_technology:before {*/
+/*	content: "\e604";*/
+/*}*/
+/*.topic-icon-activity_analysis:before {*/
+/*	content: "\e605";*/
+/*}*/
 .topic-icon-activity_fund:before {
 	content: "\e606";
 }
-.topic-icon-activity_training:before {
-	content: "\e607";
-}
-.topic-icon-activity_leadership:before {
-	content: "\e608";
-}
-.topic-icon-activity_partnership:before {
-	content: "\e609";
-}
-.topic-icon-activity_deployment:before {
-	content: "\e60a";
-}
+/*.topic-icon-activity_training:before {*/
+/*	content: "\e607";*/
+/*}*/
+/*.topic-icon-activity_leadership:before {*/
+/*	content: "\e608";*/
+/*}*/
+/*.topic-icon-activity_partnership:before {*/
+/*	content: "\e609";*/
+/*}*/
+/*.topic-icon-activity_deployment:before {*/
+/*	content: "\e60a";*/
+/*}*/
 .topic-icon-activity_humanitarian_programme_cycle:before {
 	content: "\e60b";
 }
-.topic-icon-activity_services_and_tools:before {
-	content: "\e60c";
-}
-.topic-icon-activity_scale_operation:before {
-	content: "\e60d";
-}
-.topic-icon-activity_staff_management:before {
-	content: "\e60e";
-}
-.topic-icon-activity_innovation:before {
-	content: "\e60f";
-}
-.topic-icon-activity_response:before {
-	content: "\e610";
-}
-.topic-icon-activity_meeting:before {
-	content: "\e611";
-}
-.topic-icon-activity_assessment:before {
-	content: "\e612";
-}
-.topic-icon-activity_public_information:before {
-	content: "\e613";
-}
+/*.topic-icon-activity_services_and_tools:before {*/
+/*	content: "\e60c";*/
+/*}*/
+/*.topic-icon-activity_scale_operation:before {*/
+/*	content: "\e60d";*/
+/*}*/
+/*.topic-icon-activity_staff_management:before {*/
+/*	content: "\e60e";*/
+/*}*/
+/*.topic-icon-activity_innovation:before {*/
+/*	content: "\e60f";*/
+/*}*/
+/*.topic-icon-activity_response:before {*/
+/*	content: "\e610";*/
+/*}*/
+/*.topic-icon-activity_meeting:before {*/
+/*	content: "\e611";*/
+/*}*/
+/*.topic-icon-activity_assessment:before {*/
+/*	content: "\e612";*/
+/*}*/
+/*.topic-icon-activity_public_information:before {*/
+/*	content: "\e613";*/
+/*}*/
 .topic-icon-activity_civil-military_coordination:before {
 	content: "\e614";
 }

@@ -119,9 +119,7 @@
   text-align: left;
   margin-top: -4px;
   padding: 0;
-}
-.control-order-by .orderDropdown .dropdown-toggle .caret {
-  margin-top: 6px;
+  font-size: 14px;
 }
 .control-order-by .orderDropdown .dropdown-toggle:hover,
 .control-order-by .orderDropdown .dropdown-toggle:focus {
@@ -672,7 +670,7 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 0;
 }
 .pill .icon-remove,
-.pill .glyphicon-remove {
+.pill .humanitarianicons-Exit-Cancel {
   cursor: pointer;
   margin-left: 20px;
 }
@@ -810,23 +808,15 @@ ul.dataset-resources li + li.label-icons {
   height: 35px;
   background-position: -320px -62px;
 }
-.icon-leaf.fresh {
+.humanitarianicons-Environment.fresh {
   color: #1bb580;
-  font-size: 16px;
   margin-left: 0;
 }
-.icon-leaf.fresh::before {
-  color: #1bb580;
-  font-size: 16px;
-  margin-left: 0;
-}
-.icon-questionmark.freshness {
+.humanitarianicons-Help.freshness {
   color: #007CE0;
-  font-size: 15px;
 }
-.icon-questionmark.freshness::before {
+.humanitarianicons-Help.freshness::before {
   color: #007CE0;
-  font-size: 15px;
 }
 #error-page {
   min-height: 400px;
@@ -1010,11 +1000,6 @@ ul.dataset-resources li + li.label-icons {
   color: #333333;
   text-decoration: underline;
 }
-.mainLinks > li #crises-label:after {
-  content: '\25bc';
-  margin-left: 3px;
-  font-size: 13px;
-}
 .mainLinks > li:first-child > a {
   margin-left: 0;
 }
@@ -1070,6 +1055,7 @@ ul.dataset-resources li + li.label-icons {
   top: 0;
   color: #fff;
   opacity: 1;
+  font-size: 16px;
 }
 .modal.in .modal-dialog .modal-content .modal-body {
   min-height: 193px;
@@ -2193,7 +2179,7 @@ textarea {
 .filter-category .categ-list .categ-search input:focus {
   outline: none;
 }
-.filter-category .categ-list .categ-search i.glyphicon-search {
+.filter-category .categ-list .categ-search i.humanitarianicons-Search {
   position: absolute;
   right: 10px;
   top: 10px;
@@ -2928,8 +2914,8 @@ ul.list-horizontal li:first-child:before {
 }
 .hdx-footer .links-list ul li .glyphicon-new-window,
 .hdx-footer .links-list ul a .glyphicon-new-window,
-.hdx-footer .links-list ul li .icon-external-link,
-.hdx-footer .links-list ul a .icon-external-link {
+.hdx-footer .links-list ul li .humanitarianicons-Out-of-platform,
+.hdx-footer .links-list ul a .humanitarianicons-Out-of-platform {
   color: #888888;
   margin-left: 3px;
   font-weight: 400;
@@ -2990,7 +2976,7 @@ ul.list-horizontal li:first-child:before {
 .hdx-footer .social-footer .terms a:last-child {
   margin-right: 0;
 }
-.hdx-footer .social-footer .terms a .icon-external-link {
+.hdx-footer .social-footer .terms a .humanitarianicons-Out-of-platform {
   color: #888888;
 }
 @media (max-width: 768px) {
@@ -3550,14 +3536,14 @@ ul.list-horizontal li:first-child:before {
 .new-header .header-nav-search .header-search-form .input-prepend {
   display: flex;
 }
-.new-header .header-nav-search .header-search-form .icon-search {
+.new-header .header-nav-search .header-search-form .humanitarianicons-Search {
   margin: 0 20px;
   color: #888888;
   font-size: 20px;
   line-height: 28px;
 }
 @media (max-width: 425px) {
-  .new-header .header-nav-search .header-search-form .icon-search {
+  .new-header .header-nav-search .header-search-form .humanitarianicons-Search {
     margin: 0 10px;
   }
 }

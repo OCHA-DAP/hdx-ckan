@@ -52,11 +52,6 @@
   color: #333333;
   text-decoration: underline;
 }
-.mainLinks > li #crises-label:after {
-  content: '\25bc';
-  margin-left: 3px;
-  font-size: 13px;
-}
 .mainLinks > li:first-child > a {
   margin-left: 0;
 }

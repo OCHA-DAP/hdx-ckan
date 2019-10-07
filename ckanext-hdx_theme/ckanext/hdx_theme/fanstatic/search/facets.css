@@ -116,7 +116,7 @@
 .filter-category .categ-list .categ-search input:focus {
   outline: none;
 }
-.filter-category .categ-list .categ-search i.glyphicon-search {
+.filter-category .categ-list .categ-search i.humanitarianicons-Search {
   position: absolute;
   right: 10px;
   top: 10px;

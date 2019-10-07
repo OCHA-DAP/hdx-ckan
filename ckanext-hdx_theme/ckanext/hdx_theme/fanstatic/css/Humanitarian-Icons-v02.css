@@ -1,0 +1,952 @@
+@font-face {
+  font-family: 'Humanitarian-Icons-v02';
+  src:  url('fonts/Humanitarian-Icons-v02.eot?cwtugu');
+  src:  url('fonts/Humanitarian-Icons-v02.eot?cwtugu#iefix') format('embedded-opentype'),
+    url('fonts/Humanitarian-Icons-v02.ttf?cwtugu') format('truetype'),
+    url('fonts/Humanitarian-Icons-v02.woff?cwtugu') format('woff'),
+    url('fonts/Humanitarian-Icons-v02.svg?cwtugu#Humanitarian-Icons-v02') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="humanitarianicons-"], [class*=" humanitarianicons-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Humanitarian-Icons-v02' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.humanitarianicons-Abduction-kidnapping:before {
+  content: "\e900";
+}
+.humanitarianicons-About:before {
+  content: "\e901";
+}
+.humanitarianicons-Add-document:before {
+  content: "\e902";
+}
+.humanitarianicons-Add:before {
+  content: "\e903";
+}
+.humanitarianicons-Advocacy:before {
+  content: "\e904";
+}
+.humanitarianicons-Affected-population:before {
+  content: "\e905";
+}
+.humanitarianicons-Agriculture:before {
+  content: "\e906";
+}
+.humanitarianicons-Airport-affected:before {
+  content: "\e907";
+}
+.humanitarianicons-Airport-destroyed:before {
+  content: "\e908";
+}
+.humanitarianicons-Airport-military:before {
+  content: "\e909";
+}
+.humanitarianicons-Airport-not-affected:before {
+  content: "\e90a";
+}
+.humanitarianicons-Airport:before {
+  content: "\e90b";
+}
+.humanitarianicons-Alert:before {
+  content: "\e90c";
+}
+.humanitarianicons-Analysis:before {
+  content: "\e90d";
+}
+.humanitarianicons-Arrest-detention:before {
+  content: "\e90e";
+}
+.humanitarianicons-Assault:before {
+  content: "\e90f";
+}
+.humanitarianicons-Assembly-point:before {
+  content: "\e910";
+}
+.humanitarianicons-Assessment:before {
+  content: "\e911";
+}
+.humanitarianicons-Attack:before {
+  content: "\e912";
+}
+.humanitarianicons-Blanket:before {
+  content: "\e913";
+}
+.humanitarianicons-Blog:before {
+  content: "\e914";
+}
+.humanitarianicons-Boat:before {
+  content: "\e915";
+}
+.humanitarianicons-Bookmark:before {
+  content: "\e916";
+}
+.humanitarianicons-Border-crossing:before {
+  content: "\e917";
+}
+.humanitarianicons-Borehole:before {
+  content: "\e918";
+}
+.humanitarianicons-Bottled-water:before {
+  content: "\e919";
+}
+.humanitarianicons-Bridge-affected:before {
+  content: "\e91a";
+}
+.humanitarianicons-Bridge-destroyed:before {
+  content: "\e91b";
+}
+.humanitarianicons-Bridge-not-affected:before {
+  content: "\e91c";
+}
+.humanitarianicons-Bridge:before {
+  content: "\e91d";
+}
+.humanitarianicons-Bucket:before {
+  content: "\e91e";
+}
+.humanitarianicons-Buddhist-temple:before {
+  content: "\e91f";
+}
+.humanitarianicons-Building-facility-affected:before {
+  content: "\e920";
+}
+.humanitarianicons-Building-facility-destroyed:before {
+  content: "\e921";
+}
+.humanitarianicons-Building-facility-not-affected:before {
+  content: "\e922";
+}
+.humanitarianicons-Building:before {
+  content: "\e923";
+}
+.humanitarianicons-Bus:before {
+  content: "\e924";
+}
+.humanitarianicons-Calendar:before {
+  content: "\e925";
+}
+.humanitarianicons-Camp-Coordination-and-Camp-Management:before {
+  content: "\e926";
+}
+.humanitarianicons-Car:before {
+  content: "\e927";
+}
+.humanitarianicons-Carjacking:before {
+  content: "\e928";
+}
+.humanitarianicons-Cash-transfer:before {
+  content: "\e929";
+}
+.humanitarianicons-Cell-tower:before {
+  content: "\e92a";
+}
+.humanitarianicons-Chart:before {
+  content: "\e92b";
+}
+.humanitarianicons-Chat:before {
+  content: "\e92c";
+}
+.humanitarianicons-Checkpoint:before {
+  content: "\e92d";
+}
+.humanitarianicons-Child-combatant:before {
+  content: "\e92e";
+}
+.humanitarianicons-Child-protection:before {
+  content: "\e92f";
+}
+.humanitarianicons-Children:before {
+  content: "\e930";
+}
+.humanitarianicons-Church:before {
+  content: "\e931";
+}
+.humanitarianicons-Civil-military-coordination:before {
+  content: "\e932";
+}
+.humanitarianicons-Clinic:before {
+  content: "\e933";
+}
+.humanitarianicons-Clothing:before {
+  content: "\e934";
+}
+.humanitarianicons-Cold-wave:before {
+  content: "\e935";
+}
+.humanitarianicons-Communal-latrine:before {
+  content: "\e936";
+}
+.humanitarianicons-Community-building:before {
+  content: "\e937";
+}
+.humanitarianicons-Community-engagement:before {
+  content: "\e938";
+}
+.humanitarianicons-Computer:before {
+  content: "\e939";
+}
+.humanitarianicons-Conflict:before {
+  content: "\e93a";
+}
+.humanitarianicons-Coordinated-assessement:before {
+  content: "\e93b";
+}
+.humanitarianicons-Coordination:before {
+  content: "\e93c";
+}
+.humanitarianicons-Copy:before {
+  content: "\e93d";
+}
+.humanitarianicons-Cyclone:before {
+  content: "\e93e";
+}
+.humanitarianicons-Damaged-Affected:before {
+  content: "\e93f";
+}
+.humanitarianicons-Dangerous-area:before {
+  content: "\e940";
+}
+.humanitarianicons-Data:before {
+  content: "\e941";
+}
+.humanitarianicons-Dead:before {
+  content: "\e942";
+}
+.humanitarianicons-Debris-management:before {
+  content: "\e943";
+}
+.humanitarianicons-Deployment:before {
+  content: "\e944";
+}
+.humanitarianicons-Destroyed:before {
+  content: "\e945";
+}
+.humanitarianicons-Detergent:before {
+  content: "\e946";
+}
+.humanitarianicons-Diplomatic-mission:before {
+  content: "\e947";
+}
+.humanitarianicons-Distribution-site:before {
+  content: "\e948";
+}
+.humanitarianicons-Document:before {
+  content: "\e949";
+}
+.humanitarianicons-Down:before {
+  content: "\e94a";
+}
+.humanitarianicons-Download:before {
+  content: "\e94b";
+}
+.humanitarianicons-Drought:before {
+  content: "\e94c";
+}
+.humanitarianicons-Drowned:before {
+  content: "\e94d";
+}
+.humanitarianicons-E-mail:before {
+  content: "\e94e";
+}
+.humanitarianicons-Early-Recovery:before {
+  content: "\e94f";
+}
+.humanitarianicons-Earthmound:before {
+  content: "\e950";
+}
+.humanitarianicons-Earthquake:before {
+  content: "\e951";
+}
+.humanitarianicons-Education:before {
+  content: "\e952";
+}
+.humanitarianicons-Elderly:before {
+  content: "\e953";
+}
+.humanitarianicons-Emergency-Telecommunications:before {
+  content: "\e954";
+}
+.humanitarianicons-Environment:before {
+  content: "\e955";
+}
+.humanitarianicons-Epidemic:before {
+  content: "\e956";
+}
+.humanitarianicons-Exit-Cancel:before {
+  content: "\e957";
+}
+.humanitarianicons-Famine:before {
+  content: "\e958";
+}
+.humanitarianicons-Favourite:before {
+  content: "\e959";
+}
+.humanitarianicons-Fax:before {
+  content: "\e95a";
+}
+.humanitarianicons-Ferry:before {
+  content: "\e95b";
+}
+.humanitarianicons-Film:before {
+  content: "\e95c";
+}
+.humanitarianicons-Filter:before {
+  content: "\e95d";
+}
+.humanitarianicons-Financing:before {
+  content: "\e95e";
+}
+.humanitarianicons-Fire:before {
+  content: "\e95f";
+}
+.humanitarianicons-Fishery:before {
+  content: "\e960";
+}
+.humanitarianicons-Flash-flood:before {
+  content: "\e961";
+}
+.humanitarianicons-Flood:before {
+  content: "\e962";
+}
+.humanitarianicons-Flour:before {
+  content: "\e963";
+}
+.humanitarianicons-Folder:before {
+  content: "\e964";
+}
+.humanitarianicons-Food-Security:before {
+  content: "\e965";
+}
+.humanitarianicons-Food-warehouse:before {
+  content: "\e966";
+}
+.humanitarianicons-Food:before {
+  content: "\e967";
+}
+.humanitarianicons-Forced-entry:before {
+  content: "\e968";
+}
+.humanitarianicons-Forced-recruitment:before {
+  content: "\e969";
+}
+.humanitarianicons-Fund:before {
+  content: "\e96a";
+}
+.humanitarianicons-Gap-analysis:before {
+  content: "\e96b";
+}
+.humanitarianicons-Gas-station:before {
+  content: "\e96c";
+}
+.humanitarianicons-Go:before {
+  content: "\e96d";
+}
+.humanitarianicons-Government-office:before {
+  content: "\e96e";
+}
+.humanitarianicons-Group:before {
+  content: "\e96f";
+}
+.humanitarianicons-Harassment-intimidation:before {
+  content: "\e970";
+}
+.humanitarianicons-Health-facility-affected:before {
+  content: "\e971";
+}
+.humanitarianicons-Health-facility-destroyed:before {
+  content: "\e972";
+}
+.humanitarianicons-Health-facility-not-affected:before {
+  content: "\e973";
+}
+.humanitarianicons-Health-facility:before {
+  content: "\e974";
+}
+.humanitarianicons-Health-post:before {
+  content: "\e975";
+}
+.humanitarianicons-Health:before {
+  content: "\e976";
+  color: #5091cd;
+}
+.humanitarianicons-Heatwave:before {
+  content: "\e977";
+}
+.humanitarianicons-Heavy-rain:before {
+  content: "\e978";
+}
+.humanitarianicons-Helicopter:before {
+  content: "\e979";
+}
+.humanitarianicons-Helipad:before {
+  content: "\e97a";
+}
+.humanitarianicons-Help:before {
+  content: "\e97b";
+}
+.humanitarianicons-Hidden:before {
+  content: "\e97c";
+}
+.humanitarianicons-Hindu-temple:before {
+  content: "\e97d";
+}
+.humanitarianicons-Hospital:before {
+  content: "\e97e";
+}
+.humanitarianicons-Hotel:before {
+  content: "\e97f";
+}
+.humanitarianicons-House-affected:before {
+  content: "\e980";
+}
+.humanitarianicons-House-burned:before {
+  content: "\e981";
+}
+.humanitarianicons-House-destroyed:before {
+  content: "\e982";
+}
+.humanitarianicons-House-not-affected:before {
+  content: "\e983";
+}
+.humanitarianicons-House:before {
+  content: "\e984";
+}
+.humanitarianicons-Humanitarian-access:before {
+  content: "\e985";
+}
+.humanitarianicons-Humanitarian-programme-cycle:before {
+  content: "\e986";
+}
+.humanitarianicons-IDP-refugee-camp:before {
+  content: "\e987";
+}
+.humanitarianicons-Infant-formula:before {
+  content: "\e988";
+}
+.humanitarianicons-Infant:before {
+  content: "\e989";
+}
+.humanitarianicons-Information-management:before {
+  content: "\e98a";
+}
+.humanitarianicons-Information-technology:before {
+  content: "\e98b";
+}
+.humanitarianicons-Infrastructure:before {
+  content: "\e98c";
+}
+.humanitarianicons-Injured:before {
+  content: "\e98d";
+}
+.humanitarianicons-Innovation:before {
+  content: "\e98e";
+}
+.humanitarianicons-Insect-infestation:before {
+  content: "\e98f";
+}
+.humanitarianicons-Internally-displaced:before {
+  content: "\e990";
+}
+.humanitarianicons-Internet:before {
+  content: "\e991";
+}
+.humanitarianicons-Kitchen-set:before {
+  content: "\e992";
+}
+.humanitarianicons-Landslide-mudslide:before {
+  content: "\e993";
+}
+.humanitarianicons-Laptop:before {
+  content: "\e994";
+}
+.humanitarianicons-Latrine-cabin:before {
+  content: "\e995";
+}
+.humanitarianicons-Leadership:before {
+  content: "\e996";
+}
+.humanitarianicons-Learning:before {
+  content: "\e997";
+}
+.humanitarianicons-Link:before {
+  content: "\e998";
+}
+.humanitarianicons-Livelihood:before {
+  content: "\e999";
+}
+.humanitarianicons-Livestock:before {
+  content: "\e99a";
+}
+.humanitarianicons-Location:before {
+  content: "\e99b";
+}
+.humanitarianicons-Locust-infestation:before {
+  content: "\e99c";
+}
+.humanitarianicons-Logistics:before {
+  content: "\e99d";
+}
+.humanitarianicons-Map:before {
+  content: "\e99e";
+}
+.humanitarianicons-Mattress:before {
+  content: "\e99f";
+}
+.humanitarianicons-Medical-supply:before {
+  content: "\e9a0";
+}
+.humanitarianicons-Medicine:before {
+  content: "\e9a1";
+}
+.humanitarianicons-Meeting:before {
+  content: "\e9a2";
+}
+.humanitarianicons-Menu:before {
+  content: "\e9a3";
+}
+.humanitarianicons-Military-gate:before {
+  content: "\e9a4";
+}
+.humanitarianicons-Mine:before {
+  content: "\e9a5";
+}
+.humanitarianicons-Missing:before {
+  content: "\e9a6";
+}
+.humanitarianicons-Mobile-clinic:before {
+  content: "\e9a7";
+}
+.humanitarianicons-Mobile-phone:before {
+  content: "\e9a8";
+}
+.humanitarianicons-Monitor:before {
+  content: "\e9a9";
+}
+.humanitarianicons-Monitoring:before {
+  content: "\e9aa";
+}
+.humanitarianicons-More-options:before {
+  content: "\e9ab";
+}
+.humanitarianicons-Mosque:before {
+  content: "\e9ac";
+}
+.humanitarianicons-Mosquito-net:before {
+  content: "\e9ad";
+}
+.humanitarianicons-Multi-cluster-sector:before {
+  content: "\e9ae";
+}
+.humanitarianicons-Murder:before {
+  content: "\e9af";
+}
+.humanitarianicons-National-army:before {
+  content: "\e9b0";
+}
+.humanitarianicons-Needs-assessment:before {
+  content: "\e9b1";
+}
+.humanitarianicons-Next-item:before {
+  content: "\e9b2";
+}
+.humanitarianicons-NGO-office:before {
+  content: "\e9b3";
+}
+.humanitarianicons-Non-food-items-2:before {
+  content: "\e9b4";
+}
+.humanitarianicons-Non-food-items:before {
+  content: "\e9b5";
+}
+.humanitarianicons-Not-affected:before {
+  content: "\e9b6";
+}
+.humanitarianicons-Notification:before {
+  content: "\e9b7";
+}
+.humanitarianicons-Nutrition:before {
+  content: "\e9b8";
+}
+.humanitarianicons-Observation-tower:before {
+  content: "\e9b9";
+}
+.humanitarianicons-Oil:before {
+  content: "\e9ba";
+}
+.humanitarianicons-Out-of-platform:before {
+  content: "\e9bb";
+}
+.humanitarianicons-Partnership:before {
+  content: "\e9bc";
+}
+.humanitarianicons-Pause:before {
+  content: "\e9bd";
+}
+.humanitarianicons-Peacekeeping-force:before {
+  content: "\e9be";
+}
+.humanitarianicons-People-in-need:before {
+  content: "\e9bf";
+}
+.humanitarianicons-People-targeted:before {
+  content: "\e9c0";
+}
+.humanitarianicons-People-with-physical-impairments:before {
+  content: "\e9c1";
+}
+.humanitarianicons-Permanent-camp:before {
+  content: "\e9c2";
+}
+.humanitarianicons-Person-1:before {
+  content: "\e9c3";
+  color: #5091cd;
+}
+.humanitarianicons-Person-2:before {
+  content: "\e9c4";
+}
+.humanitarianicons-Photo:before {
+  content: "\e9c5";
+}
+.humanitarianicons-Physical-closure:before {
+  content: "\e9c6";
+}
+.humanitarianicons-Plastic-sheeting:before {
+  content: "\e9c7";
+}
+.humanitarianicons-Police-station:before {
+  content: "\e9c8";
+}
+.humanitarianicons-Policy:before {
+  content: "\e9c9";
+}
+.humanitarianicons-Population-growth:before {
+  content: "\e9ca";
+}
+.humanitarianicons-Population-return:before {
+  content: "\e9cb";
+}
+.humanitarianicons-Port-affected:before {
+  content: "\e9cc";
+}
+.humanitarianicons-Port-destroyed:before {
+  content: "\e9cd";
+}
+.humanitarianicons-Port-not-affected:before {
+  content: "\e9ce";
+}
+.humanitarianicons-Port:before {
+  content: "\e9cf";
+}
+.humanitarianicons-Potable-water-source:before {
+  content: "\e9d0";
+}
+.humanitarianicons-Potable-water:before {
+  content: "\e9d1";
+}
+.humanitarianicons-Pregnant:before {
+  content: "\e9d2";
+}
+.humanitarianicons-Preparedness:before {
+  content: "\e9d3";
+}
+.humanitarianicons-Previous-item:before {
+  content: "\e9d4";
+}
+.humanitarianicons-Print:before {
+  content: "\e9d5";
+}
+.humanitarianicons-Protection:before {
+  content: "\e9d6";
+}
+.humanitarianicons-Public-information:before {
+  content: "\e9d7";
+}
+.humanitarianicons-Radio:before {
+  content: "\e9d8";
+}
+.humanitarianicons-Rebel:before {
+  content: "\e9d9";
+}
+.humanitarianicons-Reconstruction:before {
+  content: "\e9da";
+}
+.humanitarianicons-Refugee:before {
+  content: "\e9db";
+}
+.humanitarianicons-Registration:before {
+  content: "\e9dc";
+}
+.humanitarianicons-Relief-goods:before {
+  content: "\e9dd";
+}
+.humanitarianicons-Remove-document:before {
+  content: "\e9de";
+}
+.humanitarianicons-Remove:before {
+  content: "\e9df";
+}
+.humanitarianicons-Report:before {
+  content: "\e9e0";
+}
+.humanitarianicons-Reporting:before {
+  content: "\e9e1";
+}
+.humanitarianicons-Response:before {
+  content: "\e9e2";
+}
+.humanitarianicons-Return:before {
+  content: "\e9e3";
+}
+.humanitarianicons-Rice:before {
+  content: "\e9e4";
+}
+.humanitarianicons-Road-affected:before {
+  content: "\e9e5";
+}
+.humanitarianicons-Road-barrier:before {
+  content: "\e9e6";
+}
+.humanitarianicons-Road-destroyed:before {
+  content: "\e9e7";
+}
+.humanitarianicons-Road-not-affected:before {
+  content: "\e9e8";
+}
+.humanitarianicons-Road:before {
+  content: "\e9e9";
+}
+.humanitarianicons-Roadblock:before {
+  content: "\e9ea";
+}
+.humanitarianicons-Robbery:before {
+  content: "\e9eb";
+}
+.humanitarianicons-Rule-of-law-and-justice:before {
+  content: "\e9ec";
+}
+.humanitarianicons-Rural-exodus:before {
+  content: "\e9ed";
+}
+.humanitarianicons-Rural:before {
+  content: "\e9ee";
+}
+.humanitarianicons-Safety-and-security:before {
+  content: "\e9ef";
+}
+.humanitarianicons-Salt:before {
+  content: "\e9f0";
+}
+.humanitarianicons-Sanitation:before {
+  content: "\e9f1";
+}
+.humanitarianicons-Satellite-dish:before {
+  content: "\e9f2";
+}
+.humanitarianicons-Save:before {
+  content: "\e9f3";
+}
+.humanitarianicons-Scale-down-operation:before {
+  content: "\e9f4";
+}
+.humanitarianicons-Scale-up-operation:before {
+  content: "\e9f5";
+}
+.humanitarianicons-School-affected:before {
+  content: "\e9f6";
+}
+.humanitarianicons-School-destroyed:before {
+  content: "\e9f7";
+}
+.humanitarianicons-School-not-affected:before {
+  content: "\e9f8";
+}
+.humanitarianicons-School:before {
+  content: "\e9f9";
+}
+.humanitarianicons-Search:before {
+  content: "\e9fa";
+}
+.humanitarianicons-See:before {
+  content: "\e9fb";
+}
+.humanitarianicons-Selected:before {
+  content: "\e9fc";
+}
+.humanitarianicons-Services-and-tools:before {
+  content: "\e9fd";
+}
+.humanitarianicons-Settings:before {
+  content: "\e9fe";
+}
+.humanitarianicons-Sexual-violence:before {
+  content: "\e9ff";
+}
+.humanitarianicons-Share:before {
+  content: "\ea00";
+}
+.humanitarianicons-Shelter:before {
+  content: "\ea01";
+}
+.humanitarianicons-Ship:before {
+  content: "\ea02";
+}
+.humanitarianicons-Shower:before {
+  content: "\ea03";
+}
+.humanitarianicons-Smartphone:before {
+  content: "\ea04";
+}
+.humanitarianicons-Snow-avalanche:before {
+  content: "\ea05";
+}
+.humanitarianicons-Snowfall:before {
+  content: "\ea06";
+}
+.humanitarianicons-Soap:before {
+  content: "\ea07";
+}
+.humanitarianicons-Solid-waste:before {
+  content: "\ea08";
+}
+.humanitarianicons-Spontaneous-site:before {
+  content: "\ea09";
+}
+.humanitarianicons-Spring-water:before {
+  content: "\ea0a";
+}
+.humanitarianicons-Staff-management:before {
+  content: "\ea0b";
+}
+.humanitarianicons-Stop:before {
+  content: "\ea0c";
+}
+.humanitarianicons-Storm-surge:before {
+  content: "\ea0d";
+}
+.humanitarianicons-Storm:before {
+  content: "\ea0e";
+}
+.humanitarianicons-Stove:before {
+  content: "\ea0f";
+}
+.humanitarianicons-Submersible-pump:before {
+  content: "\ea10";
+}
+.humanitarianicons-Sugar:before {
+  content: "\ea11";
+}
+.humanitarianicons-Table:before {
+  content: "\ea12";
+}
+.humanitarianicons-Tarpaulin:before {
+  content: "\ea13";
+}
+.humanitarianicons-Technological-disaster:before {
+  content: "\ea14";
+}
+.humanitarianicons-Temporary-camp:before {
+  content: "\ea15";
+}
+.humanitarianicons-Tent:before {
+  content: "\ea16";
+}
+.humanitarianicons-Toilet:before {
+  content: "\ea17";
+}
+.humanitarianicons-Tornado:before {
+  content: "\ea18";
+}
+.humanitarianicons-Trade-and-market:before {
+  content: "\ea19";
+}
+.humanitarianicons-Train:before {
+  content: "\ea1a";
+}
+.humanitarianicons-Training:before {
+  content: "\ea1b";
+}
+.humanitarianicons-Transition-site:before {
+  content: "\ea1c";
+}
+.humanitarianicons-Trending:before {
+  content: "\ea1d";
+}
+.humanitarianicons-Truck:before {
+  content: "\ea1e";
+}
+.humanitarianicons-Tsunami:before {
+  content: "\ea1f";
+}
+.humanitarianicons-Tunnel:before {
+  content: "\ea20";
+}
+.humanitarianicons-UN-compound-office:before {
+  content: "\ea21";
+}
+.humanitarianicons-UN-vehicle:before {
+  content: "\ea22";
+}
+.humanitarianicons-University:before {
+  content: "\ea23";
+}
+.humanitarianicons-Up:before {
+  content: "\ea24";
+}
+.humanitarianicons-Upload:before {
+  content: "\ea25";
+}
+.humanitarianicons-Urban-rural:before {
+  content: "\ea26";
+}
+.humanitarianicons-Urban:before {
+  content: "\ea27";
+}
+.humanitarianicons-User:before {
+  content: "\ea28";
+}
+.humanitarianicons-Users:before {
+  content: "\ea29";
+}
+.humanitarianicons-Vaccine:before {
+  content: "\ea2a";
+}
+.humanitarianicons-Video:before {
+  content: "\ea2b";
+}
+.humanitarianicons-Violent-wind:before {
+  content: "\ea2c";
+}
+.humanitarianicons-Volcano:before {
+  content: "\ea2d";
+}
+.humanitarianicons-Walkie-talkie:before {
+  content: "\ea2e";
+}
+.humanitarianicons-Warning-Error:before {
+  content: "\ea2f";
+}
+.humanitarianicons-Water-Sanitation-and-Hygiene:before {
+  content: "\ea30";
+}
+.humanitarianicons-Water-source:before {
+  content: "\ea31";
+}
+.humanitarianicons-Water-trucking:before {
+  content: "\ea32";
+}
+.humanitarianicons-ZIP-compressed:before {
+  content: "\ea33";
+}
