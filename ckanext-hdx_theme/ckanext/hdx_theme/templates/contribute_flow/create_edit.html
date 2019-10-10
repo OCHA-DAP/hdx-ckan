@@ -134,7 +134,7 @@
                             {{ form_title }} - <span class="small">{{ _('Please fill out all required fields') }}</span>
                         </li>
                     </ol>
-                    {% if not data.is_fresh %}
+                    {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
                     <div class="paddingLeftHack paddingRightHack">
                       <div class="alert alert-danger">
                         This dataset has passed it's update date on
@@ -298,8 +298,8 @@
 
                                         <div id="resource-list">
                                             <div class="label-title-style mBottom10"><span class="resources_total">0 Resources</span> <small>(drag and drop to sort)</small></div>
-                                            <div class="{% if not data.is_fresh %} dataset-overdue {% endif %}">
-                                              {% if not data.is_fresh %}
+                                            <div class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-overdue {% endif %}">
+                                              {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
                                               <div id="confirm-resource-freshness">
                                                 <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u></label>
                                               </div>
@@ -559,8 +559,8 @@
                                                     'data-toggle': 'tooltip'}
                                                     %}
                                             <div id="data_update_frequency" data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                              <div class="{% if not data.is_fresh %} dataset-overdue margin-fix {% endif %}">
-                                                {% if not data.is_fresh %} <div class="overdue-title">Please check if the following field is up to date:</div>{% endif %}
+                                              <div class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-overdue margin-fix {% endif %}">
+                                                {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} <div class="overdue-title">Please check if the following field is up to date:</div>{% endif %}
                                                 {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
                                               </div>
                                             </div>
