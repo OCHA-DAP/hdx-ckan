@@ -555,7 +555,7 @@ search = {
                  'You can also find all CODs datasets <a target="_blank"  href="https://data.humdata.org/cod">here</a>. '
         },
         {
-            'q': 'How do I find a set of high quality datasets for a specific country?',
+            'q': 'How do I find a set of high quality datasets for a specific country? (How do I use the Data Grid?)',
             'a': 'The Data Grid is a prototype feature to help our users find the most critical and useful data. '
                  'The Data Grid provides a quick way to find datasets that meet or partially meet the criteria for a set '
                  'of core data categories, like internally displaced persons and refugee numbers, conflict events, '
@@ -594,16 +594,13 @@ metadata_and_data_quality = {
         },
         {
             'q': 'What should I put for expected update frequency?',
-            'a': 'This metadata field indicates how often you expect your data to be updated and includes values '
-                 'like Every day and Every year as well as the following:<br/>'
+            'a': '<p>This metadata field indicates how often you expect the data in your dataset to be updated. It should reflect the frequency with which you believe your data will change. This can be different from how often you check your data. It includes values like "Every day" and "Every year" as well as the following:</p><br/>'
                  '<ul>'
                  '<li>Live - for datasets where updates are continuous and ongoing</li>'
                  '<li>As needed - for datasets with an unpredictable, widely varying update frequency</li>'
                  '<li>Never - for datasets with data that will never be changed</li>'
                  '</ul>'
-                 'We recommend you choose the nearest less frequent regular value instead of As needed or Never as '
-                 'this helps with our monitoring of data freshness. For example, if your data will be updated '
-                 'every 1-6 days, pick Every week, or if every 2 to 9 weeks, choose Every three months.',
+                 'We recommend you choose the nearest less frequent regular value instead of "As needed" or "Never". This helps with our monitoring of data freshness. For example, if your data will be updated every 1-6 days, pick "Every week", or if every 2 to 9 weeks, choose "Every three months".',
         },
         {
             'q': 'What does the green leaf symbol mean?',
@@ -762,6 +759,7 @@ data_policy = {
                  '<p>Different data can have different levels of sensitivity depending on the context. For example, locations of medical facilities in conflict settings can expose patients and staff to risk of attacks, whereas the same facility location data would likely not be considered sensitive in a natural disaster setting.</p>'
                  '<p>Recognizing this complexity, the Guidelines include an <a target="_blank" href="https://centre.humdata.org/wp-content/uploads/2019/03/image1-768x596.png">Information and Data Sensitivity Classification model</a> to help colleagues assess and manage sensitivity in a standardized way.</p>'
                  '<p>For microdata (survey and needs-assessment data), you can manage the sensitivity level by applying a Statistical Disclosure Control (SDC) process. There are several tools available online to do SDC - we use <a target="_blank" href="http://surveys.worldbank.org/sdcmicro">sdcMicro</a>.</p>'
+                 '<p>The Centre has developed a <a target="_blank" href="https://centre.humdata.org/guidance-note-statistical-disclosure-control/">Guidance Note on Statistical Disclosure Control</a> that outlines the steps involved in the SDC process, potential applications for its use, case studies and key actions for humanitarian data practitioners to take when managing sensitive microdata.</p>'
 
         }
         ,
@@ -812,7 +810,7 @@ contact = {
 #        {
 #            'q': 'How do I access the HDX API?',
 #            'a': 'There are two APIs for accessing HDX. '
-#                 'The best choice for most tasks is the HDX Python Library which is open source and available ' 
+#                 'The best choice for most tasks is the HDX Python Library which is open source and available '
 #                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">here</a>. '
 #                 'The library is a wrapper around the the base CKAN API with additional features that simplify usage.'
 #                 'Learn more about it <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
