@@ -3736,9 +3736,6 @@ label.terms-of-service:after {
   margin: 0;
   display: block;
 }
-.navbar.new-header .navbar-toggle {
-  display: none;
-}
 .navbar.new-header.navbar-static-top {
   width: 100%;
 }
