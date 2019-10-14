@@ -2495,7 +2495,7 @@ textarea {
   color: #fff;
 }
 .hdx-form .confirm-resources-label {
-  color: #f2645a;
+  color: #333333;
   margin-bottom: 15px;
 }
 .hdx-form label.control-label {
@@ -2690,21 +2690,29 @@ textarea {
 .hdx-form input[type=checkbox] {
   top: auto;
 }
-.dataset-overdue {
+.dataset-status {
   margin: 0 -20px;
   padding: 20px;
-  background-color: #fde9e8;
-  border: 1px solid #f2645a;
+  background-color: #eeeeee;
+  border: 1px solid #888888;
   border-radius: 4px;
 }
-.dataset-overdue.margin-fix {
+.dataset-status.overdue {
+  border-color: #f2645a;
+  background-color: #fde9e8;
+}
+.dataset-status.overdue .overdue-title,
+.dataset-status.overdue .confirm-resources-label {
+  color: #f2645a;
+}
+.dataset-status.margin-fix {
   margin-bottom: 15px;
 }
-.dataset-overdue.margin-fix .form-group {
+.dataset-status.margin-fix .form-group {
   margin-bottom: 0;
 }
-.dataset-overdue .overdue-title {
-  color: #f2645a;
+.dataset-status .overdue-title {
+  color: #888888;
   font-weight: 600;
   margin-bottom: 10px;
 }
