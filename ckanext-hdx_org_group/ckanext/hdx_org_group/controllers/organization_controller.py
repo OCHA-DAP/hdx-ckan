@@ -60,33 +60,6 @@ log = logging.getLogger(__name__)
 #         return False
 #     return True
 
-def _find_last_update_for_orgs(org_names):
-    org_to_update_time = {}
-    if org_names:
-        context = {
-            'model': model,
-            'session': model.Session
-        }
-        filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
-
-        data_dict = {
-            'q': '',
-            'fq': filter,
-            'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
-            'rows': len(org_names),
-            'start': 0,
-            'sort': 'metadata_modified desc'
-        }
-        query = get_action('package_search')(context, data_dict)
-        org_to_update_time = {d['organization']['name']: d.get('metadata_modified') for d in query['results']}
-    return org_to_update_time
-
-
-def org_add_last_updated_field(displayed_orgs):
-    org_to_last_update = _find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
-    for o in displayed_orgs:
-        o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
-
 
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
@@ -147,7 +120,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         # displayed_orgs = c.featured_orgs + [o for o in c.page]
         displayed_orgs = [o for o in c.page]
-        org_add_last_updated_field(displayed_orgs)
+        helper.org_add_last_updated_field(displayed_orgs)
 
         return base.render('organization/index.html')
 
@@ -165,7 +138,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         except NotAuthorized, e:
             abort(403, _('Not authorized to see this page'))
 
-        org_add_last_updated_field([org_meta.org_dict])
+        helper.org_add_last_updated_field([org_meta.org_dict])
 
         c.group_dict = org_meta.org_dict
 

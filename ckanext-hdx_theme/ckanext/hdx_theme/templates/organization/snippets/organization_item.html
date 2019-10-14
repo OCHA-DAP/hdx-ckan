@@ -13,7 +13,7 @@ Example:
 #}
 
 {% set url = h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc') %}
-{% set f_updated_time = organization.dataset_last_updated %}
+{% set f_updated_time = h.render_datetime(organization.dataset_last_updated) %}
 {% set followers = h.get_group_followers(organization.id) %}
 {% set members = h.get_group_members(organization.id) %}
 
@@ -38,13 +38,13 @@ Example:
       		<div class="list-items content empty">{{ _('This organization has no description') }}</div>
     	{% endif %}
 	  {% endblock %}
-	  
+
 	  {% block role %}
 	  	{% if organization.role %}
 	  		<div class="list-items extra-info">{{ _('Your role') }}: {{ organization.role }}</div>
 	  	{% endif %}
 	  {% endblock %}
-	  
+
 	  {% block counters %}
 	  <div class="list-items mTop20">
 		  {% block datasets %}

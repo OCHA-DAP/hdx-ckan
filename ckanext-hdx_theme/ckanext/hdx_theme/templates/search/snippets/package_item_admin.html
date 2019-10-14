@@ -3,20 +3,22 @@
 {% block dataset_right_side %}
 <div class="row">
   <div class="col-xs-6">
-    <div>
-      <span class="info-label {% if package.is_fresh %}inverted{% endif %}">
-        <i class="glyphicon glyphicon-time"></i>
-        {% set due_date = h.hdx_get_due_overdue_date(package)  %}
-        {{ due_date | default("N/A", True) }}
-      </span>
-    </div>
-    <div class="mTop8">
-      {% if package.is_fresh %}
-        The dataset is up to date.
-      {% else %}
-        The dataset is due for update. Please <a href="#" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">edit dataset</a>.
-      {% endif %}
-    </div>
+    {% if not package.get('update_status') == 'unknown' %}
+      <div>
+        <span class="info-label {% if package.is_fresh %}inverted{% endif %}">
+          <i class="glyphicon glyphicon-time"></i>
+          {% set due_date = h.hdx_get_due_overdue_date(package)  %}
+          {{ due_date | default("N/A", True) }}
+        </span>
+      </div>
+      <div class="mTop8">
+        {% if package.is_fresh %}
+          The dataset is up to date.
+        {% else %}
+          The dataset is due for update. Please <a href="#" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">edit dataset</a>.
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
   <div class="col-xs-6">
     <ul class="plain-list">

@@ -373,16 +373,18 @@ def hdx_group_followee_list():
 
 
 def hdx_organizations_available_with_roles():
-    organizations_available = h.organizations_available('read')
-    if organizations_available and len(organizations_available) > 0:
-        orgs_where_editor = []
-        orgs_where_admin = []
+    """
+    Gets roles of organizations the current user belongs to
+    """
+    import ckanext.hdx_org_group.helpers.organization_helper as hdx_helper
+    organizations_available = h.organizations_available('read', include_dataset_count=True)
+    # if organizations_available and len(organizations_available) > 0:
+    orgs_where_editor = []
+    orgs_where_admin = []
     am_sysadmin = new_authz.is_sysadmin(c.user)
     if not am_sysadmin:
-        orgs_where_editor = set(
-            [org['id'] for org in h.organizations_available('create_dataset')])
-        orgs_where_admin = set([org['id']
-                                for org in h.organizations_available('admin')])
+        orgs_where_editor = set([org['id'] for org in h.organizations_available('create_dataset')])
+        orgs_where_admin = set([org['id'] for org in h.organizations_available('admin')])
 
     for org in organizations_available:
         org['has_add_dataset_rights'] = True
@@ -396,8 +398,8 @@ def hdx_organizations_available_with_roles():
             org['role'] = 'member'
             org['has_add_dataset_rights'] = False
 
-    organizations_available.sort(key=lambda y:
-    y['display_name'].lower())
+    organizations_available.sort(key=lambda y: y['display_name'].lower())
+    hdx_helper.org_add_last_updated_field(organizations_available)
     return organizations_available
 
 

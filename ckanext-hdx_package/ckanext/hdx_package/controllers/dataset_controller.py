@@ -9,6 +9,7 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
+from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
 from ckanext.hdx_theme.util.mail import simple_validate_email
@@ -199,7 +200,7 @@ class DatasetController(PackageController):
                                       action='contribute'))
 
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
-        c.organizations_available = helpers.hdx_organizations_available_with_roles()
+        c.organizations_available = hdx_helpers.hdx_organizations_available_with_roles()
         if c.organizations_available and len(c.organizations_available) > 0:
             return base.render('organization/organization_preselector.html')
         else:

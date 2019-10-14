@@ -3570,6 +3570,9 @@ ul.list-horizontal li:first-child:before {
     margin-right: unset;
   }
 }
+.new-header .header-nav-search .header-search-form .header-search-group {
+  width: 270px;
+}
 .new-header .header-nav-search .header-search-form .input-prepend {
   display: flex;
 }
@@ -3724,9 +3727,6 @@ label.terms-of-service:after {
 .navbar.new-header {
   margin: 0;
   display: block;
-}
-.navbar.new-header .navbar-toggle {
-  display: none;
 }
 .navbar.new-header.navbar-static-top {
   width: 100%;

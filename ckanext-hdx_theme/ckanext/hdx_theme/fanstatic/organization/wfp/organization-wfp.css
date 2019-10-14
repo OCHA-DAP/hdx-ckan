@@ -3619,6 +3619,9 @@ ul.list-horizontal li:first-child:before {
     margin-right: unset;
   }
 }
+.new-header .header-nav-search .header-search-form .header-search-group {
+  width: 270px;
+}
 .new-header .header-nav-search .header-search-form .input-prepend {
   display: flex;
 }
