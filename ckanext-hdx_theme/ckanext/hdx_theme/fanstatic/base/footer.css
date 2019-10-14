@@ -180,8 +180,8 @@
 }
 .hdx-footer .links-list ul li .glyphicon-new-window,
 .hdx-footer .links-list ul a .glyphicon-new-window,
-.hdx-footer .links-list ul li .icon-external-link,
-.hdx-footer .links-list ul a .icon-external-link {
+.hdx-footer .links-list ul li .humanitarianicons-Out-of-platform,
+.hdx-footer .links-list ul a .humanitarianicons-Out-of-platform {
   color: #888888;
   margin-left: 3px;
   font-weight: 400;
@@ -219,6 +219,9 @@
   .hdx-footer .social-footer .terms .social-actions {
     margin-top: 30px;
   }
+  .hdx-footer .social-footer .terms .social-actions i {
+    font-size: 15px;
+  }
   .hdx-footer .social-footer .terms .social-actions a:first-child {
     margin-right: 30px;
   }
@@ -242,7 +245,7 @@
 .hdx-footer .social-footer .terms a:last-child {
   margin-right: 0;
 }
-.hdx-footer .social-footer .terms a .icon-external-link {
+.hdx-footer .social-footer .terms a .humanitarianicons-Out-of-platform {
   color: #888888;
 }
 @media (max-width: 768px) {

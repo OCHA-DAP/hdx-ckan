@@ -4304,7 +4304,7 @@ my.QueryEditor = Backbone.View.extend({
       <div class="form-group"> \
         <div class="input-group text-query"> \
           <div class="input-group-addon"> \
-            <i class="glyphicon glyphicon-search"></i> \
+            <i class="humanitarianicons-Search"></i> \
           </div> \
           <label for="q">Search</label> \
           <input class="form-control search-query" type="text" id="q" name="q" value="{{q}}" placeholder="Search data ..."> \

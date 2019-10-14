@@ -134,6 +134,11 @@
 .search-list .dataset-item .dataset-content2 .dataset-heading {
   line-height: 1;
 }
+.search-list .dataset-item .dataset-content2 .dataset-heading .restricted {
+  color: #f2645a;
+  font-size: 14px;
+  margin-right: 2px;
+}
 .search-list .dataset-item .dataset-content2 .dataset-heading .popular {
   color: #333333;
   font-size: 14px;
@@ -167,7 +172,7 @@
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"]::before {
   color: #888888;
 }
-.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .icon-quickchart:hover::before {
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .humanitarianicons-Chart:hover::before {
   color: #007CE0;
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .icon-check:hover::before {
@@ -175,9 +180,6 @@
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .icon-hxl-tags:hover::before {
   color: #f2645a;
-}
-.search-list .dataset-item .dataset-content2 .icon-leaf {
-  margin: 0 4px;
 }
 .search-list .dataset-item .dataset-content2 .dataset-dates {
   margin-bottom: 8px;
