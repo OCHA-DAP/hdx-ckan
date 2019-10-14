@@ -414,6 +414,9 @@ body {
   position: relative;
   bottom: -5px;
 }
+.base-actions-menu ul li .direct-share-links i {
+  color: #333333;
+}
 /* END - Actions */
 /* Style breadcrumbs */
 .toolbarRow {
@@ -3032,6 +3035,9 @@ ul.list-horizontal li:first-child:before {
   }
   .hdx-footer .social-footer .terms .social-actions {
     margin-top: 30px;
+  }
+  .hdx-footer .social-footer .terms .social-actions i {
+    font-size: 15px;
   }
   .hdx-footer .social-footer .terms .social-actions a:first-child {
     margin-right: 30px;

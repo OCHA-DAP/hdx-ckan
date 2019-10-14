@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'Humanitarian-Icons-v02';
-  src:  url('fonts/Humanitarian-Icons-v02.eot?jd0cw');
-  src:  url('fonts/Humanitarian-Icons-v02.eot?jd0cw#iefix') format('embedded-opentype'),
-    url('fonts/Humanitarian-Icons-v02.ttf?jd0cw') format('truetype'),
-    url('fonts/Humanitarian-Icons-v02.woff?jd0cw') format('woff'),
-    url('fonts/Humanitarian-Icons-v02.svg?jd0cw#Humanitarian-Icons-v02') format('svg');
+  src:  url('fonts/Humanitarian-Icons-v02.eot?7bdye7');
+  src:  url('fonts/Humanitarian-Icons-v02.eot?7bdye7#iefix') format('embedded-opentype'),
+    url('fonts/Humanitarian-Icons-v02.ttf?7bdye7') format('truetype'),
+    url('fonts/Humanitarian-Icons-v02.woff?7bdye7') format('woff'),
+    url('fonts/Humanitarian-Icons-v02.svg?7bdye7#Humanitarian-Icons-v02') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.humanitarianicons-Social-gh:before {
+  content: "\ea48";
+}
+.humanitarianicons-Social-gh-hover:before {
+  content: "\ea49";
+}
+.humanitarianicons-Social-mail:before {
+  content: "\ea4a";
+}
+.humanitarianicons-Social-mail-hover:before {
+  content: "\ea4b";
+}
 .humanitarianicons-Double-arrow-down:before {
   content: "\ea3a";
 }

@@ -219,6 +219,9 @@
   .hdx-footer .social-footer .terms .social-actions {
     margin-top: 30px;
   }
+  .hdx-footer .social-footer .terms .social-actions i {
+    font-size: 15px;
+  }
   .hdx-footer .social-footer .terms .social-actions a:first-child {
     margin-right: 30px;
   }
