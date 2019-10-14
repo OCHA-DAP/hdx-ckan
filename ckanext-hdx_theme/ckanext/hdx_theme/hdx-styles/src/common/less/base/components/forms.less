@@ -117,7 +117,7 @@
   }
 
   .confirm-resources-label {
-    color: @orangeColor;
+    color: @darkGrayColor;
     margin-bottom: 15px;
   }
 
@@ -341,12 +341,21 @@
   }
 }
 
-.dataset-overdue {
+.dataset-status {
   margin: 0 -20px;
   padding: 20px;
-  background-color: @extraLightOrangeColor;
-  border: 1px solid @orangeColor;
+
+  background-color: @extraLightGrayColor;
+  border: 1px solid @grayColor;
   border-radius: 4px;
+
+  &.overdue {
+    border-color: @orangeColor;
+    background-color: @extraLightOrangeColor;
+    .overdue-title, .confirm-resources-label {
+      color: @orangeColor;
+    }
+  }
 
   &.margin-fix {
     margin-bottom: 15px;
@@ -356,7 +365,7 @@
   }
 
   .overdue-title {
-    color: @orangeColor;
+    color: @grayColor;
     font-weight: 600;
     margin-bottom: 10px;
   }
