@@ -301,6 +301,7 @@
                                             <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
                                               {% if data.id and not data.get('update_status') == 'unknown' %}
                                               <div id="confirm-resource-freshness">
+                                                <input type="hidden" name='review_date' value='{{ data.review_date }}' />
                                                 <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. {% if data.get('update_status') == 'needs_update' %} You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u>{% endif %}</label>
                                               </div>
                                               {% endif %}
