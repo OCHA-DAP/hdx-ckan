@@ -32,6 +32,11 @@ class HDXGroupController(grp.GroupController):
         c.countries = json.dumps(self.get_countries(user))
         return base.render('group/worldmap.html')
 
+    def group_eaa_worldmap(self):
+        user = c.user or c.author
+        c.countries = json.dumps(self.get_countries(user))
+        return base.render('group/eaa_worldmap.html')
+
     def get_countries(self, user):
 
         context = {'model': model, 'session': model.Session,
