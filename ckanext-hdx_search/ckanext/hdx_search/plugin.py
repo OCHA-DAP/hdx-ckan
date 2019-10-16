@@ -144,6 +144,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             'populate_showcase_items_count': actions.populate_showcase_items_count
         }
 
+    # IFacets
     def dataset_facets(self, facets_dict, package_type):
 
         tagged_facets = tk.config.get(u'search.facets', DEFAULT_FACET_NAMES).split()
