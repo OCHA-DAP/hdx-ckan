@@ -9,8 +9,11 @@ from ckan.lib.helpers import DEFAULT_FACET_NAMES
 import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
 import ckanext.hdx_search.helpers.search_history as search_history
+import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
+
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 
 NotFound = ckan.logic.NotFound
@@ -117,7 +120,18 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             search_params['fq'] += ' +metadata_modified:[{} TO {}]'.format(start_metadata_modified,
                                                                            end_metadata_modified)
 
+        self.__process_eaa_link_params(search_params)
+
         return search_params
+
+    def __process_eaa_link_params(self, search_params):
+        for value in EAA_FACET_NAMING_TO_INFO.values():
+            if value.get('url_param_name') in search_params['extras']:
+                search_params['fq'] += ' ' + solr_query_helper.generate_filter_query_from_list(
+                    'vocab_Topics', value.get('tag_list'), negate=value.get('negate')
+                )
+                search_params['fq'] += ' vocab_Topics: education'
+                break
 
     def after_search(self, search_results, search_params):
         if search_params.get('extras', {}).get('ext_compute_freshness') == 'true':

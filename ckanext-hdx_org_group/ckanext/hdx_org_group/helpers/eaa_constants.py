@@ -17,3 +17,27 @@ EAA_CRISIS_RESPONSE = {
 }
 
 EAA_ALL_USED_TAGS = EAA_EDUCATION_FACILITIES.union(EAA_EDUCATION_STATISTICS).union(EAA_CRISIS_RESPONSE)
+
+EAA_FACET_NAMING_TO_INFO = {
+    'education_facilities': {
+        'url_param_name': 'ext_eaa_education_facilities',
+        'tag_list': EAA_EDUCATION_FACILITIES,
+        'negate': False
+    },
+    'education_statistics': {
+        'url_param_name': 'ext_eaa_education_statistics',
+        'tag_list': EAA_EDUCATION_STATISTICS,
+        'negate': False
+    },
+    'crisis_response': {
+        'url_param_name': 'ext_eaa_crisis_response',
+        'tag_list': EAA_CRISIS_RESPONSE,
+        'negate': False
+    },
+    'other': {
+        'url_param_name': 'ext_eaa_other',
+        'tag_list': EAA_ALL_USED_TAGS,
+        'negate': True
+    }
+}
+

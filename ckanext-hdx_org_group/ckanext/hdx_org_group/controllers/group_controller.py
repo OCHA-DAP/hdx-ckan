@@ -11,11 +11,11 @@ import ckan.controllers.group as grp
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
+import ckan.lib.helpers as h
 
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 
-from ckanext.hdx_org_group.helpers.constants \
-    import EAA_CRISIS_RESPONSE, EAA_EDUCATION_FACILITIES, EAA_EDUCATION_STATISTICS, EAA_ALL_USED_TAGS
+from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 c = common.c
 request = common.request
@@ -78,15 +78,9 @@ class HDXGroupController(grp.GroupController):
             'facet.limit': 1000,
             'fq': 'vocab_Topics:education',
             'facet.query': [
-                solr_query_helper.generate_facet_query_from_list('education_statistics', query_tag, 'vocab_Topics',
-                                                                 EAA_EDUCATION_STATISTICS),
-                solr_query_helper.generate_facet_query_from_list('education_facilities', query_tag, 'vocab_Topics',
-                                                                 EAA_EDUCATION_FACILITIES),
-                solr_query_helper.generate_facet_query_from_list('crisis_response', query_tag, 'vocab_Topics',
-                                                                 EAA_CRISIS_RESPONSE),
-                solr_query_helper.generate_facet_query_from_list('other', query_tag, 'vocab_Topics',
-                                                                 EAA_ALL_USED_TAGS, negate=True),
-            ],
+                solr_query_helper.generate_facet_query_from_list(k, query_tag, 'vocab_Topics', v.get('tag_list'),
+                                                                 negate=v.get('negate'))
+                for k, v in EAA_FACET_NAMING_TO_INFO.items()],
             'facet.pivot': '{!query=' + query_tag + '}groups',
             'rows': 1,
         }
@@ -96,7 +90,18 @@ class HDXGroupController(grp.GroupController):
 
         for country in all_countries_world_1st:
             code = country['name']
-            country['eaa_stats'] = result.get('facet_pivot', {}).get('groups', {}).get(code)
+
+            eaa_stats = result.get('facet_pivot', {}).get('groups', {}).get(code)
+            if eaa_stats:
+                for key in eaa_stats.keys():
+                    facet_info = EAA_FACET_NAMING_TO_INFO.get(key)
+                    if facet_info:
+                        url_dict = {
+                            'groups': code,
+                            facet_info.get('url_param_name'): True
+                        }
+                        eaa_stats[key]['url'] = h.url_for('search', **url_dict)
+            country['eaa_stats'] = eaa_stats
 
         return all_countries_world_1st
 
