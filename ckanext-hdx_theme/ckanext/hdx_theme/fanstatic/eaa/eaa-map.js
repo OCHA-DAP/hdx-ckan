@@ -262,9 +262,8 @@ function prepareCount() {
     var code = item.name.toUpperCase();
     var newItem = {};
     newItem.title = item.title;
-    newItem.dataset_count = item.dataset_count;
-    newItem.indicator_count = item.indicator_count;
     newItem.activity_level = item.activity_level;
+    newItem.eaa_stats = item.eaa_stats;
     countDatasets[code] = newItem;
   }
   return countDatasets;
