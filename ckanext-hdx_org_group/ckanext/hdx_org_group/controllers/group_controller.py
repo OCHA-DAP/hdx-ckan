@@ -12,6 +12,8 @@ import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
 
+import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
+
 from ckanext.hdx_org_group.helpers.constants \
     import EAA_CRISIS_RESPONSE, EAA_EDUCATION_FACILITIES, EAA_EDUCATION_STATISTICS, EAA_ALL_USED_TAGS
 
@@ -24,16 +26,6 @@ log = logging.getLogger(__name__)
 
 
 class HDXGroupController(grp.GroupController):
-
-    @staticmethod
-    def _generate_facet_query(title, tag_list, negate=False):
-        quoted_tags = ('"{}"'.format(t) for t in tag_list)
-        joined_tags = ' OR '.join(quoted_tags)
-        quoted_title = '"{}"'.format(title)
-        extra_params = '{!tag=eaa key=' + quoted_title + '}'
-        prefix = '-' if negate else ''
-        query = '{}{}vocab_Topics: ({})'.format(extra_params, prefix, joined_tags)
-        return query
 
     @staticmethod
     def _get_all_countries_world_first():
@@ -80,16 +72,22 @@ class HDXGroupController(grp.GroupController):
         return all_countries_world_1st
 
     def get_eaa_countries_data(self):
+        query_tag = 'eaa'
         search = {
             'q': None,
+            'facet.limit': 1000,
             'fq': 'vocab_Topics:education',
             'facet.query': [
-                self._generate_facet_query('education_statistics', EAA_EDUCATION_STATISTICS),
-                self._generate_facet_query('education_facilities', EAA_EDUCATION_FACILITIES),
-                self._generate_facet_query('crisis_response', EAA_CRISIS_RESPONSE),
-                self._generate_facet_query('other', EAA_ALL_USED_TAGS, negate=True),
+                solr_query_helper.generate_facet_query_from_list('education_statistics', query_tag, 'vocab_Topics',
+                                                                 EAA_EDUCATION_STATISTICS),
+                solr_query_helper.generate_facet_query_from_list('education_facilities', query_tag, 'vocab_Topics',
+                                                                 EAA_EDUCATION_FACILITIES),
+                solr_query_helper.generate_facet_query_from_list('crisis_response', query_tag, 'vocab_Topics',
+                                                                 EAA_CRISIS_RESPONSE),
+                solr_query_helper.generate_facet_query_from_list('other', query_tag, 'vocab_Topics',
+                                                                 EAA_ALL_USED_TAGS, negate=True),
             ],
-            'facet.pivot': '{!query=eaa}groups',
+            'facet.pivot': '{!query=' + query_tag + '}groups',
             'rows': 1,
         }
         result = get_action('package_search')({}, search)
