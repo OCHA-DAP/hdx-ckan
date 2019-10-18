@@ -30,7 +30,6 @@ function prepareCountryList(countDatasets) {
         if (country == null || (country.dataset_count == null && country.indicator_count == null)) {
           $("<div class='country-item inactive'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
         } else {
-          // console.log(JSON.stringify(country));
           var displayDatasets = 0;
           var displayIndicators = 0;
           if (country.dataset_count != null)
@@ -123,16 +122,14 @@ function prepareMap(countDatasets, openNewWindow){
   }, 100);
   const $map = $("#map-popup");
   $map.on('mouseover', function(){
-    console.log("ddaaa");
     clearTimeout(closePopupTimeout);
   });
   $map.on('mouseout', function(){
-    // resetFeature();
+    resetFeature();
   });
-  highlightFeature = function(e) {
-    console.log("second");
+  highlightFeature = function(e, update) {
     var countryID, layer;
-    clearTimeout(closePopupTimeout);
+    // clearTimeout(closePopupTimeout);
     layer = e.target;
     countryID = layer.feature.id;
     layer.setStyle({
@@ -143,9 +140,11 @@ function prepareMap(countDatasets, openNewWindow){
       fillColor: '#f5837b'
     });
 
-    $map.html(getPopupContent(layer));
-    $map.css('top', e.originalEvent.clientY + 'px');
-    $map.css('left', e.originalEvent.clientX + 'px');
+    if (update){
+      $map.html(getPopupContent(layer));
+      $map.css('top', e.originalEvent.clientY + 'px');
+      $map.css('left', e.originalEvent.clientX + 'px');
+    }
   };
 
   getStyle = function(feature) {
@@ -185,7 +184,9 @@ function prepareMap(countDatasets, openNewWindow){
     layer.on({
       mousemove: highlightFeature,
       mouseout: resetFeature,
-      // click: highlightFeature
+      click: function(e) {
+        highlightFeature(e, true);
+      }
     });
   };
   _ref = worldJSON['features'];
