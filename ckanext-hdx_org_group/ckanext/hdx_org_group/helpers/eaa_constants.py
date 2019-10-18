@@ -13,7 +13,12 @@ EAA_CRISIS_RESPONSE = {
     'casualties', 'complex emergency', 'common operational dataset - cod', 'coordination', 'coxs bazar',
     'cyclones - hurricanes - typhoons', 'damage assessment', 'damaged buildings',
     'displaced persons locations - camps - shelters', 'earthquakes', 'ebola', 'epidemics and outbreaks',
-    'fatalities - deaths', 'floods'
+    'fatalities - deaths', 'floods', 'hazards and risk', 'humanitarian needs overview - hno',
+    'hurricane matthew - sep 2016', 'incidents of disasters', 'internally displaced persons - idp',
+    'lake chad basin crisis - 2014-2017', 'livelihoods', 'needs assessment', 'Nigeria - complex emergency - 2014 -',
+    'operational presence', 'recovery - reconstruction', 'shelter', 'syria crisis - 2011-', 'violence and conflict',
+    'vulnerable populations', 'who is doing what and where - 3w - 4w - 5w'
+
 }
 
 EAA_ALL_USED_TAGS = EAA_EDUCATION_FACILITIES.union(EAA_EDUCATION_STATISTICS).union(EAA_CRISIS_RESPONSE)
