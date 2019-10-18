@@ -56,44 +56,59 @@ function prepareCountryList(countDatasets) {
 }
 
 function getPopupContent(layer){
-  let facilites = statistics = response = other = 0;
+  let facilites = statistics = response = other = {};
   const eaaStats = layer.feature.properties.eaa_stats;
   if (eaaStats) {
-    facilites = eaaStats.education_facilities.count;
-    statistics = eaaStats.education_statistics.count;
-    response = eaaStats.crisis_response.count;
-    other = eaaStats.other.count;
+    facilites = eaaStats.education_facilities;
+    statistics = eaaStats.education_statistics;
+    response = eaaStats.crisis_response;
+    other = eaaStats.other;
   }
 
   return `
-      <div class='marker-container2'>
-          <div class="title">${layer.feature.properties.title}</div>
-          <div class="marker-set">
+    <div class="leaflet-like-container">
+      <div class="leaflet-popup-content-wrapper">
+        <div class="leaflet-popup-content">
+          <div class='marker-container-large'>
+            <div class="title">${layer.feature.properties.title}</div>
+            <div class="marker-set">
               <div class='marker-box'>
+                <a href="${facilites.url || '#'}">
                   <div class='marker-title'>Education Facilities</div>
-                  <div class='marker-number'>${facilites}</div>
+                  <div class='marker-number'>${facilites.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
+                </a>
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
+                <a href="${statistics.url || '#'}">
                   <div class='marker-title'>Education Statistics</div>
-                  <div class='marker-number'>${statistics}</div>
+                  <div class='marker-number'>${statistics.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
+                </a>
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
+                <a href="${response.url || '#'}">
                   <div class='marker-title'>Crisis Response</div>
-                  <div class='marker-number'>${response}</div>
+                  <div class='marker-number'>${response.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
+                </a>
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
+                <a href="${other.url || '#'}">
                   <div class='marker-title'>Other</div>
-                  <div class='marker-number'>${other}</div>
+                  <div class='marker-number'>${other.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
+                </a>
               </div>
           </div>
+          </div>
+        </div>
       </div>
+      <div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div>
+    </div>
     `;
 }
 
@@ -106,7 +121,16 @@ function prepareMap(countDatasets, openNewWindow){
   closeTooltip = window.setTimeout(function() {
     return map.closePopup();
   }, 100);
+  const $map = $("#map-popup");
+  $map.on('mouseover', function(){
+    console.log("ddaaa");
+    clearTimeout(closePopupTimeout);
+  });
+  $map.on('mouseout', function(){
+    // resetFeature();
+  });
   highlightFeature = function(e) {
+    console.log("second");
     var countryID, layer;
     clearTimeout(closePopupTimeout);
     layer = e.target;
@@ -118,11 +142,10 @@ function prepareMap(countDatasets, openNewWindow){
       fillOpacity: 1.0,
       fillColor: '#f5837b'
     });
-    popup.setLatLng(e.latlng);
-    popup.setContent(getPopupContent(layer));
-    if (!popup._map) {
-      popup.openOn(map);
-    }
+
+    $map.html(getPopupContent(layer));
+    $map.css('top', e.originalEvent.clientY + 'px');
+    $map.css('left', e.originalEvent.clientX + 'px');
   };
 
   getStyle = function(feature) {
@@ -143,10 +166,12 @@ function prepareMap(countDatasets, openNewWindow){
 
   resetFeature = function(e) {
     var layer;
-    layer = e.target;
-    layer.setStyle(getStyle(layer.feature));
+    if (e) {
+      layer = e.target;
+      layer.setStyle(getStyle(layer.feature));
+    }
     closePopupTimeout = setTimeout(function() {
-      //map.closePopup();
+        const $map = $("#map-popup").html('');
     }, 200);
   };
   featureClicked = function(e) {
@@ -160,7 +185,7 @@ function prepareMap(countDatasets, openNewWindow){
     layer.on({
       mousemove: highlightFeature,
       mouseout: resetFeature,
-      click: featureClicked
+      // click: highlightFeature
     });
   };
   _ref = worldJSON['features'];
@@ -199,8 +224,9 @@ function prepareMap(countDatasets, openNewWindow){
   //});
   popup = new L.Popup({
     autoPan: false,
-    offset: [0, 0]
+    offset: [0, 20]
   });
+  $(popup._container).css('z-index', 20000);
   countryLayer = L.geoJson(worldJSON, {
     style: getStyle,
     onEachFeature: onEachFeature
