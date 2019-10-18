@@ -20,7 +20,11 @@ _open_licenses = None
 VALID_SOLR_PARAMETERS = set([
     'q', 'fl', 'fq', 'rows', 'sort', 'start', 'wt', 'qf', 'bf', 'boost',
     'facet', 'facet.mincount', 'facet.limit', 'facet.field',
-    'extras', 'fq_list', 'tie', 'defType', 'mm', 'expand', 'expand.rows'
+    'extras', 'fq_list', 'tie', 'defType', 'mm', 'expand', 'expand.rows',
+    'facet.query', 'facet.pivot', 'facet.range',
+    'f.due_date.facet.mincount',
+    'f.due_date.facet.range.start', 'f.due_date.facet.range.end',
+    'f.due_date.facet.range.gap', 'f.due_date.facet.range.other',
 ])
 
 # for (solr) package searches, this specifies the fields that are searched

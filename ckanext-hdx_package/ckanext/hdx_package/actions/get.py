@@ -294,10 +294,15 @@ def package_search(context, data_dict):
 
         count = query.count
         facets = query.facets
+        facet_ranges = query.raw_response.get('facet_counts', {}).get('facet_ranges', {})
+        facet_pivot = query.raw_response.get('facet_counts', {}).get('facet_pivot', {})
         expanded = query.raw_response.get('expanded', {})
+
     else:
         count = 0
         facets = {}
+        facet_ranges = {}
+        facet_pivot = {}
         results = []
         expanded = {}
 
@@ -345,6 +350,7 @@ def package_search(context, data_dict):
                 new_facet_dict['display_name'] = key_
             new_facet_dict['count'] = value_
             restructured_facets[key]['items'].append(new_facet_dict)
+
     search_results['search_facets'] = restructured_facets
 
     # check if some extension needs to modify the search results
@@ -358,8 +364,83 @@ def package_search(context, data_dict):
             search_results['search_facets'][facet]['items'],
             key=lambda facet: facet['display_name'], reverse=True)
 
+    # ranges and pivot facets shouldn't be sorted so we process them after the sorting was done
+    _process_facet_ranges(restructured_facets, facet_ranges)
+    pivot_dict = {}
+    _process_pivot_facets(restructured_facets, pivot_dict, facet_pivot)
+    search_results['facet_pivot'] = pivot_dict
+
     return search_results
 
+
+def _process_facet_ranges(restructured_facets, facet_ranges):
+    for facet_name, facet_dict in facet_ranges.items():
+        restructured_facets[facet_name] = {
+            'title': facet_name,
+            'type': 'range',
+            'items': []
+        }
+        new_facet_dict = None
+        for i, item in enumerate(facet_dict.get('counts', [])):
+            if i % 2 == 0:
+                new_facet_dict = {'name': item, 'display_name': item}
+            else:
+                new_facet_dict['count'] = item
+                restructured_facets[facet_name]['items'].append(new_facet_dict)
+
+
+def _process_pivot_facets(restructured_facets, pivot_dict, facet_pivot):
+    restructured_facets['pivot'] = {}
+    for facet_name, first_level_list in facet_pivot.items():
+        restructured_facets['pivot'][facet_name] = {
+            'title': facet_name,
+            'type': 'pivot',
+            'items': []
+        }
+        pivot_dict[facet_name] = {}
+        facet_category = restructured_facets['pivot'][facet_name]
+        for f in first_level_list:
+            item = _create_facet_item(f)
+            facet_category['items'].append(item)
+
+            pivot_dict[facet_name][item['name']] = {
+                'count': f.get('count'),
+            }
+            if f.get('pivot'):
+                item['items'] = []
+                for f2 in f.get('pivot'):
+                    item2 = _create_facet_item(f2)
+                    item['items'].append(item2)
+                    pivot_dict[facet_name][item['name']][item2['name']] = {
+                        'count': f2.get('count')
+                    }
+
+            elif f.get('queries'):
+                item['items'] = _process_facet_queries(f.get('queries'))
+                for key, value in f.get('queries').items():
+                    pivot_dict[facet_name][item['name']][key] = {
+                        'count': value
+                    }
+
+
+def _create_facet_item(solr_item):
+    value = solr_item.get('value')
+    item = {
+        'count': solr_item.get('count'),
+        'name': value,
+        'display_name': value
+    }
+    return item
+
+
+def _process_facet_queries(query_dict):
+    return [
+        {
+            'count': value,
+            'name': key,
+            'display_name': key
+        }
+    for key, value in query_dict.items()]
 
 @logic.side_effect_free
 def resource_show(context, data_dict):
