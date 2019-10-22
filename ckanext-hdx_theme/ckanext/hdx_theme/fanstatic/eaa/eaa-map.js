@@ -72,7 +72,7 @@ function getPopupContent(layer){
             <div class="title">${layer.feature.properties.title}</div>
             <div class="marker-set">
               <div class='marker-box'>
-                <a href="${facilites.url || '#'}">
+                <a href="${facilites.url || '#'}" target="_parent">
                   <div class='marker-title'>Education Facilities</div>
                   <div class='marker-number'>${facilites.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
@@ -80,7 +80,7 @@ function getPopupContent(layer){
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
-                <a href="${statistics.url || '#'}">
+                <a href="${statistics.url || '#'}" target="_parent>
                   <div class='marker-title'>Education Statistics</div>
                   <div class='marker-number'>${statistics.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
@@ -88,7 +88,7 @@ function getPopupContent(layer){
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
-                <a href="${response.url || '#'}">
+                <a href="${response.url || '#'}" target="_parent>
                   <div class='marker-title'>Crisis Response</div>
                   <div class='marker-number'>${response.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
@@ -96,7 +96,7 @@ function getPopupContent(layer){
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
-                <a href="${other.url || '#'}">
+                <a href="${other.url || '#'}" target="_parent>
                   <div class='marker-title'>Other</div>
                   <div class='marker-number'>${other.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
