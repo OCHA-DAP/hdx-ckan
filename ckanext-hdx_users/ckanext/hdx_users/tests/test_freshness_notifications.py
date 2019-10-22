@@ -50,9 +50,9 @@ class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsT
         self._get_action('package_create')(context, dataset)
 
         checker = FreshnessNotificationsChecker('tester')
-        has_notification = checker.has_unseen_overdue_datasets()
+        has_notification = checker.has_unseen_expired_datasets()
         assert has_notification
 
         checker.set_dashboard_viewed(datetime.datetime.utcnow())
-        has_notification_after = checker.has_unseen_overdue_datasets()
+        has_notification_after = checker.has_unseen_expired_datasets()
         assert not has_notification_after

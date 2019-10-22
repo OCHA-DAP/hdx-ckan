@@ -296,6 +296,7 @@ def package_search(context, data_dict):
         facets = query.facets
         facet_ranges = query.raw_response.get('facet_counts', {}).get('facet_ranges', {})
         facet_pivot = query.raw_response.get('facet_counts', {}).get('facet_pivot', {})
+        facet_queries = query.raw_response.get('facet_counts', {}).get('facet_queries', {})
         expanded = query.raw_response.get('expanded', {})
 
     else:
@@ -303,6 +304,7 @@ def package_search(context, data_dict):
         facets = {}
         facet_ranges = {}
         facet_pivot = {}
+        facet_queries = {}
         results = []
         expanded = {}
 
@@ -369,6 +371,8 @@ def package_search(context, data_dict):
     pivot_dict = {}
     _process_pivot_facets(restructured_facets, pivot_dict, facet_pivot)
     search_results['facet_pivot'] = pivot_dict
+    _process_facet_queries(restructured_facets, facet_queries)
+    search_results['facet_queries'] = facet_queries
 
     return search_results
 
@@ -416,7 +420,7 @@ def _process_pivot_facets(restructured_facets, pivot_dict, facet_pivot):
                     }
 
             elif f.get('queries'):
-                item['items'] = _process_facet_queries(f.get('queries'))
+                item['items'] = _generate_facet_queries_list(f.get('queries'))
                 for key, value in f.get('queries').items():
                     pivot_dict[facet_name][item['name']][key] = {
                         'count': value
@@ -433,7 +437,11 @@ def _create_facet_item(solr_item):
     return item
 
 
-def _process_facet_queries(query_dict):
+def _process_facet_queries(restructured_facets, facet_queries):
+    restructured_facets['queries'] = _generate_facet_queries_list(facet_queries)
+
+
+def _generate_facet_queries_list(query_dict):
     return [
         {
             'count': value,
@@ -441,6 +449,7 @@ def _process_facet_queries(query_dict):
             'display_name': key
         }
     for key, value in query_dict.items()]
+
 
 @logic.side_effect_free
 def resource_show(context, data_dict):
@@ -554,9 +563,11 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                     package_dict['last_modified'] = max(all_dates).isoformat()
 
         freshness_calculator = FreshnessCalculator(package_dict)
-        if _should_manually_load_property_value(context, package_dict, 'due_daterange'):
-            package_dict.pop('due_daterange', None)
-            package_dict.pop('overdue_daterange', None)
+        if _should_manually_load_property_value(context, package_dict, 'due_date'):
+            package_dict.pop('due_date', None)
+            package_dict.pop('overdue_date', None)
+            # package_dict.pop('due_daterange', None)
+            # package_dict.pop('overdue_daterange', None)
             freshness_calculator.populate_with_date_ranges()
 
         if not just_for_reindexing:

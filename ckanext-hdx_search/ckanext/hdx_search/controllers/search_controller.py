@@ -24,6 +24,8 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER,\
+    UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -311,15 +313,17 @@ class HDXSearchController(PackageController):
                         if param not in tagged_fq_dict:
                             tagged_fq_dict[param] = []
                         tagged_fq_dict[param].append(u'{}:"{}"'.format(param, value))
-                        if param not in c.fields_grouped:
-                            c.fields_grouped[param] = [value]
-                        else:
-                            c.fields_grouped[param].append(value)
+                        self.append_selected_facet_to_group(c.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
                                      'ext_hxl', 'ext_showcases', 'ext_archived']:
                             featured_filters_set = True
-                        search_extras[param] = value
+                            search_extras[param] = value
+                        elif param == UPDATE_STATUS_URL_FILTER:
+                            self.append_selected_facet_to_group(c.fields_grouped, param, value)
+
+            if c.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
+                search_extras[UPDATE_STATUS_URL_FILTER] = c.fields_grouped[UPDATE_STATUS_URL_FILTER]
 
             self._set_filters_are_selected_flag()
 
@@ -403,8 +407,14 @@ class HDXSearchController(PackageController):
 
         # return render(self._search_template(package_type))
         full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, c.facet_titles,
-                                                    c.count, c.q)
+                                                    c.batch_total_items, c.q)
         return full_facet_info
+
+    def append_selected_facet_to_group(self, group, param, value):
+        if param not in group:
+            group[param] = [value]
+        else:
+            group[param].append(value)
 
     def _is_facet_only_request(self):
         return request.params.get('ext_only_facets') == 'true'
@@ -426,6 +436,18 @@ class HDXSearchController(PackageController):
             'extras': search_extras,
             'ext_compute_freshness': 'true'
         }
+        now_string = datetime.datetime.utcnow().isoformat() + 'Z'
+        freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
+        data_dict.update({
+            'facet.range': '{{!{extra}}}due_date'.format(extra=freshness_facet_extra),
+            'f.due_date.facet.range.start': now_string + '-100YEARS',
+            'f.due_date.facet.range.end': now_string + '+100YEARS',
+            'f.due_date.facet.range.gap': '+100YEARS',
+            'f.due_date.facet.mincount': '0',
+            # 'f.due_date.facet.range.other': 'all',
+            'facet.query': '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra),
+
+        })
 
         include_private = context.pop('ignore_capacity_check', None)
         if include_private:
@@ -648,6 +670,8 @@ class HDXSearchController(PackageController):
         num_of_requestdata = 0
         num_of_showcases = 0
 
+        self._process_freshness_facets(existing_facets, title_translations)
+
         for solr_category_key, category_title in title_translations.items():
             regex = r'\{[\s\S]*\}'
             category_key = re.sub(regex, '', solr_category_key)
@@ -716,3 +740,21 @@ class HDXSearchController(PackageController):
         result['query_selected'] = True if query and query.strip() else False
 
         return result
+
+    def _process_freshness_facets(self, existing_facets, title_translations):
+        freshness_facet_name = 'due_date'
+        if existing_facets and freshness_facet_name in existing_facets:
+            item_list = existing_facets.get(freshness_facet_name).get('items')
+            if item_list and len(item_list) == 2:
+                item_list[0]['display_name'] = _('Needing update')
+                item_list[0]['name'] = UPDATE_STATUS_NEEDS_UPDATE
+                item_list[1]['display_name'] = _('Up to date')
+                item_list[1]['name'] = UPDATE_STATUS_FRESH
+                unknown_item = next((i for i in existing_facets.get('queries', []) if i.get('name') == 'unknown'), None)
+                unknown_item['display_name'] = _('Unknown')
+                unknown_item['name'] = UPDATE_STATUS_UNKNOWN
+                item_list.append(unknown_item)
+
+                title_translations[UPDATE_STATUS_URL_FILTER] = _('Update status')
+                existing_facets[UPDATE_STATUS_URL_FILTER] = existing_facets[freshness_facet_name]
+                del existing_facets[freshness_facet_name]
