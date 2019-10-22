@@ -80,7 +80,7 @@ function getPopupContent(layer){
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
-                <a href="${statistics.url || '#'}" target="_parent>
+                <a href="${statistics.url || '#'}" target="_parent">
                   <div class='marker-title'>Education Statistics</div>
                   <div class='marker-number'>${statistics.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
@@ -88,7 +88,7 @@ function getPopupContent(layer){
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
-                <a href="${response.url || '#'}" target="_parent>
+                <a href="${response.url || '#'}" target="_parent">
                   <div class='marker-title'>Crisis Response</div>
                   <div class='marker-number'>${response.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
@@ -96,7 +96,7 @@ function getPopupContent(layer){
               </div>
               <div class="line-break"></div>
               <div class='marker-box'>
-                <a href="${other.url || '#'}" target="_parent>
+                <a href="${other.url || '#'}" target="_parent">
                   <div class='marker-title'>Other</div>
                   <div class='marker-number'>${other.count || '0'}</div>
                   <div class='marker-label'>datasets</div>
