@@ -476,8 +476,8 @@ def hdx_get_last_modification_date(dataset_dict):
     return FreshnessCalculator.dataset_last_change_date(dataset_dict)
 
 
-def hdx_get_due_overdue_date(dataset_dict, type='overdue', format='%b %-d %Y'):
-    due_date, overdue_date = FreshnessCalculator(dataset_dict).read_from_range_due_overdue_dates()
+def hdx_get_due_overdue_date(dataset_dict, type='due', format='%b %-d %Y'):
+    due_date, overdue_date = FreshnessCalculator(dataset_dict).read_due_overdue_dates()
     if type == 'due':
         d = due_date
     else:

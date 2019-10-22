@@ -180,7 +180,7 @@ schema. In this case the version should be set to the next CKAN version number.
 
     <field name="_version_" type="string" indexed="true" stored="true"/>
 
-    <dynamicField name="*_date" type="date" indexed="true" stored="true" multiValued="false"/>
+    <dynamicField name="*_date" type="date" indexed="true" stored="true" multiValued="false" sortMissingLast="true"/>
 
     <dynamicField name="*_daterange" type="daterange" indexed="true" stored="true" multiValued="false"/>
 

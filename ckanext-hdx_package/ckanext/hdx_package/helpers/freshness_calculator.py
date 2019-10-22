@@ -20,6 +20,7 @@ UPDATE_FREQ_INFO = {
 FRESHNESS_PROPERTY = 'is_fresh'
 
 UPDATE_STATUS_PROPERTY = 'update_status'
+UPDATE_STATUS_URL_FILTER = 'ext_' + UPDATE_STATUS_PROPERTY
 
 UPDATE_STATUS_FRESH = 'fresh'
 UPDATE_STATUS_UNKNOWN = 'unknown'
@@ -74,10 +75,10 @@ class FreshnessCalculator(object):
         :return: True if fresh, otherwise False
         :rtype: bool
         '''
-        start_of_overdue_range = self.compute_range_beginnings()[1]
-        if start_of_overdue_range:
+        start_of_expiration = self.compute_range_beginnings()[0]
+        if start_of_expiration:
             now = datetime.datetime.utcnow() # using utcnow bc this is used by core ckan, see ckan.model.package
-            fresh = now < start_of_overdue_range
+            fresh = now < start_of_expiration
             return fresh
         else:
             return False
@@ -103,7 +104,7 @@ class FreshnessCalculator(object):
 
         if is_fresh:
             self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_FRESH
-        elif self.dataset_dict.get('due_daterange'):
+        elif self.dataset_dict.get('due_date'):
             self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_NEEDS_UPDATE
         else:
             self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_UNKNOWN
@@ -111,10 +112,12 @@ class FreshnessCalculator(object):
     def populate_with_date_ranges(self):
         start_of_due_range, start_of_overdue_range = self.compute_range_beginnings()
         if start_of_due_range and start_of_overdue_range:
-            self.dataset_dict['due_daterange'] = \
-                '[{}Z TO {}Z]'.format(start_of_due_range.isoformat(), start_of_overdue_range.isoformat())
-
-            self.dataset_dict['overdue_daterange'] = '[{}Z TO *]'.format(start_of_overdue_range.isoformat())
+            self.dataset_dict['due_date'] = start_of_due_range.isoformat()
+            self.dataset_dict['overdue_date'] = start_of_overdue_range.isoformat()
+            # self.dataset_dict['due_daterange'] = \
+            #     '[{}Z TO {}Z]'.format(start_of_due_range.isoformat(), start_of_overdue_range.isoformat())
+            #
+            # self.dataset_dict['overdue_daterange'] = '[{}Z TO *]'.format(start_of_overdue_range.isoformat())
 
     def compute_range_beginnings(self):
         if not self.surely_not_fresh:
@@ -125,15 +128,21 @@ class FreshnessCalculator(object):
         else:
             return None, None
 
-    def read_from_range_due_overdue_dates(self):
+    def read_due_overdue_dates(self):
         try:
-            if 'due_daterange' in self.dataset_dict:
-                range_str = self.dataset_dict.get('due_daterange')
-                range = range_str[1:-1].split(' TO ')
-                if len(range) == 2:
-                    due_date = dateparser.parse(range[0][0:-1])
-                    overdue_date = dateparser.parse(range[1][0:-1])
-                    return due_date, overdue_date
+            # if 'due_daterange' in self.dataset_dict:
+            #     range_str = self.dataset_dict.get('due_daterange')
+            #     range = range_str[1:-1].split(' TO ')
+            #     if len(range) == 2:
+            #         due_date = dateparser.parse(range[0][0:-1])
+            #         overdue_date = dateparser.parse(range[1][0:-1])
+            #         return due_date, overdue_date
+            if 'due_date' in self.dataset_dict:
+                due_date_str = self.dataset_dict.get('due_date')
+                due_date = dateparser.parse(due_date_str[0:-1])
+                overdue_date_str = self.dataset_dict.get('overdue_date')
+                overdue_date = dateparser.parse(overdue_date_str[0:-1])
+                return due_date, overdue_date
         except Exception as e:
             log.warn(str(e))
         return None, None

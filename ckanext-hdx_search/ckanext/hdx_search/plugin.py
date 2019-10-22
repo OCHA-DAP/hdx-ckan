@@ -1,4 +1,5 @@
 import logging, re
+import datetime
 import unicodedata
 import ckan.logic
 import ckan.plugins as plugins
@@ -12,7 +13,8 @@ import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
 
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator,\
+    UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 
@@ -74,7 +76,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         def adapt_solr_fq(param_name, fq_filter_1=None, fq_filter_0=None):
             '''
             :param param_name: request param name without the "ext_" part, for example "indicator"
-            :type str:
+            :type param_name: str
             '''
             try:
                 req_param = 'ext_{}'.format(param_name)
@@ -121,6 +123,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                                                                            end_metadata_modified)
 
         self.__process_eaa_link_params(search_params)
+        self.__process_freshness_filters(search_params)
 
         return search_params
 
@@ -132,6 +135,25 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 )
                 search_params['fq'] += ' vocab_Topics: education'
                 break
+
+    def __process_freshness_filters(self, search_params):
+        values = search_params['extras'].get(UPDATE_STATUS_URL_FILTER)
+
+        if values:
+            rules = []
+            for value in values:
+                now_string = datetime.datetime.utcnow().isoformat() + 'Z'
+                if value == UPDATE_STATUS_NEEDS_UPDATE:
+                    rules.append('due_date: [* TO {}]'.format(now_string))
+                if value == UPDATE_STATUS_FRESH:
+                    rules.append('due_date: [{} TO *]'.format(now_string))
+                if value == UPDATE_STATUS_UNKNOWN:
+                    rules.append('-due_date: [* TO *]')
+
+            if rules:
+                filter_rule = ' OR '.join(rules)
+                filter_rule = '{{!tag={tag}}}{rule}'.format(tag=UPDATE_STATUS_URL_FILTER, rule=filter_rule)
+                search_params['fq_list'].append(filter_rule)
 
     def after_search(self, search_results, search_params):
         if search_params.get('extras', {}).get('ext_compute_freshness') == 'true':

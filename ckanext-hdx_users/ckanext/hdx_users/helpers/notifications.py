@@ -48,19 +48,26 @@ class FreshnessNotificationsChecker(object):
         '''
         self.set_freshness_data({FreshnessNotificationsChecker.DASHBOARD_VIEWED: viewed_date.isoformat()})
 
-    def has_unseen_overdue_datasets(self):
+    def has_unseen_expired_datasets(self, date_field='due_date'):
 
         now = datetime.datetime.now().replace(minute=0, second=0, microsecond=0)
         second_from_now = now + datetime.timedelta(seconds=1)
-        query_string = 'maintainer:{} AND overdue_daterange:[{}Z TO {}Z]'.format(self.user_id, now.isoformat(),
-                                                                                 second_from_now.isoformat())
+        # query_string = 'maintainer:{} AND overdue_daterange:[{}Z TO {}Z]'.format(self.user_id, now.isoformat(),
+        #                                                                          second_from_now.isoformat())
+        now_date_for_solr = now.isoformat() + 'Z'
+
         viewed_date = self.get_dashboard_viewed()
         if viewed_date:
-            # eliminate the datasets that were already overdue last time the user looked
-            second_from_viewed_date = viewed_date + datetime.timedelta(seconds=1)
-            query_string += ' AND -overdue_daterange:[{}Z TO {}Z]'.format(viewed_date.isoformat(),
-                                                                          second_from_viewed_date.isoformat())
-        query_string = '(' + query_string + ')'
+            # eliminate the datasets that were already due last time the user looked
+            # second_from_viewed_date = viewed_date + datetime.timedelta(seconds=1)
+            # query_string += ' AND -overdue_daterange:[{}Z TO {}Z]'.format(viewed_date.isoformat(),
+            #                                                               second_from_viewed_date.isoformat())
+            viewed_date_for_solr = viewed_date.isoformat() + 'Z'
+        else:
+            viewed_date_for_solr = '*'
+
+        query_string = '(maintainer:{} AND {}:[{} TO {}])'.format(self.user_id, date_field,
+                                                                   viewed_date_for_solr, now_date_for_solr)
         query_params = {
             'start': 0,
             'rows': 1,

@@ -359,7 +359,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         fq = 'maintainer:"{}"'.format(user_id)
 
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
-                                       ignore_capacity_check=ignore_capacity_check)
+                                       ignore_capacity_check=ignore_capacity_check, default_sort_by='due_date asc')
 
         c.other_links['current_page_url'] = h.url_for('user_dashboard_datasets')
 
