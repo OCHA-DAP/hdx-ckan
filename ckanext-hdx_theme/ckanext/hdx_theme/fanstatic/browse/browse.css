@@ -175,6 +175,35 @@
   text-align: center;
   color: #fff;
 }
+.leaflet-like-container .leaflet-popup-content-wrapper {
+  background: #333;
+  color: white;
+}
+.leaflet-like-container .leaflet-popup-tip-container {
+  width: 16px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+.leaflet-like-container .leaflet-popup-tip-container .leaflet-popup-tip {
+  margin-top: -9px;
+  margin-left: -5px;
+  border: none;
+  border-top: 10px solid #333;
+  box-shadow: none;
+  background: transparent;
+  width: 17px;
+  height: 17px;
+  padding: 1px;
+}
+#map-popup {
+  position: fixed;
+}
+#map-popup > div {
+  position: absolute;
+  transform: translate(-50%, -100%);
+}
 #title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
@@ -244,6 +273,73 @@
   margin: 15px auto 5px auto;
 }
 .marker-container .marker-box .marker-label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 10px;
+  line-height: 10px;
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+}
+.marker-container-large {
+  position: relative;
+  width: 403px;
+  min-height: 75px;
+  margin: 0;
+  padding: 10px 20px;
+}
+.marker-container-large .title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 15px;
+}
+.marker-container-large .line-break {
+  background: #888888;
+  width: 1px;
+  height: 40px;
+  margin: 0 10px;
+}
+.marker-container-large .marker-set {
+  display: flex;
+  align-items: center;
+}
+.marker-container-large .marker-box {
+  width: 80px;
+  min-height: 75px;
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.marker-container-large .marker-box a {
+  color: #fff;
+}
+.marker-container-large .marker-box a:hover {
+  color: #cccccc;
+}
+.marker-container-large .marker-box .marker-title {
+  font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.2em;
+}
+.marker-container-large .marker-box .marker-number {
+  font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
+  font-size: 30px;
+  line-height: 30px;
+  font-weight: 400;
+  text-align: center;
+  padding: 0;
+  margin: 7px auto 3px auto;
+}
+.marker-container-large .marker-box .marker-label {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 10px;
   line-height: 10px;

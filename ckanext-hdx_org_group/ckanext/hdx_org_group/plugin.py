@@ -266,6 +266,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('group_worldmap', '/worldmap',
                     controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
 
+        map.connect('group_eaa_worldmap', '/eaa-worldmap',
+                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
+
         map.connect('group_new', '/group/new', controller='group', action='new')
 
         map.connect('country_read', '/group/{id}',
