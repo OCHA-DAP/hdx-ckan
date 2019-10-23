@@ -2,7 +2,6 @@ import datetime
 import logging
 
 import dateutil.parser
-import dateutil.parser as dateparser
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 
 log = logging.getLogger(__name__)
@@ -139,9 +138,9 @@ class FreshnessCalculator(object):
             #         return due_date, overdue_date
             if 'due_date' in self.dataset_dict:
                 due_date_str = self.dataset_dict.get('due_date')
-                due_date = dateparser.parse(due_date_str[0:-1])
+                due_date = dateutil.parser.parse(due_date_str[0:-1])
                 overdue_date_str = self.dataset_dict.get('overdue_date')
-                overdue_date = dateparser.parse(overdue_date_str[0:-1])
+                overdue_date = dateutil.parser.parse(overdue_date_str[0:-1])
                 return due_date, overdue_date
         except Exception as e:
             log.warn(str(e))
