@@ -1,0 +1,47 @@
+{% extends "page.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Datasets'),
+  	controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search', highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+    {% block search_results_wrapper %}
+        <div id="search-recs"></div>
+        {% snippet 'search/snippets/search_results_wrapper.html',
+                            tracking_enabled=g.tracking_enabled, my_c=c, display_min=true %}
+
+    {% endblock %}
+  {% block package_search_results_api %}
+  {% endblock %}
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/search/search_page.js' %}
+
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block  global_dataset_input_search%}
+	{% if c.other_links and c.other_links.params_noq %}
+  		{% for key,value in  c.other_links.params_noq.items() %}
+  			<input type="hidden" name="{{ key }}" value="{{ value }}" />
+  		{% endfor %}
+  	{% endif %}
+  <input type="text" class="searchInput" name="q" id="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all data') }}">
+{% endblock %}
