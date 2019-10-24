@@ -1,0 +1,19 @@
+{#
+Example:
+
+  {% snippet 'light/notifications/expired_datasets_snippet.html', notification=notification %}
+
+#}
+{% if notification.is_sysadmin %} [datasets] {% endif %}
+
+You have
+<a href="{{ notification.my_dashboard_url }}"
+   data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
+
+    {{ notification.count }}
+    {{ 'datasets' if notification.count > 1 else 'dataset' }}
+</a>
+that {{ 'need' if notification.count > 1 else 'needs' }} to be updated.
+<br />
+<span class="date">{{ notification.last_date }}</span>
+
