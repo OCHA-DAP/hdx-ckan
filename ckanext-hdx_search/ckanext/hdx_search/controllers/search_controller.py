@@ -314,13 +314,14 @@ class HDXSearchController(PackageController):
                             tagged_fq_dict[param] = []
                         tagged_fq_dict[param].append(u'{}:"{}"'.format(param, value))
                         self.append_selected_facet_to_group(c.fields_grouped, param, value)
+                    elif param == UPDATE_STATUS_URL_FILTER:
+                        self.append_selected_facet_to_group(c.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
                                      'ext_hxl', 'ext_showcases', 'ext_archived']:
                             featured_filters_set = True
-                            search_extras[param] = value
-                        elif param == UPDATE_STATUS_URL_FILTER:
-                            self.append_selected_facet_to_group(c.fields_grouped, param, value)
+                        search_extras[param] = value
+
 
             if c.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
                 search_extras[UPDATE_STATUS_URL_FILTER] = c.fields_grouped[UPDATE_STATUS_URL_FILTER]
