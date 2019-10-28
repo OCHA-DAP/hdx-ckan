@@ -136,7 +136,7 @@ Example:
                                   <label>
                                     <input name="{{option.category_key}}" value="{{option.name}}" type="checkbox"
                                            {% if option.selected %}checked="checked"{% endif %}
-                                            {% if option.count == 0 %} disabled="disabled" {% endif %}> {{option.display_name}}
+                                            {% if option.count == 0 and not option.selected %} disabled="disabled" {% endif %}> {{option.display_name}}
                                     <span class="item-count">[{{option.count}}]</span>
                                   </label>
                                 </li>
