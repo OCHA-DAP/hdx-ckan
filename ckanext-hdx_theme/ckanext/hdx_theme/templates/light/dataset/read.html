@@ -10,7 +10,7 @@
 {% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}
 {% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}
 {% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}
-{% block analytics_dataset_availability %}{{ c.analytics_dataset_availability }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}
 
 {% block links %}
   <link rel="canonical" href="{{ h.url_for(controller='package', action='read', id=pkg.name) }}">
@@ -24,7 +24,7 @@
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
+    {% snippet "snippets/other_breadcrumb_item.html", title=_('Datastasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
 	{% endblock %}
   <li class="active">{{ h.nav_link( pkg.title|truncate(120),	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
 {% endblock %}
