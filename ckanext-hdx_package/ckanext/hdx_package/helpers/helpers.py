@@ -61,36 +61,36 @@ def hdx_user_org_num(user_id):
     return user
 
 
-def hdx_organizations_available_with_roles():
-    """
-    Gets roles of organizations the current user belongs to
-    """
-    organizations_available = h.organizations_available('read')
-    if organizations_available and len(organizations_available) > 0:
-        orgs_where_editor = []
-        orgs_where_admin = []
-    am_sysadmin = new_authz.is_sysadmin(c.user)
-    if not am_sysadmin:
-        orgs_where_editor = set(
-            [org['id'] for org in h.organizations_available('create_dataset')])
-        orgs_where_admin = set([org['id']
-                                for org in h.organizations_available('admin')])
-
-    for org in organizations_available:
-        org['has_add_dataset_rights'] = True
-        if am_sysadmin:
-            org['role'] = 'sysadmin'
-        elif org['id'] in orgs_where_admin:
-            org['role'] = 'admin'
-        elif org['id'] in orgs_where_editor:
-            org['role'] = 'editor'
-        else:
-            org['role'] = 'member'
-            org['has_add_dataset_rights'] = False
-
-    organizations_available.sort(key=lambda y:
-                                 y['display_name'].lower())
-    return organizations_available
+# def hdx_organizations_available_with_roles():
+#     """
+#     Gets roles of organizations the current user belongs to
+#     """
+#     organizations_available = h.organizations_available('read')
+#     if organizations_available and len(organizations_available) > 0:
+#         orgs_where_editor = []
+#         orgs_where_admin = []
+#     am_sysadmin = new_authz.is_sysadmin(c.user)
+#     if not am_sysadmin:
+#         orgs_where_editor = set(
+#             [org['id'] for org in h.organizations_available('create_dataset')])
+#         orgs_where_admin = set([org['id']
+#                                 for org in h.organizations_available('admin')])
+#
+#     for org in organizations_available:
+#         org['has_add_dataset_rights'] = True
+#         if am_sysadmin:
+#             org['role'] = 'sysadmin'
+#         elif org['id'] in orgs_where_admin:
+#             org['role'] = 'admin'
+#         elif org['id'] in orgs_where_editor:
+#             org['role'] = 'editor'
+#         else:
+#             org['role'] = 'member'
+#             org['has_add_dataset_rights'] = False
+#
+#     organizations_available.sort(key=lambda y:
+#                                  y['display_name'].lower())
+#     return organizations_available
 
 
 def hdx_get_activity_list(context, data_dict):
@@ -476,25 +476,15 @@ def hdx_get_last_modification_date(dataset_dict):
     return FreshnessCalculator.dataset_last_change_date(dataset_dict)
 
 
-def get_extra_from_dataset(field_name, dataset_dict):
-    ALLOWED_EXTRAS = {
-        'review_date': None,
-        'data_update_frequency': None,
-        'is_requestdata_type': [tk.get_validator('boolean_validator')],
-    }
-    result = None
-    if field_name in dataset_dict:
-        result = dataset_dict[field_name]
+def hdx_get_due_overdue_date(dataset_dict, type='due', format='%b %-d %Y'):
+    due_date, overdue_date = FreshnessCalculator(dataset_dict).read_due_overdue_dates()
+    if type == 'due':
+        d = due_date
+    else:
+        d = overdue_date
 
-    # When a dataset is indexed in solr the package dict returned by package_show
-    # leaves the extras fields unprocessed in an extras list so that they get indexed as extras_* fields in solr
-    elif 'extras' in dataset_dict and field_name in ALLOWED_EXTRAS:
-        result = next(
-            (extra.get('value') for extra in dataset_dict.get('extras')
-             if extra.get('state') == 'active' and extra.get('key') == field_name),
-            {})
-        if result and ALLOWED_EXTRAS[field_name]:
-            for func in ALLOWED_EXTRAS[field_name]:
-                result = func(result, {})
+    if d:
+        return d.strftime(format)
+    else:
+        return None
 
-    return result

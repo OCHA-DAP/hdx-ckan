@@ -134,8 +134,20 @@
                             {{ form_title }} - <span class="small">{{ _('Please fill out all required fields') }}</span>
                         </li>
                     </ol>
+                    {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
+                    <div class="paddingLeftHack paddingRightHack">
+                      <div class="alert alert-danger">
+                        This dataset has passed it's update date on
+                        <span class="info-label">
+                          <i class="glyphicon glyphicon-time"></i>
+                          {% set due_date = h.hdx_get_due_overdue_date(data)  %}
+                          {{ due_date | default("N/A", True) }}
+                        </span>
+                        . Please check or update the following <u><a href="#resource-list">Resources</a></u> or <u><a href="#data_update_frequency">Expected Updated Frequency</a></u>
+                      </div>
+                    </div>
+                    {% endif %}
                 </div>
-
                 <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
                     {% if data.is_requestdata_type %}
                         <input type="hidden" name="is_requestdata_type" value="true" />
@@ -286,16 +298,22 @@
 
                                         <div id="resource-list">
                                             <div class="label-title-style mBottom10"><span class="resources_total">0 Resources</span> <small>(drag and drop to sort)</small></div>
-                                            <div class="resources">
-
+                                            <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
+                                              {% if data.id and not data.get('update_status') == 'unknown' %}
+                                              <div id="confirm-resource-freshness">
+                                                <input type="hidden" name='review_date' value='{{ data.review_date }}' />
+                                                <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. {% if data.get('update_status') == 'needs_update' %} You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u>{% endif %}</label>
+                                              </div>
+                                              {% endif %}
+                                              <div class="resources">
+                                              </div>
+                                              <div id="resource-create"></div>
+                                              <div>
+                                                  <input class="add_new_resource btn btn-primary btn-lg" type="button" value="Add more resources"/>
+                                              </div>
                                             </div>
                                         </div>
 
-                                        <div id="resource-create"></div>
-
-                                        <div>
-                                            <input class="add_new_resource btn btn-primary btn-lg" type="button" value="Add more resources"/>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -343,7 +361,7 @@
                                             </p>
                                         </div>
                                         <div class="col-xs-9">
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private" data-module-broadcast_change="true">
                                             {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
                                             </div>
 
@@ -469,7 +487,7 @@
                                             </div>
 
                                             {% set organisations = h.hdx_organisation_list() %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private"  data-module-broadcast_change="true">
                                             {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
                                             </div>
 
@@ -541,8 +559,11 @@
                                                     'data-original-title': 'Your best guess of how often this dataset will be updated',
                                                     'data-toggle': 'tooltip'}
                                                     %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
+                                            <div id="data_update_frequency" data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
+                                              <div class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-status overdue margin-fix {% endif %}">
+                                                {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} <div class="overdue-title">Please check if the following field is up to date:</div>{% endif %}
+                                                {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
+                                              </div>
                                             </div>
 
                                             {% set location_list = h.hdx_location_list() %}
@@ -599,8 +620,14 @@
                                               'data-module-placeholder': 'eg. economy, mental health, government',
                                               'class':'form-control choices-orange', 'multiple':'true',
                                               'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="tag_string">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true">
                                             {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group', 'tags-select'], attrs=tag_attrs) }}
+                                              <div data-module="hdx_tag_recommender" data-module-tag_input_selector="#field_tag_string"
+                                                   data-module-recommended_tag_wrapper_selector="#recommended-tags-wrapper" class="form-group">
+                                                <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">
+                                                  Suggested tags: <span />
+                                                </div>
+                                              </div>
                                             </div>
 
                                         </div>

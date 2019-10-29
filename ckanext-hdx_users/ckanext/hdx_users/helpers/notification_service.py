@@ -4,7 +4,10 @@ import ckan.model as model
 
 from ckan.logic import NotFound
 from ckan.common import g
-from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, RequestDataDao
+
+from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, RequestDataDao, ExpiredDatasetsDao
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator,\
+    UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 
 
 def get_notification_service():
@@ -12,33 +15,44 @@ def get_notification_service():
         raise NotFound('Seems like user is not logged in so no notification service can be created')
     userobj = model.User.get(g.user)
     is_sysadmin = authz.is_sysadmin(g.user)
+
     membership_request_dao = MembershipRequestsDao(model, userobj, is_sysadmin)
     request_data_dao = RequestDataDao(model, userobj, is_sysadmin)
+    expired_datasets_dao = ExpiredDatasetsDao(userobj, is_sysadmin)
 
     membership_request_service = MembershipRequestsService(membership_request_dao, is_sysadmin)
     request_data_service = SysadminRequestDataService(request_data_dao, g.user) \
         if is_sysadmin else RequestDataService(request_data_dao, g.user)
+    expired_datasets_service = ExpiredDatasetsService(expired_datasets_dao, userobj, is_sysadmin)
 
-    notification_service = NotificationService(membership_request_service, request_data_service, is_sysadmin)
+    notification_service = NotificationService(membership_request_service, request_data_service,
+                                               expired_datasets_service, is_sysadmin)
     return notification_service
 
 
 class NotificationService(object):
 
-    def __init__(self, membership_request_service, request_data_service, is_sysadmin):
+    def __init__(self, membership_request_service, request_data_service, expired_dataset_service, is_sysadmin):
         '''
         :param membership_request_service:
         :type membership_request_service: MembershipRequestsService
         :param request_data_service:
         :type request_data_service: RequestDataService
+        :param expired_dataset_service:
+        :type expired_dataset_service: ExpiredDatasetsService
+        :param is_sysadmin:
+        :type is_sysadmin: bool
         '''
+
         self.request_data_service = request_data_service
         self.membership_request_service = membership_request_service
+        self.expired_dataset_service = expired_dataset_service
         self.is_sysadmin = is_sysadmin
 
     def get_notifications(self):
         notifications = self.membership_request_service.get_org_membership_requests() \
-                        + self.request_data_service.get_requestdata_requests()
+                        + self.request_data_service.get_requestdata_requests() \
+                        + self.expired_dataset_service.get_expired_datasets_info()
 
         notifications.sort(key=lambda n: n.get('last_date'), reverse=True)
         any_personal_notifications = False
@@ -103,6 +117,8 @@ class RequestDataService(object):
         '''
         :param request_data_dao:
         :type request_data_dao: RequestDataDao
+        :param username: the username of the current user
+        :type username: str
         '''
         self.request_data_dao = request_data_dao
         self.username = username
@@ -128,8 +144,6 @@ class RequestDataService(object):
 
 class SysadminRequestDataService(RequestDataService):
 
-
-
     def __init__(self, request_data_dao, username):
         super(SysadminRequestDataService, self).__init__(request_data_dao, username)
         self.is_sysadmin = True
@@ -149,6 +163,39 @@ class SysadminRequestDataService(RequestDataService):
                     'for_sysadmin': True,
                     'is_sysadmin': self.is_sysadmin
 
+                }
+            )
+        return notifications
+
+
+class ExpiredDatasetsService(object):
+    def __init__(self, expired_datasets_dao, username, is_sysadmin):
+        '''
+        :param expired_datasets_dao:
+        :type expired_datasets_dao: ExpiredDatasetsDao
+        :param username: the username of the current user
+        :type username: str
+        '''
+
+        self.expired_datasets_dao = expired_datasets_dao
+        self.username = username
+        self.is_sysadmin = is_sysadmin
+
+    def get_expired_datasets_info(self):
+        count, last_date = self.expired_datasets_dao.fetch_expired_datasets()
+        notifications = []
+        if count > 0:
+            param_dict = {
+                UPDATE_STATUS_URL_FILTER: UPDATE_STATUS_NEEDS_UPDATE
+            }
+            notifications.append(
+                {
+                    'last_date': last_date,
+                    'count': count,
+                    'html_template': 'light/notifications/expired_datasets_snippet.html',
+                    'my_dashboard_url': h.url_for('user_dashboard_datasets', **param_dict),
+                    'for_sysadmin': False,
+                    'is_sysadmin': self.is_sysadmin
                 }
             )
         return notifications

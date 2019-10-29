@@ -9,7 +9,7 @@ HDX_HXL_PROXY_URL=https://hub.docker.com/r/unocha/hxl-proxy/tags/
 HDX_HXL_PROXY_TAG=1.15.1
 
 HDX_HXL_PREVIEW_URL=https://hub.docker.com/r/unocha/hdx-hxl-preview/tags/
-HDX_HXL_PREVIEW_TAG=1.6.0-ckan
+HDX_HXL_PREVIEW_TAG=1.6.2-ckan
 
 HDX_DEMO_LITION_URL=https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
 HDX_DEMO_LITION_TAG=1.2
@@ -21,7 +21,7 @@ HDX_SNAP_SERVICE_URL=https://hub.docker.com/r/unocha/hdx-snap-service/tags/
 HDX_SNAP_SERVICE_TAG=v1.1.0
 
 HDX_DATAPROXY_URL=https://hub.docker.com/r/unocha/hdx-dataproxy/tags/
-HDX_DATAPROXY_TAG=2.2
+HDX_DATAPROXY_TAG=2.5
 
 HDX_MAP_EXPLORER_URL=https://hub.docker.com/r/unocha/hdx-map-explorer/tags/
 HDX_MAP_EXPLORER_TAG=0.0.13

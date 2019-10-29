@@ -15,6 +15,11 @@
   border-radius: 100px;
 }
 /* END Style Dashboard - Newsfeed list */
+.alert-danger {
+  color: #f2645a;
+  border-color: #f2645a;
+  background-color: #fde9e8;
+}
 /* Actions */
 .base-actions-menu a.btn.hdx-btn {
   margin-left: 12px;
@@ -63,6 +68,9 @@
   position: relative;
   bottom: -5px;
 }
+.base-actions-menu ul li .direct-share-links i {
+  color: #333333;
+}
 /* END - Actions */
 /* Style breadcrumbs */
 .toolbarRow {
@@ -92,6 +100,7 @@
 .toolbarRow .toolbar .breadcrumb > li {
   text-shadow: none;
   white-space: nowrap;
+  display: inline;
 }
 .toolbarRow .toolbar .breadcrumb > li:after {
   content: " / ";
@@ -288,6 +297,27 @@
   color: #007CE0;
 }
 /* END Style Dataset Item */
+.info-label {
+  background-color: #f2645a;
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.info-label i {
+  font-size: 12px;
+  font-weight: 400;
+}
+.info-label.inverted {
+  background-color: #eeeeee;
+  color: #888888;
+}
+.plain-list {
+  list-style: none;
+  padding: 0;
+}
 .ckan-icon {
   display: inline-block;
   vertical-align: text-bottom;
@@ -377,7 +407,7 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 0;
 }
 .pill .icon-remove,
-.pill .glyphicon-remove {
+.pill .humanitarianicons-Exit-Cancel {
   cursor: pointer;
   margin-left: 20px;
 }
@@ -515,23 +545,15 @@ ul.dataset-resources li + li.label-icons {
   height: 35px;
   background-position: -320px -62px;
 }
-.icon-leaf.fresh {
+.humanitarianicons-Environment.fresh {
   color: #1bb580;
-  font-size: 16px;
   margin-left: 0;
 }
-.icon-leaf.fresh::before {
-  color: #1bb580;
-  font-size: 16px;
-  margin-left: 0;
-}
-.icon-questionmark.freshness {
+.humanitarianicons-Help.freshness {
   color: #007CE0;
-  font-size: 15px;
 }
-.icon-questionmark.freshness::before {
+.humanitarianicons-Help.freshness::before {
   color: #007CE0;
-  font-size: 15px;
 }
 #error-page {
   min-height: 400px;
@@ -715,11 +737,6 @@ ul.dataset-resources li + li.label-icons {
   color: #333333;
   text-decoration: underline;
 }
-.mainLinks > li #crises-label:after {
-  content: '\25bc';
-  margin-left: 3px;
-  font-size: 13px;
-}
 .mainLinks > li:first-child > a {
   margin-left: 0;
 }
@@ -775,6 +792,7 @@ ul.dataset-resources li + li.label-icons {
   top: 0;
   color: #fff;
   opacity: 1;
+  font-size: 16px;
 }
 .modal.in .modal-dialog .modal-content .modal-body {
   min-height: 193px;

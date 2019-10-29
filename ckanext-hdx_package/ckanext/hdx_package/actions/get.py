@@ -27,9 +27,11 @@ from ckan.lib import uploader
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
-from ckanext.hdx_package.helpers import helpers
+import ckanext.hdx_package.helpers.helpers as helpers
+from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 
@@ -294,6 +296,7 @@ def package_search(context, data_dict):
         facets = query.facets
         facet_ranges = query.raw_response.get('facet_counts', {}).get('facet_ranges', {})
         facet_pivot = query.raw_response.get('facet_counts', {}).get('facet_pivot', {})
+        facet_queries = query.raw_response.get('facet_counts', {}).get('facet_queries', {})
         expanded = query.raw_response.get('expanded', {})
 
     else:
@@ -301,6 +304,7 @@ def package_search(context, data_dict):
         facets = {}
         facet_ranges = {}
         facet_pivot = {}
+        facet_queries = {}
         results = []
         expanded = {}
 
@@ -367,6 +371,8 @@ def package_search(context, data_dict):
     pivot_dict = {}
     _process_pivot_facets(restructured_facets, pivot_dict, facet_pivot)
     search_results['facet_pivot'] = pivot_dict
+    _process_facet_queries(restructured_facets, facet_queries)
+    search_results['facet_queries'] = facet_queries
 
     return search_results
 
@@ -414,7 +420,7 @@ def _process_pivot_facets(restructured_facets, pivot_dict, facet_pivot):
                     }
 
             elif f.get('queries'):
-                item['items'] = _process_facet_queries(f.get('queries'))
+                item['items'] = _generate_facet_queries_list(f.get('queries'))
                 for key, value in f.get('queries').items():
                     pivot_dict[facet_name][item['name']][key] = {
                         'count': value
@@ -431,7 +437,11 @@ def _create_facet_item(solr_item):
     return item
 
 
-def _process_facet_queries(query_dict):
+def _process_facet_queries(restructured_facets, facet_queries):
+    restructured_facets['queries'] = _generate_facet_queries_list(facet_queries)
+
+
+def _generate_facet_queries_list(query_dict):
     return [
         {
             'count': value,
@@ -439,6 +449,7 @@ def _process_facet_queries(query_dict):
             'display_name': key
         }
     for key, value in query_dict.items()]
+
 
 @logic.side_effect_free
 def resource_show(context, data_dict):
@@ -474,6 +485,8 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
             del resource_dict['apihighways_id']
         if 'apihighways_url' in resource_dict:
             del resource_dict['apihighways_url']
+    if resource_dict.get('url'):
+        resource_dict['download_url'] = resource_dict.get('url')
 
 @logic.side_effect_free
 def package_show(context, data_dict):
@@ -539,7 +552,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 package_dict['num_of_showcases'] = num_of_showcases
 
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
-            if helpers.get_extra_from_dataset('is_requestdata_type', package_dict):
+            if get_extra_from_dataset('is_requestdata_type', package_dict):
                 package_dict['last_modified'] = package_dict.get('metadata_modified')
             else:
                 package_dict['last_modified'] = None
@@ -549,13 +562,21 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 if all_dates:
                     package_dict['last_modified'] = max(all_dates).isoformat()
 
+        freshness_calculator = FreshnessCalculator(package_dict)
+        if _should_manually_load_property_value(context, package_dict, 'due_date'):
+            package_dict.pop('due_date', None)
+            package_dict.pop('overdue_date', None)
+            # package_dict.pop('due_daterange', None)
+            # package_dict.pop('overdue_daterange', None)
+            freshness_calculator.populate_with_date_ranges()
+
         if not just_for_reindexing:
             member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
             if member_list and not member_list.get('is_member'):
                 del package_dict['maintainer_email']
 
             # Freshness should be computed after the last_modified field
-            FreshnessCalculator(package_dict).populate_with_freshness()
+            freshness_calculator.populate_with_freshness()
 
 
 @logic.side_effect_free
@@ -838,3 +859,15 @@ def recently_changed_packages_activity_list(context, data_dict):
                     del _package_dict['maintainer_email']
 
     return result
+
+
+@logic.side_effect_free
+def hdx_recommend_tags(context, data_dict):
+    tag_recommender = TagRecommender(data_dict.get('title'), data_dict.get('organization'))
+    return tag_recommender.find_recommended_tags()
+
+
+@logic.side_effect_free
+def hdx_test_recommend_tags(context, data_dict):
+    tag_recommender = TagRecommenderTest(**data_dict)
+    return tag_recommender.run_test()

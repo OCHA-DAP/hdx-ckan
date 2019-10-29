@@ -21,9 +21,7 @@
   text-align: left;
   margin-top: -4px;
   padding: 0;
-}
-.control-order-by .orderDropdown .dropdown-toggle .caret {
-  margin-top: 6px;
+  font-size: 14px;
 }
 .control-order-by .orderDropdown .dropdown-toggle:hover,
 .control-order-by .orderDropdown .dropdown-toggle:focus {

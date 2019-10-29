@@ -1,12 +1,13 @@
 from ckan.lib.base import _
 
 from ckanext.hdx_users.helpers.permissions import Permissions
+from ckanext.hdx_users.helpers.notifications import NotificationsInfo
 
 import logging
 
 log = logging.getLogger(__name__)
 
-SYSADMIN_PROPERTIES = {Permissions.USER_EXTRA_FIELD}
+SYSADMIN_PROPERTIES = {Permissions.USER_EXTRA_FIELD, NotificationsInfo.USER_EXTRA_FIELD}
 
 
 def user_extra_create(context, data_dict):

@@ -87,7 +87,7 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 0;
 }
 .pill .icon-remove,
-.pill .glyphicon-remove {
+.pill .humanitarianicons-Exit-Cancel {
   cursor: pointer;
   margin-left: 20px;
 }
@@ -225,21 +225,13 @@ ul.dataset-resources li + li.label-icons {
   height: 35px;
   background-position: -320px -62px;
 }
-.icon-leaf.fresh {
+.humanitarianicons-Environment.fresh {
   color: #1bb580;
-  font-size: 16px;
   margin-left: 0;
 }
-.icon-leaf.fresh::before {
-  color: #1bb580;
-  font-size: 16px;
-  margin-left: 0;
-}
-.icon-questionmark.freshness {
+.humanitarianicons-Help.freshness {
   color: #007CE0;
-  font-size: 15px;
 }
-.icon-questionmark.freshness::before {
+.humanitarianicons-Help.freshness::before {
   color: #007CE0;
-  font-size: 15px;
 }

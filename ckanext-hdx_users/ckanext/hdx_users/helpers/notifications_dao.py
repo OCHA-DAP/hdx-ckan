@@ -1,8 +1,14 @@
+import datetime
+import dateutil.parser
+
 from sqlalchemy import func
 
 import ckan.model as ckan_model
+import ckan.plugins.toolkit as tk
 
 import ckanext.requestdata.model as requestdata_model
+
+get_action = tk.get_action
 
 
 class MembershipRequestsDao(object):
@@ -100,3 +106,32 @@ class RequestDataDao(object):
             return query.all()
 
         return []
+
+
+class ExpiredDatasetsDao(object):
+    def __init__(self, userobj, is_sysadmin):
+
+        self.is_sysadmin = is_sysadmin
+        self.userobj = userobj
+
+    def fetch_expired_datasets(self):
+        now = datetime.datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+        now_date_for_solr = now.isoformat() + 'Z'
+
+        query_string = '(maintainer:{} AND {}:[* TO {}])'.format(self.userobj.id, 'due_date', now_date_for_solr)
+        query_params = {
+            'include_private': True,
+            'start': 0,
+            'rows': 10,
+            'sort': 'due_date desc',
+            'fq': query_string
+        }
+        search_result = get_action('package_search')({}, query_params)
+        num_of_datasets = search_result.get('count', 0)
+
+        last_date = None
+        if num_of_datasets > 0:
+            last_date_str = search_result['results'][0].get('due_date')
+            last_date = dateutil.parser.parse(last_date_str[0:-1])
+
+        return num_of_datasets, last_date

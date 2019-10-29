@@ -302,7 +302,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
-            'last_modified': [tk.get_validator('ignore_missing')]
+            'last_modified': [tk.get_validator('ignore_missing')],
+            # 'due_daterange': [tk.get_validator('ignore_missing')],
+            # 'overdue_daterange': [tk.get_validator('ignore_missing')],
+            'due_date': [tk.get_validator('ignore_missing')],
+            'overdue_date': [tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -313,6 +317,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'filesize_format': hdx_helpers.filesize_format,
             'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
             'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
+            'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
             'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date
         }
 
@@ -348,7 +353,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
             'hdx_send_mail_members': hdx_get.hdx_send_mail_members,
             'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
-            'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list
+            'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list,
+            # 'hdx_test_recommend_tags': hdx_get.hdx_test_recommend_tags,
+            'hdx_recommend_tags': hdx_get.hdx_recommend_tags
         }
 
     # IValidators

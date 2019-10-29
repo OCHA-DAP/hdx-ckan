@@ -6,6 +6,7 @@
 import logging
 import json
 
+from collections import OrderedDict
 from pylons import config
 
 import ckan.lib.base as base
@@ -22,7 +23,7 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckan.common import _, c, g, request
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
-# import ckanext.hdx_theme.controllers.explorer as mpx
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 
 log = logging.getLogger(__name__)
 
@@ -356,10 +357,18 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             params['page'] = page
             return h.url_for('user_dashboard_datasets', **params) + suffix
 
-        fq = 'creator_user_id:"{}"'.format(user_id)
+        fq = 'maintainer:"{}"'.format(user_id)
 
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
-                                       ignore_capacity_check=ignore_capacity_check)
+                                       ignore_capacity_check=ignore_capacity_check, default_sort_by='due_date asc',
+                                       enable_update_status_facet=True)
+
+        old_facets = full_facet_info.get('facets')
+        if UPDATE_STATUS_URL_FILTER in old_facets:
+            new_facets = OrderedDict()
+            new_facets[UPDATE_STATUS_URL_FILTER] = old_facets[UPDATE_STATUS_URL_FILTER]
+            new_facets.update(old_facets)
+            full_facet_info['facets'] = new_facets
 
         c.other_links['current_page_url'] = h.url_for('user_dashboard_datasets')
 

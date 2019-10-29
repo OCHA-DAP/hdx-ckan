@@ -22,7 +22,7 @@ def is_indicator(pkg_dict):
 
 def is_cod(pkg_dict):
     tags = [tag.get('name', '') for tag in pkg_dict.get('tags', [])]
-    if 'cod' in tags:
+    if 'common operational dataset - cod' in tags:
         return 'true'
     return 'false'
 

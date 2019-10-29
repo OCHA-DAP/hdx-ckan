@@ -98,6 +98,11 @@ h1 {
   border-radius: 100px;
 }
 /* END Style Dashboard - Newsfeed list */
+.alert-danger {
+  color: #f2645a;
+  border-color: #f2645a;
+  background-color: #fde9e8;
+}
 /* Actions */
 .base-actions-menu a.btn.hdx-btn {
   margin-left: 12px;
@@ -146,6 +151,9 @@ h1 {
   position: relative;
   bottom: -5px;
 }
+.base-actions-menu ul li .direct-share-links i {
+  color: #333333;
+}
 /* END - Actions */
 /* Style breadcrumbs */
 .toolbarRow {
@@ -175,6 +183,7 @@ h1 {
 .toolbarRow .toolbar .breadcrumb > li {
   text-shadow: none;
   white-space: nowrap;
+  display: inline;
 }
 .toolbarRow .toolbar .breadcrumb > li:after {
   content: " / ";
@@ -371,6 +380,27 @@ h1 {
   color: #007CE0;
 }
 /* END Style Dataset Item */
+.info-label {
+  background-color: #f2645a;
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.info-label i {
+  font-size: 12px;
+  font-weight: 400;
+}
+.info-label.inverted {
+  background-color: #eeeeee;
+  color: #888888;
+}
+.plain-list {
+  list-style: none;
+  padding: 0;
+}
 .ckan-icon {
   display: inline-block;
   vertical-align: text-bottom;
@@ -460,7 +490,7 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 0;
 }
 .pill .icon-remove,
-.pill .glyphicon-remove {
+.pill .humanitarianicons-Exit-Cancel {
   cursor: pointer;
   margin-left: 20px;
 }
@@ -598,23 +628,15 @@ ul.dataset-resources li + li.label-icons {
   height: 35px;
   background-position: -320px -62px;
 }
-.icon-leaf.fresh {
+.humanitarianicons-Environment.fresh {
   color: #1bb580;
-  font-size: 16px;
   margin-left: 0;
 }
-.icon-leaf.fresh::before {
-  color: #1bb580;
-  font-size: 16px;
-  margin-left: 0;
-}
-.icon-questionmark.freshness {
+.humanitarianicons-Help.freshness {
   color: #007CE0;
-  font-size: 15px;
 }
-.icon-questionmark.freshness::before {
+.humanitarianicons-Help.freshness::before {
   color: #007CE0;
-  font-size: 15px;
 }
 #error-page {
   min-height: 400px;
@@ -798,11 +820,6 @@ ul.dataset-resources li + li.label-icons {
   color: #333333;
   text-decoration: underline;
 }
-.mainLinks > li #crises-label:after {
-  content: '\25bc';
-  margin-left: 3px;
-  font-size: 13px;
-}
 .mainLinks > li:first-child > a {
   margin-left: 0;
 }
@@ -858,6 +875,7 @@ ul.dataset-resources li + li.label-icons {
   top: 0;
   color: #fff;
   opacity: 1;
+  font-size: 16px;
 }
 .modal.in .modal-dialog .modal-content .modal-body {
   min-height: 193px;
@@ -1504,9 +1522,7 @@ hr.dotted {
   text-align: left;
   margin-top: -4px;
   padding: 0;
-}
-.control-order-by .orderDropdown .dropdown-toggle .caret {
-  margin-top: 6px;
+  font-size: 14px;
 }
 .control-order-by .orderDropdown .dropdown-toggle:hover,
 .control-order-by .orderDropdown .dropdown-toggle:focus {
@@ -2197,7 +2213,7 @@ textarea {
 .filter-category .categ-list .categ-search input:focus {
   outline: none;
 }
-.filter-category .categ-list .categ-search i.glyphicon-search {
+.filter-category .categ-list .categ-search i.humanitarianicons-Search {
   position: absolute;
   right: 10px;
   top: 10px;
@@ -2335,6 +2351,15 @@ textarea {
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }
+.hdx-form .alert {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+.hdx-form u a {
+  color: inherit;
+}
 .hdx-form .background-white {
   background-color: #fff;
 }
@@ -2419,6 +2444,10 @@ textarea {
   content: ">";
   float: left;
   color: #fff;
+}
+.hdx-form .confirm-resources-label {
+  color: #333333;
+  margin-bottom: 15px;
 }
 .hdx-form label.control-label {
   color: #333333;
@@ -2611,6 +2640,32 @@ textarea {
 .hdx-form input[type=radio],
 .hdx-form input[type=checkbox] {
   top: auto;
+}
+.dataset-status {
+  margin: 0 -20px;
+  padding: 20px;
+  background-color: #eeeeee;
+  border: 1px solid #888888;
+  border-radius: 4px;
+}
+.dataset-status.overdue {
+  border-color: #f2645a;
+  background-color: #fde9e8;
+}
+.dataset-status.overdue .overdue-title,
+.dataset-status.overdue .confirm-resources-label {
+  color: #f2645a;
+}
+.dataset-status.margin-fix {
+  margin-bottom: 15px;
+}
+.dataset-status.margin-fix .form-group {
+  margin-bottom: 0;
+}
+.dataset-status .overdue-title {
+  color: #888888;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 ul.list-horizontal {
   list-style: none;
@@ -2901,8 +2956,8 @@ ul.list-horizontal li:first-child:before {
 }
 .hdx-footer .links-list ul li .glyphicon-new-window,
 .hdx-footer .links-list ul a .glyphicon-new-window,
-.hdx-footer .links-list ul li .icon-external-link,
-.hdx-footer .links-list ul a .icon-external-link {
+.hdx-footer .links-list ul li .humanitarianicons-Out-of-platform,
+.hdx-footer .links-list ul a .humanitarianicons-Out-of-platform {
   color: #888888;
   margin-left: 3px;
   font-weight: 400;
@@ -2940,6 +2995,9 @@ ul.list-horizontal li:first-child:before {
   .hdx-footer .social-footer .terms .social-actions {
     margin-top: 30px;
   }
+  .hdx-footer .social-footer .terms .social-actions i {
+    font-size: 15px;
+  }
   .hdx-footer .social-footer .terms .social-actions a:first-child {
     margin-right: 30px;
   }
@@ -2963,7 +3021,7 @@ ul.list-horizontal li:first-child:before {
 .hdx-footer .social-footer .terms a:last-child {
   margin-right: 0;
 }
-.hdx-footer .social-footer .terms a .icon-external-link {
+.hdx-footer .social-footer .terms a .humanitarianicons-Out-of-platform {
   color: #888888;
 }
 @media (max-width: 768px) {
@@ -3520,17 +3578,20 @@ ul.list-horizontal li:first-child:before {
     margin-right: unset;
   }
 }
+.new-header .header-nav-search .header-search-form .header-search-group {
+  width: 270px;
+}
 .new-header .header-nav-search .header-search-form .input-prepend {
   display: flex;
 }
-.new-header .header-nav-search .header-search-form .icon-search {
+.new-header .header-nav-search .header-search-form .humanitarianicons-Search {
   margin: 0 20px;
   color: #888888;
   font-size: 20px;
   line-height: 28px;
 }
 @media (max-width: 425px) {
-  .new-header .header-nav-search .header-search-form .icon-search {
+  .new-header .header-nav-search .header-search-form .humanitarianicons-Search {
     margin: 0 10px;
   }
 }
@@ -3674,9 +3735,6 @@ label.terms-of-service:after {
 .navbar.new-header {
   margin: 0;
   display: block;
-}
-.navbar.new-header .navbar-toggle {
-  display: none;
 }
 .navbar.new-header.navbar-static-top {
   width: 100%;

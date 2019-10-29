@@ -6,7 +6,8 @@ import pylons.config as config
 
 import ckan.lib.uploader as uploader
 import ckan.lib.munge as munge
-import ckan.logic as logic
+
+from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 log = logging.getLogger(__name__)
 
@@ -104,8 +105,5 @@ class GlobalUpload(object):
             log.error("Unable to remove global file {}".format(self.get_path()))
 
 
-class GlobalUploadException(Exception):
-    def __init__(self, message, exceptions):
-        super(GlobalUploadException, self).__init__(message)
-
-        self.errors = exceptions
+class GlobalUploadException(BaseHdxException):
+    pass
