@@ -152,7 +152,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 if value == UPDATE_STATUS_FRESH:
                     rules.append('due_date: [{} TO *]'.format(now_string))
                 if value == UPDATE_STATUS_UNKNOWN:
-                    rules.append('-due_date: [* TO *]')
+                    rules.append('(*:* -due_date: [* TO *])')
 
             if rules:
                 filter_rule = ' OR '.join(rules)

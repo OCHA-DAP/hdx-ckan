@@ -162,14 +162,18 @@
   font-size: 13.25px;
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="icon-"],
-.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"] {
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"],
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="humanitarianicons-"],
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" humanitarianicons-"] {
   display: inline-block;
   margin-right: 5px;
   color: #888888;
   font-size: 16px;
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="icon-"]::before,
-.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"]::before {
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"]::before,
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="humanitarianicons-"]::before,
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" humanitarianicons-"]::before {
   color: #888888;
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .humanitarianicons-Chart:hover::before {
