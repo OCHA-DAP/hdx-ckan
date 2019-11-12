@@ -1,3 +1,16 @@
 .leaflet-popup-close-button + .leaflet-popup-content-wrapper .leaflet-popup-content {
   width: 403px !important;
 }
+.eaa-logo-container {
+  position: absolute;
+  bottom: 20px;
+  left: 45px;
+  padding: 15px 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.eaa-logo-container img {
+  width: 110px;
+}
