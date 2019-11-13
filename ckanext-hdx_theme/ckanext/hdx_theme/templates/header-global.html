@@ -149,7 +149,7 @@
                             <li class="notifications">
                               {# CKAN 2.2 DOES NOT LIKE THIS #}
                               {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
-                              <a href="{{ h.url_for('user_dashboard') }}" title="{# notifications_tooltip #}">
+                              <a href="{{ h.url_for('user_dashboard_datasets') }}" title="{# notifications_tooltip #}">
                                 <i class="icon-dashboard"></i>
                                 <span> {{ _('Dashboard') }} </span>
                               </a>
