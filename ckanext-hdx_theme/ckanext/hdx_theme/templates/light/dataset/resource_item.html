@@ -25,6 +25,9 @@
           {% if res.tracking_summary %}
             {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
           {% endif %}
+          {% if res.in_quarantine %}
+            <i style="color: red"> - in quarantine</i>
+          {% endif %}
         </span>
         <span class="spacer"></span>
         <a class="toggle-show"><i class="glyphicon glyphicon-plus"></i></a>
