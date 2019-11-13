@@ -26,6 +26,13 @@ UPDATE_STATUS_UNKNOWN = 'unknown'
 UPDATE_STATUS_NEEDS_UPDATE = 'needs_update'
 
 
+def get_calculator_instance(dataset_dict, type=None):
+    if type == 'for-data-completeness':
+        return DataCompletenessFreshnessCalculator(dataset_dict)
+    else:
+        return FreshnessCalculator(dataset_dict)
+
+
 class FreshnessCalculator(object):
 
     @staticmethod
@@ -145,3 +152,17 @@ class FreshnessCalculator(object):
         except Exception as e:
             log.warn(str(e))
         return None, None
+
+
+class DataCompletenessFreshnessCalculator(FreshnessCalculator):
+
+    def is_fresh(self, now=datetime.datetime.utcnow()):
+        update_freq = get_extra_from_dataset('data_update_frequency', self.dataset_dict)
+        try:
+            if update_freq is not None and int(update_freq) <= 0:
+                return True
+        except ValueError as e:
+            log.info('Update frequency for dataset "{}" is not a number'.format(self.dataset_dict.get('name')))
+
+        return super(DataCompletenessFreshnessCalculator, self).is_fresh(now)
+
