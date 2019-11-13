@@ -28,9 +28,10 @@ from ckan.lib import uploader
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_package.helpers.helpers as helpers
+import ckanext.hdx_package.helpers.freshness_calculator as freshness
+
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
@@ -562,7 +563,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 if all_dates:
                     package_dict['last_modified'] = max(all_dates).isoformat()
 
-        freshness_calculator = FreshnessCalculator(package_dict)
+        freshness_calculator = freshness.get_calculator_instance(package_dict, None)
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
             package_dict.pop('due_date', None)
             package_dict.pop('overdue_date', None)

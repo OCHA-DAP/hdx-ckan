@@ -17,7 +17,7 @@ class DataCompletness(object):
         'fl': ['id', 'name', 'title', 'organization',
                'extras_data_update_frequency',
                'last_modified', 'review_date'],
-        'ext_compute_freshness': 'true'
+        'ext_compute_freshness': 'for-data-completeness'
     }
 
     def __init__(self, location_code, config_url):
