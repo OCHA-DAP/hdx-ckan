@@ -45,7 +45,7 @@
                 <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn resource-btn' %}</li>
               {% endif %}
              #}
-            {% if res.url and h.is_url(res.url) %}
+            {% if res.url and h.is_url(res.url) and not res.in_quarantine %}
               <li>
                 <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.hdx_rel_url }}">
                 {#

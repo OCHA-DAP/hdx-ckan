@@ -8,18 +8,19 @@ import bisect
 import re
 import datetime
 
-import ckanext.hdx_package.helpers.caching as caching
-import ckanext.hdx_package.helpers.geopreview as geopreview
-import ckan.logic as logic
 import ckan.model as model
-
+import ckan.authz as authz
+import ckan.plugins.toolkit as tk
 import ckan.lib.navl.dictization_functions as df
 from ckan.common import _, c
+
+import ckanext.hdx_package.helpers.caching as caching
+import ckanext.hdx_package.helpers.geopreview as geopreview
 
 missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
-get_action = logic.get_action
+get_action = tk.get_action
 
 _DATASET_PREVIEW_FIRST_RESOURCE = 'first_resource'
 _DATASET_PREVIEW_RESOURCE_ID = 'resource_id'
@@ -329,3 +330,26 @@ def hdx_isodate_to_string_converter(value, context):
     if isinstance(value, datetime.datetime):
         return value.isoformat()
     return None
+
+
+def quarantine_validator(key, data, errors, context):
+    '''
+    By default, this should inject the value from the previous version.
+    The exception is if the user is a sysadmin, then the new value is used.
+    '''
+    if data[key] is missing:
+        data[key] = False
+    user = context.get('user')
+    ignore_auth = context.get('ignore_auth')
+    allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
+
+    if not allowed_to_change:
+        data[key] = False
+        resource_id = data.get(key[:-1] + ('id',))
+        if resource_id:
+            resource_dict = get_action('resource_show')(context, {'id': resource_id})
+            if resource_dict:
+                data[key] = resource_dict.get('in_quarantine', False)
+
+    return data[key]
+

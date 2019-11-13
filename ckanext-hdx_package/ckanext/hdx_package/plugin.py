@@ -14,7 +14,7 @@ import ckanext.hdx_package.actions.delete as hdx_delete
 import ckanext.hdx_package.actions.get as hdx_get
 import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.actions.patch as hdx_patch
-import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.download_wrapper as download_wrapper
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
@@ -109,12 +109,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     #         log.error(ex)
 
     def before_map(self, map):
-        map.connect('storage_file', '/storage/f/{label:.*}',
-                    controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
-                    action='file')
-        map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='resource_download')
+        # map.connect('storage_file', '/storage/f/{label:.*}',
+        #             controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
+        #             action='file')
+        # map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='resource_download')
         map.connect('dataset_preselect', '/dataset/preselect',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='preselect')
@@ -248,7 +248,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
-                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'), tk.get_validator('ignore_missing')]
+                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'), tk.get_validator('ignore_missing')],
+                'in_quarantine': [tk.get_validator('hdx_quarantine_validator')]
             }
         )
 
@@ -308,6 +309,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')]
         })
+        schema['resources'].update(
+            {
+                'in_quarantine': [tk.get_validator('boolean_validator')]
+            }
+        )
         return schema
 
     def get_helpers(self):
@@ -373,7 +379,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
             'hdx_is_url':  vd.hdx_is_url,
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
-            'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter
+            'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
+            'hdx_quarantine_validator': vd.quarantine_validator
         }
 
     def get_auth_functions(self):
@@ -505,7 +512,7 @@ class HDXAnalyticsPlugin(plugins.SingletonPlugin):
 
     def run_on_startup(self):
         # wrap resource download function so that we can track download events
-        analytics.wrap_resource_download_function()
+        download_wrapper.wrap_resource_download_function()
 
     def make_middleware(self, app, config):
         if not HDXAnalyticsPlugin.__startup_tasks_done:
