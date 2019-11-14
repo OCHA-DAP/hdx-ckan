@@ -18,7 +18,7 @@ if [ "$S3_GENERATE" == "yes" ]; then
     SF=${SF}'ckanext.s3filestore.aws_access_key_id = '${AWS_ACCESS_KEY_ID}'\n'
     SF=${SF}'ckanext.s3filestore.aws_secret_access_key = '${AWS_SECRET_ACCESS_KEY}'\n'
     SF=${SF}'ckanext.s3filestore.aws_bucket_name = '${AWS_BUCKET_NAME}'\n'
-    SF=${SF}'ckanext.s3filestore.host_name = http://s3.'${REGION_NAME}'.amazonaws.com\n'
+    SF=${SF}'ckanext.s3filestore.host_name = https://s3.'${REGION_NAME}'.amazonaws.com\n'
     SF=${SF}'ckanext.s3filestore.region_name= '${REGION_NAME}'\n'
     SF=${SF}'ckanext.s3filestore.signature_version = s3v4\n'
     SF=${SF}$(cat /srv/ckan/common-config-ini.txt | grep -E "^ckan.plugins =")' s3filestore\n'
