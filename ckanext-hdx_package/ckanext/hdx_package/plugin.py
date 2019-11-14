@@ -256,7 +256,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                   tk.get_validator('hdx_isodate_to_string_converter'),
                                   tk.get_converter('convert_to_extras')],
                 'pii_report_flag': [tk.get_validator('ignore_missing')],
-                'pii_report_id': [tk.get_validator('ignore_missing')]
+                'pii_report_id': [tk.get_validator('ignore_missing')],
+                'sdc_timestamp': [tk.get_validator('ignore_missing'),
+                                  tk.get_validator('isodate'),
+                                  tk.get_validator('hdx_isodate_to_string_converter'),
+                                  tk.get_converter('convert_to_extras')],
+                'sdc_report_flag': [tk.get_validator('ignore_missing')],
+                'sdc_report_id': [tk.get_validator('ignore_missing')]
             }
         )
 
