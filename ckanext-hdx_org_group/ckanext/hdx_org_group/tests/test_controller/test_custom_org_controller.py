@@ -101,7 +101,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             'type': '3W-dashboard',
             'title': "Who's doing what and where ?",
             'geotype': 'filestore',
-            'geo': '/dataset/json-repository/resource_download/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5',
+            'geo': '/dataset/json-repository/resource/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5/download',
             'data_link_url': 'https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium',
             'data': '/api/action/datastore_search?resource_id=1d5b6821-fe99-4a5d-a0cf-d6987868027b&limit=10000000',
             'datatype': 'datastore',

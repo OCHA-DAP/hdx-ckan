@@ -102,7 +102,8 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             config.update({
                 'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id',
                                                                                         '') + "&limit=10000000",
-                'geo': h.url_for('perma_storage_file', id=visualization.get('viz-geo-dataset-id', ''),
+                'geo': h.url_for(controller='package', action='resource_download',
+                                 id=visualization.get('viz-geo-dataset-id', ''),
                                  resource_id=visualization.get('viz-geo-resource-id', '')),
                 'source': visualization.get('viz-data-source', '')
             })
@@ -127,7 +128,8 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         else:
             if visualization.get('datatype_1', '') == 'filestore':
                 datatype = "filestore"
-                data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1', ''),
+                data = h.url_for(controller='package', action='resource_download',
+                                 id=visualization.get('dataset_id_1', ''),
                                  resource_id=visualization.get('resource_id_1', ''))
             else:
                 datatype = "datastore"
@@ -136,7 +138,8 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
             if visualization.get('datatype_2', '') == 'filestore':
                 geotype = "filestore"
-                geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2', ''),
+                geo = h.url_for(controller='package', action='resource_download',
+                                id=visualization.get('dataset_id_2', ''),
                                 resource_id=visualization.get('resource_id_2', ''))
             else:
                 geotype = "datastore"
