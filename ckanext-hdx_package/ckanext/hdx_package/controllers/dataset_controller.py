@@ -590,16 +590,16 @@ class DatasetController(PackageController):
                 'dataset_type': package_type}
         return render('package/resource_edit.html', extra_vars=vars)
 
-    def _create_perma_link_if_needed(self, dataset_id, resource):
-        """
-        Create a perma link
-        """
-        if 'perma_link' not in resource and resource.get('resource_type', '') == 'file.upload':
-            domain = config.get('ckan.site_url', '')
-            if domain and domain in resource.get('url', ''):
-                perma_link = h.url_for(
-                    'perma_storage_file', id=dataset_id, resource_id=resource['id'])
-                resource['perma_link'] = domain + perma_link
+    # def _create_perma_link_if_needed(self, dataset_id, resource):
+    #     """
+    #     Create a perma link
+    #     """
+    #     if 'perma_link' not in resource and resource.get('resource_type', '') == 'file.upload':
+    #         domain = config.get('ckan.site_url', '')
+    #         if domain and domain in resource.get('url', ''):
+    #             perma_link = h.url_for(
+    #                 'perma_storage_file', id=dataset_id, resource_id=resource['id'])
+    #             resource['perma_link'] = domain + perma_link
 
     @check_redirect_needed
     def read(self, id):

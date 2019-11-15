@@ -248,8 +248,21 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
-                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'), tk.get_validator('ignore_missing')],
-                'in_quarantine': [tk.get_validator('hdx_quarantine_validator')]
+                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'),
+                                            tk.get_validator('ignore_missing')],
+                'in_quarantine': [tk.get_validator('hdx_quarantine_validator')],
+                'pii_timestamp': [tk.get_validator('ignore_missing'),
+                                  tk.get_validator('isodate'),
+                                  tk.get_validator('hdx_isodate_to_string_converter'),
+                                  tk.get_converter('convert_to_extras')],
+                'pii_report_flag': [tk.get_validator('ignore_missing')],
+                'pii_report_id': [tk.get_validator('ignore_missing')],
+                'sdc_timestamp': [tk.get_validator('ignore_missing'),
+                                  tk.get_validator('isodate'),
+                                  tk.get_validator('hdx_isodate_to_string_converter'),
+                                  tk.get_converter('convert_to_extras')],
+                'sdc_report_flag': [tk.get_validator('ignore_missing')],
+                'sdc_report_id': [tk.get_validator('ignore_missing')]
             }
         )
 
