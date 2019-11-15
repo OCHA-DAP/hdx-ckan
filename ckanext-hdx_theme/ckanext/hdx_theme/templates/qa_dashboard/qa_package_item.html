@@ -1,0 +1,79 @@
+{% extends  "search/snippets/package_item.html" %}
+
+{% block package_item_content %}
+  {% resource 'hdx_theme/qa-package' %}
+    <div class="dataset-content2 qa-package-item" data-index="{{loop.index}}">
+      <div class="dataset-heading">
+        <div>
+          <input type="checkbox" />
+          {% set title = package.title or package.name %}
+          {{ h.link_to(title, h.url_for(controller='package', action='read', id=package.name)) }}
+        </div>
+        <div class="more-options">
+          <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+            <i class="humanitarianicons-More-options"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+            <li class="crises-group">
+              TBD
+            </li>
+            <li class="crises-group">
+              TBD
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="dataset-updated">
+        {% block updated %}
+          {{ super() }}
+        {% endblock %}
+      </div>
+      <div class="dataset-pii">
+        <ul class="pii-list">
+          <li class="pii-item">
+            <span class="pii-title">
+              DISK. RISK:
+            </span>
+            <span class="pii-label warn">
+              <span class="pii-label-text">
+              2/3
+              </span>
+              <i class="humanitarianicons-Alert"></i>
+            </span>
+            <span class="pii-status">
+              In progress
+            </span>
+          </li>
+          <li class="pii-item">
+            <span class="pii-title">
+              PII CHECK:
+            </span>
+            <span class="pii-label gray">
+              <img src="/images/filter_loading.gif">
+            </span>
+            <span class="pii-status">
+              In progress
+            </span>
+          </li>
+          <li class="pii-item">
+            <span class="pii-title">
+              CHECKLIST:
+            </span>
+            <span class="pii-label ok">
+              <span class="pii-label-text">
+              2/2
+              </span>
+              <i class="humanitarianicons-Selected"></i>
+            </span>
+            <span class="pii-status">
+              Oct 17, 2019
+            </span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+{% endblock %}
+

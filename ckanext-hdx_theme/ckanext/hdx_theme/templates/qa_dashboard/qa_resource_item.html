@@ -1,0 +1,63 @@
+{% extends "package/snippets/resource_item.html" %}
+
+{% block resource_item_edit %}
+  <div class="more-options">
+    <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+      <i class="humanitarianicons-More-options"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+      <li class="crises-group">
+        TBD
+      </li>
+      <li class="crises-group">
+        TBD
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block resource_item_explore %}
+  <div class="dataset-pii">
+    <ul class="pii-list">
+      <li class="pii-item">
+        <span class="pii-title">
+          DISK. RISK:
+        </span>
+        <span class="pii-label warn">
+          <span class="pii-label-text">
+          2/3
+          </span>
+          <i class="humanitarianicons-Alert"></i>
+        </span>
+        <span class="pii-status">
+          In progress
+        </span>
+      </li>
+      <li class="pii-item">
+        <span class="pii-title">
+          PII CHECK:
+        </span>
+        <span class="pii-label gray">
+          <img src="/images/filter_loading.gif">
+        </span>
+        <span class="pii-status">
+          In progress
+        </span>
+      </li>
+      <li class="pii-item">
+        <span class="pii-title">
+          CHECKLIST:
+        </span>
+        <span class="pii-label ok">
+          <span class="pii-label-text">
+          2/2
+          </span>
+          <i class="humanitarianicons-Selected"></i>
+        </span>
+        <span class="pii-status">
+          Oct 17, 2019
+        </span>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
