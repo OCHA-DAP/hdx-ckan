@@ -137,37 +137,7 @@
     {% block package_notes %}
     {% endblock %}
   </div>
-  <div class="mL30">
-    <ul class="nav nav-tabs">
-      <li class="active">
-        <a href="#data-resources"
-           data-module="hdx_click_stopper" data-module-link_type="dataset resources tab" data-module-just_send_event="true"
-           data-toggle="tab" class="hdx-tab-button">Data and Resources
-        </a>
-      </li>
-      <li>
-        <a href="#metadata"
-           data-module="hdx_click_stopper" data-module-link_type="dataset metadata tab" data-module-just_send_event="true"
-           data-toggle="tab" class="hdx-tab-button">Metadata
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="tab-content clearfix mL30">
-    <div class="tab-pane active" id="data-resources">
-      {% block package_resources %}
-        <div class="dataset-res-wraper">
-          {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
-          {# {% resource 'hdx_theme/explorer' %} #}
-        </div>
-      {% endblock %}
-    </div>
-    <div class="tab-pane" id="metadata">
-      {% block indicator_additional_info %}
-        {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
-      {% endblock %}
-    </div>
-  </div>
+  {% snippet "package/hdx_resources_list.html", pkg=pkg %}
   {% snippet "widget/banner/hdx-dataset-banner.html", pkg=pkg %}
 
 {% endblock %}

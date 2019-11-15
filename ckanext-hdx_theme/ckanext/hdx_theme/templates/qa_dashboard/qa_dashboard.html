@@ -11,9 +11,8 @@
 {% block primary_content %}
     {% block search_results_wrapper %}
         <div id="search-recs"></div>
-        {% snippet 'search/snippets/search_results_wrapper.html',
+        {% snippet 'qa_dashboard/qa_search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=c, display_min=true %}
-
     {% endblock %}
   {% block package_search_results_api %}
   {% endblock %}
@@ -30,7 +29,6 @@
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search/search_page.js' %}
-
 {% endblock %}
 
 {% block styles %}
