@@ -17,6 +17,8 @@ from ckan.common import _, c
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
+from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
 missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
@@ -332,24 +334,38 @@ def hdx_isodate_to_string_converter(value, context):
     return None
 
 
-def quarantine_validator(key, data, errors, context):
+def reset_on_file_upload(key, data, errors, context):
+    if context.get(FILE_WAS_UPLOADED):
+        data.pop(key, None)
+
+
+def keep_prev_value_unless_sysadmin(key, data, errors, context):
     '''
     By default, this should inject the value from the previous version.
     The exception is if the user is a sysadmin, then the new value is used.
     '''
+
     if data[key] is missing:
-        data[key] = False
+        data.pop(key, None)
+
     user = context.get('user')
     ignore_auth = context.get('ignore_auth')
     allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
 
     if not allowed_to_change:
-        data[key] = False
+        data.pop(key, None)
         resource_id = data.get(key[:-1] + ('id',))
         if resource_id:
-            resource_dict = get_action('resource_show')(context, {'id': resource_id})
+            specific_key = key[2]
+            context_key = 'resource_' + resource_id
+            resource_dict = context.get(context_key)
+            if not resource_dict:
+                resource_dict = get_action('resource_show')(context, {'id': resource_id})
+                context[context_key] = resource_dict
             if resource_dict:
-                data[key] = resource_dict.get('in_quarantine', False)
+                old_value = resource_dict.get(specific_key)
+                if old_value is not None:
+                    data[key] = old_value
 
-    return data[key]
-
+    if key not in data:
+        raise StopOnError
