@@ -3,6 +3,20 @@
 {% block search_list %}
   <div class="qa-dataset-list-head">
     <input type="checkbox"> Select all
+
+    <div class="more-options">
+      <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+        <i class="humanitarianicons-More-options"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+        <li class="crises-group">
+          TBD
+        </li>
+        <li class="crises-group">
+          TBD
+        </li>
+      </ul>
+    </div>
   </div>
   <div class="qa-dataset-list">
     <div class="dataset-items">
@@ -11,6 +25,9 @@
     <div class="dataset-description">
       {% for package in packages %}
         <div id="qa-package-details-{{loop.index}}" class="qa-package-details" style="display: none;">
+          <div class="mL30">
+            <div class="qa-dataset-description">{{ package.notes }}</div>
+          </div>
           {% snippet "package/hdx_resources_list.html", pkg=package, id_suffix=loop.index, resource_item_snippet='qa_dashboard/qa_resource_item.html' %}
         </div>
       {% endfor %}
