@@ -19,7 +19,7 @@ import ckanext.hdx_package.helpers.screenshot as screenshot
 
 from ckan.common import _
 from ckanext.hdx_package.helpers.analytics import is_cod
-from ckanext.hdx_package.actions.update import process_batch_mode
+from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
 _get_action = logic.get_action
@@ -38,6 +38,7 @@ def resource_create(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
+    flag_if_file_uploaded(context, data_dict)
 
     if data_dict.get('resource_type', '') != 'file.upload':
         #If this isn't an upload, it is a link so make sure we update

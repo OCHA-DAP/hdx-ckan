@@ -250,19 +250,38 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
                 'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'),
                                             tk.get_validator('ignore_missing')],
-                'in_quarantine': [tk.get_validator('hdx_quarantine_validator')],
-                'pii_timestamp': [tk.get_validator('ignore_missing'),
-                                  tk.get_validator('isodate'),
-                                  tk.get_validator('hdx_isodate_to_string_converter'),
-                                  tk.get_converter('convert_to_extras')],
-                'pii_report_flag': [tk.get_validator('ignore_missing')],
-                'pii_report_id': [tk.get_validator('ignore_missing')],
-                'sdc_timestamp': [tk.get_validator('ignore_missing'),
-                                  tk.get_validator('isodate'),
-                                  tk.get_validator('hdx_isodate_to_string_converter'),
-                                  tk.get_converter('convert_to_extras')],
-                'sdc_report_flag': [tk.get_validator('ignore_missing')],
-                'sdc_report_id': [tk.get_validator('ignore_missing')]
+                'in_quarantine': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ],
+                'pii_timestamp': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('isodate'),
+                    tk.get_validator('hdx_isodate_to_string_converter'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ],
+                'pii_report_flag': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ],
+                'pii_report_id': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ],
+                'sdc_timestamp': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('isodate'),
+                    tk.get_validator('hdx_isodate_to_string_converter'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ],
+                'sdc_report_flag': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ],
+                'sdc_report_id': [
+                    tk.get_validator('hdx_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_reset_on_file_upload')
+                ]
             }
         )
 
@@ -393,7 +412,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_is_url':  vd.hdx_is_url,
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
-            'hdx_quarantine_validator': vd.quarantine_validator
+            'hdx_keep_prev_value_unless_sysadmin': vd.keep_prev_value_unless_sysadmin,
+            'hdx_reset_on_file_upload': vd.reset_on_file_upload
         }
 
     def get_auth_functions(self):

@@ -7,17 +7,16 @@ Created on Jul 07, 2015
 import datetime
 import logging
 
-import ckanext.hdx_package.helpers.geopreview as geopreview
-import ckanext.hdx_package.helpers.helpers as helpers
-from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from rq.utils import utcnow
-
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.plugins as lib_plugins
 import ckan.logic as logic
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
+import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
+from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
 _check_access = logic.check_access
 _get_action = logic.get_action
@@ -35,6 +34,7 @@ def resource_update(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
+    flag_if_file_uploaded(context, data_dict)
     process_skip_validation(context, data_dict)
 
     # make the update faster (less computation in the custom package_show)
@@ -101,7 +101,7 @@ def package_update(context, data_dict):
        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
 
     if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
-        data_dict['review_date'] = utcnow()
+        data_dict['review_date'] = datetime.datetime.utcnow()()
 
     _check_access('package_update', context, data_dict)
 
@@ -225,6 +225,11 @@ def process_batch_mode(context, data_dict):
     if BATCH_MODE in data_dict:
         context[BATCH_MODE] = data_dict[BATCH_MODE]
         del data_dict[BATCH_MODE]
+
+
+def flag_if_file_uploaded(context, data_dict):
+    if data_dict.get('upload'):
+        context[FILE_WAS_UPLOADED] = True
 
 
 def process_skip_validation(context, data_dict):
