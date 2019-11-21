@@ -1,17 +1,25 @@
 @import "../base/variables";
 @import "../base/mixins";
 
-.dataset-content2 {
-  padding: 30px 15px 15px;
+.search-list .dataset-item .dataset-content2.qa-package-item {
   cursor: pointer;
+  padding: 25px 15px;
+  padding-bottom: 15px;
 
   &.open, &:hover {
     background-color: @extraLightBlueColor;
   }
 
+  .dataset-dates {
+    line-height: 1.2;
+  }
+
   .dataset-heading {
     display: flex;
     justify-content: space-between;
+    input[type='checkbox'] {
+      margin-right: 2px;
+    }
 
     .more-options {
       position: relative;
@@ -22,6 +30,7 @@
     }
   }
 }
+
 .dataset-pii {
   margin-top: 20px;
 
@@ -74,10 +83,9 @@
       }
     }
   }
-
-
 }
-.more-options {
+
+.more-options, .dataset-content2 .dataset-heading .more-options {
   > a.dropdown-toggle[data-toggle="dropdown"] {
     font-weight: 600;
     color: @grayColor;
@@ -85,11 +93,22 @@
     position: relative;
   }
 }
+@dataset-list-head-width: 38%;
 .qa-dataset-list-head {
-  padding-top: 20px;
-  padding-bottom: 10px;
+  padding: 15px 0;
   position: absolute;
   top: 0;
+  width: @dataset-list-head-width;
+  input[type='checkbox'] {
+    margin-left: 10px;
+    margin-right: 5px;
+  }
+
+  .more-options {
+    position: absolute;
+    right: 10px;
+    top: 17px;
+  }
 }
 .qa-dataset-list {
   display: flex;
@@ -97,7 +116,7 @@
   align-items: stretch;
 
   .dataset-items {
-    width: 38%;
+    width: @dataset-list-head-width;
     height: 100%;
     overflow: scroll;
     .dataset-item {
@@ -106,6 +125,8 @@
   }
   .dataset-description {
     width: 62%;
+    height: 100%;
+    overflow: scroll;
   }
 }
 
@@ -113,6 +134,8 @@
   position: absolute;
   right: 0;
   height: 100%;
+  min-height: calc(100vh - 50px);
+  padding-left: 0;
 
   .search-list{
     height: 100%;
@@ -121,13 +144,16 @@
 }
 .list-items > .row {
   position: relative;
+  margin: 0; //intentional inner 15px padding for the 2 columns
 }
 
 .resource-item {
   border-top: 1px solid @lightGrayColor;
   padding-top: 20px;
+  padding-left: 70px;
   .format-label {
     top: 20px;
+    left: 20px;
   }
   &:first-child {
     border-top: none;
@@ -153,6 +179,12 @@
   display: none;
 }
 .qa-package-details {
+  margin-left: -15px;
+  .qa-dataset-description {
+    background-color: @whiteColor;
+    color: @darkGrayColor;
+    padding: 20px;
+  }
   .nav.nav-tabs{
     background-color: @whiteColor;
   }
@@ -162,6 +194,7 @@
       .additional-info.info-wrapper {
         margin-top: 0;
         padding-top: 10px;
+        padding-left: 15px;
         .table-condensed {
           margin-top: 0;
         }
@@ -172,7 +205,10 @@
 
 
 section.search-list {
-  background-color: @extraLightGrayColor;
+  background-color: rgba(238, 238, 238, 0.50);
+  > .list-items {
+    min-height: 100vh;
+  }
   .filter-category {
     background-color: @whiteColor;
   }
