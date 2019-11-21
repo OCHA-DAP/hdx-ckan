@@ -1211,7 +1211,7 @@ class DatasetController(PackageController):
         if 'xlsx' in res_format:
             default_resource_view = next(
                 (rv for rv in resource_views if rv.get('view_type') == 'hdx_hxl_preview'),
-                None)
+                default_resource_view)
 
         return default_resource_view
 
