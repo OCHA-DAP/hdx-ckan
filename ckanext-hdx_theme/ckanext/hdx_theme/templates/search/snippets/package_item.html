@@ -16,7 +16,10 @@
               {% endif %}
               {% if is_metadata_only %}
                 {% block metadata_only_icon %}
-                  <i class="restricted humanitarianicons-Physical-closure"></i>
+                  <i class="restricted humanitarianicons-Physical-closure"
+                     title="{{ _('This data is by request only') }}" data-module="bs_tooltip"
+                     data-module-placement="top" data-toggle="tooltip"
+                  ></i>
                 {% endblock %}
               {% endif %}
               {% block title %}
