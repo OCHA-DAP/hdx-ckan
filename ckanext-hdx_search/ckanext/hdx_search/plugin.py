@@ -13,7 +13,7 @@ import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
 
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator,\
+from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_instance,\
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
@@ -155,10 +155,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 filter_rule = '{{!tag={tag}}}{rule}'.format(tag=UPDATE_STATUS_URL_FILTER, rule=filter_rule)
                 search_params['fq_list'].append(filter_rule)
 
+    # IPackageController
     def after_search(self, search_results, search_params):
-        if search_params.get('extras', {}).get('ext_compute_freshness') == 'true':
+        ext_compute_freshness = search_params.get('extras', {}).get('ext_compute_freshness')
+        if ext_compute_freshness in {'true', 'for-data-completeness'}:
             for dataset in search_results.get('results', []):
-                FreshnessCalculator(dataset).populate_with_freshness()
+                get_calculator_instance(dataset, ext_compute_freshness).populate_with_freshness()
         return search_results
 
     def before_view(self, pkg_dict):

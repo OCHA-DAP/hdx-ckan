@@ -118,6 +118,11 @@
         <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
       </tr>
       <tr>
+        {% set updated_time = h.hdx_get_last_modification_date(pkg_dict) %}
+        <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
+        <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_datetime(updated_time) }}</span></td>
+      </tr>
+      <tr>
         <th scope="row" class="dataset-label">{{ _('Tags') }}</th>
         <td class="dataset-details">
           <div class="row mTop8">
