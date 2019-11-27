@@ -167,6 +167,10 @@ Example:
         {%  if ext_after_metadata_modified %}
             <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
         {% endif %}
+        {% set ext_batch = request.params.get('ext_batch') %}
+        {% if ext_batch %}
+            <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
+        {% endif %}
     </form>
     <div id="search-page-results" class="col-xs-9">
         {% if packages %}
