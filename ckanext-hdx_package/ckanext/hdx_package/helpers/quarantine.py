@@ -8,6 +8,7 @@ abort = tk.abort
 _ = tk._
 c = tk.c
 
+
 def resource_download_with_quarantine_check(self, id, resource_id, filename=None):
 
     context = {'model': model, 'session': model.Session,
