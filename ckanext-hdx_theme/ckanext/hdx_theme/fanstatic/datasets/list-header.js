@@ -114,7 +114,7 @@ function getFilterUrlNew(resetFilters) {
 
     //check non filter params
     var params2 = $("#headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort, " +
-        "#ext_after_metadata_modified").serialize();
+        "#ext_after_metadata_modified, #ext_batch").serialize();
     params += ((params !== "" && params2 != null) ? "&" : "") + params2;
 
 
