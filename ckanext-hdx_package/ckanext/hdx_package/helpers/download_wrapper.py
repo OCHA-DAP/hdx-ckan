@@ -1,10 +1,11 @@
-# import ckan.controllers.package as package_controller
+import ckan.controllers.package as package_controller
 import ckanext.s3filestore.controller as s3_resource_controller
 
+from ckanext.hdx_theme.helpers.config import is_s3filestore_enabled
 from ckanext.hdx_package.helpers.analytics import resource_download_with_analytics
 from ckanext.hdx_package.helpers.quarantine import resource_download_with_quarantine_check
 
-Controller = s3_resource_controller.S3Controller
+Controller = s3_resource_controller.S3Controller if is_s3filestore_enabled() else package_controller.PackageController
 before_download_functions = [resource_download_with_quarantine_check,resource_download_with_analytics]
 
 
