@@ -97,10 +97,28 @@
 {% set request_membership = h.hdx_get_extras_element(data, value_key="request_membership") or "true" %}
 {% set request_membership_checked = 'checked="checked"' if request_membership=='true' else '' %}
 <div id="request-membership-trigger" class="org-control-container">
-  <label class="control-label" for="field-request_membership" style="display: inline-block;">{{ _('Display "Request Membership" option on organization page') }}</label>
-  <div class="controls" style="display:inline-block">
-    <input type="hidden" name="request_membership" id="hidden-field-request_membership" value="{{ request_membership }}" />
-    <input type="checkbox" {{ request_membership_checked }} id="field-request_membership" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+  <div class="control-group control-full org-control field-with-info" style="min-height:30px">
+    <label class="control-label" for="field-request_membership" style="display: inline-block;">{{ _('Allow Membership Requests') }}</label>
+    <div class="controls" style="display:inline-block">
+      <input type="hidden" name="request_membership" id="hidden-field-request_membership" value="{{ request_membership }}" />
+      <input type="checkbox" {{ request_membership_checked }} id="field-request_membership" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+    </div>
+  </div>
+  <div class="org-control-info info-field"   style="margin-top:0px;">
+    <div class="org-info-label">{{_('Allow registered HDX users to send requests to join your organisation on HDX.')}} </br>
+        {{_('If you check this option, a \"Request Membership\" link will be displayed to registered users on your HDX organisation page.')}}
+      </br>
+        {{_(' New HDX users will be able to send you requests to join your organisation when they sign up to HDX for the first time.')}}
+      </br>
+        {{_(' You will be notified by email when such requests are sent. ')}}
+      </br>
+        {{_(' If you uncheck this option, your organisation will be a closed group with existing members. ')}}
+      </br>
+        {{_('No new member will be able to send a request to join your organisation on HDX.')}}
+      </br>
+        {{_(' The admin(s) of your organisation can still manually invite new members, ')}}
+      </br>
+        {{_('remove existing members or change their roles from the \"Members\" tab.')}}</div>
   </div>
 </div>
 
