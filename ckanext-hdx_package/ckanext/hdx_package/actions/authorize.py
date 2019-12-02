@@ -14,8 +14,8 @@ def package_create(context, data_dict=None):
     if data_dict and 'groups' in data_dict:
         temp_groups = data_dict['groups']
         del data_dict['groups']
-        #check original package_create auth 
-        log.info('Removed groups from data_dict: ' + str(data_dict))
+        #check original package_create auth
+        log.debug('Removed groups from data_dict: ' + str(data_dict))
         retvalue = create.package_create(context, data_dict)
         data_dict['groups'] = temp_groups
     else:
@@ -29,8 +29,8 @@ def package_update(context, data_dict=None):
     if data_dict and 'groups' in data_dict:
         temp_groups = data_dict['groups']
         del data_dict['groups']
-        #check original package_create auth 
-        log.info('Removed groups from data_dict: ' + str(data_dict))
+        #check original package_create auth
+        log.debug('Removed groups from data_dict: ' + str(data_dict))
         retvalue = update.package_update(context, data_dict)
         data_dict['groups'] = temp_groups
     else:
