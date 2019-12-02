@@ -1,9 +1,6 @@
 import logging
 from urllib import urlencode
-
-import ckanext.hdx_search.helpers.search_history as search_history
 import sqlalchemy
-from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from pylons import config
 
 import ckan.lib.base as base
@@ -11,8 +8,14 @@ import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.logic as logic
 import ckan.model as model
+
+import ckanext.hdx_search.helpers.search_history as search_history
+
 from ckan.common import OrderedDict, _, json, request, c, response
+
 from ckan.controllers.api import CONTENT_TYPES
+
+from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
