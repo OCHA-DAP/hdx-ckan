@@ -137,7 +137,7 @@
                     {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
                     <div class="paddingLeftHack paddingRightHack">
                       <div class="alert alert-danger">
-                        This dataset has passed it's update date on
+                        This dataset has passed its update date on
                         <span class="info-label">
                           <i class="glyphicon glyphicon-time"></i>
                           {% set due_date = h.hdx_get_due_overdue_date(data)  %}
