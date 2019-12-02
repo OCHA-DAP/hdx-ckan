@@ -17,6 +17,7 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
+import ckanext.hdx_search.actions.authorize as authorize
 
 NotFound = ckan.logic.NotFound
 
@@ -35,6 +36,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IConfigurable)
+    plugins.implements(plugins.IAuthFunctions)
 
     # IConfigurable
     def configure(self, config):
@@ -205,3 +207,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
 
         return facets_dict
+
+    def get_auth_functions(self):
+        return {'qa_dashboard_show': authorize.qa_dashboard_show
+                }
