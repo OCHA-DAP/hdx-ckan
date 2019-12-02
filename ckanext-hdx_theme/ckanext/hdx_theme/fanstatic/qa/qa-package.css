@@ -10,17 +10,18 @@
 .search-list .dataset-item .dataset-content2.qa-package-item .dataset-dates {
   line-height: 1.2;
 }
-.search-list .dataset-item .dataset-content2.qa-package-item .dataset-heading {
+.search-list .dataset-item .dataset-content2.qa-package-item .dataset-top {
   display: flex;
   justify-content: space-between;
 }
-.search-list .dataset-item .dataset-content2.qa-package-item .dataset-heading input[type='checkbox'] {
+.search-list .dataset-item .dataset-content2.qa-package-item .dataset-top .dataset-heading input[type='checkbox'] {
   margin-right: 2px;
 }
-.search-list .dataset-item .dataset-content2.qa-package-item .dataset-heading .more-options {
+.search-list .dataset-item .dataset-content2.qa-package-item .dataset-top .more-options {
   position: relative;
   align-self: flex-start;
   margin-left: 5px;
+  margin-top: 3px;
 }
 .dataset-pii {
   margin-top: 20px;
@@ -135,11 +136,12 @@
 .resource-item {
   border-top: 1px solid #cccccc;
   padding-top: 20px;
-  padding-left: 70px;
+  padding-left: 50px;
+  padding-right: 0;
 }
 .resource-item .format-label {
   top: 20px;
-  left: 20px;
+  left: 0;
 }
 .resource-item:first-child {
   border-top: none;
@@ -147,7 +149,7 @@
 .resource-item .more-options {
   position: absolute;
   top: 20px;
-  right: 10px;
+  right: 0;
 }
 .resource-item .dataset-pii {
   margin-top: 0;
@@ -171,6 +173,13 @@
 }
 .qa-package-details .tab-content .tab-pane {
   background-color: #fff;
+}
+.qa-package-details .tab-content .tab-pane .dataset-res-wraper {
+  padding: 20px;
+}
+.qa-package-details .tab-content .tab-pane .dataset-res-wraper .lines {
+  width: 280px;
+  overflow: hidden;
 }
 .qa-package-details .tab-content .tab-pane .additional-info.info-wrapper {
   margin-top: 0;

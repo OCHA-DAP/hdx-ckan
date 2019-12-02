@@ -144,7 +144,7 @@
   font-size: 14px;
   margin-right: 2px;
 }
-.search-list .dataset-item .dataset-content2 .dataset-heading a {
+.search-list .dataset-item .dataset-content2 .dataset-heading > a {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   font-size: 14px;

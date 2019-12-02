@@ -14,10 +14,10 @@
     line-height: 1.2;
   }
 
-  .dataset-heading {
+  .dataset-top {
     display: flex;
     justify-content: space-between;
-    input[type='checkbox'] {
+    .dataset-heading input[type='checkbox'] {
       margin-right: 2px;
     }
 
@@ -25,8 +25,7 @@
       position: relative;
       align-self: flex-start;
       margin-left: 5px;
-
-
+      margin-top: 3px;
     }
   }
 }
@@ -150,10 +149,11 @@
 .resource-item {
   border-top: 1px solid @lightGrayColor;
   padding-top: 20px;
-  padding-left: 70px;
+  padding-left: 50px;
+  padding-right: 0;
   .format-label {
     top: 20px;
-    left: 20px;
+    left: 0;
   }
   &:first-child {
     border-top: none;
@@ -161,7 +161,7 @@
   .more-options {
     position: absolute;
     top: 20px;
-    right: 10px;
+    right: 0;
   }
   .dataset-pii {
     margin-top: 0;
@@ -191,6 +191,15 @@
   .tab-content {
     .tab-pane {
       background-color: @whiteColor;
+
+      .dataset-res-wraper {
+        padding: 20px;
+        .lines {
+          width: 280px;
+          overflow: hidden;
+        }
+      }
+
       .additional-info.info-wrapper {
         margin-top: 0;
         padding-top: 10px;

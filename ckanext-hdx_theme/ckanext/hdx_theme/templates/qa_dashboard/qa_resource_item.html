@@ -6,11 +6,23 @@
       <i class="humanitarianicons-More-options"></i>
     </a>
     <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
-      <li class="crises-group">
-        TBD
+      <li>
+        <a href="#">Run PII Check</a>
       </li>
-      <li class="crises-group">
-        TBD
+      <li>
+        <a href="#">Run SDC Micro</a>
+      </li>
+      <li>
+        <a href="#">Open QA Checklist</a>
+      </li>
+      <li>
+        <a href="{{ h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
+      </li>
+      <li>
+        <a href="{{ res.hdx_rel_url }}">Download</a>
+      </li>
+      <li>
+        <a href="#">Add to Quarantine</a>
       </li>
     </ul>
   </div>
