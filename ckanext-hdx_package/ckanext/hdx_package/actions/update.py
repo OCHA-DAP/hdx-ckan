@@ -16,6 +16,7 @@ import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+from ckanext.hdx_package.helpers.file_removal import file_remove
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
 _check_access = logic.check_access
@@ -40,6 +41,10 @@ def resource_update(context, data_dict):
     # make the update faster (less computation in the custom package_show)
     context['no_compute_extra_hdx_show_properties'] = True
 
+    prev_resource_dict = _fetch_prev_resource_info(context['model'], data_dict)
+    prev_resource_is_upload = prev_resource_dict.get('url_type') == 'upload'
+    new_file_uploaded = bool(data_dict.get('upload'))
+
     if data_dict.get('resource_type', '') != 'file.upload':
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up
@@ -51,7 +56,21 @@ def resource_update(context, data_dict):
             data_dict['datastore_active'] = True
     result_dict = core_update.resource_update(context, data_dict)
 
+    new_resource_is_api = result_dict.get('url_type') == 'api'
+    if prev_resource_is_upload and (new_file_uploaded or new_resource_is_api):
+        file_remove(prev_resource_dict['id'], prev_resource_dict['name'], prev_resource_dict['url_type'])
+
     return result_dict
+
+
+def _fetch_prev_resource_info(model, data_dict):
+    prev_resource = model.Resource.get(data_dict.get('id'))
+    prev_resource_dict = {
+        'id': prev_resource.id,
+        'name': prev_resource.name,
+        'url_type': prev_resource.url_type
+    }
+    return prev_resource_dict
 
 
 @geopreview.geopreview_4_packages
