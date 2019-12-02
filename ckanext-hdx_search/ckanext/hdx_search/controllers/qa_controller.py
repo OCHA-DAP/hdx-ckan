@@ -1,31 +1,21 @@
 import logging
-import re
-import datetime
 import sqlalchemy
 from urllib import urlencode
 
 from pylons import config
-from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
-import ckan.plugins as p
 
 import ckanext.hdx_search.helpers.search_history as search_history
 
 from ckan.common import OrderedDict, _, json, request, c, response
 
-from ckan.controllers.package import PackageController
 from ckan.controllers.api import CONTENT_TYPES
 
-from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
-from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
-from ckanext.hdx_package.helpers.analytics import generate_analytics_data
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER, \
-    UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 
 _validate = dict_fns.validate
@@ -65,9 +55,9 @@ class HDXQAController(HDXSearchController):
         try:
             context = {'model': model, 'user': c.user or c.author,
                        'auth_user_obj': c.userobj}
-            check_access('site_read', context)
-        except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
+            check_access('qa_dashboard_show', context)
+        except (NotFound, NotAuthorized):
+            abort(404, _('Not authorized to see this page'))
 
         package_type = 'dataset'
 
