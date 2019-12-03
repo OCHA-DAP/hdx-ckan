@@ -1,13 +1,12 @@
 import logging
-import sqlalchemy
 from urllib import urlencode
-
+import sqlalchemy
 from pylons import config
 
-import ckan.logic as logic
 import ckan.lib.base as base
-import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
+import ckan.lib.navl.dictization_functions as dict_fns
+import ckan.logic as logic
 import ckan.model as model
 
 import ckanext.hdx_search.helpers.search_history as search_history
@@ -67,12 +66,14 @@ class HDXQAController(HDXSearchController):
         def pager_url(q=None, page=None):
             params = list(params_nopage)
             params.append(('page', page))
-            return self._search_url(params, package_type)
+            url = h.url_for('qa_dashboard')
+            params = _encode_params(params)
+            return url + u'?' + urlencode(params)
 
         c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
-
+        c.other_links['current_page_url'] = h.url_for('qa_dashboard')
         query_string = request.params.get('q', u'')
         if c.userobj and query_string:
             search_history.store_search(query_string, c.userobj.id)
