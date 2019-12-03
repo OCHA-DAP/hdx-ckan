@@ -744,7 +744,7 @@ class HDXSearchController(PackageController):
         self._add_item_to_featured_facets(featured_facet_items, 'ext_subnational', 'Sub-national',
                                           num_of_subnational, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_geodata', 'Geodata', num_of_geodata, search_extras)
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_requestdata', 'Datasets on request(HDX Connect)',
+        self._add_item_to_featured_facets(featured_facet_items, 'ext_requestdata', 'Datasets on request (HDX Connect)',
                                           num_of_requestdata, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_quickcharts', 'Datasets with Quick Charts',
                                           num_of_quickcharts, search_extras)
