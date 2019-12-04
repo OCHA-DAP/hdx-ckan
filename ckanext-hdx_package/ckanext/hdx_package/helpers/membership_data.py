@@ -1,8 +1,9 @@
-import logging
 import collections
+import logging
 
-import ckan.model as model
 import ckan.logic as logic
+import ckan.model as model
+from ckan.common import c
 
 log = logging.getLogger(__name__)
 
@@ -24,6 +25,25 @@ membership_data = {
     'contributor_topics': contributor_topics,
     'group_topics': group_topics
 }
+
+def get_membership_by_user(user, org, userobj):
+    if user:
+        group_message_topics = get_message_groups(user, org)
+        template_data = {
+            'group_topics': group_message_topics,
+            'contributor_topics': membership_data['contributor_topics']
+        }
+    else:
+        group_message_topics = False
+        template_data = membership_data
+
+    if userobj:
+        template_data['fullname'] = userobj.display_name or c.userobj.name or ''
+        template_data['email'] = userobj.email or ''
+    return {
+        'display_group_message': bool(group_message_topics),
+        'data': template_data,
+    }
 
 
 def get_message_groups(current_user, org_id):

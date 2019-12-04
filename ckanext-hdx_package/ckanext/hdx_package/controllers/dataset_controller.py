@@ -9,11 +9,11 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
+from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
-from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_theme.util.mail import simple_validate_email
 from pylons import config
 
 import ckan.authz as authz
@@ -741,19 +741,7 @@ class DatasetController(PackageController):
         c.pkg_dict['social_mail_body'] = _('Description:%0D%0A') + h.markdown_extract(
             notes) + ' %0D%0A'
 
-        group_message_topics = membership_data.get_message_groups(c.user or c.author, c.pkg.owner_org)
-        template_data = {
-            'group_topics': group_message_topics,
-            'contributor_topics': membership_data.membership_data['contributor_topics']
-        }
-
-        if c.userobj:
-            template_data['fullname'] = c.userobj.display_name or c.userobj.name or ''
-            template_data['email'] = c.userobj.email or ''
-        c.membership = {
-            'display_group_message': bool(group_message_topics),
-            'data': template_data,
-        }
+        c.membership = membership_data.get_membership_by_user(c.user or c.author, c.pkg.owner_org, c.userobj)
 
         c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
 
