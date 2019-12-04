@@ -1,6 +1,10 @@
 import logging
 from urllib import urlencode
+
+import ckanext.hdx_package.helpers.membership_data as membership
+import ckanext.hdx_search.helpers.search_history as search_history
 import sqlalchemy
+from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from pylons import config
 
 import ckan.lib.base as base
@@ -8,14 +12,8 @@ import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.logic as logic
 import ckan.model as model
-
-import ckanext.hdx_search.helpers.search_history as search_history
-
-from ckan.common import OrderedDict, _, json, request, c, response
-
+from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
-
-from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -62,6 +60,8 @@ class HDXQAController(HDXSearchController):
 
         params_nopage = self._params_nopage()
         c.search_url_params = urlencode(_encode_params(params_nopage))
+
+        c.membership = membership.get_membership_by_user(c.user or c.author, None, c.userobj)
 
         def pager_url(q=None, page=None):
             params = list(params_nopage)

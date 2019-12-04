@@ -1,6 +1,5 @@
-{% macro contributor_action(pkg, h) -%}
+{% macro contributor_action(pkg, h, overrideText) -%}
   {% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) if pkg else false %}
   {% set contact_confirm_text = "WARNING: you are the contributor of this dataset. Do you wish to continue contacting the contributor?" if is_current_user_a_maintainer else None %}
-
-  {% if is_current_user_a_maintainer %}if (confirm('{{contact_confirm_text}}')){ {% endif %}closeCurrentWidget(this);spawnRecaptcha('#contactContributorPopup');showOnboardingWidget('#contactContributorPopup');{% if is_current_user_a_maintainer %} } {% endif %}
+  {% if is_current_user_a_maintainer %}if (confirm('{{contact_confirm_text}}')){ {% endif %}closeCurrentWidget(this);showContributorPopup('#contactContributorPopup','{{pkg.title | urlencode }}','{{pkg.owner_org}}', '{{pkg.name or pkg.id}}', {{overrideText}});{% if is_current_user_a_maintainer %} } {% endif %}
 {%- endmacro %}

@@ -22,7 +22,7 @@
         <a href="{{ res.hdx_rel_url }}">Download</a>
       </li>
       <li>
-        <a href="#">Add to Quarantine</a>
+        <a href="#" onclick="updateQuarantine('{{ res.id }}', {% if res.in_quarantine %}false{% else %}true{% endif %});">{% if res.in_quarantine %}Remove from{% else %}Add to{% endif %} Quarantine</a>
       </li>
     </ul>
   </div>

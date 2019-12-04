@@ -10,6 +10,10 @@
 
 {% block primary_content %}
     {% block search_results_wrapper %}
+        {% set contact_topics = c.membership.data.contributor_topics %}
+        {% set membership_data = c.membership.data %}
+        {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, membership_data=membership_data) }}
+
         <div id="search-recs"></div>
         {% snippet 'qa_dashboard/qa_search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=c, display_min=true %}
