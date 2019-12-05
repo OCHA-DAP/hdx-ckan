@@ -120,7 +120,7 @@ def package_update(context, data_dict):
        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
 
     if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
-        data_dict['review_date'] = datetime.datetime.utcnow()()
+        data_dict['review_date'] = datetime.datetime.utcnow()
 
     _check_access('package_update', context, data_dict)
 
