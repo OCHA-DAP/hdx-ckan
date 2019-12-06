@@ -140,6 +140,24 @@
           </div>
         </td>
       </tr>
+      {% if pkg_dict.resources %}
+        <tr>
+          <th scope="row" class="dataset-label">{{ _('File Format') }}</th>
+          <td class="dataset-details">
+            <div class="row mTop8">
+              <div class="col-xs-12">
+                <ul class="list-items dataset-resources unstyled">
+                  {% for resource in h.dict_list_reduce(pkg_dict.resources, 'format') %}
+                    <li>
+                      <a class="label" data-format="{{ resource.lower() }}" onclick="$('#link-data-resources-tab').tab('show');">{{ resource }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {% endif %}
     {% endblock %}
     </tbody>
   </table>
