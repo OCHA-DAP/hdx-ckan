@@ -672,6 +672,7 @@ class HDXSearchController(PackageController):
         num_of_hxl = 0
         num_of_requestdata = 0
         num_of_showcases = 0
+        num_of_administrative_divisions = 0
 
         featured_facet_items = []
         result['facets']['featured'] = {
@@ -730,6 +731,8 @@ class HDXSearchController(PackageController):
                             num_of_cods = new_item['count']
                         if category_key == 'vocab_Topics' and new_item['name'] == 'hxl':
                             num_of_hxl = new_item['count']
+                        if category_key == 'vocab_Topics' and new_item['name'] == 'administrative divisions':
+                            num_of_administrative_divisions = new_item['count']
 
                 sorted_item_list.sort(key=lambda x: x.get('display_name'))
 
@@ -752,6 +755,8 @@ class HDXSearchController(PackageController):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
+        self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
+                                          num_of_administrative_divisions, search_extras)
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
@@ -761,6 +766,7 @@ class HDXSearchController(PackageController):
         result['num_of_hxl'] = num_of_hxl
         result['num_of_requestdata'] = num_of_requestdata
         result['num_of_showcases'] = num_of_showcases
+        result['num_of_administrative_divisions'] = num_of_administrative_divisions
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
