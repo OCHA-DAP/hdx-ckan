@@ -22,7 +22,12 @@
       <tr>
         <th scope="row" class="dataset-label">{{ _('Date of Dataset') }}</th>
         <td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
-        </tr>
+      </tr>
+      <tr>
+        {% set updated_time = h.hdx_get_last_modification_date(pkg_dict) %}
+        <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
+        <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_datetime(updated_time) }}</span></td>
+      </tr>
       <tr>
         <th scope="row" class="dataset-label">{{ _('Expected Update Frequency') }}</th>
         <td class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</td>
@@ -116,11 +121,6 @@
       <tr>
         <th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
         <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
-      </tr>
-      <tr>
-        {% set updated_time = h.hdx_get_last_modification_date(pkg_dict) %}
-        <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
-        <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_datetime(updated_time) }}</span></td>
       </tr>
       <tr>
         <th scope="row" class="dataset-label">{{ _('Tags') }}</th>

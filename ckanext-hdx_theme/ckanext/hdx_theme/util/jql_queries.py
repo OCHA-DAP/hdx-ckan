@@ -155,26 +155,29 @@ function main() {{
 '''
 
 DOWNLOADS_PER_ORGANIZATION_PER_DATASET = '''
-/* VER 1.0
-unique (by distinct id, resource id, dataset id, org id) downloads by dataset id (24 weeks, used for top downloads on org page)*/
+/* VER 1.1
+Used for top downloads bar chart on org page for last 24 weeks
+ver 1.0 changed to bucket by day to be consistent with definition of uniqueness for similar queries
+ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant. Also simplified second groupBy() to use "key.X" instead of function call
 
-/*selects all download events, counts unique combinations of day, user, resource, dataset, and org, then counts the number of those unique combinations by dataset.  That is to say if a single user downloaded 10 different resources two times each (20 total downloads) from a single dataset in a given day (and on no other days), the count returned by this query would be 10*/
+selects all download events, counts unique combinations of user, resource, day, dataset, and org, then counts the number of those unique combinations by dataset.  That is to say if a single user downloaded 10 different resources two times each (20 total downloads) from a single dataset in a given day (and on no other days), the count returned by this query would be 10
+*/
 
 function main() {{
   return Events({{
-    from_date: '{}',
-    to_date: '{}',
+    from_date: "{}",
+    to_date: "{}",
     event_selectors: [{{event: "resource download"}}]
   }})
-  .groupBy(["distinct_id","properties.resource id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets),"properties.dataset id", "properties.org id"],mixpanel.reducer.count())
-  .groupBy([function(row) {{return row.key.slice(4)}}, function(row) {{return row.key.slice(3)}}],mixpanel.reducer.count())
+  .groupByUser(["properties.resource id",mixpanel.numeric_bucket("time",mixpanel.daily_time_buckets),"properties.dataset id", "properties.org id"],mixpanel.reducer.null())
+  .groupBy(["key.4", "key.3"],mixpanel.reducer.count())
   .map(function(r){{
     return {{
-      org_id: r.key[0],
-      dataset_id: r.key[1],
-      value: r.value
+    org_id: r.key[0],
+    dataset_id: r.key[1],
+    value: r.value
     }};
   }})
-  .sortDesc('value');
+  .sortDesc("value");
 }}
 '''
