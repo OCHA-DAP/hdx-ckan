@@ -43,6 +43,9 @@
 
 
       <div class="dataset-updated">
+      {% if package.qa_completed %}
+        <div><i style="color: green; font-weight: bold"> QA Completed</i></div>
+      {% endif %}
         {% block updated %}
           {{ super() }}
         {% endblock %}

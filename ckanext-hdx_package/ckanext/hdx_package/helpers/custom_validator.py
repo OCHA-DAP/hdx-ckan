@@ -369,3 +369,25 @@ def keep_prev_value_unless_sysadmin(key, data, errors, context):
 
     if key not in data:
         raise StopOnError
+
+
+def package_keep_prev_value_unless_sysadmin(key, data, errors, context):
+    '''
+    By default, this should inject the value from the previous version.
+    The exception is if the user is a sysadmin, then the new value is used.
+    '''
+    if data[key] is missing:
+        data.pop(key, None)
+
+    user = context.get('user')
+    ignore_auth = context.get('ignore_auth')
+    allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
+
+    if not allowed_to_change:
+        pkg_id = data.get(('id',))
+        pkg_dict = get_action('package_show')(context, {'id': pkg_id})
+        old_value = pkg_dict.get(key[0], None)
+        if old_value is not None:
+            data[key] = old_value
+    if key not in data:
+        raise StopOnError
