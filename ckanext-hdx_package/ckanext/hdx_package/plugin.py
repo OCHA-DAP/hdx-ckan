@@ -239,7 +239,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'review_date': [tk.get_validator('ignore_missing'),
                             tk.get_validator('isodate'),
                             tk.get_validator('hdx_isodate_to_string_converter'),
-                            tk.get_converter('convert_to_extras')]
+                            tk.get_converter('convert_to_extras')],
+            'qa_completed': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
+                             tk.get_converter('convert_to_extras')]
         })
 
         schema['resources'].update(
@@ -339,7 +341,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             # 'due_daterange': [tk.get_validator('ignore_missing')],
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
-            'overdue_date': [tk.get_validator('ignore_missing')]
+            'overdue_date': [tk.get_validator('ignore_missing')],
+            'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')]
         })
         schema['resources'].update(
             {
@@ -413,6 +416,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
             'hdx_keep_prev_value_unless_sysadmin': vd.keep_prev_value_unless_sysadmin,
+            'hdx_package_keep_prev_value_unless_sysadmin': vd.package_keep_prev_value_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload
         }
 
