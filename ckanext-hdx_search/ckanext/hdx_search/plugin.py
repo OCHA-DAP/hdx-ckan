@@ -107,6 +107,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
         adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
         adapt_solr_fq('archived', ' +extras_archived:true', ' -extras_archived:true')
+        adapt_solr_fq('administrative_divisions', ' +vocab_Topics:"administrative divisions"',
+                      ' -vocab_Topics:"administrative divisions"')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
@@ -199,5 +201,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=batch}has_geodata'] = _('Geodata')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
+        facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
 
         return facets_dict
