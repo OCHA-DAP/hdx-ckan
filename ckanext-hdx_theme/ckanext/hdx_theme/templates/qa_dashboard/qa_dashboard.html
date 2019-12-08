@@ -1,6 +1,5 @@
 {% extends "page.html" %}
 {% import 'macros/form.html' as form %}
-
 {% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -9,6 +8,9 @@
 {% endblock %}
 
 {% block primary_content %}
+    {{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Sending, please wait ...") }}
+    {{ h.snippet('qa_dashboard/qa_checklist.html', id="qaChecklist") }}
+
     {% block search_results_wrapper %}
         {% set contact_topics = c.membership.data.contributor_topics %}
         {% set membership_data = c.membership.data %}

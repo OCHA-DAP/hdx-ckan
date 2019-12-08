@@ -198,3 +198,9 @@ section.search-list > .list-items {
 section.search-list .filter-category {
   background-color: #fff;
 }
+.qa-checklist-widget {
+  background-color: #fff;
+  padding: 20px 0;
+  min-height: 300px;
+  width: 100%;
+}

@@ -26,10 +26,10 @@
               <a href="#" onclick="updateQuarantineList({{h.json_dumps(h.dict_list_reduce(package.resources, 'id'))}}, false);">Remove from quarantine all resources</a>
             </li>
             <li>
-              <a href="#">Mark as QA Completed</a>
+              <a href="#" onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
             </li>
             <li>
-              <a href="#">Open checklist</a>
+              <a href="#" onclick="openQAChecklist()">Open QA checklist</a>
             </li>
             <li>
               <a href="#" onclick="{{macro.contributor_action(package, h, 'true')}}"
