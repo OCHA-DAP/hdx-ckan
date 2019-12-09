@@ -199,8 +199,28 @@ section.search-list .filter-category {
   background-color: #fff;
 }
 .qa-checklist-widget {
+  position: relative;
   background-color: #fff;
-  padding: 20px 0;
-  min-height: 300px;
+  padding: 0 20px;
+  min-height: 500px;
   width: 100%;
+}
+.qa-checklist-widget .nav-tabs {
+  margin: 0 -20px;
+  padding: 0 20px;
+}
+.qa-checklist-widget .tab-content {
+  height: -63px;
+  overflow: auto;
+}
+.qa-checklist-widget .action-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  width: 100%;
+  padding: 0 20px 20px;
 }
