@@ -8,7 +8,6 @@ function _showLoading() {
 }
 
 function _updateQuarantine(resource, flag) {
-  _showLoading();
   let body = {
     "id": `${resource}`,
     "in_quarantine": flag,
@@ -30,7 +29,6 @@ function _updateQuarantine(resource, flag) {
 }
 
 function _updateQAComplete(package, flag) {
-  _showLoading();
   let body = {
     "id": `${package}`,
     "qa_completed": flag,
@@ -51,7 +49,17 @@ function _updateQAComplete(package, flag) {
   return promise;
 }
 
+function _getPackageResourceList(elementId) {
+  return JSON.parse($(elementId).html());
+}
+
+function _getPackageResourceIdList(elementId) {
+  return _getPackageResourceList(elementId).map((resource) => resource.id);
+}
+
+
 function updateQAComplete(package, flag) {
+  _showLoading();
   _updateQAComplete(package, flag)
     .then(() => {
         _updateLoadingMessage("QA Complete status successfully updated! Reloading page ...");
@@ -66,6 +74,7 @@ function updateQAComplete(package, flag) {
 }
 
 function updateQuarantine(resource, flag) {
+  _showLoading();
   _updateQuarantine(resource, flag)
     .then(
       (resolve) => {
@@ -81,7 +90,9 @@ function updateQuarantine(resource, flag) {
     });
 }
 
-function updateQuarantineList(resources, flag) {
+function updateQuarantineList(resourceListId, flag) {
+  _showLoading();
+  let resources = _getPackageResourceIdList(resourceListId);
   let resourcesPromise = resources.reduce((currentPromise, resource) => {
     return currentPromise
       .then(() => {
@@ -96,6 +107,38 @@ function updateQuarantineList(resources, flag) {
     })
     .catch(errors => {
       alert("Error, quarantine status not updated for at least one resource!");
+    })
+    .finally(() => {
+      location.reload();
+    });
+}
+
+function bulkUpdateQAComplete(flag) {
+  const packages = $(".dataset-heading").toArray().reduce((accumulator, item) => {
+    if ($(item).find("input[type='checkbox']").is(':checked')) {
+      let packageId = $(item).find(".package-resources").attr('data-package-id');
+      if (packageId) {
+        accumulator.push(packageId)
+      }
+    }
+    return accumulator;
+  }, []);
+
+  _showLoading();
+  let packagesPromise = packages.reduce((currentPromise, package) => {
+    return currentPromise
+      .then(() => {
+        _updateLoadingMessage(`Updating package with id [${package}], please wait ...`);
+        return _updateQAComplete(package, flag);
+      })
+  }, Promise.resolve([]));
+
+  packagesPromise
+    .then(values => {
+      _updateLoadingMessage("QA status successfully updated for all packages! Reloading page ...");
+    })
+    .catch(errors => {
+      alert("Error, QA status not updated for at least one package!");
     })
     .finally(() => {
       location.reload();
