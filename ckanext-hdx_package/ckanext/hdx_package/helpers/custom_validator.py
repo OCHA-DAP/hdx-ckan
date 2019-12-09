@@ -385,9 +385,10 @@ def package_keep_prev_value_unless_sysadmin(key, data, errors, context):
 
     if not allowed_to_change:
         pkg_id = data.get(('id',))
-        pkg_dict = get_action('package_show')(context, {'id': pkg_id})
-        old_value = pkg_dict.get(key[0], None)
-        if old_value is not None:
-            data[key] = old_value
+        if pkg_id:
+            pkg_dict = get_action('package_show')(context, {'id': pkg_id})
+            old_value = pkg_dict.get(key[0], None)
+            if old_value is not None:
+                data[key] = old_value
     if key not in data:
         raise StopOnError
