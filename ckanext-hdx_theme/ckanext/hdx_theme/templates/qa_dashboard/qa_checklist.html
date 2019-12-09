@@ -1,0 +1,33 @@
+{% resource 'hdx_theme/widget/onboarding/logout.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "QA Checklist" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+  <div class="qa-checklist-widget">
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a href="#qa-resources" data-toggle="tab" class="hdx-tab-button">Resources</a>
+      </li>
+      <li>
+        <a href="#qa-data-protection" data-toggle="tab" class="hdx-tab-button">Data Protection</a>
+      </li>
+      <li>
+        <a href="#qa-metadata" data-toggle="tab" class="hdx-tab-button">Metadata</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="qa-resources">
+        <h1>Resources</h1>
+      </div>
+      <div class="tab-pane" id="qa-data-protection">
+        <h1>Data Protection</h1>
+      </div>
+      <div class="tab-pane" id="qa-metadata">
+        <h1>Metadata</h1>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

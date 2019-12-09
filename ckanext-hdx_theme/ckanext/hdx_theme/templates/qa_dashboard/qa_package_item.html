@@ -10,6 +10,7 @@
           <input type="checkbox" />
           {% set title = package.title or package.name %}
           {{ h.link_to(title, h.url_for(controller='package', action='read', id=package.name), class_='dataset-page-link') }}
+          <div id="package-resources-{{loop.index}}" class="package-resources" data-package-id="{{package.id}}" style="display: none;">{{h.json_dumps(package.resources)}}</div>
         </div>
         <div class="more-options">
           <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
@@ -20,16 +21,16 @@
               <a href="#" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
             </li>
             <li>
-              <a href="#" onclick="updateQuarantineList({{h.json_dumps(h.dict_list_reduce(package.resources, 'id'))}}, true);">Quarantine all resources</a>
+              <a href="#" onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>
             </li>
             <li>
-              <a href="#" onclick="updateQuarantineList({{h.json_dumps(h.dict_list_reduce(package.resources, 'id'))}}, false);">Remove from quarantine all resources</a>
+              <a href="#" onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>
             </li>
             <li>
-              <a href="#">Mark as QA Completed</a>
+              <a href="#" onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
             </li>
             <li>
-              <a href="#">Open checklist</a>
+              <a href="#" onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
             </li>
             <li>
               <a href="#" onclick="{{macro.contributor_action(package, h, 'true')}}"
