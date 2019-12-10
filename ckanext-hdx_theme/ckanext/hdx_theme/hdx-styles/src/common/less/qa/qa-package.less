@@ -224,8 +224,38 @@ section.search-list {
 }
 
 .qa-checklist-widget {
+  @qaChecklistPadding: 20px;
+  @qaChecklistHeight: 500px;
+  @qaActionContainerHeight: 40px;
+  @qaTabsHeight: 43px;
+  position: relative;
   background-color: @whiteColor;
-  padding: 20px 0;
-  min-height: 300px;
+  padding: 0 @qaChecklistPadding;
+  min-height: @qaChecklistHeight;
   width: 100%;
+
+  .nav-tabs {
+    margin: 0 -@qaChecklistPadding;
+    padding: 0 @qaChecklistPadding;
+  }
+  .tab-content {
+    height: @qaChecklistHeight - @qaChecklistHeight - @qaChecklistPadding - @qaTabsHeight;
+    overflow: auto;
+  }
+
+  .action-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    bottom: 0;
+    left: 0;
+    height: @qaActionContainerHeight;
+    width: 100%;
+    padding: 0 @qaChecklistPadding @qaChecklistPadding;
+
+    .actions {
+    }
+  }
 }
+
