@@ -187,7 +187,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'populate_related_items_count': actions.populate_related_items_count,
-            'populate_showcase_items_count': actions.populate_showcase_items_count
+            'populate_showcase_items_count': actions.populate_showcase_items_count,
+            'qa_questions_list': actions.hdx_qa_questions_list
         }
 
     # IFacets

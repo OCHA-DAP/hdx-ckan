@@ -2,6 +2,8 @@ import logging
 
 import ckan.logic as logic
 import ckan.model as model
+import ckanext.hdx_search.helpers.qa_data as qa_data
+
 
 log = logging.getLogger(__name__)
 
@@ -53,3 +55,7 @@ def hdx_get_package_showcase_id_list(context, data_dict):
     # get a list of showcase ids associated with the package id
     showcase_id_list = ShowcasePackageAssociation.get_showcase_ids_for_package(validated_data_dict['package_id'])
     return showcase_id_list
+
+@logic.side_effect_free
+def hdx_qa_questions_list(context, data_dict):
+    return qa_data.questions_list
