@@ -489,7 +489,7 @@ def resource_view_update(context, data_dict):
     core_update.resource_view_update(context, data_dict)
 
 
-def package_echo_checklist_update(context, data_dict):
+def package_qa_checklist_update(context, data_dict):
     id = get_or_bust(data_dict, 'id')
     del data_dict['id']
 

@@ -400,8 +400,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list,
             # 'hdx_test_recommend_tags': hdx_get.hdx_test_recommend_tags,
             'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
-            'hdx_package_echo_checklist_update': hdx_update.package_echo_checklist_update,
-            'hdx_package_echo_checklist_show': hdx_get.package_echo_checklist_show,
+            'hdx_package_qa_checklist_update': hdx_update.package_qa_checklist_update,
+            'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
         }
 
     # IValidators
