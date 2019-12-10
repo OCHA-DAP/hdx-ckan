@@ -625,7 +625,7 @@ def package_show_edit(context, data_dict):
     return package_show(context, data_dict)
 
 @logic.side_effect_free
-def package_echo_checklist_show(context, data_dict):
+def package_qa_checklist_show(context, data_dict):
     dataset_dict = get_action('package_show')(context, data_dict)
 
     try:
