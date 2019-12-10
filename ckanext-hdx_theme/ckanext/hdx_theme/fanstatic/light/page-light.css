@@ -858,6 +858,17 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 6px;
   overflow: hidden;
   position: relative;
+  min-width: 350px;
+}
+@media (max-width: 375px) {
+  .modal.in .modal-dialog .modal-content {
+    min-width: 320px;
+  }
+}
+@media (max-width: 320px) {
+  .modal.in .modal-dialog .modal-content {
+    min-width: 280px;
+  }
 }
 .modal.in .modal-dialog .modal-content .modal-header {
   font-family: 'Gotham-Bold', sans-serif;
@@ -3580,6 +3591,11 @@ ul.list-horizontal li:first-child:before {
 }
 .new-header .header-nav-search .header-search-form .header-search-group {
   width: 270px;
+}
+@media (max-width: 375px) {
+  .new-header .header-nav-search .header-search-form .header-search-group {
+    width: 100%;
+  }
 }
 .new-header .header-nav-search .header-search-form .input-prepend {
   display: flex;
