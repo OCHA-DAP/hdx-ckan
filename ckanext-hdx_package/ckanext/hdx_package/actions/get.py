@@ -624,6 +624,17 @@ def package_show_edit(context, data_dict):
 
     return package_show(context, data_dict)
 
+@logic.side_effect_free
+def package_echo_checklist_show(context, data_dict):
+    dataset_dict = get_action('package_show')(context, data_dict)
+
+    try:
+        result = json.loads(dataset_dict.get('echo_checklist'))
+    except TypeError as e:
+        result = {}
+        log.error(str(e))
+    return result
+
 
 def _get_resource_filesize(resource_dict):
     if resource_dict.get('url_type') == 'upload':
