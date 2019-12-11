@@ -202,16 +202,25 @@ section.search-list .filter-category {
   position: relative;
   background-color: #fff;
   padding: 0 20px;
-  min-height: 500px;
+  height: 500px;
   width: 100%;
+  max-width: 640px;
 }
 .qa-checklist-widget .nav-tabs {
   margin: 0 -20px;
   padding: 0 20px;
 }
 .qa-checklist-widget .tab-content {
-  height: -63px;
+  height: 397px;
   overflow: auto;
+}
+.qa-checklist-widget .questions {
+  margin-top: 10px;
+}
+.qa-checklist-widget .questions label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
 }
 .qa-checklist-widget .action-container {
   position: absolute;

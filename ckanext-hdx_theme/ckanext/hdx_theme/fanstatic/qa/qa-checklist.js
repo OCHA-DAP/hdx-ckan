@@ -1,7 +1,36 @@
+$(document).ready(() => {
+  _getQuestionData()
+    .then((data) => data);
+
+});
+
+
 function openQAChecklist(resourcesID) {
   $("#qaChecklist").show();
   _initQATabs();
-  _populateResourcesTab(resourcesID);
+  _getQuestionData()
+    .then((questionData) => {
+      _populateResourcesTab(resourcesID, questionData.resources_checklist);
+      _populateDataProtectionTab(questionData.data_protection_checklist);
+      _populateMetadataTab(questionData.metadata_checklist);
+    });
+}
+
+function _getQuestionData() {
+  return new Promise((resolve, reject) => {
+    $.get('/api/3/action/qa_questions_list')
+      .done((result) => {
+        if (result.success) {
+          console.log(result.result);
+          resolve(result.result);
+        } else {
+          reject(result);
+        }
+      })
+      .fail((error) => {
+        reject(error);
+      });
+  });
 }
 
 function _initQATabs(){
@@ -10,7 +39,33 @@ function _initQATabs(){
   });
 }
 
-function _populateResourcesTab(resourcesID){
+function _populateDataProtectionTab(questions) {
+  let tab = $("#qa-data-protection").html('');
+  tab.append(
+    `<div class="questions">
+      ${Object.keys(questions).map((key, i) => `
+        <div><label><input name="${key}" type='checkbox'> ${questions[key]}</label></div>
+      `).join('')}
+    </div>
+    `
+  )
+}
+
+function _populateMetadataTab(questions) {
+  let tab = $("#qa-metadata").html('');
+  tab.append(
+    `<div class="questions">
+      ${Object.keys(questions).map((key, i) => `
+        <div><label><input name="${key}" type='checkbox'> ${questions[key]}</label></div>
+      `).join('')}
+    </div>
+    `
+  )
+}
+
+
+
+function _populateResourcesTab(resourcesID, questions){
   let tab = $("#qa-resources").html('');
   tab.append('<ul class="hdx-bs3 resource-list"></ul>');
   let list = tab.find('ul');
@@ -26,6 +81,11 @@ function _populateResourcesTab(resourcesID){
           </a>
           <div class="description">
             <span>${res.description}</span>
+          </div>
+          <div class="questions">
+            ${Object.keys(questions).map((key, i) => `
+              <div><label><input name="${key}" type='checkbox'> ${questions[key]}</label></div>
+            `).join('')}
           </div>
       `);
   });
