@@ -13,7 +13,36 @@ function openQAChecklist(resourcesID) {
       _populateResourcesTab(resourcesID, questionData.resources_checklist);
       _populateDataProtectionTab(questionData.data_protection_checklist);
       _populateMetadataTab(questionData.metadata_checklist);
+      _setupQAChecklistEvents();
     });
+}
+
+function _toggleChecklistItemDisabled(selector, flag) {
+  if (flag) {
+    $(selector).attr('disabled', true);
+  } else {
+     $(selector).removeAttr('disabled');
+  }
+}
+
+function _setupQAChecklistEvents() {
+  $("input.checklist-item").change((ev) => {
+    if ($(ev.currentTarget).is(":checked")) {
+      _toggleChecklistItemDisabled("#checklist-complete", true);
+    } else {
+      if (!($("input.checklist-item").is(":checked"))) {
+        _toggleChecklistItemDisabled("#checklist-complete", false);
+      }
+    }
+  });
+
+  $("#checklist-complete").change((ev) => {
+    if ($(ev.currentTarget).is(":checked")) {
+      _toggleChecklistItemDisabled("input.checklist-item", true);
+    } else {
+      _toggleChecklistItemDisabled("input.checklist-item", false);
+    }
+  });
 }
 
 function _getQuestionData() {
@@ -44,7 +73,7 @@ function _populateDataProtectionTab(questions) {
   tab.append(
     `<div class="questions">
       ${Object.keys(questions).map((key, i) => `
-        <div><label><input name="${key}" type='checkbox'> ${questions[key]}</label></div>
+        <div><label class="checklist-label"><input class="checklist-item" name="${key}" type='checkbox'> <span>${questions[key]}</span></label></div>
       `).join('')}
     </div>
     `
@@ -56,7 +85,7 @@ function _populateMetadataTab(questions) {
   tab.append(
     `<div class="questions">
       ${Object.keys(questions).map((key, i) => `
-        <div><label><input name="${key}" type='checkbox'> ${questions[key]}</label></div>
+        <div><label class="checklist-label"><input class="checklist-item" name="${key}" type='checkbox'> <span>${questions[key]}</span></label></div>
       `).join('')}
     </div>
     `
@@ -84,7 +113,7 @@ function _populateResourcesTab(resourcesID, questions){
           </div>
           <div class="questions">
             ${Object.keys(questions).map((key, i) => `
-              <div><label><input name="${key}" type='checkbox'> ${questions[key]}</label></div>
+              <div><label class="checklist-label"><input class="checklist-item" name="${key}" type='checkbox'> <span>${questions[key]}</span></label></div>
             `).join('')}
           </div>
       `);

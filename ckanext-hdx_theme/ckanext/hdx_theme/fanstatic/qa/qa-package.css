@@ -222,6 +222,9 @@ section.search-list .filter-category {
   font-weight: 400;
   font-size: 14px;
 }
+.qa-checklist-widget .checklist-label input[type='checkbox']:disabled + span {
+  color: #888888;
+}
 .qa-checklist-widget .action-container {
   position: absolute;
   display: flex;
