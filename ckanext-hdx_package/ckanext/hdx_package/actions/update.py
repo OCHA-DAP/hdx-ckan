@@ -63,8 +63,14 @@ def resource_update(context, data_dict):
     result_dict = core_update.resource_update(context, data_dict)
 
     new_resource_is_api = result_dict.get('url_type') == 'api'
-    if prev_resource_is_upload and (new_file_uploaded or new_resource_is_api):
+    new_file_has_same_name = result_dict.get('name') == prev_resource_dict['name']
+    if prev_resource_is_upload and ((new_file_uploaded and not new_file_has_same_name) or new_resource_is_api):
+        log.debug('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
         file_remove(prev_resource_dict['id'], prev_resource_dict['name'], prev_resource_dict['url_type'])
+    else:
+        log.info('Not deleting resource: prev_resource_is_upload {} / new_file_uploaded {}'
+                 '/ new_file_has_same_name {} / new_resource_is_api {}'
+                 .format(prev_resource_is_upload, new_file_uploaded, new_file_has_same_name, new_resource_is_api))
 
     return result_dict
 

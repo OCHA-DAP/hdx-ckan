@@ -1,6 +1,7 @@
 import os
 import logging
 
+import ckan.lib.munge as munge
 from ckan.lib import uploader
 
 from ckanext.s3filestore.uploader import S3ResourceUploader
@@ -33,7 +34,8 @@ def file_remove(resource_id, resource_name, resource_url_type):
     def file_remove_s3(resource_id, resource_name):
         try:
             uploader = S3ResourceUploader({})
-            filepath = uploader.get_path(resource_id, resource_name)
+            munged_resource_name = munge.munge_filename(resource_name)
+            filepath = uploader.get_path(resource_id, munged_resource_name)
             uploader.clear_key(filepath)
         except Exception, e:
             msg = 'Couldn\'t delete file from S3'
