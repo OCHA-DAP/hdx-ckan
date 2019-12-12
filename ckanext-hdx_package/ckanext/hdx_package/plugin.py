@@ -242,7 +242,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                             tk.get_converter('convert_to_extras')],
             'qa_completed': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
                              tk.get_converter('convert_to_extras')],
-            'echo_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
+            'qa_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
                              tk.get_converter('convert_to_extras')]
         })
 
@@ -345,7 +345,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
-            'echo_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
+            'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
         schema['resources'].update(
             {
