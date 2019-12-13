@@ -318,7 +318,7 @@ class HDXSearchController(PackageController):
                         self.append_selected_facet_to_group(c.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
-                                     'ext_hxl', 'ext_showcases', 'ext_archived']:
+                                     'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
                             featured_filters_set = True
                         search_extras[param] = value
 
@@ -658,7 +658,8 @@ class HDXSearchController(PackageController):
         result['filters_selected'] = False
 
         checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
-                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive']
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive',
+                      'ext_administrative_divisions']
 
         for param in checkboxes:
             if param in search_extras:
@@ -757,7 +758,6 @@ class HDXSearchController(PackageController):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
-
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
