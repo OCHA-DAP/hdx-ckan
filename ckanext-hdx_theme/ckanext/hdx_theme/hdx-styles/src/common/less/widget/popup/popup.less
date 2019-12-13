@@ -23,6 +23,9 @@
     -webkit-transform: translate(-50%, -50%); /* Safari */
 
     padding: @popupPaddingSize;
+    @media (max-width: @cut-point-mobile-m) {
+      padding: @popupPaddingSize/2;
+    }
 
     //default font style
     .sourceSansProFont(400, 14px);
