@@ -231,16 +231,30 @@ section.search-list {
   position: relative;
   background-color: @whiteColor;
   padding: 0 @qaChecklistPadding;
-  min-height: @qaChecklistHeight;
+  height: @qaChecklistHeight;
   width: 100%;
+  max-width: 640px;
 
   .nav-tabs {
     margin: 0 -@qaChecklistPadding;
     padding: 0 @qaChecklistPadding;
   }
   .tab-content {
-    height: @qaChecklistHeight - @qaChecklistHeight - @qaChecklistPadding - @qaTabsHeight;
+    height: (@qaChecklistHeight - @qaActionContainerHeight - @qaChecklistPadding - @qaTabsHeight);
     overflow: auto;
+  }
+
+  .questions {
+    margin-top: 10px;
+    label {
+      .sourceSansProFont(400, 14px);
+    }
+  }
+
+  .checklist-label {
+    input[type='checkbox']:disabled + span {
+      color: @grayColor;
+    }
   }
 
   .action-container {
