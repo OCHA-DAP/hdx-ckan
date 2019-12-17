@@ -19,6 +19,7 @@ from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 import ckanext.hdx_search.actions.authorize as authorize
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 NotFound = ckan.logic.NotFound
 
@@ -117,8 +118,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('administrative_divisions', ' +vocab_Topics:"administrative divisions"',
                       ' -vocab_Topics:"administrative divisions"')
 
-        now_string = datetime.datetime.utcnow().isoformat() + 'Z'
-        adapt_solr_fq(NEW_DATASETS_FACET_NAME, ' +metadata_created:[{}-7DAYS TO {}]'.format(now_string, now_string))
+        adapt_solr_fq(NEW_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('metadata_created', 7, include_leading_space=True, include=True))
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()

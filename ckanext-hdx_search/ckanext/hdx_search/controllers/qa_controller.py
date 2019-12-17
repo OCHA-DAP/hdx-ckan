@@ -17,6 +17,7 @@ from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -90,11 +91,14 @@ class HDXQAController(HDXSearchController):
             return self._search_template()
 
     def _add_additional_faceting_queries(self, search_data_dict):
-        now_string = datetime.datetime.utcnow().isoformat() + 'Z'
-        search_data_dict.update({
-            'facet.query': '{{!key={} ex=batch}} metadata_created:[{}-7DAYS TO {}]'.format(NEW_DATASETS_FACET_NAME,
-                                                                                            now_string, now_string),
-        })
+        query = generate_datetime_period_query('metadata_created', 7, False)
+
+        facet_queries = search_data_dict.get('facet.query') or []
+        facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, query))
+        search_data_dict['facet.query'] = facet_queries
+
+
+
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         if existing_facets:
