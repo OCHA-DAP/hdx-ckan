@@ -23,6 +23,11 @@
   color: #333333;
   letter-spacing: 0;
 }
+@media (max-width: 375px) {
+  .popup .content {
+    padding: 15px;
+  }
+}
 .popup .content .title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
