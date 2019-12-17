@@ -5,6 +5,7 @@
 """
 import logging
 import json
+import datetime
 
 from collections import OrderedDict
 from pylons import config
@@ -23,7 +24,8 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckan.common import _, c, g, request
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER,\
+    UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 
 log = logging.getLogger(__name__)
 
@@ -360,8 +362,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         fq = 'maintainer:"{}"'.format(user_id)
 
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
-                                       ignore_capacity_check=ignore_capacity_check, default_sort_by='due_date asc',
-                                       enable_update_status_facet=True)
+                                       ignore_capacity_check=ignore_capacity_check, default_sort_by='due_date asc')
 
         old_facets = full_facet_info.get('facets')
         if UPDATE_STATUS_URL_FILTER in old_facets:
@@ -374,4 +375,33 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
         return full_facet_info
 
+    def _add_additional_faceting_queries(self, search_data_dict):
+        now_string = datetime.datetime.utcnow().isoformat() + 'Z'
+        freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
+        search_data_dict.update({
+            'facet.range': '{{!{extra}}}due_date'.format(extra=freshness_facet_extra),
+            'f.due_date.facet.range.start': now_string + '-100YEARS',
+            'f.due_date.facet.range.end': now_string + '+100YEARS',
+            'f.due_date.facet.range.gap': '+100YEARS',
+            'f.due_date.facet.mincount': '0',
+            'facet.query': '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra),
+        })
+
+    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+        freshness_facet_name = 'due_date'
+        if existing_facets and freshness_facet_name in existing_facets:
+            item_list = existing_facets.get(freshness_facet_name).get('items')
+            if item_list and len(item_list) == 2:
+                item_list[0]['display_name'] = _('Needing update')
+                item_list[0]['name'] = UPDATE_STATUS_NEEDS_UPDATE
+                item_list[1]['display_name'] = _('Up to date')
+                item_list[1]['name'] = UPDATE_STATUS_FRESH
+                unknown_item = next((i for i in existing_facets.get('queries', []) if i.get('name') == 'unknown'), None)
+                unknown_item['display_name'] = _('Unknown')
+                unknown_item['name'] = UPDATE_STATUS_UNKNOWN
+                item_list.append(unknown_item)
+
+                title_translations[UPDATE_STATUS_URL_FILTER] = _('Update status')
+                existing_facets[UPDATE_STATUS_URL_FILTER] = existing_facets[freshness_facet_name]
+                del existing_facets[freshness_facet_name]
 
