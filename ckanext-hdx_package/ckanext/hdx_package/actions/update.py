@@ -6,12 +6,13 @@ Created on Jul 07, 2015
 
 import datetime
 import logging
+import json
 
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.plugins as lib_plugins
-import ckan.logic as logic
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
@@ -19,8 +20,13 @@ from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 from ckanext.hdx_package.helpers.file_removal import file_remove
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
-_check_access = logic.check_access
-_get_action = logic.get_action
+_check_access = tk.check_access
+_get_action = tk.get_action
+
+get_or_bust = tk.get_or_bust
+
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
 
 log = logging.getLogger(__name__)
 
@@ -108,11 +114,11 @@ def package_update(context, data_dict):
     user = context['user']
     name_or_id = data_dict.get('id') or data_dict.get('name')
     if name_or_id is None:
-        raise logic.ValidationError({'id': _('Missing value')})
+        raise ValidationError({'id': _('Missing value')})
 
     pkg = model.Package.get(name_or_id)
     if pkg is None:
-        raise logic.NotFound(_('Package was not found.'))
+        raise NotFound(_('Package was not found.'))
     context["package"] = pkg
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
@@ -170,7 +176,7 @@ def package_update(context, data_dict):
 
     if errors:
         model.Session.rollback()
-        raise logic.ValidationError(errors)
+        raise ValidationError(errors)
 
     rev = model.repo.new_revision()
     rev.author = user
@@ -481,3 +487,13 @@ def resource_view_update(context, data_dict):
         resource_view = model.ResourceView.get(data_dict.get('id'))
         data_dict['resource_id'] = resource_view.resource_id
     core_update.resource_view_update(context, data_dict)
+
+
+def package_qa_checklist_update(context, data_dict):
+    id = get_or_bust(data_dict, 'id')
+    del data_dict['id']
+
+    echo_checklist_string = json.dumps(data_dict)
+    result = _get_action('package_patch')(context, {'id': id, 'echo_checklist': echo_checklist_string})
+    return result
+

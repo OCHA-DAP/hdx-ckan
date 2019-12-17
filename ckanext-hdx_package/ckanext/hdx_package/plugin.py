@@ -241,6 +241,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                             tk.get_validator('hdx_isodate_to_string_converter'),
                             tk.get_converter('convert_to_extras')],
             'qa_completed': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
+                             tk.get_converter('convert_to_extras')],
+            'echo_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
                              tk.get_converter('convert_to_extras')]
         })
 
@@ -342,7 +344,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
-            'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')]
+            'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
+            'echo_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
         schema['resources'].update(
             {
@@ -396,7 +399,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
             'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list,
             # 'hdx_test_recommend_tags': hdx_get.hdx_test_recommend_tags,
-            'hdx_recommend_tags': hdx_get.hdx_recommend_tags
+            'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
+            'hdx_package_qa_checklist_update': hdx_update.package_qa_checklist_update,
+            'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
         }
 
     # IValidators
