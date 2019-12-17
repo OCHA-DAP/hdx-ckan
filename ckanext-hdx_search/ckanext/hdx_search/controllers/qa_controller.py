@@ -16,7 +16,7 @@ import ckanext.hdx_search.helpers.search_history as search_history
 from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
-from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 _validate = dict_fns.validate
@@ -91,14 +91,13 @@ class HDXQAController(HDXSearchController):
             return self._search_template()
 
     def _add_additional_faceting_queries(self, search_data_dict):
-        query = generate_datetime_period_query('metadata_created', 7, False)
+        new_datasets_query = generate_datetime_period_query('metadata_created', 7, False)
+        updated_datasets_query = generate_datetime_period_query('metadata_modified', 7, False)
 
         facet_queries = search_data_dict.get('facet.query') or []
-        facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, query))
+        facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, new_datasets_query))
+        facet_queries.append('{{!key={} ex=batch}} {}'.format(UPDATED_DATASETS_FACET_NAME, updated_datasets_query))
         search_data_dict['facet.query'] = facet_queries
-
-
-
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         if existing_facets:
@@ -110,16 +109,20 @@ class HDXQAController(HDXSearchController):
                 'show_everything': True
             }
 
-            category_key = 'ext_' + NEW_DATASETS_FACET_NAME
-            new_datasets_item = next(
-                (i for i in existing_facets.get('queries', []) if i.get('name') == NEW_DATASETS_FACET_NAME), None)
-            new_datasets_item['display_name'] = _('New datasets')
-            new_datasets_item['category_key'] = category_key
-            new_datasets_item['name'] = '1'
-            new_datasets_item['selected'] = search_extras.get(category_key)
-            item_list.append(new_datasets_item)
+            self.__add_facet_item_to_list(NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets, item_list,
+                                          search_extras)
+            self.__add_facet_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets, item_list,
+                                          search_extras)
 
-
+    def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, item_list, search_extras):
+        category_key = 'ext_' + item_name
+        item = next(
+            (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
+        item['display_name'] = item_display_name
+        item['category_key'] = category_key
+        item['name'] = '1'  # this gets displayed as value in HTML <input>
+        item['selected'] = search_extras.get(category_key)
+        item_list.append(item)
 
     def _search_template(self):
         return render('qa_dashboard/qa_dashboard.html')
