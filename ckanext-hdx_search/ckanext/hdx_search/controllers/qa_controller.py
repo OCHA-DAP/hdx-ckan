@@ -1,10 +1,8 @@
+import datetime
 import logging
 from urllib import urlencode
 
-import ckanext.hdx_package.helpers.membership_data as membership
-import ckanext.hdx_search.helpers.search_history as search_history
 import sqlalchemy
-from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from pylons import config
 
 import ckan.lib.base as base
@@ -12,8 +10,13 @@ import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.logic as logic
 import ckan.model as model
+import ckanext.hdx_package.helpers.membership_data as membership
+import ckanext.hdx_search.helpers.search_history as search_history
+
 from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_search.controllers.search_controller import HDXSearchController
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -40,7 +43,6 @@ check_access = logic.check_access
 get_action = logic.get_action
 
 NUM_OF_ITEMS = 25
-
 
 def _encode_params(params):
     return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
@@ -86,6 +88,34 @@ class HDXQAController(HDXSearchController):
             self._setup_template_variables(context, {},
                                            package_type=package_type)
             return self._search_template()
+
+    def _add_additional_faceting_queries(self, search_data_dict):
+        now_string = datetime.datetime.utcnow().isoformat() + 'Z'
+        search_data_dict.update({
+            'facet.query': '{{!key={} ex=batch}} metadata_created:[{}-7DAYS TO {}]'.format(NEW_DATASETS_FACET_NAME,
+                                                                                            now_string, now_string),
+        })
+
+    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+        if existing_facets:
+            item_list = []
+            result_facets['qa_only'] = {
+                'name': 'qa_only',
+                'display_name': _('QA only'),
+                'items': item_list,
+                'show_everything': True
+            }
+
+            category_key = 'ext_' + NEW_DATASETS_FACET_NAME
+            new_datasets_item = next(
+                (i for i in existing_facets.get('queries', []) if i.get('name') == NEW_DATASETS_FACET_NAME), None)
+            new_datasets_item['display_name'] = _('New datasets')
+            new_datasets_item['category_key'] = category_key
+            new_datasets_item['name'] = '1'
+            new_datasets_item['selected'] = search_extras.get(category_key)
+            item_list.append(new_datasets_item)
+
+
 
     def _search_template(self):
         return render('qa_dashboard/qa_dashboard.html')
