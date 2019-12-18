@@ -72,16 +72,16 @@ function _getQuestionData() {
   });
 }
 
-function _extractChecklistItem(query, collection) {
-  $(query).find(".checklist-item").toArray().forEach((item) => {
+function _extractChecklistItem(query, collection, checkboxQuery= ".checklist-item") {
+  $(query).find(checkboxQuery).toArray().forEach((item) => {
       if ($(item).is(':checked')){
         let code = $(item).attr('name');
         collection[code] = true;
       }
     });
 }
-function _populateChecklistItem(query, statuses) {
-  $(query).find('.checklist-item').toArray().forEach((item) => _setChecklistItem(item, statuses));
+function _populateChecklistItem(query, statuses, checkboxQuery= ".checklist-item") {
+  $(query).find(checkboxQuery).toArray().forEach((item) => _setChecklistItem(item, statuses));
 }
 function _setChecklistItem(item, statuses) {
   let code = $(item).attr('name');
@@ -97,9 +97,13 @@ function _loadQAChecklist(resourceId) {
   $.get("/api/action/hdx_package_qa_checklist_show?id=" + packageId)
     .done((result) => {
       let data = result.result;
-      data.resources.forEach((resource) => _populateChecklistItem(`.qa-checklist-widget .resource-item[data-resource-id=${resource.id}]`, resource));
-      _populateChecklistItem("#qa-data-protection", data.dataProtection);
-      _populateChecklistItem("#qa-metadata", data.metadata);
+      if (data && data.resources) {
+        data.resources.forEach((resource) => _populateChecklistItem(`.qa-checklist-widget .resource-item[data-resource-id=${resource.id}]`, resource));
+        _populateChecklistItem("#qa-data-protection", data.dataProtection);
+        _populateChecklistItem("#qa-metadata", data.metadata);
+        _populateChecklistItem(".qa-checklist-widget", data, "#checklist-complete");
+      }
+
       _checkDisableIndividualChecklistItems({currentTarget: ""});
       _checkDisableMainQAComplete({currentTarget: "#checklist-complete"});
     })
@@ -133,6 +137,7 @@ function _saveQAChecklist(event) {
 
   _extractChecklistItem("#qa-data-protection", data.dataProtection);
   _extractChecklistItem("#qa-metadata", data.metadata);
+  _extractChecklistItem(".qa-checklist-widget", data, "#checklist-complete");
 
   $.post("/api/action/hdx_package_qa_checklist_update", JSON.stringify(data))
     .done((result) => {
