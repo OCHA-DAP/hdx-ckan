@@ -195,7 +195,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {
             'populate_related_items_count': actions.populate_related_items_count,
             'populate_showcase_items_count': actions.populate_showcase_items_count,
-            'qa_questions_list': actions.hdx_qa_questions_list
+            'qa_questions_list': actions.hdx_qa_questions_list,
+            'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run
         }
 
     # IFacets
@@ -216,9 +217,10 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
-
         return facets_dict
 
     def get_auth_functions(self):
-        return {'qa_dashboard_show': authorize.qa_dashboard_show
-                }
+        return {
+            'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
+            'qa_sdcmicro_run': authorize.hdx_qa_dashboard_show
+        }
