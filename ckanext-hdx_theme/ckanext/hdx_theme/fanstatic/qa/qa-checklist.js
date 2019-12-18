@@ -13,7 +13,8 @@ function openQAChecklist(resourcesID) {
       _populateResourcesTab(resourcesID, questionData.resources_checklist);
       _populateDataProtectionTab(questionData.data_protection_checklist);
       _populateMetadataTab(questionData.metadata_checklist);
-      _setupQAChecklistEvents();
+      _loadQAChecklist(resourcesID);
+      _setupQAChecklistEvents(resourcesID);
     });
 }
 
@@ -25,29 +26,38 @@ function _toggleChecklistItemDisabled(selector, flag) {
   }
 }
 
-function _setupQAChecklistEvents() {
-  $("input.checklist-item").change((ev) => {
-    if ($(ev.currentTarget).is(":checked")) {
-      _toggleChecklistItemDisabled("#checklist-complete", true);
-    } else {
-      if (!($("input.checklist-item").is(":checked"))) {
-        _toggleChecklistItemDisabled("#checklist-complete", false);
-      }
-    }
-  });
 
-  $("#checklist-complete").change((ev) => {
-    if ($(ev.currentTarget).is(":checked")) {
-      _toggleChecklistItemDisabled("input.checklist-item", true);
-    } else {
-      _toggleChecklistItemDisabled("input.checklist-item", false);
-    }
-  });
+function _checkDisableIndividualChecklistItems(ev) {
+  let flag = true;
+  if (!($("input.checklist-item").is(":checked"))) {
+    flag = false;
+  }
+  _toggleChecklistItemDisabled("#checklist-complete", flag);
+}
+
+function _checkDisableMainQAComplete(ev) {
+  if ($(ev.currentTarget).is(":checked")) {
+    _toggleChecklistItemDisabled("input.checklist-item", true);
+  } else {
+    _toggleChecklistItemDisabled("input.checklist-item", false);
+  }
+}
+
+function _setupQAChecklistEvents(resourceID) {
+  $("input.checklist-item").change(_checkDisableIndividualChecklistItems);
+
+  $("#checklist-complete").change(_checkDisableMainQAComplete);
+
+  $("#checklist-save").click(_saveQAChecklist.bind(resourceID));
+  $("#checklist-close").click((ev) => $(ev.currentTarget).parents(".popup").hide());
 }
 
 function _getQuestionData() {
   return new Promise((resolve, reject) => {
-    $.get('/api/3/action/qa_questions_list')
+    $.get({
+      url: '/api/3/action/qa_questions_list',
+      cache: true
+    })
       .done((result) => {
         if (result.success) {
           console.log(result.result);
@@ -62,7 +72,87 @@ function _getQuestionData() {
   });
 }
 
-function _initQATabs(){
+function _extractChecklistItem(query, collection) {
+  $(query).find(".checklist-item").toArray().forEach((item) => {
+      if ($(item).is(':checked')){
+        let code = $(item).attr('name');
+        collection[code] = true;
+      }
+    });
+}
+function _populateChecklistItem(query, statuses) {
+  $(query).find('.checklist-item').toArray().forEach((item) => _setChecklistItem(item, statuses));
+}
+function _setChecklistItem(item, statuses) {
+  let code = $(item).attr('name');
+  if (statuses[code] === true) {
+    $(item).prop('checked', true);
+  }
+}
+
+
+function _loadQAChecklist(resourceId) {
+  let packageId = $("" + resourceId).attr('data-package-id');
+
+  $.get("/api/action/hdx_package_qa_checklist_show?id=" + packageId)
+    .done((result) => {
+      let data = result.result;
+      data.resources.forEach((resource) => _populateChecklistItem(`.qa-checklist-widget .resource-item[data-resource-id=${resource.id}]`, resource));
+      _populateChecklistItem("#qa-data-protection", data.dataProtection);
+      _populateChecklistItem("#qa-metadata", data.metadata);
+      _checkDisableIndividualChecklistItems({currentTarget: ""});
+      _checkDisableMainQAComplete({currentTarget: "#checklist-complete"});
+    })
+    .fail(() => {
+      alert("Can't load data QA checklist!!!!");
+    });
+}
+
+function _saveQAChecklist(event) {
+  _updateLoadingMessage("QA checklist saving, please wait ...");
+  _showLoading();
+  let resourceIdSelector = this;
+  let packageId = $("" + resourceIdSelector).attr('data-package-id');
+
+  let data = {
+    id: packageId,
+    version: 1,
+    resources: [],
+    dataProtection: {},
+    metadata: {}
+  };
+
+  $(".qa-checklist-widget .resource-item").toArray().forEach((item) => {
+    let resId = $(item).attr('data-resource-id');
+    let response = {
+      id: resId
+    };
+    _extractChecklistItem(item, response);
+    data.resources.push(response);
+  });
+
+  _extractChecklistItem("#qa-data-protection", data.dataProtection);
+  _extractChecklistItem("#qa-metadata", data.metadata);
+
+  $.post("/api/action/hdx_package_qa_checklist_update", JSON.stringify(data))
+    .done((result) => {
+      if (result.success) {
+        _updateLoadingMessage("QA checklist successfully updated! Reloading page ...");
+      } else {
+        alert("Error, QA checklist not updated!");
+        $("#loadingScreen").hide();
+      }
+    })
+    .fail((fail) => {
+      alert("Error, QA checklist not updated!");
+      $("#loadingScreen").hide();
+    })
+    .always(() => {
+      location.reload();
+    });
+}
+
+function _initQATabs() {
   $("#qaChecklist").find('.qa-checklist-widget .hdx-tab-button').click((ev) => {
     $(ev.currentTarget).tab('show');
   });
@@ -102,7 +192,7 @@ function _populateResourcesTab(resourcesID, questions){
   resources.forEach((res) => {
     list.append(
       `
-        <li class="resource-item">
+        <li class="resource-item" data-resource-id="${res.id}">
           <a class="heading" title="${res.name || res.description}">
             ${(res.name || res.description).slice(0,50)}
             <span class="format-label" property="dc:format" data-format="${res.format.toLowerCase() || 'data' }">${res.format}</span>
