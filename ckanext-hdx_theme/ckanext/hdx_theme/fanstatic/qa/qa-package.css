@@ -236,3 +236,6 @@ section.search-list .filter-category {
   width: 100%;
   padding: 0 20px 20px;
 }
+#loadingScreen {
+  z-index: 1002;
+}
