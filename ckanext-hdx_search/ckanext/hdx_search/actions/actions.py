@@ -59,3 +59,28 @@ def hdx_get_package_showcase_id_list(context, data_dict):
 @logic.side_effect_free
 def hdx_qa_questions_list(context, data_dict):
     return qa_data.questions_list
+
+@logic.side_effect_free
+def hdx_qa_sdcmicro_run(context, data_dict):
+    '''
+    Add sdc micro flag "running" to resource
+    Post to aws endpoint to start the sdc micro check
+    :param data_dict: dictionary containg parameters
+    :type data_dict: dict
+    Parameters from data_dict
+    :param dataset_id: the id or name of the dataset
+    :type dataset_id: str
+    :param resource_id: the id or name of the resource
+    :type resource_id: str
+    :param data_columns_list: list with data columns
+    :param weight_column: the weight column
+    :param columns_type_list: list with types for each column - text, double, numeric, date
+    :param sheet: in case of excel/xlsx/xls we need the sheet id (0-n)
+    :param skip_rows: how many rows to skip until data
+    :return: True or False or data_dict
+    :rtype: bool
+    '''
+    # resource_patch to mark sdc micro flag in "running" mode
+    # post to aws endpoint to start the sdc micro (sdc micro will have to mark the flag and upload the result)
+    return data_dict
+

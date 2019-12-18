@@ -230,7 +230,7 @@ class HDXSearchController(PackageController):
 
     def _search(self, package_type, pager_url, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=NUM_OF_ITEMS,
-                ignore_capacity_check=False, use_solr_collapse=False, enable_update_status_facet=False):
+                ignore_capacity_check=False, use_solr_collapse=False):
 
         from ckan.lib.search import SearchError
 
@@ -318,7 +318,7 @@ class HDXSearchController(PackageController):
                         self.append_selected_facet_to_group(c.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
-                                     'ext_hxl', 'ext_showcases', 'ext_archived']:
+                                     'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
                             featured_filters_set = True
                         search_extras[param] = value
 
@@ -385,8 +385,7 @@ class HDXSearchController(PackageController):
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
             facet_keys = ['{!ex=batch}site_id'] + facets.keys()
             self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras, pager_url, context,
-                                    fq_list=fq_list, expand=solr_expand,
-                                    enable_update_status_facet=enable_update_status_facet)
+                                    fq_list=fq_list, expand=solr_expand)
 
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
@@ -440,17 +439,7 @@ class HDXSearchController(PackageController):
             'ext_compute_freshness': 'true'
         }
 
-        if enable_update_status_facet:
-            now_string = datetime.datetime.utcnow().isoformat() + 'Z'
-            freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
-            data_dict.update({
-                'facet.range': '{{!{extra}}}due_date'.format(extra=freshness_facet_extra),
-                'f.due_date.facet.range.start': now_string + '-100YEARS',
-                'f.due_date.facet.range.end': now_string + '+100YEARS',
-                'f.due_date.facet.range.gap': '+100YEARS',
-                'f.due_date.facet.mincount': '0',
-                'facet.query': '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra),
-            })
+        self._add_additional_faceting_queries(data_dict)
 
         include_private = context.pop('ignore_capacity_check', None)
         if include_private:
@@ -504,6 +493,10 @@ class HDXSearchController(PackageController):
         c.count = c.item_count = query['count']
 
         return query
+
+    def _add_additional_faceting_queries(self, search_data_dict):
+        # to be overridden in sub classes that need to add more complex faceting queries
+        pass
 
     def _search_template(self):
         return render('search/search.html')
@@ -658,7 +651,8 @@ class HDXSearchController(PackageController):
         result['filters_selected'] = False
 
         checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
-                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive']
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive',
+                      'ext_administrative_divisions']
 
         for param in checkboxes:
             if param in search_extras:
@@ -682,7 +676,7 @@ class HDXSearchController(PackageController):
             'show_everything': True
         }
 
-        self._process_freshness_facets(existing_facets, title_translations)
+        self._process_complex_facet_data(existing_facets, title_translations, result['facets'], search_extras)
 
         for solr_category_key, category_title in title_translations.items():
             regex = r'\{[\s\S]*\}'
@@ -747,6 +741,8 @@ class HDXSearchController(PackageController):
         self._add_item_to_featured_facets(featured_facet_items, 'ext_subnational', 'Sub-national',
                                           num_of_subnational, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_geodata', 'Geodata', num_of_geodata, search_extras)
+        self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
+                                          num_of_administrative_divisions, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_requestdata', 'Datasets on request (HDX Connect)',
                                           num_of_requestdata, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_quickcharts', 'Datasets with Quick Charts',
@@ -755,8 +751,6 @@ class HDXSearchController(PackageController):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
-                                          num_of_administrative_divisions, search_extras)
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
@@ -782,20 +776,7 @@ class HDXSearchController(PackageController):
             'selected': search_extras.get(key),
         })
 
-    def _process_freshness_facets(self, existing_facets, title_translations):
-        freshness_facet_name = 'due_date'
-        if existing_facets and freshness_facet_name in existing_facets:
-            item_list = existing_facets.get(freshness_facet_name).get('items')
-            if item_list and len(item_list) == 2:
-                item_list[0]['display_name'] = _('Needing update')
-                item_list[0]['name'] = UPDATE_STATUS_NEEDS_UPDATE
-                item_list[1]['display_name'] = _('Up to date')
-                item_list[1]['name'] = UPDATE_STATUS_FRESH
-                unknown_item = next((i for i in existing_facets.get('queries', []) if i.get('name') == 'unknown'), None)
-                unknown_item['display_name'] = _('Unknown')
-                unknown_item['name'] = UPDATE_STATUS_UNKNOWN
-                item_list.append(unknown_item)
-
-                title_translations[UPDATE_STATUS_URL_FILTER] = _('Update status')
-                existing_facets[UPDATE_STATUS_URL_FILTER] = existing_facets[freshness_facet_name]
-                del existing_facets[freshness_facet_name]
+    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+        # to be overridden in sub-classes that need to process the results of the solr query in order to
+        # do more complex preparation of the data that needs to be shown in the filter/facets
+        pass

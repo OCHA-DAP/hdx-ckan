@@ -384,6 +384,7 @@ def package_keep_prev_value_unless_sysadmin(key, data, errors, context):
     allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
 
     if not allowed_to_change:
+        data.pop(key, None)
         pkg_id = data.get(('id',))
         if pkg_id:
             pkg_dict = get_action('package_show')(context, {'id': pkg_id})

@@ -2,6 +2,17 @@
   border-radius: 6px;
   overflow: hidden;
   position: relative;
+  min-width: 350px;
+}
+@media (max-width: 375px) {
+  .notification-widget {
+    min-width: 320px;
+  }
+}
+@media (max-width: 320px) {
+  .notification-widget {
+    min-width: 280px;
+  }
 }
 .notification-widget .notification-title {
   font-family: 'Gotham-Bold', sans-serif;

@@ -18,6 +18,8 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 import ckanext.hdx_search.actions.authorize as authorize
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 NotFound = ckan.logic.NotFound
 
@@ -116,6 +118,11 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('administrative_divisions', ' +vocab_Topics:"administrative divisions"',
                       ' -vocab_Topics:"administrative divisions"')
 
+        adapt_solr_fq(NEW_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('metadata_created', 7, include_leading_space=True, include=True))
+        adapt_solr_fq(UPDATED_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('metadata_modified', 7, include_leading_space=True, include=True))
+
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
             if batch:
@@ -188,7 +195,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {
             'populate_related_items_count': actions.populate_related_items_count,
             'populate_showcase_items_count': actions.populate_showcase_items_count,
-            'qa_questions_list': actions.hdx_qa_questions_list
+            'qa_questions_list': actions.hdx_qa_questions_list,
+            'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run
         }
 
     # IFacets
@@ -206,12 +214,13 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=batch}subnational'] = _('Subnational')
         facets_dict['{!ex=batch}has_quickcharts'] = _('Quick charts')
         facets_dict['{!ex=batch}has_geodata'] = _('Geodata')
+        # facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
-        facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
-
         return facets_dict
 
     def get_auth_functions(self):
-        return {'qa_dashboard_show': authorize.qa_dashboard_show
-                }
+        return {
+            'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
+            'qa_sdcmicro_run': authorize.hdx_qa_dashboard_show
+        }

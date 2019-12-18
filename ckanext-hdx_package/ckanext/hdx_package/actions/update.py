@@ -16,7 +16,8 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
-from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED,\
+    BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.file_removal import file_remove
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
@@ -30,7 +31,6 @@ ValidationError = tk.ValidationError
 
 log = logging.getLogger(__name__)
 
-BATCH_MODE = 'batch_mode'
 SKIP_VALIDATION = 'skip_validation'
 
 @geopreview.geopreview_4_resources
@@ -63,8 +63,14 @@ def resource_update(context, data_dict):
     result_dict = core_update.resource_update(context, data_dict)
 
     new_resource_is_api = result_dict.get('url_type') == 'api'
-    if prev_resource_is_upload and (new_file_uploaded or new_resource_is_api):
+    new_file_has_same_name = result_dict.get('name') == prev_resource_dict['name']
+    if prev_resource_is_upload and ((new_file_uploaded and not new_file_has_same_name) or new_resource_is_api):
+        log.debug('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
         file_remove(prev_resource_dict['id'], prev_resource_dict['name'], prev_resource_dict['url_type'])
+    else:
+        log.info('Not deleting resource: prev_resource_is_upload {} / new_file_uploaded {}'
+                 '/ new_file_has_same_name {} / new_resource_is_api {}'
+                 .format(prev_resource_is_upload, new_file_uploaded, new_file_has_same_name, new_resource_is_api))
 
     return result_dict
 
@@ -155,16 +161,14 @@ def package_update(context, data_dict):
         data_dict['package_creator'] = pkg.extras.get('package_creator', data_dict.get('package_creator'))
 
     # Inject a code representing the batch within which this dataset was modified
-    # KEEP_OLD - keep the code before this update
-    # DONT_GROUP - don't use any code
-    if context.get('batch_mode') == 'KEEP_OLD':
+    if context.get(BATCH_MODE) == BATCH_MODE_KEEP_OLD:
         try:
             batch_extras = pkg._extras.get('batch')
             if batch_extras and batch_extras.state == 'active':
                 data_dict['batch'] = batch_extras.value
         except Exception, e:
             log.info(str(e))
-    elif context.get('batch_mode') != 'DONT_GROUP':
+    elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
         data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
     data, errors = lib_plugins.plugin_validate(
@@ -493,7 +497,24 @@ def package_qa_checklist_update(context, data_dict):
     id = get_or_bust(data_dict, 'id')
     del data_dict['id']
 
-    echo_checklist_string = json.dumps(data_dict)
-    result = _get_action('package_patch')(context, {'id': id, 'echo_checklist': echo_checklist_string})
+    resources_checklist = data_dict.pop('resources', [])
+    res_id_to_checklist = {}
+    for res_checklist in resources_checklist:
+        res_id = get_or_bust(res_checklist, 'id')
+        del res_checklist['id']
+        res_id_to_checklist[res_id] = res_checklist
+
+    existing_dataset_dict = _get_action('package_show')(context, {'id': id})
+    for resource in existing_dataset_dict.get('resources', []):
+        checklist = res_id_to_checklist.get(resource['id'])
+        if checklist:
+            resource_checklist_string = json.dumps(checklist)
+            resource['qa_checklist'] = resource_checklist_string
+
+    dataset_checklist_string = json.dumps(data_dict)
+    existing_dataset_dict['qa_checklist'] = dataset_checklist_string
+
+    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+    result = _get_action('package_update')(context, existing_dataset_dict)
     return result
 
