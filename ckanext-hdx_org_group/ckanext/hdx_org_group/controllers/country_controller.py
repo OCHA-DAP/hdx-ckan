@@ -158,10 +158,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 2, 1, DEFAULT_SORTING, None,
+        query_result = self._performing_search(u'', fq, ['organization', 'vocab_Topics'], 2, 1, DEFAULT_SORTING, None,
                                                None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
-                                                            {'tags': 'tags', 'organization': 'organization'},
+                                                            {'vocab_Topics': 'tags', 'organization': 'organization'},
                                                             query_result.get('count'), u'')
 
         non_filtered_facet_info['results'] = query_result.get('results', [])
@@ -202,7 +202,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'name': tag.get('name'),
                 'url': '?tags='+tag.get('name')+'#dataset-filter-start'
             }
-            for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
+            for tag in full_facet_info.get('facets', {}).get('vocab_Topics', {}).get('items', [])
             ]
         tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
         return tag_list_by_count
