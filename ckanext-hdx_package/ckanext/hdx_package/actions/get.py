@@ -767,6 +767,10 @@ def hdx_send_mail_contributor(context, data_dict):
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
+
+
+
+
     if org_members:
         admins = org_members.get('admins')
         for admin in admins:
@@ -774,6 +778,13 @@ def hdx_send_mail_contributor(context, data_dict):
             user = get_action("user_show")(context, {'id': admin})
             if user.get('email'):
                 recipients_list.append({'email': user.get('email'), 'display_name': user.get('display_name')})
+
+    pkg_dict = get_action("package_show")(context, {'id': data_dict.get('pkg_id')})
+    maintainer = pkg_dict.get("maintainer")
+    if maintainer:
+        m_user = get_action("user_show")(context, {'id': maintainer})
+        if not any(r['email'] == m_user.get('email') for r in recipients_list):
+            recipients_list.append({'email': m_user.get('email'), 'display_name': m_user.get('display_name')})
 
     bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
 
