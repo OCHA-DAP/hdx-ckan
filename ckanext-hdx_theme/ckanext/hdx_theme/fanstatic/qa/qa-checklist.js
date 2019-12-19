@@ -97,6 +97,7 @@ function _loadQAChecklist(resourceId) {
   $.get("/api/action/hdx_package_qa_checklist_show?id=" + packageId)
     .done((result) => {
       let data = result.result;
+      $("#checklist-complete").prop('checked', false);
       if (data && data.resources) {
         data.resources.forEach((resource) => _populateChecklistItem(`.qa-checklist-widget .resource-item[data-resource-id=${resource.id}]`, resource));
         _populateChecklistItem("#qa-data-protection", data.dataProtection);
