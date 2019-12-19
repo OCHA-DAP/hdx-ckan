@@ -70,3 +70,10 @@ class TestContactContributor(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         assert len(second_email_addresses) == 1, 'Just the requester should be receiving the 2nd email'
         assert data_dict.get('email') in second_email_addresses, 'Requester email needs to be in recipient email list'
         assert 'You sent the following message' in second_body, '"You" not fullname should appear in the 2nd email'
+
+        pkg_dict = self._get_action('package_show')({}, {"id": "test_dataset_1"})
+        maintainer = pkg_dict.get("maintainer")
+        assert maintainer
+        m_user = model.User.get(maintainer)
+        recipients_list = [recipient for recipient in kw_args0.get('recipients_list', [])]
+        assert {'display_name': m_user.display_name, 'email': m_user.email} in recipients_list
