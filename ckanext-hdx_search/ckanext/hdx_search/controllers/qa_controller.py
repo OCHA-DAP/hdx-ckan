@@ -91,6 +91,7 @@ class HDXQAController(HDXSearchController):
             return self._search_template()
 
     def _add_additional_faceting_queries(self, search_data_dict):
+        super(HDXQAController, self)._add_additional_faceting_queries(search_data_dict)
         new_datasets_query = generate_datetime_period_query('metadata_created', 7, False)
         updated_datasets_query = generate_datetime_period_query('metadata_modified', 7, False)
 
@@ -99,7 +100,15 @@ class HDXQAController(HDXSearchController):
         facet_queries.append('{{!key={} ex=batch}} {}'.format(UPDATED_DATASETS_FACET_NAME, updated_datasets_query))
         search_data_dict['facet.query'] = facet_queries
 
+    def _generate_facet_name_to_title_map(self, package_type):
+        facets = super(HDXQAController, self)._generate_facet_name_to_title_map(package_type)
+        facets['qa_completed'] = 'QA completed'
+        return facets
+
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+        super(HDXQAController, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
+                                                                 search_extras)
+
         if existing_facets:
             item_list = []
             result_facets['qa_only'] = {
@@ -114,7 +123,9 @@ class HDXQAController(HDXSearchController):
             self.__add_facet_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets, item_list,
                                           search_extras)
 
-    def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, item_list, search_extras):
+            self.__process_qa_completed_facet(existing_facets, search_extras, item_list)
+
+    def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
         category_key = 'ext_' + item_name
         item = next(
             (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
@@ -122,7 +133,22 @@ class HDXQAController(HDXSearchController):
         item['category_key'] = category_key
         item['name'] = '1'  # this gets displayed as value in HTML <input>
         item['selected'] = search_extras.get(category_key)
-        item_list.append(item)
+        qa_only_item_list.append(item)
+
+    def __process_qa_completed_facet(self, existing_facets, search_extras, qa_only_item_list):
+        qa_completed_item = next(
+            (i for i in existing_facets.get('qa_completed', {}).get('items', []) if i.get('name') == 'true'),
+            None
+        )
+        if qa_completed_item:
+            del existing_facets['qa_completed']
+            qa_category_key = 'ext_qa_completed'
+            qa_completed_item['category_key'] = qa_category_key
+            qa_completed_item['name'] = '1'
+            qa_completed_item['display_name'] = 'QA Completed'
+            qa_completed_item['selected'] = search_extras.get(qa_category_key)
+
+            qa_only_item_list.append(qa_completed_item)
 
     def _search_template(self):
         return render('qa_dashboard/qa_dashboard.html')

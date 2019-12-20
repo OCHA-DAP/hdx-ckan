@@ -376,6 +376,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         return full_facet_info
 
     def _add_additional_faceting_queries(self, search_data_dict):
+        super(DashboardController, self)._add_additional_faceting_queries(search_data_dict)
         now_string = datetime.datetime.utcnow().isoformat() + 'Z'
         freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
         search_data_dict.update({
@@ -388,6 +389,8 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         })
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+        super(DashboardController, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
+                                                                     search_extras)
         freshness_facet_name = 'due_date'
         if existing_facets and freshness_facet_name in existing_facets:
             item_list = existing_facets.get(freshness_facet_name).get('items')
