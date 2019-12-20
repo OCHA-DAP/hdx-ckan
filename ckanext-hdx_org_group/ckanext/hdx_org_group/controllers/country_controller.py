@@ -83,6 +83,17 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # profile.print_stats('cumulative')
             return result
 
+    def _sort_datasets_by_is_good(self, data_completeness):
+        categories = data_completeness.get("categories")
+        for cat in categories:
+            if cat.get("data_series"):
+                for ds in cat.get("data_series"):
+                    datasets_list = ds.get("datasets")
+                    if datasets_list:
+                        datasets_sorted_list = sorted(datasets_list, key=lambda item: item['is_good'] == False)
+                        ds['datasets'] = datasets_sorted_list
+
+        return data_completeness
     def country_topline(self, id):
         log.info("The id of the page is: " + id)
 
@@ -119,6 +130,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         data_completness = self._get_data_completeness(country_dict.get('name')) \
                             if country_dict.get('data_completeness') == 'active' else None
+
+        if data_completness:
+            data_completness = self._sort_datasets_by_is_good(data_completness)
+
 
         template_data = {
             'data': {
@@ -158,10 +173,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 2, 1, DEFAULT_SORTING, None,
+        query_result = self._performing_search(u'', fq, ['organization', 'vocab_Topics'], 2, 1, DEFAULT_SORTING, None,
                                                None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
-                                                            {'tags': 'tags', 'organization': 'organization'},
+                                                            {'vocab_Topics': 'tags', 'organization': 'organization'},
                                                             query_result.get('count'), u'')
 
         non_filtered_facet_info['results'] = query_result.get('results', [])
@@ -202,7 +217,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'name': tag.get('name'),
                 'url': '?tags='+tag.get('name')+'#dataset-filter-start'
             }
-            for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
+            for tag in full_facet_info.get('facets', {}).get('vocab_Topics', {}).get('items', [])
             ]
         tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
         return tag_list_by_count
