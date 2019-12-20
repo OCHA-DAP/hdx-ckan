@@ -158,11 +158,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'vocab_Topics'], 2, 1, DEFAULT_SORTING, None,
+
+        # The facet titles are not really needed in this case but we need to follow the process
+        facets = {'vocab_Topics': 'tags', 'organization': 'organization'}
+        query_result = self._performing_search(u'', fq, facets.keys(), 2, 1, DEFAULT_SORTING, None,
                                                None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
-                                                            {'vocab_Topics': 'tags', 'organization': 'organization'},
-                                                            query_result.get('count'), u'')
+                                                            facets, query_result.get('count'), u'')
 
         non_filtered_facet_info['results'] = query_result.get('results', [])
 

@@ -290,12 +290,12 @@ class HDXSearchController(PackageController):
 
         self._set_other_links()
 
+        search_extras = {}
         try:
             c.fields = []
             # c.fields_grouped will contain a dict of params containing
             # a list of values eg {'tags':['tag1', 'tag2']}
             c.fields_grouped = {}
-            search_extras = {}
             # limit = g.datasets_per_page
 
             fq = additional_fq
@@ -360,28 +360,7 @@ class HDXSearchController(PackageController):
                 if not asbool(config.get('ckan.search.show_all_types', 'False')):
                     fq += ' +dataset_type:dataset'
 
-            facets = OrderedDict()
-
-            default_facet_titles = get_default_facet_titles()
-
-            for facet in h.facets():
-                if facet in default_facet_titles:
-                    facets[facet] = default_facet_titles[facet]
-                else:
-                    facets[facet] = facet
-
-            # Facet titles
-            for plugin in p.PluginImplementations(p.IFacets):
-                facets = plugin.dataset_facets(facets, package_type)
-
-            if additional_facets:
-                facets.update(additional_facets)
-
-            c.facet_titles = facets
-
-            # TODO Line below to be removed after refactoring
-            c.tab = 'all'
-
+            facets = self._generate_facet_name_to_title_map(package_type)
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
             facet_keys = ['{!ex=batch}site_id'] + facets.keys()
             self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras, pager_url, context,
@@ -389,8 +368,8 @@ class HDXSearchController(PackageController):
 
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
+            facets = {}
             c.query_error = True
-            c.facets = {}
             c.search_facets = {}
             c.page = h.Page(collection=[])
         c.search_facets_limits = {}
@@ -407,7 +386,7 @@ class HDXSearchController(PackageController):
             c.search_facets_limits[facet] = limit
 
         # return render(self._search_template(package_type))
-        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, c.facet_titles,
+        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, facets,
                                                     c.batch_total_items, c.q)
         return full_facet_info
 
@@ -766,6 +745,22 @@ class HDXSearchController(PackageController):
         result['query_selected'] = True if query and query.strip() else False
 
         return result
+
+    def _generate_facet_name_to_title_map(self, package_type):
+        facets = OrderedDict()
+        default_facet_titles = get_default_facet_titles()
+
+        for facet in h.facets():
+            if facet in default_facet_titles:
+                facets[facet] = default_facet_titles[facet]
+            else:
+                facets[facet] = facet
+
+        # Facet titles
+        for plugin in p.PluginImplementations(p.IFacets):
+            facets = plugin.dataset_facets(facets, package_type)
+
+        return facets
 
     def _add_item_to_featured_facets(self, featured_facet_items, key, display_name, num_of_cods, search_extras):
         featured_facet_items.append({

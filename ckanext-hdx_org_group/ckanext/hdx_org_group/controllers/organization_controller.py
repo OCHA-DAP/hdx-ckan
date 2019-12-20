@@ -212,10 +212,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             return h.url_for('organization_read', id=org_code, **params) + suffix
 
         fq = 'organization:"{}"'.format(org_code)
-        facets = {
-            'vocab_Topics': _('Topics')
-        }
-        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets,
+
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
                                        ignore_capacity_check=ignore_capacity_check)
         full_facet_info.get('facets', {}).pop('organization', {})
 
