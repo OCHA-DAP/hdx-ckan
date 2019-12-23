@@ -161,6 +161,17 @@ smtp.starttls = False
 #smtp.password = your_password
 #smtp.mail_from =
 
+## AWS S3 settings
+ckanext.s3filestore.aws_access_key_id = aws_access_key_id
+ckanext.s3filestore.aws_secret_access_key = aws_secret_access_key
+ckanext.s3filestore.aws_bucket_name = hdx-ckan-filestore-dev
+ckanext.s3filestore.host_name = http://s3.eu-central-1.amazonaws.com
+ckanext.s3filestore.region_name= eu-central-1
+ckanext.s3filestore.signature_version = signature_version
+
+hdx.qa.s3.log_bucket_name = hdx-ckan-filestore-dev-log
+
+
 #hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
 hdx.faqrequest.email = hdx@un.org

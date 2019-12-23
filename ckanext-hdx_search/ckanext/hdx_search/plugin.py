@@ -61,6 +61,10 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('qa_dashboard', '/qa_dashboard',
                     controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
+        map.connect('qa_pii_log', '/dataset/{id}/resource/{resource_id}/qa_pii_log',
+                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_pii_log')
+        map.connect('qa_sdcmicro_log', '/dataset/{id}/resource/{resource_id}/qa_sdcmicro_log',
+                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_sdcmicro_log')
         return map
 
     def after_map(self, map):

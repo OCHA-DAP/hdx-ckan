@@ -1,15 +1,14 @@
-import datetime
 import logging
 from urllib import urlencode
 
 import sqlalchemy
+from botocore.exceptions import ClientError
 from pylons import config
 
-import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.membership_data as membership
 import ckanext.hdx_search.helpers.search_history as search_history
 
@@ -17,10 +16,10 @@ from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.qa_s3 import LogS3
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 _validate = dict_fns.validate
-_check_access = logic.check_access
 
 _select = sqlalchemy.sql.select
 _aliased = sqlalchemy.orm.aliased
@@ -33,17 +32,19 @@ _text = sqlalchemy.text
 
 log = logging.getLogger(__name__)
 
-render = base.render
-abort = base.abort
-redirect = h.redirect_to
+render = tk.render
+abort = tk.abort
 
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
+get_action = tk.get_action
+check_access = tk.check_access
+redirect = tk.redirect_to
+
 
 NUM_OF_ITEMS = 25
+
 
 def _encode_params(params):
     return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
@@ -89,6 +90,33 @@ class HDXQAController(HDXSearchController):
             self._setup_template_variables(context, {},
                                            package_type=package_type)
             return self._search_template()
+
+    def qa_pii_log(self, id, resource_id):
+        self._redirect_to_qa_log(resource_id, 'pii.log.txt')
+
+    def qa_sdcmicro_log(self, id, resource_id):
+        self._redirect_to_qa_log(resource_id, 'sdcmicro.log.txt')
+
+    def _redirect_to_qa_log(self, resource_id, log_filename):
+        try:
+            context = {'model': model, 'user': c.user or c.author,
+                       'auth_user_obj': c.userobj}
+            check_access('qa_dashboard_show', context)
+        except (NotFound, NotAuthorized):
+            abort(404, _('Not authorized to see this page'))
+        try:
+            path = 'resources/{resource_id}/{log_filename}'.format(resource_id=resource_id, log_filename=log_filename)
+            uploader = LogS3()
+            s3 = uploader.get_s3_session()
+            client = s3.client(service_name='s3', endpoint_url=uploader.host_name)
+            url = client.generate_presigned_url(ClientMethod='get_object',
+                                                Params={'Bucket': uploader.bucket_name,
+                                                        'Key': path},
+                                                ExpiresIn=60)
+            redirect(url)
+
+        except ClientError as ex:
+            log.error(str(ex))
 
     def _add_additional_faceting_queries(self, search_data_dict):
         super(HDXQAController, self)._add_additional_faceting_queries(search_data_dict)
