@@ -6,3 +6,7 @@ def hdx_qa_dashboard_show(context, data_dict):
 
 def hdx_qa_sdcmicro_run(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can run the sdc micro check')}
+
+
+def hdx_qa_pii_run(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can run the sdc micro check')}

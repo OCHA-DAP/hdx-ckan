@@ -197,7 +197,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             'populate_related_items_count': actions.populate_related_items_count,
             'populate_showcase_items_count': actions.populate_showcase_items_count,
             'qa_questions_list': actions.hdx_qa_questions_list,
-            'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run
+            'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run,
+            'qa_pii_run': actions.hdx_qa_pii_run,
         }
 
     # IFacets
@@ -223,5 +224,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def get_auth_functions(self):
         return {
             'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
-            'qa_sdcmicro_run': authorize.hdx_qa_dashboard_show
+            'qa_sdcmicro_run': authorize.hdx_qa_dashboard_run,
+            'qa_pii_run': authorize.hdx_qa_pii_run
         }
