@@ -10,6 +10,7 @@
 {% block primary_content %}
     {{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Sending, please wait ...") }}
     {{ h.snippet('qa_dashboard/qa_checklist.html', id="qaChecklist") }}
+    {{ h.snippet('qa_dashboard/qa_sdc_micro.html', id="qaSDCMicro") }}
 
     {% block search_results_wrapper %}
         {% set contact_topics = c.membership.data.contributor_topics %}
@@ -30,6 +31,8 @@
 
 {% block scripts2 %}
   {{ super() }}
+  <script src='https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js'></script>
+  <link href='https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css' rel='stylesheet' />
   {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/jquery.highlight' %}
   {% resource 'hdx_theme/jquery.expander' %}
