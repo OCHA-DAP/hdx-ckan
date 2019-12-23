@@ -224,6 +224,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def get_auth_functions(self):
         return {
             'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
-            'qa_sdcmicro_run': authorize.hdx_qa_dashboard_run,
+            'qa_sdcmicro_run': authorize.hdx_qa_sdcmicro_run,
             'qa_pii_run': authorize.hdx_qa_pii_run
         }
