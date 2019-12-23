@@ -83,6 +83,17 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # profile.print_stats('cumulative')
             return result
 
+    def _sort_datasets_by_is_good(self, data_completeness):
+        categories = data_completeness.get("categories")
+        for cat in categories:
+            if cat.get("data_series"):
+                for ds in cat.get("data_series"):
+                    datasets_list = ds.get("datasets")
+                    if datasets_list:
+                        datasets_sorted_list = sorted(datasets_list, key=lambda item: item['is_good'] == False)
+                        ds['datasets'] = datasets_sorted_list
+
+        return data_completeness
     def country_topline(self, id):
         log.info("The id of the page is: " + id)
 
@@ -119,6 +130,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         data_completness = self._get_data_completeness(country_dict.get('name')) \
                             if country_dict.get('data_completeness') == 'active' else None
+
+        if data_completness:
+            data_completness = self._sort_datasets_by_is_good(data_completness)
+
 
         template_data = {
             'data': {
