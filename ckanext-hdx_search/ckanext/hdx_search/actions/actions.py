@@ -82,5 +82,25 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     '''
     # resource_patch to mark sdc micro flag in "running" mode
     # post to aws endpoint to start the sdc micro (sdc micro will have to mark the flag and upload the result)
+    _check_access('hdx_qa_sdcmicro_run', context, {})
     return data_dict
 
+@logic.side_effect_free
+def hdx_qa_pii_run(context, data_dict):
+    '''
+    Add sdc micro flag "running" to resource
+    Post to aws endpoint to start the sdc micro check
+    :param data_dict: dictionary containg parameters
+    :type data_dict: dict
+    Parameters from data_dict
+    :param dataset_id: the id or name of the dataset
+    :type dataset_id: str
+    :param resource_id: the id or name of the resource
+    :type resource_id: str
+    :return: True or False or data_dict
+    :rtype: bool
+    '''
+    # resource_patch to mark sdc micro flag in "running" mode
+    # post to aws endpoint to start the sdc micro (sdc micro will have to mark the flag and upload the result)
+    _check_access('hdx_qa_pii_run', context, {})
+    return data_dict
