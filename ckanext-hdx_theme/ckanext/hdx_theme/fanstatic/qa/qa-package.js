@@ -73,6 +73,45 @@ function updateQAComplete(package, flag) {
     })
 }
 
+function _runPIICheck(resource) {
+  let body = {
+    "resourceId": `${resource}`
+  };
+  let promise = new Promise((resolve, reject) => {
+    $.post('/api/action/qa_pii_run', body)
+      .done((result) => {
+        if (result.success){
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      })
+      .fail((result) => {
+        reject(result);
+      });
+  });
+  return promise;
+
+}
+
+function runPIICheck(resource) {
+  _updateLoadingMessage("Launching PII check, please wait ...");
+  _showLoading();
+  _runPIICheck(resource)
+    .then(
+      (resolve) => {
+        _updateLoadingMessage("PII check launched! Reloading page ...");
+      },
+      (error) => {
+        alert("Error, PII check couldn't be launched!");
+        $("#loadingScreen").hide();
+      }
+    )
+    .finally(() => {
+      location.reload();
+    });
+}
+
 function updateQuarantine(resource, flag) {
   _showLoading();
   _updateQuarantine(resource, flag)
