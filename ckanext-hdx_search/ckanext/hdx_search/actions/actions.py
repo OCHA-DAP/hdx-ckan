@@ -1,7 +1,7 @@
 import logging
 import requests
 import json
-import urlparse
+import ckan.lib.munge as munge
 import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_search.helpers.qa_data as qa_data
@@ -67,6 +67,8 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     '''
     Add sdc micro flag "running" to resource
     Post to aws endpoint to start the sdc micro check
+    parameters for R script:
+    -d "idp_settlement|settlement|resp_gender|resp_age|breadwinner|total_hh|person_with_disabilities" -w weights_general -s Feuil1 -f data11.xlsx -t "text|text|text|text|numeric|text|text|text|text|text|numeric|text|numeric"
     :param data_dict: dictionary containg parameters
     :type data_dict: dict
     Parameters from data_dict
@@ -108,8 +110,8 @@ def hdx_qa_pii_run(context, data_dict):
     resource_id = data_dict.get("resourceId")
     if resource_id:
         try:
-            resource_dict = get_action("resource_show")(context, {"id": resource_id})
-            get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
+            # resource_dict = get_action("resource_show")(context, {"id": resource_id})
+            resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
             _run_pii_check(resource_dict.get("id"), resource_dict.get("name"))
         except Exception, ex:
             return {
@@ -128,13 +130,14 @@ AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
 
 def _run_pii_check(resource_id, resource_name):
     try:
+        munged_resource_name = munge.munge_filename(resource_name)
         r = requests.post(
             PII_RUN_URL,
             headers={
                 'Content-Type': 'application/json'
             },
             data=json.dumps({
-                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_id, resource_name=resource_name),
+                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_id, resource_name=munged_resource_name),
             }))
         r.raise_for_status()
     except requests.exceptions.ConnectionError as ex:
