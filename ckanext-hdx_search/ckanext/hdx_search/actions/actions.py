@@ -1,5 +1,7 @@
 import logging
-
+import requests
+import json
+import urlparse
 import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_search.helpers.qa_data as qa_data
@@ -82,7 +84,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     '''
     # resource_patch to mark sdc micro flag in "running" mode
     # post to aws endpoint to start the sdc micro (sdc micro will have to mark the flag and upload the result)
-    _check_access('hdx_qa_sdcmicro_run', context, {})
+    _check_access('qa_sdcmicro_run', context, {})
     return data_dict
 
 @logic.side_effect_free
@@ -102,5 +104,43 @@ def hdx_qa_pii_run(context, data_dict):
     '''
     # resource_patch to mark sdc micro flag in "running" mode
     # post to aws endpoint to start the sdc micro (sdc micro will have to mark the flag and upload the result)
-    _check_access('hdx_qa_pii_run', context, {})
-    return data_dict
+    _check_access('qa_pii_run', context, {})
+    resource_id = data_dict.get("resourceId")
+    if resource_id:
+        try:
+            resource_dict = get_action("resource_show")(context, {"id": resource_id})
+            get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
+            _run_pii_check(resource_dict.get("id"), resource_dict.get("name"))
+        except Exception, ex:
+            return {
+                'message': "Resource ID not found"
+            }
+    else:
+        return {
+            'message': "Resource ID not provided or not found"
+        }
+    return True
+
+
+PII_RUN_URL = "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com/dev/addpii"
+AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
+
+
+def _run_pii_check(resource_id, resource_name):
+    try:
+        r = requests.post(
+            PII_RUN_URL,
+            headers={
+                'Content-Type': 'application/json'
+            },
+            data=json.dumps({
+                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_id, resource_name=resource_name),
+            }))
+        r.raise_for_status()
+    except requests.exceptions.ConnectionError as ex:
+        log.error(ex)
+        raise ex
+    except Exception as ex:
+        log.error(ex)
+        raise ex
+    return True
