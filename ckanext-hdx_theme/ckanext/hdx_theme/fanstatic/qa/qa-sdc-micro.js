@@ -135,7 +135,7 @@ function _initHandsonTable(datasetId, resourceId, data) {
   });
 }
 function _loadResourcePreviewData(datasetId, resourceId, resourceURL) {
-  $.get(`https://proxy.hxlstandard.org/api/data-preview.json?rows=20&url=${resourceURL}`)
+  $.get(`/hxlproxy/api/data-preview.json?rows=20&url=${resourceURL}`)
     .done((result) => {
       console.log(result);
       _initHandsonTable(datasetId, resourceId, result);
