@@ -624,16 +624,29 @@ def package_show_edit(context, data_dict):
 
     return package_show(context, data_dict)
 
+
 @logic.side_effect_free
 def package_qa_checklist_show(context, data_dict):
     dataset_dict = get_action('package_show')(context, data_dict)
 
+    dataset_qa_checklist = _get_obj_from_json_in_dict(dataset_dict, 'qa_checklist') or {}
+    for r in dataset_dict.get('resources', []):
+        r_qa_checklist = _get_obj_from_json_in_dict(r, 'qa_checklist')
+        if r_qa_checklist:
+            qa_res_list = dataset_qa_checklist.get('resources', [])
+            qa_res_list.append(r_qa_checklist)
+            dataset_qa_checklist['resources'] = qa_res_list
+
+    return dataset_qa_checklist
+
+
+def _get_obj_from_json_in_dict(data_dict, json_property):
     try:
-        result = json.loads(dataset_dict.get('echo_checklist'))
+        result = json.loads(data_dict.get(json_property))
     except TypeError as e:
         result = {}
-        log.error(str(e))
     return result
+
 
 
 def _get_resource_filesize(resource_dict):
