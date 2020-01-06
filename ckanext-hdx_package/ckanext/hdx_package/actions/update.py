@@ -506,10 +506,15 @@ def package_qa_checklist_update(context, data_dict):
 
     existing_dataset_dict = _get_action('package_show')(context, {'id': id})
     for resource in existing_dataset_dict.get('resources', []):
+        resource.pop('qa_checklist', None)
+        resource.pop('qa_checklist_num', None)
         checklist = res_id_to_checklist.get(resource['id'])
         if checklist:
             resource_checklist_string = json.dumps(checklist)
             resource['qa_checklist'] = resource_checklist_string
+            resource['qa_checklist_num'] = len(checklist)
+
+    data_dict['modified_date'] = datetime.datetime.utcnow().isoformat()
 
     dataset_checklist_string = json.dumps(data_dict)
     existing_dataset_dict['qa_checklist'] = dataset_checklist_string

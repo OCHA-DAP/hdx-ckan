@@ -1,5 +1,7 @@
 {% extends "package/snippets/resource_item.html" %}
 
+{% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
+
 {% block resource_item_edit %}
   <div class="more-options">
     <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
@@ -32,40 +34,25 @@
         <span class="pii-title">
           DISK. RISK:
         </span>
-        <span class="pii-label warn">
-          <span class="pii-label-text">
-          2/3
-          </span>
-          <i class="humanitarianicons-Alert"></i>
-        </span>
-        <span class="pii-status">
-          In progress
-        </span>
+        {% set sdc_status_text = 'ERR' if res.sdc_report_flag  == 'ERROR' else res.sdc_report_flag %}
+        {{ qa_macros.qa_check_item(res.sdc_report_flag, sdc_status_text, res.sdc_timestamp) }}
       </li>
       <li class="pii-item">
         <span class="pii-title">
           PII CHECK:
         </span>
-        <span class="pii-label gray">
-          <img src="/images/filter_loading.gif">
-        </span>
-        <span class="pii-status">
-          In progress
-        </span>
+        {% set pii_status_text = 'ERR' if res.pii_report_flag  == 'ERROR' else res.pii_report_flag %}
+        {{ qa_macros.qa_check_item(res.pii_report_flag, pii_status_text, res.pii_timestamp) }}
       </li>
       <li class="pii-item">
         <span class="pii-title">
           CHECKLIST:
         </span>
-        <span class="pii-label ok">
-          <span class="pii-label-text">
-          2/2
-          </span>
-          <i class="humanitarianicons-Selected"></i>
-        </span>
-        <span class="pii-status">
-          Oct 17, 2019
-        </span>
+        {% set checklist_status = 'OK' if res.qa_checklist_num  == 0 else 'ERROR' %}
+        {% set checklist_status_text = 'OK' if checklist_status  == 'OK'
+            else res.qa_checklist_num ~ '/' ~ res.qa_checklist_total_num %}
+        {{ qa_macros.qa_check_item(checklist_status, checklist_status_text, pkg.qa_checklist.modified_date) }}
+
       </li>
     </ul>
   </div>
