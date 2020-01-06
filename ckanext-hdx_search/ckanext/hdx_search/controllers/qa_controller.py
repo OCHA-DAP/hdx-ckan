@@ -18,6 +18,8 @@ from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.qa_s3 import LogS3
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
+from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
+from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 
 _validate = dict_fns.validate
 
@@ -44,6 +46,14 @@ redirect = tk.redirect_to
 
 
 NUM_OF_ITEMS = 25
+
+STATUS_PRIORITIES = {
+    '': 0,
+    'OK': 1,
+    'RUNNING': 2,
+    'QUEUED': 3,
+    'ERROR': 4
+}
 
 
 def _encode_params(params):
@@ -177,6 +187,50 @@ class HDXQAController(HDXSearchController):
             qa_completed_item['selected'] = search_extras.get(qa_category_key)
 
             qa_only_item_list.append(qa_completed_item)
+
+    def _process_found_package_list(self, package_list):
+
+        self.__process_checklist_data(package_list)
+        self.__process_script_check_data(package_list, 'pii_report_flag', 'pii_timestamp')
+        self.__process_script_check_data(package_list, 'sdc_report_flag', 'sdc_timestamp')
+
+    def __process_checklist_data(self, package_list):
+
+        if package_list:
+            num_of_resource_questions = len(qa_data_questions_list['resources_checklist'])
+            num_of_package_questions = len(qa_data_questions_list['data_protection_checklist']) + \
+                                       len(qa_data_questions_list['metadata_checklist'])
+
+            for package_dict in package_list:
+                resource_list = package_dict.get('resources', [])
+                checklist = get_obj_from_json_in_dict(package_dict, 'qa_checklist')
+                package_dict['qa_checklist'] = checklist
+                package_dict['qa_checklist_num'] = len(checklist.get('dataProtection', [])) + \
+                                                   len(checklist.get('metadata', []))
+                package_dict['qa_checklist_total_num'] = num_of_package_questions + \
+                                                         num_of_resource_questions * len(resource_list)
+
+                for r in resource_list:
+                    r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
+                    r['qa_checklist_num'] = len(r['qa_checklist'])
+                    package_dict['qa_checklist_num'] += r['qa_checklist_num']
+                    r['qa_checklist_total_num'] = num_of_resource_questions
+
+    def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
+
+        if package_list:
+            for package_dict in package_list:
+                resource_list = package_dict.get('resources', [])
+                package_dict[report_flag_field] = ''
+                package_dict[timestamp_field] = ''
+                package_pii_priority = 0
+                for r in resource_list:
+                    res_pii_priority = STATUS_PRIORITIES.get(r.get(report_flag_field, ''), 0)
+                    if res_pii_priority > package_pii_priority:
+                        package_pii_priority = res_pii_priority
+                        package_dict[report_flag_field] = r.get(report_flag_field, '')
+                        package_dict[timestamp_field] = r.get(timestamp_field, '')
+
 
     def _search_template(self):
         return render('qa_dashboard/qa_dashboard.html')

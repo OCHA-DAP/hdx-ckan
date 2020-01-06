@@ -430,6 +430,8 @@ class HDXSearchController(PackageController):
             log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
                 str(data_dict), str(query), datetime.datetime.now()))
 
+        self._process_found_package_list(query['results'])
+
         c.facets = query['facets']
         c.search_facets = query['search_facets']
 
@@ -774,4 +776,9 @@ class HDXSearchController(PackageController):
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         # to be overridden in sub-classes that need to process the results of the solr query in order to
         # do more complex preparation of the data that needs to be shown in the filter/facets
+        pass
+
+    def _process_found_package_list(self, package_list):
+        # to be overridden in sub-classes that need to process the results of the solr query in order to
+        # change the data in the package or its resources
         pass

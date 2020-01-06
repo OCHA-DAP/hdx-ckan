@@ -11,6 +11,8 @@ import logging
 import json
 
 from paste.deploy.converters import asbool
+from pylons import config
+
 import ckan.logic.schema
 import ckan.logic as logic
 import ckan.model as model
@@ -29,15 +31,14 @@ import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_package.helpers.freshness_calculator as freshness
+import ckanext.hdx_package.helpers.caching as pkg_caching
 
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
-
-import ckanext.hdx_package.helpers.caching as pkg_caching
-from pylons import config
+from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -629,24 +630,15 @@ def package_show_edit(context, data_dict):
 def package_qa_checklist_show(context, data_dict):
     dataset_dict = get_action('package_show')(context, data_dict)
 
-    dataset_qa_checklist = _get_obj_from_json_in_dict(dataset_dict, 'qa_checklist') or {}
+    dataset_qa_checklist = get_obj_from_json_in_dict(dataset_dict, 'qa_checklist') or {}
     for r in dataset_dict.get('resources', []):
-        r_qa_checklist = _get_obj_from_json_in_dict(r, 'qa_checklist')
+        r_qa_checklist = get_obj_from_json_in_dict(r, 'qa_checklist')
         if r_qa_checklist:
             qa_res_list = dataset_qa_checklist.get('resources', [])
             qa_res_list.append(r_qa_checklist)
             dataset_qa_checklist['resources'] = qa_res_list
 
     return dataset_qa_checklist
-
-
-def _get_obj_from_json_in_dict(data_dict, json_property):
-    try:
-        result = json.loads(data_dict.get(json_property))
-    except TypeError as e:
-        result = {}
-    return result
-
 
 
 def _get_resource_filesize(resource_dict):
