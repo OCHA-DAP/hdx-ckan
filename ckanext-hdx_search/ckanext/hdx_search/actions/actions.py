@@ -87,7 +87,22 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     # resource_patch to mark sdc micro flag in "running" mode
     # post to aws endpoint to start the sdc micro (sdc micro will have to mark the flag and upload the result)
     _check_access('qa_sdcmicro_run', context, {})
+    resource_id = data_dict.get("resource_id")
+    if resource_id:
+        try:
+            # resource_dict = get_action("resource_show")(context, {"id": resource_id})
+            resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
+            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weightColumn"), data_dict.get("columns_type_list"))
+        except Exception, ex:
+            return {
+                'message': "Resource ID not found"
+            }
+    else:
+        return {
+            'message': "Resource ID not provided or not found"
+        }
     return data_dict
+
 
 @logic.side_effect_free
 def hdx_qa_pii_run(context, data_dict):
@@ -110,7 +125,6 @@ def hdx_qa_pii_run(context, data_dict):
     resource_id = data_dict.get("resourceId")
     if resource_id:
         try:
-            # resource_dict = get_action("resource_show")(context, {"id": resource_id})
             resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
             _run_pii_check(resource_dict.get("id"), resource_dict.get("name"))
         except Exception, ex:
@@ -124,7 +138,8 @@ def hdx_qa_pii_run(context, data_dict):
     return True
 
 
-PII_RUN_URL = "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com/dev/addpii"
+PII_RUN_URL = "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com/feat/addpii"
+SDCMICRO_RUN_URL = "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com/feat/addsdc"
 AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
 
 
@@ -139,6 +154,40 @@ def _run_pii_check(resource_id, resource_name):
             data=json.dumps({
                 'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_id, resource_name=munged_resource_name),
             }))
+        r.raise_for_status()
+    except requests.exceptions.ConnectionError as ex:
+        log.error(ex)
+        raise ex
+    except Exception as ex:
+        log.error(ex)
+        raise ex
+    return True
+
+
+def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list= None):
+    try:
+        download_url = resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")
+        if "download/" in download_url:
+            url = download_url.split("download/")[1]
+        else:
+            url = resource_dict.get("name")
+        munged_resource_name = munge.munge_filename(url)
+        data_dict = {
+            'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
+            'sheet': 1
+        }
+        if data_columns_list:
+            data_dict['columnNames'] = '|'.join(map(str, data_columns_list))
+        if weightColumn:
+            data_dict['weightColumn'] = weightColumn
+        if columns_type_list:
+            data_dict['columnTypes'] = '|'.join(map(str, columns_type_list))
+        r = requests.post(
+            SDCMICRO_RUN_URL,
+            headers={
+                'Content-Type': 'application/json'
+            },
+            data=json.dumps(data_dict))
         r.raise_for_status()
     except requests.exceptions.ConnectionError as ex:
         log.error(ex)
