@@ -568,8 +568,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
             package_dict.pop('due_date', None)
             package_dict.pop('overdue_date', None)
-            # package_dict.pop('due_daterange', None)
-            # package_dict.pop('overdue_daterange', None)
+            package_dict.pop('delinquent_date', None)
             freshness_calculator.populate_with_date_ranges()
 
         if not just_for_reindexing:

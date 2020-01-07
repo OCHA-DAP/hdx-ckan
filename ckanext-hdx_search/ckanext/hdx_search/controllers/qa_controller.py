@@ -15,7 +15,8 @@ import ckanext.hdx_search.helpers.search_history as search_history
 from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
-from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
+    DELINQUENT_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.qa_s3 import LogS3
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
@@ -130,12 +131,15 @@ class HDXQAController(HDXSearchController):
 
     def _add_additional_faceting_queries(self, search_data_dict):
         super(HDXQAController, self)._add_additional_faceting_queries(search_data_dict)
-        new_datasets_query = generate_datetime_period_query('metadata_created', 7, False)
-        updated_datasets_query = generate_datetime_period_query('metadata_modified', 7, False)
+        new_datasets_query = generate_datetime_period_query('metadata_created', last_x_days=7)
+        updated_datasets_query = generate_datetime_period_query('metadata_modified', last_x_days=7)
+        delinquent_datasets_query = generate_datetime_period_query('delinquent_date')
 
         facet_queries = search_data_dict.get('facet.query') or []
         facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, new_datasets_query))
         facet_queries.append('{{!key={} ex=batch}} {}'.format(UPDATED_DATASETS_FACET_NAME, updated_datasets_query))
+        facet_queries.append('{{!key={} ex=batch}} {}'.format(DELINQUENT_DATASETS_FACET_NAME,
+                                                              delinquent_datasets_query))
         search_data_dict['facet.query'] = facet_queries
 
     def _generate_facet_name_to_title_map(self, package_type):
@@ -156,10 +160,12 @@ class HDXQAController(HDXSearchController):
                 'show_everything': True
             }
 
-            self.__add_facet_item_to_list(NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets, item_list,
-                                          search_extras)
-            self.__add_facet_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets, item_list,
-                                          search_extras)
+            self.__add_facet_item_to_list(NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets,
+                                          item_list, search_extras)
+            self.__add_facet_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets,
+                                          item_list, search_extras)
+            self.__add_facet_item_to_list(DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'), existing_facets,
+                                          item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, search_extras, item_list)
 

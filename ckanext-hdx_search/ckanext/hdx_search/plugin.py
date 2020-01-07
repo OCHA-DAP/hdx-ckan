@@ -18,7 +18,8 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 import ckanext.hdx_search.actions.authorize as authorize
-from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
+    DELINQUENT_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 NotFound = ckan.logic.NotFound
@@ -124,9 +125,14 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
         adapt_solr_fq('qa_completed', ' +qa_completed:true', ' -qa_completed:true')
         adapt_solr_fq(NEW_DATASETS_FACET_NAME,
-                      generate_datetime_period_query('metadata_created', 7, include_leading_space=True, include=True))
+                      generate_datetime_period_query('metadata_created', last_x_days=7, include_leading_space=True,
+                                                     include=True))
         adapt_solr_fq(UPDATED_DATASETS_FACET_NAME,
-                      generate_datetime_period_query('metadata_modified', 7, include_leading_space=True, include=True))
+                      generate_datetime_period_query('metadata_modified', last_x_days=7, include_leading_space=True,
+                                                     include=True))
+        adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
+                                                     include=True))
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
