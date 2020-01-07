@@ -140,8 +140,8 @@ def hdx_qa_pii_run(context, data_dict):
     return True
 
 
-PII_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/feat/addpii"
-SDCMICRO_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/feat/addsdc"
+PII_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/addpii"
+SDCMICRO_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/addsdc"
 AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
 
 
