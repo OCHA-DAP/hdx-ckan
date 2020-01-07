@@ -176,7 +176,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         munged_resource_name = munge.munge_filename(url)
         data_dict = {
             'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
-            'sheet': 1
+            'sheet': 0
         }
         if data_columns_list:
             data_dict['columnNames'] = '|'.join(map(str, data_columns_list))
