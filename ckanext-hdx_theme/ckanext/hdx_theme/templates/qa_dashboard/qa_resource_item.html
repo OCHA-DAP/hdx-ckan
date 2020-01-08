@@ -17,9 +17,11 @@
       <li>
         <a href="{{ h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
       </li>
-      <li>
-        <a href="{{ res.hdx_rel_url }}">Download</a>
-      </li>
+      {% if h.check_access('hdx_resource_download', res) %}
+        <li>
+          <a href="{{ res.hdx_rel_url }}">Download</a>
+        </li>
+      {% endif %}
       <li>
         <a href="#" onclick="updateQuarantine('{{ res.id }}', {% if res.in_quarantine %}false{% else %}true{% endif %});">{% if res.in_quarantine %}Remove from{% else %}Add to{% endif %} Quarantine</a>
       </li>

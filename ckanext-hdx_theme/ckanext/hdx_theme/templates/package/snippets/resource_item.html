@@ -52,7 +52,7 @@
                     </a>
                 {% endif %}
              #}
-            {% if not res.in_quarantine %}
+            {% if h.check_access('hdx_resource_download', res) %}
             <a href="{{ res.hdx_rel_url }}" class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt="{{ _('Download') }}" />
                 {{ _('Download') }}

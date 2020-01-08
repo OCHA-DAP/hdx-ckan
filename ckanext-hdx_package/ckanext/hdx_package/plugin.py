@@ -432,6 +432,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
                 'hdx_send_mail_members': authorize.hdx_send_mail_members,
                 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
+                'hdx_resource_download': authorize.hdx_resource_download
                 }
 
     def make_middleware(self, app, config):

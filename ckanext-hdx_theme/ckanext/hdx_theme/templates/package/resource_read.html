@@ -45,7 +45,7 @@
                 <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn resource-btn' %}</li>
               {% endif %}
              #}
-            {% if res.url and h.is_url(res.url) and not res.in_quarantine %}
+            {% if res.url and h.is_url(res.url) and h.check_access('hdx_resource_download', res) %}
               <li>
                 <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.hdx_rel_url }}">
                 {#
@@ -75,11 +75,19 @@
         {% block resource_content %}
           {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
           {% block resource_read_url %}
-            {% if res.url and h.is_url(res.url) %}
-              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.original_url }}</a></p>
-            {% elif res.url %}
-              <p class="muted ellipsis">{{ _('URL:') }} {{ res.hdx_rel_url }}</p>
-            {% endif %}
+
+             <p class="muted ellipsis">{{ _('URL:') }}
+              {% if h.check_access('hdx_resource_download', res) %}
+                {% if res.url and h.is_url(res.url) %}
+                  <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.original_url }}</a>
+                {% elif res.url %}
+                  {{ res.hdx_rel_url }}
+                {% endif %}
+              {% else %}
+                <i style="color: red"> - in quarantine</i>
+              {% endif %}
+             </p>
+
           {% endblock %}
           <div class="prose notes" property="rdfs:label">
             {% if res.description %}
