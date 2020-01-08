@@ -21,7 +21,7 @@ if [ "$S3_GENERATE" == "yes" ]; then
     SF=${SF}'ckanext.s3filestore.host_name = https://s3.'${REGION_NAME}'.amazonaws.com\n'
     SF=${SF}'ckanext.s3filestore.region_name= '${REGION_NAME}'\n'
     SF=${SF}'ckanext.s3filestore.signature_version = s3v4\n'
-    SF=${SF}$(cat /srv/ckan/common-config-ini.txt | grep -E "^ckan.plugins =")' s3filestore\n'
+    SF=${SF}$(cat /srv/ckan/common-config-ini.txt | grep -E "^ckan.plugins =" | sed "s/s3filestore//")' s3filestore\n'
     SF=${SF}${LF}
     sed -i "s|${LF}|${SF}|" /etc/ckan/prod.ini
 fi
@@ -43,7 +43,7 @@ lunr_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search/lunr
 [ -f $lunr_dir/feature-index.js ] || touch $lunr_dir/feature-index.js
 
 # make sure cache dir permissions are correct
-chown -R www-data:www-data ${HDX_CACHE_DIR}
+#chown -R www-data:www-data ${HDX_CACHE_DIR}
 
 #python /srv/ckan/docker/helper.py
 
