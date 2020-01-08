@@ -18,7 +18,7 @@ class LicenseCreativeCommonsIntergovernmentalOrgs(DefaultLicense):
     @property
     def title(self):
         return _("Creative Commons Attribution for Intergovernmental Organisations")
-    
+
 #class LicenseCreativeCommonsNoDerives(DefaultLicense):
 #     domain_content = True
 #     domain_data = True
@@ -29,7 +29,7 @@ class LicenseCreativeCommonsIntergovernmentalOrgs(DefaultLicense):
 #    @property
 #    def title(self):
 #        return _("Creative Commons Attribution-NoDerives")
-    
+
 class LicenseOtherPublicDomainNoRestrictions(DefaultLicense):
 #     domain_content = True
     id = "other-pd-nr"
@@ -90,3 +90,12 @@ class LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense(DefaultLicense):
     @property
     def title(self):
         return _("Open Data Commons Public Domain Dedication and License (PDDL)")
+
+class LicenseHDXCreativeCommonsAttributionInternational(DefaultLicense):
+    id = "cc-by"
+    od_conformance = 'approved'
+    url = "http://www.opendefinition.org/licenses/cc-by"
+
+    @property
+    def title(self):
+        return _("Creative Commons Attribution International")

@@ -62,7 +62,7 @@ def _generate_license_list():
     package.Package._license_register.licenses = [
         license.License(
             hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
-        license.License(license.LicenseCreativeCommonsAttribution()),
+        license.License(hdx_licenses.LicenseHDXCreativeCommonsAttributionInternational()),
         license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
         license.License(hdx_licenses.LicenseHdxOpenDatabaseLicense()),
         license.License(
