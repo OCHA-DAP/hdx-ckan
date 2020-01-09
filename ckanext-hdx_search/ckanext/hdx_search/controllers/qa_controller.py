@@ -106,7 +106,7 @@ class HDXQAController(HDXSearchController):
         self._redirect_to_qa_log(resource_id, 'pii.log.txt')
 
     def qa_sdcmicro_log(self, id, resource_id):
-        self._redirect_to_qa_log(resource_id, 'sdcmicro.log.txt')
+        self._redirect_to_qa_log(resource_id, 'sdc.log.txt')
 
     def _redirect_to_qa_log(self, resource_id, log_filename):
         try:
