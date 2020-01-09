@@ -14,7 +14,6 @@ function _sdcMicroChangeFactory(settings, col) {
 
 function _contextMenu(settings) {
   const dataTypeItems = [
-    {key: 'type:auto', name: 'auto'},
     {key: 'type:text', name: 'text'},
     {key: 'type:double', name: 'double'},
     {key: 'type:numeric', name: 'numeric'},
@@ -97,7 +96,7 @@ function _initHandsonTable(datasetId, resourceId, data) {
   let container = document.getElementById("sdc-micro-table");
   const columnsNo = data[0].length;
   let selected = Array(columnsNo).fill(false);
-  let types = Array(columnsNo).fill('auto');
+  let types = Array(columnsNo).fill('text');
   const sdcSettings = {
     datasetId: datasetId,
     resourceId: resourceId,
@@ -155,8 +154,11 @@ function _onSaveSDCMicro(ev) {
     resource_id: _sdcSettings.resourceId,
     data_columns_list: dataColumnList,
     weight_column: _sdcSettings.weightColumn,
-    columns_type_list: _sdcSettings.types,
   };
+
+  if (_sdcSettings.types.filter((value) => value !== 'text').length > 0) {
+    data.columns_type_list = _sdcSettings.types;
+  }
   $.post("/api/action/qa_sdcmicro_run", JSON.stringify(data))
     .done((result) => {
       if (result.success) {
