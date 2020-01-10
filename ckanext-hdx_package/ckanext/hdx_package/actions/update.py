@@ -258,7 +258,7 @@ def process_batch_mode(context, data_dict):
 
 def flag_if_file_uploaded(context, data_dict):
     if data_dict.get('upload'):
-        context[FILE_WAS_UPLOADED] = True
+        context[FILE_WAS_UPLOADED] = data_dict.get('name')
 
 
 def process_skip_validation(context, data_dict):
