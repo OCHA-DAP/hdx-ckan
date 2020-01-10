@@ -94,7 +94,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
         try:
             # resource_dict = get_action("resource_show")(context, {"id": resource_id})
             resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
-            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weightColumn"), data_dict.get("columns_type_list"))
+            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"), data_dict.get("columns_type_list"))
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
