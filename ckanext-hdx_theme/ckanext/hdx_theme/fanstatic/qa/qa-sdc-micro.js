@@ -1,6 +1,8 @@
 let _sdcMicroColumnChange;
 let _sdcSettings;
+let _sdcLoadedData;
 let _hot;
+const MAX_NUMBER_OF_SHEETS = 8;
 
 function _sdcMicroChangeFactory(settings, col) {
   let f = (selectEl) => {
@@ -43,7 +45,7 @@ function _contextMenu(settings) {
             _sdcSettings.weightColumn = null;
           }
           _sdcSettings.columns[selectedCol] = !_sdcSettings.columns[selectedCol];
-          hot.updateSettings({});
+          hot.render();
         }
       },
       "weight": {
@@ -59,7 +61,7 @@ function _contextMenu(settings) {
           } else {
             _sdcSettings.weightColumn = selectedCol;
           }
-          hot.updateSettings({});
+          hot.render();
         }
       },
       "type": {
@@ -91,23 +93,44 @@ function _contextMenu(settings) {
   }
 }
 
-
-function _initHandsonTable(datasetId, resourceId, data) {
-  let container = document.getElementById("sdc-micro-table");
+function _renderHandsonTable(data) {
   const columnsNo = data[0].length;
   let selected = Array(columnsNo).fill(false);
   let types = Array(columnsNo).fill('text');
-  const sdcSettings = {
-    datasetId: datasetId,
-    resourceId: resourceId,
+
+  _sdcSettings = {
+    ..._sdcSettings,
     columns: selected,
     types: types,
     weightColumn: null
   };
-  _sdcSettings = sdcSettings;
-  const contextMenu = _contextMenu(sdcSettings);
-  const settings = {
+  _hot.updateSettings({
     data: data,
+    cells: null
+  });
+  _hot.updateSettings({
+    cells: function (row, col) {
+      let cell = _hot.getCell(row,col);
+      if (!cell)
+        return;
+      if (_sdcSettings.weightColumn === col) {
+        cell.className = 'sdc-col-weight';
+      }
+      if (_sdcSettings.columns[col]) {
+        cell.className = 'sdc-col-selected';
+      }
+    }
+  });
+}
+
+function _initHandsonTable(datasetId, resourceId, data) {
+  let container = document.getElementById("sdc-micro-table");
+  _sdcSettings = {
+    datasetId: datasetId,
+    resourceId: resourceId
+  };
+  const contextMenu = _contextMenu(_sdcSettings);
+  const settings = {
     readOnly: true,
     rowHeaders: true,
     colHeaders: true,
@@ -119,25 +142,64 @@ function _initHandsonTable(datasetId, resourceId, data) {
     },
     licenseKey: 'non-commercial-and-evaluation'
   };
-  let hot = new Handsontable(container, settings);
+  _hot = new Handsontable(container, settings);
 
-  hot.updateSettings({
-    cells: function (row, col) {
-      let cell = hot.getCell(row,col);
-      if (sdcSettings.weightColumn === col) {
-        cell.style.backgroundColor = "rgba(0,124,224,0.5)";
+  _renderHandsonTable(data);
+}
+
+function _loadData(resourceURL, sheet, data, resolve, reject) {
+  $.get(`/hxlproxy/api/data-preview.json?rows=20&sheet=${sheet}&url=${resourceURL}`)
+    .done((result) => {
+      data.content.push(result);
+      data.sheets = sheet + 1;
+      if (data.sheets < MAX_NUMBER_OF_SHEETS) {
+        _loadData(resourceURL, sheet + 1, data, resolve, reject);
+      } else {
+        resolve(data);
       }
-      if (sdcSettings.columns[col]) {
-        cell.style.backgroundColor = "rgba(30,191,179,0.51)";
+    })
+    .fail((error) => {
+      if (sheet === 0) {
+        reject(error);
+      } else {
+        resolve(data);
       }
-    }
+    });
+}
+
+function _loadSheet(el, sheet) {
+  $('#qa-sdc-widget .nav .nav-item').removeClass('active');
+  $(el).parent('.nav-item').addClass('active');
+  _sdcSettings.sheet = 0;
+  _renderHandsonTable(_sdcLoadedData.content[sheet]);
+}
+
+function _generateTabs(data) {
+  let tabs = $("#qa-sdc-widget .nav");
+  let content = Array.from(Array(data.sheets)).map((_, i) => `
+    <li class="nav-item ${i === 0 ? 'active' : ''}">
+      <a class="nav-link" href="#" data-sheet="${i}">Sheet ${i + 1}</a>
+    </li>
+  `).join('');
+
+  tabs.html(content);
+  tabs.find('.nav-link').click((ev) => {
+    let sheet = $(ev.currentTarget).attr('data-sheet');
+    _loadSheet(ev.currentTarget, sheet);
   });
 }
+
 function _loadResourcePreviewData(datasetId, resourceId, resourceURL) {
-  $.get(`/hxlproxy/api/data-preview.json?rows=20&url=${resourceURL}`)
-    .done((result) => {
-      console.log(result);
-      _initHandsonTable(datasetId, resourceId, result);
+  const emptyData = {content: [], sheets: 0};
+  let promise = new Promise((resolve, reject) => _loadData(resourceURL, 0, emptyData, resolve, reject));
+  promise
+    .then((data) => {
+      _sdcLoadedData = data;
+      _generateTabs(_sdcLoadedData);
+      _initHandsonTable(datasetId, resourceId, _sdcLoadedData.content[0]);
+    })
+    .catch((error) => {
+      console.error(error);
     });
 }
 
@@ -154,6 +216,7 @@ function _onSaveSDCMicro(ev) {
     resource_id: _sdcSettings.resourceId,
     data_columns_list: dataColumnList,
     weight_column: _sdcSettings.weightColumn,
+    sheet: _sdcSettings.sheet
   };
 
   if (_sdcSettings.types.filter((value) => value !== 'text').length > 0) {
