@@ -3,7 +3,13 @@
   background-color: #fff;
   height: 500px;
   width: 1024px;
-  padding: 0 0 71px;
+  padding: 0 0 114px;
+}
+#qa-sdc-widget .sdc-col-selected {
+  background-color: rgba(30, 191, 179, 0.51);
+}
+#qa-sdc-widget .sdc-col-weight {
+  background-color: rgba(0, 124, 224, 0.5);
 }
 #qa-sdc-widget .action-container {
   position: absolute;
