@@ -94,7 +94,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
         try:
             # resource_dict = get_action("resource_show")(context, {"id": resource_id})
             resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
-            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"), data_dict.get("columns_type_list"))
+            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"), data_dict.get("columns_type_list"), data_dict.get("sheet"))
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
@@ -166,7 +166,7 @@ def _run_pii_check(resource_id, resource_name):
     return True
 
 
-def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list= None):
+def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list= None, sheet=0):
     try:
         download_url = resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")
         if "download/" in download_url:
@@ -176,7 +176,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         munged_resource_name = munge.munge_filename(url)
         data_dict = {
             'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
-            'sheet': 0,
+            'sheet': sheet,
             'riskThreshold': 3
         }
         if data_columns_list:
