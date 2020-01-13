@@ -243,6 +243,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'qa_completed': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
                              tk.get_converter('convert_to_extras')],
             'qa_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
+                            tk.get_converter('convert_to_extras')],
+            'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
                              tk.get_converter('convert_to_extras')]
         })
 
@@ -345,7 +347,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
-            'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
+            'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
         schema['resources'].update(
             {
@@ -422,7 +425,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
             'hdx_keep_prev_value_unless_sysadmin': vd.keep_prev_value_unless_sysadmin,
             'hdx_package_keep_prev_value_unless_sysadmin': vd.package_keep_prev_value_unless_sysadmin,
-            'hdx_reset_on_file_upload': vd.reset_on_file_upload
+            'hdx_reset_on_file_upload': vd.reset_on_file_upload,
+            'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty
         }
 
     def get_auth_functions(self):

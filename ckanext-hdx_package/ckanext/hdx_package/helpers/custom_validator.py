@@ -394,3 +394,31 @@ def package_keep_prev_value_unless_sysadmin(key, data, errors, context):
                 data[key] = old_value
     if key not in data:
         raise StopOnError
+
+
+def hdx_keep_prev_value_if_empty(key, data, errors, context):
+    new_value = data[key]
+    if new_value is missing or not new_value:
+        data.pop(key, None)
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            prev_package_dict = __get_previous_package_dict(pkg_id, context)
+            old_value = prev_package_dict.get(key[0], None)
+            if old_value:
+                data[key] = old_value
+
+    if isinstance(new_value, (str, unicode)) and not new_value.strip():
+        data.pop(key, None)
+
+    if key not in data:
+        raise StopOnError
+
+
+def __get_previous_package_dict(id, context):
+    context_key = 'hdx_prev_package_dict_' + id
+    pkg_dict = context.get(context_key)
+    if not pkg_dict:
+        pkg_dict = get_action('package_show')(context, {'id': id})
+        context[context_key] = pkg_dict
+
+    return pkg_dict or {}
