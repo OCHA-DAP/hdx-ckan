@@ -93,7 +93,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     if resource_id:
         try:
             # resource_dict = get_action("resource_show")(context, {"id": resource_id})
-            resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
+            resource_dict = get_action("resource_patch")(context, {"id": resource_id, "sdc_report_flag": "QUEUED"})
             _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"), data_dict.get("columns_type_list"), data_dict.get("sheet"))
         except Exception, ex:
             return {
