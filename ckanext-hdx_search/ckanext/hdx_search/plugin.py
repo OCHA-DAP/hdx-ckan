@@ -19,10 +19,11 @@ from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 import ckanext.hdx_search.actions.authorize as authorize
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
-    DELINQUENT_DATASETS_FACET_NAME
+    DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 NotFound = ckan.logic.NotFound
+
 
 def convert_country(q):
     for c in tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True}):
@@ -133,6 +134,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
                       generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
                                                      include=True))
+        adapt_solr_fq(BULK_DATASETS_FACET_NAME, 'updated_by_script:[* TO *]')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
