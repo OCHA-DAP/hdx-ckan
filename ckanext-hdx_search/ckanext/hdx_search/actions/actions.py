@@ -128,7 +128,7 @@ def hdx_qa_pii_run(context, data_dict):
     if resource_id:
         try:
             resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
-            _run_pii_check(resource_dict.get("id"), resource_dict.get("name"))
+            _run_pii_check(resource_dict)
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
@@ -145,16 +145,16 @@ SDCMICRO_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu
 AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
 
 
-def _run_pii_check(resource_id, resource_name):
+def _run_pii_check(resource_dict):
     try:
-        munged_resource_name = munge.munge_filename(resource_name)
+        munged_resource_name = _get_resource_s3_path(resource_dict)
         r = requests.post(
             PII_RUN_URL,
             headers={
                 'Content-Type': 'application/json'
             },
             data=json.dumps({
-                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_id, resource_name=munged_resource_name),
+                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
             }))
         r.raise_for_status()
     except requests.exceptions.ConnectionError as ex:
@@ -166,14 +166,9 @@ def _run_pii_check(resource_id, resource_name):
     return True
 
 
-def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list= None, sheet=0):
+def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list=None, sheet=0):
     try:
-        download_url = resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")
-        if "download/" in download_url:
-            url = download_url.split("download/")[1]
-        else:
-            url = resource_dict.get("name")
-        munged_resource_name = munge.munge_filename(url)
+        munged_resource_name = _get_resource_s3_path(resource_dict)
         data_dict = {
             'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
             'sheet': sheet,
@@ -199,3 +194,13 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         log.error(ex)
         raise ex
     return True
+
+
+def _get_resource_s3_path(resource_dict):
+    download_url = resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")
+    if "download/" in download_url:
+        url = download_url.split("download/")[1]
+    else:
+        url = resource_dict.get("name")
+    munged_resource_name = munge.munge_filename(url)
+    return munged_resource_name
