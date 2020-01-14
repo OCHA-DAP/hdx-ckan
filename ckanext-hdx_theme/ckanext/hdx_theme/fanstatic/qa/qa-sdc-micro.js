@@ -171,7 +171,7 @@ function _loadData(resourceURL, sheet, data, resolve, reject) {
 function _loadSheet(el, sheet) {
   $('#qa-sdc-widget .nav .nav-item').removeClass('active');
   $(el).parent('.nav-item').addClass('active');
-  _sdcSettings.sheet = 0;
+  _sdcSettings.sheet = sheet;
   _renderHandsonTable(_sdcLoadedData.content[sheet]);
 }
 
@@ -217,12 +217,10 @@ function _onSaveSDCMicro(ev) {
     resource_id: _sdcSettings.resourceId,
     data_columns_list: dataColumnList,
     weight_column: _sdcSettings.weightColumn,
+    columns_type_list: _sdcSettings.types,
     sheet: _sdcSettings.sheet
   };
 
-  if (_sdcSettings.types.filter((value) => value !== 'text').length > 0) {
-    data.columns_type_list = _sdcSettings.types;
-  }
   $.post("/api/action/qa_sdcmicro_run", JSON.stringify(data))
     .done((result) => {
       if (result.success) {
