@@ -182,7 +182,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         if data_columns_list:
             data_dict['columnNames'] = '|'.join(map(str, data_columns_list))
         if weightColumn:
-            data_dict['weightColumn'] = weightColumn
+            data_dict['weightColumn'] = str(weightColumn)
         if columns_type_list:
             data_dict['columnTypes'] = '|'.join(map(str, columns_type_list))
         r = requests.post(
