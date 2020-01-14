@@ -9,11 +9,12 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 config = tk.config
 
 
-class TestQuarantine(hdx_test_base.HdxBaseTest):
+class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
 
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
     PACKAGE_ID = 'test_dataset_4_quarantine'
+    RESOURCE_ID = None
 
     @classmethod
     def _get_action(cls, action_name):
@@ -21,7 +22,7 @@ class TestQuarantine(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def setup_class(cls):
-        super(TestQuarantine, cls).setup_class()
+        super(TestPiiSdcMetafields, cls).setup_class()
         factories.User(name=cls.NORMAL_USER, email='quarantine_user@hdx.hdxtest.org')
         factories.Organization(
             name='org_name_4_quarantine',
@@ -58,28 +59,38 @@ class TestQuarantine(hdx_test_base.HdxBaseTest):
         }
 
         context = {'model': model, 'session': model.Session, 'user': cls.NORMAL_USER}
-        cls._get_action('package_create')(context, package)
+        dataset_dict = cls._get_action('package_create')(context, package)
+        cls.RESOURCE_ID = dataset_dict['resources'][0]['id']
 
     def test_normal_user_cannot_modify_quarantine(self):
-        package_dict = self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
-        resource_id = package_dict['resources'][0]['id']
-
-        package_dict = self._change_quarantine_flag(resource_id, True, self.SYSADMIN_USER)
+        package_dict = self._change_resource_field(self.RESOURCE_ID, 'in_quarantine', True, self.SYSADMIN_USER)
         assert package_dict['resources'][0]['in_quarantine'] is True
 
-        package_dict = self._change_quarantine_flag(resource_id, False, self.NORMAL_USER)
+        package_dict = self._change_resource_field(self.RESOURCE_ID, 'in_quarantine', False, self.NORMAL_USER)
         assert package_dict['resources'][0]['in_quarantine'] is True
 
-        package_dict = self._change_quarantine_flag(resource_id, False, self.SYSADMIN_USER)
+        package_dict = self._change_resource_field(self.RESOURCE_ID, 'in_quarantine', False, self.SYSADMIN_USER)
         assert package_dict['resources'][0]['in_quarantine'] is False
 
-    def _change_quarantine_flag(self, resource_id, in_quarantine, username):
+    def test_normal_user_cannot_modify_pii_timestamp(self):
+        date_str = '2019-09-01T17:30:50.883601'
+
+        package_dict = self._change_resource_field(self.RESOURCE_ID, 'pii_timestamp', date_str, self.SYSADMIN_USER)
+        assert package_dict['resources'][0]['pii_timestamp'] == date_str
+
+        package_dict = self._change_resource_field(self.RESOURCE_ID, 'pii_timestamp', '', self.NORMAL_USER)
+        assert package_dict['resources'][0]['pii_timestamp'] == date_str
+
+        package_dict = self._change_resource_field(self.RESOURCE_ID, 'pii_timestamp', '', self.SYSADMIN_USER)
+        assert not package_dict['resources'][0].get('pii_timestamp')
+
+    def _change_resource_field(self, resource_id, key, new_value, username):
         self._get_action('resource_patch')(
             {
                 'model': model, 'session': model.Session,
                 'user': username,
             },
-            {'id': resource_id, 'in_quarantine': in_quarantine}
+            {'id': resource_id, key: new_value}
         )
         return self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
 

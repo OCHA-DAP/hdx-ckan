@@ -7,7 +7,7 @@ from ckan.tests import factories
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 
-class TestSpecialFieldsInPkg(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestUpdatedByScript(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_updated_by_script(self):
         context = {'model': model, 'session': model.Session, 'user': 'editor_user'}

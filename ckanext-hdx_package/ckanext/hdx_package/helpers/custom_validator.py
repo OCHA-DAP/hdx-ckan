@@ -340,7 +340,7 @@ def reset_on_file_upload(key, data, errors, context):
         data.pop(key, None)
 
 
-def keep_prev_value_unless_sysadmin(key, data, errors, context):
+def hdx_resource_keep_prev_value_unless_sysadmin(key, data, errors, context):
     '''
     By default, this should inject the value from the previous version.
     The exception is if the user is a sysadmin, then the new value is used.
@@ -356,12 +356,13 @@ def keep_prev_value_unless_sysadmin(key, data, errors, context):
     if not allowed_to_change:
         data.pop(key, None)
         resource_id = data.get(key[:-1] + ('id',))
+        package_id = data.get(('id',))
         if resource_id:
             specific_key = key[2]
             context_key = 'resource_' + resource_id
             resource_dict = context.get(context_key)
             if not resource_dict:
-                resource_dict = get_action('resource_show')(context, {'id': resource_id})
+                resource_dict = __get_previous_resource_dict(context, package_id, resource_id)
                 context[context_key] = resource_dict
             if resource_dict:
                 old_value = resource_dict.get(specific_key)
@@ -372,7 +373,7 @@ def keep_prev_value_unless_sysadmin(key, data, errors, context):
         raise StopOnError
 
 
-def package_keep_prev_value_unless_sysadmin(key, data, errors, context):
+def hdx_package_keep_prev_value_unless_sysadmin(key, data, errors, context):
     '''
     By default, this should inject the value from the previous version.
     The exception is if the user is a sysadmin, then the new value is used.
@@ -388,7 +389,7 @@ def package_keep_prev_value_unless_sysadmin(key, data, errors, context):
         data.pop(key, None)
         pkg_id = data.get(('id',))
         if pkg_id:
-            pkg_dict = get_action('package_show')(context, {'id': pkg_id})
+            pkg_dict = __get_previous_package_dict(context, pkg_id)
             old_value = pkg_dict.get(key[0], None)
             if old_value is not None:
                 data[key] = old_value
@@ -402,7 +403,7 @@ def hdx_keep_prev_value_if_empty(key, data, errors, context):
         data.pop(key, None)
         pkg_id = data.get(('id',))
         if pkg_id:
-            prev_package_dict = __get_previous_package_dict(pkg_id, context)
+            prev_package_dict = __get_previous_package_dict(context, pkg_id)
             old_value = prev_package_dict.get(key[0], None)
             if old_value:
                 data[key] = old_value
@@ -414,7 +415,12 @@ def hdx_keep_prev_value_if_empty(key, data, errors, context):
         raise StopOnError
 
 
-def __get_previous_package_dict(id, context):
+def __get_previous_resource_dict(context, package_id, resource_id):
+    dataset_dict = __get_previous_package_dict(context, package_id)
+    return next((r for r in dataset_dict.get('resources', []) if r['id'] == resource_id), None)
+
+
+def __get_previous_package_dict(context, id):
     context_key = 'hdx_prev_package_dict_' + id
     pkg_dict = context.get(context_key)
     if not pkg_dict:
