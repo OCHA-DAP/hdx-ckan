@@ -30,9 +30,8 @@ function _contextMenu(settings) {
       const selectedCol = selection[0].start.col;
 
       if (key.startsWith('type:')) {
-        let value = key.slice(5);
-        // console.log(value);
-        _sdcSettings.types[selectedCol] = value;
+        _sdcSettings.types[selectedCol] = key.slice(5);
+        setTimeout(() => _updatedSdcHeader(), 0);
       }
     },
     items: {
@@ -93,6 +92,17 @@ function _contextMenu(settings) {
   }
 }
 
+function _updatedSdcHeader() {
+  const colHeader = _hot.getColHeader();
+  _hot.updateSettings({
+    nestedHeaders: [
+      colHeader,
+      _sdcSettings.types
+    ]
+  });
+  _hot.render();
+}
+
 function _renderHandsonTable(data) {
   const columnsNo = data[0].length;
   let selected = Array(columnsNo).fill(false);
@@ -121,6 +131,7 @@ function _renderHandsonTable(data) {
       }
     }
   });
+  _updatedSdcHeader();
 }
 
 function _initHandsonTable(datasetId, resourceId, data) {
