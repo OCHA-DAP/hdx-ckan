@@ -5,7 +5,8 @@
   position: absolute;
   bottom: 70px;
   left: 45px;
-  padding: 15px 20px;
+  width: 190px;
+  padding: 15px 25px;
   padding-top: 13px;
   background-color: rgba(255, 255, 255, 0.9);
   font-family: 'Source Sans Pro', sans-serif;
@@ -14,4 +15,11 @@
 }
 .eaa-logo-container img {
   width: 110px;
+}
+.eaa-logo-container .small {
+  margin-top: 10px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.3;
 }
