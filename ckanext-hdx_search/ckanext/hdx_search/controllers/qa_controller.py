@@ -134,7 +134,7 @@ class HDXQAController(HDXSearchController):
         new_datasets_query = generate_datetime_period_query('metadata_created', last_x_days=7)
         updated_datasets_query = generate_datetime_period_query('metadata_modified', last_x_days=7)
         delinquent_datasets_query = generate_datetime_period_query('delinquent_date')
-        updated_by_script_query = 'updated_by_script:[* TO *]'
+        updated_by_script_query = 'extras_updated_by_script:[* TO *]'
 
         facet_queries = search_data_dict.get('facet.query') or []
         facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, new_datasets_query))
