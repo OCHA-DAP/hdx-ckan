@@ -85,7 +85,7 @@ class HDXQAController(HDXSearchController):
             params = _encode_params(params)
             return url + u'?' + urlencode(params)
 
-        c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
+        c.full_facet_info = self._search(package_type, pager_url)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
         c.other_links['current_page_url'] = h.url_for('qa_dashboard')
