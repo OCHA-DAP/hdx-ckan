@@ -254,8 +254,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
-                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'),
-                                            tk.get_validator('ignore_missing')],
                 'in_quarantine': [
                     tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
                     tk.get_validator('boolean_validator'),
@@ -294,6 +292,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
+                ],
+                'dataset_preview_enabled': [
+                    tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'),
+                    tk.get_validator('ignore_missing')
+                ],
+                'broken_link': [
+                    tk.get_validator('hdx_delete_unless_allow_broken_link'),
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_boolean_string_converter')
                 ]
             }
         )
@@ -359,9 +366,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         })
         schema['resources'].update(
             {
-                'in_quarantine': [tk.get_validator('boolean_validator')]
+                'in_quarantine': [tk.get_validator('boolean_validator')],
+                'broken_link': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ]
             }
         )
+
         return schema
 
     def get_helpers(self):
@@ -412,6 +424,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
             'hdx_package_qa_checklist_update': hdx_update.package_qa_checklist_update,
             'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
+            'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource
         }
 
     # IValidators
@@ -433,7 +446,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_resource_keep_prev_value_unless_sysadmin': vd.hdx_resource_keep_prev_value_unless_sysadmin,
             'hdx_package_keep_prev_value_unless_sysadmin': vd.hdx_package_keep_prev_value_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,
-            'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty
+            'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
+            'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field')
         }
 
     def get_auth_functions(self):
