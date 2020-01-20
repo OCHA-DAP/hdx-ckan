@@ -202,7 +202,7 @@ function _populateResourcesTab(resourcesID, questions){
           <a class="heading" title="${res.name || res.description}">
             ${(res.name || res.description).slice(0,50)}
             <span class="format-label" property="dc:format" data-format="${res.format.toLowerCase() || 'data' }">${res.format}</span>
-            ${res.in_quarantine ? '<i style="color: red"> - in quarantine</i>' : ''}
+            ${res.in_quarantine ? '<i style="color: red"> under review</i>' : ''}
           </a>
           <div class="description">
             <span>${res.description}</span>
