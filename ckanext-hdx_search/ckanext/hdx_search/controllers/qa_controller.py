@@ -149,7 +149,7 @@ class HDXQAController(HDXSearchController):
         facets['qa_completed'] = 'QA completed'
         return facets
 
-    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras, total_count):
         super(HDXQAController, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
                                                                  search_extras)
 
@@ -171,7 +171,7 @@ class HDXQAController(HDXSearchController):
             self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
                                           item_list, search_extras)
 
-            self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
+            self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list, total_count)
 
     def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
         category_key = 'ext_' + item_name
@@ -183,7 +183,7 @@ class HDXQAController(HDXSearchController):
         item['selected'] = search_extras.get(category_key)
         qa_only_item_list.append(item)
 
-    def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
+    def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list, total_count):
         title_translations.pop('qa_completed', None)
 
         facet_data = existing_facets.pop('qa_completed', {})
@@ -197,9 +197,17 @@ class HDXQAController(HDXSearchController):
         qa_completed_item['display_name'] = 'QA Completed'
         qa_completed_item['name'] = '1'
         qa_completed_item['count'] = qa_completed_item.get('count', 0)
-        qa_completed_item['selected'] = search_extras.get(qa_category_key)
+        qa_completed_item['selected'] = search_extras.get(qa_category_key) == '1'
 
         qa_only_item_list.append(qa_completed_item)
+
+        qa_not_completed_item = {}
+        qa_not_completed_item['category_key'] = qa_category_key
+        qa_not_completed_item['display_name'] = 'QA Not Completed'
+        qa_not_completed_item['name'] = '0'
+        qa_not_completed_item['count'] = total_count - qa_completed_item['count']
+        qa_not_completed_item['selected'] = search_extras.get(qa_category_key) == '0'
+        qa_only_item_list.append(qa_not_completed_item)
 
     def _process_found_package_list(self, package_list):
 
