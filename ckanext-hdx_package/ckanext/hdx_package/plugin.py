@@ -366,11 +366,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         })
         schema['resources'].update(
             {
-                'in_quarantine': [tk.get_validator('boolean_validator')],
+                'in_quarantine': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
                 'broken_link': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
-                ]
+                ],
             }
         )
 
