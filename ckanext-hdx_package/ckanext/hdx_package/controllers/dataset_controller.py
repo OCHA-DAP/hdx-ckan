@@ -962,9 +962,9 @@ class DatasetController(PackageController):
         url = params[0][1]
         r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key=" + config.get('hdx.google.dev_key', ''),
                           data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
-        item = r.json()
 
         try:
+            item = r.json()
             short = item['id']
         except Exception as e:
             log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))
