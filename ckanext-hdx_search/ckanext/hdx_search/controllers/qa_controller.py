@@ -144,6 +144,7 @@ class HDXQAController(HDXSearchController):
         facet_queries.append('{{!key={} ex=batch}} {}'.format(BULK_DATASETS_FACET_NAME, updated_by_script_query))
         search_data_dict['facet.query'] = facet_queries
 
+        search_data_dict['facet.field'].append('res_extras_broken_link')
         search_data_dict['facet.field'].append('qa_completed')
         search_data_dict['f.qa_completed.facet.missing'] = 'true'
 
@@ -175,6 +176,7 @@ class HDXQAController(HDXSearchController):
                                           item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
+            self.__process_broken_link_facet(existing_facets, title_translations, search_extras, item_list)
 
     def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
         category_key = 'ext_' + item_name
@@ -214,6 +216,24 @@ class HDXQAController(HDXSearchController):
         qa_not_completed_item['count'] = qa_not_completed_count
         qa_not_completed_item['selected'] = search_extras.get(qa_category_key) == '0'
         qa_only_item_list.append(qa_not_completed_item)
+
+    def __process_broken_link_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
+        title_translations.pop('res_extras_broken_link', None)
+
+        facet_data = existing_facets.pop('res_extras_broken_link', {})
+        item = next(
+            (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
+            {}
+        )
+
+        qa_category_key = 'ext_broken_link'
+        item['category_key'] = qa_category_key
+        item['display_name'] = 'Broken links'
+        item['name'] = '1'
+        item['count'] = item.get('count', 0)
+        item['selected'] = search_extras.get(qa_category_key)
+
+        qa_only_item_list.append(item)
 
     def _process_found_package_list(self, package_list):
 

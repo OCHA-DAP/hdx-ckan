@@ -67,3 +67,20 @@ def package_patch(context, data_dict):
     '''
     process_skip_validation(context, data_dict)
     return _patch.package_patch(context, data_dict)
+
+
+def hdx_mark_broken_link_in_resource(context, data_dict):
+    '''
+    Does a resource patch to change the 'broken_link' to True. Also sets a field in the context so that the value
+    of the 'broken_link' field is kept. Otherwise it would be reset on validation.
+
+    :param id: the id of the resource
+    :type id: str
+    :return:
+    :rtype: dict
+    '''
+
+    data_dict['broken_link'] = True
+    context['allow_broken_link_field'] = True
+    context['batch_mode'] = 'KEEP_OLD'
+    return _get_action('resource_patch')(context, data_dict)
