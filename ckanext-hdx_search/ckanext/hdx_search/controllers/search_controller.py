@@ -657,7 +657,7 @@ class HDXSearchController(PackageController):
             'show_everything': True
         }
 
-        self._process_complex_facet_data(existing_facets, title_translations, result['facets'], search_extras, total_count)
+        self._process_complex_facet_data(existing_facets, title_translations, result['facets'], search_extras)
 
         for solr_category_key, category_title in title_translations.items():
             regex = r'\{[\s\S]*\}'
