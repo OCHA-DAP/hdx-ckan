@@ -12,6 +12,7 @@ import json
 
 from paste.deploy.converters import asbool
 from pylons import config
+from botocore.exceptions import ClientError
 
 import ckan.logic.schema
 import ckan.logic as logic
@@ -26,6 +27,7 @@ import ckan.lib.base as base
 import ckan.lib.helpers as h
 
 from ckan.lib import uploader
+from ckan.common import _, c
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
@@ -43,10 +45,12 @@ from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
 NotFound = ckan.logic.NotFound
+NotAuthorized = ckan.logic.NotAuthorized
 _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 base_abort = base.abort
+get_or_bust = logic.get_or_bust
 
 _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
@@ -898,3 +902,40 @@ def hdx_recommend_tags(context, data_dict):
 def hdx_test_recommend_tags(context, data_dict):
     tag_recommender = TagRecommenderTest(**data_dict)
     return tag_recommender.run_test()
+
+
+@logic.side_effect_free
+def hdx_get_s3_link_for_resource(context, data_dict):
+    resource_id = get_or_bust(data_dict, 'id')
+    context = {'model': model, 'session': model.Session,
+               'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+    # this does check_access('resource_show') so we don't need to do the check
+    res_dict = get_action('resource_show')(context, {'id': resource_id})
+
+    _check_access('hdx_resource_download', context, res_dict)
+
+    if res_dict.get('url_type') == 'upload':
+        upload = uploader.get_resource_uploader(res_dict)
+        bucket_name = config.get('ckanext.s3filestore.aws_bucket_name')
+        host_name = config.get('ckanext.s3filestore.host_name')
+        bucket = upload.get_s3_bucket(bucket_name)
+
+        filename = os.path.basename(res_dict['url'])
+        key_path = upload.get_path(res_dict['id'], filename)
+
+        try:
+            s3 = upload.get_s3_session()
+            client = s3.client(service_name='s3', endpoint_url=host_name)
+            url = client.generate_presigned_url(ClientMethod='get_object',
+                                                Params={'Bucket': bucket.name,
+                                                        'Key': key_path},
+                                                ExpiresIn=60)
+            return {'s3_url': url}
+
+        except ClientError as ex:
+            log.error(unicode(ex))
+            base_abort(404, _('Resource data not found'))
+
+    else:
+        return {'s3_url': res_dict.get('url')}

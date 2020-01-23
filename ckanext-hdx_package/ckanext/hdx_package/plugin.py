@@ -427,6 +427,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
             'hdx_package_qa_checklist_update': hdx_update.package_qa_checklist_update,
             'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
+            'hdx_get_s3_link_for_resource': hdx_get.hdx_get_s3_link_for_resource,
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource
         }
 
