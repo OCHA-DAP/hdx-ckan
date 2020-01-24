@@ -34,6 +34,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
+from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES
 
 log = logging.getLogger(__name__)
 
@@ -193,7 +194,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # default - no specific package type
         return []
 
+    def _remove_package_fields_from_schema(self, schema):
+        for property_name in UNWANTED_DATASET_PROPERTIES:
+            schema.pop(property_name, None)
+
     def _modify_package_schema(self, schema):
+
+        self._remove_package_fields_from_schema(schema)
 
         schema.update({
             # Notes == description. Makes description required
@@ -276,6 +283,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(HDXPackagePlugin, self).show_package_schema()
+
+        self._remove_package_fields_from_schema(schema)
 
         schema.update({
             # Notes == description. Makes description required
