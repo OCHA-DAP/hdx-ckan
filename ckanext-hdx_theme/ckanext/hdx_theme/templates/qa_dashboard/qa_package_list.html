@@ -2,7 +2,7 @@
 
 {% block search_list %}
   <div class="qa-dataset-list-head">
-    <input type="checkbox"> Select all
+    <input type="checkbox" onclick="updateQASelection(this)"> Select all
 
     <div class="more-options">
       <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
@@ -14,9 +14,6 @@
         </li>
         <li>
           <a href="#" onclick="bulkUpdateQAComplete(false)">Remove QA Completed</a>
-        </li>
-        <li>
-          <a href="#">Change to HDX Connect</a>
         </li>
       </ul>
     </div>

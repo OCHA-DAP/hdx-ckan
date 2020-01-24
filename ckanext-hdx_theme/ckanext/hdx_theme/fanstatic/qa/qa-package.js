@@ -57,6 +57,9 @@ function _getPackageResourceIdList(elementId) {
   return _getPackageResourceList(elementId).map((resource) => resource.id);
 }
 
+function updateQASelection(cb) {
+  $(".dataset-heading").find("input[type='checkbox']").prop('checked', cb.checked);
+}
 
 function updateQAComplete(package, flag) {
   _showLoading();
