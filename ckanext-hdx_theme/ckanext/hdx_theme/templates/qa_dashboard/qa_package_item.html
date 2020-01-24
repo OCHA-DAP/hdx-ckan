@@ -14,27 +14,27 @@
           <div id="package-resources-{{loop.index}}" class="package-resources" data-package-id="{{package.id}}" style="display: none;">{{h.json_dumps(package.resources)}}</div>
         </div>
         <div class="more-options">
-          <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+          <a href="" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
             <i class="humanitarianicons-More-options"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
             <li>
-              <a href="#" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
+              <a onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
             </li>
             <li>
-              <a href="#" onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>
+              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>
             </li>
             <li>
-              <a href="#" onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>
+              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>
             </li>
             <li>
-              <a href="#" onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
+              <a onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
             </li>
             <li>
-              <a href="#" onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
+              <a onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
             </li>
             <li>
-              <a href="#" onclick="{{macro.contributor_action(package, h, 'true')}}"
+              <a onclick="{{macro.contributor_action(package, h, 'true')}}"
                  id="contact-the-contributor">
                 <span>Contact the contributor</span>
               </a>

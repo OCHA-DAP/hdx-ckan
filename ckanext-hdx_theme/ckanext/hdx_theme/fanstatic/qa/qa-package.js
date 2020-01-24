@@ -57,6 +57,9 @@ function _getPackageResourceIdList(elementId) {
   return _getPackageResourceList(elementId).map((resource) => resource.id);
 }
 
+function updateQASelection(cb) {
+  $(".dataset-heading").find("input[type='checkbox']").prop('checked', cb.checked);
+}
 
 function updateQAComplete(package, flag) {
   _showLoading();
@@ -184,12 +187,22 @@ function bulkUpdateQAComplete(flag) {
     });
 }
 
+function qaPackageDetailsSelect(target) {
+  $('.qa-package-details').hide();
+  $('.qa-package-item.open').removeClass('open');
+  $(target).addClass('open');
+  let index = $(target).attr('data-index');
+  window.location.hash = `qa-pkg-idx-${index}`;
+  $(`#qa-package-details-${index}`).show();
+}
+
 $(document).ready(() => {
-  $(".qa-package-item").on("click", (ev) => {
-    $('.qa-package-details').hide();
-    $('.qa-package-item.open').removeClass('open');
-    $(ev.currentTarget).addClass('open');
-    let index = $(ev.currentTarget).attr('data-index');
-    $(`#qa-package-details-${index}`).show();
-  });
+  $(".qa-package-item").on("click", (ev) => qaPackageDetailsSelect(ev.currentTarget));
+  let hash = window.location.hash ? window.location.hash.substr(1):null;
+  let pkgIdx = (hash && hash.startsWith('qa-pkg-idx-')) ? hash.substr(11) : 1;
+  const target = `.qa-package-item[data-index=${pkgIdx}]`;
+  qaPackageDetailsSelect(target);
+  if (pkgIdx > 1) {
+    $(target)[0].scrollIntoView();
+  }
 });
