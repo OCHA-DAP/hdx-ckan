@@ -1,0 +1,25 @@
+{#
+Done widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/contribute/private-dataset-info.html', id="datasetPopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/done.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "Regarding private datasets" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+  <div class="notification-content notification-small">
+    <div>
+      Private datasets will be listed on your organisation page and will not be included in search
+      results or the data list page. Please make sure you are logged in to see them. Please also be aware
+      that any member in your organisation on HDX can view the organisation's private datasets.
+      <div style="text-align: right;"><a class="btn btn-primary">Close</a></div>
+    </div>
+  </div>
+{% endblock %}
