@@ -262,6 +262,16 @@ class HDXQAController(HDXSearchController):
                     r['qa_checklist_num'] = len(r['qa_checklist'])
                     package_dict['qa_checklist_num'] += r['qa_checklist_num']
                     r['qa_checklist_total_num'] = num_of_resource_questions
+                    r['qa_check_list_status'] = None \
+                        if package_dict['qa_checklist'].get('modified_date') is None \
+                        else 'OK' if r['qa_checklist_num'] == 0 \
+                        else 'ERROR'
+
+                # This needs to be set AFTER we've aggregated the statuses of the resources
+                package_dict['qa_check_list_status'] = \
+                    None if package_dict['qa_checklist'].get('modified_date') is None \
+                        else 'OK' if package_dict['qa_checklist_num'] == 0 \
+                        else 'ERROR'
 
     def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
 

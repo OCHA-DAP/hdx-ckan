@@ -56,10 +56,9 @@
         <span class="pii-title">
           CHECKLIST:
         </span>
-        {% set checklist_status = 'OK' if res.qa_checklist_num  == 0 else 'ERROR' %}
-        {% set checklist_status_text = 'OK' if checklist_status  == 'OK'
+        {% set checklist_status_text = 'OK' if res.qa_check_list_status  == 'OK'
             else res.qa_checklist_num ~ '/' ~ res.qa_checklist_total_num %}
-        {{ qa_macros.qa_check_item(checklist_status, checklist_status_text, pkg.qa_checklist.modified_date) }}
+        {{ qa_macros.qa_check_item(res.qa_check_list_status, checklist_status_text, pkg.qa_checklist.modified_date) }}
 
       </li>
     </ul>
