@@ -198,16 +198,28 @@ ckan.module('contribute_flow_main', function($, _) {
                         contributeGlobal.controlUserWaitingWidget(false);
                     }
                 },
+                'datasetWaitToValidateAndSave': function(data, status) {
+                  if (contributeGlobal.validateSucceeded(data, status)) {
+                    if (!contributeGlobal.resourceSaveReadyDeferred) {
+                      contributeGlobal.resourceSaveReadyDeferred = new $.Deferred();
+                    }
+                    contributeGlobal.resourceSaveReadyDeferred.resolve(data.data.id);
+                    contributeGlobal.resourceSaveReadyDeferred = null;
+                  }
+                },
                 'afterBodyFormSave': function (data, status, xhr) {
                     // Even if there are no errors we need to update the validation UI (hide previous errors)
                     contributeGlobal.updateValidationUi(data, status, xhr);
 
-                    if ( contributeGlobal.validateSucceeded(data, status) ) {
-                        if (!contributeGlobal.resourceSaveReadyDeferred) {
-                            contributeGlobal.resourceSaveReadyDeferred = new $.Deferred();
-                        }
-                        contributeGlobal.resourceSaveReadyDeferred.resolve(data.data.id);
-                        contributeGlobal.resourceSaveReadyDeferred = null;
+                    if (data.data.private) {
+                      $('#privateDatasetInfoPopup, #privateDatasetInfoPopup .close, #privateDatasetInfoPopup .btn-primary').click(function(ev) {
+                        let {data, status} = this;
+                        contributeGlobal.datasetWaitToValidateAndSave(data, status);
+                        $('#privateDatasetInfoPopup').hide();
+                      }.bind({data, status}));
+                      $('#privateDatasetInfoPopup').show();
+                    } else {
+                      contributeGlobal.datasetWaitToValidateAndSave(data, status);
                     }
                 },
                 'resourceSaveReadyDeferred': null,

@@ -33,6 +33,8 @@
 <script id="resource-list-json" type="application/json">{{h.escaped_dump_json(data.resources)|safe}}</script>
 {% endif %}
 
+{{ h.snippet('widget/contribute/private-dataset-info.html', id="privateDatasetInfoPopup") }}
+
 <div class="contribute-main" data-module="contribute_flow_main" {% if data.id  %} data-module-dataset_id="{{ data.id }}" {% endif %}>
     <div id="create-dataset-app">
         <div class="create-step1 ">
