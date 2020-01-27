@@ -201,10 +201,25 @@ function _generateTabs(data) {
   });
 }
 
+function _getS3ResourceURL(resourceId, resolve, reject) {
+  $.get(`/api/action/hdx_get_s3_link_for_resource?id=${resourceId}`)
+    .done((data) => {
+      console.log(data);
+      resolve(data.result.s3_url);
+    })
+    .fail((error) => {
+      reject(error);
+    });
+}
+
 function _loadResourcePreviewData(datasetId, resourceId, resourceURL) {
   const emptyData = {content: [], sheets: 0};
-  let promise = new Promise((resolve, reject) => _loadData(resourceURL, 0, emptyData, resolve, reject));
+
+  let promise = new Promise((resolve, reject) => _getS3ResourceURL(resourceId, resolve, reject));
   promise
+    .then((url) => {
+      return new Promise((resolve, reject) => _loadData(url, 0, emptyData, resolve, reject));
+    })
     .then((data) => {
       _sdcLoadedData = data;
       _generateTabs(_sdcLoadedData);
