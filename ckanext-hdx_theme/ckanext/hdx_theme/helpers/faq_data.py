@@ -139,13 +139,23 @@ organizations = {
         },
         {
             'q': 'I\'m an organisation admin. How do I add/remove members?',
-            'a': '<p>Please be aware that anyone added to your organisation on HDX can view the organisation\'s '
-                 'private datasets.</p>'
-                 'If you can confirm that this user works for your organisation (ie. by using a company directory) or '
-                 'is in your trusted network, then you may approve the request. If you cannot verify who the user is, '
+            'a': '<p>Organisation admins can invite new members, remove existing members or change their roles from '
+                 'the \'Members\' tab on organisation page.</p>'
+                 '<p>Registered users can also initiate a request to join your organisation during the signup process '
+                 'or '
+                 'later on from your organisation page(if you want to disable this option, read '
+                 '<a href="https://data.humdata.org/faq#auto-faq-Organisations-I_am_an_organisation_admin__I_don_t_'
+                 'want_anyone_to_request_membership_and_want_to_manually_add_remove_members_-q">'
+                 'I am an organisation admin. I don\'t want anyone to request membership and want to '
+                 'manually add/remove members.</a> ). </p>'
+                 'Membership requests are sent to your email and also added as a notification on HDX. If you '
+                 'can confirm that the user works for your organisation (ie. by using a company directory) or is in '
+                 'your trusted network, then you may approve the request. If you cannot verify who the user is, '
                  'you should decline the request. Please do not approve membership requests for people outside your '
                  'organisation or working group. For full details on managing members, please read '
-                 '<a target="_blank" href="https://gdoc.pub/doc/e/2PACX-1vQejxquqVxklpAO59KOwTPzwMIsXajezwWO-LZkkEp20j_Jbid4SigA1PtGhf64VGNBs67wcKgq75pd">this document</a>.',
+                 '<a target="_blank" href="https://gdoc.pub/doc/e/2PACX-1vQejxquqVxklpAO59KOwTPzwMIsXajezwWO-LZkkEp20j_Jbid4SigA1PtGhf64VGNBs67wcKgq75pd">this document</a>. '
+                 'Please be aware that anyone added to your organisation on HDX can view the organisation\'s private '
+                 'datasets. ',
         },
         {
             'q': 'I am an organisation admin. I don\'t want anyone to request membership and want to manually '
