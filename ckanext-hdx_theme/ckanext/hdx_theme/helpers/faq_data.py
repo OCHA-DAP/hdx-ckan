@@ -109,14 +109,18 @@ organizations = {
             'a': 'You can request an organisation through the \'Add Data\' button. We ask you to submit the following '
                  'information: an organisation name, description and link to an organisation-related website (optional). '
                  'We review this information and then either accept the request or ask for more information, such as a '
-                 'sample dataset.',
+                 'sample dataset. Approved organisations will remain inactive and not displayed under \'Organisations\' '
+                 'page until at least one dataset has been shared through HDX.',
         },
         {
             'q': 'How do I request organisation membership?',
-            'a': 'Registered users can request membership through the organisation\'s profile page. Click on the '
-                 '\'Request Membership\' button and a request will be sent to the organisation\'s administrator(s). '
-                 'The requestor can not specify the role (i.e., admin, editor or member). Instead, the person receiving '
-                 'the request assigns the role.',
+            'a': 'Registered users have an option to join an organisation during signup. You can also request '
+                 'membership through the organisation\'s page. Please keep in mind that you need to work for the '
+                 'organisation in order to click on the \'Request Membership\' button and a request will be sent to '
+                 'the organisation\'s administrator(s). The requestor can not specify the role (i.e., admin, editor '
+                 'or member). Instead, the person receiving the request assigns the role. If you do not see this '
+                 'option displayed on organisation page, the organisation is a closed group and is not accepting '
+                 'new members.',
         },
         {
             'q': 'How does organisation membership work?',
@@ -135,9 +139,34 @@ organizations = {
         },
         {
             'q': 'I\'m an organisation admin. How do I add/remove members?',
-            'a': '<p>Please be aware that anyone added to your organisation on HDX can view the organisation\'s private datasets.</p>'
-                 'If you can confirm that this user works for your organisation or is in your trusted network, then you may approve the request. If you cannot verify who the user is, you should decline the request. Please do not approve membership requests for people outside your organisation or working group. For full details on managing members, please read '
-                 '<a target="_blank" href="http://drive.google.com/open?id=1MR3_pVVCwxqZV2RVYKBYpQom1K0yuO866_VwltSa1vM">this document</a>.',
+            'a': '<p>Organisation admins can invite new members, remove existing members or change their roles from '
+                 'the \'Members\' tab on organisation page.</p>'
+                 '<p>Registered users can also initiate a request to join your organisation during the signup process '
+                 'or '
+                 'later on from your organisation page(if you want to disable this option, read the question below'
+                 '<a href="https://data.humdata.org/faq#auto-faq-Organisations-I_am_an_organisation_admin__I_don_t_'
+                 'want_anyone_to_request_membership_and_want_to_manually_add_remove_members_-q">\''
+                 'I am an organisation admin. I don\'t want anyone to request membership and want to '
+                 'manually add/remove members.\'</a>). </p>'
+                 'Membership requests are sent to your email and also added as a notification on HDX. If you '
+                 'can confirm that the user works for your organisation (ie. by using a company directory) or is in '
+                 'your trusted network, then you may approve the request. If you cannot verify who the user is, '
+                 'you should decline the request. Please do not approve membership requests for people outside your '
+                 'organisation or working group. For full details on managing members, please read '
+                 '<a target="_blank" href="https://gdoc.pub/doc/e/2PACX-1vQejxquqVxklpAO59KOwTPzwMIsXajezwWO-LZkkEp20j_Jbid4SigA1PtGhf64VGNBs67wcKgq75pd">this document</a>. '
+                 'Please be aware that anyone added to your organisation on HDX can view the organisation\'s private '
+                 'datasets. ',
+        },
+        {
+            'q': 'I am an organisation admin. I don\'t want anyone to request membership and want to manually '
+                 'add/remove members.',
+            'a': 'Organisation admins have the option to make the organisation an open or closed group. '
+                 'By default, all organisations are an open group to allow new users to request membership. '
+                 'If you don\'t want to allow any member to join your organisation, you can turn off '
+                 'the \'Allow members\' checkbox under \'Edit organisation page\'. This will make your organization '
+                 'a closed group with existing members. No new member will be able to send a request to join your '
+                 'organization on HDX. The admin(s) of your organization can still manually invite new members, '
+                 'remove existing members or change their roles from the \'Members\' tab.',
         },
         {
             'q': 'Can I be part of more than one organisation?',
@@ -197,19 +226,29 @@ sharing_data = {
             'q': 'How do I share data on HDX?',
             'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with '
                  'appropriate privileges) before you can contribute data. If you have data to share, you can either '
-                 'request to create a new organisation or ask to join an existing one. (See the <a href="#body-faq-Organisations">Organisations section</a> above.)'
+                 'request to create a new organisation or ask to join an existing one. '
+                 '(See the <a href="#body-faq-Organisations">Organisations section</a> above.)'
                  '<br/><br/>'
                  'There are three ways to share data on HDX: '
                  '<br/><br/>'
-                 'Public - Data shared publicly is accessible to all users of the HDX platform, whether or not they are '
-                 'registered. All public data must be shared under an appropriate license. Select the \'public\' setting in the '
+                 'Public - Data shared publicly is accessible to all users of the HDX platform,'
+                 ' whether or not they are '
+                 'registered. All public data must be shared under an appropriate license. Select the \'public\' '
+                 'setting in the '
                  'metadata field when uploading data. '
                  '<br/><br/>'
-                 'Private - Organisations can share data privately with their members. The administrator of each organisation '
-                 'controls who can become a member. The default visibility is set to \'private\' when uploading new data. '
-                 'To make data accessible to HDX users, the contributing organisation needs to change the visibility to public. '
+                 'Private - Organisations can share data privately with their members. '
+                 'The administrator of each organisation '
+                 'controls who can become a member. The default visibility is set to \'private\' when uploading new '
+                 'data. '
+                 'Once shared, private datasets are only listed on your organisation page (make sure you are logged in '
+                 'to see them). They will not be included in search results or the '
+                 '<a href="https://data.humdata.org/dataset">data list</a> page.'
+                 'To make data accessible to HDX users, the contributing organisation '
+                 'needs to change the visibility to public. '
                  '<br/><br/>'
-                 'By Request - Organisations can share the metadata of a dataset and grant access to the underlying data when requested by a registered user. '
+                 'By Request - Organisations can share the metadata of a dataset and grant access to the underlying '
+                 'data when requested by a registered user. '
                  ' See how to share and request metadata only datasets through '
                  '<a class="link faq-google-embed-marker" id="faq-google-embed-link-hdx-connect-2">these walkthrough slides</a>.'
                  ''
@@ -240,7 +279,9 @@ sharing_data = {
                  '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vRP0LWovuIaa-sMwZwm8rATZhAO7ahq2IvO3zvHtZxFiQ_r438s8VLvfVraNmit642ETm8uZlC02I6I/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
                  'provide a walkthrough of how to add a dataset. Here are more details on the '
-                 '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field.',
+                 '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field. '
+                 'General information about all the metadata options in HDX is available in our '
+                 '<a href="https://centre.humdata.org/providing-metadata-for-your-datasets-on-hdx/" target="_blank">Guide to Metadata</a>.',
         },
         {
             'q': 'Can I just share metadata?',
@@ -568,8 +609,14 @@ search = {
                  'our <a target="_blank" href="https://centre.humdata.org/introducing-the-hdx-data-grid-a-way-to-find-and-fill-data-gaps/">blog post</a> '
                  'about it.'
                  '<br/><br/>'
-                 'Data Grid is not available for all countries.  Here is an <a target="_blank" href="https://data.humdata.org/group/som">example</a>.  '
-                 'Click the "expand" button under "Data Completeness" to see the Data Grid.'
+                 'Data Grid is not available for all countries.  '
+                 'Here is an <a target="_blank" href="https://data.humdata.org/group/som">example</a>.  '
+        },
+        {
+            'q': 'I shared a private dataset but cannot find it.',
+            'a': 'Private datasets are only listed on your organisation page and will not be included in search '
+                 'results or the <a href="https://data.humdata.org/dataset" target="_blank">data list</a> page. '
+                 'Please make sure you are logged in to see them.'
         }
     ]
 }

@@ -349,6 +349,20 @@ def hdx_keep_prev_value_if_empty(key, data, errors, context):
         raise StopOnError
 
 
+def hdx_delete_unless_field_in_context(context_field):
+    '''
+    :param context_field: the field in the context which tells us if it's ok to allow the value through
+    :type context_field: str
+    :return:
+    :rtype: function
+    '''
+    def hdx_delete_unless_forced(key, data, errors, context):
+        if not context.get(context_field):
+            data.pop(key, None)
+
+    return hdx_delete_unless_forced
+
+
 def __get_previous_package_dict(id, context):
     context_key = 'hdx_prev_package_dict_' + id
     pkg_dict = context.get(context_key)

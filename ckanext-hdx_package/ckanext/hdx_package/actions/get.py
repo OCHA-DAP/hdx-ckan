@@ -375,6 +375,8 @@ def package_search(context, data_dict):
     _process_facet_queries(restructured_facets, facet_queries)
     search_results['facet_queries'] = facet_queries
 
+    _remove_unwanted_dataset_properties(search_results.get('results'))
+
     return search_results
 
 
@@ -450,6 +452,12 @@ def _generate_facet_queries_list(query_dict):
             'display_name': key
         }
     for key, value in query_dict.items()]
+
+
+def _remove_unwanted_dataset_properties(dataset_list):
+    if dataset_list:
+        for dataset_dict in dataset_list:
+            dataset_dict.pop('maintainer_email', None)
 
 
 @logic.side_effect_free

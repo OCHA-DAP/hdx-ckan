@@ -35,7 +35,6 @@ class TestHDXPackageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                    'session': model.Session,
                    'user': 'testsysadmin'}
 
-        package = self._get_action('package_show')(context, {'id': 'test_dataset_1'})
 
         # Testing access to the dataset API, to check if maintainer is displayed
         # tests.call_action_api(self.app, 'package_show', id='test_private_dataset_1', status=403)
@@ -46,4 +45,8 @@ class TestHDXPackageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         result = tests.call_action_api(self.app, 'package_show', id='test_dataset_1', apikey=johndoe1.apikey, status=200)
         assert 'maintainer_email' in str(result)
         result = tests.call_action_api(self.app, 'package_show', id='test_dataset_1', status=200)
+        assert 'maintainer_email' not in str(result)
+
+        result = tests.call_action_api(self.app, 'package_search', apikey=testsysadmin.apikey, status=200,
+                                       q='*:*', fq='name:test_dataset_1')
         assert 'maintainer_email' not in str(result)

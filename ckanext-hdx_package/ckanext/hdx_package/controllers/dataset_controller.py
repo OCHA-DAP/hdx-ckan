@@ -9,11 +9,11 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
+from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
-from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_theme.util.mail import simple_validate_email
 from pylons import config
 
 import ckan.authz as authz
@@ -974,9 +974,9 @@ class DatasetController(PackageController):
         url = params[0][1]
         r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key=" + config.get('hdx.google.dev_key', ''),
                           data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
-        item = r.json()
 
         try:
+            item = r.json()
             short = item['id']
         except Exception as e:
             log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))

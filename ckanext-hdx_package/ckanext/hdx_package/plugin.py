@@ -34,6 +34,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
+from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES
 
 log = logging.getLogger(__name__)
 
@@ -193,7 +194,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # default - no specific package type
         return []
 
+    def _remove_package_fields_from_schema(self, schema):
+        for property_name in UNWANTED_DATASET_PROPERTIES:
+            schema.pop(property_name, None)
+
     def _modify_package_schema(self, schema):
+
+        self._remove_package_fields_from_schema(schema)
 
         schema.update({
             # Notes == description. Makes description required
@@ -250,7 +257,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
-                'dataset_preview_enabled': [tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'), tk.get_validator('ignore_missing')]
+                'dataset_preview_enabled': [
+                    tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'),
+                    tk.get_validator('ignore_missing')
+                ],
+                'broken_link': [
+                    tk.get_validator('hdx_delete_unless_allow_broken_link'),
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_boolean_string_converter')
+                ]
             }
         )
 
@@ -268,6 +283,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(HDXPackagePlugin, self).show_package_schema()
+
+        self._remove_package_fields_from_schema(schema)
 
         schema.update({
             # Notes == description. Makes description required
@@ -311,6 +328,16 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'overdue_date': [tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
+
+        schema['resources'].update(
+            {
+                'broken_link': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ]
+            }
+        )
+
         return schema
 
     def get_helpers(self):
@@ -358,7 +385,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
             'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list,
             # 'hdx_test_recommend_tags': hdx_get.hdx_test_recommend_tags,
-            'hdx_recommend_tags': hdx_get.hdx_recommend_tags
+            'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
+            'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource
         }
 
     # IValidators
@@ -377,7 +405,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_is_url':  vd.hdx_is_url,
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
-            'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty
+            'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
+            'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field')
         }
 
     def get_auth_functions(self):
