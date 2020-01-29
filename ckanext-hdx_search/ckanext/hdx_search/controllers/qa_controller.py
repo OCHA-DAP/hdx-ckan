@@ -64,6 +64,10 @@ def _encode_params(params):
 
 class HDXQAController(HDXSearchController):
     def search(self):
+        qa_dashboard_enabled = config.get('hdx.qadashboard.enabled', 'true')
+        if qa_dashboard_enabled == 'false':
+            abort(404, _('Not authorized to see this page'))
+
         try:
             context = {'model': model, 'user': c.user or c.author,
                        'auth_user_obj': c.userobj}
