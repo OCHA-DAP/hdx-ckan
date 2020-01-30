@@ -123,6 +123,9 @@ hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 # AWS api echo endpoint
 hdx.echo_url = https://${AWS_ECHO_API_URL}
 
+# QA dashboard
+qa.dashboard.enabled = ${HDX_QA_DASHBOARD}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext
