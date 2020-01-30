@@ -10,7 +10,6 @@ cd /srv/ckan
 [ -z "$NEW_RELIC_ENABLED"      ] && export NEW_RELIC_ENABLED=false
 [ -z "$NEW_RELIC_LICENSE_KEY"  ] && export NEW_RELIC_LICENSE_KEY="LICENSE"
 [ -z "$NEW_RELIC_LOG"          ] && export NEW_RELIC_LOG=false
-[ -z "$HDX_QA_DASHBOARD"       ] && export HDX_QA_DASHBOARD=false
 
 [ -z "HDX_ANALYTICS_TRACK_API" ]                    && export HDX_ANALYTICS_TRACK_API=false
 [ -z "HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS" ]   && export HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS=

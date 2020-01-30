@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# disable qa_dashboard by default
+export HDX_QA_DASHBOARD=${HDX_QA_DASHBOARD:-false}
+
 # trigger s3 config generate if needed
 S3_GENERATE='no'
 if [ ! -f /etc/ckan/prod.ini ]; then
