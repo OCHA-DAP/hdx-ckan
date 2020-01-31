@@ -124,7 +124,7 @@ hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 hdx.echo_url = https://${AWS_ECHO_API_URL}
 
 # QA dashboard
-qa.dashboard.enabled = ${HDX_QA_DASHBOARD}
+hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
 ## Logging configuration
 [loggers]
