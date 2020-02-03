@@ -49,6 +49,7 @@ def resource_update(context, data_dict):
     # make the update faster (less computation in the custom package_show)
     context['no_compute_extra_hdx_show_properties'] = True
     data_dict['size'] = request.content_length
+    data_dict['mimetype'] = request.files['upload'].mimetype
 
     prev_resource_dict = _fetch_prev_resource_info(context['model'], data_dict)
     prev_resource_is_upload = prev_resource_dict.get('url_type') == 'upload'

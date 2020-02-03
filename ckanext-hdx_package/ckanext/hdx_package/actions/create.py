@@ -45,6 +45,7 @@ def resource_create(context, data_dict):
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
     data_dict['size'] = request.content_length
+    data_dict['mimetype'] = request.files['upload'].mimetype
 
     result_dict = core_create.resource_create(context, data_dict)
     return result_dict
