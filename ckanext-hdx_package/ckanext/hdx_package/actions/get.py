@@ -4,43 +4,40 @@ Created on Sep 02, 2015
 @author: alexandru-m-g
 '''
 
+import json
+import logging
 import os
+
+import ckanext.hdx_package.helpers.caching as pkg_caching
+import ckanext.hdx_package.helpers.freshness_calculator as freshness
+import ckanext.hdx_package.helpers.helpers as helpers
+import ckanext.hdx_theme.util.jql as jql
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import dateutil.parser
 import sqlalchemy
-import logging
-import json
-
-from paste.deploy.converters import asbool
-from pylons import config
 from botocore.exceptions import ClientError
-
-import ckan.logic.schema
-import ckan.logic as logic
-import ckan.model as model
-import ckan.plugins as plugins
-import ckan.lib.navl.dictization_functions
-import ckan.lib.search as search
-import ckan.logic.action.get as logic_get
-import ckan.lib.plugins as lib_plugins
-import ckan.authz as authz
-import ckan.lib.base as base
-import ckan.lib.helpers as h
-
-from ckan.lib import uploader
-from ckan.common import _, c
-
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckanext.hdx_theme.util.jql as jql
-import ckanext.hdx_package.helpers.helpers as helpers
-import ckanext.hdx_package.helpers.freshness_calculator as freshness
-import ckanext.hdx_package.helpers.caching as pkg_caching
-
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
+from paste.deploy.converters import asbool
+from pylons import config
+
+import ckan.authz as authz
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.lib.navl.dictization_functions
+import ckan.lib.plugins as lib_plugins
+import ckan.lib.search as search
+import ckan.logic as logic
+import ckan.logic.action.get as logic_get
+import ckan.logic.schema
+import ckan.model as model
+import ckan.plugins as plugins
+from ckan.common import _, c
+from ckan.lib import uploader
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -472,8 +469,8 @@ def resource_show(context, data_dict):
 
 
 def _additional_hdx_resource_show_processing(context, resource_dict):
-    if _should_manually_load_property_value(context, resource_dict, 'size'):
-        resource_dict['size'] = _get_resource_filesize(resource_dict)
+    # if _should_manually_load_property_value(context, resource_dict, 'size'):
+    #     resource_dict['size'] = _get_resource_filesize(resource_dict)
     if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
         resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
     if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
