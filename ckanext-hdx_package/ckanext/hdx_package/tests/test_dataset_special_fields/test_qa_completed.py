@@ -7,7 +7,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 config = tk.config
-
+NotAuthorized = tk.NotAuthorized
 
 class TestQACompleted(hdx_test_base.HdxBaseTest):
 
@@ -36,9 +36,9 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
             org_url='https://hdx.hdxtest.org/'
         )
         cls.create_packages_by_user(cls.PACKAGE_ID, cls.NORMAL_USER)
-        cls.create_packages_by_user(cls.PACKAGE_ID_2, cls.NORMAL_USER, "true")
+        cls.create_packages_by_user(cls.PACKAGE_ID_2, cls.NORMAL_USER, True)
         cls.create_packages_by_user(cls.PACKAGE_ID_3, cls.SYSADMIN_USER)
-        cls.create_packages_by_user(cls.PACKAGE_ID_4, cls.SYSADMIN_USER, "true")
+        cls.create_packages_by_user(cls.PACKAGE_ID_4, cls.SYSADMIN_USER, True)
 
     @classmethod
     def create_packages_by_user(cls, pkg_id, user, qa_completed=None):
@@ -71,7 +71,11 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         context = {'model': model, 'session': model.Session, 'user':user}
         cls._get_action('package_create')(context, package)
 
-    def test_modify_qa_completed(self):
+    def test_qa_completed_not_on_dataset_creation(self):
+        '''
+        Tests that qa_completed cannot be set on dataset creation / package_create()
+        '''
+
         package_dict = self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
         package_dict_2 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_2})
         package_dict_3 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_3})
@@ -80,26 +84,52 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
         assert "qa_completed" in package_dict_2 and package_dict_2.get("qa_completed") is False
         assert "qa_completed" in package_dict_3 and package_dict_3.get("qa_completed") is False
-        assert "qa_completed" in package_dict_4 and package_dict_4.get("qa_completed") is True
+        assert "qa_completed" in package_dict_4 and package_dict_4.get("qa_completed") is False
 
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID, "True", self.NORMAL_USER)
+    def test_qa_completed_not_on_dataset_update(self):
+        '''
+        Tests that qa_completed cannot be set on dataset creation / package_create()
+        '''
+
+        # qa_completed field cannot be set via normal package_patch / package_update
+        package_dict = self._package_patch_qa_completed_flag(self.PACKAGE_ID, True, self.NORMAL_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID, "True", self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
-
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID_3, "True", self.NORMAL_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID_3, "True", self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
-
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID_4, None, self.NORMAL_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID_4, None, self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
-        package_dict = self._patch_qa_completed_flag(self.PACKAGE_ID_4, False, self.SYSADMIN_USER)
+        package_dict = self._package_patch_qa_completed_flag(self.PACKAGE_ID, True, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
-    def _patch_qa_completed_flag(self, package_id, qa_completed, user):
+    def test_qa_completed_on_hdx_mark_qa_completed(self):
+        '''
+        Tests that qa_completed can be changed via hdx_mark_qa_completed() only by sysadmin
+        But gets reset when any user changes the dataset.
+        '''
+        try:
+            self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_2, True, self.NORMAL_USER)
+            assert False
+        except NotAuthorized as e:
+            assert True
+        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_2, True, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+        package_dict = self._change_description_of_package(self.PACKAGE_ID_2, self.NORMAL_USER)
+        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
+
+        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_3, True, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+        package_dict = self._change_description_of_package(self.PACKAGE_ID_3, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
+
+
+    def test_qa_completed_reset_via_hdx_mark_qa_completed(self):
+        '''
+        Tests that qa_completed can be reset via hdx_mark_qa_completed() only by sysadmin
+        '''
+
+        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_4, True, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+
+        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_4, False, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
+
+    def _package_patch_qa_completed_flag(self, package_id, qa_completed, user):
         context = {
             'model': model,
             'session': model.Session,
@@ -112,3 +142,11 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
             pkg_dict["qa_completed"] = qa_completed
         self._get_action('package_patch')(context, pkg_dict)
         return self._get_action('package_show')({}, {'id': package_id})
+
+    def _change_description_of_package(self, package_id, user):
+        context = {'model': model, 'session': model.Session, 'user': user}
+        return self._get_action('package_patch')(context, {'id': package_id, 'notes': 'modified for qa completed'})
+
+    def _hdx_mark_qa_completed_flag(self, package_id, qa_completed, user):
+        context = {'model': model, 'session': model.Session, 'user': user}
+        return self._get_action('hdx_mark_qa_completed')(context, {'id': package_id, 'qa_completed': qa_completed})

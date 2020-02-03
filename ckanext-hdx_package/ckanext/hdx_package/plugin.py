@@ -247,7 +247,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                             tk.get_validator('isodate'),
                             tk.get_validator('hdx_isodate_to_string_converter'),
                             tk.get_converter('convert_to_extras')],
-            'qa_completed': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
+            'qa_completed': [tk.get_validator('hdx_reset_unless_allow_qa_completed'),
+                             tk.get_validator('ignore_missing'),
+                             tk.get_validator('hdx_boolean_string_converter'),
                              tk.get_converter('convert_to_extras')],
             'qa_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
                             tk.get_converter('convert_to_extras')],
@@ -437,7 +439,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_package_qa_checklist_update': hdx_update.package_qa_checklist_update,
             'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
             'hdx_get_s3_link_for_resource': hdx_get.hdx_get_s3_link_for_resource,
-            'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource
+            'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
+            'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed
         }
 
     # IValidators
@@ -460,7 +463,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_package_keep_prev_value_unless_sysadmin': vd.hdx_package_keep_prev_value_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,
             'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
-            'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field')
+            'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field'),
+            'hdx_reset_unless_allow_qa_completed': vd.hdx_delete_unless_field_in_context('allow_qa_completed_field')
         }
 
     def get_auth_functions(self):
@@ -470,7 +474,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
                 'hdx_send_mail_members': authorize.hdx_send_mail_members,
                 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
-                'hdx_resource_download': authorize.hdx_resource_download
+                'hdx_resource_download': authorize.hdx_resource_download,
+                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed
                 }
 
     def make_middleware(self, app, config):

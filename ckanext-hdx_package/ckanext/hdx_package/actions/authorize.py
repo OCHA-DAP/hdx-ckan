@@ -96,3 +96,10 @@ def hdx_resource_download(context, resource_dict):
     if resource_dict.get('in_quarantine', False):
         return {'success': False, 'msg': _('Only sysadmins can download quarantined resources')}
     return {'success': True}
+
+
+def hdx_mark_qa_completed(context, data_dict=None):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return {'success': False, 'msg': _('Only sysadmins can change the qa_completed flag')}

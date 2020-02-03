@@ -34,7 +34,7 @@ function _updateQAComplete(package, flag) {
     "qa_completed": flag,
   };
   let promise = new Promise((resolve, reject) => {
-    $.post('/api/action/package_patch', body)
+    $.post('/api/action/hdx_mark_qa_completed', body)
       .done((result) => {
         if (result.success){
           resolve(result);

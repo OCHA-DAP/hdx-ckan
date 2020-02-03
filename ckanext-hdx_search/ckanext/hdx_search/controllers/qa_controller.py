@@ -93,9 +93,9 @@ class HDXQAController(HDXSearchController):
 
         c.cps_off = config.get('hdx.cps.off', 'false')
         c.other_links['current_page_url'] = h.url_for('qa_dashboard')
-        query_string = request.params.get('q', u'')
-        if c.userobj and query_string:
-            search_history.store_search(query_string, c.userobj.id)
+        # query_string = request.params.get('q', u'')
+        # if c.userobj and query_string:
+        #     search_history.store_search(query_string, c.userobj.id)
 
         # If we're only interested in the facet numbers a json will be returned with the numbers
         if self._is_facet_only_request():
