@@ -20,7 +20,7 @@
     <span class="format-filesize-label">({{ h.filesize_format(res.Size) }})</span>
     {% endif %}
     {% if res.in_quarantine %}
-      <i style="color: red"> under review</i>
+      <a href="/faq" class="under-review">[ under review ]</a>
     {% endif %}
     {# {% if res.tracking_summary %}
       {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}

@@ -813,6 +813,13 @@ ul.dataset-resources li + li.label-icons {
   top: 10px;
   left: 10px;
 }
+.resource-item .under-review {
+  color: #f2645a;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+}
 .format-label {
   display: inline-block;
   vertical-align: text-bottom;
