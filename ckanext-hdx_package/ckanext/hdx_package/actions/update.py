@@ -5,21 +5,23 @@ Created on Jul 07, 2015
 '''
 
 import datetime
-import logging
 import json
+import logging
+
+import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.helpers as helpers
+from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
+from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
+    BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
+from ckanext.hdx_package.helpers.file_removal import file_remove
+from flask import request
 
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.plugins as lib_plugins
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_package.helpers.geopreview as geopreview
-import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
-from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED,\
-    BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
-from ckanext.hdx_package.helpers.file_removal import file_remove
-from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
 _check_access = tk.check_access
 _get_action = tk.get_action
@@ -55,12 +57,17 @@ def resource_update(context, data_dict):
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
+    else:
+        data_dict['size'] = request.content_length
+        data_dict['mimetype'] = request.files['upload'].mimetype
+
     if data_dict.get('datastore_active', 'false') in ('false', 'False'):
         data_dict['datastore_active'] = False
     else:
         if data_dict.get('datastore_active', 'true') in ('true', 'True'):
             data_dict['datastore_active'] = True
     result_dict = core_update.resource_update(context, data_dict)
+
 
     new_resource_is_api = result_dict.get('url_type') == 'api'
     new_file_has_same_name = result_dict.get('name') == prev_resource_dict['name']
