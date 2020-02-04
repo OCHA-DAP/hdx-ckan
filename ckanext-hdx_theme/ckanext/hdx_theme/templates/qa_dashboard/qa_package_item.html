@@ -1,0 +1,84 @@
+{% extends  "search/snippets/package_item.html" %}
+{% import 'package/snippets/base_actions_macros.html' as macro %}
+{% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
+
+{% block package_item_content %}
+  {% resource 'hdx_theme/qa-package' %}
+  {% resource 'hdx_theme/onboarding' %}
+    <div class="dataset-content2 qa-package-item" data-index="{{loop.index}}">
+      <div class="dataset-top">
+        <div class="dataset-heading">
+          <input type="checkbox" />
+          {% set title = package.title or package.name %}
+          {{ h.link_to(title, h.url_for(controller='package', action='read', id=package.name), class_='dataset-page-link') }}
+          <div id="package-resources-{{loop.index}}" class="package-resources" data-package-id="{{package.id}}" style="display: none;">{{h.json_dumps(package.resources)}}</div>
+        </div>
+        <div class="more-options">
+          <a href="" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+            <i class="humanitarianicons-More-options"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+            <li>
+              <a onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
+            </li>
+            <li>
+              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>
+            </li>
+            <li>
+              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>
+            </li>
+            <li>
+              <a onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
+            </li>
+            <li>
+              <a onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
+            </li>
+            <li>
+              <a onclick="{{macro.contributor_action(package, h, 'true')}}"
+                 id="contact-the-contributor">
+                <span>Contact the contributor</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="dataset-updated">
+      {% if package.qa_completed %}
+        <div><i style="color: green; font-weight: bold"> QA Completed</i></div>
+      {% endif %}
+        {% block updated %}
+          {{ super() }}
+        {% endblock %}
+      </div>
+      <div class="dataset-pii">
+        <ul class="pii-list">
+          <li class="pii-item">
+            <span class="pii-title">
+              DISK. RISK:
+            </span>
+            {% set sdc_status_text = 'ERR' if package.sdc_report_flag  == 'ERROR' else package.sdc_report_flag %}
+            {{ qa_macros.qa_check_item(package.sdc_report_flag, sdc_status_text, package.sdc_timestamp) }}
+          </li>
+          <li class="pii-item">
+            <span class="pii-title">
+              PII CHECK:
+            </span>
+            {% set pii_status_text = 'ERR' if package.pii_report_flag  == 'ERROR' else package.pii_report_flag %}
+            {{ qa_macros.qa_check_item(package.pii_report_flag, pii_status_text, package.pii_timestamp) }}
+          </li>
+          <li class="pii-item">
+            <span class="pii-title">
+              CHECKLIST:
+            </span>
+            {% set checklist_status_text = 'OK' if package.qa_check_list_status  == 'OK'
+                else package.qa_checklist_num ~ '/' ~ package.qa_checklist_total_num %}
+            {{ qa_macros.qa_check_item(package.qa_check_list_status, checklist_status_text, package.qa_checklist.modified_date) }}
+          </li>
+        </ul>
+      </div>
+
+    </div>
+{% endblock %}
+

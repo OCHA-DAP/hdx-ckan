@@ -1,0 +1,38 @@
+.qa-checklist-widget {
+  position: relative;
+  background-color: #fff;
+  padding: 0 20px;
+  height: 500px;
+  width: 100%;
+  max-width: 640px;
+}
+.qa-checklist-widget .nav-tabs {
+  margin: 0 -20px;
+  padding: 0 20px;
+}
+.qa-checklist-widget .tab-content {
+  height: 397px;
+  overflow: auto;
+}
+.qa-checklist-widget .questions {
+  margin-top: 10px;
+}
+.qa-checklist-widget .questions label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.qa-checklist-widget .checklist-label input[type='checkbox']:disabled + span {
+  color: #888888;
+}
+.qa-checklist-widget .action-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  width: 100%;
+  padding: 0 20px 20px;
+}

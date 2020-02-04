@@ -21,6 +21,22 @@ function notYou(){
     $('#field-login').focus();
 }
 
+function showContributorPopup(popupId, pkgTitle, pkgOwnerOrg, pkgId, overwritePopupTitle){
+  spawnRecaptcha(popupId);
+  //populate popup with hidden fields content
+  pkgTitle = decodeURIComponent(pkgTitle);
+  let form = $('#contact-contributor-form');
+  form.find('input[type="hidden"][name="pkg_title"]').val(pkgTitle);
+  form.find('input[type="hidden"][name="pkg_owner_org"]').val(pkgOwnerOrg);
+  form.find('input[type="hidden"][name="pkg_id"]').val(pkgId);
+  if (overwritePopupTitle) {
+    form.find('.contact-popup-title').html(pkgTitle);
+
+  }
+
+  showOnboardingWidget(popupId)
+}
+
 function showOnboardingWidget(id, elid, val){
     if (id == "#signupPopup") {
         // we only want to send the analytics event for the sign-up widget

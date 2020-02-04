@@ -6,7 +6,7 @@ from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 
 log = logging.getLogger(__name__)
 
-UPDATE_FREQ_INFO = {
+UPDATE_FREQ_OVERDUE_INFO = {
     '1': 1,
     '7': 7,
     '14': 7,
@@ -14,6 +14,16 @@ UPDATE_FREQ_INFO = {
     '90': 30,
     '180': 30,
     '365': 60,
+}
+
+UPDATE_FREQ_DELINQUENT_INFO = {
+    '1': 2,
+    '7': 14,
+    '14': 14,
+    '30': 30,
+    '90': 60,
+    '180': 60,
+    '365': 90,
 }
 
 FRESHNESS_PROPERTY = 'is_fresh'
@@ -65,11 +75,12 @@ class FreshnessCalculator(object):
         # modified = dataset_dict.get('metadata_modified')
         try:
             self.modified = FreshnessCalculator.dataset_last_change_date(dataset_dict)
-            if self.modified and update_freq and UPDATE_FREQ_INFO.get(update_freq):
+            if self.modified and update_freq and UPDATE_FREQ_OVERDUE_INFO.get(update_freq):
                 # if '.' not in modified:
                 #     modified += '.000'
                 # self.modified = datetime.datetime.strptime(modified, "%Y-%m-%dT%H:%M:%S.%f")
-                self.extra_days = UPDATE_FREQ_INFO.get(update_freq)
+                self.extra_overdue_days = UPDATE_FREQ_OVERDUE_INFO.get(update_freq)
+                self.extra_delinquent_days = UPDATE_FREQ_DELINQUENT_INFO[update_freq]
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
         except Exception, e:
@@ -116,10 +127,11 @@ class FreshnessCalculator(object):
             self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_UNKNOWN
 
     def populate_with_date_ranges(self):
-        start_of_due_range, start_of_overdue_range = self.compute_range_beginnings()
+        start_of_due_range, start_of_overdue_range, start_of_delinquent_range = self.compute_range_beginnings()
         if start_of_due_range and start_of_overdue_range:
             self.dataset_dict['due_date'] = start_of_due_range.isoformat()
             self.dataset_dict['overdue_date'] = start_of_overdue_range.isoformat()
+            self.dataset_dict['delinquent_date'] = start_of_delinquent_range.isoformat()
             # self.dataset_dict['due_daterange'] = \
             #     '[{}Z TO {}Z]'.format(start_of_due_range.isoformat(), start_of_overdue_range.isoformat())
             #
@@ -127,12 +139,15 @@ class FreshnessCalculator(object):
 
     def compute_range_beginnings(self):
         if not self.surely_not_fresh:
-            start_of_due_range = (self.modified + datetime.timedelta(days=self.update_freq_in_days)).replace(
-                microsecond=0)
-            start_of_overdue_range = (start_of_due_range + datetime.timedelta(days=self.extra_days)).replace(microsecond=0)
-            return start_of_due_range, start_of_overdue_range
+            start_of_due_range = (self.modified + datetime.timedelta(days=self.update_freq_in_days))\
+                .replace(microsecond=0)
+            start_of_overdue_range = (start_of_due_range + datetime.timedelta(days=self.extra_overdue_days))\
+                .replace(microsecond=0)
+            start_of_delinquent_range = (start_of_due_range + datetime.timedelta(days=self.extra_delinquent_days))\
+                .replace(microsecond=0)
+            return start_of_due_range, start_of_overdue_range, start_of_delinquent_range
         else:
-            return None, None
+            return None, None, None
 
     def read_due_overdue_dates(self):
         try:

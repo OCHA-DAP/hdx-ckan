@@ -1001,6 +1001,21 @@ ul.dataset-resources li + li.label-icons {
 .nav-tabs {
   border-bottom: 3px solid #eeeeee;
 }
+.nav-tabs.inverted {
+  border-bottom: none;
+  border-top: 3px solid #eeeeee;
+}
+.nav-tabs.inverted > li {
+  margin-bottom: 0;
+}
+.nav-tabs.inverted > li.active > a,
+.nav-tabs.inverted > li.active > a:hover,
+.nav-tabs.inverted > li.active > a:focus {
+  margin-top: -3px;
+  border: none;
+  border-top: 3px solid #eeeeee;
+  border-top-color: #f2645a;
+}
 .nav-tabs.nav-tabs-upper {
   text-transform: uppercase;
 }
@@ -1022,6 +1037,7 @@ ul.dataset-resources li + li.label-icons {
   letter-spacing: 0.03em;
   color: #888888;
   border: none;
+  border-radius: 0;
 }
 .nav-tabs > li > a:hover {
   color: #f2645a;
@@ -1031,7 +1047,8 @@ ul.dataset-resources li + li.label-icons {
 .nav-tabs > li.active > a:focus {
   border: none;
   background-color: inherit;
-  border-bottom: 3px solid #f2645a;
+  border-bottom: 3px solid #eeeeee;
+  border-bottom-color: #f2645a;
   color: #f2645a;
 }
 .nav-tabs .hdx-tab-button i {

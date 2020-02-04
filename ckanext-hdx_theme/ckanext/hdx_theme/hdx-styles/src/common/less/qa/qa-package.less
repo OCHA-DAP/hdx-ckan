@@ -1,0 +1,228 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.search-list .dataset-item .dataset-content2.qa-package-item {
+  cursor: pointer;
+  padding: 25px 15px;
+  padding-bottom: 15px;
+
+  &.open, &:hover {
+    background-color: @extraLightBlueColor;
+  }
+
+  .dataset-dates {
+    line-height: 1.2;
+  }
+
+  .dataset-top {
+    display: flex;
+    justify-content: space-between;
+    .dataset-heading input[type='checkbox'] {
+      margin-right: 2px;
+    }
+
+    .more-options {
+      position: relative;
+      align-self: flex-start;
+      margin-left: 5px;
+      margin-top: 3px;
+    }
+  }
+}
+
+.dataset-pii {
+  margin-top: 20px;
+
+  .pii-list {
+    list-style: none;
+    padding: 0;
+    .pii-item {
+      border-top: 1px solid @lightGrayColor;
+      padding: 10px 0;
+      display: flex;
+
+      .pii-title {
+        width: 80px;
+        .gothamBoldFont(12px);
+      }
+      .pii-label {
+        margin: 0 10px;
+        padding: 0 10px;
+        border: 2px solid @whiteColor;
+        border-radius: 15px;
+        .sourceSansProFont(600, 12px);
+        width: 75px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 22px;
+
+        &.gray {
+          border-color: @lightGrayColor;
+        }
+        &.warn {
+          background-color: @orangeColor;
+          color: @whiteColor;
+          border-color: @orangeColor;
+        }
+        &.ok {
+          border-color: @greenColor;
+          color: @greenColor;
+        }
+
+        .pii-label-text {
+          margin-right: 20px;
+          line-height: 1;
+        }
+      }
+      .pii-status {
+        margin-left: 20px;
+        .sourceSansProFont(400, 14px);
+        color: @darkGrayColor;
+      }
+    }
+  }
+}
+
+.more-options, .dataset-content2 .dataset-heading .more-options {
+  > a.dropdown-toggle[data-toggle="dropdown"] {
+    font-weight: 600;
+    color: @grayColor;
+    padding: 0 3px;
+    position: relative;
+  }
+}
+@dataset-list-head-width: 38%;
+.qa-dataset-list-head {
+  padding: 15px 0;
+  position: absolute;
+  top: 0;
+  width: @dataset-list-head-width;
+  input[type='checkbox'] {
+    margin-left: 10px;
+    margin-right: 5px;
+  }
+
+  .more-options {
+    position: absolute;
+    right: 10px;
+    top: 17px;
+  }
+}
+.qa-dataset-list {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+
+  .dataset-items {
+    width: @dataset-list-head-width;
+    height: 100%;
+    overflow: scroll;
+    .dataset-item {
+      background-color: @whiteColor;
+    }
+  }
+  .dataset-description {
+    width: 62%;
+    height: 100%;
+    overflow: scroll;
+  }
+}
+
+#search-page-results {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  min-height: calc(100vh - 50px);
+  padding-left: 0;
+
+  .search-list{
+    height: 100%;
+    padding-top: 50px;
+  }
+}
+.list-items > .row {
+  position: relative;
+  margin: 0; //intentional inner 15px padding for the 2 columns
+}
+
+.resource-item {
+  border-top: 1px solid @lightGrayColor;
+  padding-top: 20px;
+  padding-left: 50px;
+  padding-right: 0;
+  .format-label {
+    top: 20px;
+    left: 0;
+  }
+  &:first-child {
+    border-top: none;
+  }
+  .more-options {
+    position: absolute;
+    top: 20px;
+    right: 0;
+  }
+  .dataset-pii {
+    margin-top: 0;
+    .pii-list {
+      .pii-item {
+        &:first-child {
+          border-top: none;
+        }
+      }
+    }
+  }
+}
+
+#dataset-resources {
+  display: none;
+}
+.qa-package-details {
+  margin-left: -15px;
+  .qa-dataset-description {
+    background-color: @whiteColor;
+    color: @darkGrayColor;
+    padding: 20px;
+  }
+  .nav.nav-tabs{
+    background-color: @whiteColor;
+  }
+  .tab-content {
+    .tab-pane {
+      background-color: @whiteColor;
+
+      .dataset-res-wraper {
+        padding: 20px;
+        .lines {
+          width: 280px;
+          overflow: hidden;
+        }
+      }
+
+      .additional-info.info-wrapper {
+        margin-top: 0;
+        padding-top: 10px;
+        padding-left: 15px;
+        .table-condensed {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+}
+
+
+section.search-list {
+  background-color: rgba(238, 238, 238, 0.50);
+  > .list-items {
+    min-height: 100vh;
+  }
+  .filter-category {
+    background-color: @whiteColor;
+  }
+}
+
+#loadingScreen {
+  z-index: 1002;
+}

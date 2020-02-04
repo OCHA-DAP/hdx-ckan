@@ -1,0 +1,66 @@
+{% extends "package/snippets/resource_item.html" %}
+
+{% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
+
+{% block resource_item_edit %}
+  <div class="more-options">
+    <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+      <i class="humanitarianicons-More-options"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+      <li>
+        <a onclick="runPIICheck('{{ res.id }}')">Run PII Check</a>
+      </li>
+      <li>
+        <a onclick="openSDCMicro('{{ pkg.name }}', '{{ res.id }}', '{{ res.url }}')">Run SDC Micro</a>
+      </li>
+      <li>
+        <a href="{{ h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
+      </li>
+      {% if h.check_access('hdx_resource_download', res) %}
+        <li>
+          <a href="{{ res.hdx_rel_url }}">Download</a>
+        </li>
+      {% endif %}
+      <li>
+        <a onclick="updateQuarantine('{{ res.id }}', {% if res.in_quarantine %}false{% else %}true{% endif %});">{% if res.in_quarantine %}Remove from{% else %}Add to{% endif %} Quarantine</a>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block resource_item_explore %}
+  <div class="dataset-pii">
+    <ul class="pii-list">
+      <li class="pii-item">
+        <span class="pii-title">
+          DISK. RISK:
+        </span>
+        {% set sdc_status_text = 'ERR' if res.sdc_report_flag  == 'ERROR' else res.sdc_report_flag %}
+        {% set sdc_report_url = h.url_for('qa_sdcmicro_log', id=pkg.id, resource_id=res.id)
+            if res.sdc_report_flag  == 'ERROR' else None %}
+        {{ qa_macros.qa_check_item(res.sdc_report_flag, sdc_status_text, isodate_string=res.sdc_timestamp,
+            link_to_log=sdc_report_url) }}
+      </li>
+      <li class="pii-item">
+        <span class="pii-title">
+          PII CHECK:
+        </span>
+        {% set pii_status_text = 'ERR' if res.pii_report_flag  == 'ERROR' else res.pii_report_flag %}
+        {% set pii_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id)
+            if res.pii_report_flag  == 'ERROR' else None %}
+        {{ qa_macros.qa_check_item(res.pii_report_flag, pii_status_text, isodate_string=res.pii_timestamp,
+            link_to_log=pii_report_url) }}
+      </li>
+      <li class="pii-item">
+        <span class="pii-title">
+          CHECKLIST:
+        </span>
+        {% set checklist_status_text = 'OK' if res.qa_check_list_status  == 'OK'
+            else res.qa_checklist_num ~ '/' ~ res.qa_checklist_total_num %}
+        {{ qa_macros.qa_check_item(res.qa_check_list_status, checklist_status_text, pkg.qa_checklist.modified_date) }}
+
+      </li>
+    </ul>
+  </div>
+{% endblock %}
