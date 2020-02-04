@@ -230,7 +230,7 @@ class HDXSearchController(PackageController):
 
     def _search(self, package_type, pager_url, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=NUM_OF_ITEMS,
-                ignore_capacity_check=False, use_solr_collapse=False, enable_update_status_facet=False):
+                ignore_capacity_check=False, use_solr_collapse=False):
 
         from ckan.lib.search import SearchError
 
@@ -290,12 +290,12 @@ class HDXSearchController(PackageController):
 
         self._set_other_links()
 
+        search_extras = {}
         try:
             c.fields = []
             # c.fields_grouped will contain a dict of params containing
             # a list of values eg {'tags':['tag1', 'tag2']}
             c.fields_grouped = {}
-            search_extras = {}
             # limit = g.datasets_per_page
 
             fq = additional_fq
@@ -360,38 +360,16 @@ class HDXSearchController(PackageController):
                 if not asbool(config.get('ckan.search.show_all_types', 'False')):
                     fq += ' +dataset_type:dataset'
 
-            facets = OrderedDict()
-
-            default_facet_titles = get_default_facet_titles()
-
-            for facet in h.facets():
-                if facet in default_facet_titles:
-                    facets[facet] = default_facet_titles[facet]
-                else:
-                    facets[facet] = facet
-
-            # Facet titles
-            for plugin in p.PluginImplementations(p.IFacets):
-                facets = plugin.dataset_facets(facets, package_type)
-
-            if additional_facets:
-                facets.update(additional_facets)
-
-            c.facet_titles = facets
-
-            # TODO Line below to be removed after refactoring
-            c.tab = 'all'
-
+            facets = self._generate_facet_name_to_title_map(package_type)
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
             facet_keys = ['{!ex=batch}site_id'] + facets.keys()
             self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras, pager_url, context,
-                                    fq_list=fq_list, expand=solr_expand,
-                                    enable_update_status_facet=enable_update_status_facet)
+                                    fq_list=fq_list, expand=solr_expand)
 
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
+            facets = {}
             c.query_error = True
-            c.facets = {}
             c.search_facets = {}
             c.page = h.Page(collection=[])
         c.search_facets_limits = {}
@@ -408,7 +386,7 @@ class HDXSearchController(PackageController):
             c.search_facets_limits[facet] = limit
 
         # return render(self._search_template(package_type))
-        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, c.facet_titles,
+        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, facets,
                                                     c.batch_total_items, c.q)
         return full_facet_info
 
@@ -440,17 +418,7 @@ class HDXSearchController(PackageController):
             'ext_compute_freshness': 'true'
         }
 
-        if enable_update_status_facet:
-            now_string = datetime.datetime.utcnow().isoformat() + 'Z'
-            freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
-            data_dict.update({
-                'facet.range': '{{!{extra}}}due_date'.format(extra=freshness_facet_extra),
-                'f.due_date.facet.range.start': now_string + '-100YEARS',
-                'f.due_date.facet.range.end': now_string + '+100YEARS',
-                'f.due_date.facet.range.gap': '+100YEARS',
-                'f.due_date.facet.mincount': '0',
-                'facet.query': '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra),
-            })
+        self._add_additional_faceting_queries(data_dict)
 
         include_private = context.pop('ignore_capacity_check', None)
         if include_private:
@@ -461,6 +429,8 @@ class HDXSearchController(PackageController):
         if not query.get('results', None):
             log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
                 str(data_dict), str(query), datetime.datetime.now()))
+
+        self._process_found_package_list(query['results'])
 
         c.facets = query['facets']
         c.search_facets = query['search_facets']
@@ -504,6 +474,10 @@ class HDXSearchController(PackageController):
         c.count = c.item_count = query['count']
 
         return query
+
+    def _add_additional_faceting_queries(self, search_data_dict):
+        # to be overridden in sub classes that need to add more complex faceting queries
+        pass
 
     def _search_template(self):
         return render('search/search.html')
@@ -683,7 +657,7 @@ class HDXSearchController(PackageController):
             'show_everything': True
         }
 
-        self._process_freshness_facets(existing_facets, title_translations)
+        self._process_complex_facet_data(existing_facets, title_translations, result['facets'], search_extras)
 
         for solr_category_key, category_title in title_translations.items():
             regex = r'\{[\s\S]*\}'
@@ -774,6 +748,22 @@ class HDXSearchController(PackageController):
 
         return result
 
+    def _generate_facet_name_to_title_map(self, package_type):
+        facets = OrderedDict()
+        default_facet_titles = get_default_facet_titles()
+
+        for facet in h.facets():
+            if facet in default_facet_titles:
+                facets[facet] = default_facet_titles[facet]
+            else:
+                facets[facet] = facet
+
+        # Facet titles
+        for plugin in p.PluginImplementations(p.IFacets):
+            facets = plugin.dataset_facets(facets, package_type)
+
+        return facets
+
     def _add_item_to_featured_facets(self, featured_facet_items, key, display_name, num_of_cods, search_extras):
         featured_facet_items.append({
             'count': num_of_cods,
@@ -783,20 +773,12 @@ class HDXSearchController(PackageController):
             'selected': search_extras.get(key),
         })
 
-    def _process_freshness_facets(self, existing_facets, title_translations):
-        freshness_facet_name = 'due_date'
-        if existing_facets and freshness_facet_name in existing_facets:
-            item_list = existing_facets.get(freshness_facet_name).get('items')
-            if item_list and len(item_list) == 2:
-                item_list[0]['display_name'] = _('Needing update')
-                item_list[0]['name'] = UPDATE_STATUS_NEEDS_UPDATE
-                item_list[1]['display_name'] = _('Up to date')
-                item_list[1]['name'] = UPDATE_STATUS_FRESH
-                unknown_item = next((i for i in existing_facets.get('queries', []) if i.get('name') == 'unknown'), None)
-                unknown_item['display_name'] = _('Unknown')
-                unknown_item['name'] = UPDATE_STATUS_UNKNOWN
-                item_list.append(unknown_item)
+    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
+        # to be overridden in sub-classes that need to process the results of the solr query in order to
+        # do more complex preparation of the data that needs to be shown in the filter/facets
+        pass
 
-                title_translations[UPDATE_STATUS_URL_FILTER] = _('Update status')
-                existing_facets[UPDATE_STATUS_URL_FILTER] = existing_facets[freshness_facet_name]
-                del existing_facets[freshness_facet_name]
+    def _process_found_package_list(self, package_list):
+        # to be overridden in sub-classes that need to process the results of the solr query in order to
+        # change the data in the package or its resources
+        pass

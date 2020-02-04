@@ -1347,6 +1347,21 @@ ul.dataset-resources li + li.label-icons {
 .nav-tabs {
   border-bottom: 3px solid #eeeeee;
 }
+.nav-tabs.inverted {
+  border-bottom: none;
+  border-top: 3px solid #eeeeee;
+}
+.nav-tabs.inverted > li {
+  margin-bottom: 0;
+}
+.nav-tabs.inverted > li.active > a,
+.nav-tabs.inverted > li.active > a:hover,
+.nav-tabs.inverted > li.active > a:focus {
+  margin-top: -3px;
+  border: none;
+  border-top: 3px solid #eeeeee;
+  border-top-color: #0088FF;
+}
 .nav-tabs.nav-tabs-upper {
   text-transform: uppercase;
 }
@@ -1368,6 +1383,7 @@ ul.dataset-resources li + li.label-icons {
   letter-spacing: 0.03em;
   color: #888888;
   border: none;
+  border-radius: 0;
 }
 .nav-tabs > li > a:hover {
   color: #0088FF;
@@ -1377,7 +1393,8 @@ ul.dataset-resources li + li.label-icons {
 .nav-tabs > li.active > a:focus {
   border: none;
   background-color: inherit;
-  border-bottom: 3px solid #0088FF;
+  border-bottom: 3px solid #eeeeee;
+  border-bottom-color: #0088FF;
   color: #0088FF;
 }
 .nav-tabs .hdx-tab-button i {
@@ -1944,17 +1961,6 @@ label {
 label.radio:after,
 label.checkbox:after {
   content: "";
-}
-input[type=radio],
-input[type=checkbox] {
-  position: relative;
-  top: 7px;
-  padding: 0;
-  margin: 0;
-}
-input[type=radio].checkbox-onown,
-input[type=checkbox].checkbox-onown {
-  top: 0;
 }
 select {
   padding: 4px;

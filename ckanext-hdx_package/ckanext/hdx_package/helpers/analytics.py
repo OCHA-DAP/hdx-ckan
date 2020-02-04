@@ -138,32 +138,49 @@ def _ga_location(location_names):
     return result
 
 
-def wrap_resource_download_function():
-    '''
-    Changes the original resource_download function from the package controller with a version that
-    wraps the original function but also enqueues the tracking events
-    '''
-    original_resource_download = package_controller.PackageController.resource_download
+def resource_download_with_analytics(self, id, resource_id, filename=None):
 
-    def new_resource_download(self, id, resource_id, filename=None):
+    send_event = True
+    referer_url = request.referer
 
-        send_event = True
-        referer_url = request.referer
+    if referer_url:
+        ckan_url = config.get('ckan.site_url', '//localhost:5000')
+        ckan_parsed_url = urlparse.urlparse(ckan_url)
+        referer_parsed_url = urlparse.urlparse(referer_url)
 
-        if referer_url:
-            ckan_url = config.get('ckan.site_url', '//localhost:5000')
-            ckan_parsed_url = urlparse.urlparse(ckan_url)
-            referer_parsed_url = urlparse.urlparse(referer_url)
+        if ckan_parsed_url.hostname == referer_parsed_url.hostname:
+            send_event = False
 
-            if ckan_parsed_url.hostname == referer_parsed_url.hostname:
-                send_event = False
+    if send_event:
+        ResourceDownloadAnalyticsSender(id, resource_id).send_to_queue()
 
-        if send_event:
-            ResourceDownloadAnalyticsSender(id, resource_id).send_to_queue()
 
-        return original_resource_download(self, id, resource_id, filename)
-
-    package_controller.PackageController.resource_download = new_resource_download
+# def wrap_resource_download_function():
+#     '''
+#     Changes the original resource_download function from the package controller with a version that
+#     wraps the original function but also enqueues the tracking events
+#     '''
+#     original_resource_download = package_controller.PackageController.resource_download
+#
+#     def new_resource_download(self, id, resource_id, filename=None):
+#
+#         send_event = True
+#         referer_url = request.referer
+#
+#         if referer_url:
+#             ckan_url = config.get('ckan.site_url', '//localhost:5000')
+#             ckan_parsed_url = urlparse.urlparse(ckan_url)
+#             referer_parsed_url = urlparse.urlparse(referer_url)
+#
+#             if ckan_parsed_url.hostname == referer_parsed_url.hostname:
+#                 send_event = False
+#
+#         if send_event:
+#             ResourceDownloadAnalyticsSender(id, resource_id).send_to_queue()
+#
+#         return original_resource_download(self, id, resource_id, filename)
+#
+#     package_controller.PackageController.resource_download = new_resource_download
 
 
 class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):

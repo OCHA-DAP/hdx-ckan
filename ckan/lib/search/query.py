@@ -25,6 +25,7 @@ VALID_SOLR_PARAMETERS = set([
     'f.due_date.facet.mincount',
     'f.due_date.facet.range.start', 'f.due_date.facet.range.end',
     'f.due_date.facet.range.gap', 'f.due_date.facet.range.other',
+    'f.qa_completed.facet.missing'
 ])
 
 # for (solr) package searches, this specifies the fields that are searched

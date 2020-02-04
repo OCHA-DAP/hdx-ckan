@@ -132,6 +132,7 @@ ckan.max_image_size = 2
 
 # Path to resource format mapping file is:
 ckan.resource_formats = %(here)s/ckanext-hdx_package/ckanext/hdx_package/config/resource_formats.json
+ckan.extra_resource_fields = broken_link
 
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
 ckan.resource_proxy.max_file_size = 2097152
@@ -160,6 +161,15 @@ smtp.starttls = False
 #smtp.user = your_username@gmail.com
 #smtp.password = your_password
 #smtp.mail_from =
+
+## AWS S3 settings
+ckanext.s3filestore.aws_access_key_id = aws_access_key_id
+ckanext.s3filestore.aws_secret_access_key = aws_secret_access_key
+ckanext.s3filestore.aws_bucket_name = hdx-ckan-filestore-dev
+ckanext.s3filestore.host_name = http://s3.eu-central-1.amazonaws.com
+ckanext.s3filestore.region_name= eu-central-1
+ckanext.s3filestore.signature_version = signature_version
+
 
 #hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
@@ -310,3 +320,5 @@ hdx.caching.use_redis = true
 hdx.apihighways.enabled = false
 hdx.apihighways.url = https://api.apihighways.org/dataset?vocabulary[legacy]=hdx-full-set&page[size]=10000&includes=metadata
 hdx.apihighways.baseurl = https://apihighways.org/data-sets/
+
+hdx.qadashboard.enabled = true

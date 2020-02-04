@@ -99,3 +99,6 @@ git+https://github.com/geomet/geomet.git
 
 PyYAML==3.13
 dogpile.cache==0.7.1
+
+# ckanext-s3filestore
+-e git+https://github.com/okfn/ckanext-s3filestore.git@33d4b60ba86c4524c394575cff4e90dfe1418081#egg=ckanext-s3filestore

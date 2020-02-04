@@ -1,12 +1,12 @@
-import os
+import logging
 
 import ckan.logic as logic
-import logging
 import ckan.logic.action.delete as core_delete
 
 from ckanext.hdx_package.actions.update import process_batch_mode
 from ckanext.hdx_package.actions.create import reindex_package_on_hdx_hxl_preview_view
-from ckan.lib import uploader
+from ckanext.hdx_package.helpers.file_removal import file_remove
+
 
 _check_access = logic.check_access
 NotFound = logic.NotFound
@@ -14,22 +14,6 @@ _get_or_bust = logic.get_or_bust
 log = logging.getLogger(__name__)
 _get_action = logic.get_action
 
-def file_remove(id):
-    storage_path = uploader.get_storage_path()
-    directory = os.path.join(storage_path, 'resources', id[0:3], id[3:6])
-    filepath = os.path.join(directory, id[6:])
-
-    # remove file and its directory tree
-    try:
-        # remove file
-        os.remove(filepath)
-        # remove empty parent directories
-        os.removedirs(directory)
-        log.info(u'File %s is deleted.' % filepath)
-    except OSError, e:
-        log.debug(u'Error: %s - %s.' % (e.filename, e.strerror))
-
-    pass
 
 def hdx_dataset_purge(context, data_dict):
     _check_access('package_delete', context, data_dict)
@@ -42,7 +26,7 @@ def hdx_dataset_purge(context, data_dict):
 
     if pkg and pkg.resources:
         for r in pkg.resources:
-            file_remove(r.id)
+            file_remove(r.id, r.name, r.url_type)
 
     return dataset_purge(context, data_dict)
 
@@ -103,7 +87,14 @@ def resource_delete(context, data_dict):
 
     result_dict = core_delete.resource_delete(context, data_dict)
 
+    _resource_purge(context, data_dict)
     return result_dict
+
+
+def _resource_purge(context, data_dict):
+    model = context['model']
+    r = model.Resource.get(data_dict.get('id'))
+    file_remove(r.id, r.name, r.url_type)
 
 
 def _is_requested_data_type(entity):

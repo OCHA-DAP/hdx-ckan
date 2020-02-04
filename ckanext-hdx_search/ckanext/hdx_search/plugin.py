@@ -17,8 +17,13 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
+import ckanext.hdx_search.actions.authorize as authorize
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
+    DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 NotFound = ckan.logic.NotFound
+
 
 def convert_country(q):
     for c in tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True}):
@@ -35,6 +40,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IConfigurable)
+    plugins.implements(plugins.IAuthFunctions)
 
     # IConfigurable
     def configure(self, config):
@@ -55,6 +61,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('search', '/search',
                     controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        map.connect('qa_dashboard', '/qa_dashboard',
+                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
+        map.connect('qa_pii_log', '/dataset/{id}/resource/{resource_id}/qa_pii_log',
+                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_pii_log')
+        map.connect('qa_sdcmicro_log', '/dataset/{id}/resource/{resource_id}/qa_sdcmicro_log',
+                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_sdcmicro_log')
         return map
 
     def after_map(self, map):
@@ -62,6 +74,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('search', '/search',
                     controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        map.connect('qa_dashboard', '/qa_dashboard',
+                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
         return map
 
     def before_search(self, search_params):
@@ -109,6 +123,19 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('archived', ' +extras_archived:true', ' -extras_archived:true')
         adapt_solr_fq('administrative_divisions', ' +vocab_Topics:"administrative divisions"',
                       ' -vocab_Topics:"administrative divisions"')
+
+        adapt_solr_fq('qa_completed', ' +qa_completed:true', ' -qa_completed:true')
+        adapt_solr_fq('broken_link', ' +res_extras_broken_link:true', ' -res_extras_broken_link:true')
+        adapt_solr_fq(NEW_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('metadata_created', last_x_days=7, include_leading_space=True,
+                                                     include=True))
+        adapt_solr_fq(UPDATED_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('metadata_modified', last_x_days=7, include_leading_space=True,
+                                                     include=True))
+        adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
+                      generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
+                                                     include=True))
+        adapt_solr_fq(BULK_DATASETS_FACET_NAME, 'extras_updated_by_script:[* TO *]')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
@@ -181,7 +208,10 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'populate_related_items_count': actions.populate_related_items_count,
-            'populate_showcase_items_count': actions.populate_showcase_items_count
+            'populate_showcase_items_count': actions.populate_showcase_items_count,
+            'qa_questions_list': actions.hdx_qa_questions_list,
+            'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run,
+            'qa_pii_run': actions.hdx_qa_pii_run,
         }
 
     # IFacets
@@ -202,5 +232,11 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
-
         return facets_dict
+
+    def get_auth_functions(self):
+        return {
+            'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
+            'qa_sdcmicro_run': authorize.hdx_qa_sdcmicro_run,
+            'qa_pii_run': authorize.hdx_qa_pii_run
+        }

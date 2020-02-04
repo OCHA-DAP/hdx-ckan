@@ -1,0 +1,52 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.qa-checklist-widget {
+  @qaChecklistPadding: 20px;
+  @qaChecklistHeight: 500px;
+  @qaActionContainerHeight: 40px;
+  @qaTabsHeight: 43px;
+  position: relative;
+  background-color: @whiteColor;
+  padding: 0 @qaChecklistPadding;
+  height: @qaChecklistHeight;
+  width: 100%;
+  max-width: 640px;
+
+  .nav-tabs {
+    margin: 0 -@qaChecklistPadding;
+    padding: 0 @qaChecklistPadding;
+  }
+  .tab-content {
+    height: (@qaChecklistHeight - @qaActionContainerHeight - @qaChecklistPadding - @qaTabsHeight);
+    overflow: auto;
+  }
+
+  .questions {
+    margin-top: 10px;
+    label {
+      .sourceSansProFont(400, 14px);
+    }
+  }
+
+  .checklist-label {
+    input[type='checkbox']:disabled + span {
+      color: @grayColor;
+    }
+  }
+
+  .action-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    bottom: 0;
+    left: 0;
+    height: @qaActionContainerHeight;
+    width: 100%;
+    padding: 0 @qaChecklistPadding @qaChecklistPadding;
+
+    .actions {
+    }
+  }
+}

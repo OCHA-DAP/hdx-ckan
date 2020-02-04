@@ -590,16 +590,16 @@ class DatasetController(PackageController):
                 'dataset_type': package_type}
         return render('package/resource_edit.html', extra_vars=vars)
 
-    def _create_perma_link_if_needed(self, dataset_id, resource):
-        """
-        Create a perma link
-        """
-        if 'perma_link' not in resource and resource.get('resource_type', '') == 'file.upload':
-            domain = config.get('ckan.site_url', '')
-            if domain and domain in resource.get('url', ''):
-                perma_link = h.url_for(
-                    'perma_storage_file', id=dataset_id, resource_id=resource['id'])
-                resource['perma_link'] = domain + perma_link
+    # def _create_perma_link_if_needed(self, dataset_id, resource):
+    #     """
+    #     Create a perma link
+    #     """
+    #     if 'perma_link' not in resource and resource.get('resource_type', '') == 'file.upload':
+    #         domain = config.get('ckan.site_url', '')
+    #         if domain and domain in resource.get('url', ''):
+    #             perma_link = h.url_for(
+    #                 'perma_storage_file', id=dataset_id, resource_id=resource['id'])
+    #             resource['perma_link'] = domain + perma_link
 
     @check_redirect_needed
     def read(self, id):
@@ -741,19 +741,7 @@ class DatasetController(PackageController):
         c.pkg_dict['social_mail_body'] = _('Description:%0D%0A') + h.markdown_extract(
             notes) + ' %0D%0A'
 
-        group_message_topics = membership_data.get_message_groups(c.user or c.author, c.pkg.owner_org)
-        template_data = {
-            'group_topics': group_message_topics,
-            'contributor_topics': membership_data.membership_data['contributor_topics']
-        }
-
-        if c.userobj:
-            template_data['fullname'] = c.userobj.display_name or c.userobj.name or ''
-            template_data['email'] = c.userobj.email or ''
-        c.membership = {
-            'display_group_message': bool(group_message_topics),
-            'data': template_data,
-        }
+        c.membership = membership_data.get_membership_by_user(c.user or c.author, c.pkg.owner_org, c.userobj)
 
         c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
 
@@ -1059,32 +1047,32 @@ class DatasetController(PackageController):
             abort(404, _('Resource not found'))
         return render('package/confirm_delete_resource.html', {'dataset_type': self._get_package_type(id)})
 
-    def resource_download(self, id, resource_id):
-        '''
-        This is a wrapper of the core ckan function.
-        It's meant to allow old style HDX perma_links (/dataset/{id}/resource_download/{resource_id})
-        to still function for ppl that have bookmarked the url or for custom pages.
-
-        :param id: package id
-        :type id: string
-        :param resource_id: resource id
-        :type resource_id: string
-        :return:
-        :rtype:
-        '''
-        result = super(DatasetController, self).resource_download(id, resource_id)
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
-
-        try:
-            rsc = get_action('resource_show')(context, {'id': resource_id})
-            response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(rsc.get('name', 'download'))
-        except NotFound:
-            abort(404, _('Resource not found'))
-        except NotAuthorized:
-            abort(403, _('Unauthorized to read resource %s') % id)
-
-        return result
+    # def resource_download(self, id, resource_id):
+    #     '''
+    #     This is a wrapper of the core ckan function.
+    #     It's meant to allow old style HDX perma_links (/dataset/{id}/resource_download/{resource_id})
+    #     to still function for ppl that have bookmarked the url or for custom pages.
+    #
+    #     :param id: package id
+    #     :type id: string
+    #     :param resource_id: resource id
+    #     :type resource_id: string
+    #     :return:
+    #     :rtype:
+    #     '''
+    #     result = super(DatasetController, self).resource_download(id, resource_id)
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author, 'auth_user_obj': c.userobj}
+    #
+    #     try:
+    #         rsc = get_action('resource_show')(context, {'id': resource_id})
+    #         response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(rsc.get('name', 'download'))
+    #     except NotFound:
+    #         abort(404, _('Resource not found'))
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to read resource %s') % id)
+    #
+    #     return result
 
     def delete(self, id):
         """

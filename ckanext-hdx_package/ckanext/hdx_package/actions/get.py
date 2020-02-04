@@ -4,48 +4,50 @@ Created on Sep 02, 2015
 @author: alexandru-m-g
 '''
 
+import json
+import logging
 import os
+
+import ckanext.hdx_package.helpers.caching as pkg_caching
+import ckanext.hdx_package.helpers.freshness_calculator as freshness
+import ckanext.hdx_package.helpers.helpers as helpers
+import ckanext.hdx_theme.util.jql as jql
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import dateutil.parser
 import sqlalchemy
-import logging
-import json
-
-from paste.deploy.converters import asbool
-import ckan.logic.schema
-import ckan.logic as logic
-import ckan.model as model
-import ckan.plugins as plugins
-import ckan.lib.navl.dictization_functions
-import ckan.lib.search as search
-import ckan.logic.action.get as logic_get
-import ckan.lib.plugins as lib_plugins
-import ckan.authz as authz
-import ckan.lib.base as base
-import ckan.lib.helpers as h
-
-from ckan.lib import uploader
-
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckanext.hdx_theme.util.jql as jql
-import ckanext.hdx_package.helpers.helpers as helpers
-import ckanext.hdx_package.helpers.freshness_calculator as freshness
-
+from botocore.exceptions import ClientError
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
-
-import ckanext.hdx_package.helpers.caching as pkg_caching
+from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
+from paste.deploy.converters import asbool
 from pylons import config
+
+import ckan.authz as authz
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.lib.navl.dictization_functions
+import ckan.lib.plugins as lib_plugins
+import ckan.lib.search as search
+import ckan.logic as logic
+import ckan.logic.action.get as logic_get
+import ckan.logic.schema
+import ckan.model as model
+import ckan.plugins as plugins
+from ckan.common import _, c
+from ckan.lib import uploader
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
 NotFound = ckan.logic.NotFound
+NotAuthorized = ckan.logic.NotAuthorized
 _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 base_abort = base.abort
+get_or_bust = logic.get_or_bust
 
 _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
@@ -575,8 +577,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
             package_dict.pop('due_date', None)
             package_dict.pop('overdue_date', None)
-            # package_dict.pop('due_daterange', None)
-            # package_dict.pop('overdue_daterange', None)
+            package_dict.pop('delinquent_date', None)
             freshness_calculator.populate_with_date_ranges()
 
         if not just_for_reindexing:
@@ -631,6 +632,22 @@ def package_show_edit(context, data_dict):
     context['for_edit'] = True
 
     return package_show(context, data_dict)
+
+
+@logic.side_effect_free
+def package_qa_checklist_show(context, data_dict):
+    dataset_dict = get_action('package_show')(context, data_dict)
+
+    dataset_qa_checklist = get_obj_from_json_in_dict(dataset_dict, 'qa_checklist') or {}
+    for r in dataset_dict.get('resources', []):
+        r_qa_checklist = get_obj_from_json_in_dict(r, 'qa_checklist')
+        if r_qa_checklist:
+            qa_res_list = dataset_qa_checklist.get('resources', [])
+            r_qa_checklist['id'] = r['id']
+            qa_res_list.append(r_qa_checklist)
+            dataset_qa_checklist['resources'] = qa_res_list
+
+    return dataset_qa_checklist
 
 
 def _get_resource_filesize(resource_dict):
@@ -891,3 +908,40 @@ def hdx_recommend_tags(context, data_dict):
 def hdx_test_recommend_tags(context, data_dict):
     tag_recommender = TagRecommenderTest(**data_dict)
     return tag_recommender.run_test()
+
+
+@logic.side_effect_free
+def hdx_get_s3_link_for_resource(context, data_dict):
+    resource_id = get_or_bust(data_dict, 'id')
+    context = {'model': model, 'session': model.Session,
+               'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+    # this does check_access('resource_show') so we don't need to do the check
+    res_dict = get_action('resource_show')(context, {'id': resource_id})
+
+    _check_access('hdx_resource_download', context, res_dict)
+
+    if res_dict.get('url_type') == 'upload':
+        upload = uploader.get_resource_uploader(res_dict)
+        bucket_name = config.get('ckanext.s3filestore.aws_bucket_name')
+        host_name = config.get('ckanext.s3filestore.host_name')
+        bucket = upload.get_s3_bucket(bucket_name)
+
+        filename = os.path.basename(res_dict['url'])
+        key_path = upload.get_path(res_dict['id'], filename)
+
+        try:
+            s3 = upload.get_s3_session()
+            client = s3.client(service_name='s3', endpoint_url=host_name)
+            url = client.generate_presigned_url(ClientMethod='get_object',
+                                                Params={'Bucket': bucket.name,
+                                                        'Key': key_path},
+                                                ExpiresIn=60)
+            return {'s3_url': url}
+
+        except ClientError as ex:
+            log.error(unicode(ex))
+            base_abort(404, _('Resource data not found'))
+
+    else:
+        return {'s3_url': res_dict.get('url')}

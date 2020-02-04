@@ -1,0 +1,33 @@
+{% set tab_id_suffix = id_suffix or '-0' %}
+
+  <div class="mL30">
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a id="link-data-resources-tab" href="#data-resources{{tab_id_suffix}}"
+           data-module="hdx_click_stopper" data-module-link_type="dataset resources tab" data-module-just_send_event="true"
+           data-toggle="tab" class="hdx-tab-button">Data and Resources
+        </a>
+      </li>
+      <li>
+        <a id="link-metadata-tab" href="#metadata{{tab_id_suffix}}"
+           data-module="hdx_click_stopper" data-module-link_type="dataset metadata tab" data-module-just_send_event="true"
+           data-toggle="tab" class="hdx-tab-button">Metadata
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="tab-content clearfix mL30">
+    <div class="tab-pane active" id="data-resources{{tab_id_suffix}}">
+      {% block package_resources %}
+        <div class="dataset-res-wraper">
+          {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources, resource_item_snippet=resource_item_snippet %}
+
+        </div>
+      {% endblock %}
+    </div>
+    <div class="tab-pane" id="metadata{{tab_id_suffix}}">
+      {% block indicator_additional_info %}
+        {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+      {% endblock %}
+    </div>
+  </div>

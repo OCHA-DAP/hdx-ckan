@@ -1,0 +1,31 @@
+{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None) %}
+  {# status - OK, ERROR, RUNNIG/QUEUED, None/False #}
+  {# status_text - not needed in case it's still RUNNING/QUEUED #}
+
+  {% if status == 'RUNNING' or status == 'QUEUED' %}
+    <span class="pii-label gray">
+      <img src="/images/filter_loading.gif">
+    </span>
+    <span class="pii-status">
+      In progress
+    </span>
+  {% elif status == 'OK' or status == 'ERROR' %}
+    {% set status_class = 'ok' if status  == 'OK' else 'warn' %}
+    {% set icon_class = 'humanitarianicons-Selected' if status_class  == 'ok' else 'humanitarianicons-Alert' %}
+    <span class="pii-label {{ status_class }}">
+      <span class="pii-label-text">
+      {{ status_text }}
+      </span>
+      <i class="{{icon_class}}"></i>
+    </span>
+    <span class="pii-status">
+      {% if link_to_log %}
+        <a href="{{ link_to_log }}" target="_blank">{{ h.render_datetime(isodate_string) }}</a>
+      {% else %}
+        {{ h.render_datetime(isodate_string) }}
+      {% endif %}
+
+    </span>
+  {% endif %}
+
+{% endmacro %}

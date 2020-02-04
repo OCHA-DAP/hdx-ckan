@@ -80,7 +80,6 @@ RUN apt-get -qq -y update && \
     pip -q install --upgrade -r requirements.txt && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
-    pip install git+git://github.com/okfn/ckanext-s3filestore.git@33d4b60ba86c4524c394575cff4e90dfe1418081 && \
     pip install \
         boto3 \
         ckantoolkit && \

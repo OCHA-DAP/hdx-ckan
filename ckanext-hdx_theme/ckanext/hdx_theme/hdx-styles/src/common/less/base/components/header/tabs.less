@@ -34,7 +34,27 @@
 /* END Alter page-header style */
 
 .nav-tabs{
-  border-bottom: @navTabsBorderHeight solid @extraLightGrayColor;
+  @borderDefinition: @navTabsBorderHeight solid @extraLightGrayColor;
+  border-bottom: @borderDefinition;
+
+  &.inverted {
+    border-bottom: none;
+    border-top: @borderDefinition;
+
+    > li {
+      margin-bottom: 0;
+      &.active > a {
+        &,
+        &:hover,
+        &:focus {
+          margin-top: -@navTabsBorderHeight;
+          border: none;
+          border-top: @borderDefinition;
+          border-top-color: @navTabsActiveColor;
+        }
+      }
+    }
+  }
 
   &.nav-tabs-upper {
     text-transform: uppercase;
@@ -49,8 +69,6 @@
 
   > li {
     margin-bottom: -@navTabsBorderHeight;
-
-
     > a {
       .gothamBoldFont(14px);
       padding-left: 30px;
@@ -58,6 +76,7 @@
       .letter-spacing-3;
       color: @grayColor;
       border: none;
+      border-radius: 0;
     }
 
     > a:hover {
@@ -70,7 +89,8 @@
       &:focus {
         border: none;
         background-color: inherit;
-        border-bottom: @navTabsBorderHeight solid @navTabsActiveColor;
+        border-bottom: @borderDefinition;
+        border-bottom-color: @navTabsActiveColor;
         color: @navTabsActiveColor;
       }
     }
