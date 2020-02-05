@@ -251,6 +251,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                              tk.get_validator('ignore_missing'),
                              tk.get_validator('hdx_boolean_string_converter'),
                              tk.get_converter('convert_to_extras')],
+            'qa_checklist_completed': [tk.get_validator('hdx_reset_unless_allow_qa_checklist_completed'),
+                             tk.get_validator('ignore_missing'),
+                             tk.get_validator('hdx_boolean_string_converter'),
+                             tk.get_converter('convert_to_extras')],
             'qa_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
                             tk.get_converter('convert_to_extras')],
             'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
@@ -372,6 +376,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
+            'qa_checklist_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
@@ -464,7 +469,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,
             'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
             'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field'),
-            'hdx_reset_unless_allow_qa_completed': vd.hdx_delete_unless_field_in_context('allow_qa_completed_field')
+            'hdx_reset_unless_allow_qa_completed': vd.hdx_delete_unless_field_in_context('allow_qa_completed_field'),
+            'hdx_reset_unless_allow_qa_checklist_completed':
+                vd.hdx_delete_unless_field_in_context('allow_qa_checklist_completed_field')
         }
 
     def get_auth_functions(self):
@@ -475,7 +482,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_send_mail_members': authorize.hdx_send_mail_members,
                 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
                 'hdx_resource_download': authorize.hdx_resource_download,
-                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed
+                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
+                'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update
                 }
 
     def make_middleware(self, app, config):

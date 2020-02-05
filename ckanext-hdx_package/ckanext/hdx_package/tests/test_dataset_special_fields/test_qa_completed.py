@@ -9,6 +9,7 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 config = tk.config
 NotAuthorized = tk.NotAuthorized
 
+
 class TestQACompleted(hdx_test_base.HdxBaseTest):
 
     NORMAL_USER = 'qa_completed_user'
@@ -140,8 +141,7 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         }
         if qa_completed is not None:
             pkg_dict["qa_completed"] = qa_completed
-        self._get_action('package_patch')(context, pkg_dict)
-        return self._get_action('package_show')({}, {'id': package_id})
+        return self._get_action('package_patch')(context, pkg_dict)
 
     def _change_description_of_package(self, package_id, user):
         context = {'model': model, 'session': model.Session, 'user': user}

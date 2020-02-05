@@ -504,6 +504,7 @@ def resource_view_update(context, data_dict):
 
 
 def package_qa_checklist_update(context, data_dict):
+    _check_access('hdx_package_qa_checklist_update', context, data_dict)
     id = get_or_bust(data_dict, 'id')
     del data_dict['id']
 
@@ -515,14 +516,20 @@ def package_qa_checklist_update(context, data_dict):
         res_id_to_checklist[res_id] = res_checklist
 
     existing_dataset_dict = _get_action('package_show')(context, {'id': id})
-    for resource in existing_dataset_dict.get('resources', []):
-        resource.pop('qa_checklist', None)
-        resource.pop('qa_checklist_num', None)
-        checklist = res_id_to_checklist.get(resource['id'])
-        if checklist:
-            resource_checklist_string = json.dumps(checklist)
-            resource['qa_checklist'] = resource_checklist_string
-            resource['qa_checklist_num'] = len(checklist)
+
+    checklist_complete = data_dict.pop('checklist_complete', None)
+    if checklist_complete:
+        existing_dataset_dict['qa_checklist_completed'] = True
+    else:
+        existing_dataset_dict.pop('qa_checklist_completed', None)
+        for resource in existing_dataset_dict.get('resources', []):
+            resource.pop('qa_checklist', None)
+            resource.pop('qa_checklist_num', None)
+            checklist = res_id_to_checklist.get(resource['id'])
+            if checklist:
+                resource_checklist_string = json.dumps(checklist)
+                resource['qa_checklist'] = resource_checklist_string
+                resource['qa_checklist_num'] = len(checklist)
 
     data_dict['modified_date'] = datetime.datetime.utcnow().isoformat()
 
@@ -530,6 +537,7 @@ def package_qa_checklist_update(context, data_dict):
     existing_dataset_dict['qa_checklist'] = dataset_checklist_string
 
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+    context['allow_qa_checklist_completed_field'] = True
     result = _get_action('package_update')(context, existing_dataset_dict)
     return result
 
