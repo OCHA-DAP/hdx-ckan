@@ -1,4 +1,5 @@
 @import "../../variables";
+@import "../../mixins";
 
 @baseImagePath: "/base/images";
 @formatMediumX: 32px;
@@ -192,6 +193,12 @@ ul.dataset-resources li + li.label-icons {
       position: absolute;
       top: 10px;
       left: 10px;
+  }
+
+  .under-review {
+    color: @orangeColor;
+    .gothamBoldFont(12px);
+    text-transform: uppercase;
   }
 }
 

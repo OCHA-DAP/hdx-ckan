@@ -477,8 +477,8 @@ def resource_show(context, data_dict):
 
 
 def _additional_hdx_resource_show_processing(context, resource_dict):
-    if _should_manually_load_property_value(context, resource_dict, 'size'):
-        resource_dict['size'] = _get_resource_filesize(resource_dict)
+    # if _should_manually_load_property_value(context, resource_dict, 'size'):
+    #     resource_dict['size'] = _get_resource_filesize(resource_dict)
     if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
         resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
     if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):

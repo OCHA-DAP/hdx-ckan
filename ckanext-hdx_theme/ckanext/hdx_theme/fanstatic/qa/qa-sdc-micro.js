@@ -160,7 +160,8 @@ function _initHandsonTable(datasetId, resourceId, data) {
 
 function _loadData(resourceURL, sheet, data, resolve, reject) {
   let hxlProxyUrl = $('#qa-sdc-hxl-proxy').text();
-  $.get(`${hxlProxyUrl}/api/data-preview.json?rows=20&sheet=${sheet}&url=${resourceURL}`)
+  let encodedResourceUrl = encodeURIComponent(resourceURL);
+  $.get(`${hxlProxyUrl}/api/data-preview.json?rows=20&sheet=${sheet}&url=${encodedResourceUrl}`)
     .done((result) => {
       data.content.push(result);
       data.sheets = sheet + 1;

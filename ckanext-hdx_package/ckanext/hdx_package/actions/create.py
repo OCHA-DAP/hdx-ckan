@@ -6,22 +6,21 @@ Created on Jul 07, 2015
 
 import logging
 
-import ckan.logic.action.create as core_create
-import ckan.logic as logic
-import ckan.lib.plugins as lib_plugins
-import ckan.lib.dictization.model_save as model_save
-import ckan.plugins as plugins
-
-import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_package.helpers.screenshot as screenshot
-
-from ckan.common import _
-from ckanext.hdx_package.helpers.analytics import is_cod
-from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
+from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded
+from ckanext.hdx_package.helpers.analytics import is_cod
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
+from flask import request
+
+import ckan.lib.plugins as lib_plugins
+import ckan.logic as logic
+import ckan.logic.action.create as core_create
+import ckan.plugins as plugins
+from ckan.common import _
 
 _get_action = logic.get_action
 _check_access = logic.check_access
@@ -45,6 +44,10 @@ def resource_create(context, data_dict):
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
+    else:
+        data_dict['size'] = request.content_length
+        data_dict['mimetype'] = request.files['upload'].mimetype
+
     result_dict = core_create.resource_create(context, data_dict)
     return result_dict
 
