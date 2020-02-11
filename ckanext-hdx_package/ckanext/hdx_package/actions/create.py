@@ -45,8 +45,11 @@ def resource_create(context, data_dict):
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
     else:
-        data_dict['size'] = request.content_length
-        data_dict['mimetype'] = request.files['upload'].mimetype
+        try:
+            data_dict['size'] = request.content_length
+            data_dict['mimetype'] = request.files['upload'].mimetype
+        except RuntimeError as re:
+            log.debug('This usually happens for tests when there is no HTTP request: ' + unicode(re))
 
     result_dict = core_create.resource_create(context, data_dict)
     return result_dict
