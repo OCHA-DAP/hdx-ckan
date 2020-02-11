@@ -58,8 +58,11 @@ def resource_update(context, data_dict):
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
     else:
-        data_dict['size'] = request.content_length
-        data_dict['mimetype'] = request.files['upload'].mimetype
+        try:
+            data_dict['size'] = request.content_length
+            data_dict['mimetype'] = request.files['upload'].mimetype
+        except RuntimeError as re:
+            log.debug('This usually happens for tests when there is no HTTP request: ' + unicode(re))
 
     if data_dict.get('datastore_active', 'false') in ('false', 'False'):
         data_dict['datastore_active'] = False
