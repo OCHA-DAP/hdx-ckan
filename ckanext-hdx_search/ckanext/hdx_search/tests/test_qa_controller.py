@@ -48,54 +48,54 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             page = self.app.get(url)
         return page
 
-    # def test_qa_dashboard(self):
-    #
-    #     user = model.User.by_name('tester')
-    #     user.email = 'test@test.com'
-    #
-    #     url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-    #     try:
-    #         self._get_url(url, user.apikey)
-    #         assert False
-    #     except Exception, ex:
-    #         assert True
-    #         assert '404' in ex.message
-    #         assert '/qa_dashboard' in ex.message
-    #
-    #     user = model.User.by_name('testsysadmin')
-    #     user.email = 'test@test.com'
-    #     url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search', page=2)
-    #     try:
-    #         qa_dashboard_result = self._get_url(url, user.apikey)
-    #     except Exception, ex:
-    #         assert False
-    #     assert '200' in qa_dashboard_result.status
-    #     assert '/qa_dashboard' in qa_dashboard_result.body
-    #
-    #     config['hdx.qadashboard.enabled'] = 'false'
-    #     try:
-    #         self._get_url(url, user.apikey)
-    #         assert False
-    #     except Exception, ex:
-    #         assert True
-    #     config['hdx.qadashboard.enabled'] = 'true'
-    #     try:
-    #         self._get_url(url, user.apikey)
-    #     except Exception, ex:
-    #         assert False
-    #     assert True
-    #
-    # def test_qa_questions_list(self):
-    #     context = {'model': model, 'session': model.Session, 'user': 'tester'}
-    #     context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-    #
-    #     qa_q_list = self._get_action('qa_questions_list')(context_sysadmin, {})
-    #     assert 'metadata_checklist' in qa_q_list
-    #     assert 29 == len(qa_q_list.get('metadata_checklist'))
-    #     assert 'resources_checklist' in qa_q_list
-    #     assert 10 == len(qa_q_list.get('resources_checklist'))
-    #     assert 'data_protection_checklist' in qa_q_list
-    #     assert 6 == len(qa_q_list.get('data_protection_checklist'))
+    def test_qa_dashboard(self):
+
+        user = model.User.by_name('tester')
+        user.email = 'test@test.com'
+
+        url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
+        try:
+            self._get_url(url, user.apikey)
+            assert False
+        except Exception, ex:
+            assert True
+            assert '404' in ex.message
+            assert '/qa_dashboard' in ex.message
+
+        user = model.User.by_name('testsysadmin')
+        user.email = 'test@test.com'
+        url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search', page=2)
+        try:
+            qa_dashboard_result = self._get_url(url, user.apikey)
+        except Exception, ex:
+            assert False
+        assert '200' in qa_dashboard_result.status
+        assert '/qa_dashboard' in qa_dashboard_result.body
+
+        config['hdx.qadashboard.enabled'] = 'false'
+        try:
+            self._get_url(url, user.apikey)
+            assert False
+        except Exception, ex:
+            assert True
+        config['hdx.qadashboard.enabled'] = 'true'
+        try:
+            self._get_url(url, user.apikey)
+        except Exception, ex:
+            assert False
+        assert True
+
+    def test_qa_questions_list(self):
+        context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        qa_q_list = self._get_action('qa_questions_list')(context_sysadmin, {})
+        assert 'metadata_checklist' in qa_q_list
+        assert 29 == len(qa_q_list.get('metadata_checklist'))
+        assert 'resources_checklist' in qa_q_list
+        assert 10 == len(qa_q_list.get('resources_checklist'))
+        assert 'data_protection_checklist' in qa_q_list
+        assert 6 == len(qa_q_list.get('data_protection_checklist'))
 
     def test_qa_pii_run(self):
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
