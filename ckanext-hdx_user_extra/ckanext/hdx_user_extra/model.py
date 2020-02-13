@@ -63,10 +63,10 @@ class UserExtra(DomainObject):
         result = query.all()
         return result
 
-    @staticmethod
-    def get_by_key(key):
-        query = meta.Session.query(UserExtra)
-        return query.filter_by(key=key).all()
+    # @staticmethod
+    # def get_by_key(key):
+    #     query = meta.Session.query(UserExtra)
+    #     return query.filter_by(key=key).all()
 
     @staticmethod
     def check_exists():
@@ -89,9 +89,9 @@ def define_user_extra_table():
     Index('user_id_key_idx', user_extra_table.c.user_id, user_extra_table.c.key, unique=True)
     mapper(UserExtra, user_extra_table, extension=[extension.PluginMapperExtension(), ])
 
-
-def _create_extra(key, value):
-    return UserExtra(key=unicode(key), value=value)
+#
+# def _create_extra(key, value):
+#     return UserExtra(key=unicode(key), value=value)
 
 
 def create_table():
