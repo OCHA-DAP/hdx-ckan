@@ -64,7 +64,7 @@ class UserExtra(DomainObject):
         return result
 
     @staticmethod
-    def get_by_key( key):
+    def get_by_key(key):
         query = meta.Session.query(UserExtra)
         return query.filter_by(key=key).all()
 
