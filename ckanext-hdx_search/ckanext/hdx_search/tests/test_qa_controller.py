@@ -13,6 +13,7 @@ import ckan.tests.legacy as tests
 import json
 import unicodedata
 import ckanext.hdx_search.actions.actions as actions
+from ckan.common import config
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -43,30 +44,9 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         return page
 
     def test_qa_dashboard(self):
-        # user = model.User.by_name('tester')
-        # offset = h.url_for(
-        #     controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        # response = self.app.get(offset, params={'q': 'health'})
-        # assert '404' in response.status
-        #
-        # sysadmin_user = model.User.by_name('testsysadmin')
-        # context = {'model': model, 'session': model.Session,
-        #            'user': sysadmin_user.name, 'auth_user_obj': sysadmin_user}
-        # url = h.url_for(
-        #     controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        # response = self.app.get(url, params={'q': 'health'})
-        # assert '404' in response.status
+
         user = model.User.by_name('tester')
         user.email = 'test@test.com'
-
-        # post_params = None
-        #
-        # try:
-        #     res = self.app.get('/page/edit', params=post_params, extra_environ=auth)
-        #     assert False
-        # except Exception, ex:
-        #     assert '404 Not Found' in ex.message
-
 
         url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
         try:
@@ -78,7 +58,23 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
-        url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        qa_dashboard_result = self._get_url(url, user.apikey)
+        url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search', page=2)
+        try:
+            qa_dashboard_result = self._get_url(url, user.apikey)
+        except Exception, ex:
+            assert False
         assert '200' in qa_dashboard_result.status
         assert '/qa_dashboard' in qa_dashboard_result.body
+
+        config['hdx.qadashboard.enabled'] = 'false'
+        try:
+            qa_dashboard_result = self._get_url(url, user.apikey)
+            assert False
+        except Exception, ex:
+            assert True
+        config['hdx.qadashboard.enabled'] = 'true'
+        try:
+            qa_dashboard_result = self._get_url(url, user.apikey)
+        except Exception, ex:
+            assert False
+        assert True
