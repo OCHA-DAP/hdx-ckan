@@ -138,5 +138,5 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'columns_type_list': "text|text|text|text|text|text|numeric",
             'sheet': '0'
         }
-        qa_sdcmicro_run = self._get_action('qa_pii_run')(context, data_dict)
+        qa_sdcmicro_run = self._get_action('qa_sdcmicro_run')(context, data_dict)
         assert True
