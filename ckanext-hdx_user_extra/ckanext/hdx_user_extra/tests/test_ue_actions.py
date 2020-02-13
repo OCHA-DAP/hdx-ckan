@@ -25,13 +25,13 @@ log = logging.getLogger(__name__)
 
 class TestHDXUserExtra(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
+    # @classmethod
+    # def _load_plugins(cls):
+    #     try:
+    #         hdx_test_base.load_plugin('hdx_package hdx_search hdx_org_group hdx_theme')
+    #     except Exception as e:
+    #         log.warn('Module already loaded')
+    #         log.info(str(e))
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
@@ -40,14 +40,6 @@ class TestHDXUserExtra(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
-
-    def _get_url(self, url, apikey=None):
-        if apikey:
-            page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
-        else:
-            page = self.app.get(url)
-        return page
 
     def test_ue_actions(self):
 
