@@ -158,26 +158,49 @@ function _initHandsonTable(datasetId, resourceId, data) {
   _renderHandsonTable(data);
 }
 
-function _loadData(resourceURL, sheet, data, resolve, reject) {
+function _loadSheetNames(resourceURL) {
   let hxlProxyUrl = $('#qa-sdc-hxl-proxy').text();
+  hxlProxyUrl = 'https://beta.proxy.hxlstandard.org';
   let encodedResourceUrl = encodeURIComponent(resourceURL);
-  $.get(`${hxlProxyUrl}/api/data-preview.json?rows=20&sheet=${sheet}&url=${encodedResourceUrl}`)
-    .done((result) => {
-      data.content.push(result);
-      data.sheets = sheet + 1;
-      if (data.sheets < MAX_NUMBER_OF_SHEETS) {
-        _loadData(resourceURL, sheet + 1, data, resolve, reject);
-      } else {
+
+  return new Promise((resolve, reject) => {
+    let data = {
+      url: resourceURL,
+      sheets: 1,
+      sheetNames: ['Data']
+    };
+    $.get(`${hxlProxyUrl}/api/data-preview-sheets.json?url=${encodedResourceUrl}`)
+      .done((sheets) => {
+        data.sheets = sheets.length;
+        data.sheetNames = sheets;
+      })
+      .fail(() => {
+        //do nothing
+      })
+      .always(() => {
         resolve(data);
-      }
-    })
-    .fail((error) => {
-      if (sheet === 0) {
-        reject(error);
-      } else {
+      });
+  });
+}
+
+function _loadData(data) {
+  let hxlProxyUrl = $('#qa-sdc-hxl-proxy').text();
+  let encodedResourceUrl = encodeURIComponent(data.url);
+
+  return new Promise((resolve, reject) => {
+    let ajaxCalls = Array.from(Array(data.sheets).keys()).map((sheet) => $.get(`${hxlProxyUrl}/api/data-preview.json?rows=20&sheet=${sheet}&url=${encodedResourceUrl}`));
+    $.when(...ajaxCalls)
+      .done((...results) => {
+        if (data.sheets > 1) {
+          data.content = results.map((result) => result[0]);
+        } else {
+          data.content = [results[0]];
+        }
+
         resolve(data);
-      }
-    });
+      })
+      .fail(() => reject('Cannot load data'));
+  });
 }
 
 function _loadSheet(el, sheet) {
@@ -191,7 +214,7 @@ function _generateTabs(data) {
   let tabs = $("#qa-sdc-widget .nav");
   let content = Array.from(Array(data.sheets)).map((_, i) => `
     <li class="nav-item ${i === 0 ? 'active' : ''}">
-      <a class="nav-link" href="#" data-sheet="${i}">Sheet ${i + 1}</a>
+      <a class="nav-link" href="#" data-sheet="${i}">${data.sheetNames[i]}</a>
     </li>
   `).join('');
 
@@ -219,7 +242,10 @@ function _loadResourcePreviewData(datasetId, resourceId, resourceURL) {
   let promise = new Promise((resolve, reject) => _getS3ResourceURL(resourceId, resolve, reject));
   promise
     .then((url) => {
-      return new Promise((resolve, reject) => _loadData(url, 0, emptyData, resolve, reject));
+      return _loadSheetNames(url);
+    })
+    .then((data) => {
+      return _loadData(data);
     })
     .then((data) => {
       _sdcLoadedData = data;
@@ -281,6 +307,7 @@ function openSDCMicro(packageId, resourceId, resourceUrl) {
           <div class="bounce3"></div>
         </div>
       </div>`);
+  $("#qa-sdc-widget .nav").html('');
   $("#qaSDCMicro").show();
   _registerSDCMicroPopupEvents();
   _loadResourcePreviewData(packageId, resourceId, resourceUrl);
