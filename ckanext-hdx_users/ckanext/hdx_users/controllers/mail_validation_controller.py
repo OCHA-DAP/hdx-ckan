@@ -109,21 +109,21 @@ class ValidationController(ckan.controllers.user.UserController):
             template_data['data']['page_subtitle'] = page_subtitle
         return render('home/index.html', extra_vars=template_data)
 
-    def first_login(self, error=None):
-        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
-        data_dict = {'extras': [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]}
-        if c.user:
-            try:
-                data_dict['user_id'] = c.userobj.id or c.user
-                get_action('user_extra_update')(context, data_dict)
-            except NotFound, e:
-                return OnbUserNotFound
-            except Exception, e:
-                error_summary = str(e)
-                return self.error_message(error_summary)
-        else:
-            return OnbUserNotFound
-        return OnbSuccess
+    # def first_login(self, error=None):
+    #     context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+    #     data_dict = {'extras': [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]}
+    #     if c.user:
+    #         try:
+    #             data_dict['user_id'] = c.userobj.id or c.user
+    #             get_action('user_extra_update')(context, data_dict)
+    #         except NotFound, e:
+    #             return OnbUserNotFound
+    #         except Exception, e:
+    #             error_summary = str(e)
+    #             return self.error_message(error_summary)
+    #     else:
+    #         return OnbUserNotFound
+    #     return OnbSuccess
 
     def login(self, error=None):
         '''
@@ -473,7 +473,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 <html>
                   <head></head>
                   <body>
-                    <p>Dear {first_name},</p> 
+                    <p>Dear {first_name},</p>
                     <br/>
                     <p>Welcome to the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>! You have successfully registered your account on HDX.</p>
                     <br/>
