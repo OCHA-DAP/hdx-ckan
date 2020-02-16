@@ -376,7 +376,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
-            'qa_checklist_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
+            'qa_checklist_completed': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing'),
+                tk.get_validator('boolean_validator')
+            ],
             'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })

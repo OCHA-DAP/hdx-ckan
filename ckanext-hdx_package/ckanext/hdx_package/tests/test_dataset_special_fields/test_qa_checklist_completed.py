@@ -82,10 +82,10 @@ class TestQAChecklistCompleted(hdx_test_base.HdxBaseTest):
         package_dict_3 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_3})
         package_dict_4 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_4})
 
-        assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is False
-        assert "qa_checklist_completed" in package_dict_2 and package_dict_2.get("qa_checklist_completed") is False
-        assert "qa_checklist_completed" in package_dict_3 and package_dict_3.get("qa_checklist_completed") is False
-        assert "qa_checklist_completed" in package_dict_4 and package_dict_4.get("qa_checklist_completed") is False
+        assert package_dict.get("qa_checklist_completed") is None
+        assert package_dict_2.get("qa_checklist_completed") is None
+        assert package_dict_3.get("qa_checklist_completed") is None
+        assert package_dict_4.get("qa_checklist_completed") is None
 
     def test_qa_checklist_completed_not_on_dataset_update(self):
         '''
@@ -94,9 +94,9 @@ class TestQAChecklistCompleted(hdx_test_base.HdxBaseTest):
 
         # qa_checklist_completed field cannot be set via normal package_patch / package_update
         package_dict = self._package_patch_qa_checklist_completed_flag(self.PACKAGE_ID, True, self.NORMAL_USER)
-        assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is False
+        assert package_dict.get("qa_checklist_completed") is None
         package_dict = self._package_patch_qa_checklist_completed_flag(self.PACKAGE_ID, True, self.SYSADMIN_USER)
-        assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is False
+        assert package_dict.get("qa_checklist_completed") is None
 
     def test_qa_checklist_completed_on_qa_checklist_update(self):
         '''
@@ -111,12 +111,12 @@ class TestQAChecklistCompleted(hdx_test_base.HdxBaseTest):
         package_dict = self._qa_checklist_update(self.PACKAGE_ID_2, True, self.SYSADMIN_USER)
         assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is True
         package_dict = self._change_description_of_package(self.PACKAGE_ID_2, self.NORMAL_USER)
-        assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is False
+        assert package_dict.get("qa_checklist_completed") is None
 
         package_dict = self._qa_checklist_update(self.PACKAGE_ID_3, True, self.SYSADMIN_USER)
         assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is True
         package_dict = self._change_description_of_package(self.PACKAGE_ID_3, self.SYSADMIN_USER)
-        assert "qa_checklist_completed" in package_dict and package_dict.get("qa_checklist_completed") is False
+        assert package_dict.get("qa_checklist_completed") is None
 
     def test_qa_checklist_completed_reset_via_hdx_mark_qa_checklist_update(self):
         '''

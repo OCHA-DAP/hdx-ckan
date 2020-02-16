@@ -529,6 +529,7 @@ def package_qa_checklist_update(context, data_dict):
         if checklist_complete:
             existing_dataset_dict['qa_checklist_completed'] = True
         else:
+            existing_dataset_dict['qa_checklist_completed'] = False
             for resource in existing_dataset_dict.get('resources', []):
                 checklist = res_id_to_checklist.get(resource['id'])
                 if checklist:
