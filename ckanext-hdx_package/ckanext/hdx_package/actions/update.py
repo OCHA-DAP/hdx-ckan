@@ -508,36 +508,49 @@ def package_qa_checklist_update(context, data_dict):
     id = get_or_bust(data_dict, 'id')
     del data_dict['id']
 
+    existing_dataset_dict = _get_action('package_show')(context, {'id': id})
+    _remove_current_checklist_data(existing_dataset_dict)
+
     resources_checklist = data_dict.pop('resources', [])
     res_id_to_checklist = {}
     for res_checklist in resources_checklist:
         res_id = get_or_bust(res_checklist, 'id')
         del res_checklist['id']
-        res_id_to_checklist[res_id] = res_checklist
 
-    existing_dataset_dict = _get_action('package_show')(context, {'id': id})
+        # if there's any meaningful data at the resource level (actual checkboxes checked)
+        if res_checklist:
+            res_id_to_checklist[res_id] = res_checklist
 
-    checklist_complete = data_dict.pop('checklist_complete', None)
-    if checklist_complete:
-        existing_dataset_dict['qa_checklist_completed'] = True
-    else:
-        existing_dataset_dict.pop('qa_checklist_completed', None)
-        for resource in existing_dataset_dict.get('resources', []):
-            resource.pop('qa_checklist', None)
-            resource.pop('qa_checklist_num', None)
-            checklist = res_id_to_checklist.get(resource['id'])
-            if checklist:
-                resource_checklist_string = json.dumps(checklist)
-                resource['qa_checklist'] = resource_checklist_string
-                resource['qa_checklist_num'] = len(checklist)
+    # if there's any meaningful data (actual checkboxes checked)
+    if res_id_to_checklist or data_dict.get('metadata') or data_dict.get('dataProtection') \
+        or data_dict.get('checklist_complete'):
 
-    data_dict['modified_date'] = datetime.datetime.utcnow().isoformat()
+        checklist_complete = data_dict.pop('checklist_complete', None)
+        if checklist_complete:
+            existing_dataset_dict['qa_checklist_completed'] = True
+        else:
+            for resource in existing_dataset_dict.get('resources', []):
+                checklist = res_id_to_checklist.get(resource['id'])
+                if checklist:
+                    resource_checklist_string = json.dumps(checklist)
+                    resource['qa_checklist'] = resource_checklist_string
+                    resource['qa_checklist_num'] = len(checklist)
 
-    dataset_checklist_string = json.dumps(data_dict)
-    existing_dataset_dict['qa_checklist'] = dataset_checklist_string
+        data_dict['modified_date'] = datetime.datetime.utcnow().isoformat()
+
+        dataset_checklist_string = json.dumps(data_dict)
+        existing_dataset_dict['qa_checklist'] = dataset_checklist_string
 
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
     context['allow_qa_checklist_completed_field'] = True
+    context['allow_qa_checklist_field'] = True
     result = _get_action('package_update')(context, existing_dataset_dict)
     return result
 
+
+def _remove_current_checklist_data(dataset_dict):
+    dataset_dict.pop('qa_checklist_completed', None)
+    dataset_dict.pop('qa_checklist', None)
+    for resource_dict in dataset_dict.get('resources', []):
+        resource_dict.pop('qa_checklist', None)
+        resource_dict.pop('qa_checklist_num', None)

@@ -29,7 +29,7 @@ class TestQAChecklistCompleted(hdx_test_base.HdxBaseTest):
         factories.User(name=cls.NORMAL_USER, email='qa_checklist_completed_user@hdx.hdxtest.org')
         factories.Organization(
             name='org_name_4_qa_checklist_completed',
-            title='ORG NAME FOR QA COMPLETED',
+            title='ORG NAME FOR QA CHECKLIST COMPLETED',
             users=[
                 {'name': cls.NORMAL_USER, 'capacity': 'admin'},
             ],
@@ -145,7 +145,8 @@ class TestQAChecklistCompleted(hdx_test_base.HdxBaseTest):
 
     def _change_description_of_package(self, package_id, user):
         context = {'model': model, 'session': model.Session, 'user': user}
-        return self._get_action('package_patch')(context, {'id': package_id, 'notes': 'modified for qa completed'})
+        return self._get_action('package_patch')(context,
+                                                 {'id': package_id, 'notes': 'modified for qa checklist completed'})
 
     def _qa_checklist_update(self, package_id, qa_checklist_completed, user):
         context = {'model': model, 'session': model.Session, 'user': user}

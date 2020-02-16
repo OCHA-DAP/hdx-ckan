@@ -373,28 +373,30 @@ def hdx_resource_keep_prev_value_unless_sysadmin(key, data, errors, context):
         raise StopOnError
 
 
-def hdx_package_keep_prev_value_unless_sysadmin(key, data, errors, context):
-    '''
-    By default, this should inject the value from the previous version.
-    The exception is if the user is a sysadmin, then the new value is used.
-    '''
-    if data[key] is missing:
-        data.pop(key, None)
+def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field):
+    def hdx_package_keep_prev_value_unless_field_in_context(key, data, errors, context):
+        '''
+        By default, this should inject the value from the previous version.
+        The exception is if the 'context_field' key is in the context.
+        NOTE, we don't check whether user is sysadmin. The api action that set the
+        'context_field' should do any checks.
+        '''
+        if data[key] is missing:
+            data.pop(key, None)
 
-    user = context.get('user')
-    ignore_auth = context.get('ignore_auth')
-    allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
+        allow_qa_checklist_field = context.get(context_field)
 
-    if not allowed_to_change:
-        data.pop(key, None)
-        pkg_id = data.get(('id',))
-        if pkg_id:
-            pkg_dict = __get_previous_package_dict(context, pkg_id)
-            old_value = pkg_dict.get(key[0], None)
-            if old_value is not None:
-                data[key] = old_value
-    if key not in data:
-        raise StopOnError
+        if not allow_qa_checklist_field:
+            data.pop(key, None)
+            pkg_id = data.get(('id',))
+            if pkg_id:
+                pkg_dict = __get_previous_package_dict(context, pkg_id)
+                old_value = pkg_dict.get(key[0], None)
+                if old_value is not None:
+                    data[key] = old_value
+        if key not in data:
+            raise StopOnError
+    return hdx_package_keep_prev_value_unless_field_in_context
 
 
 def hdx_keep_prev_value_if_empty(key, data, errors, context):
