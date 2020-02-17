@@ -7,7 +7,7 @@ from ckan.logic import (
 )
 
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode
-
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 
 def resource_patch(context, data_dict):
     '''
@@ -82,7 +82,7 @@ def hdx_mark_broken_link_in_resource(context, data_dict):
 
     data_dict['broken_link'] = True
     context['allow_broken_link_field'] = True
-    context['batch_mode'] = 'KEEP_OLD'
+    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
     return _get_action('resource_patch')(context, data_dict)
 
 
@@ -91,6 +91,6 @@ def hdx_mark_qa_completed(context, data_dict):
     _get_or_bust(data_dict, 'qa_completed')
 
     context['allow_qa_completed_field'] = True
-    context['batch_mode'] = 'KEEP_OLD'
+    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
     return _get_action('package_patch')(context, data_dict)

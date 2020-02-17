@@ -262,20 +262,22 @@ class HDXQAController(HDXSearchController):
                                                          num_of_resource_questions * len(resource_list)
 
                 for r in resource_list:
-                    r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
-                    r['qa_checklist_num'] = len(r['qa_checklist'])
-                    package_dict['qa_checklist_num'] += r['qa_checklist_num']
                     r['qa_checklist_total_num'] = num_of_resource_questions
-                    r['qa_check_list_status'] = None \
-                        if package_dict['qa_checklist'].get('modified_date') is None \
-                        else 'OK' if r['qa_checklist_num'] == 0 \
-                        else 'ERROR'
+                    if package_dict.get('qa_checklist_completed'):
+                        r['qa_checklist'] = None
+                        r['qa_checklist_num'] = 0
+                        r['qa_check_list_status'] = 'OK'
+                    else:
+                        r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
+                        r['qa_checklist_num'] = len(r['qa_checklist'])
+                        package_dict['qa_checklist_num'] += r['qa_checklist_num']
+                        r['qa_check_list_status'] = 'ERROR' if r['qa_checklist_num'] > 0 else None
 
                 # This needs to be set AFTER we've aggregated the statuses of the resources
                 package_dict['qa_check_list_status'] = \
-                    None if package_dict['qa_checklist'].get('modified_date') is None \
-                        else 'OK' if package_dict['qa_checklist_num'] == 0 \
-                        else 'ERROR'
+                    'OK' if package_dict.get('qa_checklist_completed') \
+                        else 'ERROR' if package_dict['qa_checklist_num'] > 0 \
+                        else None
 
     def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
 
