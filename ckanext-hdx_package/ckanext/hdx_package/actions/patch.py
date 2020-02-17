@@ -94,3 +94,12 @@ def hdx_mark_qa_completed(context, data_dict):
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
     return _get_action('package_patch')(context, data_dict)
+
+
+def hdx_qa_resource_patch(context, data_dict):
+    _check_access('hdx_qa_resource_patch', context, data_dict)
+
+    context['allow_resource_qa_script_field'] = True
+    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+
+    return _get_action('resource_patch')(context, data_dict)

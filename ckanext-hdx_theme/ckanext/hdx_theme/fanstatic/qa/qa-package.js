@@ -13,7 +13,7 @@ function _updateQuarantine(resource, flag) {
     "in_quarantine": flag,
   };
   let promise = new Promise((resolve, reject) => {
-    $.post('/api/action/resource_patch', body)
+    $.post('/api/action/hdx_qa_resource_patch', body)
       .done((result) => {
         if (result.success){
           resolve(result);
