@@ -208,7 +208,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
 
 
 def _get_resource_s3_path(resource_dict):
-    download_url = resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")
+    download_url = resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")
     if "download/" in download_url:
         url = download_url.split("download/")[1]
     else:
