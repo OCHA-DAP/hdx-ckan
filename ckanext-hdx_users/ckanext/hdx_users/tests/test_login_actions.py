@@ -47,7 +47,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             page = self.app.get(url)
         return page
 
-    def test_first_login(self):
+    def test_login_actions(self):
         user = model.User.by_name('tester')
         context = {'model': model, 'session': model.Session, 'user': 'tester', 'auth_user_obj': user}
         res = self._get_action('hdx_first_login')(context, {})
@@ -76,7 +76,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert 'requires an authenticated user' in ex.message
         assert True
 
-    # def test_new_login(self):
+    # test_new_login
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='new_login')
         try:
@@ -97,7 +97,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert '200' in res.status
         assert 'Forgot your password?' not in res.body
 
-    # def test_login(self):
+    # test_login
         test_url = "/login_generic"
         params = {
             'login': 'testsysadmin',
@@ -111,3 +111,19 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert res.c
         assert res.c.action == 'logged_in'
         assert res.c.userobj.name == 'testsysadmin'
+
+        # test logout
+        logout_url = '/user/_logout'
+        res = self.app.get(logout_url)
+        assert '302' in res.body
+        assert '/user/logout?came_from=/user/logged_out_redirect' in res.body
+        try:
+            res1 = self.app.get('/user/logout')
+            assert '302 Found\n\nThe resource was found at http://localhost/user/logged_out?came_from=%2F; you should be redirected automatically.' in res1.body
+            res2 = self.app.get('/user/logged_out')
+            assert False
+        except Exception, ex:
+            assert '302' in res2.body
+            assert res2.c.userobj is None
+        assert True
+
