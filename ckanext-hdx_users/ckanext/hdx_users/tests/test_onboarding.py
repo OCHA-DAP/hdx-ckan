@@ -54,8 +54,10 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         else:
             page = self.app.get(url)
         return page
+
+    @mock.patch('ckanext.hdx_theme.util.mail.send_mail')
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
-    def test_onboarding(self, mocked_mail_recipient):
+    def test_onboarding(self, mocked_mail_recipient, mocked_send_mail):
 
         # step 1 register
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
@@ -77,11 +79,85 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'id="recaptcha"' in res.body
         assert 'value="newuser@hdx.org"' in res.body
 
-
         # step 3 details
         context = {'model': model, 'session': model.Session, 'auth_user_obj': user}
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_details')
+
+        try:
+            res = self.app.post(url, {})
+            assert False
+        except KeyError, ex:
+            assert True
+
+        try:
+            res = self.app.post(url, {
+                'first-name': 'firstname',
+                'last-name': 'lastname',
+                'password': 'passpass',
+                'name': 'newuser',
+                'email': 'newuser@hdx.org',
+                'login': 'newuser@hdx.org',
+                'id': '123123123123'
+            })
+            assert False
+        except AttributeError, ex:
+            assert '\'NoneType\' object has no attribute \'name\'' in ex.message
+            assert True
+
+        try:
+            res = self.app.post(url, {
+                'first-name': 'firstname',
+                'last-name': 'lastname',
+                'password': 'passpass',
+                'name': 'newuser',
+                'login': 'newuser@hdx.org',
+                'id': user.id
+            })
+            assert '"Email": "Missing value"' in res.body
+        except Exception, ex:
+            assert True
+
+        try:
+            res = self.app.post(url, {
+                'first-name': 'firstname',
+                'last-name': 'lastname',
+                'password': 'passpass',
+                'name': 'testsysadmin',
+                'email': 'newuser@hdx.org',
+                'login': 'newuser@hdx.org',
+                'id': user.id
+            })
+            assert 'That login name is not available' in res.body
+        except Exception, ex:
+            assert False
+
+        try:
+            res = self.app.post(url, {
+                'first-name': 'firstname',
+                'last-name': 'lastname',
+                'password': 'passpass',
+                'email': 'newuser@hdx.org',
+                'login': 'newuser@hdx.org',
+                'id': user.id
+            })
+            assert "Missing value" in res.body
+        except Exception, ex:
+            assert True
+
+        try:
+            res = self.app.post(url, {
+                'first-name': 'firstname',
+                'password': 'pass',
+                'name': 'newuser',
+                'email': 'newuser@hdx.org',
+                'login': 'newuser@hdx.org',
+                'id': user.id
+            })
+            assert False
+        except KeyError, ex:
+            assert True
+
         params = {
             'first-name': 'firstname',
             'last-name': 'lastname',
@@ -107,9 +183,17 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert res
         assert self._get_user_extra_by_key(res, user_model.HDX_ONBOARDING_DETAILS) == 'True'
 
+
         # step 4 follow
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='follow_details')
+
+        try:
+            res = self.app.post(url, {})
+            assert False
+        except KeyError, ex:
+            assert 'id' in ex.message
+
         params = {
             'id': user.id
         }
@@ -121,6 +205,31 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         res = self._get_action('user_extra_show')(context, {'user_id': user.id})
         assert res
         assert self._get_user_extra_by_key(res, user_model.HDX_ONBOARDING_FOLLOWS) == 'True'
+
+        # step 5b request_membership
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                        action='request_membership')
+
+        try:
+            res = self.app.post(url, {})
+            assert '"message": "Unauthorized to create user"' in res.body
+        except Exception, ex:
+            assert True
+
+        params = {
+            'org_id': 'hdx-test-org',
+            'message': "please add me to your organization",
+            'save': u'save',
+            'role': u'member',
+            'group': 'hdx-test-org'
+        }
+
+        auth = {'Authorization': str(user.apikey)}
+        try:
+            res = self.app.post(url, params, extra_environ=auth)
+            assert '{"success": true}' in res.body
+        except Exception, ex:
+            assert False
 
     def _get_user_extra_by_key(self, user_extras, key):
         ue_show_list = [d.get('value') for i, d in enumerate(user_extras) if d['key'] == key]
