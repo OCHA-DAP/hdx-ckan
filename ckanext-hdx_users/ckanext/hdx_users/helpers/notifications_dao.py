@@ -135,3 +135,71 @@ class ExpiredDatasetsDao(object):
             last_date = dateutil.parser.parse(last_date_str[0:-1])
 
         return num_of_datasets, last_date
+
+
+class QuarantinedDatasetsDao(object):
+    def __init__(self, model, userobj, is_sysadmin):
+        self.model = model
+        self.is_sysadmin = is_sysadmin
+        self.userobj = userobj
+        self.org_names = None
+
+    def __populate_org_names_for_user(self):
+        if not self.org_names:
+            model = self.model
+
+            org_names_query = model.Session.query(model.Group.name) \
+                .filter(model.Member.group_id == model.Group.id) \
+                .filter(model.Group.state == 'active') \
+                .filter(model.Group.type == 'organization') \
+                .filter(model.Member.state == 'active') \
+                .filter(model.Member.table_name == 'user') \
+                .filter(model.Member.capacity.in_(['admin', 'editor'])) \
+                .filter(model.Member.table_id == self.userobj.id)
+
+            self.org_names = org_names_query.all()
+
+    def __perform_solr_query(self, query_string):
+        query_params = {
+            'start': 0,
+            'rows': 100,
+            'sort': 'last_modified desc',
+            'fq': query_string
+        }
+        search_result = get_action('package_search')({}, query_params)
+        num_of_datasets = search_result.get('count', 0)
+        results = search_result.get('results')
+        for dataset in results:
+            dataset['last_date'] = dateutil.parser.parse(dataset.get('metadata_modified')[0:-1])
+        return search_result['results'], num_of_datasets
+
+    def fetch_quarantined_datasets_for_user(self):
+        '''
+
+        :return: list of datasets (max, 100) and total number of available datasets (maybe not all fetched)
+        :rtype: (list, integer)
+        '''
+        query_string = 'res_extras_in_quarantine:"true"'
+        self.__populate_org_names_for_user()
+        if self.org_names:
+            org_names_string = " OR ".join((o[0] for o in self.org_names))
+            query_string += ' AND organization:({})'.format(org_names_string)
+
+            return self.__perform_solr_query(query_string)
+
+        return None, 0
+
+    def fetch_all_quarantined_datasets(self):
+        '''
+
+        :return: list of datasets (max, 100) and total number of available datasets (maybe not all fetched)
+        :rtype: (list, integer)
+        '''
+        query_string = 'res_extras_in_quarantine:"true"'
+        self.__populate_org_names_for_user()
+        if self.org_names:
+            org_names_string = " OR ".join((o[0] for o in self.org_names))
+            query_string += ' -organization:({})'.format(org_names_string)
+
+        return self.__perform_solr_query(query_string)
+

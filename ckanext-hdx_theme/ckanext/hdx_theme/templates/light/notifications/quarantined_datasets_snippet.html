@@ -1,0 +1,18 @@
+{#
+Example:
+
+  {% snippet 'light/notifications/quarantined_datasets_snippet.html', notification=notification %}
+
+#}
+{% if notification.is_sysadmin %} [QA] {% endif %}
+
+The dataset
+<a href="{{ notification.dataset_url }}"
+   data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
+    {{ notification.dataset.title }}
+</a>
+is under review by the HDX team and at least one or more of your resources is unavailable for preview and download.
+This process can take up to one business day and you will be notified as soon as these become available.
+<br />
+<span class="date">{{ notification.last_date }}</span>
+
