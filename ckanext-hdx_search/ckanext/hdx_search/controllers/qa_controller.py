@@ -148,6 +148,7 @@ class HDXQAController(HDXSearchController):
         facet_queries.append('{{!key={} ex=batch}} {}'.format(BULK_DATASETS_FACET_NAME, updated_by_script_query))
         search_data_dict['facet.query'] = facet_queries
 
+        search_data_dict['facet.field'].append('{!ex=methodology,batch}methodology')
         search_data_dict['facet.field'].append('res_extras_broken_link')
         search_data_dict['facet.field'].append('qa_completed')
         search_data_dict['f.qa_completed.facet.missing'] = 'true'
@@ -181,6 +182,8 @@ class HDXQAController(HDXSearchController):
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
             self.__process_broken_link_facet(existing_facets, title_translations, search_extras, item_list)
+
+            self.__process_methodology(title_translations)
 
     def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
         category_key = 'ext_' + item_name
@@ -293,6 +296,17 @@ class HDXQAController(HDXSearchController):
                         package_pii_priority = res_pii_priority
                         package_dict[report_flag_field] = r.get(report_flag_field, '')
                         package_dict[timestamp_field] = r.get(timestamp_field, '')
+
+    def __process_methodology(self, title_translations):
+        '''
+        :param title_translations:
+        :type title_translations: collections.OrderedDict
+        :return:
+        '''
+        cloned_dict = title_translations.copy()
+        title_translations.clear()
+        title_translations['{!ex=methodology,batch}methodology'] = _('Methodology')
+        title_translations.update(cloned_dict)
 
 
     def _search_template(self):
