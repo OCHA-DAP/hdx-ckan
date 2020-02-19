@@ -487,9 +487,8 @@ class ValidationController(ckan.controllers.user.UserController):
                   </body>
                 </html>
                 """.format(username=data_dict.get('name'), link=link, faq_link=faq_link, first_name=first_name)
-                if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                    hdx_mailer.mail_recipient(
-                        [{'display_name': full_name, 'email': data_dict.get('email')}], subject, html)
+                # if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
+                hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject, html)
 
         except NotAuthorized:
             return OnbNotAuth
