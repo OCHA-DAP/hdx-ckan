@@ -260,10 +260,11 @@ ckan.module('contribute_flow_main', function($, _) {
                       let { contributeGlobal, data } = this;
                       return contributeGlobal.displayPrivateDatasetInfoPopup(data);
                     }.bind(callbackContext))
-                    .then(function () {
-                      let { contributeGlobal, data } = this;
-                      return contributeGlobal.displayContributeDatasetReviewPopup(data)
-                    }.bind(callbackContext))
+                    //DISABLED functionality for now
+                    // .then(function () {
+                    //   let { contributeGlobal, data } = this;
+                    //   return contributeGlobal.displayContributeDatasetReviewPopup(data)
+                    // }.bind(callbackContext))
                     .then(function () {
                       let { contributeGlobal, data, status } = this;
                       contributeGlobal.datasetWaitToValidateAndSave(data, status);
