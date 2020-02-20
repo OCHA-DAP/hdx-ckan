@@ -59,8 +59,9 @@ def resource_update(context, data_dict):
         data_dict['url_type'] = 'api'
     else:
         try:
-            data_dict['size'] = request.content_length
-            data_dict['mimetype'] = request.files['upload'].mimetype
+            if len(request.files) > 0:
+                data_dict['size'] = request.content_length
+                data_dict['mimetype'] = request.files['upload'].mimetype
         except RuntimeError as re:
             log.debug('This usually happens for tests when there is no HTTP request: ' + unicode(re))
 
