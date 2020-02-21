@@ -93,6 +93,7 @@ class HDXQAController(HDXSearchController):
 
         c.cps_off = config.get('hdx.cps.off', 'false')
         c.other_links['current_page_url'] = h.url_for('qa_dashboard')
+        c.advanced_mode = request.params.get('_advanced_mode', 'false').lower()
         # query_string = request.params.get('q', u'')
         # if c.userobj and query_string:
         #     search_history.store_search(query_string, c.userobj.id)
