@@ -131,8 +131,9 @@ class SplashPageController(HomeController):
         htmlItem = html.get(page)
 
         if titleItem is None:
-            message = _("The requested about page doesn't exist")
-            raise logic.ValidationError({'message': message}, error_summary=message)
+            abort(404, _("The requested about page doesn't exist"))
+            # message = _("The requested about page doesn't exist")
+            # raise logic.ValidationError({'message': message}, error_summary=message)
 
         extraVars = {'title': titleItem, 'html': htmlItem, 'page': page}
         return base.render('home/about2.html', extra_vars=extraVars)
