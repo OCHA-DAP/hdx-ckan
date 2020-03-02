@@ -20,11 +20,12 @@ class AbstractAnalyticsSender(object):
         self.response = None
 
         try:
-            self.referer_url = request.referer
+            self.referer_url = request.referrer
             self.user_addr = request.environ.get('HTTP_X_REAL_IP')
             self.request_url = request.url
 
-            self.user_agent = request.user_agent if request.user_agent else ''
+            ua = request.user_agent if request.user_agent else ''
+            self.user_agent = ua if isinstance(ua, basestring) else ua.string
             ua_dict = useragent.Parse(self.user_agent)
 
             self.is_api_call = False

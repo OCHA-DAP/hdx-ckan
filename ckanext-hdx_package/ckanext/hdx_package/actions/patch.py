@@ -6,7 +6,7 @@ from ckan.logic import (
     get_or_bust as _get_or_bust,
 )
 
-from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode
+from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 
 def resource_patch(context, data_dict):
@@ -51,6 +51,7 @@ def resource_patch(context, data_dict):
 def package_patch(context, data_dict):
     '''
     Cloned from core. It's used to parse validation parameters (SKIP_VALIDATION) for special cases
+    Also, changed so that it now calls "our" package_update instead of the core package_update.
 
     Patch a dataset (package).
 
@@ -66,7 +67,28 @@ def package_patch(context, data_dict):
     to.
     '''
     process_skip_validation(context, data_dict)
-    return _patch.package_patch(context, data_dict)
+
+    # Original package patch from CKAN
+    _check_access('package_patch', context, data_dict)
+
+    show_context = {
+        'model': context['model'],
+        'session': context['session'],
+        'user': context['user'],
+        'auth_user_obj': context['auth_user_obj'],
+    }
+
+    package_dict = _get_action('package_show')(
+        show_context,
+        {'id': _get_or_bust(data_dict, 'id')})
+
+    patched = dict(package_dict)
+    patched.update(data_dict)
+    patched['id'] = package_dict['id']
+
+    # slightly modified to call "our" package_update
+    return package_update(context, patched)
+    # END - Original package patch from CKAN
 
 
 def hdx_mark_broken_link_in_resource(context, data_dict):
