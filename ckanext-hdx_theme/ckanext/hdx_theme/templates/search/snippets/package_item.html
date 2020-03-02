@@ -78,7 +78,12 @@
 
                   </div>
                   <div class="dataset-dates">
-                    Updated {{f_updated_time}}
+                    Updated
+                    {% if h.hdx_get_frequency_by_value(package.data_update_frequency) == 'Live' %}
+                      {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}
+                    {% else %}
+                      {{f_updated_time}}
+                    {% endif %}
                     {% if package.dataset_date%}
                       {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
                       {% if dataset_date %}
