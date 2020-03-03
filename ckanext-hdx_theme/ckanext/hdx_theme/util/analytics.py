@@ -74,7 +74,7 @@ class AbstractAnalyticsSender(object):
 
     def __check_ip_addr_public(self):
         if self.user_addr:
-            ip_addr = ipaddress.ip_address(self.user_addr)
+            ip_addr = ipaddress.ip_address(unicode(self.user_addr))
             if ip_addr.is_private:
                 log.warn('IP address used in analytics event {} is not public.'
                          'This could be normal for tests and dev env.'.format(self.__class__.__name__))
