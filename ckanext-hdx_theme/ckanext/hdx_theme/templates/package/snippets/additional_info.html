@@ -27,14 +27,17 @@
   </tr>
 
   <tr>
-    {% if h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) == "Live"  %}
-      <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
-      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</span></td>
-    {% else %}
-      {% set updated_time = h.hdx_get_last_modification_date(pkg_dict) %}
-      <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
-      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_datetime(updated_time) }}</span></td>
-    {% endif %}
+    {% set updated_time = h.hdx_get_last_modification_date(pkg_dict) %}
+    <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
+    <td class="dataset-details">
+      <span data-module="hdx_show_more" style="visibility:hidden">
+      {% if h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) == "Live"  %}
+        {{ _('Live') }}
+      {% else %}
+        {{ h.render_datetime(updated_time) }}
+      {% endif %}
+      </span>
+    </td>
   </tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Expected Update Frequency') }}</th>
