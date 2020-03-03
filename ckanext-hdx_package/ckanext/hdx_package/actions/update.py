@@ -11,6 +11,7 @@ import logging
 import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
+from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
     BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.file_removal import file_remove
@@ -171,6 +172,9 @@ def package_update(context, data_dict):
     if hasattr(pkg, 'extras'):
         data_dict['package_creator'] = pkg.extras.get('package_creator', data_dict.get('package_creator'))
 
+    # Get previous version of QA COMPLETED
+    prev_qa_completed = pkg.extras.get('qa_completed') == 'true'
+
     # Inject a code representing the batch within which this dataset was modified
     if context.get(BATCH_MODE) == BATCH_MODE_KEEP_OLD:
         try:
@@ -242,10 +246,14 @@ def package_update(context, data_dict):
 
     # we could update the dataset so we should still be able to read it.
     context['ignore_auth'] = True
-    output = data_dict['id'] if return_id_only \
-        else _get_action('package_show')(context, {'id': data_dict['id']})
+    new_data_dict = _get_action('package_show')(context, {'id': data_dict['id']})
 
-    return output
+    new_qa_completed = new_data_dict.get('qa_completed')
+    if new_qa_completed != prev_qa_completed:
+        QACompletedAnalyticsSender(new_data_dict, mark_as_set=new_qa_completed).send_to_queue()
+        log.debug('new QA COMPLETED value: {}'.format(new_qa_completed))
+
+    return data_dict['id'] if return_id_only else new_data_dict
 
 
 def package_resource_reorder(context, data_dict):

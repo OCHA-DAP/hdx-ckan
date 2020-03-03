@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+import ipaddress
 
 import ckanext.hdx_theme.helpers.api_tracking_helper as api_th
 import pylons.config as config
@@ -20,11 +21,13 @@ class AbstractAnalyticsSender(object):
         self.response = None
 
         try:
-            self.referer_url = request.referer
+            self.referer_url = request.referrer
             self.user_addr = request.environ.get('HTTP_X_REAL_IP')
+            self.__check_ip_addr_public()
             self.request_url = request.url
 
-            self.user_agent = request.user_agent if request.user_agent else ''
+            ua = request.user_agent if request.user_agent else ''
+            self.user_agent = ua if isinstance(ua, basestring) else ua.string
             ua_dict = useragent.Parse(self.user_agent)
 
             self.is_api_call = False
@@ -43,7 +46,6 @@ class AbstractAnalyticsSender(object):
         except Exception, e:
             log.warn('request specific info could not be found. This is normal for nose tests. Exception is {}'.format(
                 str(e)))
-
 
     def send_to_queue(self):
         try:
@@ -69,6 +71,13 @@ class AbstractAnalyticsSender(object):
             log.error("Request timed out: {}".format(str(e)))
         except Exception, e:
             log.error('Unexpected error {}'.format(e))
+
+    def __check_ip_addr_public(self):
+        if self.user_addr:
+            ip_addr = ipaddress.ip_address(self.user_addr)
+            if ip_addr.is_private:
+                log.warn('IP address used in analytics event {} is not public.'
+                         'This could be normal for tests and dev env.'.format(self.__class__.__name__))
 
     def _populate_defaults(self):
 
