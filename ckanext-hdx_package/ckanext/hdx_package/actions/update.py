@@ -19,6 +19,7 @@ from flask import request
 
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.plugins as lib_plugins
+import ckan.lib.munge as munge
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
@@ -75,9 +76,11 @@ def resource_update(context, data_dict):
 
 
     new_resource_is_api = result_dict.get('url_type') == 'api'
-    new_file_has_same_name = result_dict.get('name') == prev_resource_dict['name']
+    munged_current_res_name = munge.munge_filename(result_dict.get('name'))
+    munged_prev_res_name = munge.munge_filename(prev_resource_dict['name'])
+    new_file_has_same_name = munged_current_res_name == munged_prev_res_name
     if prev_resource_is_upload and ((new_file_uploaded and not new_file_has_same_name) or new_resource_is_api):
-        log.debug('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
+        log.info('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
         file_remove(prev_resource_dict['id'], prev_resource_dict['name'], prev_resource_dict['url_type'])
     else:
         log.info('Not deleting resource: prev_resource_is_upload {} / new_file_uploaded {}'
