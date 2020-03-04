@@ -200,10 +200,10 @@ class HDXQAController(HDXSearchController):
         title_translations.pop('qa_completed', None)
 
         facet_data = existing_facets.pop('qa_completed', {})
-        qa_completed_item = next(
+        qa_completed_item = dict(next(
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}
-        )
+        ))
 
         qa_category_key = 'ext_qa_completed'
         qa_completed_item['category_key'] = qa_category_key
