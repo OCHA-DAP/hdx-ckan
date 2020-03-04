@@ -160,7 +160,6 @@ function _initHandsonTable(datasetId, resourceId, data) {
 
 function _loadSheetNames(resourceURL) {
   let hxlProxyUrl = $('#qa-sdc-hxl-proxy').text();
-  hxlProxyUrl = 'https://beta.proxy.hxlstandard.org';
   let encodedResourceUrl = encodeURIComponent(resourceURL);
 
   return new Promise((resolve, reject) => {
