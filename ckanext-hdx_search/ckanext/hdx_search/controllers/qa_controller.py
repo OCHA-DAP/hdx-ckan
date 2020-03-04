@@ -178,8 +178,7 @@ class HDXQAController(HDXSearchController):
                                           item_list, search_extras)
             self.__add_facet_item_to_list(DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'), existing_facets,
                                           item_list, search_extras)
-            self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
-                                          item_list, search_extras)
+            self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
             self.__process_broken_link_facet(existing_facets, title_translations, search_extras, item_list)
@@ -193,17 +192,31 @@ class HDXQAController(HDXSearchController):
         item['display_name'] = item_display_name
         item['category_key'] = category_key
         item['name'] = '1'  # this gets displayed as value in HTML <input>
-        item['selected'] = search_extras.get(category_key)
+        item['selected'] = search_extras.get(category_key) == '1'
         qa_only_item_list.append(item)
+
+        return item
+
+    def __process_bulk_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
+        bulk_facet_item = self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
+                                      qa_only_item_list, search_extras)
+
+        non_bulk_facet_item = dict(bulk_facet_item)
+        non_bulk_facet_item['display_name'] = _('Non-bulk upload')
+        non_bulk_facet_item['name'] = '0'
+        non_bulk_facet_item['count'] = c.batch_total_items - bulk_facet_item.get('count', 0)
+        non_bulk_facet_item['selected']  = search_extras.get('ext_' + BULK_DATASETS_FACET_NAME) == '0'
+        qa_only_item_list.append(non_bulk_facet_item)
+
 
     def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('qa_completed', None)
 
         facet_data = existing_facets.pop('qa_completed', {})
-        qa_completed_item = next(
+        qa_completed_item = dict(next(
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}
-        )
+        ))
 
         qa_category_key = 'ext_qa_completed'
         qa_completed_item['category_key'] = qa_category_key
