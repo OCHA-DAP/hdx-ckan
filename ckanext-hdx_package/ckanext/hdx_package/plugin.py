@@ -248,7 +248,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                             tk.get_validator('hdx_isodate_to_string_converter'),
                             tk.get_converter('convert_to_extras')],
             'qa_completed': [tk.get_validator('hdx_reset_unless_allow_qa_completed'),
-                             tk.get_validator('ignore_missing'),
+                             # tk.get_validator('ignore_missing'),
                              tk.get_validator('hdx_boolean_string_converter'),
                              tk.get_converter('convert_to_extras')],
             'qa_checklist_completed': [tk.get_validator('hdx_reset_unless_allow_qa_checklist_completed'),
@@ -375,7 +375,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
-            'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
+            'qa_completed': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_converter('hdx_assume_missing_is_true'),
+                tk.get_validator('boolean_validator')
+            ],
             'qa_checklist_completed': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing'),
@@ -468,6 +472,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
             'hdx_is_url':  vd.hdx_is_url,
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
+            'hdx_assume_missing_is_true': vd.hdx_assume_missing_is_true,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
             'hdx_resource_keep_prev_value_unless_sysadmin': vd.hdx_resource_keep_prev_value_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,

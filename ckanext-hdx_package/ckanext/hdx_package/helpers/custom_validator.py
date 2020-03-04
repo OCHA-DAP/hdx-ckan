@@ -328,6 +328,13 @@ def hdx_boolean_string_converter(value, context):
     return "false"
 
 
+def hdx_assume_missing_is_true(value, context):
+    if value is missing or value is None:
+        return "true"
+    return value
+
+
+
 def hdx_isodate_to_string_converter(value, context):
     if isinstance(value, datetime.datetime):
         return value.isoformat()
