@@ -135,7 +135,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
                       generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
                                                      include=True))
-        adapt_solr_fq(BULK_DATASETS_FACET_NAME, 'extras_updated_by_script:[* TO *]')
+        adapt_solr_fq(BULK_DATASETS_FACET_NAME, ' +extras_updated_by_script:[* TO *]',
+                      ' -extras_updated_by_script:[* TO *]')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()

@@ -207,20 +207,69 @@ ckan.module('contribute_flow_main', function($, _) {
                     contributeGlobal.resourceSaveReadyDeferred = null;
                   }
                 },
-                'afterBodyFormSave': function (data, status, xhr) {
-                    // Even if there are no errors we need to update the validation UI (hide previous errors)
-                    contributeGlobal.updateValidationUi(data, status, xhr);
+                'displayPrivateDatasetInfoPopup': function (data) {
+                  // Check if we need to display the info about private datasets
+                  let deferred = new $.Deferred();
+                  const STORAGE_KEY = "/contribute:hidePrivateDatasetInfo";
+                  let hideInfo = window.localStorage.getItem(STORAGE_KEY);
 
-                    if (data.data.private) {
-                      $('#privateDatasetInfoPopup, #privateDatasetInfoPopup .close, #privateDatasetInfoPopup .btn-primary').click(function(ev) {
-                        let {data, status} = this;
-                        contributeGlobal.datasetWaitToValidateAndSave(data, status);
-                        $('#privateDatasetInfoPopup').hide();
-                      }.bind({data, status}));
-                      $('#privateDatasetInfoPopup').show();
-                    } else {
+                  if (data.data.private && !hideInfo) {
+                    $('#privateDatasetInfoPopup, #privateDatasetInfoPopup .close, #privateDatasetInfoPopup .btn-primary').click(function(ev) {
+                      let { deferred, STORAGE_KEY } = this;
+                      if ($('#privateDatasetInfoPopup input[name="hide-message"]').is(':checked')) {
+                        window.localStorage.setItem(STORAGE_KEY, 'true');
+                      }
+                      $('#privateDatasetInfoPopup').hide();
+                      deferred.resolve();
+                    }.bind({deferred: deferred, STORAGE_KEY: STORAGE_KEY}));
+                    $('#privateDatasetInfoPopup').show();
+                  } else {
+                    deferred.resolve();
+                  }
+                  return deferred.promise();
+                },
+                'displayContributeDatasetReviewPopup': function (data) {
+                  // display the dataset contribute review info
+                  let deferred = new $.Deferred();
+                  const STORAGE_KEY = "/contribute:hideContributeDatasetReviewInfo";
+                  let hideInfo = window.localStorage.getItem(STORAGE_KEY);
+
+                  if (!hideInfo) {
+                    $('#contributeDatasetReviewPopup, #contributeDatasetReviewPopup .close, #contributeDatasetReviewPopup .btn-primary').click(function(ev) {
+                      let { deferred, STORAGE_KEY } = this;
+                      if ($('#contributeDatasetReviewPopup input[name="hide-message"]').is(':checked')) {
+                        window.localStorage.setItem(STORAGE_KEY, 'true');
+                      }
+                      $('#contributeDatasetReviewPopup').hide();
+                      deferred.resolve()
+                    }.bind({deferred: deferred, STORAGE_KEY: STORAGE_KEY}));
+                    $('#contributeDatasetReviewPopup').show();
+                  } else {
+                    deferred.resolve();
+                  }
+                  return deferred.promise();
+                },
+                'afterBodyFormSave': function (data, status, xhr) {
+                  // Even if there are no errors we need to update the validation UI (hide previous errors)
+                  contributeGlobal.updateValidationUi(data, status, xhr);
+
+                  let deferred = new $.Deferred();
+                  const callbackContext = {contributeGlobal: contributeGlobal, data: data, status: status};
+                  deferred.promise()
+                    .then(function () {
+                      let { contributeGlobal, data } = this;
+                      return contributeGlobal.displayPrivateDatasetInfoPopup(data);
+                    }.bind(callbackContext))
+                    //DISABLED functionality for now
+                    // .then(function () {
+                    //   let { contributeGlobal, data } = this;
+                    //   return contributeGlobal.displayContributeDatasetReviewPopup(data)
+                    // }.bind(callbackContext))
+                    .then(function () {
+                      let { contributeGlobal, data, status } = this;
                       contributeGlobal.datasetWaitToValidateAndSave(data, status);
-                    }
+                    }.bind(callbackContext));
+                  deferred.resolve();
                 },
                 'resourceSaveReadyDeferred': null,
                 'getResourceSaveStartPromise':  function() {

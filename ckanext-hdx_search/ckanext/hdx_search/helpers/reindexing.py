@@ -1,9 +1,10 @@
 import logging
 
 from ckan.common import config
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
-
+NotFound = tk.ObjectNotFound
 
 class HdxSolrReindexer(object):
     '''
@@ -36,9 +37,12 @@ class HdxSolrReindexer(object):
         log.info("Using hdx specific reindexing...")
 
         if package_id:
+            pkg = self.model.Package.get(package_id)
 
-            self.package_index.remove_dict({'id': package_id})
-            self._hdx_fast_reindex(self.context, [package_id], self.package_index, defer_commit, force, quiet)
+            if pkg is None:
+                raise NotFound
+            self.package_index.remove_dict({'id': pkg.id})
+            self._hdx_fast_reindex(self.context, [pkg.id], self.package_index, defer_commit, force, quiet)
         elif package_ids:
             self._hdx_fast_reindex(self.context, package_ids, self.package_index, defer_commit, False, quiet)
 

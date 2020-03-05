@@ -664,6 +664,17 @@ metadata_and_data_quality = {
                  'visualization for the data in the dataset showcase. A list of changes appears in the activity stream '
                  'on the left-hand column of the dataset page.',
         },
+        {
+            'q': 'What does it mean for a dataset to be \'under review\'?',
+            'a': '<p>The HDX team manually reviews every dataset uploaded to the platform as part of a standard quality'
+                 ' assurance (QA) process. This process exists to ensure compliance with the '
+                 '<a href="https://data.humdata.org/about/terms">HDX Terms of Service</a>, '
+                 'which prohibit the sharing of personal data. It also serves as a means to check different quality '
+                 'criteria, including the completeness of metadata, the relevance of the data to humanitarian action, '
+                 'and the integrity of the data file(s).</p>'
+                 '<p>If an issue is found, the resource(s) requiring additional review will be temporarily unavailable'
+                 ' for download and marked as \'under review\' in the dataset page on the public HDX interface.</p>',
+        },
     ]
 }
 resources_for_developers = {

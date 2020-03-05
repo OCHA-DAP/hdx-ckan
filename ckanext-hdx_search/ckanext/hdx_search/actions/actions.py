@@ -1,4 +1,6 @@
 import logging
+import urllib
+
 import requests
 import json
 import ckan.lib.munge as munge
@@ -7,7 +9,6 @@ import ckan.model as model
 import ckanext.hdx_search.helpers.qa_data as qa_data
 
 from pylons import config
-
 
 log = logging.getLogger(__name__)
 
@@ -60,9 +61,11 @@ def hdx_get_package_showcase_id_list(context, data_dict):
     showcase_id_list = ShowcasePackageAssociation.get_showcase_ids_for_package(validated_data_dict['package_id'])
     return showcase_id_list
 
+
 @logic.side_effect_free
 def hdx_qa_questions_list(context, data_dict):
     return qa_data.questions_list
+
 
 @logic.side_effect_free
 def hdx_qa_sdcmicro_run(context, data_dict):
@@ -93,8 +96,9 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     if resource_id:
         try:
             # resource_dict = get_action("resource_show")(context, {"id": resource_id})
-            resource_dict = get_action("resource_patch")(context, {"id": resource_id, "sdc_report_flag": "QUEUED"})
-            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"), data_dict.get("columns_type_list"), data_dict.get("sheet"))
+            resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "sdc_report_flag": "QUEUED"})
+            _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"),
+                                data_dict.get("columns_type_list"), data_dict.get("sheet", 0))
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
@@ -127,7 +131,7 @@ def hdx_qa_pii_run(context, data_dict):
     resource_id = data_dict.get("resourceId")
     if resource_id:
         try:
-            resource_dict = get_action("resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
+            resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
             _run_pii_check(resource_dict)
         except Exception, ex:
             return {
@@ -154,7 +158,8 @@ def _run_pii_check(resource_dict):
                 'Content-Type': 'application/json'
             },
             data=json.dumps({
-                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
+                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
+                                                         resource_name=munged_resource_name),
             }))
         r.raise_for_status()
     except requests.exceptions.ConnectionError as ex:
@@ -170,7 +175,8 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
     try:
         munged_resource_name = _get_resource_s3_path(resource_dict)
         data_dict = {
-            'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"), resource_name=munged_resource_name),
+            'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
+                                                       resource_name=munged_resource_name),
             'sheet': sheet,
             'riskThreshold': 3
         }
@@ -180,6 +186,11 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
             data_dict['weightColumn'] = str(weightColumn)
         if columns_type_list:
             data_dict['columnTypes'] = '|'.join(map(str, columns_type_list))
+
+        proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
+        params = urllib.urlencode(
+            {'sheet': sheet, 'url': resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")})
+        data_dict['resourceProxyUrl'] = proxy_data_preview_url + '?{params}'.format(params=params)
         r = requests.post(
             SDCMICRO_RUN_URL,
             headers={
@@ -197,7 +208,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
 
 
 def _get_resource_s3_path(resource_dict):
-    download_url = resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")
+    download_url = resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")
     if "download/" in download_url:
         url = download_url.split("download/")[1]
     else:

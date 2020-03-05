@@ -82,9 +82,9 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         map.connect('/login',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='new_login')
-        map.connect('/user/first_login',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='first_login')
+        # map.connect('/user/first_login',
+        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        #             action='first_login')
         return map
 
     def after_map(self, map):
@@ -96,14 +96,18 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list,
             'hdx_send_reset_link': get.hdx_send_reset_link,
-            'hdx_send_new_org_request': misc.hdx_send_new_org_request
+            'hdx_send_new_org_request': misc.hdx_send_new_org_request,
+            'hdx_first_login': create.hdx_first_login
         }
 
     def get_auth_functions(self):
-        return {'user_can_register': authorize.user_can_register,
-                'user_can_validate': authorize.user_can_validate,
-                'hdx_send_new_org_request': auth.hdx_send_new_org_request,
-                'manage_permissions': auth.manage_permissions}
+        return {
+            'user_can_register': authorize.user_can_register,
+            'user_can_validate': authorize.user_can_validate,
+            'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+            'manage_permissions': auth.manage_permissions,
+            'hdx_first_login': auth.hdx_first_login
+        }
 
     # IConfigurable
     def configure(self, config):

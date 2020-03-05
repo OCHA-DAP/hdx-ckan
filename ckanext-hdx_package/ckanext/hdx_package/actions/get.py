@@ -639,13 +639,21 @@ def package_qa_checklist_show(context, data_dict):
     dataset_dict = get_action('package_show')(context, data_dict)
 
     dataset_qa_checklist = get_obj_from_json_in_dict(dataset_dict, 'qa_checklist') or {}
-    for r in dataset_dict.get('resources', []):
-        r_qa_checklist = get_obj_from_json_in_dict(r, 'qa_checklist')
-        if r_qa_checklist:
-            qa_res_list = dataset_qa_checklist.get('resources', [])
-            r_qa_checklist['id'] = r['id']
-            qa_res_list.append(r_qa_checklist)
-            dataset_qa_checklist['resources'] = qa_res_list
+
+    qa_checklist_completed = dataset_dict.get('qa_checklist_completed')
+    if qa_checklist_completed:
+        dataset_qa_checklist['checklist_complete'] = True
+        dataset_qa_checklist.pop('metadata', None)
+        dataset_qa_checklist.pop('dataProtection', None)
+        dataset_qa_checklist.pop('resources', None)
+    else:
+        for r in dataset_dict.get('resources', []):
+            r_qa_checklist = get_obj_from_json_in_dict(r, 'qa_checklist')
+            if r_qa_checklist:
+                qa_res_list = dataset_qa_checklist.get('resources', [])
+                r_qa_checklist['id'] = r['id']
+                qa_res_list.append(r_qa_checklist)
+                dataset_qa_checklist['resources'] = qa_res_list
 
     return dataset_qa_checklist
 

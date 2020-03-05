@@ -8,7 +8,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
 class TestAboutPageController(hdx_test_base.HdxBaseTest):
-    
+
     #loads missing plugins
     @classmethod
     def _load_plugins(cls):
@@ -34,23 +34,26 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         assert 'Terms of Service' in str(page.response), 'the url /about/terms should redirect to the Terms of Service page, even when the user is logged in'
 
         try:
-            page = self._getAboutPage('fake')
-            assert "The requested about page doesn't exist" in str(page.response), 'the url /about/fake should throw an error when no user is logged in'
-        except logic.ValidationError:
-            assert True
+            self._getAboutPage('fake')
+            # assert "The requested about page doesn't exist" in str(page.response), 'the url /about/fake should throw an error when no user is logged in'
+            assert False
+        except Exception, ex:
+            assert "Bad response: 404 Not Found" in ex.message
+            assert "/about/fake" in ex.message
 
         try:
-            page = self._getAboutPage('fake', testsysadmin.apikey)
-            assert "The requested about page doesn't exist" in str(page.response), 'the url /about/terms should throw an error, even when the user is logged in'
-        except logic.ValidationError:
-            assert True
+            self._getAboutPage('fake', testsysadmin.apikey)
+            # assert "The requested about page doesn't exist" in str(page.response), 'the url /about/terms should throw an error, even when the user is logged in'
+            assert False
+        except Exception, ex:
+            assert "Bad response: 404 Not Found" in ex.message
+            assert "/about/fake" in ex.message
 
     def _getAboutPage(self, page, apikey=None):
         url = '/about/' + page
         if apikey:
-            page = self.app.get(url,headers={'Authorization':unicodedata.normalize('NFKD', apikey).encode('ascii','ignore')})
+            page = self.app.get(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
         else:
             page = self.app.get(url)
         return page
-
-

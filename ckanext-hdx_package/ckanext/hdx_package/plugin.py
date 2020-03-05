@@ -248,10 +248,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                             tk.get_validator('hdx_isodate_to_string_converter'),
                             tk.get_converter('convert_to_extras')],
             'qa_completed': [tk.get_validator('hdx_reset_unless_allow_qa_completed'),
+                             # tk.get_validator('ignore_missing'),
+                             tk.get_validator('hdx_boolean_string_converter'),
+                             tk.get_converter('convert_to_extras')],
+            'qa_checklist_completed': [tk.get_validator('hdx_reset_unless_allow_qa_checklist_completed'),
                              tk.get_validator('ignore_missing'),
                              tk.get_validator('hdx_boolean_string_converter'),
                              tk.get_converter('convert_to_extras')],
-            'qa_checklist': [tk.get_validator('hdx_package_keep_prev_value_unless_sysadmin'),
+            'qa_checklist': [tk.get_validator('hdx_keep_unless_allow_qa_checklist_field'),
                             tk.get_converter('convert_to_extras')],
             'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
                              tk.get_converter('convert_to_extras')]
@@ -264,41 +268,41 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
                 'in_quarantine': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),
                     tk.get_validator('hdx_reset_on_file_upload')
                 ],
                 'pii_timestamp': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('isodate'),
                     tk.get_validator('hdx_isodate_to_string_converter'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
                 'pii_report_flag': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
                 'pii_report_id': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
                 'sdc_timestamp': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('isodate'),
                     tk.get_validator('hdx_isodate_to_string_converter'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
                 'sdc_report_flag': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
                 'sdc_report_id': [
-                    tk.get_validator('hdx_resource_keep_prev_value_unless_sysadmin'),
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
@@ -371,7 +375,16 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
             'overdue_date': [tk.get_validator('ignore_missing')],
-            'qa_completed': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
+            'qa_completed': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_converter('hdx_assume_missing_is_true'),
+                tk.get_validator('boolean_validator')
+            ],
+            'qa_checklist_completed': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing'),
+                tk.get_validator('boolean_validator')
+            ],
             'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
@@ -440,7 +453,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
             'hdx_get_s3_link_for_resource': hdx_get.hdx_get_s3_link_for_resource,
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
-            'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed
+            'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed,
+            'hdx_qa_resource_patch': hdx_patch.hdx_qa_resource_patch,
         }
 
     # IValidators
@@ -458,13 +472,20 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
             'hdx_is_url':  vd.hdx_is_url,
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
+            'hdx_assume_missing_is_true': vd.hdx_assume_missing_is_true,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
             'hdx_resource_keep_prev_value_unless_sysadmin': vd.hdx_resource_keep_prev_value_unless_sysadmin,
-            'hdx_package_keep_prev_value_unless_sysadmin': vd.hdx_package_keep_prev_value_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,
             'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
             'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field'),
-            'hdx_reset_unless_allow_qa_completed': vd.hdx_delete_unless_field_in_context('allow_qa_completed_field')
+            'hdx_reset_unless_allow_qa_completed': vd.hdx_delete_unless_field_in_context('allow_qa_completed_field'),
+            'hdx_reset_unless_allow_qa_checklist_completed':
+                vd.hdx_delete_unless_field_in_context('allow_qa_checklist_completed_field'),
+            'hdx_keep_unless_allow_qa_checklist_field':
+                vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_qa_checklist_field'),
+            'hdx_keep_unless_allow_resource_qa_script_field':
+                vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_resource_qa_script_field',
+                                                                               resource_level=True)
         }
 
     def get_auth_functions(self):
@@ -475,7 +496,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_send_mail_members': authorize.hdx_send_mail_members,
                 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
                 'hdx_resource_download': authorize.hdx_resource_download,
-                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed
+                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
+                'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
+                'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch
                 }
 
     def make_middleware(self, app, config):

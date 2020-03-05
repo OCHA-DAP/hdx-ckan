@@ -65,8 +65,10 @@
             <span class="pii-title">
               PII CHECK:
             </span>
-            {% set pii_status_text = 'ERR' if package.pii_report_flag  == 'ERROR' else package.pii_report_flag %}
-            {{ qa_macros.qa_check_item(package.pii_report_flag, pii_status_text, package.pii_timestamp) }}
+            {%  if c.advanced_mode == 'true' %}
+              {% set pii_status_text = 'ERR' if package.pii_report_flag  == 'ERROR' else package.pii_report_flag %}
+              {{ qa_macros.qa_check_item(package.pii_report_flag, pii_status_text, package.pii_timestamp) }}
+            {% endif %}
           </li>
           <li class="pii-item">
             <span class="pii-title">

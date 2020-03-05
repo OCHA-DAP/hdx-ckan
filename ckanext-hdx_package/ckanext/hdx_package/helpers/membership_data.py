@@ -48,6 +48,8 @@ def get_membership_by_user(user, org, userobj):
 
 def get_message_groups(current_user, org_id):
     group_message_topics = {}
+    if not (org_id and current_user):
+        return group_message_topics
     context = {
         'model': model,
         'session': model.Session,

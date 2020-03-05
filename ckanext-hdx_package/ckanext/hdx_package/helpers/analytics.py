@@ -263,7 +263,7 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
         dataset_is_cod = is_cod(dataset_dict) == 'true'
         dataset_is_indicator = is_indicator(dataset_dict) == 'true'
         dataset_is_private = is_private(dataset_dict) == 'true'
-        dataset_availability_level = dataset_availability(dataset_dict) == 'true'
+        dataset_availability_level = dataset_availability(dataset_dict)
 
 
 
@@ -283,6 +283,41 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
             'ga_meta': {
                 'ec': 'dataset',  # event category
                 'ea': 'create',  # event action
+                # There is no event label because that would correspond to the page title and this doesn't exist on the
+                # server side
+                'cd1': (dataset_dict.get('organization') or {}).get('name'),
+                'cd2': _ga_dataset_type(dataset_is_indicator, dataset_is_cod),  # type
+                'cd3': _ga_location(location_names),  # locations
+
+            }
+        }
+
+
+class QACompletedAnalyticsSender(AbstractAnalyticsSender):
+    def __init__(self, dataset_dict, mark_as_set=True):
+        super(QACompletedAnalyticsSender, self).__init__()
+
+        location_names, location_ids = extract_locations(dataset_dict)
+        dataset_is_cod = is_cod(dataset_dict) == 'true'
+        dataset_is_indicator = is_indicator(dataset_dict) == 'true'
+        dataset_is_private = is_private(dataset_dict) == 'true'
+        dataset_availability_level = dataset_availability(dataset_dict)
+
+        self.analytics_dict = {
+            'event_name': 'qa set complete' if mark_as_set else 'qa set incomplete',
+            'mixpanel_meta': {
+                'event source': 'api',
+                'group names': location_names,
+                'group ids': location_ids,
+                'org_name': (dataset_dict.get('organization') or {}).get('name'),
+                'org_id': (dataset_dict.get('organization') or {}).get('id'),
+                'is cod': dataset_is_cod,
+                'is private': dataset_is_private,
+                'dataset availability': dataset_availability_level
+            },
+            'ga_meta': {
+                'ec': 'dataset',  # event category
+                'ea': 'qa set complete' if mark_as_set else 'qa set incomplete',  # event action
                 # There is no event label because that would correspond to the page title and this doesn't exist on the
                 # server side
                 'cd1': (dataset_dict.get('organization') or {}).get('name'),

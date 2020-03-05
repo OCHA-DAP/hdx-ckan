@@ -53,7 +53,7 @@ ckan.site_url = http://test.ckan.net
 #ckan.site_url = http://${HDX_PREFIX}data.${HDX_DOMAIN}
 package_new_return_url = http://localhost/dataset/<NAME>?test=new
 package_edit_return_url = http://localhost/dataset/<NAME>?test=edit
-ckan.extra_resource_fields = alt_url
+ckan.extra_resource_fields = broken_link in_quarantine
 
 # we need legacy templates for many tests to pass
 ckan.legacy_templates = yes

@@ -93,6 +93,7 @@ class HDXQAController(HDXSearchController):
 
         c.cps_off = config.get('hdx.cps.off', 'false')
         c.other_links['current_page_url'] = h.url_for('qa_dashboard')
+        c.advanced_mode = request.params.get('_advanced_mode', 'false').lower()
         # query_string = request.params.get('q', u'')
         # if c.userobj and query_string:
         #     search_history.store_search(query_string, c.userobj.id)
@@ -148,6 +149,7 @@ class HDXQAController(HDXSearchController):
         facet_queries.append('{{!key={} ex=batch}} {}'.format(BULK_DATASETS_FACET_NAME, updated_by_script_query))
         search_data_dict['facet.query'] = facet_queries
 
+        search_data_dict['facet.field'].append('{!ex=methodology,batch}methodology')
         search_data_dict['facet.field'].append('res_extras_broken_link')
         search_data_dict['facet.field'].append('qa_completed')
         search_data_dict['f.qa_completed.facet.missing'] = 'true'
@@ -176,11 +178,12 @@ class HDXQAController(HDXSearchController):
                                           item_list, search_extras)
             self.__add_facet_item_to_list(DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'), existing_facets,
                                           item_list, search_extras)
-            self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
-                                          item_list, search_extras)
+            self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
             self.__process_broken_link_facet(existing_facets, title_translations, search_extras, item_list)
+
+            self.__process_methodology(title_translations)
 
     def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
         category_key = 'ext_' + item_name
@@ -189,17 +192,31 @@ class HDXQAController(HDXSearchController):
         item['display_name'] = item_display_name
         item['category_key'] = category_key
         item['name'] = '1'  # this gets displayed as value in HTML <input>
-        item['selected'] = search_extras.get(category_key)
+        item['selected'] = search_extras.get(category_key) == '1'
         qa_only_item_list.append(item)
+
+        return item
+
+    def __process_bulk_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
+        bulk_facet_item = self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
+                                      qa_only_item_list, search_extras)
+
+        non_bulk_facet_item = dict(bulk_facet_item)
+        non_bulk_facet_item['display_name'] = _('Non-bulk upload')
+        non_bulk_facet_item['name'] = '0'
+        non_bulk_facet_item['count'] = c.batch_total_items - bulk_facet_item.get('count', 0)
+        non_bulk_facet_item['selected']  = search_extras.get('ext_' + BULK_DATASETS_FACET_NAME) == '0'
+        qa_only_item_list.append(non_bulk_facet_item)
+
 
     def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('qa_completed', None)
 
         facet_data = existing_facets.pop('qa_completed', {})
-        qa_completed_item = next(
+        qa_completed_item = dict(next(
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}
-        )
+        ))
 
         qa_category_key = 'ext_qa_completed'
         qa_completed_item['category_key'] = qa_category_key
@@ -262,20 +279,22 @@ class HDXQAController(HDXSearchController):
                                                          num_of_resource_questions * len(resource_list)
 
                 for r in resource_list:
-                    r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
-                    r['qa_checklist_num'] = len(r['qa_checklist'])
-                    package_dict['qa_checklist_num'] += r['qa_checklist_num']
                     r['qa_checklist_total_num'] = num_of_resource_questions
-                    r['qa_check_list_status'] = None \
-                        if package_dict['qa_checklist'].get('modified_date') is None \
-                        else 'OK' if r['qa_checklist_num'] == 0 \
-                        else 'ERROR'
+                    if package_dict.get('qa_checklist_completed'):
+                        r['qa_checklist'] = None
+                        r['qa_checklist_num'] = 0
+                        r['qa_check_list_status'] = 'OK'
+                    else:
+                        r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
+                        r['qa_checklist_num'] = len(r['qa_checklist'])
+                        package_dict['qa_checklist_num'] += r['qa_checklist_num']
+                        r['qa_check_list_status'] = 'ERROR' if r['qa_checklist_num'] > 0 else None
 
                 # This needs to be set AFTER we've aggregated the statuses of the resources
                 package_dict['qa_check_list_status'] = \
-                    None if package_dict['qa_checklist'].get('modified_date') is None \
-                        else 'OK' if package_dict['qa_checklist_num'] == 0 \
-                        else 'ERROR'
+                    'OK' if package_dict.get('qa_checklist_completed') \
+                        else 'ERROR' if package_dict['qa_checklist_num'] > 0 \
+                        else None
 
     def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
 
@@ -291,6 +310,17 @@ class HDXQAController(HDXSearchController):
                         package_pii_priority = res_pii_priority
                         package_dict[report_flag_field] = r.get(report_flag_field, '')
                         package_dict[timestamp_field] = r.get(timestamp_field, '')
+
+    def __process_methodology(self, title_translations):
+        '''
+        :param title_translations:
+        :type title_translations: collections.OrderedDict
+        :return:
+        '''
+        cloned_dict = title_translations.copy()
+        title_translations.clear()
+        title_translations['{!ex=methodology,batch}methodology'] = _('Methodology')
+        title_translations.update(cloned_dict)
 
 
     def _search_template(self):

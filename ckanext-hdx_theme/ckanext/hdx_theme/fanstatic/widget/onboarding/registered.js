@@ -1,8 +1,8 @@
 $(document).ready(function(){
   $('#registered-form').on("submit", function(){
       $this = $(this);
-      $.post('/user/first_login', $this.serialize(), function(result_data){
-          var result = JSON.parse(result_data);
+      $.post('/api/action/hdx_first_login', $this.serialize(), function(result_data){
+          var result = JSON.parse(JSON.stringify(result_data));
           if (result.success){
               closeCurrentWidget($this);showOnboardingWidget('#followPopup');
           } else {

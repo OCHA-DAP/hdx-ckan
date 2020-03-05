@@ -33,7 +33,9 @@ pages = [
     {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
      'action': 'preselect', 'usertype': 'all'},
     {'controller': 'user', 'action': 'dashboard_groups', 'usertype': 'all'},
-    {'controller': 'user', 'action': 'read', 'has_id': True, 'usertype': 'all'}
+    {'controller': 'user', 'action': 'read', 'has_id': True, 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_theme.splash_page:SplashPageController', 'action': 'about_hrinfo', 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_theme.splash_page:SplashPageController', 'action': 'index', 'usertype': 'all'}
 ]
 
 

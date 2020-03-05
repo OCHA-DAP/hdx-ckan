@@ -1,0 +1,34 @@
+{#
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/contribute/contribute-dataset-review.html', id="datasetPopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/done.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "Thank you for sharing your dataset! Please note:" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+  <div class="notification-content notification-small">
+    <div>
+      Your dataset will be under review for compliance with the HDX Terms of Service. <br><br>
+      During the review:
+      <ul>
+        <li>Your dataset page will remain publicly accessible</li>
+        <li>One or more of your resource(s) may become unavailable for preview or download</li>
+        <li>Notification will be posted on HDX when the review is complete</li>
+        <li>This process can take up to one business day</li>
+      </ul>
+      <div style="text-align: right;">
+        <label class="pull-left">
+          <input type="checkbox" name="hide-message"> Do not display this message next time
+        </label>
+        <a class="btn btn-primary">OK</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

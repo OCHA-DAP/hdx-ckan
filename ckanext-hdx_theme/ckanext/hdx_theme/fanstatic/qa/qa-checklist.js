@@ -44,12 +44,12 @@ function _checkDisableMainQAComplete(ev) {
 }
 
 function _setupQAChecklistEvents(resourceID) {
-  $("input.checklist-item").change(_checkDisableIndividualChecklistItems);
+  $("input.checklist-item").off('change').change(_checkDisableIndividualChecklistItems);
 
-  $("#checklist-complete").change(_checkDisableMainQAComplete);
+  $("#checklist-complete").off('change').change(_checkDisableMainQAComplete);
 
-  $("#checklist-save").click(_saveQAChecklist.bind(resourceID));
-  $("#checklist-close").click((ev) => $(ev.currentTarget).parents(".popup").hide());
+  $("#checklist-save").off('click').click(_saveQAChecklist.bind(resourceID));
+  $("#checklist-close").off('click').click((ev) => $(ev.currentTarget).parents(".popup").hide());
 }
 
 function _getQuestionData() {
@@ -98,11 +98,13 @@ function _loadQAChecklist(resourceId) {
     .done((result) => {
       let data = result.result;
       $("#checklist-complete").prop('checked', false);
-      if (data && data.resources) {
-        data.resources.forEach((resource) => _populateChecklistItem(`.qa-checklist-widget .resource-item[data-resource-id=${resource.id}]`, resource));
+      if (data) {
         _populateChecklistItem("#qa-data-protection", data.dataProtection);
         _populateChecklistItem("#qa-metadata", data.metadata);
         _populateChecklistItem(".qa-checklist-widget", data, "#checklist-complete");
+        if (data.resources) {
+          data.resources.forEach((resource) => _populateChecklistItem(`.qa-checklist-widget .resource-item[data-resource-id=${resource.id}]`, resource));
+        }
       }
 
       _checkDisableIndividualChecklistItems({currentTarget: ""});
