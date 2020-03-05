@@ -36,6 +36,7 @@ import ckan.logic.action.get as logic_get
 import ckan.logic.schema
 import ckan.model as model
 import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 from ckan.common import _, c
 from ckan.lib import uploader
 
@@ -561,6 +562,11 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
             if num_of_showcases > 0:
                 package_dict['has_showcases'] = True
                 package_dict['num_of_showcases'] = num_of_showcases
+
+        if _should_manually_load_property_value(context, package_dict, 'extras_qa_completed'):
+            qa_completed = tk.get_converter('hdx_assume_missing_is_true')(package_dict.get('extras_qa_completed'), {})
+            qa_completed = tk.get_converter('boolean_validator')(qa_completed, {})
+            package_dict['extras_qa_completed'] = qa_completed
 
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
             if get_extra_from_dataset('is_requestdata_type', package_dict):
