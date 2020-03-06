@@ -1,15 +1,15 @@
 import json
 import logging
 import urlparse
+import datetime
 
 import pylons.config as config
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
-import ckan.controllers.package as package_controller
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
-from ckan.common import _, c, request
+from ckan.common import _, c, g, request
 
 log = logging.getLogger(__name__)
 
@@ -294,7 +294,16 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
 
 
 class QACompletedAnalyticsSender(AbstractAnalyticsSender):
-    def __init__(self, dataset_dict, mark_as_set=True):
+    def __init__(self, dataset_dict, metadata_modified, mark_as_set=True):
+        '''
+
+        :param dataset_dict:
+        :type dataset_dict: dict
+        :param metadata_modified:
+        :type metadata_modified: datetime.datetime
+        :param mark_as_set:
+        :type mark_as_set: bool
+        '''
         super(QACompletedAnalyticsSender, self).__init__()
 
         location_names, location_ids = extract_locations(dataset_dict)
@@ -306,6 +315,8 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
         self.analytics_dict = {
             'event_name': 'qa set complete' if mark_as_set else 'qa set incomplete',
             'mixpanel_meta': {
+                "dataset name": dataset_dict.get('name'),
+                "dataset id": dataset_dict.get('id'),
                 'event source': 'api',
                 'group names': location_names,
                 'group ids': location_ids,
@@ -326,3 +337,9 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
 
             }
         }
+
+        if g.userobj.sysadmin and mark_as_set:
+            self.analytics_dict['mixpanel_meta']['user id'] = g.userobj.id
+
+            time_difference = datetime.datetime.utcnow() - metadata_modified
+            self.analytics_dict['mixpanel_meta']['minutes since modified'] = int(time_difference.total_seconds()) / 60
