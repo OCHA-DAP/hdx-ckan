@@ -141,6 +141,7 @@ def package_update(context, data_dict):
     if pkg is None:
         raise NotFound(_('Package was not found.'))
     context["package"] = pkg
+    prev_last_modified = pkg.metadata_modified
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
     if 'groups' in data_dict:
@@ -253,7 +254,8 @@ def package_update(context, data_dict):
 
     new_qa_completed = new_data_dict.get('qa_completed')
     if new_qa_completed != prev_qa_completed:
-        QACompletedAnalyticsSender(new_data_dict, mark_as_set=new_qa_completed).send_to_queue()
+        QACompletedAnalyticsSender(new_data_dict, prev_last_modified,
+                                   mark_as_set=new_qa_completed).send_to_queue()
         log.debug('new QA COMPLETED value: {}'.format(new_qa_completed))
 
     return data_dict['id'] if return_id_only else new_data_dict
