@@ -151,8 +151,8 @@ class HDXQAController(HDXSearchController):
 
         search_data_dict['facet.field'].append('{!ex=methodology,batch}methodology')
         search_data_dict['facet.field'].append('res_extras_broken_link')
-        search_data_dict['facet.field'].append('qa_completed')
-        search_data_dict['f.qa_completed.facet.missing'] = 'true'
+        search_data_dict['facet.field'].append('{!ex=batch}extras_qa_completed')
+        search_data_dict['f.extras_qa_completed.facet.missing'] = 'true'
 
     # def _generate_facet_name_to_title_map(self, package_type):
     #     facets = super(HDXQAController, self)._generate_facet_name_to_title_map(package_type)
@@ -212,7 +212,7 @@ class HDXQAController(HDXSearchController):
     def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('qa_completed', None)
 
-        facet_data = existing_facets.pop('qa_completed', {})
+        facet_data = existing_facets.pop('extras_qa_completed', {})
         qa_completed_item = dict(next(
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}

@@ -124,7 +124,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('administrative_divisions', ' +vocab_Topics:"administrative divisions"',
                       ' -vocab_Topics:"administrative divisions"')
 
-        adapt_solr_fq('qa_completed', ' +qa_completed:true', ' -qa_completed:true')
+        adapt_solr_fq('qa_completed', ' +extras_qa_completed:true', ' -extras_qa_completed:true')
         adapt_solr_fq('broken_link', ' +res_extras_broken_link:true', ' -res_extras_broken_link:true')
         adapt_solr_fq(NEW_DATASETS_FACET_NAME,
                       generate_datetime_period_query('metadata_created', last_x_days=7, include_leading_space=True,
