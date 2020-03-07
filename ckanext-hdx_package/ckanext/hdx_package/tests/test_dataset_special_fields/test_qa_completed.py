@@ -1,3 +1,5 @@
+import mock
+
 import ckan.tests.factories as factories
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -98,32 +100,43 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         package_dict = self._package_patch_qa_completed_flag(self.PACKAGE_ID, True, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
-    def test_qa_completed_on_hdx_mark_qa_completed(self):
+    @mock.patch('ckanext.hdx_package.helpers.analytics.g')
+    def test_qa_completed_on_hdx_mark_qa_completed(self, analytics_g):
         '''
         Tests that qa_completed can be changed via hdx_mark_qa_completed() only by sysadmin
         But gets reset when any user changes the dataset.
         '''
+        sysadmin_userobj = model.User.by_name(self.SYSADMIN_USER)
+        normal_userobj = model.User.by_name(self.NORMAL_USER)
         try:
+            analytics_g.userobj = normal_userobj
             self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_2, True, self.NORMAL_USER)
             assert False
         except NotAuthorized as e:
             assert True
+
+        analytics_g.userobj = sysadmin_userobj
         package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_2, True, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+
+        analytics_g.userobj = normal_userobj
         package_dict = self._change_description_of_package(self.PACKAGE_ID_2, self.NORMAL_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
+        analytics_g.userobj = sysadmin_userobj
         package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_3, True, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
         package_dict = self._change_description_of_package(self.PACKAGE_ID_3, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
-
-    def test_qa_completed_reset_via_hdx_mark_qa_completed(self):
+    @mock.patch('ckanext.hdx_package.helpers.analytics.g')
+    def test_qa_completed_reset_via_hdx_mark_qa_completed(self, analytics_g):
         '''
         Tests that qa_completed can be reset via hdx_mark_qa_completed() only by sysadmin
         '''
 
+        sysadmin_userobj = model.User.by_name(self.SYSADMIN_USER)
+        analytics_g.userobj = sysadmin_userobj
         package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_4, True, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
 

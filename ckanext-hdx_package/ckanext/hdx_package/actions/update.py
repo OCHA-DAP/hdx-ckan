@@ -253,7 +253,7 @@ def package_update(context, data_dict):
     new_data_dict = _get_action('package_show')(context, {'id': data_dict['id']})
 
     new_qa_completed = new_data_dict.get('qa_completed')
-    if new_qa_completed != prev_qa_completed:
+    if new_qa_completed != prev_qa_completed and new_data_dict.get('type') == 'dataset':
         QACompletedAnalyticsSender(new_data_dict, prev_last_modified,
                                    mark_as_set=new_qa_completed).send_to_queue()
         log.debug('new QA COMPLETED value: {}'.format(new_qa_completed))
