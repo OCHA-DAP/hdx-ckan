@@ -189,7 +189,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
 
         proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
         params = urllib.urlencode(
-            {'sheet': sheet, 'url': resource_dict.get("hdx_rel_url") or resource_dict.get("download_url")})
+            {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
         data_dict['resourceProxyUrl'] = proxy_data_preview_url + '?{params}'.format(params=params)
         r = requests.post(
             SDCMICRO_RUN_URL,
