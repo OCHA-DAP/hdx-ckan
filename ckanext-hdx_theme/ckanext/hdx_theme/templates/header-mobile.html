@@ -43,52 +43,60 @@
               <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
                 <li class="crises-group">
                   Ongoing
+                  {% set ongoing_links = h.hdx_get_quick_links_list() %}
                   <ul>
 
-                    {% for ev in events.ongoing %}
+                    {% for on_link in ongoing_links %}
                     <li>
-                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                      <div><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ on_link.title }}</a></div>
                       <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                     </li>
                     {% endfor %}
-                    <li>
-                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='education-in-emergencies')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Education in Emergencies</a></div>
-                    </li>
+{#                    {% for ev in events.ongoing %}#}
+{#                    <li>#}
+{#                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{#                    {% endfor %}#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='education-in-emergencies')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Education in Emergencies</a></div>#}
+{#                    </li>#}
                   </ul>
                 </li>
                 {# if events.archived #}
                 <li class="crises-group">
-                  Archived
-                  <ul>
-                    {% for ev in events.archived %}
-                    <li>
-                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                    </li>
-                    {% endfor %}
-                    <li>
-                      <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>
-                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                    </li>
-                    <li>
-                      {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
-                      <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
-                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                    </li>
-
-                  </ul>
+{#                  Archived#}
+                  <a class="archive" href="/archived_links" data-module="hdx_click_stopper" data-module-link_type="main nav">Archived <i class="icon humanitarianicons-Out-of-platform"></i></a>
+{#                  <ul>#}
+{#                    {% for ev in events.archived %}#}
+{#                    <li>#}
+{#                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{#                    {% endfor %}#}
+{#                    <li>#}
+{#                      <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}#}
+{#                      <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{##}
+{#                  </ul>#}
                 </li>
                 {# endif #}
               </ul>

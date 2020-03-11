@@ -155,6 +155,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('carousel_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
+        map.connect('quick_links_settings', '/ckan-admin/quicklinks/show',
+                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:'
+                               'QuickLinksCustomSettingsController',
+                    action='show')
+
         map.connect('pages_show', '/ckan-admin/pages/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show_pages')
 
@@ -167,6 +172,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+                    action='delete')
+
+        map.connect('update_quick_links_settings', '/ckan-admin/quick-links/update',
+                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController', action='update')
+
+        map.connect('delete_quick_links_settings', '/ckan-admin/quick-links/delete/{id}',
+                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController',
                     action='delete')
 
         map.connect('image_serve', '/image/{label}',
@@ -232,6 +244,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_frequency_list': hdx_helpers.hdx_frequency_list,
             # 'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
             'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list,
+            'hdx_get_quick_links_list': hdx_helpers.hdx_get_quick_links_list,
             'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
             'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,
             'hdx_dataset_follower_count': hdx_helpers.hdx_dataset_follower_count,
@@ -271,6 +284,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_general_statistics': hdx_actions.hdx_general_statistics,
             'hdx_user_statistics': hdx_actions.hdx_user_statistics,
             'hdx_organization_statistics': hdx_actions.hdx_organization_statistics,
+            'hdx_quick_links_settings_show': hdx_actions.hdx_quick_links_settings_show,
+            'hdx_quick_links_settings_update': hdx_actions.hdx_quick_links_settings_update,
+
         }
 
     def get_auth_functions(self):
@@ -306,7 +322,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'invalidate_region': auth.invalidate_region,
             'hdx_user_statistics': auth.hdx_user_statistics,
             'hdx_carousel_update': auth.hdx_carousel_update,
-            'hdx_request_data_admin_list': auth.hdx_request_data_admin_list
+            'hdx_request_data_admin_list': auth.hdx_request_data_admin_list,
+            'hdx_quick_links_update': auth.hdx_quick_links_update,
         }
 
     def make_middleware(self, app, config):

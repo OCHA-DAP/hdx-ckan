@@ -414,9 +414,11 @@
 {% block scripts %}
    {{ super() }}
    {% resource 'hdx_theme/homepage' %}
-   <script type="application/ld+json">
-    {{ c.structured_data | safe }}
-   </script>
+  {% if c.structured_data %}
+     <script type="application/ld+json">
+      {{ c.structured_data | safe }}
+     </script>
+  {% endif %}
 {% endblock %}
 
 {# Remove the toolbar. #}

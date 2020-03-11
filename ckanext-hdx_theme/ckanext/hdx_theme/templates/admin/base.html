@@ -22,4 +22,7 @@
   {% if user_is_sysadmin or h.check_access('admin_page_list') %}
     {{ h.build_nav_icon('pages_show', _('Pages')) }}
   {% endif %}
+  {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
+    {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
+  {% endif %}
 {% endblock %}
