@@ -191,7 +191,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
 
         url = get_action("hdx_get_s3_link_for_resource")(context, {"id": resource_dict.get("id")})
         params = urllib.urlencode(
-            {'sheet': sheet, 'url': url})
+            {'sheet': sheet, 'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))})
             # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
         data_dict['resourceProxyUrl'] = proxy_data_preview_url + '?{params}'.format(params=params)
         r = requests.post(
