@@ -98,7 +98,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
             # resource_dict = get_action("resource_show")(context, {"id": resource_id})
             resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "sdc_report_flag": "QUEUED"})
             _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"),
-                                data_dict.get("columns_type_list"), data_dict.get("sheet", 0))
+                                data_dict.get("columns_type_list"), data_dict.get("sheet", 0), context)
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
@@ -171,7 +171,7 @@ def _run_pii_check(resource_dict):
     return True
 
 
-def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list=None, sheet=0):
+def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, columns_type_list=None, sheet=0, context=None):
     try:
         munged_resource_name = _get_resource_s3_path(resource_dict)
         data_dict = {
@@ -188,8 +188,11 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
             data_dict['columnTypes'] = '|'.join(map(str, columns_type_list))
 
         proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
+
+        url = get_action("hdx_get_s3_link_for_resource")(context, {"id": resource_dict.get("id")})
         params = urllib.urlencode(
-            {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
+            {'sheet': sheet, 'url': url})
+            # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
         data_dict['resourceProxyUrl'] = proxy_data_preview_url + '?{params}'.format(params=params)
         r = requests.post(
             SDCMICRO_RUN_URL,
