@@ -303,6 +303,11 @@ def ckan_after_request(response):
     # Set CORS headers if necessary
     response = set_cors_headers_for_response(response)
 
+    # HDX - Don't allow caching for flask responses
+    # Following PR might solve this more elegantly in the future: https://github.com/ckan/ckan/pull/4781
+    response.cache_control.private = True
+
+
     return response
 
 
