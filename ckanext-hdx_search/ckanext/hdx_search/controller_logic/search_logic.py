@@ -18,10 +18,8 @@ import ckan.plugins as p
 
 import ckanext.hdx_search.helpers.search_history as search_history
 
-from ckan.common import _, request, c, response
+from ckan.common import _, request, g
 
-from ckan.controllers.package import PackageController
-from ckan.controllers.api import CONTENT_TYPES
 
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
@@ -74,227 +72,57 @@ def url_with_params(url, params):
     return url + u'?' + urlencode(params)
 
 
-#
-#
-# def search_for_all(context, data_dict):
-#     '''This search is independent of the tab in which the user
-#        currently is.
-#        The result is used for finding counts for datasets, indicators and totals
-#     '''
-#     facet_fields = data_dict.get('facet.field', [])
-#     facet_fields.append('extras_indicator')
-#     sort = data_dict.get('sort', None)
-#     if not sort:
-#         sort = 'score desc'
-#
-#     q = data_dict.get('q', None)
-#     search = {
-#         'q': data_dict.get('q', None),
-#         'fq': data_dict.get('fq', None),
-#         'facet.field': facet_fields,
-#         'facet.limit': 1000,
-#         'rows': 1,  # since this is just for facets,counts and one indicator, 1 should be enough
-#         'sort': 'extras_indicator desc, ' + sort,
-#     }
-#     #     if tab == 'indicators':
-#     #         search['extras'] = {'ext_indicator': 1}
-#     #     elif tab == 'datasets':
-#     #         search['extras'] = {'ext_indicator': 0}
-#     result = get_action('package_search')(context, search)
-#     return result
-#
-#
-# def extract_counts(result):
-#     ''' Extracts the counts from a search_for_all() result '''
-#
-#     total = result['count']
-#     if '1' in result['facets']['extras_indicator']:
-#         indicator_no = result['facets']['extras_indicator']['1']
-#     else:
-#         indicator_no = 0
-#     # dataset_no = total  - this is a wrong fix
-#     dataset_no = total - indicator_no
-#     return (dataset_no, indicator_no)
-#
-#
-# def extract_one_indicator(result):
-#     ''' Extracts the first indicator from a search_for_all() result '''
-#
-#     if len(result['results']) > 0 \
-#             and result['results'][0] \
-#             and 'indicator' in result['results'][0] \
-#             and result['results'][0]['indicator'] == '1':
-#         indicator = [result['results'][0]]
-#     else:
-#         indicator = None
-#     return indicator
+class SearchLogic(object):
 
-#
-# def sort_features(features):
-#     return sorted(features, key=lambda x: x['count'], reverse=True)
-#
-#
-# @maintain.deprecated('Showing features in search results has been deprecated')
-# def isolate_features(context, facets, q, tab, skip=0, limit=25):
-#     ''' Showing features in search results has been deprecated.
-#         Deprecated since 25.01.2015 - hdx 0.6.5
-#     '''
-#     import difflib
-#     import random
-#
-#     try:
-#         all_topics = get_action('tag_list')(
-#             context, {'vocabulary_id': 'Topics'})
-#     except NotFound, e:
-#         all_topics = []
-#         log.error('ERROR getting vocabulary named Topics: %r' %
-#                   str(e.extra_msg))
-#
-#     extract = dict()
-#     tags = list()
-#     features = list()
-#     for o in facets['organization']['items']:
-#         tags.append(o['name'])
-#         extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
-#                               'url': h.url_for(controller='organization', action='read', id=o['name']),
-#                               'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
-#
-#     for p in facets['vocab_Topics']['items']:
-#         tags.append(p['name'])
-#         extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
-#                               'url': h.url_for(
-#                                   controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-#                                   action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '',
-#                               'feature_type': 'topic', 'count': p['count']}
-#
-#     for g in facets['groups']['items']:
-#         tags.append(g['name'])
-#         extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
-#                               'url': h.url_for(controller='group', action='read', id=g['name']),
-#                               'description': g['description'], 'feature_type': 'country', 'count': g['count']}
-#
-#     if tab == 'all' and len(tags) > 3:
-#         if q:
-#             selected = difflib.get_close_matches(q, tags, cutoff=0.1, n=3)
-#         else:
-#             selected = random.sample(tags, 3)
-#     else:
-#         selected = tags
-#     for s in selected:
-#         features.append(extract[s])
-#     if tab == 'features':
-#         feature_list = sort_features(features)
-#         return (feature_list[skip:skip + limit], len(features))
-#     return features
+    def __init__(self):
+        super(SearchLogic, self).__init__()
+        self.package_type = 'dataset'
+        self.template_data = DictProxy()
 
-
-class HDXSearchController(PackageController):
-    def search(self):
-        try:
-            context = {'model': model, 'user': c.user or c.author,
-                       'auth_user_obj': c.userobj}
-            check_access('site_read', context)
-        except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
-
-        package_type = self._guess_package_type()
-
-        if package_type == 'search':
-            package_type = 'dataset'
-
-        params_nopage = self._params_nopage()
-        c.search_url_params = urlencode(_encode_params(params_nopage))
-
-        def pager_url(q=None, page=None):
-            params = list(params_nopage)
-            params.append(('page', page))
-            return self._search_url(params, package_type)
-
-        c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
-
-        c.cps_off = config.get('hdx.cps.off', 'false')
-
-        query_string = request.params.get('q', u'')
-        if c.userobj and query_string:
-            search_history.store_search(query_string, c.userobj.id)
-
-        # If we're only interested in the facet numbers a json will be returned with the numbers
-        if self._is_facet_only_request():
-            response.headers['Content-Type'] = CONTENT_TYPES['json']
-            return json.dumps(c.full_facet_info)
-        else:
-            self._setup_template_variables(context, {},
-                                           package_type=package_type)
-            return self._search_template()
-
-    def _search(self, package_type, pager_url, additional_fq='', additional_facets=None,
+    def _search(self, package_type, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False):
 
         from ckan.lib.search import SearchError
 
         # unicode format (decoded from utf8)
-        q = c.q = request.params.get('q', u'')
-        c.query_error = False
+        q = self.template_data.q = request.params.get('q', u'')
+        self.template_data.query_error = False
 
         page = self._page_number()
+        package_type = self.package_type
 
-        # Commenting below parts as it doesn't seem to be used
-        # def drill_down_url(alternative_url=None, **by):
-        #     return h.add_url_param(alternative_url=alternative_url,
-        #                            controller='package', action='search',
-        #                            new_params=by)
-        #
-        # c.drill_down_url = drill_down_url
+        def pager_url(q=None, page=None):
+            params = list(self._params_nopage())
+            params.append(('page', page))
+            return self._search_url(params, package_type)
 
-        # self._set_remove_field_function()
+
         req_sort_by = request.params.get('sort', None)
         if not req_sort_by and q:
             req_sort_by = 'score desc, ' + DEFAULT_SORTING
 
         if req_sort_by:
             sort_by = req_sort_by
-            c.used_default_sort_by = False
+            self.template_data.used_default_sort_by = False
         else:
             sort_by = default_sort_by
-            c.used_default_sort_by = True
-        # params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
-
-        # The sort_by function seems to not be used anymore
-
-        #  def _sort_by(fields):
-        #     """
-        #     Sort by the given list of fields.
-        #
-        #     Each entry in the list is a 2-tuple: (fieldname, sort_order)
-        #
-        #     eg - [('metadata_modified', 'desc'), ('name', 'asc')]
-        #
-        #     If fields is empty, then the default ordering is used.
-        #     """
-        #     params = params_nosort[:]
-        #
-        #     if fields:
-        #         sort_string = ', '.join('%s %s' % f for f in fields)
-        #         params.append(('sort', sort_string))
-        #     return self._search_url(params, package_type)
-        #
-        # c.sort_by = _sort_by
+            self.template_data.used_default_sort_by = True
 
         if not sort_by:
-            c.sort_by_fields = []
+            self.template_data.sort_by_fields = []
         else:
-            c.sort_by_fields = [field.split()[0]
+            self.template_data.sort_by_fields = [field.split()[0]
                                 for field in sort_by.split(',')]
 
         self._set_other_links()
 
         search_extras = {}
         try:
-            c.fields = []
+            self.template_data.fields = []
             # c.fields_grouped will contain a dict of params containing
             # a list of values eg {'tags':['tag1', 'tag2']}
-            c.fields_grouped = {}
+            self.template_data.fields_grouped = {}
             # limit = g.datasets_per_page
 
             fq = additional_fq
@@ -307,14 +135,14 @@ class HDXSearchController(PackageController):
                     if param == 'fq':
                         fq += ' %s' % (value,)
                     elif not param.startswith('ext_'):
-                        c.fields.append((param, value))
+                        self.template_data.fields.append((param, value))
                         # fq += ' {!tag=%s}%s:"%s"' % (param, param, value)
                         if param not in tagged_fq_dict:
                             tagged_fq_dict[param] = []
                         tagged_fq_dict[param].append(u'{}:"{}"'.format(param, value))
-                        self.append_selected_facet_to_group(c.fields_grouped, param, value)
+                        self.append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
                     elif param == UPDATE_STATUS_URL_FILTER:
-                        self.append_selected_facet_to_group(c.fields_grouped, param, value)
+                        self.append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
                                      'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
@@ -322,8 +150,8 @@ class HDXSearchController(PackageController):
                         search_extras[param] = value
 
 
-            if c.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
-                search_extras[UPDATE_STATUS_URL_FILTER] = c.fields_grouped[UPDATE_STATUS_URL_FILTER]
+            if self.template_data.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
+                search_extras[UPDATE_STATUS_URL_FILTER] = self.template_data.fields_grouped[UPDATE_STATUS_URL_FILTER]
 
             self._set_filters_are_selected_flag()
 
@@ -341,11 +169,11 @@ class HDXSearchController(PackageController):
             except:
                 limit = num_of_items
 
-            c.ext_page_size = limit
+            self.template_data.ext_page_size = limit
 
             context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author, 'for_view': True,
-                       'auth_user_obj': c.userobj}
+                       'user': g.user, 'for_view': True,
+                       'auth_user_obj': g.userobj}
 
             if ignore_capacity_check:
                 context['ignore_capacity_check'] = ignore_capacity_check
@@ -368,11 +196,11 @@ class HDXSearchController(PackageController):
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
             facets = {}
-            c.query_error = True
-            c.search_facets = {}
-            c.page = h.Page(collection=[])
-        c.search_facets_limits = {}
-        for facet in c.search_facets.keys():
+            self.template_data.query_error = True
+            self.template_data.search_facets = {}
+            self.template_data.page = h.Page(collection=[])
+        self.template_data.search_facets_limits = {}
+        for facet in self.template_data.search_facets.keys():
             limit = 1000
             try:
                 limit = int(request.params.get('_%s_limit' % facet,
@@ -382,12 +210,12 @@ class HDXSearchController(PackageController):
                              'an integer').format(
                     parameter_name='_%s_limit' % facet
                 ))
-            c.search_facets_limits[facet] = limit
+            self.template_data.search_facets_limits[facet] = limit
 
         # return render(self._search_template(package_type))
-        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, facets,
-                                                    c.batch_total_items, c.q)
-        return full_facet_info
+        full_facet_info = self._prepare_facets_info(self.template_data.search_facets, self.template_data.fields_grouped, search_extras, facets,
+                                                    self.template_data.batch_total_items, self.template_data.q)
+        self.template_data['full_facet_info'] = full_facet_info
 
     def append_selected_facet_to_group(self, group, param, value):
         if param not in group:
@@ -431,20 +259,20 @@ class HDXSearchController(PackageController):
 
         self._process_found_package_list(query['results'])
 
-        c.facets = query['facets']
-        c.search_facets = query['search_facets']
+        self.template_data.facets = query['facets']
+        self.template_data.search_facets = query['search_facets']
 
         # if we're using collapse/expand/batch then take total count from facet site_id
         if expand:
             site_id_items = query['search_facets'].get('site_id', {}).get('items', [])
-            c.batch_total_items = sum((item.get('count', 0) for item in site_id_items))
+            self.template_data.batch_total_items = sum((item.get('count', 0) for item in site_id_items))
 
         # get_action('populate_related_items_count')(
         #     context, {'pkg_dict_list': query['results']})
 
         get_action('populate_showcase_items_count')(context, {'pkg_dict_list': query['results']})
 
-        c.page = h.Page(
+        self.template_data.page = h.Page(
             collection=query['results'],
             page=page,
             url=pager_url,
@@ -467,19 +295,16 @@ class HDXSearchController(PackageController):
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
 
-        c.page.items = query['results']
-        c.sort_by_selected = query['sort']
+        self.template_data.page.items = query['results']
+        self.template_data.sort_by_selected = query['sort']
 
-        c.count = c.item_count = query['count']
+        self.template_data.count = self.template_data.item_count = query['count']
 
         return query
 
     def _add_additional_faceting_queries(self, search_data_dict):
         # to be overridden in sub classes that need to add more complex faceting queries
         pass
-
-    def _search_template(self):
-        return render('search/search.html')
 
     def _search_url(self, params, package_type=None):
         '''
@@ -498,28 +323,11 @@ class HDXSearchController(PackageController):
         return url_with_params(url, params)
 
     def _set_filters_are_selected_flag(self):
-        if len(c.fields_grouped) > 0 \
+        if len(self.template_data.fields_grouped) > 0 \
                 and ('_show_filters' not in request.params or request.params['_show_filters'] != 'false'):
-            c.filters_are_selected = True
+            self.template_data.filters_are_selected = True
         else:
-            c.filters_are_selected = False
-
-    # def _set_remove_field_function(self):
-    #     '''
-    #     Defines the method that is used to generate the URL for a search result
-    #     with the specific key(s) removed. For example the function will be used
-    #     to generate the link when clicking on a remove filter link.
-    #     '''
-    #
-    #     def remove_field(key, value=None, replace=None):
-    #         return h.remove_url_param(key, value=value, replace=replace,
-    #                                   controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-    #                                   action='search')
-    #
-    #     c.remove_field = remove_field
-
-    # def _get_named_route(self):
-    #     return 'search'
+            self.template_data.filters_are_selected = False
 
     def _page_number(self):
         try:
@@ -532,6 +340,10 @@ class HDXSearchController(PackageController):
         # most search operations should reset the page counter:
         return [(k, v) for k, v in request.params.items()
                 if k != 'page' and k not in params_to_skip]
+
+    def _set_search_url_params(self):
+        params_nopage = self._params_nopage()
+        self.template_data['search_url_params'] = urlencode(_encode_params(params_nopage))
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         url_param_list = ['sort', 'q', 'organization', 'tags',
@@ -549,32 +361,12 @@ class HDXSearchController(PackageController):
         if other_params_dict:
             params.update(other_params_dict)
 
-        # c.other_links['all'] = h.url_for(named_route, **params) + suffix
-        # params_copy = params.copy()
-        # params_copy['ext_indicator'] = 1
-        # c.other_links['indicators'] = h.url_for(
-        #     named_route, **params_copy) + suffix
-        # params_copy['ext_indicator'] = 0
-        # c.other_links['datasets'] = h.url_for(
-        #     named_route, **params_copy) + suffix
-        #
-        # params_copy = params.copy()
-        # params_copy['ext_feature'] = 1
-        # c.other_links['features'] = h.url_for(
-        #     named_route, **params_copy) + suffix
-        #
-        # params_copy = params.copy()
-        # params_copy['ext_activities'] = 1
-        # c.other_links['activities'] = h.url_for(
-        #     named_route, **params_copy) + suffix
-
-        #         c.other_links['params'] = params
-        c.other_links = {}
-        c.other_links['params_noq'] = {k: v for k, v in params.items()
+        self.template_data.other_links = {}
+        self.template_data.other_links['params_noq'] = {k: v for k, v in params.items()
                                        if k not in ['q', '_show_filters', 'id']}
-        c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
+        self.template_data.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
                                               if k not in ['sort', 'q', 'id']}
-        c.other_links['current_page_url'] = self._current_url()
+        self.template_data.other_links['current_page_url'] = self._current_url()
 
     def _current_url(self):
         url = h.url_for('search')
@@ -781,3 +573,13 @@ class HDXSearchController(PackageController):
         # to be overridden in sub-classes that need to process the results of the solr query in order to
         # change the data in the package or its resources
         pass
+
+
+class DictProxy(dict):
+
+    def __getattr__(self, name):
+        return self.get(name)
+
+    def __setattr__(self, name, value):
+        self[name] = value
+
