@@ -68,14 +68,16 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'group_delete': hdx_org_actions.hdx_group_delete,
             'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
             'hdx_get_locations_info_from_rw': get_actions.hdx_get_locations_info_from_rw,
-            'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location
+            'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location,
+            'hdx_organization_follower_list': get_actions.hdx_organization_follower_list
         }
 
     def get_auth_functions(self):
         return {
             'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
             'member_delete': authorize.member_delete,
-            'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location
+            'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location,
+            'hdx_organization_follower_list': authorize.hdx_organization_follower_list
         }
 
     # def get_auth_functions(self):

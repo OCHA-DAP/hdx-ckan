@@ -27,6 +27,12 @@ import random
 
 import logging
 
+import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.lib.navl.dictization_functions
+
+_validate = ckan.lib.navl.dictization_functions.validate
+ValidationError = logic.ValidationError
+
 log = logging.getLogger(__name__)
 
 json = common.json
@@ -288,3 +294,54 @@ def hdx_get_locations_info_from_rw(context, data_dict):
     except:
         log.error("RW file was not found or can not be accessed")
         return None
+
+
+@logic.side_effect_free
+def hdx_organization_follower_list(context, data_dict):
+    '''Return the list of users that are following the given organization.
+
+    :param id: the id or name of the organization
+    :type id: string
+
+    :rtype: list of dictionaries
+
+    '''
+    logic.check_access('hdx_organization_follower_list', context, data_dict)
+    context['keep_email'] = True
+    return _follower_list(
+        context, data_dict,
+        ckan.logic.schema.default_follow_group_schema(),
+        context['model'].UserFollowingGroup)
+
+
+def _follower_list(context, data_dict, default_schema, FollowerClass):
+    schema = context.get('schema', default_schema)
+    data_dict, errors = _validate(data_dict, schema, context)
+    if errors:
+        raise ValidationError(errors)
+
+    # Get the list of Follower objects.
+    model = context['model']
+    object_id = data_dict.get('id')
+    followers = FollowerClass.follower_list(object_id)
+
+    # Convert the list of Follower objects to a list of User objects.
+    users = [model.User.get(follower.follower_id) for follower in followers]
+    users = [user for user in users if user is not None]
+
+    # Dictize the list of User objects.
+    return _user_list_dictize(users, context)
+
+
+def _user_list_dictize(obj_list, context,
+                       sort_key=lambda x: x['name'], reverse=False):
+    import ckan.lib.dictization.model_dictize as model_dictize
+    result_list = []
+
+    for obj in obj_list:
+        user_dict = model_dictize.user_dictize(obj, context)
+        user_dict.pop('reset_key', None)
+        user_dict.pop('apikey', None)
+        # user_dict.pop('email', None)
+        result_list.append(user_dict)
+    return sorted(result_list, key=sort_key, reverse=reverse)
