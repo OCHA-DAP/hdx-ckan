@@ -369,7 +369,7 @@ class SearchLogic(object):
         self.template_data.other_links['current_page_url'] = self._current_url()
 
     def _current_url(self):
-        url = h.url_for('search')
+        url = h.url_for('hdx_light_dataset.search')
         return url
 
     def _prepare_facets_info(self, existing_facets, selected_facets, search_extras, title_translations, total_count,
