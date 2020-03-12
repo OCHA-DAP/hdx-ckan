@@ -155,6 +155,17 @@ function _initHandsonTable(datasetId, resourceId, data) {
   };
   _hot = new Handsontable(container, settings);
 
+  let adaptRunButtonState = () => {
+    let reducer = (accumulator, currentValue) => accumulator + currentValue ? 1:0;
+    let selectedNum = _sdcSettings.columns.reduce(reducer, 0);
+    if (selectedNum > 0) {
+      $("#qa-sdc-popup-save").removeClass('disabled');
+    } else {
+      $("#qa-sdc-popup-save").addClass('disabled');
+    }
+  };
+  Handsontable.hooks.add('afterRender', adaptRunButtonState, _hot);
+
   _renderHandsonTable(data);
 }
 
