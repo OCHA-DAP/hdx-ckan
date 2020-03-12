@@ -1,0 +1,33 @@
+
+{#{% for page in data %}#}
+{#    <p class="mTop30 mBottom15">#}
+{#        <div class="section-flag" id='body-{{ page.id }}' > {{ page.title }} </div>#}
+{#    </p>#}
+    <div class="panel-group hdx-panel-group" id="accordion-general" role="tablist" aria-multiselectable="false">
+        {% for page in data %}
+            {% set q_id = 'auto-%s-%s-q' | format(page.id, page.id) %}
+            {% set a_id = 'auto-%s-%s-a' | format(page.id, page.id) %}
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="{{ q_id }}">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent=".hdx-panel-group" href="#{{ a_id }}"
+                           aria-expanded="false" aria-controls="{{ a_id }}" class="faq-question-link">
+                            {{ page.title | safe }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ a_id }}" class="panel-collapse collapse faq-panel-collapse" role="tabpanel" aria-labelledby="{{ q_id }}">
+                    <div class="panel-body">
+                        {{ page.id | safe }}
+                    </div>
+                </div>
+            </div>
+         {% endfor %}
+
+    </div>
+
+{#{% endfor %}#}
+<div style="height: 75vh;">
+    {# Necessary for the left side menu to be able to scroll to the last item also #}
+</div>
+

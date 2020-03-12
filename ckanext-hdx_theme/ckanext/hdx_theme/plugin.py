@@ -140,11 +140,16 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         map.connect('about', '/about', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='about')
 
-        map.connect('/documentation', controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show')
+        map.connect('/documentation',
+                    controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController',
+                    action='show')
         map.connect('/documentation/resources-for-developers',
                     controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController',
                     action='show')
         map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+        map.connect('/archive',
+                    controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedQuickLinksController',
+                    action='show')
         map.connect(
             '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
