@@ -1,0 +1,78 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+
+.search-light {
+  background-color: @extraLightGrayColor;
+}
+.search-list {
+
+  .dataset-item {
+    .dataset-content2 {
+      padding: 15px;
+    }
+  }
+
+  .dataset-list {
+    padding: 0;
+    background-color: @extraLightGrayColor;
+    .dataset-item {
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      background-color: @whiteColor;
+
+      .dataset-content2 {
+        .dataset-description {
+          font-size: 14px;
+          line-height: 1.4;
+        }
+        .read-less {
+          margin-left: 15px;
+        }
+      }
+
+      .dataset-updated {
+        .dataset-updated-org{
+          margin-bottom: 4px;
+        }
+        .dataset-updated-other {
+          margin: 4px 0;
+        }
+      }
+    }
+  }
+}
+
+.list-header {
+  border-bottom: none;
+}
+
+.mobile-facets {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  z-index: 1000;
+  background-color: @whiteColor;
+  padding: 15px;
+
+  .actions {
+    margin-bottom: 15px;
+
+    .back-button {
+      text-transform: uppercase;
+      .sourceSansProFont(600, 14px);
+
+      i {
+        font-size: 17px;
+        font-weight: 700;
+        position: relative;
+        top: 2px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+}

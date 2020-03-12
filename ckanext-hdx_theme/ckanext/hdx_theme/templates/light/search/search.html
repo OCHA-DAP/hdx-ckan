@@ -1,12 +1,59 @@
-<html>
+{% extends "page_light.html" %}
 
-  <div><h1>FACETS</h1></div>
-  <div style="height: 300px; overflow: scroll">
-    {{ data.full_facet_info }}
+{% block links %}
+  <link rel="canonical" href="{{ h.url_for(controller='package', action='search') }}">
+  {{ super() }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Datasets'), controller='package', action='search', highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block content %}
+  <div class="mobile-facets">
+    <div class="actions">
+      <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
+    </div>
+    <div>
+      {%  set current_page_url = data.other_links.get('current_page_url') if 'current_page_url' in data.other_links else '' %}
+      <div class="filter-title">
+        Refine your search: <a href="{{current_page_url}}" class="filter-clear pull-right">Clear all</a>
+      </div>
+
+      {% set facet_list = data.full_facet_info.get('facets') %}
+      {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
+    </div>
+
   </div>
-  <br />
-  <div><h1>DATASETS</h1></div>
-  <div style="height: 300px; overflow: scroll">
-    {{ data.page.items }}
+
+  <div class="search-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
+            <span class="mL15 list-header-title">{{ _("Data") }} [{{ data.page.item_count}}]</span>
+            <span class="pull-right"><a href="#" onclick="$('.mobile-facets').show();">Show filters</a></span>
+          </div>
+
+          <div class="search-list">
+            <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+              {% for package in data.page.items %}
+                {% snippet 'search/snippets/package_item_mobile.html', package=package %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</html>
+{% endblock %}
+
+{%- block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/search-light' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+{% resource 'hdx_theme/dataset-search' %}
+{% resource 'hdx_theme/dataset' %}
+
+{% endblock -%}
