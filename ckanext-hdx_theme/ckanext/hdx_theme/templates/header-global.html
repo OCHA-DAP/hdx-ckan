@@ -139,7 +139,7 @@
                                   <span>{{ _('Global Settings') }}</span>
                                 </a>
                               </li>
-                             {% if h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true' %}
+                             {% if h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
                               <li>
                                 <a href="/qa_dashboard" title="{{ _('QA Dashboard') }}">
                                   <i class="icon-legal"></i>
