@@ -10,17 +10,16 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="{{ q_id }}">
                     <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent=".hdx-panel-group" href="#{{ a_id }}"
-                           aria-expanded="false" aria-controls="{{ a_id }}" class="faq-question-link">
-                            {{ page.title | safe }}
+                        <a role="button" href="/{{page.type}}/{{page.name}}" class="faq-question-link">
+                            {{ page.title | safe }} <i class="icon humanitarianicons-Out-of-platform"></i>
                         </a>
                     </h4>
                 </div>
-                <div id="{{ a_id }}" class="panel-collapse collapse faq-panel-collapse" role="tabpanel" aria-labelledby="{{ q_id }}">
-                    <div class="panel-body">
-                        {{ page.id | safe }}
-                    </div>
-                </div>
+{#                <div id="{{ a_id }}" class="panel-collapse collapse faq-panel-collapse" role="tabpanel" aria-labelledby="{{ q_id }}">#}
+{#                    <div class="panel-body">#}
+{#                        {{ page.id | safe }}#}
+{#                    </div>#}
+{#                </div>#}
             </div>
          {% endfor %}
 
