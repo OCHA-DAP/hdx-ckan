@@ -10,29 +10,48 @@
 {% endblock %}
 
 {% block content %}
+  {% set facet_list = data.full_facet_info.get('facets') %}
   <div class="mobile-facets" style="display: none;">
     <div class="actions">
       <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
     </div>
     <div>
+      {% set searchValue = request.args.get('q') if request.args.get('q') else '' %}
+
+      <div class="">
+
+        <input class="text-search" autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
+      </div>
+
       {%  set current_page_url = data.other_links.get('current_page_url') if 'current_page_url' in data.other_links else '' %}
       <div class="filter-title">
         Refine your search: <a href="{{current_page_url}}" class="filter-clear pull-right">Clear all</a>
       </div>
 
-      {% set facet_list = data.full_facet_info.get('facets') %}
       {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
     </div>
 
   </div>
 
   <div class="search-light">
+    <div class="show-filters">
+      <a href="#" onclick="$('.mobile-facets').show();">
+        Filters
+        <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
+          <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}/>
+          <label class="checkbox-slider-label" for="show-filter-toggle">
+            <span class="checkbox-slider-inner"></span>
+            <span class="checkbox-slider-switch"></span>
+          </label>
+        </span>
+      </a>
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
-          <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
+          <div class="dataset-filter-start list-header">
             <span class="mL15 list-header-title">{{ _("Data") }} [{{ data.page.item_count}}]</span>
-            <span class="pull-right"><a href="#" onclick="$('.mobile-facets').show();">Show filters</a></span>
+            {% snippet 'search/snippets/package_search_order.html', sort_param = request.args.get('sort') %}
           </div>
 
           <div class="search-list">
