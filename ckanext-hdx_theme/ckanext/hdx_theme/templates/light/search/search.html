@@ -51,7 +51,7 @@
         <div class="col-xs-12">
           <div class="dataset-filter-start list-header">
             <span class="mL15 list-header-title">{{ _("Data") }} [{{ data.page.item_count}}]</span>
-            {% snippet 'search/snippets/package_search_order.html', sort_param = request.args.get('sort') %}
+            {% snippet 'search/snippets/package_search_order.html', sort_param = data.sort_by_selected %}
           </div>
 
           <div class="search-list">
