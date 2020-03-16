@@ -185,7 +185,7 @@ function _loadSheetNames(resourceURL) {
         data.sheetNames = sheets;
       })
       .fail(() => {
-        //do nothing
+        alert('Error getting list of sheets. Trying to get just the first sheet.')
       })
       .always(() => {
         resolve(data);
