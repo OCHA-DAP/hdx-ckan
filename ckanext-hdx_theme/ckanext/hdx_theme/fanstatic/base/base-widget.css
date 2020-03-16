@@ -53,7 +53,9 @@ h4 small {
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
   border-top: 9px solid #007CE0;
-  vertical-align: top;
+}
+.dropup .caret {
+  border-bottom: 9px solid #007CE0;
 }
 /* END Style Caret */
 /* Change the default style for ul items */

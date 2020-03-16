@@ -253,7 +253,7 @@ hdx.explorer.iframe.height = 750px
 
 # Hxl Proxy
 # This should be overriden in your own prod.ini
-hdx.hxlproxy.url = https://beta-proxy.hxlstandard.org
+hdx.hxlproxy.url = https://proxy.hxlstandard.org
 
 # HXL Preview
 hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
