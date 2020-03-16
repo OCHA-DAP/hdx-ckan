@@ -12,7 +12,7 @@
         <div class="paddingLeftHack paddingRightHack">
           <div class="row form-section">
             <div class="col-xs-12">
-              <h3>Configure the homepage quick links menu items</h3>
+{#              <h3>Configure the homepage quick links menu items</h3>#}
               {#                        <p> On the desktop view the quick_links items are split into pages of 4 items, on mobile they are shown one by one.</p>#}
               {#                        <div class="sample-text">Sample quick_links section - reference only</div>#}
               {#                        <img style="width: 100%;" src="/images/homepage-quick_links-sample.png" />#}
@@ -62,7 +62,7 @@
                               </div>
                             </div>
                             <div class="control-group form-group control-full control-large hdx-section-field">
-                              <label class="control-label" for="new_window">New Window</label>
+                              <label class="control-label" for="new_window">OPEN IN A NEW TAB</label>
                               <div class="controls ">
                                 <select name="newTab" id="new_window" class="form-control">
                                   <option value="true"
@@ -106,7 +106,7 @@
   <div class="module module-narrow module-shallow">
     <h2 class="module-heading">
       <i class="icon-info-sign"></i>
-      {{ _('Homepage Quick Links') }}
+      {{ _('Quick Links Menu Setting') }}
     </h2>
     <div class="module-content">
       {% block admin_form_help %}
@@ -114,10 +114,14 @@
         {% set home_url = h.url_for(controller='home', action='index') %}
         {% set docs_url = "http://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
         {% trans %}
-          <h3>A quick link menu item has the following configuration fields:</h3>
-          <p><strong>Title:</strong> This is the title of menu item that will be visible</p>
-          <p><strong>URL:</strong> Quick link menu item URL</p>
-          <p><strong>Open External:</strong> The link will open in a new tab or not. Yes/No value </p>
+          <p>This setting is to configure the quick links shown under the main navigation on HDX.</p>
+          <p>A quick link menu item has the following configuration fields:</p>
+          <p><strong>Title:</strong> This is the title of menu item that will be visible (ie. Common Operational Datasets)</p>
+          <p><strong>URL:</strong> Quick link menu item URL (ie. https://data.humdata.org/dashboards/cod)</p>
+          <p><strong>Open in a new tab:</strong> If the quick link URL is an internal page on HDX, set this value to No. </p>
+          <p>*Items can be dragged to swap its order of display in the navigation dropdown</p>
+          <p>If you need to archive quick links, go to
+            <a href="/ckan-admin/pages/show" style="color:#007CE0;text-decoration: none">Event/Custom page setting</a></p>
         {% endtrans %}
       {% endblock %}
     </div>

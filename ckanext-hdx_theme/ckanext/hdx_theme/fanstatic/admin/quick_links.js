@@ -13,7 +13,7 @@
             newTab: false,
             //internal state
             graphic_upload_preview: null,
-            tab_open: false
+            tab_open: true
         },
         idAttribute: 'id',
         fileAttribute: 'graphic_upload',

@@ -20,7 +20,7 @@
     {{ h.build_nav_icon('ckanadmin_requests_data', _('Requested Data')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('admin_page_list') %}
-    {{ h.build_nav_icon('pages_show', _('Events/Custom Pages')) }}
+    {{ h.build_nav_icon('pages_show', _('Event/Custom Pages')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
     {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
