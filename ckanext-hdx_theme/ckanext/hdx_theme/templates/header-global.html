@@ -134,16 +134,16 @@
                             {% set def_url = h.find_first_global_settings_url() %}
                             {% if def_url %}
                               <li>
-                                <a href="{{def_url}}" title="{{ _('Global Settings') }}">
+                                <a href="{{def_url}}" title="{{ _('Global settings') }}">
                                   <i class="icon-legal"></i>
-                                  <span>{{ _('Global Settings') }}</span>
+                                  <span>{{ _('Global settings') }}</span>
                                 </a>
                               </li>
                              {% if h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
                               <li>
-                                <a href="/qa_dashboard" title="{{ _('QA Dashboard') }}">
+                                <a href="/qa_dashboard" title="{{ _('QA dashboard') }}">
                                   <i class="icon-legal"></i>
-                                  <span>{{ _('QA Dashboard') }}</span>
+                                  <span>{{ _('QA dashboard') }}</span>
                                 </a>
                               </li>
                              {% endif %}
@@ -163,16 +163,16 @@
                               </a>
                             </li>
                             <li>
-                              <a href="{{ h.url_for('dashboard.organizations') }}" title="{{ _('My Organisations') }}">
+                              <a href="{{ h.url_for('dashboard.organizations') }}" title="{{ _('My organisations') }}">
                                 <i class="icon-user"></i>
-                                <span>{{ _('My Organisations') }}</span>
+                                <span>{{ _('My organisations') }}</span>
                               </a>
                             </li>
                             {% block header_account_settings_link %}
                             <li>
-                              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('User Settings') }}">
+                              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('User settings') }}">
                                 <i class="icon-cog"></i>
-                                <span>{{ _('User Settings') }}</span>
+                                <span>{{ _('User settings') }}</span>
                               </a>
                             </li>
                             {% endblock %}
