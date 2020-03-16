@@ -14,6 +14,9 @@ import ckanext.hdx_search.helpers.search_history as search_history
 
 from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
+
+from ckanext.s3filestore.helpers import generate_temporary_link
+
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
@@ -21,6 +24,7 @@ from ckanext.hdx_search.helpers.qa_s3 import LogS3
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
+
 
 _validate = dict_fns.validate
 
@@ -93,7 +97,7 @@ class HDXQAController(HDXSearchController):
 
         c.cps_off = config.get('hdx.cps.off', 'false')
         c.other_links['current_page_url'] = h.url_for('qa_dashboard')
-        c.advanced_mode = request.params.get('_advanced_mode', 'false').lower()
+        c.advanced_mode = 'true'
         # query_string = request.params.get('q', u'')
         # if c.userobj and query_string:
         #     search_history.store_search(query_string, c.userobj.id)
@@ -125,10 +129,11 @@ class HDXQAController(HDXSearchController):
             uploader = LogS3()
             s3 = uploader.get_s3_session()
             client = s3.client(service_name='s3', endpoint_url=uploader.host_name)
-            url = client.generate_presigned_url(ClientMethod='get_object',
-                                                Params={'Bucket': uploader.bucket_name,
-                                                        'Key': path},
-                                                ExpiresIn=60)
+            # url = client.generate_presigned_url(ClientMethod='get_object',
+            #                                     Params={'Bucket': uploader.bucket_name,
+            #                                             'Key': path},
+            #                                     ExpiresIn=60)
+            url = generate_temporary_link(client, uploader.bucket_name, path)
             redirect(url)
 
         except ClientError as ex:

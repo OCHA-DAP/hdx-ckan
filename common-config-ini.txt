@@ -169,6 +169,7 @@ ckanext.s3filestore.aws_bucket_name = hdx-ckan-filestore-dev
 ckanext.s3filestore.host_name = http://s3.eu-central-1.amazonaws.com
 ckanext.s3filestore.region_name= eu-central-1
 ckanext.s3filestore.signature_version = signature_version
+ckanext.s3filestore.link_expires_in_seconds = 180
 
 
 #hdx.orgrequest.email = hdx@un.org
