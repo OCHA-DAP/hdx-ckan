@@ -8,20 +8,9 @@ import json
 import logging
 import os
 
-import ckanext.hdx_package.helpers.caching as pkg_caching
-import ckanext.hdx_package.helpers.freshness_calculator as freshness
-import ckanext.hdx_package.helpers.helpers as helpers
-import ckanext.hdx_theme.util.jql as jql
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import dateutil.parser
 import sqlalchemy
 from botocore.exceptions import ClientError
-from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
-from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
-from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
-from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
-from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 from paste.deploy.converters import asbool
 from pylons import config
 
@@ -37,8 +26,21 @@ import ckan.logic.schema
 import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_package.helpers.caching as pkg_caching
+import ckanext.hdx_package.helpers.freshness_calculator as freshness
+import ckanext.hdx_package.helpers.helpers as helpers
+import ckanext.hdx_theme.util.jql as jql
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
 from ckan.common import _, c
 from ckan.lib import uploader
+from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
+from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
+from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
+from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
+from ckanext.s3filestore.helpers import generate_temporary_link
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -947,10 +949,11 @@ def hdx_get_s3_link_for_resource(context, data_dict):
         try:
             s3 = upload.get_s3_session()
             client = s3.client(service_name='s3', endpoint_url=host_name)
-            url = client.generate_presigned_url(ClientMethod='get_object',
-                                                Params={'Bucket': bucket.name,
-                                                        'Key': key_path},
-                                                ExpiresIn=60)
+            # url = client.generate_presigned_url(ClientMethod='get_object',
+            #                                     Params={'Bucket': bucket.name,
+            #                                             'Key': key_path},
+            #                                     ExpiresIn=60)
+            url = generate_temporary_link(client, bucket.name, key_path)
             return {'s3_url': url}
 
         except ClientError as ex:
