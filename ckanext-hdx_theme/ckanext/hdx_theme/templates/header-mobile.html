@@ -43,54 +43,60 @@
               <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
                 <li class="crises-group">
                   Ongoing
+                  {% set ongoing_links = h.hdx_get_quick_links_list() %}
                   <ul>
+                    {% for on_link in ongoing_links %}
                     <li>
-                      <div><a href="{{h.url_for(controller='package', action='read', id='novel-coronavirus-2019-ncov-cases')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Covid-19 Outbreak</a></div>
-                    </li>
-                    {% for ev in events.ongoing %}
-                    <li>
-                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                      <div><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">
+                        {{ on_link.title }}</a></div>
                       <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                     </li>
                     {% endfor %}
-                    <li>
-                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></div>
-                    </li>
-                    <li>
-                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='education-in-emergencies')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Education in Emergencies</a></div>
-                    </li>
+{#                    {% for ev in events.ongoing %}#}
+{#                    <li>#}
+{#                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{#                    {% endfor %}#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></div>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='education-in-emergencies')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Education in Emergencies</a></div>#}
+{#                    </li>#}
                   </ul>
                 </li>
                 {# if events.archived #}
                 <li class="crises-group">
-                  Archived
-                  <ul>
-                    {% for ev in events.archived %}
-                    <li>
-                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                    </li>
-                    {% endfor %}
-                    <li>
-                      <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>
-                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                    </li>
-                    <li>
-                      {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
-                      <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
-                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                    </li>
-
-                  </ul>
+{#                  Archived#}
+                  <a class="archive" href="/archive" data-module="hdx_click_stopper" data-module-link_type="main nav">Archived <i class="icon humanitarianicons-Out-of-platform"></i></a>
+{#                  <ul>#}
+{#                    {% for ev in events.archived %}#}
+{#                    <li>#}
+{#                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{#                    {% endfor %}#}
+{#                    <li>#}
+{#                      <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{#                    <li>#}
+{#                      {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}#}
+{#                      <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>#}
+{#                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->#}
+{#                    </li>#}
+{##}
+{#                  </ul>#}
                 </li>
                 {# endif #}
               </ul>
@@ -122,22 +128,22 @@
                 <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Locations</a></li>
                 <li><a href="{{ orgLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Organisations</a></li>
                 <li class="crisis"><a><span>Quicklinks / Ongoing</span></a></li>
-                <li class="crisis">
-                  <a href="{{h.url_for(controller='package', action='read', id='novel-coronavirus-2019-ncov-cases')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Covid-19 Outbreak</a>
-                </li>
-                {% for ev in events.ongoing %}
-                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></li>
+                {% set ongoing_links = h.hdx_get_quick_links_list() %}
+                {% for on_link in ongoing_links %}
+                  <li class="crisis"><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">{{ on_link.title }}</a></li>
                 {% endfor %}
-                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></li>
-                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></li>
-                <li class="crisis"><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></li>
-                <li class="crisis"><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></li>
+
+{#                {% for ev in events.ongoing %}#}
+{#                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></li>#}
+{#                {% endfor %}#}
+{#                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></li>#}
+{#                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></li>#}
+{#                <li class="crisis"><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></li>#}
+{#                <li class="crisis"><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></li>#}
                 <li class="crisis"><a><span>Quicklinks / Archived</span></a></li>
-                {% for ev in events.archived %}
-                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></li>
-                {% endfor %}
-                <li class="crisis"><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></li>
-                <li class="crisis"><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></li>
+
+{#                <li class="crisis"><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></li>#}
+{#                <li class="crisis"><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></li>#}
 
                 <li class="sub-nav"><a href="{{ faqLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">FAQ</a></li>
                 {% if page_has_desktop_version %}
