@@ -28,6 +28,7 @@ from ckanext.hdx_package.controllers.dataset_controller import find_approx_downl
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER,\
     UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -189,6 +190,8 @@ def url_with_params(url, params):
 
 
 class HDXSearchController(PackageController):
+
+    @check_redirect_needed
     def search(self):
         try:
             context = {'model': model, 'user': c.user or c.author,
@@ -302,7 +305,7 @@ class HDXSearchController(PackageController):
             featured_filters_set = False
 
             for (param, value) in request.params.items():
-                if param not in ['q', 'page', 'sort'] \
+                if param not in ['q', 'page', 'sort', 'force_layout'] \
                         and len(value) and not param.startswith('_'):
                     if param == 'fq':
                         fq += ' %s' % (value,)

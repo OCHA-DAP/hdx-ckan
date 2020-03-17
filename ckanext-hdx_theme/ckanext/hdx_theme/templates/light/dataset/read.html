@@ -13,7 +13,7 @@
 {% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}
 
 {% block links %}
-  <link rel="canonical" href="{{ h.url_for(controller='package', action='read', id=pkg.name) }}">
+  <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
   {{ super() }}
 {% endblock %}
 

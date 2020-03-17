@@ -130,7 +130,7 @@ class SearchLogic(object):
             featured_filters_set = False
 
             for (param, value) in request.params.items():
-                if param not in ['q', 'page', 'sort'] \
+                if param not in ['q', 'page', 'sort', 'force_layout'] \
                         and len(value) and not param.startswith('_'):
                     if param == 'fq':
                         fq += ' %s' % (value,)

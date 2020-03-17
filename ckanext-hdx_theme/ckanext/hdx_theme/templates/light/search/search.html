@@ -1,7 +1,7 @@
 {% extends "page_light.html" %}
 
 {% block links %}
-  <link rel="canonical" href="{{ h.url_for(controller='package', action='search') }}">
+  <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
   {{ super() }}
 {% endblock %}
 
@@ -65,6 +65,7 @@
       </div>
     </div>
   </div>
+  {% snippet "widget/banner/hdx-light-banner.html", pkg=pkg %}
 {% endblock %}
 
 {%- block scripts %}

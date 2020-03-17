@@ -1,5 +1,6 @@
 {% extends 'search/snippets/package_item.html' %}
 
+{% set current_package_url = h.url_for('hdx_light_dataset.read', id=package.name) %}
 {% set column_class = 'col-xs-12' %}
 
 {% block actions %}{% endblock %}
