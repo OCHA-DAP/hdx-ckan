@@ -119,7 +119,7 @@ def hdx_carousel_update(context, data_dict):
 
 def hdx_quick_links_update(context, data_dict):
     username_or_id = context.get('user')
-    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CAROUSEL)
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_QUICK_LINKS)
     return {'success': result}
 
 

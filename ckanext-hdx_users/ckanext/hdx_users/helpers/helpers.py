@@ -40,6 +40,14 @@ def find_first_global_settings_url():
             url = h.url_for('pages_show')
         except NotAuthorized as e:
             pass
+
+    if not url:
+        try:
+            check_access('hdx_quick_links_update', context, {})
+            url = h.url_for('quick_links_settings')
+        except NotAuthorized as e:
+            pass
+
     return url
 
 

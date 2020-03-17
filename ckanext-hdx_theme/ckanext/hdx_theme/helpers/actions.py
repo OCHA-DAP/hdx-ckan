@@ -337,7 +337,6 @@ def hdx_quick_links_settings_show(context, data_dict):
     :returns: list of dictionaries representing the setting for each quick_links item. Returns default if nothing is in db.
     :rtype: list of dict
     '''
-    from ckanext.hdx_theme.helpers.initial_carousel_settings import INITIAL_CAROUSEL_DATA
 
     quick_links_settings = []
     setting_value_json = model.get_system_info('hdx.quick_links.config', config.get('hdx.quick_links.config'))
@@ -346,11 +345,6 @@ def hdx_quick_links_settings_show(context, data_dict):
             quick_links_settings = json.loads(setting_value_json)
         except TypeError as e:
             log.warn('The "hdx.quick_links.config" setting is not a proper json string')
-
-    # if not quick_links_settings and not context.get('not_initial'):
-    #     quick_links_settings = INITIAL_CAROUSEL_DATA
-    #     for i, item in enumerate(quick_links_settings):
-    #         item['order'] = i + 1
 
     return quick_links_settings
 
