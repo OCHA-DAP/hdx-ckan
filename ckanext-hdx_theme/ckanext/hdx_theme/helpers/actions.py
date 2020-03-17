@@ -331,6 +331,22 @@ def hdx_carousel_settings_show(context, data_dict):
 
     return carousel_settings
 
+@logic.side_effect_free
+def hdx_quick_links_settings_show(context, data_dict):
+    '''
+    :returns: list of dictionaries representing the setting for each quick_links item. Returns default if nothing is in db.
+    :rtype: list of dict
+    '''
+
+    quick_links_settings = []
+    setting_value_json = model.get_system_info('hdx.quick_links.config', config.get('hdx.quick_links.config'))
+    if setting_value_json:
+        try:
+            quick_links_settings = json.loads(setting_value_json)
+        except TypeError as e:
+            log.warn('The "hdx.quick_links.config" setting is not a proper json string')
+
+    return quick_links_settings
 
 def hdx_carousel_settings_update(context, data_dict):
     '''
@@ -348,6 +364,21 @@ def hdx_carousel_settings_update(context, data_dict):
     model.set_system_info('hdx.carousel.config', settings_json)
     return settings_json
 
+def hdx_quick_links_settings_update(context, data_dict):
+    '''
+
+    :param 'hdx.quick_links.config': a list with the quick_links settings
+    :type 'hdx.quick_links.config': list
+    :return: The JSON string that is the value of the new 'hdx.quick_links.config'
+    :rtype: str
+    '''
+
+    logic.check_access('hdx_quick_links_update', context, {})
+
+    settings = data_dict.get('hdx.quick_links.config')
+    settings_json = json.dumps(settings)
+    model.set_system_info('hdx.quick_links.config', settings_json)
+    return settings_json
 
 def hdx_organization_list_for_user(context, data_dict):
     '''Return the organizations that the user has a given permission for.

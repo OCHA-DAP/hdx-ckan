@@ -1,0 +1,53 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Archived Quicklinks'), controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedQuickLinksController', action='show') }}</li>
+{% endblock %}
+
+{% block pre_primary %}
+    <div class="row top-banner">
+        <div class="col-xs-12">
+            <div class="top-banner-text-wrapper">
+                <div class="top-banner-title">
+                   {{ _('Archived Quicklinks') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block primary %}
+    <div class="row mTop60">
+        <div class="col-xs-12">
+{#            <div id="body-about-hdx" class="section-flag" style="">Archived QuickLinks</div>#}
+        </div>
+    </div>
+    {% snippet 'archived_quick_links/questions_sections.html', data=data.pages %}
+{% endblock %}
+
+{% block secondary %}
+    <div id="hdx-faq-sidebar-wrapper" class="mTop60">
+        <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+{#            <ul class="nav">#}
+{#            {% for page in data.pages %}#}
+{#                <li>#}
+{#                    <a id='menu-{{ page.id }}' href="#body-{{ page.id }}"> {{ page.title }} </a>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#            </ul>#}
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
+            <p class="no-answer-found mTop30">
+                <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">&nbsp;</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{%- block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/faq/faq.css' %}
+    {% resource 'hdx_theme/faq/faq.js' %}
+{% endblock %}

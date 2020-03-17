@@ -685,6 +685,8 @@ def hdx_get_frequency_by_value(value):
 def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({}, {})
 
+def hdx_get_quick_links_list():
+    return logic.get_action('hdx_quick_links_settings_show')({}, {})
 
 def _get_context():
     return {
