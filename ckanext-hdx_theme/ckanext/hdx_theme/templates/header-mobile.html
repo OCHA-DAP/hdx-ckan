@@ -45,10 +45,10 @@
                   Ongoing
                   {% set ongoing_links = h.hdx_get_quick_links_list() %}
                   <ul>
-
                     {% for on_link in ongoing_links %}
                     <li>
-                      <div><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ on_link.title }}</a></div>
+                      <div><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">
+                        {{ on_link.title }}</a></div>
                       <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                     </li>
                     {% endfor %}
@@ -130,7 +130,7 @@
                 <li class="crisis"><a><span>Quicklinks / Ongoing</span></a></li>
                 {% set ongoing_links = h.hdx_get_quick_links_list() %}
                 {% for on_link in ongoing_links %}
-                  <li class="crisis"><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ on_link.title }}</a></li>
+                  <li class="crisis"><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">{{ on_link.title }}</a></li>
                 {% endfor %}
 
 {#                {% for ev in events.ongoing %}#}
