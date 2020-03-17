@@ -141,15 +141,15 @@
                               </li>
                              {% if h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
                               <li>
-                                <a href="/qa_dashboard" title="{{ _('QA Dashboard') }}">
+                                <a href="/qa_dashboard" title="{{ _('QA dashboard') }}">
                                   <i class="icon-legal"></i>
-                                  <span>{{ _('QA Dashboard') }}</span>
+                                  <span>{{ _('QA dashboard') }}</span>
                                 </a>
                               </li>
                              {% endif %}
                             {% endif %}
                             <li>
-                              <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+                              <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('Profile') }}">
                                 <i class="icon-user"></i>
                                 <span>{{ _('Profile') }}</span>
                               </a>
@@ -157,20 +157,20 @@
                             <li class="notifications">
                               {# CKAN 2.2 DOES NOT LIKE THIS #}
                               {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
-                              <a href="{{ h.url_for('user_dashboard_datasets') }}" title="{# notifications_tooltip #}">
+                              <a href="{{ h.url_for('user_dashboard_datasets') }}" title="{{ _('Dashboard') }}{# notifications_tooltip #}">
                                 <i class="icon-dashboard"></i>
                                 <span> {{ _('Dashboard') }} </span>
                               </a>
                             </li>
                             <li>
-                              <a href="{{ h.url_for('dashboard.organizations') }}" title="{{ _('My Organisations') }}">
+                              <a href="{{ h.url_for('dashboard.organizations') }}" title="{{ _('My organisations') }}">
                                 <i class="icon-user"></i>
-                                <span>{{ _('My Organisations') }}</span>
+                                <span>{{ _('My organisations') }}</span>
                               </a>
                             </li>
                             {% block header_account_settings_link %}
                             <li>
-                              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
+                              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('User settings') }}">
                                 <i class="icon-cog"></i>
                                 <span>{{ _('User settings') }}</span>
                               </a>
