@@ -40,14 +40,23 @@
   <div class="module module-narrow module-shallow">
     <h2 class="module-heading">
       <i class="icon-info-sign"></i>
-      {{ _('Events/Custom pages') }}
+      {{ _('Event/Custom Pages') }}
     </h2>
     <div class="module-content">
       {% block admin_form_help %}
 
         {% trans %}
-          <h3>A custom page ....</h3>
-          <p>Lorep ipsum</p>
+          <h3>How to create a new event/custom page:</h3>
+          <p>Click on “CREATE NEW PAGE” and follow the instructions to fill out the required fields.</p>
+
+          <h3>How to edit or delete existing event/custom page:</h3>
+          <p>Click on edit or delete for the the page you want to modify in the table. </p>
+
+          <h3>How to archive existing event/custom page:</h3>
+          <p>Click on edit for the page you want to archive in the table. Update the "Status" field to "Archived".
+            This pushes the page to the list in
+            <a href="/archive" style="color:#007CE0;text-decoration: none">archived page</a>.
+            Location page should be deleted instead of archived as the list of data would no longer be relevant. </p>
         {% endtrans %}
       {% endblock %}
     </div>

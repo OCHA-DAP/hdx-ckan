@@ -155,6 +155,17 @@ function _initHandsonTable(datasetId, resourceId, data) {
   };
   _hot = new Handsontable(container, settings);
 
+  let adaptRunButtonState = () => {
+    let reducer = (accumulator, currentValue) => accumulator + currentValue ? 1:0;
+    let selectedNum = _sdcSettings.columns.reduce(reducer, 0);
+    if (selectedNum > 0) {
+      $("#qa-sdc-popup-save").removeClass('disabled');
+    } else {
+      $("#qa-sdc-popup-save").addClass('disabled');
+    }
+  };
+  Handsontable.hooks.add('afterRender', adaptRunButtonState, _hot);
+
   _renderHandsonTable(data);
 }
 
@@ -174,7 +185,7 @@ function _loadSheetNames(resourceURL) {
         data.sheetNames = sheets;
       })
       .fail(() => {
-        //do nothing
+        alert('Error getting list of sheets. Trying to get just the first sheet.')
       })
       .always(() => {
         resolve(data);
@@ -211,15 +222,65 @@ function _loadSheet(el, sheet) {
 
 function _generateTabs(data) {
   let tabs = $("#qa-sdc-widget .nav");
-  let content = Array.from(Array(data.sheets)).map((_, i) => `
+  const navTabs = Array.from(Array(data.sheets));
+  const firstNavTabs = navTabs.slice(0,4);
+  const lastNavTabs = navTabs.slice(4);
+
+  function __computeDisplaySheetName(sheetName) {
+    return sheetName.length < 25 ? sheetName : sheetName.substring(0,25) + '...';
+  }
+  let content = firstNavTabs.map((_, i) => {
+    const sheetName = data.sheetNames[i];
+    const displaySheetName = __computeDisplaySheetName(sheetName);
+    return `
     <li class="nav-item ${i === 0 ? 'active' : ''}">
-      <a class="nav-link" href="#" data-sheet="${i}">${data.sheetNames[i]}</a>
+      <a title="${sheetName}" class="nav-link sdc-sheet-name normal-sheets" 
+            href="#" data-sheet="${i}">${displaySheetName}</a>
     </li>
-  `).join('');
+    `
+  }).join('');
+
+  if (lastNavTabs.length > 0) {
+    const offset = firstNavTabs.length;
+    const dropupContent = lastNavTabs.map(((_, i) => {
+      const realIdx = offset + i;
+      const sheetName = data.sheetNames[realIdx];
+      const displaySheetName = __computeDisplaySheetName(sheetName);
+      return `
+       <li>
+            <a title="${sheetName}" class="sdc-sheet-name extra-sheets"
+                href="#" data-sheet="${realIdx}">${displaySheetName}</a>
+       </li>
+      `
+    })).join('');
+
+    content += `
+    <li role="presentation" class="dropup" id="extra-sheets-dropup">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" 
+        aria-haspopup="true" aria-expanded="false">
+        More tabs ... <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        ${dropupContent}
+      </ul>
+    </li>
+    `;
+  }
 
   tabs.html(content);
-  tabs.find('.nav-link').click((ev) => {
-    let sheet = $(ev.currentTarget).attr('data-sheet');
+  tabs.find('.sdc-sheet-name').click((ev) => {
+    const clickedSheet = $(ev.currentTarget);
+    let sheet = clickedSheet.attr('data-sheet');
+
+    // reset state
+    $('.extra-sheets').removeClass('active');
+
+    const extraSheetsDropup = $('#extra-sheets-dropup');
+    extraSheetsDropup.removeClass('active');
+    if (clickedSheet.hasClass('extra-sheets')) {
+      clickedSheet.addClass('active');
+      extraSheetsDropup.addClass('active');
+    }
     _loadSheet(ev.currentTarget, sheet);
   });
 }

@@ -1,5 +1,5 @@
 {% resource 'hdx_theme/widget/onboarding/logout.css' %}
-{% set class = "popup-onbording" %}
+{% set class = "popup-onbording popup-close-only-x" %}
 {% set title = "SDC Micro" %}
 
 {% extends "widget/onboarding/notification.html" %}
@@ -13,7 +13,7 @@
     <div class="action-container">
       <div class="actions">
         <a id="qa-sdc-popup-close" class="btn">Cancel</a>
-        <a id="qa-sdc-popup-save" class="btn btn-primary">Run SDC</a>
+        <a id="qa-sdc-popup-save" class="btn btn-primary disabled">Run SDC</a>
       </div>
     </div>
   </div>
