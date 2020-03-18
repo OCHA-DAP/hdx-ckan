@@ -2,12 +2,13 @@
   background-color: #eeeeee;
 }
 .search-light .show-filters {
-  position: absolute;
-  right: 20px;
-  top: 110px;
-  z-index: 999;
+  position: relative;
 }
 .search-light .show-filters a {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  z-index: 999;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   font-size: 14px;
