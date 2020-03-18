@@ -289,8 +289,9 @@ class SearchLogic(object):
 
             dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
             if dataset.get('organization'):
-                dataset['batch_url'] = h.url_for('organization_read', id=dataset['organization'].get('name'),
-                                             ext_batch=dataset.get('batch'))
+                dataset['batch_url'] = h.url_for(
+                    'hdx_light_dataset.search', organization=dataset['organization'].get('name'),
+                    ext_batch=dataset.get('batch'))
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
