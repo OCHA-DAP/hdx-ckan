@@ -78,16 +78,16 @@ user_agents==1.1.0
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.3
--e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.0.2#egg=ckanext-powerview
+-e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.1.0#egg=ckanext-powerview
 
 # request data plugin
 email_validator==1.0.2
 timeago==1.0.7
 
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.1.14#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.0#egg=ckanext-requestdata
 
 # ckanext-showcase
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.0.13#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.1.0#egg=ckanext-showcase
 
 # reqs for ckanext-dcat
 rdflib==4.2.1
@@ -95,10 +95,10 @@ rdflib-jsonld==0.4.0
 git+https://github.com/geomet/geomet.git
 #ckantoolkit==0.0.3 already installed for ckanext-powerview
 # ckanext-dcat
--e git+https://github.com/OCHA-DAP/ckanext-dcat.git@v0.0.11#egg=ckanext-dcat
+-e git+https://github.com/OCHA-DAP/ckanext-dcat.git@v0.1.0#egg=ckanext-dcat
 
 PyYAML==3.13
 dogpile.cache==0.7.1
 
 # ckanext-s3filestore
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.2.0#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.0#egg=ckanext-s3filestore
