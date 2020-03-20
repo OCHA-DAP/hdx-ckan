@@ -78,7 +78,7 @@ user_agents==1.1.0
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.3
--e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.1.0#egg=ckanext-powerview
+-e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview
 
 # request data plugin
 email_validator==1.0.2
@@ -95,7 +95,7 @@ rdflib-jsonld==0.4.0
 git+https://github.com/geomet/geomet.git
 #ckantoolkit==0.0.3 already installed for ckanext-powerview
 # ckanext-dcat
--e git+https://github.com/OCHA-DAP/ckanext-dcat.git@v0.1.0#egg=ckanext-dcat
+-e git+https://github.com/OCHA-DAP/ckanext-dcat.git@0.1.0#egg=ckanext-dcat
 
 PyYAML==3.13
 dogpile.cache==0.7.1
