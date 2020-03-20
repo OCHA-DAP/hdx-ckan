@@ -1,0 +1,137 @@
+#quick_links-config-main .quick_links-item {
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+#quick_links-config-main .quick_links-item .mini-quick_links-item .quick_links-item-content > .row {
+  margin: 0 -15px;
+}
+#quick_links-config-main .quick_links-item .mini-quick_links-item .thumbnail-preview {
+  margin: 0;
+}
+#quick_links-config-main .quick_links-item .mini-quick_links-item .thumbnail-preview .sample-text {
+  display: none;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-header {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  background-color: #edf6fd;
+  border: 1px solid #eeeeee;
+  height: 40px;
+  padding: 10px 15px;
+  cursor: all-scroll;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-header .drag-handle {
+  margin-left: -3px;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-header .drag-handle i.glyphicon {
+  color: #888888;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-header .drag-handle i.glyphicon.glyphicon-align-justify {
+  margin-left: -2px;
+  margin-right: 5px;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-header .pull-right .glyphicon {
+  margin-left: 5px;
+  color: #333333;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-header > .row {
+  margin: 0;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-content {
+  background-color: #eeeeee;
+}
+#quick_links-config-main .quick_links-item .quick_links-item-content > .row {
+  margin: 0;
+}
+#quick_links-config-main .quick_links-item .thumbnail-preview {
+  margin: 15px 0;
+}
+#quick_links-config-main .quick_links-item .thumbnail-preview .thumbnail-container {
+  height: 275px;
+  padding: 20px 0;
+  width: 100%;
+  border: 1px solid #888888;
+  background-size: cover;
+  background: #fff;
+}
+#quick_links-config-main .quick_links-item .thumbnail-preview .thumbnail-container .sub-item {
+  width: 215px;
+  margin: auto;
+  float: none;
+}
+#quick_links-config-main .quick_links-item .sub-item {
+  width: 215px;
+  margin-right: 40px;
+  float: left;
+  position: relative;
+}
+#quick_links-config-main .quick_links-item .sub-item:last-child {
+  margin-right: 0;
+}
+#quick_links-config-main .quick_links-item .sub-item .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 8px;
+  padding: 5px 15px;
+  background-color: #333333;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  text-transform: uppercase;
+  line-height: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-image {
+  position: relative;
+  height: 215px;
+  margin-bottom: 5px;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-image:hover.disabled .sub-item-action {
+  display: none;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-image:hover .sub-item-action {
+  display: block;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-image .sub-item-action {
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-image .sub-item-action a {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f2645a;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-image .graphic {
+  max-height: 100%;
+  max-width: 215px;
+  height: 100%;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-caption {
+  text-align: left;
+  color: #fff;
+}
+#quick_links-config-main .quick_links-item .sub-item .sub-item-caption .description {
+  font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
+  font-weight: 400;
+  font-size: 12px;
+  margin: 0;
+}
+#quick_links-config-main .sortable-chosen {
+  opacity: 0.9;
+}
+#quick_links-config-main .sortable-ghost {
+  opacity: 0.3;
+}
