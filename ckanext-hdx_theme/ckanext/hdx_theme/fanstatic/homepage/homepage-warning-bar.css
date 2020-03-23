@@ -6,7 +6,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #F2645A;
-  z-index: 20;
+  z-index: 101;
 }
 .hdx-warning .hdx-warning-text {
   width: 1170px;
