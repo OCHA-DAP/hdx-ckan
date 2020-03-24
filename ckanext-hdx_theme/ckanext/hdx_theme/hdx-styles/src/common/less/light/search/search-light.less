@@ -6,11 +6,9 @@
   background-color: @extraLightGrayColor;
 
   .show-filters {
-    position: relative;
+    display: flex;
+    justify-content: flex-end;
     a {
-      position: absolute;
-      right: 20px;
-      top: 10px;
       z-index: 999;
       .sourceSansProFont(600, 14px);
     }
@@ -23,6 +21,7 @@
   .dataset-filter-start {
     display: flex;
     justify-content: space-between;
+    margin-top: 15px;
 
     .form-select {
       display: flex;
@@ -44,7 +43,7 @@
       }
       .dropdown-toggle-text{
         display: inline;
-        max-width: 75px;
+        max-width: 100px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -54,12 +53,22 @@
     }
   }
 }
+#search-recs {
+  .sourceSansProFont(300, 14px);
+  margin-top: 20px;
+  color: @darkGrayColor;
+}
 .search-list {
 
   .dataset-item {
     .dataset-content2 {
       padding: 15px;
     }
+  }
+
+  .search-empty {
+    background-color: @whiteColor;
+    padding: 15px;
   }
 
   .dataset-list {
@@ -71,21 +80,29 @@
       background-color: @whiteColor;
 
       .dataset-content2 {
+        .dataset-heading {
+          font-size: 15px;
+        }
         .dataset-description {
           font-size: 14px;
           line-height: 1.4;
         }
         .read-less {
-          margin-left: 15px;
+          margin-left: 0;
         }
       }
-
       .dataset-updated {
+        .dataset-dates {
+          line-height: 14px;
+        }
+        .dataset-updated-icons {
+          margin-top: 2px;
+        }
         .dataset-updated-org{
           margin-bottom: 4px;
         }
         .dataset-updated-other {
-          margin: 4px 0;
+          margin: 4px 0 6px;
         }
       }
     }

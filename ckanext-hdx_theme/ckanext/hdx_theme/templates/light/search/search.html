@@ -10,16 +10,15 @@
 {% endblock %}
 
 {% block content %}
+
   {% set facet_list = data.full_facet_info.get('facets') %}
+  {% set searchValue = request.args.get('q') if request.args.get('q') else '' %}
   <div class="mobile-facets" style="display: none;">
     <div class="actions">
       <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
     </div>
     <div>
-      {% set searchValue = request.args.get('q') if request.args.get('q') else '' %}
-
       <div class="">
-
         <input class="text-search" autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
       </div>
 
@@ -34,17 +33,20 @@
   </div>
 
   <div class="search-light">
-    <div class="show-filters">
-      <a href="#" onclick="$('.mobile-facets').show();">
-        Filters
-        <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
+    <div class="container">
+      <div id="search-recs"></div>
+      <div class="show-filters">
+        <a href="#" onclick="$('.mobile-facets').show();">
+          Filters
+          <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
           <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}/>
           <label class="checkbox-slider-label" for="show-filter-toggle">
             <span class="checkbox-slider-inner"></span>
             <span class="checkbox-slider-switch"></span>
           </label>
         </span>
-      </a>
+        </a>
+      </div>
     </div>
     <div class="container">
       <div class="row">
@@ -57,8 +59,14 @@
           <div class="search-list">
             <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
               {% for package in data.page.items %}
-                {% snippet 'search/snippets/package_item_mobile.html', package=package %}
+                {% snippet 'search/snippets/package_item_mobile.html', package=package, query=searchValue %}
               {% endfor %}
+
+              {% if data.page.items | length == 0 %}
+                <div class="search-empty">
+                  <h3>Sorry no datasets found for current filter selection</h3>
+                </div>
+              {% endif %}
             </ul>
           </div>
         </div>
@@ -73,6 +81,7 @@
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/search-light' %}
   {% resource 'hdx_theme/jquery.highlight' %}
+
 {% resource 'hdx_theme/dataset-search' %}
 {% resource 'hdx_theme/dataset' %}
 
