@@ -219,7 +219,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     packages=find_packages(exclude=['ez_setup']),
-    namespace_packages=['ckanext', 'ckanext.stats'],
+    # namespace_packages=['ckanext', 'ckanext.stats'],
     message_extractors={
         'ckan': [
             ('templates/importer/**', 'ignore', None),

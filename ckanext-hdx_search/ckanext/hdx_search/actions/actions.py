@@ -100,8 +100,9 @@ def hdx_qa_sdcmicro_run(context, data_dict):
             _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"),
                                 data_dict.get("columns_type_list"), data_dict.get("sheet", 0), context)
         except Exception, ex:
+            log.error(ex)
             return {
-                'message': "Resource ID not found"
+                'message': str(ex)
             }
     else:
         return {
