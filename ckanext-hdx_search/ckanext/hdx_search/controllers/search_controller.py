@@ -744,6 +744,12 @@ class HDXSearchController(PackageController):
         result['num_of_requestdata'] = num_of_requestdata
         result['num_of_showcases'] = num_of_showcases
         result['num_of_administrative_divisions'] = num_of_administrative_divisions
+        result['num_of_selected_items'] = sum(
+            map(
+                lambda facet_group: sum((1 if i.get('selected') else 0 for i in facet_group.get('items',[]))),
+                result.get('facets', {}).values()
+            )
+        )
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
