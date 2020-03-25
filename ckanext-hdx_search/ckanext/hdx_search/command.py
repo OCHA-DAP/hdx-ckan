@@ -109,6 +109,7 @@ def buildIndex(path):
     for name, title, _type in pages:
         action = 'read_event' if _type == 'event' else 'read_dashboards'
         index.append({'title': title or name,
+                      'extra_terms': 'Special search terms',
                       'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                                        action=action, id=name, qualified=True), 'type': 'topic'})
 
