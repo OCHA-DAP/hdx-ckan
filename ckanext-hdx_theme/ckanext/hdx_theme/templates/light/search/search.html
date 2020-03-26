@@ -37,7 +37,7 @@
       <div id="search-recs"></div>
       <div class="show-filters">
         <a href="#" onclick="$('.mobile-facets').show();">
-          Filters
+          Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}
           <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
           <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}/>
           <label class="checkbox-slider-label" for="show-filter-toggle">
