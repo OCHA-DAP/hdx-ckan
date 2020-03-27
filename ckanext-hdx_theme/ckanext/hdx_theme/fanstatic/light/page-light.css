@@ -3603,7 +3603,12 @@ ul.list-horizontal li:first-child:before {
   }
 }
 .new-header .header-nav-search .header-search-form .header-search-group {
-  width: 270px;
+  width: 330px;
+}
+@media (max-width: 1200px) {
+  .new-header .header-nav-search .header-search-form .header-search-group {
+    width: 270px;
+  }
 }
 @media (max-width: 375px) {
   .new-header .header-nav-search .header-search-form .header-search-group {
