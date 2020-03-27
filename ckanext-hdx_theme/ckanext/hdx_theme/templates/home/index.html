@@ -22,7 +22,7 @@
 
 {% block header_core %}
   {# Override to get the fullwidth header #}
-  {% snippet "header-mobile.html", page_has_desktop_version=False %}
+  {% snippet "header-mobile.html", page_has_desktop_version=False, step=step %}
 {%  endblock %}
 
 {% block content %}
