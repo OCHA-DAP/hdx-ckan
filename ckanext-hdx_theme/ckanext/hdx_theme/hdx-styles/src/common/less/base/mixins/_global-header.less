@@ -124,6 +124,18 @@
       }
       .onboarding-step {
         margin-left: 40px;
+        @media (max-width: @cut-point-tablet) {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin-right: 10px;
+          > div {
+            overflow: hidden;
+            width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
       }
       .header-user-box {
         margin-left: auto;
