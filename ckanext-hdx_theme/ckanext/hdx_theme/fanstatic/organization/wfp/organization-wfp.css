@@ -3348,6 +3348,20 @@ ul.list-horizontal li:first-child:before {
 .new-header .global-header .global-header-content .onboarding-step {
   margin-left: 40px;
 }
+@media (max-width: 768px) {
+  .new-header .global-header .global-header-content .onboarding-step {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+  }
+  .new-header .global-header .global-header-content .onboarding-step > div {
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 .new-header .global-header .global-header-content .header-user-box {
   margin-left: auto;
   color: #eeeeee;
@@ -3652,7 +3666,12 @@ ul.list-horizontal li:first-child:before {
   }
 }
 .new-header .header-nav-search .header-search-form .header-search-group {
-  width: 270px;
+  width: 330px;
+}
+@media (max-width: 1200px) {
+  .new-header .header-nav-search .header-search-form .header-search-group {
+    width: 270px;
+  }
 }
 @media (max-width: 375px) {
   .new-header .header-nav-search .header-search-form .header-search-group {
