@@ -284,7 +284,7 @@ class PagesController(HDXSearchController):
                      "title": request.params.get("title"),
                      "type": request.params.get("type"),
                      "status": request.params.get("status"),
-                     "description": "",
+                     "description": request.params.get("description"),
                      "sections": json.dumps(sections),
                      "groups": self.process_groups(data_dict_temp.get("groups", [])),
                      request.params.get("type") or 'event': checked,
