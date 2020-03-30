@@ -3,15 +3,22 @@ from flask import Blueprint
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
-from ckan.common import g
+from ckan.common import _, config, g, request
 
 import ckanext.hdx_package.helpers.analytics as analytics
+from ckanext.hdx_search.controller_logic.search_logic import SearchLogic
+
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 get_action = tk.get_action
+check_access = tk.check_access
 render = tk.render
+abort = tk.abort
+
+NotAuthorized = tk.NotAuthorized
 
 hdx_light_dataset = Blueprint(u'hdx_light_dataset', __name__, url_prefix=u'/m/dataset')
+hdx_light_search = Blueprint(u'hdx_light_search', __name__, url_prefix=u'/m/search')
 
 
 @check_redirect_needed
@@ -38,6 +45,26 @@ def read(id):
     return render(u'light/dataset/read.html', template_data)
 
 
+@check_redirect_needed
+def search():
+    try:
+        context = {'model': model, 'user': g.user,
+                   'auth_user_obj': g.userobj}
+        check_access('site_read', context)
+    except NotAuthorized:
+        abort(403, _('Not authorized to see this page'))
+
+    package_type = 'dataset'
+
+    search_logic = SearchLogic()
+
+    search_logic._search(package_type, use_solr_collapse=True)
+
+    data_dict = {'data': search_logic.template_data}
+    return render(u'light/search/search.html', data_dict)
+
+
+
 def _compute_analytics(dataset_dict):
     result = {}
     result['is_cod'] = analytics.is_cod(dataset_dict)
@@ -47,4 +74,6 @@ def _compute_analytics(dataset_dict):
     return result
 
 
+hdx_light_search.add_url_rule(u'', view_func=search)
+hdx_light_dataset.add_url_rule(u'', view_func=search)
 hdx_light_dataset.add_url_rule(u'/<id>', view_func=read)

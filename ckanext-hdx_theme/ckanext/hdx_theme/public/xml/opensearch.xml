@@ -1,0 +1,8 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <ShortName>HDX Search</ShortName>
+  <Description>The Humanitarian Data Exchange Search Engine</Description>
+  <InputEncoding>[UTF-8]</InputEncoding>
+  <Image width="16" height="16" type="image/x-icon">https://data.humdata.org/images/icons/hdx.ico</Image>
+  <Url type="text/html" template="https://data.humdata.org/search?q={searchTerms}&amp;page={startPage}&amp;ext_search_source=opensearch" />
+</OpenSearchDescription>
