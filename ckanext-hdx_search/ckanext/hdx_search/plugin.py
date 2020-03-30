@@ -41,6 +41,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IBlueprint)
 
     # IConfigurable
     def configure(self, config):
@@ -241,3 +242,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             'qa_sdcmicro_run': authorize.hdx_qa_sdcmicro_run,
             'qa_pii_run': authorize.hdx_qa_pii_run
         }
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_package.views.light_dataset as light_dataset
+        return light_dataset.hdx_light_search

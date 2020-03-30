@@ -1,11 +1,12 @@
 {% set is_metadata_only = package.is_requestdata_type %}
+{% set current_package_url = current_package_url if current_package_url else h.url_for(controller='package', action='read', id=package.name) %}
 
 <li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length and package.batch_length > 0 %} stacked-item {% endif %}">
   {% block package_item_content %}
     <div class="dataset-pre-content">
       <div class="list-items dataset-content dataset-content2">
         <div class="row">
-          <div class="col-xs-6">
+          <div class="{{column_class or 'col-xs-6'}}">
             {% block pre_icon %}
             {% endblock %}
             <span class="pull-left">
@@ -29,81 +30,91 @@
                 {% if is_metadata_only %}
                   {% set title = title + ' [By Request Only]' %}
                 {% endif %}
-                {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
+                {{ h.link_to(h.truncate(title, truncate_title), current_package_url) }}
                 {% if package.private %}
                    <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                 {% endif %}
               {% endblock %}
             </div>
+            {% block updated_placeholder %}
             <div class="dataset-updated">
               {% block updated %}
                 {% block owner_update %}
-                  <div class="dataset-updated-org">
-                    {% set updated_time = h.hdx_get_last_modification_date(package) %}
-                    {% set f_updated_time = h.render_datetime(updated_time) %}
+                  {% block owner_update_org %}
+                    <div class="dataset-updated-org">
 
-                    {% if package.organization %}
-                      <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
-                        {{ package.organization.title or package.organization.name }}
-                      </a>
-                    {% endif %}
-                  </div>
-                  <div class="dataset-updated-icons">
-                    {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
-                    {% set has_quality_checked = package.indicator == '1' or package.quality %}
-                    {% if h.hdx_dataset_is_hxl(package.tags) %}
-                      <a href="{% url_for controller='package', action='search', ext_hxl=1 %}">
-                        <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
-                              data-module-placement="top" data-toggle="tooltip">
-                        </span>
-                      </a>
-                    {% endif %}
 
-                    {# NEW ICONS
-                    <span class="icon-check" title="{{ _('Dataset Containing Data Checks') }}" data-module="bs_tooltip"
-                                  data-module-placement="top" data-toggle="tooltip">
-                    </span>
-                    #}
-
-                    {% if package.has_quickcharts %}
-                        <a href="{% url_for controller='package', action='search', ext_quickcharts=1 %}">
-                            <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
-                                  data-module-placement="top" data-toggle="tooltip"></span>
+                      {% if package.organization %}
+                        <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
+                          {{ package.organization.title or package.organization.name }}
                         </a>
-                    {% endif %}
-
-                    {% if package.approx_total_downloads  %}
-                      <span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span>
-                    {% endif %}
-
-                  </div>
-                  <div class="dataset-dates">
-                    Updated
-                    {% if h.hdx_get_frequency_by_value(package.data_update_frequency) == 'Live' %}
-                      {{ _('Live') }}
-                    {% else %}
-                      {{f_updated_time}}
-                    {% endif %}
-                    {% if package.dataset_date%}
-                      {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
-                      {% if dataset_date %}
-                          | Dataset date: {{dataset_date}}
                       {% endif %}
-                    {% endif %}
-                  </div>
-                  <div>
-                    {% if package.is_requestdata_type %}
-                      <span class="download-counts">{{ _('This data is by request only') }}</span>
-                    {% elif package.type == 'dataset' and package.data_update_frequency %}
-                        <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
-                        {%  if package.is_fresh %}
-                          <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></a>
+                    </div>
+                  {% endblock %}
+                  {% block owner_update_icons %}
+                    <div class="dataset-updated-icons">
+                      {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
+                      {% set has_quality_checked = package.indicator == '1' or package.quality %}
+                      {% if h.hdx_dataset_is_hxl(package.tags) %}
+                        <a href="{% url_for controller='package', action='search', ext_hxl=1 %}">
+                          <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
+                                data-module-placement="top" data-toggle="tooltip">
+                          </span>
+                        </a>
+                      {% endif %}
+
+                      {# NEW ICONS
+                      <span class="icon-check" title="{{ _('Dataset Containing Data Checks') }}" data-module="bs_tooltip"
+                                    data-module-placement="top" data-toggle="tooltip">
+                      </span>
+                      #}
+
+                      {% if package.has_quickcharts %}
+                          <a href="{% url_for controller='package', action='search', ext_quickcharts=1 %}">
+                              <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
+                                    data-module-placement="top" data-toggle="tooltip"></span>
+                          </a>
+                      {% endif %}
+
+                      {% if package.approx_total_downloads  %}
+                        <span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span>
+                      {% endif %}
+
+                    </div>
+                  {% endblock %}
+                  {% block owner_update_dates %}
+                    {% set updated_time = h.hdx_get_last_modification_date(package) %}
+                    <div class="dataset-dates">
+                      Updated
+                      {% if h.hdx_get_frequency_by_value(package.data_update_frequency) == 'Live' %}
+                        {{ _('Live') }}
+                      {% else %}
+                        {{ h.render_datetime(updated_time) }}
+                      {% endif %}
+                      {% if package.dataset_date%}
+                        {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
+                        {% if dataset_date %}
+                            | Dataset date: {{dataset_date}}
                         {% endif %}
-                    {% endif %}
-                  </div>
+                      {% endif %}
+                    </div>
+                  {% endblock %}
+                  {% block owner_update_other %}
+                    <div>
+                      {% if package.is_requestdata_type %}
+                        <span class="download-counts">{{ _('This data is by request only') }}</span>
+                      {% elif package.type == 'dataset' and package.data_update_frequency %}
+                          <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
+                          {%  if package.is_fresh %}
+                            <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></a>
+                          {% endif %}
+                      {% endif %}
+                    </div>
+                  {% endblock %}
                 {% endblock %}
               {% endblock %}
             </div>
+            {% endblock %}
             <div class="dataset-actions">
               {% block actions %}
               <ul class="hdx-bs3">
@@ -141,71 +152,75 @@
             </div>
           </span>
           </div>
-          <div class="col-xs-6">
+          {% block second_column_div %}
+          <div class="{{column_class or 'col-xs-6'}}">
             {% block dataset_right_side %}
-            <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
-              {% block description %}
-                {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
-                {% if notes %}
-                  <span data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"><div>{{ notes|urlize }}</div></span>
-                {% else %}
-                  <p class="empty">{{ _("This dataset has no description") }}</p>
-                {% endif %}
-              {% endblock %}
-            </div>
-            <div class="dataset-others">
-              {% block others %}
-              {% if package.is_requestdata_type %}
-                {% if c.userobj %}
-                  {% set is_logged_in = 'true' %}
-                {% else %}
-                  {% set is_logged_in = 'false' %}
-                {% endif %}
-                {% set is_hdx = h.requestdata_is_hdx_portal() %}
-                {% set redirect_url = h.url_for(controller='user', action='login') %}
-                {% set requestdata_action = h.url_for('requestdata_send_request') %}
-                {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
-                {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
-                <a href="#" class="btn btn-primary" style="margin-top: 10px;"
-                   data-module="hdx-modal-form"
-                   data-module-template_file="request_contact.html"
-                   data-module-submit_action="{{ requestdata_action }}"
-                   data-module-post_data="{{ request_post_data }}"
-                   data-module-is_logged_in="{{ is_logged_in }}"
-                   data-module-is_hdx="{{ is_hdx }}"
-                   data-module-redirect_url="{{ redirect_url }}"
-                   data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
-                   data-module-analytics="{{ package.hdx_analytics }}"
-                >Request access</a>
-                <div class="requested-data-message"></div>
-              {% else %}
-                <ul class="hdx-bs3 list-items dataset-resources unstyled">
-                  {% if package.resources and not hide_resources %}
-                    {% for resource in h.dict_list_reduce(package.resources, 'format') %}
-                      <li>
-                        <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
-                      </li>
-                    {% endfor %}
-                    {# set size="32Kb" #}
-                    {% if size %}
-                      <li class="label-size">
-                        {{ size }}
-                      </li>
-                    {% endif %}
+              <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
+                {% block description %}
+                  {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
+                  {% if notes %}
+                    <span {% block description_show_more %}data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"{% endblock %}><div>{{ notes|urlize }}</div></span>
+                  {% else %}
+                    <p class="empty">{{ _("This dataset has no description") }}</p>
                   {% endif %}
-                  <!-- load package icons -->
-                  {% snippet 'search/snippets/package_icons_base.html', package=package %}
-                </ul>
-              {% endif %}
+                {% endblock %}
+              </div>
+              {% block others_placeholder %}
+                <div class="dataset-others">
+                  {% block others %}
+                  {% if package.is_requestdata_type %}
+                    {% if c.userobj %}
+                      {% set is_logged_in = 'true' %}
+                    {% else %}
+                      {% set is_logged_in = 'false' %}
+                    {% endif %}
+                    {% set is_hdx = h.requestdata_is_hdx_portal() %}
+                    {% set redirect_url = h.url_for(controller='user', action='login') %}
+                    {% set requestdata_action = h.url_for('requestdata_send_request') %}
+                    {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
+                    {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
+                    <a href="#" class="btn btn-primary" style="margin-top: 10px;"
+                       data-module="hdx-modal-form"
+                       data-module-template_file="request_contact.html"
+                       data-module-submit_action="{{ requestdata_action }}"
+                       data-module-post_data="{{ request_post_data }}"
+                       data-module-is_logged_in="{{ is_logged_in }}"
+                       data-module-is_hdx="{{ is_hdx }}"
+                       data-module-redirect_url="{{ redirect_url }}"
+                       data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+                       data-module-analytics="{{ package.hdx_analytics }}"
+                    >Request access</a>
+                    <div class="requested-data-message"></div>
+                  {% else %}
+                    <ul class="hdx-bs3 list-items dataset-resources unstyled">
+                      {% if package.resources and not hide_resources %}
+                        {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                          <li>
+                            <a href="{{ current_package_url }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
+                          </li>
+                        {% endfor %}
+                        {# set size="32Kb" #}
+                        {% if size %}
+                          <li class="label-size">
+                            {{ size }}
+                          </li>
+                        {% endif %}
+                      {% endif %}
+                      <!-- load package icons -->
+                      {% snippet 'search/snippets/package_icons_base.html', package=package %}
+                    </ul>
+                  {% endif %}
+                  {% endblock %}
+                </div>
               {% endblock %}
-            </div>
             {% endblock %}
           </div>
+          {% endblock %}
           {% if package.batch_length and package.batch_length > 0 %}
             <div class="col-xs-12 stacked-info">
               <a href="{{package.batch_url}}" target="_blank">
-                  Show {{  h.hdx_show_singular_plural(package.batch_length, _('other update'), _('other updates')) }} from
-                  {{ package.organization.title or package.organization.name }} <i class="icon humanitarianicons-Out-of-platform"></i>
+                Show {{  h.hdx_show_singular_plural(package.batch_length, _('other update'), _('other updates')) }} from
+                {{ package.organization.title or package.organization.name }} <i class="icon humanitarianicons-Out-of-platform"></i>
               </a>
             </div>
           {% endif %}
