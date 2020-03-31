@@ -6,6 +6,7 @@ from ckanext.hdx_users.helpers.permissions import Permissions
 
 NotFound = logic.NotFound
 
+
 def page_create(context, data_dict):
     '''
     Only sysadmins are allowed to call this action
@@ -43,3 +44,8 @@ def page_show(context, data_dict):
         return {'success': True}
     else:
         return {'success': False, 'msg': _('Only sysadmins can view non-active custom pages')}
+
+
+@logic.auth_allow_anonymous_access
+def page_list(context, data_dict):
+    return {'success': True}
