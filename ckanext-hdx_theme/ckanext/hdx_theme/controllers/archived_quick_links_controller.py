@@ -31,11 +31,11 @@ class ArchivedQuickLinksController(base.BaseController):
                    'user': c.user, 'auth_user_obj': c.userobj,
                    'for_view': True, 'with_related': True}
         try:
-            logic.check_access('admin_page_list', context, {})
+            logic.check_access('page_list', context, {})
         except Exception, ex:
             abort(404, 'Page not found')
 
-        page_list = logic.get_action('admin_page_list')(context, {})
+        page_list = logic.get_action('page_list')(context, {})
         _pages = _prepare_pages(page_list)
         template_data = {
             'data': {

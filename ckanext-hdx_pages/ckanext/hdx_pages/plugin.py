@@ -66,6 +66,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_update': auth.page_update,
             'page_delete': auth.page_delete,
             'page_show': auth.page_show,
+            'page_list': auth.page_list,
             'admin_page_list': auth.admin_page_list
         }
 
