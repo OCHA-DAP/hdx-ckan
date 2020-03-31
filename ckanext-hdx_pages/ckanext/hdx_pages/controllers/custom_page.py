@@ -6,6 +6,7 @@ import ckan.lib.helpers as h
 import pylons.config as config
 
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
+import ckanext.hdx_package.helpers.helpers as pkg_h
 
 from ckan.common import _, c, g, request, response
 from ckan.controllers.api import CONTENT_TYPES
@@ -287,6 +288,7 @@ class PagesController(HDXSearchController):
                      "description": request.params.get("description"),
                      "sections": json.dumps(sections),
                      "groups": self.process_groups(data_dict_temp.get("groups", [])),
+                     "tags": self.process_tags(data_dict_temp.get("tag_string", [])),
                      request.params.get("type") or 'event': checked,
                      request.params.get("status") or 'ongoing': checked,
                      "hdx_counter": len(sections),
@@ -296,6 +298,16 @@ class PagesController(HDXSearchController):
 
     def process_groups(self, groups):
         return groups if not isinstance(groups, basestring) else [groups]
+
+    def process_tags(self, tag_string):
+        tag_list = []
+        for tag in tag_string.split(','):
+            tag = tag.strip()
+            if tag:
+                tag_list.append({'name': tag,
+                            'state': 'active'})
+        result = pkg_h.get_tag_vocabulary(tag_list)
+        return result
 
     def _init_extra_vars_edit(self, extra_vars):
 
