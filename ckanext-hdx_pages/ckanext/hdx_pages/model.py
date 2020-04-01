@@ -139,6 +139,15 @@ class PageTagAssociation(PageBaseModel):
         result = [assoc.tag_id for assoc in page.tags_assoc_all]
         return result
 
+    @classmethod
+    def get_page_ids_for_tag(cls, tag_id):
+        '''
+        Return a list of page ids associated with the passed tag_id.
+        '''
+
+        page_tag_list = meta.Session.query(cls.page_id).filter_by(tag_id=tag_id).all()
+        result = [res.page_id for res in page_tag_list]
+        return result
 
 def define_page_group_association_table():
     global page_group_association_table

@@ -1494,6 +1494,9 @@ ul.dataset-resources li + li.label-icons {
 .mTop10 {
   margin-top: 10px;
 }
+.mTop_25 {
+  margin-top: -25px;
+}
 .mBottom5 {
   margin-bottom: 5px;
 }
@@ -1782,6 +1785,25 @@ hr.dotted {
   display: inline;
   line-height: 28px;
   color: #333333;
+}
+.itemSubTitle {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  display: inline;
+  line-height: 14px;
+  color: #333333;
+}
+.itemSubTitle > a,
+.itemSubTitle > a:hover,
+.itemSubTitle > a:focus {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  display: inline;
+  line-height: 14px;
+  color: #f2645a;
+  text-decoration: underline;
 }
 .notes.embedded-content {
   font-family: 'Source Sans Pro', sans-serif;

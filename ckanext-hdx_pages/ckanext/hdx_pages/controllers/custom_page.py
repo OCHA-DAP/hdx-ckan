@@ -113,6 +113,7 @@ class PagesController(HDXSearchController):
                               id=id)
         else:
             extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
+            extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
             self._init_extra_vars_edit(extra_vars)
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)

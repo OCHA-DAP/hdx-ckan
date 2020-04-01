@@ -32,7 +32,6 @@ def page_create(context, data_dict):
                 raise toolkit.ValidationError("Group already associated with page.",
                                               error_summary=u"The group, {0}, is already in the page".format(
                                                   group_dict.get('id')))
-
             # create the association
             pages_model.PageGroupAssociation.create(page=page, group_id=group_dict.get('id'), defer_commit=True)
 
@@ -47,7 +46,6 @@ def page_create(context, data_dict):
                     raise toolkit.ValidationError("Tag already associated with page.",
                                                   error_summary=u"The tag, {0}, is already in the page".format(
                                                       tag_dict.get('id')))
-
                 # create the association
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag_dict.get('id'), defer_commit=True)
 

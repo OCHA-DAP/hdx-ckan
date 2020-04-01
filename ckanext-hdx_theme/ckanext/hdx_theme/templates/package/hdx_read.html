@@ -44,6 +44,18 @@
                         </h1>
                     </div>
                 </div>
+            {%  if pkg.page_list %}
+                <div class="row">
+                    <div class="col-xs-12 mTop_25 mBottom30">
+                        <div class="itemSubTitle">
+                            This dataset is part of ongoing event page:
+                            {% for page in pkg.page_list %}
+                              <a href="/{{ page.type }}/{{ page.name }}">{{ page.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
                 <div class="row mBottom15">
                     <div class="col-xs-12">
                         {% if pkg.notes %}

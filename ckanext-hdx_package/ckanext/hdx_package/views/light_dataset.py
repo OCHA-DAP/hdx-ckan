@@ -36,6 +36,7 @@ def read(id):
 
     dataset_dict = get_action('package_show')(context, data_dict)
     analytics_dict = _compute_analytics(dataset_dict)
+    dataset_dict['page_list'] = _compute_events(context, dataset_dict)
 
     template_data = {
         'dataset_dict': dataset_dict,
@@ -64,7 +65,6 @@ def search():
     return render(u'light/search/search.html', data_dict)
 
 
-
 def _compute_analytics(dataset_dict):
     result = {}
     result['is_cod'] = analytics.is_cod(dataset_dict)
@@ -73,6 +73,13 @@ def _compute_analytics(dataset_dict):
     result['analytics_dataset_availability'] = analytics.dataset_availability(dataset_dict)
     return result
 
+
+def _compute_events(context, dataset_dict):
+    _page_list = []
+    for tag in dataset_dict.get('tags'):
+        _list = get_action('page_list_by_tag_id')(context, {'id': tag.get('id')})
+        _page_list.extend(_list)
+    return {v['id']: v for v in _page_list}.values()
 
 hdx_light_search.add_url_rule(u'', view_func=search)
 hdx_light_dataset.add_url_rule(u'', view_func=search)
