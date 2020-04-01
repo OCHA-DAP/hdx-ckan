@@ -37,7 +37,7 @@
         <h1>{{ dataset_dict.title }}</h1>
         {%  if pkg.page_list %}
           <div class="itemSubTitle">
-            This dataset is part of ongoing event page:
+            This dataset is part of
             {% for page in pkg.page_list %}
               <a href="/{{ page.type }}/{{ page.name }}">{{ page.title }}</a>
             {% endfor %}
