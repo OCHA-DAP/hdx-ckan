@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 page_table = None
 page_group_association_table = None
+page_tag_association_table = None
 
 
 def setup():
@@ -24,6 +25,10 @@ def setup():
     if page_group_association_table is None:
         define_page_group_association_table()
         log.debug('Page group association table defined in memory')
+
+    if page_tag_association_table is None:
+        define_page_tag_association_table()
+        log.debug('Page tag association table defined in memory')
 
     # checks for existence first
     create_table()
@@ -96,16 +101,16 @@ def define_page_table():
     global page_table
 
     page_table = Table('page', meta.metadata,
-                   Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
-                   Column('name', types.UnicodeText, nullable=False, unique=True, index=True),
-                   Column('title', types.UnicodeText, nullable=False),
-                   Column('description', types.UnicodeText, nullable=True),
-                   Column('type', types.UnicodeText),
-                   Column('state', types.UnicodeText),
-                   Column('sections', types.UnicodeText),
-                   Column('modified', types.DateTime, default=datetime.datetime.now, nullable=False),
-                   Column('status', types.UnicodeText),
-                   )
+                       Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
+                       Column('name', types.UnicodeText, nullable=False, unique=True, index=True),
+                       Column('title', types.UnicodeText, nullable=False),
+                       Column('description', types.UnicodeText, nullable=True),
+                       Column('type', types.UnicodeText),
+                       Column('state', types.UnicodeText),
+                       Column('sections', types.UnicodeText),
+                       Column('modified', types.DateTime, default=datetime.datetime.now, nullable=False),
+                       Column('status', types.UnicodeText),
+                       )
 
     mapper(Page, page_table, extension=[extension.PluginMapperExtension(), ])
 
@@ -122,6 +127,27 @@ class PageGroupAssociation(PageBaseModel):
         result = [assoc.group_id for assoc in page.countries_assoc_all]
         return result
 
+
+class PageTagAssociation(PageBaseModel):
+    @classmethod
+    def get_tag_ids_for_page(cls, page_id):
+        '''
+        Return a list of tag ids associated with the passed page_id.
+        '''
+        page = Page.get_by_id(page_id)
+
+        result = [assoc.tag_id for assoc in page.tags_assoc_all]
+        return result
+
+    @classmethod
+    def get_page_ids_for_tag(cls, tag_id):
+        '''
+        Return a list of page ids associated with the passed tag_id.
+        '''
+
+        page_tag_list = meta.Session.query(cls.page_id).filter_by(tag_id=tag_id).all()
+        result = [res.page_id for res in page_tag_list]
+        return result
 
 def define_page_group_association_table():
     global page_group_association_table
@@ -143,6 +169,26 @@ def define_page_group_association_table():
                 })
 
 
+def define_page_tag_association_table():
+    global page_tag_association_table
+
+    page_tag_association_table = Table(
+        'page_tag_association',
+        meta.metadata,
+        Column('tag_id', types.UnicodeText,
+               ForeignKey('tag.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False),
+        Column('page_id', types.UnicodeText,
+               ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    )
+
+    meta.mapper(PageTagAssociation, page_tag_association_table,
+                properties={
+                    'page': orm.relation(Page,
+                                         backref=orm.backref('tags_assoc_all',
+                                                             cascade='all, delete-orphan'))
+                })
+
+
 def create_table():
     if model.group_table.exists():
         if not page_table.exists():
@@ -150,7 +196,10 @@ def create_table():
             print 'Page table created'
         if not page_group_association_table.exists():
             page_group_association_table.create()
-            print "page group association table created"
+            print 'page group association table created'
+        if not page_tag_association_table.exists():
+            page_tag_association_table.create()
+            print 'page tag association table created'
 
 #
 # def delete_table():

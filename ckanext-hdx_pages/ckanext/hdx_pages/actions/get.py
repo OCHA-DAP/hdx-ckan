@@ -2,7 +2,7 @@ import ckan.logic as logic
 from ckan.model import meta
 import ckanext.hdx_pages.model as pages_model
 import ckanext.hdx_pages.helpers.dictize as dictize
-from ckanext.hdx_pages.model import PageGroupAssociation
+from ckanext.hdx_pages.model import PageGroupAssociation, PageTagAssociation
 from ckan.common import _
 
 NotFound = logic.NotFound
@@ -25,9 +25,18 @@ def page_show(context, data_dict):
     if page is None:
         raise NotFound
     page_dict = dictize.page_dictize(page)
-    logic.check_access('page_show', context, page_dict)
+    page_dict['tags'] = _process_tags(page, context)
+    # logic.check_access('page_show', context, page_dict)
 
     return page_dict
+
+
+def _process_tags(page, context):
+    result = []
+    for pt in page.tags_assoc_all:
+        tag = logic.get_action('tag_show')(context, {'id': pt.tag_id})
+        result.append(tag)
+    return result
 
 
 @logic.side_effect_free
@@ -85,12 +94,14 @@ def page_list(context, data_dict):
 
     page_dicts = []
     for p in pages:
+        if data_dict.get('id_list'):
+            if p.id not in data_dict.get('id_list'):
+                continue
         try:
             logic.check_access('page_show', context, {'id': p.id, 'state': p.state})
         except logic.NotAuthorized:
             pass
-        else:
-            page_dicts.append(p.as_dict())
+        page_dicts.append(p.as_dict())
     return page_dicts
 
 
@@ -133,5 +144,22 @@ def group_page_list(context, data_dict):
         pg_list = page_group_list(context, {'id': page.get('id')})
         if data_dict.get('id') in pg_list:
             result.append(page)
+
+    return result
+
+
+@logic.side_effect_free
+def page_list_by_tag_id(context, data_dict):
+    '''List pages associated with a tag.
+    :param id: id of the tag
+    :type id: string
+    :rtype: list of dictionaries
+    '''
+
+    result = []
+    if 'id' in data_dict:
+        page_id_list = PageTagAssociation.get_page_ids_for_tag(data_dict.get('id'))
+        if page_id_list:
+            result = page_list(context, {'id_list': page_id_list})
 
     return result

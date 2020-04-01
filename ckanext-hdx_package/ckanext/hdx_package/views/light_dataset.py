@@ -6,6 +6,7 @@ import ckan.plugins.toolkit as tk
 from ckan.common import _, config, g, request
 
 import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_pages as cp_h
 from ckanext.hdx_search.controller_logic.search_logic import SearchLogic
 
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
@@ -36,6 +37,7 @@ def read(id):
 
     dataset_dict = get_action('package_show')(context, data_dict)
     analytics_dict = _compute_analytics(dataset_dict)
+    dataset_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, dataset_dict)
 
     template_data = {
         'dataset_dict': dataset_dict,
@@ -62,7 +64,6 @@ def search():
 
     data_dict = {'data': search_logic.template_data}
     return render(u'light/search/search.html', data_dict)
-
 
 
 def _compute_analytics(dataset_dict):

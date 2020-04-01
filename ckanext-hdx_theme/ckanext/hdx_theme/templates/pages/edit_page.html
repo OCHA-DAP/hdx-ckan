@@ -74,6 +74,25 @@
                                 {{ form.select('groups', id='field_groups', options=group_list, selected=data.groups, error=errors.groups, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label">Keywords</label>
+                            <div data-module="hdx_form_element_manager" data-module-element_name="description" >
+                                {{ form.input('description', id='field_description', type='text',placeholder='Keywords with comma separated. e.g covid19, coronavirus', value=data.description, error=errors.description, classes=['form-group'], attrs={'class':'form-control'}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          {% set tag_attrs = {'data-module': 'hdx_autocomplete',
+                                              'data-module-tags': 'false',
+                                              'data-module-multiple': 'multiple',
+                                              'data-module-width': '500px',
+                                              'data-module-placeholder': 'eg. economy, mental health, government',
+                                              'class':'form-control choices-orange', 'multiple':'true',
+                                              'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+                            <label class="control-label">Tags</label>
+                            <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" >
+                                {{ form.input('tag_string', id='field_tag_string', value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group', 'tags-select'], attrs=tag_attrs) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

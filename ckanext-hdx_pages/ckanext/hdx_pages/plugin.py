@@ -57,7 +57,8 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_group_list': get.page_group_list,
             'group_page_list': get.group_page_list,
             'page_list': get.page_list,
-            'admin_page_list': get.admin_page_list
+            'admin_page_list': get.admin_page_list,
+            'page_list_by_tag_id': get.page_list_by_tag_id
         }
 
     def get_auth_functions(self):
