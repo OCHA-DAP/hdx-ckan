@@ -327,6 +327,7 @@ class PagesController(HDXSearchController):
         _data['hdx_counter'] = len(_data['sections'])
         _data['hdx_page_id'] = _data.get('id')
         _data['mode'] = 'edit'
+        _data['description'] = _data.get('description')
 
     def _get_default_title(self, type, title):
         if title is None or title == '':
