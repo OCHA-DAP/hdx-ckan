@@ -3832,6 +3832,18 @@ label.terms-of-service:after {
 .navbar.new-header .navbar-header {
   position: relative;
 }
+.pagination-wrapper {
+  text-align: center;
+}
+.pagination-wrapper .pagination li a {
+  border-radius: 0;
+}
+@media (max-width: 375px) {
+  .pagination-wrapper .pagination li a {
+    line-height: 40px;
+    width: 40px;
+  }
+}
 .mobile-carousel {
   display: none;
 }
