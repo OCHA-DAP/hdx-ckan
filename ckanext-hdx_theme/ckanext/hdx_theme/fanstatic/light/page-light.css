@@ -3522,20 +3522,17 @@ ul.list-horizontal li:first-child:before {
   padding: 3px 30px;
   text-transform: uppercase;
 }
-.new-header .hdx-header .navbar-collapse .nav > li.crisis {
-  margin-top: 0px;
-}
 .new-header .hdx-header .navbar-collapse .nav > li.crisis span {
   font-size: 9px;
   line-height: 14px;
+}
+.new-header .hdx-header .navbar-collapse .nav > li.crisis .crisis-title {
+  line-height: 15px;
 }
 .new-header .hdx-header .navbar-collapse .nav > li.sub-nav a {
   font-family: 'Gotham-Book', sans-serif;
   font-size: 15px;
   text-transform: none;
-}
-.new-header .hdx-header .navbar-collapse .nav > li.top-pad {
-  margin-top: 40px;
 }
 .new-header .hdx-header .navbar-collapse .nav > li.login a {
   display: inline-block;
