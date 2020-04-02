@@ -72,6 +72,12 @@
         </div>
       </div>
     </div>
+
+    <div class="container">
+      {% block page_pagination %}
+        {{ data.page.pager(q=data.q) }}
+      {% endblock %}
+    </div>
   </div>
   {% snippet "widget/banner/hdx-light-banner.html", pkg=pkg %}
 {% endblock %}
