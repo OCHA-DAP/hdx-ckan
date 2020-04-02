@@ -1,5 +1,3 @@
-import datetime
-
 import ckan.model as model
 
 from ckan.tests import factories

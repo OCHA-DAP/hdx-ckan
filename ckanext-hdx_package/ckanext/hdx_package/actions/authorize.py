@@ -4,7 +4,7 @@ import ckan.logic.auth.update as update
 from ckan.lib.base import _
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
-
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
 get_action = tk.get_action
@@ -117,3 +117,9 @@ def package_qa_checklist_update(context, data_dict=None):
     Only sysadmins are allowed to call this action
     '''
     return {'success': False, 'msg': _('Only sysadmins can change the qa_completed flag')}
+
+
+def hdx_cod_update(context, data_dict):
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_COD)
+    return {'success': result}
