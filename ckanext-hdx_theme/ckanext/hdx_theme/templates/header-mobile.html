@@ -127,7 +127,7 @@
                 <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Data</a></li>
                 <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Locations</a></li>
                 <li><a href="{{ orgLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Organisations</a></li>
-                <li class="crisis"><a><span>Quicklinks / Ongoing</span></a></li>
+                <li class="crisis"><a class="crisis-title"><span>Quicklinks / Ongoing</span></a></li>
                 {% set ongoing_links = h.hdx_get_quick_links_list() %}
                 {% for on_link in ongoing_links %}
                   <li class="crisis"><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">{{ on_link.title }}</a></li>
@@ -140,7 +140,7 @@
 {#                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></li>#}
 {#                <li class="crisis"><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></li>#}
 {#                <li class="crisis"><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></li>#}
-                <li class="crisis"><a><span>Quicklinks / Archived</span></a></li>
+                <li class="crisis"><a href="/archive" class="crisis-title"><span>Quicklinks / Archived</span></a></li>
 
 {#                <li class="crisis"><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></li>#}
 {#                <li class="crisis"><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></li>#}
