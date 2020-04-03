@@ -7,6 +7,7 @@ Created on Apr 11, 2014
 import bisect
 import re
 import datetime
+import logging
 
 import ckan.model as model
 import ckan.authz as authz
@@ -23,6 +24,11 @@ missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
 get_action = tk.get_action
+check_access = tk.check_access
+
+NotAuthorized = tk.NotAuthorized
+
+log = logging.getLogger(__name__)
 
 _DATASET_PREVIEW_FIRST_RESOURCE = 'first_resource'
 _DATASET_PREVIEW_RESOURCE_ID = 'resource_id'
@@ -419,7 +425,7 @@ def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, r
 
 
 def hdx_keep_prev_value_if_empty(key, data, errors, context):
-    new_value = data[key]
+    new_value = data.get(key)
     if new_value is missing or not new_value:
         data.pop(key, None)
         pkg_id = data.get(('id',))
@@ -448,6 +454,34 @@ def hdx_delete_unless_field_in_context(context_field):
             data.pop(key, None)
 
     return hdx_delete_unless_forced
+
+
+def hdx_delete_unless_authorized_wrapper(auth_function):
+    '''
+    :param auth_function: the auth function to run through check_access()
+    :type auth_function: str
+    :return:
+    :rtype: function
+    '''
+    def hdx_delete_unless_authorized(key, data, errors, context):
+        try:
+            check_access(auth_function, context, None)
+        except NotAuthorized as e:
+            data.pop(key, None)
+
+    return hdx_delete_unless_authorized
+
+
+def hdx_value_in_list_wrapper(allowed_values, allow_missing):
+    def hdx_value_in_list(key, data, errors, context):
+        value = data[key]
+        value_is_missing = not value or value is missing
+        if not allow_missing and value_is_missing:
+            raise Invalid(_('Value is missing'))
+        if not value_is_missing and value not in allowed_values:
+            raise Invalid(_('Value not in allowed list'))
+
+    return hdx_value_in_list
 
 
 def __get_previous_resource_dict(context, package_id, resource_id):
