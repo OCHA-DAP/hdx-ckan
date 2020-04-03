@@ -1,0 +1,51 @@
+{#
+The snippet for showing the facets for a specific package search
+
+Example:
+  {% snippet 'search/snippets/package_search_facets.html', facet_list=facets  %}
+
+#}
+
+{% for id in facet_list %}
+    {% set facet = facet_list.get(id) %}
+    <div class="filter-category">
+        <div class="categ-title" data-value="{{ facet.get('display_name') | lower }}">
+            {{ facet.get('display_name') }}: <i class="pull-right glyphicon glyphicon-minus"></i>
+        </div>
+        <div class="categ-content">
+            <div class="categ-list {% if facet.show_everything %}show-always{% endif %}">
+                <div class="categ-search">
+                    <input type="text" ><i class="humanitarianicons-Search"></i>
+                </div>
+                <ul name="{{id}}" class="categ-items">
+                    {% for option in facet.get('items') %}
+                        <li>
+                          <label>
+                            <input name="{{option.category_key}}" value="{{option.name}}" type="checkbox"
+                                   {% if option.selected %}checked="checked"{% endif %}
+                                    {% if option.count == 0 and not option.selected %} disabled="disabled" {% endif %}> {{option.display_name}}
+                            <span class="item-count">[{{option.count}}]</span>
+                          </label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if not facet.show_everything %}
+            <div class="categ-actions">
+                <div>
+                    <span class="show-more"><span class="show-more-text" style="display: none;">Less</span><span class="show-more-text">More</span></span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <select name="{{id}}" style="display: none; width: 140px;" class="filter-item" title="" multiple="multiple">
+
+    </select>
+    <div name="{{id}}_initial_values" style="display: none;">
+        {% for option in facet.get('items') %}
+        <option value="{{option.name}}" count="{{option.count}}" {% if option.selected %}selected="selected"{% endif %}>{{option.display_name}}</option>
+        {% endfor %}
+    </div>
+{% endfor %}

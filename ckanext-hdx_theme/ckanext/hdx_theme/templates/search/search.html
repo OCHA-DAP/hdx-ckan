@@ -1,6 +1,13 @@
 {% extends "page.html" %}
 {% import 'macros/form.html' as form %}
 
+{% set page_has_mobile_version = True %}
+
+{% block links %}
+  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {{ super() }}
+{% endblock %}
+
 {% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -17,6 +24,7 @@
     {% endblock %}
   {% block package_search_results_api %}
   {% endblock %}
+  {% snippet "widget/banner/hdx-dataset-banner.html", pkg=pkg %}
 {% endblock %}
 
 {% block secondary %}

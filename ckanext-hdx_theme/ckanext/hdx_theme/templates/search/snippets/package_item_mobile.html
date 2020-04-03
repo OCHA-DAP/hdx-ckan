@@ -1,0 +1,40 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% set current_package_url = h.url_for('hdx_light_dataset.read', id=package.name) %}
+{% set column_class = 'col-xs-12' %}
+
+{% block actions %}{% endblock %}
+{% block others_placeholder %}{% endblock %}
+{% block owner_update %}
+  {% block owner_update_org %}
+    {{ super() }}
+  {% endblock %}
+  {% block owner_update_dates %}
+    {{ super() }}
+  {% endblock %}
+{% endblock %}
+
+{% block second_column_div %}
+  <div>
+    {{ super() }}
+    <div class="col-xs-12">
+      <div class="dataset-updated">
+        {% block owner_update_icons %}
+          {{ super() }}
+        {% endblock %}
+        <div class="dataset-updated-other">
+          {% block owner_update_other %}
+            {{ super() }}
+          {% endblock %}
+        </div>
+        <div class="dataset-others">
+          {% block others %}
+            {{ super() }}
+          {% endblock %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

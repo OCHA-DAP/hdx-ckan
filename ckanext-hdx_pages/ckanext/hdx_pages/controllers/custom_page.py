@@ -6,6 +6,7 @@ import ckan.lib.helpers as h
 import pylons.config as config
 
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
+import ckanext.hdx_package.helpers.helpers as pkg_h
 
 from ckan.common import _, c, g, request, response
 from ckan.controllers.api import CONTENT_TYPES
@@ -112,6 +113,7 @@ class PagesController(HDXSearchController):
                               id=id)
         else:
             extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
+            extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
             self._init_extra_vars_edit(extra_vars)
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
@@ -284,9 +286,10 @@ class PagesController(HDXSearchController):
                      "title": request.params.get("title"),
                      "type": request.params.get("type"),
                      "status": request.params.get("status"),
-                     "description": "",
+                     "description": request.params.get("description"),
                      "sections": json.dumps(sections),
                      "groups": self.process_groups(data_dict_temp.get("groups", [])),
+                     "tags": self.process_tags(data_dict_temp.get("tag_string", [])),
                      request.params.get("type") or 'event': checked,
                      request.params.get("status") or 'ongoing': checked,
                      "hdx_counter": len(sections),
@@ -296,6 +299,16 @@ class PagesController(HDXSearchController):
 
     def process_groups(self, groups):
         return groups if not isinstance(groups, basestring) else [groups]
+
+    def process_tags(self, tag_string):
+        tag_list = []
+        for tag in tag_string.split(','):
+            tag = tag.strip()
+            if tag:
+                tag_list.append({'name': tag,
+                            'state': 'active'})
+        result = pkg_h.get_tag_vocabulary(tag_list)
+        return result
 
     def _init_extra_vars_edit(self, extra_vars):
 
@@ -314,6 +327,7 @@ class PagesController(HDXSearchController):
         _data['hdx_counter'] = len(_data['sections'])
         _data['hdx_page_id'] = _data.get('id')
         _data['mode'] = 'edit'
+        _data['description'] = _data.get('description')
 
     def _get_default_title(self, type, title):
         if title is None or title == '':
