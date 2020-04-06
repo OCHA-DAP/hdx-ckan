@@ -14,6 +14,7 @@ def page_dictize(page):
         'id': page.id,
         'name': page.name,
         'title': page.title,
+        'description': page.description,
         'keywords': page.description,
         'type': page.type,
         'state': page.state,

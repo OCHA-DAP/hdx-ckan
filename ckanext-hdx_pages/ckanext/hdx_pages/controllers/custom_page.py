@@ -289,7 +289,7 @@ class PagesController(HDXSearchController):
                      "description": request.params.get("description"),
                      "sections": json.dumps(sections),
                      "groups": self.process_groups(data_dict_temp.get("groups", [])),
-                     "tags": self.process_tags(data_dict_temp.get("tag_string", [])),
+                     "tags": self.process_tags(data_dict_temp.get("tag_string", "")),
                      request.params.get("type") or 'event': checked,
                      request.params.get("status") or 'ongoing': checked,
                      "hdx_counter": len(sections),
