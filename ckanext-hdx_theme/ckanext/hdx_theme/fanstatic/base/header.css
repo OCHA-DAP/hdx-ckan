@@ -3345,6 +3345,11 @@ ul.list-horizontal li:first-child:before {
   display: flex;
   align-items: center;
 }
+.new-header .global-header .global-header-content .header-user-box a.action-red {
+  display: flex;
+  align-items: center;
+  color: #f2645a;
+}
 .new-header .global-header .global-header-content .header-user-box .dropdown-menu {
   margin: 0;
 }

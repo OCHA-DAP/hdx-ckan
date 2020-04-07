@@ -1,0 +1,75 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Data Responsibility for COVID-19") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Data Responsibility for COVID-19'),
+  controller='ckanext.hdx_theme.controllers.faq_data_responsability:FaqDataResponsabilityController',
+  action='show') }}</li>
+{% endblock %}
+
+{% block pre_primary %}
+    {%- block faqwidget %}
+        {{ h.snippet('widget/faq_data_responsability/faq-send-message.html', id="faqSendMsgPopup", topics=data.topics, fullname=data.fullname,
+                        email=data.email, capcha_api_key=capcha_api_key) }}
+        {{ h.snippet('widget/faq_data_responsability/done.html', id="faqDonePopup") }}
+    {% endblock -%}
+    <div class="row top-banner">
+        <div class="col-xs-12">
+            <div class="top-banner-text-wrapper">
+                <div class="top-banner-title">
+                   {{ _('Data Responsibility for COVID-19') }}
+                </div>
+                <div class="top-banner-more mTop60">
+                    {{ _("Don't see an answer you are looking for ?") }}
+                </div>
+                <div class="top-banner-more-button-wrapper mTop30">
+                    <a class="btn hdx-btn btn-blue-on-white" onclick="closeCurrentWidget(this);spawnRecaptcha('#faqSendMsgPopup');showFaqWidget('#faqSendMsgPopup');" href="#">
+                        {{ _("Contact us") }}
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block primary %}
+    <div class="row mTop60">
+        <div class="col-xs-12">
+            <div id="body-about-hdx" class="section-flag" style="">About Data Responsibility for COVID-19</div>
+            <p class="mTop10">
+              The members of the IASC Sub-Group on Data Responsibility (co-led by the OCHA Centre for Humanitarian Data,
+              IOM, and UNHCR) have developed this FAQ to support organizations and staff around the world working with
+              data in the COVID-19 response. The ongoing response presents a range of challenges and opportunities
+              around the safe, ethical, and effective management of data. This resource will be updated regularly as we
+              receive additional questions and feedback.
+            </p>
+        </div>
+    </div>
+    {% snippet 'faq_data_responsability/questions_sections.html', data=data.faq_data %}
+{% endblock %}
+
+{% block secondary %}
+    <div id="hdx-faq-sidebar-wrapper" class="mTop60">
+        <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+{#            <ul class="nav">#}
+{#            {% for section in data.faq_data %}#}
+{#                <li>#}
+{#                    <a id='menu-{{ section.id }}' href="#body-{{ section.id }}"> {{ section.title }} </a>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#            </ul>#}
+            <p class="no-answer-found mTop30">
+                <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{%- block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/faq/faq.css' %}
+    {% resource 'hdx_theme/faq/faq.js' %}
+{% endblock %}

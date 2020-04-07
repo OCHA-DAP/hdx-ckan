@@ -157,6 +157,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
+        map.connect('/faq-data-responsibility-covid-19',
+                    controller='ckanext.hdx_theme.controllers.faq_data_responsability:FaqDataResponsabilityController',
+                    action='show')
+
         map.connect('carousel_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
