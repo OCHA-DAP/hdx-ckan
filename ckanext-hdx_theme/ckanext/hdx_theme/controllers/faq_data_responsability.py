@@ -88,7 +88,7 @@ class FaqDataResponsabilityController(base.BaseController):
             return self.error_message(error_summary)
 
         try:
-            subject = u'Faq: request from user'
+            subject = u'Faq Data Responsability: request from user'
             html = u"""\
                 <html>
                   <head></head>

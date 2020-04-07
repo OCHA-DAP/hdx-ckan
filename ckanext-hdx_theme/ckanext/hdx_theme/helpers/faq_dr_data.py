@@ -136,7 +136,7 @@ section_1 = {
             'q': 'Where can I find the latest data about the ongoing COVID-19 emergency?',
             'a': '<p> The World Health Organization maintains a real-time dashboard providing an overview of the '
                  'COVID-19 situation here '
-                 '<a href="https://experience.arcgis.com/experience/685d0ace521648f8a5beeeee1b9125cd" target="_blank">https://experience.arcgis.com/experience/685d0ace521648f8a5beeeee1b9125cd</a>'
+                 '<a href="https://who.sprinklr.com/" target="_blank">https://experience.arcgis.com/experience/685d0ace521648f8a5beeeee1b9125cd</a>'
                  ' </p>'
                  '<p> Their data is updated live and can be accessed here: '
                  '<a href="https://data.humdata.org/dataset/coronavirus-covid-19-cases-data-for-china-and-the-rest-of-the-world" target="_blank">https://data.humdata.org/dataset/coronavirus-covid-19-cases-data-for-china-and-the-rest-of-the-world</a>'
