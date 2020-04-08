@@ -3508,6 +3508,12 @@ ul.list-horizontal li:first-child:before {
   .new-header .global-header .global-header-content .header-user-box .separated-list a.action .action-text {
     display: none;
   }
+  .new-header .global-header .global-header-content .header-user-box .separated-list a.action-red {
+    display: none;
+  }
+  .new-header .global-header .global-header-content .header-user-box .separated-list a.action-red .action-text {
+    display: none;
+  }
   .new-header .global-header .global-header-content .header-user-box .separated-list svg[class^='icon-o-'],
   .new-header .global-header .global-header-content .header-user-box .separated-list .glyphicon {
     margin-right: 0;

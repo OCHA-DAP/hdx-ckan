@@ -36,7 +36,7 @@ for f in faq_dr_data:
     topics[f.get('id')] = f.get('title')
 
 
-class FaqDataResponsabilityController(base.BaseController):
+class FaqDataResponsibilityController(base.BaseController):
     def show(self):
         fullname = c.userobj.display_name if c.userobj and c.userobj.display_name is not None else ''
         email = c.userobj.email if c.userobj and c.userobj.email is not None else ''
@@ -52,11 +52,11 @@ class FaqDataResponsabilityController(base.BaseController):
             'error_summary': '',
         }
 
-        return base.render('faq_data_responsability/main.html', extra_vars=template_data)
+        return base.render('faq_data_responsibility/main.html', extra_vars=template_data)
 
     # def about(self):
     #     import ckan.lib.helpers as h
-    #     return h.redirect_to(controller='ckanext.hdx_theme.controllers.faq_data_responsability:FaqController', action='show')
+    #     return h.redirect_to(controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqController', action='show')
 
     def contact_us(self):
         '''
@@ -88,7 +88,7 @@ class FaqDataResponsabilityController(base.BaseController):
             return self.error_message(error_summary)
 
         try:
-            subject = u'Faq Data Responsability: request from user'
+            subject = u'Faq Data Responsibility: request from user'
             html = u"""\
                 <html>
                   <head></head>
