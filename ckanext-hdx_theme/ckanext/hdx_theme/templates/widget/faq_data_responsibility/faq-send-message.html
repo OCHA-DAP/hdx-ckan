@@ -1,0 +1,64 @@
+{#
+Select organization widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup") }}
+#}
+
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-select-organisation" %}
+{% resource 'hdx_theme/widget/faq/faq.css' %}
+{% resource 'hdx_theme/widget/faq/faq.js' %}
+{% extends "widget/onboarding/two-column.html" %}
+
+{% block left_content %}
+    <div>
+        <div class="large-title">Have a new question?</div>
+        <div class="mTop20 large-text">Help us expand this resource for humanitarians around the world! Please send us
+          your question and we will see how best to address it and add it to a future iteration of this FAQ on data
+          responsibility in the COVID-19 response.</div>
+        <div class="mTop20 regular-text">
+            NOTICE: Any personal details you provide here will only be used by OCHA, for the purpose of recording your
+          feedback and in some cases to contact you for follow-up questions. Your personal data will not be
+          transferred to any third parties.
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_content %}
+    <div id="faq-send-message">
+        <form id="faq-send-message-form">
+            <div class="row" style="overflow: hidden; height: 400px;">
+                <div class="col-xs-12">
+                    <!--<div class="bold-regular-text">Please fill out the following: </div>-->
+{#                    <select class="required" id="topics-selector" name="topic">#}
+{#                        <option id="" value="">Your question is regarding ...</option>#}
+{#                        {% for key, value in topics.iteritems() %}#}
+{#                            <option id="{{key}}" value="{{value}}">{{value}}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+                    <div class="mTop15 control">
+                        <input id="fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
+                        <label for="fullname">Your name</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <input id="email" name="email" class="full-width required" type="text" value="{{email}}">
+                        <label for="email">Your email address</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
+                        <label for="faq-msg">Your question</label>
+                    </div>
+                </div>
+            </div>
+            <div class="right-side-actions">
+                <input class="btn btn-primary btn-large mL45 pull-right hdx-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="faqSendMessageOnSubmit" data-size="invisible" data-badge="inline">
+                <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
