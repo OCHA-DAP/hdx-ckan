@@ -3376,6 +3376,11 @@ ul.list-horizontal li:first-child:before {
   display: flex;
   align-items: center;
 }
+.new-header .global-header .global-header-content .header-user-box a.action-red {
+  display: flex;
+  align-items: center;
+  color: #f2645a;
+}
 .new-header .global-header .global-header-content .header-user-box .dropdown-menu {
   margin: 0;
 }
@@ -3452,6 +3457,12 @@ ul.list-horizontal li:first-child:before {
 }
 @media (max-width: 768px) {
   .new-header .global-header .global-header-content .header-user-box .separated-list a.action .action-text {
+    display: none;
+  }
+  .new-header .global-header .global-header-content .header-user-box .separated-list a.action-red {
+    display: none;
+  }
+  .new-header .global-header .global-header-content .header-user-box .separated-list a.action-red .action-text {
     display: none;
   }
   .new-header .global-header .global-header-content .header-user-box .separated-list svg[class^='icon-o-'],
