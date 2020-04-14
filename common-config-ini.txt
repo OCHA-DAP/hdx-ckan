@@ -127,7 +127,7 @@ ckan.feeds.author_link =
 ofs.impl = pairtree
 ofs.storage_dir = /opt/www/data
 ckan.storage_path = /opt/www/data
-ckan.max_resource_size = 300
+ckan.max_resource_size = 1200
 ckan.max_image_size = 2
 
 # Path to resource format mapping file is:
