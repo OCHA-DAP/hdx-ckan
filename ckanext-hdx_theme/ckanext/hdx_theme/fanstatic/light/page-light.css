@@ -3581,6 +3581,12 @@ ul.list-horizontal li:first-child:before {
   font-size: 15px;
   text-transform: none;
 }
+.new-header .hdx-header .navbar-collapse .nav > li.sub-nav a.action-red {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 15px;
+  text-transform: none;
+  color: #f2645a;
+}
 .new-header .hdx-header .navbar-collapse .nav > li.login a {
   display: inline-block;
   font-family: 'Gotham-Medium', sans-serif;
