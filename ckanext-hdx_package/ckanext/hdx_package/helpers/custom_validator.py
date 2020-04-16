@@ -19,6 +19,7 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+from ckanext.hdx_package.helpers.date_helper import daterange_parser
 
 missing = df.missing
 StopOnError = df.StopOnError
@@ -482,6 +483,12 @@ def hdx_value_in_list_wrapper(allowed_values, allow_missing):
             raise Invalid(_('Value not in allowed list'))
 
     return hdx_value_in_list
+
+
+def hdx_daterange_possible_infinite_end(key, data, errors, context):
+    value = data.get(key) # type: str
+    new_value = daterange_parser(value, False)
+    data[key] = new_value
 
 
 def __get_previous_resource_dict(context, package_id, resource_id):

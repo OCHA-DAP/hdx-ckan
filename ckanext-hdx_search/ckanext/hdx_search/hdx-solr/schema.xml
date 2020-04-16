@@ -185,6 +185,10 @@ schema. In this case the version should be set to the next CKAN version number.
 
     <dynamicField name="*_daterange" type="daterange" indexed="true" stored="true" multiValued="false"/>
 
+    <!-- This should be used for date fields at the resource_level -->
+    <dynamicField name="res_extras_daterange_*" type="daterange" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
+
+
     <dynamicField name="extras_*" type="text" indexed="true" stored="true" multiValued="false"/>
     <dynamicField name="res_extras_*" type="text" indexed="true" stored="true" multiValued="true"/>
     <dynamicField name="vocab_*" type="string" indexed="true" stored="true" multiValued="true"/>
