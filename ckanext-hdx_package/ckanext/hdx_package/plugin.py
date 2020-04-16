@@ -320,6 +320,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_delete_unless_allow_broken_link'),
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_boolean_string_converter')
+                ],
+                'daterange_for_data': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_daterange_possible_infinite_end')
                 ]
             }
         )
@@ -405,6 +409,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
                 ],
+                'daterange_for_data': [
+                    tk.get_validator('ignore_missing'),
+                ]
             }
         )
 
@@ -496,7 +503,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_delete_unless_authorized_to_update_cod':
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_in_cod_values':
-                vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False)
+                vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
+            'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end
         }
 
     def get_auth_functions(self):
