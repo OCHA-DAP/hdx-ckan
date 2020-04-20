@@ -37,8 +37,8 @@ def file_remove(resource_id, resource_url, resource_url_type):
     def file_remove_s3(resource_id, resource_url):
         try:
             uploader = S3ResourceUploader({})
-            resource_name = __find_filename_in_url(resource_url)
-            munged_resource_name = munge.munge_filename(resource_name)
+            # resource_name = __find_filename_in_url(resource_url)
+            munged_resource_name = munge.munge_filename(resource_url)
             filepath = uploader.get_path(resource_id, munged_resource_name)
             uploader.clear_key(filepath)
         except Exception, e:
