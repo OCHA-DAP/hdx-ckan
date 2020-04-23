@@ -1,4 +1,4 @@
--c myreqs.txt
+-c requirements.txt
 
 beautifulsoup4==4.5.1
 #coveralls   #Let Unpinned - Requires latest coveralls
