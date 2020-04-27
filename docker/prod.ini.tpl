@@ -22,7 +22,7 @@ ckan.datastore.read_url  = postgresql://datastore:datastore@dbckan:5432/datastor
 #ckan.datastore.read_url = postgresql://datastore:datastore@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/datastore
 
 ## Site Settings
-ckan.site_url = http://${HDX_PREFIX}data.${HDX_DOMAIN}
+ckan.site_url = https://${HDX_PREFIX}data.${HDX_DOMAIN}
 beaker.session.secret = 2yD+TJxTgW+VtA38OzxQJNPPO
 app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
