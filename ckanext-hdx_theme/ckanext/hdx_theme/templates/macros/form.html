@@ -125,7 +125,7 @@ Examples:
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, control_classes=["editor"], extra_html=extra_html, is_required=is_required) %}
     <textarea id="{{ id or name }}" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
-    <span class="editor-info-block">{% trans %}You can use <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here{% endtrans %}</span>
+    <span class="editor-info-block">{% trans %}You can use <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here{% endtrans %}</span>
   {% endcall %}
 {% endmacro %}
 
@@ -411,7 +411,7 @@ Example
 {% macro image_upload(data, errors, field_url='image_url', field_upload='image_upload', field_clear='clear_upload',
                       is_url=false, is_upload=false, is_upload_enabled=false, placeholder=false,
                       url_label='', upload_label='', attrs={})  %}
-  {% set placeholder = placeholder if placeholder else _('http://example.com/my-image.jpg') %}
+  {% set placeholder = placeholder if placeholder else _('https://example.com/my-image.jpg') %}
   {% set url_label = url_label or _('Image URL')  %}
   {% set upload_label = upload_label or _('Image')  %}
 

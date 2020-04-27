@@ -1,12 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
-  <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:i18n="http://genshi.edgewall.org/i18n"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-      > <!--<![endif]-->
+  <!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en"
+      xmlns="https://www.w3.org/1999/xhtml"
+      xmlns:py="https://genshi.edgewall.org/"
+      xmlns:xi="https://www.w3.org/2001/XInclude"
+> <!--<![endif]-->
 <xi:include href="_util.html" />
 <head>
   <meta charset="utf-8" />
@@ -139,15 +139,15 @@
             <ul>
                 <li>${h.link_to(_('About'), h.url_for(controller='home', action='about'))}</li>
               <li>
-                <a href="http://twitter.com/ckanproject">Twitter @ckanproject</a>
+                <a href="https://twitter.com/ckanproject">Twitter @ckanproject</a>
               </li>
                 <li>${h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=1))}</li>
-                <li>${h.link_to(_('API Docs'), 'http://docs.ckan.org/en/latest/api.html')}</li>
+                <li>${h.link_to(_('API Docs'), 'https://docs.ckan.org/en/latest/api.html')}</li>
               <li>
-                <a href="http://ckan.org/contact/">Contact Us</a>
+                <a href="https://ckan.org/contact/">Contact Us</a>
               </li>
               <li>
-                <a href="http://okfn.org/privacy-policy/">Privacy Policy</a>
+                <a href="https://okfn.org/privacy-policy/">Privacy Policy</a>
               </li>
             </ul>
           </div>
@@ -204,18 +204,18 @@
           <p id="credits">
             &copy; 2012
             <img src="//assets.okfn.org/images/logo/okf_logo_white_and_green_tiny.png" id="footer-okf-logo" />
-            <a href="http://okfn.org/">Open Knowledge Foundation</a>
-            Licensed under the <a href="http://opendatacommons.org/licenses/odbl/1.0/">Open Database License</a>
-            <a href="http://opendefinition.org/"><img alt="This Content and Data is Open" src="//assets.okfn.org/images/ok_buttons/od_80x15_blue.png" style="border: none;"/></a>
+            <a href="https://okfn.org/">Open Knowledge Foundation</a>
+            Licensed under the <a href="https://opendatacommons.org/licenses/odbl/1.0/">Open Database License</a>
+            <a href="https://opendefinition.org/"><img alt="This Content and Data is Open" src="//assets.okfn.org/images/ok_buttons/od_80x15_blue.png" style="border: none;"/></a>
 
             <br/><br/>
-            Powered by <a href="http://ckan.org">CKAN</a> v${c.__version__}.<br/>
+            Powered by <a href="https://ckan.org">CKAN</a> v${c.__version__}.<br/>
           </p>
         </div>
       </div>
     </footer>
   </div> <!-- eo #container -->
-  
+
   <div style="display:none;" id="scripts">
   <script src="${h.url_for_static('/scripts/vendor/jquery/1.7.1/jquery.js')}"></script>
   <script type="text/javascript" src="${h.url_for_static('/scripts/vendor/json2.js')}"></script>
