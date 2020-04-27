@@ -162,7 +162,7 @@ def _run_pii_check(resource_dict, context):
             # 'riskThreshold': 3
         }
         data_dict['resourceProxyUrl'] = _set_resource_proxy_url(context, data_dict, resource_dict, None)
-        log.info('RunPII for resource [%s], path [%s], proxyUrl [%s]' % (data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
+        log.warn('RunPII for resource [%s], path [%s], proxyUrl [%s]' % (data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
         r = requests.post(
             PII_RUN_URL,
             headers={
@@ -196,7 +196,7 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
             data_dict['columnTypes'] = '|'.join(map(str, columns_type_list))
 
         data_dict['resourceProxyUrl'] = _set_resource_proxy_url(context, data_dict, resource_dict, sheet)
-        log.info('RunSDC for resource path [%s], proxyUrl [%s], sheet [%s]' % (data_dict['resourcePath'], data_dict['resourceProxyUrl'], data_dict['sheet']))
+        log.warn('RunSDC for resource path [%s], proxyUrl [%s], sheet [%s]' % (data_dict['resourcePath'], data_dict['resourceProxyUrl'], data_dict['sheet']))
         r = requests.post(
             SDCMICRO_RUN_URL,
             headers={
