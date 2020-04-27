@@ -57,7 +57,7 @@
                               <label class="control-label" for="url_field">URL</label>
                               <div class="controls ">
                                 <input id="url_field" type="text" name="url" value="<%= url %>"
-                                       placeholder="eg. http://... " class="form-control">
+                                       placeholder="eg. https://... " class="form-control">
                                 <span class="error-block"></span>
                               </div>
                             </div>
@@ -112,7 +112,7 @@
       {% block admin_form_help %}
         {% set about_url = h.url_for(controller='home', action='about') %}
         {% set home_url = h.url_for(controller='home', action='index') %}
-        {% set docs_url = "http://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
+        {% set docs_url = "https://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
         {% trans %}
           <p>This setting is to configure the quick links shown under the main navigation on HDX.</p>
           <p>A quick link menu item has the following configuration fields:</p>
