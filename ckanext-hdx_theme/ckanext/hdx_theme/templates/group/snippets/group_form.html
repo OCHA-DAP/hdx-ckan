@@ -19,7 +19,7 @@
 
     {{ form.markdown('description', label=_('Description'), id='field-description', placeholder=_('A little information about my group...'), value=data.description, error=errors.description) }}
 
-    {{ form.input('image_url', label=_('Image URL'), id='field-image-url', type='url', placeholder=_('http://example.com/my-image.jpg'), value=data.image_url, error=errors.image_url, classes=['control-full']) }}
+    {{ form.input('image_url', label=_('Image URL'), id='field-image-url', type='url', placeholder=_('https://example.com/my-image.jpg'), value=data.image_url, error=errors.image_url, classes=['control-full']) }}
 
   {% endblock %}
 
@@ -47,7 +47,7 @@
         error=errors[prefix ~ 'key'] or errors[prefix ~ 'value']
       ) }}
     {% endfor %}-->
-  {% endblock %} 
+  {% endblock %}
   {# Do not update datasets here
   {% block dataset_fields %}
     {% if data.packages %}
