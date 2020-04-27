@@ -2,31 +2,34 @@
 # Use pip-compile to create a requirements.txt file from this
 Babel==2.3.4
 bleach==2.1.3
-click==6.7
+click>=7.0
 fanstatic==0.12
 Flask==0.12.4
+werkzeug<1.0
 Flask-Babel==0.11.2
-Jinja2==2.8
+Jinja2>=2.10
 Markdown==2.6.7
 ofs==0.4.2
 Pairtree==0.7.1-T
 passlib==1.6.5
-paste==1.7.5.1
+paste==1.7.5.1 # commenting will be installed anyway by the Pylons dependency
 polib==1.0.7
 psycopg2==2.7.3.2
 python-magic==0.4.15
 pysolr==3.6.0
 Pylons==0.9.7
-python-dateutil>=1.5.0,<2.0.0
+PasteScript<3.0.0 # latest version that would be installed by Pylons wants Paste >=3.0
+python-dateutil<3.0.0,>=2.1
 pytz==2016.7
 pyutilib.component.core==4.6.4
 repoze.who-friendlyform==1.0.8
 repoze.who==2.3
-requests==2.11.1
+requests>=2.14.2
 Routes==1.13
 rq==0.6.0
 simplejson==3.10.0
-sqlalchemy-migrate==0.10.0
+sqlalchemy-migrate==0.11.0
+pbr!=2.1.0,>=2.0.0 #needed by sqlalchemy-migrate and pbr!=2.1.0,>=2.0.0 (from mox3==0.28.0->pyfakefs==2.9->-r dev-requirements.in
 SQLAlchemy==1.1.11
 sqlparse==0.2.2
 tzlocal==1.3
@@ -36,3 +39,41 @@ WebHelpers==1.3
 WebOb==1.0.8
 WebTest==1.4.3  # need to pin this so that Pylons does not install a newer version that conflicts with WebOb==1.0.8
 zope.interface==4.3.2
+
+# ADDED FOR HDX
+ipaddress==1.0.23
+validate_email==1.2
+pyDNS==2.3.6
+ijson==2.2
+mailchimp==2.0.9
+ua-parser==0.7.2
+user_agents==1.1.0
+
+PyYAML>=5.1,<=5.2
+
+# Below lines are needed for ckanext-powerview
+ckantoolkit==0.0.3
+-e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview
+
+# request data plugin
+idna<2.9 # Because moto (from dev-requirements needs <2.9)
+email_validator==1.0.2
+timeago==1.0.7
+
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.0#egg=ckanext-requestdata
+
+# ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.1.0#egg=ckanext-showcase
+
+# reqs for ckanext-dcat
+rdflib==4.2.1
+rdflib-jsonld==0.4.0
+git+https://github.com/geomet/geomet.git
+#ckantoolkit==0.0.3 already installed for ckanext-powerview
+# ckanext-dcat
+-e git+https://github.com/OCHA-DAP/ckanext-dcat.git@0.1.0#egg=ckanext-dcat
+
+dogpile.cache==0.7.1
+
+# ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.0#egg=ckanext-s3filestore

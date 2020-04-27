@@ -1,7 +1,10 @@
 import os
+import os.path as path
 import logging
 
 import ckan.lib.munge as munge
+import urlparse
+
 from ckan.lib import uploader
 
 from ckanext.s3filestore.uploader import S3ResourceUploader
@@ -11,7 +14,7 @@ from ckanext.hdx_theme.helpers.config import is_s3filestore_enabled
 log = logging.getLogger(__name__)
 
 
-def file_remove(resource_id, resource_name, resource_url_type):
+def file_remove(resource_id, resource_url, resource_url_type):
 
     def file_remove_local(resource_id):
         id = resource_id
@@ -31,10 +34,11 @@ def file_remove(resource_id, resource_name, resource_url_type):
 
         pass
 
-    def file_remove_s3(resource_id, resource_name):
+    def file_remove_s3(resource_id, resource_url):
         try:
             uploader = S3ResourceUploader({})
-            munged_resource_name = munge.munge_filename(resource_name)
+            # resource_name = __find_filename_in_url(resource_url)
+            munged_resource_name = munge.munge_filename(resource_url)
             filepath = uploader.get_path(resource_id, munged_resource_name)
             uploader.clear_key(filepath)
         except Exception, e:
@@ -43,6 +47,16 @@ def file_remove(resource_id, resource_name, resource_url_type):
 
     if resource_url_type == 'upload':
         if is_s3filestore_enabled():
-            file_remove_s3(resource_id, resource_name)
+            file_remove_s3(resource_id, resource_url)
         else:
             file_remove_local(resource_id)
+
+
+def __find_filename_in_url(url):
+    if url:
+        parsed_url = urlparse.urlparse(url)
+        if parsed_url and parsed_url.path:
+            filename = path.basename(parsed_url.path)
+            return filename
+    return url
+

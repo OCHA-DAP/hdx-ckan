@@ -27,7 +27,10 @@
     {% endif %}  #}
   </a>
   {% endblock %}
-
+  <div class="update-date">
+    {{ _('Updated') }}:
+    {{ h.render_datetime(res.last_modified) }}
+  </div>
   <div class="description">
     {% if res.description %}
       <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>

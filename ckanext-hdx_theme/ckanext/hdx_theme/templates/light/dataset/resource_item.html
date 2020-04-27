@@ -36,6 +36,10 @@
 
       <div class="animation-wrapper closed">
       <div class="content">
+        <div class="update-date">
+          {{ _('Updated') }}:
+          {{ h.render_datetime(res.last_modified) }}
+        </div>
         <div class="description">
           {% if res.description %}
             <div>{{ h.render_markdown(res.description) }}</div>

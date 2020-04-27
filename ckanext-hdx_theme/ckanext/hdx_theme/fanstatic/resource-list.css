@@ -2,6 +2,9 @@
 .resource-list {
   list-style: none;
 }
+.resource-item .update-date {
+  margin-bottom: 7px;
+}
 .resource-item .description {
   text-align: justify;
   max-width: 450px;
