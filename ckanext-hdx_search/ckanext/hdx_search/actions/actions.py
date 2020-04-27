@@ -133,7 +133,7 @@ def hdx_qa_pii_run(context, data_dict):
     if resource_id:
         try:
             resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
-            _run_pii_check(resource_dict)
+            _run_pii_check(resource_dict, context)
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
