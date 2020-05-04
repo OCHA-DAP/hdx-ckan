@@ -13,16 +13,16 @@ BATCH_MODE_KEEP_OLD = 'KEEP_OLD'
 
 UNWANTED_DATASET_PROPERTIES = ['author_email', 'author']
 
-COD_WITH_SERVICE = 'cod-with-service'
-COD_WITHOUT_SERVICE = 'cod-without-service'
-COD_CANDIDATE = 'candidate-cod'
+COD_ENHANCED = 'cod-enhanced'
+COD_STANDARD = 'cod-standard'
+COD_CANDIDATE = 'cod-candidate'
 COD_NOT = 'not-cod'
 
 COD_VALUES_MAP = OrderedDict((
     (COD_NOT, 'Not COD'),
-    (COD_CANDIDATE, 'COD candidate'),
-    (COD_WITHOUT_SERVICE, 'COD without service'),
-    (COD_WITH_SERVICE, 'COD with service'),
+    (COD_CANDIDATE, 'Candidate COD'),
+    (COD_STANDARD, 'Standard COD'),
+    (COD_ENHANCED, 'Enhanced COD'),
 ))
 
 

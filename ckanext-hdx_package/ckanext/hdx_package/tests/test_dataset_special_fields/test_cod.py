@@ -4,7 +4,7 @@ from ckan.tests import factories
 
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
-from ckanext.hdx_package.helpers.constants import COD_WITH_SERVICE, COD_WITHOUT_SERVICE, COD_CANDIDATE, COD_NOT
+from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD, COD_CANDIDATE, COD_NOT
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 
@@ -41,14 +41,14 @@ class TestCod(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         dataset_dict = self.__change_cod_field(context_sysadmin, COD_CANDIDATE)
         assert dataset_dict.get('cod_level') == COD_CANDIDATE
 
-        dataset_dict = self.__change_cod_field(context_sysadmin, COD_WITHOUT_SERVICE)
-        assert dataset_dict.get('cod_level') == COD_WITHOUT_SERVICE
+        dataset_dict = self.__change_cod_field(context_sysadmin, COD_STANDARD)
+        assert dataset_dict.get('cod_level') == COD_STANDARD
 
-        dataset_dict = self.__change_cod_field(context_sysadmin, COD_WITH_SERVICE)
-        assert dataset_dict.get('cod_level') == COD_WITH_SERVICE
+        dataset_dict = self.__change_cod_field(context_sysadmin, COD_ENHANCED)
+        assert dataset_dict.get('cod_level') == COD_ENHANCED
 
         dataset_dict = self.__change_cod_field(context, COD_NOT)
-        assert dataset_dict.get('cod_level') == COD_WITH_SERVICE, 'Normal editors shouldn\'t be allowed to change COD'
+        assert dataset_dict.get('cod_level') == COD_ENHANCED, 'Normal editors shouldn\'t be allowed to change COD'
 
         dataset_dict = self.__change_cod_field(context_cod_user, COD_CANDIDATE)
         assert dataset_dict.get('cod_level') == COD_CANDIDATE
