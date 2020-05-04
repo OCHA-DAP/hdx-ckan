@@ -4,21 +4,20 @@ Created on Jun 16, 2014
 @author: alexandru-m-g
 '''
 
-import webtest
 import logging
 import ckan.lib.create_test_data as ctd
-import ckan.config as ckanconfig
 import ckan.model as model
 import ckan.lib.search as search
 import ckan.logic as logic
 
+import ckan.plugins.toolkit as tk
 import ckan.tests.helpers as helpers
 
 import ckanext.hdx_package.actions.create as hdx_actions
 import ckanext.hdx_package.helpers.caching as caching
 
-from pylons import config
 
+config = tk.config
 
 log = logging.getLogger(__name__)
 
@@ -58,22 +57,31 @@ class HdxBaseTest(object):
         load_plugin('ytp_request hdx_org_group hdx_theme')
 
     @classmethod
+    def _change_config(self, config):
+        '''
+        Allows subclasses to change the config before the "app" and the test data are created.
+        The subclass does not need to worry about cleanup of the config as this class
+        restores the original config in teardown_class()
+        '''
+        pass
+
+    @classmethod
     def setup_class(cls):
         cls.original_config = config.copy()
 
         # so that we can search for strings in the HTTP response
         config['ckan.use_pylons_response_cleanup_middleware'] = False
+        cls._change_config(config)
 
         search.clear_all()
         helpers.reset_db()
+        caching.invalidate_group_caches()
         # cls._load_plugins()
         cls.app = _get_test_app()
 
         cls.replace_package_create()
 
         cls._create_test_data()
-
-        caching.invalidate_group_caches()
 
     @classmethod
     def teardown_class(cls):

@@ -120,7 +120,7 @@ function _renderHandsonTable(data) {
   });
   _hot.updateSettings({
     cells: function (row, col) {
-      let cell = _hot.getCell(row,col);
+      let cell = _hot.getCell(row, col);
       if (!cell)
         return;
       if (_sdcSettings.weightColumn === col) {
@@ -134,18 +134,25 @@ function _renderHandsonTable(data) {
   _updatedSdcHeader();
 }
 
-function _initHandsonTable(datasetId, resourceId, data) {
-  let container = document.getElementById("sdc-micro-table");
+function _prepareHandsonSettings(datasetId, resourceId) {
   _sdcSettings = {
     datasetId: datasetId,
     resourceId: resourceId
   };
+
+}
+
+function _initHandsonTable(data) {
+  let container = document.getElementById("sdc-micro-table");
+
   const contextMenu = _contextMenu(_sdcSettings);
   const settings = {
     readOnly: true,
     rowHeaders: true,
     colHeaders: true,
     filters: true,
+    viewportColumnRenderingOffset: 10,
+    viewportRowRenderingOffsetNumber: 10,
     dropdownMenu: contextMenu,
     contextMenu: contextMenu,
     afterInit: () => {
@@ -153,10 +160,15 @@ function _initHandsonTable(datasetId, resourceId, data) {
     },
     licenseKey: 'non-commercial-and-evaluation'
   };
+
+  if (_hot) {
+    _hot.destroy();
+  }
+
   _hot = new Handsontable(container, settings);
 
   let adaptRunButtonState = () => {
-    let reducer = (accumulator, currentValue) => accumulator + currentValue ? 1:0;
+    let reducer = (accumulator, currentValue) => accumulator + currentValue ? 1 : 0;
     let selectedNum = _sdcSettings.columns.reduce(reducer, 0);
     if (selectedNum > 0) {
       $("#qa-sdc-popup-save").removeClass('disabled');
@@ -217,24 +229,25 @@ function _loadSheet(el, sheet) {
   $('#qa-sdc-widget .nav .nav-item').removeClass('active');
   $(el).parent('.nav-item').addClass('active');
   _sdcSettings.sheet = sheet;
-  _renderHandsonTable(_sdcLoadedData.content[sheet]);
+  _initHandsonTable(_sdcLoadedData.content[sheet]);
 }
 
 function _generateTabs(data) {
   let tabs = $("#qa-sdc-widget .nav");
   const navTabs = Array.from(Array(data.sheets));
-  const firstNavTabs = navTabs.slice(0,4);
+  const firstNavTabs = navTabs.slice(0, 4);
   const lastNavTabs = navTabs.slice(4);
 
   function __computeDisplaySheetName(sheetName) {
-    return sheetName.length < 25 ? sheetName : sheetName.substring(0,25) + '...';
+    return sheetName.length < 25 ? sheetName : sheetName.substring(0, 25) + '...';
   }
+
   let content = firstNavTabs.map((_, i) => {
     const sheetName = data.sheetNames[i];
     const displaySheetName = __computeDisplaySheetName(sheetName);
     return `
     <li class="nav-item ${i === 0 ? 'active' : ''}">
-      <a title="${sheetName}" class="nav-link sdc-sheet-name normal-sheets" 
+      <a title="${sheetName}" class="nav-link sdc-sheet-name normal-sheets"
             href="#" data-sheet="${i}">${displaySheetName}</a>
     </li>
     `
@@ -256,7 +269,7 @@ function _generateTabs(data) {
 
     content += `
     <li role="presentation" class="dropup" id="extra-sheets-dropup">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" 
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
         aria-haspopup="true" aria-expanded="false">
         More tabs ... <span class="caret"></span>
       </a>
@@ -310,7 +323,8 @@ function _loadResourcePreviewData(datasetId, resourceId, resourceURL) {
     .then((data) => {
       _sdcLoadedData = data;
       _generateTabs(_sdcLoadedData);
-      _initHandsonTable(datasetId, resourceId, _sdcLoadedData.content[0]);
+      _prepareHandsonSettings(datasetId, resourceId);
+      _initHandsonTable(_sdcLoadedData.content[0]);
     })
     .catch((error) => {
       console.error(error);
@@ -321,7 +335,9 @@ function _onSaveSDCMicro(ev) {
   _updateLoadingMessage("Launching SDC Micro, please wait ...");
   _showLoading();
   let dataColumnList = _sdcSettings.columns
-    .map((el, idx) => { return { "column": idx, "selected": el }})
+    .map((el, idx) => {
+      return {"column": idx, "selected": el}
+    })
     .filter((el) => el.selected)
     .map(el => el.column);
 

@@ -1,8 +1,10 @@
 HDX DOCUMENTATION
 =================
 
-GENERAL INFO
-------------
+PYTHON DEPENDENCY MANAGEMENT
+----------------------------
+Information about compiling (dev-)requirements.txt can be found here `Dependency Management <dependencies/index.rst>`_
+
 
 ANALYTICS
 +++++++++

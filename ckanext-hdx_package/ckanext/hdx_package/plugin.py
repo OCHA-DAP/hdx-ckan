@@ -34,7 +34,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
-from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES
+from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP
 
 log = logging.getLogger(__name__)
 
@@ -258,7 +258,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'qa_checklist': [tk.get_validator('hdx_keep_unless_allow_qa_checklist_field'),
                             tk.get_converter('convert_to_extras')],
             'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
-                             tk.get_converter('convert_to_extras')]
+                             tk.get_converter('convert_to_extras')],
+            'cod_level': [
+                tk.get_validator('hdx_delete_unless_authorized_to_update_cod'),
+                tk.get_validator('hdx_keep_prev_value_if_empty'),
+                tk.get_validator('hdx_in_cod_values'),
+                tk.get_converter('convert_to_extras')
+            ]
         })
 
         schema['resources'].update(
@@ -314,6 +320,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_delete_unless_allow_broken_link'),
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_boolean_string_converter')
+                ],
+                'daterange_for_data': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_daterange_possible_infinite_end')
                 ]
             }
         )
@@ -386,7 +396,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('boolean_validator')
             ],
             'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
+            'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'cod_level': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
         })
         schema['resources'].update(
             {
@@ -398,6 +409,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
                 ],
+                'daterange_for_data': [
+                    tk.get_validator('ignore_missing'),
+                ]
             }
         )
 
@@ -485,7 +499,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_qa_checklist_field'),
             'hdx_keep_unless_allow_resource_qa_script_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_resource_qa_script_field',
-                                                                               resource_level=True)
+                                                                               resource_level=True),
+            'hdx_delete_unless_authorized_to_update_cod':
+                vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_in_cod_values':
+                vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
+            'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end
         }
 
     def get_auth_functions(self):
@@ -498,7 +517,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_resource_download': authorize.hdx_resource_download,
                 'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
                 'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
-                'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch
+                'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
+                'hdx_cod_update': authorize.hdx_cod_update
                 }
 
     def make_middleware(self, app, config):

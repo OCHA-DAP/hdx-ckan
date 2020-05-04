@@ -134,7 +134,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         user = model.User.get('valid@example.com')
         admin = model.User.by_name('testsysadmin')
-        offset2 = h.url_for('user.delete', id=user.id)
+        offset2 = str(h.url_for('user.delete', id=user.id))
         res2 = self.app.post(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
 

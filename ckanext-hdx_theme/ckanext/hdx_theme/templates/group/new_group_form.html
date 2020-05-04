@@ -87,7 +87,7 @@ overriding the form blocks depending on the current context
 
   {% set data_completeness = data.get('data_completeness', '') %}
   <div class="control-group control-full">
-  	<label class="control-label" for="field-data-completeness">{{ _("Data Completeness")}}</label>
+  	<label class="control-label" for="field-data-completeness">{{ _("Data Grid Completeness")}}</label>
   	<div class="controls">
         <select id="field-data-completeness" name="data_completeness">
             <option value="inactive" {% if data_completeness == 'inactive' %}selected="selected"{% endif %}>

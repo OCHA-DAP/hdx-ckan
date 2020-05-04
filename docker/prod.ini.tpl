@@ -39,8 +39,8 @@ ckan.tracking_enabled = true
 
 ## Email settings
 
-email_to         = ${HDX_PREFIX}ckan@${HDX_DOMAIN}
-error_email_from = ${HDX_PREFIX}ckan@${HDX_DOMAIN}
+email_to         = ckan@${HDX_DOMAIN}
+error_email_from = ckan@${HDX_DOMAIN}
 smtp.mail_from   = noreply@${HDX_DOMAIN}
 smtp.server      = ${HDX_SMTP_ADDR}:${HDX_SMTP_PORT}
 smtp.user        = ${HDX_SMTP_USER}
@@ -67,8 +67,9 @@ hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
 #https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/{z}/{x}/{y}.png
 hdx.mapbox.labelslayer.url = /mapbox-layer-tiles/{z}/{x}/{y}.png
 
-hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
-hdx.rest.indicator.endpoint.facets = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2
+# disabled during work on HDX-6899
+# hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
+# hdx.rest.indicator.endpoint.facets = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2
 
 ckan.storage_path = ${HDX_FILESTORE}
 
@@ -81,7 +82,7 @@ hdx.gis.layer_import_url = http://gislayer:5000/api/add-layer/dataset/{dataset_i
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
 # at Alex suggestion, i made this proto unaware
-hdx.gis.resource_pbf_url = //${HDX_PREFIX}data.${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resource_id}/wkb_geometry/{z}/{x}/{y}.pbf
+hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resource_id}/wkb_geometry/{z}/{x}/{y}.pbf
 
 hdx.analytics.hotjar.site_id = ${HDX_HOTJAR_SITEID}
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
@@ -96,10 +97,10 @@ hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
-hdx.hxlproxy.url = https://${HDX_PREFIX}data.${HDX_DOMAIN}/hxlproxy
+hdx.hxlproxy.url = https://${HDX_DOMAIN}/hxlproxy
 
 # HXL Preview
-hdx.hxl_preview_app.url = https://${HDX_PREFIX}data.${HDX_DOMAIN}/hxlpreview
+hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/hxlpreview
 
 # GOOGLE DEV
 hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
