@@ -1,0 +1,60 @@
+{% extends "page_light.html" %}
+
+{# The line below is for google analytics #}
+{#{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}#}
+{#{% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}#}
+{#{% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}#}
+{#{% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}#}
+{#{% block analytics_is_indicator %}{{ analytics.is_indicator }}{% endblock %}#}
+{#{% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}#}
+{#{% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}#}
+{#{% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}#}
+{#{% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}#}
+{#{% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}#}
+
+{% block links %}
+  <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {{ super() }}
+{% endblock %}
+
+{% set page = page_dict %}
+{#{% set org_title = pkg.organization.title %}#}
+{#{% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}#}
+{% set page_has_mobile_version = True %}
+
+{% block breadcrumb_content %}
+	{% block breadcrum_parent_item %}
+    {% snippet "snippets/other_breadcrumb_item.html", title=page.type, controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_' + page.type, id=page.name, position=2 %}
+	{% endblock %}
+  <li class="active">{{ h.nav_link( page.title|truncate(120), controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_' + page.type, id=page.name, highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="custom-page-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>{{ page.title }}</h1>
+{#          {{ page }} -- {{ page.type }}#}
+        {% for section in page.sections %}
+          <div class="custom-page-filter-start list-header">
+            <span class="mL15 list-header-title">{{ _("Data") }}</span>
+            {{ section }}
+          </div>
+
+
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% snippet "widget/banner/hdx-light-banner.html" %}
+{% endblock %}
+
+{%- block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/custom-pages-light' %}
+{% endblock -%}
+

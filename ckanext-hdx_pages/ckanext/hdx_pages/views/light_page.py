@@ -1,0 +1,133 @@
+import json
+from flask import Blueprint
+
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+import ckan.logic as logic
+
+from ckan.common import _, config, g, request
+import ckanext.hdx_pages.helpers.helper as page_h
+import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_pages as cp_h
+from ckanext.hdx_search.controller_logic.search_logic import SearchLogic
+
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+
+get_action = tk.get_action
+check_access = tk.check_access
+render = tk.render
+abort = tk.abort
+
+NotAuthorized = tk.NotAuthorized
+NotFound = logic.NotFound
+
+hdx_light_event = Blueprint(u'hdx_light_event', __name__, url_prefix=u'/m/event')
+hdx_light_dashboard = Blueprint(u'hdx_light_dashboard', __name__, url_prefix=u'/m/dashboard')
+
+
+@check_redirect_needed
+def read_event(id):
+    return _read(id, 'event')
+
+@check_redirect_needed
+def read_dashboard(id):
+    return _read(id, 'dashboard')
+
+
+def _read(id, type):
+    try:
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user,
+            u'auth_user_obj': g.userobj,
+            u'for_view': True
+        }
+        check_access('site_read', context)
+    except NotAuthorized:
+        abort(403, _('Not authorized to see this page'))
+
+    try:
+        page_dict = get_action('page_show')(context, {'id': id})
+    except NotAuthorized:
+        abort(404, _('Page not found'))
+    except NotFound:
+        abort(404, _('Page not found'))
+
+    _populate_template_data(page_dict)
+    template_data = {
+        'page_dict': page_dict
+    }
+
+    return render(u'light/custom_pages/read.html', template_data)
+
+    # try:
+    #     context = {'model': model, 'user': g.user,
+    #                'auth_user_obj': g.userobj}
+    #     check_access('site_read', context)
+    # except NotAuthorized:
+    #     abort(403, _('Not authorized to see this page'))
+    #
+    # package_type = 'dataset'
+    #
+    # search_logic = SearchLogic()
+    #
+    # search_logic._search(package_type, use_solr_collapse=True)
+    #
+    # data_dict = {'data': search_logic.template_data}
+    # return render(u'light/search/search.html', data_dict)
+
+
+# @check_redirect_needed
+# def search():
+#     try:
+#         context = {'model': model, 'user': g.user,
+#                    'auth_user_obj': g.userobj}
+#         check_access('site_read', context)
+#     except NotAuthorized:
+#         abort(403, _('Not authorized to see this page'))
+#
+#     package_type = 'dataset'
+#
+#     search_logic = SearchLogic()
+#
+#     search_logic._search(package_type, use_solr_collapse=True)
+#
+#     data_dict = {'data': search_logic.template_data}
+#     return render(u'light/search/search.html', data_dict)
+
+
+# def _compute_analytics(dataset_dict):
+#     result = {}
+#     result['is_cod'] = analytics.is_cod(dataset_dict)
+#     result['is_indicator'] = analytics.is_indicator(dataset_dict)
+#     result['analytics_group_names'], result['analytics_group_ids'] = analytics.extract_locations_in_json(dataset_dict)
+#     result['analytics_dataset_availability'] = analytics.dataset_availability(dataset_dict)
+#     return result
+
+def _populate_template_data(page_dict):
+    if page_dict.get('sections'):
+        sections = json.loads(page_dict['sections'])
+        for section in sections:
+            page_h._compute_iframe_style(section)
+            # if section.get('type', '') == 'data_list':
+            #     saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
+            #     c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
+            #
+            #     # In case this is an AJAX request return JSON
+            #     if self._is_facet_only_request():
+            #         c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
+            #         response.headers['Content-Type'] = CONTENT_TYPES['json']
+            #         return json.dumps(c.full_facet_info)
+
+        page_dict['sections'] = sections
+
+        if len(sections) > 0 and sections[0].get('type', '') == 'map':
+            page_dict['title_section'] = sections[0]
+            del sections[0]
+    return page_dict
+
+# hdx_light_search.add_url_rule(u'', view_func=search)
+# hdx_light_dataset.add_url_rule(u'', view_func=search)
+hdx_light_event.add_url_rule(u'/<id>', view_func=read_event)
+hdx_light_dashboard.add_url_rule(u'/<id>', view_func=read_dashboard)

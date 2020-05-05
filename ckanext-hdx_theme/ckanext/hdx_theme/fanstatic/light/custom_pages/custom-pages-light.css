@@ -1,0 +1,48 @@
+.custom-page-light {
+  background-color: #eeeeee;
+}
+.custom-page-light .show-filters {
+  display: flex;
+  justify-content: flex-end;
+}
+.custom-page-light .show-filters a {
+  z-index: 999;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+}
+.custom-page-light .show-filters .checkbox-slider {
+  margin-left: 10px;
+}
+.custom-page-light .custom-page-filter-start {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+.custom-page-light .custom-page-filter-start .form-select {
+  display: flex;
+  align-items: center;
+}
+.custom-page-light .custom-page-filter-start .form-select > label {
+  height: 20px;
+  margin-bottom: 0;
+}
+.custom-page-light .custom-page-filter-start .orderDropdown {
+  display: flex;
+  height: 20px;
+  margin-bottom: 0;
+  align-items: flex-end;
+}
+.custom-page-light .custom-page-filter-start .orderDropdown .dropdown-toggle {
+  display: flex;
+  align-items: center;
+}
+.custom-page-light .custom-page-filter-start .orderDropdown .dropdown-toggle-text {
+  display: inline;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 20px;
+  margin-bottom: 0;
+}
