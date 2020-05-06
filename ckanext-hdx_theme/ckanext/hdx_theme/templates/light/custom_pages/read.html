@@ -37,24 +37,61 @@
         <h1>{{ page.title }}</h1>
 {#          {{ page }} -- {{ page.type }}#}
         {% for section in page.sections %}
-          <div class="custom-page-filter-start list-header">
-            <span class="mL15 list-header-title">{{ _("Data") }}</span>
-            {{ section }}
-          </div>
+            {% if section.type == 'data_list' %}
+              <div class="custom-page-filter-start list-header">
+                <span class="mL15 list-header-title">{{ _("Data") }}</span>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  List of datasets
+                  {{ section }}
+                </div>
+              </div>
+          {% else %}
+              <div class="custom-page-filter-start list-header">
+                {% if section.section_title %}
+                  <span class="mL15 list-header-title">{{ section.section_title }}</span>
+                {% else %}
+                  <span class="mL15 list-header-title">{{ _("Title??") }}</span>
+                {% endif %}
+              </div>
 
-
+              {% if section.description %}
+                  <div class="row">
+                      <div class="col-xs-12">
+                          <span>{{ section.description }}</span>
+                      </div>
+                  </div>
+              {% endif %}
+              <div class="row">
+                  <div class="col-xs-12 section-body">
+                      <div class="data-viewer-error">
+                      </div>
+                    {{ section }}
+                      <iframe data-module="data-viewer" frameborder="0" style="{{ section.style }}; background-color:inherit" data-hj-allow-iframe=""
+                              src="{{ section.get('data_url') }}">
+                      </iframe>
+                  </div>
+              </div>
+          {% endif %}
         {% endfor %}
       </div>
     </div>
   </div>
-
 </div>
 
 {% snippet "widget/banner/hdx-light-banner.html" %}
 {% endblock %}
 
+
 {%- block scripts %}
   {{ super() }}
   {% resource 'hdx_theme/custom-pages-light' %}
-{% endblock -%}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/search-light' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
 
+{% resource 'hdx_theme/dataset-search' %}
+{% resource 'hdx_theme/dataset' %}
+
+{% endblock -%}
