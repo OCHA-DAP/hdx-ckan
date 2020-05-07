@@ -47,7 +47,6 @@ services:
       HDX_CKANDB_DB_TEST_DATASTORE: 'datastore'
       HDX_DOMAIN: travis.org
       HDX_FILESTORE: /srv/filestore
-      HDX_PREFIX: test
       HDX_SOLR_ADDR: solr
       HDX_SOLR_PORT: 8983
       HDX_TYPE: ${HDX_TYPE}

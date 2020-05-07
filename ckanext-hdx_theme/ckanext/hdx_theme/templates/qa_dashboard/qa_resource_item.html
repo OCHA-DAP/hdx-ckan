@@ -37,8 +37,7 @@
           DISK. RISK:
         </span>
         {% set sdc_status_text = 'ERR' if res.sdc_report_flag  == 'ERROR' else res.sdc_report_flag %}
-        {% set sdc_report_url = h.url_for('qa_sdcmicro_log', id=pkg.id, resource_id=res.id)
-            if res.sdc_report_flag  == 'ERROR' else None %}
+        {% set sdc_report_url = h.url_for('qa_sdcmicro_log', id=pkg.id, resource_id=res.id) %}
         {{ qa_macros.qa_check_item(res.sdc_report_flag, sdc_status_text, isodate_string=res.sdc_timestamp,
             link_to_log=sdc_report_url) }}
       </li>
@@ -48,8 +47,7 @@
         </span>
         {%  if c.advanced_mode == 'true' %}
           {% set pii_status_text = 'ERR' if res.pii_report_flag  == 'ERROR' else res.pii_report_flag %}
-          {% set pii_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id)
-              if res.pii_report_flag  == 'ERROR' else None %}
+          {% set pii_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id) %}
           {{ qa_macros.qa_check_item(res.pii_report_flag, pii_status_text, isodate_string=res.pii_timestamp,
               link_to_log=pii_report_url) }}
         {% endif %}

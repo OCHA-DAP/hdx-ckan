@@ -98,7 +98,7 @@
                                                 <div class="control-group form-group control-full control-large hdx-section-field">
                                                     <label class="control-label" for="url_field">URL</label>
                                                     <div class="controls ">
-                                                        <input id="url_field" type="text" name="url" value="<%= url %>" placeholder="eg. http://... " class="form-control">
+                                                        <input id="url_field" type="text" name="url" value="<%= url %>" placeholder="eg. https://... " class="form-control">
                                                         <span class="error-block"></span>
                                                     </div>
                                                 </div>
@@ -115,7 +115,7 @@
                                                 <div class="control-group form-group control-full control-large hdx-section-field">
                                                     <label class="control-label" for="button_text_field">Button text</label>
                                                     <div class="controls ">
-                                                        <input id="button_text_field" type="text" name="buttonText" value="<%= buttonText %>" placeholder="eg. http://... " class="form-control">
+                                                        <input id="button_text_field" type="text" name="buttonText" value="<%= buttonText %>" placeholder="eg. https://... " class="form-control">
                                                         <span class="error-block"></span>
                                                     </div>
                                                 </div>
@@ -168,7 +168,7 @@
       {% block admin_form_help %}
       {% set about_url = h.url_for(controller='home', action='about') %}
       {% set home_url = h.url_for(controller='home', action='index') %}
-      {% set docs_url = "http://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
+      {% set docs_url = "https://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
       {% trans %}
         <h3>A carousel item has the following configuration fields:</h3>
         <p><strong>Title:</strong> This is the title of .......</p>

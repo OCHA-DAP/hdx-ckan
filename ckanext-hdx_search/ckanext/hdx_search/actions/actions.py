@@ -1,14 +1,14 @@
+import json
 import logging
 import urllib
 
 import requests
-import json
+from pylons import config
+
 import ckan.lib.munge as munge
 import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_search.helpers.qa_data as qa_data
-
-from pylons import config
 
 log = logging.getLogger(__name__)
 
@@ -133,7 +133,7 @@ def hdx_qa_pii_run(context, data_dict):
     if resource_id:
         try:
             resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
-            _run_pii_check(resource_dict)
+            _run_pii_check(resource_dict, context)
         except Exception, ex:
             return {
                 'message': "Resource ID not found"
@@ -150,18 +150,25 @@ SDCMICRO_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu
 AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
 
 
-def _run_pii_check(resource_dict):
+def _run_pii_check(resource_dict, context):
     try:
         munged_resource_name = _get_resource_s3_path(resource_dict)
+        data_dict = {
+            'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
+                                                       resource_name=munged_resource_name),
+            'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
+                                                     resource_name=munged_resource_name)
+            # 'sheet': sheet,
+            # 'riskThreshold': 3
+        }
+        data_dict['resourceProxyUrl'] = _set_resource_proxy_url(context, data_dict, resource_dict, None)
+        log.warn('RunPII for resourceId [%s], resourcePath [%s], resourceProxyUrl [%s]' % (data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
         r = requests.post(
             PII_RUN_URL,
             headers={
                 'Content-Type': 'application/json'
             },
-            data=json.dumps({
-                'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
-                                                         resource_name=munged_resource_name),
-            }))
+            data=json.dumps(data_dict))
         r.raise_for_status()
     except requests.exceptions.ConnectionError as ex:
         log.error(ex)
@@ -188,13 +195,8 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         if columns_type_list:
             data_dict['columnTypes'] = '|'.join(map(str, columns_type_list))
 
-        proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
-
-        url = get_action("hdx_get_s3_link_for_resource")(context, {"id": resource_dict.get("id")})
-        params = urllib.urlencode(
-            {'sheet': sheet, 'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))})
-            # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
-        data_dict['resourceProxyUrl'] = proxy_data_preview_url + '?{params}'.format(params=params)
+        data_dict['resourceProxyUrl'] = _set_resource_proxy_url(context, data_dict, resource_dict, sheet)
+        log.warn('RunSDC for resourcePath [%s], resourceProxyUrl [%s], sheet [%s]' % (data_dict['resourcePath'], data_dict['resourceProxyUrl'], data_dict['sheet']))
         r = requests.post(
             SDCMICRO_RUN_URL,
             headers={
@@ -209,6 +211,18 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         log.error(ex)
         raise ex
     return True
+
+
+def _set_resource_proxy_url(context, data_dict, resource_dict, sheet=None):
+    proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
+    url = get_action("hdx_get_s3_link_for_resource")(context, {"id": resource_dict.get("id")})
+    params = urllib.urlencode(
+        {
+         'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))})
+    if sheet:
+        params['sheet'] = sheet
+    # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
+    return proxy_data_preview_url + '?{params}'.format(params=params)
 
 
 def _get_resource_s3_path(resource_dict):

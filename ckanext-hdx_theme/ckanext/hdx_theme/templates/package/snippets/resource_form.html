@@ -63,7 +63,7 @@
                         {% endblock %}
 
                         {% block basic_fields_url %}
-                        {{ form.input('url', id='field-url', label=_('File or URL'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper', 'dataset-required']) }}
+                        {{ form.input('url', id='field-url', label=_('File or URL'), placeholder=_('eg. https://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper', 'dataset-required']) }}
                         {% endblock %}
 
                         {% block basic_fields_name %}

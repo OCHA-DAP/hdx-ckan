@@ -34,7 +34,7 @@
          #}
 		{% set org_url_value = h.hdx_get_extras_element(data) %}
 
-	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
+	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('https://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
 	    <div class="org-control-info info-field">
 	    	<div class="org-info-label">{{_('Where can people go to find more about this organisation?')}}</div>
 	    </div>

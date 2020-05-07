@@ -26,7 +26,7 @@ def hdx_dataset_purge(context, data_dict):
 
     if pkg and pkg.resources:
         for r in pkg.resources:
-            file_remove(r.id, r.name, r.url_type)
+            file_remove(r.id, r.url, r.url_type)
 
     return dataset_purge(context, data_dict)
 
@@ -94,7 +94,7 @@ def resource_delete(context, data_dict):
 def _resource_purge(context, data_dict):
     model = context['model']
     r = model.Resource.get(data_dict.get('id'))
-    file_remove(r.id, r.name, r.url_type)
+    file_remove(r.id, r.url, r.url_type)
 
 
 def _is_requested_data_type(entity):

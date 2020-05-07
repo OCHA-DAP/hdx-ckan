@@ -132,7 +132,7 @@ ckan.max_image_size = 2
 
 # Path to resource format mapping file is:
 ckan.resource_formats = %(here)s/ckanext-hdx_package/ckanext/hdx_package/config/resource_formats.json
-ckan.extra_resource_fields = broken_link in_quarantine
+ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data
 
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
 ckan.resource_proxy.max_file_size = 2097152

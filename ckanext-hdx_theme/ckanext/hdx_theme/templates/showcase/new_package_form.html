@@ -58,7 +58,7 @@
   {% block metadata_fields %}
     <div class="form-group">
       {% block package_metadata_fields_url %}
-        {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('http://www.example.com'), value=data.url, error=errors.url, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+        {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('https://www.example.com'), value=data.url, error=errors.url, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
       {% endblock %}
 
       {% block package_metadata_author %}
