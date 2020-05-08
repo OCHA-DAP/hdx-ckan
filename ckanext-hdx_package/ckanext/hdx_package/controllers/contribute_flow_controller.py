@@ -71,6 +71,7 @@ class ContributeFlowController(base.BaseController):
                     self.process_tags(dataset_dict)
                     self.process_dataset_preview_edit(dataset_dict)
                     self.process_custom_viz(dataset_dict)
+                    self.process_resource_grouping_edit(dataset_dict)
                     maintainer_dict = logic.get_action('user_show')(context,
                                                                     {'id': dataset_dict.get('maintainer', None)})
                     if maintainer_dict:
@@ -195,6 +196,7 @@ class ContributeFlowController(base.BaseController):
         self.process_methodology(data_dict)
         self.process_maintainer(context, data_dict)
         self.process_dataset_preview_save(data_dict)
+        self.process_resource_grouping_save(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
@@ -350,3 +352,11 @@ class ContributeFlowController(base.BaseController):
                 data_dict['dataset_preview'] = vd._DATASET_PREVIEW_NO_PREVIEW
         else:
             data_dict['dataset_preview'] = vd._DATASET_PREVIEW_NO_PREVIEW
+
+    def process_resource_grouping_save(self, data_dict):
+        if data_dict.get('resource_grouping'):
+            data_dict['resource_grouping'] = data_dict.get('resource_grouping').split(u', ')
+
+    def process_resource_grouping_edit(self, data_dict):
+        if data_dict.get('resource_grouping'):
+            data_dict['resource_grouping'] = u', '.join(data_dict.get('resource_grouping'))

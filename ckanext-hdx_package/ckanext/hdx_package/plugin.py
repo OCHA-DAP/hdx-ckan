@@ -264,6 +264,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_validator('hdx_in_cod_values'),
                 tk.get_converter('convert_to_extras')
+            ],
+            'resource_grouping': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('hdx_convert_to_json_string'),
+                tk.get_converter('convert_to_extras')
             ]
         })
 
@@ -324,6 +329,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'daterange_for_data': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_daterange_possible_infinite_end')
+                ],
+                'grouping': [
+                    tk.get_validator('ignore_missing')
                 ]
             }
         )
@@ -397,7 +405,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             ],
             'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'cod_level': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
+            'cod_level': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'resource_grouping': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('hdx_convert_from_json_string'),
+            ],
+
         })
         schema['resources'].update(
             {
@@ -505,7 +519,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
-            'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end
+            'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
+            'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
+            'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
         }
 
     def get_auth_functions(self):
