@@ -325,6 +325,9 @@
                                     </div>
                                 </div>
                                 <section id="contribute-flow-form-body">
+                                    {% if data.resource_grouping %}
+                                        <input id="field_resource_grouping" type="hidden" name="resource_grouping" value="{{ data.resource_grouping }}" />
+                                    {% endif %}
                                     <div class="row form-section form-privacy-section">
                                         <div class="col-xs-3">
                                             <h3>Privacy Settings</h3>
