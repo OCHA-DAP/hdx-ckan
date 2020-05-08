@@ -12,7 +12,7 @@ import ckanext.hdx_search.model as search_model
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
-from ckanext.hdx_package.helpers.date_helper import daterange_parser
+from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 
 from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_instance,\
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
@@ -206,6 +206,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 new_formats.append(new_format)
             pkg_dict['res_format'] = new_formats
         pkg_dict['title_string'] = unicodedata.normalize("NFKD", pkg_dict['title']).replace(r'\xc3', 'I')
+        pkg_dict.pop('resource_grouping', None)
 
         self.__process_dates_in_resource_extra(pkg_dict)
         return pkg_dict
@@ -224,7 +225,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 new_list = []
                 for value in values:
                     try:
-                        new_value = daterange_parser(value, True)
+                        new_value = DaterangeParser(value ).compute_daterange_string(True)
                         new_list.append(new_value)
                     except:
                         continue
