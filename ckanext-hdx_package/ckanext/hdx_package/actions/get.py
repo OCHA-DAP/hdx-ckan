@@ -36,6 +36,7 @@ from ckan.common import _, c
 from ckan.lib import uploader
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+from ckanext.hdx_package.helpers.resource_grouping import ResourceGrouping
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
@@ -612,6 +613,15 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
             # Freshness should be computed after the last_modified field
             freshness_calculator.populate_with_freshness()
 
+            __compute_resource_grouping(context, package_dict)
+
+
+def __compute_resource_grouping(context, package_dict):
+    if context.get('use_cache', True):
+        saved_grouping = package_dict.get('resource_grouping')
+        computed_grouping = saved_grouping if saved_grouping else ResourceGrouping(package_dict).get_sorted_groupings()
+        package_dict['x_resource_grouping'] = computed_grouping
+
 
 @logic.side_effect_free
 def shape_info_show(context, data_dict):
@@ -813,9 +823,6 @@ def hdx_send_mail_contributor(context, data_dict):
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
-
-
-
 
     if org_members:
         admins = org_members.get('admins')
