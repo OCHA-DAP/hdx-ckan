@@ -6,6 +6,26 @@ Example:
 
 #}
 
+{% macro render_facet_list(items, ul_name, ul_class) %}
+  <ul name="{{ ul_name }}" class="{{ ul_class }}">
+    {% for option in items %}
+      <li>
+        <label>
+        <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
+               {% if option.selected %}checked="checked"{% endif %}
+               {% if option.get('items') %} class="parent-facet" {% endif %}
+               {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %}>
+          {{ option.display_name }}
+          <span class="item-count">[{{ option.count }}]</span>
+          {% if option.get('items') %}
+            {{ render_facet_list(option.get('items'), '', '') }}
+          {% endif %}
+        </label>
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
 {% for id in facet_list %}
     {% set facet = facet_list.get(id) %}
     <div class="filter-category">
@@ -17,18 +37,7 @@ Example:
                 <div class="categ-search">
                     <input type="text" ><i class="humanitarianicons-Search"></i>
                 </div>
-                <ul name="{{id}}" class="categ-items">
-                    {% for option in facet.get('items') %}
-                        <li>
-                          <label>
-                            <input name="{{option.category_key}}" value="{{option.name}}" type="checkbox"
-                                   {% if option.selected %}checked="checked"{% endif %}
-                                    {% if option.count == 0 and not option.selected %} disabled="disabled" {% endif %}> {{option.display_name}}
-                            <span class="item-count">[{{option.count}}]</span>
-                          </label>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {{ render_facet_list(facet.get('items'), id, 'categ-items') }}
             </div>
             {% if not facet.show_everything %}
             <div class="categ-actions">

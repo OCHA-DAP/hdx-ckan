@@ -261,6 +261,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
+
+        facets_dict['{!ex=cod_level,batch}cod_level'] = _('CODs')
+
         return facets_dict
 
     def get_auth_functions(self):

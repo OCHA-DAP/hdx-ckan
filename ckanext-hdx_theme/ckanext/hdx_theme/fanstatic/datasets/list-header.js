@@ -47,7 +47,17 @@ $(document).ready(function() {
         });
     });
 
-    $(".filter-category .categ-items li input").on("change", function() {
+    $(".filter-category .categ-items li input.parent-facet").on("change", function() {
+      var childInputs = $(this).parent().find('li input');
+      if(this.checked) {
+        childInputs.prop('checked', true);
+      } else {
+        childInputs.prop('checked', false);
+      }
+      window.location = getFilterUrlNew(false);
+    });
+
+    $(".filter-category .categ-items li input").not(".parent-facet").on("change", function() {
         var location = getFilterUrlNew(false);
         console.log("Refresh to: " + location);
         window.location = location;
@@ -102,7 +112,7 @@ $(document).ready(function() {
 function getFilterUrlNew(resetFilters) {
     var params = "";
     if (!resetFilters){
-        params = $(".filter-category .categ-items li input").serialize();
+        params = $(".filter-category .categ-items li input").not(".parent-facet").serialize();
         $("input.checkbox-filter:checked").each(function (idx, el) {
             if (params !== "") {
                 params += "&";
