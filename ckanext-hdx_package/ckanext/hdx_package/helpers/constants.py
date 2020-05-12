@@ -19,10 +19,30 @@ COD_CANDIDATE = 'cod-candidate'
 COD_NOT = 'not-cod'
 
 COD_VALUES_MAP = OrderedDict((
-    (COD_NOT, 'Not COD'),
-    (COD_CANDIDATE, 'Candidate COD'),
-    (COD_STANDARD, 'Standard COD'),
-    (COD_ENHANCED, 'Enhanced COD'),
+    (COD_NOT,
+     {
+         'title': 'Not COD',
+         'is_cod': False,
+     }
+     ),
+    (COD_CANDIDATE,
+     {
+         'title': 'Candidate COD',
+         'is_cod': True,
+     }
+     ),
+    (COD_STANDARD,
+     {
+         'title': 'Standard COD',
+         'is_cod': True,
+     }
+     ),
+    (COD_ENHANCED,
+     {
+         'title': 'Enhanced COD',
+         'is_cod': True,
+     }
+     ),
 ))
 
 
