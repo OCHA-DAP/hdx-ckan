@@ -51,6 +51,7 @@ ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
 
+
 def get_default_facet_titles():
     return {
         'organization': _('Organizations'),
@@ -70,6 +71,16 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
+
+
+def get_url_param_iterator():
+    keys = set(request.params.keys())
+
+    def list_of_values(key):
+        return request.params.getlist(key) if hasattr(request.params, 'getlist') else request.params.getall(key)
+
+    param_values = ((param, value) for param in keys for value in list_of_values(param))
+    return param_values
 
 
 class SearchLogic(object):
@@ -129,7 +140,7 @@ class SearchLogic(object):
             tagged_fq_dict = {}
             featured_filters_set = False
 
-            for (param, value) in request.params.items():
+            for (param, value) in get_url_param_iterator():
                 if param not in ['q', 'page', 'sort', 'force_layout'] \
                         and len(value) and not param.startswith('_'):
                     if param == 'fq':
