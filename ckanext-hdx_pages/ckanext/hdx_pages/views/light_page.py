@@ -1,4 +1,5 @@
 import json
+import logging
 from flask import Blueprint
 
 import ckan.model as model
@@ -7,9 +8,9 @@ import ckan.logic as logic
 
 from ckan.common import _, config, g, request
 import ckanext.hdx_pages.helpers.helper as page_h
-import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_package.helpers.custom_pages as cp_h
-from ckanext.hdx_search.controller_logic.search_logic import SearchLogic
+# import ckanext.hdx_package.helpers.analytics as analytics
+# import ckanext.hdx_package.helpers.custom_pages as cp_h
+from ckanext.hdx_pages.controller_logic.custom_pages_search_logic import CustomPagesSearchLogic
 
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
@@ -17,6 +18,7 @@ get_action = tk.get_action
 check_access = tk.check_access
 render = tk.render
 abort = tk.abort
+log = logging.getLogger(__name__)
 
 NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
@@ -28,6 +30,7 @@ hdx_light_dashboard = Blueprint(u'hdx_light_dashboard', __name__, url_prefix=u'/
 @check_redirect_needed
 def read_event(id):
     return _read(id, 'event')
+
 
 @check_redirect_needed
 def read_dashboard(id):
@@ -47,6 +50,7 @@ def _read(id, type):
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
+    page_dict = None
     try:
         page_dict = get_action('page_show')(context, {'id': id})
     except NotAuthorized:
@@ -61,58 +65,21 @@ def _read(id, type):
 
     return render(u'light/custom_pages/read.html', template_data)
 
-    # try:
-    #     context = {'model': model, 'user': g.user,
-    #                'auth_user_obj': g.userobj}
-    #     check_access('site_read', context)
-    # except NotAuthorized:
-    #     abort(403, _('Not authorized to see this page'))
-    #
-    # package_type = 'dataset'
-    #
-    # search_logic = SearchLogic()
-    #
-    # search_logic._search(package_type, use_solr_collapse=True)
-    #
-    # data_dict = {'data': search_logic.template_data}
-    # return render(u'light/search/search.html', data_dict)
-
-
-# @check_redirect_needed
-# def search():
-#     try:
-#         context = {'model': model, 'user': g.user,
-#                    'auth_user_obj': g.userobj}
-#         check_access('site_read', context)
-#     except NotAuthorized:
-#         abort(403, _('Not authorized to see this page'))
-#
-#     package_type = 'dataset'
-#
-#     search_logic = SearchLogic()
-#
-#     search_logic._search(package_type, use_solr_collapse=True)
-#
-#     data_dict = {'data': search_logic.template_data}
-#     return render(u'light/search/search.html', data_dict)
-
-
-# def _compute_analytics(dataset_dict):
-#     result = {}
-#     result['is_cod'] = analytics.is_cod(dataset_dict)
-#     result['is_indicator'] = analytics.is_indicator(dataset_dict)
-#     result['analytics_group_names'], result['analytics_group_ids'] = analytics.extract_locations_in_json(dataset_dict)
-#     result['analytics_dataset_availability'] = analytics.dataset_availability(dataset_dict)
-#     return result
 
 def _populate_template_data(page_dict):
     if page_dict.get('sections'):
         sections = json.loads(page_dict['sections'])
         for section in sections:
             page_h._compute_iframe_style(section)
-            # if section.get('type', '') == 'data_list':
-            #     saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
-            #     c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
+            if section.get('type', '') == 'data_list':
+                saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
+                package_type = 'dataset'
+                cp_search_logic = CustomPagesSearchLogic()
+                search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'), saved_filters)
+                cp_search_logic._search(package_type, **search_params)
+                section['template_data'] = cp_search_logic.template_data
+                log.info(saved_filters)
+                # c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
             #
             #     # In case this is an AJAX request return JSON
             #     if self._is_facet_only_request():
@@ -127,7 +94,6 @@ def _populate_template_data(page_dict):
             del sections[0]
     return page_dict
 
-# hdx_light_search.add_url_rule(u'', view_func=search)
-# hdx_light_dataset.add_url_rule(u'', view_func=search)
+
 hdx_light_event.add_url_rule(u'/<id>', view_func=read_event)
 hdx_light_dashboard.add_url_rule(u'/<id>', view_func=read_dashboard)
