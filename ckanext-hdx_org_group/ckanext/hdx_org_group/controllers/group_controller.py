@@ -25,7 +25,7 @@ NotFound = logic.NotFound
 log = logging.getLogger(__name__)
 
 
-class HDXGroupController(grp.GroupController):
+class HDXGroupController(base.BaseController):
 
     @staticmethod
     def _get_all_countries_world_first():

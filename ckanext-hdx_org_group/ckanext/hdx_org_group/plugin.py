@@ -262,14 +262,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
                     action='redirect_to_group_list')
 
-        map.connect('group_index', '/group',
-                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
-                    highlight_actions='index search')
-        map.connect('group_worldmap', '/worldmap',
-                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
-
-        map.connect('group_eaa_worldmap', '/eaa-worldmap',
-                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
+        # map.connect('group_index', '/group',
+        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
+        #             highlight_actions='index search')
+        # map.connect('group_worldmap', '/worldmap',
+        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
+        #
+        # map.connect('group_eaa_worldmap', '/eaa-worldmap',
+        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
 
         map.connect('group_new', '/group/new', controller='group', action='new')
 
@@ -316,6 +316,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
     plugins.implements(plugins.IGroupForm, inherit=False)
     plugins.implements(plugins.IGroupController, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
     def group_types(self):
         return ['']
@@ -399,3 +400,26 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
                 tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
             except Exception, ex:
                 log.error(ex)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_group as group
+        return group.hdx_group
+
+
+class HDXGroupEaaMapPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_group as group
+        return group.hdx_group_eaa_maps
+
+
+class HDXLightGroupPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_group as group
+        return group.hdx_light_group
