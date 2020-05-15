@@ -1,0 +1,56 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+
+.custom-page-light {
+  background-color: @extraLightGrayColor;
+
+  .show-filters {
+    display: flex;
+    justify-content: flex-end;
+    a {
+      z-index: 999;
+      .sourceSansProFont(600, 14px);
+    }
+
+    .checkbox-slider {
+      margin-left: 10px;
+    }
+  }
+
+  .custom-page-filter-start {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+
+    .form-select {
+      display: flex;
+      align-items: center;
+
+      > label {
+        height: 20px;
+        margin-bottom: 0;
+      }
+    }
+    .orderDropdown {
+      display: flex;
+      height: 20px;
+      margin-bottom: 0;
+      align-items: flex-end;
+      .dropdown-toggle {
+        display: flex;
+        align-items: center;
+      }
+      .dropdown-toggle-text{
+        display: inline;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        height: 20px;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
