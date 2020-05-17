@@ -28,6 +28,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IValidators)
+    plugins.implements(plugins.IBlueprint)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -199,9 +200,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('organization_bulk_process_no_id', '/organization/bulk_process',
                     controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
                     action='redirect_to_org_list')
-        map.connect('organizations_index', '/organization',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='index')
+        # map.connect('organizations_index', '/organization',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='index')
         map.connect('organization_new', '/organization/new',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='new')
@@ -279,10 +280,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('country_topline', '/country/topline/{id}',
                     controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
 
-        map.connect(
-            'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController',
-            action='org_read')
-
         map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
             action='feed_organization')
 
@@ -307,6 +304,20 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     # IOrganizationController
     def delete(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_organization as org
+        return org.hdx_org
+
+
+class HDXLightOrgPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_organization as org
+        return org.hdx_light_org
 
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
