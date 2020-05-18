@@ -7,6 +7,9 @@
 .custom-page-light .section-body {
   position: relative;
 }
+.custom-page-light .section-body iframe {
+  background-color: #fff;
+}
 .custom-page-light .section-body .fold {
   height: 70px !important;
   transition: height 1s;
