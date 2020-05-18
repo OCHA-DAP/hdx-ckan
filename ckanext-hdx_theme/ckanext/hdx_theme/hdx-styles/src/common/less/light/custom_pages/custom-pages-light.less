@@ -5,6 +5,47 @@
 .custom-page-light {
   background-color: @extraLightGrayColor;
 
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .section-body {
+    position: relative;
+    .fold {
+      height:70px !important; // override style that can directly be set from config
+      transition: height 1s;
+      &.open {
+        height: 400px !important;
+      }
+    }
+    .section-unfold {
+      position: absolute;
+      padding: 0 15px;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      //height: 20px;
+      .overlay {
+        padding: 5px 10px;
+        background-color: rgba(200,200,200,0.7);
+        display: flex;
+        justify-content: space-between;
+        .fullscreen {
+          .sourceSansProFont(400, 12px);
+        }
+        .display-toggle {
+          display: flex;
+          align-self: flex-end;
+
+          .checkbox-slider {
+            margin-left: 5px;
+          }
+        }
+
+      }
+    }
+  }
+
   .show-filters {
     display: flex;
     justify-content: flex-end;

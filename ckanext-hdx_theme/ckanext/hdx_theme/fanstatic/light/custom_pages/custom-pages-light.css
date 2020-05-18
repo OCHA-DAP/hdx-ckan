@@ -1,6 +1,44 @@
 .custom-page-light {
   background-color: #eeeeee;
 }
+.custom-page-light h1 {
+  margin-bottom: 20px;
+}
+.custom-page-light .section-body {
+  position: relative;
+}
+.custom-page-light .section-body .fold {
+  height: 70px !important;
+  transition: height 1s;
+}
+.custom-page-light .section-body .fold.open {
+  height: 400px !important;
+}
+.custom-page-light .section-body .section-unfold {
+  position: absolute;
+  padding: 0 15px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.custom-page-light .section-body .section-unfold .overlay {
+  padding: 5px 10px;
+  background-color: rgba(200, 200, 200, 0.7);
+  display: flex;
+  justify-content: space-between;
+}
+.custom-page-light .section-body .section-unfold .overlay .fullscreen {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+.custom-page-light .section-body .section-unfold .overlay .display-toggle {
+  display: flex;
+  align-self: flex-end;
+}
+.custom-page-light .section-body .section-unfold .overlay .display-toggle .checkbox-slider {
+  margin-left: 5px;
+}
 .custom-page-light .show-filters {
   display: flex;
   justify-content: flex-end;
