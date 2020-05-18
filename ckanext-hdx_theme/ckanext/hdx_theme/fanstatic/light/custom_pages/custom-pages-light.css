@@ -6,16 +6,16 @@
 }
 .custom-page-light .section-body {
   position: relative;
+  padding-bottom: 24px;
 }
 .custom-page-light .section-body iframe {
   background-color: #fff;
 }
 .custom-page-light .section-body .fold {
-  height: 70px !important;
   transition: height 1s;
 }
-.custom-page-light .section-body .fold.open {
-  height: 400px !important;
+.custom-page-light .section-body .fold.closed {
+  height: 70px !important;
 }
 .custom-page-light .section-body .section-unfold {
   position: absolute;

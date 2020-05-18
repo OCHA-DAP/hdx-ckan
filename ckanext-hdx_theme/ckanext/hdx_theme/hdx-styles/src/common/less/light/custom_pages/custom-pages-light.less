@@ -11,14 +11,15 @@
 
   .section-body {
     position: relative;
+    padding-bottom: 24px;
+
     iframe {
       background-color: @whiteColor;
     }
     .fold {
-      height:70px !important; // override style that can directly be set from config
       transition: height 1s;
-      &.open {
-        height: 400px !important;
+      &.closed {
+        height:70px !important; // override style that can directly be set from config
       }
     }
     .section-unfold {

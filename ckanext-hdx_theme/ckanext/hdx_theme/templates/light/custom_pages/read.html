@@ -62,7 +62,7 @@
               <div class="col-xs-12 section-body">
                 <div class="data-viewer-error">
                 </div>
-                <iframe class="fold" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
+                <iframe class="fold closed" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
                   src="{{ section.get('data_url') }}">
                 </iframe>
                 <div class="section-unfold">
@@ -71,8 +71,8 @@
                     <div class="display-toggle">
                       Display:
                       <span class="checkbox-slider" style="display: inline-block; ">
-                        <input id="show-filter-toggle" onclick="customPageToggleSectionFold(this);" type="checkbox" class="checkbox-slider-checkbox">
-                        <label class="checkbox-slider-label" for="show-filter-toggle">
+                        <input id="section-slider-toggle-{{loop.index}}" onclick="customPageToggleSectionFold(this);" type="checkbox" class="checkbox-slider-checkbox">
+                        <label class="checkbox-slider-label" for="section-slider-toggle-{{loop.index}}">
                           <span class="checkbox-slider-inner"></span>
                           <span class="checkbox-slider-switch"></span>
                         </label>

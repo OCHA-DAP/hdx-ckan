@@ -168,9 +168,12 @@
   line-height: 45px;
 }
 .pagination li.active a,
-.module .pagination li.active a {
+.module .pagination li.active a,
+.pagination li.active a:hover,
+.module .pagination li.active a:hover {
   background-color: #0088FF;
   color: #fff;
+  margin-left: -2px;
 }
 .pagination li.disabled a,
 .module .pagination li.disabled a {
