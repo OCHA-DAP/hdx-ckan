@@ -54,15 +54,6 @@ def _index(template_file):
     return render(template_file, template_data)
 
 
-# def group_worldmap():
-#     user = g.user
-#     countries = json.dumps(get_countries(user))
-#     template_data = {
-#         'countries': countries,
-#     }
-#     return render('group/worldmap.html', template_data)
-
-
 def group_eaa_worldmap():
     countries = json.dumps(get_eaa_countries_data())
     template_data = {
