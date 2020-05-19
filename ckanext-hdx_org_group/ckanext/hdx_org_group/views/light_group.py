@@ -1,15 +1,13 @@
+import json
+import logging
+
 from flask import Blueprint
 
-import logging
-import json
-
 import ckan.common as common
-import ckan.model as model
 import ckan.lib.helpers as h
+import ckan.model as model
 import ckan.plugins.toolkit as tk
-
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
-
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 g = common.g
@@ -40,7 +38,7 @@ def _get_all_countries_world_first():
 
 
 def index():
-    return _index('group/index.html')
+    return _index('light/group/index.html')
 
 
 def light_index():

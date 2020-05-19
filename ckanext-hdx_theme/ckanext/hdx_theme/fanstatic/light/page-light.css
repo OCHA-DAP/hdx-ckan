@@ -3861,6 +3861,17 @@ label.terms-of-service:after {
 .mobile-carousel {
   display: none;
 }
+@media (min-width: 1260px) {
+  body {
+    background: #1ebfb3;
+    max-width: 1260px;
+    margin: auto;
+  }
+  body [role=main],
+  body .main {
+    background-color: #fff;
+  }
+}
 @media (min-width: 1200px) {
   body nav.new-header.navbar-static-top .global-header .global-header-bg {
     margin: 0;
