@@ -74,7 +74,7 @@ def _populate_template_data(page_dict):
             if section.get('type', '') == 'data_list':
                 saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
                 package_type = 'dataset'
-                cp_search_logic = CustomPagesSearchLogic()
+                cp_search_logic = CustomPagesSearchLogic(page_dict.get('id'), page_dict.get('type'))
                 search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'), saved_filters)
                 cp_search_logic._search(package_type, **search_params)
                 section['template_data'] = cp_search_logic.template_data
