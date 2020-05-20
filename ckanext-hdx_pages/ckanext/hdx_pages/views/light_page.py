@@ -24,7 +24,7 @@ NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
 
 hdx_light_event = Blueprint(u'hdx_light_event', __name__, url_prefix=u'/m/event')
-hdx_light_dashboard = Blueprint(u'hdx_light_dashboard', __name__, url_prefix=u'/m/dashboard')
+hdx_light_dashboard = Blueprint(u'hdx_light_dashboard', __name__, url_prefix=u'/m/dashboards')
 
 
 @check_redirect_needed
