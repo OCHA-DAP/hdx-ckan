@@ -59,7 +59,9 @@
     {{ h.snippet('widget/onboarding/survey.html', id="surveyPopup") }}
 
     {% block header_core %}
-      {% snippet "header-mobile.html", page_has_desktop_version=True %}
+      {% set page_has_desktop_version = page_has_desktop_version if page_has_desktop_version is defined else True %}
+      {% set page_has_mobile_version = page_has_mobile_version if page_has_mobile_version is defined else False  %}
+      {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
     {% endblock %}
   {% endblock -%}
 

@@ -9,10 +9,13 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed, switch_url_path
+
 
 g = common.g
 request = common.request
 render = tk.render
+redirect = tk.redirect_to
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
 
@@ -37,19 +40,23 @@ def _get_all_countries_world_first():
     return all_countries_world_1st
 
 
+@check_redirect_needed
 def index():
-    return _index('light/group/index.html')
+    return _index('light/group/index.html', True)
 
 
+@check_redirect_needed
 def light_index():
-    return _index('light/group/index.html')
+    return _index('light/group/index.html', False)
 
 
-def _index(template_file):
+def _index(template_file, on_desktop):
     user = g.user
     countries = json.dumps(get_countries(user))
     template_data = {
         'countries': countries,
+        'page_has_desktop_version': False if on_desktop else True,
+        'page_has_mobile_version': True if on_desktop else False,
     }
     return render(template_file, template_data)
 
@@ -129,6 +136,12 @@ def _get_dataset_counts(context, package_type):
         return {}
 
 
+def light_read(id):
+    new_url = switch_url_path(None, False)
+    return redirect(new_url)
+
+
 hdx_group.add_url_rule(u'', view_func=index)
 hdx_group_eaa_maps.add_url_rule(u'', view_func=group_eaa_worldmap)
 hdx_light_group.add_url_rule(u'', view_func=light_index)
+hdx_light_group.add_url_rule(u'/<id>', view_func=light_read)
