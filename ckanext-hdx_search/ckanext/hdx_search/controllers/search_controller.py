@@ -835,5 +835,5 @@ class HDXSearchController(PackageController):
         cod_category['category_key'] = cod_category['name']
         cod_category['name'] = 'ALL'
         cod_category['count'] = total_count
-        cod_category['selected'] = all((item.get('selected') for item in real_cod_items))
+        cod_category['selected'] = all((item.get('selected') for item in real_cod_items)) if real_cod_items else False
         return cod_category
