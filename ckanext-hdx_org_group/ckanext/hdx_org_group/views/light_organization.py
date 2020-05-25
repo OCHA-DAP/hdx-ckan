@@ -8,6 +8,7 @@ import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 g = common.g
 request = common.request
@@ -26,17 +27,23 @@ hdx_org = Blueprint(u'hdx_org', __name__, url_prefix=u'/organization')
 hdx_light_org = Blueprint(u'hdx_light_org', __name__, url_prefix=u'/m/organization')
 
 
+@check_redirect_needed
 def index():
-    return _index('organization/index.html')
+    return _index('organization/index.html', False, True)
 
+
+@check_redirect_needed
 def light_index():
-    return _index('light/organization/index.html')
+    return _index('light/organization/index.html', True, False)
 
 
-def _index(template_file):
-    context = {'model': model, 'session': model.Session,
-               'for_view': True,
-               'with_private': False}
+def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
+    context = {
+        'model': model,
+        'session': model.Session,
+        'for_view': True,
+        'with_private': False
+    }
     try:
         check_access('site_read', context)
     except NotAuthorized:
@@ -90,6 +97,8 @@ def _index(template_file):
         'sorting_selected': sort_option,
         'limit_selected': limit,
         'page': page,
+        'page_has_desktop_version': show_switch_to_desktop,
+        'page_has_mobile_version': show_switch_to_mobile,
     }
     return render(template_file, template_data)
 
