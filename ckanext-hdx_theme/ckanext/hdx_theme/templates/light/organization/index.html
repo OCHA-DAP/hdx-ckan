@@ -1,1 +1,104 @@
-DUMMY PAGE
+{% extends "page_light.html" %}
+{% set logged_in = true if c.userobj else false %}
+{% set is_sys_admin = c.userobj.sysadmin %}
+{% block subtitle %}{{ _('Organisations') }}{% endblock %}
+
+{% block breadcrumb_content %}
+<li class="active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="list-items search-form">
+        <h2>All Organisations</h2>
+    </div>
+
+    <a name="organisations"></a>
+    <div id="organizationsSection" class="row list-items module">
+      <div class="mobile-facets" style="display: none;">
+        <div class="actions">
+          <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
+        </div>
+        <div>
+          <div class="">
+            {% set searchValue = q if q else '' %}
+            <input id="headerSearch" class="text-search" type="text" placeholder="Search {{page.item_count}} organisations ..." value="{{searchValue}}">
+          </div>
+
+          {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
+          <div class="form-select control-group control-order-by">
+            <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+            <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
+              <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+                <span class="dropdown-toggle-text">
+                {% for label, value in sorting %}
+                  {% if sorting_selected == value %} {{ label }} {% endif %}
+                {% endfor %}
+                </span>
+                <i class="humanitarianicons-Down"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+                {% for label, value in sorting %}
+                {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="list-header-showall">
+            {% set limits = [25, 50, 100] %}
+            {% set limit_selected = limit_param if limit_param else 25 %}
+
+            Show
+            {% for value in limits %}
+              {% if limit_selected|int == value %}
+                <span>{{ value }}</span>
+              {% else %}
+                <span><a href="#">{{value}}</a></span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-12">
+        <div class="list-header crisis-list-header">
+          <span class="mL15 list-header-title">{{ _("Organisations") }} [{{page.item_count}}]</span>
+          <div class="show-filters pull-right">
+            Show filters:
+            <a href="#" onclick="$('.mobile-facets').show();">
+              <span class="checkbox-slider" style="display: inline-block; top: 6px;">
+                <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" />
+                <label class="checkbox-slider-label" for="show-filter-toggle">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div>
+          <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+            {% for organization in page.items %}
+            {% snippet 'browse/snippets/org_item.html', organization=organization %}
+            {% endfor %}
+          </ul>
+        </div>
+        {% block page_pagination %}
+        {{ page.pager() }}
+        {% endblock %}
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% resource 'hdx_theme/search' %}
+    {% resource 'hdx_theme/organizations' %}
+    {% resource 'hdx_theme/jquery.expander' %}
+    {% resource 'hdx_theme/hdx_show_more.js' %}
+{% endblock %}

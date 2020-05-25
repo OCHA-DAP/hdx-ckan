@@ -3862,7 +3862,7 @@ label.terms-of-service:after {
   display: none;
 }
 @media (min-width: 1260px) {
-  body {
+  :not(body.home) {
     background: #1ebfb3;
     max-width: 1260px;
     margin: auto;

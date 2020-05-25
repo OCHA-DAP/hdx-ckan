@@ -8,9 +8,11 @@
 
 @media (min-width: @cut-point-desktop){
   body {
-    background: @greenColor;
-    max-width: @bodySize;
-    margin: auto;
+    :not(&.home) {
+      background: @greenColor;
+      max-width: @bodySize;
+      margin: auto;
+    }
 
     [role=main], .main {
       background-color: @whiteColor;

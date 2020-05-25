@@ -1,6 +1,56 @@
 @import "../base/variables";
 @import "../base/mixins";
 
+@import "../light/search/mobile-facets";
+
+@media (max-width: @cut-point-laptop-s) {
+  [role=main], .main {
+    background-color: @extraLightGrayColor;
+  }
+  #organizationsSection {
+    .list-header {
+      margin-top: 0;
+    }
+    ul.dataset-list {
+      padding: 0;
+
+      .dataset-item {
+        background-color: @whiteColor;
+        padding: 20px;
+        border: 1px solid @extraLightGrayAccent;
+        margin-bottom: 10px;
+
+        .dataset-content {
+          .mL15 {
+            margin-left: 0;
+          }
+          .organization-heading {
+            margin-top: 0;
+
+            ~ .list-items {
+              margin-top: 10px;
+            }
+          }
+
+          .dataset-description {
+            margin-top: 15px;
+          }
+        }
+      }
+    }
+
+    .mobile-facets {
+      .control-group {
+        float: none;
+        margin-top: 15px;
+      }
+      .list-header-showall {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
 .organization-heading{
   text-decoration: none;
   font-size: 18px;
@@ -95,5 +145,5 @@
     }
 
   }
-
 }
+
