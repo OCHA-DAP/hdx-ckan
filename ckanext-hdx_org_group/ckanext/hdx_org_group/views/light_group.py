@@ -40,23 +40,22 @@ def _get_all_countries_world_first():
     return all_countries_world_1st
 
 
-@check_redirect_needed
 def index():
-    return _index('light/group/index.html', True)
+    return _index('light/group/index.html', False, False)
 
 
-@check_redirect_needed
 def light_index():
-    return _index('light/group/index.html', False)
+    new_url = switch_url_path(None, False)
+    return redirect(new_url)
 
 
-def _index(template_file, on_desktop):
+def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     user = g.user
     countries = json.dumps(get_countries(user))
     template_data = {
         'countries': countries,
-        'page_has_desktop_version': False if on_desktop else True,
-        'page_has_mobile_version': True if on_desktop else False,
+        'page_has_desktop_version': show_switch_to_desktop,
+        'page_has_mobile_version': show_switch_to_mobile,
     }
     return render(template_file, template_data)
 
