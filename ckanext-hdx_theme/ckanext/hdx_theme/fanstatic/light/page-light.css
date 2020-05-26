@@ -1529,9 +1529,12 @@ hr.dotted {
   line-height: 45px;
 }
 .pagination li.active a,
-.module .pagination li.active a {
+.module .pagination li.active a,
+.pagination li.active a:hover,
+.module .pagination li.active a:hover {
   background-color: #1ebfb3;
   color: #fff;
+  margin-left: -2px;
 }
 .pagination li.disabled a,
 .module .pagination li.disabled a {

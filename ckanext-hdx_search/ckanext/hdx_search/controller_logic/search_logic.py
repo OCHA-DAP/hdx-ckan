@@ -103,10 +103,7 @@ class SearchLogic(object):
         page = self._page_number()
         package_type = self.package_type
 
-        def pager_url(q=None, page=None):
-            params = list(self._params_nopage())
-            params.append(('page', page))
-            return self._search_url(params, package_type)
+
 
 
         req_sort_by = request.params.get('sort', None)
@@ -203,7 +200,8 @@ class SearchLogic(object):
             facets = self._generate_facet_name_to_title_map(package_type)
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
             facet_keys = ['{!ex=batch}site_id'] + facets.keys()
-            self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras, pager_url, context,
+            self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras,
+                                    self._get_pager_function(package_type), context,
                                     fq_list=fq_list, expand=solr_expand)
 
         except SearchError, se:
@@ -229,6 +227,13 @@ class SearchLogic(object):
         full_facet_info = self._prepare_facets_info(self.template_data.search_facets, self.template_data.fields_grouped, search_extras, facets,
                                                     self.template_data.batch_total_items, self.template_data.q)
         self.template_data['full_facet_info'] = full_facet_info
+
+    def _get_pager_function(self, package_type):
+        def pager_url(q=None, page=None):
+            params = list(self._params_nopage())
+            params.append(('page', page))
+            return self._search_url(params, package_type)
+        return pager_url
 
     def append_selected_facet_to_group(self, group, param, value):
         if param not in group:
