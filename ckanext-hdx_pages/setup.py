@@ -79,6 +79,8 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_pages=ckanext.hdx_pages.plugin:HdxPagesPlugin
+        hdx_events=ckanext.hdx_pages.plugin:HdxEventPlugin
+        hdx_dashboards=ckanext.hdx_pages.plugin:HdxDashboardPlugin
 
         [paste.paster_command]
         hdx_pages=ckanext.hdx_pages.command:InitDBCommand
