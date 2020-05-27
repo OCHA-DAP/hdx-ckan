@@ -9,6 +9,10 @@
   background-color: #fff;
   padding: 15px;
 }
+.mobile-facets .mobile-order-by {
+  margin-top: 20px;
+  float: none;
+}
 .mobile-facets .text-search {
   line-height: 18px;
   font-family: 'Source Sans Pro', sans-serif;
