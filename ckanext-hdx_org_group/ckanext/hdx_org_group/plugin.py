@@ -28,6 +28,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IValidators)
+    plugins.implements(plugins.IBlueprint)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -199,9 +200,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('organization_bulk_process_no_id', '/organization/bulk_process',
                     controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
                     action='redirect_to_org_list')
-        map.connect('organizations_index', '/organization',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='index')
+        # map.connect('organizations_index', '/organization',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='index')
         map.connect('organization_new', '/organization/new',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='new')
@@ -262,14 +263,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
                     action='redirect_to_group_list')
 
-        map.connect('group_index', '/group',
-                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
-                    highlight_actions='index search')
-        map.connect('group_worldmap', '/worldmap',
-                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
-
-        map.connect('group_eaa_worldmap', '/eaa-worldmap',
-                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
+        # map.connect('group_index', '/group',
+        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
+        #             highlight_actions='index search')
+        # map.connect('group_worldmap', '/worldmap',
+        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
+        #
+        # map.connect('group_eaa_worldmap', '/eaa-worldmap',
+        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
 
         map.connect('group_new', '/group/new', controller='group', action='new')
 
@@ -278,10 +279,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         map.connect('country_topline', '/country/topline/{id}',
                     controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
-
-        map.connect(
-            'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController',
-            action='org_read')
 
         map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
             action='feed_organization')
@@ -308,6 +305,20 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def delete(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
 
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_organization as org
+        return org.hdx_org
+
+
+class HDXLightOrgPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_organization as org
+        return org.hdx_light_org
+
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     '''
@@ -316,6 +327,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
     plugins.implements(plugins.IGroupForm, inherit=False)
     plugins.implements(plugins.IGroupController, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
     def group_types(self):
         return ['']
@@ -399,3 +411,26 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
                 tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
             except Exception, ex:
                 log.error(ex)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_group as group
+        return group.hdx_group
+
+
+class HDXGroupEaaMapPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_group as group
+        return group.hdx_group_eaa_maps
+
+
+class HDXLightGroupPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_org_group.views.light_group as group
+        return group.hdx_light_group

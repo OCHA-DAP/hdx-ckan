@@ -25,6 +25,9 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_org_group=ckanext.hdx_org_group.plugin:HDXOrgGroupPlugin
+        hdx_light_org=ckanext.hdx_org_group.plugin:HDXLightOrgPlugin
         hdx_group=ckanext.hdx_org_group.plugin:HDXGroupPlugin
+        hdx_light_group=ckanext.hdx_org_group.plugin:HDXLightGroupPlugin
+        hdx_group_eaa_map=ckanext.hdx_org_group.plugin:HDXGroupEaaMapPlugin
     ''',
 )

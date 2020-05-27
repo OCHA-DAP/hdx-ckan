@@ -6,6 +6,20 @@
 	display: none;
 }
 
+@media (min-width: @cut-point-desktop){
+  body {
+    :not(&.home) {
+      background: @greenColor;
+      max-width: @bodySize;
+      margin: auto;
+    }
+
+    [role=main], .main {
+      background-color: @whiteColor;
+    }
+  }
+}
+
 @media (min-width: @cut-point-laptop-m){
   body nav.new-header.navbar-static-top {
     .global-header .global-header-bg {
