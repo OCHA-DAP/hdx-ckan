@@ -5,15 +5,17 @@ import ckan.model as model
 import ckan.lib.helpers as h
 import pylons.config as config
 
-from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
+
 import ckanext.hdx_package.helpers.helpers as pkg_h
 import ckanext.hdx_pages.helpers.helper as page_h
-
-from ckan.common import _, c, g, request, response
-from ckan.controllers.api import CONTENT_TYPES
 import ckan.lib.navl.dictization_functions as dict_fns
 
 import ckanext.hdx_search.command as lunr
+
+from ckan.common import _, c, g, request, response
+from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -118,9 +120,11 @@ class PagesController(HDXSearchController):
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 
+    @check_redirect_needed
     def read_event(self, id):
         return self.read_page(id, 'event')
 
+    @check_redirect_needed
     def read_dashboards(self, id):
         return self.read_page(id, 'dashboards')
 
