@@ -9,6 +9,32 @@ $(document).ready(function(){
         function(){ $(this).removeClass('open') }
     );
 
+    // function showDataUseSurveyPopup() {
+    //   var SURVEY_COOKIE = "hdx-data-usesurvey-popup";
+    //   var cookie = $.cookie(SURVEY_COOKIE);
+    //   // if (!cookie) {
+    //     $("#dataUseSurveyPopup a.btn-primary").click(function (e) {
+    //       hdxUtil.analytics.sendSurveyEvent('confirm popup');
+    //       var pkg_id = $("#dataUseSurveryPkgId").text();
+    //       var org_id = $("#dataUseSurveryOrgId").text();
+    //       window.open(pkg_id + org_id, "_blank");
+    //       $("#dataUseSurveyPopup").hide();
+    //       var date = new Date();
+    //       date.setTime(date.getTime() + 1000);
+    //       $.cookie(SURVEY_COOKIE, true, {
+    //         expires: date.setTime(date) //days
+    //       });
+    //     });
+    //     var date = new Date();
+    //     date.setTime(date.getTime() + 1000);
+    //     $.cookie(SURVEY_COOKIE, true, {
+    //       expires: date //days
+    //     });
+    //     hdxUtil.analytics.sendSurveyEvent('show popup');
+    //     $("#dataUseSurveyPopup").show();
+    //   // }
+    // }
+
     function showSurveyPopup(){
       var SURVEY_COOKIE = "hdx-survey-popup";
       var cookie = $.cookie(SURVEY_COOKIE);
@@ -43,5 +69,5 @@ $(document).ready(function(){
     // initCookiePopup();
 
 
-    // showSurveyPopup();
+    // showDataUseSurveyPopup();
 });
