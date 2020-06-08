@@ -21,6 +21,7 @@ Example:
     {% if resources %}
       <ul class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
         {% block resource_list_inner %}
+          {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
           {% for resource in resources %}
             {% snippet 'light/dataset/resource_item.html', pkg=pkg, res=resource %}
           {% endfor %}
