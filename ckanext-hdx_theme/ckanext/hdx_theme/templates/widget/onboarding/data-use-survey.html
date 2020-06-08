@@ -17,7 +17,9 @@ Example:
   <div class="survey-widget">
     <div class="center">
       <div style="text-align: justify;">
-        Take 2 minutes to help HDX and {{ pkg.organization.title or pkg.organization.name}} understand how this data will be used
+        {% set org_name = pkg.organization.title or pkg.organization.name %}
+        Take 2 minutes to help HDX
+        {% if  org_name != 'HDX' %}and {{ pkg.organization.title or pkg.organization.name}}{% endif %} understand how this data will be used
       </div>
 
     </div>
