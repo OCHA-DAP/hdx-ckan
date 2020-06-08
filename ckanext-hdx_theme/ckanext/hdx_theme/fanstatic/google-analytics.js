@@ -614,7 +614,7 @@ $(
         var mixpanelData = {
             "eventName": "popup interaction",
             "eventMeta": {
-                "popup title": "Data Literacy Survey",
+                "popup title": "HDX Data Use Survey - 2020-06",
                 "popup type": "general",
                 "interaction type": interactionType
             }

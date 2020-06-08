@@ -171,6 +171,7 @@
 
 {% block scripts %}
   {{ super() }}
+  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
   {% resource 'hdx_theme/dataset' %}
   {% resource 'hdx_theme/datasets/stats-chart.js' %}
   {% resource 'hdx_theme/activity-stream' %}

@@ -24,3 +24,31 @@ function showDataCheck(url){
   iframe.attr('src', url);
   iframe.focus();
 }
+
+function showDataUseSurveyPopup(res_id) {
+  var org_name = $("#dataUseSurveyOrgName").text();
+  var SURVEY_COOKIE = "hdx-data-use-survey-popup-" + org_name;
+  var cookie = $.cookie(SURVEY_COOKIE);
+  if (!cookie) {
+    $("#dataUseSurveyPopup a.btn-primary").click(function (e) {
+      hdxUtil.analytics.sendSurveyEvent('confirm popup');
+      var pkg_id = $("#dataUseSurveyPkgId").text();
+      var org_name = $("#dataUseSurveyOrgName").text();
+      var url = "https://docs.google.com/forms/d/e/1FAIpQLSfqFSzgbPSBsXCvzIwg8Mdq6dGmx4FA0ECse_FqzX23J0VXxQ/viewform?usp=pp_url&entry.373528326="+pkg_id+"&entry.39727542="+res_id+"&entry.730743274="+org_name;
+      window.open(url, "_blank");
+      $("#dataUseSurveyPopup").hide();
+      // var date = new Date();
+      // date.setTime(date.getTime() + 1000);
+      $.cookie(SURVEY_COOKIE, true, {
+        expires: 30 //days
+      });
+    });
+    // var date = new Date();
+    // date.setTime(date.getTime() + 1000);
+    // $.cookie(SURVEY_COOKIE, true, {
+    //   expires: 30 //days
+    // });
+    hdxUtil.analytics.sendSurveyEvent('show popup');
+    $("#dataUseSurveyPopup").show();
+  }
+}

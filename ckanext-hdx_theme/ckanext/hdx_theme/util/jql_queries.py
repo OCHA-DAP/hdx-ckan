@@ -1,9 +1,13 @@
 DOWNLOADS_PER_DATASET = '''
-/* VER 1.2
+/* 6. unique downloads by dataset
+VER 1.3
+
+ver 1.3 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
 
 used for total downloads from 2016-08-01 which is used to sort datasets by "most downloads" for the "XXX downloads" counter on /search and on each individual dataset
 
-gets all download events and counts occurrences of unique combinations of user, resource, and dataset, and day, then counts the number of occurrences of dataset by week.  In other words, if a user downloaded all 3 resources on a dataset 2 different times on the same day (6 total downloads), the result of this query would be 3.  It answers the question "What is the total number of downloads of any resource on a given dataset, ignorning repeated downloads from the same user the same day?"*/
+gets all download events and counts occurrences of unique combinations of user, resource, and dataset, and day, then counts the number of occurrences of dataset by week.  In other words, if a user downloaded all 3 resources on a dataset 2 different times on the same day (6 total downloads), the result of this query would be 3.  It answers the question "What is the total number of downloads of any resource on a given dataset, ignorning repeated downloads from the same user the same day?"
+*/
 
 function main() {{
   return Events({{
@@ -11,7 +15,7 @@ function main() {{
     to_date: '{}',
     event_selectors: [{{event: "resource download"}}]
   }})
-  .groupBy(["distinct_id","properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.count())
+  .groupByUser(["properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.null())
   .groupBy(["key.2"], mixpanel.reducer.count())
     .map(function(r){{
     return {{

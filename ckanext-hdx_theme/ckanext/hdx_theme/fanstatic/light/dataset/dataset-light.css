@@ -189,6 +189,9 @@
 .dataset-light .tab-content .btn-primary {
   width: 100%;
 }
+.dataset-light .tab-content .btn-primary-small {
+  width: auto;
+}
 .dataset-light .lines {
   overflow: hidden;
 }

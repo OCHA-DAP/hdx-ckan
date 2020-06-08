@@ -14,7 +14,7 @@ Example:
 {% resource 'hdx_theme/requestdata/modal-form.js' %}
 {% resource 'requestdata/css/main.css' %}
 {% resource 'hdx_theme/bs_tooltip.js' %}
-
+{{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
 {% set resource_item_snippet = resource_item_snippet or 'package/snippets/resource_item.html' %}
 
 <p id="dataset-resources" class="resources mTop35 info-wrapper">

@@ -1,0 +1,31 @@
+{#
+Done widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/survey.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "HDX Data Use Survey" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+  <div class="survey-widget">
+    <div class="center">
+      <div style="text-align: justify;">
+        Take 2 minutes to help HDX and {{ pkg.organization.title or pkg.organization.name}} understand how this data will be used
+      </div>
+
+    </div>
+    <div class="right-side-actions">
+      <div id="dataUseSurveyPkgId" style="visibility:hidden;position:absolute;">{{ pkg.id }}</div>
+      <div id="dataUseSurveyOrgName" style="visibility:hidden;position:absolute;">{{ pkg.organization.name }}</div>
+      <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Close">
+      <a href="#"  class="mL35 btn btn-primary btn-primary-small btn-large pull-right" type="button" value="Take survey">Take the survey</a>
+    </div>
+  </div>
+{% endblock %}
