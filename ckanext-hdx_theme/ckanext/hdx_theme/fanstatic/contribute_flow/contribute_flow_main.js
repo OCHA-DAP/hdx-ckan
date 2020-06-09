@@ -355,11 +355,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     var newOptions = resourceModelList.models;
                     $("#field_dataset_preview_value").find("option").remove();
                     var selectOptions = $('#field_dataset_preview_value').prop('options');
-                    //     selectOptions[0] = new Option('!Default (first resource with preview)', 'first_resource', true, true);
-                    // }
-                    // else{
                     selectOptions[0] = new Option('Default (first resource with preview)', 'first_resource');
-                    // }
                     var i = 'first_resource';
                     $.each(newOptions, function(index, value) {
                         var resName = value.get('name') ? value.get('name') : 'Resource '+(index+1);
