@@ -29,9 +29,10 @@
       line-height: @paginationItemSize;
     }
 
-    &.active a {
+    &.active a, &.active a:hover {
       background-color: @paginationActiveBackground;
       color: @whiteColor;
+      margin-left: -2px;
     }
     &.disabled a{
       cursor: default;

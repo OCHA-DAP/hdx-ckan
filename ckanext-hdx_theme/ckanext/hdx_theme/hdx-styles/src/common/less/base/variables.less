@@ -9,6 +9,7 @@
 //Base Colors
 @whiteColor: #fff;
 @extraLightGrayColor: #eeeeee;
+@extraLightGrayAccent: #ddd;
 @lightGrayColor: #cccccc;
 @grayColor: #888888;
 @darkGrayColor: #333333;
@@ -46,6 +47,7 @@
 @containerSize: 1200px; //container size;
 @containerRealSize: @containerSize - @gutterSize; //real container size (no gutter)
 @containerMarginSize: 45px; //left/right margin set larger than gutter by design so content width will be 1260px
+@bodySize: @containerRealSize + 2*@containerMarginSize;
 
 @paginationActiveBackground: @greenColor;
 @paginationItemSize: 45px;
@@ -63,3 +65,5 @@
 @cut-point-tablet: 768px;
 @cut-point-laptop-s: 1024px;
 @cut-point-laptop-m: 1200px;
+@cut-point-desktop: @bodySize;
+

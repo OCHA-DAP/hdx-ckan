@@ -1,0 +1,42 @@
+.mobile-facets {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  z-index: 1000;
+  background-color: #fff;
+  padding: 15px;
+}
+.mobile-facets .mobile-order-by {
+  margin-top: 20px;
+  float: none;
+}
+.mobile-facets .text-search {
+  line-height: 18px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #888888;
+  padding: 7px 6px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  width: 100%;
+}
+.mobile-facets .actions {
+  margin-bottom: 15px;
+}
+.mobile-facets .actions .back-button {
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+}
+.mobile-facets .actions .back-button i {
+  font-size: 17px;
+  font-weight: 700;
+  position: relative;
+  top: 2px;
+  margin-right: 5px;
+}

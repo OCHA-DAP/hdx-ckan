@@ -1,4 +1,4 @@
-{% extends "page.html" %}
+{% extends "page_light.html" %}
 
 {% block subtitle %}{{ _("Locations") }}{% endblock %}
 
@@ -6,18 +6,19 @@
     <li class="active">{% link_for _('Locations'), controller='group', action='index' %}</li>
 {% endblock %}
 
-{% block primary_content %}
+{% block content %}
+  <div class="container">
     <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
     <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
     <div id="datasetCounts" style="display: none;">
-        {{ c.countries }}
+        {{ countries }}
     </div>
     <div class="list-items search-form">
         <h2>All Locations</h2>
     </div>
 
-    <div id="locationSection" class="row paddingRowHack">
-        <div id="optionsGroup" class="col-xs-12 paddingLeftHack paddingRightHack">
+    <div id="locationSection" class="row">
+        <div id="optionsGroup" class="col-xs-12">
             <div class="list-header crisis-list-header">
               <span class="mL15 list-header-title">
                 Locations
@@ -29,28 +30,27 @@
 
 
         </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-xs-12">
             <div id="map" style="height: 580px; position: relative;">
             </div>
         </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-xs-12">
             <div class="very-active-country-description">
                 <p class="very-active-country">A red dot beside the location name denotes a country for which there is a <a href="https://www.humanitarianresponse.info/en/programme-cycle/space/page/strategic-response-planning" target="_blank">humanitarian response plan</a></p>
             </div>
 
         </div>
 
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-xs-12">
             <div id="country_list" class="row" style="">
             </div>
         </div>
     </div>
+
+  </div>
 {% endblock %}
 
-{% block secondary %}
-{% endblock %}
-
-{% block scripts2 %}
+{% block scripts %}
     {{ super() }}
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet' />
