@@ -15,9 +15,10 @@ Example:
 (_('Most Downloads'), 'total_res_downloads desc')]
 %}
 {% if admin_view %} {% set nothing=sorting.insert(0, (_('Due for Update'), 'due_date asc')) %}{% endif %}
+{% set extra_class = class if class else 'pull-right' %}
 
 {% set sorting_selected = sort_param if sort_param else 'score desc, metadata_modified desc' %}
-<div class="form-select control-group control-order-by pull-right">
+<div class="form-select control-group control-order-by {{extra_class}}">
   <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
   <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">
     <a id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">

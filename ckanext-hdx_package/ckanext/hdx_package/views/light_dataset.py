@@ -3,7 +3,7 @@ from flask import Blueprint
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
-from ckan.common import _, config, g, request
+from ckan.common import g
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_pages as cp_h
@@ -15,6 +15,7 @@ get_action = tk.get_action
 check_access = tk.check_access
 render = tk.render
 abort = tk.abort
+_ = tk._
 
 NotAuthorized = tk.NotAuthorized
 

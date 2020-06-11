@@ -10,9 +10,10 @@ import ckanext.hdx_pages.actions.auth as auth
 import ckanext.hdx_pages.helpers.helper as helper
 import ckanext.hdx_pages.model as pages_model
 
+import ckanext.hdx_pages.views.light_page as light_page
+
 
 class HdxPagesPlugin(plugins.SingletonPlugin):
-
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IRoutes, inherit=True)
@@ -79,3 +80,17 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
     # IConfigurable
     def configure(self, config):
         pages_model.setup()
+
+
+class HdxEventPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    def get_blueprint(self):
+        return light_page.hdx_light_event
+
+
+class HdxDashboardPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IBlueprint)
+
+    def get_blueprint(self):
+        return light_page.hdx_light_dashboard

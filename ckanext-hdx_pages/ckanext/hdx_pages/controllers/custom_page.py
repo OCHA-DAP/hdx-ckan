@@ -5,15 +5,17 @@ import ckan.model as model
 import ckan.lib.helpers as h
 import pylons.config as config
 
-from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
-import ckanext.hdx_package.helpers.helpers as pkg_h
 
-from ckan.common import _, c, g, request, response
-from ckan.controllers.api import CONTENT_TYPES
-from urlparse import parse_qs, urlparse
+import ckanext.hdx_package.helpers.helpers as pkg_h
+import ckanext.hdx_pages.helpers.helper as page_h
 import ckan.lib.navl.dictization_functions as dict_fns
 
 import ckanext.hdx_search.command as lunr
+
+from ckan.common import _, c, g, request, response
+from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -118,9 +120,11 @@ class PagesController(HDXSearchController):
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 
+    @check_redirect_needed
     def read_event(self, id):
         return self.read_page(id, 'event')
 
+    @check_redirect_needed
     def read_dashboards(self, id):
         return self.read_page(id, 'dashboards')
 
@@ -140,9 +144,9 @@ class PagesController(HDXSearchController):
         if page_dict.get('sections'):
             sections = json.loads(page_dict['sections'])
             for section in sections:
-                PagesController._compute_iframe_style(section)
+                page_h._compute_iframe_style(section)
                 if section.get('type', '') == 'data_list':
-                    saved_filters = PagesController._find_dataset_filters(section.get('data_url', ''))
+                    saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
                     c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
 
                     # In case this is an AJAX request return JSON
@@ -192,19 +196,19 @@ class PagesController(HDXSearchController):
         # h.redirect_to('/')
         return base.render('home/index.html', extra_vars=vars)
 
-    @staticmethod
-    def _find_dataset_filters(url):
-        filters = parse_qs(urlparse(url).query)
-        return filters
+    # @staticmethod
+    # def _find_dataset_filters(url):
+    #     filters = parse_qs(urlparse(url).query)
+    #     return filters
 
-    @staticmethod
-    def _compute_iframe_style(section):
-        style = 'width: 100%; '
-        max_height = section.get('max_height')
-        height = max_height if max_height else '400px'
-        style += 'max-height: {}; '.format(max_height) if max_height else ''
-        style += 'height: {}; '.format(height)
-        section['style'] = style
+    # @staticmethod
+    # def _compute_iframe_style(section):
+    #     style = 'width: 100%; '
+    #     max_height = section.get('max_height')
+    #     height = max_height if max_height else '400px'
+    #     style += 'max-height: {}; '.format(max_height) if max_height else ''
+    #     style += 'height: {}; '.format(height)
+    #     section['style'] = style
 
     def _generate_dataset_results(self, page_id, type, saved_filters):
 

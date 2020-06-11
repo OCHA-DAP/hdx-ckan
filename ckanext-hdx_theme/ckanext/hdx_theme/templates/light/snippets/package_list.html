@@ -1,0 +1,69 @@
+  {% set facet_list = data.full_facet_info.get('facets') %}
+  {% set searchValue = request.args.get('q') if request.args.get('q') else '' %}
+  <div class="mobile-facets" style="display: none;">
+    <div class="actions">
+      <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
+    </div>
+    <div>
+      <div class="">
+        <input class="text-search" autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
+      </div>
+
+      {% snippet 'search/snippets/package_search_order.html', sort_param = data.sort_by_selected, class='mobile-order-by' %}
+
+      {%  set current_page_url = data.other_links.get('current_page_url') if 'current_page_url' in data.other_links else '' %}
+      <div class="filter-title">
+        Refine your search: <a href="{{current_page_url}}" class="filter-clear pull-right">Clear all</a>
+      </div>
+
+      {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
+    </div>
+
+  </div>
+
+  <div class="search-light">
+    <div class="container">
+      <div id="search-recs"></div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="dataset-filter-start list-header">
+            <span class="mL15 list-header-title">{{ _("Data") }} [{{ data.batch_total_items or data.page.item_count}}]</span>
+            <div class="show-filters">
+              <a href="#" onclick="$('.mobile-facets').show();">
+                Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}
+                <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
+                <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}/>
+                <label class="checkbox-slider-label" for="show-filter-toggle">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </span>
+              </a>
+            </div>
+          </div>
+
+          <div class="search-list">
+            <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+              {% for package in data.page.items %}
+                {% snippet 'search/snippets/package_item_mobile.html', package=package, query=searchValue %}
+              {% endfor %}
+
+              {% if data.page.items | length == 0 %}
+                <div class="search-empty">
+                  <h3>Sorry no datasets found for current filter selection</h3>
+                </div>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      {% block page_pagination %}
+        {{ data.page.pager(q=data.q) }}
+      {% endblock %}
+    </div>
+  </div>

@@ -1,4 +1,5 @@
 {% extends "page.html" %}
+{% set page_has_mobile_version = True %}
 
 {% block subtitle %}{{ data.title }}{% endblock %}
 
@@ -12,7 +13,6 @@
          action='read_dashboards', id=data.name) }}</li>
     {% endif %}
 {% endblock %}
-
 {% block secondary %}{% endblock %}
 
 {% block primary %}

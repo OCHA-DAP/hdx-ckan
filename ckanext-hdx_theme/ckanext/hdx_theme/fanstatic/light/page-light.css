@@ -1529,9 +1529,12 @@ hr.dotted {
   line-height: 45px;
 }
 .pagination li.active a,
-.module .pagination li.active a {
+.module .pagination li.active a,
+.pagination li.active a:hover,
+.module .pagination li.active a:hover {
   background-color: #1ebfb3;
   color: #fff;
+  margin-left: -2px;
 }
 .pagination li.disabled a,
 .module .pagination li.disabled a {
@@ -3860,6 +3863,17 @@ label.terms-of-service:after {
 }
 .mobile-carousel {
   display: none;
+}
+@media (min-width: 1260px) {
+  :not(body.home) {
+    background: #1ebfb3;
+    max-width: 1260px;
+    margin: auto;
+  }
+  body [role=main],
+  body .main {
+    background-color: #fff;
+  }
 }
 @media (min-width: 1200px) {
   body nav.new-header.navbar-static-top .global-header .global-header-bg {
