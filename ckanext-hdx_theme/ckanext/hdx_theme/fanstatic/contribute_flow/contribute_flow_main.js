@@ -69,7 +69,7 @@ ckan.module('contribute_flow_main', function($, _) {
 
                                     // Tags are required for metadata-only datasets
                                     if (data.data.is_requestdata_type && data.data.tag_string.length === 0) {
-                                        data.errors.tag_string = ['Missing value']
+                                        data.errors.tag_string = ['Missing value'];
                                     }
 
                                     contributeGlobal.updateValidationUi(data, status, xhr);
@@ -479,9 +479,6 @@ ckan.module('contribute_flow_main', function($, _) {
                 // this is logic is reflected in the contribute controller as well
                 privateEl.prop('checked', true);
             }
-            // if(privateEl === 'requestdata'){
-            //   this.__prepareFormForMetadataOnly({isEdit: true});
-            // }
             sandbox.publish('hdx-form-validation', {
                     'type': 'private_changed',
                     'newValue': privateVal //privateVal == 'false' ? 'public' : 'private'
@@ -495,76 +492,10 @@ ckan.module('contribute_flow_main', function($, _) {
                             'type': 'private_changed',
                             'newValue': $(this).val() //$(this).val() == 'false' ? 'public' : 'private'
                         };
-                        // if($(this).val() === 'requestdata'){
-                        //   this.__prepareFormForMetadataOnly({isEdit: true});
-                        // }
                         sandbox.publish('hdx-form-validation', message);
                     }
                 }
             );
-        },
-        __prepareFormForMetadataOnly: function(data) {
-            var formSectionResources = $('.form-resources-section');
-            var formSectionPrivacy = $('.form-privacy-section');
-            var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=false]');
-            var selectMethodology = $('#field_methodology');
-            var methodologySelectModule = $('.methodology-select');
-            var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen');
-            var formBody = $('#contribute-flow-form-body');
-            var selectUpdateFrequency = $('#field_data_update_frequency');
-            var updateFrequencySelectModule = $('.update-frequency-select');
-            var currentlySelectedUpdateFrequency = updateFrequencySelectModule.find('.select2-chosen');
-            var selectTagsModule = $('.tags-select');
-            var licenseField = $('.special-license');
-            var selectFieldNames = $('.field-names-select');
-            var selectFileTypes = $('.file-types-select');
-            var selectNumOfRows = $('.num-of-rows-select');
-            var isEdit = data.isEdit;
-
-            // We set the type so that the right schema is used in the backend
-            formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
-
-            // Resources are not required for metadata-only datasets
-            formSectionResources.hide();
-
-            // Hides the horizontal line
-            formSectionResources.next().hide();
-
-            // hide dataset preview
-            $('#_dataset_preview').hide();
-
-            // Metadata-only datasets are public only, so we select the "Public"
-            // radio button and disable the "Private" one
-            privacyPublicRadioBtn.click();
-            formSectionPrivacy.hide();
-
-            // if (!isEdit) {
-            //     selectMethodology.val('None');
-            //     currentlySelectedMethodology.text('None');
-            //     // selectUpdateFrequency.val('-1');
-            //     // currentlySelectedUpdateFrequency.text('None');
-            // }
-
-            // For some reason, when editing a dataset, the class wasn't
-            // applied, that's why the timeout is needed.
-            setTimeout(function() {
-
-                // Methodology and Update frequency fields are not required in a
-                // metadata-only dataset
-                methodologySelectModule.removeClass('required');
-                updateFrequencySelectModule.removeClass('required');
-
-                selectTagsModule.addClass('required');
-            }, 500);
-
-            // License is not required as well
-            licenseField.hide();
-
-            // These are already created fields in the DOM, but they are
-            // initially hidden, and are only shown for metadata-only datasets
-            selectFieldNames.show();
-            selectFileTypes.show();
-            selectNumOfRows.show();
         },
         moduleLog: function (message) {
             //console.log(message);

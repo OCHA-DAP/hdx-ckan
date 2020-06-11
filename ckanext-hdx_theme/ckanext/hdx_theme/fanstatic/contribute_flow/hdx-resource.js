@@ -794,17 +794,19 @@ $(function(){
             }.bind(this));
 
             sandbox.subscribe('hdx-form-validation', function (message) {
-                // ... when ready, get the contribute_global object.
-                // this.contribute_global = global;
-                //
-                // this.contribute_global.getDatasetIdPromise().then(
-                //     function(package_id){
-                //         if (package_id != null){
-                //             this.goToStep2();
-                //         }
-                //     }.bind(this));
-              if (message.type === 'private_changed' && message.newValue === 'requestdata')
+              // ... when ready, get the contribute_global object.
+              // this.contribute_global = global;
+              //
+              // this.contribute_global.getDatasetIdPromise().then(
+              //     function(package_id){
+              //         if (package_id != null){
+              //             this.goToStep2();
+              //         }
+              //     }.bind(this));
+              if (message.type === 'private_changed' && message.newValue === 'requestdata') {
+                // this.contribute_global.resourceModelList.models = [];
                 this._prepareFormForMetadataOnly({isEdit: true}, true);
+              }
               else{
                 this._prepareFormForMetadataOnly({isEdit: true}, false);
               }
@@ -854,7 +856,10 @@ $(function(){
 
             addMetadataBtn.on('click', function() {
                 this.goToStep2();
-                this._prepareFormForMetadataOnly({isEdit: false});
+                var formSectionPrivacy = $('.form-privacy-section');
+                var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=requestdata]');
+                privacyPublicRadioBtn.click();
+                this._prepareFormForMetadataOnly({isEdit: false}, true);
             }.bind(this));
 
             var isMetadataOnly = $('input[name=is_requestdata_type][value=true]');
@@ -862,7 +867,7 @@ $(function(){
             // For already created datasets, if they are metadata-only adapt
             // the form
             if (isMetadataOnly.length === 1) {
-                this._prepareFormForMetadataOnly({isEdit: true});
+                this._prepareFormForMetadataOnly({isEdit: true}, true);
             }
         },
         initGooglePicker: function() {

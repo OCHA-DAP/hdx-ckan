@@ -26,25 +26,17 @@ ckan.module('hdx_form_element_manager', function ($, _) {
             errorWrapperEl.removeClass('error');
             errorEl.html('');
           } else if (message.type === 'private_changed') {
-
-
-            // if (required && message.newValue === 'public' || required === 'private') {
-            //   controlGroupEl.addClass('required');
-            // } else {
-            //   controlGroupEl.removeClass('required');
-            // }
-            var reqFlag = false;
-            for ( var i=0; i< required.length; i++){
-              if (message.newValue === required[i]){
-                reqFlag = true;
-                break;
+              var reqFlag = false;
+              for ( var i=0; i< required.length; i++){
+                if (message.newValue === required[i]){
+                  reqFlag = true;
+                  break;
+                }
               }
-            }
-            if (reqFlag)
-              controlGroupEl.addClass('required');
-            else
-              controlGroupEl.removeClass('required');
-
+              if (reqFlag)
+                controlGroupEl.addClass('required');
+              else
+                controlGroupEl.removeClass('required');
           } else if (message.elementName === elementName) {
             try {
               if (errorWrapperEl.find("input").attr("data-module") === "slug-preview-slug") {

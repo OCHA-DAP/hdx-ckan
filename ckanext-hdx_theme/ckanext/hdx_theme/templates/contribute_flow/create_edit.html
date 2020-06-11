@@ -152,9 +152,9 @@
                     {% endif %}
                 </div>
                 <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
-                    {% if data.is_requestdata_type %}
-                        <input type="hidden" name="is_requestdata_type" value="true" />
-                    {% endif %}
+{#                    {% if data.is_requestdata_type %}#}
+{#                        <input type="hidden" name="is_requestdata_type" value="true" />#}
+{#                    {% endif %}#}
                     <div class="background-gray">
                         <div class="paddingLeftHack paddingRightHack">
                                 <div id="hdx_error" class="error-explanation alert alert-danger hdx-invisible-element" data-module="hdx_error_block_manager">
@@ -335,7 +335,7 @@
                                                 <label class="control-label">This dataset is</label>
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' %}checked="checked"{% endif %}/>
+                                                        <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
                                                         <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
                                                     </label>
                                                 </div>
@@ -347,7 +347,7 @@
                                                 </div>
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="private" value="public" {% if data.private == False %}checked="checked"{% endif %}/>
+                                                        <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
                                                         <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                                     </label>
                                                 </div>

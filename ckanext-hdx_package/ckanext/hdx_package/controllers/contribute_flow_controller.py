@@ -197,6 +197,17 @@ class ContributeFlowController(base.BaseController):
         self.process_dataset_preview_save(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
+            # data_dict['is_requestdata_type'] = 'False'
+        else:
+            if data_dict.get('private') == 'public':
+                data_dict['private'] = 'False'
+                # data_dict['is_requestdata_type'] = 'False'
+            if data_dict.get('private') == 'private':
+                data_dict['private'] = 'True'
+                # data_dict['is_requestdata_type'] = 'False'
+            if data_dict.get('private') == 'requestdata':
+                data_dict['private'] = 'False'
+                data_dict['is_requestdata_type'] = 'True'
 
         return data_dict
 
