@@ -112,7 +112,7 @@ def add_init_shape_info_data_if_needed(resource_data):
     # The format detection only happens during the actual 'create' action.
     # That's why we're applying the same format detection function to name and url in case there's no format provided.
     file_format = lower(resource_data.get('format', '')) or detect_format_from_extension(
-        resource_data['name']) or detect_format_from_extension(resource_data['url'])
+        resource_data.get('name')) or detect_format_from_extension(resource_data.get('url'))
 
     if file_format in GIS_FORMATS:
         shape_info_json = json.dumps({
