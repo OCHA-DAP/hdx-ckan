@@ -335,22 +335,23 @@
                                                 <label class="control-label">This dataset is</label>
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="private" value="true" {% if data.private == True %}checked="checked"{% endif %} />
+                                                        <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' %}checked="checked"{% endif %}/>
+                                                        <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
+                                                    </label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
                                                         <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                                     </label>
                                                 </div>
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="private" value="false" {% if data.private == False %}checked="checked"{% endif %}/>
+                                                        <input type="radio" name="private" value="public" {% if data.private == False %}checked="checked"{% endif %}/>
                                                         <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                                     </label>
                                                 </div>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="requestData" {% if data.private == 'requestData' %}checked="checked"{% endif %}/>
-                                                        <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                                    </label>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -370,7 +371,7 @@
                                             </p>
                                         </div>
                                         <div class="col-xs-9">
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private" data-module-broadcast_change="true">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private,public,requestdata" data-module-broadcast_change="true">
                                             {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
                                             </div>
 
@@ -379,11 +380,11 @@
                                             {% set domain = domain|replace("http://", "")|replace("https://", "") %}
                                             {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
 
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="name" data-module-required="private">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="name" data-module-required="private,public,requestdata">
                                             {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs, classes=['form-group', 'required']) }}
                                             </div>
 
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="notes" data-module-required="public">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="notes" data-module-required="public,requestdata">
                                             {{ form.markdown('notes', id='field_notes', label=_('Description'), placeholder=_('What type of data is included in this dataset ? For example, "This data is about an assessment in x region"'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                             </div>
 
@@ -491,12 +492,12 @@
                                             <p> Metadata is additional information about your dataset that will make it easier for others to understand and put your data into context. Datasets on HDX must include a set of metadata fields. </p>
                                         </div>
                                         <div class="col-xs-7">
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source" data-module-required="private">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source" data-module-required="private,public,requestdata">
                                             {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['form-group'], attrs={'class':'form-control'}) }}
                                             </div>
 
                                             {% set organisations = h.hdx_organisation_list() %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private"  data-module-broadcast_change="true">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private,public,requestdata"  data-module-broadcast_change="true">
                                             {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
                                             </div>
 
@@ -509,12 +510,12 @@
                                             'data-module-key': 'id',
                                             'data-module-extra-params': 'org=' + selected_org_name,
                                             'class':'form-control' } %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="maintainer" data-module-required="private">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="maintainer" data-module-required="private,public,requestdata">
                                             {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group', 'required'], attrs=maintainer_attrs) }}
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-xs-6" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
+                                                <div class="col-xs-6" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
                                                     {% set original_value = data.dataset_date %}
                                                     {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
                                                     'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
@@ -576,13 +577,13 @@
                                             </div>
 
                                             {% set location_list = h.hdx_location_list() %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" data-module-required="public">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" data-module-required="public,requestdata">
                                             {{ form.select('locations', id='field_locations', label=_('Location'), options=location_list, selected=data.locations, error=errors.locations, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
                                             </div>
 
 
                                             {% set licenses = h.hdx_license_list() %}
-                                            <div class="special-license" data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private" data-module-broadcast_change="true">
+                                            <div class="special-license" data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private,public" data-module-broadcast_change="true">
                                                 {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
                                                 <a href="/about/license" target="_blank" class="license-help">Read more about licenses</a>
                                             </div>
@@ -591,12 +592,12 @@
                                             </div>
 
                                             {% set field_names_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What are the most important fields in the dataset?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="field_names" data-module-required="public">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="field_names" data-module-required="requestdata">
                                             {{ form.input('field_names', id='field_names', label=_('Field names'), value=data.field_names, error=errors.field_names, classes=['control-full', 'form-group', 'field-names-select'], attrs=field_names_attrs) }}
                                             </div>
 
                                             {% set file_types_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What file types does your dataset contain?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="file_types" data-module-required="public">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="file_types" data-module-required="requestdata">
                                             {{ form.input('file_types', id='file_types', label=_('File types'), value=data.file_types, error=errors.file_types, classes=['control-full', 'form-group', 'file-types-select'], attrs=file_types_attrs) }}
                                             </div>
 
@@ -628,7 +629,7 @@
                                               'data-module-placeholder': 'eg. economy, mental health, government',
                                               'class':'form-control choices-orange', 'multiple':'true',
                                               'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" data-module-required="requestdata">
                                             {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group', 'tags-select'], attrs=tag_attrs) }}
                                               <div data-module="hdx_tag_recommender" data-module-tag_input_selector="#field_tag_string"
                                                    data-module-recommended_tag_wrapper_selector="#recommended-tags-wrapper" class="form-group">
