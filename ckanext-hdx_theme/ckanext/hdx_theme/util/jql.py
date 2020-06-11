@@ -33,6 +33,14 @@ class JqlQueryExecutor(object):
         }
 
     def run_query(self, transformer):
+        try:
+            return self._run_query(transformer)
+        except Exception as e:
+            log.error('Ran into problems when getting data from mixpanel. Returning empty dict.')
+            log.error(str(e))
+            return {}
+
+    def _run_query(self, transformer):
         '''
         :param transformer: transforms the request result
         :type transformer: MappingResultTransformer
