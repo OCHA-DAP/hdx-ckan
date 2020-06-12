@@ -3861,9 +3861,6 @@ label.terms-of-service:after {
     width: 40px;
   }
 }
-.mobile-carousel {
-  display: none;
-}
 @media (min-width: 1260px) {
   :not(body.home) {
     background: #1ebfb3;
@@ -3963,6 +3960,9 @@ label.terms-of-service:after {
     display: block;
     min-height: 255px;
     overflow: hidden;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel {
+    display: none;
   }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
     display: flex;
