@@ -176,6 +176,9 @@
   letter-spacing: 0.01em;
   line-height: 24px;
 }
+#incomplete-profile > span {
+  display: none;
+}
 @media (max-width: 375px) {
   .popup.popup-onboarding .content {
     left: 0;
