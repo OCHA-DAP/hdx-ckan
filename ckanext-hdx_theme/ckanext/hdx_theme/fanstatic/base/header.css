@@ -3427,6 +3427,11 @@ ul.list-horizontal li:first-child:before {
   padding: 3px 6px;
   background-color: red;
 }
+@media (max-width: 1024px) {
+  .new-header .global-header .global-header-content .header-user-box .separated-list a.action-red .full-text {
+    display: none;
+  }
+}
 @media (max-width: 768px) {
   .new-header .global-header .global-header-content .header-user-box .separated-list a.action .action-text {
     display: none;
