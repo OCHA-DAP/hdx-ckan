@@ -2,9 +2,7 @@
 @import "../base/mixins";
 @import "_variables";
 
-.mobile-carousel{
-	display: none;
-}
+
 
 @media (min-width: @cut-point-desktop){
   body {
@@ -119,39 +117,12 @@
 					margin-bottom: 30px;
 					position: relative;
 				}
-				@carousel-left-pos: 45px;
-				@carousel-item-width: 215px;
-				@carousel-height: 255px;
+
 				.carousel{
 					display: none;
 					&.mobile-carousel{
-						display: block;
-						min-height: @carousel-height;
-						overflow: hidden;
-						.mobile-carousel-inner{
-							display: flex;
-							left: @carousel-left-pos;
-							position: absolute;
-							.item {
-								margin-right: @carousel-left-pos;
-								width: @carousel-item-width;
-								.graphic{
-									//height: 150px;
-									width: @carousel-item-width;
-									img,
-									iframe{
-										height: 100%;
-										width: 100%;
-									}
-								}
-							}
-						}
-						.carousel-indicators{
-							display: none;
-							li{
-								margin-right: 5px;
-							}
-						}
+            @import "mobile-carousel";
+						.mobile-carousel-style();
 					}
 				}
       }

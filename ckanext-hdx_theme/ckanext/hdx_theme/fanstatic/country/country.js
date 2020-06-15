@@ -241,6 +241,17 @@ function onDataCompletenessExpand() {
   $(".data-item-details").toggle(this.checked);
 }
 
+function mobileTopline() {
+  let searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.has('mobileCarousel')) {
+    let param = searchParams.get('mobileCarousel');
+    if (param === "true"){
+      $(".carousel").hide();
+      $(".mobile-carousel").show();
+    }
+  }
+}
+
 $(document).ready(function() {
     drawMap();
     buildGraphs();
@@ -251,5 +262,5 @@ $(document).ready(function() {
       console.log('after');
       c3ActiveSparklineRedraw();
     });
-
+    mobileTopline();
 });
