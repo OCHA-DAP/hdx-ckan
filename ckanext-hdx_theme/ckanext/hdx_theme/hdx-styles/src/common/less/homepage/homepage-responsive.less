@@ -2,11 +2,13 @@
 @import "../base/mixins";
 @import "_variables";
 
-
+.mobile-carousel{
+	display: none;
+}
 
 @media (min-width: @cut-point-desktop){
   body {
-    :not(&.home) {
+    &.responsive {
       background: @greenColor;
       max-width: @bodySize;
       margin: auto;
@@ -19,19 +21,21 @@
 }
 
 @media (min-width: @cut-point-laptop-m){
-  body nav.new-header.navbar-static-top {
-    .global-header .global-header-bg {
-      margin: 0;
+  body {
+    nav.new-header.navbar-static-top {
+      .global-header .global-header-bg {
+        margin: 0;
+      }
+    }
+    &.responsive {
+      .toolbar {
+        width: @containerRealSize;
+        margin: 0 auto;
+        padding: 0 @gutterSmallSize;
+      }
     }
   }
 
-  body.responsive {
-    .toolbar {
-      width: @containerRealSize;
-      margin: 0 auto;
-      padding: 0 @gutterSmallSize;
-    }
-  }
 }
 
 @media (max-width: @cut-point-laptop-m) {
