@@ -20,7 +20,6 @@ ckantoolkit==0.0.3        # via -r requirements.in
 click==7.1.1              # via -r requirements.in, flask, geomet, rq
 decorator==4.4.2          # via dogpile.cache, pylons, sqlalchemy-migrate
 dnspython==1.16.0         # via email-validator
-docopt==0.4.0             # via mailchimp
 dogpile.cache==0.7.1      # via -r requirements.in
 email_validator==1.0.2    # via -r requirements.in
 fanstatic==0.12           # via -r requirements.in
@@ -36,7 +35,7 @@ ipaddress==1.0.23         # via -r requirements.in
 isodate==0.6.0            # via rdflib
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.2            # via -r requirements.in, flask, flask-babel
-mailchimp==2.0.9          # via -r requirements.in
+mailchimp3==3.0.14        # via -r requirements.in
 mako==1.1.2               # via pylons
 markdown==2.6.7           # via -r requirements.in
 markupsafe==1.1.1         # via jinja2, mako, webhelpers
@@ -66,7 +65,7 @@ redis==3.4.1              # via rq
 repoze.lru==0.7           # via routes
 repoze.who-friendlyform==1.0.8  # via -r requirements.in
 repoze.who==2.3           # via -r requirements.in, repoze.who-friendlyform
-requests==2.23.0          # via -r requirements.in, mailchimp, pysolr
+requests==2.23.0          # via -r requirements.in, mailchimp3, pysolr
 routes==1.13              # via -r requirements.in, pylons
 rq==0.6.0                 # via -r requirements.in
 simplejson==3.10.0        # via -r requirements.in, pylons

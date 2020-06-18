@@ -11,16 +11,10 @@ import logging as logging
 import re
 import urllib2 as urllib2
 
-import ckanext.hdx_theme.util.mail as hdx_mail
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckanext.hdx_users.helpers.tokens as tokens
-import ckanext.hdx_users.helpers.user_extra as ue_helpers
-import ckanext.hdx_users.logic.schema as user_reg_schema
-import ckanext.hdx_users.model as user_model
 import dateutil
-import mailchimp
 import pylons.configuration as configuration
 import requests
+from mailchimp3 import MailChimp
 from pylons import config
 from sqlalchemy.exc import IntegrityError
 
@@ -37,6 +31,12 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.tokens as tokens
+import ckanext.hdx_users.helpers.user_extra as ue_helpers
+import ckanext.hdx_users.logic.schema as user_reg_schema
+import ckanext.hdx_users.model as user_model
 from ckan.common import _, c, g, request, response
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -339,14 +339,14 @@ class ValidationController(ckan.controllers.user.UserController):
                 log.info("Will signup to newsletter: " + signup)
                 m = self._get_mailchimp_api()
                 try:
-                    m.helper.ping()
+                    m.ping.get()
                     list_id = configuration.config.get('hdx.mailchimp.list.newsletter')
                     if (list_id):
-                        email = {
-                            'email': data['email']
-                        }
-                        m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
-                except mailchimp.Error, ex:
+                        m.lists.members.create(list_id, {
+                            'email_address': data['email'],
+                            'status': 'subscribed'
+                        })
+                except Exception as ex:
                     log.error(ex)
                 signup = signup
         return None
@@ -354,14 +354,14 @@ class ValidationController(ckan.controllers.user.UserController):
     def _signup_newsuser(self, data):
         m = self._get_mailchimp_api()
         try:
-            m.helper.ping()
+            m.ping.get()
             list_id = configuration.config.get('hdx.mailchimp.list.newuser')
             if list_id:
-                email = {
-                    'email': data['email']
-                }
-                m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
-        except mailchimp.Error, ex:
+                m.lists.members.create(list_id, {
+                    'email_address': data['email'],
+                    'status': 'subscribed'
+                })
+        except Exception as ex:
             log.error(ex)
 
         return None
@@ -946,7 +946,7 @@ class ValidationController(ckan.controllers.user.UserController):
         return 'success' in res and res['success'] == True
 
     def _get_mailchimp_api(self):
-        return mailchimp.Mailchimp(configuration.config.get('hdx.mailchimp.api.key'))
+        return MailChimp(configuration.config.get('hdx.mailchimp.api.key'))
 
     # moved from login_controller.py
     def _new_login(self, message, page_subtitle, error=None):
