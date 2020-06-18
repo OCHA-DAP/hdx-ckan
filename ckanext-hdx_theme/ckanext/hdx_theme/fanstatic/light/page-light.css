@@ -3867,8 +3867,11 @@ label.terms-of-service:after {
     width: 40px;
   }
 }
+.mobile-carousel {
+  display: none;
+}
 @media (min-width: 1260px) {
-  :not(body.home) {
+  body.responsive {
     background: #1ebfb3;
     max-width: 1260px;
     margin: auto;

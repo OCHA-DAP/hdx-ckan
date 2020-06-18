@@ -101,6 +101,9 @@
 .leaflet-container .leaflet-top-pane {
   pointer-events: none;
 }
+.leaflet-container .leaflet-top {
+  z-index: 999;
+}
 .leaflet-container .leaflet-popup-pane {
   z-index: 10;
 }
