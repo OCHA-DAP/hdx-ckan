@@ -11,6 +11,8 @@ ckan.module('contribute_flow_main', function($, _) {
             var hxlPreviewApi = this.options.hxl_preview_api;
             var requestUrl = window.location.pathname;
             var isNewDataset = null; // Whether we're editing or creating a new dataset
+            // var managePrivateField = this.managePrivateField;
+            // var __this = this;
             var contributeGlobal = {
                 'getDatasetIdPromise': function() {
                     var deferred = new $.Deferred();
@@ -73,8 +75,10 @@ ckan.module('contribute_flow_main', function($, _) {
                                     }
 
                                     contributeGlobal.updateValidationUi(data, status, xhr);
+                                    // contributeGlobal._managePrivateField();
                                     deferred.resolve(contributeGlobal.validateSucceeded(data, status));
                                     moduleLog('Validation finished');
+
                                 }
                             );
 
@@ -83,6 +87,32 @@ ckan.module('contribute_flow_main', function($, _) {
 
 
                     return deferred.promise();
+                },
+                '_managePrivateField': function () {
+                  // var sandbox = this.sandbox;
+                  var privateVal = null;
+                  var privateEl = null;
+                  var privateRadioEls = $("input[name='private']");
+                  for (var i = 0; i < privateRadioEls.length; i++) {
+                    var radioEl = $(privateRadioEls[i]);
+                    if (radioEl.prop('checked')) {
+                      privateVal = radioEl.val();
+                    }
+                    if (radioEl.val() == "true") {
+                      privateEl = radioEl;
+                    }
+                  }
+                  if (privateVal == null) {
+                    privateVal = "false";
+                    // If no checkbox is selected assume it's a private dataset
+                    // this is logic is reflected in the contribute controller as well
+                    privateEl.prop('checked', true);
+                  }
+                  sandbox.publish('hdx-form-validation', {
+                      'type': 'private_changed',
+                      'newValue': privateVal //privateVal == 'false' ? 'public' : 'private'
+                    }
+                  );
                 },
                 'saveDatasetForm': function() {
                     this.controlUserWaitingWidget(true, "Validating...");
@@ -197,6 +227,29 @@ ckan.module('contribute_flow_main', function($, _) {
                         }
                         contributeGlobal.controlUserWaitingWidget(false);
                     }
+                    var privateVal = null;
+                    var privateEl = null;
+                    var privateRadioEls = $("input[name='private']");
+                    for (var i = 0; i < privateRadioEls.length; i++) {
+                      var radioEl = $(privateRadioEls[i]);
+                      if (radioEl.prop('checked')) {
+                        privateVal = radioEl.val();
+                      }
+                      if (radioEl.val() == "true") {
+                        privateEl = radioEl;
+                      }
+                    }
+                    if (privateVal == null) {
+                      privateVal = "false";
+                      // If no checkbox is selected assume it's a private dataset
+                      // this is logic is reflected in the contribute controller as well
+                      privateEl.prop('checked', true);
+                    }
+                    sandbox.publish('hdx-form-validation', {
+                        'type': 'private_changed',
+                        'newValue': privateVal //privateVal == 'false' ? 'public' : 'private'
+                      }
+                    );
                 },
                 'datasetWaitToValidateAndSave': function(data, status) {
                   if (contributeGlobal.validateSucceeded(data, status)) {
