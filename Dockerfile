@@ -70,7 +70,7 @@ RUN apt-get -qq -y update && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
     python setup.py develop && \
     pip install -r requirements.txt && \
-    pip install newrelic && \
+    pip install newrelic==5.12.1.141 && \
     hdxckantool plugins dev && \
     # curl https://codeload.github.com/okfn/ckanext-s3filestore/tar.gz/v0.1.1 -o s3f.tgz && \
     # tar xvzf s3f.tgz && \

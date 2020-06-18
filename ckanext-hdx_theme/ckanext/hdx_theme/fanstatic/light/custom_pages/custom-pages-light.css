@@ -15,7 +15,7 @@
   transition: height 1s;
 }
 .custom-page-light .section-body .fold.closed {
-  height: 70px !important;
+  height: 175px !important;
 }
 .custom-page-light .section-body .section-unfold {
   position: absolute;
@@ -25,8 +25,8 @@
   width: 100%;
 }
 .custom-page-light .section-body .section-unfold .overlay {
-  padding: 5px 10px;
-  background-color: rgba(200, 200, 200, 0.7);
+  padding: 5px 15px;
+  background-color: #edf6fd;
   display: flex;
   justify-content: space-between;
 }

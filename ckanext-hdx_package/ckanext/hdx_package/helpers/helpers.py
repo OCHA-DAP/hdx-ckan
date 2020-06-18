@@ -6,10 +6,10 @@ import urlparse
 import ckanext.hdx_package.helpers.custom_validator as vd
 from ckanext.hdx_package.exceptions import NoOrganization
 from ckanext.hdx_package.helpers.caching import cached_group_iso_to_title
+from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 from pylons import config
 
-import ckan.authz as new_authz
 import ckan.lib.activity_streams as activity_streams
 import ckan.lib.base as base
 import ckan.lib.helpers as h
@@ -488,3 +488,9 @@ def hdx_get_due_overdue_date(dataset_dict, type='due', format='%b %-d %Y'):
     else:
         return None
 
+
+def hdx_render_resource_updated_date(resource_dict, package_dict):
+    if package_dict.get('data_update_frequency') == UPDATE_FREQ_LIVE:
+        return 'Live'
+    else:
+        return h.render_datetime(resource_dict.get('last_modified'))

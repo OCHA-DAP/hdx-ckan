@@ -8,7 +8,7 @@
 
 @media (min-width: @cut-point-desktop){
   body {
-    :not(&.home) {
+    &.responsive {
       background: @greenColor;
       max-width: @bodySize;
       margin: auto;
@@ -21,19 +21,21 @@
 }
 
 @media (min-width: @cut-point-laptop-m){
-  body nav.new-header.navbar-static-top {
-    .global-header .global-header-bg {
-      margin: 0;
+  body {
+    nav.new-header.navbar-static-top {
+      .global-header .global-header-bg {
+        margin: 0;
+      }
+    }
+    &.responsive {
+      .toolbar {
+        width: @containerRealSize;
+        margin: 0 auto;
+        padding: 0 @gutterSmallSize;
+      }
     }
   }
 
-  body.responsive {
-    .toolbar {
-      width: @containerRealSize;
-      margin: 0 auto;
-      padding: 0 @gutterSmallSize;
-    }
-  }
 }
 
 @media (max-width: @cut-point-laptop-m) {
@@ -119,39 +121,12 @@
 					margin-bottom: 30px;
 					position: relative;
 				}
-				@carousel-left-pos: 45px;
-				@carousel-item-width: 215px;
-				@carousel-height: 255px;
+
 				.carousel{
 					display: none;
 					&.mobile-carousel{
-						display: block;
-						min-height: @carousel-height;
-						overflow: hidden;
-						.mobile-carousel-inner{
-							display: flex;
-							left: @carousel-left-pos;
-							position: absolute;
-							.item {
-								margin-right: @carousel-left-pos;
-								width: @carousel-item-width;
-								.graphic{
-									//height: 150px;
-									width: @carousel-item-width;
-									img,
-									iframe{
-										height: 100%;
-										width: 100%;
-									}
-								}
-							}
-						}
-						.carousel-indicators{
-							display: none;
-							li{
-								margin-right: 5px;
-							}
-						}
+            @import "mobile-carousel";
+						.mobile-carousel-style();
 					}
 				}
       }

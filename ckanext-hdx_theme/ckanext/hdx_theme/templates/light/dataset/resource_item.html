@@ -38,7 +38,7 @@
       <div class="content">
         <div class="update-date">
           {{ _('Updated') }}:
-          {{ h.render_datetime(res.last_modified) }}
+          {{ h.hdx_render_resource_updated_date(res, pkg) }}
         </div>
         <div class="description">
           {% if res.description %}
