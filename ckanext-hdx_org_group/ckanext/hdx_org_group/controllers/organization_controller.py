@@ -319,6 +319,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                    'user': c.user or c.author, 'for_view': True}
 
         org_id = org_meta.org_dict['id']
+        org_name = org_meta.org_dict.get('name')
         pageviews_per_week_dict = jql.pageviews_per_organization_per_week_last_24_weeks_cached().get(
             org_id, {})
         downloads_per_week_dict = jql.downloads_per_organization_per_week_last_24_weeks_cached().get(
@@ -334,7 +335,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             })
 
         stats_top_dataset_downloads, total_downloads_topline, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name = \
-            self._stats_top_dataset_downloads(org_id)
+            self._stats_top_dataset_downloads(org_id, org_name)
 
         downloaders_topline = jql.downloads_per_organization_last_30_days_cached().get(org_id, 0)
         viewers_topline = jql.pageviews_per_organization_last_30_days_cached().get(org_id, 0)
@@ -376,18 +377,16 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             result['units'] = ''
         return result
 
-    def _stats_top_dataset_downloads(self, org_id):
+    def _stats_top_dataset_downloads(self, org_id, org_name):
         from ckan.lib.search.query import make_connection
         datasets_map = jql.downloads_per_organization_per_dataset_last_24_weeks_cached().get(
             org_id, {})
         total_downloads = sum((item.get('value') for item in datasets_map.values()))
 
-        context = {'model': model, 'user': c.user or c.author,
-                   'auth_user_obj': c.userobj}
         data_dict = {
             'q': '*:*',
             'fl': 'id name title',
-            'fq': 'capacity:"public" id:({})'.format(' OR '.join(datasets_map.keys())),
+            'fq': 'capacity:"public" organization:{}'.format(org_name),
             'rows': len(datasets_map),
             'start': 0,
         }
@@ -398,13 +397,17 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 conn = make_connection(decode_dates=False)
                 search_result = conn.search(**data_dict)
                 dataseta_meta_map = {
-                d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
-                for d in search_result.docs}
+                    d['id']: {
+                        'title': d.get('title'),
+                        'name': d.get('name'),
+                    }
+                    for d in search_result.docs
+                }
                 ret = [
                     {
                         'dataset_id': d.get('dataset_id'),
                         'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
-                        'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
+                        'url': h.url_for('dataset_read', id=dataseta_meta_map.get(d.get('dataset_id'), {}).get('name')),
                         'value': d.get('value'),
                         'total': total_downloads,
                         # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
