@@ -169,6 +169,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                                'QuickLinksCustomSettingsController',
                     action='show')
 
+        map.connect('package_links_settings', '/ckan-admin/packagelinks/show',
+                    controller='ckanext.hdx_theme.controllers.package_links_custom_settings:'
+                               'PackageLinksCustomSettingsController',
+                    action='show')
+
         map.connect('pages_show', '/ckan-admin/pages/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show_pages')
 
@@ -184,10 +189,19 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     action='delete')
 
         map.connect('update_quick_links_settings', '/ckan-admin/quick-links/update',
-                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController', action='update')
+                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController',
+                    action='update')
 
         map.connect('delete_quick_links_settings', '/ckan-admin/quick-links/delete/{id}',
                     controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController',
+                    action='delete')
+
+        map.connect('update_package_links_settings', '/ckan-admin/package-links/update',
+                    controller='ckanext.hdx_theme.controllers.package_links_custom_settings:PackageLinksCustomSettingsController',
+                    action='update')
+
+        map.connect('delete_package_links_settings', '/ckan-admin/package-links/delete/{id}',
+                    controller='ckanext.hdx_theme.controllers.package_links_custom_settings:PackageLinksCustomSettingsController',
                     action='delete')
 
         map.connect('image_serve', '/image/{label}',
@@ -295,7 +309,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_organization_statistics': hdx_actions.hdx_organization_statistics,
             'hdx_quick_links_settings_show': hdx_actions.hdx_quick_links_settings_show,
             'hdx_quick_links_settings_update': hdx_actions.hdx_quick_links_settings_update,
-
+            'hdx_package_links_settings_show': hdx_actions.package_links_settings_show,
+            'hdx_package_links_settings_update': hdx_actions.package_links_settings_update,
+            'hdx_package_links_by_id_list': hdx_actions.package_links_by_id_list,
         }
 
     def get_auth_functions(self):
