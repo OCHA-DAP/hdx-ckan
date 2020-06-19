@@ -158,7 +158,7 @@ formatter = generic
 
 [handler_file]
 class = FileHandler
-args = ('/var/log/ckan/ckan.pain.log','a')
+args = ('/var/log/ckan/ckan.log','a')
 level = NOTSET
 formatter = generic
 
