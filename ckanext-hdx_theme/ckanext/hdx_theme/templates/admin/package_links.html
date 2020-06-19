@@ -70,7 +70,7 @@
                               </div>
                             </div>
                             <div class="control-group form-group control-full control-large hdx-section-field">
-                              <label class="control-label" for="package_list">Title</label>
+                              <label class="control-label" for="package_list">Datasets to highlight</label>
                               <div class="controls ">
                                 <textarea id="package_list" rows="10" name="package_list" placeholder="dataset1,dataset2,..." class="form-control"><%= package_list %></textarea>
                                 <span class="error-block"></span>
@@ -120,11 +120,10 @@
           <p>This setting is to configure the package links shown under the main navigation on HDX.</p>
           <p>A package link menu item has the following configuration fields:</p>
           <p><strong>Title:</strong> This is the title of menu item that will be visible (ie. Common Operational Datasets)</p>
-          <p><strong>URL:</strong> Package link menu item URL (ie. https://data.humdata.org/dashboards/cod)</p>
+          <p><strong>URL:</strong> Vizualization url (ie. https://data.humdata.org/visualization/covid19-humanitarian-operations/)</p>
           <p><strong>Open in a new tab:</strong> If the package link URL is an internal page on HDX, set this value to No. </p>
+          <p><strong>Datasets to highlight:</strong> Add a comma-separated list of dataset names (last part of the dataset url) for any hdx dataset that is included in the visual. When the dataset page for one of those datasets is displayed, a link will be added to this visual.</p>
           <p>*Items can be dragged to swap its order of display in the navigation dropdown</p>
-          <p>If you need to archive package links, go to
-            <a href="/ckan-admin/pages/show" style="color:#007CE0;text-decoration: none">Event/Custom page setting</a></p>
         {% endtrans %}
       {% endblock %}
     </div>
