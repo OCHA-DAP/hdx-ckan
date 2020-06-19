@@ -761,6 +761,10 @@ class DatasetController(PackageController):
         log.info('Reading dataset {}: finding custom page list for this dataset'.format(c.pkg_dict.get('name')))
         c.pkg_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, c.pkg_dict)
 
+        #links to vizualizations
+        log.info('Reading dataset {}: finding links list for this dataset'.format(c.pkg_dict.get('name')))
+        c.pkg_dict['links_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': c.pkg_dict.get('name')})
+
         log.info('Reading dataset {}: deciding on the dataset visualization/preview'.format(c.pkg_dict.get('name')))
         _dataset_preview = None
         if 'resources' in c.pkg_dict:
