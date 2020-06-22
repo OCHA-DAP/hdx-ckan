@@ -132,6 +132,17 @@
             <p class="no-answer-found mTop30">
                 <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
             </p>
+            <p>
+              <div class="search-box">
+                <div class="search-box-title">Search FAQ:</div>
+                <input id="faq-search" type="text">
+                <div id="search-no-results" style="display: none;">No results</div>
+                <div id="search-results" style="display: none;">
+                  <div>Result <span id="faq-search-current"></span> / <span id="faq-search-total"></span></div>
+                  <div><a id="faq-search-prev" href>« Prev</a> - <a id="faq-search-next" href>Next »</a></div>
+                </div>
+              </div>
+            </p>
         </div>
     </div>
 {% endblock %}
@@ -139,6 +150,7 @@
 
 {%- block styles %}
     {{ super() }}
+    {% resource 'hdx_theme/jquery.highlight' %}
     {% resource 'hdx_theme/faq/faq.css' %}
     {% resource 'hdx_theme/faq/faq.js' %}
 {% endblock %}

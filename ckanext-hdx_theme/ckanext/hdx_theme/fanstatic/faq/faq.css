@@ -25,6 +25,25 @@
 .hdx-faq-sidebar .no-answer-found a:hover {
   color: #007CE0;
 }
+.hdx-faq-sidebar .search-box .search-box-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+}
+.hdx-faq-sidebar .search-box input {
+  width: 190px;
+}
+#search-results {
+  display: flex;
+  justify-content: space-between;
+}
+.highlight {
+  background-color: #fde9e8;
+}
+.highlight.current {
+  background-color: #f8a7a1;
+}
 .hdx-wrapper .section-flag {
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 18px;

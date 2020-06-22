@@ -113,6 +113,47 @@
         iframe.focus();
     }
 
+    function _resetSearch($panel) {
+      $panel.find("span.highlight").closest(".faq-panel-collapse").collapse('hide');
+      $panel.unhighlight();
+      $("#search-no-results").hide();
+      $("#search-results").hide();
+    }
+
+    function updateSearch() {
+      const text = $(this).val();
+      console.log(text);
+      const $panel = $(".panel");
+      _resetSearch($panel);
+      $panel.highlight(text);
+      const $results = $panel.find("span.highlight");
+      if ($results.length > 0) {
+        $results.closest(".faq-panel-collapse").collapse('show');
+        $results.first().get(0).scrollIntoView({ behavior: 'smooth' });
+        $("#faq-search-current").text('0');
+        $("#faq-search-total").text($results.length);
+        incrementCurrentResult(1)();
+        $("#search-results").show();
+      } else {
+        $("#search-no-results").show();
+      }
+    }
+
+    function incrementCurrentResult(val) {
+      return () => {
+        $("span.highlight.current").removeClass("current");
+        let result = parseInt($("#faq-search-current").text());
+        let total = parseInt($("#faq-search-total").text());
+        result += val;
+        result = (result < 1 ? total : (result > total ? 1 : result));
+        $("#faq-search-current").text(result);
+        const current = $(".panel").find("span.highlight").get(result - 1);
+        $(current).addClass("current");
+        current.scrollIntoView({ behavior: 'smooth' });
+        return false;
+      }
+    }
+
     $(document).ready(function(){
         if (location.hash) {
             if (location.hash.endsWith("-a")) {
@@ -124,6 +165,10 @@
                 $(location.hash + " ~ .panel-collapse").collapse('show');
             }
         }
+
+        $("#faq-search").change(updateSearch);
+        $("#faq-search-prev").click(incrementCurrentResult(-1));
+        $("#faq-search-next").click(incrementCurrentResult(1));
 
         // $("#learn-add-viz-dataset-link").click(function () {
         //   showPresentationModal("#learn-add-viz-dataset");
