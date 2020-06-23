@@ -331,6 +331,7 @@ def hdx_carousel_settings_show(context, data_dict):
 
     return carousel_settings
 
+
 @logic.side_effect_free
 def hdx_quick_links_settings_show(context, data_dict):
     '''
@@ -348,6 +349,25 @@ def hdx_quick_links_settings_show(context, data_dict):
 
     return quick_links_settings
 
+
+@logic.side_effect_free
+def package_links_settings_show(context, data_dict):
+    '''
+    :returns: list of dictionaries representing the setting for each package_links item. Returns default if nothing is in db.
+    :rtype: list of dict
+    '''
+
+    package_links_settings = []
+    setting_value_json = model.get_system_info('hdx.package_links.config', config.get('hdx.package_links.config'))
+    if setting_value_json:
+        try:
+            package_links_settings = json.loads(setting_value_json)
+        except TypeError as e:
+            log.warn('The "hdx.package_links.config" setting is not a proper json string')
+
+    return package_links_settings
+
+
 def hdx_carousel_settings_update(context, data_dict):
     '''
 
@@ -364,6 +384,7 @@ def hdx_carousel_settings_update(context, data_dict):
     model.set_system_info('hdx.carousel.config', settings_json)
     return settings_json
 
+
 def hdx_quick_links_settings_update(context, data_dict):
     '''
 
@@ -379,6 +400,47 @@ def hdx_quick_links_settings_update(context, data_dict):
     settings_json = json.dumps(settings)
     model.set_system_info('hdx.quick_links.config', settings_json)
     return settings_json
+
+
+def package_links_settings_update(context, data_dict):
+    '''
+
+    :param 'hdx.package_links.config': a list with the package_links settings
+    :type 'hdx.package_links.config': list
+    :return: The JSON string that is the value of the new 'hdx.package_links.config'
+    :rtype: str
+    '''
+
+    logic.check_access('hdx_quick_links_update', context, {})
+
+    settings = data_dict.get('hdx.package_links.config')
+    settings_json = json.dumps(settings)
+    model.set_system_info('hdx.package_links.config', settings_json)
+    return settings_json
+
+
+@logic.side_effect_free
+def package_links_by_id_list(context, data_dict):
+    '''
+    :returns: list of dictionaries representing the settings for a package_id
+    :rtype: list of dict
+    '''
+
+    package_links_settings = []
+    if data_dict.get('id'):
+        setting_value_json = model.get_system_info('hdx.package_links.config', config.get('hdx.package_links.config'))
+        if setting_value_json:
+            try:
+                _all_pls = json.loads(setting_value_json)
+                for item in _all_pls:
+                    if item.get('package_list'):
+                        pkg_list = item.get('package_list').split(',')
+                        if pkg_list and data_dict.get('id') in pkg_list:
+                            package_links_settings.append(item)
+            except TypeError as e:
+                log.warn('The "hdx.package_links.config" setting is not a proper json string')
+    return package_links_settings
+
 
 def hdx_organization_list_for_user(context, data_dict):
     '''Return the organizations that the user has a given permission for.
