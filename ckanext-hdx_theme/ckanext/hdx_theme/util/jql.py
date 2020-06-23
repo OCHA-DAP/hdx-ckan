@@ -175,6 +175,7 @@ class MultipleValueMandatoryMappingResultTransformer(MappingResultTransformer):
 
 @dogpile_jql_region.cache_on_arguments()
 def downloads_per_dataset_all_cached():
+    log.info('Creating cache for downloads_per_dataset_all_cached()')
     return downloads_per_dataset()
 
 
@@ -187,6 +188,7 @@ def downloads_per_dataset(hours_since_now=None):
 
 @dogpile_jql_region.cache_on_arguments()
 def downloads_per_dataset_per_week_last_24_weeks_cached():
+    log.info('Creating cache for downloads_per_dataset_per_week_last_24_weeks_cached()')
     return downloads_per_dataset_per_week(24)
 
 
@@ -204,6 +206,7 @@ def downloads_per_dataset_per_week(weeks=24):
 
 @dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_last_30_days_cached():
+    log.info('Creating cache for downloads_per_organization_last_30_days_cached()')
     return downloads_per_organization(30)
 
 
@@ -216,6 +219,7 @@ def downloads_per_organization(days_since_now=30):
 
 @dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_per_week_last_24_weeks_cached():
+    log.info('Creating cache for downloads_per_organization_per_week_last_24_weeks_cached()')
     return downloads_per_organization_per_week(24)
 
 
@@ -233,6 +237,7 @@ def downloads_per_organization_per_week(weeks=24):
 
 @dogpile_jql_region.cache_on_arguments()
 def downloads_per_organization_per_dataset_last_24_weeks_cached():
+    log.info('Creating cache for downloads_per_organization_per_dataset_last_24_weeks_cached()')
     return downloads_per_organization_per_dataset(24)
 
 
@@ -248,6 +253,7 @@ def downloads_per_organization_per_dataset(weeks=24):
 
 @dogpile_jql_region.cache_on_arguments()
 def pageviews_per_dataset_last_14_days_cached():
+    log.info('Creating cache for pageviews_per_dataset_last_14_days_cached()')
     hours = 14 * 24
     return pageviews_per_dataset(hours)
 
@@ -261,6 +267,7 @@ def pageviews_per_dataset(hours_since_now=None):
 
 @dogpile_jql_region.cache_on_arguments()
 def pageviews_per_organization_last_30_days_cached():
+    log.info('Creating cache for pageviews_per_organization_last_30_days_cached()')
     return pageviews_per_organization(30)
 
 
@@ -273,6 +280,7 @@ def pageviews_per_organization(days_since_now=30):
 
 @dogpile_jql_region.cache_on_arguments()
 def pageviews_per_organization_per_week_last_24_weeks_cached():
+    log.info('Creating cache for pageviews_per_organization_per_week_last_24_weeks_cached()')
     return pageviews_per_organization_per_week(24)
 
 
