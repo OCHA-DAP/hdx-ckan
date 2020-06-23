@@ -1,4 +1,5 @@
 @import "../base/variables";
+@import "../base/mixins";
 
 .container .twoColumnBackground{
   background-image: none;
@@ -38,6 +39,26 @@
     a:hover {
       color: @blueColor;
     }
+  }
+
+  .search-box {
+    .search-box-title {
+      .gothamBoldFont(14px);
+      color: @darkGrayColor;
+    }
+    input {
+      width: 190px;
+    }
+  }
+}
+#search-results {
+  display: flex;
+  justify-content: space-between;
+}
+.highlight {
+  background-color: @extraLightOrangeColor;
+  &.current {
+    background-color: @lightOrangeColor;
   }
 }
 
