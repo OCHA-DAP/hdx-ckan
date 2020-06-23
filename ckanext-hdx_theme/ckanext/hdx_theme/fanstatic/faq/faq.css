@@ -37,6 +37,7 @@
 #search-results {
   display: flex;
   justify-content: space-between;
+  max-width: 190px;
 }
 .highlight {
   background-color: #fde9e8;
