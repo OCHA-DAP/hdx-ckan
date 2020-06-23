@@ -39,6 +39,7 @@ def read(id):
     dataset_dict = get_action('package_show')(context, data_dict)
     analytics_dict = _compute_analytics(dataset_dict)
     dataset_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, dataset_dict)
+    dataset_dict['link_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
 
     template_data = {
         'dataset_dict': dataset_dict,

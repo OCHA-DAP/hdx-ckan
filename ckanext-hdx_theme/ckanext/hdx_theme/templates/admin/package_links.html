@@ -1,0 +1,137 @@
+{% import 'macros/autoform.html' as autoform %}
+{% import 'macros/form.html' as form %}
+
+
+{% extends "admin/base.html" %}
+
+{% block primary_content_module_margin %}{% endblock %}
+{% block primary_content_inner %}
+  <div id="package_links-config-main" data-module="hdx_custom_pages" class="paddingLeftHack">
+    <div id="package_links-config-form" class="cp-form hdx-form">
+      <div class="paddingRowHack">
+        <div class="paddingLeftHack paddingRightHack">
+          <div class="row form-section">
+            <div class="col-xs-12">
+            </div>
+          </div>
+          <div class="row form-section">
+            <div class="col-xs-12">
+              <div id="package_links-config-saved-data" style="display: none;">
+                {{ data['hdx.package_links.config'] }}
+              </div>
+              <script type="text/template" id="package_links-item-tpl">
+                <div class="<%= (tab_open?'col-xs-12':'col-xs-4') %>">
+                  <div class="row package_links-item">
+                    <div class="col-xs-12">
+                      <div class="package_links-item-header">
+                        <div class="row">
+                          <div class="drag-handle pull-left">
+                            Package Links Item <%= order %>
+                            <input type="hidden" name="id" value="<%= id %>">
+                          </div>
+                          <div class="pull-right">
+                            <a href="#" class="delete-item"><i class="glyphicon glyphicon-trash"></i></a>
+                            <a href="#" class="toggle-tab-state"><i
+                                    class="glyphicon <%= (tab_open?'glyphicon-chevron-down':'glyphicon-chevron-up') %> "></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 <%= (tab_open?'':'mini-package_links-item') %>">
+                      <div class="package_links-item-content">
+                        <div class="row">
+                          <div class="col-xs-8 <%= (tab_open?'':'hidden') %>">
+                            <div class="control-group form-group control-full control-large hdx-section-field">
+                              <label class="control-label" for="title">Title</label>
+                              <div class="controls ">
+                                <input id="title" type="text" name="title" value="<%= title %>" placeholder="Title"
+                                       class="form-control">
+                                <span class="error-block"></span>
+                              </div>
+                            </div>
+                            <div class="control-group form-group control-full control-large hdx-section-field">
+                              <label class="control-label" for="url_field">URL</label>
+                              <div class="controls ">
+                                <input id="url_field" type="text" name="url" value="<%= url %>"
+                                       placeholder="eg. https://... " class="form-control">
+                                <span class="error-block"></span>
+                              </div>
+                            </div>
+                            <div class="control-group form-group control-full control-large hdx-section-field">
+                              <label class="control-label" for="new_window">OPEN IN A NEW TAB</label>
+                              <div class="controls ">
+                                <select name="newTab" id="new_window" class="form-control">
+                                  <option value="true"
+                                  <%= (newTab.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                  <option value="false"
+                                  <%= (newTab.toString()==="true"?'':'selected="selected"') %>>No</option>
+                                </select>
+                                <span class="error-block"></span>
+                              </div>
+                            </div>
+                            <div class="control-group form-group control-full control-large hdx-section-field">
+                              <label class="control-label" for="package_list">Datasets to highlight</label>
+                              <div class="controls ">
+                                <textarea id="package_list" rows="10" name="package_list" placeholder="dataset1,dataset2,..." class="form-control"><%= package_list %></textarea>
+                                <span class="error-block"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </script>
+
+              <div id="package_links-item-collection" class="row">
+
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-bottom: 30px;">
+            <div class="col-xs-12">
+              <button id="add-package_links-item" class="btn pull-left"> + New Item</button>
+              <a href="#" class="btn btn-primary pull-right" id="save-package_links">Save</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      {{ _('Package Links Menu Setting') }}
+    </h2>
+    <div class="module-content">
+      {% block admin_form_help %}
+        {% set about_url = h.url_for(controller='home', action='about') %}
+        {% set home_url = h.url_for(controller='home', action='index') %}
+        {% set docs_url = "https://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
+        {% trans %}
+          <p>This setting is to configure the package links shown under the main navigation on HDX.</p>
+          <p>A package link menu item has the following configuration fields:</p>
+          <p><strong>Title:</strong> This is the title of menu item that will be visible (ie. Common Operational Datasets)</p>
+          <p><strong>URL:</strong> Vizualization url (ie. https://data.humdata.org/visualization/covid19-humanitarian-operations/)</p>
+          <p><strong>Open in a new tab:</strong> If the package link URL is an internal page on HDX, set this value to No. </p>
+          <p><strong>Datasets to highlight:</strong> Add a comma-separated list of dataset names (last part of the dataset url) for any hdx dataset that is included in the visual. When the dataset page for one of those datasets is displayed, a link will be added to this visual.</p>
+          <p>*Items can be dragged to swap its order of display in the navigation dropdown</p>
+        {% endtrans %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/custom-pages' %}
+  {% resource 'hdx_theme/package-links-admin' %}
+{% endblock %}

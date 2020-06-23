@@ -35,10 +35,18 @@
       <div class="col-xs-12">
         <h1>{{ dataset_dict.title }}</h1>
         {%  if pkg.page_list %}
-          <div class="itemSubTitle">
+          <div class="itemSubTitle" style="display: flex;">
             This dataset is part of
             {% for page in pkg.page_list %}
-              <a href="/{{ page.type }}/{{ page.name }}">{{ page.title }}</a>
+              <a href="/{{ page.type }}/{{ page.name }}">&nbsp;{{ page.title }}&nbsp;</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {%  if pkg.link_list %}
+          <div class="itemSubTitle" style="display: flex;">
+            This dataset can be viewed in the
+            {% for link in pkg.link_list %}
+              <a href="{{ link.url }}" target="{% if link.newTab == True %}_blank{% else %}_self{% endif %}">&nbsp;{{ link.title }}&nbsp;</a>
             {% endfor %}
           </div>
         {% endif %}
