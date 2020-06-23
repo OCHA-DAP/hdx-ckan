@@ -860,6 +860,9 @@ $(function(){
                 var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=requestdata]');
                 privacyPublicRadioBtn.click();
                 this._prepareFormForMetadataOnly({isEdit: false}, true);
+                var req_type_notification = $('#requestdata_type_notification');
+                req_type_notification.addClass('hdx-invisible-element');
+
             }.bind(this));
 
             var isMetadataOnly = $('input[name=is_requestdata_type][value=true]');
@@ -927,6 +930,8 @@ $(function(){
             var selectFileTypes = $('.file-types-select');
             var selectNumOfRows = $('.num-of-rows-select');
             var isEdit = data.isEdit;
+            var req_type_notification = $('#requestdata_type_notification');
+
 
             // // We set the type so that the right schema is used in the backend
             // formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
@@ -963,6 +968,7 @@ $(function(){
               selectFieldNames.show();
               selectFileTypes.show();
               selectNumOfRows.show();
+              req_type_notification.removeClass('hdx-invisible-element');
             }
             else{
               // Resources are not required for metadata-only datasets
@@ -995,6 +1001,7 @@ $(function(){
               selectFieldNames.hide();
               selectFileTypes.hide();
               selectNumOfRows.hide();
+              req_type_notification.addClass('hdx-invisible-element');
             }
 
 

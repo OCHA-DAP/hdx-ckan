@@ -339,6 +339,9 @@
                                                         <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
                                                     </label>
                                                 </div>
+                                                <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
+                                                  <p>{{ _('You are switching your dataset\'s privacy setting to "By request - HDX Connect". All existing resources will be deleted when you submit this change.') }}</p>
+                                                </div>
                                                 <div class="radio">
                                                     <label>
                                                         <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
