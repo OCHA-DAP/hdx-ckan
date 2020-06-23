@@ -454,6 +454,7 @@ $(function(){
                 error_block.html(error_text);
                 var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
                 parent_el.addClass('error');
+                parent_el.closest('.source-file').addClass('error');
             }.bind(this));
 
             //this._setUpForSourceType('source-url');
