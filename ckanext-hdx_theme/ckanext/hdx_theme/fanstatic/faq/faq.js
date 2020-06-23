@@ -113,6 +113,8 @@
         iframe.focus();
     }
 
+
+    const SEARCH_BASE_SELECTOR='.wrapper-primary';
     function _resetSearch($panel) {
       $panel.find("span.highlight").closest(".faq-panel-collapse").collapse('hide');
       $panel.unhighlight();
@@ -123,7 +125,7 @@
     function updateSearch() {
       const text = $(this).val();
       console.log(text);
-      const $panel = $(".panel");
+      const $panel = $(SEARCH_BASE_SELECTOR);
       _resetSearch($panel);
       $panel.highlight(text);
       const $results = $panel.find("span.highlight");
@@ -147,7 +149,7 @@
         result += val;
         result = (result < 1 ? total : (result > total ? 1 : result));
         $("#faq-search-current").text(result);
-        const current = $(".panel").find("span.highlight").get(result - 1);
+        const current = $(SEARCH_BASE_SELECTOR).find("span.highlight").get(result - 1);
         $(current).addClass("current");
         current.scrollIntoView({ behavior: 'smooth' });
         return false;

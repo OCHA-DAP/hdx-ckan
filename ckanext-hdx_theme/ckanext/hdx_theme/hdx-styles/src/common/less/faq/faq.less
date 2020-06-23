@@ -13,6 +13,7 @@
   letter-spacing: 0.01em;
 }
 
+@faqSearchWidth: 190px;
 .hdx-faq-sidebar {
   &.sticky {
     position: fixed;
@@ -47,13 +48,14 @@
       color: @darkGrayColor;
     }
     input {
-      width: 190px;
+      width: @faqSearchWidth;
     }
   }
 }
 #search-results {
   display: flex;
   justify-content: space-between;
+  max-width: @faqSearchWidth;
 }
 .highlight {
   background-color: @extraLightOrangeColor;
