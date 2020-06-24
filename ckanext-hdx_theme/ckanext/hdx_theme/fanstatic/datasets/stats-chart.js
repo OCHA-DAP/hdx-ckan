@@ -1,4 +1,24 @@
 function setupDatasetDownloads(dataDivId, placeholderDivId, extraConfigs){
+        /**
+         *
+         * @param list {[number]}
+         * @returns {boolean}
+         */
+        var sortedListHasDuplicatesWhenRoundUp = function (list) {
+          var hasDuplicates = false;
+          if (list && list.length > 1) {
+            hasDuplicates = list
+              .map(function(item) {
+                return Math.ceil(item);
+              })
+              .some(function (item, idx, all) {
+                if (idx >= 1 && item === all[idx-1]) {
+                  return true;
+                }
+            });
+          }
+          return hasDuplicates;
+        };
         var chartData = JSON.parse($(dataDivId).html());
         var monthsSet = {};
         if (!extraConfigs)
@@ -70,7 +90,7 @@ function setupDatasetDownloads(dataDivId, placeholderDivId, extraConfigs){
                     min: 0,
                     tick: {
                         count: tickValues.length,
-                        format: d3.format('.0f'),
+                        format: sortedListHasDuplicatesWhenRoundUp(tickValues) ? null : d3.format('.0f'),
                         values: tickValues
                     }
                 }
