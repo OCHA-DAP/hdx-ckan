@@ -1,0 +1,40 @@
+@import "../base/variables";
+@import "../base/mixins";
+@import "_variables";
+
+.mobile-carousel{
+	display: none;
+}
+
+@carousel-left-pos: 45px;
+@carousel-item-width: 215px;
+@carousel-height: 255px;
+.mobile-carousel-style(@carousel-left-pos: 45px, @carousel-item-width: 215px, @carousel-height: 255px) {
+  display: block;
+  min-height: @carousel-height;
+  overflow: hidden;
+  .mobile-carousel-inner{
+    display: flex;
+    left: @carousel-left-pos;
+    position: absolute;
+    .item {
+      margin-right: @carousel-left-pos;
+      width: @carousel-item-width;
+      .graphic{
+        //height: 150px;
+        width: @carousel-item-width;
+        img,
+        iframe{
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+  }
+  .carousel-indicators{
+    display: none;
+    li{
+      margin-right: 5px;
+    }
+  }
+}

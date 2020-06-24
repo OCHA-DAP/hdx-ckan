@@ -59,6 +59,10 @@ def resource_update(context, data_dict):
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
+
+        # we need to overwrite size field (not just setting it to None or pop) otherwise
+        # ckan.lib.dictization.model_save.resource_dict_save() keeps the old value
+        data_dict['size'] = 0
     else:
         try:
             if len(request.files) > 0:

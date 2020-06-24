@@ -45,6 +45,18 @@ lunr_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search/lunr
 [ -d $lunr_dir ] || mkdir -p $lunr_dir
 [ -f $lunr_dir/feature-index.js ] || touch $lunr_dir/feature-index.js
 
+# OPS-6700 -> to be added in the ckan repository
+# make sure less compile can write to his folder AND the tmp folder
+less_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated
+less_tmp_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp
+less_tmp_org_dir=$less_tmp_dir/organization
+
+[ -d $less_dir ] || mkdir -p $less_dir
+[ -d $less_tmp_org_dir ] || mkdir -p $less_tmp_org_dir
+
+chown -R www-data $less_dir
+chown -R www-data $less_tmp_dir
+
 # make sure cache dir permissions are correct
 #chown -R www-data:www-data ${HDX_CACHE_DIR}
 

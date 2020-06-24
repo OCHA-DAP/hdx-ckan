@@ -13,7 +13,7 @@ function mobileToolTabChange(){
 }
 
 function initMobileCarousel(){
-    var carousel = document.getElementById('mobileCarousel');
+    var carousel = $(".mobile-carousel")[0];
     var hammer = new Hammer(carousel);
     var itemW = $(carousel).find('.item').outerWidth(true);
     var numItems = $(carousel).find('.item').length;
@@ -39,7 +39,7 @@ function initMobileCarousel(){
 }
 
 function initMobileCarouselPagination(){
-    var carousel = document.getElementById('mobileCarousel');
+    var carousel = $(".mobile-carousel")[0];
     $(carousel).find('.carousel-indicators').html('');
     for (var i=0; i<$(carousel).find('.item').length; i++){
         $(carousel).find('.carousel-indicators').append('<li></li>');
@@ -49,7 +49,7 @@ function initMobileCarouselPagination(){
 }
 
 function setMobileCarouselPagination(id){
-    var carousel = document.getElementById('mobileCarousel');
+    var carousel = $(".mobile-carousel")[0];
     $(carousel).find('.carousel-indicators li').removeClass('active');
     $(carousel).find('.carousel-indicators li:nth-child('+id+')').addClass('active');
 

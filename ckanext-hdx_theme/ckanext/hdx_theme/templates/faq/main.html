@@ -132,6 +132,9 @@
             <p class="no-answer-found mTop30">
                 <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
             </p>
+            <p>
+              {% snippet 'faq/search.html' %}
+            </p>
         </div>
     </div>
 {% endblock %}

@@ -49,8 +49,15 @@ function main() {{
 '''
 
 DOWNLOADS_PER_DATASET_PER_WEEK = '''
-/* VER 1.0
-selects all download events, counts unique combinations of week, user, resource, and dataset, then counts the number of those unique combinations by dataset.  That is to say if a single user downloaded 10 different resources two times each (20 total downloads) from a single dataset in a given week, the count returned by this query would be 10*/
+/* 1. unique downloads by dataset by week
+VER 1.1
+
+ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
+
+unique (by distinct id, resource id, and day) # of downloads by dataset by week (last 24 weeks, used in timeline on dataset page)
+
+selects all download events, counts unique combinations of user, resource, dataset and day, then counts the number of those unique combinations by dataset and week.
+*/
 
 function main() {{
   return Events({{
@@ -58,7 +65,7 @@ function main() {{
     to_date: '{}',
     event_selectors: [{{event: "resource download"}}]
   }})
-  .groupBy(["distinct_id","properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.count())
+  .groupByUser(["properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.null())
   .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())
   .sortAsc(function(row){{return row.key[1]}})
   .map(function(r){{
@@ -136,8 +143,14 @@ function main() {{
 '''
 
 DOWNLOADS_PER_ORGANIZATION_PER_WEEK = '''
-/* VER 1.0
-selects all download events, counts unique combinations of week, user, resource, and org, then counts the number of those unique combinations by org.  That is to say if a single user downloaded 10 different resources two times each (20 total downloads) from a given org in a given week, the count returned by this query would be 10*/
+/* 5. unique downloads by org by week
+VER 1.1
+
+ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
+
+used in timeline on org page
+selects all download events, counts unique combinations of user, resource, and org, then counts the number of those unique combinations by org by week.  For each week, it gives the total number of times a resource was downloaded from an organization, excluding multiple downloads of the same resource by the same users on the same day.
+*/
 
 function main() {{
   return Events({{
@@ -145,7 +158,7 @@ function main() {{
     to_date: '{}',
     event_selectors: [{{event: "resource download"}}]
   }})
-  .groupBy(["distinct_id","properties.resource id","properties.org id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.count())
+  .groupByUser(["properties.resource id","properties.org id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.null())
   .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())
   .sortAsc(function(row){{return row.key[1]}})
   .map(function(r){{
@@ -159,11 +172,13 @@ function main() {{
 '''
 
 DOWNLOADS_PER_ORGANIZATION_PER_DATASET = '''
-/* VER 1.1
-Used for top downloads bar chart on org page for last 24 weeks
+/* 8. unique downloads by dataset by organization
+VER 1.1
+
 ver 1.0 changed to bucket by day to be consistent with definition of uniqueness for similar queries
 ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant. Also simplified second groupBy() to use "key.X" instead of function call
 
+Used for top downloads bar chart on org page for last 24 weeks
 selects all download events, counts unique combinations of user, resource, day, dataset, and org, then counts the number of those unique combinations by dataset.  That is to say if a single user downloaded 10 different resources two times each (20 total downloads) from a single dataset in a given day (and on no other days), the count returned by this query would be 10
 */
 

@@ -270,7 +270,15 @@
             background-color: red;
           }
         }
-
+        @media (max-width: @cut-point-laptop-s) {
+          .separated-list {
+            a.action-red {
+              .full-text {
+                display: none;
+              }
+            }
+          }
+        }
         @media (max-width: @cut-point-tablet) {
           .separated-list {
             a.action {

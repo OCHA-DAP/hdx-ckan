@@ -24,3 +24,6 @@ COD_VALUES_MAP = OrderedDict((
     (COD_WITHOUT_SERVICE, 'COD without service'),
     (COD_WITH_SERVICE, 'COD with service'),
 ))
+
+
+UPDATE_FREQ_LIVE = '0'

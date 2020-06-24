@@ -62,9 +62,10 @@
               <div class="col-xs-12 section-body">
                 <div class="data-viewer-error">
                 </div>
-                <iframe class="fold closed" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
+                <iframe class="fold {% if section.type != 'key_figures' %}closed{% endif %}" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
                   src="{{ section.get('data_url') }}">
                 </iframe>
+                {% if section.type != 'key_figures' %}
                 <div class="section-unfold">
                   <div class="overlay">
                     <a class="fullscreen" href="{{ section.get('data_url') }}" target="_blank">Open fullscreen <i class="icon humanitarianicons-Out-of-platform"></i> </a>
@@ -78,9 +79,9 @@
                         </label>
                       </span>
                     </div>
-
                   </div>
                 </div>
+                {% endif %}
               </div>
             </div>
           {% endif %}

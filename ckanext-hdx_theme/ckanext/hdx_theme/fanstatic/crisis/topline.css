@@ -74,3 +74,44 @@
 .topline .indicator-prevalue {
   margin-left: 0px;
 }
+.mobile-carousel {
+  display: none;
+}
+#key-figures-mobile-carousel {
+  display: block;
+  min-height: 220px;
+  overflow: hidden;
+}
+#key-figures-mobile-carousel .mobile-carousel-inner {
+  display: flex;
+  left: 10px;
+  position: absolute;
+}
+#key-figures-mobile-carousel .mobile-carousel-inner .item {
+  margin-right: 10px;
+  width: 300px;
+}
+#key-figures-mobile-carousel .mobile-carousel-inner .item .graphic {
+  width: 300px;
+}
+#key-figures-mobile-carousel .mobile-carousel-inner .item .graphic img,
+#key-figures-mobile-carousel .mobile-carousel-inner .item .graphic iframe {
+  height: 100%;
+  width: 100%;
+}
+#key-figures-mobile-carousel .carousel-indicators {
+  display: none;
+}
+#key-figures-mobile-carousel .carousel-indicators li {
+  margin-right: 5px;
+}
+#key-figures-mobile-carousel .carousel-indicators {
+  bottom: -5px;
+}
+#key-figures-mobile-carousel .carousel-indicators li {
+  border: 1px solid #cccccc;
+  background-color: #fff;
+}
+#key-figures-mobile-carousel .carousel-indicators li.active {
+  background-color: #cccccc;
+}
