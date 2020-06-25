@@ -387,12 +387,13 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             'q': '*:*',
             'fl': 'id name title',
             'fq': 'capacity:"public" organization:{}'.format(org_name),
-            'rows': len(datasets_map),
+            'rows': 5000, # Just setting a max, we need all public datasets that an org has
             'start': 0,
         }
 
         ret = []
         if datasets_map:
+            mp_datasets_sorted = sorted(datasets_map.values(), key=lambda item: item.get('value'), reverse=True)
             try:
                 conn = make_connection(decode_dates=False)
                 search_result = conn.search(**data_dict)
@@ -413,7 +414,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                         # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
                     }
                     for d in itertools.islice(
-                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 25
+                        (ds for ds in mp_datasets_sorted if ds.get('dataset_id') in dataseta_meta_map), 25
                     )
                 ]
             except Exception, e:
