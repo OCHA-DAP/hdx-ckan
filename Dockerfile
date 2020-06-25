@@ -6,7 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LC_ALL=en_US.UTF-8 \
     HDX_CKAN_WORKERS=4 \
     INI_FILE=/etc/ckan/prod.ini \
-    HDX_CACHE_DIR=/srv/cache
+    HDX_CACHE_DIR=/srv/cache \
+    HDX_LOG_LEVEL=INFO
 
 COPY . /srv/ckan/
 
