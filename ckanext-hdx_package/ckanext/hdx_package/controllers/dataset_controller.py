@@ -637,7 +637,7 @@ class DatasetController(PackageController):
         try:
             c.pkg_dict = get_action('package_show')(context, data_dict)
             c.pkg = context['package']
-            log.info('Reading dataset {}: read via package_show successfully, cps_off setting is {}'
+            log.debug('Reading dataset {}: read via package_show successfully, cps_off setting is {}'
                      .format(c.pkg_dict.get('name'), c.cps_off))
 
             # Needed because of showcase validation convert_package_name_or_id_to_id_for_type_dataset()
@@ -657,7 +657,7 @@ class DatasetController(PackageController):
         # used by disqus plugin
         c.current_package_id = c.pkg.id
 
-        log.info('Reading dataset {}: checking which resources can be previewed'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: checking which resources can be previewed'.format(c.pkg_dict.get('name')))
         # can the resources be previewed?
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
@@ -698,7 +698,7 @@ class DatasetController(PackageController):
         template = self._read_template(package_type)
         # template = template[:template.index('.') + 1] + format
 
-        log.info('Reading dataset {}: setting analytics data for template'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: setting analytics data for template'.format(c.pkg_dict.get('name')))
         # set dataset type for google analytics - modified by HDX
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
         c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
@@ -707,7 +707,7 @@ class DatasetController(PackageController):
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
-        log.info('Reading dataset {}: getting activity list for dataset'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: getting activity list for dataset'.format(c.pkg_dict.get('name')))
         c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
 
         # added as per HDX-4969
@@ -743,7 +743,7 @@ class DatasetController(PackageController):
         #                   {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
         # Constructing the email body
-        log.info('Reading dataset {}: constructing email body'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: constructing email body'.format(c.pkg_dict.get('name')))
         notes = c.pkg_dict.get('notes') if c.pkg_dict.get('notes') else _('No description available')
         c.pkg_dict['social_mail_body'] = _('Description:%0D%0A') + h.markdown_extract(
             notes) + ' %0D%0A'
@@ -753,19 +753,19 @@ class DatasetController(PackageController):
         c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
 
         #analytics charts
-        log.info('Reading dataset {}: getting data for analytics charts'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: getting data for analytics charts'.format(c.pkg_dict.get('name')))
         downloads_last_weeks = downloads_per_dataset_per_week_last_24_weeks_cached().get(c.pkg_dict['id'], {}).values()
         c.stats_downloads_last_weeks = downloads_last_weeks
 
         #tags&custom_pages
-        log.info('Reading dataset {}: finding custom page list for this dataset'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: finding custom page list for this dataset'.format(c.pkg_dict.get('name')))
         c.pkg_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, c.pkg_dict)
 
         #links to vizualizations
-        log.info('Reading dataset {}: finding links list for this dataset'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: finding links list for this dataset'.format(c.pkg_dict.get('name')))
         c.pkg_dict['links_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': c.pkg_dict.get('name')})
 
-        log.info('Reading dataset {}: deciding on the dataset visualization/preview'.format(c.pkg_dict.get('name')))
+        log.debug('Reading dataset {}: deciding on the dataset visualization/preview'.format(c.pkg_dict.get('name')))
         _dataset_preview = None
         if 'resources' in c.pkg_dict:
             _dataset_preview = c.pkg_dict.get('dataset_preview', vd._DATASET_PREVIEW_FIRST_RESOURCE)
@@ -816,7 +816,7 @@ class DatasetController(PackageController):
 
             cps_off = config.get('hdx.cps.off', 'false')
 
-            log.info('Reading dataset {}: rendering template'.format(c.pkg_dict.get('name')))
+            log.debug('Reading dataset {}: rendering template'.format(c.pkg_dict.get('name')))
             if org_info_dict.get('custom_org', False):
                 return render('package/custom_hdx_read.html')
             return render('package/hdx_read.html')
