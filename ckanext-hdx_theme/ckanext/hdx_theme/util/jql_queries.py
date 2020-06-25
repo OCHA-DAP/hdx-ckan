@@ -27,16 +27,22 @@ function main() {{
 '''
 
 PAGEVIEWS_PER_DATASET = '''
-/* VER 1.0
-gets all page view events and counts the occurrence of each unique dataset.  It answers the question "How many times has this dataset page been viewed?"*/
+/* 7. total PVs by dataset
+VER 1.1
 
-/* Note:  as of 12-july-2017, this query fails (or at least doesn't return what is expected), because there are no dataset IDs being sent with the page view event.*/
+ver 1.1 added a filter to only take into consideration "page views" that have a "dataset id" property set
+
+used for the flame icon and for sorting by "trending"
+gets all page view events and counts the occurrence of each unique dataset.  It answers the question "How many times has this dataset page been viewed ?"
+
+Note:  as of 12-july-2017, this query fails (or at least doesn't return what is expected), because there are no dataset IDs being sent with the page view event.
+*/
 
 function main() {{
   return Events({{
     from_date: '{}',
     to_date: '{}',
-    event_selectors: [{{event: "page view"}}]
+    event_selectors: [{{event: 'page view', selector: 'properties["dataset id"]'}}]
   }})
   .groupBy(["properties.dataset id"],mixpanel.reducer.count())
   .map(function(r){{
@@ -50,8 +56,9 @@ function main() {{
 
 DOWNLOADS_PER_DATASET_PER_WEEK = '''
 /* 1. unique downloads by dataset by week
-VER 1.1
+VER 1.2
 
+ver 1.2 removing sorting function as it's not needed
 ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
 
 unique (by distinct id, resource id, and day) # of downloads by dataset by week (last 24 weeks, used in timeline on dataset page)
@@ -67,7 +74,6 @@ function main() {{
   }})
   .groupByUser(["properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.null())
   .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())
-  .sortAsc(function(row){{return row.key[1]}})
   .map(function(r){{
     return {{
       dataset_id: r.key[0],
@@ -79,16 +85,22 @@ function main() {{
 '''
 
 PAGEVIEWS_PER_ORGANIZATION = '''
-/* VER 1.0
-gets all page view events and counts unique combinations of user and org.  This is to say, if a single user looked at 3 different datasets from a single organization and then looked at the organization page as well (4 total page views), the count returned by this query would be 1.  It answers the question "How many individuals looked at one or more of an organization's content."*/
+/* 2. unique PVs by organization
+VER 1.1
+
+ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant. Also added a filter to only take into consideration "page views" that have an "org id" property set
+
+used for unique visitors key figure on org stats page
+gets all page view events and counts unique combinations of user and org.  This is to say, if a single user looked at 3 different datasets from a single organization and then looked at the organization page as well (4 total page views), the count returned by this query would be 1.  It answers the question "How many individuals looked at one or more of an organization's content within a given time period."
+*/
 
 function main() {{
   return Events({{
     from_date: '{}',
     to_date: '{}',
-    event_selectors: [{{event: "page view"}}]
+    event_selectors: [{{event: 'page view', selector: 'properties["org id"]'}}]
   }})
-  .groupBy(["distinct_id","properties.org id"],mixpanel.reducer.count())
+  .groupByUser(['properties.org id'],mixpanel.reducer.null())
   .groupBy([function(row) {{return row.key.slice(1)}}],mixpanel.reducer.count())
   .map(function(r){{
     return {{
@@ -100,8 +112,14 @@ function main() {{
 '''
 
 DOWNLOADS_PER_ORGANIZATION = '''
-/* VER 1.0
-gets all download events and counts unique combinations of user and org.  This is to say, if a single user downloaded 5 resources 2 times from datasets belonging to a given organization (10 total downloads), the count returned by this query would be 1.  It answers the question "How many individuals one or more resources from an organization's datasets."*/
+/* 3. unique downloads by organization
+VER 1.1
+
+ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
+
+used as "unique downloaders" key figure on org page
+gets all download events and counts unique combinations of user and org.  This is to say, if a single user downloaded 5 resources 2 times from datasets belonging to a given organization (10 total downloads), the count returned by this query would be 1.  It answers the question "How many individuals downloaded one or more resources from an organization's datasets."
+*/
 
 function main() {{
   return Events({{
@@ -109,7 +127,7 @@ function main() {{
     to_date: '{}',
     event_selectors: [{{event: "resource download"}}]
   }})
-  .groupBy(["distinct_id","properties.org id"],mixpanel.reducer.count())
+  .groupByUser(["properties.org id"],mixpanel.reducer.null())
   .groupBy([function(row) {{return row.key.slice(1)}}],mixpanel.reducer.count())
   .map(function(r){{
     return {{
@@ -121,17 +139,22 @@ function main() {{
 '''
 
 PAGEVIEWS_PER_ORGANIZATION_PER_WEEK = '''
-/* VER 1.0
-gets all page view events and counts unique combinations of week and org.  This is to say, if a single user looked at 3 different datasets from a single organization and then looked at the organization page as well (4 total page views) in a given week, the count returned by this query for that week would be 4.  It answers the question "How many page views did an organization's content receive in a given week."*/
+/* 4. total PVs by org by week
+VER 1.1
+
+ver 1.1 changing selector to also filter null 'org ids'. Removing sorting as it is not needed.
+
+used as timeline on org page
+gets all page view events and counts unique combinations of week and org.  It answers the question "How many page views did an organization's content receive in a given week."
+*/
 
 function main() {{
   return Events({{
     from_date: '{}',
     to_date: '{}',
-    event_selectors: [{{event: "page view", selector: 'properties["org id"] != ""'}}]
+    event_selectors: [{{event: 'page view', selector: 'properties["org id"]'}}]
   }})
-  .groupBy(["properties.org id",mixpanel.numeric_bucket('time',mixpanel.weekly_time_buckets)],mixpanel.reducer.count())
-  .sortAsc(function(row){{return row.key[1]}})
+  .groupBy(['properties.org id',mixpanel.numeric_bucket('time',mixpanel.weekly_time_buckets)],mixpanel.reducer.count())
   .map(function(r){{
     return {{
       org_id: r.key[0],
@@ -144,8 +167,9 @@ function main() {{
 
 DOWNLOADS_PER_ORGANIZATION_PER_WEEK = '''
 /* 5. unique downloads by org by week
-VER 1.1
+VER 1.2
 
+ver 1.2 removing sorting function as it's not needed
 ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
 
 used in timeline on org page
@@ -160,7 +184,6 @@ function main() {{
   }})
   .groupByUser(["properties.resource id","properties.org id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.null())
   .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())
-  .sortAsc(function(row){{return row.key[1]}})
   .map(function(r){{
     return {{
       org_id: r.key[0],
@@ -175,8 +198,9 @@ DOWNLOADS_PER_ORGANIZATION_PER_DATASET = '''
 /* 8. unique downloads by dataset by organization
 VER 1.1
 
-ver 1.0 changed to bucket by day to be consistent with definition of uniqueness for similar queries
+ver 1.2 removing sorting from the query, we can do the sorting in HDX - recommended by MP support
 ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant. Also simplified second groupBy() to use "key.X" instead of function call
+ver 1.0 changed to bucket by day to be consistent with definition of uniqueness for similar queries
 
 Used for top downloads bar chart on org page for last 24 weeks
 selects all download events, counts unique combinations of user, resource, day, dataset, and org, then counts the number of those unique combinations by dataset.  That is to say if a single user downloaded 10 different resources two times each (20 total downloads) from a single dataset in a given day (and on no other days), the count returned by this query would be 10
@@ -196,7 +220,6 @@ function main() {{
     dataset_id: r.key[1],
     value: r.value
     }};
-  }})
-  .sortDesc("value");
+  }});
 }}
 '''

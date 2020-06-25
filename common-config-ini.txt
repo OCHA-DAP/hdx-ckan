@@ -228,6 +228,7 @@ hdx.analytics.hotjar.site_id =
 hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165
 hdx.analytics.mixpanel.secret = OVERWRITE_WITH_SECRET_FROM_MP_PROJECT
 hdx.analytics.hours_for_results_in_cache = 12
+hdx.analytics.mixpanel.warning_threshold_seconds = 90
 # Disable HDX API tracking
 # added in prod.ini.tpl as env vars; the env vars get their defaults in the ckn startup script
 # hdx.analytics.track_api = false
