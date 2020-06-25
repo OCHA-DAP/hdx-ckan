@@ -145,7 +145,7 @@ qualname = ckan
 propagate = 0
 
 [logger_ckanext]
-level = WARNING
+level = ${HDX_LOG_LEVEL}
 handlers = console, file
 qualname = ckanext
 propagate = 0
