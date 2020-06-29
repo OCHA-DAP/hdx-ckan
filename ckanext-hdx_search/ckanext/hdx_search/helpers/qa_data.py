@@ -38,6 +38,9 @@ questions_list = {
         'm27': 'Does the dataset have subnational data',
         'm28': 'If the dataset contains subnational data, the Dataset DOES NOT have the SUB-NATIONAL flag',
         'm29': 'If the dataset does NOT contain sub-national data,  the dataset has the SUB-NATIONAL flag',
+        'm30': 'No embedded dataviz is working',
+        'm31': 'The quickcharts showing on the dataviz don\'t make sense',
+        'm32': 'The dataset has zipped shapefiles, but the geopreview is not working'
     },
     'resources_checklist':{
         'r1': 'The download link is NOT working',
