@@ -807,6 +807,11 @@ $(function(){
               if (message.type === 'private_changed' && message.newValue === 'requestdata') {
                 // this.contribute_global.resourceModelList.models = [];
                 this._prepareFormForMetadataOnly({isEdit: true}, true);
+                var isMetadataOnly = $('input[name=_is_requestdata_type][value=true]');
+                if (isMetadataOnly.length === 1) {
+                  var req_type_notification = $('#requestdata_type_notification');
+                  req_type_notification.addClass('hdx-invisible-element');
+            }
               }
               else{
                 this._prepareFormForMetadataOnly({isEdit: true}, false);
@@ -866,12 +871,14 @@ $(function(){
 
             }.bind(this));
 
-            var isMetadataOnly = $('input[name=is_requestdata_type][value=true]');
+            var isMetadataOnly = $('input[name=_is_requestdata_type][value=true]');
 
             // For already created datasets, if they are metadata-only adapt
             // the form
             if (isMetadataOnly.length === 1) {
                 this._prepareFormForMetadataOnly({isEdit: true}, true);
+                var req_type_notification = $('#requestdata_type_notification');
+                req_type_notification.addClass('hdx-invisible-element');
             }
         },
         initGooglePicker: function() {
