@@ -18,13 +18,12 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckanext.s3filestore.helpers import generate_temporary_link
 
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
-from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
+from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.qa_s3 import LogS3
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
-
 
 _validate = dict_fns.validate
 
@@ -48,7 +47,6 @@ ValidationError = tk.ValidationError
 get_action = tk.get_action
 check_access = tk.check_access
 redirect = tk.redirect_to
-
 
 NUM_OF_ITEMS = 25
 
@@ -156,6 +154,7 @@ class HDXQAController(HDXSearchController):
 
         search_data_dict['facet.field'].append('{!ex=methodology,batch}methodology')
         search_data_dict['facet.field'].append('res_extras_broken_link')
+        search_data_dict['facet.field'].append('res_extras_in_quarantine')
         search_data_dict['facet.field'].append('{!ex=batch}extras_qa_completed')
         search_data_dict['f.extras_qa_completed.facet.missing'] = 'true'
 
@@ -186,7 +185,10 @@ class HDXQAController(HDXSearchController):
             self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
+
             self.__process_broken_link_facet(existing_facets, title_translations, search_extras, item_list)
+
+            self.__process_in_quarantine_facet(existing_facets, title_translations, search_extras, item_list)
 
             self.__process_methodology(title_translations)
 
@@ -204,15 +206,14 @@ class HDXQAController(HDXSearchController):
 
     def __process_bulk_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
         bulk_facet_item = self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
-                                      qa_only_item_list, search_extras)
+                                                        qa_only_item_list, search_extras)
 
         non_bulk_facet_item = dict(bulk_facet_item)
         non_bulk_facet_item['display_name'] = _('Non-bulk upload')
         non_bulk_facet_item['name'] = '0'
         non_bulk_facet_item['count'] = c.batch_total_items - bulk_facet_item.get('count', 0)
-        non_bulk_facet_item['selected']  = search_extras.get('ext_' + BULK_DATASETS_FACET_NAME) == '0'
+        non_bulk_facet_item['selected'] = search_extras.get('ext_' + BULK_DATASETS_FACET_NAME) == '0'
         qa_only_item_list.append(non_bulk_facet_item)
-
 
     def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('qa_completed', None)
@@ -255,6 +256,24 @@ class HDXQAController(HDXSearchController):
         qa_category_key = 'ext_broken_link'
         item['category_key'] = qa_category_key
         item['display_name'] = 'Broken links'
+        item['name'] = '1'
+        item['count'] = item.get('count', 0)
+        item['selected'] = search_extras.get(qa_category_key)
+
+        qa_only_item_list.append(item)
+
+    def __process_in_quarantine_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
+        title_translations.pop('res_extras_in_quarantine', None)
+
+        facet_data = existing_facets.pop('res_extras_in_quarantine', {})
+        item = next(
+            (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
+            {}
+        )
+
+        qa_category_key = 'ext_in_quarantine'
+        item['category_key'] = qa_category_key
+        item['display_name'] = 'Under review'
         item['name'] = '1'
         item['count'] = item.get('count', 0)
         item['selected'] = search_extras.get(qa_category_key)
@@ -326,7 +345,6 @@ class HDXQAController(HDXSearchController):
         title_translations.clear()
         title_translations['{!ex=methodology,batch}methodology'] = _('Methodology')
         title_translations.update(cloned_dict)
-
 
     def _search_template(self):
         return render('qa_dashboard/qa_dashboard.html')
