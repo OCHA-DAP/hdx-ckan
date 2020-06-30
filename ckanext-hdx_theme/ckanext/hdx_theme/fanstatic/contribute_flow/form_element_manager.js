@@ -8,7 +8,10 @@ ckan.module('hdx_form_element_manager', function ($, _) {
       var errorWrapperEl = this.el.find('.controls');
       var controlGroupEl = this.el.find('.control-group');
       var elementName = this.options.element_name;
-      var required = this.options.required;
+      var required = [];
+      if(this.options.required)
+              required = this.options.required.split(',');
+
       var broadcastChange = this.options.broadcast_change;
 
       var moduleLog = this.moduleLog;
@@ -23,11 +26,17 @@ ckan.module('hdx_form_element_manager', function ($, _) {
             errorWrapperEl.removeClass('error');
             errorEl.html('');
           } else if (message.type === 'private_changed') {
-            if (required && message.newValue === 'public' || required === 'private') {
-              controlGroupEl.addClass('required');
-            } else {
-              controlGroupEl.removeClass('required');
-            }
+              var reqFlag = false;
+              for ( var i=0; i< required.length; i++){
+                if (message.newValue === required[i]){
+                  reqFlag = true;
+                  break;
+                }
+              }
+              if (reqFlag)
+                controlGroupEl.addClass('required');
+              else
+                controlGroupEl.removeClass('required');
           } else if (message.elementName === elementName) {
             try {
               if (errorWrapperEl.find("input").attr("data-module") === "slug-preview-slug") {

@@ -11,6 +11,8 @@ ckan.module('contribute_flow_main', function($, _) {
             var hxlPreviewApi = this.options.hxl_preview_api;
             var requestUrl = window.location.pathname;
             var isNewDataset = null; // Whether we're editing or creating a new dataset
+            // var managePrivateField = this.managePrivateField;
+            // var __this = this;
             var contributeGlobal = {
                 'getDatasetIdPromise': function() {
                     var deferred = new $.Deferred();
@@ -69,12 +71,14 @@ ckan.module('contribute_flow_main', function($, _) {
 
                                     // Tags are required for metadata-only datasets
                                     if (data.data.is_requestdata_type && data.data.tag_string.length === 0) {
-                                        data.errors.tag_string = ['Missing value']
+                                        data.errors.tag_string = ['Missing value'];
                                     }
 
                                     contributeGlobal.updateValidationUi(data, status, xhr);
+                                    // contributeGlobal._managePrivateField();
                                     deferred.resolve(contributeGlobal.validateSucceeded(data, status));
                                     moduleLog('Validation finished');
+
                                 }
                             );
 
@@ -83,6 +87,32 @@ ckan.module('contribute_flow_main', function($, _) {
 
 
                     return deferred.promise();
+                },
+                '_managePrivateField': function () {
+                  // var sandbox = this.sandbox;
+                  var privateVal = null;
+                  var privateEl = null;
+                  var privateRadioEls = $("input[name='private']");
+                  for (var i = 0; i < privateRadioEls.length; i++) {
+                    var radioEl = $(privateRadioEls[i]);
+                    if (radioEl.prop('checked')) {
+                      privateVal = radioEl.val();
+                    }
+                    if (radioEl.val() == "true") {
+                      privateEl = radioEl;
+                    }
+                  }
+                  if (privateVal == null) {
+                    privateVal = "false";
+                    // If no checkbox is selected assume it's a private dataset
+                    // this is logic is reflected in the contribute controller as well
+                    privateEl.prop('checked', true);
+                  }
+                  sandbox.publish('hdx-form-validation', {
+                      'type': 'private_changed',
+                      'newValue': privateVal //privateVal == 'false' ? 'public' : 'private'
+                    }
+                  );
                 },
                 'saveDatasetForm': function() {
                     this.controlUserWaitingWidget(true, "Validating...");
@@ -197,6 +227,29 @@ ckan.module('contribute_flow_main', function($, _) {
                         }
                         contributeGlobal.controlUserWaitingWidget(false);
                     }
+                    var privateVal = null;
+                    var privateEl = null;
+                    var privateRadioEls = $("input[name='private']");
+                    for (var i = 0; i < privateRadioEls.length; i++) {
+                      var radioEl = $(privateRadioEls[i]);
+                      if (radioEl.prop('checked')) {
+                        privateVal = radioEl.val();
+                      }
+                      if (radioEl.val() == "true") {
+                        privateEl = radioEl;
+                      }
+                    }
+                    if (privateVal == null) {
+                      privateVal = "false";
+                      // If no checkbox is selected assume it's a private dataset
+                      // this is logic is reflected in the contribute controller as well
+                      privateEl.prop('checked', true);
+                    }
+                    sandbox.publish('hdx-form-validation', {
+                        'type': 'private_changed',
+                        'newValue': privateVal //privateVal == 'false' ? 'public' : 'private'
+                      }
+                    );
                 },
                 'datasetWaitToValidateAndSave': function(data, status) {
                   if (contributeGlobal.validateSucceeded(data, status)) {
@@ -355,11 +408,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     var newOptions = resourceModelList.models;
                     $("#field_dataset_preview_value").find("option").remove();
                     var selectOptions = $('#field_dataset_preview_value').prop('options');
-                    //     selectOptions[0] = new Option('!Default (first resource with preview)', 'first_resource', true, true);
-                    // }
-                    // else{
                     selectOptions[0] = new Option('Default (first resource with preview)', 'first_resource');
-                    // }
                     var i = 'first_resource';
                     $.each(newOptions, function(index, value) {
                         var resName = value.get('name') ? value.get('name') : 'Resource '+(index+1);
@@ -483,10 +532,9 @@ ckan.module('contribute_flow_main', function($, _) {
                 // this is logic is reflected in the contribute controller as well
                 privateEl.prop('checked', true);
             }
-
             sandbox.publish('hdx-form-validation', {
                     'type': 'private_changed',
-                    'newValue': privateVal == 'false' ? 'public' : 'private'
+                    'newValue': privateVal //privateVal == 'false' ? 'public' : 'private'
                 }
             );
 
@@ -495,14 +543,12 @@ ckan.module('contribute_flow_main', function($, _) {
                     if ($(this).prop('checked')){
                         var message = {
                             'type': 'private_changed',
-                            'newValue': $(this).val() == 'false' ? 'public' : 'private'
+                            'newValue': $(this).val() //$(this).val() == 'false' ? 'public' : 'private'
                         };
                         sandbox.publish('hdx-form-validation', message);
                     }
-
                 }
             );
-
         },
         moduleLog: function (message) {
             //console.log(message);

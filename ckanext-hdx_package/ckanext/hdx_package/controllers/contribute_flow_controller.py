@@ -170,8 +170,18 @@ class ContributeFlowController(base.BaseController):
             pkg_dict = {}
             if data_dict.get('id'):
                 # we allow partial updates to not destroy existing resources
-                context['allow_partial_update'] = True
+                is_req_type = False
+                if data_dict.get('private', 'True') == 'False' and data_dict.get('is_requestdata_type',
+                                                                                 'False') == 'True':
+                    context['allow_partial_update'] = False
+                    is_req_type = True
+                else:
+                    context['allow_partial_update'] = True
+                pkg_old = logic.get_action('package_show')(context, {'id': data_dict.get('id')})
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
+                if is_req_type:
+                    for res in pkg_old.get('resources'):
+                        logic.get_action('resource_delete')(context, {'id': res.get('id')})
             else:
                 pkg_dict = logic.get_action('package_create')(context, data_dict)
 
@@ -197,6 +207,17 @@ class ContributeFlowController(base.BaseController):
         self.process_dataset_preview_save(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
+            # data_dict['is_requestdata_type'] = 'False'
+        else:
+            if data_dict.get('private') == 'public':
+                data_dict['private'] = 'False'
+                # data_dict['is_requestdata_type'] = 'False'
+            if data_dict.get('private') == 'private':
+                data_dict['private'] = 'True'
+                # data_dict['is_requestdata_type'] = 'False'
+            if data_dict.get('private') == 'requestdata':
+                data_dict['private'] = 'False'
+                data_dict['is_requestdata_type'] = 'True'
 
         return data_dict
 
