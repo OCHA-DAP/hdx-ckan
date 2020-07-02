@@ -148,7 +148,7 @@
                           </li>
                          {% if h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
                           <li>
-                            <a href="/qa_dashboard" title="{{ _('QA Dashboard') }}">
+                            <a href="/qa_dashboard?ext_bulk_datasets=0&ext_qa_completed=0" title="{{ _('QA Dashboard') }}">
                               <i class="icon-legal"></i>
                               <span>{{ _('QA Dashboard') }}</span>
                             </a>

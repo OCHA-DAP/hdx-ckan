@@ -367,7 +367,7 @@ $(function(){
             this.listenTo(this.model, 'progress', function(fraction){
                 var idx = this.model.get('position') + 1;
                 var percentage = Math.floor(fraction * 100);
-                this.trigger('upload progress', 'Saving resource ' + idx +  ': ' + percentage + '%')
+                this.trigger('upload progress', 'Saving resource ' + idx +  ': ' + percentage + '%');
             });
 
             var dragGhost, dragParent;
@@ -454,6 +454,7 @@ $(function(){
                 error_block.html(error_text);
                 var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
                 parent_el.addClass('error');
+                parent_el.closest('.source-file').addClass('error');
             }.bind(this));
 
             //this._setUpForSourceType('source-url');
@@ -608,7 +609,7 @@ $(function(){
                 });
             browseButton.on('change', function(e){
                 handleFiles(this.files);
-            })
+            });
 
         },
 
@@ -676,7 +677,7 @@ $(function(){
                 url: '',
                 format: '',
                 description: ''
-            }
+            };
         },
         initialize: function(options) {
             var sandbox = options.sandbox;
@@ -793,6 +794,30 @@ $(function(){
                     }.bind(this));
             }.bind(this));
 
+            sandbox.subscribe('hdx-form-validation', function (message) {
+              // ... when ready, get the contribute_global object.
+              // this.contribute_global = global;
+              //
+              // this.contribute_global.getDatasetIdPromise().then(
+              //     function(package_id){
+              //         if (package_id != null){
+              //             this.goToStep2();
+              //         }
+              //     }.bind(this));
+              if (message.type === 'private_changed' && message.newValue === 'requestdata') {
+                // this.contribute_global.resourceModelList.models = [];
+                this._prepareFormForMetadataOnly({isEdit: true}, true);
+                var isMetadataOnly = $('input[name=_is_requestdata_type][value=true]');
+                if (isMetadataOnly.length === 1) {
+                  var req_type_notification = $('#requestdata_type_notification');
+                  req_type_notification.addClass('hdx-invisible-element');
+            }
+              }
+              else{
+                this._prepareFormForMetadataOnly({isEdit: true}, false);
+              }
+            }.bind(this));
+
             var widget = $(".contribute-splash .drop-here.full-dataset-box"),
                 mask = widget.find(".drop-here-mask"),
                 browseButton = $(".contribute-splash .browse-button input[type='file']");
@@ -831,21 +856,29 @@ $(function(){
                 .on('drop', handleDropEvent);
             browseButton.on('change', function(e){
                 handleFiles(this.files);
-            })
+            });
 
             var addMetadataBtn = $('.contribute-splash .add-metadata-btn');
 
             addMetadataBtn.on('click', function() {
                 this.goToStep2();
-                this._prepareFormForMetadataOnly({isEdit: false});
+                var formSectionPrivacy = $('.form-privacy-section');
+                var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=requestdata]');
+                privacyPublicRadioBtn.click();
+                this._prepareFormForMetadataOnly({isEdit: false}, true);
+                var req_type_notification = $('#requestdata_type_notification');
+                req_type_notification.addClass('hdx-invisible-element');
+
             }.bind(this));
 
-            var isMetadataOnly = $('input[name=is_requestdata_type][value=true]');
+            var isMetadataOnly = $('input[name=_is_requestdata_type][value=true]');
 
             // For already created datasets, if they are metadata-only adapt
             // the form
             if (isMetadataOnly.length === 1) {
-                this._prepareFormForMetadataOnly({isEdit: true})
+                this._prepareFormForMetadataOnly({isEdit: true}, true);
+                var req_type_notification = $('#requestdata_type_notification');
+                req_type_notification.addClass('hdx-invisible-element');
             }
         },
         initGooglePicker: function() {
@@ -888,7 +921,7 @@ $(function(){
             $(".create-step1").hide();
             $(".create-step2").show();
         },
-        _prepareFormForMetadataOnly: function(data) {
+        _prepareFormForMetadataOnly: function(data, is_req_dataset) {
             var formSectionResources = $('.form-resources-section');
             var formSectionPrivacy = $('.form-privacy-section');
             var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=false]');
@@ -905,34 +938,27 @@ $(function(){
             var selectFileTypes = $('.file-types-select');
             var selectNumOfRows = $('.num-of-rows-select');
             var isEdit = data.isEdit;
+            var req_type_notification = $('#requestdata_type_notification');
 
-            // We set the type so that the right schema is used in the backend
-            formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
 
-            // Resources are not required for metadata-only datasets
-            formSectionResources.hide();
+            // // We set the type so that the right schema is used in the backend
+            // formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
 
-            // Hides the horizontal line
-            formSectionResources.next().hide();
 
-            // hide dataset preview
-            $('#_dataset_preview').hide();
+            if(is_req_dataset) {
+              // Resources are not required for metadata-only datasets
+              formSectionResources.hide();
+              // Hides the horizontal line
+              formSectionResources.next().hide();
+              // Hides the horizontal line
+              formSectionResources.next().hide();
 
-            // Metadata-only datasets are public only, so we select the "Public"
-            // radio button and disable the "Private" one
-            privacyPublicRadioBtn.click();
-            formSectionPrivacy.hide();
+              // hide dataset preview
+              $('#_dataset_preview').hide();
 
-            // if (!isEdit) {
-            //     selectMethodology.val('None');
-            //     currentlySelectedMethodology.text('None');
-            //     // selectUpdateFrequency.val('-1');
-            //     // currentlySelectedUpdateFrequency.text('None');
-            // }
-
-            // For some reason, when editing a dataset, the class wasn't
-            // applied, that's why the timeout is needed.
-            setTimeout(function() {
+              // For some reason, when editing a dataset, the class wasn't
+              // applied, that's why the timeout is needed.
+              setTimeout(function () {
 
                 // Methodology and Update frequency fields are not required in a
                 // metadata-only dataset
@@ -940,16 +966,53 @@ $(function(){
                 updateFrequencySelectModule.removeClass('required');
 
                 selectTagsModule.addClass('required');
-            }, 500);
+              }, 500);
 
-            // License is not required as well
-            licenseField.hide();
+              // License is not required as well
+              licenseField.hide();
 
-            // These are already created fields in the DOM, but they are
-            // initially hidden, and are only shown for metadata-only datasets
-            selectFieldNames.show();
-            selectFileTypes.show();
-            selectNumOfRows.show();
+              // These are already created fields in the DOM, but they are
+              // initially hidden, and are only shown for metadata-only datasets
+              selectFieldNames.show();
+              selectFileTypes.show();
+              selectNumOfRows.show();
+              req_type_notification.removeClass('hdx-invisible-element');
+            }
+            else{
+              // Resources are not required for metadata-only datasets
+              formSectionResources.show();
+              // Hides the horizontal line
+              formSectionResources.next().show();
+              // Hides the horizontal line
+              formSectionResources.next().show();
+
+              // hide dataset preview
+              $('#_dataset_preview').show();
+
+              // For some reason, when editing a dataset, the class wasn't
+              // applied, that's why the timeout is needed.
+              // setTimeout(function () {
+              //
+              //   // Methodology and Update frequency fields are not required in a
+              //   // metadata-only dataset
+              //   methodologySelectModule.removeClass('required');
+              //   updateFrequencySelectModule.removeClass('required');
+              //
+              //   selectTagsModule.addClass('required');
+              // }, 500);
+
+              // License is not required as well
+              licenseField.show();
+
+              // These are already created fields in the DOM, but they are
+              // initially hidden, and are only shown for metadata-only datasets
+              selectFieldNames.hide();
+              selectFileTypes.hide();
+              selectNumOfRows.hide();
+              req_type_notification.addClass('hdx-invisible-element');
+            }
+
+
         }
     });
 

@@ -7,6 +7,9 @@
 .drag-drop-component .source-file-fields {
   margin-top: 8px;
 }
+.drag-drop-component.source-file.error {
+  border: 1px solid #f2645a;
+}
 .drag-drop-component.source-file .source-file-fields {
   display: none;
 }

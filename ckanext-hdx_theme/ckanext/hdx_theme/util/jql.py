@@ -1,12 +1,14 @@
 import requests
 import logging
-from dogpile.cache import make_region
 import pylons.config as config
 
+from dogpile.cache import make_region
 from datetime import datetime, timedelta
 from collections import OrderedDict
+from functools import wraps
 
 import ckanext.hdx_theme.util.jql_queries as jql_queries
+from ckanext.hdx_theme.util.timer import Timer
 from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
     HDXRedisInvalidationStrategy
 
@@ -24,6 +26,7 @@ if dogpile_config_filter == 'cache.redis.':
     dogpile_jql_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_jql_region)
 
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
+JQL_WARNING_THRESHOLD = int(config.get('hdx.analytics.mixpanel.warning_threshold_seconds', 90))
 
 
 class JqlQueryExecutor(object):
@@ -173,9 +176,21 @@ class MultipleValueMandatoryMappingResultTransformer(MappingResultTransformer):
         return result
 
 
+def timer_wrapper(original_caching_function):
+    @wraps(original_caching_function)
+    def timed_caching_function():
+        timer = Timer(original_caching_function.__name__,
+                      init_message='creating cache',
+                      in_millis=False, log_warning_step_threshold=JQL_WARNING_THRESHOLD)
+        result = original_caching_function()
+        timer.next('finished')
+        return result
+    return timed_caching_function
+
+
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def downloads_per_dataset_all_cached():
-    log.info('Creating cache for downloads_per_dataset_all_cached()')
     return downloads_per_dataset()
 
 
@@ -187,8 +202,8 @@ def downloads_per_dataset(hours_since_now=None):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def downloads_per_dataset_per_week_last_24_weeks_cached():
-    log.info('Creating cache for downloads_per_dataset_per_week_last_24_weeks_cached()')
     return downloads_per_dataset_per_week(24)
 
 
@@ -205,8 +220,8 @@ def downloads_per_dataset_per_week(weeks=24):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def downloads_per_organization_last_30_days_cached():
-    log.info('Creating cache for downloads_per_organization_last_30_days_cached()')
     return downloads_per_organization(30)
 
 
@@ -218,8 +233,8 @@ def downloads_per_organization(days_since_now=30):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def downloads_per_organization_per_week_last_24_weeks_cached():
-    log.info('Creating cache for downloads_per_organization_per_week_last_24_weeks_cached()')
     return downloads_per_organization_per_week(24)
 
 
@@ -236,8 +251,8 @@ def downloads_per_organization_per_week(weeks=24):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def downloads_per_organization_per_dataset_last_24_weeks_cached():
-    log.info('Creating cache for downloads_per_organization_per_dataset_last_24_weeks_cached()')
     return downloads_per_organization_per_dataset(24)
 
 
@@ -252,8 +267,8 @@ def downloads_per_organization_per_dataset(weeks=24):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def pageviews_per_dataset_last_14_days_cached():
-    log.info('Creating cache for pageviews_per_dataset_last_14_days_cached()')
     hours = 14 * 24
     return pageviews_per_dataset(hours)
 
@@ -266,8 +281,8 @@ def pageviews_per_dataset(hours_since_now=None):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def pageviews_per_organization_last_30_days_cached():
-    log.info('Creating cache for pageviews_per_organization_last_30_days_cached()')
     return pageviews_per_organization(30)
 
 
@@ -279,8 +294,8 @@ def pageviews_per_organization(days_since_now=30):
 
 
 @dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def pageviews_per_organization_per_week_last_24_weeks_cached():
-    log.info('Creating cache for pageviews_per_organization_per_week_last_24_weeks_cached()')
     return pageviews_per_organization_per_week(24)
 
 
