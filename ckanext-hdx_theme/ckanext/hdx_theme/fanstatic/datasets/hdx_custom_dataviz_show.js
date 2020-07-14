@@ -27,6 +27,8 @@ ckan.module('hdx_custom_dataviz_show', function($, _) {
     deactivate: function() {
       this.el.addClass('viz-deactivated');
       this.currentlyShown = true;
+      var fullscreen_el = $('#pkg_fullscreen');
+      fullscreen_el.attr('href',this.options.url);
     },
     activate: function() {
       this.el.removeClass('viz-deactivated');
