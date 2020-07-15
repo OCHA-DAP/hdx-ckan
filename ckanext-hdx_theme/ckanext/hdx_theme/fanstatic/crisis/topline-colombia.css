@@ -82,7 +82,7 @@
 }
 #key-figures-mobile-carousel {
   display: block;
-  min-height: 220px;
+  min-height: 194px;
   overflow: hidden;
 }
 #key-figures-mobile-carousel .mobile-carousel-inner {
@@ -109,7 +109,8 @@
   margin-right: 5px;
 }
 #key-figures-mobile-carousel .carousel-indicators {
-  bottom: -5px;
+  bottom: 0;
+  margin-bottom: 0;
 }
 #key-figures-mobile-carousel .carousel-indicators li {
   border: 1px solid #cccccc;
