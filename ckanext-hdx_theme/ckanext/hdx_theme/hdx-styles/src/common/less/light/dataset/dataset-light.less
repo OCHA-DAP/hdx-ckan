@@ -43,9 +43,10 @@
 
       .animation-wrapper {
         padding: 0;
-        max-height: 500px;
-        transition: max-height 1s;
+        // in case a fixed height needs to be set, check HDX-7009
+        //max-height: 500px;
         overflow: hidden;
+        transition: max-height 1s;
         &.closed {
           max-height: 0;
         }

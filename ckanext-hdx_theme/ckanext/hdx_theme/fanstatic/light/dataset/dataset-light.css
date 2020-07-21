@@ -131,9 +131,8 @@
 }
 .dataset-light .resource-list .resource-item .animation-wrapper {
   padding: 0;
-  max-height: 500px;
-  transition: max-height 1s;
   overflow: hidden;
+  transition: max-height 1s;
 }
 .dataset-light .resource-list .resource-item .animation-wrapper.closed {
   max-height: 0;

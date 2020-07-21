@@ -216,11 +216,10 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
 def _set_resource_proxy_url(context, data_dict, resource_dict, sheet=None):
     proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
     url = get_action("hdx_get_s3_link_for_resource")(context, {"id": resource_dict.get("id")})
-    params = urllib.urlencode(
-        {
-         'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))})
+    params_dict = {'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))}
     if sheet:
-        params['sheet'] = sheet
+        params_dict['sheet'] = sheet
+    params = urllib.urlencode(params_dict)
     # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
     return proxy_data_preview_url + '?{params}'.format(params=params)
 
