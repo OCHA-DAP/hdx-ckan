@@ -241,15 +241,26 @@ function onDataCompletenessExpand() {
   $(".data-item-details").toggle(this.checked);
 }
 
-function mobileTopline() {
-  let searchParams = new URLSearchParams(window.location.search);
-  if (searchParams.has('mobileCarousel')) {
-    let param = searchParams.get('mobileCarousel');
-    if (param === "true"){
+function handleWindowWidth() {
+  const CUT_POINT = 1024;
+  if (!window.hdxMobileTopline) {
+    if (window.innerWidth < CUT_POINT) {
+      window.hdxMobileTopline = true;
       $(".carousel").hide();
       $(".mobile-carousel").show();
     }
+  } else {
+    if (window.innerWidth >= CUT_POINT) {
+      window.hdxMobileTopline = false;
+      $(".carousel").show();
+      $(".mobile-carousel").hide();
+    }
   }
+}
+
+function mobileTopline() {
+  handleWindowWidth(); //initial setup
+  $( window ).resize(handleWindowWidth);
 }
 
 $(document).ready(function() {

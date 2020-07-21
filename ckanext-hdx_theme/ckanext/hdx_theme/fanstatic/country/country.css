@@ -114,25 +114,31 @@ h1.country-title {
 .base-actions-menu ul {
   padding: 0;
 }
-#key-figures-carousel .carousel-chevron {
+#key-figures-carousel .carousel-chevron,
+#key-figures-mobile-carousel .carousel-chevron {
   position: absolute;
   font-size: 20px;
   top: 50%;
   transform: translate(0, -50%);
 }
-#key-figures-carousel .carousel-chevron.left {
+#key-figures-carousel .carousel-chevron.left,
+#key-figures-mobile-carousel .carousel-chevron.left {
   left: -18px;
 }
-#key-figures-carousel .carousel-chevron.right {
+#key-figures-carousel .carousel-chevron.right,
+#key-figures-mobile-carousel .carousel-chevron.right {
   right: -18px;
 }
-#key-figures-carousel .carousel-chevron.left-embed {
-  left: -13px;
+#key-figures-carousel .carousel-chevron.left-embed,
+#key-figures-mobile-carousel .carousel-chevron.left-embed {
+  left: 0px;
 }
-#key-figures-carousel .carousel-chevron.right-embed {
-  right: -12px;
+#key-figures-carousel .carousel-chevron.right-embed,
+#key-figures-mobile-carousel .carousel-chevron.right-embed {
+  right: 0px;
 }
-#key-figures-carousel .topline .topline-value {
+#key-figures-carousel .topline .topline-value,
+#key-figures-mobile-carousel .topline .topline-value {
   font-size: 52px;
 }
 .followers-list-popup.dropdown-menu {
