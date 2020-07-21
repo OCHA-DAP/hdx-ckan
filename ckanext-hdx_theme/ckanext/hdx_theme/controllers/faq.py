@@ -2,6 +2,7 @@ import exceptions as exceptions
 import json
 import logging
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckan.lib.mailer as mailer
 import pylons.configuration as configuration
 import requests
 import pylons.config as config
@@ -90,19 +91,28 @@ class FaqController(base.BaseController):
 
         try:
             subject = u'Faq: request from user'
-            html = u"""\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>A user sent the following question using the FAQ contact us form.</p>
-                    <p>Name: {fullname}</p>
-                    <p>Email: {email}</p>
-                    <p>Section: {topic}</p>
-                    <p>Message: {msg}</p>
-                  </body>
-                </html>
-                """.format(fullname=fullname, email=email, topic=topic, msg=msg)
-            hdx_mailer.mail_recipient([{'display_name': 'HDX', 'email': hdx_email}], subject, html)
+            # html = u"""\
+            #     <html>
+            #       <head></head>
+            #       <body>
+            #         <p>A user sent the following question using the FAQ contact us form.</p>
+            #         <p>Name: {fullname}</p>
+            #         <p>Email: {email}</p>
+            #         <p>Section: {topic}</p>
+            #         <p>Message: {msg}</p>
+            #       </body>
+            #     </html>
+            #     """.format(fullname=fullname, email=email, topic=topic, msg=msg)
+            email_data = {
+                'user_display_name': fullname,
+                'user_email': email,
+                'topic': topic,
+                'msg': msg,
+            }
+            # html = mailer.render_jinja2('email/content/faq_request.html', email_data)
+            hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                                      subject, email_data, sender_name=fullname, sender_email=email,
+                                      snippet='email/content/faq_request.html')
 
         except exceptions.Exception, e:
             error_summary = e.error or str(e)
