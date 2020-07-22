@@ -74,10 +74,13 @@ def hdx_resource_id_list(context, data_dict):
 @logic.side_effect_free
 def package_search(context, data_dict):
     '''
+    THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN.
 
-    THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN
-    IT'S CHANGED TO RETURN MORE DATA FROM THE SOLR QUERY (collapse/expand)
-    ALSO CHANGED DEFAULT SORTING
+    IT'S CHANGED TO:
+
+    *  RETURN MORE DATA FROM THE SOLR QUERY (collapse/expand)
+    *  HAVE A DIFFERENT DEFAULT SORTING
+    *  TO SET DIFFERENT DEFAULT SOLR QUERY PARAMS
 
     Searches for packages satisfying a given search criteria.
 
@@ -269,6 +272,12 @@ def package_search(context, data_dict):
             labels = lib_plugins.get_permission_labels(
                 ).get_user_dataset_labels(context['auth_user_obj'])
 
+        # ADDED BY HDX - setting default query params
+        _set_default_value_if_needed('qf', data_dict)
+        _set_default_value_if_needed('tie', data_dict)
+        _set_default_value_if_needed('bf', data_dict)
+        # END ADDED BY HDX
+
         query = search.query_for(model.Package)
         query.run(data_dict, permission_labels=labels)
 
@@ -383,6 +392,13 @@ def package_search(context, data_dict):
     _remove_unwanted_dataset_properties(search_results.get('results'))
 
     return search_results
+
+
+def _set_default_value_if_needed(query_param, data_dict):
+    if not data_dict.get(query_param):
+        default_value = config.get('hdx.solr.query.{}'.format(query_param))
+        if default_value:
+            data_dict[query_param] = default_value
 
 
 def _process_facet_ranges(restructured_facets, facet_ranges):
