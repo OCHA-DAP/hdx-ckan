@@ -42,26 +42,30 @@ def token_update(context, data_dict):
 
 
 def send_validation_email(user, token):
-    validate_link = h.url_for(
+    # link = '{0}{1}'
+    # html = """\
+    #         <p>Hello,</p>
+    #         <br/>
+    #         <p>Thank you for your interest in the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>. Please complete the registration process by clicking the link below.</p>
+    #         <br/>
+    #         <p><a href="{link}">Verify Email</a></p>
+    #         <br/>
+    #         <p>Best wishes,</p>
+    #         <p>The HDX team</p>
+    #     """.format(link=link.format(config['ckan.site_url'], validate_link))
+    validation_link = h.url_for(
         controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         action='validate',
         token=token['token'])
     link = '{0}{1}'
-    subject = "HDX: Complete your registration"
-    print 'Validate link: ' + validate_link
-    html = """\
-            <p>Hello,</p> 
-            <br/>
-            <p>Thank you for your interest in the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>. Please complete the registration process by clicking the link below.</p>
-            <br/>
-            <p><a href="{link}">Verify Email</a></p>
-            <br/>
-            <p>Best wishes,</p>
-            <p>The HDX team</p>
-        """.format(link=link.format(config['ckan.site_url'], validate_link))
-
+    subject = "Complete your HDX registration"
+    email_data = {
+        'validation_link': link.format(config['ckan.site_url'], validation_link),
+    }
     try:
-        hdx_mailer.mail_recipient([{'email': user['email']}], subject, html)
+        print validation_link
+        hdx_mailer.mail_recipient([{'email': user['email']}], subject, email_data,
+                                  snippet='email/content/onboarding_email_validation.html')
         return True
     except exceptions.Exception, e:
         error_summary = str(e)

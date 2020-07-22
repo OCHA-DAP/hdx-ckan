@@ -472,32 +472,38 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_extra_update')(context, ue_data_dict)
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
-                subject = 'Thank you for joining the HDX community'
                 link = config['ckan.site_url'] + '/login'
                 # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
                 # <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
                 faq_link = '<a href="https://data.humdata.org/faq">Frequently Asked Questions</a>'
                 full_name = data_dict.get('fullname')
-                html = """\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>Dear {first_name},</p>
-                    <br/>
-                    <p>Welcome to the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>! You have successfully registered your account on HDX.</p>
-                    <br/>
-                    <p>Your username is {username}</p>
-                    <p>Please use the following link to <a href="{link}">login</a></p>
-                    <br/>
-                    <p>You can learn more about HDX in our {faq_link}. Look out for a couple more emails from us in the coming days -- we will be offering tips on making the most of the platform. </p>
-                    <br/>
-                    <p>Best wishes,</p>
-                    <p>The HDX team</p>
-                  </body>
-                </html>
-                """.format(username=data_dict.get('name'), link=link, faq_link=faq_link, first_name=first_name)
+                # html = """\
+                # <html>
+                #   <head></head>
+                #   <body>
+                #     <p>Dear {first_name},</p>
+                #     <br/>
+                #     <p>Welcome to the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>! You have successfully registered your account on HDX.</p>
+                #     <br/>
+                #     <p>Your username is {username}</p>
+                #     <p>Please use the following link to <a href="{link}">login</a></p>
+                #     <br/>
+                #     <p>You can learn more about HDX in our {faq_link}. Look out for a couple more emails from us in the coming days -- we will be offering tips on making the most of the platform. </p>
+                #     <br/>
+                #     <p>Best wishes,</p>
+                #     <p>The HDX team</p>
+                #   </body>
+                # </html>
+                # """.format(username=data_dict.get('name'), link=link, faq_link=faq_link, first_name=first_name)
                 # if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject, html)
+                subject = u'Thank you for joining the HDX community!'
+                email_data = {
+                    'user_first_name': first_name,
+                    'username': data_dict.get('name'),
+                }
+                hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject,
+                                          email_data,
+                                          snippet='email/content/onboarding_confirmation_of_registration.html')
 
         except NotAuthorized:
             return OnbNotAuth
