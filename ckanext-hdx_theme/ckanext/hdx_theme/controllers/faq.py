@@ -90,7 +90,7 @@ class FaqController(base.BaseController):
             return self.error_message(error_summary)
 
         try:
-            subject = u'Faq: request from user'
+
             # html = u"""\
             #     <html>
             #       <head></head>
@@ -103,6 +103,7 @@ class FaqController(base.BaseController):
             #       </body>
             #     </html>
             #     """.format(fullname=fullname, email=email, topic=topic, msg=msg)
+            subject = u'HDX contact form submission'
             email_data = {
                 'user_display_name': fullname,
                 'user_email': email,
