@@ -150,6 +150,12 @@ handlers = console, file
 qualname = ckanext
 propagate = 0
 
+[logger_ckanext.hdx_theme.util.jql]
+level = INFO
+handlers = console, file
+qualname = ckanext.hdx_theme.util.jql
+propagate = 0
+
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)
