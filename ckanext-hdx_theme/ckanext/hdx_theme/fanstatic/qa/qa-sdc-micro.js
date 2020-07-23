@@ -151,8 +151,9 @@ function _initHandsonTable(data) {
     rowHeaders: true,
     colHeaders: true,
     filters: true,
-    viewportColumnRenderingOffset: 10,
-    viewportRowRenderingOffsetNumber: 10,
+    // removed as per HDX-7042, cells were not rendered and couldn't be selected from the menu
+    // viewportColumnRenderingOffset: 10,
+    // viewportRowRenderingOffsetNumber: 10,
     dropdownMenu: contextMenu,
     contextMenu: contextMenu,
     afterInit: () => {
