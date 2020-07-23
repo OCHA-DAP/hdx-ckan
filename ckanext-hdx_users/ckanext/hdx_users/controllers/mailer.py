@@ -165,7 +165,10 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
 
 # def _mail_recipient_html(recipients_list, subject, body, sender_name, bcc_recipients_list=None, footer=True, headers={},
 #                          sender_email=None, reply_wanted=False, snippet='email/email.html'):
-    mail_from = sender_email or config.get('hdx_smtp.mail_from_please_reply') if reply_wanted else config.get('smtp.mail_from')
+    if sender_email:
+        mail_from = sender_email
+    else:
+        mail_from = config.get('hdx_smtp.mail_from_please_reply') if reply_wanted else config.get('smtp.mail_from')
 
     template_data = {
         'data': {
