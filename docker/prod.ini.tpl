@@ -19,7 +19,7 @@ ckan.datastore.write_url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${
 ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB_PASS_DATASTORE}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
 
 ## Site Settings
-ckan.site_url = http://${HDX_DOMAIN}
+ckan.site_url = https://${HDX_DOMAIN}
 beaker.session.secret = 2yD+TJxTgW+VtA38OzxQJNPPO
 app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
