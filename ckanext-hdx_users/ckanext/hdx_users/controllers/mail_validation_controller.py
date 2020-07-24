@@ -502,7 +502,7 @@ class ValidationController(ckan.controllers.user.UserController):
                     'username': data_dict.get('name'),
                 }
                 hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject,
-                                          email_data,
+                                          email_data, footer=data_dict.get('email'),
                                           snippet='email/content/onboarding_confirmation_of_registration.html')
 
         except NotAuthorized:

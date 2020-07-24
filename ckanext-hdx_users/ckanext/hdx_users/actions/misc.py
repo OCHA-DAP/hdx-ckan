@@ -73,6 +73,24 @@ def hdx_send_new_org_request(context, data_dict):
                                   sender_email=ckan_email,
                                   snippet='email/content/new_org_request_hdx_team_notification.html')
 
+        subject = u'Confirmation of your request to create a new organisation on HDX'
+        email_data = {
+            'org_name': data_dict.get('name', ''),
+            # 'org_acronym': data_dict.get('acronym', ''),
+            # 'org_description': data_dict.get('description', ''),
+            # 'org_type': data_dict.get('org_type', ''),
+            # 'org_website': data_dict.get('org_url', ''),
+            # 'data_description': data_dict.get('description_data', ''),
+            # 'requestor_work_email': data_dict.get('work_email', ''),
+            # 'requestor_hdx_username': ckan_username,
+            # 'requestor_hdx_email': ckan_email,
+            # 'request_time': datetime.datetime.now().isoformat(),
+            'user_fullname': data_dict.get('your_name', ''),
+        }
+        hdx_mailer.mail_recipient([{'display_name': data_dict.get('your_name', ''), 'email': ckan_email}],
+                                  subject, email_data, footer=ckan_email,
+                                  snippet='email/content/new_org_request_confirmation_to_user.html')
+
 # replaced with hdx_user_show from actions.py from hdx_theme
 # def hdx_user_show(context, data_dict):
 #     '''Return a user account.
