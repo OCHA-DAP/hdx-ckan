@@ -143,13 +143,13 @@ def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_
 
 
 def mail_recipient(recipients_list, subject, body, sender_name='Humanitarian Data Exchange (HDX)',
-                   sender_email='hdx@un.org', bcc_recipients_list=None,
+                   sender_email='hdx@un.org', cc_recipients_list=None, bcc_recipients_list=None,
                    footer=None, headers={}, reply_wanted=False,  snippet='email/email.html'):
     if recipients_list is None and bcc_recipients_list is None:
         raise MailerException('There are no recipients to send email')
     return _mail_recipient_html(sender_name, sender_email, recipients_list, subject, content_dict=body,
-                                bcc_recipients_list=bcc_recipients_list, footer=footer, headers=headers,
-                                reply_wanted=reply_wanted, snippet=snippet)
+                                cc_recipients_list=cc_recipients_list, bcc_recipients_list=bcc_recipients_list,
+                                footer=footer, headers=headers, reply_wanted=reply_wanted, snippet=snippet)
 
 
 def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
@@ -157,6 +157,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                          recipients_list=None,
                          subject=None,
                          content_dict=None,
+                         cc_recipients_list=None,
                          bcc_recipients_list=None,
                          footer=True,
                          headers={},
@@ -203,6 +204,13 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     if bcc_recipients_list:
         for r in bcc_recipients_list:
             recipient_email_list.append(r.get('email'))
+    cc_recipient = ''
+    if cc_recipients_list:
+        for r in cc_recipients_list:
+            recipient_email_list.append(r.get('email'))
+            cc_recipient += u"%s <%s> , " % (r.get('display_name'), r.get('email'))
+        msg['Cc'] = cc_recipient
+
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     if sender_email:
