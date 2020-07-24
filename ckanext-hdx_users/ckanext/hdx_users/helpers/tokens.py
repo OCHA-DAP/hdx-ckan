@@ -64,7 +64,7 @@ def send_validation_email(user, token):
     }
     try:
         print validation_link
-        hdx_mailer.mail_recipient([{'email': user['email']}], subject, email_data,
+        hdx_mailer.mail_recipient([{'email': user['email']}], subject, email_data, footer=user['email'],
                                   snippet='email/content/onboarding_email_validation.html')
         return True
     except exceptions.Exception, e:

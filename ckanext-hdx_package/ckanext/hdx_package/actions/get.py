@@ -813,10 +813,6 @@ def hdx_send_mail_contributor(context, data_dict):
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
-
-
-
-
     if org_members:
         admins = org_members.get('admins')
         for admin in admins:
@@ -832,17 +828,32 @@ def hdx_send_mail_contributor(context, data_dict):
         if not any(r['email'] == m_user.get('email') for r in recipients_list):
             recipients_list.append({'email': m_user.get('email'), 'display_name': m_user.get('display_name')})
 
-    bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
 
-    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=admins_body_html,
-                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              bcc_recipients_list=bcc_recipients_list, footer=_FOOTER_CONTACT_CONTRIBUTOR,
-                              reply_wanted=True)
 
-    requester_list = [{'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')}]
-    hdx_mailer.mail_recipient(recipients_list=requester_list, subject=subject, body=requester_body_html,
-                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              footer=_FOOTER_CONTACT_CONTRIBUTOR)
+    # hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=admins_body_html,
+    #                           sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
+    #                           bcc_recipients_list=bcc_recipients_list, footer=_FOOTER_CONTACT_CONTRIBUTOR,
+    #                           reply_wanted=True)
+    org_dict = get_action('hdx_light_group_show')(context, {'id': data_dict.get('pkg_owner_org')})
+    subject = u'HDX dataset inquiry'
+    email_data = {
+        'org_name': org_dict.get('title'),
+        'user_fullname': data_dict.get('fullname'),
+        'user_email': data_dict.get('email'),
+        'pkg_url': data_dict.get('pkg_url'),
+        'pkg_title': data_dict.get('pkg_title'),
+        'topic': data_dict.get('topic'),
+        'msg': data_dict.get('msg'),
+    }
+    cc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
+    hdx_mailer.mail_recipient(recipients_list, subject, email_data, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'), cc_recipients_list=cc_recipients_list,
+                              snippet='email/content/contact_contributor_request.html')
+
+    # requester_list = [{'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')}]
+    # hdx_mailer.mail_recipient(recipients_list=requester_list, subject=subject, body=requester_body_html,
+    #                           sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
+    #                           footer=_FOOTER_CONTACT_CONTRIBUTOR)
 
     return None
 

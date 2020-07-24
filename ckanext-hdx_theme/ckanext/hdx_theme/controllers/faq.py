@@ -90,19 +90,6 @@ class FaqController(base.BaseController):
             return self.error_message(error_summary)
 
         try:
-
-            # html = u"""\
-            #     <html>
-            #       <head></head>
-            #       <body>
-            #         <p>A user sent the following question using the FAQ contact us form.</p>
-            #         <p>Name: {fullname}</p>
-            #         <p>Email: {email}</p>
-            #         <p>Section: {topic}</p>
-            #         <p>Message: {msg}</p>
-            #       </body>
-            #     </html>
-            #     """.format(fullname=fullname, email=email, topic=topic, msg=msg)
             subject = u'HDX contact form submission'
             email_data = {
                 'user_display_name': fullname,
@@ -110,10 +97,18 @@ class FaqController(base.BaseController):
                 'topic': topic,
                 'msg': msg,
             }
-            # html = mailer.render_jinja2('email/content/faq_request.html', email_data)
             hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
                                       subject, email_data, sender_name=fullname, sender_email=email,
                                       snippet='email/content/faq_request.html')
+
+            subject = u'Confirmation of your contact form submission'
+            email_data = {
+                'user_fullname': fullname,
+                'topic': topic,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': fullname, 'email': email}],
+                                      subject, email_data, snippet='email/content/faq_request_user_confirmation.html')
 
         except exceptions.Exception, e:
             error_summary = e.error or str(e)
