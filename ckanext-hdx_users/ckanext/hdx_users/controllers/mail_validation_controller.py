@@ -464,29 +464,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
                 link = config['ckan.site_url'] + '/login'
-                # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
-                # <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
-                faq_link = '<a href="https://data.humdata.org/faq">Frequently Asked Questions</a>'
                 full_name = data_dict.get('fullname')
-                # html = """\
-                # <html>
-                #   <head></head>
-                #   <body>
-                #     <p>Dear {first_name},</p>
-                #     <br/>
-                #     <p>Welcome to the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>! You have successfully registered your account on HDX.</p>
-                #     <br/>
-                #     <p>Your username is {username}</p>
-                #     <p>Please use the following link to <a href="{link}">login</a></p>
-                #     <br/>
-                #     <p>You can learn more about HDX in our {faq_link}. Look out for a couple more emails from us in the coming days -- we will be offering tips on making the most of the platform. </p>
-                #     <br/>
-                #     <p>Best wishes,</p>
-                #     <p>The HDX team</p>
-                #   </body>
-                # </html>
-                # """.format(username=data_dict.get('name'), link=link, faq_link=faq_link, first_name=first_name)
-                # if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
                 subject = u'Thank you for joining the HDX community!'
                 email_data = {
                     'user_first_name': first_name,
@@ -632,31 +610,41 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             if not c.user:
                 return OnbNotAuth
-            usr = c.userobj.display_name or c.user
+            # usr = c.userobj.display_name or c.user
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
 
-            subject = u'{fullname} invited you to join HDX!'.format(fullname=usr)
-            link = config['ckan.site_url'] + '/user/register'
-            hdx_link = '<a href="{link}">HDX</a>'.format(link=link)
-            # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
-            faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
-            html = u"""\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
-                    <p>You can learn more about HDX by {faq_link}.</p>
-                    <p>Join {hdx_link}</p>
-                  </body>
-                </html>
-            """.format(fullname=usr, faq_link=faq_link, hdx_link=hdx_link)
+            # subject = u'{fullname} invited you to join HDX!'.format(fullname=usr)
+            # link = config['ckan.site_url'] + '/user/register'
+            # hdx_link = '<a href="{link}">HDX</a>'.format(link=link)
+            # # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
+            # faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
+            # html = u"""\
+            #     <html>
+            #       <head></head>
+            #       <body>
+            #         <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
+            #         <p>You can learn more about HDX by {faq_link}.</p>
+            #         <p>Join {hdx_link}</p>
+            #       </body>
+            #     </html>
+            # """.format(fullname=usr, faq_link=faq_link, hdx_link=hdx_link)
 
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
+            recipients_list = []
             for f in friends:
                 if f and configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
+                    recipients_list.append({'display_name': f, 'email': f})
+            subject = u'Invitation to join the Humanitarian Data Exchange (HDX)'
+            email_data = {
+                'user_fullname': c.userobj.fullname,
+                'user_email': c.userobj.email,
+            }
+            cc_recipients_list = {'display_name': c.userobj.fullname, 'email': c.userobj.email}
+            hdx_mailer.mail_recipient(recipients_list, subject, email_data, cc_recipients_list=cc_recipients_list,
+                                      snippet='email/content/onboarding_invite_others.html')
+            # hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
 
         except Exception, e:
             error_summary = str(e)
