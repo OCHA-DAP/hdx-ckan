@@ -2,6 +2,7 @@ import logging
 
 import ckanext.hdx_org_group.actions.authorize as authorize
 import ckanext.hdx_org_group.actions.get as get_actions
+import ckanext.hdx_org_group.actions.create as create_actions
 import ckanext.hdx_org_group.actions.update as update_actions
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
@@ -70,7 +71,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
             'hdx_get_locations_info_from_rw': get_actions.hdx_get_locations_info_from_rw,
             'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location,
-            'hdx_organization_follower_list': get_actions.hdx_organization_follower_list
+            'hdx_organization_follower_list': get_actions.hdx_organization_follower_list,
+            'hdx_user_invite': create_actions.hdx_user_invite
+
         }
 
     def get_auth_functions(self):

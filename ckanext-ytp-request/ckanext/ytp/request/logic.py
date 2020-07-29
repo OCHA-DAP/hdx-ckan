@@ -16,6 +16,7 @@ from ckan.lib.i18n import set_lang, get_lang
 from ckan.lib.helpers import url_for
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.ytp.request.util as hdx_util
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 
@@ -65,34 +66,27 @@ def _reset_lang():
 
 
 def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=None, admin_list=None):
-    # current_locale = get_lang()
-    #
-    # if locale == 'en':
-    #     _reset_lang()
-    # else:
-    #     set_lang(locale)
-    subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(**{
-        'user_fullname': user_obj.display_name
-    })
-
-    user_message = data_dict.get('message') if data_dict else 'Please add me to this organisation'
-    message = hdx_util._MESSAGE_MEMBERSHIP_REQUEST.format(**{
-        'user_fullname': user_obj.display_name,
-        'user_email': user_obj.email,
-        'org_title': group.display_name,
-        'org_add_member_url': (config['ckan.site_url'] + '/organization/members/{org_name}').format(
-            org_name=group.name),
-        'user_message': user_message
-    })
-
     try:
-        # mail_user(admin, subject, message)
-        # HDX change
-        if admin:
-            hdx_mail.send_mail([{'display_name': admin.display_name or admin.fullname, 'email': admin.email}], subject,
-                               message)
-        else:
-            hdx_mail.send_mail(admin_list, subject, message, True)
+        if admin_list:
+            subject = user_obj.display_name + u' has asked to join your organisation'
+            email_data = {
+                'org_name': group.display_name,
+                'org_membership_url': config.get('ckan.site_url') + '/organization/members/' + group.name,
+                'user_fullname': user_obj.display_name,
+                'user_email': user_obj.email
+            }
+            hdx_mailer.mail_recipient(admin_list, subject, email_data,
+                                      snippet='email/content/join_organization_request.html')
+
+            subject = u'Your request to join organisation ' + group.display_name
+            email_data = {
+                'org_name': group.display_name,
+                'user_fullname': user_obj.display_name,
+                'user_email': user_obj.email
+            }
+            hdx_mailer.mail_recipient([{'display_name': user_obj.display_name, 'email': user_obj.email}],
+                                      subject, email_data,
+                                      snippet='email/content/join_organization_request_confirmation_to_user.html')
 
     except MailerException, e:
         log.error(e)
@@ -100,26 +94,54 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
     #     set_lang(current_locale)
 
 
-def _mail_process_status(locale, member_user, approve, group_name, capacity):
-    # current_locale = get_lang()
-    # if locale == 'en':
-    #     _reset_lang()
-    # else:
-    #     set_lang(locale)
-
-    role_name = _(capacity)
-
-    subject = hdx_util._SUBJECT_MEMBERSHIP_APPROVED if approve else hdx_util._SUBJECT_MEMBERSHIP_REJECTED
-    message_template = hdx_util._MESSAGE_MEMBERSHIP_APPROVED if approve else hdx_util._MESSAGE_MEMBERSHIP_REJECTED
-
-    message = message_template.format(**{
-        'role': role_name,
-        'organization': group_name
-    })
+def _mail_process_status(locale, member_user, approve, group_name, capacity, group_id=None):
     try:
-        hdx_mail.send_mail(
-            [{'display_name': member_user.display_name or member_user.fullname, 'email': member_user.email}],
-            subject, message)
+        if approve:
+            subject = u'Approval of your request to join organisation ' + group_name
+            email_data = {
+                'user_fullname': member_user.display_name,
+                'org_name': group_name,
+                'capacity': capacity
+            }
+            hdx_mailer.mail_recipient([{'display_name': member_user.display_name, 'email': member_user.email}], subject,
+                                      email_data, footer=member_user.email,
+                                      snippet='email/content/join_organization_approval_to_user.html')
+            admin_list = []
+            if group_id:
+                for admin in get_organization_admins(group_id):
+                    if admin.email != member_user.email:
+                        admin_list.append({'display_name': admin.display_name, 'email': admin.email})
+                subject = u'Join request approved for organisation ' + group_name
+                email_data = {
+                    'user_fullname': member_user.display_name,
+                    'user_email': member_user.email,
+                    'org_name': group_name,
+                }
+                hdx_mailer.mail_recipient(admin_list, subject, email_data,
+                                          snippet='email/content/join_organization_approval_to_admins.html')
+
+        else:
+            subject = u'Denial of your request to join organisation ' + group_name
+            email_data = {
+                'user_fullname': member_user.display_name,
+                'org_name': group_name,
+            }
+            hdx_mailer.mail_recipient([{'display_name': member_user.display_name, 'email': member_user.email}], subject,
+                                      email_data, footer=member_user.email,
+                                      snippet='email/content/join_organization_reject_to_user.html')
+            admin_list = []
+            if group_id:
+                for admin in get_organization_admins(group_id):
+                    admin_list.append({'display_name': admin.display_name, 'email': admin.email})
+                subject = u'Join request denied for organisation ' + group_name
+                email_data = {
+                    'user_fullname': member_user.display_name,
+                    'user_email': member_user.email,
+                    'org_name': group_name,
+                }
+                hdx_mailer.mail_recipient(admin_list, subject, email_data,
+                                          snippet='email/content/join_organization_reject_to_admins.html')
+
     except MailerException, e:
         log.error(e)
     # finally:
@@ -323,7 +345,7 @@ def _process_request(context, member, action, new_role=None):
 
     locale = member.extras.get('locale', None) or _get_default_locale()
     _log_process(member_user, member.group.display_name, approve, admin_user)
-    _mail_process_status(locale, member_user, approve, member.group.display_name, member.capacity)
+    _mail_process_status(locale, member_user, approve, member.group.display_name, member.capacity, member.group_id)
 
     return model_dictize.member_dictize(member, context)
 
