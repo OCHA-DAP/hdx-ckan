@@ -79,9 +79,9 @@ def hdx_send_reset_link(context, data_dict):
 
     mailer.create_reset_key(user)
 
-    subject = mailer.render_jinja2('emails/reset_password_subject.txt', {'site_title': config.get('ckan.site_title')})
+    # subject = mailer.render_jinja2('emails/reset_password_subject.txt', {'site_title': config.get('ckan.site_title')})
     # Make sure we only use the first line
-    subject = subject.split('\n')[0]
+    subject = u'HDX password reset'
 
     reset_link = user_fullname = recipient_mail = None
     if user:
@@ -90,16 +90,23 @@ def hdx_send_reset_link(context, data_dict):
         reset_link = urljoin(config.get('ckan.site_url'),
                              h.url_for(controller='user', action='perform_reset', id=user.id, key=user.reset_key))
 
-    body = u"""\
-                <p>Dear {fullname}, </p>
-                <p>You have requested your password on {site_title} to be reset.</p>
-                <p>Please click on the following link to confirm this request:</p>
-                <p> <a href=\"{reset_link}\">{reset_link}</a></p>
-            """.format(fullname=user_fullname, site_title=config.get('ckan.site_title'),
-                       reset_link=reset_link)
+    # body = u"""\
+    #             <p>Dear {fullname}, </p>
+    #             <p>You have requested your password on {site_title} to be reset.</p>
+    #             <p>Please click on the following link to confirm this request:</p>
+    #             <p> <a href=\"{reset_link}\">{reset_link}</a></p>
+    #         """.format(fullname=user_fullname, site_title=config.get('ckan.site_title'),
+    #                    reset_link=reset_link)
 
+    email_data = {
+        'user_fullname': user_fullname,
+        'user_reset_link': reset_link,
+    }
     if recipient_mail:
-        hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
+        hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject,
+                                  email_data, footer=recipient_mail,
+                                  snippet='email/content/password_reset.html')
+        # hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
 
 
 @logic.validate(logic.schema.default_autocomplete_schema)

@@ -624,35 +624,19 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
 
-            # subject = u'{fullname} invited you to join HDX!'.format(fullname=usr)
-            # link = config['ckan.site_url'] + '/user/register'
-            # hdx_link = '<a href="{link}">HDX</a>'.format(link=link)
-            # # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
-            # faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
-            # html = u"""\
-            #     <html>
-            #       <head></head>
-            #       <body>
-            #         <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
-            #         <p>You can learn more about HDX by {faq_link}.</p>
-            #         <p>Join {hdx_link}</p>
-            #       </body>
-            #     </html>
-            # """.format(fullname=usr, faq_link=faq_link, hdx_link=hdx_link)
-
-            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
-            recipients_list = []
-            for f in friends:
-                if f and configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                    recipients_list.append({'display_name': f, 'email': f})
             subject = u'Invitation to join the Humanitarian Data Exchange (HDX)'
             email_data = {
                 'user_fullname': c.userobj.fullname,
                 'user_email': c.userobj.email,
             }
-            cc_recipients_list = {'display_name': c.userobj.fullname, 'email': c.userobj.email}
-            hdx_mailer.mail_recipient(recipients_list, subject, email_data, cc_recipients_list=cc_recipients_list,
-                                      snippet='email/content/onboarding_invite_others.html')
+            cc_recipients_list = [{'display_name': c.userobj.fullname, 'email': c.userobj.email}]
+            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
+            for f in friends:
+                if f and configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
+                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, email_data,
+                                              cc_recipients_list=cc_recipients_list,
+                                              snippet='email/content/onboarding_invite_others.html')
+
             # hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
 
         except Exception, e:

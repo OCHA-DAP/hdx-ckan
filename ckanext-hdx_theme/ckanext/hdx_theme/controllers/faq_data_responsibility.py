@@ -88,24 +88,23 @@ class FaqDataResponsibilityController(base.BaseController):
             return self.error_message(error_summary)
 
         try:
-            subject = u'Faq Data Responsibility: request from user'
-            html = u"""\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>A user sent the following question using the FAQ contact us form.</p>
-                    <p>Name: {fullname}</p>
-                    <p>Email: {email}</p>
-                    <p>Message: {msg}</p>
-                  </body>
-                </html>
-                """.format(fullname=fullname, email=email, msg=msg)
-            recipients_list = [
-                {'display_name': 'HDX', 'email': hdx_email},
-                {'display_name': 'Jos', 'email': 'berens@un.org'},
-                {'display_name': 'Stuart', 'email': 'campo2@un.org'},
-            ]
-            hdx_mailer.mail_recipient(recipients_list, subject, html)
+            subject = u'HDX contact form submission (COVID-19 data responsibility)'
+            email_data = {
+                'user_display_name': fullname,
+                'user_email': email,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                                      subject, email_data, sender_name=fullname, sender_email=email,
+                                      snippet='email/content/data_responsability_faq_request.html')
+
+            subject = u'Confirmation of your contact form submission (COVID-19 data responsibility)'
+            email_data = {
+                'user_fullname': fullname,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': fullname, 'email': email}],
+                                      subject, email_data, snippet='email/content/data_responsability_faq_request_user_confirmation.html')
 
         except exceptions.Exception, e:
             error_summary = e.error or str(e)

@@ -1,0 +1,13 @@
+<p>Dear {{ data.user_fullname }},</p>
+
+<p>Your request to join the HDX organisation {{ data.org_name }} was approved by the organisation administrator(s).</p>
+
+<p>You have been assigned the role of
+{% if data.capacity == 'admin' %} <strong>administrator</strong>: add, edit, and delete datasets, and manage organisation membership.
+{% elif data.capacity == 'editor' %} <strong>editor</strong>: add, edit, and delete datasets.
+{% elif data.capacity == 'member'  %} <strong>member</strong>: view all of an organisation’s datasets (including private datasets).
+{% endif %}
+</p>
+<p>If your role has been set to editor or administrator, you are now ready to share data. There are three ways to share data on HDX: public, private, and by request. <a href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a">Learn more in our FAQ</a>.</p>
+
+<p>Thank you for being part of the HDX community!</p>
