@@ -35,7 +35,7 @@ def onboarding_followee_list(context, data_dict):
                 result_aux.append(create_item(item, type, False))
                 i += 1
 
-    orgs = get_action('cached_organization_list')(context, {})
+    orgs = get_action('cached_organization_list')({}, {})
     orgs = sorted(orgs, key=lambda elem: elem.get('package_count', 0), reverse=True)
 
     i = 1
