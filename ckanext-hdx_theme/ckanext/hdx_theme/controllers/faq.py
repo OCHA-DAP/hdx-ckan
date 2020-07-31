@@ -17,7 +17,7 @@ from ckan.controllers.api import CONTENT_TYPES
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 ValidationError = logic.ValidationError
-§
+CaptchaNotValid = _('Captcha is not valid')
 FaqSuccess = json.dumps({'success': True})
 FaqCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
 

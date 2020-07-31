@@ -121,7 +121,7 @@ def hdx_user_invite(context, data_dict):
     return model_dictize.user_dictize(user, context)
 
 
-def get_organization_admins(group_id, skip_email):
+def get_organization_admins(group_id, skip_email=''):
     admin_list = []
     admins = set(core_model.Session.query(core_model.User).join(core_model.Member,
                                                                 core_model.User.id == core_model.Member.table_id).
