@@ -1,5 +1,9 @@
 #!/usr/bin/with-contenv sh
 
+[ -z "$HDX_SOLR_ADDR" ] && export HDX_SOLR_ADDR="solr"
+[ -z "$HDX_SOLR_PORT" ] && export HDX_SOLR_PORT="8983"
+[ -z "$HDX_SOLR_CORE" ] && export HDX_SOLR_CORE="ckan"
+
 # preparing to run ckan...
 bash /srv/ckan/docker/ckan_helper.sh
 
