@@ -25,8 +25,8 @@ app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
 ## Search Settings
 ckan.site_id = default
-solr_url = http://solr:8983/solr/ckan
-#solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/ckan
+#solr_url = http://solr:8983/solr/ckan
+solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/${HDX_SOLR_CORE}
 #ckan.simple_search = 1
 
 ckan.recaptcha.publickey  = 6Lcl60EUAAAAAE46a3XcPM2nPUKI2K4XZbcsorkR
