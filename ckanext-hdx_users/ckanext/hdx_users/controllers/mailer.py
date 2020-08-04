@@ -1,11 +1,14 @@
 import logging
 import smtplib
+import cgi
 import ckan.lib.mailer as mailer
 from email import Utils
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from time import time
+from email.MIMEBase import MIMEBase
+from email import Encoders
 
 import paste.deploy.converters
 from pylons import config
@@ -144,12 +147,12 @@ def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_
 
 def mail_recipient(recipients_list, subject, body, sender_name='Humanitarian Data Exchange (HDX)',
                    sender_email='hdx@un.org', cc_recipients_list=None, bcc_recipients_list=None,
-                   footer=None, headers={}, reply_wanted=False,  snippet='email/email.html'):
+                   footer=None, headers={}, reply_wanted=False,  snippet='email/email.html', file=None):
     if recipients_list is None and bcc_recipients_list is None:
         raise MailerException('There are no recipients to send email')
     return _mail_recipient_html(sender_name, sender_email, recipients_list, subject, content_dict=body,
                                 cc_recipients_list=cc_recipients_list, bcc_recipients_list=bcc_recipients_list,
-                                footer=footer, headers=headers, reply_wanted=reply_wanted, snippet=snippet)
+                                footer=footer, headers=headers, reply_wanted=reply_wanted, snippet=snippet, file=file)
 
 
 def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
@@ -162,10 +165,9 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                          footer=True,
                          headers={},
                          reply_wanted=False,
-                         snippet='email/email.html'):
+                         snippet='email/email.html',
+                         file=None):
 
-# def _mail_recipient_html(recipients_list, subject, body, sender_name, bcc_recipients_list=None, footer=True, headers={},
-#                          sender_email=None, reply_wanted=False, snippet='email/email.html'):
     if sender_email:
         mail_from = sender_email
     else:
@@ -178,10 +180,10 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             '_snippet': snippet
         },
     }
-    # body = add_msg_niceties(body=body, footer=footer)
     body_html = mailer.render_jinja2('email/email.html', template_data)
 
-    msg = MIMEMultipart('alternative')
+    # msg = MIMEMultipart('alternative')
+    msg = MIMEMultipart()
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
@@ -217,6 +219,15 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
         msg['Reply-To'] = Header((u"%s <%s>" % (sender_name, sender_email)), 'utf-8')
     part = MIMEText(body_html, 'html', 'utf-8')
     msg.attach(part)
+
+    if isinstance(file, cgi.FieldStorage):
+        _part = MIMEBase('application', 'octet-stream')
+        _part.set_payload(file.file.read())
+        Encoders.encode_base64(_part)
+        extension = file.filename.split('.')[-1]
+        header_value = 'attachment; filename=attachment.{0}'.format(extension)
+        _part.add_header('Content-Disposition', header_value)
+        msg.attach(_part)
 
     # Send the email using Python's smtplib.
     smtp_connection = smtplib.SMTP()
