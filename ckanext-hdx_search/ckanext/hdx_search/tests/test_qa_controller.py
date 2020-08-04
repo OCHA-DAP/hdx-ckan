@@ -91,7 +91,7 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         qa_q_list = self._get_action('qa_questions_list')(context_sysadmin, {})
         assert 'metadata_checklist' in qa_q_list
-        assert 29 == len(qa_q_list.get('metadata_checklist'))
+        assert 32 == len(qa_q_list.get('metadata_checklist'))
         assert 'resources_checklist' in qa_q_list
         assert 10 == len(qa_q_list.get('resources_checklist'))
         assert 'data_protection_checklist' in qa_q_list
