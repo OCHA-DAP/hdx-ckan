@@ -1,0 +1,35 @@
+{% if pkg.x_show_grouping %}
+  {% resource 'hdx_theme/resource_grouping/hdx_resource_grouping.js' %}
+  <div class="dropdown">
+    <a id="resource-grouping-link-title" href="javascript:void(0);"
+       class="dropdown-toggle btn btn-empty btn-empty-blue resource-grouping-btn" data-toggle="dropdown">
+      <span class="selected-grouping-title">{{ pkg.x_resource_grouping[0] }}</span>
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu crises-menu" role="menu" data-module="hdx_resource_grouping">
+      <li class="crises-group">LATEST
+      {% for grouping in pkg.x_resource_grouping[:1] %}
+        <ul>
+          <li data-grouping-id="{{ h.hdx_munge_title(grouping) }}">
+            <a href="javascript:void(0);">
+              {{ grouping }}
+            </a>
+          </li>
+        </ul>
+      {% endfor %}
+      </li>
+
+      <li class="crises-group">PREVIOUS VERSIONS
+      {% for grouping in pkg.x_resource_grouping[1:] %}
+        <ul>
+          <li data-grouping-id="{{ h.hdx_munge_title(grouping) }}">
+            <a href="javascript:void(0);">
+              {{ grouping }}
+            </a>
+          </li>
+        </ul>
+      {% endfor %}
+      </li>
+    </ul>
+  </div>
+{% endif %}

@@ -12,8 +12,12 @@
 {% resource 'hdx_theme/hdx_show_more.js' %}
 {% resource 'hdx_theme/resource-list' %}
 
+{% if pkg.x_show_grouping %}
+  {% set resource_grouping =  h.hdx_munge_title(res.x_grouping) %}
 
-<li class="resource-item">
+{% endif %}
+
+<li class="resource-item" data-grouping-id="{{ resource_grouping }}" style="display: {{ 'none' if pkg.x_show_grouping else '' }}">
   {% block resource_item_title %}
     <a class="heading" title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
