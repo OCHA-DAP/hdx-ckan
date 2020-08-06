@@ -26,6 +26,7 @@ import ckan.plugins.toolkit as tk
 from ckan.common import (
     _, ungettext, c, request, json,
 )
+from ckan.lib import munge
 from ckan.plugins import toolkit
 
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
@@ -748,3 +749,7 @@ def hdx_dataset_is_hxl(tag_list):
 
 def hdx_switch_url_path():
     return switch_url_path()
+
+
+def hdx_munge_title(title):
+    return munge.munge_title_to_name(title)
