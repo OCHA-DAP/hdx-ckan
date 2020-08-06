@@ -3716,6 +3716,9 @@ ul.list-horizontal li:first-child:before {
   padding: 10px 20px;
   border-bottom: 1px solid #eeeeee;
 }
+.crises-menu li.crises-group a:hover {
+  color: #007CE0;
+}
 .crises-menu li.crises-group a.archive {
   text-transform: uppercase;
   color: #888888;

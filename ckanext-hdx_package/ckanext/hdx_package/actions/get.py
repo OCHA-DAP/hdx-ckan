@@ -619,9 +619,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
 
 def __compute_resource_grouping(context, package_dict):
     if context.get('use_cache', True):
-        saved_grouping = package_dict.get('resource_grouping')
-        computed_grouping = saved_grouping if saved_grouping else ResourceGrouping(package_dict).get_sorted_groupings()
-        package_dict['x_resource_grouping'] = computed_grouping
+        ResourceGrouping(package_dict).populate_computed_groupings()
 
 
 @logic.side_effect_free
