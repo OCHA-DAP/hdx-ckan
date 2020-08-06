@@ -40,5 +40,21 @@
         }
     })(document, window.mixpanel || []);
     mixpanel.init("{{ h.hdx_get_ckan_config('hdx.analytics.mixpanel.token') }}");
+
+    var mixpanelTrackData = {
+      "page title": analyticsInfo.pageTitle,
+      "org name": analyticsInfo.organizationName,
+      "org id": analyticsInfo.organizationId,
+      "group names": analyticsInfo.groupNames,
+      "group ids": analyticsInfo.groupIds,
+      "authenticated": analyticsInfo.authenticated,
+      "dataset availability": analyticsInfo.datasetAvailability,
+      "is cod": analyticsInfo.isCod,
+      "is indicator": analyticsInfo.isIndicator,
+      "dataset id": analyticsInfo.datasetId,
+      "dataset name": analyticsInfo.datasetName
+    };
+
+    mixpanel.track("page view", mixpanelTrackData);
 </script>
 <!-- end Mixpanel -->
