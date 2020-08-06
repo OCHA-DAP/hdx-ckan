@@ -106,7 +106,11 @@ function runPIICheck(resource) {
         _updateLoadingMessage("PII check launched! Reloading page ...");
       },
       (error) => {
-        alert("Error, PII check couldn't be launched!");
+        let extraMsg = '';
+        if( error && error.responseJSON){
+          extraMsg = JSON.stringify(error.responseJSON.error.message);
+        }
+        alert("Error, PII check couldn't be launched!!  " + extraMsg);
         $("#loadingScreen").hide();
       }
     )
@@ -123,7 +127,7 @@ function updateQuarantine(resource, flag) {
         _updateLoadingMessage("Quarantine status successfully updated! Reloading page ...");
       },
       (error) => {
-        alert("Error, quarantine status not updated!");
+        alert("Error, quarantine status not updated! " + extraMsg);
         $("#loadingScreen").hide();
       }
     )

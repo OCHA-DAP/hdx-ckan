@@ -1,10 +1,8 @@
 import json
 import logging
 import urllib
-
 import requests
 from pylons import config
-
 import ckan.lib.munge as munge
 import ckan.logic as logic
 import ckan.model as model
@@ -99,11 +97,10 @@ def hdx_qa_sdcmicro_run(context, data_dict):
             resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "sdc_report_flag": "QUEUED"})
             _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"),
                                 data_dict.get("columns_type_list"), data_dict.get("sheet", 0), context)
-        except Exception, ex:
-            log.error(ex)
-            return {
-                'message': str(ex)
-            }
+        except Exception, e:
+            ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
+            message = e.error_summary if hasattr(e,'error_summary') and e.error_summary else 'Something went wrong while processing the request: {}'.format(ex_msg)
+            raise logic.ValidationError({'message': message}, error_summary=message)
     else:
         return {
             'message': "Resource ID not provided or not found"
@@ -134,14 +131,12 @@ def hdx_qa_pii_run(context, data_dict):
         try:
             resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
             _run_pii_check(resource_dict, context)
-        except Exception, ex:
-            return {
-                'message': "Resource ID not found"
-            }
+        except Exception, e:
+            ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
+            message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request: {}'.format(ex_msg)
+            raise logic.ValidationError({'message': message}, error_summary=message)
     else:
-        return {
-            'message': "Resource ID not provided or not found"
-        }
+        return json.dumps({'success': False, 'error': {'message': 'Resource ID not provided or not found'}})
     return True
 
 

@@ -356,7 +356,11 @@ function _onSaveSDCMicro(ev) {
       if (result.success) {
         _updateLoadingMessage("SDC Micro successfully launched! Reloading page ...");
       } else {
-        alert("Error, SDC Micro could not be started!");
+        let extraMsg = '';
+        if( error && error.responseJSON){
+          extraMsg = JSON.stringify(error.responseJSON.error.message);
+        }
+        alert("Error, SDC Micro could not be started!!  " + extraMsg);
         $("#loadingScreen").hide();
       }
     })
