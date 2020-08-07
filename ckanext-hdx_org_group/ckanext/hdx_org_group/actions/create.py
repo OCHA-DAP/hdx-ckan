@@ -1,19 +1,18 @@
 import random
+from socket import error as socket_error
+
+from pylons import config
+
+import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as core_df
 import ckan.logic as logic
 import ckan.logic.action.create as core_create
 import ckan.logic.schema as core_schema
 import ckan.model as core_model
-import ckan.lib.dictization.model_dictize as model_dictize
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckan.lib.mailer as core_mailer
-import ckan.lib.helpers as h
+import ckanext.hdx_users.helpers.reset_password as reset_password
 from ckan.common import c
-from socket import error as socket_error
-
-from ckan.common import _
-
-
 
 _validate = core_df.validate
 _check_access = logic.check_access
@@ -85,12 +84,14 @@ def hdx_user_invite(context, data_dict):
         group_dict = _get_action('group_show')(context,
                                                {'id': data['group_id']})
     try:
-        core_mailer.create_reset_key(user)
+        expiration_in_hours = int(config.get('hdx.password.invitation_reset_key.expiration_in_hours'))
+        reset_password.create_reset_key(user, expiration_in_hours=expiration_in_hours)
         subject = u'HDX account creation'
         email_data = {
             'org_name': group_dict.get('display_name'),
             'capacity': data['role'],
             'user_fullname': c.userobj.display_name,
+            'expiration_in_hours': expiration_in_hours,
             'user_reset_link': h.url_for(controller='user',
                                          action='perform_reset',
                                          id=user.id,

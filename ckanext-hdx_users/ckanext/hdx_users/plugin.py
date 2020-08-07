@@ -95,7 +95,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'token_create': create.token_create,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list,
-            'hdx_send_reset_link': get.hdx_send_reset_link,
+            'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
             'hdx_first_login': create.hdx_first_login
         }
@@ -106,7 +106,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_validate': authorize.user_can_validate,
             'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'manage_permissions': auth.manage_permissions,
-            'hdx_first_login': auth.hdx_first_login
+            'hdx_first_login': auth.hdx_first_login,
+            'user_update': auth.user_update
         }
 
     # IConfigurable
