@@ -329,3 +329,6 @@ hdx.qadashboard.enabled = true
 hdx.solr.query.qf = name^4 title^4 vocab_text_Topics^2 notes groups^2 text
 hdx.solr.query.tie = 0.3
 hdx.solr.query.bf = scale(ord(pageviews_last_14_days),0,8)
+
+hdx.password.reset_key.expiration_in_hours = 3
+hdx.password.invitation_reset_key.expiration_in_hours = 48
