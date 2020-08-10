@@ -1,14 +1,17 @@
 from flask import Blueprint
 
 import logging
-
+import ckan.logic as logic
 import ckan.common as common
 import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
+from ckan.common import c
+import ckan.authz as new_authz
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_org_group.controller_logic.organization_search_logic import OrganizationSearchLogic
 
 g = common.g
 request = common.request
@@ -18,6 +21,7 @@ check_access = tk.check_access
 render = tk.render
 abort = tk.abort
 NotAuthorized = tk.NotAuthorized
+NotFound = logic.NotFound
 _ = tk._
 
 log = logging.getLogger(__name__)
@@ -103,5 +107,58 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     return render(template_file, template_data)
 
 
+@check_redirect_needed
+def light_read(id):
+    return _read('light/organization/read.html', id, True, False)
+
+
+def _populate_template_data(org_dict):
+    user = c.user or c.author
+    ignore_capacity_check = False
+    is_org_member = (user and new_authz.has_user_permission_for_group_or_org(org_dict.get('name'), user, 'read'))
+    if is_org_member:
+        ignore_capacity_check = True
+    package_type = 'dataset'
+    search_logic = OrganizationSearchLogic(id=org_dict.get('name'))
+    fq = 'organization:"{}"'.format(org_dict.get('name'))
+    search_logic._search(package_type, additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
+    org_dict['template_data'] = search_logic.template_data
+
+
+def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
+    context = {
+        'model': model,
+        'session': model.Session,
+        'for_view': True,
+        'with_private': False
+    }
+    try:
+        check_access('site_read', context)
+    except NotAuthorized:
+        abort(403, _('Not authorized to see this page'))
+
+    org_dict = None
+    try:
+        org_dict = get_action('hdx_light_group_show')(context, {'id': id})
+    except NotAuthorized:
+        abort(404, _('Page not found'))
+    except NotFound:
+        abort(404, _('Page not found'))
+
+    _populate_template_data(org_dict)
+
+    template_data = {
+        # 'q': q,
+        # 'sorting_selected': sort_option,
+        # 'limit_selected': limit,
+        # 'page': page,
+        'org_dict': org_dict,
+        'page_has_desktop_version': show_switch_to_desktop,
+        'page_has_mobile_version': show_switch_to_mobile,
+    }
+    return render(template_file, template_data)
+
+
 hdx_org.add_url_rule(u'', view_func=index)
 hdx_light_org.add_url_rule(u'', view_func=light_index)
+hdx_light_org.add_url_rule(u'/<id>', view_func=light_read)
