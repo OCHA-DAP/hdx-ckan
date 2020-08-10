@@ -19,12 +19,13 @@ getting_started = {
         },
         {
             'q': 'What browsers are best to use for HDX?',
-            'a': 'We build and test HDX using the latest versions of Chrome and Firefox. We also test on Internet '
-                 'Explorer 10 and later, but do not formally support it.',
+            'a': 'We build and test HDX using the latest versions of Chrome and Firefox. We also test on '
+                 'Microsoft Edge, but do not formally support it.',
         },
         {
             'q': 'How do I register an account with HDX?',
-            'a': 'You can register by clicking on \'Sign Up\' on the upper-right corner of any HDX page.',
+            'a': 'You can register by clicking on '
+                 '<a target="_blank" href="https://data.humdata.org/user/register">\'Sign Up\'</a>.',
         },
         {
 
@@ -278,8 +279,7 @@ sharing_data = {
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
                  '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vRP0LWovuIaa-sMwZwm8rATZhAO7ahq2IvO3zvHtZxFiQ_r438s8VLvfVraNmit642ETm8uZlC02I6I/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>'
-                 'provide a walkthrough of how to add a dataset. Here are more details on the '
-                 '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field. '
+                 'provide a walkthrough of how to add a dataset. '
                  'General information about all the metadata options in HDX is available in our '
                  '<a href="https://centre.humdata.org/providing-metadata-for-your-datasets-on-hdx/" target="_blank">Guide to Metadata</a>.',
         },
@@ -610,7 +610,7 @@ search = {
                  'about it.'
                  '<br/><br/>'
                  'Data Grid is not available for all countries.  '
-                 'Here is an <a target="_blank" href="https://data.humdata.org/group/som">example</a>.  '
+                 'Here is an <a target="_blank" href="https://data.humdata.org/group/som">overview</a>.  '
         },
         {
             'q': 'I shared a private dataset but cannot find it.',
@@ -652,7 +652,7 @@ metadata_and_data_quality = {
         {
             'q': 'What does the green leaf symbol mean?',
             'a': 'The green leaf symbol indicates that a dataset is up to date - that there has been an update to '
-                 'the data in the dataset(not the dataset metadata) within the expected update frequency plus some leeway. '
+                 'the data in the dataset (not the dataset metadata) within the expected update frequency plus some leeway. '
                  'For more information on the expected update frequency metadata field and the number of days '
                  'a dataset qualifies as being fresh, see '
                  '<a target="_blank"  href="https://humanitarian.atlassian.net/wiki/spaces/HDX/pages/442826919/Expected+Update+Frequency+vs+Freshness+Status">here</a>.',

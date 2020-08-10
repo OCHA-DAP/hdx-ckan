@@ -19,14 +19,14 @@ ckan.datastore.write_url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${
 ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB_PASS_DATASTORE}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
 
 ## Site Settings
-ckan.site_url = http://${HDX_DOMAIN}
+ckan.site_url = https://${HDX_DOMAIN}
 beaker.session.secret = 2yD+TJxTgW+VtA38OzxQJNPPO
 app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
 ## Search Settings
 ckan.site_id = default
-solr_url = http://solr:8983/solr/ckan
-#solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/ckan
+#solr_url = http://solr:8983/solr/ckan
+solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/${HDX_SOLR_CORE}
 #ckan.simple_search = 1
 
 ckan.recaptcha.publickey  = 6Lcl60EUAAAAAE46a3XcPM2nPUKI2K4XZbcsorkR
@@ -148,6 +148,12 @@ propagate = 0
 level = ${HDX_LOG_LEVEL}
 handlers = console, file
 qualname = ckanext
+propagate = 0
+
+[logger_ckanext.hdx_theme.util.jql]
+level = INFO
+handlers = console, file
+qualname = ckanext.hdx_theme.util.jql
 propagate = 0
 
 [handler_console]

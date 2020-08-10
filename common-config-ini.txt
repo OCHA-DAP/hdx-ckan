@@ -324,3 +324,8 @@ hdx.apihighways.url = https://api.apihighways.org/dataset?vocabulary[legacy]=hdx
 hdx.apihighways.baseurl = https://apihighways.org/data-sets/
 
 hdx.qadashboard.enabled = true
+
+# HDX specific default solr query parameters
+hdx.solr.query.qf = name^4 title^4 vocab_text_Topics^2 notes groups^2 text
+hdx.solr.query.tie = 0.3
+hdx.solr.query.bf = scale(ord(pageviews_last_14_days),0,8)
