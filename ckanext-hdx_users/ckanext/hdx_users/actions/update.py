@@ -4,6 +4,7 @@ import ckan.logic as logic
 import ckanext.hdx_users.model as umodel
 
 import ckanext.hdx_users.helpers.reset_password as reset_password
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 
 NotFound = logic.NotFound
@@ -26,9 +27,7 @@ def token_update(context, data_dict):
 
 def hdx_send_reset_link(context, data_dict):
     from urlparse import urljoin
-    import ckan.lib.mailer as mailer
     import ckan.lib.helpers as h
-    import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
     model = context['model']
 
@@ -44,7 +43,7 @@ def hdx_send_reset_link(context, data_dict):
         if user is None:
             raise NotFound
 
-    expiration_in_hours = int(config.get('hdx.password.reset_key.expiration_in_hours'))
+    expiration_in_hours = int(config.get('hdx.password.reset_key.expiration_in_hours', 3))
     if user:
         reset_password.create_reset_key(user, expiration_in_hours)
 
