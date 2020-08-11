@@ -2,8 +2,8 @@
 
 {# The line below is for google analytics #}
 {#{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}#}
-{#{% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}#}
-{#{% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}#}
+{#{% block analytics_org_name %}{{ pkg.org.name }}{% endblock %}#}
+{#{% block analytics_org_id %}{{ pkg.org.id }}{% endblock %}#}
 {#{% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}#}
 {#{% block analytics_is_indicator %}{{ analytics.is_indicator }}{% endblock %}#}
 {#{% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}#}
@@ -29,14 +29,45 @@
 
 
 {% block content %}
-<div class="custom-page-light">
+{% set followers = h.get_group_followers(org.id) %}
+{% set members = h.get_group_members(org.id) %}
+<div class="dataset-light">
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
         <h1>{{ org.title }}</h1>
-            <div class="row">
-              {% snippet "light/snippets/package_list.html", data=org.template_data %}
-            </div>
+        <div class="list-items mTop20 mBottom20">
+          {% if org.package_count or org.datasets_num %}
+              {% if org.package_count is number %}
+                  {% set num_of_pack = org.package_count %}
+              {% else %}
+                  {% set num_of_pack = org.datasets_num %}
+              {% endif %}
+              <span class="sspBold14">
+                  <a class="sspBold14" href="{{ h.url_for('organization_read', action='read', id=org.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+              </span>
+          {% else %}
+              <span class="sspBold14">{{ _('0 Datasets') }}</span>
+          {% endif %}
+          -
+          {% set group_members_url = h.url_for(controller='organization', action='members', id=org.name or org.title, sort='metadata_modified desc') %}
+          {% if members == 0 %}
+              <span class="sspBold14">{{members}} {{ _('Members') }}</span>
+              {% else %}
+              <a class="sspBold14" href="{{ group_members_url }}">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</a>
+          {% endif %}
+          -
+          <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+          -
+          <a class="sspBold14" href="{{ org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a>
+        </div>
+
+        <div data-module="hdx_show_more" data-module-points="200" style="visibility:hidden" class="notes embedded-content">
+              {{ h.render_markdown(h.get_translated(org, 'description')) }}
+        </div>
+        <div class="row">
+          {% snippet "light/snippets/package_list.html", data=org.template_data %}
+        </div>
       </div>
     </div>
   </div>
@@ -48,7 +79,8 @@
 
 {%- block scripts %}
   {{ super() }}
-  {% resource 'hdx_theme/custom-pages-light' %}
+{#  {% resource 'hdx_theme/custom-pages-light' %}#}
+  {% resource 'hdx_theme/dataset-light' %}
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/search-light' %}
   {% resource 'hdx_theme/jquery.highlight' %}
