@@ -15,7 +15,7 @@ HDX_DEMO_LITION_URL=https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
 HDX_DEMO_LITION_TAG=1.2
 
 HDX_GISRESTAPI_URL=https://hub.docker.com/r/unocha/hdx-gisrestapi/tags/
-HDX_GISRESTAPI_TAG=4.2.2
+HDX_GISRESTAPI_TAG=4.2.3
 
 HDX_SNAP_SERVICE_URL=https://hub.docker.com/r/unocha/hdx-snap-service/tags/
 HDX_SNAP_SERVICE_TAG=1.1.3
