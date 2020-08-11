@@ -12,6 +12,7 @@ import ckan.authz as new_authz
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_org_group.controller_logic.organization_search_logic import OrganizationSearchLogic
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 
 g = common.g
 request = common.request
@@ -139,13 +140,22 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
 
     org_dict = None
     try:
-        org_dict = get_action('hdx_light_group_show')(context, {'id': id})
+        org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+        try:
+            org_meta.fetch_all()
+            org_dict = org_meta.org_dict
+        except NotFound, e:
+            abort(404)
+        except NotAuthorized, e:
+            abort(403, _('Not authorized to see this page'))
     except NotAuthorized:
         abort(404, _('Page not found'))
     except NotFound:
         abort(404, _('Page not found'))
 
-    _populate_template_data(org_dict)
+    if org_dict:
+        _populate_template_data(org_dict)
+        org_dict['datasets_num'] = org_meta.datasets_num
 
     template_data = {
         # 'q': q,
