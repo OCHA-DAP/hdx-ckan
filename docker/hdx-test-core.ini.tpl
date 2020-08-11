@@ -78,6 +78,8 @@ hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
 
+hdx.hxlproxy.url = https://proxy.hxlstandard.org
+
 hdx.onboarding.send_confirmation_email = true
 
 # use <strong> so we can check that html is *not* escaped

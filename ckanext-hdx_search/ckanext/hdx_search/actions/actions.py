@@ -99,7 +99,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
                                 data_dict.get("columns_type_list"), data_dict.get("sheet", 0), context)
         except Exception, e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
-            message = e.error_summary if hasattr(e,'error_summary') and e.error_summary else 'Something went wrong while processing the request: {}'.format(ex_msg)
+            message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request: ' + str(ex_msg)
             raise logic.ValidationError({'message': message}, error_summary=message)
     else:
         return {
@@ -133,7 +133,7 @@ def hdx_qa_pii_run(context, data_dict):
             _run_pii_check(resource_dict, context)
         except Exception, e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
-            message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request: {}'.format(ex_msg)
+            message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(ex_msg)
             raise logic.ValidationError({'message': message}, error_summary=message)
     else:
         return json.dumps({'success': False, 'error': {'message': 'Resource ID not provided or not found'}})
