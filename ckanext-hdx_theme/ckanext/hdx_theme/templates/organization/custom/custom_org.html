@@ -1,5 +1,7 @@
 {% extends "page.html" %}
 
+{% set page_has_mobile_version = True %}
+
 {# The lines below are for analytics #}
 {% block analytics_org_name %}{{ data.org_info.name }}{% endblock %}
 {% block analytics_org_id %}{{ data.org_info.id }}{% endblock %}
@@ -290,7 +292,8 @@
 {% endblock %}
 
 {% block meta %}
-      {{ super() }}
+  {{ super() }}
+  {% snippet "widget/banner/hdx-dataset-banner.html" %}
 {% endblock %}
 
 {% block custom_styles %}
