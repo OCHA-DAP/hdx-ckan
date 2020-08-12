@@ -156,6 +156,7 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
     if org_dict:
         _populate_template_data(org_dict)
         org_dict['datasets_num'] = org_meta.datasets_num
+        org_dict['custom_sq_logo_url'] = org_meta.custom_sq_logo_url
 
     template_data = {
         # 'q': q,
@@ -172,3 +173,6 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
 hdx_org.add_url_rule(u'', view_func=index)
 hdx_light_org.add_url_rule(u'', view_func=light_index)
 hdx_light_org.add_url_rule(u'/<id>', view_func=light_read)
+hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_read)
+hdx_light_org.add_url_rule(u'/stats/<id>', view_func=light_read)
+hdx_light_org.add_url_rule(u'/members/<id>', view_func=light_read)
