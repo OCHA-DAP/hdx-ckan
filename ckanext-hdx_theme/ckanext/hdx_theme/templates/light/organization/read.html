@@ -1,24 +1,11 @@
 {% extends "page_light.html" %}
 
-{# The line below is for google analytics #}
-{#{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}#}
-{#{% block analytics_org_name %}{{ pkg.org.name }}{% endblock %}#}
-{#{% block analytics_org_id %}{{ pkg.org.id }}{% endblock %}#}
-{#{% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}#}
-{#{% block analytics_is_indicator %}{{ analytics.is_indicator }}{% endblock %}#}
-{#{% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}#}
-{#{% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}#}
-{#{% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}#}
-{#{% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}#}
-{#{% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}#}
-
 {% block links %}
   <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
   {{ super() }}
 {% endblock %}
 
 {% set org = org_dict %}
-{#{% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}#}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
