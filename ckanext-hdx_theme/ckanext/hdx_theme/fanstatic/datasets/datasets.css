@@ -16,6 +16,11 @@
   max-height: 65px;
   max-width: 160px;
 }
+@media (max-width: 768px) {
+  .org-logo-large {
+    width: unset;
+  }
+}
 /* search_form.html customisations */
 .list-items.search-form {
   border-bottom: none;
