@@ -12,7 +12,11 @@
             <span class="{% block indent_item %}mL15{% endblock %} pull-left">
                 {% block org_title %}
                     <h3 class="list-items organization-heading">
-                        {{ h.link_to(organization.title, h.url_for(controller='organization', action='read', id=organization.name)) }}
+                    {% if light=='True' %}
+                      {{ h.nav_link( organization.title, named_route='hdx_light_org.light_read', id=organization.name, highlight_actions = 'new index') }}
+                    {% else %}
+                      {{ h.link_to(organization.title, h.url_for(controller='organization', action='read', id=organization.name)) }}
+                    {% endif %}
                     </h3>
                 {% endblock %}
                 <div class="list-items mTop20">
