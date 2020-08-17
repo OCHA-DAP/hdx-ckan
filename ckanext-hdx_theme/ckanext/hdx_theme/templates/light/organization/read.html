@@ -18,10 +18,10 @@
 {% block content %}
 {% set followers = h.get_group_followers(org.id) %}
 {% set members = h.get_group_members(org.id) %}
-<div class="dataset-light">
+<div class="dataset-light org-light">
   <div class="container">
-    <div class="row">
-      <div class="col-xs-8">
+    <div class="row org-details">
+      <div class="col-xs-9 col-lg-8 ">
         <h1>{{ org.title }}</h1>
         <div class="list-items mTop20 mBottom20">
           {% if org.package_count or org.datasets_num %}
@@ -53,7 +53,7 @@
               {{ h.render_markdown(h.get_translated(org, 'description')) }}
         </div>
       </div>
-      <div class="col-xs-4">
+      <div class="col-xs-3 col-lg-4">
         <div class="row">
             <div class="org-logo-large table-valign">
                 <div class="table-valign-content">
@@ -77,11 +77,11 @@
 
 {%- block scripts %}
   {{ super() }}
-{#  {% resource 'hdx_theme/custom-pages-light' %}#}
   {% resource 'hdx_theme/dataset-light' %}
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/search-light' %}
   {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/light/organization/org-light.css' %}
 
   {% resource 'hdx_theme/dataset-search' %}
   {% resource 'hdx_theme/dataset' %}
