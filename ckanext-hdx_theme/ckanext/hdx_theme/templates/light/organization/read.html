@@ -31,7 +31,7 @@
                   {% set num_of_pack = org.datasets_num %}
               {% endif %}
               <span class="sspBold14">
-                  <a class="sspBold14" href="{{ h.url_for('organization_read', action='read', id=org.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                  {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
               </span>
           {% else %}
               <span class="sspBold14">{{ _('0 Datasets') }}</span>
@@ -39,9 +39,9 @@
           -
           {% set group_members_url = h.url_for(controller='organization', action='members', id=org.name or org.title, sort='metadata_modified desc') %}
           {% if members == 0 %}
-              <span class="sspBold14">{{members}} {{ _('Members') }}</span>
-              {% else %}
-              <a class="sspBold14" href="{{ group_members_url }}">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</a>
+            <span class="sspBold14">{{members}} {{ _('Members') }}</span>
+          {% else %}
+          <span class="sspBold14">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</span>
           {% endif %}
           -
           <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
