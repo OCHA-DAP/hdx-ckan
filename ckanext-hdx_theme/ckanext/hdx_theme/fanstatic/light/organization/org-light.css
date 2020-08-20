@@ -1,3 +1,6 @@
 .org-light .org-details {
   background-color: #eeeeee;
 }
+.org-light .org-logo {
+  margin-top: 20px;
+}
