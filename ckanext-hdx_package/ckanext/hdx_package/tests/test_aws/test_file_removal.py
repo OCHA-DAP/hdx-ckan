@@ -165,9 +165,39 @@ class TestFileRemovalS3(object):
 
         resource_dict2 = self.__resource_update_with_upload(context, self.file2_name, self.file2_name, resource_id)
         assert not self.__file_exists(resource_id, self.file1_name)
+        assert self.__file_exists(resource_id, self.file2_name)
 
         _get_action('resource_delete')(context, {'id': resource_id})
         assert not self.__file_exists(resource_id, self.file2_name)
+
+    def test_resource_update_with_same_resource_name(self):
+
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        resource_dict = self.__resource_create_with_upload(context, self.file1_name, 'Test resource1.csv',
+                                                           self.dataset1_name)
+
+        resource_id = resource_dict['id']
+
+        resource_dict2 = self.__resource_update_with_upload(context, self.file2_name, 'Test resource1.csv', resource_id)
+        assert not self.__file_exists(resource_id, self.file1_name)
+        assert self.__file_exists(resource_id, self.file2_name)
+
+        _get_action('resource_delete')(context, {'id': resource_id})
+        assert not self.__file_exists(resource_id, self.file2_name)
+
+    def test_resource_update_with_same_file_name(self):
+
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        resource_dict = self.__resource_create_with_upload(context, self.file1_name, 'Test resource1.csv',
+                                                           self.dataset1_name)
+
+        resource_id = resource_dict['id']
+
+        resource_dict2 = self.__resource_update_with_upload(context, self.file1_name, 'Test resource2.csv', resource_id)
+        assert self.__file_exists(resource_id, self.file1_name)
+
+        _get_action('resource_delete')(context, {'id': resource_id})
+        assert not self.__file_exists(resource_id, self.file1_name)
 
     def test_package_purge(self):
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
