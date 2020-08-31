@@ -240,7 +240,7 @@ def render_date_from_concat_str(str, separator='-'):
         for index, strdate in enumerate(strdate_list):
             try:
                 date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
-                render_strdate = date.strftime('%b %d, %Y')
+                render_strdate = date.strftime('%B %d, %Y')
                 result += render_strdate
                 if index < len(strdate_list) - 1:
                     result += ' - '
