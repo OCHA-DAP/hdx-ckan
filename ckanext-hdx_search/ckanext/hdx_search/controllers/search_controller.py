@@ -347,7 +347,8 @@ class HDXSearchController(PackageController):
             solr_expand = 'false'
             if use_solr_collapse and not fq_list and not q and not featured_filters_set:
                 fq_list = [
-                    '{{!tag=batch}}{{!collapse field=batch nullPolicy=expand sort="{sort}"}} '.format(sort=sort_by)
+                    '{{!tag=batch q.op=OR}}{{!collapse field=batch nullPolicy=expand sort="{sort}"}} '
+                        .format(sort=sort_by)
                 ]
                 solr_expand = 'true'
 
