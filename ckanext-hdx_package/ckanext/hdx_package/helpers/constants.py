@@ -45,5 +45,9 @@ COD_VALUES_MAP = OrderedDict((
      ),
 ))
 
+for i, cod_value in enumerate(COD_VALUES_MAP.values()):
+    cod_value['index'] = i
+
+
 
 UPDATE_FREQ_LIVE = '0'

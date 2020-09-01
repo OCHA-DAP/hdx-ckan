@@ -623,6 +623,7 @@ class SearchLogic(object):
         for item in real_cod_items:
             item['display_name'] = COD_VALUES_MAP.get(item.get('name'), {}).get('title')
         total_count = sum((item.get('count', 0) for item in real_cod_items))
+        real_cod_items.sort(key=lambda item: COD_VALUES_MAP.get(item.get('name'), {}).get('index', -1))
         cod_category['items'] = real_cod_items
         cod_category['category_key'] = cod_category['name']
         cod_category['name'] = 'ALL'
