@@ -143,6 +143,7 @@ function _prepareHandsonSettings(datasetId, resourceId) {
 }
 
 function _initHandsonTable(data) {
+  $("#sdc-micro-spinner").show();
   let container = document.getElementById("sdc-micro-table");
 
   const contextMenu = _contextMenu(_sdcSettings);
@@ -151,13 +152,13 @@ function _initHandsonTable(data) {
     rowHeaders: true,
     colHeaders: true,
     filters: true,
-    // removed as per HDX-7042, cells were not rendered and couldn't be selected from the menu
-    // viewportColumnRenderingOffset: 10,
-    // viewportRowRenderingOffsetNumber: 10,
+    // as per HDX-7042, cells were not rendered and couldn't be selected from the menu
+    viewportColumnRenderingOffset: 1000,
+    viewportRowRenderingOffsetNumber: 25,
     dropdownMenu: contextMenu,
     contextMenu: contextMenu,
     afterInit: () => {
-      $("#sdc-micro-spinner").remove();
+      $("#sdc-micro-spinner").hide();
     },
     licenseKey: 'non-commercial-and-evaluation'
   };
