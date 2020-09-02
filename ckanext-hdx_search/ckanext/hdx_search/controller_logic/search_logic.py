@@ -222,6 +222,7 @@ class SearchLogic(object):
         # return render(self._search_template(package_type))
         full_facet_info = self._prepare_facets_info(self.template_data.search_facets, self.template_data.fields_grouped, search_extras, facets,
                                                     self.template_data.batch_total_items, self.template_data.q)
+        full_facet_info['results'] = self.template_data.get('page').collection if 'page' in self.template_data else []
         self.template_data['full_facet_info'] = full_facet_info
 
     def _get_pager_function(self, package_type):

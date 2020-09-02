@@ -1,5 +1,5 @@
 {% extends "crisis/crisis-base.html" %}
-
+{% set page_has_mobile_version = True %}
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
 {% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
