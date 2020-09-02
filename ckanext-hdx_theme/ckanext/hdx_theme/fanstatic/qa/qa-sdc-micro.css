@@ -40,3 +40,7 @@
 #qa-sdc-widget .nav .extra-sheets.active {
   font-weight: bold;
 }
+#qa-sdc-widget .handsontable .changeType {
+  position: relative;
+  z-index: 100;
+}
