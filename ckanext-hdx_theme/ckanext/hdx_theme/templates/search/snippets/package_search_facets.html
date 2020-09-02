@@ -16,6 +16,13 @@ Example:
                {% if option.get('items') %} class="parent-facet" {% endif %}
                {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %}>
           {{ option.display_name }}
+          {% if option.explanation %}
+            <a href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"
+               data-toggle="tooltip">[?]</a>
+          {% endif %}
+          {% if option.explanation_link %}
+            <a href="{{ option.explanation_link }}" target="_blank">[{{ _('Learn more') }}]</a>
+          {% endif %}
           <span class="item-count">[{{ option.count }}]</span>
           {% if option.get('items') %}
             {{ render_facet_list(option.get('items'), '', '') }}

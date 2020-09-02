@@ -25,7 +25,7 @@ from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
-from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP
+from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -620,7 +620,9 @@ class SearchLogic(object):
             item for item in cod_category.get('items') if COD_VALUES_MAP.get(item.get('name'), {}).get('is_cod')
         ]
         for item in real_cod_items:
-            item['display_name'] = COD_VALUES_MAP.get(item.get('name'), {}).get('title')
+            cod_information = COD_VALUES_MAP.get(item.get('name'), {})
+            item['display_name'] = cod_information.get('title')
+            item['explanation'] = cod_information.get('explanation')
         total_count = sum((item.get('count', 0) for item in real_cod_items))
         real_cod_items.sort(key=lambda item: COD_VALUES_MAP.get(item.get('name'), {}).get('index', -1))
         cod_category['items'] = real_cod_items
@@ -628,6 +630,7 @@ class SearchLogic(object):
         cod_category['name'] = 'ALL'
         cod_category['count'] = total_count
         cod_category['selected'] = all((item.get('selected') for item in real_cod_items)) if real_cod_items else False
+        cod_category['explanation_link'] = COD_GROUP_EXPLANATION_LINK
         return cod_category
 
 
