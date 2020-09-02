@@ -55,12 +55,10 @@
       </div>
       <div class="col-xs-3 col-lg-4">
         <div class="row">
-            <div class="org-logo-large table-valign">
-                <div class="table-valign-content">
-                    {% if org.custom_sq_logo_url %}
-                        <img class="lazyload" data-src="{{org.custom_sq_logo_url}}"/>
-                    {% endif %}
-                </div>
+            <div class="org-logo-large ">
+                {% if org.custom_sq_logo_url %}
+                    <img class="lazyload" data-src="{{org.custom_sq_logo_url}}"/>
+                {% endif %}
             </div>
         </div>
       </div>
