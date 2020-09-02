@@ -571,7 +571,7 @@ class SearchLogic(object):
                 }
                 sorted_item_list.append(new_item)
 
-        sorted_item_list.sort(key=lambda x: x.get('display_name'))
+        sorted_item_list.sort(key=lambda x: ('a' if x.get('selected') else 'b', x.get('display_name')))
         standard_facet_category = {
             'name': category_key,
             'display_name': category_title,
