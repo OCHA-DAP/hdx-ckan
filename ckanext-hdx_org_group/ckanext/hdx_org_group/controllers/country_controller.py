@@ -61,7 +61,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
             not_filtered_facet_info = self._get_not_filtered_facet_info(country_dict)
-            latest_cod_dataset = country_helper.get_latest_cod_datatset(country_dict.get('name'))
+            latest_cod_dataset = country_helper.get_latest_cod_dataset(country_dict.get('name'))
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
 
@@ -191,7 +191,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {
                 'display_name': org.get('display_name'),
                 'name': org.get('name'),
-                'url': helpers.url_for('organization_read', id=org.get('name'))
+                'url': h.url_for('organization_read', id=org.get('name'))
             }
             for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', [])
             ]
@@ -203,7 +203,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'display_name': org.get('display_name'),
                 'name': org.get('name'),
                 'count': org.get('count'),
-                'url': helpers.url_for('organization_read', id=org.get('name'))
+                'url': h.url_for('organization_read', id=org.get('name'))
             }
             for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if
             org.get('name') != 'hdx'

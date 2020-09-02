@@ -2,11 +2,11 @@ import ckan.lib.helpers as h
 import ckanext.hdx_search.controller_logic.search_logic as sl
 
 
-class OrganizationSearchLogic(sl.SearchLogic):
+class GroupSearchLogic(sl.SearchLogic):
 
     def __init__(self, id):
-        super(OrganizationSearchLogic, self).__init__()
-        self.org_id = id
+        super(GroupSearchLogic, self).__init__()
+        self.group_id = id
 
     def _search_url(self, params, package_type=None):
         '''
@@ -20,5 +20,5 @@ class OrganizationSearchLogic(sl.SearchLogic):
         '''
         # url = h.url_for(self._generate_action_name(self.type), id=self.org_id)
         suffix = '#datasets-section'
-        url = h.url_for('hdx_light_org.light_read', id=self.org_id)
+        url = h.url_for('hdx_light_group.light_read', id=self.group_id)
         return sl.url_with_params(url, params) + suffix

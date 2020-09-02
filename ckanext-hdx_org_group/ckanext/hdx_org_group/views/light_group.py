@@ -8,8 +8,12 @@ import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
+import ckanext.hdx_org_group.helpers.country_helper as grp_h
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed, switch_url_path
+from ckanext.hdx_org_group.controller_logic.group_search_logic import GroupSearchLogic
+
+
 
 lookup_group_plugin = ckan.lib.plugins.lookup_group_plugin
 
@@ -162,12 +166,26 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
-    country_dict = _get_country(id)
+    package_type = 'dataset'
+    ignore_capacity_check = False
+    country_dict = grp_h.get_country(id)
     country_code = country_dict.get('name', id)
+    search_logic = GroupSearchLogic(id=country_code)
+    fq = 'groups:"{}"'.format(country_code)
+    search_logic._search(package_type, additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
+
+    # non_filtered_facet_info = search_logic._prepare_facets_info(query_result.get('search_facets'), {}, {},
+    #                                                     facets, query_result.get('count'), u'')
+    #
+    # non_filtered_facet_info['results'] = query_result.get('results', [])
+    country_dict['template_data'] = search_logic.template_data
+    not_filtered_facet_info = grp_h.get_not_filtered_facet_info(country_dict)
+    template_data = grp_h.get_template_data(country_dict, not_filtered_facet_info)
     template_data = {
         'grp_dict': country_dict,
         'page_has_desktop_version': show_switch_to_desktop,
         'page_has_mobile_version': show_switch_to_mobile,
+        'widgets_data': template_data
     }
     return render(template_file, template_data)
 
@@ -178,26 +196,26 @@ hdx_light_group.add_url_rule(u'', view_func=light_index)
 hdx_light_group.add_url_rule(u'/<id>', view_func=light_read)
 
 
-def _get_country(id):
-    context = {'model': model, 'session': model.Session,
-               'user': g.user,
-               'schema': _db_to_form_schema(group_type='group'),
-               'for_view': True}
-    data_dict = {'id': id}
-
-    try:
-        context['include_datasets'] = False
-        group_dict = get_action('hdx_light_group_show')(context, data_dict)
-        if group_dict.get('type') not in GROUP_TYPES:
-            abort(404, _('Incorrect group type'))
-        return group_dict
-    except NotFound:
-        abort(404, _('Group not found'))
-    except NotAuthorized:
-        abort(403, _('Unauthorized to read group %s') % id)
-
-
-def _db_to_form_schema(self, group_type=None):
-    '''This is an interface to manipulate data from the database
-    into a format suitable for the form (optional)'''
-    return lookup_group_plugin(group_type).db_to_form_schema()
+# def _get_country(id):
+#     context = {'model': model, 'session': model.Session,
+#                'user': g.user,
+#                'schema': _db_to_form_schema(group_type='group'),
+#                'for_view': True}
+#     data_dict = {'id': id}
+#
+#     try:
+#         context['include_datasets'] = False
+#         group_dict = get_action('hdx_light_group_show')(context, data_dict)
+#         if group_dict.get('type') not in GROUP_TYPES:
+#             abort(404, _('Incorrect group type'))
+#         return group_dict
+#     except NotFound:
+#         abort(404, _('Group not found'))
+#     except NotAuthorized:
+#         abort(403, _('Unauthorized to read group %s') % id)
+#
+#
+# def _db_to_form_schema(group_type=None):
+#     '''This is an interface to manipulate data from the database
+#     into a format suitable for the form (optional)'''
+#     return lookup_group_plugin(group_type).db_to_form_schema()

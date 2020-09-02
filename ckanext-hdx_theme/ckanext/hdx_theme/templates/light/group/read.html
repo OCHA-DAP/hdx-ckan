@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% set grp = grp_dict %}
+{% set data = widgets_data.data %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
@@ -16,61 +17,230 @@
 
 
 {% block content %}
-  ala bala
-{#{% set followers = h.get_group_followers(org.id) %}#}
-{#{% set members = h.get_group_members(org.id) %}#}
-{#<div class="dataset-light">#}
-{#  <div class="container">#}
-{#    <div class="row">#}
-{#      <div class="col-xs-8">#}
-{#        <h1>{{ org.title }}</h1>#}
-{#        <div class="list-items mTop20 mBottom20">#}
-{#          {% if org.package_count or org.datasets_num %}#}
-{#              {% if org.package_count is number %}#}
-{#                  {% set num_of_pack = org.package_count %}#}
-{#              {% else %}#}
-{#                  {% set num_of_pack = org.datasets_num %}#}
-{#              {% endif %}#}
-{#              <span class="sspBold14">#}
-{#                  <a class="sspBold14" href="{{ h.url_for('organization_read', action='read', id=org.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>#}
-{#              </span>#}
-{#          {% else %}#}
-{#              <span class="sspBold14">{{ _('0 Datasets') }}</span>#}
-{#          {% endif %}#}
-{#          -#}
-{#          {% set group_members_url = h.url_for(controller='organization', action='members', id=org.name or org.title, sort='metadata_modified desc') %}#}
-{#          {% if members == 0 %}#}
-{#              <span class="sspBold14">{{members}} {{ _('Members') }}</span>#}
-{#              {% else %}#}
-{#              <a class="sspBold14" href="{{ group_members_url }}">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</a>#}
-{#          {% endif %}#}
-{#          -#}
-{#          <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>#}
-{#          -#}
-{#          <a class="sspBold14" href="{{ org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a>#}
-{#        </div>#}
-{##}
-{#        <div data-module="hdx_show_more" data-module-points="200" style="visibility:hidden" class="notes embedded-content">#}
-{#              {{ h.render_markdown(h.get_translated(org, 'description')) }}#}
-{#        </div>#}
-{#      </div>#}
-{#      <div class="col-xs-4">#}
-{#        <div class="row">#}
-{#            <div class="org-logo-large table-valign">#}
-{#                <div class="table-valign-content">#}
-{#                    {% if org.custom_sq_logo_url %}#}
-{#                        <img class="lazyload" data-src="{{org.custom_sq_logo_url}}"/>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#      </div>#}
-{#    </div>#}
-{#    <div class="row">#}
-{#      {% snippet "light/snippets/package_list.html", data=org.template_data %}#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
+<div class="dataset-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>{{ grp.title }}</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-8">
+        <div class="base-actions-menu">
+          <ul>
+            <li>
+              {% set num_of_pack = data.stats_section.num_of_datasets %}
+              {% if num_of_pack%}
+                  <span class="sspBold14">
+                      <a class="sspBold14" href="?#dataset-filter-start">
+                          {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
+                      </a>
+                      {% if data.stats_section.num_of_cods > 0 %}
+                          (<a href="?ext_cod=1#dataset-filter-start">{{ data.stats_section.num_of_cods }} CODs</a>)
+                      {% endif %}
+                  </span>
+              {% else %}
+                  <span class="sspBold14">{{ _('0 Datasets') }}</span>
+              {% endif %}
+            </li>
+            <li>
+              {% set num_of_followers = data.stats_section.num_of_followers %}
+              <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+            </li>
+            <li>
+              {% set num_of_orgs = data.stats_section.num_of_organizations %}
+              <a href="#" >
+                <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        {% snippet "country/country_actions_menu.html", country=data.country_dict, can_edit=h.check_access('group_update', {'id': data.country_dict.id}), classes='base-actions-menu followButtonContainer pull-right' %}
+      </div>
+    </div>
+
+  <!--  DATA COMPLETENESS -->
+  {% if data.data_completness %}
+    <div class="row data-completeness">
+      <div class="col-xs-12">
+        <div class="list-header crisis-list-header">
+          <span class="mL15 mR30 list-header-title">
+              {{ _("Data Grid Completeness") }}
+          </span>
+
+
+          <div class="progress-breakdown progress-header">
+            <span class="progress-blue" style="width: {{100*data.data_completness.stats.dataseries_good_percentage}}%;">
+            </span>
+            <span class="progress-striped" style="width: {{100*data.data_completness.stats.dataseries_not_good_percentage}}%;"></span>
+          </div>
+
+          <span class="mL45 list-header-showall list-completeness">
+            <span>{{data.data_completness.stats.good_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
+            <span>{{ data.data_completness.stats.total_datasets_num }} Datasets</span>
+            <span>{{ data.data_completness.stats.org_num }} Organisations</span>
+          </span>
+
+          <span class="mL45 pull-right completeness-header-actions">
+              <a class="show-completeness-legend">Show legend</a>
+              <div class="completeness-legend">
+                <div class="hdx-arrow-wrapper"></div>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <div class="legend-title">What is Data Grid Completeness?</div>
+                    <div class="legend-description">
+                      Data Grid Completeness defines
+                      <span class="orange">
+                      a set of core data that are essential for preparedness and emergency response.
+                    </span>
+                      For select countries, the HDX Team and trusted partners evaluate datasets available on HDX and add those meeting the definition of a core data category to the Data Grid Completeness board above. Please help us improve this feature by sending your feedback to
+                      <a href="mailto: hdx@un.org">hdx@un.org</a>.
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+                    <div class="legend-title">Legend:</div>
+                    <div class="legend-item">
+                      Presence, freshness, and quality of dataset
+                      <ul>
+                        <li>
+                          <span class="progress-breakdown mini"><span class="progress-blue" style="width: 100%;"></span></span>
+                          Dataset fully matches criteria and is up-to-date
+                        </li>
+                        <li>
+                          <span class="progress-breakdown mini"><span class="progress-striped" style="width: 100%;"></span></span>
+                          Dataset partially matches criteria and/or is not up-to-date
+                        </li>
+                        <li>
+                          <span class="progress-breakdown mini"></span>
+                          No dataset found matching the criteria
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span>Expand</span>
+              <span>
+                <span class="checkbox-slider" style="display: inline-block; top: 5px; margin-left: 3px;">
+                  <input id="expand-data-completeness" type="checkbox" checked="checked" class="checkbox-slider-checkbox" autocomplete="off" />
+                  <label id="expand-data-completeness-label" class="checkbox-slider-label" for="expand-data-completeness">
+                    <span class="checkbox-slider-inner"></span>
+                    <span class="checkbox-slider-switch"></span>
+                  </label>
+                </span>
+              </span>
+          </span>
+
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="row">
+          <div class="mLR15">
+            <div class="col-xs-12">
+              {% set loop_items = 3 %}
+              {% for category in data.data_completness.categories %}
+                {% if (loop.index - 1) is divisibleby loop_items %}
+                  <div class="row">
+                {% endif %}
+                    <div class="col-xs-4 data-item">
+                      <div class="data-item-summary">
+                        {% set category_hover_title = '<b>' + category.title + '</b>:<br/>' + category.description %}
+                        <div class="categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
+                             data-html="true" data-original-title="{{ category_hover_title }}">
+                          {{ category.title }}
+                        </div>
+                        <div class="categ-sub-title">
+
+                          {#
+                          <span class="icon-circle-down">
+                            <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
+                          </span>
+                          #}
+                          <span class="dataset-count">{{ category.stats.total_datasets_num }} Datasets</span>
+                        </div>
+                        <div class="completeness-progress">
+                            <div class="progress-breakdown">
+                              <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
+                                 data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.good_dataseries_text }}">
+                              </span>
+                              <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
+                                 data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.not_good_dataseries_text }}"></span>
+                              <span class="progress-empty"
+                                 style="width: {{ 100*(1 - category.stats.dataseries_good_percentage - category.stats.dataseries_not_good_percentage) }}%;"
+                                    data-module="bs_tooltip" data-module-placement="top"
+                                 data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.empty_dataseries_text }}">
+                              </span>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="data-item-details" style="">
+                        {% for subcateg in category.data_series %}
+                        <div class="sub-category">
+                          {% set subcateg_hover_body = '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-column"></div></div>' %}
+                          {% set subcateg_hover_title = '<div class="tooltip-content">' + subcateg.description + '</div>' %}
+                          <div class="sub-categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
+                               data-original-title="{{ subcateg_hover_title }}" data-container="body" data-html="true" data-template="{{ subcateg_hover_body }}">
+                            {{ subcateg.title }}
+                          </div>
+                          {% if subcateg.datasets | length > 0 %}
+                            {% for dataset in subcateg.datasets %}
+                              {% set dataset_hover_title = dataset.title + "<br/><b>Limitations</b>: " + dataset.general_comment if dataset.general_comment else dataset.title %}
+                              {% set dataset_hover_title = '<div class="tooltip-content">' + dataset_hover_title + '</div>' %}
+                              {% set dataset_hover_body = '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-column"></div></div>' %}
+                            <div class="dataset" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
+                                  data-original-title="{{ dataset_hover_title }}" data-container="body" data-html="true"
+                                  data-template="{{ dataset_hover_body }}">
+                              <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
+                              <div class="dataset-link" >
+                                <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
+                                  {{ dataset.title }}
+                                </a>
+                              </div>
+                              <span class="data-org"
+                                title="{{ dataset.organization_title }}">
+                                {{ dataset.organization_title }}
+                              </span>
+                            </div>
+                            {% endfor %}
+                          {% else %}
+                            <div>
+                              {% if c.userobj %}
+                                <a href="javascript:void(0);" onclick="contributeAddDetails(null, 'data grid');" class="add-data">Add Data</a>
+                              {% else %}
+                                <a href="/contribute" class="add-data" data-module="hdx_click_stopper" data-module-link_type="data grid add data">Add Data</a>
+                              {% endif %}
+                            </div>
+                          {% endif %}
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                {% if ((loop.index) is divisibleby loop_items) or (loop.index == data.data_completness.categories|length) %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="mLR15">
+            <div class="col-xs-11">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <!-- END DATA COMPLETENESS -->
+
+    <div class="row">
+      {% snippet "light/snippets/package_list.html", data=grp.template_data %}
+    </div>
+  </div>
+</div>
 
 {% snippet "widget/banner/hdx-light-banner.html" %}
 {% endblock %}
@@ -82,7 +252,7 @@
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/search-light' %}
   {% resource 'hdx_theme/jquery.highlight' %}
-
+  {% resource 'hdx_theme/country' %}
   {% resource 'hdx_theme/dataset-search' %}
   {% resource 'hdx_theme/dataset' %}
 {% endblock -%}

@@ -403,7 +403,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
 
         # Screenshot generation for latest COD when country is edited
-        cod_dict = country_helper.get_latest_cod_datatset(country.name)
+        cod_dict = country_helper.get_latest_cod_dataset(country.name)
         shape_infos = []
         if cod_dict:
             shape_infos = [r.get('shape_info') for r in cod_dict.get('resources', []) if r.get('shape_info')]
