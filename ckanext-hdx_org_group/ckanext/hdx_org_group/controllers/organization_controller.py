@@ -8,6 +8,14 @@ import itertools
 import json
 import logging
 
+import ckan.authz as new_authz
+import ckan.common as common
+import ckan.controllers.organization as org
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.lib.navl.dictization_functions as dict_fns
+import ckan.logic as logic
+import ckan.model as model
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
@@ -16,19 +24,10 @@ import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.util.jql as jql
-import ckan.lib.navl.dictization_functions as dict_fns
-
-import ckan.authz as new_authz
-import ckan.common as common
-import ckan.controllers.organization as org
-import ckan.lib.base as base
-import ckan.lib.helpers as h
-import ckan.logic as logic
-import ckan.model as model
-from ckan.controllers.feed import FeedController as FeedController
 from ckan.common import c, request, _
 from ckan.controllers.api import CONTENT_TYPES
-
+from ckan.controllers.feed import FeedController as FeedController
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 abort = base.abort
 render = base.render
@@ -124,6 +123,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
     #
     #     return base.render('organization/index.html')
 
+    @check_redirect_needed
     def read(self, id, limit=20):
         self._ensure_controller_matches_group_type(id)
 
