@@ -1,5 +1,5 @@
 {% extends "page.html" %}
-
+{% set page_has_mobile_version = True %}
 {% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -36,4 +36,5 @@
 {% block styles %}
   {{ super() }}
   {% resource 'hdx_theme/organization/organization-read.css' %}
+  {% snippet "widget/banner/hdx-dataset-banner.html" %}
 {% endblock %}

@@ -8,6 +8,8 @@
 {% set can_edit = h.check_access('organization_update', {'id': c.group_dict.id}) %}
 {% set can_actions = can_create_dataset or can_edit %}
 
+{% set page_has_mobile_version = True %}
+
 {% block item_title_contrib %}
 	<div>
 		<ul style="list-style: none; padding: 0;" class="mTop40">

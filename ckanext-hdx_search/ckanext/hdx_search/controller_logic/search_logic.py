@@ -103,9 +103,6 @@ class SearchLogic(object):
         page = self._page_number()
         package_type = self.package_type
 
-
-
-
         req_sort_by = request.params.get('sort', None)
         if not req_sort_by and q:
             req_sort_by = 'score desc, ' + DEFAULT_SORTING
@@ -156,7 +153,6 @@ class SearchLogic(object):
                                      'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
                             featured_filters_set = True
                         search_extras[param] = value
-
 
             if self.template_data.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
                 search_extras[UPDATE_STATUS_URL_FILTER] = self.template_data.fields_grouped[UPDATE_STATUS_URL_FILTER]

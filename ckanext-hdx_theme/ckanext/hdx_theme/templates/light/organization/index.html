@@ -83,7 +83,7 @@
         <div>
           <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
             {% for organization in page.items %}
-            {% snippet 'browse/snippets/org_item.html', organization=organization %}
+              {% snippet 'browse/snippets/org_item.html', organization=organization, light='True' %}
             {% endfor %}
           </ul>
         </div>
