@@ -73,7 +73,8 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                 'org_name': group.display_name,
                 'org_membership_url': config.get('ckan.site_url') + '/organization/members/' + group.name,
                 'user_fullname': user_obj.display_name,
-                'user_email': user_obj.email
+                'user_email': user_obj.email,
+                'message': data_dict.get('message')
             }
             hdx_mailer.mail_recipient(admin_list, subject, email_data,
                                       snippet='email/content/join_organization_request.html')

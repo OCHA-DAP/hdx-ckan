@@ -41,6 +41,10 @@ Example:
                 <option id="">{{_('Select an organisation...')}}</option>
             </select>
             <div class="control">
+              <textarea id="msg_id" name="message" class="full-width required mTop10"></textarea>
+              <label for="msg_id">Message for organization admin</label>
+            </div>
+            <div class="control">
                 <label class="mTop10 vertically-center" data-module="hdx_terms_checkbox" data-module-button="join-org-action">
                     <input type="checkbox">
                     <span class="red">*</span>I confirm that I work for this organization.
@@ -48,8 +52,10 @@ Example:
             </div>
 
             <div class="regular-text mTop20">Don't see your organisation? <a href="#" onclick="$('#select-organisation, #onboard-org-join-text').hide();$('#create-organisation, #onboard-org-request-new-text').show();">Request a new organisation</a></div>
-            <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.</div>
-            <div class="regular-text mTop20">If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
+            <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.
+{#            </div>#}
+{#            <div class="regular-text mTop20">#}
+              If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
 
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
