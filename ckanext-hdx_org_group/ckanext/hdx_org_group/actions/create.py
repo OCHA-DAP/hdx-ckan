@@ -8,7 +8,7 @@ import ckan.lib.dictization.model_dictize as model_dictize
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckan.lib.mailer as core_mailer
 import ckan.lib.helpers as h
-
+from ckan.common import c
 from socket import error as socket_error
 
 from ckan.common import _
@@ -90,6 +90,7 @@ def hdx_user_invite(context, data_dict):
         email_data = {
             'org_name': group_dict.get('display_name'),
             'capacity': data['role'],
+            'user_fullname': c.userobj.display_name,
             'user_reset_link': h.url_for(controller='user',
                                          action='perform_reset',
                                          id=user.id,

@@ -7,8 +7,11 @@
 <p>{{ data.msg }}</p>
 
 {% if data.is_attach %}
-  <p>The maintainer({{ data.user_admin_fullname }}) had also attached the requested data file.</p>
+  <p>The requested file has been attached to this email.</p>
+{% else %}
+  <p>We suggest that you contact {{ data.user_admin_fullname }} directly at {{ data.user_admin_email }} to make arrangements for accessing the requested data.</p>
 {% endif %}
+
 
 <p>Please feel free to reach out to the HDX team by replying to this email if you have any questions or concerns.</p>
 

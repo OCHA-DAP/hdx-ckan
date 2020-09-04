@@ -1,6 +1,7 @@
 <p>Dear {{ data.org_name }} administrator(s),</p>
 
-<p>{{ data.user_fullname }} ({{ data.user_email }}) has requested to join your organisation on HDX.</p>
+<p>{{ data.user_fullname }} ({{ data.user_email }}) has requested to join your organisation on HDX {% if data.message %}with the following message: </p>
+<p>{{ data.message }}</p>{% endif %} </p>
 
 <p>If you are able to confirm that this person works for your organisation or is in your trusted network, then you may approve the request. If you cannot verify who the user is, you should decline the request.</p>
 
@@ -16,4 +17,4 @@
     <li><strong>Member</strong>: View all of an organisation’s datasets (including private datasets). The user cannot add new datasets or manage organisation members.</li>
   </ul>
 </div>
-<p><a href="https://gdoc.pub/doc/e/2PACX-1vRh4Dr3zIQrKQt__HPs_kwC_9qyIr25naivppxFP16JSA0HbT-SRWcMKhsMA91SnY589q7BZgNf86q2">Learn more about managing HDX organisation members here</a>, or feel free to reply to this email if you have any questions.</p>
+<p><a href="https://humanitarian.atlassian.net/wiki/spaces/HDXKB/pages/1254490113/For+HDX+org+admins+How+to+Manage+Organizational+Membership">Learn more about managing HDX organisation members here</a>, or feel free to reply to this email if you have any questions.</p>
