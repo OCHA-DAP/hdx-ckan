@@ -183,6 +183,7 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                 'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
                 'dataset_title': data.get('package_name'),
                 'user_admin_fullname': c.userobj.fullname,
+                'user_admin_email': c.userobj.email,
                 'msg': data.get('message_content'),
             }
             hdx_mailer.mail_recipient([{'display_name': data.get('requested_by'), 'email': data.get('send_to')}],
