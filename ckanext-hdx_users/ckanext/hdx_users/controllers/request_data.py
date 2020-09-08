@@ -238,6 +238,7 @@ class HDXRequestDataController(RequestDataController):
             data_maintainers = []
             data_maintainers_ids = []
             # Get users objects from maintainers list
+            user={}
             for id in maintainers:
                 try:
                     user =\
@@ -279,10 +280,11 @@ class HDXRequestDataController(RequestDataController):
                 'org_name': package.get('organization').get('title'),
                 'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
                 'dataset_title': dataset_title,
-                'requestdata_org_url': h.url_for('requestdata_organization_requests', id=package.get('owner_org'),
+                'maintainer_fullname': user.get('display_name') or user.get('fullname') if user else 'HDX user',
+                 'requestdata_org_url': h.url_for('requestdata_organization_requests', id=package.get('owner_org'),
                                                  qualified=True)
             }
-            hdx_mailer.mail_recipient(users_email, subject, email_data,
+            hdx_mailer.mail_recipient(users_email, subject, email_data, footer='hdx@un.org',
                                       snippet='email/content/request_data_to_admins.html')
 
             subject = u'Request for access to metadata-only dataset'

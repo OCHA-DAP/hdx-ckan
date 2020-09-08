@@ -627,9 +627,6 @@ class ValidationController(ckan.controllers.user.UserController):
                     hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, email_data,
                                               cc_recipients_list=cc_recipients_list,
                                               snippet='email/content/onboarding_invite_others.html')
-
-            # hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
-
         except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
