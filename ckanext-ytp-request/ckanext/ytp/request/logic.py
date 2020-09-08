@@ -76,7 +76,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                 'user_email': user_obj.email,
                 'message': data_dict.get('message')
             }
-            hdx_mailer.mail_recipient(admin_list, subject, email_data,
+            hdx_mailer.mail_recipient(admin_list, subject, email_data,footer=user_obj.email,
                                       snippet='email/content/join_organization_request.html')
 
             subject = u'Your request to join organisation ' + group.display_name
@@ -86,7 +86,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                 'user_email': user_obj.email
             }
             hdx_mailer.mail_recipient([{'display_name': user_obj.display_name, 'email': user_obj.email}],
-                                      subject, email_data,
+                                      subject, email_data,footer=user_obj.email,
                                       snippet='email/content/join_organization_request_confirmation_to_user.html')
 
     except MailerException, e:
@@ -118,7 +118,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
                     'user_email': member_user.email,
                     'org_name': group_name,
                 }
-                hdx_mailer.mail_recipient(admin_list, subject, email_data,
+                hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=member_user.email,
                                           snippet='email/content/join_organization_approval_to_admins.html')
 
         else:
@@ -140,7 +140,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
                     'user_email': member_user.email,
                     'org_name': group_name,
                 }
-                hdx_mailer.mail_recipient(admin_list, subject, email_data,
+                hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=member_user.email,
                                           snippet='email/content/join_organization_reject_to_admins.html')
 
     except MailerException, e:

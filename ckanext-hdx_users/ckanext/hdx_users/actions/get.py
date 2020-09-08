@@ -106,7 +106,6 @@ def hdx_send_reset_link(context, data_dict):
         hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject,
                                   email_data, footer=recipient_mail,
                                   snippet='email/content/password_reset.html')
-        # hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
 
 
 @logic.validate(logic.schema.default_autocomplete_schema)
