@@ -110,7 +110,7 @@ def hdx_user_invite(context, data_dict):
         }
         admin_list = get_organization_admins(group_dict.get('id'), user.email)
         hdx_mailer.mail_recipient(admin_list,
-                                  subject, email_data,
+                                  subject, email_data, footer='hdx@un.org',
                                   snippet='email/content/new_account_confirmation_to_admins.html')
     except (socket_error, Exception) as error:
         # Email could not be sent, delete the pending user
