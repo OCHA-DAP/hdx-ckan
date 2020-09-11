@@ -116,6 +116,7 @@
                                 {% set s_data_url = 'field_section_'+_i+'_data_url' %}
                                 {% set s_title = 'field_section_'+_i+'_section_title' %}
                                 {% set s_description = 'field_section_'+_i+'_section_description' %}
+                                {% set s_long_description = 'field_section_'+_i+'_section_long_description' %}
                                 {% set s_max_height = 'field_section_'+_i+'_max_height' %}
                                 {% set s_del = 'del_section_'+_i %}
                                 <div class="col-xs-12 hdx-visible-element pTopBottom15" id="{{s_id}}" >
@@ -125,6 +126,7 @@
                                             {{ form.input(s_data_url, id=s_data_url, label=_('Data URL'), placeholder=_('Enter URL'), value=section.data_url, error=errors.data_url, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                                             {{ form.input(s_title, id=s_title, label=_('Title of Section'), placeholder=_('If missing will have the default value'), value=section.section_title, error=errors.section_title, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                                             {{ form.input(s_description, id=s_description, label=_('Description (optional)'), placeholder=_('eg. Description of the section'), value=section.description, error=errors.title, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
+                                            {{ form.input(s_long_description, id=s_long_description, label=_('Long Description (optional)'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.title, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                                             {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=errors['max_height'], classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                                         </div>
                                         <div class="col-xs-3">
@@ -172,6 +174,7 @@
                 {{ form.input('field_section_template_data_url', id='field_section_template_data_url', label=_('Data URL'), placeholder=_('Enter URL'), classes=['form-group', 'control-full', 'control-large', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                 {{ form.input('field_section_template_section_title', id='field_section_template_section_title', label=_('Title of Section'), placeholder=_('Title of Section (optional)'), classes=['form-group', 'control-full', 'control-large', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                 {{ form.input('field_section_template_section_description', id='field_section_template_section_description', label=_('Description (optional)'), placeholder=_('eg. Description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-section-field'], attrs={'class':'form-control'}) }}
+                {{ form.input('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long Description (optional)'), placeholder=_('eg. Long Description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                 {{ form.input('field_section_template_max_height', id='field_section_template_max_height', label=_('Max Height'), placeholder=_('400px recommended'), classes=['form-group', 'control-full', 'control-large', 'hdx-section-field'], attrs={'class':'form-control'}) }}
             </div>
             <div class="col-xs-3">

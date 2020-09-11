@@ -36,6 +36,7 @@ checked = 'checked="checked"'
 # }
 section_types = {
     "empty": '',
+    "long_description": _(''),
     "map": _(''),
     "key_figures": _(''),
     "interactive_data": _(''),
@@ -251,6 +252,7 @@ class PagesController(HDXSearchController):
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
         errors = errors or {}
         data_dict = {'content_type': [{'value': 'empty', 'text': _('Select content type')},
+                                      {'value': 'long_description', 'text': _('Text/Description')},
                                       {'value': 'map', 'text': _('Map')},
                                       {'value': 'key_figures', 'text': _('Key Figures')},
                                       {'value': 'interactive_data', 'text': _('Interactive Data')},
@@ -283,6 +285,7 @@ class PagesController(HDXSearchController):
                     "section_title": _title,
                     "max_height": size,
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
+                    "long_description": request.params.get("field_section_" + str(_i) + "_section_long_description"),
                 }
                 sections.append(section)
 
