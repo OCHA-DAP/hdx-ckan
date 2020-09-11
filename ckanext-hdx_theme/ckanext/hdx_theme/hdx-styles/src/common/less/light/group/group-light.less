@@ -1,0 +1,56 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+.group-light {
+  background-color: @extraLightGrayColor;
+
+  .data-completeness {
+    .data-item {
+      background: @whiteColor;
+      margin: 0;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+  }
+
+  .completeness-legend {
+    .hdx-arrow-wrapper {
+      display: none;
+    }
+
+    &:before {
+      content: none;
+    }
+
+    display: flex;
+    position: static;
+    width: 100%;
+    z-index: auto;
+    top: initial;
+    left: initial;
+
+    .legend-title {
+      margin-top: 10px;
+    }
+  }
+
+  .base-actions-menu {
+    ul {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      li {
+        &:first-child:before {
+          margin: 0;
+        }
+        span, a {
+          font-size: 12px;
+          text-wrap: none;
+        }
+      }
+    }
+
+  }
+}

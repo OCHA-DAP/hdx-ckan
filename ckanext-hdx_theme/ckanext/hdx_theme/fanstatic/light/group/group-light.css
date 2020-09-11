@@ -1,0 +1,40 @@
+.group-light {
+  background-color: #eeeeee;
+}
+.group-light .data-completeness .data-item {
+  background: #fff;
+  margin: 0;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+.group-light .completeness-legend {
+  display: flex;
+  position: static;
+  width: 100%;
+  z-index: auto;
+  top: initial;
+  left: initial;
+}
+.group-light .completeness-legend .hdx-arrow-wrapper {
+  display: none;
+}
+.group-light .completeness-legend:before {
+  content: none;
+}
+.group-light .completeness-legend .legend-title {
+  margin-top: 10px;
+}
+.group-light .base-actions-menu ul {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.group-light .base-actions-menu ul li:first-child:before {
+  margin: 0;
+}
+.group-light .base-actions-menu ul li span,
+.group-light .base-actions-menu ul li a {
+  font-size: 12px;
+  text-wrap: none;
+}
