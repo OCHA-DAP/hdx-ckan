@@ -1,6 +1,10 @@
 <html>
   <head>
-
+    <style>
+      p {
+        font-size: 12px;
+      }
+    </style>
   </head>
   <body>
   <div align="center">
@@ -375,19 +379,18 @@
   <div>
     {% snippet data._snippet, data=data.data %}
   </div>
-  <br/><br/>
   <div>
     Best regards,<br/>
     The HDX team
   </div>
   <footer>
     {% if data.footer %}
-      <p align="center">
+      <p style="font-size:10px;text-align:center;">
 {#        You are receiving this email because you joined HDX with the email {{ data.footer }}.#}
         You are receiving this email because you are a registered HDX user.
       </p>
     {% endif %}
-    <p align="center">
+    <p style="font-size:10px;text-align:center;">
       <a href="https://data.humdata.org">HDX</a> is a product of the <a href="https://unocha.org">United Nations Office
       for the Coordination of Humanitarian Affairs</a> (OCHA) - <a href="https://centre.humdata.org">Centre for
       Humanitarian Data</a>. Keep in touch by following us on <a href="https://twitter.com/humdata">Twitter</a>, <a
