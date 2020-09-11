@@ -20,7 +20,9 @@ ckan.module('hdx_custom_pages', function ($, _) {
                 $(field).removeClass("hdx-invisible-element");
                 if (!$(field).hasClass("hdx-visible-element"))
                     $(field).addClass("hdx-visible-element");
-                    txt_input.removeProp("disabled");
+                    txt_input.prop("disabled", false);
+
+                    // txt_input.removeProp("disabled");
             }
 
         }
@@ -32,6 +34,7 @@ ckan.module('hdx_custom_pages', function ($, _) {
 
             this.field_config = {
                 "empty":[],
+                "description":["section_title","section_long_description","max_height"],
                 "map":["data_url","section_title","max_height"],
                 "key_figures":["data_url","section_title","section_description","max_height"],
                 "interactive_data":["data_url","section_title","section_description","max_height"],
