@@ -698,6 +698,23 @@ def vocabulary_list_dictize(vocabulary_list, context):
 
 def activity_dictize(activity, context):
     activity_dict = d.table_dictize(activity, context)
+    # HDX change to remove most info from activity list
+    # similar to code from CKAN 2.9 but adapted to work with HDX
+    # https://github.com/ckan/ckan/blob/2.9/ckan/lib/dictization/model_dictize.py#L655
+    if True:
+        # replace the data with just a {'title': title} and not the rest of
+        # the dataset/group/org/custom obj. we need the title to display it
+        # in the activity stream.
+        initial_data = activity_dict['data']
+        activity_dict['data'] = {
+            key: {
+                'title': val['title'],
+                'id': val.get('id'),
+                'name': val.get('name'),
+            }
+            for (key, val) in activity_dict['data'].items()
+            if isinstance(val, dict) and 'title' in val}
+    # END HDX change
     return activity_dict
 
 def activity_list_dictize(activity_list, context):
