@@ -189,7 +189,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     msg['Subject'] = subject
     msg['From'] = _(u"%s <%s>") % (sender_name, mail_from)
     recipient_email_list = []
-    recipients = u""
+    recipients = None
     if recipients_list:
         for r in recipients_list:
             email = r.get('email')
@@ -201,19 +201,19 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                 recipient = u"%s" % email
             # else:
             # no recipient list provided
-            recipients = ', '.join([recipients, recipient])
+            recipients = ', '.join([recipients, recipient]) if recipients else recipient
 
     msg['To'] = Header(recipients, 'utf-8')
     if bcc_recipients_list:
         for r in bcc_recipients_list:
             recipient_email_list.append(r.get('email'))
-    cc_recipients = ''
+    cc_recipients = None
     if cc_recipients_list:
         for r in cc_recipients_list:
             recipient_email_list.append(r.get('email'))
             cc_recipient = u"%s <%s>" % (r.get('display_name'), r.get('email'))
-            cc_recipients = ', '.join([cc_recipients, cc_recipient])
-        msg['Cc'] = cc_recipients
+            cc_recipients = ', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
+        msg['Cc'] = cc_recipients if cc_recipients else ''
 
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
