@@ -312,6 +312,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_package_links_settings_show': hdx_actions.package_links_settings_show,
             'hdx_package_links_settings_update': hdx_actions.package_links_settings_update,
             'hdx_package_links_by_id_list': hdx_actions.package_links_by_id_list,
+            'activity_detail_list': hdx_actions.hdx_activity_detail_list,
         }
 
     def get_auth_functions(self):

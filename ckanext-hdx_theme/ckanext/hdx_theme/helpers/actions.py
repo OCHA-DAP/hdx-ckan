@@ -10,6 +10,7 @@ import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 import ckan.authz as new_authz
 import ckan.model as model
+import ckan.logic.action.get as ckan_get
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
@@ -642,3 +643,18 @@ def hdx_organization_statistics(context, data_dict):
         'active_organizations': org_list,
         'inactive_organizations': inactive_org_list
     }
+
+
+@logic.side_effect_free
+def hdx_activity_detail_list(context, data_dict):
+    result = ckan_get.activity_detail_list(context, data_dict)
+    detail_data_list = (
+        detail_data
+        for detail in result or []
+        for detail_data in detail.get('data', {}).values()
+    )
+    for detail_data_dict in detail_data_list:
+        detail_data_dict.pop('maintainer_email', None)
+        detail_data_dict.pop('author_email', None)
+
+    return result
