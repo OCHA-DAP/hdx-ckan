@@ -705,7 +705,6 @@ def activity_dictize(activity, context):
         # replace the data with just a {'title': title} and not the rest of
         # the dataset/group/org/custom obj. we need the title to display it
         # in the activity stream.
-        initial_data = activity_dict['data']
         activity_dict['data'] = {
             key: {
                 'title': val['title'],
