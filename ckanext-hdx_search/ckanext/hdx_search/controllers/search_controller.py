@@ -347,7 +347,8 @@ class HDXSearchController(PackageController):
             solr_expand = 'false'
             if use_solr_collapse and not fq_list and not q and not featured_filters_set:
                 fq_list = [
-                    '{{!tag=batch}}{{!collapse field=batch nullPolicy=expand sort="{sort}"}} '.format(sort=sort_by)
+                    '{{!tag=batch q.op=OR}}{{!collapse field=batch nullPolicy=expand sort="{sort}"}} '
+                        .format(sort=sort_by)
                 ]
                 solr_expand = 'true'
 
@@ -723,7 +724,7 @@ class HDXSearchController(PackageController):
                         if category_key == 'vocab_Topics' and new_item['name'] == 'administrative divisions':
                             num_of_administrative_divisions = new_item['count']
 
-                sorted_item_list.sort(key=lambda x: x.get('display_name'))
+                sorted_item_list.sort(key=lambda x: ('a' if x.get('selected') else 'b', x.get('display_name')))
 
                 result['facets'][category_key] = {
                     'name': category_key,

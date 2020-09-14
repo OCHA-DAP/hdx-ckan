@@ -103,9 +103,6 @@ class SearchLogic(object):
         page = self._page_number()
         package_type = self.package_type
 
-
-
-
         req_sort_by = request.params.get('sort', None)
         if not req_sort_by and q:
             req_sort_by = 'score desc, ' + DEFAULT_SORTING
@@ -157,7 +154,6 @@ class SearchLogic(object):
                             featured_filters_set = True
                         search_extras[param] = value
 
-
             if self.template_data.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
                 search_extras[UPDATE_STATUS_URL_FILTER] = self.template_data.fields_grouped[UPDATE_STATUS_URL_FILTER]
 
@@ -170,7 +166,8 @@ class SearchLogic(object):
             solr_expand = 'false'
             if use_solr_collapse and not fq_list and not q and not featured_filters_set:
                 fq_list = [
-                    '{{!tag=batch}}{{!collapse field=batch nullPolicy=expand sort="{sort}"}} '.format(sort=sort_by)
+                    '{{!tag=batch q.op=OR}}{{!collapse field=batch nullPolicy=expand sort="{sort}"}} '
+                        .format(sort=sort_by)
                 ]
                 solr_expand = 'true'
 
@@ -226,6 +223,7 @@ class SearchLogic(object):
         # return render(self._search_template(package_type))
         full_facet_info = self._prepare_facets_info(self.template_data.search_facets, self.template_data.fields_grouped, search_extras, facets,
                                                     self.template_data.batch_total_items, self.template_data.q)
+        full_facet_info['results'] = self.template_data.get('page').collection if 'page' in self.template_data else []
         self.template_data['full_facet_info'] = full_facet_info
 
     def _get_pager_function(self, package_type):
@@ -519,7 +517,7 @@ class SearchLogic(object):
                         if category_key == 'vocab_Topics' and new_item['name'] == 'administrative divisions':
                             num_of_administrative_divisions = new_item['count']
 
-                sorted_item_list.sort(key=lambda x: x.get('display_name'))
+                sorted_item_list.sort(key=lambda x: ('a' if x.get('selected') else 'b', x.get('display_name')))
 
                 result['facets'][category_key] = {
                     'name': category_key,

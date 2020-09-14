@@ -14,7 +14,7 @@ from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
     BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
-from ckanext.hdx_package.helpers.file_removal import file_remove
+from ckanext.hdx_package.helpers.file_removal import file_remove, find_filename_in_url
 from flask import request
 
 import ckan.lib.dictization.model_save as model_save
@@ -78,11 +78,11 @@ def resource_update(context, data_dict):
             data_dict['datastore_active'] = True
     result_dict = core_update.resource_update(context, data_dict)
 
-
     new_resource_is_api = result_dict.get('url_type') == 'api'
-    munged_current_res_name = munge.munge_filename(result_dict.get('name'))
-    munged_prev_res_name = munge.munge_filename(prev_resource_dict['name'])
-    new_file_has_same_name = munged_current_res_name == munged_prev_res_name
+    filename = find_filename_in_url(result_dict.get('url', ''))
+    munged_current_filename = munge.munge_filename(filename)
+    munged_prev_filename = munge.munge_filename(prev_resource_dict['url'])
+    new_file_has_same_name = munged_current_filename == munged_prev_filename
     if prev_resource_is_upload and ((new_file_uploaded and not new_file_has_same_name) or new_resource_is_api):
         log.info('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
         file_remove(prev_resource_dict['id'], prev_resource_dict['url'], prev_resource_dict['url_type'])

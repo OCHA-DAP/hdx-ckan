@@ -1,0 +1,15 @@
+.org-light {
+  background-color: #eeeeee;
+}
+.org-light .org-details {
+  background-color: #eeeeee;
+}
+.org-light .org-logo-large {
+  margin-top: 20px;
+  width: 100%;
+  padding-right: 15px;
+  text-align: right;
+}
+.org-light .org-logo-large img {
+  max-width: 100%;
+}

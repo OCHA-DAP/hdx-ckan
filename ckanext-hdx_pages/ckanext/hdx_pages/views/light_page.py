@@ -29,15 +29,15 @@ hdx_light_dashboard = Blueprint(u'hdx_light_dashboard', __name__, url_prefix=u'/
 
 @check_redirect_needed
 def read_event(id):
-    return _read(id, 'event')
+    return _read(id, 'event', True, False)
 
 
 @check_redirect_needed
 def read_dashboard(id):
-    return _read(id, 'dashboard')
+    return _read(id, 'dashboard', True, False)
 
 
-def _read(id, type):
+def _read(id, type, show_switch_to_desktop, show_switch_to_mobile):
     try:
         context = {
             u'model': model,
@@ -60,7 +60,9 @@ def _read(id, type):
 
     _populate_template_data(page_dict)
     template_data = {
-        'page_dict': page_dict
+        'page_dict': page_dict,
+        'page_has_desktop_version': show_switch_to_desktop,
+        'page_has_mobile_version': show_switch_to_mobile,
     }
 
     return render(u'light/custom_pages/read.html', template_data)
