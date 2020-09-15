@@ -5,7 +5,7 @@ ckan.module('hdx_custom_pages', function ($, _) {
         var fields = $('#section_' + id).find('.hdx-section-field');
         for (var _i = 0; _i < fields.length; _i++) {
             var field = fields[_i];
-            var inputs = $(field).find('input');
+            var inputs = $(field).find('.custom-page-field');
             var txt_input = $(inputs[0]);
             var name = txt_input.attr('id').replace("field_section_" + id + "_", "");
             if (this.field_config[sType].indexOf(name) == -1) {
