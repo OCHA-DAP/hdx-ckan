@@ -25,6 +25,14 @@
             <div class="row">
               {% snippet "light/snippets/package_list.html", data=section.template_data %}
             </div>
+          {% elif section.type == 'description' %}
+            {% if section.long_description %}
+                <div class="row mTop8">
+                    <div class="col-xs-12">
+                        <span>{{ h.render_markdown(section.long_description) }}</span>
+                    </div>
+                </div>
+            {% endif %}
           {% else %}
             {% if section.section_title %}
               <div class="custom-page-filter-start list-header">
