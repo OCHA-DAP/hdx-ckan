@@ -201,7 +201,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     }
                 },
                 'updateValidationUi': function (data, status, xhr) {
-                    var resetMessage = {type: 'reset'};
+                    var resetMessage = {type: 'reset', data: data};
                     sandbox.publish('hdx-form-validation', resetMessage);
                     if (data.error_summary && Object.keys(data.error_summary).length > 0) {
                         var sumMessage = {

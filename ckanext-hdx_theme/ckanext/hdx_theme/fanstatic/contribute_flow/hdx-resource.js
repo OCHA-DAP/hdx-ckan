@@ -808,13 +808,19 @@ $(function(){
                 // this.contribute_global.resourceModelList.models = [];
                 this._prepareFormForMetadataOnly({isEdit: true}, true);
                 var isMetadataOnly = $('input[name=_is_requestdata_type][value=true]');
-                if (isMetadataOnly.length === 1) {
+                // if (isMetadataOnly.length === 1) {
+                if(isMetadataOnly.length === 1 || this.contribute_global!=null && !this.contribute_global._datasetId){
                   var req_type_notification = $('#requestdata_type_notification');
                   req_type_notification.addClass('hdx-invisible-element');
-            }
+                }
               }
               else{
-                this._prepareFormForMetadataOnly({isEdit: true}, false);
+                if(message.data!=null && message.data.data!=null && message.data.data.is_requestdata_type==='True'){
+                  this._prepareFormForMetadataOnly({isEdit: true}, true);
+                }
+                else {
+                  this._prepareFormForMetadataOnly({isEdit: true}, false);
+                }
               }
             }.bind(this));
 
