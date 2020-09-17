@@ -429,7 +429,8 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema}
         # data_dict['name'] = data_dict['email']
         first_name = data_dict['first-name']
-        data_dict['fullname'] = first_name + ' ' + data_dict['last-name']
+        last_name = data_dict['last-name']
+        data_dict['fullname'] = first_name + ' ' + last_name
         try:
             # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
             # if is_captcha_enabled == 'true':
@@ -456,11 +457,19 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_update')(context, data_dict)
             tokens.token_update(context, data_dict)
 
-            ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
-            get_action('user_extra_update')(context, ue_dict)
+            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
+            # get_action('user_extra_update')(context, ue_dict)
+            #
+            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
+            # get_action('user_extra_update')(context, ue_dict)
 
-            ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
-            get_action('user_extra_update')(context, ue_dict)
+            ue_data_dict = {'user_id': data_dict.get('id'), 'extras': [
+                {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'},
+                {'key': user_model.HDX_ONBOARDING_DETAILS, 'new_value': 'True'},
+                {'key': user_model.HDX_FIRST_NAME, 'new_value': first_name},
+                {'key': user_model.HDX_LAST_NAME, 'new_value': last_name},
+            ]}
+            get_action('user_extra_update')(context, ue_data_dict)
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
                 subject = 'Thank you for joining the HDX community'
@@ -664,6 +673,15 @@ class ValidationController(ckan.controllers.user.UserController):
 
     def _build_extras_dict(self, key, value='True'):
         return {'extras': [{'key': key, 'new_value': value}]}
+
+    # def _get_ue_dict_for_key_list(self, user_id, data_list):
+    #     ue_dict = {'user_id': user_id}
+    #     extras = []
+    #     for item in data_list:
+    #         extras.append({'key': item.get('key')), 'new_value': value})
+    #     ue_dict['extras'] = extras
+    #     return ue_dict
+
 
     @staticmethod
     @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')

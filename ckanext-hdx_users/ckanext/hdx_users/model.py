@@ -28,6 +28,8 @@ HDX_LOGIN = 'hdx_login'
 HDX_REGISTER = 'hdx_register'
 HDX_LOGOUT = 'hdx_logout'
 HDX_FIRST_LOGIN = "hdx_first_login"
+HDX_FIRST_NAME = "hdx_first_name"
+HDX_LAST_NAME = "hdx_last_name"
 
 USER_STATUSES = [
     HDX_ONBOARDING_USER_REGISTERED,
