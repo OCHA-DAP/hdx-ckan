@@ -65,6 +65,20 @@
 
       </div>
     </div>
+  {% if (not data.country_dict.key_figures or data.country_dict.key_figures == 'active') and data.widgets.top_line_data_list %}
+  <div class="row">
+      <div class="col-xs-12">
+          <div class="list-header crisis-list-header">
+              <span class="mL15 list-header-title">
+                  {{ _("Key Figures") }}
+              </span>
+          </div>
+      </div>
+      <div class="col-xs-12">
+        {% snippet 'country/key-figures.html', country_active=country_active, data=data, embedded=false %}
+      </div>
+  </div>
+  {% endif %}
 
   <!--  DATA COMPLETENESS -->
   {% if data.data_completness %}
@@ -128,7 +142,9 @@
   {% resource 'hdx_theme/search-light' %}
   {% resource 'hdx_theme/jquery.highlight' %}
   {% resource 'hdx_theme/country' %}
+  {% resource 'hdx_theme/country-topline' %}
   {% resource 'hdx_theme/dataset-search' %}
   {% resource 'hdx_theme/dataset' %}
   {% resource 'hdx_theme/light/group/group-light.css' %}
+
 {% endblock -%}

@@ -38,3 +38,21 @@
   font-size: 12px;
   text-wrap: none;
 }
+.group-light #key-figures-carousel .carousel-inner {
+  background: #fff;
+}
+.group-light #key-figures-carousel .carousel-chevron.left {
+  left: -13px;
+}
+.group-light #key-figures-carousel .carousel-chevron.right {
+  right: -13px;
+}
+.group-light #key-figures-mobile-carousel.mobile-carousel {
+  width: auto;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.group-light #key-figures-mobile-carousel.mobile-carousel .mobile-carousel-inner {
+  left: 15px;
+  background: #fff;
+}
