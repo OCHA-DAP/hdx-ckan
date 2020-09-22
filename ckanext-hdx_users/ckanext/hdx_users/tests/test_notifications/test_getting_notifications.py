@@ -42,7 +42,7 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
             org_url='https://hdx.hdxtest.org/'
         )
 
-    @mock.patch('ckanext.ytp.request.logic.hdx_mail')
+    @mock.patch('ckanext.ytp.request.logic.hdx_mailer')
     def test_get_org_membership_requests(self, hdx_mail_mock):
         req1 = self._request_membership(self.NORMAL_USER1)
         req2 = self._request_membership(self.NORMAL_USER2)
