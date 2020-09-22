@@ -73,18 +73,11 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test User'
         }
-        # offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
-        #                    action='request_new_organization')
         offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                            action='request_new_organization')
         self.app.post(offset, params=postparams, extra_environ=auth)
         args, kw_args = mocked_mail_recipient.call_args
 
-        # assert len(args[0]) == 2, 'mail goes to sender, org admin'
-        # assert post_params['msg'] in args[2].get('msg')
-        # assert kw_args.get('sender_name') == post_params['fullname']
-        # assert kw_args.get('sender_email') == post_params['email']
-        # assert 'email/content/group_message.html' == kw_args.get('snippet')
         assert args, 'This needs to contain the email that will be sent'
         assert 'test@test.com' in args[0][0].get('email')
         assert 'Test User' in args[0][0].get('display_name')
@@ -93,17 +86,6 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         assert 'Test User' in args[2].get('user_fullname')
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args.get('snippet')
         assert 'test@test.com' in kw_args.get('footer')
-        # assert 'tester' in mail_info, 'Ckan username needs to be in the email'
-        # assert 'test@test.com' in mail_info, 'Ckan email needs to be in the email'
-        # assert 'Test User' in mail_info, 'Person\'s name needs to be in the email'
-        # assert 'email1@testemail.com' in mail_info, 'Person\'s email needs to be in the email'
-        # assert 'emailwork1@testemail.com' in mail_info, 'Person\'s work email needs to be in the email'
-        # assert 'Test description' in mail_info, 'Description needs to be in the email'
-        # assert 'Test description data' in mail_info, 'Description data needs to be in the email'
-        # assert 'Test org' in mail_info, 'Org name needs to be in the email'
-        # assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
-        # assert ORGANIZATION_TYPE_LIST[0][1] in mail_info, 'Org type needs to be in the email'
-        # assert 'TOACRONYM' in mail_info, 'Org acronym needs to be in the email'
 
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_new_org_req_with_special_chars(self, mocked_mail_recipient):
@@ -127,8 +109,6 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test êßȘ'
         }
-        # offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
-        #                    action='request_new_organization')
         offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                            action='request_new_organization')
         self.app.post(offset, params=postparams, extra_environ=auth)
@@ -147,15 +127,3 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
 
         assert 'email/content/new_org_request_hdx_team_notification.html' in kw_args0.get('snippet')
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args1.get('snippet')
-
-        # assert mail_info, 'This needs to contain the email that will be sent'
-        # assert 'tester' in mail_info, 'Ckan username needs to be in the email'
-        # assert u'Test êßȘ' in mail_info, 'Person\'s name needs to be in the email'
-        # assert 'email1@testemail.com' in mail_info, 'Person\'s email needs to be in the email'
-        # assert 'emailwork1@testemail.com' in mail_info, 'Person\'s work email needs to be in the email'
-        # assert u'Description ê,ß, and Ș' in mail_info, 'Description needs to be in the email'
-        # assert u'Description data ê,ß, and Ș' in mail_info, 'Description data needs to be in the email'
-        # assert u'Org êßȘ' in mail_info, 'Org name needs to be in the email'
-        # assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
-        # assert ORGANIZATION_TYPE_LIST[0][1] in mail_info, 'Org type needs to be in the email'
-        # assert 'SCOACRONYM' in mail_info, 'Org acronym needs to be in the email'
