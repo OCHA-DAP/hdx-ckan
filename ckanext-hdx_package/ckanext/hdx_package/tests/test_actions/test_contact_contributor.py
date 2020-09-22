@@ -76,5 +76,5 @@ class TestContactContributor(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         maintainer = pkg_dict.get("maintainer")
         assert maintainer
         m_user = model.User.get(maintainer)
-        recipients_list = [args0[0][0].get('email')]
+        recipients_list = [args0[0][0]]
         assert {'display_name': m_user.display_name, 'email': m_user.email} in recipients_list
