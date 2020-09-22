@@ -92,7 +92,9 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
     @mock.patch('ckanext.hdx_users.helpers.notification_service.MembershipRequestsService')
     @mock.patch('ckanext.hdx_users.helpers.notification_service.RequestDataService')
     @mock.patch('ckanext.hdx_users.helpers.notification_service.g')
-    def test_get_user_notifications_helper(self, mock_g, MockRequestDataService, MockMembershipRequestService):
+    @mock.patch('ckanext.hdx_users.helpers.helpers.g')
+    def test_get_user_notifications_helper(self, mock_helpers_g, mock_notifications_g,
+                                           MockRequestDataService, MockMembershipRequestService):
         dates = [
             {'datestr': '2019-08-01T08:35:01'},
             {'datestr': '2019-08-04T08:35:01'},
@@ -105,7 +107,9 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
 
         sorted_dates = sorted(dates, key=lambda d: d['date'], reverse=True)
 
-        mock_g.user = self.ADMIN_USER
+        mock_notifications_g.user = self.ADMIN_USER
+        mock_helpers_g.hdx_user_notifications = None
+
         MockMembershipRequestService.return_value.get_org_membership_requests.return_value = [
             {
                 'org_title': 'Org 1',
