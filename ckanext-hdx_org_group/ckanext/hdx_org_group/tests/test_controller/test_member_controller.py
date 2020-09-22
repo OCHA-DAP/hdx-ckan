@@ -231,18 +231,28 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         mock_helper.populate_mock_as_c(theme_c, test_sysadmin)
 
         original_send_invite = mailer.send_invite
-        original_mail_recipient = hdx_mailer._mail_recipient
+        original_mail_recipient = hdx_mailer._mail_recipient_html
 
         def mock_send_invite(user):
             global invited_user
             invited_user = user
 
-        def mock_mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=None, footer=None,
-                                headers={}, sender_email=None):
+        def mock_mail_recipient(sender_name='Humanitarian Data Exchange (HDX)',
+                         sender_email='hdx@un.org',
+                         recipients_list=None,
+                         subject=None,
+                         content_dict=None,
+                         cc_recipients_list=None,
+                         bcc_recipients_list=None,
+                         footer=True,
+                         headers={},
+                         reply_wanted=False,
+                         snippet='email/email.html',
+                         file=None):
             return True
 
         mailer.send_invite = mock_send_invite
-        hdx_mailer._mail_recipient = mock_mail_recipient
+        hdx_mailer._mail_recipient_html = mock_mail_recipient
         context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
 
         # removing one member from organization
@@ -274,7 +284,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
                       extra_environ={"REMOTE_USER": test_username})
 
         mailer.send_invite = original_send_invite
-        hdx_mailer._mail_recipient = original_mail_recipient
+        hdx_mailer._mail_recipient_html = original_mail_recipient
 
 
 class MockedHDXOrgMemberController(member_controller.HDXOrgMemberController):
