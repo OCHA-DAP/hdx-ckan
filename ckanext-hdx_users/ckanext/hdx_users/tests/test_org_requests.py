@@ -136,14 +136,14 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         args1, kw_args1 = mocked_mail_recipient.call_args_list[1]
 
         req_dict = args0[2]
-        assert postparams.get('name') == req_dict.get('org_name')
-        assert postparams.get('acronym') == req_dict.get('org_acronym')
-        assert postparams.get('org_type') == req_dict.get('org_type')
-        assert postparams.get('url') == req_dict.get('org_website')
-        assert postparams.get('description') == req_dict.get('org_description')
-        assert postparams.get('description_data') == req_dict.get('data_description')
-        assert postparams.get('work_email') == req_dict.get('requestor_work_email')
-        assert postparams.get('your_name') == req_dict.get('user_fullname')
+        assert postparams.get('name') == str(req_dict.get('org_name'))
+        assert postparams.get('acronym') == str(req_dict.get('org_acronym'))
+        assert postparams.get('org_type') == str(req_dict.get('org_type'))
+        assert postparams.get('url') == str(req_dict.get('org_website'))
+        assert postparams.get('description') == str(req_dict.get('org_description'))
+        assert postparams.get('description_data') == str(req_dict.get('data_description'))
+        assert postparams.get('work_email') == str(req_dict.get('requestor_work_email'))
+        assert postparams.get('your_name') == str(req_dict.get('user_fullname'))
 
         # assert mail_info, 'This needs to contain the email that will be sent'
         # assert 'tester' in mail_info, 'Ckan username needs to be in the email'
