@@ -434,9 +434,9 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], config['smtp.mail_from'])
+        assert_equal(msg[1], 'hdx@un.org')
         assert_equal(msg[2], [bob_user['email']])
-        assert_true('Reset' in msg[3])
+        assert_true('HDX_password_reset' in msg[3])
 
     def test_send_reset_email_for_username(self):
         '''Password reset email is sent for valid user name'''
@@ -462,9 +462,9 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], config['smtp.mail_from'])
+        assert_equal(msg[1], 'hdx@un.org')
         assert_equal(msg[2], [bob_user['email']])
-        assert_true('Reset' in msg[3])
+        assert_true('HDX_password_reset' in msg[3])
 
     def test_send_reset_email_for_email_different_case(self):
         '''Password reset email is sent for valid user email (with some
@@ -491,9 +491,9 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], config['smtp.mail_from'])
+        assert_equal(msg[1], 'hdx@un.org')
         assert_equal(msg[2], [bob_user['email']])
-        assert_true('Reset' in msg[3])
+        assert_true('HDX_password_reset' in msg[3])
 
     def test_no_send_reset_email_for_non_user(self):
         '''Password reset email is not sent for a valid email but no account'''
