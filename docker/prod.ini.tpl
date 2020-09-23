@@ -126,7 +126,7 @@ hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
 ## Logging configuration
 [loggers]
-keys = root, ckan, ckanext
+keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer
 
 [handlers]
 keys = console, file
@@ -150,10 +150,10 @@ handlers = console, file
 qualname = ckanext
 propagate = 0
 
-[logger_ckanext.hdx_theme.util.jql]
+[logger_ckanext.hdx_theme.util.timer]
 level = INFO
 handlers = console, file
-qualname = ckanext.hdx_theme.util.jql
+qualname = ckanext.hdx_theme.util.timer
 propagate = 0
 
 [handler_console]
