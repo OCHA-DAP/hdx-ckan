@@ -69,7 +69,7 @@ class ValidationToken(DomainObject):
 
 
 def define_validation_token_table():
-    global  validation_token_table
+    global validation_token_table
     validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                Column('user_id', types.UnicodeText, ForeignKey('user.id'), unique=True),

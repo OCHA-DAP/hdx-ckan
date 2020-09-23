@@ -120,6 +120,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IValidators)
+    plugins.implements(plugins.IBlueprint)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -249,3 +250,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_email_validator': hdx_validators.user_email_validator,
             'user_name_validator': hdx_validators.user_name_validator
         }
+
+    # IBlueprint
+    def get_blueprint(self):
+        import ckanext.hdx_users.views.user as user_view
+        return user_view.user
