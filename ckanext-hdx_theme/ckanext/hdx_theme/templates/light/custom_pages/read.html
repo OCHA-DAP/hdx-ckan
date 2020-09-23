@@ -25,6 +25,14 @@
             <div class="row">
               {% snippet "light/snippets/package_list.html", data=section.template_data %}
             </div>
+          {% elif section.type == 'description' %}
+            {% if section.long_description %}
+                <div class="row mTop8">
+                    <div class="col-xs-12">
+                        <span>{{ h.render_markdown(section.long_description) }}</span>
+                    </div>
+                </div>
+            {% endif %}
           {% else %}
             {% if section.section_title %}
               <div class="custom-page-filter-start list-header">
@@ -47,7 +55,7 @@
               <div class="col-xs-12 section-body">
                 <div class="data-viewer-error">
                 </div>
-                <iframe class="fold {% if section.type != 'key_figures' %}closed{% endif %}" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
+                <iframe class="fold {% if (section.type != 'key_figures') and (page.sections|length > 1) %}closed{% endif %}" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
                   src="{{ section.get('data_url') }}">
                 </iframe>
                 {% if section.type != 'key_figures' %}
@@ -57,7 +65,7 @@
                     <div class="display-toggle">
                       Display:
                       <span class="checkbox-slider" style="display: inline-block; ">
-                        <input id="section-slider-toggle-{{loop.index}}" onclick="customPageToggleSectionFold(this);" type="checkbox" class="checkbox-slider-checkbox">
+                        <input id="section-slider-toggle-{{loop.index}}" {% if page.sections|length == 1 %} checked="checked" {% endif %} onclick="customPageToggleSectionFold(this);" type="checkbox" class="checkbox-slider-checkbox">
                         <label class="checkbox-slider-label" for="section-slider-toggle-{{loop.index}}">
                           <span class="checkbox-slider-inner"></span>
                           <span class="checkbox-slider-switch"></span>
