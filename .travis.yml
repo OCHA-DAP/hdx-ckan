@@ -19,12 +19,8 @@ script:
   - docker-compose build ckan
   - docker-compose up -d
   - sleep 10
-  - docker-compose logs solr
-  - docker-compose exec solr bin/solr create_core -c ckan -force
-  - docker cp ./ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml solr:/srv/solr/server/solr/ckan/conf/
-  - docker cp ./docker/solrconfig.xml solr:/srv/solr/server/solr/ckan/conf/
-  - docker-compose restart solr
-  - sleep 20
+  - docker-compose exec solr bin/solr create -c ckan -d /configsets/hdx-current
+  - sleep 10
   - docker-compose restart ckan
   - docker-compose exec ckan pip install -r /srv/ckan/dev-requirements.txt
   - docker-compose exec ckan python setup.py develop
