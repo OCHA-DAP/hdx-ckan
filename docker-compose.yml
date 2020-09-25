@@ -5,9 +5,27 @@ networks:
 
 services:
   solr:
-    image: unocha/alpine-solr:6.3.0-201701-01
+    image: solr:7.7.3-slim
+    environment:
+      SOLR_OPTS: -Dsolr.jetty.request.header.size=65536 -Dsolr.dns.prevent.reverse.lookup
+      ZK_HOST: zookeeper:2181
+    ulimits:
+      nofile:
+        soft: 65000
+        hard: 65000
     hostname: solr
     container_name: solr
+    volumes:
+      - "./docker/solr:/configsets"
+
+  zookeeper:
+    image: zookeeper:3.6
+    hostname: zookeeper
+    container_name: zookeeper
+    environment:
+      ZOO_SERVERS: server.1=zookeeper:2888:3888;2181
+      ZOO_STANDALONE_ENABLED: 'true'
+      ZOO_LOG4J_PROP: 'INFO,ROLLINGFILE'
 
   db:
     image: unocha/alpine-postgres:201703-PR116
@@ -51,11 +69,6 @@ services:
       HDX_SOLR_ADDR: solr
       HDX_SOLR_PORT: 8983
       HDX_TYPE: ${HDX_TYPE}
-      HDX_GISDB_DB: gis
-      HDX_GISDB_ADDR: 127.0.0.1
-      HDX_GISDB_PORT: 5432
-      HDX_GISDB_USER: gis
-      HDX_GISDB_PASS: gis
       HDX_SMTP_ADDR: localhost
       HDX_SMTP_PORT: 25
       HDX_SMTP_USER: ''
