@@ -120,6 +120,7 @@ hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 
 # AWS api echo endpoint
 hdx.echo_url = https://${AWS_ECHO_API_URL}
+hdx.echo_api_key = ${HDX_ECHO_API_KEY}
 
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
