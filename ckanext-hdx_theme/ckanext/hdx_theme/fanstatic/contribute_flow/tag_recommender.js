@@ -25,6 +25,10 @@ ckan.module('hdx_tag_recommender', function ($, _) {
         var newTagsString = currentTagsString ? currentTagsString + ',' + tag : tag;
         this.tagInputEl.val(newTagsString);
         this.tagInputEl.trigger('change');
+        hdxUtil.analytics.sendLinkClickEvent({
+          destinationUrl: '#',
+          linkType: 'dataset recommended tag'
+        });
       }
     },
     /**
