@@ -146,9 +146,18 @@ def detect_format(key, data, errors, context):
         if file_format:
             data[key] = file_format
             return file_format
-        raise df.Invalid(_('No format provided and none could be automatically deduced'))
+        err_message = "We couldn't determine your file type. If it is a compressed format (zip, etc), please  \
+                      indicate the primary format of the data files inside compressed file."
+        errors[key].append(_(err_message))
+        raise df.StopOnError()
 
     return current_format
+
+
+def to_lower(current_value):
+    if current_value:
+        return current_value.lower()
+    return current_value
 
 
 def hdx_show_subnational(key, data, errors, context):

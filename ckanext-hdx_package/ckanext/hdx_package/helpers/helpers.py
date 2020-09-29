@@ -316,28 +316,6 @@ def get_tag_vocabulary(tags):
     return tags
 
 
-def hdx_unified_resource_format(format):
-    '''
-    This function is based on the unified_resource_format() function from ckan.lib.helpers.
-    As the one from core ckan it checks the resource formats configuration to translate the
-    format string to a standard format.
-    The difference is that in case nothing is found in 'resource_formats.json' then it's
-    turned to lowercase.
-
-    :param format: resource format as written by the user
-    :type format: string
-    :return:
-    :rtype:
-    '''
-    formats = h.resource_formats()
-    format_clean = format.lower()
-    if format_clean in formats:
-        format_new = formats[format_clean][1]
-    else:
-        format_new = format_clean
-    return format_new
-
-
 def filesize_format(size_in_bytes):
     try:
         d = 1024.0
