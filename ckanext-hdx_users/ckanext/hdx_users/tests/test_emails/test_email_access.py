@@ -251,7 +251,6 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email(self):
         '''Editing an existing user's email is successful.'''
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
-
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         url_for = h.url_for('user.edit')
         response = self.app.get(
@@ -261,7 +260,9 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         # existing values in the form
         form = response.forms['user-edit-form']
         assert_equal(form['name'].value, sue_user['name'])
-        assert_equal(form['fullname'].value, sue_user['fullname'])
+        # assert_equal(form['fullname'].value, sue_user['fullname'])
+        assert_equal(form['firstname'].value, sue_user['fullname'])
+        assert_equal(form['lastname'].value, '')
         assert_equal(form['email'].value, sue_user['email'])
         assert_equal(form['about'].value, sue_user['about'])
         assert_equal(form['activity_streams_email_notifications'].value, None)
