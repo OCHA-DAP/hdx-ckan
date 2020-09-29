@@ -9,7 +9,7 @@
 		" * List of alternative representations - these are other names that the user might type when they mean this format, or alternative mime-types or any other identifier. (They must be unique to this resource format.)"
 	],
 ["API","Application Programming Interface",null,[]],
-["ARC/INFO ASCII Grid","An ASCII-encoded format for raster geographic data","application/x-­‐ogc-­‐ aaigrid",[]],
+["ARC/INFO ASCII Grid","An ASCII-encoded format for raster geographic data","application/x‐ogc-aaigrid",[]],
 ["ARC/INFO Grid","A format for raster geographic data",null,["ARC grid","grid"]],
 ["BIN","Binary Data","application/octet-stream",[]],
 ["BMP","Bitmap Image File","image/x-ms-bmp",[".bmp"]],
@@ -21,7 +21,7 @@
 ["DTA","Stata data file","application/x-stata-dta",[".dta"]],
 ["E00","ARC/INFO interchange file format","application/x-e00",[]],
 ["EMF","Enhanced graphics metafile","application/x-emf",[".emf"]],
-["Garmin IMG","A format for loading geodata onto Garmin GPS receivers",null,[]],
+["Garmin IMG","A format for loading geodata onto Garmin GPS receivers",null,["img"]],
 ["Geodatabase","ESRI File Geodatabase or ESRI Personal Geodatabase",null,["gdb",".gdb","zipped gdb"]],
 ["GeoJSON","Geographic JavaScript Object Notation",null,[]],
 ["Geopackage","An open format for transferring geospatial information","application/geopackage+vnd",["gpkg",".gpkg"]],
@@ -33,7 +33,7 @@
 ["JPEG","JPG Image File","image/jpeg",["jpg"]],
 ["JSON","JavaScript Object Notation","application/json",[]],
 ["KML","KML File","application/vnd.google-earth.kml+xml",[]],
-["KMZ","KMZ File","application/vnd.google-earth.kmz+xml",["application/vnd.google-earth.kmz"]],
+["KMZ","KMZ File","application/vnd.google-earth.kmz+xml",[]],
 ["MBTiles","A format for geographic data stored as raster or vector tiles","application/vnd.google-apps.spreadsheet",[".mbtiles"]],
 ["MDB","Access Database","application/x-msaccess",[]],
 ["MXD","ESRI ArcGIS project file","application/x-mxd",[]],
@@ -66,7 +66,7 @@
 ["Unknown","Format is unknown",null,[]],
 ["VRT","GDAL Virtual Format - an xml file describing multiple geospatial rasters that can be loaded together",null,[]],
 ["Web App","A web-based application. Use of these kinds of links as data resources on HDX is discouraged but in some cases necessary.",null,["app"]],
-["XLS","Excel Document","application/vnd.ms-excel",[]],
+["XLS","Excel Spreadsheet","application/vnd.ms-excel",[]],
 ["XLSX","Excel OOXML Spreadsheet","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",[".xlsx"]],
 ["XML","XML File","application/xml",["text/xml","http://purl.org/net/mediatypes/application/xml"]]
 ]

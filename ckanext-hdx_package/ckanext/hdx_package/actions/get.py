@@ -36,6 +36,7 @@ from ckan.common import _, c
 from ckan.lib import uploader
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+from ckanext.hdx_package.helpers.resource_format import resource_format_autocomplete, guess_format_from_extension
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
@@ -978,3 +979,23 @@ def hdx_get_s3_link_for_resource(context, data_dict):
 
     else:
         return {'s3_url': res_dict.get('url')}
+
+
+@logic.side_effect_free
+def hdx_format_autocomplete(context, data_dict):
+
+    q = data_dict['q']
+    if not q:
+        return []
+
+    return resource_format_autocomplete(q, 5)
+
+
+@logic.side_effect_free
+def hdx_guess_format_from_extension(context, data_dict):
+
+    q = data_dict['q']
+    if not q:
+        return None
+
+    return guess_format_from_extension(q)
