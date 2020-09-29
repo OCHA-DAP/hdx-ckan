@@ -157,11 +157,14 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     action='permission')
         # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='logged_in')
-        map.connect('/user/reset', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        map.connect('/user/reset',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='request_reset')
-        map.connect('/contribute', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        map.connect('/contribute',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contribute')
-        map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        map.connect('/contact_hdx',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contact_hdx')
         # map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='save_mapexplorer_config')
@@ -212,16 +215,17 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('requestdata_send_request', '/request_data',
                     controller=hdx_request_data_controller,
                     action='send_request')
-        map.connect('/util/user/hdx_autocomplete', controller='ckanext.hdx_users.controllers.api:APIExtensionController',
+        map.connect('/util/user/hdx_autocomplete',
+                    controller='ckanext.hdx_users.controllers.api:APIExtensionController',
                     action='hdx_user_autocomplete')
-
 
         #######
         map.connect('user_datasets', '/user/{id:((?!edit)[^/])+}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
-        map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='hdx_delete_powerview',)
+        map.connect('delete_page', '/dashboard/visualization/delete/{id}',
+                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='hdx_delete_powerview', )
         return map
 
     def after_map(self, map):
@@ -243,6 +247,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
             'hdx_user_show': get.hdx_user_show,
+            'hdx_user_fullname_show': get.hdx_user_fullname_show,
+            'user_show': get.user_show,
         }
 
     def get_validators(self):

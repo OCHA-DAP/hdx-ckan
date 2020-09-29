@@ -29,6 +29,7 @@ class HDX_User_ExtraPlugin(plugins.SingletonPlugin):
         return {
             'user_extra_create': create.user_extra_create,
             'user_extra_show': get.user_extra_show,
+            'user_extra_value_by_key_show': get.user_extra_value_by_key_show,
             'user_extra_update': update.user_extra_update
         }
 
