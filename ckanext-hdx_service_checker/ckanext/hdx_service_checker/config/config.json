@@ -1,12 +1,5 @@
 [
   {
-    "name": "CPS check",
-    "module_name": "ckanext.hdx_service_checker.checks.checks",
-    "class_name": "HttpResponseTextCheck",
-    "url": "#{hdx.rest.indicator.endpoint}?l=ROU",
-    "included_text": "indicatorTypeName"
-  },
-  {
     "name": "Dataproxy check",
     "module_name": "ckanext.hdx_service_checker.checks.checks",
     "class_name": "HttpResponseTextCheck",
