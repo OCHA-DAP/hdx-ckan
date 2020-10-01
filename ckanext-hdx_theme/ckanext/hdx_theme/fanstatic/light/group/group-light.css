@@ -48,11 +48,9 @@
   right: -13px;
 }
 .group-light #key-figures-mobile-carousel.mobile-carousel {
-  width: auto;
-  margin-left: -15px;
-  margin-right: -15px;
+  background: #fff;
 }
 .group-light #key-figures-mobile-carousel.mobile-carousel .mobile-carousel-inner {
-  left: 15px;
+  left: 0;
   background: #fff;
 }
