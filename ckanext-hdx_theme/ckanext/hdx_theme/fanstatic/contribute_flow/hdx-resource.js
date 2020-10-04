@@ -420,6 +420,10 @@ $(function(){
             }.bind(this));
 
             this.googlepicker = this.initGooglePicker();
+
+            if (!this.model.id) {
+                this._processResourceExtension();
+            }
         },
 
         initGooglePicker: function() {
