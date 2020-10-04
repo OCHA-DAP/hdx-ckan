@@ -8,6 +8,7 @@ import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
+import ckanext.hdx_users.views.user as hdx_user
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -24,6 +25,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IBlueprint)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -114,6 +116,10 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def configure(self, config):
         users_model.setup()
 
+    #IBlueprint
+    def get_blueprint(self):
+        return hdx_user.user
+
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -188,7 +194,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/logged_out', controller='user', action='logged_out')
         map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
         # map.connect('/user/reset', controller='user', action='request_reset')
-        map.connect('/user/me', controller='user', action='me')
+        # map.connect('/user/me', controller='user', action='me')
         # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
 
