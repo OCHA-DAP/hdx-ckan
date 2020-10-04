@@ -12,6 +12,7 @@ import ckanext.hdx_users.helpers.reset_password as reset_password
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
+url_for = tk.url_for
 
 
 class TestPasswordReset(hdx_test_base.HdxBaseTest):
@@ -102,4 +103,23 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
         except NotAuthorized as e:
             assert True, 'Password reset should not be possible with expired key'
 
+    @mock.patch('ckanext.hdx_users.actions.update.hdx_mailer.mail_recipient')
+    def test_reset_page_controller(self, mocked_mail_recipient):
+        email = 'controller_password_reset_fails_user@hdx.hdxtest.org'
+        user_dict = factories.User(name='controller_password_reset_fails_user', email=email)
 
+        data_dict = {
+            'id': email
+        }
+        _get_action('hdx_send_reset_link')({}, data_dict)
+        user = model.User.get(user_dict['id'])
+
+        expired_time = (datetime.utcnow() - timedelta(days=1)).isoformat()
+        key_random_part = user.reset_key.split('__')[0]
+        expired_key = '{}__{}'.format(key_random_part, expired_time)
+        user.reset_key = expired_key
+        model.repo.commit()
+
+        reset_page_url = url_for('hdx_user.perform_reset', id=user.id, key=expired_key)
+        response = self.app.get(reset_page_url)
+        assert 'has expired' in response.html.text
