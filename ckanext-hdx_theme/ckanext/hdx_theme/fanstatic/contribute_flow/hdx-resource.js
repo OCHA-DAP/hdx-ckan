@@ -422,7 +422,7 @@ $(function(){
             this.googlepicker = this.initGooglePicker();
 
             if (!this.model.id) {
-                this._processResourceExtension();
+                this._guessFormat();
             }
         },
 
@@ -459,6 +459,8 @@ $(function(){
             } else {
                 this._setUpForSourceType('source-file');
             }
+
+            this._showFormatWarningIfNeeded();
 
             return this;
         },
@@ -511,7 +513,8 @@ $(function(){
             this.model.set(e.target.name, e.target.value);
 
             if (e.target.name === 'name' || e.target.name === 'url') {
-              this._processResourceExtension();
+                this._guessFormat();
+                this._showFormatWarningIfNeeded();
             }
 
         },
@@ -524,7 +527,7 @@ $(function(){
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
             this.render();
-            this._processResourceExtension();
+            this._guessFormat();
         },
 
         onFormatGetsFocus: function(e){
@@ -677,7 +680,32 @@ $(function(){
             //}
             this.model.set('name', name);
         },
-        _processResourceExtension: function () {
+        _showFormatWarningIfNeeded: function () {
+
+            var extension = this._computeExtension();
+
+            var isArchive = ARCHIVE_EXTENSIONS.indexOf(extension) >= 0;
+            var wasArchive = ARCHIVE_EXTENSIONS.indexOf(this.prevFileExtension) >= 0;
+
+            if (isArchive && !wasArchive && !this.model.get('format') ) {
+                this.display_errors({'format': WARNINGS.archive});
+            }
+            else if (!isArchive && wasArchive) {
+                this.display_errors({'format': ''});
+            }
+            this.prevFileExtension = extension;
+        },
+        _guessFormat: function() {
+            var onSuccessSetFormat = function(data) {
+                if (data.success === true && data.result) {
+                    this.model.set('format', data.result);
+                    this.render();
+                }
+            }.bind(this);
+            var extension = this._computeExtension();
+            $.get(URLS.guessFormat + extension, onSuccessSetFormat);
+        },
+        _computeExtension: function() {
             var __getExtension = function(url) {
                 var extension = null;
                 if (url) {
@@ -695,28 +723,8 @@ $(function(){
             }
 
             var extension = __getExtension(this.model.get('name')) || __getExtension(this.model.get('url'));
-            var isArchive = ARCHIVE_EXTENSIONS.indexOf(extension) >= 0;
-            var wasArchive = ARCHIVE_EXTENSIONS.indexOf(this.prevFileExtension) >= 0;
 
-            if (isArchive && !wasArchive && !this.model.get('format') ) {
-                this.display_errors({'format': WARNINGS.archive});
-            }
-            else if (!isArchive && wasArchive) {
-                this.display_errors({'format': ''});
-            }
-            this.prevFileExtension = extension;
-            if (extension) {
-              this._guessFormat(extension);
-            }
-        },
-        _guessFormat: function(extension) {
-            var onSuccessSetFormat = function(data) {
-                if (data.success === true && data.result) {
-                    this.model.set('format', data.result);
-                    this.render();
-                }
-            }.bind(this);
-            $.get(URLS.guessFormat + extension, onSuccessSetFormat);
+            return extension;
         }
     });
 
