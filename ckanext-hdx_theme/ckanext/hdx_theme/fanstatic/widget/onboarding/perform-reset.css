@@ -58,48 +58,17 @@
     margin-left: 5px;
   }
 }
-.recover-widget {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  background-color: #eeeeee;
-  padding: 20px;
+.notification-title .close {
+  display: none;
 }
-.recover-widget .btn-primary {
-  width: 100%;
+#recoverPopup {
+  background: none;
+  pointer-events: none;
 }
-.recover-widget .not-member {
-  color: #888888;
+#recoverPopup .content {
+  pointer-events: all;
 }
-.recover-widget .not-member a {
-  font-weight: 700;
-}
-.recover-widget .logo {
-  height: 30px;
-}
-#recoverPopup .notification-widget {
-  width: 370px;
-}
-#recoverPopup .notification-title {
-  padding: 0;
-  height: 200px;
-  position: relative;
-}
-#recoverPopup .notification-title .close {
-  position: absolute;
-  float: none;
-  top: 20px;
-  right: 20px;
-  font-size: 21px;
-}
-#recoverPopup .notification-title .title {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
-  color: #fff;
-}
-#recoverPopup .notification-title img {
-  position: absolute;
-  height: 100%;
-  right: 0;
+#recoverPopup .recover-widget {
+  min-height: 380px;
+  height: auto;
 }

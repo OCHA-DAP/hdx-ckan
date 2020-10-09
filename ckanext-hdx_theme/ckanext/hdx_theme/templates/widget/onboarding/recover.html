@@ -26,11 +26,20 @@ Example:
             <div class="error-message" style="display: none;">
             </div>
         </div>
-        <div class="mTop10 bottom-actions">
-
-                <input class="btn btn-primary btn-large pull-right" type="submit" value="Reset">
-                <input class="btn btn-empty btn-empty-black btn-large pull-right mR30" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-       ` </div>
+        <div class="mTop20">
+          <input class="btn btn-primary btn-large" type="submit" value="Reset">
+        </div>
+        <div class="mTop20 center not-member">
+          Not a member? <a href="">Register</a>
+        </div>
+        <div class="mTop30 center">
+          <img class="logo" src="/images/homepage/logo-combined.png"/>
+        </div>
     </div>
 </form>
+{% endblock %}
+
+{% block notification_title %}
+  <img src="/images/onboarding/reset-password.png" />
+  <span class="title">Forgot your password?</span>
 {% endblock %}
