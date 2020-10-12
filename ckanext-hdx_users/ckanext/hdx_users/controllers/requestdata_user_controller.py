@@ -185,6 +185,7 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                 'user_admin_fullname': c.userobj.fullname,
                 'user_admin_email': c.userobj.email,
                 'msg': data.get('message_content'),
+                'is_attach': data.get('file_upload') is not None
             }
             hdx_mailer.mail_recipient([{'display_name': data.get('requested_by'), 'email': data.get('send_to')}],
                                       subject, email_data, footer=data.get('send_to'),

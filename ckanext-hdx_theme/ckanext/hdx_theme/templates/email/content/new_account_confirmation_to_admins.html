@@ -1,7 +1,7 @@
 <p>Dear {{ data.org_name }} administrator(s),
 
-<p>As requested, we have created a new HDX user account with the name {{ data.user_username }}. The account credentials were sent to
-  {{ data.user_email }}.</p>
+<p>As requested, we have created a new HDX user account with the name <strong>{{ data.user_username }}</strong>. The account credentials were sent to
+  <strong>{{ data.user_email }}</strong>.</p>
 
 <p>The new account for {{ data.user_username }} was assigned the role of
   {% if data.capacity == 'admin' %} <strong>administrator</strong>: add, edit, and delete datasets, and manage organisation membership.
