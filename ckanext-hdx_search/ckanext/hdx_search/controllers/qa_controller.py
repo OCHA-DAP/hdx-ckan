@@ -1,9 +1,9 @@
 import logging
-from urllib import urlencode
-
 import sqlalchemy
 from botocore.exceptions import ClientError
+from ckanext.s3filestore.helpers import generate_temporary_link
 from pylons import config
+from urllib import urlencode
 
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
@@ -11,18 +11,14 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.membership_data as membership
 import ckanext.hdx_search.helpers.search_history as search_history
-
 from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
-
-from ckanext.s3filestore.helpers import generate_temporary_link
-
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
+from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_search.helpers.qa_s3 import LogS3
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
-from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 
 _validate = dict_fns.validate
@@ -95,7 +91,7 @@ class HDXQAController(HDXSearchController):
 
         c.cps_off = config.get('hdx.cps.off', 'false')
         c.other_links['current_page_url'] = h.url_for('qa_dashboard')
-        c.advanced_mode = request.params.get('_advanced_mode', 'false').lower()
+        c.advanced_mode = request.params.get('_advanced_mode', 'true').lower()
         # query_string = request.params.get('q', u'')
         # if c.userobj and query_string:
         #     search_history.store_search(query_string, c.userobj.id)
