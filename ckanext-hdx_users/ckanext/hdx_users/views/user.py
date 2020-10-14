@@ -2,29 +2,20 @@
 import logging
 
 from flask import Blueprint
-from flask.views import MethodView
-from paste.deploy.converters import asbool
-from six import text_type
 
 import ckan.lib.authenticator as authenticator
 import ckan.lib.base as base
-import ckan.lib.captcha as captcha
 import ckan.lib.helpers as h
-import ckan.lib.mailer as mailer
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
-import ckan.logic.schema as schema
-import ckan.model as model
-import ckan.plugins as plugins
-from ckan import authz
-from ckan.common import _, config, g, request
-from ckan.views.user import EditView as EditView
-from ckan.views.user import set_repoze_user as set_repoze_user
-import ckanext.hdx_users.model as user_model
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_users.model as user_model
+from ckan.common import _, request
 from ckan.common import g
+from ckan.views.user import EditView as EditView
 from ckan.views.user import PerformResetView
+from ckan.views.user import set_repoze_user as set_repoze_user
 
 log = logging.getLogger(__name__)
 

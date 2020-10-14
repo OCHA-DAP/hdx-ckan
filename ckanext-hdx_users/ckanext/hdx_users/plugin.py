@@ -264,7 +264,3 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_name_validator': hdx_validators.user_name_validator
         }
 
-    # IBlueprint
-    def get_blueprint(self):
-        import ckanext.hdx_users.views.user as user_view
-        return user_view.user
