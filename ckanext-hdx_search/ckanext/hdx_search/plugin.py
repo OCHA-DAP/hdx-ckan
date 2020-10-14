@@ -1,4 +1,4 @@
-import logging, re
+import re
 import datetime
 import unicodedata
 import ckan.logic
@@ -11,7 +11,6 @@ import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
-import ckanext.hdx_package.helpers.helpers as hdx_package_helper
 from ckanext.hdx_package.helpers.date_helper import daterange_parser
 
 from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_instance,\
@@ -19,6 +18,7 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 import ckanext.hdx_search.actions.authorize as authorize
+from ckanext.hdx_package.helpers.reindex_helper import before_indexing_clean_resource_formats
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
@@ -199,13 +199,11 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def before_view(self, pkg_dict):
         return pkg_dict
 
+    # IPackageController
     def before_index(self, pkg_dict):
-        if pkg_dict.get('res_format'):
-            new_formats = []
-            for format in pkg_dict['res_format']:
-                new_format = hdx_package_helper.hdx_unified_resource_format(format)
-                new_formats.append(new_format)
-            pkg_dict['res_format'] = new_formats
+
+        before_indexing_clean_resource_formats(pkg_dict)
+
         pkg_dict['title_string'] = unicodedata.normalize("NFKD", pkg_dict['title']).replace(r'\xc3', 'I')
 
         self.__process_dates_in_resource_extra(pkg_dict)

@@ -1,21 +1,20 @@
 import logging
 
-
-import ckan.logic as logic
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.plugins as plugins
 import ckan.lib.plugins as lib_plugins
-
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 
 from ckanext.hdx_package.actions.get import \
     _additional_hdx_package_show_processing as additional_hdx_package_show_processing
 
 log = logging.getLogger(__name__)
-get_action = logic.get_action
-_check_access = logic.check_access
-NotFound = logic.NotFound
-ValidationError = logic.ValidationError
-_get_or_bust = logic.get_or_bust
+get_action = tk.get_action
+_check_access = tk.check_access
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
+_get_or_bust = tk.get_or_bust
+h = tk.h
 
 
 def package_list_show_for_reindex(context, dataset_ids):
@@ -77,3 +76,20 @@ def package_list_show_for_reindex(context, dataset_ids):
 
         dataset_dicts.append(package_dict)
     return dataset_dicts
+
+
+def before_indexing_clean_resource_formats(pkg_dict):
+    '''
+    This is needed when reindexing from CLI: validation is set to false so the package_show()
+    (or more precisely ckanext.hdx_package.helpers.reindex_helper.package_list_show_for_reindex())
+    doesn't do clean_format()
+
+    :param pkg_dict:
+    :type pkg_dict: dict
+    '''
+    if pkg_dict.get('res_format'):
+        new_formats = []
+        for format in pkg_dict['res_format']:
+            new_format = h.unified_resource_format(format)
+            new_formats.append(new_format)
+        pkg_dict['res_format'] = new_formats

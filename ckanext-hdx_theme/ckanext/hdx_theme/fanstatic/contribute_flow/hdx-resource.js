@@ -8,6 +8,15 @@ $(function(){
         - Handle server validation errors on create/update of resources
     */
 
+    // CONSTANTS
+    var URLS = {
+        'guessFormat': '/api/action/hdx_guess_format_from_extension?q='
+    };
+    var WARNINGS = {
+        'archive': 'Please indicate the primary format of the data files inside your compressed file.'
+    };
+    var ARCHIVE_EXTENSIONS = ['zip', '7z', 'tar', 'rar'];
+
     // MODELS
 
     var Resource = Backbone.Model.extend({
@@ -352,6 +361,8 @@ $(function(){
         className: 'drag-drop-component source-file',
         template: _.template($('#resource-item-tmpl').html()),
 
+        prevFileExtension: null,
+
         events: {
             'click .update_resource': 'onUpdateBtn',
             'click .delete_resource': 'onDeleteBtn',
@@ -409,6 +420,10 @@ $(function(){
             }.bind(this));
 
             this.googlepicker = this.initGooglePicker();
+
+            if (!this.model.id) {
+                this._guessFormat();
+            }
         },
 
         initGooglePicker: function() {
@@ -444,6 +459,8 @@ $(function(){
             } else {
                 this._setUpForSourceType('source-file');
             }
+
+            this._showFormatWarningIfNeeded();
 
             return this;
         },
@@ -494,8 +511,13 @@ $(function(){
 
         onFieldEdit: function(e) {
             this.model.set(e.target.name, e.target.value);
-        },
 
+            if (e.target.name === 'name' || e.target.name === 'url') {
+                this._guessFormat();
+                this._showFormatWarningIfNeeded();
+            }
+
+        },
         //onFileChange: function(e) {
         //    this._onFileChange($(e.currentTarget).val(), this.$('.resource_file_field')[0].files[0]);
         //},
@@ -505,6 +527,7 @@ $(function(){
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
             this.render();
+            this._guessFormat();
         },
 
         onFormatGetsFocus: function(e){
@@ -656,6 +679,52 @@ $(function(){
             //    this.model.set('name', name);
             //}
             this.model.set('name', name);
+        },
+        _showFormatWarningIfNeeded: function () {
+
+            var extension = this._computeExtension();
+
+            var isArchive = ARCHIVE_EXTENSIONS.indexOf(extension) >= 0;
+            var wasArchive = ARCHIVE_EXTENSIONS.indexOf(this.prevFileExtension) >= 0;
+
+            if (isArchive && !wasArchive && !this.model.get('format') ) {
+                this.display_errors({'format': WARNINGS.archive});
+            }
+            else if (!isArchive && wasArchive) {
+                this.display_errors({'format': ''});
+            }
+            this.prevFileExtension = extension;
+        },
+        _guessFormat: function() {
+            var onSuccessSetFormat = function(data) {
+                if (data.success === true && data.result) {
+                    this.model.set('format', data.result);
+                    this.render();
+                }
+            }.bind(this);
+            var extension = this._computeExtension();
+            $.get(URLS.guessFormat + extension, onSuccessSetFormat);
+        },
+        _computeExtension: function() {
+            var __getExtension = function(url) {
+                var extension = null;
+                if (url) {
+                    try {
+                        var urlObj = new URL(url, 'https://data.humdata.org');
+                        var lastIndex = urlObj.pathname.lastIndexOf('.');
+                        if (lastIndex > 0 && lastIndex+1 < urlObj.pathname.length) {
+                            extension = urlObj.pathname.substring(lastIndex+1).toLowerCase();
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                return extension;
+            }
+
+            var extension = __getExtension(this.model.get('name')) || __getExtension(this.model.get('url'));
+
+            return extension;
         }
     });
 
