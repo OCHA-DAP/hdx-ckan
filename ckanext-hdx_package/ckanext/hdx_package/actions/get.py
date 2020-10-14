@@ -53,8 +53,8 @@ get_action = logic.get_action
 base_abort = base.abort
 get_or_bust = logic.get_or_bust
 
-_FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
-_FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
+# _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
+# _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
 
 GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service', 'file geodatabase',
                    'garmin img', 'gdb', 'geodatabase', 'geonode', 'geotiff', 'map server', 'map service', 'obf',
@@ -814,10 +814,6 @@ def hdx_send_mail_contributor(context, data_dict):
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
-
-
-
-
     if org_members:
         admins = org_members.get('admins')
         for admin in admins:
@@ -833,17 +829,34 @@ def hdx_send_mail_contributor(context, data_dict):
         if not any(r['email'] == m_user.get('email') for r in recipients_list):
             recipients_list.append({'email': m_user.get('email'), 'display_name': m_user.get('display_name')})
 
-    bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
+    org_dict = get_action('hdx_light_group_show')(context, {'id': data_dict.get('pkg_owner_org')})
+    subject = u'HDX dataset inquiry'
+    email_data = {
+        'org_name': org_dict.get('title'),
+        'user_fullname': data_dict.get('fullname'),
+        'user_email': data_dict.get('email'),
+        'pkg_url': data_dict.get('pkg_url'),
+        'pkg_title': data_dict.get('pkg_title'),
+        'topic': data_dict.get('topic'),
+        'msg': data_dict.get('msg'),
+    }
+    cc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
+    hdx_mailer.mail_recipient(recipients_list, subject, email_data, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'), cc_recipients_list=cc_recipients_list,
+                              footer='hdx@un.org',
+                              snippet='email/content/contact_contributor_request.html')
 
-    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=admins_body_html,
-                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              bcc_recipients_list=bcc_recipients_list, footer=_FOOTER_CONTACT_CONTRIBUTOR,
-                              reply_wanted=True)
-
-    requester_list = [{'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')}]
-    hdx_mailer.mail_recipient(recipients_list=requester_list, subject=subject, body=requester_body_html,
-                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              footer=_FOOTER_CONTACT_CONTRIBUTOR)
+    subject = u'HDX dataset inquiry'
+    email_data = {
+        'user_fullname': data_dict.get('fullname'),
+        'pkg_url': data_dict.get('pkg_url'),
+        'pkg_title': data_dict.get('pkg_title'),
+        'topic': data_dict.get('topic'),
+        'msg': data_dict.get('msg'),
+    }
+    recipients_list = [{'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')}]
+    hdx_mailer.mail_recipient(recipients_list, subject, email_data, footer=data_dict.get('email'),
+                              snippet='email/content/contact_contributor_request_confirmation_to_user.html')
 
     return None
 
@@ -882,32 +895,36 @@ def __create_body_for_contributor(data_dict, for_admins):
 
 
 def hdx_send_mail_members(context, data_dict):
-    subject = u'[HDX] {fullname} sent a group message regarding \"[Dataset] {pkg_title}\"'.format(
-        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
-    html = u"""\
-            <p>{fullname} sent the following message to {topic} of {pkg_owner_org}: </p>
-            <p>{msg}</p>
-        """.format(fullname=data_dict.get('fullname'), topic=data_dict.get('topic').lower(),
-                   pkg_owner_org=data_dict.get('pkg_owner_org'), msg=data_dict.get('msg'))
-
-    if data_dict.get('source_type') == 'dataset':
-        html += u'<p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>'.format(pkg_url=data_dict.get('pkg_url'),
-                                                                            pkg_title=data_dict.get('pkg_title'))
-
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org_id')})
     if org_members:
-        admins = org_members.get(data_dict.get('topic_key'))
-        for admin in admins:
-            user = get_action("user_show")(context, {'id': admin})
-            if user.get('email'):
-                recipients_list.append({'email': user.get('email'), '_display_name': user.get('display_name')})
-    recipients_list.append({'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')})
-
-    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=html,
-                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              footer=_FOOTER_GROUP_MESSAGE)
-
+        users_list = org_members.get(data_dict.get('topic_key'))
+        for _user in users_list:
+            # user = get_action("user_show")(context, {'id': admin})
+            user_obj = model.User.get(_user)
+            if user_obj and user_obj.email:
+                recipients_list.append({'email': user_obj.email, 'display_name': user_obj.fullname})
+    # recipients_list.append({'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')})
+    users_role = ''
+    if data_dict.get('topic_key') == 'all':
+        users_role = 'administrator(s), editor(s), and member(s)'
+    elif data_dict.get('topic_key') == 'admins':
+        users_role = 'administrator(s)]'
+    elif data_dict.get('topic_key') == 'editors':
+        users_role = 'editor(s)]'
+    elif data_dict.get('topic_key') == 'members':
+        users_role = 'member(s)]'
+    subject = u'HDX group message from ' + data_dict.get('pkg_owner_org')
+    email_data = {
+        'org_name': data_dict.get('pkg_owner_org'),
+        'user_fullname': data_dict.get('fullname'),
+        'user_email': data_dict.get('email'),
+        'msg': data_dict.get('msg'),
+        'users_role': users_role
+    }
+    hdx_mailer.mail_recipient(recipients_list, subject, email_data, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'), footer='hdx@un.org',
+                              snippet='email/content/group_message.html')
     return None
 
 @logic.validate(logic.schema.default_pagination_schema)

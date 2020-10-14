@@ -8,6 +8,7 @@ import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
+import ckanext.hdx_users.views.user as hdx_user
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -24,6 +25,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IBlueprint)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -95,7 +97,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'token_create': create.token_create,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list,
-            'hdx_send_reset_link': get.hdx_send_reset_link,
+            'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
             'hdx_first_login': create.hdx_first_login
         }
@@ -106,12 +108,17 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_validate': authorize.user_can_validate,
             'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'manage_permissions': auth.manage_permissions,
-            'hdx_first_login': auth.hdx_first_login
+            'hdx_first_login': auth.hdx_first_login,
+            'user_update': auth.user_update
         }
 
     # IConfigurable
     def configure(self, config):
         users_model.setup()
+
+    #IBlueprint
+    def get_blueprint(self):
+        return hdx_user.user
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
@@ -187,7 +194,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/logged_out', controller='user', action='logged_out')
         map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
         # map.connect('/user/reset', controller='user', action='request_reset')
-        map.connect('/user/me', controller='user', action='me')
+        # map.connect('/user/me', controller='user', action='me')
         # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
 
@@ -257,7 +264,3 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_name_validator': hdx_validators.user_name_validator
         }
 
-    # IBlueprint
-    def get_blueprint(self):
-        import ckanext.hdx_users.views.user as user_view
-        return user_view.user

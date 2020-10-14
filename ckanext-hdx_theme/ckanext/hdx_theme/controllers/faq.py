@@ -2,6 +2,7 @@ import exceptions as exceptions
 import json
 import logging
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckan.lib.mailer as mailer
 import pylons.configuration as configuration
 import requests
 import pylons.config as config
@@ -63,6 +64,8 @@ class FaqController(base.BaseController):
         Send a contact request form
         :return:
         '''
+        if request.params.get('topic') is None:
+            return self._contact_us_data_responsability()
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
             topic = request.params.get('topic')
@@ -89,20 +92,25 @@ class FaqController(base.BaseController):
             return self.error_message(error_summary)
 
         try:
-            subject = u'Faq: request from user'
-            html = u"""\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>A user sent the following question using the FAQ contact us form.</p>
-                    <p>Name: {fullname}</p>
-                    <p>Email: {email}</p>
-                    <p>Section: {topic}</p>
-                    <p>Message: {msg}</p>
-                  </body>
-                </html>
-                """.format(fullname=fullname, email=email, topic=topic, msg=msg)
-            hdx_mailer.mail_recipient([{'display_name': 'HDX', 'email': hdx_email}], subject, html)
+            subject = u'HDX contact form submission'
+            email_data = {
+                'user_display_name': fullname,
+                'user_email': email,
+                'topic': topic,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                                      subject, email_data, sender_name=fullname, sender_email=email,
+                                      snippet='email/content/faq_request.html')
+
+            subject = u'Confirmation of your contact form submission'
+            email_data = {
+                'user_fullname': fullname,
+                'topic': topic,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': fullname, 'email': email}],
+                                      subject, email_data, snippet='email/content/faq_request_user_confirmation.html')
 
         except exceptions.Exception, e:
             error_summary = e.error or str(e)
@@ -119,3 +127,56 @@ class FaqController(base.BaseController):
         r = requests.get(url, params=params, verify=True)
         res = json.loads(r.content)
         return 'success' in res and res['success']
+
+    def _contact_us_data_responsability(self):
+        '''
+        Send a contact request form
+        :return:
+        '''
+        response.headers['Content-Type'] = CONTENT_TYPES['json']
+        try:
+            fullname = request.params.get('fullname')
+            email = request.params.get('email')
+            msg = request.params.get('faq-msg')
+            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
+
+            test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+            if not test:
+                captcha_response = request.params.get('g-recaptcha-response')
+                if not self.is_valid_captcha(response=captcha_response):
+                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+
+            simple_validate_email(email)
+
+        except ValidationError, e:
+            error_summary = e.error_summary
+            if error_summary == CaptchaNotValid:
+                return FaqCaptchaErr
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = e.error or str(e)
+            return self.error_message(error_summary)
+
+        try:
+            subject = u'HDX contact form submission (COVID-19 data responsibility)'
+            email_data = {
+                'user_display_name': fullname,
+                'user_email': email,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                                      subject, email_data, sender_name=fullname, sender_email=email,
+                                      snippet='email/content/data_responsability_faq_request.html')
+
+            subject = u'Confirmation of your contact form submission (COVID-19 data responsibility)'
+            email_data = {
+                'user_fullname': fullname,
+                'msg': msg,
+            }
+            hdx_mailer.mail_recipient([{'display_name': fullname, 'email': email}],
+                                      subject, email_data, snippet='email/content/data_responsability_faq_request_user_confirmation.html')
+
+        except exceptions.Exception, e:
+            error_summary = e.error or str(e)
+            return self.error_message(error_summary)
+        return FaqSuccess

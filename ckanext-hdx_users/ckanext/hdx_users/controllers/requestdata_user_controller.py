@@ -5,7 +5,9 @@ from ckanext.requestdata.emailer import send_email
 from email_validator import validate_email
 from paste.deploy.converters import asbool
 from pylons import config
+import ckan.lib.helpers as h
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+from ckanext.requestdata.model import ckanextRequestdata
 
 from ckan import logic
 from ckan.common import _, c
@@ -28,7 +30,7 @@ _MESSAGE_REQUESTDATA_REPLY = \
     Dear {requested_by},<br/>
     {maintainer_name} from {organization} replied to your request for "{dataset_name}".
      You can contact the maintainer on this email address {email_address}. See their message below:<br/>
-    
+
     {message_content}
 
     <br/>Best wishes, <br/>
@@ -39,7 +41,7 @@ _SUBJECT_REQUESTDATA_REJECT = u'''[HDX] Data request denied: "{dataset_name}" ''
 _MESSAGE_REQUESTDATA_REJECT = \
     u'''
     Dear {requested_by},<br/>
-    Unfortunately, the contributing organization denied your request for "{dataset_name}". 
+    Unfortunately, the contributing organization denied your request for "{dataset_name}".
     You can try contacting them again with more details on your intended use. <br/>
     <br/>
     They included this message:<br/>
@@ -97,8 +99,8 @@ class HDXRequestdataUserController(requestdata_user.UserController):
         else:
             counters_data_dict['flag'] = 'replied'
 
-        message_content = self._get_email_content(data, request_action)
-
+        # self._get_email_content(data, request_action)
+        message_content = data.get('message_content')
         if message_content is None or message_content == '':
             payload = {
                 'success': False,
@@ -106,7 +108,6 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                     'message_content': 'Missing value'
                 }
             }
-
             return json.dumps(payload)
 
         try:
@@ -120,28 +121,89 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                     'fields': e.error_dict
                 }
             }
-
             return json.dumps(error)
 
-        to = self._get_email_to(data, request_action)
+        # to = self._get_email_to(data, request_action)
+        #
+        # subject = self._get_email_subject(data, request_action)
+        #
+        # file = data.get('file_upload')
+        #
+        # response = send_email(message_content, to, subject, file=file)
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'auth_user_obj': c.userobj}
+        if request_action == _REQUESTDATA_REJECT:
+            try:
+                subject = u'Request for access to HDX "metadata-only" dataset denied'
+                pkg_dict = get_action('package_show')(context, {'id': data.get('package_id')})
+                org_dict = get_action('organization_show')(context, {'id': pkg_dict.get('owner_org')})
+                email_data = {
+                    'user_fullname': data.get('requested_by'),
+                    'org_name': org_dict.get('title'),
+                    'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
+                    'dataset_title': data.get('package_name'),
+                    'msg': data.get('message_content'),
+                }
+                hdx_mailer.mail_recipient([{'display_name': data.get('requested_by'), 'email': data.get('send_to')}],
+                                          subject, email_data, footer=data.get('send_to'),
+                                          snippet='email/content/request_data_rejection_to_user.html')
 
-        subject = self._get_email_subject(data, request_action)
-
-        file = data.get('file_upload')
-
-        response = send_email(message_content, to, subject, file=file)
-
-        if response['success'] is False:
-            error = {
-                'success': False,
-                'error': {
-                    'fields': {
-                        'email': response['message']
+                subject = u'Request for access to HDX "metadata only" dataset denied'
+                maintainer_obj = model.User.get(pkg_dict.get('maintainer'))
+                email_data = {
+                    'user_fullname': data.get('requested_by'),
+                    'user_email': data.get('send_to'),
+                    'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
+                    'dataset_title': data.get('package_name'),
+                    'user_admin_fullname': c.userobj.fullname,
+                }
+                hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
+                                          subject, email_data, footer=maintainer_obj.email,
+                                          snippet='email/content/request_data_rejection_to_admins.html')
+            except Exception, ex:
+                error = {
+                    'success': False,
+                    'error': {
+                        'fields': {
+                            'email': str(ex)
+                        }
                     }
                 }
-            }
 
-            return json.dumps(error)
+                return json.dumps(error)
+
+        if request_action == _REQUESTDATA_REPLY:
+            subject = u'Request for access to HDX "metadata-only" dataset approved'
+            pkg_dict = get_action('package_show')(context, {'id': data.get('package_id')})
+            org_dict = get_action('organization_show')(context, {'id': pkg_dict.get('owner_org')})
+            email_data = {
+                'user_fullname': data.get('requested_by'),
+                'org_name': org_dict.get('title'),
+                'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
+                'dataset_title': data.get('package_name'),
+                'user_admin_fullname': c.userobj.fullname,
+                'user_admin_email': c.userobj.email,
+                'msg': data.get('message_content'),
+                'is_attach': data.get('file_upload') is not None
+            }
+            hdx_mailer.mail_recipient([{'display_name': data.get('requested_by'), 'email': data.get('send_to')}],
+                                      subject, email_data, footer=data.get('send_to'),
+                                      snippet='email/content/request_data_approval_to_user.html',
+                                      file=data.get('file_upload'))
+
+            subject = u'Request for access to HDX "metadata only" dataset approved'
+            maintainer_obj = model.User.get(pkg_dict.get('maintainer'))
+            email_data = {
+                'user_fullname': data.get('requested_by'),
+                'user_email': data.get('send_to'),
+                'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
+                'dataset_title': data.get('package_name'),
+                'user_admin_fullname': c.userobj.fullname,
+            }
+            hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
+                                      subject, email_data, footer=maintainer_obj.email,
+                                      snippet='email/content/request_data_approval_to_admins.html')
 
         success = {
             'success': True,

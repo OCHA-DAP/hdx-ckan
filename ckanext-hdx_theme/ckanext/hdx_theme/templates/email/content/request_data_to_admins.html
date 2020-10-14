@@ -1,0 +1,13 @@
+<p>Dear {{ data.maintainer_fullname }},</p>
+
+<p>{{ data.user_fullname }} ({{ data.user_email }}) has requested access to one of your organisation’s metadata-only datasets on HDX.</p>
+
+<p>
+  <strong>Dataset name</strong>: <a href="{{ data.dataset_link }}">{{ data.dataset_title }}</a><br/>
+  <strong>Message from requestor</strong>: {{ data.msg }}
+</p>
+
+<p>We would appreciate it if you could respond to this request within two business days.
+  <a href="{{ data.requestdata_org_url }}">Click here to approve or decline the dataset request</a>, which you will find on your organisation page in the "Requested Data" tab.</p>
+
+<p>Please reply to this email if you have any questions.</p>

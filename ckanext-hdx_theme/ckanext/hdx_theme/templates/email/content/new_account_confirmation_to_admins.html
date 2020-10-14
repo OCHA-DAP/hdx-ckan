@@ -1,0 +1,13 @@
+<p>Dear {{ data.org_name }} administrator(s),
+
+<p>As requested, we have created a new HDX user account with the name <strong>{{ data.user_username }}</strong>. The account credentials were sent to
+  <strong>{{ data.user_email }}</strong>.</p>
+
+<p>The new account for {{ data.user_username }} was assigned the role of
+  {% if data.capacity == 'admin' %} <strong>administrator</strong>: add, edit, and delete datasets, and manage organisation membership.
+  {% elif data.capacity == 'editor' %} <strong>editor</strong>: add, edit, and delete datasets.
+  {% elif data.capacity == 'member'  %} <strong>member</strong>: view all of an organisation's datasets (including private datasets).
+  {% endif %}
+</p>
+
+<p>If this account was created in error, or if you require any additional assistance, please reply to this email. </p>

@@ -5,6 +5,9 @@ from ckanext.requestdata import emailer
 from ckan.plugins import toolkit
 from ckan.controllers.admin import get_sysadmins
 from ckanext.requestdata.controllers.request_data import RequestDataController
+import ckanext.hdx_org_group.actions.create as og_create
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckan.lib.helpers as h
 
 try:
     # CKAN 2.7 and later
@@ -45,11 +48,12 @@ def _get_email_configuration(
     new_terms = [user_name, data_maintainers, dataset_name, organization,
                  message, email]
 
-    try:
-        is_user_sysadmin = \
-            _get_action('user_show', {'id': c.user}).get('sysadmin')
-    except NotFound:
-        pass
+    # try:
+        # is_user_sysadmin = \
+        #     _get_action('user_show', {'id': c.user}).get('sysadmin')
+    is_user_sysadmin = c.userobj.sysadmin
+    # except NotFound:
+    #     pass
 
     for key in schema:
         # get only email configuration
@@ -234,13 +238,14 @@ class HDXRequestDataController(RequestDataController):
             data_maintainers = []
             data_maintainers_ids = []
             # Get users objects from maintainers list
+            user={}
             for id in maintainers:
                 try:
                     user =\
                         toolkit.get_action('user_show')(context_sysadmin,
                                                         {'id': id})
                     data_dict['users'].append(user)
-                    users_email.append(user['email'])
+                    users_email.append({'display_name': user.get('fullname'), 'email': user.get('email')})
                     data_maintainers.append(user['fullname'] or user['name'])
                     data_maintainers_ids.append(user['name'] or user['id'])
                 except NotFound:
@@ -251,21 +256,47 @@ class HDXRequestDataController(RequestDataController):
 
             if len(users_email) == 0:
                 admins = self._org_admins_for_dataset(dataset_name)
+                # admins=og_create.get_organization_admins(package.get('owner_org'))
 
                 for admin in admins:
-                    users_email.append(admin.get('email'))
+                    users_email.append({'display_name': admin.get('fullname'), 'email': admin.get('email')})
                     data_maintainers.append(admin.get('fullname'))
                     data_maintainers_ids.append(admin.get('name') or admin.get('id'))
                 only_org_admins = True
 
-            content = _get_email_configuration(
-                sender_name, data_owner, dataset_name, email,
-                message, org, data_maintainers,
-                data_maintainers_ids=data_maintainers_ids,
-                only_org_admins=only_org_admins)
+            # content = _get_email_configuration(
+            #     sender_name, data_owner, dataset_name, email,
+            #     message, org, data_maintainers,
+            #     data_maintainers_ids=data_maintainers_ids,
+            #     only_org_admins=only_org_admins)
 
-            response_message = \
-                emailer.send_email(content, users_email, mail_subject)
+            # response_message = \
+            #     emailer.send_email(content, users_email, mail_subject)
+            subject = sender_name + u' has requested access to one of your datasets'
+            email_data = {
+                'user_fullname': sender_name,
+                'user_email': email,
+                'msg': message,
+                'org_name': package.get('organization').get('title'),
+                'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
+                'dataset_title': dataset_title,
+                'maintainer_fullname': user.get('display_name') or user.get('fullname') if user else 'HDX user',
+                 'requestdata_org_url': h.url_for('requestdata_organization_requests', id=package.get('owner_org'),
+                                                 qualified=True)
+            }
+            hdx_mailer.mail_recipient(users_email, subject, email_data, footer='hdx@un.org',
+                                      snippet='email/content/request_data_to_admins.html')
+
+            subject = u'Request for access to metadata-only dataset'
+            email_data = {
+                'user_fullname': sender_name,
+                'msg': message,
+                'org_name': package.get('organization').get('title'),
+                'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
+                'dataset_title': dataset_title,
+            }
+            hdx_mailer.mail_recipient(users_email, subject, email_data, footer=email,
+                                      snippet='email/content/request_data_to_user.html')
 
             # notify package creator that new data request was made
             _get_action('requestdata_notification_create', data_dict)
@@ -276,8 +307,11 @@ class HDXRequestDataController(RequestDataController):
 
             action_name = 'requestdata_increment_request_data_counters'
             _get_action(action_name, data_dict)
-
-            return json.dumps(response_message)
+            response_dict = {
+                'success': True,
+                'message': 'Email message was successfully sent.'
+            }
+            return json.dumps(response_dict)
         else:
             message = {
                 'success': True,

@@ -1,6 +1,14 @@
+import datetime
+import logging
+
 import ckan.authz as new_authz
+import ckan.logic as logic
+import ckan.logic.auth.update as core_auth_update
 from ckan.common import _
 
+from ckanext.hdx_users.helpers.reset_password import ResetKeyHelper
+
+log = logging.getLogger(__name__)
 
 ## ORGS
 def hdx_send_new_org_request(context, data_dict):
@@ -21,5 +29,17 @@ def hdx_first_login(context, data_dict):
         return {'success': True}
     else:
         return {'success': False, 'msg': _("You must be logged in to send a first_login update")}
+
+
+@logic.auth_allow_anonymous_access
+def user_update(context, data_dict):
+    if data_dict.get('reset_key'):
+        reset_key_helper = ResetKeyHelper(data_dict.get('reset_key'))
+        if not reset_key_helper.contains_expiration_time():
+            return {'success': False, 'msg': _("Reset key has wrong format")}
+        elif reset_key_helper.is_expired():
+            return {'success': False, 'msg': _("Reset key no longer valid")}
+
+    return core_auth_update.user_update(context, data_dict)
 
 

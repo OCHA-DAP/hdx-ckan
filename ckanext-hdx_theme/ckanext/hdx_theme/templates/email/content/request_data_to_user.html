@@ -1,0 +1,10 @@
+<p>Dear {{ data.user_fullname }},</p>
+
+<p>Your request for access to the dataset <a href="{{ data.dataset_link }}">{{ data.dataset_title }}</a>
+  has been forwarded to the dataset maintainer at {{ data.org_name }} along with the following message:
+<p>
+    {{ data.msg}}
+</p>
+<p>If you don't hear back within two business days, please reply to this email to let us know.</p>
+
+<p>Please note that only the organisation administrator(s) can approve your request.</p>
