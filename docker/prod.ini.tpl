@@ -125,6 +125,9 @@ hdx.echo_api_key = ${HDX_ECHO_API_KEY}
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
+# COD
+hdx.cod.new_filters.enabled = false
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer

@@ -6,15 +6,14 @@ import json
 from urllib import urlencode
 from collections import OrderedDict
 
-from pylons import config
 from paste.deploy.converters import asbool
 
 import ckan.logic as logic
-import ckan.lib.base as base
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_search.helpers.search_history as search_history
 
@@ -24,6 +23,7 @@ from ckan.common import _, request, g
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
+from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK
 
@@ -41,15 +41,17 @@ _text = sqlalchemy.text
 
 log = logging.getLogger(__name__)
 
-render = base.render
-abort = base.abort
-redirect = h.redirect_to
+render = tk.render
+abort = tk.abort
+redirect = tk.redirect_to
 
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
+check_access = tk.check_access
+get_action = tk.get_action
+
+config = tk.config
 
 
 def get_default_facet_titles():
@@ -457,6 +459,8 @@ class SearchLogic(object):
         num_of_showcases = 0
         num_of_administrative_divisions = 0
 
+        new_cod_filters_enabled = are_new_cod_filters_enabled()
+
         featured_facet_items = []
         result['facets']['featured'] = {
             'name': 'featured',
@@ -500,18 +504,24 @@ class SearchLogic(object):
                     num_of_administrative_divisions = \
                         self._get_facet_item_count_from_list(item_list, 'administrative divisions')
 
+                    if not new_cod_filters_enabled:
+                        num_of_cods = self._get_facet_item_count_from_list(item_list, 'common operational dataset - cod')
+
                 standard_facet_category, anything_selected = \
                     self._create_standard_facet_category(category_key, category_title, item_list, selected_facets)
 
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
 
-        cod_category = result['facets'].pop('cod_level', None)
-        if cod_category:
-            modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
-            featured_facet_items.append(modified_cod_category)
+        if new_cod_filters_enabled:
+            cod_category = result['facets'].pop('cod_level', None)
+            if cod_category:
+                modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
+                featured_facet_items.append(modified_cod_category)
 
-        # self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
+        if not new_cod_filters_enabled:
+            self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
+
         self._add_item_to_featured_facets(featured_facet_items, 'ext_subnational', 'Sub-national',
                                           num_of_subnational, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_geodata', 'Geodata', num_of_geodata, search_extras)

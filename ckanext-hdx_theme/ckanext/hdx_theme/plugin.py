@@ -54,6 +54,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         import ckan.lib.fanstatic_resources
         ckan.lib.fanstatic_resources.create_library(name, absolute_path, False)
 
+    # IConfigurer
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
