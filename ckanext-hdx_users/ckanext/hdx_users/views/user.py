@@ -1,6 +1,5 @@
 # encoding: utf-8
 import logging
-
 from flask import Blueprint
 
 import ckan.lib.authenticator as authenticator
@@ -148,9 +147,16 @@ class HDXPerformResetView(PerformResetView):
             u'user_dict': user_dict
         })
 
+def _forgot_password():
+    return render('user/forgot_password.html')
+
+
 
 user.add_url_rule(
-    u'/user/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'perform_reset')))
+    u'/reset', view_func=_forgot_password)
+
+user.add_url_rule(
+    u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'perform_reset')))
 
 _edit_view = HDXEditView.as_view(str(u'edit'))
 user.add_url_rule(u'/edit', view_func=_edit_view)
