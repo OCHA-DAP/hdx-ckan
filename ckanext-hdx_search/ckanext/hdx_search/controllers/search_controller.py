@@ -6,15 +6,14 @@ import json
 from urllib import urlencode
 from collections import OrderedDict
 
-from pylons import config
 from paste.deploy.converters import asbool
 
 import ckan.logic as logic
-import ckan.lib.base as base
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_search.helpers.search_history as search_history
 
@@ -22,13 +21,15 @@ from ckan.common import _, request, c, response
 
 from ckan.controllers.package import PackageController
 from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
 
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER,\
-    UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK
+
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -44,15 +45,18 @@ _text = sqlalchemy.text
 
 log = logging.getLogger(__name__)
 
-render = base.render
-abort = base.abort
-redirect = h.redirect_to
+render = tk.render
+abort = tk.abort
+redirect = tk.redirect_to
 
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
+check_access = tk.check_access
+get_action = tk.get_action
+
+config = tk.config
+
 
 def get_default_facet_titles():
     return {
@@ -664,6 +668,8 @@ class HDXSearchController(PackageController):
         num_of_showcases = 0
         num_of_administrative_divisions = 0
 
+        new_cod_filters_enabled = are_new_cod_filters_enabled()
+
         featured_facet_items = []
         result['facets']['featured'] = {
             'name': 'featured',
@@ -702,38 +708,29 @@ class HDXSearchController(PackageController):
                 num_of_showcases = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'),
                                         0)
             else:
-                sorted_item_list = []
-                for item in item_list:
-                    item_name = item.get('name', '')
-                    if item_name and item_name.strip():
-                        selected = item_name in selected_facets.get(category_key, [])
-                        if selected and not result['filters_selected']:
-                            result['filters_selected'] = selected
-                        new_item = {
-                            'count': item.get('count', 0),
-                            'category_key': category_key,
-                            'name': item_name,
-                            'display_name': item.get('display_name', ''),
-                            'selected': selected,
-                        }
-                        sorted_item_list.append(new_item)
-                        if category_key == 'vocab_Topics' and new_item['name'] == 'common operational dataset - cod':
-                            num_of_cods = new_item['count']
-                        if category_key == 'vocab_Topics' and new_item['name'] == 'hxl':
-                            num_of_hxl = new_item['count']
-                        if category_key == 'vocab_Topics' and new_item['name'] == 'administrative divisions':
-                            num_of_administrative_divisions = new_item['count']
+                if category_key == 'vocab_Topics':
+                    num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
+                    num_of_administrative_divisions = \
+                        self._get_facet_item_count_from_list(item_list, 'administrative divisions')
 
-                sorted_item_list.sort(key=lambda x: ('a' if x.get('selected') else 'b', x.get('display_name')))
+                    if not new_cod_filters_enabled:
+                        num_of_cods = self._get_facet_item_count_from_list(item_list, 'common operational dataset - cod')
 
-                result['facets'][category_key] = {
-                    'name': category_key,
-                    'display_name': category_title,
-                    'items': sorted_item_list,
-                    'show_everything': len(sorted_item_list) < 5
-                }
+                standard_facet_category, anything_selected = \
+                    self._create_standard_facet_category(category_key, category_title, item_list, selected_facets)
 
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
+                result['facets'][category_key] = standard_facet_category
+                result['filters_selected'] = result['filters_selected'] or anything_selected
+
+        if new_cod_filters_enabled:
+            cod_category = result['facets'].pop('cod_level', None)
+            if cod_category:
+                modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
+                featured_facet_items.append(modified_cod_category)
+
+        if not new_cod_filters_enabled:
+            self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
+
         self._add_item_to_featured_facets(featured_facet_items, 'ext_subnational', 'Sub-national',
                                           num_of_subnational, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_geodata', 'Geodata', num_of_geodata, search_extras)
@@ -769,6 +766,40 @@ class HDXSearchController(PackageController):
 
         return result
 
+    def _get_facet_item_count_from_list(self, item_list, facet_item_name):
+        count = 0
+        for item in item_list:
+            item_name = item.get('name', '')
+            if item_name == facet_item_name:
+                count = item.get('count', 0)
+        return count
+
+    def _create_standard_facet_category(self, category_key, category_title, item_list, selected_facets):
+        sorted_item_list = []
+        anything_selected = False
+        for item in item_list:
+            item_name = item.get('name', '')
+            if item_name and item_name.strip():
+                selected = item_name in selected_facets.get(category_key, [])
+                anything_selected = anything_selected or selected
+                new_item = {
+                    'count': item.get('count', 0),
+                    'category_key': category_key,
+                    'name': item_name,
+                    'display_name': item.get('display_name', ''),
+                    'selected': selected,
+                }
+                sorted_item_list.append(new_item)
+
+        sorted_item_list.sort(key=lambda x: ('a' if x.get('selected') else 'b', x.get('display_name')))
+        standard_facet_category = {
+            'name': category_key,
+            'display_name': category_title,
+            'items': sorted_item_list,
+            'show_everything': len(sorted_item_list) < 5
+        }
+        return standard_facet_category, anything_selected
+
     def _generate_facet_name_to_title_map(self, package_type):
         facets = OrderedDict()
         default_facet_titles = get_default_facet_titles()
@@ -803,3 +834,21 @@ class HDXSearchController(PackageController):
         # to be overridden in sub-classes that need to process the results of the solr query in order to
         # change the data in the package or its resources
         pass
+
+    def __create_featured_cod_facet_category(self, cod_category):
+        real_cod_items = [
+            item for item in cod_category.get('items') if COD_VALUES_MAP.get(item.get('name'), {}).get('is_cod')
+        ]
+        for item in real_cod_items:
+            cod_information = COD_VALUES_MAP.get(item.get('name'), {})
+            item['display_name'] = cod_information.get('title')
+            item['explanation'] = cod_information.get('explanation')
+        total_count = sum((item.get('count', 0) for item in real_cod_items))
+        real_cod_items.sort(key=lambda item: COD_VALUES_MAP.get(item.get('name'), {}).get('index', -1))
+        cod_category['items'] = real_cod_items
+        cod_category['category_key'] = cod_category['name']
+        cod_category['name'] = 'ALL'
+        cod_category['count'] = total_count
+        cod_category['selected'] = all((item.get('selected') for item in real_cod_items)) if real_cod_items else False
+        cod_category['explanation_link'] = COD_GROUP_EXPLANATION_LINK
+        return cod_category

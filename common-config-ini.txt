@@ -332,3 +332,6 @@ hdx.solr.query.bf = scale(ord(pageviews_last_14_days),0,8)
 
 hdx.password.reset_key.expiration_in_hours = 3
 hdx.password.invitation_reset_key.expiration_in_hours = 48
+
+# COD
+hdx.cod.new_filters.enabled = true

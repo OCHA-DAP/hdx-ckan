@@ -37,6 +37,7 @@ from ckan.lib import uploader
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.resource_format import resource_format_autocomplete, guess_format_from_extension
+from ckanext.hdx_package.helpers.resource_grouping import ResourceGrouping
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
@@ -612,6 +613,13 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
 
             # Freshness should be computed after the last_modified field
             freshness_calculator.populate_with_freshness()
+
+            __compute_resource_grouping(context, package_dict)
+
+
+def __compute_resource_grouping(context, package_dict):
+    if context.get('use_cache', True):
+        ResourceGrouping(package_dict).populate_computed_groupings()
 
 
 @logic.side_effect_free

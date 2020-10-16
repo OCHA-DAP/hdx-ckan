@@ -21,6 +21,7 @@ Example:
   <div class="requested-data-message"></div>
   {% block resource_list %}
     {% if resources %}
+      {% snippet 'package/snippets/groupings.html', pkg=pkg %}
       <ul class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
         {% block resource_list_inner %}
           {% for resource in resources %}

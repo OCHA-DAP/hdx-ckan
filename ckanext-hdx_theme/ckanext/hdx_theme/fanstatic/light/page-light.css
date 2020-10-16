@@ -2300,6 +2300,10 @@ textarea {
 .filter-category .categ-list .categ-items li:nth-child(n+6) {
   display: none;
 }
+.filter-category .categ-list .categ-items li ul {
+  list-style: none;
+  padding-left: 20px;
+}
 .filter-category .categ-list.show-all .categ-search {
   display: block;
 }
@@ -3742,6 +3746,9 @@ ul.list-horizontal li:first-child:before {
   font-size: 12px;
   padding: 10px 20px;
   border-bottom: 1px solid #eeeeee;
+}
+.crises-menu li.crises-group a:hover {
+  color: #007CE0;
 }
 .crises-menu li.crises-group a.archive {
   text-transform: uppercase;

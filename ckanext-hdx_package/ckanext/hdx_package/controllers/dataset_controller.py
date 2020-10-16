@@ -8,7 +8,7 @@ from string import lower
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
-from ckanext.hdx_package.helpers import helpers
+from ckanext.hdx_package.helpers import helpers, resource_grouping
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
@@ -677,17 +677,10 @@ class DatasetController(PackageController):
             # if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
             #     resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
 
-        # Is this an indicator? Load up graph data
-        # c.pkg_dict['indicator'] = 1
-        try:
-            if int(c.pkg_dict['indicator']):
-                c.pkg_dict['graph'] = '{}'
-                c.pkg_dict['indicator'] = 1
-            else:
-                c.pkg_dict['indicator'] = 0
-        except:
-            # If there's no indicator value it isn't an indicator
-            c.pkg_dict['indicator'] = 0
+        # dealing with resource grouping
+        resource_grouping.set_show_groupings_flag(c.pkg_dict)
+        if c.pkg_dict.get('x_show_grouping'):
+            resource_grouping.add_other_grouping_if_needed(c.pkg_dict)
 
         package_type = c.pkg_dict['type'] or 'dataset'
         self._setup_template_variables(context, {'id': id},
@@ -813,8 +806,6 @@ class DatasetController(PackageController):
                             # })
                         }
                         return render('package/hdx-read-hxl.html')
-
-            cps_off = config.get('hdx.cps.off', 'false')
 
             log.debug('Reading dataset {}: rendering template'.format(c.pkg_dict.get('name')))
             if org_info_dict.get('custom_org', False):

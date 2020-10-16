@@ -54,6 +54,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         import ckan.lib.fanstatic_resources
         ckan.lib.fanstatic_resources.create_library(name, absolute_path, False)
 
+    # IConfigurer
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
@@ -276,6 +277,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
             'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
             'hdx_switch_url_path': hdx_helpers.switch_url_path,
+            'hdx_munge_title': hdx_helpers.hdx_munge_title,
             'HDX_CONST': const
         }
 

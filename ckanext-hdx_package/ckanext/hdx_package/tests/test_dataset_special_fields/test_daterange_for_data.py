@@ -12,6 +12,7 @@ ValidationError = tk.ValidationError
 class TestResourceDaterangeForData(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
     resource_id = None
+    daterange_field = 'daterange_for_data'
 
     @classmethod
     def setup_class(cls):
@@ -22,7 +23,6 @@ class TestResourceDaterangeForData(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrg
 
     def test_save_update_daterange_field(self):
 
-        daterange_field = 'daterange_for_data'
         context_sysadmin = self.context_sysadmin
         start_date_str = '2020-03-11T21:16:48.838350'
         end_date_str = '2020-04-12T21:16:49'
@@ -31,36 +31,36 @@ class TestResourceDaterangeForData(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrg
         resource_dict = self._get_action('resource_patch')(context_sysadmin,
                                                            {
                                                                'id': self.resource_id,
-                                                               daterange_field: date_range
+                                                               self.daterange_field: date_range
                                                            })
-        assert resource_dict.get(daterange_field) == '[2020-03-11T21:16:48.838 TO 2020-04-12T21:16:49]', \
+        assert resource_dict.get(self.daterange_field) == '[2020-03-11T21:16:48.838 TO 2020-04-12T21:16:49]', \
             'the date strings should be reduced to 23 characters for solr\'s benefit'
 
         date_range = '[{} TO {}]'.format(start_date_str, '*')
         resource_dict = self._get_action('resource_patch')(context_sysadmin,
                                                            {
                                                                'id': self.resource_id,
-                                                               daterange_field: date_range
+                                                               self.daterange_field: date_range
                                                            })
-        assert resource_dict.get(daterange_field) == '[2020-03-11T21:16:48.838 TO *]', \
+        assert resource_dict.get(self.daterange_field) == '[2020-03-11T21:16:48.838 TO *]', \
             'the date strings should be reduced to 23 characters for solr\'s benefit'
 
         try:
             self._get_action('resource_patch')(context_sysadmin,
                                                {
                                                    'id': self.resource_id,
-                                                   daterange_field: 'DUMMY STRING'
+                                                   self.daterange_field: 'DUMMY STRING'
                                                })
             assert False
         except ValidationError as e:
-            assert True, '{} needs to be a daterange'.format(daterange_field)
-        del resource_dict[daterange_field]
+            assert True, '{} needs to be a daterange'.format(self.daterange_field)
+        del resource_dict[self.daterange_field]
         resource_dict2 = self._get_action('resource_update')(context_sysadmin, resource_dict)
-        assert not resource_dict2.get(daterange_field), 'For now, {} shouldn\'t be mandatory'.format(daterange_field)
+        assert not resource_dict2.get(self.daterange_field), \
+            'For now, {} shouldn\'t be mandatory'.format(self.daterange_field)
 
     def test_search_by_daterange_field(self):
 
-        daterange_field = 'daterange_for_data'
         context_sysadmin = self.context_sysadmin
         start_date_str = '2020-03-11T21:16:48.838350'
         start_date = dateutil_parser.parse(start_date_str)
@@ -71,15 +71,15 @@ class TestResourceDaterangeForData(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrg
         resource_dict = self._get_action('resource_patch')(context_sysadmin,
                                                            {
                                                                'id': self.resource_id,
-                                                               daterange_field: date_range
+                                                               self.daterange_field: date_range
                                                            })
-        assert resource_dict.get(daterange_field) == '[2020-03-11T21:16:48.838 TO 2020-04-12T21:16:49]', \
+        assert resource_dict.get(self.daterange_field) == '[2020-03-11T21:16:48.838 TO 2020-04-12T21:16:49]', \
                 'the date strings should be reduced to 23 characters for solr\'s benefit'
 
-        assert 'test_private_dataset_1' in self.__search_by_date_field(daterange_field, start_date)
-        assert 'test_private_dataset_1' in self.__search_by_date_field(daterange_field, end_date)
+        assert 'test_private_dataset_1' in self.__search_by_date_field(self.daterange_field, start_date)
+        assert 'test_private_dataset_1' in self.__search_by_date_field(self.daterange_field, end_date)
         assert 'test_private_dataset_1' not in \
-               self.__search_by_date_field(daterange_field,dateutil_parser.parse('1999-04-12T21:16:48'))
+               self.__search_by_date_field(self.daterange_field,dateutil_parser.parse('1999-04-12T21:16:48'))
 
     def __search_by_date_field(self, daterange_field, around_date):
 
