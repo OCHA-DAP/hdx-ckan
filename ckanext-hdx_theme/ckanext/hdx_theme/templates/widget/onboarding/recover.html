@@ -14,6 +14,8 @@ Example:
 
 {% extends "widget/onboarding/notification.html" %}
 
+{% block popup_attributes %}{% if (not show) %} {{ super() }} {% endif %} {% endblock %}
+
 {% block notification_content %}
 <form id="recover-form" onsubmit="return false;">
     <div class="recover-widget">
@@ -23,15 +25,22 @@ Example:
                 <input id="field-recover-id" name="user" class="full-width required" type="text">
                 <label for="field-recover-id">Username or Email</label>
             </div>
-            <div class="error-message" style="display: none;">
-            </div>
+            {% block error_section %}
+              {% for message in h.flash.pop_messages() | list %}
+                <div class="alert alert-warning fade in {{ message.category }}">
+                  {{ h.literal(message) }}
+                </div>
+              {% endfor %}
+              <div class="error-message" style="display: none;">
+              </div>
+            {% endblock %}
         </div>
         <div class="mTop20">
           <input class="btn btn-primary btn-large" type="submit" value="Reset">
         </div>
-        <div class="mTop20 center not-member">
+        {#<div class="mTop20 center not-member">
           Not a member? <a href="">Register</a>
-        </div>
+        </div>#}
         <div class="mTop30 center">
           <img class="logo" src="/images/homepage/logo-combined.png"/>
         </div>
