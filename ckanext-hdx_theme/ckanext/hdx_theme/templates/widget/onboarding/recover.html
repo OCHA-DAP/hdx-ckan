@@ -21,9 +21,11 @@ Example:
     <div class="recover-widget">
         <div>Enter your username or email below and we will send you an email with a link to enter a new password.</div>
         <div class="mTop20">
-            <div class="control">
-                <input id="field-recover-id" name="user" class="full-width required" type="text">
-                <label for="field-recover-id">Username or Email</label>
+            <div class="control-group form-group">
+              <div class="control">
+                  <input id="field-recover-id" name="user" class="full-width required" type="text">
+                  <label for="field-recover-id">Username or Email</label>
+              </div>
             </div>
             {% block error_section %}
               {% for message in h.flash.pop_messages() | list %}

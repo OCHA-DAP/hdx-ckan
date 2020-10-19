@@ -137,6 +137,7 @@ class HDXPerformResetView(PerformResetView):
                     u'If the problem persists please '
                     u'<a href="/faq#auto-faq-Contact-How_do_I_contact_the_HDX_team_-a">contact us</a>.')
             h.flash(msg, category='alert-error', allow_html=True)
+            return _forgot_password()
 
         try:
             user_dict = get_action(u'user_show')(context, {u'id': id})
@@ -147,9 +148,9 @@ class HDXPerformResetView(PerformResetView):
             u'user_dict': user_dict
         })
 
+
 def _forgot_password():
     return render('user/forgot_password.html')
-
 
 
 user.add_url_rule(
