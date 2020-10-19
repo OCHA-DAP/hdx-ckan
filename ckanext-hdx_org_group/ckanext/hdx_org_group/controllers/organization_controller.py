@@ -426,7 +426,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if ret and len(ret) == 1:
             dataset_id = ret[0].get('dataset_id')
             stats_1_dataset_downloads_last_weeks = \
-                jql.downloads_per_dataset_per_week_last_24_weeks_cached().get(dataset_id).values()
+                jql.fetch_downloads_per_week_for_dataset(dataset_id).values()
             stats_1_dataset_name = ret[0].get('name')
 
         return ret, total_downloads, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name

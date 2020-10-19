@@ -11,7 +11,7 @@ import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers, resource_grouping
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.helpers import helpers as hdx_helpers
-from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
+from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import simple_validate_email
 import ckanext.hdx_package.helpers.custom_pages as cp_h
@@ -747,7 +747,7 @@ class DatasetController(PackageController):
 
         #analytics charts
         log.debug('Reading dataset {}: getting data for analytics charts'.format(c.pkg_dict.get('name')))
-        downloads_last_weeks = downloads_per_dataset_per_week_last_24_weeks_cached().get(c.pkg_dict['id'], {}).values()
+        downloads_last_weeks = fetch_downloads_per_week_for_dataset(c.pkg_dict['id']).values()
         c.stats_downloads_last_weeks = downloads_last_weeks
 
         #tags&custom_pages
