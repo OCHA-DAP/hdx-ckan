@@ -42,7 +42,7 @@ class ContributeFlowController(base.BaseController):
         try:
             if id:
                 dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
-                owner_org  = dataset_dict.get('organization')
+                owner_org = dataset_dict.get('organization')
                 if owner_org:
                     dataset_dict['owner_org_name'] = owner_org.get('name')
             logic.check_access(action_name, context, dataset_dict)
@@ -72,6 +72,7 @@ class ContributeFlowController(base.BaseController):
                     self.process_dataset_preview_edit(dataset_dict)
                     self.process_custom_viz(dataset_dict)
                     self.process_resource_grouping_edit(dataset_dict)
+                    self.pre_process_dataset_date(dataset_dict)
                     maintainer_dict = logic.get_action('user_show')(context,
                                                                     {'id': dataset_dict.get('maintainer', None)})
                     if maintainer_dict:
@@ -113,6 +114,15 @@ class ContributeFlowController(base.BaseController):
     def process_tags(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
             dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
+
+    def pre_process_dataset_date(self, dataset_dict):
+        if dataset_dict and 'dataset_date' in dataset_dict and 'TO' in dataset_dict.get('dataset_date'):
+            _date = dataset_dict.get('dataset_date')
+            _date_list = str(_date).replace('[', '').replace(']', '').replace(' ', '').split('TO')
+            result = []
+            for item in _date_list:
+                result.append(item.split('T')[0])
+            dataset_dict['dataset_date'] = 'TO'.join(result)
 
     def process_dataset_preview_edit(self, dataset_dict):
         if dataset_dict:
@@ -335,11 +345,19 @@ class ContributeFlowController(base.BaseController):
     #         data_dict['dataset_source'] = source
 
     def process_dataset_date(self, data_dict):
-        if 'date_range1' in data_dict:
-            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2',
-                                                                                           data_dict.get('date_range1'))
-        elif 'data_range2' in data_dict:
-            data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
+        if 'dataset_date' in data_dict:
+            date_range1 = data_dict.get('dataset_date')
+            data_dict['dataset_date'] = '[{date_range1} TO {date_range1}]'.format(date_range1=date_range1)
+        elif 'date_range1' in data_dict or 'date_range2' in data_dict:
+            data_dict['dataset_date'] = '[{date_range1} TO {date_range2}]'.format(
+                date_range1=data_dict.get('date_range1', '*'), date_range2=data_dict.get('date_range2', '*'))
+
+        #
+        # if 'date_range1' in data_dict:
+        #     data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2',
+        #                                                                                    data_dict.get('date_range1'))
+        # elif 'data_range2' in data_dict:
+        #     data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
 
     def process_expected_update_frequency(self, data_dict):
         if data_dict.get('data_update_frequency', '-999') == '-999':

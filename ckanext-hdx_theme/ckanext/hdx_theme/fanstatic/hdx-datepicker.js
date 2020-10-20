@@ -7,7 +7,7 @@ ckan.module('hdx_datepicker', function ($, _) {
       this.el.datepicker(
         {
           onSelect: this._onSelect,
-          dateFormat: "mm/dd/yy"
+          dateFormat: "yy-mm-dd"
 
         }
       );
@@ -15,7 +15,7 @@ ckan.module('hdx_datepicker', function ($, _) {
       var dateStr = null;
       if (this.options.original_value) {
         try {
-          var range = this.options.original_value.split("-");
+          var range = this.options.original_value.split("TO");
           if (range.length > 1) {
             if (this.options.type == 'start-period') {
               dateStr = range[0];
@@ -36,7 +36,7 @@ ckan.module('hdx_datepicker', function ($, _) {
 
       if (this.options.alt_field_id) {
         this.el.datepicker("option", "altField", "#" + this.options.alt_field_id);
-        this.el.datepicker("option", "altFormat", "mm/dd/yy");
+        this.el.datepicker("option", "altFormat", "yy-mm-dd");
       }
       if (this.options.show_years_months == 'true') {
         this.el.datepicker("option", "changeMonth", true);
