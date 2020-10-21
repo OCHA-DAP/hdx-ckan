@@ -28,20 +28,28 @@ if dogpile_config_filter == 'cache.redis.':
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 JQL_WARNING_THRESHOLD = int(config.get('hdx.analytics.mixpanel.warning_threshold_seconds', 90))
 
+MIXPANEL_GROUPS = ['0123', '4567', '89ab', 'cdef']
+
 
 class JqlQueryExecutor(object):
-    def __init__(self, query, *args):
-        self.payload = {
-            'script': query.format(*args)
-        }
+    def __init__(self, query):
+        self.query = query
+        self.args = []
+        self.payload = None
 
     def run_query(self, transformer):
+        self._compile_query()
         try:
             return self._run_query(transformer)
         except Exception as e:
             log.error('Ran into problems when getting data from mixpanel. Returning empty dict.')
             log.error(str(e))
             return {}
+
+    def _compile_query(self):
+        self.payload = {
+            'script': self.query.format(*self.args)
+        }
 
     def _run_query(self, transformer):
         '''
@@ -61,8 +69,8 @@ class JqlQueryExecutor(object):
 
 class JqlQueryExecutorForHoursSinceNow(JqlQueryExecutor):
     def __init__(self, query, hours_since_now):
-        super(JqlQueryExecutorForHoursSinceNow, self). \
-            __init__(query, *JqlQueryExecutorForHoursSinceNow._compute_period(hours_since_now))
+        super(JqlQueryExecutorForHoursSinceNow, self).__init__(query)
+        self.args += self._compute_period(hours_since_now)
 
     @staticmethod
     def _compute_period(hours_since_now):
@@ -90,8 +98,8 @@ class JqlQueryExecutorForWeeksSinceNow(JqlQueryExecutor):
         :param since_date:
         :type since_date: datetime
         '''
-        super(JqlQueryExecutorForWeeksSinceNow, self). \
-            __init__(query, *JqlQueryExecutorForWeeksSinceNow._compute_period(weeks_since, since_date))
+        super(JqlQueryExecutorForWeeksSinceNow, self).__init__(query)
+        self.args += self._compute_period(weeks_since, since_date)
 
     @staticmethod
     def _compute_period(weeks_since, since_date):
@@ -110,6 +118,22 @@ class JqlQueryExecutorForWeeksSinceNow(JqlQueryExecutor):
         from_date_str = from_date.isoformat()[:10]
 
         return [from_date_str, until_date_str]
+
+
+class JqlQueryExecutorForWeeksSinceNowWithGroupFiltering(JqlQueryExecutorForWeeksSinceNow):
+    def __init__(self, query, weeks_since, since_date, group):
+        '''
+        :param query:
+        :type query: str
+        :param weeks_since:
+        :type weeks_since: int
+        :param since_date:
+        :type since_date: datetime
+        :param group:
+        :type group: MixpanelDatasetGroups
+        '''
+        super(JqlQueryExecutorForWeeksSinceNowWithGroupFiltering, self).__init__(query, weeks_since, since_date)
+        self.args.append(group)
 
 
 class MappingResultTransformer(object):
@@ -176,13 +200,24 @@ class MultipleValueMandatoryMappingResultTransformer(MappingResultTransformer):
         return result
 
 
+def get_dataset_mp_group(dataset_id):
+    first_letter = dataset_id[0]
+    for group in MIXPANEL_GROUPS:
+        if first_letter in group:
+            return group
+    log.error('Dataset group could not be determined for JQL query')
+    return None
+
+
 def timer_wrapper(original_caching_function):
     @wraps(original_caching_function)
-    def timed_caching_function():
-        timer = Timer(original_caching_function.__name__,
+    def timed_caching_function(*args):
+        args_to_name = ', '.join(args)
+        name = '{} with args ({})'.format(original_caching_function.__name__, args_to_name)
+        timer = Timer(name,
                       init_message='creating cache',
                       in_millis=False, log_warning_step_threshold=JQL_WARNING_THRESHOLD)
-        result = original_caching_function()
+        result = original_caching_function(*args)
         timer.next('finished')
         return result
     return timed_caching_function
@@ -201,15 +236,23 @@ def downloads_per_dataset(hours_since_now=None):
     return result
 
 
+def fetch_downloads_per_week_for_dataset(dataset_id):
+    mixpanel_group = get_dataset_mp_group(dataset_id)
+    if mixpanel_group:
+        return downloads_per_dataset_per_week_last_24_weeks_cached(mixpanel_group).get(dataset_id, {})
+    return {}
+
+
 @dogpile_jql_region.cache_on_arguments()
 @timer_wrapper
-def downloads_per_dataset_per_week_last_24_weeks_cached():
-    return downloads_per_dataset_per_week(24)
+def downloads_per_dataset_per_week_last_24_weeks_cached(mixpanel_group):
+    return downloads_per_dataset_per_week(mixpanel_group, 24)
 
 
-def downloads_per_dataset_per_week(weeks=24):
+def downloads_per_dataset_per_week(mixpanel_group, weeks=24):
     since = datetime.utcnow()
-    query_executor = JqlQueryExecutorForWeeksSinceNow(jql_queries.DOWNLOADS_PER_DATASET_PER_WEEK, weeks, since)
+    query_executor = JqlQueryExecutorForWeeksSinceNowWithGroupFiltering(jql_queries.DOWNLOADS_PER_DATASET_PER_WEEK,
+                                                                        weeks, since, mixpanel_group)
 
     mandatory_values = _generate_mandatory_dates(since, weeks)
 
