@@ -2,7 +2,7 @@ HDX DOCUMENTATION
 =================
 
 PYTHON DEPENDENCY MANAGEMENT
-----------------------------
+++++++++++++++++++++++++++++
 Information about compiling (dev-)requirements.txt can be found here `Dependency Management <dependencies/index.rst>`_
 
 
@@ -16,14 +16,15 @@ SEARCH ENGINE
 Information about how the CKAN search results are being computed can be found here `Search Documentation <search/index.rst>`_
 
 
+DATASET FIELDS
+++++++++++++++
 
-ADD DATA FORM
-+++++++++++++
-Information about the fields and the dataset creation form can be found here `Add Data Form <add_data_form/index.rst>`_
-
-
-TECHNICAL INFO
+SPECIAL FIELDS
 --------------
+Information about the fields and the dataset creation form can be found here `Special Dataset Fields <special_fields/index.rst>`_
 
-* Adding a new field to dataset. Please note that doesn't necessarily mean storing a new field. It might be a computed field also:
-  `Adding a new field to datasets <tech_add_field/index.rst>`_
+
+HOW TO ADD A NEW FIELD
+----------------------
+Adding a new field to dataset. Please note that doesn't necessarily mean storing a new field. It might be a computed field also:
+`Adding a new field to datasets <tech_add_field/index.rst>`_

@@ -56,8 +56,9 @@ function main() {{
 
 DOWNLOADS_PER_DATASET_PER_WEEK = '''
 /* 1. unique downloads by dataset by week
-VER 1.2
+VER 1.3
 
+ver 1.3 splitting datasets in groups (0123, 4567, 89ab, cdef), for smaller result sets
 ver 1.2 removing sorting function as it's not needed
 ver 1.1 changed to use groupByUser() instead of 1st groupBy() and have the first reducer be null() - recommended by mixpanel support as being more performant.
 
@@ -71,6 +72,10 @@ function main() {{
     from_date: '{}',
     to_date: '{}',
     event_selectors: [{{event: "resource download"}}]
+  }})
+  .filter(function(event){{
+    var first_letter = event.properties['dataset id'][0];
+    return '{}'.includes(first_letter);
   }})
   .groupByUser(["properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.null())
   .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())

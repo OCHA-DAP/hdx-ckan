@@ -1,0 +1,13 @@
+<p>Dear {{ data.org_name }} administrator(s),</p>
+
+<p>{{ data.user_fullname }} ({{ data.user_email }}) has used the 'contact the contributor' function in HDX to inquire about your dataset
+  <a href="{{ data.pkg_url }}">{{ data.pkg_title }}</a>.</p>
+
+<p>
+Inquiry type: {{ data.topic }}<br/>
+Message: {{ data.msg }}
+</p>
+
+{#<p>We suggest you 'reply all' to this message in order to ensure that all of your organisation’s administrators are made aware.</p>#}
+
+<p>If you have any questions or concerns, please contact us by emailing <a href="mailto:hdx@un.org">hdx@un.org</a>. </p>

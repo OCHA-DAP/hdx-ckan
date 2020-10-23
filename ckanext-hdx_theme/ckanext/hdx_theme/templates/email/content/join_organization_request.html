@@ -1,0 +1,20 @@
+<p>Dear {{ data.org_name }} administrator(s),</p>
+
+<p>{{ data.user_fullname }} ({{ data.user_email }}) has requested to join your organisation on HDX {% if data.message %}with the following message: </p>
+<p>{{ data.message }}</p>{% endif %} </p>
+
+<p>If you are able to confirm that this person works for your organisation or is in your trusted network, then you may approve the request. If you cannot verify who the user is, you should decline the request.</p>
+
+<p><strong>Please do not approve membership requests for people outside your trusted network</strong>. Be aware that anyone who is added to your organisation on HDX can view your organisation's private datasets (if any).</p>
+
+<p><a href="{{ data.org_membership_url }}">Click here to approve or decline the membership request</a>, which you will find on your organisation page in the Members tab listed under "Pending Approval".</p>
+
+<div>
+  <p>If approved, you will be prompted to assign the user one of the following roles:</p>
+  <ul>
+    <li><strong>Administrator</strong>: Add, edit, and delete datasets, and manage organisation membership.</li>
+    <li><strong>Editor</strong>: Add, edit, and delete datasets. The user <strong>cannot</strong> manage organisation members.</li>
+    <li><strong>Member</strong>: View all of an organisation’s datasets (including private datasets). The user <strong>cannot</strong> add new datasets or manage organisation members.</li>
+  </ul>
+</div>
+<p><a href="https://humanitarian.atlassian.net/wiki/spaces/HDXKB/pages/1254490113/For+HDX+org+admins+How+to+Manage+Organizational+Membership">Learn more about managing HDX organisation members here</a>, or feel free to reply to this email if you have any questions.</p>

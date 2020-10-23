@@ -429,7 +429,8 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema}
         # data_dict['name'] = data_dict['email']
         first_name = data_dict['first-name']
-        data_dict['fullname'] = first_name + ' ' + data_dict['last-name']
+        last_name = data_dict['last-name']
+        data_dict['fullname'] = first_name + ' ' + last_name
         try:
             # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
             # if is_captcha_enabled == 'true':
@@ -456,39 +457,31 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_update')(context, data_dict)
             tokens.token_update(context, data_dict)
 
-            ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
-            get_action('user_extra_update')(context, ue_dict)
+            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
+            # get_action('user_extra_update')(context, ue_dict)
+            #
+            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
+            # get_action('user_extra_update')(context, ue_dict)
 
-            ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
-            get_action('user_extra_update')(context, ue_dict)
+            ue_data_dict = {'user_id': data_dict.get('id'), 'extras': [
+                {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'},
+                {'key': user_model.HDX_ONBOARDING_DETAILS, 'new_value': 'True'},
+                {'key': user_model.HDX_FIRST_NAME, 'new_value': first_name},
+                {'key': user_model.HDX_LAST_NAME, 'new_value': last_name},
+            ]}
+            get_action('user_extra_update')(context, ue_data_dict)
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
-                subject = 'Thank you for joining the HDX community'
                 link = config['ckan.site_url'] + '/login'
-                # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
-                # <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
-                faq_link = '<a href="https://data.humdata.org/faq">Frequently Asked Questions</a>'
                 full_name = data_dict.get('fullname')
-                html = """\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>Dear {first_name},</p>
-                    <br/>
-                    <p>Welcome to the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>! You have successfully registered your account on HDX.</p>
-                    <br/>
-                    <p>Your username is {username}</p>
-                    <p>Please use the following link to <a href="{link}">login</a></p>
-                    <br/>
-                    <p>You can learn more about HDX in our {faq_link}. Look out for a couple more emails from us in the coming days -- we will be offering tips on making the most of the platform. </p>
-                    <br/>
-                    <p>Best wishes,</p>
-                    <p>The HDX team</p>
-                  </body>
-                </html>
-                """.format(username=data_dict.get('name'), link=link, faq_link=faq_link, first_name=first_name)
-                # if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject, html)
+                subject = u'Thank you for joining the HDX community!'
+                email_data = {
+                    'user_first_name': first_name,
+                    'username': data_dict.get('name'),
+                }
+                hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject,
+                                          email_data, footer=data_dict.get('email'),
+                                          snippet='email/content/onboarding_confirmation_of_registration.html')
 
         except NotAuthorized:
             return OnbNotAuth
@@ -626,32 +619,23 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             if not c.user:
                 return OnbNotAuth
-            usr = c.userobj.display_name or c.user
+            # usr = c.userobj.display_name or c.user
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
 
-            subject = u'{fullname} invited you to join HDX!'.format(fullname=usr)
-            link = config['ckan.site_url'] + '/user/register'
-            hdx_link = '<a href="{link}">HDX</a>'.format(link=link)
-            # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
-            faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
-            html = u"""\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
-                    <p>You can learn more about HDX by {faq_link}.</p>
-                    <p>Join {hdx_link}</p>
-                  </body>
-                </html>
-            """.format(fullname=usr, faq_link=faq_link, hdx_link=hdx_link)
-
+            subject = u'Invitation to join the Humanitarian Data Exchange (HDX)'
+            email_data = {
+                'user_fullname': c.userobj.fullname,
+                'user_email': c.userobj.email,
+            }
+            cc_recipients_list = [{'display_name': c.userobj.fullname, 'email': c.userobj.email}]
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
                 if f and configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
-
+                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, email_data,
+                                              cc_recipients_list=cc_recipients_list,
+                                              snippet='email/content/onboarding_invite_others.html')
         except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
@@ -664,6 +648,15 @@ class ValidationController(ckan.controllers.user.UserController):
 
     def _build_extras_dict(self, key, value='True'):
         return {'extras': [{'key': key, 'new_value': value}]}
+
+    # def _get_ue_dict_for_key_list(self, user_id, data_list):
+    #     ue_dict = {'user_id': user_id}
+    #     extras = []
+    #     for item in data_list:
+    #         extras.append({'key': item.get('key')), 'new_value': value})
+    #     ue_dict['extras'] = extras
+    #     return ue_dict
+
 
     @staticmethod
     @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')

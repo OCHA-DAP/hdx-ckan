@@ -36,6 +36,7 @@ ckan.module('hdx_custom_pages', function ($, _) {
                 "empty":[],
                 "description":["section_title","section_long_description","max_height"],
                 "map":["data_url","section_title","max_height"],
+                "long_description":["section_title","section_long_description","max_height"],
                 "key_figures":["data_url","section_title","section_description","max_height"],
                 "interactive_data":["data_url","section_title","section_description","max_height"],
                 "data_list":["data_url", "section_title"]

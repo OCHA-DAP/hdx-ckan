@@ -19,6 +19,7 @@ import ckan.model as model
 import ckan.lib.helpers as h
 
 from ckan.common import c
+from ckanext.hdx_package.helpers.resource_format import allowed_formats
 
 from ckanext.hdx_theme.helpers.hash_generator import generate_hash_dict, HashCodeGenerator
 
@@ -35,16 +36,20 @@ PROCESSING = 'processing'
 _get_or_bust = logic.get_or_bust
 get_action = logic.get_action
 
+
 def detect_format_from_extension(url):
+    available_formats = allowed_formats()
     if url:
         split_url = urlparse.urlsplit(url)
         if split_url.path:
             file_name = os.path.basename(split_url.path)
-            possible_extension = file_name.split(".")[-1].lower()
+            possible_format = file_name.split(".")[-1].lower()
             if file_name.endswith('.shp.zip'):
-                return 'zipped shapefile'
-            elif '.' in file_name and possible_extension:
-                return possible_extension
+                possible_format = 'zipped shapefile'
+
+            # Needs to be an existing format
+            if possible_format and possible_format in available_formats:
+                return possible_format
     return None
 
 
@@ -70,6 +75,7 @@ def add_to_shape_info_list(shape_info_json, resource):
             log.error('There was an error processing the shape info from geopreview: {}'.format(str(e)))
 
     return None
+
 
 def _get_shape_info_as_json(gis_data):
     resource_id = gis_data['resource_id']

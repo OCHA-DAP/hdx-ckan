@@ -1,7 +1,6 @@
-import logging, re
+import re
 import datetime
 import unicodedata
-import ckan.logic
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 from ckan.common import _
@@ -11,19 +10,20 @@ import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
-import ckanext.hdx_package.helpers.helpers as hdx_package_helper
-from ckanext.hdx_package.helpers.date_helper import daterange_parser
+from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
+from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 
 from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_instance,\
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 
 import ckanext.hdx_search.actions.authorize as authorize
+from ckanext.hdx_package.helpers.reindex_helper import before_indexing_clean_resource_formats
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME,\
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
-NotFound = ckan.logic.NotFound
+NotFound = tk.ObjectNotFound
 
 
 def convert_country(q):
@@ -199,14 +199,13 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def before_view(self, pkg_dict):
         return pkg_dict
 
+    # IPackageController
     def before_index(self, pkg_dict):
-        if pkg_dict.get('res_format'):
-            new_formats = []
-            for format in pkg_dict['res_format']:
-                new_format = hdx_package_helper.hdx_unified_resource_format(format)
-                new_formats.append(new_format)
-            pkg_dict['res_format'] = new_formats
+
+        before_indexing_clean_resource_formats(pkg_dict)
+
         pkg_dict['title_string'] = unicodedata.normalize("NFKD", pkg_dict['title']).replace(r'\xc3', 'I')
+        pkg_dict.pop('resource_grouping', None)
 
         self.__process_dates_in_resource_extra(pkg_dict)
         return pkg_dict
@@ -225,7 +224,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 new_list = []
                 for value in values:
                     try:
-                        new_value = daterange_parser(value, True)
+                        new_value = DaterangeParser(value ).compute_daterange_string(True)
                         new_list.append(new_value)
                     except:
                         continue
@@ -260,6 +259,10 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
+
+        if are_new_cod_filters_enabled():
+            facets_dict['{!ex=cod_level,batch}cod_level'] = _('CODs')
+
         return facets_dict
 
     def get_auth_functions(self):

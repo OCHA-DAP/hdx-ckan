@@ -8,11 +8,6 @@ import json
 import logging
 from operator import itemgetter
 
-import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_org_group.helpers.caching as caching
-import ckanext.hdx_package.helpers.screenshot as screenshot
-import ckanext.hdx_search.controllers.search_controller as search_controller
-
 import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.base as base
@@ -20,11 +15,14 @@ import ckan.lib.helpers as h
 import ckan.lib.helpers as helpers
 import ckan.logic as logic
 import ckan.model as model
-
-from ckan.controllers.api import CONTENT_TYPES
+import ckanext.hdx_org_group.helpers.caching as caching
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_package.helpers.screenshot as screenshot
+import ckanext.hdx_search.controllers.search_controller as search_controller
 from ckan.common import config
-
+from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 render = base.render
 abort = base.abort
@@ -43,6 +41,8 @@ group_type = 'group'
 
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
+
+    @check_redirect_needed
     def country_read(self, id, get_only_toplines=False):
         # import cProfile
         # profile = cProfile.Profile()

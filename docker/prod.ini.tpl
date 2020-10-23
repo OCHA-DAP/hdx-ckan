@@ -120,13 +120,17 @@ hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 
 # AWS api echo endpoint
 hdx.echo_url = https://${AWS_ECHO_API_URL}
+hdx.echo_api_key = ${HDX_ECHO_API_KEY}
 
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
+# COD
+hdx.cod.new_filters.enabled = false
+
 ## Logging configuration
 [loggers]
-keys = root, ckan, ckanext
+keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer
 
 [handlers]
 keys = console, file
@@ -150,10 +154,10 @@ handlers = console, file
 qualname = ckanext
 propagate = 0
 
-[logger_ckanext.hdx_theme.util.jql]
+[logger_ckanext.hdx_theme.util.timer]
 level = INFO
 handlers = console, file
-qualname = ckanext.hdx_theme.util.jql
+qualname = ckanext.hdx_theme.util.timer
 propagate = 0
 
 [handler_console]

@@ -32,8 +32,9 @@ def user_extra_update(context, data_dict):
         try:
             user_extra = ue_model.UserExtra.get(user_id=data_dict['user_id'], key=ue['key'])
             if user_extra is None:
-                raise NotFound
-            user_extra.value = ue['new_value']
+                user_extra = ue_model.UserExtra(user_id=data_dict['user_id'], key=ue['key'], value=ue['new_value'])
+            else:
+                user_extra.value = ue['new_value']
             session.add(user_extra)
             session.commit()
             result.append(user_extra.as_dict())

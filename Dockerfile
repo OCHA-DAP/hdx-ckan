@@ -55,7 +55,8 @@ RUN apt-get -qq -y update && \
     curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get -qq -y install nodejs && \
     npm install -g less && \
-    easy_install pip && \
+    apt-get -qq -y install python-pip && \
+    pip install --upgrade pip && \
     pip -q install --upgrade \
         gevent \
         gunicorn \

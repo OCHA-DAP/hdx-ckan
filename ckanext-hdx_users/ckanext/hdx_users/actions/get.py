@@ -1,9 +1,14 @@
+import logging
 import pylons.config as config
 from ckan.plugins import toolkit as tk
+import ckan.model as model
 
 import ckan.logic as logic
+import ckan.logic.action.get as user_get
 import ckan.lib.dictization.model_dictize as model_dictize
+import ckanext.hdx_users.model as user_model
 
+log = logging.getLogger(__name__)
 _check_access = logic.check_access
 NotFound = logic.NotFound
 get_action = logic.get_action
@@ -35,7 +40,7 @@ def onboarding_followee_list(context, data_dict):
                 result_aux.append(create_item(item, type, False))
                 i += 1
 
-    orgs = get_action('cached_organization_list')(context, {})
+    orgs = get_action('cached_organization_list')({}, {})
     orgs = sorted(orgs, key=lambda elem: elem.get('package_count', 0), reverse=True)
 
     i = 1
@@ -55,46 +60,6 @@ def onboarding_followee_list(context, data_dict):
 def create_item(item, type, follow=False):
     return {'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,
             'follow': follow}
-
-
-def hdx_send_reset_link(context, data_dict):
-    from urlparse import urljoin
-    import ckan.lib.mailer as mailer
-    import ckan.lib.helpers as h
-    import ckanext.hdx_users.controllers.mailer as hdx_mailer
-
-    model = context['model']
-
-    id = data_dict.get('id', None)
-    if id:
-        user = model.User.get(id)
-        context['user_obj'] = user
-        if user is None:
-            raise NotFound
-
-    mailer.create_reset_key(user)
-
-    subject = mailer.render_jinja2('emails/reset_password_subject.txt', {'site_title': config.get('ckan.site_title')})
-    # Make sure we only use the first line
-    subject = subject.split('\n')[0]
-
-    reset_link = user_fullname = recipient_mail = None
-    if user:
-        recipient_mail = user.email if user.email else None
-        user_fullname = user.fullname or ''
-        reset_link = urljoin(config.get('ckan.site_url'),
-                             h.url_for(controller='user', action='perform_reset', id=user.id, key=user.reset_key))
-
-    body = u"""\
-                <p>Dear {fullname}, </p>
-                <p>You have requested your password on {site_title} to be reset.</p>
-                <p>Please click on the following link to confirm this request:</p>
-                <p> <a href=\"{reset_link}\">{reset_link}</a></p>
-            """.format(fullname=user_fullname, site_title=config.get('ckan.site_title'),
-                       reset_link=reset_link)
-
-    if recipient_mail:
-        hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
 
 
 @logic.validate(logic.schema.default_autocomplete_schema)
@@ -147,6 +112,7 @@ def hdx_user_autocomplete(context, data_dict):
         user_list.append(result_dict)
 
     return user_list
+
 
 # moved from misc.py
 def hdx_user_show(context, data_dict):
@@ -218,4 +184,51 @@ def hdx_user_show(context, data_dict):
         {'model': model, 'session': model.Session},
         {'id': user_dict['id']})
     user_dict['total_count'] = dataset_q_counter
+    return user_dict
+
+
+@logic.side_effect_free
+def hdx_user_fullname_show(context, data_dict):
+    if 'id' not in data_dict:
+        raise NotFound("Id not provided")
+
+    _check_access('user_show', context, data_dict)
+
+    user_id = data_dict.get('id')
+    user_dict = {'id': user_id}
+    # if 'include_user_dict' in data_dict and data_dict.get('include_user_dict') == 'true':
+    # try:
+    #     user_dict = get_action('user_show')(context, {'id': user_id})
+    # except Exception, ex:
+    #     log.error(ex)
+    #     raise NotFound("user not found")
+    # user_obj = model.User.get(user_id)
+    _set_user_names(context, user_dict)
+    return user_dict
+
+
+def _set_user_names(context, user_dict):
+    if user_dict and 'id' in user_dict:
+        try:
+            first_name = get_action('user_extra_value_by_key_show')(context,
+                                                                    {'user_id': user_dict.get('id'),
+                                                                     'key': user_model.HDX_FIRST_NAME})
+            user_dict['firstname'] = first_name.get(user_model.HDX_FIRST_NAME)
+        except Exception, ex:
+            user_dict['firstname'] = None
+        try:
+            last_name = get_action('user_extra_value_by_key_show')(context,
+                                                                   {'user_id': user_dict.get('id'),
+                                                                    'key': user_model.HDX_LAST_NAME})
+            user_dict['lastname'] = last_name.get(user_model.HDX_LAST_NAME)
+        except  Exception, ex:
+            user_dict['lastname'] = None
+    return user_dict
+
+
+@logic.side_effect_free
+def user_show(context, data_dict):
+    user_dict = user_get.user_show(context, data_dict)
+    if user_dict:
+        _set_user_names(context, user_dict)
     return user_dict

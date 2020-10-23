@@ -264,14 +264,24 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_validator('hdx_in_cod_values'),
                 tk.get_converter('convert_to_extras')
+            ],
+            'resource_grouping': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('hdx_convert_to_json_string'),
+                tk.get_converter('convert_to_extras')
             ]
         })
 
         schema['resources'].update(
             {
                 'name': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
-                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
-                           tk.get_validator('clean_format'), unicode],
+                'format': [
+                    tk.get_validator('hdx_detect_format'),
+                    tk.get_validator('not_empty'),
+                    tk.get_validator('hdx_to_lower'),
+                    tk.get_validator('clean_format'),
+                    unicode
+                ],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
@@ -324,6 +334,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'daterange_for_data': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_daterange_possible_infinite_end')
+                ],
+                'grouping': [
+                    tk.get_validator('ignore_missing')
                 ]
             }
         )
@@ -345,6 +358,25 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         self._remove_package_fields_from_schema(schema)
 
+        schema['resources'].update(
+            {
+                'format': [
+                    tk.get_validator('hdx_to_lower'),
+                    tk.get_validator('clean_format'),
+                ],
+                'in_quarantine': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
+                'broken_link': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
+                'daterange_for_data': [
+                    tk.get_validator('ignore_missing'),
+                ]
+            }
+        )
         schema.update({
             # Notes == description. Makes description required
             'notes': [vd.not_empty_ignore_ws],
@@ -397,23 +429,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             ],
             'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'cod_level': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]
+            'cod_level': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'resource_grouping': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('hdx_convert_from_json_string'),
+            ],
+
         })
-        schema['resources'].update(
-            {
-                'in_quarantine': [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_validator('boolean_validator')
-                ],
-                'broken_link': [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_validator('boolean_validator')
-                ],
-                'daterange_for_data': [
-                    tk.get_validator('ignore_missing'),
-                ]
-            }
-        )
 
         return schema
 
@@ -446,6 +469,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_view_delete': hdx_delete.resource_view_delete,
             'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
+            'format_autocomplete': hdx_get.hdx_format_autocomplete,
+            'hdx_guess_format_from_extension': hdx_get.hdx_guess_format_from_extension,
             'package_create': hdx_create.package_create,
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
@@ -470,12 +495,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
             'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed,
             'hdx_qa_resource_patch': hdx_patch.hdx_qa_resource_patch,
+
         }
 
     # IValidators
     def get_validators(self):
         return {
             'hdx_detect_format': vd.detect_format,
+            'hdx_to_lower': vd.to_lower,
             'find_package_creator': vd.find_package_creator,
             'not_empty_if_methodology_other': vd.general_not_empty_if_other_selected('methodology', 'Other'),
             'not_empty_if_license_other': vd.general_not_empty_if_other_selected('license_id', 'hdx-other'),
@@ -505,7 +532,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
-            'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end
+            'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
+            'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
+            'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
         }
 
     def get_auth_functions(self):

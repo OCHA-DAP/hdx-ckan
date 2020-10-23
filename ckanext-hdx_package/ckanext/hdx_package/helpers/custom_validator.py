@@ -8,6 +8,7 @@ import bisect
 import re
 import datetime
 import logging
+import json
 
 import ckan.model as model
 import ckan.authz as authz
@@ -19,7 +20,7 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
-from ckanext.hdx_package.helpers.date_helper import daterange_parser
+from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 
 missing = df.missing
 StopOnError = df.StopOnError
@@ -42,12 +43,12 @@ DATASET_PREVIEW_VALUES_LIST = [_DATASET_PREVIEW_FIRST_RESOURCE, _DATASET_PREVIEW
 # from Django framework
 
 url_regex = re.compile(
-        r'^(?:http|ftp)s?://' # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
-        r'localhost|' #localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
-        r'(?::\d+)?' # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    r'^(?:http|ftp)s?://'  # http:// or https://
+    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+    r'localhost|'  # localhost...
+    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+    r'(?::\d+)?'  # optional port
+    r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
 # same as not_empty, but ignore whitespaces
@@ -146,9 +147,18 @@ def detect_format(key, data, errors, context):
         if file_format:
             data[key] = file_format
             return file_format
-        raise df.Invalid(_('No format provided and none could be automatically deduced'))
+        err_message = "We couldn't determine your file type. If it is a compressed format (zip, etc), please  \
+                      indicate the primary format of the data files inside compressed file."
+        errors[key].append(_(err_message))
+        raise df.StopOnError()
 
     return current_format
+
+
+def to_lower(current_value):
+    if current_value:
+        return current_value.lower()
+    return current_value
 
 
 def hdx_show_subnational(key, data, errors, context):
@@ -292,12 +302,11 @@ def hdx_convert_from_extras_to_list_item(key, data, errors, context):
 
     for data_key, data_value in data.iteritems():
         if isinstance(data_value, basestring):
-            data_value_parts = data_value.split('__') # Example: ['customviz', 0, 'url']
-            key_parts = key[-1].split('__') # Example ['customviz', 'url']
+            data_value_parts = data_value.split('__')  # Example: ['customviz', 0, 'url']
+            key_parts = key[-1].split('__')  # Example ['customviz', 'url']
             if data_key[0] == 'extras' and data_key[-1] == 'key' \
-                    and len(data_value_parts) == 3 and len(key_parts) == 2 \
-                    and data_value_parts[0] == key_parts[0] and data_value_parts[2] == key_parts[1]:
-
+                and len(data_value_parts) == 3 and len(key_parts) == 2 \
+                and data_value_parts[0] == key_parts[0] and data_value_parts[2] == key_parts[1]:
                 list_name = key_parts[0]
                 property_name = key_parts[1]
 
@@ -339,7 +348,6 @@ def hdx_assume_missing_is_true(value, context):
     if value is missing or value is None:
         return "true"
     return value
-
 
 
 def hdx_isodate_to_string_converter(value, context):
@@ -422,6 +430,7 @@ def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, r
                         data[key] = old_value
         if key not in data:
             raise StopOnError
+
     return hdx_package_keep_prev_value_unless_field_in_context
 
 
@@ -450,6 +459,7 @@ def hdx_delete_unless_field_in_context(context_field):
     :return:
     :rtype: function
     '''
+
     def hdx_delete_unless_forced(key, data, errors, context):
         if not context.get(context_field):
             data.pop(key, None)
@@ -464,6 +474,7 @@ def hdx_delete_unless_authorized_wrapper(auth_function):
     :return:
     :rtype: function
     '''
+
     def hdx_delete_unless_authorized(key, data, errors, context):
         try:
             check_access(auth_function, context, None)
@@ -486,9 +497,33 @@ def hdx_value_in_list_wrapper(allowed_values, allow_missing):
 
 
 def hdx_daterange_possible_infinite_end(key, data, errors, context):
-    value = data.get(key) # type: str
-    new_value = daterange_parser(value, False)
+    value = data.get(key)  # type: str
+    new_value = DaterangeParser(value).compute_daterange_string(False)
     data[key] = new_value
+
+
+def hdx_convert_to_json_string(key, data, errors, context):
+    value = data[key]
+    try:
+        data[key] = json.dumps(value)
+    except TypeError as e:
+        raise df.Invalid(_('Input is not valid'))
+
+
+def hdx_convert_from_json_string(key, data, errors, context):
+    value = data[key]
+    try:
+        data[key] = json.loads(value)
+    except (ValueError, TypeError) as e:
+        raise df.Invalid(_('Could not parse JSON'))
+
+# def hdx_autocompute_grouping(key, data, errors, context):
+#     current_value = data.get(key)
+#     if not current_value or current_value is missing:
+#         daterange_value = data.get(key[:-1] + ('daterange_for_data',))
+#         if daterange_value and daterange_value is not missing:
+#             daterange_parser = DaterangeParser(daterange_value)
+#             data[key] = daterange_parser.human_readable()
 
 
 def __get_previous_resource_dict(context, package_id, resource_id):

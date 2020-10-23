@@ -38,8 +38,8 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         args, kw_args = mocked_mail_recipient.call_args
 
-        assert len(kw_args.get('recipients_list', [])) == 3, 'mail goes to sender, org admin and 1 other member'
-        assert post_params['msg'] in kw_args.get('body')
+        assert len(args[0]) == 2, 'mail goes to sender, org admin'
+        assert post_params['msg'] in args[2].get('msg')
         assert kw_args.get('sender_name') == post_params['fullname']
         assert kw_args.get('sender_email') == post_params['email']
-        assert post_params['title'] in kw_args.get('subject')
+        assert 'email/content/group_message.html' == kw_args.get('snippet')

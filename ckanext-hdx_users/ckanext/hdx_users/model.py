@@ -28,6 +28,13 @@ HDX_LOGIN = 'hdx_login'
 HDX_REGISTER = 'hdx_register'
 HDX_LOGOUT = 'hdx_logout'
 HDX_FIRST_LOGIN = "hdx_first_login"
+HDX_FIRST_NAME = "hdx_first_name"
+HDX_LAST_NAME = "hdx_last_name"
+
+USER_DETAILS = [
+    HDX_FIRST_NAME,
+    HDX_LAST_NAME
+]
 
 USER_STATUSES = [
     HDX_ONBOARDING_USER_REGISTERED,
@@ -67,7 +74,7 @@ class ValidationToken(DomainObject):
 
 
 def define_validation_token_table():
-    global  validation_token_table
+    global validation_token_table
     validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                Column('user_id', types.UnicodeText, ForeignKey('user.id'), unique=True),

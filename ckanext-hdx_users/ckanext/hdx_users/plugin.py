@@ -8,6 +8,7 @@ import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
+import ckanext.hdx_users.views.user as hdx_user
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -24,6 +25,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IBlueprint)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -95,7 +97,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'token_create': create.token_create,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list,
-            'hdx_send_reset_link': get.hdx_send_reset_link,
+            'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
             'hdx_first_login': create.hdx_first_login
         }
@@ -106,12 +108,17 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_validate': authorize.user_can_validate,
             'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'manage_permissions': auth.manage_permissions,
-            'hdx_first_login': auth.hdx_first_login
+            'hdx_first_login': auth.hdx_first_login,
+            'user_update': auth.user_update
         }
 
     # IConfigurable
     def configure(self, config):
         users_model.setup()
+
+    #IBlueprint
+    def get_blueprint(self):
+        return hdx_user.user
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
@@ -120,6 +127,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IValidators)
+    plugins.implements(plugins.IBlueprint)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -156,11 +164,14 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     action='permission')
         # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='logged_in')
-        map.connect('/user/reset', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        map.connect('/user/reset',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='request_reset')
-        map.connect('/contribute', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        map.connect('/contribute',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contribute')
-        map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        map.connect('/contact_hdx',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contact_hdx')
         # map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='save_mapexplorer_config')
@@ -183,7 +194,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/logged_out', controller='user', action='logged_out')
         map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
         # map.connect('/user/reset', controller='user', action='request_reset')
-        map.connect('/user/me', controller='user', action='me')
+        # map.connect('/user/me', controller='user', action='me')
         # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
 
@@ -211,16 +222,17 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('requestdata_send_request', '/request_data',
                     controller=hdx_request_data_controller,
                     action='send_request')
-        map.connect('/util/user/hdx_autocomplete', controller='ckanext.hdx_users.controllers.api:APIExtensionController',
+        map.connect('/util/user/hdx_autocomplete',
+                    controller='ckanext.hdx_users.controllers.api:APIExtensionController',
                     action='hdx_user_autocomplete')
-
 
         #######
         map.connect('user_datasets', '/user/{id:((?!edit)[^/])+}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
-        map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='hdx_delete_powerview',)
+        map.connect('delete_page', '/dashboard/visualization/delete/{id}',
+                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='hdx_delete_powerview', )
         return map
 
     def after_map(self, map):
@@ -242,6 +254,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
             'hdx_user_show': get.hdx_user_show,
+            'hdx_user_fullname_show': get.hdx_user_fullname_show,
+            'user_show': get.user_show,
         }
 
     def get_validators(self):
@@ -249,3 +263,4 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_email_validator': hdx_validators.user_email_validator,
             'user_name_validator': hdx_validators.user_name_validator
         }
+

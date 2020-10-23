@@ -143,6 +143,7 @@ def hdx_qa_pii_run(context, data_dict):
 PII_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/addpii"
 SDCMICRO_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/addsdc"
 AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
+ECHO_API_KEY = config.get('hdx.echo_api_key', '')
 
 
 def _run_pii_check(resource_dict, context):
@@ -161,7 +162,8 @@ def _run_pii_check(resource_dict, context):
         r = requests.post(
             PII_RUN_URL,
             headers={
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Api-Key': ECHO_API_KEY
             },
             data=json.dumps(data_dict))
         r.raise_for_status()
@@ -195,7 +197,8 @@ def _run_sdcmicro_check(resource_dict, data_columns_list, weightColumn=None, col
         r = requests.post(
             SDCMICRO_RUN_URL,
             headers={
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Api-Key': ECHO_API_KEY
             },
             data=json.dumps(data_dict))
         r.raise_for_status()

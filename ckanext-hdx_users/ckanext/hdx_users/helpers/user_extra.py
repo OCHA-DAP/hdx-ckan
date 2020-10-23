@@ -16,6 +16,8 @@ def get_default_extras():
     result = []
     for us in user_model.USER_STATUSES:
         result.append({'key': us, 'value': 'False'})
+    result.append({'key': user_model.HDX_FIRST_NAME, 'value': ''})
+    result.append({'key': user_model.HDX_LAST_NAME, 'value': ''})
     return result
 
 

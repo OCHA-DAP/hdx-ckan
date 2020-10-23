@@ -65,8 +65,41 @@
   background-color: #eeeeee;
   padding: 20px;
 }
-.recover-widget .bottom-actions {
+.recover-widget .btn-primary {
+  width: 100%;
+}
+.recover-widget .not-member {
+  color: #888888;
+}
+.recover-widget .not-member a {
+  font-weight: 700;
+}
+.recover-widget .logo {
+  height: 30px;
+}
+#recoverPopup .notification-widget {
+  width: 370px;
+}
+#recoverPopup .notification-title {
+  padding: 0;
+  height: 200px;
+  position: relative;
+}
+#recoverPopup .notification-title .close {
   position: absolute;
+  float: none;
+  top: 20px;
+  right: 20px;
+  font-size: 21px;
+}
+#recoverPopup .notification-title .title {
+  position: absolute;
+  left: 20px;
   bottom: 20px;
-  width: 60%;
+  color: #fff;
+}
+#recoverPopup .notification-title img {
+  position: absolute;
+  height: 100%;
+  right: 0;
 }

@@ -8,10 +8,10 @@ from ckan.common import c
 log = logging.getLogger(__name__)
 
 contributor_topics = {
-    'sent a general question': 'General question',
-    'asked about metadata': 'Metadata',
-    'reported a problem': 'Report a problem',
-    'suggested edits': 'Suggest edits',
+    'general question': 'General question',
+    'metadata': 'Metadata',
+    'problem report': 'Problem report',
+    'suggested edits': 'Suggested edits',
 }
 
 group_topics = {

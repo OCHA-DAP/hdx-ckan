@@ -193,7 +193,7 @@ class HDXOrgMemberController(org.OrganizationController):
                                 'id': id  # This is something staging/prod need
                             }
                             del data_dict['email']
-                            user_dict = self._action('user_invite')(context, user_data_dict)
+                            user_dict = self._action('hdx_user_invite')(context, user_data_dict)
                             invited = True
                             data_dict['username'] = user_dict['name']
                             h.flash_success(email + ' has been invited as ' + data_dict['role'])
@@ -254,7 +254,7 @@ class HDXOrgMemberController(org.OrganizationController):
                                     'role': role,
                                     'id': id  # This is something staging/prod need
                                 }
-                                user_dict = self._action('user_invite')(context, user_data_dict)
+                                user_dict = self._action('hdx_user_invite')(context, user_data_dict)
                                 invited_members.append(email)
                                 # h.flash_success(email + ' has been invited as ' + role)
                                 log.info('{} was invited as a new user'.format(email))
