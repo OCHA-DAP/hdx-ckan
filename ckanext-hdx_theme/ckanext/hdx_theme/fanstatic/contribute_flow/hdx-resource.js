@@ -361,7 +361,7 @@ $(function(){
         className: 'drag-drop-component source-file',
         template: _.template($('#resource-item-tmpl').html()),
 
-        prevFileExtension: null,
+        // prevFileExtension: null,
 
         events: {
             'click .update_resource': 'onUpdateBtn',
@@ -469,9 +469,11 @@ $(function(){
             _.each(field_errors, function(error_text, field_name) {
                 var error_block = this.$("[name='" + field_name + "'] ~ .error-block");
                 error_block.html(error_text);
-                var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
-                parent_el.addClass('error');
-                parent_el.closest('.source-file').addClass('error');
+                if (error_text) {
+                    var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
+                    parent_el.addClass('error');
+                    parent_el.closest('.source-file').addClass('error');
+                }
             }.bind(this));
 
             //this._setUpForSourceType('source-url');
@@ -510,11 +512,15 @@ $(function(){
         },
 
         onFieldEdit: function(e) {
-            this.model.set(e.target.name, e.target.value);
+          var modifiedFieldName = e.target.name;
+          this.model.set(modifiedFieldName, e.target.value);
 
-            if (e.target.name === 'name' || e.target.name === 'url') {
+            if (modifiedFieldName === 'name' || modifiedFieldName === 'url') {
                 this._guessFormat();
                 this._showFormatWarningIfNeeded();
+            }
+            if (modifiedFieldName === 'format') {
+              this._showFormatWarningIfNeeded();
             }
 
         },
@@ -524,6 +530,7 @@ $(function(){
 
         _onFileChange: function(file){
             // If a file has been selected, set up interface with file path.
+            this.model.set('format', '');
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
             this.render();
@@ -685,15 +692,15 @@ $(function(){
             var extension = this._computeExtension();
 
             var isArchive = ARCHIVE_EXTENSIONS.indexOf(extension) >= 0;
-            var wasArchive = ARCHIVE_EXTENSIONS.indexOf(this.prevFileExtension) >= 0;
+            // var wasArchive = ARCHIVE_EXTENSIONS.indexOf(this.prevFileExtension) >= 0;
 
-            if (isArchive && !wasArchive && !this.model.get('format') ) {
+            if (isArchive && !this.model.get('format') ) {
                 this.display_errors({'format': WARNINGS.archive});
             }
-            else if (!isArchive && wasArchive) {
+            else if (this.model.get('format') || !isArchive) {
                 this.display_errors({'format': ''});
             }
-            this.prevFileExtension = extension;
+            // this.prevFileExtension = extension;
         },
         _guessFormat: function() {
             var onSuccessSetFormat = function(data) {
