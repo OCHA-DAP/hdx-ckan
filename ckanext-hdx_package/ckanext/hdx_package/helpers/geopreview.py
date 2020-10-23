@@ -25,7 +25,7 @@ from ckanext.hdx_theme.helpers.hash_generator import generate_hash_dict, HashCod
 
 log = logging.getLogger(__name__)
 
-ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
+ZIPPED_SHAPEFILE_FORMAT = 'shp'
 GEOJSON_FORMAT = 'geojson'
 KML_FORMAT = 'kml'
 KMZ_FORMAT = 'kmz'
