@@ -3,8 +3,9 @@ import logging
 
 from flask import Blueprint
 from flask.views import MethodView
-from paste.deploy.converters import asbool
-from six import text_type
+from ckan.common import asbool
+from six import text_type, ensure_str
+import dominate.tags as dom_tags
 
 import ckan.lib.authenticator as authenticator
 import ckan.lib.base as base
@@ -56,8 +57,7 @@ def _extra_template_variables(context, data_dict):
     try:
         user_dict = logic.get_action(u'user_show')(context, data_dict)
     except logic.NotFound:
-        h.flash_error(_(u'Not authorized to see this page'))
-        return
+        base.abort(404, _(u'User not found'))
     except logic.NotAuthorized:
         base.abort(403, _(u'Not authorized to see this page'))
 
@@ -78,7 +78,7 @@ def before_request():
         context = dict(model=model, user=g.user, auth_user_obj=g.userobj)
         logic.check_access(u'site_read', context)
     except logic.NotAuthorized:
-        _, action = request.url_rule.endpoint.split(u'.')
+        blueprint, action = plugins.toolkit.get_endpoint()
         if action not in (
                 u'login',
                 u'request_reset',
@@ -123,8 +123,8 @@ def index():
 
 
 def me():
-    route = u'dashboard.index' if g.user else u'user.login'
-    return h.redirect_to(route)
+    return h.redirect_to(
+        config.get(u'ckan.route_after_login', u'dashboard.index'))
 
 
 def read(id):
@@ -149,6 +149,90 @@ def read(id):
     if extra_vars is None:
         return h.redirect_to(u'user.login')
     return base.render(u'user/read.html', extra_vars)
+
+
+class ApiTokenView(MethodView):
+    def get(self, id, data=None, errors=None, error_summary=None):
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user,
+            u'auth_user_obj': g.userobj,
+            u'for_view': True,
+            u'include_plugin_extras': True
+        }
+        try:
+            tokens = logic.get_action(u'api_token_list')(
+                context, {u'user': id}
+            )
+        except logic.NotAuthorized:
+            base.abort(403, _(u'Unauthorized to view API tokens.'))
+
+        data_dict = {
+            u'id': id,
+            u'user_obj': g.userobj,
+            u'include_datasets': True,
+            u'include_num_followers': True
+        }
+
+        extra_vars = _extra_template_variables(context, data_dict)
+        if extra_vars is None:
+            return h.redirect_to(u'user.login')
+        extra_vars[u'tokens'] = tokens
+        extra_vars.update({
+            u'data': data,
+            u'errors': errors,
+            u'error_summary': error_summary
+        })
+        return base.render(u'user/api_tokens.html', extra_vars)
+
+    def post(self, id):
+        context = {u'model': model}
+
+        data_dict = logic.clean_dict(
+            dictization_functions.unflatten(
+                logic.tuplize_dict(logic.parse_params(request.form))))
+
+        data_dict[u'user'] = id
+        try:
+            token = logic.get_action(u'api_token_create')(
+                context,
+                data_dict
+            )[u'token']
+        except logic.NotAuthorized:
+            base.abort(403, _(u'Unauthorized to create API tokens.'))
+        except logic.ValidationError as e:
+            errors = e.error_dict
+            error_summary = e.error_summary
+            return self.get(id, data_dict, errors, error_summary)
+
+        copy_btn = dom_tags.button(dom_tags.i(u'', {
+            u'class': u'fa fa-copy'
+        }), {
+            u'type': u'button',
+            u'class': u'btn btn-default btn-xs',
+            u'data-module': u'copy-into-buffer',
+            u'data-module-copy-value': ensure_str(token)
+        })
+        h.flash_success(
+            _(
+                u"API Token created: <code style=\"word-break:break-all;\">"
+                u"{token}</code> {copy}<br>"
+                u"Make sure to copy it now, "
+                u"you won't be able to see it again!"
+            ).format(token=ensure_str(token), copy=copy_btn),
+            True
+        )
+        return h.redirect_to(u'user.api_tokens', id=id)
+
+
+def api_token_revoke(id, jti):
+    context = {u'model': model}
+    try:
+        logic.get_action(u'api_token_revoke')(context, {u'jti': jti})
+    except logic.NotAuthorized:
+        base.abort(403, _(u'Unauthorized to revoke API tokens.'))
+    return h.redirect_to(u'user.api_tokens', id=id)
 
 
 class EditView(MethodView):
@@ -189,6 +273,11 @@ class EditView(MethodView):
             data_dict = logic.clean_dict(
                 dictization_functions.unflatten(
                     logic.tuplize_dict(logic.parse_params(request.form))))
+            data_dict.update(logic.clean_dict(
+                dictization_functions.unflatten(
+                    logic.tuplize_dict(logic.parse_params(request.files))))
+            )
+
         except dictization_functions.DataError:
             base.abort(400, _(u'Integrity Error'))
         data_dict.setdefault(u'activity_streams_email_notifications', False)
@@ -248,10 +337,6 @@ class EditView(MethodView):
             base.abort(404, _(u'User not found'))
         user_obj = context.get(u'user_obj')
 
-        if not (authz.is_sysadmin(g.user) or g.user == user_obj.name):
-            msg = _(u'User %s not authorized to edit %s') % (g.user, id)
-            base.abort(403, msg)
-
         errors = errors or {}
         vars = {
             u'data': data,
@@ -265,7 +350,6 @@ class EditView(MethodView):
             u'user': g.user
         }, data_dict)
 
-        extra_vars[u'is_myself'] = True
         extra_vars[u'show_email_notifications'] = asbool(
             config.get(u'ckan.activity_streams_email_notifications'))
         vars.update(extra_vars)
@@ -296,6 +380,11 @@ class RegisterView(MethodView):
             data_dict = logic.clean_dict(
                 dictization_functions.unflatten(
                     logic.tuplize_dict(logic.parse_params(request.form))))
+            data_dict.update(logic.clean_dict(
+                dictization_functions.unflatten(
+                    logic.tuplize_dict(logic.parse_params(request.files)))
+            ))
+
         except dictization_functions.DataError:
             base.abort(400, _(u'Integrity Error'))
 
@@ -360,7 +449,9 @@ class RegisterView(MethodView):
 def login():
     # Do any plugin login stuff
     for item in plugins.PluginImplementations(plugins.IAuthenticator):
-        item.login()
+        response = item.login()
+        if response:
+            return response
 
     extra_vars = {}
     if g.user:
@@ -391,7 +482,10 @@ def logged_in():
 def logout():
     # Do any plugin logout stuff
     for item in plugins.PluginImplementations(plugins.IAuthenticator):
-        item.logout()
+        response = item.logout()
+        if response:
+            return response
+
     url = h.url_for(u'user.logged_out_page')
     return h.redirect_to(
         _get_repoze_handler(u'logout_handler_path') + u'?came_from=' + url,
@@ -425,8 +519,12 @@ def delete(id):
     except logic.NotAuthorized:
         msg = _(u'Unauthorized to delete user with id "{user_id}".')
         base.abort(403, msg.format(user_id=id))
-    user_index = h.url_for(u'user.index')
-    return h.redirect_to(user_index)
+
+    if g.userobj.id == id:
+        return logout()
+    else:
+        user_index = h.url_for(u'user.index')
+        return h.redirect_to(user_index)
 
 
 def generate_apikey(id=None):
@@ -478,13 +576,15 @@ def activity(id, offset=0):
     extra_vars = _extra_template_variables(context, data_dict)
 
     try:
-        g.user_activity_stream = logic.get_action(u'user_activity_list_html')(
-            context, {
-                u'id': extra_vars[u'user_dict'][u'id'],
-                u'offset': offset
-            })
+        extra_vars['user_activity_stream'] = \
+            logic.get_action(u'user_activity_list')(
+                context, {
+                    u'id': extra_vars[u'user_dict'][u'id'],
+                    u'offset': offset
+                })
     except logic.ValidationError:
         base.abort(400)
+    extra_vars['id'] = id
 
     return base.render(u'user/activity_stream.html', extra_vars)
 
@@ -497,58 +597,81 @@ class RequestResetView(MethodView):
             u'user': g.user,
             u'auth_user_obj': g.userobj
         }
-        data_dict = {u'id': request.form.get(u'user')}
         try:
             logic.check_access(u'request_reset', context)
         except logic.NotAuthorized:
             base.abort(403, _(u'Unauthorized to request reset password.'))
-        return context, data_dict
 
     def post(self):
-        context, data_dict = self._prepare()
-        id = data_dict[u'id']
+        self._prepare()
+        id = request.form.get(u'user')
+        if id in (None, u''):
+            h.flash_error(_(u'Email is required'))
+            return h.redirect_to(u'/user/reset')
+        log.info(u'Password reset requested for user "{}"'.format(id))
 
-        context = {u'model': model, u'user': g.user}
-        user_obj = None
-        try:
-            logic.get_action(u'user_show')(context, data_dict)
-            user_obj = context[u'user_obj']
-        except logic.NotFound:
-            # Try searching the user
-            if id and len(id) > 2:
-                user_list = logic.get_action(u'user_list')(context, {
-                    u'id': id
-                })
-                if len(user_list) == 1:
-                    # This is ugly, but we need the user object for the
-                    # mailer,
+        context = {u'model': model, u'user': g.user, u'ignore_auth': True}
+        user_objs = []
+
+        # Usernames cannot contain '@' symbols
+        if u'@' in id:
+            # Search by email address
+            # (You can forget a user id, but you don't tend to forget your
+            # email)
+            user_list = logic.get_action(u'user_list')(context, {
+                u'email': id
+            })
+            if user_list:
+                # send reset emails for *all* user accounts with this email
+                # (otherwise we'd have to silently fail - we can't tell the
+                # user, as that would reveal the existence of accounts with
+                # this email address)
+                for user_dict in user_list:
+                    # This is ugly, but we need the user object for the mailer,
                     # and user_list does not return them
-                    data_dict[u'id'] = user_list[0][u'id']
-                    logic.get_action(u'user_show')(context, data_dict)
-                    user_obj = context[u'user_obj']
-                elif len(user_list) > 1:
-                    h.flash_error(_(u'"%s" matched several users') % (id))
-                else:
-                    h.flash_error(_(u'No such user: %s') % id)
-            else:
-                h.flash_error(_(u'No such user: %s') % id)
+                    logic.get_action(u'user_show')(
+                        context, {u'id': user_dict[u'id']})
+                    user_objs.append(context[u'user_obj'])
 
-        if user_obj:
+        else:
+            # Search by user name
+            # (this is helpful as an option for a user who has multiple
+            # accounts with the same email address and they want to be
+            # specific)
+            try:
+                logic.get_action(u'user_show')(context, {u'id': id})
+                user_objs.append(context[u'user_obj'])
+            except logic.NotFound:
+                pass
+
+        if not user_objs:
+            log.info(u'User requested reset link for unknown user: {}'
+                     .format(id))
+
+        for user_obj in user_objs:
+            log.info(u'Emailing reset link to user: {}'
+                     .format(user_obj.name))
             try:
                 # FIXME: How about passing user.id instead? Mailer already
                 # uses model and it allow to simplify code above
                 mailer.send_reset_link(user_obj)
-                h.flash_success(
-                    _(u'Please check your inbox for '
-                      u'a reset code.'))
-                return h.redirect_to(u'/')
             except mailer.MailerException as e:
-                h.flash_error(_(u'Could not send reset link: %s') %
-                              text_type(e))
-        return self.get()
+                # SMTP is not configured correctly or the server is
+                # temporarily unavailable
+                h.flash_error(_(u'Error sending the email. Try again later '
+                                'or contact an administrator for help'))
+                log.exception(e)
+                return h.redirect_to(u'home.index')
+
+        # always tell the user it succeeded, because otherwise we reveal
+        # which accounts exist or not
+        h.flash_success(
+            _(u'A reset link has been emailed to you '
+              '(unless the account specified does not exist)'))
+        return h.redirect_to(u'home.index')
 
     def get(self):
-        context, data_dict = self._prepare()
+        self._prepare()
         return base.render(u'user/request_reset.html', {})
 
 
@@ -611,7 +734,7 @@ class PerformResetView(MethodView):
             mailer.create_reset_key(context[u'user_obj'])
 
             h.flash_success(_(u'Your password has been reset.'))
-            return h.redirect_to(u'/')
+            return h.redirect_to(u'home.index')
         except logic.NotAuthorized:
             h.flash_error(_(u'Unauthorized to edit user %s') % id)
         except logic.NotFound:
@@ -651,7 +774,7 @@ def follow(id):
     except logic.ValidationError as e:
         error_message = (e.message or e.error_summary or e.error_dict)
         h.flash_error(error_message)
-    except logic.NotAuthorized as e:
+    except (logic.NotFound, logic.NotAuthorized) as e:
         h.flash_error(e.message)
     return h.redirect_to(u'user.read', id=id)
 
@@ -671,12 +794,11 @@ def unfollow(id):
         h.flash_success(
             _(u'You are no longer following {0}').format(
                 user_dict[u'display_name']))
-    except (logic.NotFound, logic.NotAuthorized) as e:
-        error_message = e.message
-        h.flash_error(error_message)
     except logic.ValidationError as e:
         error_message = (e.error_summary or e.message or e.error_dict)
         h.flash_error(error_message)
+    except (logic.NotFound, logic.NotAuthorized) as e:
+        h.flash_error(e.message)
     return h.redirect_to(u'user.read', id=id)
 
 
@@ -734,3 +856,10 @@ user.add_url_rule(u'/unfollow/<id>', view_func=unfollow, methods=(u'POST', ))
 user.add_url_rule(u'/followers/<id>', view_func=followers)
 
 user.add_url_rule(u'/<id>', view_func=read)
+user.add_url_rule(
+    u'/<id>/api-tokens', view_func=ApiTokenView.as_view(str(u'api_tokens'))
+)
+user.add_url_rule(
+    u'/<id>/api-tokens/<jti>/revoke', view_func=api_token_revoke,
+    methods=(u'POST',)
+)

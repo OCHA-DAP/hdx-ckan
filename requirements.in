@@ -1,43 +1,40 @@
-# The file contains the direct ckan requirements.
+# The file contains the direct ckan requirements (python3).
 # Use pip-compile to create a requirements.txt file from this
-Babel==2.3.4
-bleach==2.1.3
-click>=7.0
-fanstatic==0.12
-Flask==0.12.4
-werkzeug<1.0
-Flask-Babel==0.11.2
-Jinja2>=2.10
+alembic==1.0.0
+Babel==2.7.0
+Beaker==1.11.0
+bleach==3.1.4
+click==6.7
+dominate==2.4.0
+fanstatic==1.1
+feedgen==0.9.0
+Flask==1.1.1
+Flask-Babel==1.0.0
+flask-multistatic==1.0
+Jinja2==2.10.1
+PyJWT==1.7.1
 Markdown==2.6.7
-ofs==0.4.2
-Pairtree==0.7.1-T
 passlib==1.6.5
-paste==1.7.5.1 # commenting will be installed anyway by the Pylons dependency
 polib==1.0.7
-psycopg2==2.7.3.2
+psycopg2==2.8.2
 python-magic==0.4.15
 pysolr==3.6.0
-Pylons==0.9.7
-PasteScript<3.0.0 # latest version that would be installed by Pylons wants Paste >=3.0
-python-dateutil<3.0.0,>=2.1
+python-dateutil>=1.5.0
 pytz==2016.7
-pyutilib.component.core==4.6.4
-repoze.who-friendlyform==1.0.8
+PyUtilib==5.7.1
+pyyaml==5.3.1
 repoze.who==2.3
-requests>=2.14.2
+requests==2.22.0
 Routes==1.13
-rq==0.6.0
+rq==1.0
 simplejson==3.10.0
-sqlalchemy-migrate==0.11.0
-pbr!=2.1.0,>=2.0.0 #needed by sqlalchemy-migrate and pbr!=2.1.0,>=2.0.0 (from mox3==0.28.0->pyfakefs==2.9->-r dev-requirements.in
-SQLAlchemy==1.1.11
+sqlalchemy-migrate==0.12.0
+SQLAlchemy==1.3.5
 sqlparse==0.2.2
 tzlocal==1.3
 unicodecsv>=0.9
-vdm==0.14
-WebHelpers==1.3
-WebOb==1.0.8
-WebTest==1.4.3  # need to pin this so that Pylons does not install a newer version that conflicts with WebOb==1.0.8
+webassets==0.12.1
+Werkzeug[watchdog]==1.0.0
 zope.interface==4.3.2
 
 # ADDED FOR HDX
