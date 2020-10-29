@@ -122,7 +122,6 @@ class HDXPerformResetView(PerformResetView):
         context = {
             u'model': model,
             u'session': model.Session,
-            u'user': id,
             u'keep_email': True
         }
 
