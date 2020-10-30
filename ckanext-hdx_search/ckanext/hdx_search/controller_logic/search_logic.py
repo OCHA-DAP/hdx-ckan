@@ -175,7 +175,7 @@ class SearchLogic(object):
 
             if hide_archived:
                 fq_list = fq_list or []
-                fq_list.append('extras_archived: "false"')
+                fq_list.append('-extras_archived:"true"')
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
