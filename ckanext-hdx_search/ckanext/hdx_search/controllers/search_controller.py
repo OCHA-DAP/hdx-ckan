@@ -227,7 +227,7 @@ class HDXSearchController(PackageController):
             params.append(('page', page))
             return self._search_url(params, package_type)
 
-        c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
+        c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True, hide_archived=True)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
@@ -246,7 +246,7 @@ class HDXSearchController(PackageController):
 
     def _search(self, package_type, pager_url, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
-                ignore_capacity_check=False, use_solr_collapse=False):
+                ignore_capacity_check=False, use_solr_collapse=False, hide_archived=False):
 
         from ckan.lib.search import SearchError
 
@@ -355,6 +355,10 @@ class HDXSearchController(PackageController):
                         .format(sort=sort_by)
                 ]
                 solr_expand = 'true'
+
+            if hide_archived:
+                fq_list = fq_list or []
+                fq_list.append('extras_archived: "false"')
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
