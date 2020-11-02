@@ -15,14 +15,13 @@ before_install:
 script:
   - echo "$(env | grep TRAVIS)" >> travis.env
   - echo "CI=\"$CI\"" >> travis.env
-  - cat travis.env
   - docker-compose build ckan
   - docker-compose up -d
   - sleep 10
   - docker-compose exec solr bin/solr create -c ckan -d /configsets/hdx-current
   - sleep 10
   - docker-compose restart ckan
-  - docker-compose exec ckan pip install -r /srv/ckan/dev-requirements.txt
+  - docker-compose exec ckan pip install -r /srv/ckan/dev-requirements-py2.txt
   - docker-compose exec ckan python setup.py develop
   - docker-compose exec ckan hdxckantool plugins dev
   - docker-compose exec ckan hdxckantool pgpass

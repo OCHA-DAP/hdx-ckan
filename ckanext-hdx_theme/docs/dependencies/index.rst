@@ -10,18 +10,7 @@ Notes
   Please note that this file starts with :code:`-c requirements.txt`
   This tells *pip-compile* to take into consideration the requirements from that file
   when compiling the dev dependencies
-* There's a conflict that can't be solved between `mailchimp <https://pypi.org/project/mailchimp/>`_
-  (from *requirements.in*) and *coveralls* from
-  *dev-requirements.in*: they need different versions of the same package *docopt*.
 
-  * So we will create **2** dev requirements files:
-
-    * *dev-requirements.txt* will be used by Travis
-    * *dev-requirements-local.txt* will be used for local development
-  * That's why we need to manually
-    add *coveralls* **manually** at the end of *dev-requirements.txt* after compilation.
-  * Maybe we could switch to using
-    `another mailchimp library <https://pypi.org/project/mailchimp3/>`_ in the near future
 
 Compilation steps
 -----------------
@@ -30,23 +19,33 @@ Compilation steps
 
     pip install pip-tools==5.0.0
 
-#. Compile the main dependencies::
+#. Compile the main dependencies:
 
-    pip-compile requirements.in --output-file=requirements.txt
+   *  FOR PYTHON 2::
 
-#. Compile the dev dependencies::
+       pip-compile requirements-py2.in --output-file=requirements-py2.txt
 
-    pip-compile dev-requirements.in --output-file=dev-requirements.txt
-    cp dev-requirements.txt dev-requirements-local.txt
+   *  FOR PYTHON 3::
 
-#. Add *coveralls* manually to *dev-requirements.txt*::
+       pip-compile requirements.in --output-file=requirements.txt
 
-    ....
-    xmltodict==0.12.0         # via moto
-    zipp==1.2.0               # via importlib-metadata
-    coveralls
+#. Compile the dev dependencies:
+
+   *  FOR PYTHON 2::
+
+       pip-compile dev-requirements-py2.in --output-file=dev-requirements-py2.txt
+
+   *  FOR PYTHON 3::
+
+       pip-compile dev-requirements.in --output-file=dev-requirements.txt
 
 #. Make sure your python environment has the correct libraries installed. Notice that
-   we're using the *dev-requirements-local.txt* file here::
+   we're using the *dev-requirements-local.txt* file here:
 
-    pip-sync requirements.txt dev-requirements-local.txt
+   *  FOR PYTHON 2::
+
+       pip-sync requirements-py2.txt dev-requirements-py2.txt
+
+   *  FOR PYTHON 3::
+
+       pip-sync requirements.txt dev-requirements.txt

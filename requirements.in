@@ -39,7 +39,7 @@ zope.interface==4.3.2
 
 # ADDED FOR HDX
 ipaddress==1.0.23
-validate_email==1.2
+# validate_email==1.2
 pyDNS==2.3.6
 ijson==2.2
 mailchimp3==3.0.14

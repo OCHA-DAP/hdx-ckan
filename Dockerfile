@@ -71,7 +71,7 @@ RUN apt-get -qq -y update && \
     ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
     python setup.py develop && \
-    pip install -r requirements.txt && \
+    pip install -r requirements-py2.txt && \
     pip install newrelic==5.12.1.141 && \
     hdxckantool plugins dev && \
     # curl https://codeload.github.com/okfn/ckanext-s3filestore/tar.gz/v0.1.1 -o s3f.tgz && \
@@ -79,7 +79,7 @@ RUN apt-get -qq -y update && \
     # rm -f s3f.tgz && \
     # cd ckanext-s3filestore-0.1.1 && \
     # python setup.py develop && \
-    pip -q install --upgrade -r requirements.txt && \
+    pip -q install --upgrade -r requirements-py2.txt && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     pip install \
