@@ -1,9 +1,9 @@
 import logging
 import ckan.logic.auth.create as _auth_create
 
-from ckan.lib.base import _
+import ckan.plugins.toolkit as tk
 
-
+_ = tk._
 log = logging.getLogger(__name__)
 
 

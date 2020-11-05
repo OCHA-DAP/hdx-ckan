@@ -2,11 +2,12 @@ import ckan.authz as new_authz
 import ckan.logic as logic
 import ckan.logic.auth.create as create
 
-from ckan.lib.base import _
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.helpers.helpers as helpers
 from ckanext.hdx_users.helpers.permissions import Permissions
+
+_ = tk._
 
 
 ## ORGS

@@ -1,14 +1,13 @@
 import logging
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
-from ckan.lib.base import _
-import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
 get_action = tk.get_action
 auth_allow_anonymous_access = tk.auth_allow_anonymous_access
+_ = tk._
 
 
 def package_create(context, data_dict=None):
