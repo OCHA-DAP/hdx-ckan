@@ -165,7 +165,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 'users': {'__extras': [tk.get_converter('keep_extras')]},
                 'num_followers': [],
                 'created': [],
-                'revision_id': [],
                 'state': [],
                 'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
 
