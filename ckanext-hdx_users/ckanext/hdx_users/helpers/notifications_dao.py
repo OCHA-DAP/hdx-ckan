@@ -31,11 +31,9 @@ class MembershipRequestsDao(object):
         model = self.model
 
         query = model.Session.query(model.Group.name, model.Group.title,
-                                    func.count(model.Member.id).label('count'),
-                                    func.max(model.MemberRevision.revision_timestamp).label('last_date')) \
+                                    func.count(model.Member.id).label('count')) \
             .filter(model.Member.group_id == model.Group.id) \
             .filter(model.Group.state == 'active') \
-            .filter(model.Member.revision_id == model.MemberRevision.revision_id) \
             .filter(model.Member.table_name == "user") \
             .filter(model.Member.state == 'pending')
 

@@ -1,3 +1,4 @@
+import datetime
 import ckan.lib.helpers as h
 import ckan.authz as authz
 import ckan.model as model
@@ -105,6 +106,7 @@ class MembershipRequestsService(object):
         notifications = []
 
         if requests_grouped_by_org:
+            now = datetime.datetime.utcnow()
             for request in requests_grouped_by_org:
                 notifications.append(
                     {
@@ -112,7 +114,7 @@ class MembershipRequestsService(object):
                         'org_name': request.name,
                         'org_hdx_url': h.url_for('organization_members', id=request.name),
                         'html_template': 'light/notifications/org_membership_snippet.html',
-                        'last_date': request.last_date,
+                        'last_date': now,
                         'count': request.count,
                         'for_sysadmin': request.name not in org_names_where_user_is_admin
                                             if self.is_sysadmin else False,
