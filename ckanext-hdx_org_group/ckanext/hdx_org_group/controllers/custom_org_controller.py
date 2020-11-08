@@ -284,7 +284,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             'description': result['description'],
             'name': result['name'],
             'link': org_meta.org_dict.get('extras', {}).get('org_url'),
-            'revision_id': result['revision_id'],
+            # 'revision_id': result['revision_id'],
             'topline_resource': org_meta.customization.get('topline_resource'),
             'modified_at': result.get('modified_at', ''),
             'image_sq': org_meta.customization.get('image_sq'),
