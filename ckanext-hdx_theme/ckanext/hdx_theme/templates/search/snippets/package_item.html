@@ -1,5 +1,5 @@
 {% set is_metadata_only = package.is_requestdata_type %}
-{% set current_package_url = current_package_url if current_package_url else h.url_for(controller='package', action='read', id=package.name) %}
+{% set current_package_url = current_package_url if current_package_url else h.url_for('dataset_read', id=package.name) %}
 
 <li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length and package.batch_length > 0 %} stacked-item {% endif %}">
   {% block package_item_content %}
