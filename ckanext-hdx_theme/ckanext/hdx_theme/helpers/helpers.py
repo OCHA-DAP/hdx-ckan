@@ -234,19 +234,30 @@ def methodology_bk_compat(meth, other, render=True):
             return ("Other", meth[0])
 
 
-def render_date_from_concat_str(str, separator='-'):
+def render_date_from_concat_str(_str, separator='-'):
     result = ''
-    if str:
-        strdate_list = str.split(separator)
-        for index, strdate in enumerate(strdate_list):
-            try:
-                date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
-                render_strdate = date.strftime('%B %d, %Y')
-                result += render_strdate
-                if index < len(strdate_list) - 1:
-                    result += ' - '
-            except ValueError, e:
-                log.warning(e)
+    if _str:
+        if 'TO' in _str:
+            res_list = []
+            dates_list = str(_str).replace('[', '').replace(']', '').replace(' ', '').split('TO')
+            for date in dates_list:
+                if '*' not in date:
+                    _date = datetime.datetime.strptime(date.split('T')[0], "%Y-%m-%d")
+                    res_list.append(_date.strftime('%B %d, %Y'))
+                else:
+                    res_list.append(datetime.datetime.today().strftime('%B %d, %Y'))
+            result = '-'.join(res_list)
+        else:
+            strdate_list = _str.split(separator)
+            for index, strdate in enumerate(strdate_list):
+                try:
+                    date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
+                    render_strdate = date.strftime('%B %d, %Y')
+                    result += render_strdate
+                    if index < len(strdate_list) - 1:
+                        result += ' - '
+                except ValueError, e:
+                    log.warning(e)
 
     return result
 

@@ -116,13 +116,23 @@ class ContributeFlowController(base.BaseController):
             dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
 
     def pre_process_dataset_date(self, dataset_dict):
-        if dataset_dict and 'dataset_date' in dataset_dict and 'TO' in dataset_dict.get('dataset_date'):
-            _date = dataset_dict.get('dataset_date')
-            _date_list = str(_date).replace('[', '').replace(']', '').replace(' ', '').split('TO')
-            result = []
-            for item in _date_list:
-                result.append(item.split('T')[0])
-            dataset_dict['dataset_date'] = 'TO'.join(result)
+        if dataset_dict and 'dataset_date' in dataset_dict:
+            if 'TO' in dataset_dict.get('dataset_date'):
+                _date = dataset_dict.get('dataset_date')
+                _date_list = str(_date).replace('[', '').replace(']', '').replace(' ', '').split('TO')
+                result = []
+                for item in _date_list:
+                    result.append(item.split('T')[0])
+                dataset_dict['dataset_date'] = 'TO'.join(result)
+                if '*' in dataset_dict['dataset_date']:
+                    dataset_dict['ui_date_ongoing'] = "1"
+                dataset_dict['dataset_date'] = dataset_dict['dataset_date'].replace('*','')
+            else:
+                _date_list = dataset_dict['dataset_date'].split('-')
+                if len(_date_list) == 2:
+                    dataset_dict['dataset_date'] = 'TO'.join(_date_list)
+                else:
+                    dataset_dict['dataset_date'] = _date_list[0]+'TO'+_date_list[0]
 
     def process_dataset_preview_edit(self, dataset_dict):
         if dataset_dict:
@@ -351,13 +361,6 @@ class ContributeFlowController(base.BaseController):
         elif 'date_range1' in data_dict or 'date_range2' in data_dict:
             data_dict['dataset_date'] = '[{date_range1} TO {date_range2}]'.format(
                 date_range1=data_dict.get('date_range1', '*'), date_range2=data_dict.get('date_range2', '*'))
-
-        #
-        # if 'date_range1' in data_dict:
-        #     data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2',
-        #                                                                                    data_dict.get('date_range1'))
-        # elif 'data_range2' in data_dict:
-        #     data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
 
     def process_expected_update_frequency(self, data_dict):
         if data_dict.get('data_update_frequency', '-999') == '-999':
