@@ -576,7 +576,15 @@
 {#                                                          <div style="margin-left:-160px; ">#}
 {#                                                            {{ form.checkbox('dataset_date_ongoing', id='field_dataset_date_ongoing', label=_('Ongoing'), value='1', checked=data.dataset_date_ongoing, error=errors.dataset_date_ongoing, classes=['form-group'], attrs={}) }}#}
 {#                                                          </div>#}
-                                                          <label style="font-weight:inherit">
+{#                                                                                                    {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
+{#                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
+{#                                                    'data-toggle': 'tooltip'}
+{#                                                    %}#}
+                                                          <label style="font-weight:inherit"
+                                                                 data-module='bs_tooltip'
+                                                                 data-module-placement='top'
+                                                                 data-original-title= 'The end date will always advance to be the current date'
+                                                                 data-toggle= 'tooltip' >
                                                             <input style="margin-right: 5px"
                                                                    type="checkbox"
                                                                    name="ui_date_ongoing"
@@ -589,7 +597,7 @@
                                                                    data-module-alt_field_id='date_ongoing'
                                                                    data-module-original_value="{{ data.ui_date_ongoing }}"
                                                                    {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
-                                                            Ongoing
+                                                            Ongoing (?)
                                                           </label>
                                                         </div></div>
                                                     </div>
