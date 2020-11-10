@@ -52,7 +52,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         package = {
             "package_creator": "testsysadmin",
             "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
             "indicator": "0",
             "caveats": "These are the caveats",
             "license_other": "TEST OTHER LICENSE",
@@ -153,7 +153,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         assert json_result and len(
             json_result.get('error_summary', [])) == 1, 'There should be only one validation error, date missing'
 
-        post_params["dataset_date"] = "01/01/1960-12/31/2012"
+        post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
 
         res2 = self.app.post('/contribute/validate', params=post_params,
                             extra_environ=auth)
@@ -178,7 +178,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         assert json_result and len(
             json_result.get('error_summary', [])) == 1, 'There should be only one validation error, date missing'
 
-        post_params["dataset_date"] = "01/01/1960-12/31/2012"
+        post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
 
         res2 = self.app.post('/contribute/new', params=post_params,
                              extra_environ=auth)
@@ -188,7 +188,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         saved_dataset = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-save'})
 
-        assert saved_dataset and saved_dataset.get('dataset_date') == "01/01/1960-12/31/2012"
+        assert saved_dataset and saved_dataset.get('dataset_date') == "[1960-01-01 TO 2012-12-31]"
 
         type(self).use_package_create_wrapper = True
 
@@ -201,7 +201,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params = self._get_dataset_post_param('testing-dataset-edit')
         post_params['save'] = 'update-dataset-json'
 
-        post_params["dataset_date"] = "01/01/1960-12/31/2012"
+        post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
 
         res = self.app.post('/contribute/new', params=post_params,
                              extra_environ=auth)
@@ -211,7 +211,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         saved_dataset = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-edit'})
 
-        assert saved_dataset and saved_dataset.get('dataset_date') == "01/01/1960-12/31/2012"
+        assert saved_dataset and saved_dataset.get('dataset_date') == "[1960-01-01 TO 2012-12-31]"
         assert saved_dataset.get('id')
 
         post_params['id'] = saved_dataset.get('id')
@@ -242,7 +242,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params = self._get_dataset_post_param('testing-dataset-edit-lists')
         post_params['tag_string'] = 'list_test_tag'
 
-        post_params["dataset_date"] = "01/01/1960-12/31/2012"
+        post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
         post_params['save'] = 'update-dataset-json'
 
         res = self.app.post('/contribute/new', params=post_params,
