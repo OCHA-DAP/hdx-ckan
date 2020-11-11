@@ -3,15 +3,14 @@ from rdflib import Graph, Literal, BNode, RDF
 from rdflib.namespace import Namespace
 
 import ckan.lib.base as base
-from ckan.lib.base import request
+import ckan.logic as logic
+import ckanext.hdx_theme.helpers.faq_wordpress as fw
+from ckan.common import config
+from ckan.controllers.home import HomeController
+from ckan.lib.base import _
 from ckan.lib.base import c, h
 from ckan.lib.base import model
-from ckan.lib.base import _
-import ckan.logic as logic
-
-from ckan.controllers.home import HomeController
-from ckan.common import config
-
+from ckan.lib.base import request
 
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
@@ -124,11 +123,11 @@ class SplashPageController(HomeController):
     def about(self, page):
         title = {'license': _('Data Licenses'),
                  'terms': _('Terms of Service')}
-        html = {'license': 'home/snippets/hdx_licenses.html',
-                'terms': 'home/snippets/hdx_terms_of_service.html'}
+        html = {'license': config.get('hdx.wordpress.post.licenses'),
+                'terms': config.get('hdx.wordpress.post.terms')}
 
         titleItem = title.get(page)
-        htmlItem = html.get(page)
+        htmlItem = fw.get_post(html.get(page))
 
         if titleItem is None:
             abort(404, _("The requested about page doesn't exist"))
