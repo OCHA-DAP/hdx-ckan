@@ -1,18 +1,18 @@
 import exceptions as exceptions
 import json
 import logging
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckan.lib.mailer as mailer
+import pylons.config as config
 import pylons.configuration as configuration
 import requests
-import pylons.config as config
-from ckanext.hdx_theme.helpers.faq_data import faq_data
-from ckanext.hdx_theme.util.mail import simple_validate_email
 
 import ckan.lib.base as base
+import ckan.lib.mailer as mailer
 import ckan.logic as logic
+import ckanext.hdx_theme.helpers.faq_wordpress as fw
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from ckan.common import _, c, request, response
 from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_theme.util.mail import simple_validate_email
 
 log = logging.getLogger(__name__)
 get_action = logic.get_action
@@ -21,30 +21,16 @@ CaptchaNotValid = _('Captcha is not valid')
 FaqSuccess = json.dumps({'success': True})
 FaqCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
 
-for section in faq_data:
-    s_id = ''.join(i if i.isalnum() else '_' for i in section['title'])
-    s_id = 'faq-{}'.format(s_id)
-    section['id'] = s_id
-    for question in section['questions']:
-        try:
-            q_id = ''.join(i if i.isalnum() else '_' for i in question['q'])
-            question['id'] = q_id
-        except Exception, ex:
-            log.error(ex)
-
-topics = {}
-for f in faq_data:
-    topics[f.get('id')] = f.get('title')
-
-
 class FaqController(base.BaseController):
     def show(self):
         fullname = c.userobj.display_name if c.userobj and c.userobj.display_name is not None else ''
         email = c.userobj.email if c.userobj and c.userobj.email is not None else ''
+        wp_category_faq = config.get('hdx.wordpress.category.faq')
+        data = fw.faq_for_category(wp_category_faq)
         template_data = {
             'data': {
-                'faq_data': faq_data,
-                'topics': topics,
+                'faq_data': data['faq_data'],
+                'topics': data['topics'],
                 'fullname': fullname,
                 'email': email,
             },

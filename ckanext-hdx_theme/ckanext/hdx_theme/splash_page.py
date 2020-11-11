@@ -4,6 +4,7 @@ from rdflib.namespace import Namespace
 
 import ckan.lib.base as base
 import ckan.logic as logic
+import ckanext.hdx_theme.helpers.faq_wordpress as fw
 from ckan.common import config
 from ckan.controllers.home import HomeController
 from ckan.lib.base import _
@@ -121,8 +122,8 @@ class SplashPageController(HomeController):
 
     def about(self, page):
         title = {
-            'license': _('Data Licenses'),
-            'terms': _('Terms of Service'),
+            'license': config.get('hdx.wordpress.post.licenses'),
+            'terms': config.get('hdx.wordpress.post.terms'),
             'hdx-qa-process': _('HDX QA Process')
         }
         html = {

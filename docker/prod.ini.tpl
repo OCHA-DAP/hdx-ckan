@@ -133,6 +133,15 @@ hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 # COD
 hdx.cod.new_filters.enabled = false
 
+# FAQ - Wordpress
+hdx.wordpress.url=
+hdx.wordpress.auth.basic=
+hdx.wordpress.category.faq=
+hdx.wordpress.category.covid
+hdx.wordpress.category.devs=
+hdx.wordpress.post.licenses=
+hdx.wordpress.post.terms=
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer
