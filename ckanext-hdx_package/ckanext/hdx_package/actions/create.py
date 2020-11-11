@@ -5,6 +5,7 @@ Created on Jul 07, 2015
 '''
 
 import logging
+import six
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.geopreview as geopreview
@@ -138,11 +139,13 @@ def package_create(context, data_dict):
     :param owner_org: the id of the dataset's owning organization, see
         :py:func:`~ckan.logic.action.get.organization_list` or
         :py:func:`~ckan.logic.action.get.organization_list_for_user` for
-        available values (optional)
+        available values. This parameter can be made optional if the config
+        option :ref:`ckan.auth.create_unowned_dataset` is set to ``True``.
     :type owner_org: string
 
     :returns: the newly created dataset (unless 'return_id_only' is set to True
-              in the context, in which case just the dataset id will be returned)
+              in the context, in which case just the dataset id will
+              be returned)
     :rtype: dictionary
 
     '''
@@ -150,6 +153,7 @@ def package_create(context, data_dict):
     process_batch_mode(context, data_dict)
 
     model = context['model']
+    session = context['session']
     user = context['user']
 
     if 'type' not in data_dict:
@@ -164,7 +168,6 @@ def package_create(context, data_dict):
         data_dict['type'] = package_type
     else:
         package_plugin = lib_plugins.lookup_package_plugin(data_dict['type'])
-
 
     if 'schema' in context:
         schema = context['schema']
@@ -209,15 +212,9 @@ def package_create(context, data_dict):
         model.Session.rollback()
         raise logic.ValidationError(errors)
 
-    rev = model.repo.new_revision()
-    rev.author = user
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Create object %s') % data.get("name")
-
     if user:
-        user_obj = model.User.by_name(user.decode('utf8'))
+
+        user_obj = model.User.by_name(six.ensure_text(user))
         if user_obj:
             data['creator_user_id'] = user_obj.id
 
@@ -235,11 +232,9 @@ def package_create(context, data_dict):
         for index, resource in enumerate(data['resources']):
             resource['id'] = pkg.resources[index].id
 
-
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
     context_org_update['defer_commit'] = True
-    context_org_update['add_revision'] = False
     _get_action('package_owner_org_update')(context_org_update,
                                             {'id': pkg.id,
                                              'organization_id': pkg.owner_org})
@@ -260,21 +255,28 @@ def package_create(context, data_dict):
              'ignore_auth': True},
             {'package': data})
 
+    # Create activity
+    if not pkg.private:
+        user_obj = model.User.by_name(user)
+        if user_obj:
+            user_id = user_obj.id
+        else:
+            user_id = 'not logged in'
+
+        activity = pkg.activity_stream_item('new', user_id)
+        session.add(activity)
+
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    # need to let rest api create
-    context["package"] = pkg
-    # this is added so that the rest controller can make a new location
-    context["id"] = pkg.id
-    log.debug('Created object %s' % pkg.name)
-
     return_id_only = context.get('return_id_only', False)
 
-    output = context['id'] if return_id_only \
-        else _get_action('package_show')(context, {'id': context['id']})
+    if return_id_only:
+        return pkg.id
 
-    return output
+    return _get_action('package_show')(
+        context.copy(), {'id': pkg.id}
+    )
 
 
 def hdx_create_screenshot_for_cod(context, data_dict):
