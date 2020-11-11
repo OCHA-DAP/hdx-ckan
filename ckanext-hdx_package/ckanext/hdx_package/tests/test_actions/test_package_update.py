@@ -193,7 +193,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            # 'dataset_source': 'Modified source',
                            'last_metadata_update_date': 'last_metadata_update_date test',
                            'last_data_update_date': 'last_data_update_date test',
-                           'dataset_date': '[2014-11-02 TO 2014-11-20]',
+                           'dataset_date': '[2014-11-02T00:00:00 TO 2014-11-20T00:00:00]',
                            # 'dataset_source_code': 'dataset_source_code test',
                            'indicator_type': 'indicator_type test',
                            'indicator_type_code': 'indicator_type_code test',

@@ -355,10 +355,10 @@ class ContributeFlowController(base.BaseController):
     #         data_dict['dataset_source'] = source
 
     def process_dataset_date(self, data_dict):
-        if 'dataset_date' in data_dict:
-            date_range1 = data_dict.get('dataset_date')
-            data_dict['dataset_date'] = '[{date_range1} TO {date_range1}]'.format(date_range1=date_range1)
-        elif 'date_range1' in data_dict or 'date_range2' in data_dict:
+        # if 'dataset_date' in data_dict:
+        #     # date_range1 = data_dict.get('dataset_date')
+        #     data_dict['dataset_date'] = '[{date_range1} TO {date_range1}]'.format(date_range1=date_range1)
+        if 'date_range1' in data_dict or 'date_range2' in data_dict:
             data_dict['dataset_date'] = '[{date_range1} TO {date_range2}]'.format(
                 date_range1=data_dict.get('date_range1', '*'), date_range2=data_dict.get('date_range2', '*'))
 
