@@ -234,6 +234,16 @@ def methodology_bk_compat(meth, other, render=True):
             return ("Other", meth[0])
 
 
+def _hdx_strftime(_date):
+    result = None
+    try:
+        result = _date.strftime('%B %d, %Y')
+    except ValueError, e:
+        month = datetime.date(1900, _date.month, 1).strftime('%B')
+        result = month + " " + str(_date.day) + ", " + str(_date.year)
+    return result
+
+
 def render_date_from_concat_str(_str, separator='-'):
     result = ''
     if _str:
@@ -243,7 +253,8 @@ def render_date_from_concat_str(_str, separator='-'):
             for date in dates_list:
                 if '*' not in date:
                     _date = datetime.datetime.strptime(date.split('T')[0], "%Y-%m-%d")
-                    res_list.append(_date.strftime('%B %d, %Y'))
+                    res_list.append(_hdx_strftime(_date))
+                    # _date.strftime('%B %d, %Y'))
                 else:
                     res_list.append(datetime.datetime.today().strftime('%B %d, %Y'))
             result = '-'.join(res_list)
