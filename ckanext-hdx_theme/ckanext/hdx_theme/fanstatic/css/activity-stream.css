@@ -16,13 +16,13 @@
 	  list-style-type: none;
 	  background: none;
 	}
-	
+
 	.activity .item {
 	    margin: 0 0 0px;
 	    padding: 0;
 	    position: relative;
 	}
-	
+
 	.activity .item p {
 	    font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 400;
@@ -41,13 +41,13 @@
 	    opacity: 1;
 	    white-space: nowrap;
 	}
-	
-	.dsb-activity-item{
+
+	.activity .item p{
 	    margin-bottom: 25px;
         word-wrap: break-word;
     	}
-	
-	div.dsb-activity-item p span.actor a, div.dsb-activity-item p span.actor a:hover, div.dsb-activity-item p span.actor a:focus {
+
+	.activity .item p span.actor a, .activity .item p span.actor a:hover, .activity .item p span.actor a:focus {
 		font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 700;
 	    font-size: 14px;
@@ -56,8 +56,8 @@
 	    opacity: 1;
 	    text-decoration: none;
 	}
-	
-	div.dsb-activity-item p a, div.dsb-activity-item p a:hover, div.dsb-activity-item p a:focus {
+
+	.activity .item p a, .activity .item p a:hover, .activity .item p a:focus {
 		font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 700;
 	    font-size: 14px;
@@ -66,17 +66,18 @@
 	    opacity: 1;
 	    text-decoration: none;
 	}
-	
-	.activity .item .actor .gravatar {
+
+	.activity .item .actor .gravatar, .activity .item .actor .user-image {
 	    left: 0px;
 	    position: absolute;
 	    top: 5px;
+      border-radius: 100px;
 	}
 	.more{
 	    float: right;
 	    margin-top: -30px;
 	}
-	
+
 	.wrapper-secondary h2 {
 	    font-family: 'Gotham-Book', sans-serif;
 	    font-weight: 400;

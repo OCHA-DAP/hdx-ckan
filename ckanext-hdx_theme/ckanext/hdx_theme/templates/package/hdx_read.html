@@ -149,7 +149,7 @@
     </div>
   <div>
         <h2 class="uppercase">{{_('Activity')}}</h2>
-     {% snippet "package/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     {% snippet 'package/snippets/activity_stream.html', activity_stream=c.hdx_activities, id=pkg.id, object_type='package' %}
      <br>
     {% if h.follow_status('dataset', pkg.name) %}
       <span class="more">See more in <a href="{{ h.url_for('user_dashboard') }}">your dashboard</a></span>
