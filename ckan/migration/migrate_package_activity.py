@@ -73,9 +73,31 @@ def num_activities_migratable():
     return num_activities
 
 
+def _get_dataset_names():
+    from ckan import model
+    dataset_names = model.Session.execute(u'''
+        SELECT name FROM package p
+        WHERE p.type = 'dataset' AND p.state = 'active'
+        ''').fetchall()
+    return [d[0] for d in dataset_names]
+
+
+def _create_package_idx_on_resoure_revision():
+    from ckan import model
+    print('Creating package_id index on resource_revision table')
+    result = model.Session.execute(u'''
+            CREATE INDEX IF NOT EXISTS migration_idx_package_id
+            ON public.resource_revision USING btree
+            (package_id ASC NULLS LAST)
+            TABLESPACE pg_default;
+            ''')
+    print('Finished creating index')
+
 def migrate_all_datasets():
     import ckan.logic as logic
-    dataset_names = logic.get_action(u'package_list')(get_context(), {})
+    # dataset_names = logic.get_action(u'package_list')(get_context(), {})
+    _create_package_idx_on_resoure_revision()
+    dataset_names = _get_dataset_names()
     num_datasets = len(dataset_names)
     errors = defaultdict(int)
     with PackageDictizeMonkeyPatch():
