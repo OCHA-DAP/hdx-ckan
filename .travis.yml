@@ -22,17 +22,21 @@ script:
   - sleep 10
   - docker-compose restart ckan
   - docker-compose exec ckan pip install -r /srv/ckan/dev-requirements-py2.txt
-  - docker-compose exec ckan python setup.py develop
-  - docker-compose exec ckan hdxckantool plugins dev
+#  - docker-compose exec ckan python setup.py develop
+#  - docker-compose exec ckan hdxckantool plugins dev
   - docker-compose exec ckan hdxckantool pgpass
   - docker-compose exec ckan psql -h dbckan -U ckan -c "create database datastore owner ckan;"
   - docker-compose exec ckan psql -h dbckan -U ckan -c "create role datastore with login;"
   - docker-compose exec ckan psql -h dbckan -U ckan -c "alter role datastore with password 'datastore';"
   - docker-compose exec ckan hdxckantool db set-perms
-  - docker-compose exec ckan paster db upgrade -c /etc/ckan/prod.ini
+#  - docker-compose exec ckan paster db upgrade -c /etc/ckan/prod.ini
+  - docker-compose exec ckan ckan -c /etc/ckan/prod.ini db init
   - docker-compose exec ckan hdxckantool feature
   - docker-compose exec ckan hdxckantool less compile
   - docker-compose exec ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
   - docker-compose exec ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
-  - docker-compose exec ckan hdxckantool test
-  - docker-compose exec ckan coveralls
+  - docker-compose exec ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_search/ckanext/hdx_search/tests"
+  - docker-compose exec ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_users/ckanext/hdx_users/tests"
+  - docker-compose exec ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_theme/ckanext/hdx_theme/tests"
+#  - docker-compose exec ckan hdxckantool test
+#  - docker-compose exec ckan coveralls
