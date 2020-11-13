@@ -26,6 +26,10 @@ class HdxSolrReindexer(object):
         self.query_for = query_for
         self.text_traceback = text_traceback
 
+        # dealing with multi-process sqlAlchemy connections
+        # https://docs.sqlalchemy.org/en/13/faq/connections.html#commands-out-of-sync-you-can-t-run-this-command-now-this-result-object-does-not-return-rows-it-has-been-closed-automatically
+        model.meta.engine.dispose()
+
     def rebuild(self,
                 package_id=None, only_missing=False, force=False, refresh=False,
                 defer_commit=False, package_ids=None, quiet=False):
