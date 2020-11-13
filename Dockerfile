@@ -56,13 +56,11 @@ RUN apt-get -qq -y update && \
     apt-get -qq -y install nodejs && \
     npm install -g less && \
     apt-get -qq -y install python-pip && \
-    pip install --upgrade pip && \
+    python -m pip install --upgrade pip && \
     pip -q install --upgrade \
         gevent \
         gunicorn \
-        lxml \
-        pip \
-        setuptools==36.1 && \
+        lxml && \
     mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
     cp -a docker/run_ckan /etc/services.d/ckan/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
@@ -70,16 +68,16 @@ RUN apt-get -qq -y update && \
     chmod +x /srv/hdxckantool.py && \
     ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
-    python setup.py develop && \
-    pip install -r requirements-py2.txt && \
+    pip install -r requirement-setuptools.txt && \
+    pip -q install --upgrade -r requirements-py2.txt && \
     pip install newrelic==5.12.1.141 && \
-    hdxckantool plugins dev && \
+    chmod +x setup_py_helper.sh && \
+    ./setup_py_helper.sh && \
     # curl https://codeload.github.com/okfn/ckanext-s3filestore/tar.gz/v0.1.1 -o s3f.tgz && \
     # tar xvzf s3f.tgz && \
     # rm -f s3f.tgz && \
     # cd ckanext-s3filestore-0.1.1 && \
     # python setup.py develop && \
-    pip -q install --upgrade -r requirements-py2.txt && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     pip install \
