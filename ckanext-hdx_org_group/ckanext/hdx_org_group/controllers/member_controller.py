@@ -322,7 +322,7 @@ class HDXOrgMemberController(org.OrganizationController):
         return True
 
     def _send_membership_confirmation(self, org_display_name, org_id, role, user_info):
-        subject = u'Confirmation of membership'
+        subject = u'Confirmation of HDX organisation membership'
         email_data = {
             'user_fullname': user_info.display_name or user_info.fullname,
             'org_name': org_display_name,
@@ -341,7 +341,7 @@ class HDXOrgMemberController(org.OrganizationController):
             admins.append(hdx_h.hdx_get_user_info(admin_id))
         admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('email')} for admin in
                              admins if admin['email']]
-        subject = u'New ' + role + ' added to organization ' + org_display_name
+        subject = u'New ' + role + ' added to HDX organisation ' + org_display_name
         email_data = {
             'user_fullname': user_info.display_name or user_info.fullname,
             'user_username': user_info.name,
@@ -422,7 +422,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('display_name')} for
                                      admin in admins if admin['email']]
                 user_display_name = usr_obj.display_name or usr_obj.fullname
-                subject = u'Organization ' + org_obj.display_name + ' membership removal'
+                subject = u'HDX Organisation ' + org_obj.display_name + ' membership removal'
                 email_data = {
                     'user_fullname': user_display_name,
                     'user_username': usr_obj.name,
