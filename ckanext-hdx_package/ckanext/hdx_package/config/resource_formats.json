@@ -58,7 +58,6 @@
   ["Stata Data File","Stata data file","application/x-stata-dta",[".dta","dta"]],
   ["Stata DO File","Stata do file (labeling file)","application/x-stata-do",[".do","do"]],
   ["SVG","SVG vector image","image/svg+xml",[".svg"]],
-  ["TIFF","TIFF Image File","image/tiff",[]],
   ["TopoJSON","A format for geographic vector data",null,[".topojson"]],
   ["TSV","Tab Separated Values File","text/tsv",[".tsv"]],
   ["TXT","Text File","text/plain",["text",".txt"]],
