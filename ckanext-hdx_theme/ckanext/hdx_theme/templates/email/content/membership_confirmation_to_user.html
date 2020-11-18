@@ -1,0 +1,12 @@
+<p>Dear {{ data.user_fullname }},
+
+<p>Your account has been assigned the role of
+  {% if data.capacity == 'admin' %} <strong>administrator</strong>: add, edit, and delete datasets, and manage organisation membership
+  {% elif data.capacity == 'editor' %} <strong>editor</strong>: add, edit, and delete datasets
+  {% elif data.capacity == 'member'  %} <strong>member</strong>: view all of an organisation's datasets (including private datasets)
+  {% endif %}
+ for organization {{ data.org_name }}
+</p>
+
+<p>If you feel that this is an error, or if you require any additional assistance, please reply to this email.</p>
+

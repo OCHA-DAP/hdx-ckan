@@ -13,6 +13,7 @@ import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 import ckanext.hdx_org_group.helpers.analytics as analytics
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckanext.hdx_theme.util.mail as mailutil
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 import ckan.controllers.organization as org
 import ckan.lib.base as base
@@ -202,11 +203,12 @@ class HDXOrgMemberController(org.OrganizationController):
                     c.group_dict = self._action('group_member_create')(context, data_dict)
 
                     user_obj = model.User.get(data_dict['username'])
-                    display_name = user_obj.display_name or user_obj.name
+                    # display_name = user_obj.display_name or user_obj.name
 
                     org_obj = model.Group.get(id)
-                    self.notify_admin_users(org_obj, None if invited else [display_name],
-                                            [email] if invited else None, data_dict['role'])
+                    # self.notify_admin_users(org_obj, None if invited else [display_name],
+                    #                         [email] if invited else None, data_dict['role'])
+                    self._send_membership_confirmation(org_obj.display_name, org_obj.id, data_dict['role'], user_obj)
 
                     h.flash_success(flash_message)
                     org_obj = model.Group.get(id)
@@ -235,6 +237,7 @@ class HDXOrgMemberController(org.OrganizationController):
             emails = req_dict.get('emails', '').strip()
             new_members = []
             invited_members = []
+            org_obj = model.Group.get(id)
             if emails and role:
                 for email in emails.split(','):
                     context = self._get_context()
@@ -242,11 +245,11 @@ class HDXOrgMemberController(org.OrganizationController):
                     try:
                         if email:
                             # Check if email is used
-                            user_dict = self._get_user_obj(email)
-                            if user_dict:
-                                added = self._add_existing_user_as_member(context, id, role, user_dict)
+                            _user_obj = self._get_user_obj(email)
+                            if _user_obj:
+                                added = self._add_existing_user_as_member(context, id, role, _user_obj, org_obj.display_name)
                                 if added:
-                                    new_members.append(user_dict.display_name)
+                                    new_members.append(_user_obj)
                             else:
                                 user_data_dict = {
                                     'email': email,
@@ -261,20 +264,20 @@ class HDXOrgMemberController(org.OrganizationController):
                     except tk.Invalid as e:
                         h.flash_error(_('Invalid email address or unknown username provided: ') + email)
 
-                if new_members:
-                    new_members_msg = _(' were added to the organization.') if len(new_members) != 1 else _(
-                        ' was added to the organization.')
-                    h.flash_success(', '.join(new_members) + new_members_msg)
+                # if new_members:
+                #     new_members_msg = _(' were added to the organization.') if len(new_members) != 1 else _(
+                #         ' was added to the organization.')
+                #     h.flash_success(', '.join([m.display_name for m in new_members]) + new_members_msg)
+                #
+                # if invited_members:
+                #     invited_members_msg = _(
+                #         ' were invited to join the organization. An account was created for them.') if len(
+                #         invited_members) != 1 else _(
+                #         ' was invited to join the organization. An account was created for her/him.')
+                #     h.flash_success(', '.join(invited_members) + invited_members_msg)
 
-                if invited_members:
-                    invited_members_msg = _(
-                        ' were invited to join the organization. An account was created for them.') if len(
-                        invited_members) != 1 else _(
-                        ' was invited to join the organization. An account was created for her/him.')
-                    h.flash_success(', '.join(invited_members) + invited_members_msg)
 
-                org_obj = model.Group.get(id)
-                self.notify_admin_users(org_obj, new_members, invited_members, role)
+                # self.notify_admin_users(org_obj, new_members, invited_members, role)
                 self._send_analytics_info(org_obj, new_members, invited_members)
             else:
                 h.flash_error(_('''No user or role was specified'''))
@@ -301,7 +304,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 raise
         return userobj
 
-    def _add_existing_user_as_member(self, context, org_id, role, user_info):
+    def _add_existing_user_as_member(self, context, org_id, role, user_info, org_display_name):
         email = user_info.email
         # Is user deleted?
         if user_info.state == 'deleted':
@@ -314,7 +317,40 @@ class HDXOrgMemberController(org.OrganizationController):
             'role': role
         }
         self._action('group_member_create')(context, user_data_dict)
+
+        self._send_membership_confirmation(org_display_name, org_id, role, user_info)
         return True
+
+    def _send_membership_confirmation(self, org_display_name, org_id, role, user_info):
+        subject = u'Confirmation of membership'
+        email_data = {
+            'user_fullname': user_info.display_name or user_info.fullname,
+            'org_name': org_display_name,
+            'capacity': role,
+        }
+        hdx_mailer.mail_recipient(
+            [{'display_name': user_info.display_name or user_info.fullname, 'email': user_info.email}], subject,
+            email_data, footer=user_info.email,
+            snippet='email/content/membership_confirmation_to_user.html')
+        context = self._get_context()
+        org_admins = self._action('member_list')(context, {'id': org_id, 'capacity': 'admin',
+                                                           'object_type': 'user'})
+        admins = []
+        for admin_tuple in org_admins:
+            admin_id = admin_tuple[0]
+            admins.append(hdx_h.hdx_get_user_info(admin_id))
+        admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('email')} for admin in
+                             admins if admin['email']]
+        subject = u'New ' + role + ' added to organization ' + org_display_name
+        email_data = {
+            'user_fullname': user_info.display_name or user_info.fullname,
+            'user_username': user_info.name,
+            'org_name': org_display_name,
+            'capacity': role,
+        }
+        hdx_mailer.mail_recipient(admins_with_email, subject,
+                                  email_data,
+                                  snippet='email/content/membership_confirmation_to_admins.html')
 
     def _send_analytics_info(self, org_obj, new_members, invited_members):
         for i in xrange(0, len(new_members) + len(invited_members)):
@@ -376,6 +412,29 @@ class HDXOrgMemberController(org.OrganizationController):
 
                 org_obj = model.Group.get(id)
                 analytics.RemoveMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
+                usr_obj = model.User.get(user_id)
+                org_admins = self._action('member_list')(context, {'id': org_obj.id, 'capacity': 'admin',
+                                                                   'object_type': 'user'})
+                admins = []
+                for admin_tuple in org_admins:
+                    admin_id = admin_tuple[0]
+                    admins.append(hdx_h.hdx_get_user_info(admin_id))
+                admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('display_name')} for
+                                     admin in admins if admin['email']]
+                user_display_name = usr_obj.display_name or usr_obj.fullname
+                subject = u'Organization ' + org_obj.display_name + ' membership removal'
+                email_data = {
+                    'user_fullname': user_display_name,
+                    'user_username': usr_obj.name,
+                    'org_name': org_obj.display_name,
+                }
+                hdx_mailer.mail_recipient(admins_with_email, subject,
+                                          email_data,
+                                          snippet='email/content/membership_removal_to_admins.html')
+
+                hdx_mailer.mail_recipient([{'display_name': user_display_name, 'email': usr_obj.email}], subject,
+                                          email_data,
+                                          snippet='email/content/membership_removal_to_user.html')
 
                 self._redirect_to_this_controller(action='members', id=id)
             c.user_dict = self._action('user_show')(context, {'id': user_id})

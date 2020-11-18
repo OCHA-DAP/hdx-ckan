@@ -7,12 +7,11 @@ import pylons.config as config
 
 class CountController(base.BaseController):
 
-
     def _get_count(self, table, type, extra):
         isPrivate=''
         extraQ=''
         if type == 'dataset':
-            isPrivate=' and private = FALSE';
+            isPrivate=' and private = FALSE'
 
         if extra:
             extraQ = "where state='active' and type='{type}' {isPrivate}".format(type=type, isPrivate=isPrivate)
@@ -22,7 +21,17 @@ class CountController(base.BaseController):
         return result
 
     def dataset(self):
-        return json.dumps({'count': self._get_count('package', 'dataset', True)})
+        q = sqlalchemy.text('''
+        select
+            (select count(*) from package p
+                where p.type = 'dataset' and p.state = 'active' and p.private = FALSE)
+            -(select count(*) from package p
+                left outer join package_extra pe on pe.package_id = p.id
+                where pe.key = 'archived' and pe.state = 'active' and pe.value = 'true'
+                    and p.type = 'dataset' and p.state = 'active' and p.private = FALSE)
+        ''')
+        result = model.Session.connection().execute(q).scalar()
+        return json.dumps({'count': result})
 
     def country(self):
         return json.dumps({'count': self._get_count('"group"', 'group', True)})
