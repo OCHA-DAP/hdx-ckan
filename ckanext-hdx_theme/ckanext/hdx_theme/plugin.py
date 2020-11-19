@@ -278,6 +278,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
             'hdx_switch_url_path': hdx_helpers.switch_url_path,
             'hdx_munge_title': hdx_helpers.hdx_munge_title,
+            'hdx_url_for': hdx_helpers.hdx_url_for,
             'HDX_CONST': const
         }
 

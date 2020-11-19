@@ -753,3 +753,15 @@ def hdx_switch_url_path():
 
 def hdx_munge_title(title):
     return munge.munge_title_to_name(title)
+
+
+def hdx_url_for(*args, **kw):
+    '''
+    Removes the '/' at the end of an URL returned by the core CKAN url_for() helper.
+    It appears when url_for() thinks it can return a flask route. But if it's a pylons
+    controller that needs to render the page the '/' gets in the way.
+    '''
+    url = tk.url_for(*args, **kw)
+    if url and url.endswith('/'):
+        url = url[:-1]
+    return url
