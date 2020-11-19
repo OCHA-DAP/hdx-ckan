@@ -2,10 +2,10 @@
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the ckan project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
-# 
+#
 # Translators:
 # Adrià Mercader <adria.mercader@okfn.org>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -911,7 +911,7 @@ msgstr "Bad request data: %s"
 #: ckan/views/group.py:929 ckan/views/group.py:950 ckan/views/group.py:969
 #: ckan/views/group.py:1029 ckan/views/group.py:1099
 msgid "Group not found"
-msgstr "Group not found"
+msgstr "Location not found"
 
 #: ckan/controllers/feed.py:247 ckan/logic/action/create.py:1468
 #: ckan/views/feed.py:223
@@ -920,7 +920,7 @@ msgstr "Organisation not found"
 
 #: ckan/controllers/group.py:131 ckan/controllers/group.py:593
 msgid "Incorrect group type"
-msgstr "Incorrect group type"
+msgstr "Incorrect location type"
 
 #: ckan/controllers/group.py:317 ckan/controllers/home.py:61
 #: ckan/controllers/package.py:256 ckan/lib/helpers.py:1249
@@ -950,7 +950,7 @@ msgstr "Organisations"
 #: ckan/tests/config/test_middleware.py:120 ckan/views/dataset.py:285
 #: ckan/views/group.py:305 ckan/views/home.py:50
 msgid "Groups"
-msgstr "Groups"
+msgstr "Locations"
 
 #: ckan/controllers/group.py:319 ckan/controllers/home.py:63
 #: ckan/controllers/package.py:258 ckan/lib/helpers.py:1251
@@ -993,7 +993,7 @@ msgstr "Not authorised to perform bulk update"
 #: ckan/controllers/group.py:473 ckan/views/group.py:838
 #: ckan/views/group.py:927
 msgid "Unauthorized to create a group"
-msgstr "Unauthorised to create a group"
+msgstr "Unauthorised to create a location"
 
 #: ckan/controllers/group.py:551 ckan/controllers/group.py:581
 #: ckan/controllers/package.py:947 ckan/controllers/package.py:995
@@ -1014,7 +1014,7 @@ msgstr "User %r not authorised to edit %s authorisations"
 #: ckan/views/group.py:1010 ckan/views/group.py:1027
 #, python-format
 msgid "Unauthorized to delete group %s"
-msgstr "Unauthorised to delete group %s"
+msgstr "Unauthorised to delete location %s"
 
 #: ckan/controllers/group.py:633 ckan/views/group.py:1019
 msgid "Organization has been deleted."
@@ -1022,7 +1022,7 @@ msgstr "Organisation has been deleted."
 
 #: ckan/controllers/group.py:635 ckan/views/group.py:1021
 msgid "Group has been deleted."
-msgstr "Group has been deleted."
+msgstr "Location has been deleted."
 
 #: ckan/controllers/group.py:637 ckan/views/group.py:1024
 #, python-format
@@ -1042,17 +1042,17 @@ msgstr ""
 #: ckan/controllers/group.py:724 ckan/views/group.py:1097
 #, python-format
 msgid "Unauthorized to add member to group %s"
-msgstr "Unauthorised to add member to group %s"
+msgstr "Unauthorised to add member to location %s"
 
 #: ckan/controllers/group.py:743 ckan/controllers/group.py:756
 #: ckan/views/group.py:567 ckan/views/group.py:588
 #, python-format
 msgid "Unauthorized to delete group %s members"
-msgstr "Unauthorised to delete group %s members"
+msgstr "Unauthorised to delete location %s members"
 
 #: ckan/controllers/group.py:750 ckan/views/group.py:576
 msgid "Group member has been deleted."
-msgstr "Group member has been deleted."
+msgstr "Location member has been deleted."
 
 #: ckan/controllers/group.py:774 ckan/controllers/package.py:435
 msgid "Select two revisions before doing the comparison."
@@ -1060,11 +1060,11 @@ msgstr "Select two revisions before doing the comparison."
 
 #: ckan/controllers/group.py:798
 msgid "CKAN Group Revision History"
-msgstr "CKAN Group Revision History"
+msgstr "CKAN Location Revision History"
 
 #: ckan/controllers/group.py:802
 msgid "Recent changes to CKAN Group: "
-msgstr "Recent changes to CKAN Group: "
+msgstr "Recent changes to CKAN Location: "
 
 #: ckan/controllers/group.py:823 ckan/controllers/package.py:486
 msgid "Log message: "
@@ -1520,7 +1520,7 @@ msgstr "organisation"
 
 #: ckan/lib/mailer.py:151 ckan/templates/home/snippets/stats.html:23
 msgid "group"
-msgstr "group"
+msgstr "location"
 
 #: ckan/lib/navl/dictization_functions.py:13
 #: ckan/lib/navl/dictization_functions.py:16
@@ -1599,7 +1599,7 @@ msgstr "Must be a natural number"
 
 #: ckan/logic/validators.py:127
 msgid "Must be a postive integer"
-msgstr "Must be a postive integer"
+msgstr "Must be a positive integer"
 
 #: ckan/logic/validators.py:154
 msgid "Date format incorrect"
@@ -1619,7 +1619,7 @@ msgstr "Resource"
 
 #: ckan/logic/validators.py:278
 msgid "That group name or ID does not exist."
-msgstr "That group name or ID does not exist."
+msgstr "That location name or ID does not exist."
 
 #: ckan/logic/validators.py:292
 msgid "Activity type"
@@ -1677,7 +1677,7 @@ msgstr "Duplicate key \"%s\""
 
 #: ckan/logic/validators.py:434
 msgid "Group name already exists in database"
-msgstr "Group name already exists in database"
+msgstr "Location name already exists in database"
 
 #: ckan/logic/validators.py:440
 #, python-format
@@ -2029,7 +2029,7 @@ msgstr "Not authorised to create users"
 
 #: ckan/logic/auth/create.py:191
 msgid "Group was not found."
-msgstr "Group was not found."
+msgstr "Location was not found."
 
 #: ckan/logic/auth/create.py:225
 #, python-format
@@ -2895,11 +2895,11 @@ msgstr "Add a Group"
 
 #: ckan/templates/group/base_form_page.html:10
 msgid "Group Form"
-msgstr "Group Form"
+msgstr "Location Form"
 
 #: ckan/templates/group/confirm_delete.html:11
 msgid "Are you sure you want to delete group - {name}?"
-msgstr "Are you sure you want to delete group - {name}?"
+msgstr "Are you sure you want to delete location - {name}?"
 
 #: ckan/templates/group/confirm_delete_member.html:11
 #: ckan/templates/organization/confirm_delete_member.html:11
@@ -2920,7 +2920,7 @@ msgstr "Manage"
 
 #: ckan/templates/group/edit.html:12
 msgid "Edit Group"
-msgstr "Edit Group"
+msgstr "Edit Location"
 
 #: ckan/templates/group/edit_base.html:21 ckan/templates/group/members.html:3
 #: ckan/templates/organization/edit_base.html:24
@@ -2931,15 +2931,15 @@ msgstr "Members"
 #: ckan/templates/group/index.html:13
 #: ckan/templates/user/dashboard_groups.html:7
 msgid "Add Group"
-msgstr "Add Group"
+msgstr "Add Location"
 
 #: ckan/templates/group/index.html:20
 msgid "Search groups..."
-msgstr "Search groups..."
+msgstr "Search locations..."
 
 #: ckan/templates/group/index.html:29
 msgid "There are currently no groups for this site"
-msgstr "There are currently no groups for this site"
+msgstr "There are currently no locations for this site"
 
 #: ckan/templates/group/index.html:31
 #: ckan/templates/organization/index.html:31
@@ -3045,15 +3045,15 @@ msgstr ""
 #: ckan/templates/group/new.html:3 ckan/templates/group/new.html:5
 #: ckan/templates/group/new.html:7
 msgid "Create a Group"
-msgstr "Create a Group"
+msgstr "Create a Location"
 
 #: ckan/templates/group/new_group_form.html:17
 msgid "Update Group"
-msgstr "Update Group"
+msgstr "Update Location"
 
 #: ckan/templates/group/new_group_form.html:19
 msgid "Create Group"
-msgstr "Create Group"
+msgstr "Create Location"
 
 #: ckan/templates/group/read.html:19 ckan/templates/organization/read.html:25
 #: ckan/templates/snippets/search_form.html:3
@@ -3072,19 +3072,19 @@ msgstr "Name"
 
 #: ckan/templates/group/snippets/group_form.html:10
 msgid "My Group"
-msgstr "My Group"
+msgstr "My Location"
 
 #: ckan/templates/group/snippets/group_form.html:20
 msgid "A little information about my group..."
-msgstr "A little information about my group..."
+msgstr "A little information about my location..."
 
 #: ckan/templates/group/snippets/group_form.html:38
 msgid "Are you sure you want to delete this Group?"
-msgstr "Are you sure you want to delete this Group?"
+msgstr "Are you sure you want to delete this Location?"
 
 #: ckan/templates/group/snippets/group_form.html:41
 msgid "Save Group"
-msgstr "Save Group"
+msgstr "Save Location"
 
 #: ckan/templates/group/snippets/group_item.html:38
 #: ckan/templates/group/snippets/group_item.html:39
@@ -3093,11 +3093,11 @@ msgstr "View {name}"
 
 #: ckan/templates/group/snippets/group_item.html:43
 msgid "Remove dataset from this group"
-msgstr "Remove dataset from this group"
+msgstr "Remove dataset from this location"
 
 #: ckan/templates/group/snippets/helper.html:4
 msgid "What are Groups?"
-msgstr "What are Groups?"
+msgstr "What are Locations?"
 
 #: ckan/templates/group/snippets/helper.html:8
 msgid ""
@@ -3269,7 +3269,7 @@ msgstr "Clear Upload"
 
 #: ckan/templates/organization/base_form_page.html:5
 msgid "Add an Organization"
-msgstr ""
+msgstr "Add an Organisation"
 
 #: ckan/templates/organization/base_form_page.html:10
 msgid "Organization Form"
@@ -3514,15 +3514,15 @@ msgstr "Update"
 
 #: ckan/templates/package/group_list.html:14
 msgid "Associate this group with this dataset"
-msgstr "Associate this group with this dataset"
+msgstr "Associate this location with this dataset"
 
 #: ckan/templates/package/group_list.html:14
 msgid "Add to group"
-msgstr "Add to group"
+msgstr "Add to location"
 
 #: ckan/templates/package/group_list.html:23
 msgid "There are no groups associated with this dataset"
-msgstr "There are no groups associated with this dataset"
+msgstr "There are no locations associated with this dataset"
 
 #: ckan/templates/package/new_package_form.html:13
 msgid "Update Dataset"
@@ -4239,22 +4239,22 @@ msgstr "No datasets found"
 #: ckan/templates/snippets/search_result_text.html:21
 msgid "{number} group found for \"{query}\""
 msgid_plural "{number} groups found for \"{query}\""
-msgstr[0] "{number} group found for \"{query}\""
-msgstr[1] "{number} groups found for \"{query}\""
+msgstr[0] "{number} location found for \"{query}\""
+msgstr[1] "{number} locations found for \"{query}\""
 
 #: ckan/templates/snippets/search_result_text.html:22
 msgid "No groups found for \"{query}\""
-msgstr "No groups found for \"{query}\""
+msgstr "No locations found for \"{query}\""
 
 #: ckan/templates/snippets/search_result_text.html:23
 msgid "{number} group found"
 msgid_plural "{number} groups found"
-msgstr[0] "{number} group found"
-msgstr[1] "{number} groups found"
+msgstr[0] "{number} location found"
+msgstr[1] "{number} locations found"
 
 #: ckan/templates/snippets/search_result_text.html:24
 msgid "No groups found"
-msgstr "No groups found"
+msgstr "No locations found"
 
 #: ckan/templates/snippets/search_result_text.html:27
 msgid "{number} organization found for \"{query}\""
@@ -4728,7 +4728,7 @@ msgstr "My Organisations"
 #: ckan/templates/user/dashboard.html:22
 #: ckan/templates/user/dashboard_groups.html:12
 msgid "My Groups"
-msgstr "My Groups"
+msgstr "My Locations"
 
 #: ckan/templates/user/dashboard.html:39
 msgid "Activity from items that I'm following"
@@ -4748,11 +4748,11 @@ msgstr "Create one now?"
 
 #: ckan/templates/user/dashboard_groups.html:20
 msgid "You are not a member of any groups."
-msgstr "You are not a member of any groups."
+msgstr "You are not a member of any location."
 
 #: ckan/templates/user/dashboard_organizations.html:21
 msgid "You are not a member of any organizations."
-msgstr "You are not a member of any organisations."
+msgstr "You are not a member of any organisation."
 
 #: ckan/templates/user/edit.html:6 ckan/templates/user/edit_base.html:3
 #: ckan/templates/user/list.html:6 ckan/templates/user/list.html:13
@@ -4923,7 +4923,7 @@ msgstr "Why Sign Up?"
 
 #: ckan/templates/user/new.html:28
 msgid "Create datasets, groups and other exciting things"
-msgstr "Create datasets, groups and other exciting things"
+msgstr "Create datasets, locations and other exciting things"
 
 #: ckan/templates/user/new_user_form.html:5
 msgid "username"
