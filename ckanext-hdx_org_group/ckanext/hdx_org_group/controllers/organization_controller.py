@@ -296,10 +296,15 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         self._setup_template_variables(context, data, group_type=group_type)
         c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] +\
                               [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
-        c.form = render(self._group_form(group_type), extra_vars=vars)
+        form = render(self._group_form(group_type), extra_vars=vars)
 
         #  The extra_vars are needed here to send analytics information like org name and id
-        return render(self._edit_template(c.group.type), extra_vars={'data': data})
+        extra_vars = {
+            'data': data,
+            'form': form,
+            'group_type': group_type
+        }
+        return render(self._edit_template(c.group.type), extra_vars=extra_vars)
 
     # def stats(self, id, data=None, errors=None, error_summary=None):
     #     template_data = {}
