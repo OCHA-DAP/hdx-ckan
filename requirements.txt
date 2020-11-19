@@ -72,7 +72,7 @@ simplejson==3.10.0        # via -r requirements.in, pylons
 six==1.14.0               # via bleach, geomet, html5lib, isodate, pastescript, python-dateutil, pyutilib.component.core, sqlalchemy-migrate
 sparqlwrapper==1.8.5      # via rdflib
 sqlalchemy-migrate==0.11.0  # via -r requirements.in
-sqlalchemy==1.1.11        # via -r requirements.in, sqlalchemy-migrate
+sqlalchemy==1.3.0         # via -r requirements.in, sqlalchemy-migrate
 sqlparse==0.2.2           # via -r requirements.in, sqlalchemy-migrate
 tempita==0.5.2            # via pylons, sqlalchemy-migrate, weberror
 timeago==1.0.7            # via -r requirements.in
