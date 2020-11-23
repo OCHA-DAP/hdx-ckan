@@ -1,0 +1,292 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+@sectionBackgroundColor: #f2f2f2;
+@sectionBlueBackgroundColor: #f8fcfd;
+
+.qa-process {
+  @media (min-width: @cut-point-laptop-m) {
+    margin: 0 -@gutterSize;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  .hero {
+    min-height: 230px;
+    background: url(/images/qa-process/hdx-qa-process-hero.jpg);
+    background-size: cover;
+    background-position-x: 68%;
+    background-position-y: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .hero-content {
+      color: @darkGrayColor;
+      text-align: center;
+      width: 300px;
+      @media (min-width: @cut-point-tablet) {
+        width: 530px
+      }
+      line-height: 1.2;
+    }
+    .hero-title {
+      .gothamMediumFont(26px);
+    }
+    .hero-sub-title {
+      .gothamBoldFont(26px);
+    }
+    .hero-description {
+      margin-top: 30px;
+      .gothamBookFont(12px)
+    }
+  }
+
+  @introSectionMargin: 32px;
+  @introItemsMargin: 42px;
+  .qa-intro {
+    background-color: @sectionBlueBackgroundColor;
+
+    .qa-intro-content {
+      padding-bottom: 1px;
+      @media (min-width: @cut-point-tablet) {
+        display: flex;
+        flex-direction: column;
+        margin: 0 -15px;
+      }
+    }
+
+    .qa-intro-title {
+      color: @darkGrayColor;
+      .gothamMediumFont(16px);
+      margin: @introSectionMargin 0;
+      @media (min-width: @cut-point-tablet) {
+        width: 320px;
+        align-self: center;
+        text-align: center;
+        line-height: 1.6;
+      }
+    }
+    .qa-intro-list {
+      @media (min-width: @cut-point-tablet) {
+        display: flex;
+      }
+    }
+    @introItemDesktopWidth: 300px;
+    @introBarHeight: 16px;
+    .qa-intro-item {
+      margin-bottom: @introItemsMargin;
+      .sourceSansProFont(400, 14px);
+      @media (min-width: @cut-point-tablet) {
+        width: 33.33%;
+      }
+
+      .qa-intro-item-title {
+        .gothamBoldFont(14px);
+        text-transform: uppercase;
+        margin: @introSectionMargin 0;
+        @media (min-width: @cut-point-tablet) {
+          margin: @introSectionMargin 2*@introBarHeight;
+        }
+      }
+      .qa-intro-item-description {
+        @media (min-width: @cut-point-tablet) {
+          margin: 0 2*@introBarHeight;
+        }
+      }
+
+      .intro-bar {
+        height: @introBarHeight;
+        width: 84px;
+        @media (min-width: @cut-point-tablet) {
+          width: 100%;
+          height: 2*@introBarHeight;
+        }
+
+        margin: @introSectionMargin 0;
+
+        &.bar1 {
+          background-color: #caedea;
+        }
+        &.bar2 {
+          background-color: #6bded0;
+        }
+        &.bar3 {
+          background-color: #22caba;
+        }
+        @media (min-width: @cut-point-tablet) {
+          &.bar1 {
+            background-color: #caedea;
+            margin-top: 4*@introBarHeight;
+          }
+          &.bar2 {
+            margin-top: 2*@introBarHeight;
+          }
+          &.bar3 {
+            margin-top: 0;
+          }
+        }
+
+      }
+    }
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+  }
+  @arrowSize: 25px;
+  .arrow-up {
+    width: 0;
+    height: 0;
+    border-left: @arrowSize solid transparent;
+    border-right: @arrowSize solid transparent;
+    border-bottom: @arrowSize solid @sectionBackgroundColor;
+  }
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: @arrowSize solid transparent;
+    border-right: @arrowSize solid transparent;
+    border-top: @arrowSize solid @sectionBackgroundColor;
+  }
+
+  @introProcessImgWidth: 242px;
+  .qa-process-intro {
+    .sourceSansProFont(400, 18px);
+    line-height: 1;
+    text-align: center;
+
+    .qa-intro-title {
+      .gothamMediumFont(28px);
+      margin: @introSectionMargin 0;
+      color: @darkGrayColor;
+    }
+
+    .qa-intro-section-title {
+      .gothamMediumFont(18px);
+      color: @blueColor;
+      margin-top: @introSectionMargin;
+    }
+
+    .img-container {
+      padding: @introItemsMargin 0;
+      img {
+        max-width: @introProcessImgWidth;
+      }
+    }
+  }
+
+  .qa-process-steps {
+    background-color: @sectionBackgroundColor;
+    padding-bottom: @introItemsMargin;
+
+    @media (min-width: @cut-point-tablet) {
+      padding-top: @introItemsMargin;
+
+      .qa-process-step-column {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .qa-process-title, .qa-process-description {
+          width: 60%;
+        }
+      }
+    }
+
+
+    .qa-process-step {
+      display: flex;
+      flex-direction: column-reverse;
+
+      @media (min-width: @cut-point-tablet) {
+        flex-direction: row;
+
+        &.qa-process-inverted-step {
+          flex-direction: row-reverse;
+        }
+
+        ~ .qa-process-step {
+          margin-top: @introItemsMargin;
+        }
+      }
+
+      .sourceSansProFont(400, 14px);
+
+      .qa-process-image {
+        margin: @introItemsMargin 0;
+        text-align: center;
+        img {
+          max-width: @introProcessImgWidth;
+        }
+      }
+
+      .qa-process-title {
+        .gothamMediumFont(18px);
+        color: @blueColor;
+        margin-bottom: @introSectionMargin;
+      }
+    }
+  }
+
+  .qa-doc-section {
+    background-color: @sectionBackgroundColor;
+    margin: @introItemsMargin 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .qa-doc-section-title {
+      color: @darkGrayColor;
+      .gothamMediumFont(18px);
+      text-align: center;
+      margin: @introItemsMargin 0;
+    }
+    @media (min-width: @cut-point-tablet) {
+      .qa-doc-list {
+        display: flex;
+        flex-direction: row;
+      }
+
+    }
+
+    .qa-doc-item {
+      background-color: @whiteColor;
+      max-width: 300px;
+      margin: 0 @introItemsMargin/2 @introItemsMargin;
+      padding: @introSectionMargin;
+
+      img {
+        height: @introItemsMargin;
+      }
+      .qa-doc-title {
+        color: @blueColor;
+        .sourceSansProFont(400, 18px);
+        margin: @introSectionMargin 0;
+      }
+      .qa-doc-description {
+        color: @grayColor;
+        .sourceSansProFont(400, 13px);
+      }
+    }
+  }
+
+  .qa-learn {
+    color: @darkGrayColor;
+    text-align: center;
+    padding-bottom: @introSectionMargin;
+
+    .qa-learn-title {
+      .gothamMediumFont(18px);
+      margin-bottom: @introSectionMargin;
+    }
+    .qa-learn-description {
+      .sourceSansProFont(400, 14px);
+    }
+  }
+}

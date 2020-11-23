@@ -3,15 +3,13 @@ from rdflib import Graph, Literal, BNode, RDF
 from rdflib.namespace import Namespace
 
 import ckan.lib.base as base
-from ckan.lib.base import request
+import ckan.logic as logic
+from ckan.common import config
+from ckan.controllers.home import HomeController
+from ckan.lib.base import _
 from ckan.lib.base import c, h
 from ckan.lib.base import model
-from ckan.lib.base import _
-import ckan.logic as logic
-
-from ckan.controllers.home import HomeController
-from ckan.common import config
-
+from ckan.lib.base import request
 
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
@@ -122,13 +120,23 @@ class SplashPageController(HomeController):
         return get_action(self._replace_group_org(action_name))
 
     def about(self, page):
-        title = {'license': _('Data Licenses'),
-                 'terms': _('Terms of Service')}
-        html = {'license': 'home/snippets/hdx_licenses.html',
-                'terms': 'home/snippets/hdx_terms_of_service.html'}
+        title = {
+            'license': _('Data Licenses'),
+            'terms': _('Terms of Service'),
+            'hdx-qa-process': _('HDX QA Process')
+        }
+        html = {
+            'license': 'home/snippets/hdx_licenses.html',
+            'terms': 'home/snippets/hdx_terms_of_service.html',
+            'hdx-qa-process': 'home/snippets/qa-process.html'
+        }
+        render = {
+            'hdx-qa-process': 'home/about2-light.html'
+        }
 
         titleItem = title.get(page)
         htmlItem = html.get(page)
+        renderItem = render.get(page, 'home/about2.html')
 
         if titleItem is None:
             abort(404, _("The requested about page doesn't exist"))
@@ -136,7 +144,7 @@ class SplashPageController(HomeController):
             # raise logic.ValidationError({'message': message}, error_summary=message)
 
         extraVars = {'title': titleItem, 'html': htmlItem, 'page': page}
-        return base.render('home/about2.html', extra_vars=extraVars)
+        return base.render(renderItem, extra_vars=extraVars)
 
     def about_hrinfo(self):
         title = {'hr_info': _('Legacy HR Info')}
