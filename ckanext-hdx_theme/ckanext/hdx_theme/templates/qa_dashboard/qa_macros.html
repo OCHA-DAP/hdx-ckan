@@ -1,4 +1,4 @@
-{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None) %}
+{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None) %}
   {# status - OK, ERROR, RUNNIG/QUEUED, None/False #}
   {# status_text - not needed in case it's still RUNNING/QUEUED #}
 
@@ -21,10 +21,15 @@
     <span class="pii-status">
       {% if link_to_log %}
         <a href="{{ link_to_log }}" target="_blank">{{ h.render_datetime(isodate_string) }}</a>
+        {% if link_to_dlp %}
+          <a href="{{ link_to_dlp }}" target="_blank">[DLP]</a>
+        {% endif %}
+        {% if link_to_debug %}
+          <a href="{{ link_to_debug }}" target="_blank">[DBG]</a>
+        {% endif %}
       {% else %}
         {{ h.render_datetime(isodate_string) }}
       {% endif %}
-
     </span>
   {% endif %}
 
