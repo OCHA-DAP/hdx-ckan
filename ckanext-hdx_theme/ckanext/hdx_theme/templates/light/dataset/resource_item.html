@@ -11,9 +11,10 @@
 {% resource 'hdx_theme/jquery.expander' %}
 {% resource 'hdx_theme/hdx_show_more.js' %}
 {% resource 'hdx_theme/resource-list' %}
+{% set in_review = res.pii_report_flag == "ERROR" %}
 
 <li>
-    <div class="resource-item">
+    <div class="resource-item {% if in_review %}in-review{% endif %}">
       {% block resource_item_title %}
       <div class="resource-item-title">
         <span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
@@ -51,7 +52,7 @@
           {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
           <div class="actions">
             {% block resource_item_explore_links %}
-              {% if h.check_access('hdx_resource_download', res) %}
+              {% if not in_review and h.check_access('hdx_resource_download', res) %}
                 <a href="{{ res.hdx_rel_url }}"
                    class="btn btn-primary btn-download hdx-btn resource-url-analytics ga-download"
                    title="{{ _('Download') }}"
@@ -63,6 +64,11 @@
                 <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                 <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
               </a>
+              {% endif %}
+              {% if in_review %}
+                <span class="btn btn-empty btn-empty-blue disabled hdx-btn">
+                  {{ _('Under Review') }}
+                </span>
               {% endif %}
             {% endblock %}
           </div>
