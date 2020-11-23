@@ -163,6 +163,45 @@
                                       <!--<li data-field-label="type of error">type of error: error</li>-->
                                     <!--</ul>-->
                                 </div>
+                                <div class="row form-section form-privacy-section">
+                                  <div class="col-xs-3">
+                                    <h3>Privacy Settings</h3>
+                                    <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
+                                  </div>
+                                  <div class="col-xs-9">
+                                    <div class="form-group required">
+                                      <label class="control-label">This dataset is</label>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
+                                          <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
+                                        </label>
+                                      </div>
+                                      <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
+                                        <p>{{ _('You are switching your dataset\'s privacy setting to "By request - ')}}<a href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.</p>
+                                      </div>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
+                                          <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                        </label>
+                                      </div>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
+                                          <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                        </label>
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-xs-12">
+                                    <hr class="form-hr"/>
+                                  </div>
+                                </div>
+
                                 <div class="row form-section form-resources-section">
                                     <div class="col-xs-3 form-explanation">
                                         <h3>{{ _('Your Files') }}</h3>
@@ -330,44 +369,6 @@
                                     {% if data.resource_grouping %}
                                         <input id="field_resource_grouping" type="hidden" name="resource_grouping" value="{{ data.resource_grouping }}" />
                                     {% endif %}
-                                    <div class="row form-section form-privacy-section">
-                                        <div class="col-xs-3">
-                                            <h3>Privacy Settings</h3>
-                                            <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <div class="form-group required">
-                                                <label class="control-label">This dataset is</label>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
-                                                        <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
-                                                    </label>
-                                                </div>
-                                                <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
-                                                  <p>{{ _('You are switching your dataset\'s privacy setting to "By request - ')}}<a href="/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.</p>
-                                                </div>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
-                                                        <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                                    </label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
-                                                        <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                                    </label>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <hr class="form-hr"/>
-                                        </div>
-                                    </div>
                                     <div class="row form-section">
                                         <div class="col-xs-3">
                                             <h3>Dataset Title &amp; Description</h3>
