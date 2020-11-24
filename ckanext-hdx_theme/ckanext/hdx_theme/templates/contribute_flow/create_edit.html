@@ -137,6 +137,14 @@
                             {{ form_title }} - <span class="small">{{ _('Please fill out all required fields') }}</span>
                         </li>
                     </ol>
+                    <div class="sub-title paddingLeftHack paddingRightHack">
+                      The HDX team manually reviews every dataset uploaded to the platform as part of a standard
+                      quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
+                      every resource. This helps ensure a high standard for all data shared on HDX. You can learn
+                      more in our
+                      <a href="https://docs.google.com/document/d/1Hp7me1QBY70cd94Sq1Fjn7tPmsJm4b1LFRZuAO9nHFA/edit?usp=sharing" target="_blank">QA process overview</a>.
+                    </div>
+
                     {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
                     <div class="paddingLeftHack paddingRightHack">
                       <div class="alert alert-danger">

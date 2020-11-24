@@ -2475,6 +2475,15 @@ textarea {
   font-size: 20px;
   color: #fff;
 }
+.hdx-form .hdx-form-breadcrumb .sub-title {
+  font-size: 14px;
+}
+.hdx-form .hdx-form-breadcrumb .sub-title a,
+.hdx-form .hdx-form-breadcrumb .sub-title a:hover,
+.hdx-form .hdx-form-breadcrumb .sub-title a:focus {
+  color: #fff;
+  text-decoration: underline;
+}
 .hdx-form .hdx-form-breadcrumb .breadcrumb {
   margin: 0;
   background-color: #007CE0;
