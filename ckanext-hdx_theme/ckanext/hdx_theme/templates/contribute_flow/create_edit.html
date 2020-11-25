@@ -327,6 +327,36 @@
                                                                   </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                  <div class="control-group form-group">
+                                                                    <label class="control-label">This file could contain:</label>
+                                                                    <div class="controls checkbox">
+                                                                      <label class="" for="resource<%= position %>-pii">
+                                                                        <input id="resource<%= position %>-pii" type="checkbox" name="pii" <% if (pii) { print('checked="checked"'); } %>>
+                                                                        <b>Personal data (PII)</b> e.g. name, surname, phone number, IDs, ...
+                                                                      </label>
+                                                                      <div class="item-description orange" <% if (!pii) { print('style="display:none;"'); } %>>
+                                                                        HDX does not allow data that includes personally identifiable information (PII) to be shared
+                                                                        publicly through the site. Please delete the resource(s) containing PII. If you wish to share this resource,
+                                                                        take steps to ensure that it is properly anonymised (with all the direct identifiers removed) and upload it again
+                                                                        You can learn more in the <a href="/about/terms" target="_blank">HDX Terms of Service</a>.
+                                                                      </div>
+                                                                    </div>
+                                                                    <div class="controls checkbox">
+                                                                      <label class="" for="resource<%= position %>-microdata">
+                                                                        <input id="resource<%= position %>-microdata" type="checkbox" name="microdata" <% if (microdata) { print('checked="checked"'); } %>>
+                                                                        <b>Microdata</b> e.g. disaggregated assessment data
+                                                                      </label>
+                                                                      <div class="item-description" <% if (!microdata) { print('style="display:none;"'); } %>>
+                                                                        HDX allows microdata to be shared publicly through the site. However, to protect individuals and vulnerable groups, our team runs a disclosure risk assessment on any resource  containing microdata. We do this because it may still be possible to re-identify individuals or expose confidential information even after direct identifiers have been removed from microdata.<br><br>
+                                                                        Once you have successfully uploaded the resource, our team will review it to better understand the likelihood of a disclosure taking place. We will notify you within 24 hours if any risk has been detected and can then make a decision together about whether and how it should be shared on HDX.<br><br>
+                                                                        You can learn more in our <a href="" target="_blank">QA process overview</a>.
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="col-xs-3 source-file-upload">
                                                             <div class="drag-drop-area">

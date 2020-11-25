@@ -368,6 +368,8 @@ $(function(){
             'click .delete_resource': 'onDeleteBtn',
             //'change .resource_file_field': 'onFileChange',
             'change input[type=radio].resource-source': 'onSourceChange',
+            'change input[type=checkbox][name=pii]': 'onPiiChange',
+            'change input[type=checkbox][name=microdata]': 'onMicrodataChange',
             'change .source-file-fields .form-control': 'onFieldEdit',
             'click .dropbox a': 'onDropboxBtn',
             'click .googledrive a': 'onGoogleDriveBtn'
@@ -433,10 +435,20 @@ $(function(){
             return picker;
         },
 
-        render: function() {
+        _convertToBoolean: function (value) {
+          if (value === "True")
+            return true;
+          if (value === "False")
+            return false;
+          return value;
+        },
+
+        render: function () {
             var template_data = _.clone(this.model.attributes);
             template_data.template_position = this.model.collection.indexOf(this.model);
             template_data.lower_case_format = template_data.format ? template_data.format.toLowerCase() : null;
+            template_data.pii = this._convertToBoolean(this.model.get('pii'));
+            template_data.microdata = this._convertToBoolean(this.model.get('microdata'));
             var html = this.template(template_data);
             this.$el.html(html);
 
@@ -458,6 +470,10 @@ $(function(){
                     this._setUpForSourceType('source-url');
             } else {
                 this._setUpForSourceType('source-file');
+            }
+
+            if (template_data.pii) {
+              this.$el.addClass('orange');
             }
 
             this._showFormatWarningIfNeeded();
@@ -491,6 +507,22 @@ $(function(){
                 this.model.set('url', '');
             }
             this._setUpForSourceType(sourceClass);
+        },
+
+        onPiiChange: function (e) {
+          const value = e.target.checked;
+          this.model.set('pii', value);
+          $(e.target).closest('.controls').find('.item-description').toggle(value);
+          $(e.target).closest('.drag-drop-component').toggleClass("orange", value);
+
+          console.error('PII ' + value);
+        },
+
+        onMicrodataChange: function (e) {
+          const value = e.target.checked;
+          this.model.set('microdata', value);
+          $(e.target).closest('.controls').find('.item-description').toggle(value);
+          console.error('Micro ' + value);
         },
 
         onUpdateBtn: function(e) {
@@ -752,6 +784,8 @@ $(function(){
                 position: this.resourceCollection.length,
                 url: '',
                 format: '',
+                pii: false,
+                microdata: false,
                 description: ''
             };
         },

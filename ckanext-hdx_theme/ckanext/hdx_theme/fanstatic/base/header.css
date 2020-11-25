@@ -2536,6 +2536,24 @@ textarea {
   margin-top: 4px;
   top: 0;
 }
+.hdx-form .form-group .radio .item-description,
+.hdx-form .form-group .checkbox .item-description {
+  margin-top: 5px;
+  padding-left: 20px;
+}
+.hdx-form .form-group .radio .item-description.orange,
+.hdx-form .form-group .checkbox .item-description.orange {
+  color: #f2645a;
+}
+.hdx-form .form-group .radio .item-description.orange a,
+.hdx-form .form-group .checkbox .item-description.orange a,
+.hdx-form .form-group .radio .item-description.orange a:hover,
+.hdx-form .form-group .checkbox .item-description.orange a:hover,
+.hdx-form .form-group .radio .item-description.orange a:focus,
+.hdx-form .form-group .checkbox .item-description.orange a:focus {
+  color: #f2645a;
+  text-decoration: underline;
+}
 .hdx-form .form-group .form-control {
   background-color: #fff;
   min-height: 44px;
