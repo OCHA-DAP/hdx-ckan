@@ -178,6 +178,21 @@
         margin-top: 4px;
         top: 0;
       }
+
+      .item-description {
+        margin-top: 5px;
+        padding-left: 20px;
+
+        &.orange {
+          color: @orangeColor;
+          a {
+            &, &:hover, &:focus {
+              color: @orangeColor;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
     }
 
     .form-control {

@@ -1,6 +1,10 @@
 .drag-drop-component {
   position: relative;
 }
+.drag-drop-component.orange {
+  border: 1px solid #f2645a;
+  background-color: #fde9e8;
+}
 .drag-drop-component .drag-drop-area {
   margin-top: 8px;
 }
