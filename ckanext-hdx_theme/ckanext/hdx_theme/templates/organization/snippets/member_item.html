@@ -1,7 +1,7 @@
 {#
 Example:
 
-  {% snippet 'organization/snippets/member_item.html', translated_role= translated_role, 
+  {% snippet 'organization/snippets/member_item.html', translated_role= translated_role,
   	id=user_id, role=role, roles=roles, group_id=c.group_dict.id, authorized=True %}
 
 #}
@@ -16,7 +16,7 @@ Example:
 
 <li class="list-items dataset-item" id="mx-member-item-{{member.name}}">
 	<div class="list-items dataset-content member-item mTB15 mLR15">
-		<span style="position: absolute;" class="image">{{ h.linked_gravatar(member.email_hash, 20) }}</span>
+		<span style="position: absolute;" class="image">{{ h.user_image(member.email_hash, 20) }}</span>
 
 		<div class="mL30">
 			<div class="dataset-heading">

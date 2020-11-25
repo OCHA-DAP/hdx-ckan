@@ -31,8 +31,10 @@ ValidationError = logic.ValidationError
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
 parse_params = logic.parse_params
+render = tk.render
 
 log = logging.getLogger(__name__)
+
 
 class HDXOrgMemberController(org.OrganizationController):
     def members(self, id):
@@ -91,10 +93,11 @@ class HDXOrgMemberController(org.OrganizationController):
         except Exception, ex:
             log.error(str(ex))
             base.abort(404, _('Server error'))
+        extra_vars = {'group_dict': c.group_dict}
         if org_meta.is_custom:
-            return self._render_template('group/custom_members.html', 'organization')
+            return render('organization/custom_members.html', extra_vars)
         else:
-            return self._render_template('group/members.html', 'organization')
+            return render('organization/members.html', extra_vars)
 
     def _get_member_requests_for_org(self, org_id):
         context = self._get_context()
@@ -319,7 +322,6 @@ class HDXOrgMemberController(org.OrganizationController):
     def _send_analytics_info(self, org_obj, new_members, invited_members):
         for i in xrange(0, len(new_members) + len(invited_members)):
             analytics.AddMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
-
 
     def notify_admin_users(self, org_obj, new_members, invited_memberes, role):
 
