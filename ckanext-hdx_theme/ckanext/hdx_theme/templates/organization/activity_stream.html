@@ -7,7 +7,7 @@
 {% block primary_content_inner %}
 	<h2 class="hide-heading">{% block page_heading %}{{ _('Activity Stream') }}{% endblock %}</h2>
 	{% block activity_stream %}
-	{{ c.group_activity_stream | safe }}
+	{% snippet 'snippets/activity_stream.html', activity_stream=c.group_activity_stream, id=c.group_dict.id, object_type='organization' %}
 	{% endblock %}
 {% endblock %}
 

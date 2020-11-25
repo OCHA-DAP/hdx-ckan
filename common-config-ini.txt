@@ -139,7 +139,7 @@ ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
 ckan.resource_proxy.max_file_size = 2097152
 
-ckan.legacy_route_mappings = {"search": "search"}
+ckan.legacy_route_mappings = {"search": "search", "organization_read": "organization_read", "organization_activity": "organization_activity", "organization_members": "organization_members"}
 
 ## Datapusher settings
 

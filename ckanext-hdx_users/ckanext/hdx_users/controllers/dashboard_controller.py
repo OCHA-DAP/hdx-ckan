@@ -182,7 +182,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             action_function = logic.get_action(action_functions.get(filter_type))
             return action_function(context, {'id': filter_id, 'offset': offset})
         else:
-            return logic.get_action('dashboard_activity_list_html')(
+            return logic.get_action('dashboard_activity_list')(
                 context, {'offset': offset})
 
     def dashboard(self, id=None, offset=0):
