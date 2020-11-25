@@ -88,6 +88,22 @@ LEGACY_ROUTE_NAMES = {
     'organization_about': 'organization.about',
 }
 
+# Added by HDX to make sure some routes are not built for flask:
+HDX_LEGACY_ROUTES = None
+
+
+def hdx_is_pylons_url(args):
+    global HDX_LEGACY_ROUTES
+    if args:
+        if HDX_LEGACY_ROUTES is None:
+            routes_str = config.get('ckan.legacy_route_mappings', '')
+            HDX_LEGACY_ROUTES = json.loads(routes_str)
+        key = args[0]
+        if HDX_LEGACY_ROUTES.get(key):
+            return True
+    return False
+# END
+
 
 class HelperAttributeDict(dict):
     def __init__(self, *args, **kwargs):
@@ -345,8 +361,14 @@ def url_for(*args, **kw):
 
     _auto_flask_context = _get_auto_flask_context()
     try:
+
         if _auto_flask_context:
             _auto_flask_context.push()
+
+        # Added by HDX to make sure some routes are not built for flask:
+        if hdx_is_pylons_url(args):
+            raise FlaskRouteBuildError('hdx', None, None, None)
+        # END
 
         # First try to build the URL with the Flask router
         # Temporary mapping for pylons to flask route names
