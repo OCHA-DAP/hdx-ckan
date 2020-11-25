@@ -216,8 +216,9 @@ def _group_activity_query(group_id):
     ).outerjoin(
         model.Package,
         and_(
-            or_(model.Package.id == model.Member.table_id,
-                model.Package.owner_org == group_id),
+            # modified by HDX - or_ was removed
+            model.Package.id == model.Member.table_id,
+
             model.Package.private == False,
         )
     ).filter(
