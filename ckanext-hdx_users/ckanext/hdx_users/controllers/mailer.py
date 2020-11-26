@@ -1,7 +1,5 @@
 import logging
-import smtplib
 import cgi
-import ckan.lib.mailer as mailer
 from email import Utils
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
@@ -10,7 +8,6 @@ from time import time
 from email.MIMEBase import MIMEBase
 from email import Encoders
 
-import paste.deploy.converters
 from pylons import config
 
 import ckan
@@ -19,6 +16,7 @@ from ckan.common import _
 log = logging.getLogger(__name__)
 
 from ckan.lib.mailer import MailerException
+from ckan.lib.base import render_jinja2
 
 # class MailerException(Exception):
 #     pass
@@ -180,7 +178,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             '_snippet': snippet
         },
     }
-    body_html = mailer.render_jinja2('email/email.html', template_data)
+    body_html = render_jinja2('email/email.html', template_data)
 
     # msg = MIMEMultipart('alternative')
     msg = MIMEMultipart()
