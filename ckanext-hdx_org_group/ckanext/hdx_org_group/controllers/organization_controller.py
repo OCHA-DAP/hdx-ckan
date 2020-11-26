@@ -354,7 +354,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'stats_1_dataset_downloads_last_weeks': stats_1_dataset_downloads_last_weeks,
                 'stats_1_dataset_name': stats_1_dataset_name,
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
-            }
+            },
+            'group_dict': c.group_dict
         }
 
         if org_meta.is_custom:
