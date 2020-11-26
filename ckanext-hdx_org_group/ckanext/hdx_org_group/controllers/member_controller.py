@@ -419,7 +419,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 for admin_tuple in org_admins:
                     admin_id = admin_tuple[0]
                     admins.append(hdx_h.hdx_get_user_info(admin_id))
-                admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('display_name')} for
+                admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('email')} for
                                      admin in admins if admin['email']]
                 user_display_name = usr_obj.display_name or usr_obj.fullname
                 subject = u'HDX Organisation ' + org_obj.display_name + ' membership removal'
