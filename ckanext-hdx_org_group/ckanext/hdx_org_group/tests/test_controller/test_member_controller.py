@@ -242,7 +242,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             invited_user = user
 
         def mock_mail_recipient(sender_name='Humanitarian Data Exchange (HDX)',
-                         sender_email='hdx@un.org',
+                         sender_email='hdx@humdata.org',
                          recipients_list=None,
                          subject=None,
                          content_dict=None,

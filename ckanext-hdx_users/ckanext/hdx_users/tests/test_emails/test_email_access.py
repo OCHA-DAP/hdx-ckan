@@ -435,7 +435,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], 'hdx@un.org')
+        assert_equal(msg[1], 'hdx@humdata.org')
         assert_equal(msg[2], [bob_user['email']])
         assert_true('HDX_password_reset' in msg[3])
 
@@ -463,7 +463,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], 'hdx@un.org')
+        assert_equal(msg[1], 'hdx@humdata.org')
         assert_equal(msg[2], [bob_user['email']])
         assert_true('HDX_password_reset' in msg[3])
 
@@ -492,7 +492,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], 'hdx@un.org')
+        assert_equal(msg[1], 'hdx@humdata.org')
         assert_equal(msg[2], [bob_user['email']])
         assert_true('HDX_password_reset' in msg[3])
 
