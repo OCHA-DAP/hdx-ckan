@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-xs-12">
                             <div class="current-user">
-                                <div class="image">{{ h.user_image(current_member.email_hash, 70) }}</div>
+                                <div class="image">{{ h.user_image(current_member.name, 70) }}</div>
                                 <div class="user-details search-list">
                                     <div class="dataset-item">
                                         <div class="dataset-heading">
@@ -142,7 +142,7 @@
                                 </div>
                                 {% for request in c.request_list %}
                                 <div class="approval-request">
-                                    <div class="image">{{ h.linked_gravatar(request.email_hash, 20) }}</div>
+                                    <div class="image">{{ h.user_image(request.user_name, 20) }}</div>
                                     <div class="user-details search-list">
                                         <div class="dataset-item">
                                             <div class="dataset-heading">
