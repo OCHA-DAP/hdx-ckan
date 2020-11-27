@@ -205,14 +205,6 @@ def _create_member_request(context, data_dict):
     if member.state != 'pending' or changed:
         member.state = 'pending'
         member.capacity = role
-        revision = model.repo.new_revision()
-        revision.author = user
-        if 'message' in context:
-            revision.message = context['message']
-        elif changed:
-            revision.message = u'New member request'
-        else:
-            revision.message = u'Changed member request'
 
         if changed:
             model.Session.add(member)
@@ -330,13 +322,6 @@ def _process_request(context, member, action, new_role=None):
     member.state = state
     if new_role:
         member.capacity = new_role
-    revision = model.repo.new_revision()
-    revision.author = user
-
-    if 'message' in context:
-        revision.message = context['message']
-    else:
-        revision.message = 'Processed member request'
 
     member.save()
     model.repo.commit()

@@ -103,8 +103,8 @@ class HDXOrgMemberController(org.OrganizationController):
         context = self._get_context()
         req_list = logic.get_action('member_request_list')(context, {'group': org_id})
         for req in req_list:
-            revision_dict = logic.get_action('revision_show')(context, {'id': req.get('revision_id')})
-            req['revision_last_updated'] = revision_dict.get('timestamp')
+
+            req['revision_last_updated'] = ''
             user_dict = logic.get_action('user_show')(context, {'id': req.get('user_name')})
             req['user_display_name'] = user_dict.get('display_name', user_dict.get('name'))
 
