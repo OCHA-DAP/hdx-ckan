@@ -146,7 +146,7 @@ from ckan.lib.mailer import MailerException
 
 
 def mail_recipient(recipients_list, subject, body, sender_name='Humanitarian Data Exchange (HDX)',
-                   sender_email='hdx@un.org', cc_recipients_list=None, bcc_recipients_list=None,
+                   sender_email='hdx@humdata.org', cc_recipients_list=None, bcc_recipients_list=None,
                    footer=None, headers={}, reply_wanted=False,  snippet='email/email.html', file=None):
     if recipients_list is None and bcc_recipients_list is None:
         raise MailerException('There are no recipients to send email')
@@ -156,7 +156,7 @@ def mail_recipient(recipients_list, subject, body, sender_name='Humanitarian Dat
 
 
 def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
-                         sender_email='hdx@un.org',
+                         sender_email='hdx@humdata.org',
                          recipients_list=None,
                          subject=None,
                          content_dict=None,
@@ -168,10 +168,10 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                          snippet='email/email.html',
                          file=None):
 
-    if sender_email:
-        mail_from = sender_email
-    else:
-        mail_from = config.get('hdx_smtp.mail_from_please_reply') if reply_wanted else config.get('smtp.mail_from')
+    # if sender_email:
+    #     mail_from = sender_email
+    # else:
+    mail_from = config.get('smtp.mail_from')
 
     template_data = {
         'data': {
@@ -188,7 +188,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
-    msg['From'] = _(u"%s <%s>") % (sender_name, mail_from)
+    msg['From'] = _(u"%s <%s>") % ('Humanitarian Data Exchange (HDX)', mail_from)
     recipient_email_list = []
     recipients = None
     if recipients_list:
@@ -218,8 +218,8 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
 
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
-    if sender_email:
-        msg['Reply-To'] = Header((u"%s <%s>" % (sender_name, sender_email)), 'utf-8')
+    # if sender_email:
+    msg['Reply-To'] = Header((u"%s <%s>" % (sender_name, sender_email)), 'utf-8')
     part = MIMEText(body_html, 'html', 'utf-8')
     msg.attach(part)
 
