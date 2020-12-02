@@ -395,6 +395,29 @@ def hdx_resource_keep_prev_value_unless_sysadmin(key, data, errors, context):
         raise StopOnError
 
 
+# def hdx_update_field_if_value_wrapper(context_field, value):
+#     def hdx_update_field_if_value(key, data, errors, context):
+#         a = 10
+#
+#     return hdx_update_field_if_value
+def hdx_update_microdata(key, data, errors, context):
+    if not data.get(key):
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            pkg_dict = __get_previous_package_dict(context, pkg_id)
+            if pkg_dict.get(key[0], [])[0].get('in_quarantine', None) and not data.get(key):
+                data[key[:2] + ('microdata',)] = False
+
+
+def hdx_update_in_quarantine_by_microdata(key, data, errors, context):
+    if data.get(key):
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            pkg_dict = __get_previous_package_dict(context, pkg_id)
+            if not pkg_dict.get(key[0], [])[0].get('microdata', None) and data.get(key):
+                data[key[:2] + ('in_quarantine',)] = True
+
+
 def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, resource_level=False):
     def hdx_package_keep_prev_value_unless_field_in_context(key, data, errors, context):
         '''
@@ -403,6 +426,7 @@ def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, r
         NOTE, we don't check whether user is sysadmin. The api action that set the
         'context_field' should do any checks.
         '''
+
         if data[key] is missing:
             data.pop(key, None)
 
