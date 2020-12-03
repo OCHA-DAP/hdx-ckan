@@ -7,7 +7,7 @@
   max-width: 100%;
 }
 .qa-process .hero {
-  min-height: 230px;
+  min-height: 315px;
   background: url(/images/qa-process/hdx-qa-process-hero.jpg);
   background-size: cover;
   background-position-x: 68%;
@@ -24,25 +24,25 @@
 }
 @media (min-width: 768px) {
   .qa-process .hero .hero-content {
-    width: 530px;
+    width: 640px;
   }
 }
 .qa-process .hero .hero-title {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 26px;
+  font-size: 36px;
 }
 .qa-process .hero .hero-sub-title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 26px;
+  font-size: 36px;
 }
 .qa-process .hero .hero-description {
   margin-top: 30px;
   font-family: 'Gotham-Book', sans-serif;
   font-display: block;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
 }
 .qa-process .qa-intro {
   background-color: #f8fcfd;
@@ -61,15 +61,16 @@
   color: #333333;
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 16px;
-  margin: 32px 0;
+  font-size: 24px;
+  line-height: 1.4;
+  margin-top: 100px;
+  margin-bottom: 50px;
 }
 @media (min-width: 768px) {
   .qa-process .qa-intro .qa-intro-title {
-    width: 320px;
+    width: 500px;
     align-self: center;
     text-align: center;
-    line-height: 1.6;
   }
 }
 @media (min-width: 768px) {
@@ -81,7 +82,7 @@
   margin-bottom: 42px;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 18px;
 }
 @media (min-width: 768px) {
   .qa-process .qa-intro .qa-intro-item {
@@ -91,29 +92,32 @@
 .qa-process .qa-intro .qa-intro-item .qa-intro-item-title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 18px;
   text-transform: uppercase;
   margin: 32px 0;
 }
 @media (min-width: 768px) {
   .qa-process .qa-intro .qa-intro-item .qa-intro-item-title {
-    margin: 32px 32px;
+    margin: 45px 45px 40px;
   }
+}
+.qa-process .qa-intro .qa-intro-item .qa-intro-item-description {
+  line-height: 1.4;
 }
 @media (min-width: 768px) {
   .qa-process .qa-intro .qa-intro-item .qa-intro-item-description {
-    margin: 0 32px;
+    margin: 0 45px;
   }
 }
 .qa-process .qa-intro .qa-intro-item .intro-bar {
-  height: 16px;
+  height: 19px;
   width: 84px;
   margin: 32px 0;
 }
 @media (min-width: 768px) {
   .qa-process .qa-intro .qa-intro-item .intro-bar {
     width: 100%;
-    height: 32px;
+    height: 38px;
   }
 }
 .qa-process .qa-intro .qa-intro-item .intro-bar.bar1 {
@@ -128,10 +132,10 @@
 @media (min-width: 768px) {
   .qa-process .qa-intro .qa-intro-item .intro-bar.bar1 {
     background-color: #caedea;
-    margin-top: 64px;
+    margin-top: 76px;
   }
   .qa-process .qa-intro .qa-intro-item .intro-bar.bar2 {
-    margin-top: 32px;
+    margin-top: 38px;
   }
   .qa-process .qa-intro .qa-intro-item .intro-bar.bar3 {
     margin-top: 0;
@@ -142,6 +146,10 @@
   justify-content: center;
 }
 .qa-process .arrow-up {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 25px solid transparent;
@@ -149,6 +157,10 @@
   border-bottom: 25px solid #f2f2f2;
 }
 .qa-process .arrow-down {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 25px solid transparent;
@@ -158,96 +170,107 @@
 .qa-process .qa-process-intro {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 18px;
-  line-height: 1;
+  font-size: 24px;
+  line-height: 1.4;
   text-align: center;
 }
 .qa-process .qa-process-intro .qa-intro-title {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 28px;
-  margin: 32px 0;
+  font-size: 36px;
+  margin-top: 85px;
+  margin-bottom: 45px;
   color: #333333;
 }
 .qa-process .qa-process-intro .qa-intro-section-title {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 24px;
   color: #007CE0;
-  margin-top: 32px;
 }
 .qa-process .qa-process-intro .img-container {
-  padding: 42px 0;
+  margin-top: 42px;
 }
 .qa-process .qa-process-intro .img-container img {
-  max-width: 242px;
+  max-width: 370px;
+  width: 100%;
 }
 .qa-process .qa-process-steps {
   background-color: #f2f2f2;
-  padding-bottom: 42px;
+  margin: 116px 0;
 }
 @media (min-width: 768px) {
-  .qa-process .qa-process-steps {
-    padding-top: 42px;
-  }
   .qa-process .qa-process-steps .qa-process-step-column {
-    width: 50%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+  .qa-process .qa-process-steps .qa-process-step-column.qa-process-image {
+    align-items: center;
+  }
   .qa-process .qa-process-steps .qa-process-step-column .qa-process-title,
   .qa-process .qa-process-steps .qa-process-step-column .qa-process-description {
-    width: 60%;
+    width: 80%;
   }
 }
 .qa-process .qa-process-steps .qa-process-step {
   display: flex;
   flex-direction: column-reverse;
+  margin: 140px 0;
+  padding: 0 15px;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 18px;
+  line-height: 1.3;
 }
 @media (min-width: 768px) {
   .qa-process .qa-process-steps .qa-process-step {
     flex-direction: row;
+    padding: 0 45px;
+    justify-content: space-between;
   }
   .qa-process .qa-process-steps .qa-process-step.qa-process-inverted-step {
     flex-direction: row-reverse;
-  }
-  .qa-process .qa-process-steps .qa-process-step ~ .qa-process-step {
-    margin-top: 42px;
   }
 }
 .qa-process .qa-process-steps .qa-process-step .qa-process-image {
   margin: 42px 0;
   text-align: center;
 }
+@media (min-width: 768px) {
+  .qa-process .qa-process-steps .qa-process-step .qa-process-image {
+    margin: 0;
+  }
+}
 .qa-process .qa-process-steps .qa-process-step .qa-process-image img {
-  max-width: 242px;
+  max-width: 370px;
+  width: 100%;
 }
 .qa-process .qa-process-steps .qa-process-step .qa-process-title {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 24px;
   color: #007CE0;
-  margin-bottom: 32px;
+  margin-bottom: 25px;
 }
 .qa-process .qa-doc-section {
   background-color: #f2f2f2;
-  margin: 42px 0;
+  margin: 116px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 30px;
 }
 .qa-process .qa-doc-section .qa-doc-section-title {
   color: #333333;
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 24px;
   text-align: center;
-  margin: 42px 0;
+  line-height: 1.4;
+  margin: 84px 0;
 }
 @media (min-width: 768px) {
   .qa-process .qa-doc-section .qa-doc-list {
@@ -257,18 +280,26 @@
 }
 .qa-process .qa-doc-section .qa-doc-item {
   background-color: #fff;
-  max-width: 300px;
-  margin: 0 21px 42px;
+  max-width: 400px;
+  width: 100%;
+  min-height: 400px;
   padding: 32px;
+  margin: 0 0 65px;
+}
+@media (min-width: 768px) {
+  .qa-process .qa-doc-section .qa-doc-item {
+    margin: 0 32.5px 65px;
+  }
 }
 .qa-process .qa-doc-section .qa-doc-item img {
-  height: 42px;
+  height: 70px;
 }
 .qa-process .qa-doc-section .qa-doc-item .qa-doc-title {
   color: #007CE0;
-  font-family: 'Source Sans Pro', sans-serif;
+  line-height: 1.3;
+  font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 24px;
   margin: 32px 0;
 }
 .qa-process .qa-doc-section .qa-doc-item .qa-doc-description {
@@ -285,11 +316,14 @@
 .qa-process .qa-learn .qa-learn-title {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
-  font-size: 18px;
-  margin-bottom: 32px;
+  font-size: 22px;
+  margin-bottom: 40px;
 }
 .qa-process .qa-learn .qa-learn-description {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 18px;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-bottom: 116px;
 }
