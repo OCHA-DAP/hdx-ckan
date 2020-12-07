@@ -3847,6 +3847,9 @@ label.terms-of-service {
   font-weight: 400;
   margin: 0;
 }
+label.terms-of-service.disabled {
+  color: #888888;
+}
 label.terms-of-service:after {
   content: none;
 }
