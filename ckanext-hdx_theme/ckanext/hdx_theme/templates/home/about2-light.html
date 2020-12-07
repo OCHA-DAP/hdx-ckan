@@ -8,6 +8,12 @@
 
 {% endblock %}
 
+{% block header_core %}
+  {% set page_has_desktop_version = False %}
+  {% set page_has_mobile_version = False  %}
+  {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
+{% endblock %}
+
 {% block content %}
 <div class="about-page-light">
   <div class="container">
