@@ -1,13 +1,8 @@
-'''
-Created on Nov 6, 2014
-
-@author: alexandru-m-g
-'''
+import pytest
 import logging as logging
 
-import ckan.plugins.toolkit as tk
-import ckan.model as model
-import ckan.lib.helpers as h
+
+import ckanext.hdx_theme.helpers.helpers as h
 import ckan.common as common
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -69,4 +64,4 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search',
             q='Nepal')
         result = self.app.get(url)
-        assert '<div class="search-ahead"' in str(result.response)
+        assert '<div class="search-ahead"' in result.data

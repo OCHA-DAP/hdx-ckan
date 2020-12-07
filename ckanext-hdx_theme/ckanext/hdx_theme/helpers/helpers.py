@@ -767,3 +767,6 @@ def hdx_url_for(*args, **kw):
     elif url and '/?' in url:
         url = url.replace('/?', '?')
     return url
+
+
+url_for = hdx_url_for

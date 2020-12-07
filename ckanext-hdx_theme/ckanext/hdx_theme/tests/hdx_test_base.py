@@ -48,6 +48,17 @@ class HdxBaseTest(object):
     See replace_package_create ()
     '''
 
+    USERS_USED_IN_TEST = []
+
+    @classmethod
+    def _set_user_api_keys(cls):
+        for username in cls.USERS_USED_IN_TEST:
+            user = model.User.by_name(username)
+            user.email = username + '@test_domain.com'
+            user.apikey = username + '_apikey'
+
+        model.Session.commit()
+
     @classmethod
     def _create_test_data(cls):
         ctd.CreateTestData.create()
@@ -82,6 +93,8 @@ class HdxBaseTest(object):
         cls.replace_package_create()
 
         cls._create_test_data()
+
+        cls._set_user_api_keys()
 
     @classmethod
     def teardown_class(cls):
