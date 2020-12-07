@@ -1,22 +1,20 @@
 import logging
 
-from sqlalchemy.sql.expression import or_
-from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
+from datetime import datetime
 from pylons import config
-from ckanext.ytp.request.model import MemberExtra
 from pylons import i18n
+from sqlalchemy.sql.expression import or_
 
-from ckan import model, authz
-from ckan.lib.dictization import model_dictize
-from ckan.logic import NotFound, ValidationError, check_access
-from ckan.common import _, c
-from ckan.lib.mailer import mail_user, MailerException
-from ckan.lib import helpers
-from ckan.lib.i18n import set_lang, get_lang
-from ckan.lib.helpers import url_for
-import ckanext.hdx_theme.util.mail as hdx_mail
-import ckanext.ytp.request.util as hdx_util
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+from ckan import model, authz
+from ckan.common import _, c
+from ckan.lib import helpers
+from ckan.lib.dictization import model_dictize
+from ckan.lib.helpers import url_for
+from ckan.lib.mailer import MailerException
+from ckan.logic import NotFound, ValidationError, check_access
+from ckanext.ytp.request.model import MemberExtra
+from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
 
 log = logging.getLogger(__name__)
 
@@ -145,8 +143,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
 
     except MailerException, e:
         log.error(e)
-    # finally:
-    #     set_lang(current_locale)
+
 
 
 def _member_list_dictize(obj_list, context, sort_key=lambda x: x['group_id'], reverse=False):
@@ -211,7 +208,7 @@ def _create_member_request(context, data_dict):
         else:
             member.save()
 
-        extra = MemberExtra(member_id=member.id, key="locale", value=locale)
+        extra = MemberExtra(member_id=member.id, key="created", value=datetime.utcnow().isoformat())
         extra.save()
 
         model.repo.commit()
@@ -323,13 +320,18 @@ def _process_request(context, member, action, new_role=None):
     if new_role:
         member.capacity = new_role
 
+    for extra in member.extras:
+        if extra.key == 'created':
+            extra.delete()
+
     member.save()
     model.repo.commit()
 
     member_user = model.Session.query(model.User).get(member.table_id)
     admin_user = model.User.get(user)
 
-    locale = member.extras.get('locale', None) or _get_default_locale()
+    # locale = member.extras.get('locale', None) or _get_default_locale()
+    locale = _get_default_locale()
     _log_process(member_user, member.group.display_name, approve, admin_user)
     _mail_process_status(locale, member_user, approve, member.group.display_name, member.capacity, member.group_id)
 

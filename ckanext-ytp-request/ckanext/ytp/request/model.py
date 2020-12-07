@@ -12,6 +12,7 @@ import ckan.model.domain_object as domain_object
 
 import logging
 from ckan import model
+
 log = logging.getLogger(__name__)
 
 __all__ = ['MemberExtra', 'member_extra_table']
@@ -33,11 +34,13 @@ def setup():
                                    Column('value', types.UnicodeText))
 
         meta.mapper(MemberExtra, member_extra_table,
-                    properties={'member': orm.relation(group.Member, backref=orm.backref('_extras',
-                                                                                         collection_class=orm.collections.attribute_mapped_collection(
-                                                                                             u'key'),
+                    properties={'member': orm.relation(group.Member, backref=orm.backref('extras',
                                                                                          cascade='all, delete, delete-orphan'))},
                     order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
+
+        # meta.mapper(group.Member, group.member_table, properties={
+        #     'extras': orm.relationship(MemberExtra, order_by=member_extra_table.c.id)
+        # })
 
     if model.member_table.exists() and not member_extra_table.exists():
         member_extra_table.create()
