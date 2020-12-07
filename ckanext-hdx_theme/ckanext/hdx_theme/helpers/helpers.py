@@ -764,4 +764,6 @@ def hdx_url_for(*args, **kw):
     url = tk.url_for(*args, **kw)
     if url and url.endswith('/'):
         url = url[:-1]
+    elif url and '/?' in url:
+        url = url.replace('/?', '?')
     return url

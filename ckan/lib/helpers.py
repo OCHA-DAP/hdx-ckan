@@ -97,7 +97,7 @@ def hdx_is_pylons_url(args):
     if args:
         if HDX_LEGACY_ROUTES is None:
             routes_str = config.get('ckan.legacy_route_mappings', '')
-            HDX_LEGACY_ROUTES = json.loads(routes_str)
+            HDX_LEGACY_ROUTES = json.loads(routes_str) if routes_str else {}
         key = args[0]
         if HDX_LEGACY_ROUTES.get(key):
             return True
