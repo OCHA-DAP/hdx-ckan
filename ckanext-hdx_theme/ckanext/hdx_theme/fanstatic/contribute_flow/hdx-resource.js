@@ -68,11 +68,13 @@ $(function(){
         hashResource: function() {
             var newUpload = this.get('upload') ? 'true' : 'false';
             var dpe = this.get('dataset_preview_enabled') === '1' || this.get('dataset_preview_enabled') === 'True' ? 'True' : 'False';
+            var microdata = this.get('microdata') ? 'true' : 'false';
             var properties = [
                 this.get('name'), this.get('format'), this.get('url'),
                 this.get('description'), this.get('url_type'), this.get('resource_type'),
                 dpe,
-                newUpload
+                newUpload,
+                microdata
             ];
 
             var hashCode = hdxUtil.compute.strListHash(properties);
@@ -508,21 +510,36 @@ $(function(){
             }
             this._setUpForSourceType(sourceClass);
         },
+        _updatePiiCount: function(value){
+          let terms = $("#terms-of-service-label");
+          let count = parseInt(terms.attr("piiCount"));
+          if (!count) {
+            count = 0;
+          }
+          count = Math.max(0, count + value);
+          terms.attr("piiCount", count);
+          if (count > 0) {
+            terms.addClass('disabled');
+            terms.find('input[type="checkbox"]').prop("disabled", true);
+            terms.find('input[type="checkbox"]').prop("checked", false).change();
+          } else {
+            terms.removeClass('disabled');
+            terms.find('input[type="checkbox"]').prop("disabled", false);
+          }
+        },
 
         onPiiChange: function (e) {
           const value = e.target.checked;
           this.model.set('pii', value);
+          this._updatePiiCount(value ? 1 : -1);
           $(e.target).closest('.controls').find('.item-description').toggle(value);
           $(e.target).closest('.drag-drop-component').toggleClass("orange", value);
-
-          console.error('PII ' + value);
         },
 
         onMicrodataChange: function (e) {
           const value = e.target.checked;
           this.model.set('microdata', value);
           $(e.target).closest('.controls').find('.item-description').toggle(value);
-          console.error('Micro ' + value);
         },
 
         onUpdateBtn: function(e) {
