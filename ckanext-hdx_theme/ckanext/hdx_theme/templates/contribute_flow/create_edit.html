@@ -140,9 +140,7 @@
                     <div class="sub-title paddingLeftHack paddingRightHack">
                       The HDX team manually reviews every dataset uploaded to the platform as part of a standard
                       quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
-                      every resource. This helps ensure a high standard for all data shared on HDX. You can learn
-                      more in our
-                      <a href="https://docs.google.com/document/d/1Hp7me1QBY70cd94Sq1Fjn7tPmsJm4b1LFRZuAO9nHFA/edit?usp=sharing" target="_blank">QA process overview</a>.
+                      every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>..
                     </div>
 
                     {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
@@ -333,10 +331,10 @@
                                                                     <label class="control-label">This file could contain:</label>
                                                                     <div class="controls checkbox">
                                                                       <label class="" for="resource<%= position %>-pii">
-                                                                        <input id="resource<%= position %>-pii" type="checkbox" name="pii" <% if (pii) { print('checked="checked"'); } %>>
+                                                                        <input id="resource<%= position %>-pii" type="checkbox" name="pii" <% if (pii === 'true') { print('checked="checked"'); } %>>
                                                                         <b>Personal data (PII)</b> e.g. name, surname, phone number, IDs, ...
                                                                       </label>
-                                                                      <div class="item-description orange" <% if (!pii) { print('style="display:none;"'); } %>>
+                                                                      <div class="item-description orange" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
                                                                         HDX does not allow data that includes personally identifiable information (PII) to be shared
                                                                         publicly through the site. Please delete the resource(s) containing PII. If you wish to share this resource,
                                                                         take steps to ensure that it is properly anonymised (with all the direct identifiers removed) and upload it again
@@ -351,7 +349,7 @@
                                                                       <div class="item-description" <% if (!microdata) { print('style="display:none;"'); } %>>
                                                                         HDX allows microdata to be shared publicly through the site. However, to protect individuals and vulnerable groups, our team runs a disclosure risk assessment on any resource  containing microdata. We do this because it may still be possible to re-identify individuals or expose confidential information even after direct identifiers have been removed from microdata.<br><br>
                                                                         Once you have successfully uploaded the resource, our team will review it to better understand the likelihood of a disclosure taking place. We will notify you within 24 hours if any risk has been detected and can then make a decision together about whether and how it should be shared on HDX.<br><br>
-                                                                        You can learn more in our <a href="/about/hdx-qa-process" target="_blank">QA process overview</a>.
+                                                                        Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
                                                                       </div>
                                                                     </div>
                                                                   </div>
