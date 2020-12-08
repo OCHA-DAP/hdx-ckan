@@ -1,0 +1,27 @@
+{% extends "page_light.html" %}
+
+{% block subtitle %}{{ _('About') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('About'), controller='home', action='about', position=2 %}
+  <li class="active">{% link_for title, controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page=page %}</li>
+
+{% endblock %}
+
+{% block header_core %}
+  {% set page_has_desktop_version = False %}
+  {% set page_has_mobile_version = False  %}
+  {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
+{% endblock %}
+
+{% block content %}
+<div class="about-page-light">
+  <div class="container">
+    <div class="row">
+        {% snippet 'home/snippets/qa-process.html' %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block secondary %}{% endblock %}

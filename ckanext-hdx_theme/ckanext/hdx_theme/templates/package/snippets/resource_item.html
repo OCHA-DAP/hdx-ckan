@@ -4,6 +4,8 @@
 {% set is_not_zipped = h.is_not_zipped(res) %}
 {% set resource_display_name = h.resource_display_name(res) %}
 
+{% set in_review = res.pii_report_flag == "ERROR" %}
+
 {# This should be included via page.html but it's not loading for me. Investigate after template upgrade to 2.3 in complete and delete this #}
 {% resource 'hdx_theme/package/tracking.js' %}
 {# #}
@@ -17,7 +19,7 @@
 
 {% endif %}
 
-<li class="resource-item" data-grouping-id="{{ resource_grouping }}" style="display: {{ 'none' if pkg.x_show_grouping else '' }}">
+<li class="resource-item {% if in_review %}in-review{% endif %}" data-grouping-id="{{ resource_grouping }}" style="display: {{ 'none' if pkg.x_show_grouping else '' }}">
   {% block resource_item_title %}
     <a class="heading" title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
@@ -60,7 +62,7 @@
                     </a>
                 {% endif %}
              #}
-            {% if h.check_access('hdx_resource_download', res) %}
+            {% if not in_review and h.check_access('hdx_resource_download', res) %}
 
               <a href="{{ res.hdx_rel_url }}"
                  class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download"
@@ -122,6 +124,11 @@
               {% endif %}
             {% endif %}
 
+            {% if in_review %}
+              <span class="btn btn-empty btn-empty-blue disabled hdx-btn">
+                  {{ _('Under Review') }}
+              </span>
+            {% endif %}
 
             {% set button_id = 'social-btn-' + res.id %}
             {% set social_div_id = 'social-' + res.id %}
