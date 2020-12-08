@@ -474,7 +474,7 @@ $(function(){
                 this._setUpForSourceType('source-file');
             }
 
-            if (template_data.pii) {
+            if (template_data.pii && template_data.pii === 'true') {
               this.$el.addClass('orange');
             }
 
