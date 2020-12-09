@@ -76,4 +76,4 @@ git+https://github.com/geomet/geomet.git
 dogpile.cache==0.7.1
 
 # ckanext-s3filestore
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.0#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.1#egg=ckanext-s3filestore
