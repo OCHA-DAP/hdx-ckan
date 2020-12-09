@@ -55,7 +55,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         package = {"package_creator": "test function",
                    "private": False,
-                   "dataset_date": "01/01/1960-12/31/2012",
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
                    "caveats": "These are the caveats",
                    "license_other": "TEST OTHER LICENSE",
                    "methodology": "This is a test methodology",
@@ -100,7 +100,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         package = {"package_creator": "test function",
                    "private": False,
-                   "dataset_date": "01/01/1960-12/31/2012",
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
                    "caveats": "These are the caveats",
                    "license_other": "TEST OTHER LICENSE",
                    "methodology": "This is a test methodology",
@@ -136,7 +136,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             log.error(ex)
         package = {"package_creator": "test function",
                    "private": False,
-                   "dataset_date": "01/01/1960-12/31/2012",
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
                    "caveats": "These are the caveats",
                    "license_other": "TEST OTHER LICENSE",
                    "methodology": "This is a test methodology",
@@ -161,7 +161,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         package = {"package_creator": "test function",
                    "private": False,
-                   "dataset_date": "01/01/1960-12/31/2012",
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
                    "caveats": "These are the caveats",
                    "license_other": "TEST OTHER LICENSE",
                    "methodology": "This is a test methodology",
@@ -193,7 +193,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            # 'dataset_source': 'Modified source',
                            'last_metadata_update_date': 'last_metadata_update_date test',
                            'last_data_update_date': 'last_data_update_date test',
-                           'dataset_date': '11/02/2014-11/20/2014',
+                           'dataset_date': '[2014-11-02T00:00:00 TO 2014-11-20T00:00:00]',
                            # 'dataset_source_code': 'dataset_source_code test',
                            'indicator_type': 'indicator_type test',
                            'indicator_type_code': 'indicator_type_code test',
@@ -238,7 +238,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     def test_hdx_package_subnational_validation(self):
         package = {"package_creator": "test function",
                    "private": False,
-                   "dataset_date": "01/01/1960-12/31/2012",
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
                    "caveats": "These are the caveats",
                    "license_other": "TEST OTHER LICENSE",
                    "methodology": "This is a test methodology",
@@ -313,7 +313,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         package = {"package_creator": "test function",
                    "private": False,
-                   "dataset_date": "01/01/1960-12/31/2012",
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
                    "caveats": "These are the caveats",
                    "license_other": "TEST OTHER LICENSE",
                    "methodology": "This is a test methodology",

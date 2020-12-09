@@ -523,24 +523,29 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-xs-6" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
-                                                    {% set original_value = data.dataset_date %}
-                                                    {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
-                                                    'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
-                                                    'data-module-alt_field_id': 'field-dataset_date',
-                                                    'data-module-original_value': original_value, 'class':'form-control' } %}
-                                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
-                                                    <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+                                                <div class="col-xs-3" >
+                                                    <div class="control-group form-group">
+                                                        <label class="control-label">Date of dataset</label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-6">
+{#                                                <div class="col-xs-5" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">#}
+{#                                                    {% set original_value = data.dataset_date %}#}
+{#                                                    {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',#}
+{#                                                    'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',#}
+{#                                                    'data-module-alt_field_id': 'field-dataset_date',#}
+{#                                                    'data-module-original_value': original_value, 'class':'form-control' } %}#}
+{#                                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}#}
+{#                                                    <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />#}
+{#                                                </div>#}
+                                                <div class="col-xs-9">
                                                     <div class="row">
-                                                            <div class="col-xs-1" style="padding:0">
-                                                                <div class="control-group form-group">
-                                                                    <label class="control-label">OR</label>
-                                                                </div>
-                                                            </div>
+{#                                                            <div class="col-xs-1" style="padding:0">#}
+{#                                                                <div class="control-group form-group">#}
+{#                                                                    <label class="control-label">OR</label>#}
+{#                                                                </div>#}
+{#                                                            </div>#}
 
-                                                        <div class="col-xs-5" style="padding-right: 0">
+                                                        <div class="col-xs-4" style="padding-left:10px;padding-right:0px">
                                                             <div class="form-group">
                                                                 <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
                                                                        data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
@@ -557,7 +562,7 @@
                                                                 </div>
                                                         </div>
 
-                                                        <div class="col-xs-5" style="padding-left: 0">
+                                                        <div class="col-xs-4" style="padding:0">
                                                             <div class="form-group">
                                                                 <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
                                                                        data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
@@ -567,6 +572,34 @@
                                                             </div>
 
                                                         </div>
+                                                        <div class="col-xs-3" style="padding-top:10px"><div class="form-group">
+{#                                                          <div style="margin-left:-160px; ">#}
+{#                                                            {{ form.checkbox('dataset_date_ongoing', id='field_dataset_date_ongoing', label=_('Ongoing'), value='1', checked=data.dataset_date_ongoing, error=errors.dataset_date_ongoing, classes=['form-group'], attrs={}) }}#}
+{#                                                          </div>#}
+{#                                                                                                    {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
+{#                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
+{#                                                    'data-toggle': 'tooltip'}
+{#                                                    %}#}
+                                                          <label style="font-weight:inherit"
+                                                                 data-module='bs_tooltip'
+                                                                 data-module-placement='top'
+                                                                 data-original-title= 'The end date will always advance to be the current date'
+                                                                 data-toggle= 'tooltip' >
+                                                            <input style="margin-right: 5px"
+                                                                   type="checkbox"
+                                                                   name="ui_date_ongoing"
+                                                                   value="1"
+                                                                   id="ui_date_ongoing"
+                                                                   data-module='hdx_datepicker'
+                                                                   data-module-group='2'
+                                                                   data-module-type="date_ongoing"
+                                                                   data-module-topic='date-field-clicked'
+                                                                   data-module-alt_field_id='date_ongoing'
+                                                                   data-module-original_value="{{ data.ui_date_ongoing }}"
+                                                                   {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
+                                                            Ongoing (?)
+                                                          </label>
+                                                        </div></div>
                                                     </div>
                                                 </div>
 
