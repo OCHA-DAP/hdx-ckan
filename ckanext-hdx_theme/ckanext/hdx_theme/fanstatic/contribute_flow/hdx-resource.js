@@ -790,13 +790,18 @@ $(function(){
                         return this.contribute_global.getDatasetIdPromise();
                     }.bind(this))
                     .then(function(package_id){
-                        return this.resourceCollection.saveAll(package_id);
-                    }.bind(this))
-                    .then(function(){
-                        return this.resourceCollection.destroyRemovedModels();
-                    }.bind(this))
-                    .then(function(){
-                        return this.resourceCollection.resourceReorder();
+                      if (this.contribute_global.isRequestedData()){
+                        return true;
+                      }
+                      else {
+                        return this.resourceCollection.saveAll(package_id)
+                        .then(function(){
+                            return this.resourceCollection.destroyRemovedModels();
+                        }.bind(this))
+                        .then(function(){
+                            return this.resourceCollection.resourceReorder();
+                        }.bind(this));
+                      }
                     }.bind(this))
                     .then(function(){
                         console.log('Browsing away ');
@@ -805,6 +810,8 @@ $(function(){
                     function (error){
                         console.error("error while uploading resources");
                     });
+
+
             }.bind(this));
         },
 
