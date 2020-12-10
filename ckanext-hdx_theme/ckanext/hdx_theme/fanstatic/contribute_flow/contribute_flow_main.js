@@ -52,16 +52,9 @@ ckan.module('contribute_flow_main', function($, _) {
                     this.getDatasetIdPromise().done(
                         function (datasetId) {
                             var formDataArray = this.getFormValues('validate-json');
-                            var isRequestData = false;
-                            for (var i=0; i<formDataArray.length; i++) {
-                              var item = formDataArray[i];
-                              if (item.name==='private' && item.value === 'requestdata') {
-                                isRequestData = true;
-                                break;
-                              }
-                            }
-                            if(!isRequestData){
-                              var resourceDataArray = this.generateResourcePostData();
+                            var resourceDataArray;
+                            if(!this.isRequestedData()){
+                              resourceDataArray = this.generateResourcePostData();
                               formDataArray = formDataArray.concat(resourceDataArray);
                               var customVizArray = this.generateCustomVizPostData();
                               formDataArray = formDataArray.concat(customVizArray);
@@ -485,8 +478,15 @@ ckan.module('contribute_flow_main', function($, _) {
                     });
                 },
                 'finishContributeFlow': function() {
-                    var callback = this.browseToDataset.bind(this);
-                    this.callHxlPreviewGenerator().then(callback, callback);
+
+                    if(!this.isRequestedData()){
+                      var callback = this.browseToDataset.bind(this);
+                      this.callHxlPreviewGenerator().then(callback, callback);
+                    }
+                    else{
+                      this.browseToDataset();
+                    }
+
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;
