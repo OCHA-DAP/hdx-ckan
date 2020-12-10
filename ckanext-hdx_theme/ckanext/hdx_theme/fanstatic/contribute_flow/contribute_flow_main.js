@@ -52,11 +52,20 @@ ckan.module('contribute_flow_main', function($, _) {
                     this.getDatasetIdPromise().done(
                         function (datasetId) {
                             var formDataArray = this.getFormValues('validate-json');
-                            var resourceDataArray = this.generateResourcePostData();
-                            formDataArray = formDataArray.concat(resourceDataArray);
-
-                            var customVizArray = this.generateCustomVizPostData();
-                            formDataArray = formDataArray.concat(customVizArray);
+                            var isRequestData = false;
+                            for (var i=0; i<formDataArray.length; i++) {
+                              var item = formDataArray[i];
+                              if (item.name==='private' && item.value === 'requestdata') {
+                                isRequestData = true;
+                                break;
+                              }
+                            }
+                            if(!isRequestData){
+                              var resourceDataArray = this.generateResourcePostData();
+                              formDataArray = formDataArray.concat(resourceDataArray);
+                              var customVizArray = this.generateCustomVizPostData();
+                              formDataArray = formDataArray.concat(customVizArray);
+                            }
 
                             formDataArray.push({'name': 'id', 'value': datasetId});
 
@@ -164,6 +173,18 @@ ckan.module('contribute_flow_main', function($, _) {
                     );
 
                     return deferred.promise();
+                },
+                'isRequestedData': function() {
+                    var formDataArray = this.getFormValues('validate-json');
+                    var isRequestedData = false;
+                    for (var i=0; i<formDataArray.length; i++) {
+                      var item = formDataArray[i];
+                      if (item.name==='private' && item.value === 'requestdata') {
+                        isRequestedData = true;
+                        break;
+                      }
+                    }
+                    return isRequestedData;
                 },
                 'getFormValues': function(save_mode) {
                     var formSelector = "#" + formBodyId;

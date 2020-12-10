@@ -539,3 +539,8 @@ def __get_previous_package_dict(context, id):
         context[context_key] = pkg_dict
 
     return pkg_dict or {}
+
+
+def hdx_resources_not_allowed_if_requested_data(key, data, errors, context):
+    if data[key] and (u'resources', 0, 'url') in data and (u'resources', 0, 'name') in data:
+        raise df.Invalid(_('By request - HDX Connect datasets can not store resources'))

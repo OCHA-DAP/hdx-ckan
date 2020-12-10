@@ -209,7 +209,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                 tk.get_validator('not_empty'),
                                 tk.get_converter('convert_to_extras')],
             'groups_list': [vd.groups_not_empty],
-            'is_requestdata_type': [tk.get_validator('hdx_boolean_string_converter'), tk.get_converter('convert_to_extras')],
+            'is_requestdata_type': [tk.get_validator('hdx_resources_not_allowed_if_requested_data'),
+                                    tk.get_validator('hdx_boolean_string_converter'),
+                                    tk.get_converter('convert_to_extras')],
             'indicator': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'last_data_update_date': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'last_metadata_update_date': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -535,6 +537,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
+            'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data
         }
 
     def get_auth_functions(self):
