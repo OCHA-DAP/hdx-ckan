@@ -563,6 +563,7 @@ ul.dataset-resources li + li.label-icons {
   border-color: #333333;
   opacity: 0.65;
   cursor: help;
+  text-align: center;
 }
 .resource-item .under-review.btn:hover,
 .resource-item .under-review.btn:focus {
