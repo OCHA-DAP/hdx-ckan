@@ -504,7 +504,7 @@ def hdx_daterange_possible_infinite_end(key, data, errors, context):
 
 def hdx_convert_old_date_to_daterange(key, data, errors, context):
     value = data[key]
-    if '[' in value and "]" in value and " TO " in value:
+    if value and '[' in value and ']' in value and ' TO ' in value:
         return
     try:
         dates_list = value.split('-')
