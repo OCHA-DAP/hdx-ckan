@@ -7,7 +7,7 @@
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@0.1.0#egg=ckanext-dcat  # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview  # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.0#egg=ckanext-requestdata  # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.2#egg=ckanext-s3filestore  # via -r requirements.in
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.3#egg=ckanext-s3filestore  # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.1.0#egg=ckanext-showcase  # via -r requirements.in
 argparse==1.4.0           # via ofs
 babel==2.3.4              # via -r requirements.in, flask-babel
