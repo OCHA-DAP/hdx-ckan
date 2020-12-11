@@ -938,6 +938,7 @@ $(function(){
               //             this.goToStep2();
               //         }
               //     }.bind(this));
+              $('#dataset-is-public-description').toggle(message.type === 'private_changed' && message.newValue === 'public');
               if (message.type === 'private_changed' && message.newValue === 'requestdata') {
                 // this.contribute_global.resourceModelList.models = [];
                 this._prepareFormForMetadataOnly({isEdit: true}, true);
