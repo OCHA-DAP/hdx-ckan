@@ -502,6 +502,26 @@ def hdx_daterange_possible_infinite_end(key, data, errors, context):
     data[key] = new_value
 
 
+def hdx_convert_old_date_to_daterange(key, data, errors, context):
+    value = data[key]
+    if '[' in value and "]" in value and " TO " in value:
+        return
+    try:
+        dates_list = value.split('-')
+        if dates_list:
+            start_date = datetime.datetime.strptime(dates_list[0].strip(), '%m/%d/%Y')
+            if len(dates_list) == 2:
+                end_date = datetime.datetime.strptime(dates_list[1].strip(), '%m/%d/%Y')
+            else:
+                end_date = start_date
+            data[key] = "[{start_date}T00:00:00 TO {end_date}T23:59:59]".format(start_date=start_date.strftime("%Y-%m-%d"),
+                                                                                end_date=end_date.strftime("%Y-%m-%d"))
+    except TypeError as e:
+        raise df.Invalid(_('Invalid old HDX date format MM/DD/YYYY. Please use [start_datetime TO end_datetime]'))
+    except ValueError as e:
+        raise df.Invalid(_('Invalid old HDX date format MM/DD/YYYY. Please use [start_datetime TO end_datetime]'))
+
+
 def hdx_convert_to_json_string(key, data, errors, context):
     value = data[key]
     try:
