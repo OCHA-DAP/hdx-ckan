@@ -24,7 +24,7 @@ dogpile.cache==0.7.1      # via -r requirements.in
 email_validator==1.0.2    # via -r requirements.in
 fanstatic==0.12           # via -r requirements.in
 flask-babel==0.11.2       # via -r requirements.in
-flask==0.12.4             # via -r requirements.in, flask-babel
+flask==1.0                # via -r requirements.in, flask-babel
 formencode==1.3.1         # via pylons
 funcsigs==1.0.2           # via beaker
 git+https://github.com/geomet/geomet.git  # via -r requirements.in
