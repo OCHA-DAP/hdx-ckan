@@ -116,6 +116,7 @@
   min-height: 200px;
   background-color: #eeeeee;
   border-radius: 6px;
+  overflow: hidden;
 }
 .homepage-main .hero-section .hero-boxes .action-box ~ .action-box {
   margin-top: 20px;
@@ -211,6 +212,20 @@
 .homepage-main .hero-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content .action {
   color: #f2645a;
   text-transform: uppercase;
+}
+.homepage-main .hero-section .hero-boxes .action-box .add-data-footer {
+  background-color: #f2645a;
+  padding: 10px 15px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #eeeeee;
+}
+.homepage-main .hero-section .hero-boxes .action-box .add-data-footer a,
+.homepage-main .hero-section .hero-boxes .action-box .add-data-footer a:focus,
+.homepage-main .hero-section .hero-boxes .action-box .add-data-footer a:hover {
+  color: #eeeeee;
+  text-decoration: underline;
 }
 .homepage-main .carousel-section {
   background-color: #1ebfb3;

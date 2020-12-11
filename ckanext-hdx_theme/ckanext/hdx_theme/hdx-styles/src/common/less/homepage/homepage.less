@@ -111,6 +111,7 @@
         min-height: 200px; //actual content will enlarge/shrink
         background-color: @extraLightGrayColor;
         border-radius: @searchBoxRadius;
+        overflow: hidden;
 
         ~ .action-box {
           margin-top: 20px;
@@ -212,6 +213,18 @@
                 color: @orangeColor;
                 text-transform: uppercase;
               }
+            }
+          }
+        }
+        .add-data-footer {
+          background-color: @orangeColor;
+          padding: 10px 15px;
+          .sourceSansProFont(400, 14px);
+          color: @extraLightGrayColor;
+          a {
+            &, &:focus, &:hover {
+              color: @extraLightGrayColor;
+              text-decoration: underline;
             }
           }
         }
