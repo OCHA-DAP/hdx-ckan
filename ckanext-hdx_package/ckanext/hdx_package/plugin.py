@@ -553,7 +553,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
             'hdx_update_microdata': vd.hdx_update_microdata,
-            'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata
+            'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata,
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
             'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange
         }
