@@ -225,7 +225,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         saved_dataset2 = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-edit'})
 
-        assert saved_dataset2 and saved_dataset2.get('dataset_date') == "[2016-09-17T00:00:00 TO 2016-09-27T00:00:00]"
+        assert saved_dataset2 and saved_dataset2.get('dataset_date') == "[2016-09-17T00:00:00 TO 2016-09-27T23:59:59]"
 
         type(self).use_package_create_wrapper = True
 
