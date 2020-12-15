@@ -44,6 +44,11 @@ smtp.user        = ${HDX_SMTP_USER}
 smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
 
+## DOWNLOAD WITH CACHE DATASETS
+# accepting comma separated list with no spaces
+hdx.download_with_cache.datasets = repository-for-pdf-files
+hdx.download_with_cache.folder = /srv/filestore/download_cache
+
 hdx_smtp.mail_from_please_reply   = please-reply@${HDX_SMTP_DOMAIN}
 
 hdx.cache.onstartup = true
