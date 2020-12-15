@@ -64,7 +64,7 @@ class DaterangeParser(object):
         else:
             end_date_str = self.end_date.isoformat()[:23] + ('Z' if for_solr else '')
             if end_date_ending and '00:00:00' in end_date_str:
-                end_date_str.replace('00:00:00','23:59:59')
+                end_date_str = end_date_str.replace('00:00:00', '23:59:59')
 
         return '[{} TO {}]'.format(start_date_str, end_date_str)
 

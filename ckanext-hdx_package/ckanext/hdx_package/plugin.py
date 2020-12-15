@@ -225,7 +225,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'caveats': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'dataset_source': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'dataset_date': [tk.get_validator('hdx_convert_old_date_to_daterange'),
-                             tk.get_validator('hdx_daterange_possible_infinite_end'),
+                             tk.get_validator('hdx_daterange_possible_infinite_end_dataset_date'),
                              tk.get_validator('not_empty'),
                              tk.get_converter('convert_to_extras')],
             'methodology': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
@@ -538,6 +538,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
             'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
+            'hdx_daterange_possible_infinite_end_dataset_date': vd.hdx_daterange_possible_infinite_end_dataset_date,
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,

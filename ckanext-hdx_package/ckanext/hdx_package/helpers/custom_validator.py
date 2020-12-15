@@ -502,6 +502,12 @@ def hdx_daterange_possible_infinite_end(key, data, errors, context):
     data[key] = new_value
 
 
+def hdx_daterange_possible_infinite_end_dataset_date(key, data, errors, context):
+    value = data.get(key)  # type: str
+    new_value = DaterangeParser(value).compute_daterange_string(False, end_date_ending=True)
+    data[key] = new_value
+
+
 def hdx_convert_old_date_to_daterange(key, data, errors, context):
     value = data[key]
     if value and '[' in value and ']' in value and ' TO ' in value:
