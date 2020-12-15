@@ -206,21 +206,21 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         pkg_dict.pop('resource_grouping', None)
 
         self.__process_dates_in_resource_extra(pkg_dict)
-        self.__process_dataset_date(pkg_dict)
+        # self.__process_dataset_date(pkg_dict)
         return pkg_dict
 
-    def __process_dataset_date(self, pkg_dict):
-        '''
-        This is very similar to what happens in :func:`ckan.lib.search.index.index_package()`
-        for '_date' fields
-        :param pkg_dict:
-        :type pkg_dict: dict
-        '''
-        key = 'extras_dataset_date'
-        value = pkg_dict.get(key)
-        if value:
-            new_value = DaterangeParser(value).compute_daterange_string(True, end_date_ending=True)
-            pkg_dict[key] = new_value
+    # def __process_dataset_date(self, pkg_dict):
+    #     '''
+    #     This is very similar to what happens in :func:`ckan.lib.search.index.index_package()`
+    #     for '_date' fields
+    #     :param pkg_dict:
+    #     :type pkg_dict: dict
+    #     '''
+    #     key = 'extras_dataset_date'
+    #     value = pkg_dict.get(key)
+    #     if value:
+    #         new_value = DaterangeParser(value).compute_daterange_string(True, end_date_ending=True)
+    #         pkg_dict[key] = new_value
 
     def __process_dates_in_resource_extra(self, pkg_dict):
         '''
