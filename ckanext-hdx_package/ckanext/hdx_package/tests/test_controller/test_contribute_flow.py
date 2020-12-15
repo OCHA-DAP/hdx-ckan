@@ -188,7 +188,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         saved_dataset = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-save'})
 
-        assert saved_dataset and saved_dataset.get('dataset_date') == "[1960-01-01T00:00:00 TO 2012-12-31T00:00:00]"
+        assert saved_dataset and saved_dataset.get('dataset_date') == "[1960-01-01T00:00:00 TO 2012-12-31T23:59:59]"
 
         type(self).use_package_create_wrapper = True
 
@@ -211,7 +211,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         saved_dataset = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-edit'})
 
-        assert saved_dataset and saved_dataset.get('dataset_date') == "[1960-01-01T00:00:00 TO 2012-12-31T00:00:00]"
+        assert saved_dataset and saved_dataset.get('dataset_date') == "[1960-01-01T00:00:00 TO 2012-12-31T23:59:59]"
         assert saved_dataset.get('id')
 
         post_params['id'] = saved_dataset.get('id')
