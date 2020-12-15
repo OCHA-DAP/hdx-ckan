@@ -57,12 +57,15 @@ class DaterangeParser(object):
     #         return True
     #     return False
 
-    def compute_daterange_string(self, for_solr):
+    def compute_daterange_string(self, for_solr, end_date_ending=False):
         start_date_str = self.start_date.isoformat()[:23] + ('Z' if for_solr else '')
         if self.end_date_is_infinity:
             end_date_str = '*'
         else:
             end_date_str = self.end_date.isoformat()[:23] + ('Z' if for_solr else '')
+            if end_date_ending and '00:00:00' in end_date_str:
+                end_date_str.replace('00:00:00','23:59:59')
+
         return '[{} TO {}]'.format(start_date_str, end_date_str)
 
     # def human_readable(self):

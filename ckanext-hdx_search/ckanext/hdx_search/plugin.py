@@ -219,7 +219,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         key = 'extras_dataset_date'
         value = pkg_dict.get(key)
         if value:
-            new_value = DaterangeParser(value).compute_daterange_string(True)
+            new_value = DaterangeParser(value).compute_daterange_string(True, end_date_ending=True)
             pkg_dict[key] = new_value
 
     def __process_dates_in_resource_extra(self, pkg_dict):
