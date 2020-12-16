@@ -1,4 +1,4 @@
-{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None) %}
+{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None, resource=None) %}
   {# status - OK, ERROR, RUNNIG/QUEUED, None/False #}
   {# status_text - not needed in case it's still RUNNING/QUEUED #}
 
@@ -12,9 +12,15 @@
   {% elif status == 'OK' or status == 'ERROR' %}
     {% set status_class = 'ok' if status  == 'OK' else 'warn' %}
     {% set icon_class = 'humanitarianicons-Selected' if status_class  == 'ok' else 'humanitarianicons-Alert' %}
+    {% if resource.pii_predict_score %}
+      {% set score = resource.pii_predict_score|float %}
+      {% set score = score * 100 %}
+      {% set status_text = '%0.2f'|format(score) %}
+      {% set status_text = status_text ~ "%" %}
+    {% endif %}
     <span class="pii-label {{ status_class }}">
       <span class="pii-label-text">
-      {{ status_text }}
+        {{ status_text }}
       </span>
       <i class="{{icon_class}}"></i>
     </span>
