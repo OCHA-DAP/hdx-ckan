@@ -169,7 +169,7 @@
   padding: 20px;
 }
 .qa-package-details .resource-item.in-review {
-  opacity: 100%;
+  opacity: 60%;
 }
 .qa-package-details .nav.nav-tabs {
   background-color: #fff;
