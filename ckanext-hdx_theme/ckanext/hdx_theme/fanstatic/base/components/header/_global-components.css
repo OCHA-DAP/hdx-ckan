@@ -217,15 +217,6 @@
   padding-left: 20px;
   padding-right: 20px;
 }
-.btn-empty-blue.disabled {
-  color: #333333;
-  border-color: #333333;
-}
-.btn-empty-blue.disabled:hover,
-.btn-empty-blue.disabled:focus {
-  color: #333333;
-  border-color: #333333;
-}
 .btn-empty-blue:hover,
 .btn-empty-blue:focus {
   color: #007CE0;
@@ -483,6 +474,18 @@ ul.dataset-resources li + li.label-icons {
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;
+}
+.resource-item .under-review.btn {
+  color: #333333;
+  border-color: #333333;
+  opacity: 0.65;
+  cursor: help;
+  text-align: center;
+}
+.resource-item .under-review.btn:hover,
+.resource-item .under-review.btn:focus {
+  color: #333333;
+  border-color: #333333;
 }
 .format-label {
   display: inline-block;

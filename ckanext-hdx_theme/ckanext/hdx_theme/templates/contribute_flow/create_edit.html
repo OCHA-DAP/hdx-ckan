@@ -137,6 +137,7 @@
                             {{ form_title }} - <span class="small">{{ _('Please fill out all required fields') }}</span>
                         </li>
                     </ol>
+
                     {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
                     <div class="paddingLeftHack paddingRightHack">
                       <div class="alert alert-danger">
@@ -163,6 +164,50 @@
                                       <!--<li data-field-label="type of error">type of error: error</li>-->
                                     <!--</ul>-->
                                 </div>
+                                <div class="row form-section form-privacy-section contribute-form-container-items">
+                                  <div class="col-xs-3">
+                                    <h3>Privacy Settings</h3>
+                                    <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
+                                  </div>
+                                  <div class="col-xs-9">
+                                    <div class="form-group required">
+                                      <label class="control-label">This dataset is</label>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
+                                          <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
+                                        </label>
+                                      </div>
+                                      <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
+                                        <p>{{ _('You are switching your dataset\'s privacy setting to "By request - ')}}<a href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.</p>
+                                      </div>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
+                                          <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                        </label>
+                                      </div>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
+                                          <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                        </label>
+                                      </div>
+
+                                      <div id="dataset-is-public-description" style="padding-left: 20px; {% if not (data.private == False and data.is_requestdata_type == False) %}display: none;{% endif %}" >
+                                        The HDX team manually reviews every dataset uploaded to the platform as part of a standard
+                                        quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
+                                        every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-xs-12">
+                                    <hr class="form-hr"/>
+                                  </div>
+                                </div>
+
                                 <div class="row form-section form-resources-section">
                                     <div class="col-xs-3 form-explanation">
                                         <h3>{{ _('Your Files') }}</h3>
@@ -280,6 +325,36 @@
                                                                   </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                  <div class="control-group form-group">
+                                                                    <label class="control-label">This file could contain:</label>
+                                                                    <div class="controls checkbox">
+                                                                      <label class="" for="resource<%= position %>-pii">
+                                                                        <input id="resource<%= position %>-pii" type="checkbox" name="pii" <% if (pii === 'true') { print('checked="checked"'); } %>>
+                                                                        <b>Personally Identifiable Information (PII)</b> e.g. name, biometric data, phone number, ID numbers, etc.
+                                                                      </label>
+                                                                      <div class="item-description orange" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
+                                                                        HDX does not allow data that includes personally identifiable information (PII) to be shared
+                                                                        publicly through the site. Please delete the resource(s) containing PII. If you wish to share this resource,
+                                                                        take steps to ensure that it is properly anonymised (with all the direct identifiers removed) and upload it again.<br>
+                                                                        You can learn more in the <a href="/about/terms" target="_blank">HDX Terms of Service</a>.
+                                                                      </div>
+                                                                    </div>
+                                                                    <div class="controls checkbox">
+                                                                      <label class="" for="resource<%= position %>-microdata">
+                                                                        <input id="resource<%= position %>-microdata" type="checkbox" name="microdata" <% if (microdata) { print('checked="checked"'); } %>>
+                                                                        <b>Microdata</b> e.g. household survey results, disaggregated needs assessment data, etc.
+                                                                      </label>
+                                                                      <div class="item-description" <% if (!microdata) { print('style="display:none;"'); } %>>
+                                                                        HDX allows microdata to be shared publicly through the site. However, to protect individuals and vulnerable groups, our team runs a disclosure risk assessment on any resource  containing microdata. We do this because it may still be possible to re-identify individuals or expose confidential information even after direct identifiers have been removed from microdata.<br><br>
+                                                                        We will notify you within 24 hours if our team detects any disclosure risk. During this time, the resource will appear on your dataset page but be marked as <b>under review</b>.<br><br>
+                                                                        Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="col-xs-3 source-file-upload">
                                                             <div class="drag-drop-area">
@@ -326,48 +401,10 @@
                                         <hr class="form-hr"/>
                                     </div>
                                 </div>
-                                <section id="contribute-flow-form-body">
+                                <section id="contribute-flow-form-body" class="contribute-form-container-items">
                                     {% if data.resource_grouping %}
                                         <input id="field_resource_grouping" type="hidden" name="resource_grouping" value="{{ data.resource_grouping }}" />
                                     {% endif %}
-                                    <div class="row form-section form-privacy-section">
-                                        <div class="col-xs-3">
-                                            <h3>Privacy Settings</h3>
-                                            <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <div class="form-group required">
-                                                <label class="control-label">This dataset is</label>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
-                                                        <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
-                                                    </label>
-                                                </div>
-                                                <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
-                                                  <p>{{ _('You are switching your dataset\'s privacy setting to "By request - ')}}<a href="/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.</p>
-                                                </div>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
-                                                        <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                                    </label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
-                                                        <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                                    </label>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <hr class="form-hr"/>
-                                        </div>
-                                    </div>
                                     <div class="row form-section">
                                         <div class="col-xs-3">
                                             <h3>Dataset Title &amp; Description</h3>
@@ -522,87 +559,57 @@
                                             {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group', 'required'], attrs=maintainer_attrs) }}
                                             </div>
 
-                                            <div class="row" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
-                                                <div class="col-xs-3" >
-                                                    <div class="control-group form-group">
-                                                        <label class="control-label">Date of dataset</label>
-                                                    </div>
-                                                </div>
-{#                                                <div class="col-xs-5" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">#}
-{#                                                    {% set original_value = data.dataset_date %}#}
-{#                                                    {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',#}
-{#                                                    'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',#}
-{#                                                    'data-module-alt_field_id': 'field-dataset_date',#}
-{#                                                    'data-module-original_value': original_value, 'class':'form-control' } %}#}
-{#                                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}#}
-{#                                                    <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />#}
-{#                                                </div>#}
-                                                <div class="col-xs-9">
-                                                    <div class="row">
-{#                                                            <div class="col-xs-1" style="padding:0">#}
-{#                                                                <div class="control-group form-group">#}
-{#                                                                    <label class="control-label">OR</label>#}
-{#                                                                </div>#}
-{#                                                            </div>#}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
+                                              <div class="control-group form-group control-full">
+                                                <label class="control-label">Date of dataset</label>
+                                                <div class="controls">
+                                                  <div style="display: flex">
+                                                      <div>
+                                                        <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
+                                                               data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
+                                                               data-module-alt_field_id='date_range1' data-module-original_value="{{ data.dataset_date }}"
+                                                               label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-control' style="width: 100%;" />
+                                                        <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
 
-                                                        <div class="col-xs-4" style="padding-left:10px;padding-right:0px">
-                                                            <div class="form-group">
-                                                                <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
-                                                                       data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
-                                                                       data-module-alt_field_id='date_range1' data-module-original_value="{{ data.dataset_date }}"
-                                                                       label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-group form-control' style="width: 100%;" />
-                                                                <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="col-xs-1" style="padding:0">
-{#                                                                <div class="control-group form-group">#}
-                                                                    <label class="control-label" style="text-align: center">-</label>
-{#                                                                </div>#}
-                                                        </div>
-
-                                                        <div class="col-xs-4" style="padding:0">
-                                                            <div class="form-group">
-                                                                <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
-                                                                       data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
-                                                                       data-module-alt_field_id='date_range2' data-module-original_value="{{ data.dataset_date }}"
-                                                                       label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='form-group form-control' style="width: 100%;" />
-                                                                <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="col-xs-3" style="padding-top:10px"><div class="form-group">
-{#                                                          <div style="margin-left:-160px; ">#}
-{#                                                            {{ form.checkbox('dataset_date_ongoing', id='field_dataset_date_ongoing', label=_('Ongoing'), value='1', checked=data.dataset_date_ongoing, error=errors.dataset_date_ongoing, classes=['form-group'], attrs={}) }}#}
-{#                                                          </div>#}
-{#                                                                                                    {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-{#                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
-{#                                                    'data-toggle': 'tooltip'}
-{#                                                    %}#}
-                                                          <label style="font-weight:inherit"
-                                                                 data-module='bs_tooltip'
-                                                                 data-module-placement='top'
-                                                                 data-original-title= 'The end date will always advance to be the current date'
-                                                                 data-toggle= 'tooltip' >
-                                                            <input style="margin-right: 5px"
-                                                                   type="checkbox"
-                                                                   name="ui_date_ongoing"
-                                                                   value="1"
-                                                                   id="ui_date_ongoing"
-                                                                   data-module='hdx_datepicker'
-                                                                   data-module-group='2'
-                                                                   data-module-type="date_ongoing"
-                                                                   data-module-topic='date-field-clicked'
-                                                                   data-module-alt_field_id='date_ongoing'
-                                                                   data-module-original_value="{{ data.ui_date_ongoing }}"
-                                                                   {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
+                                                      </div>
+                                                      <span style="width:30px; text-align: center; padding-top: 10px;">-</span>
+                                                      <div>
+                                                        <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
+                                                               data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
+                                                               data-module-alt_field_id='date_range2' data-module-original_value="{{ data.dataset_date }}"
+                                                               label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='form-control' style="width: 100%;" />
+                                                        <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+                                                      </div>
+                                                      <div style="padding-top: 10px; margin-left: 20px;">
+                                                        <label style="font-weight:inherit"
+                                                               data-module='bs_tooltip'
+                                                               data-module-placement='top'
+                                                               data-original-title= 'The end date will always advance to be the current date'
+                                                               data-toggle= 'tooltip' >
+                                                          <input style="margin-right: 5px; width: auto;"
+                                                                 type="checkbox"
+                                                                 name="ui_date_ongoing"
+                                                                 value="1"
+                                                                 id="ui_date_ongoing"
+                                                                 data-module='hdx_datepicker'
+                                                                 data-module-group='2'
+                                                                 data-module-type="date_ongoing"
+                                                                 data-module-topic='date-field-clicked'
+                                                                 data-module-alt_field_id='date_ongoing'
+                                                                 data-module-original_value="{{ data.ui_date_ongoing }}"
+                                                                 {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
                                                             Ongoing (?)
-                                                          </label>
-                                                        </div></div>
+                                                        </label>
+                                                      </div>
+                                                  </div>
+                                                  <div class="row">
+                                                    <div class="col-xs-12">
+                                                      <span class="error-block"></span>
                                                     </div>
-                                                </div>
+                                                  </div>
 
+                                                </div>
+                                                </div>
                                             </div>
 
                                             {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
@@ -689,7 +696,7 @@
                         <div class="paddingLeftHack paddingRightHack">
                             <div class="pTopBottom35">
                                 <div class="clearfix vertically-center-reference">
-                                    <label class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="create-form-submit">
+                                    <label id="terms-of-service-label" class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="create-form-submit">
                                         <input type="checkbox">
                                         I confirm that this dataset does not contain Personally Identifiable Information (PII) or otherwise violate the  <a target="_blank" href="/about/terms">HDX Terms of Service</a>
                                     </label>

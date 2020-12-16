@@ -11,7 +11,7 @@
 {% resource 'hdx_theme/jquery.expander' %}
 {% resource 'hdx_theme/hdx_show_more.js' %}
 {% resource 'hdx_theme/resource-list' %}
-{% set in_review = res.pii_report_flag == "ERROR" %}
+{% set in_review = res.in_quarantine %}
 
 <li>
     <div class="resource-item {% if in_review %}in-review{% endif %}">
@@ -25,9 +25,6 @@
           {% endif %}
           {% if res.tracking_summary %}
             {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
-          {% endif %}
-          {% if res.in_quarantine %}
-            <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a" class="under-review">[ under review ]</a>
           {% endif %}
         </span>
         <span class="spacer"></span>
@@ -66,9 +63,10 @@
               </a>
               {% endif %}
               {% if in_review %}
-                <span class="btn btn-empty btn-empty-blue disabled hdx-btn">
+                <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a"
+                   class="btn btn-empty btn-empty-blue under-review hdx-btn">
                   {{ _('Under Review') }}
-                </span>
+                </a>
               {% endif %}
             {% endblock %}
           </div>

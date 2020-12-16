@@ -180,7 +180,8 @@ ckan.module('contribute_flow_main', function($, _) {
                     return isRequestedData;
                 },
                 'getFormValues': function(save_mode) {
-                    var formSelector = "#" + formBodyId;
+                    // var formSelector = "#" + formBodyId;
+                    var formSelector = ".contribute-form-container-items";
                     var modifiedFormDataArray = [
                         {
                             'name':'save',
