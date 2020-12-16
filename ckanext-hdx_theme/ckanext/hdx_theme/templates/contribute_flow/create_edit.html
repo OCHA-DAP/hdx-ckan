@@ -559,12 +559,9 @@
                                             {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group', 'required'], attrs=maintainer_attrs) }}
                                             </div>
 
-                                            <div class="row" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
-                                                <div class="col-xs-3" >
-                                                    <div class="control-group form-group">
-                                                        <label class="control-label">Date of dataset</label>
-                                                    </div>
-                                                </div>
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
+                                              <div class="control-group form-group control-full">
+                                                <label class="control-label">Date of dataset</label>
 {#                                                <div class="col-xs-5" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">#}
 {#                                                    {% set original_value = data.dataset_date %}#}
 {#                                                    {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',#}
@@ -574,14 +571,8 @@
 {#                                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}#}
 {#                                                    <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />#}
 {#                                                </div>#}
-                                                <div class="col-xs-9">
-                                                    <div class="row">
-{#                                                            <div class="col-xs-1" style="padding:0">#}
-{#                                                                <div class="control-group form-group">#}
-{#                                                                    <label class="control-label">OR</label>#}
-{#                                                                </div>#}
-{#                                                            </div>#}
-
+                                                      <div class="controls">
+                                                        <div class="row">
                                                         <div class="col-xs-4" style="padding-left:10px;padding-right:0px">
                                                             <div class="form-group">
                                                                 <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
@@ -589,16 +580,14 @@
                                                                        data-module-alt_field_id='date_range1' data-module-original_value="{{ data.dataset_date }}"
                                                                        label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-group form-control' style="width: 100%;" />
                                                                 <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
+
                                                             </div>
-
                                                         </div>
-
                                                         <div class="col-xs-1" style="padding:0">
 {#                                                                <div class="control-group form-group">#}
-                                                                    <label class="control-label" style="text-align: center">-</label>
+                                                                    <span>-</span>
 {#                                                                </div>#}
                                                         </div>
-
                                                         <div class="col-xs-4" style="padding:0">
                                                             <div class="form-group">
                                                                 <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
@@ -607,16 +596,8 @@
                                                                        label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='form-group form-control' style="width: 100%;" />
                                                                 <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
                                                             </div>
-
                                                         </div>
                                                         <div class="col-xs-3" style="padding-top:10px"><div class="form-group">
-{#                                                          <div style="margin-left:-160px; ">#}
-{#                                                            {{ form.checkbox('dataset_date_ongoing', id='field_dataset_date_ongoing', label=_('Ongoing'), value='1', checked=data.dataset_date_ongoing, error=errors.dataset_date_ongoing, classes=['form-group'], attrs={}) }}#}
-{#                                                          </div>#}
-{#                                                                                                    {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-{#                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
-{#                                                    'data-toggle': 'tooltip'}
-{#                                                    %}#}
                                                           <label style="font-weight:inherit"
                                                                  data-module='bs_tooltip'
                                                                  data-module-placement='top'
@@ -637,9 +618,15 @@
                                                             Ongoing (?)
                                                           </label>
                                                         </div></div>
+                                                        </div>
+                                                      <div class="row">
+                                                        <div class="col-xs-12">
+                                                          <span class="error-block"></span>
+                                                        </div>
+                                                      </div>
+
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
