@@ -414,8 +414,13 @@ def hdx_update_in_quarantine_by_microdata(key, data, errors, context):
         pkg_id = data.get(('id',))
         if pkg_id:
             pkg_dict = __get_previous_package_dict(context, pkg_id)
-            if not pkg_dict.get(key[0], [])[0].get('microdata', None) and data.get(key):
+            if len(pkg_dict.get(key[0], [])) > 0:
+                if not pkg_dict.get(key[0], [])[0].get('microdata', None) and data.get(key):
+                    data[key[:2] + ('in_quarantine',)] = True
+            elif data.get(key):
                 data[key[:2] + ('in_quarantine',)] = True
+        elif data.get(('name',)):
+            data[key[:2] + ('in_quarantine',)] = True
 
 
 def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, resource_level=False):
