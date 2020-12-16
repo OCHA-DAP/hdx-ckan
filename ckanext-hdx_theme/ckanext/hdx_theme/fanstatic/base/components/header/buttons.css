@@ -94,15 +94,6 @@
   padding-left: 20px;
   padding-right: 20px;
 }
-.btn-empty-blue.disabled {
-  color: #333333;
-  border-color: #333333;
-}
-.btn-empty-blue.disabled:hover,
-.btn-empty-blue.disabled:focus {
-  color: #333333;
-  border-color: #333333;
-}
 .btn-empty-blue:hover,
 .btn-empty-blue:focus {
   color: #007CE0;

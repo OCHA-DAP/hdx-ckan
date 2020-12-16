@@ -80,7 +80,14 @@
     background-color: @blueColor;
     .gothamLightFont(20px);
     color: @whiteColor;
+    .sub-title {
+      font-size: 14px;
 
+      a, a:hover, a:focus {
+        color: @whiteColor;
+        text-decoration: underline;
+      }
+    }
     .breadcrumb{
       margin: 0;
       background-color: @blueColor;
@@ -170,6 +177,21 @@
       input {
         margin-top: 4px;
         top: 0;
+      }
+
+      .item-description {
+        margin-top: 5px;
+        padding-left: 20px;
+
+        &.orange {
+          color: @orangeColor;
+          a {
+            &, &:hover, &:focus {
+              color: @orangeColor;
+              text-decoration: underline;
+            }
+          }
+        }
       }
     }
 

@@ -291,7 +291,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),
-                    tk.get_validator('hdx_reset_on_file_upload')
+                    tk.get_validator('hdx_reset_on_file_upload'),
+                    tk.get_validator('hdx_update_microdata'),
+                ],
+                'microdata': [
+                    # tk.get_validator('hdx_update_field_if_value_wrapper'),
+                    tk.get_validator('boolean_validator'),
+                    tk.get_validator('hdx_update_in_quarantine_by_microdata'),
+                    # tk.get_validator('hdx_reset_on_file_upload')
                 ],
                 'pii_timestamp': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
@@ -370,6 +377,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('clean_format'),
                 ],
                 'in_quarantine': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
+                'microdata': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
                 ],
@@ -541,6 +552,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_daterange_possible_infinite_end_dataset_date': vd.hdx_daterange_possible_infinite_end_dataset_date,
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
+            'hdx_update_microdata': vd.hdx_update_microdata,
+            'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata,
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
             'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange
         }
