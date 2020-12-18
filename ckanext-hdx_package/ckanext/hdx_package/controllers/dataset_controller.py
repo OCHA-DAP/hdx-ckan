@@ -13,7 +13,7 @@ from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape
 from ckanext.hdx_theme.helpers import helpers as hdx_helpers
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-from ckanext.hdx_theme.util.mail import simple_validate_email
+from ckanext.hdx_theme.util.mail import hdx_validate_email
 import ckanext.hdx_package.helpers.custom_pages as cp_h
 from pylons import config
 
@@ -1291,7 +1291,7 @@ class DatasetController(PackageController):
                                              qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
-            simple_validate_email(data_dict['email'])
+            hdx_validate_email(data_dict['email'])
 
         except NotAuthorized:
             return json.dumps(
@@ -1351,7 +1351,7 @@ class DatasetController(PackageController):
                                                  qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
-            simple_validate_email(data_dict['email'])
+            hdx_validate_email(data_dict['email'])
 
         except NotAuthorized:
             return json.dumps(

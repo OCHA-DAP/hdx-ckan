@@ -6,7 +6,7 @@ import pylons.configuration as configuration
 import requests
 import pylons.config as config
 from ckanext.hdx_theme.helpers.faq_dr_data import faq_dr_data
-from ckanext.hdx_theme.util.mail import simple_validate_email
+from ckanext.hdx_theme.util.mail import hdx_validate_email
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -76,7 +76,7 @@ class FaqDataResponsibilityController(base.BaseController):
                 if not self.is_valid_captcha(response=captcha_response):
                     raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
 
-            simple_validate_email(email)
+            hdx_validate_email(email)
 
         except ValidationError, e:
             error_summary = e.error_summary

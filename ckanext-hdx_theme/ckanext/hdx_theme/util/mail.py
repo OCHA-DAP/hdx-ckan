@@ -52,13 +52,13 @@ class NoRecipientException(exceptions.Exception):
         return repr(self.value)
 
 
-def simple_validate_email(email):
+def hdx_validate_email(email):
     '''
-    Uses the validate_email library with check_mx=False, verify=False
+    Wrapper for email_validator from ckan core
     :param email: the email to validate
     :return: True if valid, raises Invalid exception otherwise
     '''
 
-    get_validator('email_validator')(email, {})
+    v = get_validator('email_validator')(email, {})
 
     return True

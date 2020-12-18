@@ -294,7 +294,7 @@ class HDXOrgMemberController(org.OrganizationController):
     def _get_user_obj(self, mail_or_username):
         userobj = None
         try:
-            if mailutil.simple_validate_email(mail_or_username):
+            if mailutil.hdx_validate_email(mail_or_username):
                 users = model.User.by_email(mail_or_username)
                 if users:
                     userobj = users[0]

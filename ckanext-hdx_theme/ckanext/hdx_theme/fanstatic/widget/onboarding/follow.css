@@ -1,6 +1,9 @@
 .two-column-follow .two-column-left {
   height: 560px;
 }
+.two-column-follow .two-column-left .regular-text {
+  color: #cccccc;
+}
 .two-column-follow .two-column-left .envelope {
   max-height: 200px;
   max-width: 100%;

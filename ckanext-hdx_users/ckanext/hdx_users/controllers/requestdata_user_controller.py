@@ -2,7 +2,7 @@ import json
 import ckan.model as model
 import ckanext.requestdata.controllers.user as requestdata_user
 from ckanext.requestdata.emailer import send_email
-from email_validator import validate_email
+from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
 from paste.deploy.converters import asbool
 from pylons import config
 import ckan.lib.helpers as h
