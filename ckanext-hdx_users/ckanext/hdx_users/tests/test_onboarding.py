@@ -1,10 +1,5 @@
-'''
-Created on Febr 17, 2020
+import pytest
 
-@author: Dan
-
-
-'''
 import mock
 import logging as logging
 import ckan.model as model
@@ -14,30 +9,16 @@ import unicodedata
 import ckan.lib.helpers as h
 import json
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
-import ckanext.hdx_users.helpers.permissions as ph
 import ckanext.hdx_users.helpers.tokens as tkh
 import ckanext.hdx_users.model as user_model
 
-from nose.tools import (assert_equal,
-                        assert_true,
-                        assert_false,
-                        assert_not_equal)
-
+from nose.tools import assert_true
 log = logging.getLogger(__name__)
 NotFound = logic.NotFound
 
 
 class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
-
-    # @classmethod
-    # def _load_plugins(cls):
-    #     try:
-    #         hdx_test_base.load_plugin('hdx_users hdx_user_extra hdx_package hdx_org_group hdx_theme')
-    #     except Exception as e:
-    #         log.warn('Module already loaded')
-    #         log.info(str(e))
 
     @classmethod
     def _get_action(cls, action_name):

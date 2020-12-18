@@ -48,7 +48,9 @@ class HdxBaseTest(object):
     See replace_package_create ()
     '''
 
-    USERS_USED_IN_TEST = []
+    app = None
+    original_config = None
+    USERS_USED_IN_TEST = ['tester', 'testsysadmin']
 
     @classmethod
     def _set_user_api_keys(cls):
@@ -136,6 +138,10 @@ class HdxBaseTest(object):
             return original_package_create(context, data_dict)
         logic._actions['package_create'] = package_create_wrapper
 
+    @classmethod
+    def get_backwards_compatible_test_client(cls):
+        return HDXBackwardsCompatibleTestClient(cls.app.app, helpers.CKANResponse)
+
 
 class HdxFunctionalBaseTest(HdxBaseTest):
 
@@ -144,3 +150,20 @@ class HdxFunctionalBaseTest(HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
         load_plugin('hdx_service_checker hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase')
+
+
+class HDXBackwardsCompatibleTestClient(helpers.CKANTestClient):
+
+    def __init__(self, application, response_wrapper=None, use_cookies=True, allow_subdomain_redirects=False):
+        super(HDXBackwardsCompatibleTestClient, self).__init__(application, response_wrapper, use_cookies,
+                                                               allow_subdomain_redirects)
+
+    def post(self, *args, **kwargs):
+        params = kwargs.pop("params", None)
+        if params:
+            kwargs["data"] = params
+        return super(HDXBackwardsCompatibleTestClient, self).post(*args, **kwargs)
+
+    def open(self, *args, **kwargs):
+        kwargs['follow_redirects'] = False
+        return super(HDXBackwardsCompatibleTestClient, self).open(*args, **kwargs)

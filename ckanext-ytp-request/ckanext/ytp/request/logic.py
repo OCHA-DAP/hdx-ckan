@@ -205,8 +205,8 @@ def _create_member_request(context, data_dict):
 
         if changed:
             model.Session.add(member)
-        else:
-            member.save()
+
+        model.Session.flush()
 
         extra = MemberExtra(member_id=member.id, key="created", value=datetime.utcnow().isoformat())
         extra.save()

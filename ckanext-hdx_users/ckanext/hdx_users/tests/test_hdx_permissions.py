@@ -1,3 +1,5 @@
+import pytest
+
 import logging
 
 import ckan.plugins.toolkit as tk

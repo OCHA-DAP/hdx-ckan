@@ -1,5 +1,4 @@
-import mock
-import dateutil.parser as date_parser
+import pytest
 
 import ckan.tests.factories as factories
 import ckan.plugins.toolkit as tk
