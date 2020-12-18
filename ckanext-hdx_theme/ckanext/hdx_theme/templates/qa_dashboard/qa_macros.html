@@ -26,12 +26,13 @@
     </span>
     <span class="pii-status">
       {% if link_to_log %}
-        <a href="{{ link_to_log }}" target="_blank">{{ h.render_datetime(isodate_string) }}</a>
+        <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">[View results]</a>
+        <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[LOG]</a>
         {% if link_to_dlp %}
-          <a href="{{ link_to_dlp }}" target="_blank">[DLP]</a>
+          <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[DLP]</a>
         {% endif %}
         {% if link_to_debug %}
-          <a href="{{ link_to_debug }}" target="_blank">[DBG]</a>
+          <a href="{{ link_to_debug }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[DBG]</a>
         {% endif %}
       {% else %}
         {{ h.render_datetime(isodate_string) }}
