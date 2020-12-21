@@ -106,12 +106,17 @@ class HDXQAController(HDXSearchController):
             return self._search_template()
 
     def qa_pii_log(self, id, resource_id, file_name):
-        self._redirect_to_qa_log(resource_id, file_name)
+        url = self._get_url_to_qa_log(resource_id, file_name)
+        if request.params.get("noredirect"):
+            return url
+        else:
+            redirect(url)
 
     def qa_sdcmicro_log(self, id, resource_id):
-        self._redirect_to_qa_log(resource_id, 'sdc.log.txt')
+        url = self._get_url_to_qa_log(resource_id, 'sdc.log.txt')
+        redirect(url)
 
-    def _redirect_to_qa_log(self, resource_id, log_filename, path_format='resources/{resource_id}/{log_filename}'):
+    def _get_url_to_qa_log(self, resource_id, log_filename, path_format='resources/{resource_id}/{log_filename}'):
         try:
             context = {'model': model, 'user': c.user or c.author,
                        'auth_user_obj': c.userobj}
@@ -128,7 +133,7 @@ class HDXQAController(HDXSearchController):
             #                                             'Key': path},
             #                                     ExpiresIn=60)
             url = generate_temporary_link(client, uploader.bucket_name, path)
-            redirect(url)
+            return url
 
         except ClientError as ex:
             log.error(str(ex))

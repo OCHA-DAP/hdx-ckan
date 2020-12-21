@@ -1,6 +1,7 @@
 {% extends "search/snippets/package_list.html" %}
 
 {% block search_list %}
+  {{ h.snippet('qa_dashboard/qa_results.html', id="qa-results-visualisation", title="PII Results") }}
   <div class="qa-dataset-list-head">
     <input type="checkbox" onclick="updateQASelection(this)"> Select all
 
