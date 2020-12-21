@@ -64,6 +64,11 @@
   color: #fff;
   border-color: #f2645a;
 }
+.dataset-pii .pii-list .pii-item .pii-label.info {
+  background-color: #888888;
+  color: #fff;
+  border-color: #888888;
+}
 .dataset-pii .pii-list .pii-item .pii-label.ok {
   border-color: #1ebfb3;
   color: #1ebfb3;

@@ -15,8 +15,9 @@
     {% if resource.pii_predict_score %}
       {% set score = resource.pii_predict_score|float %}
       {% set score = score * 100 %}
-      {% set status_text = '%0.2f'|format(score) %}
+      {% set status_text = '%0.1f'|format(score) %}
       {% set status_text = status_text ~ "%" %}
+      {% set status_class = 'info' %}
     {% endif %}
     <span class="pii-label {{ status_class }}">
       <span class="pii-label-text">
@@ -26,7 +27,10 @@
     </span>
     <span class="pii-status">
       {% if link_to_log %}
-        <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">[View results]</a>
+        {% if link_to_dlp %}
+          <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">[View results]</a>
+        {% endif %}
+
         <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[LOG]</a>
         {% if link_to_dlp %}
           <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[DLP]</a>
