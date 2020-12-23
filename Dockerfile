@@ -54,7 +54,7 @@ RUN apt-get -qq -y update && \
         libssl-dev && \
     curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get -qq -y install nodejs && \
-    npm install -g less && \
+    npm install -g less@3.13.1 && \
     apt-get -qq -y install python-pip && \
     pip install --upgrade pip && \
     pip -q install --upgrade \
