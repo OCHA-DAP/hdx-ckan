@@ -132,7 +132,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         user = model.User.get('valid@example.com')
         admin = model.User.by_name('testsysadmin')
         offset2 = str(h.url_for('user.delete', id=user.id))
-        res2 = self.app.post(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
+        res2 = self.app.post(offset2, status=200, headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
 
         profile_url = h.url_for(controller='user', action='read', id='valid@example.com')
@@ -140,18 +140,18 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
         non_admin = model.User.by_name('tester')
-        profile_result2 = self.app.get(profile_url, status=[404], headers={'Authorization': unicodedata.normalize(
+        profile_result2 = self.app.get(profile_url, status=404, headers={'Authorization': unicodedata.normalize(
             'NFKD', non_admin.apikey).encode('ascii', 'ignore')})
 
         assert '404' in profile_result2.status
 
-        assert '<span class="label label-important">Deleted</span>' in str(profile_result.response)
+        assert '<span class="label label-important">Deleted</span>' in profile_result.data
 
     def _create_user(self, email='valid@example.com'):
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
         params = {'email': email, 'nosetest': 'true'}
-        res = self.app.post(url, params)
+        res = self.app.post(url, data=params)
         return res
 
 
@@ -174,7 +174,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
         params = {'email': 'valid@example.com', 'nosetest': 'true'}
-        res = self.app.post(url, params)
+        res = self.app.post(url, data=params)
         assert_true(json.loads(res.body)['success'])
 
         user = model.User.get('valid@example.com')
@@ -192,9 +192,9 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
                         action='register_email')
         params = {'email': 'valid@example.com', 'nosetest': 'true'}
         # create 1
-        self.app.post(url, params)
+        self.app.post(url, data=params)
         # create 2
-        res = json.loads(self.app.post(url, params).body)
+        res = json.loads(self.app.post(url, data=params).body)
         assert_false(res['success'])
         assert_equal(res['error']['message'][0], 'The email address is already registered on HDX. Please use the sign in screen below.')
 
@@ -206,9 +206,10 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         params_one = {'email': 'valid@example.com', 'nosetest': 'true'}
         params_two = {'email': 'VALID@example.com', 'nosetest': 'true'}
         # create 1
-        self.app.post(url, params_one)
+        self.app.post(url, data=params_one)
         # create 2
-        res = json.loads(self.app.post(url, params_two).body)
+        response = self.app.post(url, data=params_two)
+        res = json.loads(response.data)
         assert_false(res['success'])
         assert_equal(res['error']['message'][0], 'The email address is already registered on HDX. Please use the sign in screen below.')
 
@@ -218,7 +219,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
         params = {'email': 'VALID@example.com', 'nosetest': 'true'}
-        self.app.post(url, params)
+        self.app.post(url, data=params)
         user = model.User.get('valid@example.com')
         # retrieved user has lowercase email
         assert_equal(user.email, 'valid@example.com')
@@ -230,8 +231,8 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
                         action='register_email')
         params = {'email': 'invalidexample.com', 'nosetest': 'true'}
 
-        res = json.loads(self.app.post(url, params).body)
-        assert_equal(res['error']['message'][0], u'Email address is not valid')
+        res = json.loads(self.app.post(url, data=params).data)
+        assert_equal(res['error']['message'][0], u'Email invalidexample.com is not a valid format')
 
 
 # class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):

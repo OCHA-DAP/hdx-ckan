@@ -28,23 +28,25 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def _create_test_data(cls, create_datasets=True, create_members=False):
         super(TestHDXControllerPage, cls)._create_test_data(create_datasets=True, create_members=True)
 
-    def _get_url(self, url, apikey=None):
-        if apikey:
-            page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
-        else:
-            page = self.app.get(url)
-        return page
+    # def _get_url(self, url, apikey=None):
+    #     if apikey:
+    #         page = self.app.get(url, headers={
+    #             'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+    #     else:
+    #         page = self.app.get(url)
+    #     return page
 
     @mock.patch('ckanext.hdx_theme.util.mail.send_mail')
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_onboarding(self, mocked_mail_recipient, mocked_send_mail):
 
+        test_client = self.get_backwards_compatible_test_client()
+
         # step 1 register
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params = {'email': 'newuser@hdx.org', 'nosetest': 'true'}
-        res = self.app.post(url, params)
+        data = {'email': 'newuser@hdx.org', 'nosetest': 'true'}
+        res = test_client.post(url, data = data)
         assert_true(json.loads(res.body)['success'])
 
         user = model.User.get('newuser@hdx.org')
@@ -55,7 +57,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         # step 2 validate
         token = tkh.token_show({}, {'id': user.id})
         url = '/user/validate/' + token.get('token')
-        res = self.app.get(url)
+        res = test_client.get(url)
         assert '<label for="field-email">Your Email Address</label>' in res.body
         assert 'id="recaptcha"' in res.body
         assert 'value="newuser@hdx.org"' in res.body
@@ -66,13 +68,13 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                         action='register_details')
 
         try:
-            res = self.app.post(url, {})
+            res = test_client.post(url, data={})
             assert False
         except KeyError, ex:
             assert True
 
         try:
-            res = self.app.post(url, {
+            res = test_client.post(url, data={
                 'first-name': 'firstname',
                 'last-name': 'lastname',
                 'password': 'passpass',
@@ -87,7 +89,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         try:
-            res = self.app.post(url, {
+            res = test_client.post(url, data={
                 'first-name': 'firstname',
                 'last-name': 'lastname',
                 'password': 'passpass',
@@ -100,7 +102,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         try:
-            res = self.app.post(url, {
+            res = test_client.post(url, data={
                 'first-name': 'firstname',
                 'last-name': 'lastname',
                 'password': 'passpass',
@@ -114,7 +116,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert False
 
         try:
-            res = self.app.post(url, {
+            res = test_client.post(url, data={
                 'first-name': 'firstname',
                 'last-name': 'lastname',
                 'password': 'passpass',
@@ -127,7 +129,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         try:
-            res = self.app.post(url, {
+            res = test_client.post(url, {
                 'first-name': 'firstname',
                 'password': 'pass',
                 'name': 'newuser',
@@ -139,7 +141,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         except KeyError, ex:
             assert True
 
-        params = {
+        data = {
             'first-name': 'firstname',
             'last-name': 'lastname',
             'password': 'passpass',
@@ -149,17 +151,17 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'id': user.id
         }
         try:
-            res = self.app.post(url, params)
+            res = test_client.post(url, data=data)
         except Exception, ex:
             assert False
         assert 'true' in res
         updated_user = model.User.get('newuser@hdx.org')
-        assert updated_user.name == params.get('name')
-        assert updated_user.id == params.get('id')
-        assert updated_user.display_name == params.get('first-name') + " " + params.get('last-name')
+        assert updated_user.name == data.get('name')
+        assert updated_user.id == data.get('id')
+        assert updated_user.display_name == data.get('first-name') + " " + data.get('last-name')
         assert updated_user.password is not None
         assert updated_user.sysadmin is False
-        assert updated_user.email == params.get('email')
+        assert updated_user.email == data.get('email')
         res = self._get_action('user_extra_show')(context, {'user_id': user.id})
         assert res
         assert self._get_user_extra_by_key(res, user_model.HDX_ONBOARDING_DETAILS) == 'True'
@@ -170,16 +172,16 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                         action='follow_details')
 
         try:
-            res = self.app.post(url, {})
+            res = test_client.post(url, data={})
             assert False
         except KeyError, ex:
             assert 'id' in ex.message
 
-        params = {
+        data = {
             'id': user.id
         }
         try:
-            res = self.app.post(url, params)
+            res = test_client.post(url, data=data)
         except Exception, ex:
             assert False
         assert 'true' in res
@@ -192,12 +194,12 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                         action='request_membership')
 
         try:
-            res = self.app.post(url, {})
+            res = test_client.post(url, {})
             assert '"message": "Unauthorized to create user"' in res.body
         except Exception, ex:
             assert True
 
-        params = {
+        data = {
             'org_id': 'hdx-test-org',
             'message': "please add me to your organization",
             'save': u'save',
@@ -207,7 +209,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         auth = {'Authorization': str(user.apikey)}
         try:
-            res = self.app.post(url, params, extra_environ=auth)
+            res = test_client.post(url, data=data, extra_environ=auth)
             assert '{"success": true}' in res.body
         except Exception, ex:
             assert False
