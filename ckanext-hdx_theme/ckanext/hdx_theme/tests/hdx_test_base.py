@@ -56,8 +56,9 @@ class HdxBaseTest(object):
     def _set_user_api_keys(cls):
         for username in cls.USERS_USED_IN_TEST:
             user = model.User.by_name(username)
-            user.email = username + '@test_domain.com'
-            user.apikey = username + '_apikey'
+            if user:
+                user.email = username + '@test_domain.com'
+                user.apikey = username + '_apikey'
 
         model.Session.commit()
 
