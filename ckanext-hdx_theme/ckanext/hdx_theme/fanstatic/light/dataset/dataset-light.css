@@ -67,6 +67,9 @@
 .resource-list {
   list-style: none;
 }
+.resource-item.in-review {
+  opacity: 60%;
+}
 .resource-item .heading {
   color: #333333;
   font-size: 14px;
@@ -137,6 +140,9 @@
   border: 1px solid #eeeeee;
   padding: 0;
 }
+.dataset-light .resource-list .resource-item.in-review {
+  opacity: 60%;
+}
 .dataset-light .resource-list .resource-item:last-child {
   margin-bottom: 0;
 }
@@ -181,6 +187,7 @@
 }
 .dataset-light .resource-list .resource-item .content .actions {
   margin-top: 10px;
+  text-align: center;
 }
 .dataset-light .resource-list .resource-item .content .actions a.btn {
   width: 100%;

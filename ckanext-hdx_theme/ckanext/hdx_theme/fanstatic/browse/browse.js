@@ -77,6 +77,11 @@ function prepareMap(countDatasets, openNewWindow){
       fillOpacity: 1.0,
       fillColor: '#f5837b'
     });
+    popup.setLatLng(e.latlng);
+    popup.setContent("<div class='marker-container'> <div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.datasets + "</div> <div class='marker-label'>datasets</div> </div> </div>");
+    if (!popup._map) {
+      popup.openOn(map);
+    }
   };
 
   getStyle = function(feature) {

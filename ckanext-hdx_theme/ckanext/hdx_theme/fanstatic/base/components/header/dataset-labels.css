@@ -152,6 +152,18 @@ ul.dataset-resources li + li.label-icons {
   font-size: 12px;
   text-transform: uppercase;
 }
+.resource-item .under-review.btn {
+  color: #333333;
+  border-color: #333333;
+  opacity: 0.65;
+  cursor: help;
+  text-align: center;
+}
+.resource-item .under-review.btn:hover,
+.resource-item .under-review.btn:focus {
+  color: #333333;
+  border-color: #333333;
+}
 .format-label {
   display: inline-block;
   vertical-align: text-bottom;

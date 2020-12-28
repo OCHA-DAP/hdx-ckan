@@ -105,13 +105,18 @@ class HDXQAController(HDXSearchController):
                                            package_type=package_type)
             return self._search_template()
 
-    def qa_pii_log(self, id, resource_id):
-        self._redirect_to_qa_log(resource_id, 'pii.log.txt')
+    def qa_pii_log(self, id, resource_id, file_name):
+        url = self._get_url_to_qa_log(resource_id, file_name)
+        if request.params.get("noredirect"):
+            return url
+        else:
+            redirect(url)
 
     def qa_sdcmicro_log(self, id, resource_id):
-        self._redirect_to_qa_log(resource_id, 'sdc.log.txt')
+        url = self._get_url_to_qa_log(resource_id, 'sdc.log.txt')
+        redirect(url)
 
-    def _redirect_to_qa_log(self, resource_id, log_filename):
+    def _get_url_to_qa_log(self, resource_id, log_filename, path_format='resources/{resource_id}/{log_filename}'):
         try:
             context = {'model': model, 'user': c.user or c.author,
                        'auth_user_obj': c.userobj}
@@ -119,7 +124,7 @@ class HDXQAController(HDXSearchController):
         except (NotFound, NotAuthorized):
             abort(404, _('Not authorized to see this page'))
         try:
-            path = 'resources/{resource_id}/{log_filename}'.format(resource_id=resource_id, log_filename=log_filename)
+            path = path_format.format(resource_id=resource_id, log_filename=log_filename)
             uploader = LogS3()
             s3 = uploader.get_s3_session()
             client = s3.client(service_name='s3', endpoint_url=uploader.host_name)
@@ -128,7 +133,7 @@ class HDXQAController(HDXSearchController):
             #                                             'Key': path},
             #                                     ExpiresIn=60)
             url = generate_temporary_link(client, uploader.bucket_name, path)
-            redirect(url)
+            return url
 
         except ClientError as ex:
             log.error(str(ex))

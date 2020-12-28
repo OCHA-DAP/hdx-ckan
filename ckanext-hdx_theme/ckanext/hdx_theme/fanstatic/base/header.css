@@ -742,6 +742,18 @@ ul.dataset-resources li + li.label-icons {
   font-size: 12px;
   text-transform: uppercase;
 }
+.resource-item .under-review.btn {
+  color: #333333;
+  border-color: #333333;
+  opacity: 0.65;
+  cursor: help;
+  text-align: center;
+}
+.resource-item .under-review.btn:hover,
+.resource-item .under-review.btn:focus {
+  color: #333333;
+  border-color: #333333;
+}
 .format-label {
   display: inline-block;
   vertical-align: text-bottom;
@@ -2547,6 +2559,15 @@ textarea {
   font-size: 20px;
   color: #fff;
 }
+.hdx-form .hdx-form-breadcrumb .sub-title {
+  font-size: 14px;
+}
+.hdx-form .hdx-form-breadcrumb .sub-title a,
+.hdx-form .hdx-form-breadcrumb .sub-title a:hover,
+.hdx-form .hdx-form-breadcrumb .sub-title a:focus {
+  color: #fff;
+  text-decoration: underline;
+}
 .hdx-form .hdx-form-breadcrumb .breadcrumb {
   margin: 0;
   background-color: #007CE0;
@@ -2629,6 +2650,24 @@ textarea {
 .hdx-form .form-group .checkbox input {
   margin-top: 4px;
   top: 0;
+}
+.hdx-form .form-group .radio .item-description,
+.hdx-form .form-group .checkbox .item-description {
+  margin-top: 5px;
+  padding-left: 20px;
+}
+.hdx-form .form-group .radio .item-description.orange,
+.hdx-form .form-group .checkbox .item-description.orange {
+  color: #f2645a;
+}
+.hdx-form .form-group .radio .item-description.orange a,
+.hdx-form .form-group .checkbox .item-description.orange a,
+.hdx-form .form-group .radio .item-description.orange a:hover,
+.hdx-form .form-group .checkbox .item-description.orange a:hover,
+.hdx-form .form-group .radio .item-description.orange a:focus,
+.hdx-form .form-group .checkbox .item-description.orange a:focus {
+  color: #f2645a;
+  text-decoration: underline;
 }
 .hdx-form .form-group .form-control {
   background-color: #fff;
@@ -3922,6 +3961,9 @@ ul.list-horizontal li:first-child:before {
 label.terms-of-service {
   font-weight: 400;
   margin: 0;
+}
+label.terms-of-service.disabled {
+  color: #888888;
 }
 label.terms-of-service:after {
   content: none;

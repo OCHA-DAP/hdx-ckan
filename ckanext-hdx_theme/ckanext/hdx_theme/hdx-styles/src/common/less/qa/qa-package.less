@@ -56,6 +56,8 @@
         justify-content: center;
         align-items: center;
         height: 22px;
+        display: flex;
+        justify-content: space-between;
 
         &.gray {
           border-color: @lightGrayColor;
@@ -65,13 +67,17 @@
           color: @whiteColor;
           border-color: @orangeColor;
         }
+        &.info {
+          background-color: @grayColor;
+          color: @whiteColor;
+          border-color: @grayColor;
+        }
         &.ok {
           border-color: @greenColor;
           color: @greenColor;
         }
 
         .pii-label-text {
-          margin-right: 20px;
           line-height: 1;
         }
       }
@@ -185,6 +191,9 @@
     color: @darkGrayColor;
     padding: 20px;
   }
+  .resource-item.in-review {
+    opacity: 60%;
+  }
   .nav.nav-tabs{
     background-color: @whiteColor;
   }
@@ -225,4 +234,17 @@ section.search-list {
 
 #loadingScreen {
   z-index: 1002;
+}
+
+#qa-results-visualisation {
+  .content {
+    width: 1290px;
+
+    iframe {
+      width: 100%;
+      min-height: 600px;
+      max-height: 80vh;
+      border: 0;
+    }
+  }
 }

@@ -92,10 +92,11 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert len(user_list) == 1, "Only one user should be found for query"
         assert user_list[0] == 'Anna Anderson2'
 
+    @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
     @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
     @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
-    def test_members_delete_add(self, member_c, org_helper_c, theme_c):
+    def test_members_delete_add(self, member_c, org_helper_c, theme_c, mailer_c):
         test_username = 'testsysadmin'
         mock_helper.populate_mock_as_c(member_c, test_username)
         mock_helper.populate_mock_as_c(org_helper_c, test_username)
@@ -106,7 +107,10 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             action='member_delete',
             id='hdx-test-org'
         )
-        self.app.post(url, params={'user': 'annaanderson2'}, extra_environ={"REMOTE_USER": "testsysadmin"})
+        try:
+            self.app.post(url, params={'user': 'annaanderson2'}, extra_environ={"REMOTE_USER": "testsysadmin"})
+        except Exception, ex:
+            assert False
 
         context = {
             'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -238,7 +242,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             invited_user = user
 
         def mock_mail_recipient(sender_name='Humanitarian Data Exchange (HDX)',
-                         sender_email='hdx@un.org',
+                         sender_email='hdx@humdata.org',
                          recipients_list=None,
                          subject=None,
                          content_dict=None,

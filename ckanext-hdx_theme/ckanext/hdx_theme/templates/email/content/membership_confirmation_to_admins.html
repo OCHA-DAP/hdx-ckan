@@ -1,0 +1,11 @@
+<p>Dear {{ data.org_name }} administrator(s),
+
+<p> The HDX user {{ data.user_fullname }} ({{ data.user_username }}) was added to your organization with the role of
+  {% if data.capacity == 'admin' %} <strong>administrator</strong>: add, edit, and delete datasets, and manage organisation membership
+  {% elif data.capacity == 'editor' %} <strong>editor</strong>: add, edit, and delete datasets
+  {% elif data.capacity == 'member'  %} <strong>member</strong>: view all of an organisation's datasets (including private datasets)
+  {% endif %}
+</p>
+
+<p>If this user was added by mistake, or if you require any additional assistance, please reply to this email.</p>
+

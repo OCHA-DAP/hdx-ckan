@@ -378,7 +378,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 #         user = model.Session.query(model.User).get(sue_user['id'])
 #         assert_equal(user.email, 'sue@example.com')
 #
-
+#
 # class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 #     @classmethod
 #     def _load_plugins(cls):
@@ -433,7 +433,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 #
 #         # check it went to the mock smtp server
 #         msg = msgs[0]
-#         assert_equal(msg[1], 'hdx@un.org')
+#         assert_equal(msg[1], 'hdx@humdata.org')
 #         assert_equal(msg[2], [bob_user['email']])
 #         assert_true('HDX_password_reset' in msg[3])
 #
@@ -461,7 +461,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 #
 #         # check it went to the mock smtp server
 #         msg = msgs[0]
-#         assert_equal(msg[1], 'hdx@un.org')
+#         assert_equal(msg[1], 'hdx@humdata.org')
 #         assert_equal(msg[2], [bob_user['email']])
 #         assert_true('HDX_password_reset' in msg[3])
 #
@@ -490,7 +490,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 #
 #         # check it went to the mock smtp server
 #         msg = msgs[0]
-#         assert_equal(msg[1], 'hdx@un.org')
+#         assert_equal(msg[1], 'hdx@humdata.org')
 #         assert_equal(msg[2], [bob_user['email']])
 #         assert_true('HDX_password_reset' in msg[3])
 #
@@ -516,4 +516,58 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 #         # no email has been sent
 #         msgs = self.get_smtp_messages()
 #         assert_equal(len(msgs), 0)
+
+
+        # TODO create user according to the last onboarding. Note CAPTCHA!
+        # def test_login_not_valid(self):
+        #     offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
+        #     res = self.app.get(offset, status=[200,302])
+        #     fv = res.forms[1]
+        #     fv['name'] = "testingvalid"
+        #     fv['fullname'] = "Valid Test"
+        #     fv['email'] = "valid@example.com"
+        #     fv['password1'] = "password"
+        #     fv['password2'] = "password"
+        #     res = fv.submit('save')
+        #
+        #     user = model.User.by_name('testingvalid')
+        #
+        #     offset = h.url_for(controller='user', action='login')
+        #     res = self.app.get(offset)
+        #     fv = res.forms[1]
+        #     fv['login'] = user.name
+        #     fv['password'] = 'password'
+        #     res = fv.submit()
+        #
+        #     # first get redirected to logged_in
+        #     assert '302' in res.status
+        #     # then get redirected to login
+        #     res = res.follow()
+        #     assert res.headers['Location'].startswith('http://localhost/user/logged_in') or \
+        #            res.header('Location').startswith('/user/logged_in')
+        #     res = res.follow()
+        #     assert res.headers['Location'].startswith('http://localhost/user/logout') or \
+        #            res.header('Location').startswith('/user/logout')
+
+        # def test_validate_account(self):
+        #     offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
+        #     res = self.app.get(offset, status=[200,302])
+        #     fv = res.forms[1]
+        #     fv['name'] = "testingvalid"
+        #     fv['fullname'] = "Valid Test"
+        #     fv['email'] = "valid@example.com"
+        #     fv['password1'] = "password"
+        #     fv['password2'] = "password"
+        #     res = fv.submit('save')
+
+        #     user = model.User.by_name('testingvalid')
+        #     assert user
+        #     token = umodel.ValidationToken.get(user.id)
+        #     assert token
+
+        #     offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='validate', token=token.token)
+        #     res = self.app.get(offset, status=[200,302])
+
+        #     token = umodel.ValidationToken.get(user.id)
+        #     assert token.valid is True
 

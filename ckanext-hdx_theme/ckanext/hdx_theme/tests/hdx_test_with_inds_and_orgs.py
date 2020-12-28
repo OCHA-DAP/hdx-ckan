@@ -18,7 +18,7 @@ def get_packages():
         {
             "package_creator": "test function",
             "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
             "indicator": "1",
             "caveats": "These are the caveats",
             "license_other": "TEST OTHER LICENSE",
@@ -35,7 +35,7 @@ def get_packages():
             "package_creator": "test function",
             "indicator": "1",
             "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
             "caveats": "These are the caveats",
             "license_other": "TEST OTHER LICENSE",
             "methodology": "This is a test methodology",
@@ -50,7 +50,7 @@ def get_packages():
         {
             "package_creator": "test function",
             "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
             "caveats": "These are the caveats",
             "license_other": "TEST OTHER LICENSE",
             "methodology": "This is a test methodology",
@@ -65,7 +65,7 @@ def get_packages():
         {
             "package_creator": "test function",
             "private": True,
-            "dataset_date": "01/01/1960-12/31/2012",
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
             "indicator": "1",
             "caveats": "These are the caveats for private dataset",
             "license_other": "TEST OTHER LICENSE",

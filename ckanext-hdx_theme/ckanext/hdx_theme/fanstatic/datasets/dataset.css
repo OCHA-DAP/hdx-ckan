@@ -67,6 +67,9 @@
 .resource-list {
   list-style: none;
 }
+.resource-item.in-review {
+  opacity: 60%;
+}
 .resource-item .heading {
   color: #333333;
   font-size: 14px;

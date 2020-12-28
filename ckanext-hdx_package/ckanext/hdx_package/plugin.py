@@ -209,7 +209,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                 tk.get_validator('not_empty'),
                                 tk.get_converter('convert_to_extras')],
             'groups_list': [vd.groups_not_empty],
-            'is_requestdata_type': [tk.get_validator('hdx_boolean_string_converter'), tk.get_converter('convert_to_extras')],
+            'is_requestdata_type': [tk.get_validator('hdx_resources_not_allowed_if_requested_data'),
+                                    tk.get_validator('hdx_boolean_string_converter'),
+                                    tk.get_converter('convert_to_extras')],
             'indicator': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'last_data_update_date': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'last_metadata_update_date': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -222,7 +224,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'source_code': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'caveats': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'dataset_source': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
-            'dataset_date': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'dataset_date': [tk.get_validator('hdx_convert_old_date_to_daterange'),
+                             tk.get_validator('hdx_daterange_possible_infinite_end_dataset_date'),
+                             tk.get_validator('not_empty'),
+                             tk.get_converter('convert_to_extras')],
             'methodology': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'methodology_other': [tk.get_validator('not_empty_if_methodology_other'),
                                   tk.get_converter('convert_to_extras')],
@@ -286,7 +291,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),
-                    tk.get_validator('hdx_reset_on_file_upload')
+                    tk.get_validator('hdx_reset_on_file_upload'),
+                    tk.get_validator('hdx_update_microdata'),
+                ],
+                'microdata': [
+                    # tk.get_validator('hdx_update_field_if_value_wrapper'),
+                    tk.get_validator('boolean_validator'),
+                    tk.get_validator('hdx_update_in_quarantine_by_microdata'),
+                    # tk.get_validator('hdx_reset_on_file_upload')
                 ],
                 'pii_timestamp': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
@@ -365,6 +377,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('clean_format'),
                 ],
                 'in_quarantine': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
+                'microdata': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
                 ],
@@ -533,8 +549,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
             'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
+            'hdx_daterange_possible_infinite_end_dataset_date': vd.hdx_daterange_possible_infinite_end_dataset_date,
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
+            'hdx_update_microdata': vd.hdx_update_microdata,
+            'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata,
+            'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
+            'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange
         }
 
     def get_auth_functions(self):
@@ -608,11 +629,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def _update_with_private_modify_package_schema(self, schema):
         log.debug('Update with private modifiy package schema')
-        schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
-        schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-        schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-        schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
-                                           tk.get_converter('convert_to_extras')]
+        schema['notes'] = [tk.get_validator('ignore_missing')] + schema['notes']
+        schema['methodology'] = [tk.get_validator('ignore_missing')] + schema['methodology']
+        schema['dataset_date'] = [tk.get_validator('ignore_missing')] + schema['dataset_date']
+        schema['data_update_frequency'] = [tk.get_validator('ignore_missing')] + schema['data_update_frequency']
 
         if 'groups_list' in schema:
             del schema['groups_list']

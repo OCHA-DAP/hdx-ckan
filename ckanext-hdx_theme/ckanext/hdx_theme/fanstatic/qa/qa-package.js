@@ -119,6 +119,18 @@ function runPIICheck(resource) {
     });
 }
 
+function viewPIIResults(url) {
+  $.get(`${url}?noredirect=true`)
+    .done((result)=> {
+      console.log(result);
+      const visWidgetId = '#qa-results-visualisation';
+      const visUrl = 'https://ocha-dap.github.io/dlp-output-viz/';
+      const dataUrl = encodeURIComponent(result);
+      $(visWidgetId+"-iframe").attr('src', `${visUrl}?dataUrl=${dataUrl}`);
+      showOnboardingWidget(visWidgetId);
+    });
+}
+
 function updateQuarantine(resource, flag) {
   _showLoading();
   _updateQuarantine(resource, flag)

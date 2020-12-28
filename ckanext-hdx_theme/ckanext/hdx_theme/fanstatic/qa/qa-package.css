@@ -50,10 +50,11 @@
   font-weight: 600;
   font-size: 12px;
   width: 75px;
-  display: flex;
   justify-content: center;
   align-items: center;
   height: 22px;
+  display: flex;
+  justify-content: space-between;
 }
 .dataset-pii .pii-list .pii-item .pii-label.gray {
   border-color: #cccccc;
@@ -63,12 +64,16 @@
   color: #fff;
   border-color: #f2645a;
 }
+.dataset-pii .pii-list .pii-item .pii-label.info {
+  background-color: #888888;
+  color: #fff;
+  border-color: #888888;
+}
 .dataset-pii .pii-list .pii-item .pii-label.ok {
   border-color: #1ebfb3;
   color: #1ebfb3;
 }
 .dataset-pii .pii-list .pii-item .pii-label .pii-label-text {
-  margin-right: 20px;
   line-height: 1;
 }
 .dataset-pii .pii-list .pii-item .pii-status {
@@ -168,6 +173,9 @@
   color: #333333;
   padding: 20px;
 }
+.qa-package-details .resource-item.in-review {
+  opacity: 60%;
+}
 .qa-package-details .nav.nav-tabs {
   background-color: #fff;
 }
@@ -200,4 +208,13 @@ section.search-list .filter-category {
 }
 #loadingScreen {
   z-index: 1002;
+}
+#qa-results-visualisation .content {
+  width: 1290px;
+}
+#qa-results-visualisation .content iframe {
+  width: 100%;
+  min-height: 600px;
+  max-height: 80vh;
+  border: 0;
 }

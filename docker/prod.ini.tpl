@@ -38,11 +38,16 @@ ckan.tracking_enabled = true
 
 email_to         = ckan@${HDX_SMTP_DOMAIN}
 error_email_from = ckan@${HDX_SMTP_DOMAIN}
-smtp.mail_from   = noreply@${HDX_SMTP_DOMAIN}
+smtp.mail_from   = hdx@${HDX_SMTP_DOMAIN}
 smtp.server      = ${HDX_SMTP_ADDR}:${HDX_SMTP_PORT}
 smtp.user        = ${HDX_SMTP_USER}
 smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
+
+## DOWNLOAD WITH CACHE DATASETS
+# accepting comma separated list with no spaces
+hdx.download_with_cache.datasets = repository-for-pdf-files
+hdx.download_with_cache.folder = /srv/filestore/download_cache
 
 hdx_smtp.mail_from_please_reply   = please-reply@${HDX_SMTP_DOMAIN}
 

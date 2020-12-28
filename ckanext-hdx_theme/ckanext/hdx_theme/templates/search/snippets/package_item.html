@@ -91,8 +91,8 @@
                       {% else %}
                         {{ h.render_datetime(updated_time) }}
                       {% endif %}
-                      {% if package.dataset_date%}
-                        {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
+                      {% if package.dataset_date %}
+                        {% set dataset_date = h.render_date_from_concat_str(package.dataset_date) %}
                         {% if dataset_date %}
                             | Dataset date: {{dataset_date}}
                         {% endif %}

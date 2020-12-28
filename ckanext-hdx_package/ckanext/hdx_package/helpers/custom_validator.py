@@ -395,6 +395,34 @@ def hdx_resource_keep_prev_value_unless_sysadmin(key, data, errors, context):
         raise StopOnError
 
 
+# def hdx_update_field_if_value_wrapper(context_field, value):
+#     def hdx_update_field_if_value(key, data, errors, context):
+#         a = 10
+#
+#     return hdx_update_field_if_value
+def hdx_update_microdata(key, data, errors, context):
+    if not data.get(key):
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            pkg_dict = __get_previous_package_dict(context, pkg_id)
+            if pkg_dict.get('resources', [])[key[1]].get('in_quarantine') and not data.get(key):
+                data[key[:2] + ('microdata',)] = False
+
+
+def hdx_update_in_quarantine_by_microdata(key, data, errors, context):
+    if data.get(key):
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            pkg_dict = __get_previous_package_dict(context, pkg_id)
+            if len(pkg_dict.get('resources', [])) > 0:
+                if not pkg_dict.get('resources', [])[key[1]].get('microdata') and data.get(key):
+                    data[key[:2] + ('in_quarantine',)] = True
+            elif data.get(key):
+                data[key[:2] + ('in_quarantine',)] = True
+        else:
+            data[key[:2] + ('in_quarantine',)] = True
+
+
 def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, resource_level=False):
     def hdx_package_keep_prev_value_unless_field_in_context(key, data, errors, context):
         '''
@@ -403,6 +431,7 @@ def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, r
         NOTE, we don't check whether user is sysadmin. The api action that set the
         'context_field' should do any checks.
         '''
+
         if data[key] is missing:
             data.pop(key, None)
 
@@ -502,6 +531,33 @@ def hdx_daterange_possible_infinite_end(key, data, errors, context):
     data[key] = new_value
 
 
+def hdx_daterange_possible_infinite_end_dataset_date(key, data, errors, context):
+    value = data.get(key)  # type: str
+    new_value = DaterangeParser(value).compute_daterange_string(False, end_date_ending=True)
+    data[key] = new_value
+
+
+def hdx_convert_old_date_to_daterange(key, data, errors, context):
+    value = data[key]
+    if value and '[' in value and ']' in value and ' TO ' in value:
+        return
+    try:
+        if value:
+            dates_list = value.split('-')
+            if dates_list:
+                start_date = datetime.datetime.strptime(dates_list[0].strip(), '%m/%d/%Y')
+                if len(dates_list) == 2:
+                    end_date = datetime.datetime.strptime(dates_list[1].strip(), '%m/%d/%Y')
+                else:
+                    end_date = start_date
+                data[key] = "[{start_date}T00:00:00 TO {end_date}T23:59:59]".format(start_date=start_date.strftime("%Y-%m-%d"),
+                                                                                    end_date=end_date.strftime("%Y-%m-%d"))
+    except TypeError as e:
+        raise df.Invalid(_('Invalid old HDX date format MM/DD/YYYY. Please use [start_datetime TO end_datetime]'))
+    except ValueError as e:
+        raise df.Invalid(_('Invalid old HDX date format MM/DD/YYYY. Please use [start_datetime TO end_datetime]'))
+
+
 def hdx_convert_to_json_string(key, data, errors, context):
     value = data[key]
     try:
@@ -539,3 +595,8 @@ def __get_previous_package_dict(context, id):
         context[context_key] = pkg_dict
 
     return pkg_dict or {}
+
+
+def hdx_resources_not_allowed_if_requested_data(key, data, errors, context):
+    if data[key] and ((u'resources', 0, 'url') in data or (u'resources', 0, 'name') in data):
+        raise df.Invalid(_('By request - HDX Connect datasets can not store resources'))

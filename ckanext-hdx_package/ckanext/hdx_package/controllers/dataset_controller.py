@@ -1353,6 +1353,8 @@ class DatasetController(PackageController):
 
             hdx_validate_email(data_dict['email'])
 
+            get_action('hdx_send_mail_members')(context, data_dict)
+
         except NotAuthorized:
             return json.dumps(
                 {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
@@ -1360,14 +1362,14 @@ class DatasetController(PackageController):
             return json.dumps(
                 {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
         except Exception, e:
-            error_summary = e.error or str(e)
+            error_summary = str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
 
-        try:
-            get_action('hdx_send_mail_members')(context, data_dict)
-        except Exception, e:
-            error_summary = e.error or str(e)
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        # try:
+        #
+        # except Exception, e:
+        #     error_summary = e.error_summary or str(e)
+        #     return json.dumps({'success': False, 'error': {'message': error_summary}})
         return SUCCESS
 
     def _handle_resource(self, resource):

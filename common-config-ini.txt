@@ -175,6 +175,10 @@ ckanext.s3filestore.region_name= eu-central-1
 ckanext.s3filestore.signature_version = signature_version
 ckanext.s3filestore.link_expires_in_seconds = 180
 
+## DOWNLOAD WITH CACHE DATASETS
+# accepting comma separated list with no spaces
+hdx.download_with_cache.datasets = sample-dataset-name
+hdx.download_with_cache.folder = /srv/filestore/download_cache
 
 #hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true

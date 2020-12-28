@@ -21,7 +21,7 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 package = {
     "package_creator": "test function",
     "private": False,
-    "dataset_date": "01/01/1960-12/31/2012",
+    "dataset_date": "[1960-01-01 TO 2012-12-31]",
     "indicator": "1",
     "caveats": "These are the caveats",
     "license_other": "TEST OTHER LICENSE",
