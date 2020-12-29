@@ -784,10 +784,11 @@ def hdx_url_for(*args, **kw):
     controller that needs to render the page the '/' gets in the way.
     '''
     url = tk.url_for(*args, **kw)
-    if url and url.endswith('/'):
-        url = url[:-1]
-    elif url and '/?' in url:
-        url = url.replace('/?', '?')
+    if url and len(url) > 1:
+        if url.endswith('/'):
+            url = url[:-1]
+        elif '/?' in url:
+            url = url.replace('/?', '?')
     return url
 
 
