@@ -235,287 +235,307 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         assert_equal(res['error']['message'][0], u'Email invalidexample.com is not a valid format')
 
 
-# class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
-#     @classmethod
-#     def setup_class(cls):
-#         super(TestEditUserEmail, cls).setup_class()
-#         # umodel.setup()
-#         # ue_model.create_table()
-#
-#     def setup(self):
-#         test_helpers.reset_db()
-#         test_helpers.search.clear_all()
-#
-#     def test_edit_email(self):
-#         '''Editing an existing user's email is successful.'''
-#         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
-#         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-#         url_for = h.url_for('user.edit')
-#         response = self.app.get(
-#             url=url_for,
-#             extra_environ=env,
-#         )
-#         # existing values in the form
-#         form = response.forms['user-edit-form']
-#         assert_equal(form['name'].value, sue_user['name'])
-#         # assert_equal(form['fullname'].value, sue_user['fullname'])
-#         assert_equal(form['firstname'].value, sue_user['fullname'])
-#         assert_equal(form['lastname'].value, '')
-#         assert_equal(form['email'].value, sue_user['email'])
-#         assert_equal(form['about'].value, sue_user['about'])
-#         assert_equal(form['activity_streams_email_notifications'].value, None)
-#         assert_equal(form['password1'].value, '')
-#         assert_equal(form['password2'].value, '')
-#
-#         form['old_password'].value = 'abcdefgh'
-#
-#         # new email value
-#         form['email'] = 'new@example.com'
-#         response = submit_and_follow(self.app, form, env, 'save')
-#
-#         user = model.Session.query(model.User).get(sue_user['id'])
-#         assert_equal(user.email, 'new@example.com')
-#
-#     def test_edit_email_to_existing(self):
-#         '''Editing to an existing user's email is unsuccessful.'''
-#         factories.User(name='existing', email='existing@example.com')
-#         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
-#
-#         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-#         response = self.app.get(
-#             url=h.url_for('user.edit'),
-#             extra_environ=env,
-#         )
-#         # existing email in the form
-#         form = response.forms['user-edit-form']
-#         assert_equal(form['email'].value, sue_user['email'])
-#
-#         # new email value
-#         form['email'] = 'existing@example.com'
-#         form['old_password'] = 'abcdefgh'
-#
-#         response = webtest_submit(form, 'save', extra_environ=env)
-#
-#         # error message in response
-#         assert_true('The email address is already registered on HDX. Please use the sign in screen below.' in response)
-#
-#         # sue user email hasn't changed.
-#         user = model.Session.query(model.User).get(sue_user['id'])
-#         assert_equal(user.email, 'sue@example.com')
-#
-#     def test_edit_email_invalid_format(self):
-#         '''Editing with an invalid email format is unsuccessful.'''
-#         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
-#
-#         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-#         response = self.app.get(
-#             url=h.url_for('user.edit'),
-#             extra_environ=env,
-#         )
-#         # existing email in the form
-#         form = response.forms['user-edit-form']
-#         assert_equal(form['email'].value, sue_user['email'])
-#
-#         # new invalid email value
-#         form['email'] = 'invalid.com'
-#         form['old_password'] = 'abcdefgh'
-#         response = webtest_submit(form, 'save', extra_environ=env)
-#
-#         # error message in response
-#         assert_true('Email: Email address is not valid' in response)
-#
-#         # sue user email hasn't changed.
-#         user = model.Session.query(model.User).get(sue_user['id'])
-#         assert_equal(user.email, 'sue@example.com')
-#
-#     def test_edit_email_saved_as_lowercase(self):
-#         '''Editing with an email in uppercase will be saved as lowercase.'''
-#         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
-#
-#         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-#         response = self.app.get(
-#             url=h.url_for('user.edit'),
-#             extra_environ=env,
-#         )
-#         # existing email in the form
-#         form = response.forms['user-edit-form']
-#         assert_equal(form['email'].value, sue_user['email'])
-#
-#         # new invalid email value
-#         form['email'] = 'UPPER@example.com'
-#         form['old_password'] = 'abcdefgh'
-#
-#         response = webtest_submit(form, 'save', extra_environ=env)
-#
-#         # sue user email hasn't changed.
-#         user = model.Session.query(model.User).get(sue_user['id'])
-#         assert_equal(user.email, 'upper@example.com')
-#
-#     def test_edit_email_differently_case_existing(self):
-#         '''Editing with an existing user's email will be unsuccessful, even is
-#         differently cased.'''
-#         factories.User(name='existing', email='existing@example.com')
-#         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
-#
-#         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-#         response = self.app.get(
-#             url=h.url_for('user.edit'),
-#             extra_environ=env,
-#         )
-#         # existing email in the form
-#         form = response.forms['user-edit-form']
-#         assert_equal(form['email'].value, sue_user['email'])
-#
-#         # new email value
-#         form['email'] = 'EXISTING@example.com'
-#         form['old_password'] = 'abcdefgh'
-#         response = webtest_submit(form, 'save', extra_environ=env)
-#
-#         # error message in response
-#         assert_true('The email address is already registered on HDX. Please use the sign in screen below.' in response)
-#
-#         # sue user email hasn't changed.
-#         user = model.Session.query(model.User).get(sue_user['id'])
-#         assert_equal(user.email, 'sue@example.com')
-#
-#
-# class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
-#     @classmethod
-#     def _load_plugins(cls):
-#         hdx_test_base.load_plugin(
-#             'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
-#
-#     @classmethod
-#     def setup_class(cls):
-#         smtp_server = config.get('smtp.test_server')
-#         if smtp_server:
-#             host, port = smtp_server.split(':')
-#             port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
-#             config['smtp.test_server'] = '%s:%s' % (host, port)
-#         SmtpServerHarness.setup_class()
-#         PylonsTestCase.setup_class()
-#         umodel.setup()
-#         ue_model.create_table()
-#         cls._load_plugins()
-#         cls.app = hdx_test_base._get_test_app()
-#
-#     @classmethod
-#     def teardown_class(cls):
-#         SmtpServerHarness.teardown_class()
-#         model.repo.rebuild_db()
-#
-#     def setup(self):
-#         test_helpers.reset_db()
-#         test_helpers.search.clear_all()
-#         self.clear_smtp_messages()
-#
-#     def test_send_reset_email_for_email(self):
-#         '''Password reset email is sent for valid user email'''
-#         bob_user = factories.User(name='bob', email='bob@example.com')
-#
-#         # send email
-#         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-#                         action='request_reset')
-#         params = {
-#             'user': bob_user['name']
-#         }
-#
-#         # no emails sent yet
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 0)
-#
-#         res = json.loads(self.app.post(url, params).body)
-#         assert_true(res['success'])
-#
-#         # an email has been sent
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 1)
-#
-#         # check it went to the mock smtp server
-#         msg = msgs[0]
-#         assert_equal(msg[1], 'hdx@humdata.org')
-#         assert_equal(msg[2], [bob_user['email']])
-#         assert_true('HDX_password_reset' in msg[3])
-#
-#     def test_send_reset_email_for_username(self):
-#         '''Password reset email is sent for valid user name'''
-#         bob_user = factories.User(name='bob', email='bob@example.com')
-#
-#         # send email
-#         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-#                         action='request_reset')
-#         params = {
-#             'user': bob_user['name']
-#         }
-#
-#         # no emails sent yet
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 0)
-#
-#         res = json.loads(self.app.post(url, params).body)
-#         assert_true(res['success'])
-#
-#         # an email has been sent
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 1)
-#
-#         # check it went to the mock smtp server
-#         msg = msgs[0]
-#         assert_equal(msg[1], 'hdx@humdata.org')
-#         assert_equal(msg[2], [bob_user['email']])
-#         assert_true('HDX_password_reset' in msg[3])
-#
-#     def test_send_reset_email_for_email_different_case(self):
-#         '''Password reset email is sent for valid user email (with some
-#         uppercase in local part).'''
-#         bob_user = factories.User(name='bob', email='bob@example.com')
-#
-#         # send email
-#         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-#                         action='request_reset')
-#         params = {
-#             'user': 'BOB@example.com'
-#         }
-#
-#         # no emails sent yet
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 0)
-#
-#         res = json.loads(self.app.post(url, params).body)
-#         assert_true(res['success'])
-#
-#         # an email has been sent
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 1)
-#
-#         # check it went to the mock smtp server
-#         msg = msgs[0]
-#         assert_equal(msg[1], 'hdx@humdata.org')
-#         assert_equal(msg[2], [bob_user['email']])
-#         assert_true('HDX_password_reset' in msg[3])
-#
-#     def test_no_send_reset_email_for_non_user(self):
-#         '''Password reset email is not sent for a valid email but no account'''
-#
-#         # send email
-#         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-#                         action='request_reset')
-#
-#         # user doesn't exist
-#         params = {
-#             'user': 'bob@example.com'
-#         }
-#
-#         # no emails sent yet
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 0)
-#
-#         res = json.loads(self.app.post(url, params).body)
-#         assert_false(res['success'])
-#
-#         # no email has been sent
-#         msgs = self.get_smtp_messages()
-#         assert_equal(len(msgs), 0)
+# Below imports and definitions are needed so that the tests below don't give an error when running pytest.
+# The tests will be skipped for now as many functions and objects no longer available in 2.9
+import hashlib
+import ckanext.hdx_user_extra.model as ue_model
+config = tk.config
+
+
+class SmtpServerHarness(object):
+    pass
+
+
+class PylonsTestCase(object):
+    pass
+
+
+submit_and_follow = None
+webtest_submit = None
+
+@pytest.mark.skip(reason='Many functions and objects no longer available in 2.9')
+class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
+    @classmethod
+    def setup_class(cls):
+        super(TestEditUserEmail, cls).setup_class()
+        # umodel.setup()
+        # ue_model.create_table()
+
+    def setup(self):
+        test_helpers.reset_db()
+        test_helpers.search.clear_all()
+
+    def test_edit_email(self):
+        '''Editing an existing user's email is successful.'''
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        url_for = h.url_for('user.edit')
+        response = self.app.get(
+            url=url_for,
+            extra_environ=env,
+        )
+        # existing values in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['name'].value, sue_user['name'])
+        # assert_equal(form['fullname'].value, sue_user['fullname'])
+        assert_equal(form['firstname'].value, sue_user['fullname'])
+        assert_equal(form['lastname'].value, '')
+        assert_equal(form['email'].value, sue_user['email'])
+        assert_equal(form['about'].value, sue_user['about'])
+        assert_equal(form['activity_streams_email_notifications'].value, None)
+        assert_equal(form['password1'].value, '')
+        assert_equal(form['password2'].value, '')
+
+        form['old_password'].value = 'abcdefgh'
+
+        # new email value
+        form['email'] = 'new@example.com'
+        response = submit_and_follow(self.app, form, env, 'save')
+
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'new@example.com')
+
+    def test_edit_email_to_existing(self):
+        '''Editing to an existing user's email is unsuccessful.'''
+        factories.User(name='existing', email='existing@example.com')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for('user.edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new email value
+        form['email'] = 'existing@example.com'
+        form['old_password'] = 'abcdefgh'
+
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # error message in response
+        assert_true('The email address is already registered on HDX. Please use the sign in screen below.' in response)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'sue@example.com')
+
+    def test_edit_email_invalid_format(self):
+        '''Editing with an invalid email format is unsuccessful.'''
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for('user.edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new invalid email value
+        form['email'] = 'invalid.com'
+        form['old_password'] = 'abcdefgh'
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # error message in response
+        assert_true('Email: Email address is not valid' in response)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'sue@example.com')
+
+    def test_edit_email_saved_as_lowercase(self):
+        '''Editing with an email in uppercase will be saved as lowercase.'''
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for('user.edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new invalid email value
+        form['email'] = 'UPPER@example.com'
+        form['old_password'] = 'abcdefgh'
+
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'upper@example.com')
+
+    def test_edit_email_differently_case_existing(self):
+        '''Editing with an existing user's email will be unsuccessful, even is
+        differently cased.'''
+        factories.User(name='existing', email='existing@example.com')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for('user.edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new email value
+        form['email'] = 'EXISTING@example.com'
+        form['old_password'] = 'abcdefgh'
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # error message in response
+        assert_true('The email address is already registered on HDX. Please use the sign in screen below.' in response)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'sue@example.com')
+
+
+@pytest.mark.skip(reason='Many functions and objects no longer available in 2.9')
+class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin(
+            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+
+    @classmethod
+    def setup_class(cls):
+        smtp_server = config.get('smtp.test_server')
+        if smtp_server:
+            host, port = smtp_server.split(':')
+            port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
+            config['smtp.test_server'] = '%s:%s' % (host, port)
+        SmtpServerHarness.setup_class()
+        PylonsTestCase.setup_class()
+        umodel.setup()
+        ue_model.create_table()
+        cls._load_plugins()
+        cls.app = hdx_test_base._get_test_app()
+
+    @classmethod
+    def teardown_class(cls):
+        SmtpServerHarness.teardown_class()
+        model.repo.rebuild_db()
+
+    def setup(self):
+        test_helpers.reset_db()
+        test_helpers.search.clear_all()
+        self.clear_smtp_messages()
+
+    def test_send_reset_email_for_email(self):
+        '''Password reset email is sent for valid user email'''
+        bob_user = factories.User(name='bob', email='bob@example.com')
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                        action='request_reset')
+        params = {
+            'user': bob_user['name']
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_true(res['success'])
+
+        # an email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 1)
+
+        # check it went to the mock smtp server
+        msg = msgs[0]
+        assert_equal(msg[1], 'hdx@humdata.org')
+        assert_equal(msg[2], [bob_user['email']])
+        assert_true('HDX_password_reset' in msg[3])
+
+    def test_send_reset_email_for_username(self):
+        '''Password reset email is sent for valid user name'''
+        bob_user = factories.User(name='bob', email='bob@example.com')
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                        action='request_reset')
+        params = {
+            'user': bob_user['name']
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_true(res['success'])
+
+        # an email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 1)
+
+        # check it went to the mock smtp server
+        msg = msgs[0]
+        assert_equal(msg[1], 'hdx@humdata.org')
+        assert_equal(msg[2], [bob_user['email']])
+        assert_true('HDX_password_reset' in msg[3])
+
+    def test_send_reset_email_for_email_different_case(self):
+        '''Password reset email is sent for valid user email (with some
+        uppercase in local part).'''
+        bob_user = factories.User(name='bob', email='bob@example.com')
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                        action='request_reset')
+        params = {
+            'user': 'BOB@example.com'
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_true(res['success'])
+
+        # an email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 1)
+
+        # check it went to the mock smtp server
+        msg = msgs[0]
+        assert_equal(msg[1], 'hdx@humdata.org')
+        assert_equal(msg[2], [bob_user['email']])
+        assert_true('HDX_password_reset' in msg[3])
+
+    def test_no_send_reset_email_for_non_user(self):
+        '''Password reset email is not sent for a valid email but no account'''
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                        action='request_reset')
+
+        # user doesn't exist
+        params = {
+            'user': 'bob@example.com'
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_false(res['success'])
+
+        # no email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
 
 
         # TODO create user according to the last onboarding. Note CAPTCHA!

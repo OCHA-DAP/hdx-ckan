@@ -38,6 +38,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @mock.patch('ckanext.hdx_theme.util.mail.send_mail')
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
+    @pytest.mark.skip(reason='Checks to be re-analyzed to decide on expected results after 2.9 upgrade')
     def test_onboarding(self, mocked_mail_recipient, mocked_send_mail):
 
         test_client = self.get_backwards_compatible_test_client()
