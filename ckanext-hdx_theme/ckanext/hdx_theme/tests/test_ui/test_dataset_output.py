@@ -74,18 +74,18 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
 
         page = self._getPackagePage(dataset_name)
-        assert not 'Deleted' in str(page.response), 'Page should not have deleted badge as it was not deleted'
+        assert not 'Deleted' in page.data, 'Page should not have deleted badge as it was not deleted'
 
         deleted_result = tests.call_action_api(self.app, 'package_delete',
                                                apikey=testsysadmin.apikey, id=dataset_name)
 
         deleted_page = self._getPackagePage(dataset_name, testsysadmin.apikey)
         # print deleted_page.response
-        assert 'Deleted' in str(deleted_page.response), 'Page needs to have deleted badge'
+        assert 'Deleted' in deleted_page.data, 'Page needs to have deleted badge'
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None
-        url = h.url_for(controller='package', action='read', id=package_id)
+        url = h.url_for('dataset_read', id=package_id)
         if apikey:
             page = self.app.get(url, headers={
                 'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})

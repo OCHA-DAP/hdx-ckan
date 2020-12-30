@@ -4,12 +4,12 @@ Created on September 25, 2015
 @author: aartimon
 
 '''
+import unicodedata
 
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
-import ckan.lib.create_test_data as ctd
-import unicodedata
+import ckan.tests.factories as factories
 
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
@@ -60,6 +60,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def setup_class(cls):
+        cls.USERS_USED_IN_TEST.extend(['joeadmin', 'annafan'])
         super(TestDatasetOutput, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
@@ -81,8 +82,6 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         global package
 
-        user_bob = ctd.CreateTestData.create_user('bob')
-
         user = model.User.by_name('annafan')
         testsysadmin = model.User.by_name('testsysadmin')
 
@@ -95,33 +94,37 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert not 'contact-members' in str(page.response), 'Anonymous users should not see the contact members button'
+        assert not 'contact-members' in page.data, 'Anonymous users should not see the contact members button'
 
         # test sysadmin can see the button
         page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        assert 'contact-members' in str(page.response), 'Sysadmin users should see the contact members button'
+        assert 'contact-members' in page.data, 'Sysadmin users should see the contact members button'
 
         # test member/owner can see the button
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-members' in str(page.response), 'Member/owner should see the edit button'
+        assert 'contact-members' in page.data, 'Member/owner should see the edit button'
 
         # test editor can see the button
         context['user'] = 'tester'
         user = model.User.by_name('tester')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-members' in str(page.response), 'Editor should see the edit button'
+        assert 'contact-members' in page.data, 'Editor should see the edit button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
         user = model.User.by_name('joeadmin')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-members' in str(page.response), 'Admin should see the edit button'
+        assert 'contact-members' in page.data, 'Admin should see the edit button'
 
 
         # any logged in user and not member of organization can NOT see the button
+        factories.User(name='bob')
+        user_bob = model.User.by_name('bob')
+        user_bob.apikey = u'api_key'
+        model.Session.commit()
         context['user'] = 'bob'
         page = self._getPackagePage(dataset_name, user_bob.apikey)
-        assert 'contact-members' not in str(page.response), 'Any loggedin user & not member should NOT see the edit button'
+        assert 'contact-members' not in page.data, 'Any loggedin user & not member should NOT see the edit button'
 
 
         # self._get_action('organization_member_create')(context_sysadmin,
@@ -132,7 +135,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None
-        url = h.url_for(controller='package', action='read', id=package_id)
+        url = h.url_for('dataset_read', id=package_id)
         if apikey:
             page = self.app.get(url, headers={
                 'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
