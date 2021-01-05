@@ -48,8 +48,6 @@ services:
     depends_on:
       - db
       - solr
-    env_file:
-      - travis.env
     volumes:
       - "./.git:/srv/ckan/.git"
     environment:
@@ -64,7 +62,7 @@ services:
       HDX_CKANDB_DB_TEST: '${PGSQL_DB}'
       HDX_CKANDB_DB_TEST_DATASTORE: 'datastore'
       HDX_CKANDB_PASS_DATASTORE: 'datastore'
-      HDX_DOMAIN: travis.org
+      HDX_DOMAIN: humdata.org
       HDX_FILESTORE: /srv/filestore
       HDX_SOLR_ADDR: solr
       HDX_SOLR_PORT: 8983
