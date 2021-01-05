@@ -51,7 +51,7 @@ class SitemapController(BaseController):
                 loc.text = config.get('ckan.site_url') + url_for(controller="package", action="resource_read", id = dataset['name'], resource_id = resource['id'])
                 lastmod = etree.SubElement(url, 'lastmod')
                 try:
-                    last_updated = resource.get('revision_last_updated')
+                    last_updated = resource.get('last_modified')
                     lastmod.text = last_updated[:10]
                 except:
                     pass
