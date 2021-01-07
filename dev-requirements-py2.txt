@@ -33,12 +33,12 @@ cookiecutter==1.7.0       # via -r dev-requirements-py2.in
 cookies==2.2.1            # via responses
 coverage==5.3             # via coveralls, pytest-cov
 coveralls==1.11.1         # via -r dev-requirements-py2.in
-cryptography==3.2.1       # via moto, pyopenssl, python-jose, sshpubkeys, urllib3
+cryptography==3.2.1       # via moto, pyopenssl, sshpubkeys, urllib3
 decorator==4.4.0          # via -c requirements-py2.txt, ipython, networkx, traitlets
 docker==4.3.1             # via moto
 docopt==0.6.2             # via coveralls
 docutils==0.12            # via -r dev-requirements-py2.in, sphinx
-ecdsa==0.14.1             # via moto, python-jose, sshpubkeys
+ecdsa==0.14.1             # via python-jose, sshpubkeys
 enum34==1.1.10            # via aws-sam-translator, aws-xray-sdk, cryptography, traitlets
 factory-boy==2.12.0       # via -r dev-requirements-py2.in
 faker==3.0.1              # via factory-boy
@@ -62,16 +62,16 @@ itsdangerous==1.1.0       # via -c requirements-py2.txt, flask, flask-debugtoolb
 jinja2-time==0.2.0        # via cookiecutter
 jinja2==2.10.1            # via -c requirements-py2.txt, cookiecutter, flask, jinja2-time, moto, sphinx, towncrier
 jmespath==0.10.0          # via boto3, botocore
-jsondiff==1.2.0           # via moto
+jsondiff==1.1.2           # via moto
 jsonpatch==1.26           # via cfn-lint
 jsonpickle==1.4.1         # via aws-xray-sdk
 jsonpointer==2.0          # via jsonpatch
 jsonschema==3.2.0         # via aws-sam-translator, cfn-lint
 junit-xml==1.9            # via cfn-lint
-markupsafe==1.1.1         # via -c requirements-py2.txt, jinja2, moto
+markupsafe==1.1.1         # via -c requirements-py2.txt, jinja2
 mock==2.0.0               # via -r dev-requirements-py2.in, moto, responses
-more-itertools==5.0.0     # via moto, pytest
-moto==1.3.16              # via -r dev-requirements-py2.in
+more-itertools==5.0.0     # via pytest
+moto==1.3.14              # via -r dev-requirements-py2.in
 networkx==2.2             # via cfn-lint
 packaging==20.4           # via pytest, sphinx
 pathlib2==2.3.5           # via cfn-lint, importlib-metadata, importlib-resources, ipython, pickleshare, pytest
@@ -98,7 +98,7 @@ pytest-rerunfailures==8.0  # via -r dev-requirements-py2.in
 pytest-split-tests==1.0.9  # via -r dev-requirements-py2.in
 pytest==4.6.5             # via -r dev-requirements-py2.in, pytest-cov, pytest-freezegun, pytest-rerunfailures, pytest-split-tests
 python-dateutil==2.8.0    # via -c requirements-py2.txt, arrow, botocore, faker, freezegun, moto
-python-jose[cryptography]==3.2.0  # via moto
+python-jose==3.2.0        # via moto
 pytz==2016.7              # via -c requirements-py2.txt, babel, moto
 pyyaml==5.3.1             # via -c requirements-py2.txt, cfn-lint, moto
 requests==2.22.0          # via -c requirements-py2.txt, cookiecutter, coveralls, docker, moto, responses, sphinx
@@ -128,7 +128,7 @@ werkzeug[watchdog]==0.16.1  # via -c requirements-py2.txt, flask, flask-debugtoo
 whichcraft==0.6.1         # via cookiecutter
 wrapt==1.12.1             # via aws-xray-sdk
 xmltodict==0.12.0         # via moto
-zipp==1.2.0               # via importlib-metadata, importlib-resources, moto
+zipp==1.2.0               # via importlib-metadata, importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
