@@ -57,7 +57,7 @@ class HdxBaseTest(object):
         for username in cls.USERS_USED_IN_TEST:
             user = model.User.by_name(username)
             if user:
-                user.email = username + '@test_domain.com'
+                user.email = username + '@test-domain.com'
                 user.apikey = username + '_apikey'
 
         model.Session.commit()

@@ -93,8 +93,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                              action='read', id=package['name'])
         result = self.app.post(
             test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
-        assert '200' in str(result)
-        assert '<a class="heading" title="hdx_test.csv">' in str(result)
+        assert result.status_code == 200
+        assert '<a class="heading" title="hdx_test.csv">' in result.data
 
     def test_hdx_package_delete_redirect(self):
 
@@ -121,8 +121,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
         test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                              action='delete', id=package['name'])
-        result = self.app.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
-        assert '302' in str(result)
+        test_client = self.get_backwards_compatible_test_client()
+        result = test_client.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        assert result.status_code == 302
 
     def test_hdx_solr_additions(self):
         testsysadmin = model.User.by_name('testsysadmin')
