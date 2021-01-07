@@ -22,17 +22,19 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 # from ckan.tests.legacy.mock_mail_server import SmtpServerHarness
 # from ckan.tests.legacy.pylons_controller import PylonsTestCase
 from ckan.tests import factories
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+from urlparse import urljoin
+import ckanext.hdx_users.helpers.reset_password as reset_password
+
 
 # webtest_submit = test_helpers.webtest_submit
 # submit_and_follow = test_helpers.submit_and_follow
 
-
+# @pytest.mark.skip(reason='Many functions and objects no longer available in 2.9')
 class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
         super(TestEmailAccess, cls).setup_class()
-        # umodel.setup()
-        # ue_model.create_table()
 
         cls._get_action('user_create')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -196,7 +198,8 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         # create 2
         res = json.loads(self.app.post(url, data=params).body)
         assert_false(res['success'])
-        assert_equal(res['error']['message'][0], 'The email address is already registered on HDX. Please use the sign in screen below.')
+        assert_equal(res['error']['message'][0],
+                     'The email address is already registered on HDX. Please use the sign in screen below.')
 
     def test_create_user_duplicate_email_case_different(self):
         '''Creating a new user with same email (differently cased) is
@@ -211,7 +214,8 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         response = self.app.post(url, data=params_two)
         res = json.loads(response.data)
         assert_false(res['success'])
-        assert_equal(res['error']['message'][0], 'The email address is already registered on HDX. Please use the sign in screen below.')
+        assert_equal(res['error']['message'][0],
+                     'The email address is already registered on HDX. Please use the sign in screen below.')
 
     def test_create_user_email_saved_as_lowercase(self):
         '''A newly created user will have their email transformed to lowercase
@@ -239,21 +243,37 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 # The tests will be skipped for now as many functions and objects no longer available in 2.9
 import hashlib
 import ckanext.hdx_user_extra.model as ue_model
+
 config = tk.config
 
 
-class SmtpServerHarness(object):
-    pass
+# class SmtpServerHarness(object):
+#     pass
+#
+#
+# class PylonsTestCase(object):
+#     pass
+#
+#
+# submit_and_follow = None
+# webtest_submit = None
 
 
-class PylonsTestCase(object):
-    pass
+def _get_user_params(user_dict):
+    params = {
+        'old_password': 'abcdefgh',
+        'email': user_dict.get('email'),
+        'save': 'True',
+        'password1': '',
+        'password2': '',
+        'name': user_dict.get('name'),
+        'firstname': 'Sue',
+        'lastname': 'User',
+        'id': user_dict.get('id'),
+        'about': user_dict.get('about')
+    }
+    return params
 
-
-submit_and_follow = None
-webtest_submit = None
-
-@pytest.mark.skip(reason='Many functions and objects no longer available in 2.9')
 class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -268,6 +288,11 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email(self):
         '''Editing an existing user's email is successful.'''
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+
+        sue_obj = model.User.get('sue@example.com')
+        sue_obj.apikey = 'SUE_API_KEY'
+        model.Session.commit()
+
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         url_for = h.url_for('user.edit')
         response = self.app.get(
@@ -275,22 +300,24 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing values in the form
-        form = response.forms['user-edit-form']
-        assert_equal(form['name'].value, sue_user['name'])
-        # assert_equal(form['fullname'].value, sue_user['fullname'])
-        assert_equal(form['firstname'].value, sue_user['fullname'])
-        assert_equal(form['lastname'].value, '')
-        assert_equal(form['email'].value, sue_user['email'])
-        assert_equal(form['about'].value, sue_user['about'])
-        assert_equal(form['activity_streams_email_notifications'].value, None)
-        assert_equal(form['password1'].value, '')
-        assert_equal(form['password2'].value, '')
+        assert '<input id="field-username" type="text" name="name" value="sue"' in response.body
+        assert '<input id="field-firstname" type="text" name="firstname" value="Mr. Test User"' in response.body
+        assert '<input id="field-lastname" type="text" name="lastname" value=""' in response.body
+        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
+        assert '<textarea id="field-about" name="about" cols="20" rows="5" placeholder="A little information about yourself"' in response.body
+        assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
+        assert '<input id="field-password" type="password" name="old_password" value=""' in response.body
+        assert '<input id="field-password" type="password" name="password1" value=""' in response.body
+        assert '<input id="field-password-confirm" type="password" name="password2" value=""' in response.body
 
-        form['old_password'].value = 'abcdefgh'
-
-        # new email value
-        form['email'] = 'new@example.com'
-        response = submit_and_follow(self.app, form, env, 'save')
+        user_dict = tk.get_action('user_show')({
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'sue@example.com'})
+        test_client = self.get_backwards_compatible_test_client()
+        params = _get_user_params(user_dict)
+        params['email'] = 'new@example.com'
+        auth = {'Authorization': str(sue_obj.apikey)}
+        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         user = model.Session.query(model.User).get(sue_user['id'])
         assert_equal(user.email, 'new@example.com')
@@ -299,24 +326,30 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         '''Editing to an existing user's email is unsuccessful.'''
         factories.User(name='existing', email='existing@example.com')
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        sue_obj = model.User.get('sue@example.com')
+        sue_obj.apikey = 'SUE_API_KEY'
+        model.Session.commit()
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        url_for = h.url_for('user.edit')
         response = self.app.get(
-            url=h.url_for('user.edit'),
+            url=url_for,
             extra_environ=env,
         )
         # existing email in the form
-        form = response.forms['user-edit-form']
-        assert_equal(form['email'].value, sue_user['email'])
+        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
 
-        # new email value
-        form['email'] = 'existing@example.com'
-        form['old_password'] = 'abcdefgh'
-
-        response = webtest_submit(form, 'save', extra_environ=env)
+        user_dict = tk.get_action('user_show')({
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'sue@example.com'})
+        test_client = self.get_backwards_compatible_test_client()
+        params = _get_user_params(user_dict)
+        params['email'] = 'existing@example.com'
+        auth = {'Authorization': str(sue_obj.apikey)}
+        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         # error message in response
-        assert_true('The email address is already registered on HDX. Please use the sign in screen below.' in response)
+        assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -325,23 +358,30 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email_invalid_format(self):
         '''Editing with an invalid email format is unsuccessful.'''
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        sue_obj = model.User.get('sue@example.com')
+        sue_obj.apikey = 'SUE_API_KEY'
+        model.Session.commit()
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        url_for = h.url_for('user.edit')
         response = self.app.get(
-            url=h.url_for('user.edit'),
+            url=url_for,
             extra_environ=env,
         )
         # existing email in the form
-        form = response.forms['user-edit-form']
-        assert_equal(form['email'].value, sue_user['email'])
+        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
 
-        # new invalid email value
-        form['email'] = 'invalid.com'
-        form['old_password'] = 'abcdefgh'
-        response = webtest_submit(form, 'save', extra_environ=env)
+        user_dict = tk.get_action('user_show')({
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'sue@example.com'})
+        test_client = self.get_backwards_compatible_test_client()
+        params = _get_user_params(user_dict)
+        params['email'] = 'invalid.com'
+        auth = {'Authorization': str(sue_obj.apikey)}
+        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         # error message in response
-        assert_true('Email: Email address is not valid' in response)
+        assert '<li data-field-label="Email">Email: Email {} is not a valid format</li>'.format(params['email']) in user_updated.body
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -349,192 +389,254 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email_saved_as_lowercase(self):
         '''Editing with an email in uppercase will be saved as lowercase.'''
+        existing_user = factories.User(name='existing', email='existing@example.com', password='abcdefgh')
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
+        sue_obj = model.User.get('sue@example.com')
+        sue_obj.apikey = 'SUE_API_KEY'
+        model.Session.commit()
+
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        url_for = h.url_for('user.edit')
         response = self.app.get(
-            url=h.url_for('user.edit'),
+            url=url_for,
             extra_environ=env,
         )
-        # existing email in the form
-        form = response.forms['user-edit-form']
-        assert_equal(form['email'].value, sue_user['email'])
+        # existing values in the form
+        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
 
-        # new invalid email value
-        form['email'] = 'UPPER@example.com'
-        form['old_password'] = 'abcdefgh'
+        user_dict = tk.get_action('user_show')({
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'sue@example.com'})
+        test_client = self.get_backwards_compatible_test_client()
+        params = _get_user_params(user_dict)
+        params['email'] = 'existing@example.com'
+        auth = {'Authorization': str(sue_obj.apikey)}
+        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
 
-        response = webtest_submit(form, 'save', extra_environ=env)
-
-        # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, 'upper@example.com')
+        assert_equal(user.email, sue_user.get('email'))
 
     def test_edit_email_differently_case_existing(self):
         '''Editing with an existing user's email will be unsuccessful, even is
         differently cased.'''
-        factories.User(name='existing', email='existing@example.com')
+        '''Editing with an email in uppercase will be saved as lowercase.'''
+        existing_user = factories.User(name='existing', email='existing@example.com', password='abcdefgh')
         sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
 
+        sue_obj = model.User.get('sue@example.com')
+        sue_obj.apikey = 'SUE_API_KEY'
+        model.Session.commit()
+
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        url_for = h.url_for('user.edit')
         response = self.app.get(
-            url=h.url_for('user.edit'),
+            url=url_for,
             extra_environ=env,
         )
-        # existing email in the form
-        form = response.forms['user-edit-form']
-        assert_equal(form['email'].value, sue_user['email'])
+        # existing values in the form
+        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
 
-        # new email value
-        form['email'] = 'EXISTING@example.com'
-        form['old_password'] = 'abcdefgh'
-        response = webtest_submit(form, 'save', extra_environ=env)
+        user_dict = tk.get_action('user_show')({
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'sue@example.com'})
+        test_client = self.get_backwards_compatible_test_client()
+        params = _get_user_params(user_dict)
+        params['email'] = 'EXISTING@example.com'
+        auth = {'Authorization': str(sue_obj.apikey)}
+        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
 
-        # error message in response
-        assert_true('The email address is already registered on HDX. Please use the sign in screen below.' in response)
-
-        # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, 'sue@example.com')
+        assert_equal(user.email, sue_user.get('email'))
 
 
-@pytest.mark.skip(reason='Many functions and objects no longer available in 2.9')
-class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
-    @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
-
+class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
-        smtp_server = config.get('smtp.test_server')
-        if smtp_server:
-            host, port = smtp_server.split(':')
-            port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
-            config['smtp.test_server'] = '%s:%s' % (host, port)
-        SmtpServerHarness.setup_class()
-        PylonsTestCase.setup_class()
-        umodel.setup()
-        ue_model.create_table()
-        cls._load_plugins()
-        cls.app = hdx_test_base._get_test_app()
-
-    @classmethod
-    def teardown_class(cls):
-        SmtpServerHarness.teardown_class()
-        model.repo.rebuild_db()
+        super(TestResetPasswordSendingEmail, cls).setup_class()
 
     def setup(self):
         test_helpers.reset_db()
         test_helpers.search.clear_all()
-        self.clear_smtp_messages()
 
-    def test_send_reset_email_for_email(self):
+    @pytest.mark.usefixtures("with_request_context")
+    def test_send_reset_email(self, mail_server):
         '''Password reset email is sent for valid user email'''
-        bob_user = factories.User(name='bob', email='bob@example.com')
+        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        user_obj = model.User.get(user.get('name'))
+        msgs = mail_server.get_smtp_messages()
+        assert msgs == []
+
+        try:
+            reset_password.create_reset_key(user_obj, 3)
+            subject = u'HDX password reset'
+            reset_link = urljoin(config.get('ckan.site_url'),
+                                 h.url_for(controller='user', action='perform_reset', id=user_obj.id,
+                                           key=user_obj.reset_key))
+
+            email_data = {
+                'user_fullname': user_obj.fullname,
+                'user_reset_link': reset_link,
+                'expiration_in_hours': 3,
+            }
+            hdx_mailer.mail_recipient([{'display_name': user_obj.fullname, 'email': user_obj.email}], subject,
+                                      email_data, footer=user_obj.email,
+                                      snippet='email/content/password_reset.html')
+
+            # check it went to the mock smtp server
+            msgs = mail_server.get_smtp_messages()
+            assert True
+        except Exception as ex:
+            assert False
+
+
+class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
+    @classmethod
+    def setup_class(cls):
+        super(TestPasswordReset, cls).setup_class()
+
+    def setup(self):
+        test_helpers.reset_db()
+        test_helpers.search.clear_all()
+
+    @pytest.mark.usefixtures("with_request_context")
+    def test_send_reset_email_for_username(self, mail_server):
+        '''Password reset email is sent for valid user username'''
+
+        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        # user_obj = model.User.get(user.get('name'))
 
         # send email
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
         params = {
-            'user': bob_user['name']
+            'user': user.get('name')
         }
 
         # no emails sent yet
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 0)
 
-        res = json.loads(self.app.post(url, params).body)
-        assert_true(res['success'])
+        test_client = self.get_backwards_compatible_test_client()
+        try:
+            result = test_client.post(url, data=params)
+            res = json.loads(result.body)
+            assert_true(res['success'])
+        except Exception as ex:
+            assert False
 
         # an email has been sent
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 1)
 
         # check it went to the mock smtp server
         msg = msgs[0]
         assert_equal(msg[1], 'hdx@humdata.org')
-        assert_equal(msg[2], [bob_user['email']])
+        assert_equal(msg[2], [user.get('email')])
         assert_true('HDX_password_reset' in msg[3])
 
-    def test_send_reset_email_for_username(self):
-        '''Password reset email is sent for valid user name'''
-        bob_user = factories.User(name='bob', email='bob@example.com')
+    @pytest.mark.usefixtures("with_request_context")
+    def test_send_reset_email_for_email(self, mail_server):
+        '''Password reset email is sent for valid email'''
+
+        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        # user_obj = model.User.get(user.get('name'))
 
         # send email
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
         params = {
-            'user': bob_user['name']
+            'user': user.get('email')
         }
 
         # no emails sent yet
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 0)
 
-        res = json.loads(self.app.post(url, params).body)
-        assert_true(res['success'])
+        test_client = self.get_backwards_compatible_test_client()
+        try:
+            result = test_client.post(url, data=params)
+            res = json.loads(result.body)
+            assert_true(res['success'])
+        except Exception as ex:
+            assert False
 
         # an email has been sent
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 1)
 
         # check it went to the mock smtp server
         msg = msgs[0]
         assert_equal(msg[1], 'hdx@humdata.org')
-        assert_equal(msg[2], [bob_user['email']])
+        assert_equal(msg[2], [user.get('email')])
         assert_true('HDX_password_reset' in msg[3])
 
-    def test_send_reset_email_for_email_different_case(self):
-        '''Password reset email is sent for valid user email (with some
-        uppercase in local part).'''
-        bob_user = factories.User(name='bob', email='bob@example.com')
+    @pytest.mark.usefixtures("with_request_context")
+    def test_send_reset_email_for_email_different_case(self, mail_server):
+        '''Password reset email is sent for valid user email but with lowercase'''
+
+        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        # user_obj = model.User.get(user.get('name'))
 
         # send email
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
         params = {
-            'user': 'BOB@example.com'
+            'user': user.get('email').upper()
         }
 
         # no emails sent yet
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 0)
 
-        res = json.loads(self.app.post(url, params).body)
-        assert_true(res['success'])
+        test_client = self.get_backwards_compatible_test_client()
+        try:
+            result = test_client.post(url, data=params)
+            res = json.loads(result.body)
+            assert_true(res['success'])
+        except Exception as ex:
+            assert False
 
         # an email has been sent
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 1)
 
         # check it went to the mock smtp server
         msg = msgs[0]
         assert_equal(msg[1], 'hdx@humdata.org')
-        assert_equal(msg[2], [bob_user['email']])
+        assert_equal(msg[2], [user.get('email')])
         assert_true('HDX_password_reset' in msg[3])
 
-    def test_no_send_reset_email_for_non_user(self):
-        '''Password reset email is not sent for a valid email but no account'''
+    @pytest.mark.usefixtures("with_request_context")
+    def test_send_reset_email_for_email_not_existing(self, mail_server):
+        '''Password reset email is sent for not a valid user email'''
+
+        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        # user_obj = model.User.get(user.get('name'))
 
         # send email
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
-
-        # user doesn't exist
         params = {
-            'user': 'bob@example.com'
+            'user': "test" + user.get('email').upper()
         }
 
         # no emails sent yet
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 0)
 
-        res = json.loads(self.app.post(url, params).body)
-        assert_false(res['success'])
+        test_client = self.get_backwards_compatible_test_client()
+        try:
+            result = test_client.post(url, data=params)
+            res = json.loads(result.body)
+            assert_false(res['success'])
+        except Exception as ex:
+            assert False
 
         # no email has been sent
-        msgs = self.get_smtp_messages()
+        msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 0)
 
 
@@ -590,4 +692,3 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
 
         #     token = umodel.ValidationToken.get(user.id)
         #     assert token.valid is True
-

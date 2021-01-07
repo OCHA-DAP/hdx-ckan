@@ -71,14 +71,6 @@ def hdx_send_reset_link(context, data_dict):
         reset_link = urljoin(config.get('ckan.site_url'),
                              h.url_for(controller='user', action='perform_reset', id=user.id, key=user.reset_key))
 
-    # body = u"""\
-    #             <p>Dear {fullname}, </p>
-    #             <p>You have requested your password on {site_title} to be reset.</p>
-    #             <p>Please click on the following link to confirm this request:</p>
-    #             <p> <a href=\"{reset_link}\">{reset_link}</a></p>
-    #         """.format(fullname=user_fullname, site_title=config.get('ckan.site_title'),
-    #                    reset_link=reset_link)
-
     email_data = {
         'user_fullname': user_fullname,
         'user_reset_link': reset_link,
