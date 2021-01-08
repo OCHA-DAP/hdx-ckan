@@ -15,13 +15,12 @@ jobs:
       - name: Building CKAN docker image
         run: docker-compose build ckan
       - name: Spinning up docker-compose stack
-        shell: 'script -q -e -c "bash {0}"'
         run: |
           docker-compose up -d
           sleep 10
-          docker-compose exec solr bin/solr create -c ckan -d /configsets/hdx-current
-          docker-compose exec ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
-          docker-compose exec ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
+          docker-compose exec -T solr bin/solr create -c ckan -d /configsets/hdx-current
+          docker-compose exec -T ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
+          docker-compose exec -T ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
           docker-compose restart ckan
       - name: Installing HDX/CKAN python dev-requirements
         run: docker-compose exec -T ckan pip install -r /srv/ckan/dev-requirements-py2.txt
@@ -38,13 +37,19 @@ jobs:
           docker-compose exec -T ckan hdxckantool feature
           docker-compose exec -T ckan hdxckantool less compile
       - name: Testing hdx_search
-        run: docker-compose exec -T ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_search/ckanext/hdx_search/tests"
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
       - name: Testing hdx_users
-        run: docker-compose exec -T ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_users/ckanext/hdx_users/tests"
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_users"
       - name: Testing hdx_theme
-        run: docker-compose exec -T ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_theme/ckanext/hdx_theme/tests"
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_theme"
       - name: Testing hdx_package
-        run: docker-compose exec -T ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_package/ckanext/hdx_package/tests"
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package"
       - name: Testing hdx_pages
-        run: docker-compose exec -T ckan sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_pages/ckanext/hdx_pages/tests"
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
+      - name: Publish in Coveralls
+        uses: AndreMiras/coveralls-python-action@develop
+        if: success()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: pytests
 
