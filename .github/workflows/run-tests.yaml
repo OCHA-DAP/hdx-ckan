@@ -15,6 +15,9 @@ jobs:
       - name: Building CKAN docker image
         run: docker-compose build ckan
       - name: Spinning up docker-compose stack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           docker-compose up -d
           sleep 10
@@ -47,9 +50,6 @@ jobs:
       - name: Testing hdx_pages
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
       - name: Publish in Coveralls
-        uses: AndreMiras/coveralls-python-action@develop
         if: success()
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: pytests
+        run: docker-compose exec -T ckan sh -c "coveralls"
 
