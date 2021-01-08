@@ -71,6 +71,7 @@ RUN apt-get -qq -y update && \
     pip install -r requirement-setuptools.txt && \
     pip -q install --upgrade -r requirements-py2.txt && \
     pip install newrelic==5.12.1.141 && \
+    chmod +x run_pytest_with_coverage.sh && \
     chmod +x setup_py_helper.sh && \
     ./setup_py_helper.sh && \
     # curl https://codeload.github.com/okfn/ckanext-s3filestore/tar.gz/v0.1.1 -o s3f.tgz && \
