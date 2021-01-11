@@ -168,6 +168,8 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert updated_user.email == data.get('email')
         res = self._get_action('user_extra_show')(context, {'user_id': user.id})
         assert res
+        assert self._get_user_extra_by_key(res, user_model.HDX_FIRST_NAME) == data.get('first-name')
+        assert self._get_user_extra_by_key(res, user_model.HDX_LAST_NAME) == data.get('last-name')
         assert self._get_user_extra_by_key(res, user_model.HDX_ONBOARDING_DETAILS) == 'True'
 
 
