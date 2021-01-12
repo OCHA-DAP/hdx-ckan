@@ -35,7 +35,7 @@ class SitemapController(BaseController):
         for dataset in datasets:
             url = etree.SubElement(root, 'url')
             loc = etree.SubElement(url, 'loc')
-            pkg_url = url_for(controller='package', action="read", id = dataset['name'])
+            pkg_url = url_for('dataset_read', id=dataset['name'])
             loc.text = config.get('ckan.site_url') + pkg_url
             lastmod = etree.SubElement(url, 'lastmod')
             try:
@@ -48,7 +48,7 @@ class SitemapController(BaseController):
             for resource in dataset.get('resources', []):
                 url = etree.SubElement(root, 'url')
                 loc = etree.SubElement(url, 'loc')
-                loc.text = config.get('ckan.site_url') + url_for(controller="package", action="resource_read", id = dataset['name'], resource_id = resource['id'])
+                loc.text = config.get('ckan.site_url') + url_for('resource_read', id=dataset['name'], resource_id=resource['id'])
                 lastmod = etree.SubElement(url, 'lastmod')
                 try:
                     last_updated = resource.get('last_modified')
