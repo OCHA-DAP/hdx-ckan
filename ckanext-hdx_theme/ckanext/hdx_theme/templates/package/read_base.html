@@ -4,7 +4,7 @@
 
 {% block links -%}
     {{ super() }}
-    <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for(controller='package', action='read', id=pkg.id, format='rdf', qualified=True) }}"/>
+    <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for('dataset_read', id=pkg.id, format='rdf', qualified=True) }}"/>
 {% endblock -%}
 
 {% block head_extras -%}
@@ -32,7 +32,7 @@
         <div class="module info alert alert-info">
           <p class="module-content">
             {% set timestamp = h.render_datetime(c.pkg_revision_timestamp, with_hours=True) %}
-            {% set url = h.url(controller='package', action='read', id=pkg.name) %}
+            {% set url = h.url('dataset_read', id=pkg.name) %}
 
             {% if c.pkg_revision_not_latest %}
               {% trans timestamp=timestamp, url=url %}This is an old revision of this dataset, as edited at {{ timestamp }}. It may differ significantly from the <a href="{{ url }}">current revision</a>.{% endtrans %}
@@ -104,7 +104,7 @@
     {% snippet "snippets/hdx_social.html", title=pkg.title or pkg.name  %}
     <hr class="mTop20 dotted"/>
   {% endblock %}
-  
+
   {% block package_tags %}
     {% snippet "package/snippets/hdx_tags.html", tags=pkg.tags %}
   {% endblock %}

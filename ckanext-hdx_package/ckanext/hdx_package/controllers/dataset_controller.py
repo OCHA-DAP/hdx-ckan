@@ -499,7 +499,7 @@ class DatasetController(PackageController):
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
                                    action='read', id=id))
-            redirect(h.url_for(controller='package', action='read', id=id))
+            redirect(h.url_for('dataset_read', id=id))
 
         if not data:
             data = get_action('package_show')(context, {'id': id})
@@ -1287,7 +1287,7 @@ class DatasetController(PackageController):
             data_dict['pkg_owner_org'] = request.params.get('pkg_owner_org')
             data_dict['pkg_title'] = request.params.get('pkg_title')
             data_dict['pkg_id'] = request.params.get('pkg_id')
-            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+            data_dict['pkg_url'] = h.url_for('dataset_read', id=request.params.get('pkg_id'),
                                              qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
@@ -1347,7 +1347,7 @@ class DatasetController(PackageController):
             data_dict['pkg_title'] = request.params.get('title')
             if source_type == 'dataset':
                 data_dict['pkg_id'] = request.params.get('pkg_id')
-                data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                data_dict['pkg_url'] = h.url_for('dataset_read', id=request.params.get('pkg_id'),
                                                  qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 

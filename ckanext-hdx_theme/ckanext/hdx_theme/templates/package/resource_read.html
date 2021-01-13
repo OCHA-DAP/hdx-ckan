@@ -27,7 +27,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), controller='package', action='read', id=pkg.id, position=3 %}
+  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), 'dataset_read', id=pkg.id, position=3 %}
   <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 
@@ -98,7 +98,7 @@
             {% if not res.description and c.package.notes %}
               <h3>{{ _('From the dataset abstract') }}</h3>
               <blockquote>{{ h.markdown_extract(c.package.get('notes')) }}</blockquote>
-              <p>{% trans dataset=c.package.title, url=h.url_for(controller='package', action='read', id=c.package['name']) %}Source: <a href="{{ url }}">{{ dataset }}</a>{% endtrans %}
+              <p>{% trans dataset=c.package.title, url=h.url_for('dataset_read', id=c.package['name']) %}Source: <a href="{{ url }}">{{ dataset }}</a>{% endtrans %}
             {% endif %}
           </div>
         {% endblock %}

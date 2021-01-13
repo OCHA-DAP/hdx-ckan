@@ -10,7 +10,7 @@ Example usage:
 #}
 
 {% resource 'requestdata/expand-dataset.js' %}
-{% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
+{% set package_url = h.url_for('dataset_read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
   <div class="requested-data-container__content-item--sections" style="align-items: center;">

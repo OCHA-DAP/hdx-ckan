@@ -31,7 +31,7 @@ Example:
           </span>
         {% endif %}
 
-        {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
+        {{ h.link_to(h.truncate(title, truncate_title), h.url_for('dataset_read', id=package.name)) }}
         {% if package.get('state', '').startswith('draft') %}
           <span class="label label-info">{{ _('Draft') }}</span>
         {% elif package.get('state', '').startswith('deleted') %}
@@ -46,7 +46,7 @@ Example:
   				</a>
   			{% endif %} - {{f_updated_time}}
       </div>
-      
+
       {% if banner %}
         <span class="banner">{{ _('Popular') }}</span>
       {% endif %}
@@ -60,7 +60,7 @@ Example:
       <ul class="list-items dataset-resources unstyled">
         {% for resource in h.dict_list_reduce(package.resources, 'format') %}
           <li>
-            <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
+            <a href="{{ h.url_for('dataset_read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
           </li>
         {% endfor %}
       </ul>

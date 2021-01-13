@@ -254,7 +254,7 @@ class QuarantinedDatasetsService(object):
                         'last_date': dataset.get('last_date'),
                         'html_template': 'light/notifications/quarantined_datasets_snippet.html',
                         'dataset': dataset,
-                        'dataset_url': h.url_for(controller='package', action='read', id=dataset.get('name')),
+                        'dataset_url': h.url_for('dataset_read', id=dataset.get('name')),
                         'for_sysadmin': for_sysadmin,
                         'is_sysadmin': self.is_sysadmin
                     }
