@@ -6,7 +6,7 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@0.1.0#egg=ckanext-dcat  # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview  # via -r requirements-py2.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.3#egg=ckanext-requestdata  # via -r requirements-py2.in
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.4#egg=ckanext-requestdata  # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.3#egg=ckanext-s3filestore  # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.2.1#egg=ckanext-showcase  # via -r requirements-py2.in
 alembic==1.0.0            # via -r requirements-py2.in
