@@ -36,7 +36,7 @@ def _get_test_app():
     return app
 
 class TestSitemap(FunctionalTestCase, unittest.TestCase):
-    
+
     @classmethod
     def setup_class(cls):
         """
@@ -65,7 +65,7 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
-    
+
     def test_controller(self):
         url = url_for(controller="ckanext.sitemap.controller:SitemapController",
                       action='view')
@@ -107,10 +107,9 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         # Needs to be created today as test data is too
         pkgdate = pkg.latest_related_revision.timestamp.strftime('%Y-%m-%d')
         self.assert_(tree.getroot()[0][1].text == pkgdate)
-        resurl = config.get('ckan.site_url') + url_for(controller='package',
-                                                       action='resource_read',
-                                                       id = pkg.name,
-                                                       resource_id = pkg.resources[0].id)
+        resurl = config.get('ckan.site_url') + url_for('resource_read',
+                                                       id=pkg.name,
+                                                       resource_id=pkg.resources[0].id)
         self.assert_(tree.getroot()[1][0].text == resurl)
 
     def _create_pkg(self):

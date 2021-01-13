@@ -8,7 +8,7 @@
 {% block breadcrumb_content %}
   {{ super() }}
   {% if res %}
-    <li>{% link_for h.resource_display_name(res)|truncate(30), controller='package', action='resource_read', id=pkg.name, resource_id=res.id %}</li>
+    <li>{% link_for h.resource_display_name(res)|truncate(30), 'resource_read', id=pkg.name, resource_id=res.id %}</li>
     <li class="active"><a href="">{{ _('Edit') }}</a></li>
   {% endif %}
 {% endblock %}
