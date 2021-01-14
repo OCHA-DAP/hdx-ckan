@@ -43,12 +43,16 @@ jobs:
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
       - name: Testing hdx_users
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_users"
+      - name: Testing hdx_user_extra
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_user_extra"
       - name: Testing hdx_theme
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_theme"
       - name: Testing hdx_package
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package"
       - name: Testing hdx_pages
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
+      - name: Testing hdx_org_group
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_org_group"
       - name: Publish in Coveralls
         if: success()
         run: docker-compose exec -T ckan sh -c "coveralls"
