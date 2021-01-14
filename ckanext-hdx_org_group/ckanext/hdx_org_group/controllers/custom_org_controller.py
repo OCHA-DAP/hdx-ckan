@@ -102,7 +102,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             config.update({
                 'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id',
                                                                                         '') + "&limit=10000000",
-                'geo': h.url_for(controller='package', action='resource_download',
+                'geo': h.url_for('resource_download',
                                  id=visualization.get('viz-geo-dataset-id', ''),
                                  resource_id=visualization.get('viz-geo-resource-id', '')),
                 'source': visualization.get('viz-data-source', '')
@@ -128,7 +128,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         else:
             if visualization.get('datatype_1', '') == 'filestore':
                 datatype = "filestore"
-                data = h.url_for(controller='package', action='resource_download',
+                data = h.url_for('resource_download',
                                  id=visualization.get('dataset_id_1', ''),
                                  resource_id=visualization.get('resource_id_1', ''))
             else:
@@ -138,7 +138,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
             if visualization.get('datatype_2', '') == 'filestore':
                 geotype = "filestore"
-                geo = h.url_for(controller='package', action='resource_download',
+                geo = h.url_for('resource_download',
                                 id=visualization.get('dataset_id_2', ''),
                                 resource_id=visualization.get('resource_id_2', ''))
             else:

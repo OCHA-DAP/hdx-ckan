@@ -41,7 +41,7 @@ class TestDatasetSearchParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest
             controller='organization', action='read', id='hdx-test-org')
 
         result = self.app.get(url, extra_environ={'REMOTE_USER': 'testsysadmin'})
-        page = str(result.response)
+        page = result.data
 
         begin_str = '<section class="search-list list-items">'
         end_str = '</section>'

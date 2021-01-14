@@ -71,8 +71,9 @@ top_line_items = [
 
 class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin('ytp_request hdx_pages hdx_org_group hdx_package hdx_user_extra hdx_users hdx_theme')
+    def setup_class(cls):
+        cls.USERS_USED_IN_TEST.append('janedoe3')
+        super(TestCustomOrgController, cls).setup_class()
 
     @classmethod
     def _create_test_data(cls):
@@ -155,16 +156,13 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             action='edit', id='hdx-test-org')
         testsysadmin = model.User.by_name('testsysadmin')
         result = self.app.get(url, extra_environ={'Authorization': str(testsysadmin.apikey)})
-        assert 'id="customization-trigger"' in str(result.response)
+        assert 'id="customization-trigger"' in result.data
 
         testadmin = model.User.by_name('janedoe3')
-        flag = False
-        try:
-            self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
-        except Exception, ex:
-            assert 'something went wrong' in ex.message
-            flag = True
-        assert flag
+        result = self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
+        assert 'something went wrong' in result.data
+        assert result.status_code == 403
+
         # assert 'id="customization-trigger"' not in str(result.response)
 
     # COMMENTED OUT FOR 2.6 UPGRADE - TO BE REVIEWED
