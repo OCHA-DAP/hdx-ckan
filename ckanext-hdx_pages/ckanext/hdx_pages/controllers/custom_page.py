@@ -27,21 +27,22 @@ NotFound = logic.NotFound
 abort = base.abort
 checked = 'checked="checked"'
 
-# section_types = {
-#     "empty": '',
-#     "map": _('Map'),
-#     "key_figures": _('Key Figures'),
-#     "interactive_data": _('Interactive Data'),
-#     "data_list": _('Data')
-# }
 section_types = {
     "empty": '',
-    "description": _(''),
-    "map": _(''),
-    "key_figures": _(''),
-    "interactive_data": _(''),
-    "data_list": _('')
+    "description": '',
+    "map": '',
+    "key_figures": '',
+    "interactive_data": '',
+    "data_list": ''
 }
+# section_types = {
+#     "empty": '',
+#     "description": _(''),
+#     "map": _(''),
+#     "key_figures": _(''),
+#     "interactive_data": _(''),
+#     "data_list": _('')
+# }
 
 
 class PagesController(HDXSearchController):
