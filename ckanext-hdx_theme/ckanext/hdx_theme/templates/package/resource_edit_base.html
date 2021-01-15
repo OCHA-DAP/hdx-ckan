@@ -8,13 +8,13 @@
 {% block breadcrumb_content %}
   {{ super() }}
   {% if res %}
-    <li>{% link_for h.resource_display_name(res)|truncate(30), 'resource_read', id=pkg.name, resource_id=res.id %}</li>
+    <li>asd{% link_for h.resource_display_name(res)|truncate(30), named_route=pkg.type ~ '_resource.read', id=pkg.name, resource_id=res.id %}</li>
     <li class="active"><a href="">{{ _('Edit') }}</a></li>
   {% endif %}
 {% endblock %}
 
 {% block content_action %}
-  {% link_for _('All resources'), controller='package', action='resources', id=pkg.name, class_='btn', icon='arrow-left' %}
+  {% link_for _('All resources'), named_route=pkg.type ~ '.resources', id=pkg.name, class_='btn', icon='arrow-left' %}
   {#
   {% if res %}
     {% link_for _('View resource'), controller='package', action='resource_read', id=pkg.name, resource_id=res.id, class_='btn', icon='eye-open' %}

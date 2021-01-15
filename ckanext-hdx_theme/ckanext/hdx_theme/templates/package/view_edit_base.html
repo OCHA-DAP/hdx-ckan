@@ -6,9 +6,9 @@
 {% block breadcrumb_edit_selected %}{% endblock %}
 
 {% block content_action %}
-  {% link_for _('All views'), controller='package', action='resource_views', id=pkg.name, resource_id=res.id, class_='btn', icon='arrow-left' %}
+  {% link_for _('All views'), named_route=pkg.type ~ '_resource.views', id=pkg.name, resource_id=res.id, class_='btn', icon='arrow-left' %}
   {% if res %}
-    {% set url = h.url_for('resource_read', id=pkg.name, resource_id=res.id) ~ '?view_id=' ~ resource_view.id %}
+    {% set url = h.url_for(pkg.type ~ '_resource.read', id=pkg.name, resource_id=res.id) ~ '?view_id=' ~ resource_view.id %}
     <a href="{{ url }}" class="btn"><i class="icon-eye-open"></i> {{ _('View view') }}</a>
   {% endif %}
 {% endblock %}

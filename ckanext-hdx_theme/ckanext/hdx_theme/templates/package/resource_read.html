@@ -27,7 +27,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), 'dataset_read', id=pkg.id, position=3 %}
+  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='read', id=pkg.id, position=3 %}
   <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 
