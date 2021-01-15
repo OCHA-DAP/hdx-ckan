@@ -177,9 +177,9 @@
   flex-grow: 0;
 }
 .dataset-light .resource-list .resource-item .format-label {
-  transform: scale(0.6);
   position: initial;
   min-width: 32px;
+  margin: 2px 0 0 -20px;
 }
 .dataset-light .resource-list .resource-item .content {
   border-top: 1px solid #eeeeee;
