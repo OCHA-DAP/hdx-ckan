@@ -130,7 +130,7 @@ hdx.cod.new_filters.enabled = false
 
 # FAQ - Wordpress
 hdx.wordpress.url=
-hdx.wordpress.auth.basic=
+#hdx.wordpress.auth.basic=
 hdx.wordpress.category.faq=
 hdx.wordpress.category.covid
 hdx.wordpress.category.devs=
