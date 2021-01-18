@@ -337,7 +337,7 @@ hdx.password.invitation_reset_key.expiration_in_hours = 48
 hdx.cod.new_filters.enabled = true
 
 # FAQ - Wordpress
-hdx.wordpress.url=https://centre.humdata.org
+#hdx.wordpress.url=https://centre.humdata.org
 #only use auth with the dev server
 #hdx.wordpress.auth.basic=
 hdx.wordpress.category.faq=554
