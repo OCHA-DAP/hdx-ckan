@@ -122,13 +122,13 @@ class SplashPageController(HomeController):
 
     def about(self, page):
         title = {
-            'license': config.get('hdx.wordpress.post.licenses'),
-            'terms': config.get('hdx.wordpress.post.terms'),
+            'license': _('Data Licenses'),
+            'terms': _('Terms of Service'),
             'hdx-qa-process': _('HDX QA Process')
         }
         html = {
-            'license': 'home/snippets/hdx_licenses.html',
-            'terms': 'home/snippets/hdx_terms_of_service.html',
+            'license': config.get('hdx.wordpress.post.licenses'),
+            'terms': config.get('hdx.wordpress.post.terms'),
             'hdx-qa-process': 'home/snippets/qa-process.html'
         }
         render = {
@@ -136,8 +136,12 @@ class SplashPageController(HomeController):
         }
 
         titleItem = title.get(page)
-        htmlItem = html.get(page)
-        renderItem = render.get(page, 'home/about2.html')
+        renderItem = render.get(page, 'wordpress')
+        if renderItem == 'wordpress':
+            renderItem = 'home/about2.html'
+            htmlItem = fw.get_post(html.get(page))
+        else:
+            htmlItem = html.get(page)
 
         if titleItem is None:
             abort(404, _("The requested about page doesn't exist"))
