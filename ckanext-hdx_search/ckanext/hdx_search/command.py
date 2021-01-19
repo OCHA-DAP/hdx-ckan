@@ -111,7 +111,8 @@ def buildIndex(path):
         index.append({'title': title or name,
                       'extra_terms': description,
                       'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                       action=action, id=name, qualified=True), 'type': 'event'})
+                                       action=action, id=name, qualified=True),
+                      'type': 'event'})
 
     # visualizations
 

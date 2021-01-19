@@ -6,20 +6,20 @@ $('document').ready(function(){
         this.field('url');
         this.ref('id');
 
-        for(i=0; i<feature_index.length; i++){//This is the part where Lunr is actually not too bright
+        for(let i=0; i<feature_index.length; i++){//This is the part where Lunr is actually not too bright
             feature_index[i]['id'] = i;
-            if(feature_index[i]['type'] == 'event'){
-                feature_index[i]['event'] = feature_index[i]['title'];
+            if(feature_index[i]['type'] === 'event'){
+                feature_index[i]['event'] = feature_index[i]['extra_terms'];
             }else{
                 feature_index[i]['event'] = '';
             }
-            this.add(feature_index[i])
+            this.add(feature_index[i]);
         }
     });
 
     var performSearchQuery = function(query) {
       var termList = query.split(' ');
-      var modifiedQ = termList.map(term => term.length > 0 ? '+' + term : term).join(' ');
+      var modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
       modifiedQ += modifiedQ.length > 0 ? '*' : '';
       var results = modifiedQ.length > 0 ? index.search(modifiedQ) : [];
       return {
@@ -27,7 +27,7 @@ $('document').ready(function(){
         'termList': termList,
         'modifiedQ': modifiedQ,
         'results': results
-      }
+      };
     };
 
 
@@ -36,7 +36,7 @@ $('document').ready(function(){
     if(results.length > 0){//Don't show if we don't have any good matches
         var html = "You might also like:";
         var limit = results.length > 5 ? 5 : results.length;
-        for(i=0; i<limit; i++){
+        for(let i=0; i<limit; i++){
             html += ' <a href="'+feature_index[results[i]['ref']]['url']+'">'+feature_index[results[i]['ref']]['title']+'</a> '+feature_index[results[i]['ref']]['type']+' page';
             if(i<limit-1){
                 html +=',';
@@ -51,6 +51,9 @@ $('document').ready(function(){
         var prevSearch = JSON.parse($("#previous-searches").text());
 
         // console.log('MODIFIED QUERY IS: ' + searchInfo.modifiedQ);
+        // console.log('QUERY IS: ' + searchInfo.q);
+        // console.log('results are: ' + searchInfo.results);
+        // console.log('________________________' );
         var search = searchInfo.results;
         var $results = $(this).parents("form").find('.search-ahead');
         var html = "";
@@ -64,7 +67,7 @@ $('document').ready(function(){
 
         if(search.length >0){
             var limit = search.length > 5 ? 5 : search.length;
-            for(i=0; i<limit; i++){
+            for(let i=0; i<limit; i++){
                 html += '<li data-search-term="'+searchInfo.q+'" data-search-type="'+feature_index[search[i]['ref']]['type']+
                     '" data-href="'+feature_index[search[i]['ref']]['url']+'" ' +
                     'data-toggle="tooltip" title="'+ feature_index[search[i]['ref']]['title'] +'"><div class="ahead-link"><i class="empty"></i>'+
