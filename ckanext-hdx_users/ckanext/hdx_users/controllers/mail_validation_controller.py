@@ -597,6 +597,13 @@ class ValidationController(ckan.controllers.user.UserController):
 
         except hdx_mail.NoRecipientException, e:
             return self.error_message(_(str(e)))
+        except ValidationError as e:
+            log.error(str(e))
+            if isinstance(e.error_summary, dict):
+                error_summary = ' '.join(e.error_summary.values())
+            else:
+                error_summary = json.dumps(e.error_summary)
+            return self.error_message(error_summary)
         except Exception, e:
             log.error(str(e))
             return self.error_message(_('Request can not be sent. Contact an administrator.'))
