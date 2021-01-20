@@ -134,8 +134,8 @@ hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 hdx.cod.new_filters.enabled = false
 
 # FAQ - Wordpress
-hdx.wordpress.url=${HDX_WORDPRESS_URL}
-hdx.wordpress.auth.basic=${HDX_WORDPRESS_AUTH_BASIC}
+hdx.wordpress.url = ${HDX_WORDPRESS_URL}
+hdx.wordpress.auth.basic = ${HDX_WORDPRESS_AUTH_BASIC}
 
 ## Logging configuration
 [loggers]
