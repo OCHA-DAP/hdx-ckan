@@ -68,7 +68,7 @@ class FaqDataResponsibilityController(base.BaseController):
             fullname = request.params.get('fullname')
             email = request.params.get('email')
             msg = request.params.get('faq-msg')
-            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
+            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@humdata.org')
 
             test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
             if not test:

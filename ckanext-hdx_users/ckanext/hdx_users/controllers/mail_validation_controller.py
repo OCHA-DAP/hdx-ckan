@@ -13,7 +13,7 @@ import urllib2 as urllib2
 
 import dateutil
 import pylons.configuration as configuration
-import requests
+
 from mailchimp3 import MailChimp
 from pylons import config
 from sqlalchemy.exc import IntegrityError
@@ -35,6 +35,7 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
+import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
 from ckan.common import _, c, g, request, response
@@ -189,11 +190,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 time_passed = None
             if 'activity' in user_dict and (not user_dict['activity']) and time_passed and time_passed.days < 3:
                 # /dataset/new
-                contribute_url = h.url_for(controller='package', action='new')
-                # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
-                #    If you want to associate this dataset with an organization, either click on "My Organizations" below
-                #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
-                # h.flash_success(_(message), True)
+                # contribute_url = h.url_for(controller='package', action='new')
 
                 return h.redirect_to('dashboard.organizations')
             else:
@@ -207,7 +204,7 @@ class ValidationController(ckan.controllers.user.UserController):
                     h.redirect_to(locale=None, controller='user', action='login', id=None)
 
                 # do we need this?
-                user_ref = c.userobj.get_reference_preferred_for_uri()
+                # user_ref = c.userobj.get_reference_preferred_for_uri()
 
                 _ckan_site_url = config.get('ckan.site_url', '#')
                 _came_from = str(request.referrer or _ckan_site_url)
@@ -251,7 +248,7 @@ class ValidationController(ckan.controllers.user.UserController):
             is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
             if is_captcha_enabled == 'true':
                 captcha_response = data_dict.get('g-recaptcha-response', None)
-                if not self.is_valid_captcha(response=captcha_response):
+                if not usr_h.is_valid_captcha(captcha_response=captcha_response):
                     raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
         except ValidationError, e:
             error_summary = e.error_summary
@@ -259,8 +256,9 @@ class ValidationController(ckan.controllers.user.UserController):
                 return OnbCaptchaErr
             return self.error_message(error_summary)
         except Exception, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
+            log.error(e)
+            # error_summary = e.error_summary
+            return self.error_message('Something went wrong. Please contact support.')
 
         """
         STEP 1: user register the email
@@ -768,100 +766,6 @@ class ValidationController(ckan.controllers.user.UserController):
         else:
             return render('user/logout_first.html')
 
-            # def new(self, data=None, errors=None, error_summary=None):
-            #     '''GET to display a form for registering a new user.
-            #        or POST the form data to actually do the user registration.
-            #     '''
-            #
-            #     temp_schema = self._new_form_to_db_schema()
-            #     if temp_schema.has_key('name'):
-            #         temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
-            #                                temp_schema['name']]
-            #
-            #     context = {'model': model, 'session': model.Session,
-            #                'user': c.user or c.author,
-            #                'auth_user_obj': c.userobj,
-            #                'schema': temp_schema,
-            #                'save': 'save' in request.params}
-            #
-            #     try:
-            #         check_access('user_create', context)
-            #     except NotAuthorized:
-            #         abort(401, _('Unauthorized to create a user'))
-            #
-            #     if context['save'] and not data:
-            #         return self._save_new(context)
-            #
-            #     if c.user and not data:
-            #         # #1799 Don't offer the registration form if already logged in
-            #         return render('user/logout_first.html')
-
-            # data = data or {}
-            # errors = errors or {}
-            # error_summary = error_summary or {}
-            # vars = {'data': data, 'errors': errors,
-            #         'error_summary': error_summary,
-            #         'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
-
-            # c.is_sysadmin = new_authz.is_sysadmin(c.user)
-            # c.form = render(self.new_user_form, extra_vars=vars)
-
-            # return render('user/new.html')
-
-    # def _save_new(self, context):
-    #     try:
-    #         data_dict = logic.clean_dict(unflatten(
-    #             logic.tuplize_dict(logic.parse_params(request.params))))
-    #         context['message'] = data_dict.get('log_message', '')
-    #         captcha.check_recaptcha(request)
-    #         user = get_action('user_create')(context, data_dict)
-    #         token = get_action('token_create')(context, user)
-    #         user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
-    #                                                                'extras': ue_helpers.get_default_extras()})
-    #         # print user_extra
-    #
-    #     except NotAuthorized:
-    #         abort(401, _('Unauthorized to create user %s') % '')
-    #     except NotFound, e:
-    #         abort(404, _('User not found'))
-    #     except DataError:
-    #         abort(400, _(u'Integrity Error'))
-    #     except captcha.CaptchaError:
-    #         error_msg = _(u'Bad Captcha. Please try again.')
-    #         h.flash_error(error_msg)
-    #         return self.new(data_dict)
-    #     except ValidationError, e:
-    #         errors = e.error_dict
-    #         error_summary = e.error_summary
-    #         return self.new(data_dict, errors, error_summary)
-    #     if not c.user:
-    #         # Send validation email
-    #         self.send_validation_email(user, token)
-    #
-    #         # Redirect to a URL picked up by repoze.who which performs the
-    #         # login
-    #         # login_url = self._get_repoze_handler('login_handler_path')
-    #
-    #         post_register_url = h.url_for(
-    #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-    #             action='post_register')
-    #
-    #         # We need to pass the logged in URL as came_from parameter
-    #         # otherwise we lose the language setting
-    #         came_from = h.url_for(controller='user', action='logged_in',
-    #                               __ckan_no_root=True)
-    #         redirect_url = '{0}?came_from={1}&user={2}'
-    #         h.redirect_to(redirect_url.format(
-    #             post_register_url,
-    #             came_from, user['id']))
-    #     else:
-    #         # #1799 User has managed to register whilst logged in - warn user
-    #         # they are not re-logged in as new user.
-    #         h.flash_success(_('User "%s" is now registered but you are still '
-    #                           'logged in as "%s" from before') %
-    #                         (data_dict['name'], c.user))
-    #         return render('user/logout_first.html')
-
     def validation_resend(self, id):
         # Get user by id
         context = {'model': model, 'session': model.Session,
@@ -929,14 +833,6 @@ class ValidationController(ckan.controllers.user.UserController):
                 'user_extra': request.params.get('user_extra') if request.params.get('user_extra') == 'True' else None
                 }
         return data
-
-    def is_valid_captcha(self, response):
-        url = configuration.config.get('hdx.captcha.url')
-        secret = configuration.config.get('ckan.recaptcha.privatekey')
-        params = {'secret': secret, "response": response}
-        r = requests.get(url, params=params, verify=True)
-        res = json.loads(r.content)
-        return 'success' in res and res['success'] == True
 
     def _get_mailchimp_api(self):
         return MailChimp(configuration.config.get('hdx.mailchimp.api.key'))

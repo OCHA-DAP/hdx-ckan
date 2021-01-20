@@ -182,7 +182,7 @@ hdx.download_with_cache.folder = /srv/filestore/download_cache
 
 #hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
-hdx.faqrequest.email = hdx@un.org
+hdx.faqrequest.email = hdx@humdata.org
 hdx.cache.onstartup = true
 hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
