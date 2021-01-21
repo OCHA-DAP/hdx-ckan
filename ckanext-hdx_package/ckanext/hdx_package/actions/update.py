@@ -189,15 +189,16 @@ def package_update(context, data_dict):
     prev_qa_completed = pkg.extras.get('qa_completed') == 'true'
 
     # Inject a code representing the batch within which this dataset was modified
-    if context.get(BATCH_MODE) == BATCH_MODE_KEEP_OLD:
-        try:
-            batch_extras = pkg._extras.get('batch')
-            if batch_extras and batch_extras.state == 'active':
-                data_dict['batch'] = batch_extras.value
-        except Exception, e:
-            log.info(str(e))
-    elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
-        data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
+    if pkg.type == 'dataset':
+        if context.get(BATCH_MODE) == BATCH_MODE_KEEP_OLD:
+            try:
+                batch_extras = pkg._extras.get('batch')
+                if batch_extras and batch_extras.state == 'active':
+                    data_dict['batch'] = batch_extras.value
+            except Exception, e:
+                log.info(str(e))
+        elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
+            data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
     resource_uploads = []
     for resource in data_dict.get('resources', []):
@@ -264,7 +265,7 @@ def package_update(context, data_dict):
         item.after_update(context, data)
 
     # Create activity
-    if not pkg.private:
+    if not pkg.private and pkg.type == 'dataset':
         user_obj = model.User.by_name(user)
         if user_obj:
             user_id = user_obj.id
