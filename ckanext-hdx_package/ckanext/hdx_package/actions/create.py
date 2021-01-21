@@ -190,8 +190,9 @@ def package_create(context, data_dict):
                 package_plugin.check_data_dict(data_dict)
 
     # Inject a code representing the batch within which this dataset was modified
-    if context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
-        data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
+    if (data_dict.get('type') or 'dataset') == 'dataset':
+        if context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
+            data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
 
     data, errors = lib_plugins.plugin_validate(
@@ -256,7 +257,7 @@ def package_create(context, data_dict):
             {'package': data})
 
     # Create activity
-    if not pkg.private:
+    if not pkg.private and pkg.type == 'dataset':
         user_obj = model.User.by_name(user)
         if user_obj:
             user_id = user_obj.id
