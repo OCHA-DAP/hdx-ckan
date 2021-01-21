@@ -201,17 +201,21 @@ def package_update(context, data_dict):
 
     resource_uploads = []
     for resource in data_dict.get('resources', []):
-        # file uploads/clearing
-        upload = uploader.get_resource_uploader(resource)
+        # I believe that unless a resource has either an upload field or is marked to be deleted
+        # we don't need to create an uploader object which is expensive
+        if 'clear_upload' in resource or 'upload' in resource:
+            # file uploads/clearing
+            upload = uploader.get_resource_uploader(resource)
 
-        if 'mimetype' not in resource:
-            if hasattr(upload, 'mimetype'):
-                resource['mimetype'] = upload.mimetype
+            if 'mimetype' not in resource:
+                if hasattr(upload, 'mimetype'):
+                    resource['mimetype'] = upload.mimetype
 
-        if 'size' not in resource and 'url_type' in resource:
-            if hasattr(upload, 'filesize'):
-                resource['size'] = upload.filesize
-
+            if 'size' not in resource and 'url_type' in resource:
+                if hasattr(upload, 'filesize'):
+                    resource['size'] = upload.filesize
+        else:
+            upload = None
         resource_uploads.append(upload)
 
     data, errors = lib_plugins.plugin_validate(
@@ -249,7 +253,10 @@ def package_update(context, data_dict):
             zip(data.get('resources', []), resource_uploads)):
         resource['id'] = pkg.resources[index].id
 
-        upload.upload(resource['id'], uploader.get_max_resource_size())
+        if upload:
+            log.info('There\'s a resource in package_update() which is marked for: {}'
+                     .format('clear' if upload.clear else 'upload'))
+            upload.upload(resource['id'], uploader.get_max_resource_size())
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
