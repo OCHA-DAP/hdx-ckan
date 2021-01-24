@@ -141,6 +141,10 @@ ckan.resource_proxy.max_file_size = 2097152
 
 ckan.legacy_route_mappings = {"search": "search", "organization_read": "organization_read", "organization_activity": "organization_activity", "organization_members": "organization_members"}
 
+ckan.recline.dataproxy_url = /dataproxy
+ckanext.spatial.common_map.type = custom
+ckanext.spatial.common_map.custom.url = /crisis-tiles/{z}/{x}/{y}.png
+
 ## Datapusher settings
 
 # Make sure you have set up the DataStore
@@ -187,7 +191,6 @@ hdx.cache.onstartup = true
 hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
 hdx.ogre.url = http://ogre:3000
-hdx.datapreview.url = /dataproxy
 hdx.previewmap.url = //{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.orgmap.url = //{s}.tile.openstreetmap.org/{z}/{x}/{y}.png

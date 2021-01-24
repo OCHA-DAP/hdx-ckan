@@ -70,7 +70,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         self.__add_hxl_proxy_url_for_checks(config)
 
     def __add_dataproxy_url_for_checks(self, config):
-        dataproxy_url = config.get('hdx.datapreview.url', '')
+        dataproxy_url = config.get('ckan.recline.dataproxy_url', '')
         dataproxy_url = self._create_full_URL(dataproxy_url)
         config['hdx_checks.dataproxy_url'] = dataproxy_url
 
