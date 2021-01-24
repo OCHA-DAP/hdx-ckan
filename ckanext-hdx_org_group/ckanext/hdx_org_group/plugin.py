@@ -332,7 +332,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     plugins.implements(plugins.IBlueprint)
 
     def group_types(self):
-        return ['']
+        return ['group']
 
     def is_fallback(self):
         return True
