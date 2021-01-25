@@ -1,12 +1,12 @@
 import json
 import logging
 import pylons.configuration as configuration
-from ckanext.hdx_theme.helpers.faq_data import faq_data
 
 import ckan.lib.base as base
 import ckan.logic as logic
-from ckan.common import _, c
 import ckan.model as model
+import ckanext.hdx_theme.helpers.faq_wordpress as fw
+from ckan.common import _, c
 
 abort = base.abort
 log = logging.getLogger(__name__)
@@ -37,6 +37,9 @@ class ArchivedQuickLinksController(base.BaseController):
 
         page_list = logic.get_action('page_list')(context, {})
         _pages = _prepare_pages(page_list)
+        wp_category_faq = configuration.config.get('hdx.wordpress.category.faq')
+        faq_data = fw.faq_for_category(wp_category_faq)
+
         template_data = {
             'data': {
                 'faq_data': faq_data,

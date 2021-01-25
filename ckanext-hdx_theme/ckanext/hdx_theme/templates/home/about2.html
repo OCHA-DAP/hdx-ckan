@@ -11,7 +11,7 @@
 {% block primary %}
 <div class="paddingRowHack whiteBackground">
     <div class="paddingLeftHack paddingRightHack">
-        {% snippet html %}
+        {{ html | safe }}
     </div>
 </div>
 {% endblock %}
