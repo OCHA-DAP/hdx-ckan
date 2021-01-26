@@ -1,4 +1,5 @@
-import ckan.logic as logic
+import pytest
+
 import ckan.model as model
 import unicodedata
 import ckanext.hdx_users.model as umodel
@@ -7,6 +8,7 @@ import ckanext.hdx_user_extra.model as ue_model
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
+@pytest.mark.skip(reason="Skipping for now as the page needs WP data")
 class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
     #loads missing plugins
