@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content_action %}
-  {% link_for _('View dataset'), controller='package', action='read', id=pkg.name, class_='btn', icon='eye-open' %}
+  {% link_for _('View dataset'), 'dataset_read', id=pkg.name, class_='btn', icon='eye-open' %}
 {% endblock %}
 
 {% block secondary_content %}

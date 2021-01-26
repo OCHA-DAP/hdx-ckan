@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 class TestOrgAuth(org_group_base.OrgGroupBaseTest):
-    
+
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
@@ -114,27 +114,21 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
 
     def test_new_org_request_page(self):
         offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
-        flag = False
-        try:
-            result = self.app.get(offset)
-        except Exception, ex:
-            assert '403' in ex.message
-            assert 'something went wrong' in ex.message
-            flag = True
-        assert flag
-
+        result = self.app.get(offset)
+        assert result.status_code == 403
+        assert 'something went wrong' in result.data
 
     def test_new_org_request(self):
         tests.call_action_api(self.app, 'hdx_send_new_org_request',
-                           title='Org Title', description='Org Description', 
-                           org_url='http://test-org.com/', 
+                           title='Org Title', description='Org Description',
+                           org_url='http://test-org.com/',
                            your_name='Some Name', your_email='test@test.com',
                            status=403)
 
     def test_editor_request_for_org(self):
         tests.call_action_api(self.app, 'hdx_send_editor_request_for_org',
-                           display_name='User Name', name='username', 
-                           email='test@test.com', 
+                           display_name='User Name', name='username',
+                           email='test@test.com',
                            organization='Org Name', message='Some message',
                            admins=[],
                            status=403)

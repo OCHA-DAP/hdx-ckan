@@ -21,9 +21,9 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         hdx_test_base.load_plugin('hdx_org_group hdx_users hdx_search hdx_package hdx_theme')
 
     def test_breadcrumb_on_indicator_page(self):
-        url = h.url_for(controller='package', action='read', id='test_indicator_1')
+        url = h.url_for('dataset_read', id='test_indicator_1')
         result = self.app.get(url)
-        page = str(result.response)
+        page = result.data
 
         begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'
@@ -32,9 +32,9 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         hdx_test_util.are_strings_in_text(page, search_strings, begin_str, end_str)
 
     def test_breadcrumb_on_dataset_page(self):
-        url = h.url_for(controller='package', action='read', id='test_dataset_1')
+        url = h.url_for('dataset_read', id='test_dataset_1')
         result = self.app.get(url)
-        page = str(result.response)
+        page = result.data
 
         begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'

@@ -93,35 +93,33 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert '/contact_hdx' in str(page.response), 'Anonymous users should see the contact_hdx link'
+        assert '/contact_hdx' in page.data, 'Anonymous users should see the contact_hdx link'
 
         # test sysadmin can see the button
         page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Sysadmin users should see contact contributor button'
+        assert 'contact-the-contributor' in page.data, 'Sysadmin users should see contact contributor button'
 
         # test member/owner can see the button
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(
-            page.response), 'Member/owner should see the  contact contributor button'
+        assert 'contact-the-contributor' in page.data, 'Member/owner should see the  contact contributor button'
 
         # test editor can see the button
         context['user'] = 'tester'
         user = model.User.by_name('tester')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Editor should see the  contact contributor button'
+        assert 'contact-the-contributor' in page.data, 'Editor should see the  contact contributor button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
         user = model.User.by_name('joeadmin')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Admin should see the  contact contributor button'
+        assert 'contact-the-contributor' in page.data, 'Admin should see the  contact contributor button'
 
 
         # any logged in user and not member of organization can NOT see the button
         context['user'] = 'bob'
         page = self._getPackagePage(dataset_name, user_bob.apikey)
-        assert 'contact-the-contributor' in str(
-            page.response), 'Any loggedin user & not member should NOT see the edit button'
+        assert 'contact-the-contributor' in page.data, 'Any loggedin user & not member should NOT see the edit button'
 
 
         # self._get_action('organization_member_create')(context_sysadmin,
@@ -132,7 +130,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None
-        url = h.url_for(controller='package', action='read', id=package_id)
+        url = h.url_for('dataset_read', id=package_id)
         if apikey:
             page = self.app.get(url, headers={
                 'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})

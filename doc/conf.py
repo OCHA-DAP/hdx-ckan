@@ -17,7 +17,7 @@
 import re
 import os
 import subprocess
-
+import six
 
 import ckan
 
@@ -38,7 +38,9 @@ rst_epilog = '''
 .. |config_dir| replace:: |config_parent_dir|/default
 .. |production.ini| replace:: |config_dir|/production.ini
 .. |development.ini| replace:: |config_dir|/development.ini
+.. |ckan.ini| replace:: |config_dir|/ckan.ini
 .. |git_url| replace:: \https://github.com/ckan/ckan.git
+.. |raw_git_url| replace:: \https://raw.githubusercontent.com/ckan/ckan
 .. |postgres| replace:: PostgreSQL
 .. |database| replace:: ckan_default
 .. |database_user| replace:: ckan_default
@@ -48,13 +50,13 @@ rst_epilog = '''
 .. |test_datastore| replace:: datastore_test
 .. |apache_config_file| replace:: /etc/apache2/sites-available/ckan_default.conf
 .. |apache.wsgi| replace:: |config_dir|/apache.wsgi
+.. |wsgi.py| replace:: |config_dir|/wsgi.py
 .. |data_dir| replace:: |config_dir|/data
 .. |sstore| replace:: |config_dir|/sstore
 .. |storage_parent_dir| replace:: /var/lib/ckan
 .. |storage_dir| replace:: |storage_parent_dir|/default
 .. |storage_path| replace:: |storage_parent_dir|/default
-.. |reload_apache| replace:: sudo service apache2 reload
-.. |restart_apache| replace:: sudo service apache2 restart
+.. |restart_uwsgi| replace:: sudo supervisorctl restart ckan-uwsgi:*
 .. |restart_solr| replace:: sudo service jetty8 restart
 .. |solr| replace:: Solr
 .. |restructuredtext| replace:: reStructuredText
@@ -66,6 +68,7 @@ rst_epilog = '''
 .. |apache| replace:: Apache
 .. |nginx_config_file| replace:: /etc/nginx/sites-available/ckan
 .. |reload_nginx| replace:: sudo service nginx reload
+.. |restart_nginx| replace:: sudo service nginx restart
 .. |jquery| replace:: jQuery
 .. |nodejs| replace:: Node.js
 
@@ -98,12 +101,12 @@ master_doc = 'contents'
 # General information about the project.
 project = u'CKAN'
 project_short_name = u'CKAN'
-copyright = u'''&copy; 2009-2018 <a href="https://okfn.org/">Open Knowledge International</a> and <a href="https://github.com/ckan/ckan/graphs/contributors">contributors</a>.
+copyright = u'''&copy; 2009-2018 <a href="https://okfn.org/">Open Knowledge Foundation</a> and <a href="https://github.com/ckan/ckan/graphs/contributors">contributors</a>.
     Licensed under <a
-    href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons
+    href="https://creativecommons.org/licenses/by-sa/3.0/">Creative Commons
     Attribution ShareAlike (Unported) v3.0 License</a>.<br />
-    <img src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" alt="CC License Logo" />
-    <a href="http://opendefinition.org/"><img src="http://assets.okfn.org/images/ok_buttons/oc_80x15_blue.png" border="0"
+    <img src="https://licensebuttons.net/l/by-sa/3.0/80x15.png" alt="CC License Logo" />
+    <a href="https://opendefinition.org/"><img src="https://assets.okfn.org/images/ok_buttons/oc_80x15_blue.png" border="0"
       alt="{{ _('Open Content') }}" /></a>
   '''
 html_show_sphinx = False
@@ -125,8 +128,7 @@ SUPPORTED_CKAN_VERSIONS = 3
 def get_release_tags():
     git_tags = subprocess.check_output(
         ['git', 'tag', '-l'], stderr=subprocess.STDOUT).split()
-
-    release_tags_ = [tag for tag in git_tags if tag.startswith('ckan-')]
+    release_tags_ = [tag for tag in git_tags if tag.startswith(six.b('ckan-'))]
 
     # git tag -l prints out the tags in the right order anyway, but don't rely
     # on that, sort them again here for good measure.
@@ -143,6 +145,8 @@ def parse_version(version_):
     global version_re
     if version_re is None:
         version_re = re.compile('(?:ckan-)?(\d+)\.(\d+)(?:\.(\d+))?[a-z]?')
+    if isinstance(version_, six.binary_type):
+        version_ = version_.decode()
     return version_re.match(version_).groups()
 
 
@@ -183,10 +187,26 @@ def get_status_of_this_version():
         return 'unsupported'
 
 
+def get_current_release_tag():
+    ''' Return the name of the tag for the current release
+
+    e.g.: "ckan-2.7.4"
+
+    '''
+    release_tags_ = get_release_tags()
+
+    current_tag = "ckan-{}".format(version)
+
+    if release_tags_.__contains__(current_tag):
+        return current_tag
+    else:
+        return 'COULD_NOT_DETECT_TAG_VERSION'
+
+
 def get_latest_release_tag():
     '''Return the name of the git tag for the latest stable release.
 
-    e.g.: "ckan-2.1.1"
+    e.g.: "ckan-2.7.4"
 
     This requires git to be installed.
 
@@ -212,10 +232,27 @@ def get_latest_release_version():
     return version
 
 
-def get_latest_package_name(distro='trusty'):
+def get_current_release_version():
+    '''Return the version number of the current release.
+
+    e.g. "2.1.1"
+
+    '''
+    version = get_current_release_tag()[len('ckan-'):]
+
+    # TODO: We could assert here that latest_version matches X.Y.Z.
+
+    return version
+
+
+def get_latest_package_name(distro, py_version=None):
     '''Return the filename of the Ubuntu package for the latest stable release.
 
     e.g. "python-ckan_2.1-trusty_amd64.deb"
+
+    If ``py_version`` is provided, it's added as part of the iter number:
+
+    e.g. "python-ckan_2.9-py3-focal_amd64.deb"
 
     '''
     # We don't create a new package file name for a patch release like 2.1.1,
@@ -223,8 +260,13 @@ def get_latest_package_name(distro='trusty'):
     # have the X.Y part of the version number in them, not X.Y.Z.
     latest_minor_version = get_latest_release_version()[:3]
 
-    return 'python-ckan_{version}-{distro}_amd64.deb'.format(
-        version=latest_minor_version, distro=distro)
+    if py_version:
+        name = 'python-ckan_{version}-py{py_version}-{distro}_amd64.deb'.format(
+            version=latest_minor_version, distro=distro, py_version=py_version)
+    else:
+        name = 'python-ckan_{version}-{distro}_amd64.deb'.format(
+            version=latest_minor_version, distro=distro)
+    return name
 
 
 def get_min_setuptools_version():
@@ -266,7 +308,8 @@ def write_substitutions_file(**kwargs):
             f.write('.. |{name}| replace:: {substitution}\n'.format(
                     name=name, substitution=substitution))
 
-
+current_release_tag = get_current_release_tag()
+current_release_version = get_current_release_version()
 latest_release_tag_value = get_latest_release_tag()
 latest_release_version = get_latest_release_version()
 latest_minor_version = latest_release_version[:3]
@@ -276,10 +319,10 @@ is_latest_version = version == latest_release_version
 
 write_substitutions_file(
     latest_release_tag=latest_release_tag_value,
-    latest_release_version=get_latest_release_version(),
-    latest_package_name_precise=get_latest_package_name('precise'),
-    latest_package_name_trusty=get_latest_package_name('trusty'),
-    latest_package_name_xenial=get_latest_package_name('xenial'),
+    latest_release_version=latest_release_version,
+    latest_package_name_bionic=get_latest_package_name('bionic'),
+    latest_package_name_focal_py2=get_latest_package_name('focal', py_version=2),
+    latest_package_name_focal_py3=get_latest_package_name('focal', py_version=3),
     min_setuptools_version=get_min_setuptools_version(),
 )
 

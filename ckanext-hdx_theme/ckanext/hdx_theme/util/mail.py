@@ -9,9 +9,10 @@ import logging as logging
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import pylons.config as config
-import validate_email
 
 import ckan.plugins.toolkit as tk
+
+get_validator = tk.get_validator
 
 log = logging.getLogger(__name__)
 
@@ -51,13 +52,13 @@ class NoRecipientException(exceptions.Exception):
         return repr(self.value)
 
 
-def simple_validate_email(email):
+def hdx_validate_email(email):
     '''
-    Uses the validate_email library with check_mx=False, verify=False
+    Wrapper for email_validator from ckan core
     :param email: the email to validate
     :return: True if valid, raises Invalid exception otherwise
     '''
-    if not validate_email.validate_email(email, check_mx=False, verify=False):
-        raise tk.Invalid(tk._('Email address is not valid'))
+
+    v = get_validator('email_validator')(email, {})
 
     return True

@@ -7,6 +7,7 @@ Created on Jan 14, 2015
 import json
 import logging
 import os
+import six
 from datetime import datetime, timedelta
 
 import ckanext.hdx_crisis.dao.data_access as data_access
@@ -14,8 +15,6 @@ import ckanext.hdx_search.command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import paste.deploy.converters as converters
-import pylons.config as config
 from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
@@ -31,7 +30,7 @@ import ckan.logic as logic
 import ckan.logic.action as core
 import ckan.model as model
 import ckan.plugins as plugins
-from ckan.common import _, c
+from ckan.common import _, c, config
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 
@@ -213,31 +212,38 @@ def hdx_get_group_activity_list(context, data_dict):
 
 
 def compile_less(result, translate_func=None):
-    if 'extras' in result:
-        base_color = '#007CE0'  # default value
-        logo_use_org_color = "false"
-        less_code_list = None
-        for el in result['extras']:
-            if el['key'] == 'less':
-                less_code_list = el.get('value', None)
-            elif el['key'] == 'customization':
-                variables = el.get('value', None)
-                try:
-                    variables = json.loads(variables)
-                    base_color = variables.get('highlight_color', '#007CE0') or '#007CE0'
-                    logo_use_org_color = variables.get('use_org_color', 'false')
-                except:
-                    base_color = '#007CE0'
-        if less_code_list:
-            less_code = less_code_list.strip()
-            if less_code:
-                less_code = _add_custom_less_code(base_color, logo_use_org_color) + less_code
-                css_dest_dir = '/organization/' + result['name']
-                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
-                                             h.hdx_get_extras_element(result, value_key="modified_at"),
-                                             translate_func=translate_func)
-                compilation_result = compiler.compile_less()
-                result['less_compilation'] = compilation_result
+    base_color = '#007CE0'  # default value
+    logo_use_org_color = "false"
+
+    def get_value_from_result(key):
+        value = result.get(key)
+        if not value:
+            extra = next((e for e in (result.get('extras') or []) if e['key'] == key), None)
+            if extra:
+                value = extra.get('value')
+        return value
+
+    less_code_list = get_value_from_result('less')
+    customization = get_value_from_result('customization')
+
+    if customization:
+        try:
+            variables = json.loads(customization)
+            base_color = variables.get('highlight_color', '#007CE0') or '#007CE0'
+            logo_use_org_color = variables.get('use_org_color', 'false')
+        except:
+            base_color = '#007CE0'
+
+    if less_code_list:
+        less_code = less_code_list.strip()
+        if less_code:
+            less_code = _add_custom_less_code(base_color, logo_use_org_color) + less_code
+            css_dest_dir = '/organization/' + result['name']
+            compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
+                                         h.hdx_get_extras_element(result, value_key="modified_at"),
+                                         translate_func=translate_func)
+            compilation_result = compiler.compile_less()
+            result['less_compilation'] = compilation_result
 
 
 def _add_custom_less_code(base_color, logo_use_org_color):
@@ -332,10 +338,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     if group is None:
         raise NotFound('Group was not found.')
 
-    if is_org:
-        check_access('organization_update', context, data_dict)
-    else:
-        check_access('group_update', context, data_dict)
+    data_dict['type'] = group.type
 
     # get the schema
     group_plugin = lib_plugins.lookup_group_plugin(group.type)
@@ -345,6 +348,12 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
                                                          'context': context})
     except AttributeError:
         schema = group_plugin.form_to_db_schema()
+
+    if is_org:
+        check_access('organization_update', context, data_dict)
+    else:
+        check_access('group_update', context, data_dict)
+
 
     try:
         customization = json.loads(group.extras['customization'])
@@ -416,7 +425,9 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         except TypeError:
             group_plugin.check_data_dict(data_dict)
 
-    data, errors = _validate(data_dict, schema, context)
+    data, errors = lib_plugins.plugin_validate(
+        group_plugin, context, data_dict, schema,
+        'organization_update' if is_org else 'group_update')
     log.debug('group_update validate_errs=%r user=%s group=%s data_dict=%r',
               errors, context.get('user'),
               context.get('group').name if context.get('group') else '',
@@ -426,22 +437,12 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         session.rollback()
         raise ValidationError(errors)
 
-    rev = model.repo.new_revision()
-    rev.author = user
+    contains_packages = 'packages' in data_dict
 
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Update object %s') % data.get("name")
-
-    # when editing an org we do not want to update the packages if using the
-    # new templates.
-    if ((not is_org)
-        and not converters.asbool(
-            config.get('ckan.legacy_templates', False))
-        and 'api_version' not in context):
-        context['prevent_packages_update'] = True
-    group = model_save.group_dict_save(data, context)
+    group = model_save.group_dict_save(
+        data, context,
+        prevent_packages_update=is_org or not contains_packages
+    )
 
     if is_org:
         plugin_type = plugins.IOrganizationController
@@ -457,10 +458,10 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         activity_type = 'changed group'
 
     activity_dict = {
-        'user_id': model.User.by_name(user.decode('utf8')).id,
-        'object_id': group.id,
-        'activity_type': activity_type,
-    }
+            'user_id': model.User.by_name(six.ensure_text(user)).id,
+            'object_id': group.id,
+            'activity_type': activity_type,
+            }
     # Handle 'deleted' groups.
     # When the user marks a group as deleted this comes through here as
     # a 'changed' group activity. We detect this and change it to a 'deleted'
@@ -474,7 +475,8 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
             activity_dict = None
         else:
             # We will emit a 'deleted group' activity.
-            activity_dict['activity_type'] = 'deleted group'
+            activity_dict['activity_type'] = \
+                'deleted organization' if is_org else 'deleted group'
     if activity_dict is not None:
         activity_dict['data'] = {
             'group': dictization.table_dictize(group, context)
@@ -594,14 +596,6 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
         session.rollback()
         raise ValidationError(errors)
 
-    rev = model.repo.new_revision()
-    rev.author = user
-
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Create object %s') % data.get("name")
-
     group = model_save.group_dict_save(data, context)
 
     # Needed to let extensions know the group id
@@ -620,15 +614,15 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     else:
         activity_type = 'new group'
 
-    user_id = model.User.by_name(user.decode('utf8')).id
+    user_id = model.User.by_name(six.ensure_text(user)).id
 
     activity_dict = {
         'user_id': user_id,
         'object_id': group.id,
         'activity_type': activity_type,
-    }
-    activity_dict['data'] = {
-        'group': ckan.lib.dictization.table_dictize(group, context)
+        'data': {
+            'group': ckan.lib.dictization.table_dictize(group, context)
+        }
     }
     activity_create_context = {
         'model': model,
@@ -671,7 +665,14 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     logic.get_action('member_create')(member_create_context, member_dict)
 
     log.debug('Created object %s' % group.name)
-    return model_dictize.group_dictize(group, context)
+
+    return_id_only = context.get('return_id_only', False)
+    action = 'organization_show' if is_org else 'group_show'
+
+    output = context['id'] if return_id_only \
+        else get_action(action)(context, {'id': group.id})
+
+    return output
 
 
 def recompile_everything(context):

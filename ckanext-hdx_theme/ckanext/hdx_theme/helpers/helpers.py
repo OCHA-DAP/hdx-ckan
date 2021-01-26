@@ -70,7 +70,7 @@ def is_not_hxl_format(res_format):
 
 def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
-        facet, limit, exclude_active=exclude_active)
+        facet, limit=limit, exclude_active=exclude_active)
     filtered_no_items = c.search_facets.get(facet)['items'].__len__()
     # total_no_items = json.loads(
     #     count.CountController.list[facet](count.CountController()))['count']
@@ -775,3 +775,21 @@ def hdx_switch_url_path():
 
 def hdx_munge_title(title):
     return munge.munge_title_to_name(title)
+
+
+def hdx_url_for(*args, **kw):
+    '''
+    Removes the '/' at the end of an URL returned by the core CKAN url_for() helper.
+    It appears when url_for() thinks it can return a flask route. But if it's a pylons
+    controller that needs to render the page the '/' gets in the way.
+    '''
+    url = tk.url_for(*args, **kw)
+    if url and len(url) > 1:
+        if url.endswith('/'):
+            url = url[:-1]
+        elif '/?' in url:
+            url = url.replace('/?', '?')
+    return url
+
+
+url_for = hdx_url_for

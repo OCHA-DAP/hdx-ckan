@@ -1,0 +1,59 @@
+name: HDX/CKAN tests
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Building CKAN docker image
+        run: docker-compose build ckan
+      - name: Spinning up docker-compose stack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          docker-compose up -d
+          sleep 10
+          docker-compose exec -T solr bin/solr create -c ckan -d /configsets/hdx-current
+          docker-compose exec -T ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
+          docker-compose exec -T ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
+          docker-compose restart ckan
+      - name: Installing HDX/CKAN python dev-requirements
+        run: docker-compose exec -T ckan pip install -r /srv/ckan/dev-requirements-py2.txt
+      - name: Preparing database
+        run: |
+          docker-compose exec -T ckan hdxckantool pgpass
+          docker-compose exec -T ckan psql -h dbckan -U ckan -c "create database datastore owner ckan;"
+          docker-compose exec -T ckan psql -h dbckan -U ckan -c "create role datastore with login;"
+          docker-compose exec -T ckan psql -h dbckan -U ckan -c "alter role datastore with password 'datastore';"
+          docker-compose exec -T ckan hdxckantool db set-perms
+          docker-compose exec -T ckan ckan -c /etc/ckan/prod.ini db init
+      - name: Building UI search index and compiling org style sheets (should be removed?)
+        run: |
+          docker-compose exec -T ckan hdxckantool feature
+          docker-compose exec -T ckan hdxckantool less compile
+      - name: Testing hdx_search
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
+      - name: Testing hdx_users
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_users"
+      - name: Testing hdx_user_extra
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_user_extra"
+      - name: Testing hdx_theme
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_theme"
+      - name: Testing hdx_package
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package"
+      - name: Testing hdx_pages
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
+      - name: Testing hdx_org_group
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_org_group"
+      - name: Publish in Coveralls
+        if: success()
+        run: docker-compose exec -T ckan sh -c "coveralls"
+

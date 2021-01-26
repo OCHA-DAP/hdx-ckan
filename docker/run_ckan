@@ -19,11 +19,13 @@ cd /srv/ckan
 [ -z "HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS" ]   && export HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS=
 [ -z "HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER" ]      && export HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER=
 
+ln -sf /etc/ckan/prod.ini ckan.ini
+
 if [ "$NEW_RELIC_ENABLED" = true ]; then
     echo "new relic is enabled."
     newrelic-admin generate-config $NEW_RELIC_LICENSE_KEY $NEW_RELIC_CONFIG_FILE
-    exec newrelic-admin run-program gunicorn -w ${HDX_CKAN_WORKERS} --paste /etc/ckan/prod.ini -c /srv/ckan/docker/gunicorn_conf.py
+    exec newrelic-admin run-program gunicorn -w ${HDX_CKAN_WORKERS} -c /srv/ckan/docker/gunicorn_conf.py wsgi:application
 else
     echo "new relic is disabled."
-    exec gunicorn -w ${HDX_CKAN_WORKERS} --paste /etc/ckan/prod.ini -c /srv/ckan/docker/gunicorn_conf.py
+    exec gunicorn -w ${HDX_CKAN_WORKERS} -c /srv/ckan/docker/gunicorn_conf.py wsgi:application
 fi

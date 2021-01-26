@@ -156,6 +156,24 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         assert True
 
+class TestHDXPageWithGroups(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
+    @classmethod
+    def _load_plugins(cls):
+        try:
+            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
+        except Exception as e:
+            log.warn('Module already loaded')
+            log.info(str(e))
+
+    @classmethod
+    def _get_action(cls, action_name):
+        return tk.get_action(action_name)
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXPageWithGroups, cls)._create_test_data(create_datasets=True, create_members=True)
+
     def test_page_with_groups(self):
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -199,6 +217,24 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             log.info(ex)
             assert True
 
+class TestHDXValidationPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
+    @classmethod
+    def _load_plugins(cls):
+        try:
+            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
+        except Exception as e:
+            log.warn('Module already loaded')
+            log.info(str(e))
+
+    @classmethod
+    def _get_action(cls, action_name):
+        return tk.get_action(action_name)
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXValidationPage, cls)._create_test_data(create_datasets=True, create_members=True)
+
     def test_validation_page(self):
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -212,6 +248,23 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             log.info(ex)
             assert True
 
+class TestHDXPageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
+    @classmethod
+    def _load_plugins(cls):
+        try:
+            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
+        except Exception as e:
+            log.warn('Module already loaded')
+            log.info(str(e))
+
+    @classmethod
+    def _get_action(cls, action_name):
+        return tk.get_action(action_name)
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXPageShow, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_page_show(self):
         context = {'model': model, 'session': model.Session, 'user': 'tester'}

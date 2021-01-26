@@ -15,7 +15,7 @@ Example:
 #}
 
 {% set truncate = truncate or 0 %}
-{% set url = h.url_for(organization.type + '_read', id=organization.name, ) %}
+{% set url = h.url_for(organization.type + '.read', id=organization.name, ) %}
 
   {% block info %}
   <div class="module module-narrow module-shallow context-info">
@@ -40,8 +40,10 @@ Example:
       {% endblock %}
       {% block description %}
       {% if organization.description %}
-        <p>
+        <p class="description">
           {{ h.markdown_extract(organization.description, 180) }}
+        </p>
+        <p class="read-more">
           {% link_for _('read more'), controller='organization', action='about', id=organization.name %}
         </p>
       {% else %}

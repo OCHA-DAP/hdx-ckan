@@ -10,7 +10,6 @@ from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 from pylons import config
 
-import ckan.lib.activity_streams as activity_streams
 import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.logic as logic

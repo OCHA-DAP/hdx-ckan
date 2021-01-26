@@ -20,8 +20,9 @@ log = logging.getLogger(__name__)
 class TestHDXPackageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_package hdx_users hdx_theme')
+    def setup_class(cls):
+        cls.USERS_USED_IN_TEST.append('johndoe1')
+        super(TestHDXPackageShow, cls).setup_class()
 
     @classmethod
     def _create_test_data(cls):

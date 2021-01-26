@@ -3,12 +3,13 @@ import json
 import os
 import urlparse
 
-import ckanext.hdx_theme.helpers.api_tracking_middleware as api_tracking
-import ckanext.hdx_theme.helpers.auth as auth
 import pylons.config as config
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import ckanext.hdx_theme.helpers.api_tracking_middleware as api_tracking
+import ckanext.hdx_theme.helpers.auth as auth
+from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
 
 
 # def run_on_startup():
@@ -28,6 +29,7 @@ import ckan.plugins.toolkit as toolkit
 #                                                   license.License(hdx_licenses.LicenseHdxMultiple()),
 #                                                   license.License(hdx_licenses.LicenseHdxOther())
 #                                                   ]
+
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
@@ -68,7 +70,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         self.__add_hxl_proxy_url_for_checks(config)
 
     def __add_dataproxy_url_for_checks(self, config):
-        dataproxy_url = config.get('hdx.datapreview.url', '')
+        dataproxy_url = config.get('ckan.recline.dataproxy_url', '')
         dataproxy_url = self._create_full_URL(dataproxy_url)
         config['hdx_checks.dataproxy_url'] = dataproxy_url
 
@@ -278,6 +280,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
             'hdx_switch_url_path': hdx_helpers.switch_url_path,
             'hdx_munge_title': hdx_helpers.hdx_munge_title,
+            'hdx_url_for': hdx_helpers.hdx_url_for,
             'HDX_CONST': const
         }
 
@@ -356,9 +359,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     def make_middleware(self, app, config):
         api_tracking_enabled = config.get('hdx.analytics.track_api', 'false')
+        new_app = app
         # run_on_startup()
         if api_tracking_enabled == 'true':
             new_app = api_tracking.APITrackingMiddleware(app, config)
-            return new_app
 
-        return app
+        new_app = RedirectionMiddleware(app, config)
+
+        return new_app

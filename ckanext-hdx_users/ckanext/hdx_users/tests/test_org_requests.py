@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on Jul 23, 2014
+import pytest
 
-@author: alexandru-m-g
-'''
 import mock
 import ckan.model as model
 import logging as logging

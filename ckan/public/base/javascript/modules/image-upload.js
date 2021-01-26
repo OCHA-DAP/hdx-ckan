@@ -11,7 +11,8 @@ this.ckan.module('image-upload', function($) {
       field_url: 'image_url',
       field_clear: 'clear_upload',
       field_name: 'name',
-      upload_label: ''
+      upload_label: '',
+      previous_upload: false
     },
 
     /* Should be changed to true if user modifies resource's name
@@ -43,6 +44,7 @@ this.ckan.module('image-upload', function($) {
       this.label_location = $('label[for="field-image-url"]');
       // determines if the resource is a data resource
       this.is_data_resource = (this.options.field_url === 'url') && (this.options.field_upload === 'upload');
+      this.previousUpload = this.options.previous_upload;
 
       // Is there a clear checkbox on the form already?
       var checkbox = $(field_clear, this.el);
@@ -67,6 +69,11 @@ this.ckan.module('image-upload', function($) {
                              '<i class="fa fa-cloud-upload"></i>' +
                              this._('Upload') + '</a>')
         .insertAfter(this.input);
+
+      if (this.previousUpload) {
+        $('<div class="error-inline"><i class="fa fa-warning"></i> ' +
+          this._('Please select the file to upload again') + '</div>').appendTo(this.field_image);
+      }
 
       // Button for resetting the form when there is a URL set
       var removeText = this._('Remove');
@@ -197,6 +204,16 @@ this.ckan.module('image-upload', function($) {
      */
     _onInputChange: function() {
       var file_name = this.input.val().split(/^C:\\fakepath\\/).pop();
+
+      // Internet Explorer 6-11 and Edge 20+
+      var isIE = !!document.documentMode;
+      var isEdge = !isIE && !!window.StyleMedia;
+      // for IE/Edge when 'include filepath option' is enabled
+      if (isIE || isEdge) {
+        var fName = file_name.match(/[^\\\/]+$/);
+        file_name = fName ? fName[0] : file_name;
+      }
+
       this.field_url_input.val(file_name);
       this.field_url_input.prop('readonly', true);
 

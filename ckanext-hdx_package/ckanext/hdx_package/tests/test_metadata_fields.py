@@ -81,7 +81,8 @@ class TestMetadataFields(hdx_test_base.HdxBaseTest):
 
         offset = '/api/2/util/tag/autocomplete?incomplete=a'
 
-        res = self.app.get(offset, status=[200,302])
+        res = self.app.get(offset, )
+        assert res.status_code in [200,302]
         r = json.loads(res.body)
         assert len(r['ResultSet']['Result']) > 0
 

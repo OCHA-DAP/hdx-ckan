@@ -6,11 +6,10 @@ import logging
 import datetime
 import time
 import json
-import mimetypes
-import os
 
 from ckan.common import config
-import paste.deploy.converters as converters
+import ckan.common as converters
+import six
 from six import text_type
 
 import ckan.lib.helpers as h
@@ -20,7 +19,7 @@ import ckan.logic.schema as schema_
 import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
-import ckan.lib.navl.dictization_functions
+import ckan.lib.navl.dictization_functions as dfunc
 import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.email_notifications as email_notifications
@@ -37,7 +36,7 @@ log = logging.getLogger(__name__)
 # Define some shortcuts
 # Ensure they are module-private so that they don't get loaded as available
 # actions in the action API.
-_validate = ckan.lib.navl.dictization_functions.validate
+_validate = dfunc.validate
 _get_action = logic.get_action
 _check_access = logic.check_access
 NotFound = logic.NotFound
@@ -98,31 +97,16 @@ def resource_update(context, data_dict):
     for plugin in plugins.PluginImplementations(plugins.IResourceController):
         plugin.before_update(context, pkg_dict['resources'][n], data_dict)
 
-    upload = uploader.get_resource_uploader(data_dict)
-
-    if 'mimetype' not in data_dict:
-        if hasattr(upload, 'mimetype'):
-            data_dict['mimetype'] = upload.mimetype
-
-    if 'size' not in data_dict and 'url_type' in data_dict:
-        if hasattr(upload, 'filesize'):
-            data_dict['size'] = upload.filesize
-
     pkg_dict['resources'][n] = data_dict
 
     try:
-        context['defer_commit'] = True
         context['use_cache'] = False
         updated_pkg_dict = _get_action('package_update')(context, pkg_dict)
-        context.pop('defer_commit')
     except ValidationError as e:
         try:
             raise ValidationError(e.error_dict['resources'][n])
         except (KeyError, IndexError):
             raise ValidationError(e.error_dict)
-
-    upload.upload(id, uploader.get_max_resource_size())
-    model.repo.commit()
 
     resource = _get_action('resource_show')(context, {'id': id})
 
@@ -255,7 +239,7 @@ def package_update(context, data_dict):
 
     '''
     model = context['model']
-    user = context['user']
+    session = context['session']
     name_or_id = data_dict.get('id') or data_dict.get('name')
     if name_or_id is None:
         raise ValidationError({'id': _('Missing value')})
@@ -264,11 +248,14 @@ def package_update(context, data_dict):
     if pkg is None:
         raise NotFound(_('Package was not found.'))
     context["package"] = pkg
+
+    # immutable fields
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
 
     _check_access('package_update', context, data_dict)
 
+    user = context['user']
     # get the schema
     package_plugin = lib_plugins.lookup_package_plugin(pkg.type)
     if 'schema' in context:
@@ -289,6 +276,21 @@ def package_update(context, data_dict):
                 # to ensure they still work.
                 package_plugin.check_data_dict(data_dict)
 
+    resource_uploads = []
+    for resource in data_dict.get('resources', []):
+        # file uploads/clearing
+        upload = uploader.get_resource_uploader(resource)
+
+        if 'mimetype' not in resource:
+            if hasattr(upload, 'mimetype'):
+                resource['mimetype'] = upload.mimetype
+
+        if 'size' not in resource and 'url_type' in resource:
+            if hasattr(upload, 'filesize'):
+                resource['size'] = upload.filesize
+
+        resource_uploads.append(upload)
+
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
     log.debug('package_update validate_errs=%r user=%s package=%s data=%r',
@@ -300,13 +302,6 @@ def package_update(context, data_dict):
         model.Session.rollback()
         raise ValidationError(errors)
 
-    rev = model.repo.new_revision()
-    rev.author = user
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Update object %s') % data.get("name")
-
     #avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
@@ -317,21 +312,33 @@ def package_update(context, data_dict):
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
     context_org_update['defer_commit'] = True
-    context_org_update['add_revision'] = False
     _get_action('package_owner_org_update')(context_org_update,
                                             {'id': pkg.id,
                                              'organization_id': pkg.owner_org})
 
     # Needed to let extensions know the new resources ids
     model.Session.flush()
-    if data.get('resources'):
-        for index, resource in enumerate(data['resources']):
-            resource['id'] = pkg.resources[index].id
+    for index, (resource, upload) in enumerate(
+            zip(data.get('resources', []), resource_uploads)):
+        resource['id'] = pkg.resources[index].id
+
+        upload.upload(resource['id'], uploader.get_max_resource_size())
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
 
         item.after_update(context, data)
+
+    # Create activity
+    if not pkg.private:
+        user_obj = model.User.by_name(user)
+        if user_obj:
+            user_id = user_obj.id
+        else:
+            user_id = 'not logged in'
+
+        activity = pkg.activity_stream_item('changed', user_id)
+        session.add(activity)
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -349,6 +356,170 @@ def package_update(context, data_dict):
             else _get_action('package_show')(context, {'id': data_dict['id']})
 
     return output
+
+
+def package_revise(context, data_dict):
+    '''Revise a dataset (package) selectively with match, filter and
+    update parameters.
+
+    You must be authorized to edit the dataset and the groups that it belongs
+    to.
+
+    :param match: a dict containing "id" or "name" values of the dataset
+                  to update, all values provided must match the current
+                  dataset values or a ValidationError will be raised. e.g.
+                  ``{"name": "my-data", "resources": {["name": "big.csv"]}}``
+                  would abort if the my-data dataset's first resource name
+                  is not "big.csv".
+    :type match: dict
+    :param filter: a list of string patterns of fields to remove from the
+                   current dataset. e.g. ``"-resources__1"`` would remove the
+                   second resource, ``"+title, +resources, -*"`` would
+                   remove all fields at the dataset level except title and
+                   all resources (default: ``[]``)
+    :type filter: comma-separated string patterns or list of string patterns
+    :param update: a dict with values to update/create after filtering
+                   e.g. ``{"resources": [{"description": "file here"}]}`` would
+                   update the description for the first resource
+    :type update: dict
+    :param include: a list of string pattern of fields to include in response
+                    e.g. ``"-*"`` to return nothing (default: ``[]`` all
+                    fields returned)
+    :type include: comma-separated-string patterns or list of string patterns
+
+    ``match`` and ``update`` parameters may also be passed as "flattened keys", using
+    either the item numeric index or its unique id (with a minimum of 5 characters), e.g.
+    ``update__resource__1f9ab__description="guidebook"`` would set the
+    description of the resource with id starting with "1f9ab" to "guidebook", and
+    ``update__resource__-1__description="guidebook"`` would do the same
+    on the last resource in the dataset.
+
+    The ``extend`` suffix can also be used on the update parameter to add
+    a new item to a list, e.g. ``update__resources__extend=[{"name": "new resource", "url": "https://example.com"}]``
+    will add a new resource to the dataset with the provided ``name`` and ``url``.
+
+    Usage examples:
+
+    * Change description in dataset, checking for old description::
+
+        match={"notes": "old notes", "name": "xyz"}
+        date={"notes": "new notes"}
+
+    * Identical to above, but using flattened keys::
+
+        match__name="xyz"
+        match__notes="old notes"
+        update__notes="new notes"
+
+    * Replace all fields at dataset level only, keep resources (note: dataset id
+      and type fields can't be deleted) ::
+
+        match={"id": "1234abc-1420-cbad-1922"}
+        filter=["+resources", "-*"]
+        update={"name": "fresh-start", "title": "Fresh Start"}
+
+    * Add a new resource (__extend on flattened key)::
+
+        match={"id": "abc0123-1420-cbad-1922"}
+        update__resources__extend=[{"name": "new resource", "url": "http://example.com"}]
+
+    * Update a resource by its index::
+
+        match={"name": "my-data"}
+        update__resources__0={"name": "new name, first resource"}
+
+    * Update a resource by its id (provide at least 5 characters)::
+
+        match={"name": "their-data"}
+        update__resources__19cfad={"description": "right one for sure"}
+
+    * Replace all fields of a resource::
+
+        match={"id": "34a12bc-1420-cbad-1922"}
+        filter=["+resources__1492a__id", "-resources__1492a__*"]
+        update__resources__1492a={"name": "edits here", "url": "http://example.com"}
+
+
+    :returns: a dict containing 'package':the updated dataset with fields filtered by include parameter
+    :rtype: dictionary
+
+    '''
+    model = context['model']
+
+    schema = schema_.package_revise_schema()
+    data, errors = _validate(data_dict, schema, context)
+    if errors:
+        model.Session.rollback()
+        raise ValidationError(errors)
+
+    name_or_id = (
+        data['match__'].get('id') or
+        data.get('match', {}).get('id') or
+        data['match__'].get('name') or
+        data.get('match', {}).get('name'))
+    if name_or_id is None:
+        raise ValidationError({'match__id': _('Missing value')})
+
+    package_show_context = dict(
+        context,
+        return_type='dict',
+        for_update=True)
+    orig = _get_action('package_show')(
+        package_show_context,
+        {'id': name_or_id})
+
+    pkg = package_show_context['package']  # side-effect of package_show
+
+    unmatched = []
+    if 'match' in data:
+        unmatched.extend(dfunc.check_dict(orig, data['match']))
+
+    for k, v in sorted(data['match__'].items()):
+        unmatched.extend(dfunc.check_string_key(orig, k, v))
+
+    if unmatched:
+        model.Session.rollback()
+        raise ValidationError([{'match': [
+            '__'.join(str(p) for p in unm)
+            for unm in unmatched
+        ]}])
+
+    if 'filter' in data:
+        orig_id = orig['id']
+        dfunc.filter_glob_match(orig, data['filter'])
+        orig['id'] = orig_id
+
+    if 'update' in data:
+        try:
+            dfunc.update_merge_dict(orig, data['update'])
+        except dfunc.DataError as de:
+            model.Session.rollback()
+            raise ValidationError([{'update': [de.error]}])
+
+    # update __extend keys before __#__* so that files may be
+    # attached to newly added resources in the same call
+    try:
+        for k, v in sorted(
+                data['update__'].items(),
+                key=lambda s: s[0][-6] if s[0].endswith('extend') else s[0]):
+            dfunc.update_merge_string_key(orig, k, v)
+    except dfunc.DataError as de:
+        model.Session.rollback()
+        raise ValidationError([{k: [de.error]}])
+
+    _check_access('package_revise', context, {"update": orig})
+
+    # future-proof return dict by putting package data under
+    # "package". We will want to return activity info
+    # on update or "nothing changed" status once possible
+    rval = {
+        'package': _get_action('package_update')(
+            dict(context, package=pkg),
+            orig)}
+    if 'include' in data_dict:
+        dfunc.filter_glob_match(rval, data_dict['include'])
+    return rval
+
 
 def package_resource_reorder(context, data_dict):
     '''Reorder resources against datasets.  If only partial resource ids are
@@ -400,10 +571,6 @@ def _update_package_relationship(relationship, comment, context):
     ref_package_by = 'id' if api == 2 else 'name'
     is_changed = relationship.comment != comment
     if is_changed:
-        rev = model.repo.new_revision()
-        rev.author = context["user"]
-        rev.message = (_(u'REST API: Update package relationship: %s %s %s') %
-            (relationship.subject, relationship.type, relationship.object))
         relationship.comment = comment
         if not context.get('defer_commit'):
             model.repo.commit_and_remove()
@@ -517,14 +684,6 @@ def _group_or_org_update(context, data_dict, is_org=False):
         session.rollback()
         raise ValidationError(errors)
 
-    rev = model.repo.new_revision()
-    rev.author = user
-
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Update object %s') % data.get("name")
-
     contains_packages = 'packages' in data_dict
 
     group = model_save.group_dict_save(
@@ -546,7 +705,7 @@ def _group_or_org_update(context, data_dict, is_org=False):
         activity_type = 'changed group'
 
     activity_dict = {
-            'user_id': model.User.by_name(user.decode('utf8')).id,
+            'user_id': model.User.by_name(six.ensure_text(user)).id,
             'object_id': group.id,
             'activity_type': activity_type,
             }
@@ -563,7 +722,8 @@ def _group_or_org_update(context, data_dict, is_org=False):
             activity_dict = None
         else:
             # We will emit a 'deleted group' activity.
-            activity_dict['activity_type'] = 'deleted group'
+            activity_dict['activity_type'] = \
+                'deleted organization' if is_org else 'deleted group'
     if activity_dict is not None:
         activity_dict['data'] = {
                 'group': dictization.table_dictize(group, context)
@@ -651,7 +811,7 @@ def user_update(context, data_dict):
 
     '''
     model = context['model']
-    user = context['user']
+    user = author = context['user']
     session = context['session']
     schema = context.get('schema') or schema_.default_update_user_schema()
     id = _get_or_bust(data_dict, 'id')
@@ -662,6 +822,10 @@ def user_update(context, data_dict):
         raise NotFound('User was not found.')
 
     _check_access('user_update', context, data_dict)
+
+    upload = uploader.get_uploader('user')
+    upload.update_data_dict(data_dict, 'image_url',
+                            'image_upload', 'clear_upload')
 
     data, errors = _validate(data_dict, schema, context)
     if errors:
@@ -681,7 +845,7 @@ def user_update(context, data_dict):
             }
     activity_create_context = {
         'model': model,
-        'user': user,
+        'user': author,
         'defer_commit': True,
         'ignore_auth': True,
         'session': session
@@ -690,9 +854,19 @@ def user_update(context, data_dict):
     # TODO: Also create an activity detail recording what exactly changed in
     # the user.
 
+    upload.upload(uploader.get_max_image_size())
+
     if not context.get('defer_commit'):
         model.repo.commit()
-    return model_dictize.user_dictize(user, context)
+
+    author_obj = model.User.get(context.get('user'))
+    include_plugin_extras = False
+    if author_obj:
+        include_plugin_extras = author_obj.sysadmin and 'plugin_extras' in data
+    user_dict = model_dictize.user_dictize(
+        user, context, include_plugin_extras=include_plugin_extras)
+
+    return user_dict
 
 
 def user_generate_apikey(context, data_dict):
@@ -755,7 +929,7 @@ def task_status_update(context, data_dict):
 
     '''
     model = context['model']
-    session = model.meta.create_local_session()
+    session = model.Session
     context['session'] = session
 
     user = context['user']
@@ -914,7 +1088,7 @@ def vocabulary_update(context, data_dict):
         raise NotFound(_('Could not find vocabulary "%s"') % vocab_id)
 
     data_dict['id'] = vocab.id
-    if data_dict.has_key('name'):
+    if 'name' in data_dict:
         if data_dict['name'] == vocab.name:
             del data_dict['name']
 
@@ -1004,14 +1178,6 @@ def package_owner_org_update(context, data_dict):
         org = None
         pkg.owner_org = None
 
-    if context.get('add_revision', True):
-        rev = model.repo.new_revision()
-        rev.author = user
-        if 'message' in context:
-            rev.message = context['message']
-        else:
-            rev.message = _(u'REST API: Update object %s') % pkg.get("name")
-
     members = model.Session.query(model.Member) \
         .filter(model.Member.table_id == pkg.id) \
         .filter(model.Member.capacity == 'organization')
@@ -1050,13 +1216,17 @@ def _bulk_update_dataset(context, data_dict, update_dict):
         .filter(model.Package.owner_org == org_id) \
         .update(update_dict, synchronize_session=False)
 
-    # revisions
-    model.Session.query(model.package_revision_table) \
-        .filter(model.PackageRevision.id.in_(datasets)) \
-        .filter(model.PackageRevision.owner_org == org_id) \
-        .filter(model.PackageRevision.current is True) \
-        .update(update_dict, synchronize_session=False)
-
+    # Handle Activity Stream for Bulk Operations
+    user = context['user']
+    user_obj = model.User.by_name(user)
+    if user_obj:
+        user_id = user_obj.id
+    else:
+        user_id = 'not logged in'
+    for dataset in datasets:
+        entity = model.Package.get(dataset)
+        activity = entity.activity_stream_item('changed', user_id)
+        model.Session.add(activity)
     model.Session.commit()
 
     # solr update here
@@ -1208,7 +1378,7 @@ def config_option_update(context, data_dict):
         model.Session.rollback()
         raise ValidationError(errors)
 
-    for key, value in data.iteritems():
+    for key, value in six.iteritems(data):
 
         # Set full Logo url
         if key == 'ckan.site_logo' and value and not value.startswith('http')\

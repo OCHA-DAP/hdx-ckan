@@ -140,6 +140,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
     def test_validate(self):
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
+        model.Session.commit()
         auth = {'Authorization': str(user.apikey)}
 
         post_params = self._get_dataset_post_param('testing-dataset-validation')

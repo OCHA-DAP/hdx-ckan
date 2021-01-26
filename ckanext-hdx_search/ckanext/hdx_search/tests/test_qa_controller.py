@@ -1,19 +1,10 @@
-'''
-Created on September 18, 2014
+import pytest
 
-@author: Marianne, Alex, Dan
-
-
-'''
 import logging as logging
-import ckan.lib.helpers as h
+import ckanext.hdx_theme.helpers.helpers as h
 import ckan.model as model
 import ckan.logic as logic
-import ckan.plugins as p
-import ckan.tests.legacy as tests
-import json
 import unicodedata
-import ckanext.hdx_search.actions.actions as actions
 from ckan.common import config
 import ckan.plugins.toolkit as tk
 
@@ -23,7 +14,10 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 log = logging.getLogger(__name__)
 ValidationError = logic.ValidationError
 
+
 class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
+    USERS_USED_IN_TEST = ['testsysadmin', 'tester']
 
     @classmethod
     def _load_plugins(cls):
@@ -36,6 +30,7 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
         super(TestHDXSearch, cls)._create_test_data(create_datasets=True, create_members=True)
+
 
     @classmethod
     def _get_action(cls, action_name):
@@ -52,39 +47,25 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_qa_dashboard(self):
 
         user = model.User.by_name('tester')
-        user.email = 'test@test.com'
 
         url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        try:
-            self._get_url(url, user.apikey)
-            assert False
-        except Exception, ex:
-            assert True
-            assert '404' in ex.message
-            assert '/qa_dashboard' in ex.message
+
+        result = self._get_url(url, user.apikey)
+        assert result.status_code == 404
+
 
         user = model.User.by_name('testsysadmin')
-        user.email = 'test@test.com'
         url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search', page=2)
-        try:
-            qa_dashboard_result = self._get_url(url, user.apikey)
-        except Exception, ex:
-            assert False
-        assert '200' in qa_dashboard_result.status
-        assert '/qa_dashboard' in qa_dashboard_result.body
+        qa_dashboard_result = self._get_url(url, user.apikey)
+        assert qa_dashboard_result.status_code == 200
 
         config['hdx.qadashboard.enabled'] = 'false'
-        try:
-            self._get_url(url, user.apikey)
-            assert False
-        except Exception, ex:
-            assert True
+        result = self._get_url(url, user.apikey)
+        assert result.status_code == 404
+
         config['hdx.qadashboard.enabled'] = 'true'
-        try:
-            self._get_url(url, user.apikey)
-        except Exception, ex:
-            assert False
-        assert True
+        result = self._get_url(url, user.apikey)
+        assert result.status_code == 200
 
     def test_qa_questions_list(self):
         context = {'model': model, 'session': model.Session, 'user': 'tester'}

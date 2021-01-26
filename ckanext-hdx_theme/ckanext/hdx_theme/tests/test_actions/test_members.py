@@ -30,6 +30,7 @@ janedoe3 = {
     'about': 'Jane Doe3, 3rd user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
 }
 
+
 class TestMemberActions(hdx_test_base.HdxBaseTest):
 
     @classmethod
@@ -82,9 +83,10 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
                 {'name': 'test123admin', 'email': 'example-admin@example.com', 'password': 'abcdefgh'})
         user = model.Session.query(model.User).filter(model.User.id == u['id']).first()
         user.sysadmin = True
+        user.apikey = 'TEST_API_KEY'
         model.Session.commit()
+        context['user'] = u['name']
         ret_user =  self._get_action("user_show")(context, {'id': u['id']})
-        ret_user['apikey'] = u['apikey']
         return ret_user
 
     def _users_create(self, apikey):

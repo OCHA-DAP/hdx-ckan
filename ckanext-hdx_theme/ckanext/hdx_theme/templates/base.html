@@ -221,8 +221,9 @@
     {%- endblock %}
 
 
-
   </body>
   {%- block scripts2 %}
+    {{ h.render_assets('style') }}
+    {{ h.render_assets('script') }}
   {% endblock -%}
 </html>

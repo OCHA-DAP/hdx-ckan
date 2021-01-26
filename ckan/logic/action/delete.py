@@ -5,12 +5,15 @@
 import logging
 
 import sqlalchemy as sqla
+import six
 
 import ckan.lib.jobs as jobs
 import ckan.logic
 import ckan.logic.action
 import ckan.plugins as plugins
+import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.lib.api_token as api_token
 from ckan import authz
 
 from ckan.common import _
@@ -48,11 +51,6 @@ def user_delete(context, data_dict):
     if user is None:
         raise NotFound('User "{id}" was not found.'.format(id=user_id))
 
-    # New revision, needed by the member table
-    rev = model.repo.new_revision()
-    rev.author = context['user']
-    rev.message = _(u' Delete User: {0}').format(user.name)
-
     user.delete()
 
     user_memberships = model.Session.query(model.Member).filter(
@@ -60,6 +58,11 @@ def user_delete(context, data_dict):
 
     for membership in user_memberships:
         membership.delete()
+
+    datasets_where_user_is_collaborator = model.Session.query(model.PackageMember).filter(
+            model.PackageMember.user_id == user.id).all()
+    for collaborator in datasets_where_user_is_collaborator:
+        collaborator.delete()
 
     model.repo.commit()
 
@@ -77,6 +80,7 @@ def package_delete(context, data_dict):
 
     '''
     model = context['model']
+    session = context['session']
     user = context['user']
     id = _get_or_bust(data_dict, 'id')
 
@@ -86,10 +90,6 @@ def package_delete(context, data_dict):
         raise NotFound
 
     _check_access('package_delete', context, data_dict)
-
-    rev = model.repo.new_revision()
-    rev.author = user
-    rev.message = _(u'REST API: Delete Package: %s') % entity.name
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.delete(entity)
@@ -104,6 +104,22 @@ def package_delete(context, data_dict):
 
     for membership in dataset_memberships:
         membership.delete()
+
+    dataset_collaborators = model.Session.query(model.PackageMember).filter(
+        model.PackageMember.package_id == id).all()
+    for collaborator in dataset_collaborators:
+        collaborator.delete()
+
+    # Create activity
+    if not entity.private:
+        user_obj = model.User.by_name(user)
+        if user_obj:
+            user_id = user_obj.id
+        else:
+            user_id = 'not logged in'
+
+        activity = entity.activity_stream_item('changed', user_id)
+        session.add(activity)
 
     model.repo.commit()
 
@@ -148,8 +164,6 @@ def dataset_purge(context, data_dict):
         r.purge()
 
     pkg = model.Package.get(id)
-    # no new_revision() needed since there are no object_revisions created
-    # during purge
     pkg.purge()
     model.repo.commit_and_remove()
 
@@ -180,6 +194,8 @@ def resource_delete(context, data_dict):
     for plugin in plugins.PluginImplementations(plugins.IResourceController):
         plugin.before_delete(context, data_dict,
                              pkg_dict.get('resources', []))
+
+    pkg_dict = _get_action('package_show')(context, {'id': package_id})
 
     if pkg_dict.get('resources'):
         pkg_dict['resources'] = [r for r in pkg_dict['resources'] if not
@@ -271,10 +287,6 @@ def package_relationship_delete(context, data_dict):
     context['relationship'] = relationship
     _check_access('package_relationship_delete', context, data_dict)
 
-    rev = model.repo.new_revision()
-    rev.author = user
-    rev.message = _(u'REST API: Delete %s') % revisioned_details
-
     relationship.delete()
     model.repo.commit()
 
@@ -313,11 +325,59 @@ def member_delete(context, data_dict=None):
             filter(model.Member.group_id == group.id).\
             filter(model.Member.state    == 'active').first()
     if member:
-        rev = model.repo.new_revision()
-        rev.author = context.get('user')
-        rev.message = _(u'REST API: Delete Member: %s') % obj_id
         member.delete()
         model.repo.commit()
+
+
+def package_collaborator_delete(context, data_dict):
+    '''Remove a collaborator from a dataset.
+
+    Currently you must be an Admin on the dataset owner organization to
+    manage collaborators.
+
+    Note: This action requires the collaborators feature to be enabled with
+    the :ref:`ckan.auth.allow_dataset_collaborators` configuration option.
+
+    :param id: the id or name of the dataset
+    :type id: string
+    :param user_id: the id or name of the user to remove
+    :type user_id: string
+
+    '''
+
+    model = context['model']
+
+    package_id, user_id = _get_or_bust(
+        data_dict,
+        ['id', 'user_id']
+    )
+
+    _check_access('package_collaborator_delete', context, data_dict)
+
+    if not authz.check_config_permission('allow_dataset_collaborators'):
+        raise ValidationError(_('Dataset collaborators not enabled'))
+
+    package = model.Package.get(package_id)
+    if not package:
+        raise NotFound(_('Package not found'))
+
+    user = model.User.get(user_id)
+    if not user:
+        raise NotFound(_('User not found'))
+
+    collaborator = model.Session.query(model.PackageMember).\
+        filter(model.PackageMember.package_id == package.id).\
+        filter(model.PackageMember.user_id == user.id).one_or_none()
+    if not collaborator:
+        raise NotFound(
+            'User {} is not a collaborator on this package'.format(user_id))
+
+    model.Session.delete(collaborator)
+    model.repo.commit()
+
+    log.info('User {} removed as collaborator from package {}'.format(
+        user_id, package.id))
+
 
 def _group_or_org_delete(context, data_dict, is_org=False):
     '''Delete a group.
@@ -346,7 +406,7 @@ def _group_or_org_delete(context, data_dict, is_org=False):
     else:
         _check_access('group_delete', context, data_dict)
 
-    # organization delete will not occure whilke all datasets for that org are
+    # organization delete will not occur while all datasets for that org are
     # not deleted
     if is_org:
         datasets = model.Session.query(model.Package) \
@@ -367,10 +427,6 @@ def _group_or_org_delete(context, data_dict, is_org=False):
                 ).values(owner_org=None)
             )
 
-    rev = model.repo.new_revision()
-    rev.author = user
-    rev.message = _(u'REST API: Delete %s') % revisioned_details
-
     # The group's Member objects are deleted
     # (including hierarchy connections to parent and children groups)
     for member in model.Session.query(model.Member).\
@@ -380,6 +436,28 @@ def _group_or_org_delete(context, data_dict, is_org=False):
         member.delete()
 
     group.delete()
+
+    if is_org:
+        activity_type = 'deleted organization'
+    else:
+        activity_type = 'deleted group'
+
+    activity_dict = {
+        'user_id': model.User.by_name(six.ensure_text(user)).id,
+        'object_id': group.id,
+        'activity_type': activity_type,
+        'data': {
+            'group': dictization.table_dictize(group, context)
+            }
+    }
+    activity_create_context = {
+        'model': model,
+        'user': user,
+        'defer_commit': True,
+        'ignore_auth': True,
+        'session': context['session']
+    }
+    _get_action('activity_create')(activity_create_context, activity_dict)
 
     if is_org:
         plugin_type = plugins.IOrganizationController
@@ -471,14 +549,11 @@ def _group_or_org_purge(context, data_dict, is_org=False):
                    .filter(sqla.or_(model.Member.group_id == group.id,
                                     model.Member.table_id == group.id))
     if members.count() > 0:
-        # no need to do new_revision() because Member is not revisioned, nor
-        # does it cascade delete any revisioned objects
         for m in members.all():
             m.purge()
         model.repo.commit_and_remove()
 
     group = model.Group.get(id)
-    model.repo.new_revision()
     group.purge()
     model.repo.commit_and_remove()
 
@@ -582,7 +657,7 @@ def tag_delete(context, data_dict):
     '''
     model = context['model']
 
-    if not data_dict.has_key('id') or not data_dict['id']:
+    if 'id' not in data_dict or not data_dict['id']:
         raise ValidationError({'id': _('id not in data')})
     tag_id_or_name = _get_or_bust(data_dict, 'id')
 
@@ -602,7 +677,7 @@ def tag_delete(context, data_dict):
 def _unfollow(context, data_dict, schema, FollowerClass):
     model = context['model']
 
-    if not context.has_key('user'):
+    if 'user' not in context:
         raise ckan.logic.NotAuthorized(
                 _("You must be logged in to unfollow something."))
     userobj = model.User.get(context['user'])
@@ -755,3 +830,30 @@ def job_cancel(context, data_dict):
         log.info(u'Cancelled background job {}'.format(id))
     except KeyError:
         raise NotFound
+
+
+def api_token_revoke(context, data_dict):
+    """Delete API Token.
+
+    :param string token: Token to remove(required if `jti` not specified).
+    :param string jti: Id of the token to remove(overrides `token` if specified).
+
+    .. versionadded:: 3.0
+    """
+    jti = data_dict.get(u'jti')
+    if not jti:
+        token = _get_or_bust(data_dict, u'token')
+        decoders = plugins.PluginImplementations(plugins.IApiToken)
+        for plugin in decoders:
+            data = plugin.decode_api_token(token)
+            if data:
+                break
+        else:
+            data = api_token.decode(token)
+
+        if data:
+            jti = data.get(u'jti')
+
+    _check_access(u'api_token_revoke', context, {u'jti': jti})
+    model = context[u'model']
+    model.ApiToken.revoke(jti)

@@ -10,12 +10,15 @@ from dateutil.parser import parse
 
 import re
 
+import six
 import pysolr
 from ckan.common import config
-from paste.deploy.converters import asbool
+from ckan.common import asbool
+import six
 from six import text_type
+from six.moves import map
 
-from common import SearchIndexError, make_connection
+from .common import SearchIndexError, make_connection
 from ckan.model import PackageRelationship
 import ckan.model as model
 from ckan.plugins import (PluginImplementations,
@@ -28,7 +31,11 @@ log = logging.getLogger(__name__)
 
 TYPE_FIELD = "entity_type"
 PACKAGE_TYPE = "package"
-KEY_CHARS = string.digits + string.letters + "_-"
+if six.PY2:
+    KEY_CHARS = string.digits + string.letters + "_-"
+else:
+    KEY_CHARS = string.digits + string.ascii_letters + "_-"
+
 SOLR_FIELDS = [TYPE_FIELD, "res_url", "text", "urls", "indexed_ts", "site_id"]
 RESERVED_FIELDS = SOLR_FIELDS + ["tags", "groups", "res_name", "res_description",
                                  "res_format", "res_url", "res_type"]
@@ -143,7 +150,7 @@ class PackageSearchIndex(SearchIndex):
             if (not pkg_dict.get('state') or 'deleted' in pkg_dict.get('state')):
                 return self.delete_package(pkg_dict)
 
-            index_fields = RESERVED_FIELDS + pkg_dict.keys()
+            index_fields = RESERVED_FIELDS + list(pkg_dict.keys())
 
             # include the extras in the main namespace
             extras = pkg_dict.get('extras', [])
@@ -224,7 +231,7 @@ class PackageSearchIndex(SearchIndex):
             for rel in subjects:
                 type = rel['type']
                 rel_dict[type].append(model.Package.get(rel['object_package_id']).name)
-            for key, value in rel_dict.iteritems():
+            for key, value in six.iteritems(rel_dict):
                 if key not in pkg_dict:
                     pkg_dict[key] = value
 
@@ -241,7 +248,7 @@ class PackageSearchIndex(SearchIndex):
             new_dict = {}
             bogus_date = datetime.datetime(1, 1, 1)
             for key, value in pkg_dict.items():
-                key = key.encode('ascii', 'ignore')
+                key = six.ensure_str(key)
                 if key.endswith('_date'):
                     try:
                         date = parse(value, default=bogus_date)
@@ -251,7 +258,7 @@ class PackageSearchIndex(SearchIndex):
                             # The date field was empty, so dateutil filled it with
                             # the default bogus date
                             value = None
-                    except:
+                    except (ValueError, IndexError):
                         continue
                 new_dict[key] = value
             pkg_dict = new_dict
@@ -284,7 +291,7 @@ class PackageSearchIndex(SearchIndex):
 
             # add a unique index_id to avoid conflicts
             import hashlib
-            pkg_dict['index_id'] = hashlib.md5('%s%s' % (pkg_dict['id'],config.get('ckan.site_id'))).hexdigest()
+            pkg_dict['index_id'] = hashlib.md5(six.b('%s%s' % (pkg_dict['id'],config.get('ckan.site_id')))).hexdigest()
 
             for item in PluginImplementations(IPackageController):
                 pkg_dict = item.before_index(pkg_dict)
@@ -309,7 +316,7 @@ class PackageSearchIndex(SearchIndex):
             conn.add(docs=final_dicts, commit=commit)
         except pysolr.SolrError, e:
             msg = 'Solr returned an error: {0}'.format(
-                e[:1000] # limit huge responses
+                e.args[0][:1000] # limit huge responses
             )
             raise SearchIndexError(msg)
         except socket.error, e:
@@ -353,7 +360,7 @@ class PackageSearchIndex(SearchIndex):
         if (not pkg_dict.get('state') or 'deleted' in pkg_dict.get('state')):
             return self.delete_package(pkg_dict)
 
-        index_fields = RESERVED_FIELDS + pkg_dict.keys()
+        index_fields = RESERVED_FIELDS + list(pkg_dict.keys())
 
         # include the extras in the main namespace
         extras = pkg_dict.get('extras', [])
@@ -434,7 +441,7 @@ class PackageSearchIndex(SearchIndex):
         for rel in subjects:
             type = rel['type']
             rel_dict[type].append(model.Package.get(rel['object_package_id']).name)
-        for key, value in rel_dict.iteritems():
+        for key, value in six.iteritems(rel_dict):
             if key not in pkg_dict:
                 pkg_dict[key] = value
 
@@ -451,7 +458,7 @@ class PackageSearchIndex(SearchIndex):
         new_dict = {}
         bogus_date = datetime.datetime(1, 1, 1)
         for key, value in pkg_dict.items():
-            key = key.encode('ascii', 'ignore')
+            key = six.ensure_str(key)
             if key.endswith('_date'):
                 try:
                     date = parse(value, default=bogus_date)
@@ -461,7 +468,7 @@ class PackageSearchIndex(SearchIndex):
                         # The date field was empty, so dateutil filled it with
                         # the default bogus date
                         value = None
-                except:
+                except (ValueError, IndexError):
                     continue
             new_dict[key] = value
         pkg_dict = new_dict
@@ -494,7 +501,7 @@ class PackageSearchIndex(SearchIndex):
 
         # add a unique index_id to avoid conflicts
         import hashlib
-        pkg_dict['index_id'] = hashlib.md5('%s%s' % (pkg_dict['id'],config.get('ckan.site_id'))).hexdigest()
+        pkg_dict['index_id'] = hashlib.md5(six.b('%s%s' % (pkg_dict['id'],config.get('ckan.site_id')))).hexdigest()
 
         for item in PluginImplementations(IPackageController):
             pkg_dict = item.before_index(pkg_dict)
@@ -517,7 +524,7 @@ class PackageSearchIndex(SearchIndex):
             conn.add(docs=[pkg_dict], commit=commit)
         except pysolr.SolrError as e:
             msg = 'Solr returned an error: {0}'.format(
-                e[:1000] # limit huge responses
+                e.args[0][:1000] # limit huge responses
             )
             raise SearchIndexError(msg)
         except socket.error as e:

@@ -1,17 +1,22 @@
+import requests
+import json
+from ckan.common import _
 from ckan.common import g
 from ckan.logic import NotFound
-
+from ckan.common import config
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 import ckan.authz as authz
+import ckan.logic as logic
 import ckan.model.user as user_model
-
 
 from ckanext.hdx_users.helpers.notification_service import get_notification_service
 
 get_action = toolkit.get_action
 check_access = toolkit.check_access
 NotAuthorized = toolkit.NotAuthorized
+CaptchaNotValid = _('Captcha is not valid')
+ValidationError = logic.ValidationError
 
 
 def find_first_global_settings_url():
@@ -70,3 +75,23 @@ def find_user_id(username_or_id):
         raise NotFound()
     user_id = user.id
     return user_id
+
+
+def is_valid_captcha(captcha_response):
+    is_captcha_enabled = config.get('hdx.captcha', 'false')
+    if is_captcha_enabled == 'true':
+        # captcha_response = request.params.get('g-recaptcha-response')
+        if not _is_valid_captcha(response=captcha_response):
+            raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+        return True
+    else:
+        return None
+
+
+def _is_valid_captcha(response):
+    url = config.get('hdx.captcha.url')
+    secret = config.get('ckan.recaptcha.privatekey')
+    params = {'secret': secret, "response": response}
+    r = requests.get(url, params=params, verify=True)
+    res = json.loads(r.content)
+    return 'success' in res and res['success'] == True

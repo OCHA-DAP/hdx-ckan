@@ -24,30 +24,20 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
 
         page = self._getAboutPage('license')
-        assert 'Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
+        assert 'Data Licenses' in page.data, 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
         page = self._getAboutPage('license', testsysadmin.apikey)
-        assert 'Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page, even when the user is logged in'
+        assert 'Data Licenses' in page.data, 'the url /about/license should redirect to the Data Licenses page, even when the user is logged in'
 
         page = self._getAboutPage('terms')
-        assert 'Terms of Service' in str(page.response), 'the url /about/terms should redirect to the Terms of Service page when no user is logged in'
+        assert 'Terms of Service' in page.data, 'the url /about/terms should redirect to the Terms of Service page when no user is logged in'
         page = self._getAboutPage('terms', testsysadmin.apikey)
-        assert 'Terms of Service' in str(page.response), 'the url /about/terms should redirect to the Terms of Service page, even when the user is logged in'
+        assert 'Terms of Service' in page.data, 'the url /about/terms should redirect to the Terms of Service page, even when the user is logged in'
 
-        try:
-            self._getAboutPage('fake')
-            # assert "The requested about page doesn't exist" in str(page.response), 'the url /about/fake should throw an error when no user is logged in'
-            assert False
-        except Exception, ex:
-            assert "Bad response: 404 Not Found" in ex.message
-            assert "/about/fake" in ex.message
+        page = self._getAboutPage('fake')
+        assert page.status_code == 404
 
-        try:
-            self._getAboutPage('fake', testsysadmin.apikey)
-            # assert "The requested about page doesn't exist" in str(page.response), 'the url /about/terms should throw an error, even when the user is logged in'
-            assert False
-        except Exception, ex:
-            assert "Bad response: 404 Not Found" in ex.message
-            assert "/about/fake" in ex.message
+        page = self._getAboutPage('fake', testsysadmin.apikey)
+        assert page.status_code == 404
 
     def _getAboutPage(self, page, apikey=None):
         url = '/about/' + page

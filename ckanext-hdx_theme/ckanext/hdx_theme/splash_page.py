@@ -4,14 +4,15 @@ from rdflib.namespace import Namespace
 
 import ckan.lib.base as base
 import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
 from ckan.common import config
 from ckan.controllers.home import HomeController
-from ckan.lib.base import _
 from ckan.lib.base import c, h
 from ckan.lib.base import model
 from ckan.lib.base import request
 
+_ = tk._
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
 get_action = logic.get_action

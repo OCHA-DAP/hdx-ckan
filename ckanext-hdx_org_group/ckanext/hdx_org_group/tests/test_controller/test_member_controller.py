@@ -48,11 +48,11 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         ret = [next(user['fullname'] for user in users if user['id'] == member[0]) for member in members]
         return ret
 
-
     @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
     @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
     @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
-    def test_members(self, member_c, org_helper_c, theme_c):
+    @mock.patch('ckanext.hdx_org_group.controllers.member_controller.render')
+    def test_members(self, render, member_c, org_helper_c, theme_c):
         global sort, q
 
         test_username = 'testsysadmin'
@@ -96,7 +96,8 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
     @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
     @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
-    def test_members_delete_add(self, member_c, org_helper_c, theme_c, mailer_c):
+    @mock.patch('ckanext.hdx_org_group.controllers.member_controller.render')
+    def test_members_delete_add(self, render, member_c, org_helper_c, theme_c, mailer_c):
         test_username = 'testsysadmin'
         mock_helper.populate_mock_as_c(member_c, test_username)
         mock_helper.populate_mock_as_c(org_helper_c, test_username)
@@ -227,7 +228,8 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
     @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
     @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
-    def test_request_membership(self, member_c, org_helper_c, theme_c, request_c):
+    @mock.patch('ckanext.hdx_org_group.controllers.member_controller.render')
+    def test_request_membership(self, render, member_c, org_helper_c, theme_c, request_c):
         test_sysadmin = 'testsysadmin'
         test_username = 'johndoe1'
         mock_helper.populate_mock_as_c(member_c, test_sysadmin)

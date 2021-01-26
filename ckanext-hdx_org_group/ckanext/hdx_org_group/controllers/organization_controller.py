@@ -165,7 +165,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 return json.dumps(c.full_facet_info)
             else:
                 # self._read(id, limit)
-                return render(self._read_template(c.group_dict['type']))
+                return render(self._read_template(c.group_dict['type']),
+                          {'group_dict': c.group_dict})
 
     def _get_org(self, org_id):
         group_type = 'organization'
@@ -296,10 +297,15 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         self._setup_template_variables(context, data, group_type=group_type)
         c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] +\
                               [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
-        c.form = render(self._group_form(group_type), extra_vars=vars)
+        form = render(self._group_form(group_type), extra_vars=vars)
 
         #  The extra_vars are needed here to send analytics information like org name and id
-        return render(self._edit_template(c.group.type), extra_vars={'data': data})
+        extra_vars = {
+            'data': data,
+            'form': form,
+            'group_type': group_type
+        }
+        return render(self._edit_template(c.group.type), extra_vars=extra_vars)
 
     # def stats(self, id, data=None, errors=None, error_summary=None):
     #     template_data = {}
@@ -348,7 +354,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'stats_1_dataset_downloads_last_weeks': stats_1_dataset_downloads_last_weeks,
                 'stats_1_dataset_name': stats_1_dataset_name,
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
-            }
+            },
+            'group_dict': c.group_dict
         }
 
         if org_meta.is_custom:
@@ -470,13 +477,14 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         # template context for the group/read.html template to retrieve later.
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True}
-        c.group_activity_stream = self._action('group_activity_list_html')(
+        c.group_activity_stream = get_action('organization_activity_list')(
             context, {'id': c.group_dict['id'], 'offset': offset})
 
+        extra_vars = {'group_dict': c.group_dict}
         if org_meta.is_custom:
-            return render(custom_org.CustomOrgController()._activity_template('organization'))
+            return render(custom_org.CustomOrgController()._activity_template('organization'), extra_vars)
         else:
-            return render(self._activity_template('organization'))
+            return render(self._activity_template('organization'), extra_vars)
 
     def _restore_org(self, id, context):
 

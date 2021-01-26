@@ -59,17 +59,19 @@ def get_message_groups(current_user, org_id):
         cnt_members_list = logic.get_action('hdx_member_list')(context, {'org_id': org_id})
         if cnt_members_list.get('is_member', False):
             group_topics = [
-                (
-                    'all', membership_data['group_topics']['all'] + ' [' + str(
-                        cnt_members_list.get('total_counter', 0)) + ']'),
-                ('admins', membership_data['group_topics']['admins'] + ' [' + str(
-                    cnt_members_list.get('admins_counter', 0)) + ']'),
-                ('editors', membership_data['group_topics']['editors'] + ' [' + str(
-                    cnt_members_list.get('editors_counter', 0)) + ']'),
-                ('members', membership_data['group_topics']['members'] + ' [' + str(
-                    cnt_members_list.get('members_counter', 0)) + ']')
+                ('all', membership_data['group_topics']['all'] + ' [' + str(
+                        cnt_members_list.get('total_counter', 0)) + ']')
             ]
-
+            # displaying only the category of users that exists for organization
+            if cnt_members_list.get('admins_counter'):
+                group_topics.append(('admins', membership_data['group_topics']['admins'] + ' [' + str(
+                    cnt_members_list.get('admins_counter', 0)) + ']'))
+            if cnt_members_list.get('editors_counter'):
+                group_topics.append(('editors', membership_data['group_topics']['editors'] + ' [' + str(
+                    cnt_members_list.get('editors_counter', 0)) + ']'))
+            if cnt_members_list.get('members_counter'):
+                group_topics.append(('members', membership_data['group_topics']['members'] + ' [' + str(
+                    cnt_members_list.get('members_counter', 0)) + ']'))
             group_message_topics = collections.OrderedDict(group_topics)
     except Exception, e:
         log.warning("Exception occured while getting message groups for org {}".format(org_id) + str(e.args))

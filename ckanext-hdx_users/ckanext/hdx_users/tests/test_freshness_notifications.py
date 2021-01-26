@@ -1,3 +1,5 @@
+import pytest
+
 import datetime
 
 import ckan.model as model
@@ -11,15 +13,14 @@ from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_OVERDUE
 class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_notification_data_save(self):
-        checker2 = FreshnessNotificationsChecker('tester')
+        checker = FreshnessNotificationsChecker('tester')
         date1 = datetime.datetime.utcnow()
-        checker2.set_dashboard_viewed(date1)
-        assert checker2.get_dashboard_viewed() == date1
+        checker.set_dashboard_viewed(date1)
+        assert checker.get_dashboard_viewed() == date1
 
-        checker2 = FreshnessNotificationsChecker('tester')
         date2 = date1 + datetime.timedelta(hours=1)
-        checker2.set_dashboard_viewed(date2)
-        assert checker2.get_dashboard_viewed() == date2
+        checker.set_dashboard_viewed(date2)
+        assert checker.get_dashboard_viewed() == date2
 
     def test_freshness_notification(self):
         data_update_frequency = 30
@@ -50,6 +51,10 @@ class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsT
         self._get_action('package_create')(context, dataset)
 
         checker = FreshnessNotificationsChecker('tester')
+
+        # the user looked at the dashboard 3 days after the dataset was created, when it was still fresh
+        last_dashboard_view = days_in_the_past + 3
+        checker.set_dashboard_viewed(datetime.datetime.utcnow() - datetime.timedelta(days=last_dashboard_view))
         has_notification = checker.has_unseen_expired_datasets()
         assert has_notification
 

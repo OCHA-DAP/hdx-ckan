@@ -39,7 +39,7 @@
       {% block primary_content_inner %}
         <div data-module="dashboard">
           {% block activity_stream %}
-         	{{ c.dashboard_activity_stream }}
+         	{% snippet 'snippets/activity_stream.html', activity_stream=c.dashboard_activity_stream, id=c.userobj.id, object_type='user' %}
           {% endblock %}
         </div>
       {% endblock %}

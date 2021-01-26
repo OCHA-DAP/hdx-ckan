@@ -219,8 +219,8 @@ html > .contribute-body > .contribute-main > div {
 }
 .form-group .format-label {
   position: absolute;
-  margin-left: 5px;
-  margin-top: 3px;
+  margin-left: -10px;
+  margin-top: -12px;
 }
 .form-group .format-label + input {
   padding-left: 45px;

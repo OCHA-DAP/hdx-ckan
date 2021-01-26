@@ -8,13 +8,13 @@ from contextlib import contextmanager
 import logging
 from pkg_resources import iter_entry_points
 from pyutilib.component.core import PluginGlobals, implements
-from pyutilib.component.core import ExtensionPoint as PluginImplementations
+from pyutilib.component.core import ExtensionPoint
 from pyutilib.component.core import SingletonPlugin as _pca_SingletonPlugin
 from pyutilib.component.core import Plugin as _pca_Plugin
-from paste.deploy.converters import asbool
+from ckan.common import asbool
 from six import string_types
 
-import interfaces
+from ckan.plugins import interfaces
 
 from ckan.common import config
 
@@ -71,6 +71,21 @@ def use_plugin(*plugins):
         unload(*plugins)
 
 
+class PluginImplementations(ExtensionPoint):
+    # COPIED BY HDX FROM https://github.com/ckan/ckan/commit/c3acb95a7c1a7324ed1af2ca003e8cfa37e8c5ad
+    def __iter__(self):
+        '''
+        When we upgraded pyutilib on CKAN 2.9 the order in which
+        plugins were returned by `PluginImplementations` changed
+        so we use this wrapper to maintain the previous order
+        (which is the same as the ckan.plugins config option)
+        '''
+
+        iterator = super(PluginImplementations, self).__iter__()
+
+        return reversed(list(iterator))
+
+
 class PluginNotFoundException(Exception):
     '''
     Raised when a requested plugin cannot be found.
@@ -112,10 +127,10 @@ def plugins_update():
     # the file containing them is imported, for example if two or more
     # extensions are defined in the same file.  Therefore we do a sanity
     # check and disable any that should not be active.
-    for env in PluginGlobals.env_registry.values():
-        for service in env.services.copy():
-            if service.__class__ not in _PLUGINS_CLASS:
-                service.deactivate()
+    for env in PluginGlobals.env.values():
+        for service, id_ in env.singleton_services.items():
+            if service not in _PLUGINS_CLASS:
+                PluginGlobals.plugin_instances[id_].deactivate()
 
     # Reset CKAN to reflect the currently enabled extensions.
     import ckan.config.environment as environment
