@@ -6,14 +6,12 @@ import pylons.config as config
 import requests
 
 import ckan.lib.base as base
-import ckan.lib.mailer as mailer
 import ckan.logic as logic
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 from ckan.common import _, c, request, response
 from ckan.controllers.api import CONTENT_TYPES
-from ckanext.hdx_theme.helpers.faq_data import faq_data
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 
 log = logging.getLogger(__name__)
