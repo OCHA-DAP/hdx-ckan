@@ -212,6 +212,47 @@ function qaPackageDetailsSelect(target) {
   $(`#qa-package-details-${index}`).show();
 }
 
+function _updateResourceConfirmState(resource, flag) {
+  let body = {
+    "id": `${resource}`,
+    "sensitive": flag,
+  };
+  let promise = new Promise((resolve, reject) => {
+    $.post('/api/action/hdx_qa_resource_patch', body)
+      .done((result) => {
+        if (result.success){
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      })
+      .fail((result) => {
+        reject(result);
+      });
+  });
+  return promise;
+}
+
+function confirmPIIState(el, resourceId) {
+  $(el).parents(".modal").modal("hide");
+  let sensitive = $(el).parents(".modal-content").find("input[name='pii-confirm']:checked").val();
+  console.log('Confirm: ' + resourceId + " " + sensitive);
+  _showLoading();
+  _updateResourceConfirmState(resourceId, sensitive)
+    .then(
+      (resolve) => {
+        _updateLoadingMessage("PII State successfully confirmed! Reloading page ...");
+      },
+      (error) => {
+        alert("Error, PII state not updated! " + extraMsg);
+        $("#loadingScreen").hide();
+      }
+    )
+    .finally(() => {
+      location.reload();
+    });
+}
+
 $(document).ready(() => {
   $(".qa-package-item").on("click", (ev) => qaPackageDetailsSelect(ev.currentTarget));
   let hash = window.location.hash ? window.location.hash.substr(1):null;
