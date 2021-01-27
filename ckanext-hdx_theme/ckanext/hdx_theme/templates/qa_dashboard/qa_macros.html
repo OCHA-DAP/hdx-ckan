@@ -82,12 +82,12 @@
               <h5 class="modal-title">Confirm Risk Classification</h5>
             </div>
             <div class="modal-body">
-              <label><input name="pii-confirm" type="radio"> <span class="icon-bell"></span> I have checked this dataset and I believe it may contain sensitive content</label> <br><br>
-              <label><input name="pii-confirm" type="radio"> <span class="icon-check"></span> I have checked this dataset and I did not find any sensitive content</label>
+              <label><input name="pii-confirm" type="radio" value="true"> <span class="icon-bell"></span> I have checked this dataset and I believe it may contain sensitive content</label> <br><br>
+              <label><input name="pii-confirm" type="radio" value="false"> <span class="icon-check"></span> I have checked this dataset and I did not find any sensitive content</label>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary">Confirm</button>
+              <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}')">Confirm</button>
             </div>
           </div>
         </div>
