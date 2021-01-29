@@ -86,8 +86,9 @@
               <label><input name="pii-confirm" type="radio" value="false"> <span class="icon-check"></span> I have checked this dataset and I did not find any sensitive content</label>
             </div>
             <div class="modal-footer">
+              {% set score_for_mixpanel = resource.pii_predict_score|float or 0 %}
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}')">Confirm</button>
+              <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}', {{ score_for_mixpanel }}, '{{ link_to_log }}')">Confirm</button>
             </div>
           </div>
         </div>
