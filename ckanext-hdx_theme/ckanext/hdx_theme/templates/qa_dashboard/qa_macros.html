@@ -82,8 +82,8 @@
               <h5 class="modal-title">Confirm Risk Classification</h5>
             </div>
             <div class="modal-body">
-              <label><input name="pii-confirm" type="radio" value="true"> <span class="icon-bell"></span> I have checked this dataset and I believe it may contain sensitive content</label> <br><br>
-              <label><input name="pii-confirm" type="radio" value="false"> <span class="icon-check"></span> I have checked this dataset and I did not find any sensitive content</label>
+              <label><input name="pii-confirm" type="radio" value="true"> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
+              <label><input name="pii-confirm" type="radio" value="false"> <span class="icon-check"></span> I have checked this resource and I did not find any sensitive content</label>
             </div>
             <div class="modal-footer">
               {% set score_for_mixpanel = resource.pii_predict_score|float or 0 %}
