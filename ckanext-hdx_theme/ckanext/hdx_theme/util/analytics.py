@@ -1,17 +1,20 @@
 import json
 import logging
 import time
-import ipaddress
+from urlparse import urlparse
 
-import ckanext.hdx_theme.helpers.api_tracking_helper as api_th
-import pylons.config as config
+import ipaddress
 import requests
 import ua_parser.user_agent_parser as useragent
+
+import ckan.plugins.toolkit as tk
 from ckanext.hdx_theme.helpers.hash_generator import HashCodeGenerator
 
-from ckan.common import request
-
 log = logging.getLogger(__name__)
+
+request = tk.request
+config = tk.config
+
 
 class AbstractAnalyticsSender(object):
 
@@ -33,7 +36,7 @@ class AbstractAnalyticsSender(object):
             self.is_api_call = False
             rq_headers = request.headers if request.headers else request._headers
             if rq_headers and rq_headers.environ:
-                self.is_api_call = api_th.is_api_call(rq_headers.environ)
+                self.is_api_call = self.is_ckan_api_call(rq_headers.environ)
 
             if ua_dict:
                 self.ua_browser = ua_dict.get('user_agent', {}).get('family')
@@ -91,7 +94,7 @@ class AbstractAnalyticsSender(object):
         self._set_if_not_exists(self.analytics_dict, 'send_ga', False)
 
         mixpanel_meta = self.analytics_dict.get('mixpanel_meta')
-        if (self.is_api_call):
+        if self.is_api_call:
             self._set_if_not_exists(mixpanel_meta, 'event source', 'api')
 
         # setting the event time
@@ -120,3 +123,22 @@ class AbstractAnalyticsSender(object):
     def _set_if_not_exists(data_dict, key, value):
         if not data_dict.get(key):
             data_dict[key] = value
+
+    @staticmethod
+    def is_ckan_api_call(environ):
+        url_path = AbstractAnalyticsSender._get_current_path(environ)
+        if url_path:
+            return '/api/' in url_path and '/action/' in url_path
+        return False
+
+    @staticmethod
+    def _get_current_path(environ):
+        url = environ.get('CKAN_CURRENT_URL')
+        try:
+            called_url = urlparse(url)
+            return called_url.path
+        except Exception as e:
+            log.error('Exception while trying get current url', unicode(e))
+
+        return None
+

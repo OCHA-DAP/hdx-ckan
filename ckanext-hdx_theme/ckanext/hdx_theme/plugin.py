@@ -7,7 +7,6 @@ import pylons.config as config
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-import ckanext.hdx_theme.helpers.api_tracking_middleware as api_tracking
 import ckanext.hdx_theme.helpers.auth as auth
 from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
 
@@ -358,12 +357,5 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         }
 
     def make_middleware(self, app, config):
-        api_tracking_enabled = config.get('hdx.analytics.track_api', 'false')
-        new_app = app
-        # run_on_startup()
-        if api_tracking_enabled == 'true':
-            new_app = api_tracking.APITrackingMiddleware(app, config)
-
         new_app = RedirectionMiddleware(app, config)
-
         return new_app
