@@ -317,6 +317,17 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
+                'pii_is_sensitive': [
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
+                    tk.get_validator('hdx_reset_on_file_upload'),
+                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
+                ],
+                'pii_predict_score': [
+                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
+                    tk.get_validator('hdx_float_number'),
+                    tk.get_validator('hdx_reset_on_file_upload'),
+                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
+                ],
                 'sdc_timestamp': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('isodate'),
@@ -555,7 +566,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_update_microdata': vd.hdx_update_microdata,
             'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata,
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
-            'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange
+            'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange,
+            'hdx_float_number': vd.hdx_float_number
         }
 
     def get_auth_functions(self):

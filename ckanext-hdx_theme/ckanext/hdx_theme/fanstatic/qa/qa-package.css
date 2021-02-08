@@ -34,6 +34,7 @@
   border-top: 1px solid #cccccc;
   padding: 10px 0;
   display: flex;
+  position: relative;
 }
 .dataset-pii .pii-list .pii-item .pii-title {
   width: 80px;
@@ -49,7 +50,7 @@
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   font-size: 12px;
-  width: 75px;
+  min-width: 75px;
   justify-content: center;
   align-items: center;
   height: 22px;
@@ -58,6 +59,12 @@
 }
 .dataset-pii .pii-list .pii-item .pii-label.gray {
   border-color: #cccccc;
+}
+.dataset-pii .pii-list .pii-item .pii-label.error {
+  background-color: #ff0000;
+  color: #fff;
+  border-color: #ff0000;
+  cursor: help;
 }
 .dataset-pii .pii-list .pii-item .pii-label.warn {
   background-color: #f2645a;
@@ -75,6 +82,7 @@
 }
 .dataset-pii .pii-list .pii-item .pii-label .pii-label-text {
   line-height: 1;
+  margin-right: 5px;
 }
 .dataset-pii .pii-list .pii-item .pii-status {
   margin-left: 20px;
@@ -151,6 +159,9 @@
 .resource-item:first-child {
   border-top: none;
 }
+.resource-item .pii-item .more-options {
+  top: 13px;
+}
 .resource-item .more-options {
   position: absolute;
   top: 20px;
@@ -217,4 +228,13 @@ section.search-list .filter-category {
   min-height: 600px;
   max-height: 80vh;
   border: 0;
+}
+#pii-confirm-modal .modal-body input[type="radio"] {
+  margin-right: 10px;
+}
+#pii-confirm-modal .modal-body .icon-bell {
+  color: #f2645a;
+}
+#pii-confirm-modal .modal-body .icon-check:before {
+  color: #1ebfb3;
 }

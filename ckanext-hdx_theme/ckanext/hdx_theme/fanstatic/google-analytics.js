@@ -587,6 +587,39 @@ $(
 
     hdxUtil.analytics.sendUserRegisteredEvent = sendUserRegisteredEvent;
 
+
+    /**
+     * Sends events related to new user registration: user register, start user register, submit email register
+     * @param resourceId {string}
+     * @param isSensitive {boolean}
+     * @param piiPredictScore {number}
+     * @param piiReportId {string}
+     */
+    function sendQADashboardEvent(resourceId, isSensitive, piiPredictScore, piiReportId) {
+        var eventName = "qa resource sensitivity set";
+        var metadata = {
+            "page title": analyticsInfo.pageTitle,
+            "resource id": resourceId,
+            "is sensitive": isSensitive,
+            "pii predict score": piiPredictScore,
+            "pii report id": piiReportId
+        };
+
+        var mixpanelData = {
+            "eventName": eventName,
+            "eventMeta": metadata
+        };
+
+        var gaData = {
+            "eventCategory": "qa",
+            "eventAction": eventName,
+            "eventLabel": isSensitive
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+    }
+
+    hdxUtil.analytics.sendQADashboardEvent = sendQADashboardEvent;
     /**
      *
      * @param {string} searchTerm
