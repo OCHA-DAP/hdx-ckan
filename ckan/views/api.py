@@ -517,3 +517,8 @@ version_rule = u'/<int(min=1, max=2):ver>'
 for rule, view_func in util_rules:
     api.add_url_rule(rule, view_func=view_func)
     api.add_url_rule(version_rule + rule, view_func=view_func)
+
+
+# Added by HDX to send analytics for API
+from ckanext.hdx_theme.util.analytics_api import send_api_analytics
+api.before_request(send_api_analytics)
