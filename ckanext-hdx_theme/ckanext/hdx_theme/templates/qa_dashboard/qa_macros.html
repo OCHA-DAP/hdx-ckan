@@ -50,7 +50,6 @@
       {% if resource.pii_predict_score %}
         {% set score = resource.pii_predict_score|float %}
         {% set score = score * 100 %}
-
         {% if score > 32 %}
           {% set status_text = "High Risk" %}
           {% set status_class = 'warn' %}
@@ -67,14 +66,34 @@
       {% set status_text = 'Error' %}
     {% endif %}
 
-    <span class="pii-label {{ status_class }}">
-      <span class="pii-label-text">
-        {{ status_text }}
+    {% if resource.pii_is_sensitive=='true' %}
+      <span class="pii-label warn">
+        <span class="pii-label-text" title="Predict score: {{score}}%">
+          Sensitive
+        </span>
+        <i class="humanitarianicons-Alert"></i>
       </span>
-      <i class="{{icon_class}}"></i>
-    </span>
+    {% elif resource.pii_is_sensitive=='false' %}
+      <span class="pii-label ok">
+        <span class="pii-label-text">
+          OK
+        </span>
+        <i class="humanitarianicons-Selected"></i>
+      </span>
+    {% else %}
+      <span class="pii-label {{ status_class }}">
+        <span class="pii-label-text" title="Predict score: {{score}}%">
+          {{ status_text }}
+        </span>
+        <i class="{{icon_class}}"></i>
+      </span>
+    {% endif %}
+
+
     <span class="pii-status">
-      <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Confirm</a>
+      {% if not resource.pii_is_sensitive %}
+        <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Confirm</a>
+      {% endif %}
       <div class="modal" id="pii-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -82,8 +101,8 @@
               <h5 class="modal-title">Confirm Risk Classification</h5>
             </div>
             <div class="modal-body">
-              <label><input name="pii-confirm" type="radio" value="true"> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
-              <label><input name="pii-confirm" type="radio" value="false"> <span class="icon-check"></span> I have checked this resource and I did not find any sensitive content</label>
+              <label><input name="pii-confirm" type="radio" value="true" {% if resource.pii_is_sensitive=='true' %} checked="checked"{% endif %}> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
+              <label><input name="pii-confirm" type="radio" value="false" {% if resource.pii_is_sensitive=='false' %} checked="checked"{% endif %}> <span class="icon-check"></span> I have checked this resource and I did not find any sensitive content</label>
             </div>
             <div class="modal-footer">
               {% set score_for_mixpanel = resource.pii_predict_score|float or 0 %}
@@ -99,6 +118,11 @@
             <i class="humanitarianicons-More-options"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+            {% if resource.pii_is_sensitive %}
+              <li>
+                <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Update Risk Classification</a>
+              </li>
+            {% endif %}
             {% if link_to_dlp %}
               <li>
                 <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
