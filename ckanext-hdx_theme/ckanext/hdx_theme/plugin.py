@@ -8,7 +8,9 @@ import pylons.config as config
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_theme.helpers.auth as auth
+
 from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
+from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 
 
 # def run_on_startup():
@@ -36,7 +38,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IApiToken, inherit=True)
     plugins.implements(plugins.IMiddleware, inherit=True)
+    plugins.implements(plugins.IValidators, inherit=True)
 
     def _add_resource(cls, path, name):
         '''OVERRIDE toolkit.add_resource in order to allow adding a resource library
@@ -359,3 +363,15 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def make_middleware(self, app, config):
         new_app = RedirectionMiddleware(app, config)
         return new_app
+
+    # IValidators
+    def get_validators(self):
+        return {
+            'doesnt_exceed_max_validity_period': doesnt_exceed_max_validity_period,
+        }
+
+    # IApiToken
+    def create_api_token_schema(self, schema):
+        # add to the schema from expire_api_token plugin
+        schema['expires_in'].append(toolkit.get_validator('doesnt_exceed_max_validity_period'))
+        return schema
