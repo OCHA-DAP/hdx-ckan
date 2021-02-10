@@ -12,7 +12,7 @@ HDX_DEMO_LITION_URL=https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
 HDX_DEMO_LITION_TAG=1.2
 
 HDX_GISRESTAPI_URL=https://hub.docker.com/r/unocha/hdx-gisrestapi/tags/
-HDX_GISRESTAPI_TAG=4.2.4
+HDX_GISRESTAPI_TAG=4.2.5
 
 HDX_DATAPROXY_URL=https://hub.docker.com/r/unocha/hdx-dataproxy/tags/
 HDX_DATAPROXY_TAG=2.5
