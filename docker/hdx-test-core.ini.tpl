@@ -69,7 +69,7 @@ apikey_header_name = X-Non-Standard-CKAN-API-Key
 # only for 2.3
 #ckan.plugins = stats
 # only for 2.6
-ckan.plugins = dcat dcat_json_interface structured_data hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
+ckan.plugins = dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
 ckan.use_pylons_response_cleanup_middleware = False
 hdx_portal = True
 
