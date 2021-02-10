@@ -17,3 +17,12 @@ def general_value_in_list(value_list, allow_not_selected, not_selected_value='-1
 
     return verify_value_in_list
 
+
+# used for api token validations
+def doesnt_exceed_max_validity_period(key, data, errors, context):
+    expires_in = data.get(key, 0)
+    unit = data.get(('unit',), 0)
+    seconds = expires_in * unit
+    max_seconds = 180 * 24 * 60 * 60
+    if seconds > max_seconds:
+        raise df.Invalid(_('Token needs to expire in maximum 180 days'))
