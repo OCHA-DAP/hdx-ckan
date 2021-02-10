@@ -167,8 +167,7 @@ class DataCompletness(object):
         ds['stats'] = {
             'total_datasets_num': total_datasets_num,
             'good_datasets_num': good_datasets_num,
-            'state': 'empty' if total_datasets_num == 0
-                                else 'not_good' if good_datasets_num < total_datasets_num else 'good'
+            'state': 'empty' if total_datasets_num == 0 else 'good' if good_datasets_num > 0 else 'not_good'
         }
 
     @staticmethod
