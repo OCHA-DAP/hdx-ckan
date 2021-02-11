@@ -275,7 +275,7 @@ function confirmPIIState(el, resourceId, score, piiReportId) {
     .then(
       (resolve) => {
         _updateLoadingMessage("PII State successfully confirmed! Reloading page ...");
-        location.reload();
+        // location.reload();
       },
       (error) => {
         let extraMsg = '';
@@ -285,10 +285,10 @@ function confirmPIIState(el, resourceId, score, piiReportId) {
         alert("Error, PII state not updated! " + extraMsg);
         $("#loadingScreen").hide();
       }
-    );
-    // .finally(() => {
-    //   location.reload();
-    // });
+    )
+    .always(() => {
+      location.reload();
+    });
   // location.reload();
 }
 
