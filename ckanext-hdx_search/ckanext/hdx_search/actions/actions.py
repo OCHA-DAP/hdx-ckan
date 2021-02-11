@@ -276,8 +276,7 @@ def _run_aws_log_update(context, data_dict):
     try:
         data_dict['fileName'] = data_dict.get('filename').split('/')[-1:]
 
-        log.warn('RunPII for resourceId [%s], resourcePath [%s], resourceProxyUrl [%s]' % (
-        data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
+        log.warn('RunPII for resourceId [%s]' % (data_dict['resourceId']))
         r = requests.post(
             AWS_LOG_UPDATE,
             headers={
