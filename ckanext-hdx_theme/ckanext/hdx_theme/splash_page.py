@@ -136,32 +136,31 @@ class SplashPageController(HomeController):
             'hdx-qa-process': 'home/about2-light.html'
         }
 
-        titleItem = title.get(page)
-        renderItem = render.get(page, 'wordpress')
-        if renderItem == 'wordpress':
-            renderItem = 'home/about2.html'
-            htmlItem = fw.get_post(html.get(page))
-        else:
-            htmlItem = html.get(page)
-
-        if titleItem is None:
+        title_item = title.get(page)
+        if title_item is None:
             abort(404, _("The requested about page doesn't exist"))
-            # message = _("The requested about page doesn't exist")
-            # raise logic.ValidationError({'message': message}, error_summary=message)
 
-        extraVars = {'title': titleItem, 'html': htmlItem, 'page': page}
-        return base.render(renderItem, extra_vars=extraVars)
+        render_item = render.get(page, 'wordpress')
+        if render_item == 'wordpress':
+            render_item = 'home/about2.html'
+            html_item = fw.get_post(html.get(page))
+        else:
+            html_item = html.get(page)
+
+        extra_vars = {'title': title_item, 'html': html_item, 'page': page}
+        return base.render(render_item, extra_vars=extra_vars)
 
     def about_hrinfo(self):
+        from ckan.lib.base import render_jinja2
         title = {'hr_info': _('Legacy HR Info')}
         html = {'hr_info': 'home/snippets/hdx_hr_info.html'}
 
-        titleItem = title['hr_info']
-        htmlItem = html['hr_info']
+        title_item = title['hr_info']
+        html_item = html['hr_info']
 
-        if titleItem is None:
+        if title_item is None:
             message = _("The requested about page doesn't exist")
             raise logic.ValidationError({'message': message}, error_summary=message)
-
-        extraVars = {'title': titleItem, 'html': htmlItem, 'page': 'hr_info'}
-        return base.render('home/about2.html', extra_vars=extraVars)
+        html_item = render_jinja2(html_item, {})
+        extra_vars = {'title': title_item, 'html': html_item, 'page': 'hr_info'}
+        return base.render('home/about2.html', extra_vars=extra_vars)
