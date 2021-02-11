@@ -259,8 +259,8 @@ def aws_log_update(context, data_dict):
     resource_id = data_dict.get("resourceId")
     if resource_id:
         try:
-            resource_dict = get_action("resource_show")(context, {"id": resource_id})
-            data_dict['resource_dict'] = resource_dict
+            # resource_dict = get_action("resource_show")(context, {"id": resource_id})
+            # data_dict['resource_dict'] = resource_dict
             _run_aws_log_update(context, data_dict)
         except Exception, e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
@@ -274,9 +274,9 @@ def aws_log_update(context, data_dict):
 
 def _run_aws_log_update(context, data_dict):
     try:
-        data_dict['fileName'] = data_dict.get('filename').split('/')[-1:]
+        data_dict['filename'] = data_dict.get('filename').split('/')[-1:][0]
 
-        log.warn('RunPII for resourceId [%s]' % (data_dict['resourceId']))
+        log.warn('Run aws log update for resourceId [%s]' % (data_dict['resourceId']))
         r = requests.post(
             AWS_LOG_UPDATE,
             headers={
