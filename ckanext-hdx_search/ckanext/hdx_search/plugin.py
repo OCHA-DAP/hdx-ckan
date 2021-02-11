@@ -251,6 +251,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             'qa_questions_list': actions.hdx_qa_questions_list,
             'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run,
             'qa_pii_run': actions.hdx_qa_pii_run,
+            'hdx_aws_log_update': actions.aws_log_update
         }
 
     # IFacets

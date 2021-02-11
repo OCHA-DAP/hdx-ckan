@@ -147,7 +147,7 @@ PII_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-cent
 SDCMICRO_RUN_URL = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/addsdc"
 AWS_RESOURCE_FORMAT = "resources/{resource_id}/{resource_name}"
 ECHO_API_KEY = config.get('hdx.echo_api_key', '')
-
+AWS_LOG_UPDATE = config.get('hdx.echo_url', "https://1oelc8tsn7.execute-api.eu-central-1.amazonaws.com") + "/amendjson"
 
 def _run_pii_check(resource_dict, context):
     try:
@@ -233,3 +233,63 @@ def _get_resource_s3_path(resource_dict):
         url = resource_dict.get("name")
     munged_resource_name = munge.munge_filename(url)
     return munged_resource_name
+
+
+# @logic.side_effect_free
+def aws_log_update(context, data_dict):
+    '''
+    Add key/value to the json log from aws
+    :param data_dict: dictionary containg parameters
+    :type data_dict: dict
+    Parameters from data_dict
+    :param resource_id: the id or name of the resource
+    :type resource_id: str
+    :param filename: name of the log file
+    :type filename: str
+    :param key: key of the property we need to update
+    :type key: str
+    :param value: value of the property we need to update
+    :type value: str
+    :return: True or False or data_dict
+    :rtype: bool
+    '''
+
+    # post to aws endpoint to update the json log file
+    _check_access('qa_pii_run', context, {})
+    resource_id = data_dict.get("resourceId")
+    if resource_id:
+        try:
+            resource_dict = get_action("resource_show")(context, {"id": resource_id})
+            data_dict['resource_dict'] = resource_dict
+            _run_aws_log_update(context, data_dict)
+        except Exception, e:
+            ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
+            message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(
+                ex_msg)
+            raise logic.ValidationError({'message': message}, error_summary=message)
+    else:
+        return json.dumps({'success': False, 'error': {'message': 'Resource ID not provided or not found'}})
+    return True
+
+
+def _run_aws_log_update(context, data_dict):
+    try:
+        data_dict['fileName'] = data_dict.get('filename').split('/')[-1:]
+
+        log.warn('RunPII for resourceId [%s], resourcePath [%s], resourceProxyUrl [%s]' % (
+        data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
+        r = requests.post(
+            AWS_LOG_UPDATE,
+            headers={
+                'Content-Type': 'application/json',
+                'X-Api-Key': ECHO_API_KEY
+            },
+            data=json.dumps(data_dict))
+        r.raise_for_status()
+    except requests.exceptions.ConnectionError as ex:
+        log.error(ex)
+        raise ex
+    except Exception as ex:
+        log.error(ex)
+        raise ex
+    return True

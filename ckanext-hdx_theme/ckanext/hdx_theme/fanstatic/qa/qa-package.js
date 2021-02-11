@@ -219,7 +219,7 @@ function _updateResourceConfirmState(resource, flag, score, piiReportId) {
   };
 
   let promise = new Promise((resolve, reject) => {
-    const mixpanelPromise = hdxUtil.analytics.sendQADashboardEvent(resource,flag,10.10010,piiReportId);
+    const mixpanelPromise = hdxUtil.analytics.sendQADashboardEvent(resource,flag,score,piiReportId);
     const patchPromise = $.post('/api/action/hdx_qa_resource_patch', body);
     mixpanelPromise.then((mixpanelResults) => {
       patchPromise
@@ -238,12 +238,40 @@ function _updateResourceConfirmState(resource, flag, score, piiReportId) {
   return promise;
 }
 
+function _awsLogUpdate(resourceId, filename, key, value) {
+  let body = {
+    "resourceId": resourceId,
+    "filename": filename,
+    "key": key,
+    "value": value
+  };
+
+  let promise = new Promise((resolve, reject) => {
+    const logUpdatePromise = $.post('/api/action/hdx_aws_log_update', body);
+    logUpdatePromise
+        .done((result) => {
+          if (result.success) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        })
+        .fail((result) => {
+          reject(result);
+        });
+  });
+  return promise;
+}
+
 function confirmPIIState(el, resourceId, score, piiReportId) {
   $(el).parents(".modal").modal("hide");
   let sensitive = $(el).parents(".modal-content").find("input[name='pii-confirm']:checked").val();
   console.log('Confirm: ' + resourceId + " " + sensitive);
   _showLoading();
-  _updateResourceConfirmState(resourceId, sensitive, score, piiReportId)
+  const logUpdatePromise = _awsLogUpdate(resourceId, piiReportId, "pii_is_sensitive", sensitive);
+  const resourceConfirmStatePromise = _updateResourceConfirmState(resourceId, sensitive, score, piiReportId);
+
+  $.when(logUpdatePromise, resourceConfirmStatePromise)
     .then(
       (resolve) => {
         _updateLoadingMessage("PII State successfully confirmed! Reloading page ...");
