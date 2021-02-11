@@ -284,10 +284,10 @@ function confirmPIIState(el, resourceId, score, piiReportId) {
         alert("Error, PII state not updated! " + extraMsg);
         $("#loadingScreen").hide();
       }
-    )
-    .finally(() => {
-      location.reload();
-    });
+    );
+    // .finally(() => {
+    //   location.reload();
+    // });
 }
 
 $(document).ready(() => {
