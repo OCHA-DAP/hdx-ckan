@@ -85,10 +85,14 @@
 @import "../homepage/mobile-carousel";
 #key-figures-mobile-carousel{
   display: block;
-  .mobile-carousel-style(10px, 300px, 194px);
+  .mobile-carousel-style(10px, 300px, 216px);
   .carousel-indicators {
     bottom: 0;
     margin-bottom: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
     li {
       border: 1px solid @lightGrayColor;
       background-color: @whiteColor;
