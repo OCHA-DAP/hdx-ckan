@@ -1,23 +1,23 @@
 {% extends "page.html" %}
 
-{% set organization = c.group_dict %}
+{% set group_dict = c.group_dict %}
 
-{% block subtitle %}{{ organization.display_name }}{% endblock %}
+{% block subtitle %}{{ group_dict.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
   {% block breadcrumb_content_inner %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=organization.display_name|truncate(35), controller='organization', action='read', id=organization.name, position=3 %}
-    <li class="active">{% link_for _('Admin'), controller='organization', action='edit', id=organization.name %}</li>
+    {% snippet "snippets/other_breadcrumb_item.html", title=group_dict.display_name|truncate(35), controller='organization', action='read', id=group_dict.name, position=3 %}
+    <li class="active">{% link_for _('Admin'), controller='organization', action='edit', id=group_dict.name %}</li>
   {% endblock %}
 {% endblock %}
 
 {% block content_action %}
-  
+
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('organization_edit', _('Edit'), id=c.group_dict.name) }}
+  {{ h.build_nav_icon('organization_edit', _('Edit'), id=group_dict.name) }}
   {#
   {{ h.build_nav_icon('organization_bulk_process', _('Datasets'), id=c.group_dict.name) }}
   {{ h.build_nav_icon('organization_members', _('Members'), id=c.group_dict.name) }}
@@ -25,8 +25,8 @@
 {% endblock %}
 
 {% block secondary_content %}
-  {% if organization %}
-    {% snippet 'snippets/organization.html', organization=organization %}
+  {% if group_dict %}
+    {% snippet 'snippets/organization.html', organization=group_dict %}
   {% else %}
     {{ super() }}
   {% endif %}

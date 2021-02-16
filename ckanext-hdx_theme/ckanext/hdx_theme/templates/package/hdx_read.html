@@ -24,7 +24,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', position=2 %}
 	{% endblock %}
-  <li class="active">{{ h.nav_link( pkg.title|truncate(120), controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
+  <li class="active">{{ h.nav_link( pkg.title|truncate(120), controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
 
 {% endblock %}
 
@@ -149,7 +149,7 @@
     </div>
   <div>
         <h2 class="uppercase">{{_('Activity')}}</h2>
-     {% snippet "package/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     {% snippet 'package/snippets/activity_stream.html', activity_stream=c.hdx_activities, id=pkg.id, object_type='package' %}
      <br>
     {% if h.follow_status('dataset', pkg.name) %}
       <span class="more">See more in <a href="{{ h.url_for('user_dashboard') }}">your dashboard</a></span>

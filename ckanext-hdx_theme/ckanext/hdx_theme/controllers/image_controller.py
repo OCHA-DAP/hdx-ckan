@@ -1,18 +1,20 @@
-import ckan.controllers.storage as storage
 import os
 
 
 import ckan.lib.uploader as uploader
+import ckan.plugins.toolkit as tk
 
 from ckan.lib.base import request, h
 from logging import getLogger
 
 log = getLogger(__name__)
 
+BaseController = tk.BaseController
+
 BASE_PATH = uploader.get_storage_path() +'/storage/'
 
 
-def generate_response(http_status, unicode_body, error=False, no_cache=True, other_headers=None):
+def generate_response(http_status, unicode_body, error=None, no_cache=True, other_headers=None):
     r = request.environ['pylons.pylons'].response
     if no_cache:
         r.headers['Pragma'] = 'no-cache'
@@ -30,7 +32,8 @@ def generate_response(http_status, unicode_body, error=False, no_cache=True, oth
     return r
 
 
-class ImageController(storage.StorageController):
+class ImageController(BaseController):
+
     def _download_file(self, relative_path, label):
         file_path = BASE_PATH + relative_path + label
         exists = os.path.isfile(file_path)
@@ -49,7 +52,7 @@ class ImageController(storage.StorageController):
 
         with open(file_path, 'rb') as f:
             image = f.read()
-        return generate_response(200, image, other_headers={'Content-type':'image'})
+        return generate_response(200, image, other_headers={'Content-type': 'image'})
 
 
     def org_file(self, label):

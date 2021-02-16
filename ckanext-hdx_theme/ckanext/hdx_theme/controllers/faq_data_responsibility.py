@@ -9,9 +9,10 @@ import ckan.lib.base as base
 import ckan.logic as logic
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
 from ckan.common import _, c, request, response
 from ckan.controllers.api import CONTENT_TYPES
-from ckanext.hdx_theme.util.mail import simple_validate_email
+from ckanext.hdx_theme.util.mail import hdx_validate_email
 
 log = logging.getLogger(__name__)
 get_action = logic.get_action
@@ -42,7 +43,7 @@ class FaqDataResponsibilityController(base.BaseController):
 
     # def about(self):
     #     import ckan.lib.helpers as h
-    #     return h.redire   ct_to(controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqController', action='show')
+    #     return h.redirect_to(controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqController', action='show')
 
     def contact_us(self):
         '''
@@ -54,7 +55,7 @@ class FaqDataResponsibilityController(base.BaseController):
             fullname = request.params.get('fullname')
             email = request.params.get('email')
             msg = request.params.get('faq-msg')
-            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
+            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@humdata.org')
 
             test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
             if not test:
@@ -62,7 +63,7 @@ class FaqDataResponsibilityController(base.BaseController):
                 if not self.is_valid_captcha(response=captcha_response):
                     raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
 
-            simple_validate_email(email)
+            hdx_validate_email(email)
 
         except ValidationError, e:
             error_summary = e.error_summary

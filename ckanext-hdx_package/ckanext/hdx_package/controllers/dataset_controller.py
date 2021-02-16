@@ -4,17 +4,6 @@ Functions for creating and maintaining datasets.
 import cgi
 import logging
 from string import lower
-
-import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_package.helpers.custom_validator as vd
-import ckanext.hdx_package.helpers.membership_data as membership_data
-from ckanext.hdx_package.helpers import helpers, resource_grouping
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
-from ckanext.hdx_theme.helpers import helpers as hdx_helpers
-from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
-from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-from ckanext.hdx_theme.util.mail import simple_validate_email
-import ckanext.hdx_package.helpers.custom_pages as cp_h
 from pylons import config
 
 import ckan.authz as authz
@@ -31,6 +20,19 @@ from ckan.common import _, json, request, c, g, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckan.controllers.home import CACHE_PARAMETERS
 from ckan.lib.mailer import MailerException
+
+
+import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_validator as vd
+import ckanext.hdx_package.helpers.membership_data as membership_data
+from ckanext.hdx_package.helpers import helpers, resource_grouping
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
+from ckanext.hdx_theme.helpers import helpers as hdx_helpers
+from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_theme.util.mail import hdx_validate_email
+import ckanext.hdx_package.helpers.custom_pages as cp_h
+import ckanext.hdx_users.helpers.helpers as usr_h
 
 log = logging.getLogger(__name__)
 
@@ -499,7 +501,7 @@ class DatasetController(PackageController):
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
                                    action='read', id=id))
-            redirect(h.url_for(controller='package', action='read', id=id))
+            redirect(h.url_for('dataset_read', id=id))
 
         if not data:
             data = get_action('package_show')(context, {'id': id})
@@ -701,7 +703,10 @@ class DatasetController(PackageController):
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
         log.debug('Reading dataset {}: getting activity list for dataset'.format(c.pkg_dict.get('name')))
-        c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
+
+        # c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
+
+        c.hdx_activities = get_action(u'package_activity_list')(context, act_data_dict)
 
         # added as per HDX-4969
         # c.downloads_count = 0
@@ -1272,7 +1277,8 @@ class DatasetController(PackageController):
         data_dict = {}
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
-            captcha.check_recaptcha(request)
+            usr_h.is_valid_captcha(request.params.get('g-recaptcha-response'))
+
             check_access('hdx_send_mail_contributor', context, data_dict)
             # for k, v in membership_data.get('contributor_topics').iteritems():
             #     if v == request.params.get('topic'):
@@ -1284,11 +1290,10 @@ class DatasetController(PackageController):
             data_dict['pkg_owner_org'] = request.params.get('pkg_owner_org')
             data_dict['pkg_title'] = request.params.get('pkg_title')
             data_dict['pkg_id'] = request.params.get('pkg_id')
-            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
-                                             qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
+            data_dict['pkg_url'] = h.url_for('dataset_read', id=request.params.get('pkg_id'), qualified=True)
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
 
-            simple_validate_email(data_dict['email'])
+            hdx_validate_email(data_dict['email'])
 
         except NotAuthorized:
             return json.dumps(
@@ -1296,19 +1301,20 @@ class DatasetController(PackageController):
         except captcha.CaptchaError:
             return json.dumps(
                 {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
-        except Exception, e:
-            error_summary = e.error or str(e)
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        except Exception as e:
+            log.error(e)
+            return json.dumps({'success': False, 'error': {'message': u'There was an error. Please contact support'}})
+
         try:
             get_action('hdx_send_mail_contributor')(context, data_dict)
         except MailerException, e:
             error_summary = _('Could not send request for: %s') % unicode(e)
             log.error(error_summary)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
-        except Exception, e:
-            error_summary = e.error or str(e)
-            log.error(error_summary)
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        except Exception as e:
+            # error_summary = e.error or str(e)
+            log.error(e)
+            return json.dumps({'success': False, 'error': {'message': u'There was an error. Please contact support'}})
         return SUCCESS
 
     def contact_members(self):
@@ -1325,7 +1331,7 @@ class DatasetController(PackageController):
         data_dict = {}
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
-            captcha.check_recaptcha(request)
+            _captcha = usr_h.is_valid_captcha(request.params.get('g-recaptcha-response'))
             source_type = request.params.get('source_type')
             data_dict['source_type'] = source_type
             org_id = request.params.get('org_id')
@@ -1344,11 +1350,11 @@ class DatasetController(PackageController):
             data_dict['pkg_title'] = request.params.get('title')
             if source_type == 'dataset':
                 data_dict['pkg_id'] = request.params.get('pkg_id')
-                data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                data_dict['pkg_url'] = h.url_for('dataset_read', id=request.params.get('pkg_id'),
                                                  qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
 
-            simple_validate_email(data_dict['email'])
+            hdx_validate_email(data_dict['email'])
 
             get_action('hdx_send_mail_members')(context, data_dict)
 

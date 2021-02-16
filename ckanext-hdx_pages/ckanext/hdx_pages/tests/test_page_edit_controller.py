@@ -87,9 +87,13 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             res = self.app.post('/page/edit', params=post_params, extra_environ=auth)
+            assert '404 Not Found' in res.status
+            assert 'Sorry, something went wrong.' in res.body
+            assert 'Please check the URL, try the search or go back to our homepage.' in res.body
+        except AssertionError as ex:
             assert False
         except Exception, ex:
-            assert '404 Not Found' in ex.message
+            assert False
 
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
@@ -98,9 +102,8 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             res = self.app.post('/page/edit/'+page_elnino.get('name'), params=post_params, extra_environ=auth)
         except Exception, ex:
-            log.info(ex)
             assert False
-        assert '302' in res.status
+        assert '200 OK' in res.status
         assert '/dashboards/elnino' in res.body
 
         elnino = self._get_action('page_show')(context, {'id': page_dict.get('id')})

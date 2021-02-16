@@ -1,16 +1,9 @@
-'''
-Created on September 18, 2014
+import pytest
 
-@author: Marianne, Alex, Dan
-
-
-'''
 import logging as logging
-import ckan.lib.helpers as h
+import ckanext.hdx_theme.helpers.helpers as h
 import ckan.model as model
-import ckan.plugins as p
 import ckan.tests.legacy as tests
-import json
 import ckanext.hdx_search.actions.actions as actions
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -118,7 +111,7 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 #             controller='organization', action='list')
 #         response = self.app.get(org, params={'sort':'title+asc'})
 #         assert '200' in response.status
-# 
+#
 #     def test_new_sort_grp(self):
 #         grp = h.url_for(
 #             controller='group', action='list')

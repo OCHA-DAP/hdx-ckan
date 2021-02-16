@@ -50,7 +50,7 @@ class FreshnessNotificationsChecker(object):
 
     def has_unseen_expired_datasets(self, date_field='due_date'):
 
-        now = datetime.datetime.now().replace(minute=0, second=0, microsecond=0)
+        now = datetime.datetime.utcnow().replace(minute=0, second=0, microsecond=0)
         second_from_now = now + datetime.timedelta(seconds=1)
         # query_string = 'maintainer:{} AND overdue_daterange:[{}Z TO {}Z]'.format(self.user_id, now.isoformat(),
         #                                                                          second_from_now.isoformat())

@@ -3,14 +3,17 @@ Created on Aug 28, 2014
 
 @author: alexandru-m-g
 '''
-
+import pytest
 import unicodedata
 import logging as logging
 
 import ckan.model as model
 import ckan.lib.helpers as h
+import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+
+log = logging.getLogger(__name__)
 
 pages = [
     {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
@@ -18,22 +21,21 @@ pages = [
     {'controller': 'user', 'action': 'login', 'usertype': None},
     {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
      'action': 'contribute', 'usertype': None},
-    {'controller': 'package', 'action': 'search', 'usertype': 'all'},
-    {'controller': 'group', 'action': 'index', 'usertype': 'all'},
-    {'controller': 'organization', 'action': 'index', 'usertype': 'all'},
-    {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_search.controllers.search_controller:HDXSearchController', 'action': 'search', 'usertype': 'all'},
+    {'url_name': 'hdx_group.index', 'usertype': 'all'},
+    {'url_name': 'hdx_org.index', 'usertype': 'all'},
+    # {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'about', 'usertype': 'all'},
-    {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
-    {'controller': 'user', 'action': 'dashboard_organizations', 'usertype': 'all'},
+    # {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
+    {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard_datasets', 'usertype': 'all'},
-    {'controller': 'user', 'action': 'dashboard_groups', 'usertype': 'all'},
+    {'url_name': 'dashboard.groups', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
      'action': 'preselect', 'usertype': 'all'},
-    {'controller': 'user', 'action': 'dashboard_groups', 'usertype': 'all'},
-    {'controller': 'user', 'action': 'read', 'has_id': True, 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController', 'action': 'read', 'has_id': True, 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.splash_page:SplashPageController', 'action': 'about_hrinfo', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.splash_page:SplashPageController', 'action': 'index', 'usertype': 'all'}
 ]
@@ -57,36 +59,50 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         ue_model.create_table()
         p_model.create_table()
 
-    def test_page_load(self):
-        global pages
-        for page in pages:
-            controller = page['controller']
-            action = page['action']
-            id = page.get('id')
-            if not page['usertype']:
-                self._try_page_load(controller, action, None)
-            else:
-                id = None
-                has_id = page.get('has_id', False)
+    @pytest.mark.parametrize("page", pages)
+    def test_page_load(self, page):
+        # global pages
+        test_client = self.get_backwards_compatible_test_client()
+        # for page in pages:
+        controller = page.get('controller')
+        action = page.get('action')
+        url_name = page.get('url_name')
+        id = page.get('id')
+        if not page['usertype']:
+            self._try_page_load(test_client, url_name, controller, action, None)
+        else:
+            id = None
+            has_id = page.get('has_id', False)
 
-                if page['usertype'] == 'user' or page['usertype'] == 'all':
-                    if has_id:
-                        id = 'tester'
-                    self._try_page_load(controller, action, 'tester', id)
-                if page['usertype'] == 'sysadmin' or page['usertype'] == 'all':
-                    if has_id:
-                        id = 'testsysadmin'
-                    self._try_page_load(
-                        controller, action, 'testsysadmin', id)
+            if page['usertype'] == 'user' or page['usertype'] == 'all':
+                if has_id:
+                    id = 'tester'
+                self._try_page_load(test_client, url_name, controller, action, 'tester', id)
+            if page['usertype'] == 'sysadmin' or page['usertype'] == 'all':
+                if has_id:
+                    id = 'testsysadmin'
+                self._try_page_load(test_client,
+                    url_name, controller, action, 'testsysadmin', id)
 
-    def _try_page_load(self, controller, action, username, id=None):
+    def _try_page_load(self, test_client, url_name, controller, action, username, id=None):
         result = None
-        url = h.url_for(controller=controller, action=action, id=id)
+        args = []
+        kw = {}
+        url_for = h.url_for if url_name and '.' in url_name else hdx_h.url_for
+        if url_name:
+            args.append(url_name)
+        else:
+            kw['controller'] = controller
+            kw['action'] = action
+        if id:
+            kw['id'] = id
+        url = url_for(*args, **kw)
+        log.info('Testing url: ' + url)
         if username:
             user = model.User.by_name(username)
-            result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
+            result = test_client.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', user.apikey).encode('ascii', 'ignore')})
         else:
-            result = self.app.get(url)
+            result = test_client.get(url)
         assert ('200' in result.status or '302' in result.status), 'HTTP OK'
         assert 'server error' not in str(result.body).lower()

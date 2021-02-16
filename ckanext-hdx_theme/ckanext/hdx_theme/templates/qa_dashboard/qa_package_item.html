@@ -10,7 +10,7 @@
         <div class="dataset-heading">
           <input type="checkbox" />
           {% set title = package.title or package.name %}
-          {{ h.link_to(title, h.url_for(controller='package', action='read', id=package.name), class_='dataset-page-link') }}
+          {{ h.link_to(title, h.url_for('dataset_read', id=package.name), class_='dataset-page-link') }}
           <div id="package-resources-{{loop.index}}" class="package-resources" data-package-id="{{package.id}}" style="display: none;">{{h.json_dumps(package.resources)}}</div>
         </div>
         <div class="more-options">

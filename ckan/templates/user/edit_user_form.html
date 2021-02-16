@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-<form id="user-edit-form" class="dataset-form" method="post" action="{{ action }}">
+<form id="user-edit-form" class="dataset-form" method="post" action="{{ action }}" enctype="multipart/form-data">
   {{ form.errors(error_summary) }}
 
   <fieldset>
@@ -20,6 +20,11 @@
       {% endcall %}
     {% endif %}
 
+    {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
+    {% set is_url = data.image_url and data.image_url.startswith('http') %}
+
+    {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Profile picture'), url_label=_('Profile picture URL') ) }}
+
   </fieldset>
 
   <fieldset>
@@ -27,7 +32,7 @@
     {{ form.input('old_password',
                   type='password',
                   label=_('Sysadmin Password') if is_sysadmin else _('Old Password'),
-                  id='field-password',
+                  id='field-password-old',
                   value=data.oldpassword,
                   error=errors.oldpassword,
                   classes=['control-medium'],

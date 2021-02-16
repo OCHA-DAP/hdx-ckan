@@ -15,7 +15,7 @@
         <a onclick="openSDCMicro('{{ pkg.name }}', '{{ res.id }}', '{{ res.url }}')">Run SDC Micro</a>
       </li>
       <li>
-        <a href="{{ h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
+        <a href="{{ h.url_for('resource_read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
       </li>
       {% if h.check_access('hdx_resource_download', res) %}
         <li>
@@ -46,7 +46,7 @@
           PII CHECK:
         </span>
         {%  if c.advanced_mode == 'true' %}
-          {% set pii_status_text = 'ERR' if res.pii_report_flag  == 'ERROR' else res.pii_report_flag %}
+          {% set pii_status_text = 'ERR' if res.pii_report_flag  == 'EXCEPTION' else res.pii_report_flag %}
           {% set main_file_name = res.pii_report_id | replace('/resources/' + res.id + '/', '') %}
           {% set debug_file_name = main_file_name | replace('main.json', 'debug.txt') %}
           {% set dlp_file_name = main_file_name | replace('main.json', 'dlp.json') %}
@@ -54,7 +54,7 @@
           {% set main_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=main_file_name) %}
           {% set debug_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=debug_file_name) %}
           {% set dlp_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=dlp_file_name) %}
-          {{ qa_macros.qa_check_item(res.pii_report_flag, pii_status_text, isodate_string=res.pii_timestamp,
+          {{ qa_macros.qa_check_pii_item(res.pii_report_flag, pii_status_text, isodate_string=res.pii_timestamp,
               link_to_log=main_report_url, link_to_debug=debug_report_url, link_to_dlp=dlp_report_url, resource=res ) }}
         {% endif %}
       </li>

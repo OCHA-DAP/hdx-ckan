@@ -1,4 +1,4 @@
-{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None, resource=None) %}
+{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None) %}
   {# status - OK, ERROR, RUNNIG/QUEUED, None/False #}
   {# status_text - not needed in case it's still RUNNING/QUEUED #}
 
@@ -12,13 +12,7 @@
   {% elif status == 'OK' or status == 'ERROR' %}
     {% set status_class = 'ok' if status  == 'OK' else 'warn' %}
     {% set icon_class = 'humanitarianicons-Selected' if status_class  == 'ok' else 'humanitarianicons-Alert' %}
-    {% if resource.pii_predict_score %}
-      {% set score = resource.pii_predict_score|float %}
-      {% set score = score * 100 %}
-      {% set status_text = '%0.1f'|format(score) %}
-      {% set status_text = status_text ~ "%" %}
-      {% set status_class = 'info' %}
-    {% endif %}
+
     <span class="pii-label {{ status_class }}">
       <span class="pii-label-text">
         {{ status_text }}
@@ -27,21 +21,129 @@
     </span>
     <span class="pii-status">
       {% if link_to_log %}
-        {% if link_to_dlp %}
-          <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">[View results]</a>
-        {% endif %}
-
         <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[LOG]</a>
-        {% if link_to_dlp %}
-          <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[DLP]</a>
-        {% endif %}
-        {% if link_to_debug %}
-          <a href="{{ link_to_debug }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[DBG]</a>
-        {% endif %}
       {% else %}
         {{ h.render_datetime(isodate_string) }}
       {% endif %}
     </span>
   {% endif %}
+{% endmacro %}
 
+{% macro qa_check_pii_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None, resource=None) %}
+  {# status - OK, FINDINGS, EXCEPTION, RUNNIG/QUEUED, None/False #}
+  {# status_text - not needed in case it's still RUNNING/QUEUED #}
+
+  {% if status == 'RUNNING' or status == 'QUEUED' %}
+    <span class="pii-label gray">
+      <img src="/images/filter_loading.gif">
+    </span>
+    <span class="pii-status">
+      In progress
+    </span>
+  {% elif status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION' %}
+    {% if status == 'OK' %}
+      {% set status_class = 'ok' %}
+      {% set icon_class = 'humanitarianicons-Selected' %}
+    {% elif status == 'FINDINGS' %}
+      {% set status_class = 'warn' %}
+      {% set icon_class = 'humanitarianicons-Alert' %}
+      {% if resource.pii_predict_score %}
+        {% set score = resource.pii_predict_score|float %}
+        {% set score = score * 100 %}
+        {% if score > 32 %}
+          {% set status_text = "High Risk" %}
+          {% set status_class = 'warn' %}
+          {% set icon_class = "" %}
+        {% else %}
+          {% set status_text = "Normal Risk" %}
+          {% set status_class = 'info' %}
+          {% set icon_class = "" %}
+        {% endif %}
+      {% endif %}
+    {% elif status == 'EXCEPTION' %}
+      {% set status_class = 'error' %}
+      {% set icon_class = 'humanitarianicons-Alert' %}
+      {% set status_text = 'Error' %}
+    {% endif %}
+
+    {% if resource.pii_is_sensitive=='true' %}
+      <span class="pii-label warn">
+        <span class="pii-label-text" title="Predict score: {{score}}%">
+          Sensitive
+        </span>
+        <i class="humanitarianicons-Alert"></i>
+      </span>
+    {% elif resource.pii_is_sensitive=='false' %}
+      <span class="pii-label ok">
+        <span class="pii-label-text">
+          OK
+        </span>
+        <i class="humanitarianicons-Selected"></i>
+      </span>
+    {% else %}
+      <span class="pii-label {{ status_class }}">
+        <span class="pii-label-text" title="Predict score: {{score}}%">
+          {{ status_text }}
+        </span>
+        <i class="{{icon_class}}"></i>
+      </span>
+    {% endif %}
+
+
+    <span class="pii-status">
+      {% if not resource.pii_is_sensitive %}
+        <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Confirm</a>
+      {% endif %}
+      <div class="modal" id="pii-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm Risk Classification</h5>
+            </div>
+            <div class="modal-body">
+              <label><input name="pii-confirm" type="radio" value="true" {% if resource.pii_is_sensitive=='true' %} checked="checked"{% endif %}> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
+              <label><input name="pii-confirm" type="radio" value="false" {% if resource.pii_is_sensitive=='false' %} checked="checked"{% endif %}> <span class="icon-check"></span> I have checked this resource and I did not find any sensitive content</label>
+            </div>
+            <div class="modal-footer">
+              {% set score_for_mixpanel = resource.pii_predict_score|float or 0 %}
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}', {{ score_for_mixpanel }}, '{{ link_to_log }}')">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if link_to_log %}
+        <div class="more-options center-y">
+          <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+            <i class="humanitarianicons-More-options"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
+            {% if resource.pii_is_sensitive %}
+              <li>
+                <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Update Risk Classification</a>
+              </li>
+            {% endif %}
+            {% if link_to_dlp %}
+              <li>
+                <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
+              </li>
+            {% endif %}
+            <li>
+              <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Main JSON</a>
+            </li>
+            {% if link_to_dlp %}
+              <li>
+                <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">DLP JSON</a>
+              </li>
+            {% endif %}
+            {% if link_to_debug %}
+              <li>
+                <a href="{{ link_to_debug }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Debug Log</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      {% endif %}
+    </span>
+  {% endif %}
 {% endmacro %}

@@ -1,17 +1,16 @@
 from six import string_types
-
+from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
 import ckan.plugins.toolkit as tk
 
 
 def user_email_validator(key, data, errors, context):
-    '''HDX valiator for emails as identifiers.'''
+    '''HDX validator for emails as identifiers.'''
     model = context['model']
     # Convert email to lowercase
     data[key] = data[key].lower()
     email = data[key]
 
-    from validate_email import validate_email
-    if not validate_email(email, check_mx=False, verify=False):
+    if not validate_email(email):
         raise tk.Invalid(tk._('Email address is not valid'))
 
     if not isinstance(email, basestring):

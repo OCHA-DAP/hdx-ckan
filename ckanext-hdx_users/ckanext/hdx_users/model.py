@@ -1,21 +1,17 @@
-import datetime
 import logging
 
 import sqlalchemy.orm as orm
-from sqlalchemy.schema import Table, Column, UniqueConstraint, ForeignKey, CreateTable
+from sqlalchemy.schema import Table, Column, ForeignKey
 import sqlalchemy.types as types
-import vdm.sqlalchemy
 
 import ckan.model as model
 from ckan.model.domain_object import DomainObject
-# import ckan.model.domain_object as domain_object
 
-from ckan.model import meta, extension, core, user
+from ckan.model import meta, extension
 import ckan.model.types as _types
 
 mapper = orm.mapper
 log = logging.getLogger(__name__)
-# DomainObject = domain_object.DomainObject
 
 HDX_ONBOARDING_USER_REGISTERED = 'hdx_onboarding_user_registered'
 HDX_ONBOARDING_USER_VALIDATED = 'hdx_onboarding_user_validated'

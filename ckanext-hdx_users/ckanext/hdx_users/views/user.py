@@ -35,8 +35,15 @@ user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
 
 
 class HDXEditView(EditView):
+
+    def _prepare(self, id):
+        context, id = super(HDXEditView, self)._prepare(id)
+        context['schema']['email'] = [tk.get_validator('not_empty'), tk.get_validator('user_email_validator'), tk.get_validator('unicode_safe')]
+        return context, id
+
     def post(self, id=None):
         context, id = self._prepare(id)
+
         if not context[u'save']:
             return self.get(id)
 
@@ -74,7 +81,7 @@ class HDXEditView(EditView):
                 return self.get(id, data_dict, errors, error_summary)
 
         try:
-            data_dict['fullname'] = data_dict.get('firstname') + u' ' + data_dict.get('lastname')
+            data_dict['fullname'] = data_dict.get('firstname', "") + u' ' + data_dict.get('lastname', "")
             user = logic.get_action(u'user_update')(context, data_dict)
             if user:
                 ue_data_dict = {'user_id': user.get('id'), 'extras': [
@@ -90,6 +97,8 @@ class HDXEditView(EditView):
             errors = e.error_dict
             error_summary = e.error_summary
             return self.get(id, data_dict, errors, error_summary)
+        except Exception as ex:
+            log.error(ex)
 
         h.flash_success(_(u'Profile updated'))
         resp = h.redirect_to(u'user.read', id=user[u'name'])

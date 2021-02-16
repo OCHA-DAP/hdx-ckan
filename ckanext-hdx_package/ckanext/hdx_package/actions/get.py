@@ -500,13 +500,13 @@ def resource_show(context, data_dict):
 def _additional_hdx_resource_show_processing(context, resource_dict):
     # if _should_manually_load_property_value(context, resource_dict, 'size'):
     #     resource_dict['size'] = _get_resource_filesize(resource_dict)
-    if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-        resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
+    # if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
+    #     resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
     if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
         resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
 
     if not resource_dict.get('last_modified'):
-        resource_dict['last_modified'] = resource_dict['revision_last_updated']
+        resource_dict['last_modified'] = resource_dict['metadata_modified']
 
     if config.get('hdx.apihighways.enabled') == 'true':
         resource_dict['apihighways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))

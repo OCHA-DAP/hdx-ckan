@@ -1,3 +1,4 @@
+import pytest
 import mock
 
 from datetime import datetime, timedelta
@@ -122,4 +123,4 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
 
         reset_page_url = url_for('hdx_user.perform_reset', id=user.id, key=expired_key)
         response = self.app.get(reset_page_url)
-        assert 'has expired' in response.html.text
+        assert 'has expired' in response.data

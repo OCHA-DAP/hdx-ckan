@@ -3,7 +3,7 @@ from ckan.common import c, _
 from ckan import logic
 from ckanext.requestdata import emailer
 from ckan.plugins import toolkit
-from ckan.controllers.admin import get_sysadmins
+# from ckan.controllers.admin import get_sysadmins
 from ckanext.requestdata.controllers.request_data import RequestDataController
 import ckanext.hdx_org_group.actions.create as og_create
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
@@ -26,6 +26,12 @@ abort = base.abort
 BaseController = base.BaseController
 
 
+def _get_sysadmins():
+    q = model.Session.query(model.User).filter(model.User.sysadmin == True,
+                                               model.User.state == 'active')
+    return q.all()
+
+
 def _get_context():
     return {
         'model': model,
@@ -40,17 +46,17 @@ def _get_action(action, data_dict):
 
 
 def _get_email_configuration(
-        user_name, data_owner, dataset_name, email, message, organization,
-        data_maintainers, data_maintainers_ids, only_org_admins=False):
+    user_name, data_owner, dataset_name, email, message, organization,
+    data_maintainers, data_maintainers_ids, only_org_admins=False):
     schema = logic.schema.update_configuration_schema()
     available_terms = ['{name}', '{data_maintainers}', '{dataset}',
-                      '{organization}', '{message}', '{email}']
+                       '{organization}', '{message}', '{email}']
     new_terms = [user_name, data_maintainers, dataset_name, organization,
                  message, email]
 
     # try:
-        # is_user_sysadmin = \
-        #     _get_action('user_show', {'id': c.user}).get('sysadmin')
+    # is_user_sysadmin = \
+    #     _get_action('user_show', {'id': c.user}).get('sysadmin')
     is_user_sysadmin = c.userobj.sysadmin
     # except NotFound:
     #     pass
@@ -69,9 +75,9 @@ def _get_email_configuration(
     for i in range(0, len(available_terms)):
         if available_terms[i] == '{dataset}' and new_terms[i]:
             url = toolkit.url_for(
-                                    controller='package',
-                                    action='read',
-                                    id=new_terms[i], qualified=True)
+                controller='package',
+                action='read',
+                id=new_terms[i], qualified=True)
             new_terms[i] = '<a href="' + url + '">' + new_terms[i] + '</a>'
         elif available_terms[i] == '{organization}' and is_user_sysadmin:
             new_terms[i] = config.get('ckan.site_title')
@@ -92,7 +98,8 @@ def _get_email_configuration(
         elif available_terms[i] == '{email}':
             # display a mask of the email
             email_list = new_terms[i].split('@')
-            new_terms[i] = "@".join([email_list[0].replace(email_list[0][1:len(email_list[0])-1], '********'),email_list[1]])
+            new_terms[i] = "@".join(
+                [email_list[0].replace(email_list[0][1:len(email_list[0]) - 1], '********'), email_list[1]])
         email_header = email_header.replace(available_terms[i], new_terms[i])
         email_body = email_body.replace(available_terms[i], new_terms[i])
         email_footer = email_footer.replace(available_terms[i], new_terms[i])
@@ -116,15 +123,15 @@ def _get_email_configuration(
          as soon as you can by visiting the \
          <a href="' + url + '">My Requests</a> page.</strong>'
 
-    organizations =\
+    organizations = \
         _get_action('hdx_organization_list_for_user', {'id': data_owner})
 
     package = _get_action('package_show', {'id': dataset_name})
 
     if not only_org_admins:
         for org in organizations:
-            if org['name'] in organization\
-                    and package['owner_org'] == org['id']:
+            if org['name'] in organization \
+                and package['owner_org'] == org['id']:
                 url = \
                     toolkit.url_for('requestdata_organization_requests',
                                     id=org['name'], qualified=True)
@@ -200,17 +207,18 @@ class HDXRequestDataController(RequestDataController):
 
         orgs = []
         for i in organizations:
-                orgs.append(i['display_name'])
+            orgs.append(i['display_name'])
         org = ','.join(orgs)
         dataset_name = package['name']
         dataset_title = package['title']
         email = user_obj.email
         message = data['message_content']
         creator_user_id = package['creator_user_id']
-        data_owner =\
+        data_owner = \
             _get_action('user_show', {'id': creator_user_id}).get('name')
-        if len(get_sysadmins()) > 0:
-            sysadmin = get_sysadmins()[0].name
+        _sysadmins = _get_sysadmins()
+        if len(_sysadmins) > 0:
+            sysadmin = _sysadmins[0].name
             context_sysadmin = {
                 'model': model,
                 'session': model.Session,
@@ -238,10 +246,10 @@ class HDXRequestDataController(RequestDataController):
             data_maintainers = []
             data_maintainers_ids = []
             # Get users objects from maintainers list
-            user={}
+            user = {}
             for id in maintainers:
                 try:
-                    user =\
+                    user = \
                         toolkit.get_action('user_show')(context_sysadmin,
                                                         {'id': id})
                     data_dict['users'].append(user)
@@ -250,9 +258,9 @@ class HDXRequestDataController(RequestDataController):
                     data_maintainers_ids.append(user['name'] or user['id'])
                 except NotFound:
                     pass
-            mail_subject =\
-                config.get('ckan.site_title') + ': New data request "'\
-                                                + dataset_title + '"'
+            mail_subject = \
+                config.get('ckan.site_title') + ': New data request "' \
+                + dataset_title + '"'
 
             if len(users_email) == 0:
                 admins = self._org_admins_for_dataset(dataset_name)
@@ -281,7 +289,7 @@ class HDXRequestDataController(RequestDataController):
                 'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
                 'dataset_title': dataset_title,
                 'maintainer_fullname': user.get('display_name') or user.get('fullname') if user else 'HDX user',
-                 'requestdata_org_url': h.url_for('requestdata_organization_requests', id=package.get('owner_org'),
+                'requestdata_org_url': h.url_for('requestdata_organization_requests', id=package.get('owner_org'),
                                                  qualified=True)
             }
             hdx_mailer.mail_recipient(users_email, subject, email_data, footer='hdx@un.org',

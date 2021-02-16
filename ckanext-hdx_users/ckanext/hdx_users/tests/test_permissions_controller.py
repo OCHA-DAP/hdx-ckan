@@ -5,6 +5,8 @@ Created on June 11, 2019
 
 
 '''
+import pytest
+
 import logging as logging
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -86,9 +88,9 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_manage_permissions(self):
         url = h.url_for(controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
                         action='permission', id='tester')
-
+        test_client = self.get_backwards_compatible_test_client()
         try:
-            res = self.app.post(url, params=permission)
+            res = test_client.post(url, params=permission)
             assert False
         except Exception, ex:
             assert True
@@ -97,7 +99,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         tester.email = 'test@test.com'
         auth = {'Authorization': str(tester.apikey)}
         try:
-            res = self.app.post(url, params=permission, extra_environ=auth)
+            res = test_client.post(url, params=permission, extra_environ=auth)
             assert False
         except Exception, ex:
             assert True
@@ -106,14 +108,14 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         sysadmin.email = 'test@test.com'
         auth = {'Authorization': str(sysadmin.apikey)}
         try:
-            res = self.app.post(url, params=permission, extra_environ=auth)
+            res = test_client.post(url, params=permission, extra_environ=auth)
         except Exception, ex:
             log.info(ex)
             assert False
         assert ('302' in res.status), 'HTTP OK'
 
         try:
-            res = self.app.get(url, headers={'Authorization': unicodedata.normalize(
+            res = test_client.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
             assert True
         except Exception, ex:
@@ -126,14 +128,14 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert res.body.count(' checked ') == 4
 
         try:
-            res = self.app.post(url, params=permission_carousel, extra_environ=auth)
+            res = test_client.post(url, params=permission_carousel, extra_environ=auth)
         except Exception, ex:
             log.info(ex)
             assert False
         assert ('302' in res.status), 'HTTP OK'
 
         try:
-            res = self.app.get(url, headers={'Authorization': unicodedata.normalize(
+            res = test_client.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
             assert True
         except Exception, ex:

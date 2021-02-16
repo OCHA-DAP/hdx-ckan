@@ -108,11 +108,11 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                              action='read', id=package['name'])
         result = self.app.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
-        assert '200' in str(result)
+        assert result.status_code == 200
 
-        assert 'Request data directly from the maintainer of this dataset.' in str(result)
+        assert 'Request data directly from the maintainer of this dataset.' in result.data
 
-        assert 'This data is by request only' in str(result)
+        assert 'This data is by request only' in result.data
 
         context['user'] = 'tester'
         data_dict = {

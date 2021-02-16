@@ -3,8 +3,6 @@
 
 """ Provides extras for user model """
 
-import vdm.sqlalchemy
-import vdm.sqlalchemy.stateful
 from sqlalchemy import orm, types, Column, Table, ForeignKey
 
 import ckan.model.group as group
@@ -14,6 +12,7 @@ import ckan.model.domain_object as domain_object
 
 import logging
 from ckan import model
+
 log = logging.getLogger(__name__)
 
 __all__ = ['MemberExtra', 'member_extra_table']
@@ -21,7 +20,7 @@ __all__ = ['MemberExtra', 'member_extra_table']
 member_extra_table = None
 
 
-class MemberExtra(vdm.sqlalchemy.StatefulObjectMixin, domain_object.DomainObject):
+class MemberExtra(domain_object.DomainObject):
     pass
 
 
@@ -34,18 +33,14 @@ def setup():
                                    Column('key', types.UnicodeText),
                                    Column('value', types.UnicodeText))
 
-        vdm.sqlalchemy.make_table_stateful(member_extra_table)
         meta.mapper(MemberExtra, member_extra_table,
-                    properties={'member': orm.relation(group.Member, backref=orm.backref('_extras',
-                                                                                         collection_class=orm.collections.attribute_mapped_collection(
-                                                                                             u'key'),
+                    properties={'member': orm.relation(group.Member, backref=orm.backref('extras',
                                                                                          cascade='all, delete, delete-orphan'))},
                     order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
 
-        _extras_active = vdm.sqlalchemy.stateful.DeferredProperty('_extras', vdm.sqlalchemy.stateful.StatefulDict)
-        setattr(group.Member, 'extras_active', _extras_active)
-        group.Member.extras = vdm.sqlalchemy.stateful.OurAssociationProxy('extras_active', 'value',
-                                                                          creator=_create_extra)
+        # meta.mapper(group.Member, group.member_table, properties={
+        #     'extras': orm.relationship(MemberExtra, order_by=member_extra_table.c.id)
+        # })
 
     if model.member_table.exists() and not member_extra_table.exists():
         member_extra_table.create()

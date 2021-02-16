@@ -1,0 +1,6 @@
+{% ckan_extends %}
+
+{% block form %}
+  {% set form_body = form if form else c.form %}
+  {{ form_body | safe }}
+{% endblock %}

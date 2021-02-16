@@ -59,6 +59,8 @@ ckan.auth.create_user_via_api = false
 ckan.auth.create_user_via_web = true
 ckan.auth.roles_that_cascade_to_sub_groups = admin
 
+ckan.group_and_organization_list_all_fields_max = 400
+
 ckanext.powerview.allow_user_create = true
 
 
@@ -81,7 +83,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = dcat dcat_json_interface structured_data hdx_hxl_preview ytp_request powerview hdx_pages hdx_events hdx_dashboards hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_light_group hdx_light_org hdx_group_eaa_map  hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
+ckan.plugins = dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request powerview hdx_pages hdx_events hdx_dashboards hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_light_group hdx_light_org hdx_group_eaa_map  hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -137,6 +139,12 @@ ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
 ckan.resource_proxy.max_file_size = 2097152
 
+ckan.legacy_route_mappings = {"search": "search", "organization_read": "organization_read", "organization_activity": "organization_activity", "organization_members": "organization_members"}
+
+ckan.recline.dataproxy_url = /dataproxy
+ckanext.spatial.common_map.type = custom
+ckanext.spatial.common_map.custom.url = /crisis-tiles/{z}/{x}/{y}.png
+
 ## Datapusher settings
 
 # Make sure you have set up the DataStore
@@ -178,12 +186,11 @@ hdx.download_with_cache.folder = /srv/filestore/download_cache
 
 #hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
-hdx.faqrequest.email = hdx@un.org
+hdx.faqrequest.email = hdx@humdata.org
 hdx.cache.onstartup = true
 hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
 hdx.ogre.url = http://ogre:3000
-hdx.datapreview.url = /dataproxy
 hdx.previewmap.url = //{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.orgmap.url = //{s}.tile.openstreetmap.org/{z}/{x}/{y}.png

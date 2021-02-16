@@ -45,7 +45,7 @@ To setup CKAN's FileStore with local file storage:
       ckan.storage_path = |storage_path|
 
 3. Set the permissions of your :ref:`ckan.storage_path` directory.
-   For example if you're running CKAN with Apache, then Apache's user
+   For example if you're running CKAN with Nginx, then the Nginx's user
    (``www-data`` on Ubuntu) must have read, write and execute permissions for
    the :ref:`ckan.storage_path`:
 
@@ -54,11 +54,11 @@ To setup CKAN's FileStore with local file storage:
      sudo chown www-data |storage_path|
      sudo chmod u+rwx |storage_path|
 
-4. Restart your web server, for example to restart Apache:
+4. Restart your web server, for example to restart uWSGI on a package install:
 
    .. parsed-literal::
 
-      |reload_apache|
+    sudo supervisorctl restart ckan-uwsgi:*
 
 
 -------------
@@ -73,7 +73,7 @@ Files can be uploaded to the FileStore using the
 :py:func:`~ckan.logic.action.create.resource_create` and
 :py:func:`~ckan.logic.action.update.resource_update` action API
 functions. You can post multipart/form-data to the API and the key, value
-pairs will treated as as if they are a JSON object.
+pairs will be treated as if they are a JSON object.
 The extra key ``upload`` is used to actually post the binary data.
 
 For example, to create a new CKAN resource and upload a file to it using
@@ -121,7 +121,7 @@ Migration from 2.1 to 2.2
 If you are using pairtree local file storage then you can keep your current settings
 without issue.  The pairtree and new storage can live side by side but you are still
 encouraged to migrate.  If you change your config options to the ones specified in
-this docs you will need to run the migration below.
+this doc you will need to run the migration below.
 
 If you are running remote storage then all previous links will still be accessible
 but if you want to move the remote storage documents to the local storage you will
@@ -131,10 +131,10 @@ In order to migrate make sure your CKAN instance is running as the script will
 request the data from the instance using APIs.  You need to run the following
 on the command line to do the migration::
 
-    paster db migrate-filestore
+    ckan -c |ckan.ini| db migrate-filestore
 
 This may take a long time especially if you have a lot of files remotely.
-If the remote hosting goes down or the job is interrupted it is save to run it again
+If the remote hosting goes down or the job is interrupted it is saved to run it again
 and it will try all the unsuccessful ones again.
 
 

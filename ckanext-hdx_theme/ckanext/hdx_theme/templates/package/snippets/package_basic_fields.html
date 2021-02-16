@@ -54,8 +54,8 @@
 {% block package_basic_fields_url %}
     <div class="row">
         <div class="col-xs-12">
-            {% set prefix = h.url_for(controller='package', action='read', id='') %}
-            {% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+            {% set prefix = h.url_for('dataset_read', id='') %}
+            {% set domain = h.url_for('dataset_read', id='', qualified=true) %}
             {% set domain = domain|replace("http://", "")|replace("https://", "") %}
             {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
             {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}

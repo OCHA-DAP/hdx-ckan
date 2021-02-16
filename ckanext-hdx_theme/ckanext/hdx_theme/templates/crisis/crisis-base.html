@@ -60,3 +60,9 @@
   {% resource 'hdx_theme/crisis-base' %}
 
 {% endblock %}
+
+{% block links %}
+  {{ super() }}
+  {% set group_dict = data.country_dict %}
+  {% include "group/snippets/feeds.html" %}
+{% endblock %}

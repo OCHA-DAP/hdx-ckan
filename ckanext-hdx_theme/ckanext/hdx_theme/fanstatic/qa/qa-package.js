@@ -212,6 +212,86 @@ function qaPackageDetailsSelect(target) {
   $(`#qa-package-details-${index}`).show();
 }
 
+function _updateResourceConfirmState(resource, flag, score, piiReportId) {
+  let body = {
+    "id": `${resource}`,
+    "pii_is_sensitive": flag,
+  };
+
+  let promise = new Promise((resolve, reject) => {
+    const mixpanelPromise = hdxUtil.analytics.sendQADashboardEvent(resource,flag,score,piiReportId);
+    const patchPromise = $.post('/api/action/hdx_qa_resource_patch', body);
+    mixpanelPromise.then((mixpanelResults) => {
+      patchPromise
+        .done((result) => {
+          if (result.success) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        })
+        .fail((result) => {
+          reject(result);
+        });
+    });
+  });
+  return promise;
+}
+
+function _awsLogUpdate(resourceId, filename, key, value) {
+  let body = {
+    "resourceId": resourceId,
+    "filename": filename,
+    "key": key,
+    "value": value
+  };
+
+  let promise = new Promise((resolve, reject) => {
+    const logUpdatePromise = $.post('/api/action/hdx_aws_log_update', body);
+    logUpdatePromise
+        .done((result) => {
+          if (result.success) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        })
+        .fail((result) => {
+          reject(result);
+        });
+  });
+  return promise;
+}
+
+function confirmPIIState(el, resourceId, score, piiReportId) {
+  $(el).parents(".modal").modal("hide");
+  let sensitive = $(el).parents(".modal-content").find("input[name='pii-confirm']:checked").val();
+  console.log('Confirm: ' + resourceId + " " + sensitive);
+  _showLoading();
+  const logUpdatePromise = _awsLogUpdate(resourceId, piiReportId, "pii_is_sensitive", sensitive);
+  const resourceConfirmStatePromise = _updateResourceConfirmState(resourceId, sensitive, score, piiReportId);
+
+  $.when(logUpdatePromise, resourceConfirmStatePromise)
+    .then(
+      (resolve) => {
+        _updateLoadingMessage("PII State successfully confirmed! Reloading page ...");
+        // location.reload();
+      },
+      (error) => {
+        let extraMsg = '';
+        if( error && error.responseJSON){
+          extraMsg = JSON.stringify(error.responseJSON.error.message);
+        }
+        alert("Error, PII state not updated! " + extraMsg);
+        $("#loadingScreen").hide();
+      }
+    )
+    .always(() => {
+      location.reload();
+    });
+  // location.reload();
+}
+
 $(document).ready(() => {
   $(".qa-package-item").on("click", (ev) => qaPackageDetailsSelect(ev.currentTarget));
   let hash = window.location.hash ? window.location.hash.substr(1):null;

@@ -7,6 +7,7 @@ import ckan.model as ckan_model
 import ckan.plugins.toolkit as tk
 
 import ckanext.requestdata.model as requestdata_model
+import ckanext.ytp.request.model as membership_model
 
 get_action = tk.get_action
 
@@ -32,10 +33,12 @@ class MembershipRequestsDao(object):
 
         query = model.Session.query(model.Group.name, model.Group.title,
                                     func.count(model.Member.id).label('count'),
-                                    func.max(model.MemberRevision.revision_timestamp).label('last_date')) \
+                                    func.max(membership_model.MemberExtra.value).label('last_date_str')
+                                    ) \
             .filter(model.Member.group_id == model.Group.id) \
+            .filter(model.Member.id == membership_model.MemberExtra.member_id) \
+            .filter(membership_model.MemberExtra.key == 'created') \
             .filter(model.Group.state == 'active') \
-            .filter(model.Member.revision_id == model.MemberRevision.revision_id) \
             .filter(model.Member.table_name == "user") \
             .filter(model.Member.state == 'pending')
 

@@ -2,10 +2,10 @@
 
 import logging
 import json
-import urlparse
 import datetime
 import time
 
+from six.moves.urllib.parse import urljoin
 from dateutil.parser import parse as parse_date
 
 import requests
@@ -61,8 +61,15 @@ def datapusher_submit(context, data_dict):
 
     datapusher_url = config.get('ckan.datapusher.url')
 
-    site_url = h.url_for('/', qualified=True)
-    callback_url = h.url_for('/api/3/action/datapusher_hook', qualified=True)
+    callback_url_base = config.get('ckan.datapusher.callback_url_base')
+    if callback_url_base:
+        site_url = callback_url_base
+        callback_url = urljoin(
+            callback_url_base.rstrip('/'), '/api/3/action/datapusher_hook')
+    else:
+        site_url = h.url_for('/', qualified=True)
+        callback_url = h.url_for(
+            '/api/3/action/datapusher_hook', qualified=True)
 
     user = p.toolkit.get_action('user_show')(context, {'id': context['user']})
 
@@ -114,14 +121,17 @@ def datapusher_submit(context, data_dict):
     context['ignore_auth'] = True
     p.toolkit.get_action('task_status_update')(context, task)
 
+    site_user = p.toolkit.get_action(
+        'get_site_user')({'ignore_auth': True}, {})
+
     try:
         r = requests.post(
-            urlparse.urljoin(datapusher_url, 'job'),
+            urljoin(datapusher_url, 'job'),
             headers={
                 'Content-Type': 'application/json'
             },
             data=json.dumps({
-                'api_key': user['apikey'],
+                'api_key': site_user['apikey'],
                 'job_type': 'push_to_datastore',
                 'result_url': callback_url,
                 'metadata': {
@@ -144,9 +154,11 @@ def datapusher_submit(context, data_dict):
         raise p.toolkit.ValidationError(error)
 
     except requests.exceptions.HTTPError as e:
-        m = 'An Error occurred while sending the job: {0}'.format(e.message)
+        m = 'An Error occurred while sending the job: {0}'.format(str(e))
         try:
             body = e.response.json()
+            if body.get('error'):
+                m += ' ' + body['error']
         except ValueError:
             body = e.response.text
         error = {'message': m,
@@ -282,7 +294,7 @@ def datapusher_status(context, data_dict):
     job_detail = None
 
     if job_id:
-        url = urlparse.urljoin(datapusher_url, 'job' + '/' + job_id)
+        url = urljoin(datapusher_url, 'job' + '/' + job_id)
         try:
             r = requests.get(url, headers={'Content-Type': 'application/json',
                                            'Authorization': job_key})

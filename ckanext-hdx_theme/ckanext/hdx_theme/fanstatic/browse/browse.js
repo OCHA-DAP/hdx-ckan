@@ -50,7 +50,7 @@ function prepareCountryList(countDatasets) {
   $('.country-item:not(inactive) a').tooltip().on('click', function(e) {
     code = $(this).data('code');
     if (code) {
-      openURL("group/" + code);
+      window.open("group/" + code, "_self");
     }
   });
 }

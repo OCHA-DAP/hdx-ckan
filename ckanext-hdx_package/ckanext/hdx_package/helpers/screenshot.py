@@ -18,7 +18,7 @@ def __get_file_name(dataset_dict):
 
 def create_screenshot(dataset_dict):
     url = config.get('ckan.site_url') + \
-          helpers.url_for(controller='package', action='read', id = dataset_dict.get('name'))
+          helpers.url_for('dataset_read', id=dataset_dict.get('name'))
     output_file = __get_file_path(dataset_dict)
 
     screenshot_creator = ScreenshotCreator(url, output_file, '"#map"', renderdelay=90000, waitcapturedelay=10000,

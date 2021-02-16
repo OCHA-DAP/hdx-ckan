@@ -14,7 +14,7 @@
 
 {% block content_action %}
   {# link_for _('View dataset'), controller='package', action='read', id=pkg.name, class_='btn', icon='eye-open' #}
-  <a href="{{ h.url_for(controller='package', action='read', id=pkg.name) }}"
+  <a href="{{ h.url_for('dataset_read', id=pkg.name) }}"
      class="btn">
     <i class="glyphicon glyphicon-eye-open"></i> {{ _('View dataset') }}
   </a>

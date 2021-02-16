@@ -149,9 +149,11 @@ def user_create(context, data_dict=None):
             'create users')}
     return {'success': True}
 
+
 def user_invite(context, data_dict):
     data_dict['id'] = data_dict['group_id']
     return group_member_create(context, data_dict)
+
 
 def _check_group_auth(context, data_dict):
     '''Has this user got update permission for all of the given groups?
@@ -205,13 +207,16 @@ def vocabulary_create(context, data_dict):
     # sysadmins only
     return {'success': False}
 
+
 def activity_create(context, data_dict):
     # sysadmins only
     return {'success': False}
 
+
 def tag_create(context, data_dict):
     # sysadmins only
     return {'success': False}
+
 
 def _group_or_org_member_create(context, data_dict):
     user = context['user']
@@ -220,11 +225,14 @@ def _group_or_org_member_create(context, data_dict):
         return {'success': False, 'msg': _('User %s not authorized to add members') % user}
     return {'success': True}
 
+
 def organization_member_create(context, data_dict):
     return _group_or_org_member_create(context, data_dict)
 
+
 def group_member_create(context, data_dict):
     return _group_or_org_member_create(context, data_dict)
+
 
 def member_create(context, data_dict):
     group = logic_auth.get_group_object(context, data_dict)
@@ -245,3 +253,30 @@ def member_create(context, data_dict):
                         (str(user), group.id)}
     else:
         return {'success': True}
+
+
+def api_token_create(context, data_dict):
+    """Create new token for current user.
+    """
+    user = context['model'].User.get(data_dict['user'])
+    return {'success': user.name == context['user']}
+
+
+
+def package_collaborator_create(context, data_dict):
+    '''Checks if a user is allowed to add collaborators to a dataset
+
+    See :py:func:`~ckan.authz.can_manage_collaborators` for details
+    '''
+    user = context['user']
+    model = context['model']
+
+    pkg = model.Package.get(data_dict['id'])
+    user_obj = model.User.get(user)
+
+    if not authz.can_manage_collaborators(pkg.id, user_obj.id):
+        return {
+            'success': False,
+            'msg': _('User %s not authorized to add collaborators to this dataset') % user}
+
+    return {'success': True}

@@ -77,9 +77,10 @@ class TestHDXPageController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             res = self.app.post('/page/new', params=post_params, extra_environ=auth)
-            assert False
+            assert 'Something went wrong' in res.body
         except Exception, ex:
-            assert '404 Not Found' in ex.message
+            assert False
+            # assert '404 Not Found' in ex.message
 
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
@@ -91,7 +92,7 @@ class TestHDXPageController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             res = self.app.post('/page/new', params=post_params, extra_environ=auth)
         except Exception, ex:
             assert False
-        assert '302' in res.status
+        assert '200 OK' in res.status
         assert '/event/elnino' in res.body
 
         elnino = self._get_action('page_show')(context, {'id': 'elnino'})
@@ -102,5 +103,6 @@ class TestHDXPageController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         del post_params['name']
         try:
             res = self.app.post('/page/new', params=post_params, extra_environ=auth)
+            assert 'Page name cannot be empty' in res.body
         except Exception, ex:
-            assert True
+            assert False

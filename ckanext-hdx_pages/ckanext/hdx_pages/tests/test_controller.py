@@ -91,6 +91,22 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def _create_test_data(cls, create_datasets=True, create_members=False):
         super(TestHDXControllerPage, cls)._create_test_data(create_datasets=True, create_members=True)
 
+    def _get_url(self, url, apikey=None):
+        test_client = self.get_backwards_compatible_test_client()
+        if apikey:
+            page = test_client.get(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+        else:
+            page = self.app.get(url)
+        return page
+
+
+class TestHDXControllerPageNew(TestHDXControllerPage):
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXControllerPageNew, cls)._create_test_data(create_datasets=True, create_members=True)
+
     def test_page_new(self):
 
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
@@ -98,10 +114,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='new')
         try:
-            self._get_url(url)
-            assert False
+            page_new = self._get_url(url)
+            assert 'Something went wrong' in page_new.body, 'a regular user can not not access a page creation form'
+            assert '404 Not Found' in page_new.status
         except Exception, ex:
-            assert '404 Not Found' in ex.message
+            assert False
 
         context['user'] = 'testsysadmin'
         user = model.User.by_name('testsysadmin')
@@ -115,7 +132,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'field_name' in page.body
 
 
+class TestHDXControllerPageEdit(TestHDXControllerPage):
 
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXControllerPageEdit, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_page_edit(self):
 
@@ -130,10 +151,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='edit',
                         id=page_dict.get('id'))
         try:
-            self._get_url(url)
-            assert False
+            page_edit = self._get_url(url)
+            assert 'Something went wrong' in page_edit.body, 'a regular user can not not access a page edit form'
+            assert '404 Not Found' in page_edit.status
         except Exception, ex:
-            assert '404 Not Found' in ex.message
+            assert False
 
         context['user'] = 'testsysadmin'
         user = model.User.by_name('testsysadmin')
@@ -147,13 +169,12 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'hdx_page_ongoing' in page.body
         assert 'field_name' in page.body
 
-    def _get_url(self, url, apikey=None):
-        if apikey:
-            page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
-        else:
-            page = self.app.get(url)
-        return page
+
+class TestHDXControllerPageRead(TestHDXControllerPage):
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXControllerPageRead, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_page_read(self):
 
@@ -187,10 +208,17 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',
                             id='nopageid')
             eldashbo_result = self._get_url(url, user.apikey)
-            assert False
+            assert 'Something went wrong' in eldashbo_result.body, 'page doesn\'t exist'
+            assert '404 Not Found' in eldashbo_result.status
         except Exception, ex:
-            assert '404' in ex.message
-            assert True
+            assert False
+
+
+class TestHDXControllerPageDelete(TestHDXControllerPage):
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXControllerPageDelete, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_page_delete(self):
 
@@ -205,7 +233,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert 'El Deleted Lorem Ipsum' in eldeleted_dict.get('description')
         except Exception, ex:
             # page already exists
-            assert True
+            assert False
 
         eldeleted_page = self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
         context['user'] = 'tester'
@@ -214,13 +242,14 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                             action='delete',
                             id=eldeleted_page.get('id'))
-            self._get_url(url, user.apikey)
-            assert False
+            page_delete = self._get_url(url, user.apikey)
+            assert 'Something went wrong' in page_delete.body, 'page doesn\'t exist'
+            assert '404 Not Found' in page_delete.status
         except logic.NotAuthorized:
-            assert True
+            assert False
         except Exception, ex:
             log.info(ex)
-            assert True
+            assert False
 
         context['user'] = 'testsysadmin'
         user = model.User.by_name('testsysadmin')
@@ -229,10 +258,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                             action='delete',
                             id='nopageid')
-            self._get_url(url, user.apikey)
+            page_delete = self._get_url(url, user.apikey)
+            assert 'Something went wrong' in page_delete.body, 'page doesn\'t exist'
+            assert '500 Internal Server Error' in page_delete.status
+        except Exception as ex:
             assert False
-        except logic.NotFound:
-            assert True
 
         url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                         action='delete',
@@ -241,7 +271,9 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert '200' in result.status
 
         try:
-            self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
+            result = self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
             assert False
         except logic.NotFound:
             assert True
+        except Exception as ex:
+            assert False

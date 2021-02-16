@@ -57,7 +57,7 @@
                         data-template="{{ dataset_hover_body }}">
                     <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
                     <div class="dataset-link" >
-                      <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
+                      <a href="{{ h.url_for('dataset_read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
                         {{ dataset.title }}
                       </a>
                     </div>

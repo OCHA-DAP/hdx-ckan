@@ -1,18 +1,18 @@
 import exceptions as exceptions
 import json
 import logging
-import pylons.config as config
 import pylons.configuration as configuration
+import pylons.config as config
 import requests
 
 import ckan.lib.base as base
-import ckan.lib.mailer as mailer
 import ckan.logic as logic
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
 from ckan.common import _, c, request, response
 from ckan.controllers.api import CONTENT_TYPES
-from ckanext.hdx_theme.util.mail import simple_validate_email
+from ckanext.hdx_theme.util.mail import hdx_validate_email
 
 log = logging.getLogger(__name__)
 get_action = logic.get_action
@@ -58,7 +58,7 @@ class FaqController(base.BaseController):
             fullname = request.params.get('fullname')
             email = request.params.get('email')
             msg = request.params.get('faq-msg')
-            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
+            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@humdata.org')
 
             test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
             if not test:
@@ -66,7 +66,7 @@ class FaqController(base.BaseController):
                 if not self.is_valid_captcha(response=captcha_response):
                     raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
 
-            simple_validate_email(email)
+            hdx_validate_email(email)
 
         except ValidationError, e:
             error_summary = e.error_summary
@@ -124,7 +124,7 @@ class FaqController(base.BaseController):
             fullname = request.params.get('fullname')
             email = request.params.get('email')
             msg = request.params.get('faq-msg')
-            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
+            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@humdata.org')
 
             test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
             if not test:
@@ -132,7 +132,7 @@ class FaqController(base.BaseController):
                 if not self.is_valid_captcha(response=captcha_response):
                     raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
 
-            simple_validate_email(email)
+            hdx_validate_email(email)
 
         except ValidationError, e:
             error_summary = e.error_summary

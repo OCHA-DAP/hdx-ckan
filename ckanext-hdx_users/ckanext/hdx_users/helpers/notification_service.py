@@ -1,6 +1,11 @@
+import logging
+import datetime
+
 import ckan.lib.helpers as h
 import ckan.authz as authz
 import ckan.model as model
+
+from dateutil.parser import parse as dateutil_parse
 
 from ckan.logic import NotFound
 from ckan.common import g
@@ -9,6 +14,8 @@ from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, R
     QuarantinedDatasetsDao
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator,\
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
+
+log = logging.getLogger(__name__)
 
 
 def get_notification_service():
@@ -106,16 +113,21 @@ class MembershipRequestsService(object):
 
         if requests_grouped_by_org:
             for request in requests_grouped_by_org:
+                try:
+                    last_date = dateutil_parse(request.last_date_str)
+                except Exception, e:
+                    log.error('Cannot parse date for membership request, using "now": ' + unicode(e))
+                    last_date = datetime.datetime.utcnow()
                 notifications.append(
                     {
                         'org_title': request.title,
                         'org_name': request.name,
                         'org_hdx_url': h.url_for('organization_members', id=request.name),
                         'html_template': 'light/notifications/org_membership_snippet.html',
-                        'last_date': request.last_date,
+                        'last_date': last_date,
                         'count': request.count,
                         'for_sysadmin': request.name not in org_names_where_user_is_admin
-                                            if self.is_sysadmin else False,
+                        if self.is_sysadmin else False,
                         'is_sysadmin': self.is_sysadmin
                     }
                 )
@@ -242,7 +254,7 @@ class QuarantinedDatasetsService(object):
                         'last_date': dataset.get('last_date'),
                         'html_template': 'light/notifications/quarantined_datasets_snippet.html',
                         'dataset': dataset,
-                        'dataset_url': h.url_for(controller='package', action='read', id=dataset.get('name')),
+                        'dataset_url': h.url_for('dataset_read', id=dataset.get('name')),
                         'for_sysadmin': for_sysadmin,
                         'is_sysadmin': self.is_sysadmin
                     }

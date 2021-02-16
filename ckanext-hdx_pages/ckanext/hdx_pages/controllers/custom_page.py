@@ -27,21 +27,22 @@ NotFound = logic.NotFound
 abort = base.abort
 checked = 'checked="checked"'
 
-# section_types = {
-#     "empty": '',
-#     "map": _('Map'),
-#     "key_figures": _('Key Figures'),
-#     "interactive_data": _('Interactive Data'),
-#     "data_list": _('Data')
-# }
 section_types = {
     "empty": '',
-    "description": _(''),
-    "map": _(''),
-    "key_figures": _(''),
-    "interactive_data": _(''),
-    "data_list": _('')
+    "description": '',
+    "map": '',
+    "key_figures": '',
+    "interactive_data": '',
+    "data_list": ''
 }
+# section_types = {
+#     "empty": '',
+#     "description": _(''),
+#     "map": _(''),
+#     "key_figures": _(''),
+#     "interactive_data": _(''),
+#     "data_list": _('')
+# }
 
 
 class PagesController(HDXSearchController):
@@ -105,7 +106,7 @@ class PagesController(HDXSearchController):
                     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
                     if not test:
                         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-                except logic.ValidationError, e:
+                except logic.ValidationError as e:
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.edit(id, page_dict, errors, error_summary)

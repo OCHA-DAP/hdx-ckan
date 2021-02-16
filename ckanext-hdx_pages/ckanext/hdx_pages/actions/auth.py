@@ -1,10 +1,11 @@
 import ckan.logic as logic
-from ckan.lib.base import _
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_pages.model as pages_model
 from ckanext.hdx_users.helpers.permissions import Permissions
 
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
+_ = tk._
 
 
 def page_create(context, data_dict):

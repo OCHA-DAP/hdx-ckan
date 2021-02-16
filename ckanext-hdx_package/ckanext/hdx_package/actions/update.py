@@ -20,6 +20,7 @@ from flask import request
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.munge as munge
+import ckan.lib.uploader as uploader
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
@@ -137,7 +138,7 @@ def package_update(context, data_dict):
     process_skip_validation(context, data_dict)
 
     model = context['model']
-    user = context['user']
+    session = context['session']
     name_or_id = data_dict.get('id') or data_dict.get('name')
     if name_or_id is None:
         raise ValidationError({'id': _('Missing value')})
@@ -147,6 +148,8 @@ def package_update(context, data_dict):
         raise NotFound(_('Package was not found.'))
     context["package"] = pkg
     prev_last_modified = pkg.metadata_modified
+
+    # immutable fields
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
     if 'groups' in data_dict:
@@ -157,6 +160,7 @@ def package_update(context, data_dict):
 
     _check_access('package_update', context, data_dict)
 
+    user = context['user']
     # get the schema
     package_plugin = lib_plugins.lookup_package_plugin(pkg.type)
     if 'schema' in context:
@@ -185,15 +189,35 @@ def package_update(context, data_dict):
     prev_qa_completed = pkg.extras.get('qa_completed') == 'true'
 
     # Inject a code representing the batch within which this dataset was modified
-    if context.get(BATCH_MODE) == BATCH_MODE_KEEP_OLD:
-        try:
-            batch_extras = pkg._extras.get('batch')
-            if batch_extras and batch_extras.state == 'active':
-                data_dict['batch'] = batch_extras.value
-        except Exception, e:
-            log.info(str(e))
-    elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
-        data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
+    if pkg.type == 'dataset':
+        if context.get(BATCH_MODE) == BATCH_MODE_KEEP_OLD:
+            try:
+                batch_extras = pkg._extras.get('batch')
+                if batch_extras and batch_extras.state == 'active':
+                    data_dict['batch'] = batch_extras.value
+            except Exception, e:
+                log.info(str(e))
+        elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
+            data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
+
+    resource_uploads = []
+    for resource in data_dict.get('resources', []):
+        # I believe that unless a resource has either an upload field or is marked to be deleted
+        # we don't need to create an uploader object which is expensive
+        if 'clear_upload' in resource or 'upload' in resource:
+            # file uploads/clearing
+            upload = uploader.get_resource_uploader(resource)
+
+            if 'mimetype' not in resource:
+                if hasattr(upload, 'mimetype'):
+                    resource['mimetype'] = upload.mimetype
+
+            if 'size' not in resource and 'url_type' in resource:
+                if hasattr(upload, 'filesize'):
+                    resource['size'] = upload.filesize
+        else:
+            upload = None
+        resource_uploads.append(upload)
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
@@ -205,13 +229,6 @@ def package_update(context, data_dict):
     if errors:
         model.Session.rollback()
         raise ValidationError(errors)
-
-    rev = model.repo.new_revision()
-    rev.author = user
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Update object %s') % data.get("name")
 
     #avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
@@ -227,21 +244,36 @@ def package_update(context, data_dict):
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
     context_org_update['defer_commit'] = True
-    context_org_update['add_revision'] = False
     _get_action('package_owner_org_update')(context_org_update,
                                             {'id': pkg.id,
                                              'organization_id': pkg.owner_org})
 
     # Needed to let extensions know the new resources ids
     model.Session.flush()
-    if data.get('resources'):
-        for index, resource in enumerate(data['resources']):
-            resource['id'] = pkg.resources[index].id
+    for index, (resource, upload) in enumerate(
+            zip(data.get('resources', []), resource_uploads)):
+        resource['id'] = pkg.resources[index].id
+
+        if upload:
+            log.info('There\'s a resource in package_update() which is marked for: {}'
+                     .format('clear' if upload.clear else 'upload'))
+            upload.upload(resource['id'], uploader.get_max_resource_size())
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
 
         item.after_update(context, data)
+
+    # Create activity
+    if not pkg.private and pkg.type == 'dataset':
+        user_obj = model.User.by_name(user)
+        if user_obj:
+            user_id = user_obj.id
+        else:
+            user_id = 'not logged in'
+
+        activity = pkg.activity_stream_item('changed', user_id)
+        session.add(activity)
 
     if not context.get('defer_commit'):
         model.repo.commit()

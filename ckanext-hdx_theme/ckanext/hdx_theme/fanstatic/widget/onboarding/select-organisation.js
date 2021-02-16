@@ -26,7 +26,7 @@ $(document).ready(function(){
                 $('#select-organisation-form')[0].reset();
                 showOnboardingWidget('#invitePopup');
             } else {
-                //alert("Can't join org: " + result.error.message);
+                alert("Can't join org: " + result.error.message);
                 $sel.css("border", "1px solid red");
             }
         });

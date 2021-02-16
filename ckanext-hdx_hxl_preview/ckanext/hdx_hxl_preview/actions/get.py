@@ -39,7 +39,7 @@ def hxl_preview_iframe_url_show(context, data_dict):
     package_dict = _get_action('package_show')(context, {'id': package_id})
     package_source = package_dict.get('dataset_source', '')
 
-    package_url = h.url_for(controller='package', action='read', id=package_id, qualified=True)
+    package_url = h.url_for('dataset_read', id=package_id, qualified=True)
     resource_last_modified = h.render_datetime(resource_dict.get('last_modified') or resource_dict.get('created'))
     params = {
         'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),

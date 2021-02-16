@@ -581,6 +581,13 @@ def hdx_convert_from_json_string(key, data, errors, context):
 #             daterange_parser = DaterangeParser(daterange_value)
 #             data[key] = daterange_parser.human_readable()
 
+def hdx_float_number(key, data, errors, context):
+    value = data[key]
+    try:
+        data[key] = float(value)
+    except (ValueError, TypeError) as e:
+        raise df.Invalid(_('Input is not a float valid number'))
+
 
 def __get_previous_resource_dict(context, package_id, resource_id):
     dataset_dict = __get_previous_package_dict(context, package_id)

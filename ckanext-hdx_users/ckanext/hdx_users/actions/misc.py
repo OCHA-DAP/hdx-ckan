@@ -53,7 +53,7 @@ def hdx_send_new_org_request(context, data_dict):
         #                     person_email=data_dict.get('your_email',''),
         #                     ckan_username=ckan_username, ckan_email=ckan_email,
         #                     request_time=datetime.datetime.now().isoformat())
-        hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
+        hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@humdata.org')
         subject = u'Request to create a new organisation on HDX'
         email_data = {
             'org_name': data_dict.get('name', ''),

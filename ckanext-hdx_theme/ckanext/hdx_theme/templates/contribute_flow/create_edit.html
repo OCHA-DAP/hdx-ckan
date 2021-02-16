@@ -420,8 +420,8 @@
                                             {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
                                             </div>
 
-                                            {% set prefix = h.url_for(controller='package', action='read', id='') %}
-                                            {% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+                                            {% set prefix = h.url_for('dataset_read', id='') %}
+                                            {% set domain = h.url_for('dataset_read', id='', qualified=true) %}
                                             {% set domain = domain|replace("http://", "")|replace("https://", "") %}
                                             {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
 
