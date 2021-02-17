@@ -12,6 +12,7 @@
     console.log(text);
     const $panel = $(SEARCH_BASE_SELECTOR);
     _resetSearch($panel);
+    $panel.unhighlight();
     $panel.highlight(text);
     const $results = $panel.find("span.highlight");
     if ($results.length > 0) {
@@ -22,7 +23,7 @@
         $results.closest(".faq-panel-collapse").collapse('show');
         $results.first().get(0).scrollIntoView({ behavior: 'smooth' });
         incrementCurrentResult(1)();
-      }, 10); //wait for hide collapse animation to fire for sections that might get re-shown :)
+      }, 150); //wait for hide collapse animation to fire for sections that might get re-shown :)
     } else {
       $("#search-no-results").show();
     }
