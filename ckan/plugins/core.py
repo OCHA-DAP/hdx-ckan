@@ -72,7 +72,7 @@ def use_plugin(*plugins):
 
 
 class PluginImplementations(ExtensionPoint):
-    # COPIED BY HDX FROM https://github.com/ckan/ckan/commit/c3acb95a7c1a7324ed1af2ca003e8cfa37e8c5ad
+
     def __iter__(self):
         '''
         When we upgraded pyutilib on CKAN 2.9 the order in which
