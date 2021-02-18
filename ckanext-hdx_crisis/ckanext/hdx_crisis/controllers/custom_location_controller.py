@@ -102,7 +102,8 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
                 'topline_chart_sections': self._create_sections(top_line_items, charts_config_data),
                 'show_map': True,
                 'map': self._get_maps_config(custom_dict),
-                'is_crisis': False
+                'is_crisis': False,
+                'country_dict': group_info  # needed by snippet group/snippets/feeds.html from crisis-base.html
 
             },
             'errors': errors,
