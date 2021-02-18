@@ -1,34 +1,24 @@
-# from ckan.controllers import group
 import datetime
-# import json
 import logging
 import re
-# from webhelpers.html import escape, HTML, literal, url_escape
-# from ckan.common import _
 import urlparse as urlparse
 
-# import ckanext.hdx_theme.helpers.explorer_data as explorer
-import ckanext.hdx_theme.version as version
 import pylons.config as config
 
-# import re
 import ckan.authz as new_authz
 import ckan.lib.base as base
 import ckan.lib.datapreview as datapreview
 import ckan.lib.helpers as h
 import ckan.logic as logic
-# from ckan.common import (
-#     c, request
-# )
-# import sqlalchemy
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_theme.version as version
 from ckan.common import (
     _, ungettext, c, request, json,
 )
 from ckan.lib import munge
 from ckan.plugins import toolkit
-
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 
 # import ckanext.hdx_theme.helpers.counting_actions as counting
@@ -666,25 +656,20 @@ def hdx_tag_list():
         return tags_dict_list
     return []
 
+
 def hdx_dataset_preview_values_list():
     import ckanext.hdx_package.helpers.custom_validator as vd
     result = [{'value': vd._DATASET_PREVIEW_FIRST_RESOURCE, 'text': 'Default (first resource with preview)'}]
     return result
 
+
 def hdx_frequency_list(for_sysadmin=False, include_value=None):
     result = [
-        {'value': '-999', 'text': '-- Please select --', 'onlySysadmin': False},
-        {'value': '1', 'text': 'Every day', 'onlySysadmin': False},
-        {'value': '7', 'text': 'Every week', 'onlySysadmin': False},
-        {'value': '14', 'text': 'Every two weeks', 'onlySysadmin': False},
-        {'value': '30', 'text': 'Every month', 'onlySysadmin': False},
-        {'value': '90', 'text': 'Every three months', 'onlySysadmin': False},
-        {'value': '180', 'text': 'Every six months', 'onlySysadmin': False},
-        {'value': '365', 'text': 'Every year', 'onlySysadmin': False},
-        {'value': '0', 'text': 'Live', 'onlySysadmin': False},
-        {'value': '-2', 'text': 'As needed', 'onlySysadmin': False},
-        {'value': '-1', 'text': 'Never', 'onlySysadmin': False},
+        {'value': key, 'text': val['title'], 'onlySysadmin': False}
+        for key, val in UPDATE_FREQ_INFO.items()
     ]
+    result.insert(0, {'value': '-999', 'text': '-- Please select --', 'onlySysadmin': False})
+
     filtered_result = result
     if not for_sysadmin:
         filtered_result = [r for r in result if not r.get('onlySysadmin') or include_value == r.get('value')]
@@ -693,11 +678,7 @@ def hdx_frequency_list(for_sysadmin=False, include_value=None):
 
 
 def hdx_get_frequency_by_value(value):
-    freqs = hdx_frequency_list(for_sysadmin=True)
-    for freq in freqs:
-        if value == freq.get('value'):
-            return freq.get('text')
-    return ''
+    return UPDATE_FREQ_INFO.get(value, {}).get('title', '')
 
 
 # def hdx_get_layer_info(id=None):

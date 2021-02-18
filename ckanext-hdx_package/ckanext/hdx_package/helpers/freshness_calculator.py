@@ -4,27 +4,78 @@ import logging
 import dateutil.parser
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 
+from collections import OrderedDict
+
 log = logging.getLogger(__name__)
 
-UPDATE_FREQ_OVERDUE_INFO = {
-    '1': 1,
-    '7': 7,
-    '14': 7,
-    '30': 14,
-    '90': 30,
-    '180': 30,
-    '365': 60,
-}
+UPDATE_FREQ_INFO = OrderedDict(
+    (
+        ('1', {
+            'overdue': 1,
+            'delinquent': 2,
+            'title': 'Every day',
+            'special': False
+        }),
+        ('7', {
+            'overdue': 7,
+            'delinquent': 14,
+            'title': 'Every week',
+            'special': False
+        }),
+        ('14', {
+            'overdue': 7,
+            'delinquent': 14,
+            'title': 'Every two weeks',
+            'special': False
+        }),
+        ('30', {
+            'overdue': 14,
+            'delinquent': 30,
+            'title': 'Every month',
+            'special': False
+        }),
+        ('90', {
+            'overdue': 30,
+            'delinquent': 60,
+            'title': 'Every three months',
+            'special': False
+        }),
+        ('180', {
+            'overdue': 30,
+            'delinquent': 60,
+            'title': 'Every six months',
+            'special': False
+        }),
+        ('365', {
+            'overdue': 60,
+            'delinquent': 90,
+            'title': 'Every year',
+            'special': False
+        }),
+        ('0', {
+            'overdue': None,
+            'delinquent': None,
+            'title': 'Live',
+            'special': True
+        }),
+        ('-2', {
+            'overdue': None,
+            'delinquent': None,
+            'title': 'As needed',
+            'special': True
+        }),
+        ('-1', {
+            'overdue': None,
+            'delinquent': None,
+            'title': 'Never',
+            'special': True
+        }),
+    )
+)
 
-UPDATE_FREQ_DELINQUENT_INFO = {
-    '1': 2,
-    '7': 14,
-    '14': 14,
-    '30': 30,
-    '90': 60,
-    '180': 60,
-    '365': 90,
-}
+UPDATE_FREQ_OVERDUE_INFO = {key: val['overdue'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
+
+UPDATE_FREQ_DELINQUENT_INFO = {key: val['delinquent'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
 
 FRESHNESS_PROPERTY = 'is_fresh'
 
