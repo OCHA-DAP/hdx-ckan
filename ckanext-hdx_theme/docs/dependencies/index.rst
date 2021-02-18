@@ -17,7 +17,7 @@ Compilation steps
 
 #. Make sure to have *pip-tools* installed, at least version 5.0.0::
 
-    pip install pip-tools==5.0.0
+    pip install pip-tools==5.5.0
 
 #. Compile the main dependencies:
 
