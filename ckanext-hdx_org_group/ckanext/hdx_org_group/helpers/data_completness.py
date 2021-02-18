@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 GOODNESS_PROPERTY = 'is_good'
 
+
 class DataCompletness(object):
 
     basic_query_params = {
@@ -29,10 +30,8 @@ class DataCompletness(object):
 
     def get_config(self):
         try:
-            response = requests.get(self.config_url)
-            response.raise_for_status()
-            yaml_text = response.text
-            self.config = yaml.load(yaml_text)
+            yaml_dict = self._fetch_yaml()
+            self.config = yaml_dict
 
             context = {}
             # datasets = logic.get_action('package_search')(context, {
@@ -44,6 +43,12 @@ class DataCompletness(object):
             self.config = None
 
         return self.config
+
+    def _fetch_yaml(self):
+        response = requests.get(self.config_url)
+        response.raise_for_status()
+        yaml_text = response.text
+        return yaml.load(yaml_text)
 
     def __populate_dataseries(self):
         all_dataset_map = {}
