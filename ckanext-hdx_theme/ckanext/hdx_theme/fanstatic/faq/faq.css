@@ -236,6 +236,11 @@
 .hdx-wrapper .hdx-panel-group .panel + .panel {
   margin: 0;
 }
+.hdx-wrapper .hdx-panel-group .panel .collapsing {
+  -webkit-transition: height 0.1s ease;
+  -o-transition: height 0.1s ease;
+  transition: height 0.1s ease;
+}
 .hdx-wrapper .hdx-panel-group .panel .panel-heading {
   min-height: 74px;
   border: none;
