@@ -11,6 +11,7 @@ import ckanext.hdx_theme.helpers.auth as auth
 
 from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
+from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 
 
 # def run_on_startup():
@@ -360,8 +361,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_quick_links_update': auth.hdx_quick_links_update,
         }
 
+    # IMiddleware
     def make_middleware(self, app, config):
         new_app = RedirectionMiddleware(app, config)
+        if app.app_name == 'flask_app':
+            app.logger.addFilter(FlaskEmailFilter())
         return new_app
 
     # IValidators
