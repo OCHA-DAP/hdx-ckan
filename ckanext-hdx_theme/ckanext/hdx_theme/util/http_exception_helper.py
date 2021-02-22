@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 @decorator
 def catch_http_exceptions(original_action, *args, **kw):
     try:
-        original_action(*args, **kw)
+        return original_action(*args, **kw)
     except (NotFound, NotAuthorized):
         return abort(404, _(u'Page not found'))
 
