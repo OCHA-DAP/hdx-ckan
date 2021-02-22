@@ -35,6 +35,7 @@ import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
 from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 
 log = logging.getLogger(__name__)
 
@@ -238,7 +239,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                             tk.get_converter('convert_to_extras')],
             'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                         tk.get_converter('convert_to_extras')],
-            'data_update_frequency': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'data_update_frequency': [
+                tk.get_validator('not_empty'),
+                tk.get_validator('unicode_safe'),
+                tk.get_validator('hdx_in_update_frequency_values'),
+                tk.get_converter('convert_to_extras')
+            ],
             'batch': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
@@ -559,6 +565,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
+            'hdx_in_update_frequency_values':
+                vd.hdx_value_in_list_wrapper(UPDATE_FREQ_INFO.keys(), False),
             'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
             'hdx_daterange_possible_infinite_end_dataset_date': vd.hdx_daterange_possible_infinite_end_dataset_date,
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,

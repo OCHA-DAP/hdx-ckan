@@ -119,6 +119,9 @@ hdx.cache.onstartup = false
 
 ckan.storage_path = /srv/filestore
 
+# DATA GRID / COMPLETENESS
+hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%20grid%20recipe%20-%20{iso}.yml
+
 # hdx.caching.dogpile_filename = /tmp/hdx_dogpile_cache.dbm
 
 # Logging configuration
