@@ -8,7 +8,7 @@ from ckan.common import g
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_pages as cp_h
 from ckanext.hdx_search.controller_logic.search_logic import SearchLogic
-
+from ckanext.hdx_theme.util.http_exception_helper import catch_http_exceptions
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 get_action = tk.get_action
@@ -24,6 +24,7 @@ hdx_light_search = Blueprint(u'hdx_light_search', __name__, url_prefix=u'/m/sear
 
 
 @check_redirect_needed
+@catch_http_exceptions
 def read(id):
     context = {
         u'model': model,
