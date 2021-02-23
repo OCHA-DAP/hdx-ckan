@@ -63,6 +63,8 @@
 
 {% block links %}
   {{ super() }}
-  {% set group_dict = data.country_dict %}
-  {% include "group/snippets/feeds.html" %}
+  {% if 'country_dict' in data %}
+    {% set group_dict = data.country_dict %}
+    {% include "group/snippets/feeds.html" %}
+  {%  endif %}
 {% endblock %}
