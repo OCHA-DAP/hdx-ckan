@@ -153,15 +153,15 @@ def _run_pii_check(resource_dict, context):
     try:
         munged_resource_name = _get_resource_s3_path(resource_dict)
         data_dict = {
-            'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
-                                                       resource_name=munged_resource_name),
+            # 'resourcePath': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
+            #                                            resource_name=munged_resource_name),
             'resourceId': AWS_RESOURCE_FORMAT.format(resource_id=resource_dict.get("id"),
                                                      resource_name=munged_resource_name)
             # 'sheet': sheet,
             # 'riskThreshold': 3
         }
-        data_dict['resourceProxyUrl'] = _set_resource_proxy_url(context, data_dict, resource_dict, None)
-        log.warn('RunPII for resourceId [%s], resourcePath [%s], resourceProxyUrl [%s]' % (data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
+        # data_dict['resourceProxyUrl'] = _set_resource_proxy_url(context, data_dict, resource_dict, None)
+        # log.warn('RunPII for resourceId [%s], resourcePath [%s], resourceProxyUrl [%s]' % (data_dict['resourceId'], data_dict['resourcePath'], data_dict['resourceProxyUrl']))
         r = requests.post(
             PII_RUN_URL,
             headers={
