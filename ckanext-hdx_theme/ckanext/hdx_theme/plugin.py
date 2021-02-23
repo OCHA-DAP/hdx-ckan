@@ -1,3 +1,4 @@
+import logging
 import inspect
 import json
 import os
@@ -365,6 +366,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def make_middleware(self, app, config):
         new_app = RedirectionMiddleware(app, config)
         if app.app_name == 'flask_app':
+            from logging.handlers import SMTPHandler
+            for handler in app.logger.handlers:
+                if isinstance(handler, SMTPHandler):
+                    handler.setLevel(logging.ERROR)
             app.logger.addFilter(FlaskEmailFilter())
         return new_app
 
