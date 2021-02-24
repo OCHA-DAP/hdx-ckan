@@ -13,6 +13,8 @@
           <h1>
             {% if code == 404 or code[0] == 404 %}
               Page not found
+            {% elif code == 403 or code[0] == 403 %}
+              You don't have permission to access this page
             {% elif code == 500 or code[0] == 500 %}
               Server Error
             {% else %}
@@ -24,6 +26,9 @@
           <p>
             {% if code == 404 or code[0] == 404 %}
               Sorry, the page you are looking for could not be found. <br>
+              Please check the URL, try the search or go back to our homepage.
+            {% elif code == 403 or code[0] == 403 %}
+              Sorry, you don't have permission to access this page. <br>
               Please check the URL, try the search or go back to our homepage.
             {% elif code == 500 or code[0] == 500 %}
               Sorry, there was a server error. <br>
