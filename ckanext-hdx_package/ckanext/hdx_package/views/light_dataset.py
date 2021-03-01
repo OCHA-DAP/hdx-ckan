@@ -4,6 +4,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 
 from ckan.common import g
+import ckan.logic as logic
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_pages as cp_h
@@ -18,6 +19,7 @@ abort = tk.abort
 _ = tk._
 
 NotAuthorized = tk.NotAuthorized
+NotFound = logic.NotFound
 
 hdx_light_dataset = Blueprint(u'hdx_light_dataset', __name__, url_prefix=u'/m/dataset')
 hdx_light_search = Blueprint(u'hdx_light_search', __name__, url_prefix=u'/m/search')
@@ -38,16 +40,19 @@ def read(id):
     }
 
     dataset_dict = get_action('package_show')(context, data_dict)
-    analytics_dict = _compute_analytics(dataset_dict)
-    dataset_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, dataset_dict)
-    dataset_dict['link_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
+    if dataset_dict.get('type') == 'dataset':
+        analytics_dict = _compute_analytics(dataset_dict)
+        dataset_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, dataset_dict)
+        dataset_dict['link_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
 
-    template_data = {
-        'dataset_dict': dataset_dict,
-        'analytics': analytics_dict
-    }
+        template_data = {
+            'dataset_dict': dataset_dict,
+            'analytics': analytics_dict
+        }
 
-    return render(u'light/dataset/read.html', template_data)
+        return render(u'light/dataset/read.html', template_data)
+    else:
+        raise NotFound
 
 
 @check_redirect_needed
