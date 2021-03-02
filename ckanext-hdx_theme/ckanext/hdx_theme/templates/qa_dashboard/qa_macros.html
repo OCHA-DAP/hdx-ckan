@@ -52,7 +52,7 @@
         {% set score = score * 100 %}
         {% if score > 32 %}
           {% set status_text = "High Risk" %}
-          {% set status_class = 'warn' %}
+          {% set status_class = 'error' %}
           {% set icon_class = "" %}
         {% else %}
           {% set status_text = "Normal Risk" %}

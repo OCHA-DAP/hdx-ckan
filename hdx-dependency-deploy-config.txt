@@ -6,7 +6,7 @@ HDX_GISWORKER_URL=https://hub.docker.com/r/unocha/hdx-gisworker/tags/
 HDX_GISWORKER_TAG=0.6.4
 
 HDX_HXL_PREVIEW_URL=https://hub.docker.com/r/unocha/hdx-hxl-preview/tags/
-HDX_HXL_PREVIEW_TAG=1.7.3
+HDX_HXL_PREVIEW_TAG=1.8.0
 
 HDX_DEMO_LITION_URL=https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
 HDX_DEMO_LITION_TAG=1.2
