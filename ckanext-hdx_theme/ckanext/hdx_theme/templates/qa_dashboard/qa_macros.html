@@ -92,9 +92,9 @@
 
     <span class="pii-status">
       {% if not resource.pii_is_sensitive %}
-        <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Confirm</a>
+        <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{resource.id}}">Confirm</a>
       {% endif %}
-      <div class="modal" id="pii-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal" id="pii-confirm-modal-{{resource.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
