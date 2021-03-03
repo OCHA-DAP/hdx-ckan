@@ -26,6 +26,7 @@ class TestFileRemovalS3(object):
     bucket_name = 'some-bucket-name'
     dataset1_name = 'test-file-removal-dataset-1'
     dataset2_name = 'test-file-removal-dataset-2'
+    revise_dataset_name = 'test-file-removal-revise-dataset'
     file1_name = 'data1.csv'
     file2_name = 'data2.csv'
 
@@ -209,6 +210,28 @@ class TestFileRemovalS3(object):
 
         _get_action('hdx_dataset_purge')(context, {'id': self.dataset2_name})
         assert not self.__file_exists(resource_id, self.file1_name)
+
+    def test_package_revise(self):
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        self._create_packages_by_user(self.revise_dataset_name, 'testsysadmin', create_org_and_group=False)
+        resource_dict = self.__resource_create_with_upload(context, self.file1_name, 'Test resource1.csv',
+                                                           self.revise_dataset_name)
+        resource_id = resource_dict['id']
+        file_path = os.path.join(os.path.dirname(__file__), self.file2_name)
+        with open(file_path) as f:
+            file_upload = FileStorage(f)
+            package_dict = _get_action('package_revise')(context,
+                                                         {
+                                                             'match__name': self.revise_dataset_name,
+                                                             'update__resources__1__name': 'Test resource2.csv',
+                                                             'update__resources__1__upload': file_upload,
+
+                                                         })
+            assert not self.__file_exists(resource_id, self.file1_name)
+            assert self.__file_exists(resource_id, self.file2_name)
+
+        _get_action('hdx_dataset_purge')(context, {'id': self.revise_dataset_name})
+        assert not self.__file_exists(resource_id, self.file2_name)
 
     def __file_exists(self, resource_id, file_name):
         key = 'resources/{}/{}'.format(resource_id, file_name)

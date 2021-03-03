@@ -8,26 +8,28 @@ import datetime
 import json
 import logging
 
+from flask import request
+from sqlalchemy import or_
+
+import ckan.lib.dictization.model_save as model_save
+import ckan.lib.munge as munge
+import ckan.lib.plugins as lib_plugins
+import ckan.lib.uploader as uploader
+import ckan.logic.action.update as core_update
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
+from ckan.common import _
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
     BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.file_removal import file_remove, find_filename_in_url
-from flask import request
-
-import ckan.lib.dictization.model_save as model_save
-import ckan.lib.plugins as lib_plugins
-import ckan.lib.munge as munge
-import ckan.lib.uploader as uploader
-import ckan.logic.action.update as core_update
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as tk
-from ckan.common import _
 
 _check_access = tk.check_access
 _get_action = tk.get_action
+_get_or_bust = tk.get_or_bust
 
 get_or_bust = tk.get_or_bust
 
@@ -38,12 +40,15 @@ log = logging.getLogger(__name__)
 
 SKIP_VALIDATION = 'skip_validation'
 
+
 @geopreview.geopreview_4_resources
 def resource_update(context, data_dict):
     '''
     This runs the 'resource_update' action from core ckan's update.py
     It allows us to do some minor changes and wrap it.
     '''
+
+    id = _get_or_bust(data_dict, "id")
 
     process_batch_mode(context, data_dict)
     flag_if_file_uploaded(context, data_dict)
@@ -52,9 +57,8 @@ def resource_update(context, data_dict):
     # make the update faster (less computation in the custom package_show)
     context['no_compute_extra_hdx_show_properties'] = True
 
-    prev_resource_dict = _fetch_prev_resource_info(context['model'], data_dict)
-    prev_resource_is_upload = prev_resource_dict.get('url_type') == 'upload'
-    new_file_uploaded = bool(data_dict.get('upload'))
+    # prev_resource_dict = _fetch_prev_resource_info(context['model'], id)
+    # new_file_uploaded = bool(data_dict.get('upload'))
 
     if data_dict.get('resource_type', '') != 'file.upload':
         #If this isn't an upload, it is a link so make sure we update
@@ -79,31 +83,49 @@ def resource_update(context, data_dict):
             data_dict['datastore_active'] = True
     result_dict = core_update.resource_update(context, data_dict)
 
-    new_resource_is_api = result_dict.get('url_type') == 'api'
-    filename = find_filename_in_url(result_dict.get('url', ''))
-    munged_current_filename = munge.munge_filename(filename)
-    munged_prev_filename = munge.munge_filename(prev_resource_dict['url'])
-    new_file_has_same_name = munged_current_filename == munged_prev_filename
-    if prev_resource_is_upload and ((new_file_uploaded and not new_file_has_same_name) or new_resource_is_api):
-        log.info('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
-        file_remove(prev_resource_dict['id'], prev_resource_dict['url'], prev_resource_dict['url_type'])
-    else:
-        log.info('Not deleting resource: prev_resource_is_upload {} / new_file_uploaded {}'
-                 '/ new_file_has_same_name {} / new_resource_is_api {}'
-                 .format(prev_resource_is_upload, new_file_uploaded, new_file_has_same_name, new_resource_is_api))
+    # if new_file_uploaded:
+    #     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
 
     return result_dict
 
 
-def _fetch_prev_resource_info(model, data_dict):
-    prev_resource = model.Resource.get(data_dict.get('id'))
-    prev_resource_dict = {
-        'id': prev_resource.id,
-        'name': prev_resource.name,
-        'url_type': prev_resource.url_type,
-        'url': prev_resource.url,
-    }
-    return prev_resource_dict
+def _delete_old_file_if_necessary(prev_resource_dict, resource_dict):
+    prev_resource_is_upload = prev_resource_dict.get('url_type') == 'upload'
+    new_resource_is_api = resource_dict.get('url_type') == 'api'
+    filename = find_filename_in_url(resource_dict.get('url', ''))
+    munged_current_filename = munge.munge_filename(filename)
+    munged_prev_filename = munge.munge_filename(prev_resource_dict['url'])
+    new_file_has_same_name = munged_current_filename == munged_prev_filename
+    if prev_resource_is_upload and (new_resource_is_api or not new_file_has_same_name):
+        log.info('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
+        file_remove(prev_resource_dict['id'], prev_resource_dict['url'], prev_resource_dict['url_type'])
+    else:
+        log.info('Not deleting resource: prev_resource_is_upload {} '
+                 '/ new_file_has_same_name {} / new_resource_is_api {}'
+                 .format(prev_resource_is_upload, new_file_has_same_name, new_resource_is_api))
+
+
+# def _fetch_prev_resource_info(model, resource_id):
+#     id_to_resource_map = _fetch_prev_resources_info(model, [resource_id])
+#     return id_to_resource_map.get(resource_id)
+
+
+def _fetch_prev_resources_info(model, resource_ids):
+    q = model.Session.query(model.Resource).filter(
+        or_(
+            model.Resource.id.in_(resource_ids), model.Resource.name.in_(resource_ids)
+        )
+    )
+    resources = q.all()
+    id_to_resource_map = {}
+    for res in resources:
+        id_to_resource_map[res.id] = {
+            'id': res.id,
+            'name': res.name,
+            'url_type': res.url_type,
+            'url': res.url,
+        }
+    return id_to_resource_map
 
 
 @geopreview.geopreview_4_packages
@@ -200,6 +222,7 @@ def package_update(context, data_dict):
         elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
             data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
+    resource_upload_ids = []
     resource_uploads = []
     for resource in data_dict.get('resources', []):
         # I believe that unless a resource has either an upload field or is marked to be deleted
@@ -207,6 +230,7 @@ def package_update(context, data_dict):
         if 'clear_upload' in resource or 'upload' in resource:
             # file uploads/clearing
             upload = uploader.get_resource_uploader(resource)
+            resource_upload_ids.append(resource.get('id') or resource.get('name'))
 
             if 'mimetype' not in resource:
                 if hasattr(upload, 'mimetype'):
@@ -216,6 +240,7 @@ def package_update(context, data_dict):
         else:
             upload = None
         resource_uploads.append(upload)
+    ids_to_prev_resource_dict = _fetch_prev_resources_info(model, resource_upload_ids)
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
@@ -286,6 +311,12 @@ def package_update(context, data_dict):
     # we could update the dataset so we should still be able to read it.
     context['ignore_auth'] = True
     new_data_dict = _get_action('package_show')(context, {'id': data_dict['id']})
+
+    # HDX - delete previous files if needed
+    for resource_dict in new_data_dict.get('resources'):
+        prev_resource_dict = ids_to_prev_resource_dict.get(resource_dict['id'])
+        if prev_resource_dict:
+            _delete_old_file_if_necessary(prev_resource_dict, resource_dict)
 
     new_qa_completed = new_data_dict.get('qa_completed')
     if new_qa_completed != prev_qa_completed and new_data_dict.get('type') == 'dataset':
