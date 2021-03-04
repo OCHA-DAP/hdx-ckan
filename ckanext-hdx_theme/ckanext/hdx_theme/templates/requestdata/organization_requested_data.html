@@ -1,9 +1,52 @@
-{% ckan_extends %}
+{% extends "organization/read.html" %}
 
-{% block primary %}
-<div class="request-data-module">
-    {{ super() }}
-</div>
-    {% resource 'requestdata/css/main.css' %}
-    {% resource 'hdx_theme/requestdata/request-data.css' %}
+{% block breadcrumb_content %}
+  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  {% block breadcrumb_content_inner %}
+    <li>{% link_for c.group_dict.display_name|truncate(35), controller='organization', action='read', id=org_name %}</li>
+    <li class="active">
+      {% set requested_data_url = h.url_for('requestdata_organization_requests', id=org_name) %}
+      <a href="{{ requested_data_url }}">Dataset Requests</a>
+    </li>
+  {% endblock %}
+{% endblock %}
+
+{% block subtitle %}{{ _('Dataset Requests') }} - {{ super() }}{% endblock %}
+
+{% set total_archived_requests = [] %}
+
+{% for item in requests_archive %}
+  {% for request in item.requests_archived %}
+    {% if total_archived_requests.append(1) %}{% endif %}
+  {% endfor %}
+{% endfor %}
+
+{% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
+
+{% block primary_content_inner %}
+  <div class="request-data-module">
+    {% snippet 'requestdata/snippets/requests_header.html', title='Dataset Requests', total_requests=total_requests, type='organization', maintainers=maintainers, org_name=org_name, counters=counters %}
+    <br>
+    {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
+    {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
+
+    {% if requests_archive %}
+      {% set service_url = h.url_for('requestdata_organization_requests', id=c.id) %}
+      {% snippet 'requestdata/snippets/order_requests.html', service_url=service_url, org_name=org_name, current_order_name=current_order_name %}
+    {% endif %}
+
+    {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
+
+    <div class="alert alert-dismissible request-message-alert hide" role="alert">
+      <div class="alert-text"></div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block primary_content_module_margin %}{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+  {% resource 'requestdata/css/main.css' %}
+  {% resource 'hdx_theme/requestdata/request-data.css' %}
 {% endblock %}

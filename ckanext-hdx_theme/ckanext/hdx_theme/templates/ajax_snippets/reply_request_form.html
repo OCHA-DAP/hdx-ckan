@@ -33,33 +33,48 @@
             <div class="ds-title">
               Reply to this request
             </div>
-            <div class="ds-contrib mtop5">
-              <span>Provide instructions on how to access the data, or simply attach the file.</span><br/>
-              <span>*Please note that HDX tracks whether data requests are accepted or denied
-                but does not track the content of the email message.</span>
-            </div>
-            <form class="form-horizontal" id="request-data-form" enctype="multipart/form-data">
-              {% block message_content %}
-                <div class="request-data-form-control reply-request-form-control">
-                  <textarea id="field-comments" name="message_content" class="request-data-form-input reply-request-form-message-content" type="text" value="" required="required" style="height: 100px; padding: 12px;"></textarea>
+            <div style="overflow:scroll; height:450px">
+              <div class="ds-contrib mTop10">
+                <p>Please reply to the request using the form below. HDX tracks whether data requests are accepted or denied but does not track the content of the email message.</p>
+                <p>Sensitive data should always be shared via a secure channel, such as encrypted email or an encrypted file transfer service. Share the password to decrypt data separately via a different secure channel. You may want to establish a data sharing agreement before sharing sensitive data.</p>
+                <p>For more on responsible approaches to data sharing read this <a href="https://centre.humdata.org/guidance-note-responsible-approaches-to-data-sharing/">guidance note</a></p>
+              </div>
+              <form class="form-horizontal" id="request-data-form" enctype="multipart/form-data">
+                {% block message_content %}
+                  <div class="request-data-form-control reply-request-form-control mBottom5">
+                    <textarea
+                            id="field-comments"
+                            name="message_content"
+                            class="request-data-form-input reply-request-form-message-content"
+                            required="required"
+                            style="height: 75px; padding: 10px;"
+                            placeholder="Write here your message to the requester"></textarea>
+                  </div>
+                {% endblock %}
+
+                <!--<div class="ds-title">-->
+                  <!--Reply email-->
+                <!--</div>-->
+                <div class="ds-contrib mtop5">
+                  Please indicate which email address the requester should use to contact you should they have questions.
                 </div>
-              {% endblock %}
 
-              <!--<div class="ds-title">-->
-                <!--Reply email-->
-              <!--</div>-->
-              <div class="ds-contrib mtop5">
-                Please indicate which email address the requester should use to contact you should they have questions.
-              </div>
+                <div class="request-data-form-control reply-request-form-control">
+                  <input type="email"
+                         name="email"
+                         class="request-data-form-input reply-request-form-reply-email"
+                         required="required"
+                         value="{{ c.userobj.email }}"
+                         placeholder="Your email (e.g user@email.com)"
+                         style="max-width:288px; margin-left:2px;"
+                         title="Please provide a valid email address !"/>
+                </div>
 
-              <div class="request-data-form-control reply-request-form-control">
-                <input type="email" name="email" class="request-data-form-input reply-request-form-reply-email" required="required" value="{{ c.userobj.email }}" />
-              </div>
-
-              <div class="ds-title">
-                Share File <input type="file" name="file_upload" class="reply-request-form-file-upload" />
-              </div>
-            </form>
+  {#              <div class="ds-title">#}
+  {#                Share File <input type="file" name="file_upload" class="reply-request-form-file-upload" />#}
+  {#              </div>#}
+              </form>
+            </div>
             <div class="modal-footer request-data-modal-footer">
               <button class="btn btn-empty btn-empty-black btn-large btn-cancel" style="border-color: transparent;">Cancel</button>
               <button type="submit" class="btn btn-primary btn-submit" style="width: 120px; margin-left: 25px;">Send</button>
