@@ -1,0 +1,15 @@
+.admin-two-col .col-xs-3 {
+  padding: 0 15px;
+  color: #333333;
+}
+.admin-two-col .col-xs-3 h2 {
+  font-size: 20px;
+}
+.admin-two-col .col-xs-3 h3 {
+  font-size: 12px;
+}
+.admin-two-col .col-xs-9 {
+  border-left-color: #cccccc;
+  border-left-style: solid;
+  border-left-width: 1px;
+}

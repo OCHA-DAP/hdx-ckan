@@ -13,7 +13,7 @@
 {% block primary %}
   <h2 class="sspBold28 black">
     {% block page_heading %}
-      {{ _('Dashboard') }}
+      {{ _('User Dashboard') }}
     {% endblock %}
   </h2>
 
@@ -25,8 +25,30 @@
           {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
+
 {#          {{ h.build_nav_icon('user_dashboard_visualizations', _('My Visualizations')) }}#}
-          {{ h.build_nav_icon('requestdata_my_requests', _('My Requests'), id=c.userobj.name) }}
+          {{ h.build_nav_icon('requestdata_my_requests', _('HDX Connect Requests'), id=c.userobj.name) }}
+          {% if c.userobj.sysadmin %}
+            <li class="nav-tabs-more">
+              <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                <span id="crises-label">More <i class="humanitarianicons-Down"></i></span>
+              </a>
+              <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+                <li class="crises-group">
+                  <ul>
+                    <li>
+                      <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">Carousel</a>
+                    </li>
+                    {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}
+                    {{ h.build_nav_icon('pages_show', _('Custom/Event Page')) }}
+                    <li>
+                      <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          {% endif %}
         </ul>
         <div class="paddingRightHack" style="position: absolute; top: 50px; right: 0">
           {% block page_header_inner %}

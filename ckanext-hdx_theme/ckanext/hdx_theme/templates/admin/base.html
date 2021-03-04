@@ -3,27 +3,99 @@
 {% block subtitle %}{{ _('Administration') }}{% endblock %}
 
 {% block breadcrumb_content %}{% endblock %}
+{% block secondary %}{% endblock %}
+
+{% block primary_content %}
+  <h2 class="sspBold28 black">
+    {% block page_heading %}
+      {{ _('Sysadmin Dashboard') }}
+    {% endblock %}
+  </h2>
+  <article class="module">
+    {% block item_title_contrib %}
+    {% endblock %}
+
+    {% block page_header %}
+      <div class="paddingLeftHack">
+        <header class="module-content page-header paddingRowHack mBottom10">
+          <div class="paddingLeftHack">
+            <ul class="nav nav-tabs paddingRightHack">
+              {{ self.content_primary_nav() }}
+            </ul>
+          </div>
+        </header>
+      </div>
+      {% if self.content_action() | trim %}
+        <div class="content_action">
+            {% block content_action %}{% endblock %}
+        </div>
+      {% endif %}
+    {% endblock %}
+    <div class="module-content {% block primary_content_module_margin %} mTop45 {% endblock %}">
+      {% if self.page_primary_action() | trim %}
+        <div class="page_primary_action">
+          {% block page_primary_action %}{% endblock %}
+        </div>
+      {% endif %}
+      <div class="row admin-two-col">
+        <div class="col-xs-3">
+          {% block secondary_content %}
+          {% endblock %}
+
+        </div>
+        <div class="col-xs-9">
+          {% block primary_content_inner %}
+          {% endblock %}
+        </div>
+      </div>
+
+    </div>
+  </article>
+{% endblock %}
 
 {% block content_primary_nav %}
 
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
   {% if user_is_sysadmin %}
-    {{ h.build_nav_icon('admin.index', _('Sysadmins')) }}
-    {{ h.build_nav_icon('admin.config', _('Config')) }}
-    {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
-    {{ h.build_nav_icon('admin.trash', _('Trash')) }}
+    {{ h.build_nav_icon('admin.index', _('All Sysadmins')) }}
+  {% endif %}
+  {% if user_is_sysadmin %}
+    <li><a href="/user/">{{ _('All users') }}</a></li>
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
     {{ h.build_nav_icon('carousel_settings', _('Carousel')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
-    {{ h.build_nav_icon('ckanadmin_requests_data', _('Requested Data')) }}
+    {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('admin_page_list') %}
-    {{ h.build_nav_icon('pages_show', _('Event/Custom Pages')) }}
+    {{ h.build_nav_icon('pages_show', _('Custom/Event Pages')) }}
   {% endif %}
-  {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
-    {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
-    {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
+  {% if c.userobj.sysadmin %}
+    <li class="nav-tabs-more">
+      <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+        <span id="crises-label">More <i class="humanitarianicons-Down"></i></span>
+      </a>
+      <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+        <li class="crises-group">
+          <ul>
+            {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
+              {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
+              {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
+            {% endif %}
+            {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+              {{ h.build_nav_icon('admin.config', _('Config')) }}
+
+          </ul>
+        </li>
+      </ul>
+    </li>
   {% endif %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% resource 'hdx_theme/admin/admin-base.css' %}
+  {% resource 'hdx_theme/dashboard.css' %}
+
 {% endblock %}
