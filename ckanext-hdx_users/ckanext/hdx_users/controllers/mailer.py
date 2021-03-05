@@ -64,7 +64,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
-    msg['From'] = _(u"%s <%s>") % ('Humanitarian Data Exchange (HDX)', mail_from)
+    msg['From'] = _(u'"%s" <%s>') % ('Humanitarian Data Exchange (HDX)', mail_from)
     recipient_email_list = []
     recipients = None
     if recipients_list:
@@ -73,7 +73,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             recipient_email_list.append(email)
             display_name = r.get('display_name')
             if display_name:
-                recipient = u"%s <%s>" % (display_name, email)
+                recipient = u'"%s" <%s>' % (display_name, email)
             else:
                 recipient = u"%s" % email
             # else:
@@ -88,14 +88,14 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     if cc_recipients_list:
         for r in cc_recipients_list:
             recipient_email_list.append(r.get('email'))
-            cc_recipient = u"%s <%s>" % (r.get('display_name'), r.get('email'))
+            cc_recipient = u'"%s" <%s>' % (r.get('display_name'), r.get('email'))
             cc_recipients = ', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
         msg['Cc'] = cc_recipients if cc_recipients else ''
 
     msg['Date'] = utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     # if sender_email:
-    msg['Reply-To'] = Header((u"%s <%s>" % (sender_name, sender_email)), 'utf-8')
+    msg['Reply-To'] = Header((u'"%s" <%s>' % (sender_name, sender_email)), 'utf-8')
     part = MIMEText(body_html, 'html', 'utf-8')
     msg.attach(part)
 
