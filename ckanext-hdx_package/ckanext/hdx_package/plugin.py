@@ -407,7 +407,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ],
                 'daterange_for_data': [
                     tk.get_validator('ignore_missing'),
-                ]
+                ],
+                'revision_last_updated': [
+                    tk.get_validator('ignore')
+                ],
             }
         )
         schema.update({
