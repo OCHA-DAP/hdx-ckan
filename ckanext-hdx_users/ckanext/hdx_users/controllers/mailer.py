@@ -2,6 +2,7 @@ import smtplib
 import socket
 import logging
 import cgi
+import unicodedata
 from email import utils
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
@@ -73,7 +74,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             recipient_email_list.append(email)
             display_name = r.get('display_name')
             if display_name:
-                recipient = u'"{display_name}" <{email}>'.format(display_name=display_name, email=email)
+                recipient = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(display_name), email=email)
             else:
                 recipient = u'{email}'.format(email=email)
             # else:
@@ -88,14 +89,14 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     if cc_recipients_list:
         for r in cc_recipients_list:
             recipient_email_list.append(r.get('email'))
-            cc_recipient = u'"{display_name}" <{email}>'.format(display_name=r.get('display_name'), email=r.get('email'))
+            cc_recipient = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(r.get('display_name')), email=r.get('email'))
             cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
         msg['Cc'] = cc_recipients if cc_recipients else ''
 
     msg['Date'] = utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     # if sender_email:
-    reply_to = u'"{display_name}" <{email}>'.format(display_name=sender_name, email=sender_email)
+    reply_to = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(sender_name), email=sender_email)
     msg['Reply-To'] = Header(reply_to, 'utf-8')
     part = MIMEText(body_html, 'html', 'utf-8')
     msg.attach(part)
@@ -162,3 +163,9 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
         raise MailerException(msg)
     finally:
         smtp_connection.quit()
+
+
+def get_decoded_str(display_name):
+    encoded_display_name = display_name.encode('utf-8')
+    decoded_display_name = unicodedata.normalize('NFKD', encoded_display_name).encode('ascii', 'ignore')
+    return decoded_display_name
