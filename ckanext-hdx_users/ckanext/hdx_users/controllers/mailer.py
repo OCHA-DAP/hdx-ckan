@@ -78,7 +78,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                 recipient = u'{email}'.format(email=email)
             # else:
             # no recipient list provided
-            recipients = ', '.join([recipients, recipient]) if recipients else recipient
+            recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
     msg['To'] = Header(recipients, 'utf-8')
     if bcc_recipients_list:
@@ -89,7 +89,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
         for r in cc_recipients_list:
             recipient_email_list.append(r.get('email'))
             cc_recipient = u'"{display_name}" <{email}>'.format(display_name=r.get('display_name'), email=r.get('email'))
-            cc_recipients = ', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
+            cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
         msg['Cc'] = cc_recipients if cc_recipients else ''
 
     msg['Date'] = utils.formatdate(time())
