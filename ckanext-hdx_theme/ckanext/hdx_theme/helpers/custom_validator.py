@@ -22,6 +22,10 @@ def general_value_in_list(value_list, allow_not_selected, not_selected_value='-1
 def doesnt_exceed_max_validity_period(key, data, errors, context):
     expires_in = data.get(key, 0)
     unit = data.get(('unit',), 0)
+    try:
+        unit = int(unit) # make sure the unit is an integer
+    except ValueError as ve:
+        raise df.Invalid(_('Unit needs to be an integer value'))
     seconds = expires_in * unit
     max_seconds = 180 * 24 * 60 * 60
     if seconds > max_seconds:
