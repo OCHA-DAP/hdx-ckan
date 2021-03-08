@@ -34,6 +34,7 @@ Example:
 {% block right_content %}
     <div id="group-message">
         <form id="group-message-form">
+            <div class="alert alert-danger hide"></div>
             <div class="row" style="overflow-y: auto; height: 400px;">
                 <div class="col-xs-12">
                     <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">
@@ -43,7 +44,7 @@ Example:
                         <input type="hidden" name="org_id" value="{{org_id}}">
                         <input type="hidden" name="pkg_id" value="{{pkg_id}}">
                     </div>
-                    <select class="required mTop15" id="group-message-topics-selector" name="topic">
+                    <select class="required mTop15" id="group-message-topics-selector" name="topic" required="required" onchange="_groupMessageValidator();">
                         <option id="" value="">{{ _("Select recipient group(s)") }}</option>
                         {% for key, value in groups.iteritems() %}
                             <option id="group-message-{{key}}" value="{{key}}">{{value}}</option>
@@ -58,14 +59,14 @@ Example:
                         <label for="group-message-email">Your email address</label>
                     </div>
                     <div class="mTop15 control">
-                        <textarea id="group-message-msg" name="msg" class="full-width required"></textarea>
+                        <textarea id="group-message-msg" name="msg" class="full-width required" required="required" oninput="_groupMessageValidator();"></textarea>
                         <label for="group-message-msg">Comments</label>
                     </div>
                 </div>
             </div>
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input class="btn btn-primary btn-large mL45 hdx-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="groupMessageOnSubmit" data-size="invisible" data-badge="inline">
+                <input id="submitGroupMessage" class="btn btn-primary btn-large mL45 hdx-recaptcha disabled" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="groupMessageOnSubmit" data-size="invisible" data-badge="inline">
             </div>
         </form>
     </div>

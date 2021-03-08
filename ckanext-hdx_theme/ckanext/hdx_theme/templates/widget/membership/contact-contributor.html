@@ -40,7 +40,7 @@ Example:
                         <input type="hidden" name="pkg_owner_org" value="">
                         <input type="hidden" name="pkg_id" value="">
                     </div>
-                    <select class="required mTop15" id="contact-contributor-topics-selector" name="topic">
+                    <select class="required mTop15" id="contact-contributor-topics-selector" name="topic" required="required" onchange="_contactContributorFormValidator();">
                         <option id="" value="">{{ _("Your inquiry is regarding ...") }}</option>
                         {% for key, value in topics.iteritems() %}
                             <option id="contact-contributor-{{key}}" value="{{key}}">{{value}}</option>
@@ -55,14 +55,14 @@ Example:
                         <label for="contact-contributor-email">Your email address</label>
                     </div>
                     <div class="mTop15 control">
-                        <textarea id="contact-contributor-msg" name="msg" class="full-width required"></textarea>
+                        <textarea id="contact-contributor-msg" name="msg" class="full-width required" required="required" oninput="_contactContributorFormValidator();"></textarea>
                         <label for="contact-contributor-msg">Comments</label>
                     </div>
                 </div>
             </div>
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input class="btn btn-primary btn-large mL45 hdx-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="contactContributorOnSubmit" data-size="invisible" data-badge="inline">
+                <input id="submitContactContributorMessage" class="btn btn-primary btn-large mL45 hdx-recaptcha disabled" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="contactContributorOnSubmit" data-size="invisible" data-badge="inline">
             </div>
         </form>
     </div>
