@@ -81,7 +81,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             # no recipient list provided
             recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
-    msg['To'] = Header(recipients, 'utf-8')
+    msg['To'] = Header(recipients.encode('utf-8'), 'utf-8')
     if bcc_recipients_list:
         for r in bcc_recipients_list:
             recipient_email_list.append(r.get('email'))
@@ -91,13 +91,13 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             recipient_email_list.append(r.get('email'))
             cc_recipient = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(r.get('display_name')), email=r.get('email'))
             cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
-        msg['Cc'] = cc_recipients if cc_recipients else ''
+        msg['Cc'] = Header(cc_recipients.encode('utf-8'), 'utf-8') if cc_recipients else ''
 
     msg['Date'] = utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     # if sender_email:
     reply_to = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(sender_name), email=sender_email)
-    msg['Reply-To'] = Header(reply_to, 'utf-8')
+    msg['Reply-To'] = Header(reply_to.encode('utf-8'), 'utf-8')
     part = MIMEText(body_html, 'html', 'utf-8')
     msg.attach(part)
 
@@ -166,10 +166,10 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
 
 
 def get_decoded_str(display_name):
-    if display_name:
-        try:
-            decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
-            return decoded_display_name
-        except Exception as ex:
-            log.error(ex)
+    # if display_name:
+    #     try:
+    #         decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
+    #         return decoded_display_name
+    #     except Exception as ex:
+    #         log.error(ex)
     return display_name
