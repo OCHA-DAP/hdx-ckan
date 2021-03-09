@@ -21,6 +21,8 @@ log = logging.getLogger(__name__)
 from ckan.lib.mailer import MailerException
 from ckan.lib.base import render_jinja2
 
+CHARSET = 'utf-8'
+
 
 def mail_recipient(recipients_list, subject, body, sender_name='Humanitarian Data Exchange (HDX)',
                    sender_email='hdx@humdata.org', cc_recipients_list=None, bcc_recipients_list=None,
@@ -44,7 +46,6 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                          reply_wanted=False,
                          snippet='email/email.html',
                          file=None):
-    CHARSET = 'utf-8'
     # if sender_email:
     #     mail_from = sender_email
     # else:
@@ -74,7 +75,8 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             recipient_email_list.append(email)
             display_name = r.get('display_name')
             if display_name:
-                recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(display_name), email=email)
+                recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(display_name),
+                                                                 email=email)
                 # recipient = _get_decoded_address(display_name, email)
             else:
                 recipient = u'{email}'.format(email=email)
@@ -82,7 +84,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             # no recipient list provided
             recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
-    msg['To'] = Header(recipients.encode(CHARSET), CHARSET)
+    msg['To'] = Header(recipients, CHARSET)
 
     if bcc_recipients_list:
         for r in bcc_recipients_list:
@@ -91,15 +93,16 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     if cc_recipients_list:
         for r in cc_recipients_list:
             recipient_email_list.append(r.get('email'))
-            cc_recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(r.get('display_name')), email=r.get('email'))
+            cc_recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(r.get('display_name')),
+                                                                email=r.get('email'))
             cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
-        msg['Cc'] = Header(cc_recipients.encode(CHARSET), CHARSET) if cc_recipients else ''
+        msg['Cc'] = Header(cc_recipients, CHARSET) if cc_recipients else ''
 
     msg['Date'] = utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     # if sender_email:
     reply_to = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(sender_name), email=sender_email)
-    msg['Reply-To'] = Header(reply_to.encode(CHARSET), CHARSET)
+    msg['Reply-To'] = Header(reply_to, CHARSET)
     part = MIMEText(body_html, 'html', CHARSET)
     msg.attach(part)
 
@@ -170,12 +173,13 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
 def _get_decoded_str(display_name):
     if display_name:
         try:
-            decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
+            encoded_display_name = display_name.encode(CHARSET)
+            decoded_display_name = unicodedata.normalize('NFKD', encoded_display_name).encode('ascii', 'ignore')
             return decoded_display_name
         except Exception as ex:
             log.error(ex)
     return display_name
-
-
-def _get_decoded_address(display_name, email):
-    return utils.formataddr((display_name, email)).encode('utf-8')
+#
+#
+# def _get_decoded_address(display_name, email):
+#     return utils.formataddr((display_name, email)).encode('utf-8')
