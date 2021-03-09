@@ -196,7 +196,9 @@
               {% block page_primary_action %}{% endblock %}
             </div>
           {% endif %}
-          {% block primary_content_inner %}
+          {% block primary_content_inner_wrapper %}
+            {% block primary_content_inner %}
+            {% endblock %}
           {% endblock %}
         </div>
       </article>

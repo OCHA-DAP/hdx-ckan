@@ -9,6 +9,19 @@ $(document).ready(function(){
         function(){ $(this).removeClass('open') }
     );
 
+    $(".dropdown .collapsible-submenu-item").click((ev) => {
+      let container = $(ev.currentTarget).siblings(".dropdown-submenu");
+      let icon = $(ev.currentTarget).find("i");
+      let classes = icon.prop("classList");
+      let toggle = classes.contains('humanitarianicons-Down');
+      classes.forEach(c => icon.removeClass(c));
+      icon.addClass((toggle ? 'humanitarianicons-Up' : 'humanitarianicons-Down'));
+      container.collapse((toggle ? 'hide':'show'));
+      console.log("click fired");
+      ev.stopPropagation();
+      return true;
+    });
+
     // function showDataUseSurveyPopup() {
     //   var SURVEY_COOKIE = "hdx-data-usesurvey-popup";
     //   var cookie = $.cookie(SURVEY_COOKIE);

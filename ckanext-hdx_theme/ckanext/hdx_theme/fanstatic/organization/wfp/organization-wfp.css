@@ -3634,14 +3634,26 @@ ul.list-horizontal li:first-child:before {
   align-items: center;
   color: #f2645a;
 }
-.new-header .global-header .global-header-content .header-user-box .dropdown-menu {
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
+  list-style: none;
+  padding: 0;
+}
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu > li > a {
+  padding: 3px 20px 3px 40px;
+  display: block;
+}
+.new-header .global-header .global-header-content .header-user-box .dropdown-menu,
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
   margin: 0;
 }
-.new-header .global-header .global-header-content .header-user-box .dropdown-menu li a {
+.new-header .global-header .global-header-content .header-user-box .dropdown-menu li a,
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu li a {
   color: #333333;
 }
 .new-header .global-header .global-header-content .header-user-box .dropdown-menu > li > a:hover,
-.new-header .global-header .global-header-content .header-user-box .dropdown-menu > li > a:focus {
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu > li > a:hover,
+.new-header .global-header .global-header-content .header-user-box .dropdown-menu > li > a:focus,
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu > li > a:focus {
   color: #fff;
   background-color: #007CE0;
   background-image: none;
