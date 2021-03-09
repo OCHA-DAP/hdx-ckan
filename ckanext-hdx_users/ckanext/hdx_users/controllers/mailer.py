@@ -81,7 +81,10 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             # no recipient list provided
             recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
-    msg['To'] = Header(recipients.encode('utf-8'), 'utf-8')
+    # msg['To'] = Header(recipients.encode('utf-8'), 'utf-8')
+    CHARSET = 'utf-8'
+    msg['To'] = MIMEText(recipients.encode(CHARSET), 'plain', CHARSET)
+
     if bcc_recipients_list:
         for r in bcc_recipients_list:
             recipient_email_list.append(r.get('email'))
