@@ -44,7 +44,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
                          reply_wanted=False,
                          snippet='email/email.html',
                          file=None):
-
+    CHARSET = 'utf-8'
     # if sender_email:
     #     mail_from = sender_email
     # else:
@@ -63,7 +63,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     # msg = MIMEMultipart('alternative')
     msg = MIMEMultipart()
     for k, v in headers.items(): msg[k] = v
-    subject = Header(subject.encode('utf-8'), 'utf-8')
+    subject = Header(subject.encode(CHARSET), CHARSET)
     msg['Subject'] = subject
     msg['From'] = u'"{display_name}" <{email}>'.format(display_name='Humanitarian Data Exchange (HDX)', email=mail_from)
     recipient_email_list = []
@@ -74,16 +74,16 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             recipient_email_list.append(email)
             display_name = r.get('display_name')
             if display_name:
-                recipient = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(display_name), email=email)
+                # recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(display_name), email=email)
+                recipient = _get_decoded_address(display_name, email)
             else:
                 recipient = u'{email}'.format(email=email)
             # else:
             # no recipient list provided
             recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
-    # msg['To'] = Header(recipients.encode('utf-8'), 'utf-8')
-    CHARSET = 'utf-8'
-    msg['To'] = MIMEText(recipients.encode(CHARSET), 'plain', CHARSET)
+    # msg['To'] = Header(recipients, 'utf-8').encode()
+    msg['To'] = Header(recipients, 'utf-8')
 
     if bcc_recipients_list:
         for r in bcc_recipients_list:
@@ -92,16 +92,16 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
     if cc_recipients_list:
         for r in cc_recipients_list:
             recipient_email_list.append(r.get('email'))
-            cc_recipient = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(r.get('display_name')), email=r.get('email'))
+            cc_recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(r.get('display_name')), email=r.get('email'))
             cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
-        msg['Cc'] = Header(cc_recipients.encode('utf-8'), 'utf-8') if cc_recipients else ''
+        msg['Cc'] = Header(cc_recipients.encode(CHARSET), CHARSET) if cc_recipients else ''
 
     msg['Date'] = utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     # if sender_email:
-    reply_to = u'"{display_name}" <{email}>'.format(display_name=get_decoded_str(sender_name), email=sender_email)
-    msg['Reply-To'] = Header(reply_to.encode('utf-8'), 'utf-8')
-    part = MIMEText(body_html, 'html', 'utf-8')
+    reply_to = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(sender_name), email=sender_email)
+    msg['Reply-To'] = Header(reply_to.encode(CHARSET), CHARSET)
+    part = MIMEText(body_html, 'html', CHARSET)
     msg.attach(part)
 
     if isinstance(file, cgi.FieldStorage):
@@ -168,11 +168,15 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
         smtp_connection.quit()
 
 
-def get_decoded_str(display_name):
-    # if display_name:
-    #     try:
-    #         decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
-    #         return decoded_display_name
-    #     except Exception as ex:
-    #         log.error(ex)
+def _get_decoded_str(display_name):
+    if display_name:
+        try:
+            decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
+            return decoded_display_name
+        except Exception as ex:
+            log.error(ex)
     return display_name
+
+
+def _get_decoded_address(display_name, email):
+    return utils.formataddr((display_name, email)).encode('utf-8')
