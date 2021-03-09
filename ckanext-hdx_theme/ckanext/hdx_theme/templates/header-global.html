@@ -138,51 +138,101 @@
                       </a>
                       <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         {% block header_account_logged %}
+                        {% set user_is_sysadmin = h.check_access('sysadmin') %}
                         {% set def_url = h.find_first_global_settings_url() %}
                         {% if def_url %}
                           <li>
-                            <a href="{{def_url}}" title="{{ _('Global Settings') }}">
-                              <i class="icon-legal"></i>
-                              <span>{{ _('Global Settings') }}</span>
+                            <a href="#" class="collapsible-submenu-item" title="{{ _('Sysadmin Dashboard') }}">
+                              {{ _('Sysadmin Dashboard') }} <i class="humanitarianicons-Down"></i>
                             </a>
+                            <ul id="user-menu-sysadmin-submenu" class="dropdown-submenu collapse in">
+                              <li>
+                                <a href="{{def_url}}" title="{{ _('All Sysadmins') }}">
+                                  <i class="icon-legal"></i>
+                                  <span>{{ _('All Sysadmins') }}</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="/user/" title="{{ _('All Users') }}">
+                                  <i class="icon-legal"></i>
+                                  <span>{{ _('All Users') }}</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="{{ h.url_for('carousel_settings') }}" title="{{ _('Carousel') }}">
+                                  <i class="icon-legal"></i>
+                                  <span>{{ _('Carousel') }}</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="{{ h.url_for('ckanadmin_requests_data') }}" title="{{ _('HDX Connect Dashboard') }}">
+                                  <i class="icon-legal"></i>
+                                  <span>{{ _('HDX Connect Dashboard') }}</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="{{ h.url_for('pages_show') }}" title="{{ _('Custom/Event Pages') }}">
+                                  <i class="icon-legal"></i>
+                                  <span>{{ _('Custom/Event Pages') }}</span>
+                                </a>
+                              </li>
+                              {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
+                                {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
+                                {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
+                              {% endif %}
+                              {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+                              {{ h.build_nav_icon('admin.config', _('Config')) }}
+                            </ul>
                           </li>
-                         {% if h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
+                        {% endif %}
+                        {% if def_url and h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
                           <li>
                             <a href="/qa_dashboard?ext_bulk_datasets=0&ext_qa_completed=0" title="{{ _('QA Dashboard') }}">
                               <i class="icon-legal"></i>
                               <span>{{ _('QA Dashboard') }}</span>
                             </a>
                           </li>
-                         {% endif %}
                         {% endif %}
-                        <li>
-                          <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('Profile') }}">
-                            <i class="icon-user"></i>
-                            <span>{{ _('Profile') }}</span>
-                          </a>
+                        <li class="notifications">
+                            <a href="#" class="collapsible-submenu-item" title="{{ _('User Dashboard') }}">
+                              {{ _('User Dashboard') }} <i class="humanitarianicons-Down"></i>
+                            </a>
+                            <ul class="dropdown-submenu collapse in">
+                              {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
+                              {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
+                              {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
+                              {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
+                              {{ h.build_nav_icon('requestdata_my_requests', _('HDX Connect Requests'), id=c.userobj.name) }}
+                              {% if user_is_sysadmin %}
+                                <li>
+                                  <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">Carousel</a>
+                                </li>
+                                {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}
+                                {{ h.build_nav_icon('pages_show', _('Custom/Event Page')) }}
+                                <li>
+                                  <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
+                                </li>
+                              {% endif %}
+
+                            </ul>
                         </li>
                         <li class="notifications">
-                          {# CKAN 2.2 DOES NOT LIKE THIS #}
-                          {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
-                          <a href="{{ h.url_for('user_dashboard_datasets') }}" title="{{ _('Dashboard') }}{# notifications_tooltip #}">
-                            <i class="icon-dashboard"></i>
-                            <span> {{ _('Dashboard') }} </span>
+                          <a href="#" class="collapsible-submenu-item" title="{{ _('User Settings') }}">
+                            {{ _('User Settings') }} <i class="humanitarianicons-Down"></i>
                           </a>
+                          <ul class="dropdown-submenu collapse in">
+                            {{ h.build_nav_icon('user.read', _('Datasets'), id=c.userobj.name) }}
+                            {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=c.userobj.name) }}
+                            {% if h.check_access('sysadmin') %}
+                              {{ h.build_nav_icon('user_permission', _('User Permission'), id=c.userobj.name) }}
+                            {% endif %}
+                            {% if h.check_access('api_token_list', {'user': c.userobj['name']}) %}
+                              {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=c.userobj.name) }}
+                            {% endif %}
+                          </ul>
                         </li>
-                        <li>
-                          <a href="{{ h.url_for('dashboard.organizations') }}" title="{{ _('My Organisations') }}">
-                            <i class="icon-user"></i>
-                            <span>{{ _('My Organisations') }}</span>
-                          </a>
-                        </li>
-                        {% block header_account_settings_link %}
-                        <li>
-                          <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('User Settings') }}">
-                            <i class="icon-cog"></i>
-                            <span>{{ _('User Settings') }}</span>
-                          </a>
-                        </li>
-                        {% endblock %}
+
+
                         {% block header_account_log_out_link %}
                         <li>
                           <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">

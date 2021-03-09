@@ -2,7 +2,7 @@
 
 {% import 'macros/form.html' as form %}
 
-{% block page_primary_action %}
+{% block primary_content_inner %}
   {% if h.check_access('api_token_create', {'user': user['name']}) %}
     <form method="POST" class="form">
       {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
@@ -21,14 +21,6 @@
       {% endblock form_actions %}
     </form>
   {% endif %}
-{% endblock page_primary_action %}
-
-
-{% block primary_content_inner %}
-  <h2 class="hide-heading">
-    {% block page_heading %}{{ _('API Tokens') }}{% endblock %}
-  </h2>
-
   {% block token_list %}
     {% if tokens %}
       {% snippet 'user/snippets/api_token_list.html', tokens=tokens, user=user %}

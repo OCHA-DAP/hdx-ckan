@@ -9,10 +9,25 @@
   {{ h.build_nav('user.read', user.display_name|truncate(35), id=user.name) }}
 {% endblock %}
 
-{% block content_action %}
-{% if h.check_access('user_update', user) %}
-  {% link_for _('Edit'), controller='user', action='edit', id=user.name, class_='btn', icon='wrench' %}
-{% endif %}
+{% block item_title_contrib %}
+  <h2 class="sspBold28 black">
+    {% block page_heading %}
+      {{ _('User Settings') }}
+    {% endblock %}
+  </h2>
+{% endblock %}
+{% block primary_content_module_margin %} mTop30 {% endblock %}
+{% block secondary %}{% endblock %}
+{% block primary_content_inner_wrapper %}
+  <div class="row admin-two-col">
+    <div class="col-xs-3">
+      {{ self.secondary_content() }}
+    </div>
+    <div class="col-xs-9">
+      {% block primary_content_inner %}
+      {% endblock %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content_primary_nav %}
@@ -96,8 +111,18 @@
           <dd class="value"><code>{{ user.apikey }}</code></dd>
         </dl>
         {% endif %}
+        {% if h.check_access('user_update', user) %}
+          {% link_for _('Edit'), controller='user', action='edit', id=user.name, class_='btn', icon='wrench' %}
+        {% endif %}
       </div>
     {% endblock %}
   </section>
 </div>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% resource 'hdx_theme/admin/admin-base.css' %}
+  {% resource 'hdx_theme/dashboard.css' %}
+
 {% endblock %}
