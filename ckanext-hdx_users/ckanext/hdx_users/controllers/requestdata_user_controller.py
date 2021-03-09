@@ -135,7 +135,7 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                    'auth_user_obj': c.userobj}
         if request_action == _REQUESTDATA_REJECT:
             try:
-                subject = u'Request for access to HDX "metadata-only" dataset denied'
+                subject = u'Request for access to HDX "metadata-only" dataset'
                 pkg_dict = get_action('package_show')(context, {'id': data.get('package_id')})
                 org_dict = get_action('organization_show')(context, {'id': pkg_dict.get('owner_org')})
                 email_data = {
@@ -174,7 +174,7 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                 return json.dumps(error)
 
         if request_action == _REQUESTDATA_REPLY:
-            subject = u'Request for access to HDX "metadata-only" dataset approved'
+            subject = u'Request for access to HDX "metadata-only" dataset'
             pkg_dict = get_action('package_show')(context, {'id': data.get('package_id')})
             org_dict = get_action('organization_show')(context, {'id': pkg_dict.get('owner_org')})
             email_data = {
@@ -192,7 +192,7 @@ class HDXRequestdataUserController(requestdata_user.UserController):
                                       snippet='email/content/request_data_approval_to_user.html',
                                       file=data.get('file_upload'))
 
-            subject = u'Request for access to HDX "metadata only" dataset approved'
+            subject = u'Request for access to HDX "metadata only" dataset'
             maintainer_obj = model.User.get(pkg_dict.get('maintainer'))
             email_data = {
                 'user_fullname': data.get('requested_by'),
