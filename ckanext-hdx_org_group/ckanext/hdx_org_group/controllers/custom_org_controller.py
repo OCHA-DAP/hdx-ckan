@@ -477,4 +477,4 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         return result
 
     def _activity_template(self, group_type):
-        return  'organization/custom_activity_stream.html'
+        return 'organization/custom_activity_stream.html'

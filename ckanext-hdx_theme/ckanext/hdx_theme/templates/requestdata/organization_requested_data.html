@@ -24,7 +24,7 @@
 {% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
 
 {% block primary_content_inner %}
-  <div class="request-data-module">
+  <div class="request-data-module mTop30">
     {% snippet 'requestdata/snippets/requests_header.html', title='Dataset Requests', total_requests=total_requests, type='organization', maintainers=maintainers, org_name=org_name, counters=counters %}
     <br>
     {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
