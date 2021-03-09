@@ -173,8 +173,8 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
 def _get_decoded_str(display_name):
     if display_name:
         try:
-            encoded_display_name = display_name.encode(CHARSET)
-            decoded_display_name = unicodedata.normalize('NFKD', encoded_display_name).encode('ascii', 'ignore')
+            # encoded_display_name = display_name.encode(CHARSET)
+            decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
             return decoded_display_name
         except Exception as ex:
             log.error(ex)
