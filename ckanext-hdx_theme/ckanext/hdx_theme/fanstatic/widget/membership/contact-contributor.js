@@ -1,6 +1,16 @@
 $(document).ready(function(){
     var $contact = $('#contact-contributor-form');
     $contact.find("select").select2();
+    _contactContributorFormValidator = function(){
+      var contactContributorMessageMsg = $("#contact-contributor-msg");
+      var contactContributorSelector = $("#contact-contributor-topics-selector");
+      if(contactContributorSelector.val() !== "" && contactContributorMessageMsg.val()!==""){
+        $("#submitContactContributorMessage").removeClass("disabled");
+      }
+      else {
+        $("#submitContactContributorMessage").addClass("disabled");
+      }
+    };
     contactContributorOnSubmit = function(){
         $this = $('#contact-contributor-form');
         var toMessage = $("#membershipDonePopup").find(".to-message ");

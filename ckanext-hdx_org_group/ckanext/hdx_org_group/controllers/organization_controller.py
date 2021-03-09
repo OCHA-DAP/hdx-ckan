@@ -307,16 +307,12 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         }
         return render(self._edit_template(c.group.type), extra_vars=extra_vars)
 
-    # def stats(self, id, data=None, errors=None, error_summary=None):
-    #     template_data = {}
-    #     return render('organization/stats.html', extra_vars=template_data)
-
     def stats(self, id, org_meta=None, offset=0):
         if not org_meta:
             org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         c.org_meta = org_meta
         org_meta.fetch_all()
-
+        helper.org_add_last_updated_field([org_meta.org_dict])
         c.group_dict = org_meta.org_dict
 
         # Add the group's activity stream (already rendered to HTML) to the
@@ -470,7 +466,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         c.org_meta = org_meta
         org_meta.fetch_all()
-
+        helper.org_add_last_updated_field([org_meta.org_dict])
         c.group_dict = org_meta.org_dict
 
         # Add the group's activity stream (already rendered to HTML) to the

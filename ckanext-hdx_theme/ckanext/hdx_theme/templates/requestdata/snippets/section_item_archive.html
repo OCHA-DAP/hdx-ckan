@@ -8,8 +8,9 @@ Example usage:
   {% snippet 'requestdata/snippets/section_item_archive.html', item=item %}
 
 #}
-
+{% resource 'requestdata/handle-reopen-request.js' %}
 {% resource 'requestdata/expand-dataset.js' %}
+
 {% set package_url = h.url_for('dataset_read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
@@ -49,6 +50,20 @@ Example usage:
         {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
 
         <div class="requested-data-container__collapse--request-status">
+            <div >
+              {% set action_reopen = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+              {% set post_data_reopen = h.dump_json({'id': x.id, 'package_id': x.package_id, 'state': 'open', 'data_shared': True}) %}
+              <span class="mL30">
+                <a data-module="handle-reopen-request"
+                  data-module-action="{{ action_reopen }}"
+                  data-module-post_data="{{ post_data_reopen }}"
+                  data-module-refresh_on_success="1"
+                  style="cursor: pointer;">{{ _('Reopen this request') }}</a>
+              </span>
+              <div class="alert alert-dismissible request-message-alert hide" role="alert">
+                <div class="alert-text"></div>
+              </div>
+            </div>
           {% if x.rejected %}
             <div style="margin-right: 2px;">
               <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />

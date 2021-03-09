@@ -1,11 +1,20 @@
 $(document).ready(function(){
     var $group = $('#group-message-form');
     $group.find("select").select2();
+    _groupMessageValidator = function(){
+      var groupMessageMsg = $("#group-message-msg");
+      var groupSelector = $("#group-message-topics-selector");
+      if(groupSelector.val() !== "" && groupMessageMsg.val()!==""){
+        $("#submitGroupMessage").removeClass("disabled");
+      }
+      else {
+        $("#submitGroupMessage").addClass("disabled");
+      }
+    };
     groupMessageOnSubmit = function(){
         $this = $("#group-message-form");
         var toMessage = $("#membershipDonePopup").find(".to-message ");
         toMessage.hide();
-
         var analyticsPromise =
             hdxUtil.analytics.sendMessagingEvent('dataset', 'group message',
                 null, $this.find('select[name="topic"]').val(), true);
@@ -32,5 +41,5 @@ $(document).ready(function(){
         );
 
         return false;
-    }
+    };
 });

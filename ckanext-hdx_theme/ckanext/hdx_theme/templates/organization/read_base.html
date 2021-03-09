@@ -30,7 +30,10 @@
 
 {% block links %}
   {{ super() }}
-  {% include "organization/snippets/feeds.html" %}
+    {% if 'country_dict' in c.group_dict %}
+      {% set group_dict = c.group_dict %}
+      {% include "organization/snippets/feeds.html" %}
+    {%  endif %}
 {% endblock %}
 
 {% block styles %}
