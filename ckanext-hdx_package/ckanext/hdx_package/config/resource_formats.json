@@ -23,6 +23,7 @@
   ["ERDAS Image","ERDAS raster image format",null,["rrd",".rrd",".img","img"]],
   ["ESRI ArcMap Project File","ESRI ArcGIS project file","application/x-mxd",[".mxd","mxd"]],
   ["ESRI Map Package","A container for map layout and data",null,["mpk",".mpk"]],
+  ["External System","A system outside HDX's control must be used to access the data",null,[]],
   ["Garmin IMG","Map data format for Garmin GPS devices",null,[]],
   ["GDAL Virtual Format","GDAL Virtual Format - an xml file describing multiple geospatial rasters that can be loaded together",null,[".vrt","vrt"]],
   ["Geodatabase","ESRI File Geodatabase or ESRI Personal Geodatabase",null,["gdb","zipped gdb","geodatabase","zipped geodatabase","zipped file geodatabase","zipped geodatabse",".gdb"]],
