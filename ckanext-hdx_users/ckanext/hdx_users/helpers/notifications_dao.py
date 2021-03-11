@@ -88,6 +88,7 @@ class RequestDataDao(object):
             .filter(requestdata_model.ckanextRequestdata.package_id == model.Package.id) \
             .filter(requestdata_model.ckanextRequestdata.state == 'new') \
             .filter(model.Package.state == 'active') \
+            .filter(model.Package.private == False) \
             .filter(model.Package.maintainer == self.userobj.id)
 
         return query.all()
@@ -104,6 +105,7 @@ class RequestDataDao(object):
                 .filter(requestdata_model.ckanextRequestdata.package_id == model.Package.id) \
                 .filter(requestdata_model.ckanextRequestdata.state == 'new') \
                 .filter(model.Package.state == 'active') \
+                .filter(model.Package.private == False) \
                 .group_by(model.Group.name, model.Group.title)
 
             return query.all()
