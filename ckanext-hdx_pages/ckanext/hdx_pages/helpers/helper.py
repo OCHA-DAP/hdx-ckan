@@ -22,9 +22,9 @@ def hdx_events_list():
             "ongoing": sorted(ongoing, key=lambda x: x['title'])}
 
 
-def _compute_iframe_style(section):
+def _compute_iframe_style(section, is_mobile=False):
     style = 'width: 100%; '
-    max_height = section.get('max_height')
+    max_height = section.get('m_max_height') if is_mobile else section.get('max_height')
     height = max_height if max_height else '400px'
     style += 'max-height: {}; '.format(max_height) if max_height else ''
     style += 'height: {}; '.format(height)
