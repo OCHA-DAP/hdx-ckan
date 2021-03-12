@@ -278,6 +278,7 @@ class PagesController(HDXSearchController):
                 _title = self._get_default_title(request.params.get("field_section_" + str(_i) + "_type"),
                                                  request.params.get("field_section_" + str(_i) + "_section_title"))
                 size = request.params.get("field_section_" + str(_i) + "_max_height")
+                m_size = request.params.get("field_section_" + str(_i) + "_m_max_height")
                 # if size and size == '':
                 #     size = '400px'
                 section = {
@@ -285,6 +286,7 @@ class PagesController(HDXSearchController):
                     "data_url": request.params.get("field_section_" + str(_i) + "_data_url"),
                     "section_title": _title,
                     "max_height": size,
+                    "m_max_height": m_size,
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
                     "long_description": request.params.get("field_section_" + str(_i) + "_section_long_description"),
                 }
