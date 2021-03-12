@@ -115,7 +115,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
         url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='new')
         try:
             page_new = self._get_url(url)
-            assert 'Something went wrong' in page_new.body, 'a regular user can not not access a page creation form'
+            assert 'Page not found' in page_new.body, 'a regular user can not not access a page creation form'
             assert '404 Not Found' in page_new.status
         except Exception, ex:
             assert False
@@ -152,7 +152,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
                         id=page_dict.get('id'))
         try:
             page_edit = self._get_url(url)
-            assert 'Something went wrong' in page_edit.body, 'a regular user can not not access a page edit form'
+            assert 'Page not found' in page_edit.body, 'a regular user can not not access a page edit form'
             assert '404 Not Found' in page_edit.status
         except Exception, ex:
             assert False
@@ -208,7 +208,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
             url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',
                             id='nopageid')
             eldashbo_result = self._get_url(url, user.apikey)
-            assert 'Something went wrong' in eldashbo_result.body, 'page doesn\'t exist'
+            assert 'Page not found' in eldashbo_result.body, 'page doesn\'t exist'
             assert '404 Not Found' in eldashbo_result.status
         except Exception, ex:
             assert False
@@ -243,7 +243,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
                             action='delete',
                             id=eldeleted_page.get('id'))
             page_delete = self._get_url(url, user.apikey)
-            assert 'Something went wrong' in page_delete.body, 'page doesn\'t exist'
+            assert 'Page not found' in page_delete.body, 'page doesn\'t exist'
             assert '404 Not Found' in page_delete.status
         except logic.NotAuthorized:
             assert False
@@ -259,7 +259,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
                             action='delete',
                             id='nopageid')
             page_delete = self._get_url(url, user.apikey)
-            assert 'Something went wrong' in page_delete.body, 'page doesn\'t exist'
+            assert 'Server Error' in page_delete.body, 'page doesn\'t exist'
             assert '500 Internal Server Error' in page_delete.status
         except Exception as ex:
             assert False
