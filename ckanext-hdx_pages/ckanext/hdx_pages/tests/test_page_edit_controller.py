@@ -88,7 +88,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             res = self.app.post('/page/edit', params=post_params, extra_environ=auth)
             assert '404 Not Found' in res.status
-            assert 'Sorry, something went wrong.' in res.body
+            assert 'Sorry, the page you are looking for could not be found.' in res.body
             assert 'Please check the URL, try the search or go back to our homepage.' in res.body
         except AssertionError as ex:
             assert False
