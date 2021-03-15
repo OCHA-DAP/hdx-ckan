@@ -66,14 +66,14 @@
       {% set status_text = 'Error' %}
     {% endif %}
 
-    {% if resource.pii_is_sensitive=='true' %}
+    {% if resource.pii_is_sensitive==True %}
       <span class="pii-label warn">
         <span class="pii-label-text" title="Predict score: {{score}}%">
           Sensitive
         </span>
         <i class="humanitarianicons-Alert"></i>
       </span>
-    {% elif resource.pii_is_sensitive=='false' %}
+    {% elif resource.pii_is_sensitive==False %}
       <span class="pii-label ok">
         <span class="pii-label-text">
           OK
@@ -101,8 +101,8 @@
               <h5 class="modal-title">Confirm Risk Classification</h5>
             </div>
             <div class="modal-body">
-              <label><input name="pii-confirm" type="radio" value="true" {% if resource.pii_is_sensitive=='true' %} checked="checked"{% endif %}> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
-              <label><input name="pii-confirm" type="radio" value="false" {% if resource.pii_is_sensitive=='false' %} checked="checked"{% endif %}> <span class="icon-check"></span> I have checked this resource and I did not find any sensitive content</label>
+              <label><input name="pii-confirm" type="radio" value="true" {% if resource.pii_is_sensitive==True %} checked="checked"{% endif %}> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
+              <label><input name="pii-confirm" type="radio" value="false" {% if resource.pii_is_sensitive==False %} checked="checked"{% endif %}> <span class="icon-check"></span> I have checked this resource and I did not find any sensitive content</label>
             </div>
             <div class="modal-footer">
               {% set score_for_mixpanel = resource.pii_predict_score|float  if resource.pii_predict_score else 0 %}

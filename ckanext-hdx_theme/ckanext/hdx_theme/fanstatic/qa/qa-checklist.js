@@ -60,7 +60,7 @@ function _getQuestionData() {
     })
       .done((result) => {
         if (result.success) {
-          console.log(result.result);
+          // console.log(result.result);
           resolve(result.result);
         } else {
           reject(result);

@@ -326,7 +326,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'pii_is_sensitive': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
+                    tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
+                    tk.get_validator('boolean_validator')
                 ],
                 'pii_predict_score': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
@@ -411,6 +412,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'revision_last_updated': [
                     tk.get_validator('ignore')
                 ],
+                'pii_is_sensitive': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ]
             }
         )
         schema.update({

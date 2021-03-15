@@ -158,6 +158,9 @@ class HDXQAController(HDXSearchController):
         search_data_dict['facet.field'].append('res_extras_in_quarantine')
         search_data_dict['facet.field'].append('{!ex=batch}extras_qa_completed')
         search_data_dict['f.extras_qa_completed.facet.missing'] = 'true'
+        search_data_dict['facet.field'].append('{!ex=batch}res_extras_pii_is_sensitive')
+        search_data_dict['f.res_extras_pii_is_sensitive.facet.missing'] = 'true'
+
 
     # def _generate_facet_name_to_title_map(self, package_type):
     #     facets = super(HDXQAController, self)._generate_facet_name_to_title_map(package_type)
@@ -192,6 +195,8 @@ class HDXQAController(HDXSearchController):
             self.__process_in_quarantine_facet(existing_facets, title_translations, search_extras, item_list)
 
             self.__process_methodology(title_translations)
+
+            self.__process_pii_is_sensitive_facet(existing_facets, title_translations, search_extras, item_list)
 
     def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
         category_key = 'ext_' + item_name
@@ -257,6 +262,24 @@ class HDXQAController(HDXSearchController):
         qa_category_key = 'ext_broken_link'
         item['category_key'] = qa_category_key
         item['display_name'] = 'Broken links'
+        item['name'] = '1'
+        item['count'] = item.get('count', 0)
+        item['selected'] = search_extras.get(qa_category_key)
+
+        qa_only_item_list.append(item)
+
+    def __process_pii_is_sensitive_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
+        title_translations.pop('res_extras_pii_is_sensitive', None)
+
+        facet_data = existing_facets.pop('res_extras_pii_is_sensitive', {})
+        item = next(
+            (i for i in facet_data.get('items', []) if i.get('name') is None),
+            {}
+        )
+
+        qa_category_key = 'ext_pii_is_sensitive'
+        item['category_key'] = qa_category_key
+        item['display_name'] = 'Unconfirmed Sensitivity Classification'
         item['name'] = '1'
         item['count'] = item.get('count', 0)
         item['selected'] = search_extras.get(qa_category_key)
