@@ -12,7 +12,7 @@ class RedirectionMiddleware(object):
         if path:
             if path.endswith('/'):
                 return path[:-1]
-            elif '/?' in path:
+            elif path.find('/?') > 0:
                 return path.replace('/?', '?')
         return None
 
