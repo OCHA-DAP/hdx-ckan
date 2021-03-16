@@ -160,7 +160,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
         testadmin = model.User.by_name('janedoe3')
         result = self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
-        assert 'something went wrong' in result.data
+        assert 'You don\'t have permission to access this page' in result.data
         assert result.status_code == 403
 
         # assert 'id="customization-trigger"' not in str(result.response)
