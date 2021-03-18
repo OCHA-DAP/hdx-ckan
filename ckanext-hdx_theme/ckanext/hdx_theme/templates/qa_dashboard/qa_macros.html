@@ -29,7 +29,7 @@
   {% endif %}
 {% endmacro %}
 
-{% macro qa_check_pii_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None, resource=None) %}
+{% macro qa_check_pii_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None, resource=None, dlp_run=False) %}
   {# status - OK, FINDINGS, EXCEPTION, RUNNIG/QUEUED, None/False #}
   {# status_text - not needed in case it's still RUNNING/QUEUED #}
 
@@ -40,7 +40,7 @@
     <span class="pii-status">
       In progress
     </span>
-  {% elif status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION' %}
+  {% elif status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION' or status=='' or not status %}
     {% if status == 'OK' %}
       {% set status_class = 'ok' %}
       {% set icon_class = 'humanitarianicons-Selected' %}
@@ -65,7 +65,6 @@
       {% set icon_class = 'humanitarianicons-Alert' %}
       {% set status_text = 'Error' %}
     {% endif %}
-
     {% if resource.pii_is_sensitive==True %}
       <span class="pii-label warn">
         <span class="pii-label-text" title="Predict score: {{score}}%">
@@ -89,11 +88,10 @@
       </span>
     {% endif %}
 
-
     <span class="pii-status">
-      {% if not resource.pii_is_sensitive %}
+{#      {% if not resource.pii_is_sensitive %}#}
         <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{resource.id}}">Confirm</a>
-      {% endif %}
+{#      {% endif %}#}
       <div class="modal" id="pii-confirm-modal-{{resource.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -107,12 +105,13 @@
             <div class="modal-footer">
               {% set score_for_mixpanel = resource.pii_predict_score|float  if resource.pii_predict_score else 0 %}
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}', {{ score_for_mixpanel }}, '{{ link_to_log }}')">Confirm</button>
+              <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}', {{ score_for_mixpanel }}, '{{ link_to_log }}', '{{ dlp_run }}')">Confirm</button>
             </div>
           </div>
         </div>
       </div>
-      {% if link_to_log %}
+
+      {% if link_to_log and (status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION') %}
         <div class="more-options center-y">
           <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
             <i class="humanitarianicons-More-options"></i>
@@ -120,7 +119,7 @@
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
             {% if resource.pii_is_sensitive %}
               <li>
-                <a href="#" data-toggle="modal" data-target="#pii-confirm-modal">Update Risk Classification</a>
+                <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{ res.id }}">Update Risk Classification</a>
               </li>
             {% endif %}
             {% if link_to_dlp %}
