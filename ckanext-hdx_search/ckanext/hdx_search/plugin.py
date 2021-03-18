@@ -146,6 +146,13 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             else:
                 raise Exception('wrong parameter value for ext_batch')
 
+        if 'ext_pii_is_sensitive' in search_params['extras']:
+            show_unconfirmed = search_params['extras']['ext_pii_is_sensitive'].strip()
+            if show_unconfirmed:
+                search_params['fq'] += ' -res_extras_pii_is_sensitive:[* TO *]'
+            else:
+                raise Exception('wrong parameter value for ext_pii_is_sensitive')
+
         if 'ext_after_metadata_modified' in search_params['extras'] or \
                 'ext_before_metadata_modified' in search_params['extras']:
             start_metadata_modified = search_params['extras'].get('ext_after_metadata_modified', '*')

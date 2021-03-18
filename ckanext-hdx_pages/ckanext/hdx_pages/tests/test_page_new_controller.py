@@ -77,7 +77,7 @@ class TestHDXPageController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             res = self.app.post('/page/new', params=post_params, extra_environ=auth)
-            assert 'Something went wrong' in res.body
+            assert 'Page not found' in res.body
         except Exception, ex:
             assert False
             # assert '404 Not Found' in ex.message

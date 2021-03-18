@@ -118,6 +118,7 @@
                                 {% set s_description = 'field_section_'+_i+'_section_description' %}
                                 {% set s_long_description = 'field_section_'+_i+'_section_long_description' %}
                                 {% set s_max_height = 'field_section_'+_i+'_max_height' %}
+                                {% set s_m_max_height = 'field_section_'+_i+'_m_max_height' %}
                                 {% set s_del = 'del_section_'+_i %}
                                 <div class="col-xs-12 hdx-visible-element pTopBottom15" id="{{s_id}}" >
                                     <div class="row">
@@ -129,6 +130,7 @@
 {#                                            {{ form.input(s_long_description, id=s_long_description, label=_('Long Description (optional)'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}#}
                                             {{ form.markdown(s_long_description, id=s_long_description, label=_('Long Description'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
                                             {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=max_height, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
+                                            {{ form.input(s_m_max_height, id=s_m_max_height, label=_('Mobile Max Height'), placeholder=_('400px recommended'), value=section.m_max_height, error=m_max_height, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
                                         </div>
                                         <div class="col-xs-3">
                                             <a href="#" id="{{s_del}}" name="{{s_del}}">Delete this section</a>
@@ -178,6 +180,7 @@
 {#                {{ form.input('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long description (optional)'), placeholder=_('eg. Long description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}#}
                 {{ form.markdown('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long Description'), placeholder=_('eg. Long Description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
                 {{ form.input('field_section_template_max_height', id='field_section_template_max_height', label=_('Max Height'), placeholder=_('400px recommended'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
+                {{ form.input('field_section_template_m_max_height', id='field_section_template_m_max_height', label=_('Mobile Max Height'), placeholder=_('400px recommended'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
             </div>
             <div class="col-xs-3">
                 <a href="#" id="del_section" type="button" name="del_section">Delete this section</a>

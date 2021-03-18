@@ -326,7 +326,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'pii_is_sensitive': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
+                    tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
+                    tk.get_validator('boolean_validator')
                 ],
                 'pii_predict_score': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
@@ -411,6 +412,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'revision_last_updated': [
                     tk.get_validator('ignore')
                 ],
+                'pii_is_sensitive': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ]
             }
         )
         schema.update({
@@ -677,7 +682,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'num_of_rows': [tk.get_validator('ignore_missing'), tk.get_validator('is_positive_integer'),
                             tk.get_converter('convert_to_extras')],
             'data_update_frequency': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-            'methodology': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+            'methodology': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'license_id': [tk.get_validator('ignore')],
+            'license_other': [tk.get_validator('ignore')],
         })
 
         schema.pop('license_id')
@@ -699,7 +706,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'num_of_rows': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing'),
                             tk.get_validator('is_positive_integer')],
             'data_update_frequency': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore_missing')],
-            'methodology': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore_missing')]
+            'methodology': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore_missing')],
+            'license_id': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore')],
+            'license_other': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore')]
         })
 
     def get_blueprint(self):
