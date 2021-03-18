@@ -238,12 +238,16 @@ function _updateResourceConfirmState(resource, flag, score, piiReportId) {
   return promise;
 }
 
-function _awsLogUpdate(resourceId, filename, key, value) {
+function _awsLogUpdate(resourceId, filename, key, value, dlpRun) {
+  if(dlpRun === 'False' || dlpRun==='false'){
+    return ;
+  }
   let body = {
     "resourceId": resourceId,
     "filename": filename,
     "key": key,
-    "value": value
+    "value": value,
+    "dlpRun": dlpRun
   };
 
   let promise = new Promise((resolve, reject) => {
@@ -263,12 +267,12 @@ function _awsLogUpdate(resourceId, filename, key, value) {
   return promise;
 }
 
-function confirmPIIState(el, resourceId, score, piiReportId) {
+function confirmPIIState(el, resourceId, score, piiReportId, dlpRun) {
   $(el).parents(".modal").modal("hide");
   let sensitive = $(el).parents(".modal-content").find("input[name='pii-confirm']:checked").val();
-  console.log('Confirm: ' + resourceId + " " + sensitive);
+  // console.log('Confirm: ' + resourceId + " " + sensitive + " " + piiReportId);
   _showLoading();
-  const logUpdatePromise = _awsLogUpdate(resourceId, piiReportId, "pii_is_sensitive", sensitive);
+  const logUpdatePromise = _awsLogUpdate(resourceId, piiReportId, "pii_is_sensitive", sensitive, dlpRun);
   const resourceConfirmStatePromise = _updateResourceConfirmState(resourceId, sensitive, score, piiReportId);
 
   $.when(logUpdatePromise, resourceConfirmStatePromise)

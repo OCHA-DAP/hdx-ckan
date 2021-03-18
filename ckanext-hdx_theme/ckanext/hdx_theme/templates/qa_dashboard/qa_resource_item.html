@@ -54,8 +54,9 @@
           {% set main_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=main_file_name) %}
           {% set debug_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=debug_file_name) %}
           {% set dlp_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=dlp_file_name) %}
+          {% set dlp_run = 'pii_report_flag' in res and 'pii_report_id' in res %}
           {{ qa_macros.qa_check_pii_item(res.pii_report_flag, pii_status_text, isodate_string=res.pii_timestamp,
-              link_to_log=main_report_url, link_to_debug=debug_report_url, link_to_dlp=dlp_report_url, resource=res ) }}
+              link_to_log=main_report_url, link_to_debug=debug_report_url, link_to_dlp=dlp_report_url, resource=res, dlp_run=dlp_run ) }}
         {% endif %}
       </li>
       <li class="pii-item">
