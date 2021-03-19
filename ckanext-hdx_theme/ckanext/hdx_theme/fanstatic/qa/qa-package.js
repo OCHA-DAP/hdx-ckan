@@ -49,11 +49,11 @@ function _updateQAComplete(package, flag) {
   return promise;
 }
 
-function _updatePIISensitive(package) {
+function _updateAllResourcesKeyValue(package,key,value) {
   let body = {
     "id": `${package}`,
-    "key": "pii_is_sensitive",
-    "value": "False",
+    "key": key,
+    "value": value,
   };
   let promise = new Promise((resolve, reject) => {
     $.post('/api/action/hdx_qa_package_revise_resource', body)
@@ -98,14 +98,29 @@ function updateQAComplete(package, flag) {
     });
 }
 
-function updatePIISensitive(package) {
+function updateAllResourcesPIISensitive(package) {
   _showLoading();
-  _updatePIISensitive(package)
+  _updateAllResourcesKeyValue(package,'pii_is_sensitive','False')
     .then(() => {
         _updateLoadingMessage("QA PII is sensitive status successfully updated! Reloading page ...");
     })
     .catch(() => {
         alert("Error, QA PII is sensitive status not updated!");
+        $("#loadingScreen").hide();
+    })
+    .finally(() => {
+      location.reload();
+    });
+}
+
+function updateAllResourcesQuarantine(package,value) {
+  _showLoading();
+  _updateAllResourcesKeyValue(package,'in_quarantine',value)
+    .then(() => {
+        _updateLoadingMessage("QA quarantine status successfully updated! Reloading page ...");
+    })
+    .catch(() => {
+        alert("Error, QA quarantine status not updated!");
         $("#loadingScreen").hide();
     })
     .finally(() => {

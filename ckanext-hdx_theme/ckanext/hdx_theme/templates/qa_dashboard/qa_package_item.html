@@ -21,17 +21,23 @@
             <li>
               <a onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
             </li>
+{#            <li>#}
+{#              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>#}
+{#            </li>#}
+{#            <li>#}
+{#              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>#}
+{#            </li>#}
             <li>
-              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>
+              <a onclick="updateAllResourcesQuarantine('{{ package.id }}','True');">Quarantine all resources</a>
             </li>
             <li>
-              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>
+              <a onclick="updateAllResourcesQuarantine('{{ package.id }}','False');">Remove from quarantine all resources</a>
             </li>
             <li>
               <a onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
             </li>
             <li>
-              <a onclick="updatePIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
+              <a onclick="updateAllResourcesPIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
             </li>
             <li>
               <a onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
