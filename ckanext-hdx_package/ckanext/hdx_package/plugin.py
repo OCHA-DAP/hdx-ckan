@@ -536,6 +536,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
             'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed,
             'hdx_qa_resource_patch': hdx_patch.hdx_qa_resource_patch,
+            'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource
 
         }
 

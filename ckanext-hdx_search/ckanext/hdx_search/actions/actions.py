@@ -261,7 +261,9 @@ def aws_log_update(context, data_dict):
         try:
             # resource_dict = get_action("resource_show")(context, {"id": resource_id})
             # data_dict['resource_dict'] = resource_dict
-            _run_aws_log_update(context, data_dict)
+            dlpRun = data_dict.get("dlpRun", 'False')
+            if dlpRun == 'True':
+                _run_aws_log_update(context, data_dict)
         except Exception, e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(

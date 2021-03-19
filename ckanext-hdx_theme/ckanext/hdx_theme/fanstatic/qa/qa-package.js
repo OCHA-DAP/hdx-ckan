@@ -49,6 +49,28 @@ function _updateQAComplete(package, flag) {
   return promise;
 }
 
+function _updatePIISensitive(package) {
+  let body = {
+    "id": `${package}`,
+    "key": "pii_is_sensitive",
+    "value": "False",
+  };
+  let promise = new Promise((resolve, reject) => {
+    $.post('/api/action/hdx_qa_package_revise_resource', body)
+      .done((result) => {
+        if (result.success){
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      })
+      .fail((result) => {
+        reject(result);
+      });
+  });
+  return promise;
+}
+
 function _getPackageResourceList(elementId) {
   return JSON.parse($(elementId).html());
 }
@@ -73,7 +95,22 @@ function updateQAComplete(package, flag) {
     })
     .finally(() => {
       location.reload();
+    });
+}
+
+function updatePIISensitive(package) {
+  _showLoading();
+  _updatePIISensitive(package)
+    .then(() => {
+        _updateLoadingMessage("QA PII is sensitive status successfully updated! Reloading page ...");
     })
+    .catch(() => {
+        alert("Error, QA PII is sensitive status not updated!");
+        $("#loadingScreen").hide();
+    })
+    .finally(() => {
+      location.reload();
+    });
 }
 
 function _runPIICheck(resource) {
@@ -239,9 +276,9 @@ function _updateResourceConfirmState(resource, flag, score, piiReportId) {
 }
 
 function _awsLogUpdate(resourceId, filename, key, value, dlpRun) {
-  if(dlpRun === 'False' || dlpRun==='false'){
-    return ;
-  }
+  // if(dlpRun === 'False' || dlpRun==='false'){
+  //   return ;
+  // }
   let body = {
     "resourceId": resourceId,
     "filename": filename,
