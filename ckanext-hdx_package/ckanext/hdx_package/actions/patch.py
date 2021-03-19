@@ -1,3 +1,4 @@
+import ckan.logic as logic
 import ckan.logic.action.update as _update
 import ckan.logic.action.patch as _patch
 from ckan.logic import (
@@ -8,6 +9,8 @@ from ckan.logic import (
 
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
+
+NotFound = logic.NotFound
 
 def resource_patch(context, data_dict):
     '''
@@ -125,3 +128,26 @@ def hdx_qa_resource_patch(context, data_dict):
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
     return _get_action('resource_patch')(context, data_dict)
+
+
+def hdx_qa_package_revise_resource(context, data_dict):
+    _check_access('hdx_qa_resource_patch', context, data_dict)
+
+    pkg_id = data_dict.get('id') or data_dict.get('package_id')
+    key = data_dict.get('key')
+    value = data_dict.get('value')
+    if pkg_id is None or key is None or value is None:
+        raise NotFound("package id, key or value were not provided")
+    pkg_dict = _get_action('package_show')(context, {'id': pkg_id})
+
+    context['allow_resource_qa_script_field'] = True
+    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+
+    data_revise_dict = {
+        "match": {"id": pkg_id}
+    }
+    # if 'resources' in pkg_dict and len(pkg_dict.get('resources'))>0:
+    for res in pkg_dict.get('resources'):
+        data_revise_dict['update__resources__' + str(res.get('position'))] = {key: value}
+
+    return _get_action('package_revise')(context, data_revise_dict)
