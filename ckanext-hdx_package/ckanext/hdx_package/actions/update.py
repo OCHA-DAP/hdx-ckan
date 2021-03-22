@@ -227,7 +227,7 @@ def package_update(context, data_dict):
     for resource in data_dict.get('resources', []):
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
-        if 'clear_upload' in resource or 'upload' in resource:
+        if 'clear_upload' in resource or resource.get('upload'):
             # file uploads/clearing
             upload = uploader.get_resource_uploader(resource)
             resource_upload_ids.append(resource.get('id') or resource.get('name'))
