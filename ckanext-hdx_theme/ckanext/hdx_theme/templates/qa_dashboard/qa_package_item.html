@@ -21,14 +21,23 @@
             <li>
               <a onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
             </li>
+{#            <li>#}
+{#              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>#}
+{#            </li>#}
+{#            <li>#}
+{#              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>#}
+{#            </li>#}
             <li>
-              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>
+              <a onclick="updateAllResourcesQuarantine('{{ package.id }}','True');">Quarantine all resources</a>
             </li>
             <li>
-              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>
+              <a onclick="updateAllResourcesQuarantine('{{ package.id }}','False');">Remove from quarantine all resources</a>
             </li>
             <li>
               <a onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
+            </li>
+            <li>
+              <a onclick="updateAllResourcesPIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
             </li>
             <li>
               <a onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
@@ -66,6 +75,7 @@
               PII CHECK:
             </span>
             {%  if c.advanced_mode == 'true' %}
+              --{{ package.pii_report_flag }}--
               {% set pii_status_text = 'ERR' if package.pii_report_flag  == 'ERROR' else package.pii_report_flag %}
               {{ qa_macros.qa_check_item(package.pii_report_flag, pii_status_text, package.pii_timestamp) }}
             {% endif %}

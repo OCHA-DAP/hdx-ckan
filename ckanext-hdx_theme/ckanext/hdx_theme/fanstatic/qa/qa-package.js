@@ -49,6 +49,28 @@ function _updateQAComplete(package, flag) {
   return promise;
 }
 
+function _updateAllResourcesKeyValue(package,key,value) {
+  let body = {
+    "id": `${package}`,
+    "key": key,
+    "value": value,
+  };
+  let promise = new Promise((resolve, reject) => {
+    $.post('/api/action/hdx_qa_package_revise_resource', body)
+      .done((result) => {
+        if (result.success){
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      })
+      .fail((result) => {
+        reject(result);
+      });
+  });
+  return promise;
+}
+
 function _getPackageResourceList(elementId) {
   return JSON.parse($(elementId).html());
 }
@@ -73,7 +95,37 @@ function updateQAComplete(package, flag) {
     })
     .finally(() => {
       location.reload();
+    });
+}
+
+function updateAllResourcesPIISensitive(package) {
+  _showLoading();
+  _updateAllResourcesKeyValue(package,'pii_is_sensitive','False')
+    .then(() => {
+        _updateLoadingMessage("QA PII is sensitive status successfully updated! Reloading page ...");
     })
+    .catch(() => {
+        alert("Error, QA PII is sensitive status not updated!");
+        $("#loadingScreen").hide();
+    })
+    .finally(() => {
+      location.reload();
+    });
+}
+
+function updateAllResourcesQuarantine(package,value) {
+  _showLoading();
+  _updateAllResourcesKeyValue(package,'in_quarantine',value)
+    .then(() => {
+        _updateLoadingMessage("QA quarantine status successfully updated! Reloading page ...");
+    })
+    .catch(() => {
+        alert("Error, QA quarantine status not updated!");
+        $("#loadingScreen").hide();
+    })
+    .finally(() => {
+      location.reload();
+    });
 }
 
 function _runPIICheck(resource) {
@@ -238,12 +290,16 @@ function _updateResourceConfirmState(resource, flag, score, piiReportId) {
   return promise;
 }
 
-function _awsLogUpdate(resourceId, filename, key, value) {
+function _awsLogUpdate(resourceId, filename, key, value, dlpRun) {
+  // if(dlpRun === 'False' || dlpRun==='false'){
+  //   return ;
+  // }
   let body = {
     "resourceId": resourceId,
     "filename": filename,
     "key": key,
-    "value": value
+    "value": value,
+    "dlpRun": dlpRun
   };
 
   let promise = new Promise((resolve, reject) => {
@@ -263,12 +319,12 @@ function _awsLogUpdate(resourceId, filename, key, value) {
   return promise;
 }
 
-function confirmPIIState(el, resourceId, score, piiReportId) {
+function confirmPIIState(el, resourceId, score, piiReportId, dlpRun) {
   $(el).parents(".modal").modal("hide");
   let sensitive = $(el).parents(".modal-content").find("input[name='pii-confirm']:checked").val();
-  console.log('Confirm: ' + resourceId + " " + sensitive);
+  // console.log('Confirm: ' + resourceId + " " + sensitive + " " + piiReportId);
   _showLoading();
-  const logUpdatePromise = _awsLogUpdate(resourceId, piiReportId, "pii_is_sensitive", sensitive);
+  const logUpdatePromise = _awsLogUpdate(resourceId, piiReportId, "pii_is_sensitive", sensitive, dlpRun);
   const resourceConfirmStatePromise = _updateResourceConfirmState(resourceId, sensitive, score, piiReportId);
 
   $.when(logUpdatePromise, resourceConfirmStatePromise)
