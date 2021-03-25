@@ -146,36 +146,46 @@
                               {{ _('Sysadmin Dashboard') }} <i class="humanitarianicons-Down"></i>
                             </a>
                             <ul id="user-menu-sysadmin-submenu" class="dropdown-submenu collapse in">
+                              {% if user_is_sysadmin %}
                               <li>
                                 <a href="{{def_url}}" title="{{ _('All Sysadmins') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('All Sysadmins') }}</span>
                                 </a>
                               </li>
+                              {% endif %}
+                              {% if user_is_sysadmin %}
                               <li>
                                 <a href="/user/" title="{{ _('All Users') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('All Users') }}</span>
                                 </a>
                               </li>
+                              {% endif %}
+                              {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
                               <li>
                                 <a href="{{ h.url_for('carousel_settings') }}" title="{{ _('Carousel') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('Carousel') }}</span>
                                 </a>
                               </li>
+                              {% endif %}
+                              {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
                               <li>
                                 <a href="{{ h.url_for('ckanadmin_requests_data') }}" title="{{ _('HDX Connect Dashboard') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('HDX Connect Dashboard') }}</span>
                                 </a>
                               </li>
+                              {% endif %}
+                              {% if user_is_sysadmin or h.check_access('admin_page_list') %}
                               <li>
                                 <a href="{{ h.url_for('pages_show') }}" title="{{ _('Custom/Event Pages') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('Custom/Event Pages') }}</span>
                                 </a>
                               </li>
+                              {% endif %}
                               {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
                                 {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
                                 {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
@@ -195,9 +205,9 @@
                         {% endif %}
                         <li class="notifications">
                             <a href="#" class="collapsible-submenu-item" title="{{ _('User Dashboard') }}">
-                              {{ _('User Dashboard') }} <i class="humanitarianicons-Down"></i>
+                              {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
                             </a>
-                            <ul class="dropdown-submenu collapse in">
+                            <ul class="dropdown-submenu collapse">
                               {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
                               {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
                               {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
@@ -218,9 +228,9 @@
                         </li>
                         <li class="notifications">
                           <a href="#" class="collapsible-submenu-item" title="{{ _('User Settings') }}">
-                            {{ _('User Settings') }} <i class="humanitarianicons-Down"></i>
+                            {{ _('User Settings') }} <i class="humanitarianicons-Up"></i>
                           </a>
-                          <ul class="dropdown-submenu collapse in">
+                          <ul class="dropdown-submenu collapse">
                             {{ h.build_nav_icon('user.read', _('Datasets'), id=c.userobj.name) }}
                             {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=c.userobj.name) }}
                             {% if h.check_access('sysadmin') %}

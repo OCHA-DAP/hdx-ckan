@@ -1940,7 +1940,7 @@ hr.dotted {
   max-width: 700px;
 }
 .org-nums dl {
-  border-bottom: 1px solid #888888;
+  border-bottom: 1px solid #dddddd;
   margin-bottom: 20px;
   padding-bottom: 15px;
 }
@@ -1998,7 +1998,7 @@ hr.dotted {
 /* FIX Org Page */
 .org-nums dl {
   margin-top: 14px;
-  border-bottom: 1px solid #888888;
+  border-bottom: 1px solid #dddddd;
   padding-bottom: 15px;
 }
 .unstyled {
@@ -3508,6 +3508,15 @@ ul.list-horizontal li:first-child:before {
   display: flex;
   align-items: center;
   color: #f2645a;
+}
+.new-header .global-header .global-header-content .header-user-box .collapsible-submenu-item {
+  position: relative;
+  padding-right: 47px;
+}
+.new-header .global-header .global-header-content .header-user-box .collapsible-submenu-item i {
+  position: absolute;
+  right: 20px;
+  top: 6px;
 }
 .new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
   list-style: none;
