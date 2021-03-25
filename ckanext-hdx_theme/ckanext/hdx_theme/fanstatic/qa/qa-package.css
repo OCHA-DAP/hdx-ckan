@@ -229,12 +229,12 @@ section.search-list .filter-category {
   max-height: 80vh;
   border: 0;
 }
-#pii-confirm-modal .modal-body input[type="radio"] {
+.pii-confirm-modal .modal-body input[type="radio"] {
   margin-right: 10px;
 }
-#pii-confirm-modal .modal-body .icon-bell {
+.pii-confirm-modal .modal-body .icon-bell {
   color: #f2645a;
 }
-#pii-confirm-modal .modal-body .icon-check:before {
+.pii-confirm-modal .modal-body .icon-check:before {
   color: #1ebfb3;
 }
