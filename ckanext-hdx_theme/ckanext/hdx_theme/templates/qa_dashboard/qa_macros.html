@@ -112,7 +112,7 @@
       </div>
 
 {#      {% if link_to_log and (status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION') %}#}
-      {% if 'pii_is_sensitive' in resource %}
+      {% if 'pii_is_sensitive' in resource or dlp_run %}
         <div class="more-options center-y">
           <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
             <i class="humanitarianicons-More-options"></i>
