@@ -32,6 +32,10 @@ beaker.session.key = ckan
 who.config_file = %(here)s/ckan/config/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
+# 3 days in seconds
+who.timeout = 259200
+# only set the auth cookie on HTTPS
+who.secure = True
 
 
 ## Database Settings
