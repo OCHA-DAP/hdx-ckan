@@ -5,6 +5,9 @@
   padding: 0 15px;
   color: #333333;
 }
+.admin-two-col .col-xs-3 h1.heading {
+  overflow-wrap: break-word;
+}
 .admin-two-col .col-xs-3 h2 {
   font-size: 20px;
 }
