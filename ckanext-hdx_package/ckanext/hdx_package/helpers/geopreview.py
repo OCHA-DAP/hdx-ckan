@@ -165,8 +165,7 @@ def do_geo_transformation_process(context, result_dict):
 
     # This is needed because the URL is not always correctly set in the received dictionary
     if result_dict.get('url_type', '') == 'upload' and 'http' not in url:
-        url = h.url_for(controller='package',
-                        action='resource_download',
+        url = h.url_for('resource.download',
                         id=result_dict['package_id'],
                         resource_id=result_dict['id'],
                         filename=url,

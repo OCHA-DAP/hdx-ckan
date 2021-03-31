@@ -89,10 +89,10 @@
     {% endif %}
 
     <span class="pii-status">
-{#      {% if not resource.pii_is_sensitive %}#}
+      {% if 'pii_is_sensitive' not in resource %}
         <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{resource.id}}">Confirm</a>
-{#      {% endif %}#}
-      <div class="modal" id="pii-confirm-modal-{{resource.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {% endif %}
+      <div class="modal pii-confirm-modal" id="pii-confirm-modal-{{resource.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -111,31 +111,32 @@
         </div>
       </div>
 
-      {% if link_to_log and (status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION') %}
+{#      {% if link_to_log and (status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION') %}#}
+      {% if 'pii_is_sensitive' in resource or dlp_run %}
         <div class="more-options center-y">
           <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
             <i class="humanitarianicons-More-options"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
-            {% if resource.pii_is_sensitive %}
+            {% if 'pii_is_sensitive' in resource %}
               <li>
                 <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{ res.id }}">Update Risk Classification</a>
               </li>
             {% endif %}
-            {% if link_to_dlp %}
+            {% if dlp_run and link_to_dlp %}
               <li>
                 <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
               </li>
-            {% endif %}
+{#            {% endif %}#}
             <li>
               <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Main JSON</a>
             </li>
-            {% if link_to_dlp %}
+{#            {% if link_to_dlp %}#}
               <li>
                 <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">DLP JSON</a>
               </li>
             {% endif %}
-            {% if link_to_debug %}
+            {% if dlp_run and link_to_debug %}
               <li>
                 <a href="{{ link_to_debug }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Debug Log</a>
               </li>
