@@ -600,12 +600,6 @@
   display: inline-block !important;
   margin-left: 10px;
 }
-.request-data-module .requests-main-container {
-  padding-left: initial !important;
-  padding-right: initial !important;
-  padding-bottom: initial !important;
-  padding-top: 38px !important;
-}
 .request-data-module .requests-header__title {
   color: #333333;
   font-size: 18px !important;

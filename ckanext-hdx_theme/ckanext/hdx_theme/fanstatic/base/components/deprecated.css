@@ -136,7 +136,7 @@
   max-width: 700px;
 }
 .org-nums dl {
-  border-bottom: 1px solid #888888;
+  border-bottom: 1px solid #dddddd;
   margin-bottom: 20px;
   padding-bottom: 15px;
 }
@@ -194,7 +194,7 @@
 /* FIX Org Page */
 .org-nums dl {
   margin-top: 14px;
-  border-bottom: 1px solid #888888;
+  border-bottom: 1px solid #dddddd;
   padding-bottom: 15px;
 }
 .unstyled {

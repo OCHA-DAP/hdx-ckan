@@ -1,9 +1,12 @@
-{% ckan_extends %}
+{% extends "user/dashboard.html" %}
 
+{% block subtitle %}{% endblock %}
+{% block dashboard_activity_stream_context %}{% endblock %}
+{% block page_header_inner %}{% endblock %}
 
 {% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
 
-{% block primary %}
+{% block primary_content_inner %}
 
 <div class="request-data-module">
     <div class="requests-main-container">
