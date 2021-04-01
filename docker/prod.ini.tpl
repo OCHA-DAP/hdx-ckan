@@ -127,7 +127,7 @@ hdx.echo_api_key = ${HDX_ECHO_API_KEY}
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
 # COD
-hdx.cod.new_filters.enabled = false
+hdx.cod.new_filters.enabled = true
 
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}
