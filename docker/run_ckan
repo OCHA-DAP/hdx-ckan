@@ -4,7 +4,6 @@
 [ -z "$HDX_SOLR_PORT" ] && export HDX_SOLR_PORT="8983"
 [ -z "$HDX_SOLR_CORE" ] && export HDX_SOLR_CORE="ckan"
 
-
 # normalize log bucket env var (remove this after 2021.05.30)
 [ -z "$HDX_ECHO_LOG_BUCKET_NAME" ] && export HDX_ECHO_LOG_BUCKET_NAME=${AWS_BUCKET_NAME}-log
 
