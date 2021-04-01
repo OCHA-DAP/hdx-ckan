@@ -358,7 +358,7 @@ def hdx_isodate_to_string_converter(value, context):
 
 def reset_on_file_upload(key, data, errors, context):
     resource_id = data.get(key[:-1] + ('id',))
-    if resource_id and resource_id == context.get(FILE_WAS_UPLOADED):
+    if resource_id and resource_id in context.get(FILE_WAS_UPLOADED, set()):
         data.pop(key, None)
 
 
