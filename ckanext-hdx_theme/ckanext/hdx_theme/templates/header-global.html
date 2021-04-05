@@ -246,23 +246,27 @@
 
 
                         {% block header_account_log_out_link %}
+                        {#
                         <li>
                           <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
                             <i class="icon-signout"></i>
                             <span>{{ _('Log out') }}</span>
                           </a>
                         </li>
+                        #}
                         {% endblock %}
                         {% endblock %}
                       </ul>
                     </div>
                 </li>
+                {#
                 <li class="logout-action">
                   <a class="action" href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
                     <i class="glyphicon glyphicon-log-out"></i>
                     <span>{{ _('Log out') }}</span>
                   </a>
                 </li>
+                #}
                 {% else %}
                 {% block header_account_notlogged %}
                 <li>
