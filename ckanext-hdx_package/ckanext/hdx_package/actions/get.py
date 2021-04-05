@@ -583,11 +583,6 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 package_dict['has_showcases'] = True
                 package_dict['num_of_showcases'] = num_of_showcases
 
-        if _should_manually_load_property_value(context, package_dict, 'extras_qa_completed'):
-            qa_completed = tk.get_converter('hdx_assume_missing_is_true')(package_dict.get('extras_qa_completed'), {})
-            qa_completed = tk.get_converter('boolean_validator')(qa_completed, {})
-            package_dict['extras_qa_completed'] = qa_completed
-
         if _should_manually_load_property_value(context, package_dict, 'last_modified'):
             if get_extra_from_dataset('is_requestdata_type', package_dict):
                 package_dict['last_modified'] = package_dict.get('metadata_modified')
@@ -598,6 +593,8 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                              if r.get('last_modified')]
                 if all_dates:
                     package_dict['last_modified'] = max(all_dates).isoformat()
+
+        __inject_qa_completed_in_old_datasets(context, package_dict)
 
         freshness_calculator = freshness.get_calculator_instance(package_dict, None)
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
@@ -615,6 +612,24 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
             freshness_calculator.populate_with_freshness()
 
             __compute_resource_grouping(context, package_dict)
+
+
+def __inject_qa_completed_in_old_datasets(context, package_dict):
+    # Package show validation is not run when reindexing. So we need to inject ourselves a value for 'qa_completed'
+    # in case one doesn't exist. Since validation was not run we have the 'extras' dict in the package_dict
+    validation_disabled = not context.get('validate')
+    extras = package_dict.get('extras')
+    field_exists = False
+    if validation_disabled and extras:
+        for e in extras:
+            if e.get('key') == 'qa_completed':
+                field_exists = True
+                break
+        if not field_exists:
+            extras.append({
+                'key': 'qa_completed',
+                'value': 'true'
+            })
 
 
 def __compute_resource_grouping(context, package_dict):
