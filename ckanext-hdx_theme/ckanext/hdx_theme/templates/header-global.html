@@ -190,8 +190,10 @@
                                 {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
                                 {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
                               {% endif %}
-                              {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
-                              {{ h.build_nav_icon('admin.config', _('Config')) }}
+                              {% if user_is_sysadmin %}
+                                {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+                                {{ h.build_nav_icon('admin.config', _('Config')) }}
+                              {% endif %}
                             </ul>
                           </li>
                         {% endif %}
@@ -207,7 +209,7 @@
                             <a href="#" class="collapsible-submenu-item" title="{{ _('User Dashboard') }}">
                               {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
                             </a>
-                            <ul class="dropdown-submenu collapse">
+                            <ul class="dropdown-submenu collapse {% if not def_url %}in{% endif %}">
                               {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
                               {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
                               {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
