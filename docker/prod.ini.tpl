@@ -141,6 +141,7 @@ ckanext.s3filestore.aws_bucket_name = ${AWS_BUCKET_NAME}
 ckanext.s3filestore.host_name = https://s3.${REGION_NAME}.amazonaws.com
 ckanext.s3filestore.region_name= ${REGION_NAME}
 ckanext.s3filestore.signature_version = s3v4
+ckanext.s3filestore.check_access_on_startup = true
 ckan.storage_path = ${HDX_FILESTORE}
 
 ## Logging configuration
