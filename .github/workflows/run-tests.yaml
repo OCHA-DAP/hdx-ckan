@@ -34,6 +34,8 @@ jobs:
           docker-compose exec -T ckan psql -h dbckan -U ckan -c "create database datastore owner ckan;"
           docker-compose exec -T ckan psql -h dbckan -U ckan -c "create role datastore with login;"
           docker-compose exec -T ckan psql -h dbckan -U ckan -c "alter role datastore with password 'datastore';"
+          docker-compose exec -T ckan /bin/bash -c \
+            "sed -i 's/s3filestore.check_access_on_startup = true/s3filestore.check_access_on_startup = false/' /etc/ckan/prod.ini"
           docker-compose exec -T ckan ckan -c /etc/ckan/prod.ini db init
       - name: Building UI search index and compiling org style sheets (should be removed?)
         run: |
