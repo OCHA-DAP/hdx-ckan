@@ -1,4 +1,4 @@
-.nav-tabs .nav-tabs-more .crises-menu li > a {
+.nav-tabs-more li > a {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -7,12 +7,12 @@
   border: none;
   border-radius: 0;
 }
-.nav-tabs .nav-tabs-more .crises-menu li > a:hover {
+.nav-tabs-more li > a:hover {
   color: #f2645a;
 }
-.nav-tabs .nav-tabs-more .crises-menu li.active > a,
-.nav-tabs .nav-tabs-more .crises-menu li.active > a:hover,
-.nav-tabs .nav-tabs-more .crises-menu li.active > a:focus {
+.nav-tabs-more li.active > a,
+.nav-tabs-more li.active > a:hover,
+.nav-tabs-more li.active > a:focus {
   border: none;
   background-color: inherit;
   color: #f2645a;

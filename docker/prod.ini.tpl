@@ -122,6 +122,7 @@ hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 # AWS api echo endpoint
 hdx.echo_url = https://${AWS_ECHO_API_URL}
 hdx.echo_api_key = ${HDX_ECHO_API_KEY}
+hdx.echo_log_bucket = ${HDX_ECHO_LOG_BUCKET_NAME}
 
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
@@ -132,6 +133,16 @@ hdx.cod.new_filters.enabled = false
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}
 hdx.wordpress.auth.basic = ${HDX_WORDPRESS_AUTH_BASIC}
+
+# add s3 config
+ckanext.s3filestore.aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+ckanext.s3filestore.aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+ckanext.s3filestore.aws_bucket_name = ${AWS_BUCKET_NAME}
+ckanext.s3filestore.host_name = https://s3.${REGION_NAME}.amazonaws.com
+ckanext.s3filestore.region_name= ${REGION_NAME}
+ckanext.s3filestore.signature_version = s3v4
+ckanext.s3filestore.check_access_on_startup = true
+ckan.storage_path = ${HDX_FILESTORE}
 
 ## Logging configuration
 [loggers]

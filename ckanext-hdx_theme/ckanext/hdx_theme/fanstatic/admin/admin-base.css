@@ -1,0 +1,22 @@
+.admin-two-col .col-xs-3 {
+  border-right-color: #cccccc;
+  border-right-style: solid;
+  border-right-width: 1px;
+  padding: 0 15px;
+  color: #333333;
+}
+.admin-two-col .col-xs-3 h1.heading {
+  overflow-wrap: break-word;
+}
+.admin-two-col .col-xs-3 h2 {
+  font-size: 20px;
+}
+.admin-two-col .col-xs-3 h3 {
+  font-size: 12px;
+}
+.admin-two-col .col-xs-9 {
+  margin-left: -1px;
+  border-left-color: #cccccc;
+  border-left-style: solid;
+  border-left-width: 1px;
+}

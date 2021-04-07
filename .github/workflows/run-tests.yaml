@@ -29,11 +29,13 @@ jobs:
         run: docker-compose exec -T ckan pip install -r /srv/ckan/dev-requirements-py2.txt
       - name: Preparing database
         run: |
-          docker-compose exec -T ckan hdxckantool pgpass
+          docker-compose exec -T ckan /bin/bash -c \
+            'echo "$HDX_CKANDB_ADDR:$HDX_CKANDB_PORT:$HDX_CKANDB_DB:$HDX_CKANDB_USER:$HDX_CKANDB_PASS" > /root/.pgpass && chmod 600 /root/.pgpass'
           docker-compose exec -T ckan psql -h dbckan -U ckan -c "create database datastore owner ckan;"
           docker-compose exec -T ckan psql -h dbckan -U ckan -c "create role datastore with login;"
           docker-compose exec -T ckan psql -h dbckan -U ckan -c "alter role datastore with password 'datastore';"
-          docker-compose exec -T ckan hdxckantool db set-perms
+          docker-compose exec -T ckan /bin/bash -c \
+            "sed -i 's/s3filestore.check_access_on_startup = true/s3filestore.check_access_on_startup = false/' /etc/ckan/prod.ini"
           docker-compose exec -T ckan ckan -c /etc/ckan/prod.ini db init
       - name: Building UI search index and compiling org style sheets (should be removed?)
         run: |

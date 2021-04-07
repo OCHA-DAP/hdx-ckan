@@ -51,7 +51,7 @@ def resource_update(context, data_dict):
     id = _get_or_bust(data_dict, "id")
 
     process_batch_mode(context, data_dict)
-    flag_if_file_uploaded(context, data_dict)
+    # flag_if_file_uploaded(context, data_dict)
     process_skip_validation(context, data_dict)
 
     # make the update faster (less computation in the custom package_show)
@@ -228,6 +228,9 @@ def package_update(context, data_dict):
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
         if 'clear_upload' in resource or resource.get('upload'):
+            #this needs to be run while the upload field still exists
+            flag_if_file_uploaded(context, resource)
+
             # file uploads/clearing
             upload = uploader.get_resource_uploader(resource)
             resource_upload_ids.append(resource.get('id') or resource.get('name'))
@@ -346,9 +349,11 @@ def process_batch_mode(context, data_dict):
         del data_dict[BATCH_MODE]
 
 
-def flag_if_file_uploaded(context, data_dict):
-    if data_dict.get('upload'):
-        context[FILE_WAS_UPLOADED] = data_dict.get('id', 'NEW')
+def flag_if_file_uploaded(context, resource_dict):
+    if resource_dict.get('upload'):
+        if FILE_WAS_UPLOADED not in context:
+            context[FILE_WAS_UPLOADED] = set()
+        context[FILE_WAS_UPLOADED].add(resource_dict.get('id', 'NEW'))
 
 
 def process_skip_validation(context, data_dict):

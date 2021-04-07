@@ -186,7 +186,26 @@
           align-items: center;
           color: @orangeColor;
         }
-        .dropdown-menu {
+        .collapsible-submenu-item {
+          position: relative;
+          padding-right: 47px;
+          i {
+            position: absolute;
+            right: 20px;
+            top: 6px;
+          }
+        }
+        .dropdown-submenu {
+          list-style: none;
+          padding: 0;
+          > li {
+            > a {
+              padding: 3px 20px 3px 40px;
+              display: block;
+            }
+          }
+        }
+        .dropdown-menu, .dropdown-submenu {
           margin: 0;
           li a {
             color: @darkGrayColor;

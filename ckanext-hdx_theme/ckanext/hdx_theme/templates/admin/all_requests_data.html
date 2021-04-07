@@ -1,10 +1,64 @@
-{% ckan_extends %}
+{% extends "admin/base.html" %}
 
-{% block primary %}
-<div class="request-data-module">
-    {{ super() }}
-</div>
-    {% resource 'hdx_theme/requestdata/remove-class.js' %}
-    {% resource 'requestdata/css/main.css' %}
-    {% resource 'hdx_theme/requestdata/request-data.css' %}
+{% import 'macros/form.html' as form %}
+{% block primary_content_module_margin %}{% endblock %}
+
+
+{% block primary_content_inner_wrapper %}
+  <div class="row">
+    <div class="col-xs-12">
+      {% block primary_content_inner %}
+        <div class="request-data-module">
+          {% set service_url = h.url_for('download_requests_data') %}
+          {% set csv = '?format=csv'%}
+          {% set json = '?format=json'%}
+          {% if organizations %}
+            <div class="dropdown requested-data-download-btn">
+              <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">Download
+              <span class="caret" style="border-top-color: white;"></span></button>
+              <ul class="dropdown-menu dropdown-menu-left">
+                <li><a href="{{ service_url }}{{ csv }}">CSV</a></li>
+                <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
+              </ul>
+            </div>
+          {% endif %}
+          <div class="requested-data-total-content">
+            <div class="requested-data-total requested-data-container-item">
+              <h3>Data Requests [{{ total_requests_counters.requests[0][0] or 0 }}]</h3>
+            </div>
+              {% if organizations %}
+                <div class="total-requests-filter">
+                  {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
+                </div>
+              {% endif %}
+          </div>
+          <div class="sysadmin-requests-container">
+            {% for org in organizations %}
+              {% snippet 'requestdata/snippets/requests_header.html', title=org.title, total_requests=org.requests, type='admin', maintainers=org.maintainers, org_name=org.name, counters=org.counters %}
+
+              {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'], template_type='admin'  %}
+              {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'], template_type='admin' %}
+
+        {#      {% if org['requests_archive'] %}#}
+        {#        {% set service_url = h.url_for('ckanadmin_requests_data') %}#}
+        {#        {% snippet 'requestdata/snippets/order_requests.html', service_url=service_url, org_name=org.name, current_order_name=org.current_order_name %}#}
+        {#      {% endif %}#}
+
+              {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=org['requests_archive'], template_type='admin'  %}
+            {% endfor %}
+          </div>
+          <div class="alert alert-dismissible request-message-alert hide" role="alert">
+            <div class="alert-text"></div>
+          </div>
+        </div>
+        {% resource 'hdx_theme/requestdata/remove-class.js' %}
+        {% resource 'requestdata/css/main.css' %}
+        {% resource 'hdx_theme/requestdata/request-data.css' %}
+      {% endblock %}
+
+    </div>
+  </div>
 {% endblock %}
+
+
+

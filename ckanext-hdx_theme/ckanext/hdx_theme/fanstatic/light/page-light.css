@@ -1971,7 +1971,7 @@ body {
   max-width: 700px;
 }
 .org-nums dl {
-  border-bottom: 1px solid #888888;
+  border-bottom: 1px solid #dddddd;
   margin-bottom: 20px;
   padding-bottom: 15px;
 }
@@ -2029,7 +2029,7 @@ body {
 /* FIX Org Page */
 .org-nums dl {
   margin-top: 14px;
-  border-bottom: 1px solid #888888;
+  border-bottom: 1px solid #dddddd;
   padding-bottom: 15px;
 }
 .unstyled {
@@ -3540,14 +3540,35 @@ ul.list-horizontal li:first-child:before {
   align-items: center;
   color: #f2645a;
 }
-.new-header .global-header .global-header-content .header-user-box .dropdown-menu {
+.new-header .global-header .global-header-content .header-user-box .collapsible-submenu-item {
+  position: relative;
+  padding-right: 47px;
+}
+.new-header .global-header .global-header-content .header-user-box .collapsible-submenu-item i {
+  position: absolute;
+  right: 20px;
+  top: 6px;
+}
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
+  list-style: none;
+  padding: 0;
+}
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu > li > a {
+  padding: 3px 20px 3px 40px;
+  display: block;
+}
+.new-header .global-header .global-header-content .header-user-box .dropdown-menu,
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
   margin: 0;
 }
-.new-header .global-header .global-header-content .header-user-box .dropdown-menu li a {
+.new-header .global-header .global-header-content .header-user-box .dropdown-menu li a,
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu li a {
   color: #333333;
 }
 .new-header .global-header .global-header-content .header-user-box .dropdown-menu > li > a:hover,
-.new-header .global-header .global-header-content .header-user-box .dropdown-menu > li > a:focus {
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu > li > a:hover,
+.new-header .global-header .global-header-content .header-user-box .dropdown-menu > li > a:focus,
+.new-header .global-header .global-header-content .header-user-box .dropdown-submenu > li > a:focus {
   color: #fff;
   background-color: #007CE0;
   background-image: none;
