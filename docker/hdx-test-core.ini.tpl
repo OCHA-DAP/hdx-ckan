@@ -75,7 +75,7 @@ hdx_portal = True
 
 # Map Explorer configs
 hdx.explorer.url = /mpx/#/
-hdx.explorer.iframe.width = 100%
+hdx.explorer.iframe.width = 100%%
 hdx.explorer.iframe.height = 750px
 
 hdx.hxlproxy.url = https://proxy.hxlstandard.org
@@ -120,7 +120,7 @@ hdx.cache.onstartup = false
 ckan.storage_path = /srv/filestore
 
 # DATA GRID / COMPLETENESS
-hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%20grid%20recipe%20-%20{iso}.yml
+hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
 
 # hdx.caching.dogpile_filename = /tmp/hdx_dogpile_cache.dbm
 
