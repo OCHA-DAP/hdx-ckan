@@ -13,10 +13,10 @@ config = tk.config
 @pytest.mark.usefixtures("clean_db")
 @pytest.mark.ckan_config("hdx.checks.config_path", config_path)
 @pytest.mark.ckan_config("hdx_test.url_for_passing_check", "https://google.com")
-class TestServiceChecker(object):
+class TestServiceCheckerApi(object):
 
-    def test_general(self):
-        user = factories.User(name='test_sysadmin_user1', sysadmin=True)
+    def test_run_checks(self):
+        user = factories.User(name='test_sysadmin_service_checker_user1', sysadmin=True)
         context = {
             'model': model,
             'user': user['name']

@@ -1,6 +1,7 @@
 <li>
     {{ check.name }} -
     <span style="color: {{ check.render_color }}">{{ check.result }}</span>
+    <span style="display: none">{{ check.name }} -- {{ check.result }}</span>
     {% if check.result == 'Failed' %}
         <table>
             <thead>
