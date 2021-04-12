@@ -27,12 +27,26 @@ class Checker(object):
     def __init__(self, config_list, runtime_vars):
         self.checks = []
         for config in config_list:
+            try:
+                self.__replace_runtime_vars(config, runtime_vars)
+            except exceptions.ParamMissingException as ex:
+                error_message = str(ex)
+                config = {
+                    'name': config['name'],
+                    'module_name': 'ckanext.hdx_service_checker.checks.checks',
+                    'class_name': 'DummyCheck',
+                    'error_message': error_message,
+                    'description': 'The configured {} check could not be performed. '
+                                   'There was an error when replacing runtime vars.'.format(config['class_name']),
+                    'result': 'Failed',
+
+
+                }
+                log.warning(error_message)
             class_name = config['class_name']
             module_name = config['module_name']
             key = '{}:{}'.format(module_name, class_name)
             user_agent = runtime_vars.get('HDX_USER_AGENT', 'SERVICE_CHECKER')
-
-            self.__replace_runtime_vars(config, runtime_vars)
 
             # 2 or more requests could hit this at the same time
             with LOCK:
@@ -76,6 +90,7 @@ class Checker(object):
             log.info(str(result))
 
         return result_list
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s',
