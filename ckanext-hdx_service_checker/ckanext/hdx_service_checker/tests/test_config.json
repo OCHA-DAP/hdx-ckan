@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Dummy check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "DummyCheck"
+  },
+  {
+    "name": "Failing check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx_test.var_that_cant_be_found}",
+    "included_text": "some text that won't be found"
+  },
+  {
+    "name": "Passing check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx_test.url_for_passing_check}",
+    "included_text": "body"
+  }
+]
