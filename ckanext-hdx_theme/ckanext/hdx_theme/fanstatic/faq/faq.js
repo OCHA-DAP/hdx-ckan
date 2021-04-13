@@ -19,6 +19,11 @@
         }
     }
 
+    $('.faq-panel-collapse').on('show.bs.collapse', function(event){
+      $(event.target).find('iframe[load-src]').each(function() {
+        $(this).attr('src', $(this).attr('load-src'));
+      })
+    });
     $('.faq-panel-collapse').on('shown.bs.collapse', function(event){
         send_analytic_event(event.target);
 
