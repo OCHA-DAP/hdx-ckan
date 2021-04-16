@@ -465,7 +465,7 @@ def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, r
 
 def hdx_keep_prev_value_if_empty(key, data, errors, context):
     new_value = data.get(key)
-    if new_value is missing or not new_value:
+    if new_value is missing or (not new_value and new_value is not False):  # False is not an empty value
         data.pop(key, None)
         pkg_id = data.get(('id',))
         if pkg_id:
