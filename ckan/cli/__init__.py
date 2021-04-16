@@ -6,7 +6,7 @@ import os
 import click
 import logging
 from logging.config import fileConfig as loggingFileConfig
-from six.moves.configparser import ConfigParser
+from six.moves.configparser import SafeConfigParser as ConfigParser
 
 from ckan.exceptions import CkanConfigurationException
 

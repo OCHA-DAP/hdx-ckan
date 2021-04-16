@@ -1,9 +1,8 @@
-import pylons.config as config
-
 import ckan.plugins.toolkit as tk
 from ckan.common import request
 
 _ = tk._
+config = tk.config
 
 
 @tk.auth_allow_anonymous_access

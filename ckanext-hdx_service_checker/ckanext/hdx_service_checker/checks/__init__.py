@@ -19,6 +19,8 @@ class Check(object):
         self.user_agent = user_agent
         self.name = config.get('name')
         self.subchecks = []
+        self.result = 'Failed'
+        self.error_message = ''
         if not self.name:
             raise exceptions.ParamMissingException('"name" missing from config')
 

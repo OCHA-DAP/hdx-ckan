@@ -78,4 +78,43 @@ services:
       AWS_SECRET_ACCESS_KEY: RANDOM_SECRET_KEY
       AWS_BUCKET_NAME: RANDOM_BUCKET
       REGION_NAME: eu-central-1
+      HDX_ENABLED_PLUGINS: "dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore"
 
+  ckan-py3:
+    build:
+      context: ./
+      dockerfile: Dockerfile.py3
+    hostname: ckan-py3
+    depends_on:
+      - db
+      - solr
+    entrypoint: "tail -f /dev/null"
+    environment:
+      HDX_HOURS_MIXPANEL_CACHE: 1
+      HDX_CKANDB_ADDR: 'dbckan'
+      HDX_CKANDB_PORT: 5432
+      HDX_CKANDB_DB: '${PGSQL_DB}'
+      HDX_CKANDB_USER: '${PGSQL_USER}'
+      HDX_CKANDB_PASS: '${PGSQL_PASS}'
+      HDX_CKANDB_USER_DATASTORE: 'datastore'
+      HDX_CKANDB_DB_DATASTORE: 'datastore'
+      HDX_CKANDB_DB_TEST: '${PGSQL_DB}'
+      HDX_CKANDB_DB_TEST_DATASTORE: 'datastore'
+      HDX_CKANDB_PASS_DATASTORE: 'datastore'
+      HDX_DOMAIN: humdata.org
+      HDX_FILESTORE: /srv/filestore
+      HDX_SOLR_ADDR: solr
+      HDX_SOLR_PORT: 8983
+      HDX_TYPE: ${HDX_TYPE}
+      HDX_SMTP_ADDR: localhost
+      HDX_SMTP_PORT: 25
+      HDX_SMTP_USER: ''
+      HDX_SMTP_PASS: ''
+      HDX_SMTP_TLS: 'False'
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-NO_TOKEN_PROVIDED}
+      COVERALLS_REPO_TOKEN: ${COVERALLS_REPO_TOKEN:-NO_TOKEN_PROVIDED}
+      AWS_ACCESS_KEY_ID: RANDOM_KEY
+      AWS_SECRET_ACCESS_KEY: RANDOM_SECRET_KEY
+      AWS_BUCKET_NAME: RANDOM_BUCKET
+      REGION_NAME: eu-central-1
+      HDX_ENABLED_PLUGINS: resource_proxy text_view recline_view datastore hdx_service_checker
