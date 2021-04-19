@@ -62,8 +62,12 @@ jobs:
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_org_group"
       - name: Testing hdx_service_checker
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_service_checker"
+      - name: Testing sitemap
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh sitemap"
       - name: Publish in Coveralls
         if: success()
         run: docker-compose exec -T ckan sh -c "coveralls"
       - name: PY3/Testing hdx_service_checker
         run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_service_checker/ckanext/hdx_service_checker/tests"
+      - name: PY3/Testing sitemap
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-sitemap/ckanext/sitemap/tests"
