@@ -10,7 +10,7 @@
     # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.9#egg=ckanext-requestdata
     # via -r requirements-py2.in
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.4.1#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.4.2#egg=ckanext-s3filestore
     # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.3.0#egg=ckanext-showcase
     # via -r requirements-py2.in
