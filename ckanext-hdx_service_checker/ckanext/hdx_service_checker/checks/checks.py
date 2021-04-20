@@ -4,10 +4,14 @@ import ckanext.hdx_service_checker.exceptions as exceptions
 
 
 class DummyCheck(checks.Check):
-    type = 'DummyCheck'
-    description = 'Just a dummy check. Does nothing.'
-    result = 'Passed'
-    error_message = 'Dummy message'
+    type = 'Dummy Check'
+
+    def __init__(self, config, user_agent='SERVICE_CHECKER'):
+        super(DummyCheck, self).__init__(config, user_agent)
+
+        self.result = config.get('result') or 'Passed'
+        self.error_message = config.get('error_message') or 'Dummy message'
+        self.description = config.get('description') or 'Just a dummy check. Does nothing.'
 
     def run_check(self):
         return super(DummyCheck, self)._create_result()

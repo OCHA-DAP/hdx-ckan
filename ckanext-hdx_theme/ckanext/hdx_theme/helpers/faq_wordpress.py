@@ -1,6 +1,7 @@
 import logging
 import pylons.config as config
 import requests
+import re
 
 log = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ def get_faq_data(category):
         for categ_id in item['ufaq-category']:
             map[categ_id]['questions'].append({
                 'q': item['title']['rendered'],
-                'a': item['content']['rendered']
+                'a': process_content(item['content']['rendered'])
             })
     response = []
     for categ_id in map:
@@ -47,12 +48,20 @@ def get_faq_data(category):
 
     return response
 
+def replace_iframe_src(content):
+    p = re.compile(r"(<iframe.*?)(src=\")(.*?\".*?>)")
+    content = re.sub(p, "\g<1>load-\g<2>\g<3>", content)
+    return content
+
+def process_content(content):
+    content = replace_iframe_src(content)
+    return content
 
 def get_post(id):
     response = requests.get('{0}/wp-json/wp/v2/ufaq/{1}'.format(config.get('hdx.wordpress.url'), id),
                             headers=get_headers())
     json = response.json()
-    return json['content']['rendered']
+    return process_content(json['content']['rendered'])
 
 
 def faq_for_category(category):

@@ -12,8 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Building CKAN docker image
+      - name: Building CKAN / PY2 docker image
         run: docker-compose build ckan
+      - name: Building CKAN / PY3 docker image
+        run: docker-compose build ckan-py3
       - name: Spinning up docker-compose stack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,8 +27,11 @@ jobs:
           docker-compose exec -T ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
           docker-compose exec -T ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
           docker-compose restart ckan
-      - name: Installing HDX/CKAN python dev-requirements
+          docker-compose exec -T ckan-py3 sh -c "envsubst < /srv/ckan/docker/hdx-test-core.ini.tpl > /srv/ckan/hdx-test-core.ini"
+      - name: Installing HDX/CKAN PY2 dev-requirements
         run: docker-compose exec -T ckan pip install -r /srv/ckan/dev-requirements-py2.txt
+      - name: Installing HDX/CKAN PY3 dev-requirements
+        run: docker-compose exec -T ckan-py3 pip install -r /srv/ckan/dev-requirements.txt
       - name: Preparing database
         run: |
           docker-compose exec -T ckan /bin/bash -c \
@@ -55,7 +60,14 @@ jobs:
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
       - name: Testing hdx_org_group
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_org_group"
+      - name: Testing hdx_service_checker
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_service_checker"
+      - name: Testing sitemap
+        run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh sitemap"
       - name: Publish in Coveralls
         if: success()
         run: docker-compose exec -T ckan sh -c "coveralls"
-
+      - name: PY3/Testing hdx_service_checker
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_service_checker/ckanext/hdx_service_checker/tests"
+      - name: PY3/Testing sitemap
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-sitemap/ckanext/sitemap/tests"

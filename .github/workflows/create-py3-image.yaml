@@ -1,0 +1,39 @@
+name: HDX/CKAN create PY3 image
+
+on:
+  push:
+    tags: [ '*-py3' ]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        required: true
+        description: The tag for the docker image
+
+jobs:
+  create-py3-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Git Tag Info
+        id: git_tag_info
+        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
+      - name: Compute Tag Name
+        id: tag_info
+        run: echo ::set-output name=TAG_NAME::$([ -z "$MANUAL_TAG_NAME" ] && echo "$GIT_TAG_NAME" || echo "$MANUAL_TAG_NAME")
+        env:
+          MANUAL_TAG_NAME: ${{ github.event.inputs.image_tag }}
+          GIT_TAG_NAME: ${{ steps.git_tag_info.outputs.TAG_NAME }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.TEMP_HDX_CKAN_PY3_DOCKERHUB_USER }}
+          password: ${{ secrets.TEMP_HDX_CKAN_PY3_DOCKERHUB_TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          file: ./Dockerfile.py3
+          push: true
+          tags: mgalex2/hdx-ckan-py3:${{ steps.tag_info.outputs.TAG_NAME }}
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}

@@ -69,13 +69,15 @@ apikey_header_name = X-Non-Standard-CKAN-API-Key
 # only for 2.3
 #ckan.plugins = stats
 # only for 2.6
-ckan.plugins = dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
+# ckan.plugins = dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
+ckan.plugins = ${HDX_ENABLED_PLUGINS}
+
 ckan.use_pylons_response_cleanup_middleware = False
 hdx_portal = True
 
 # Map Explorer configs
 hdx.explorer.url = /mpx/#/
-hdx.explorer.iframe.width = 100%
+hdx.explorer.iframe.width = 100%%
 hdx.explorer.iframe.height = 750px
 
 hdx.hxlproxy.url = https://proxy.hxlstandard.org
@@ -120,7 +122,7 @@ hdx.cache.onstartup = false
 ckan.storage_path = /srv/filestore
 
 # DATA GRID / COMPLETENESS
-hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%20grid%20recipe%20-%20{iso}.yml
+hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
 
 # hdx.caching.dogpile_filename = /tmp/hdx_dogpile_cache.dbm
 

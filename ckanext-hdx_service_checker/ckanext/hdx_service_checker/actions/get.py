@@ -1,12 +1,13 @@
 import logging
-import pylons.config as config
 
 import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_service_checker.checker as checker
 import ckanext.hdx_service_checker.exceptions as exceptions
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 
 @logic.side_effect_free
