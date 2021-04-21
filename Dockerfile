@@ -81,9 +81,7 @@ RUN apt-get -qq -y update && \
     # python setup.py develop && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
-    pip install \
-        boto3 \
-        ckantoolkit && \
+    pip install boto3 && \
     chown -R www-data ckan/public/base/i18n && \
     apt-get -qq -y remove \
         build-essential \
