@@ -56,7 +56,7 @@ user_agents==1.1.0
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.3
--e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview
+# -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview
 
 # request data plugin
 idna<2.9 # Because moto (from dev-requirements needs <2.9)
