@@ -4,7 +4,7 @@
     <div class="mTop20">
     	{% for tag in tags %}
 	    <div class="tag-wrapper">
-	      <a class="label tag" title="{{tag.display_name}}" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ tag.display_name }}</a>
+	      <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'search', tags=tag.name %}">{{ tag.display_name }}</a>
 	    </div>
 	  {% endfor %}
 	  <span class="clear"></span>
