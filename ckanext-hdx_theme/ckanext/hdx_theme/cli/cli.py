@@ -93,9 +93,14 @@ class AnalyticsChangesReindex(cli.CkanCommand):
         # hours_to_check = int(config.get('hdx.analytics.hours_to_check_for_refresh', 24))
 
         self.log = logging.getLogger(__name__)
+        length = lambda item: len(item) if item else 0
 
         solr_ds = self._find_potential_datasets_in_solr()
+        self.log.info('Fetched info for {} datasets from solr'.format(length(solr_ds)))
+
         pageviews_ds, downloads_ds = self._find_potential_datasets_in_mixpanel()
+        self.log.info('Fetched pageview info for {} datasets and download info for {} datasets from mixpanel'
+                      .format(length(pageviews_ds), length(downloads_ds)))
 
         ds_to_update = self._decide_which_datasets_need_update(solr_ds, pageviews_ds, downloads_ds)
 

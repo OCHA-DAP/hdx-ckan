@@ -13,7 +13,7 @@ import ckanext.hdx_theme.helpers.auth as auth
 from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
-
+from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -43,6 +43,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IApiToken, inherit=True)
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
     def _add_resource(cls, path, name):
         '''OVERRIDE toolkit.add_resource in order to allow adding a resource library
@@ -385,3 +386,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         # add to the schema from expire_api_token plugin
         schema['expires_in'].append(toolkit.get_validator('doesnt_exceed_max_validity_period'))
         return schema
+
+    # IBlueprint
+    def get_blueprint(self):
+        return [hdx_colored_page]

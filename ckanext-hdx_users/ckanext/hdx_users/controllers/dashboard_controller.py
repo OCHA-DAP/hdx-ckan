@@ -316,29 +316,22 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
     #     }
     #     return render('user/dashboard_visualizations.html', extra_vars=template_data)
 
-    def hdx_delete_powerview(self, id):
-        """
-        Dashboard tab for visualizations.
-        """
-
-        context = {'model': model, 'session': model.Session, 'for_view': True,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   }
-        data_dict = {'id': id, 'user_obj': c.userobj}
-
-        #check if user can access this link
-        # try:
-        #     check_access('powerview_delete', context, data_dict)
-        # except NotAuthorized:
-        #     base.abort(401, _('Unauthorized to request reset password.'))
-
-        try:
-            get_action('powerview_delete')(context, data_dict)
-        except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
-
-        h.redirect_to(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='dashboard_visualizations')
-        # return self.dashboard_visualizations()
+    # def hdx_delete_powerview(self, id):
+    #     """
+    #     Dashboard tab for visualizations.
+    #     """
+    #
+    #     context = {'model': model, 'session': model.Session, 'for_view': True,
+    #                'user': c.user or c.author, 'auth_user_obj': c.userobj,
+    #                }
+    #     data_dict = {'id': id, 'user_obj': c.userobj}
+    #
+    #     try:
+    #         get_action('powerview_delete')(context, data_dict)
+    #     except NotAuthorized:
+    #         abort(403, _('Not authorized to see this page'))
+    #
+    #     h.redirect_to(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='dashboard_visualizations')
 
 
     def _get_dataset_search_results(self, user_id):

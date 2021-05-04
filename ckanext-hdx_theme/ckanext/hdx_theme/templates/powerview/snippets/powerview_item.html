@@ -11,6 +11,7 @@ Example:
       {% endfor %}
     </ul>
 #}
+{#
 {% set url="/explore?load="+powerview.id %}
 {% set del_url = h.url_for(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='hdx_delete_powerview', id=powerview.id) %}
 <li class="list-items dataset-item" id="mx-org-item-{{powerview.name}}">
@@ -47,3 +48,4 @@ Example:
 {% if position is divisibleby 3 %}
   <li class="clearfix js-hide"></li>
 {% endif %}
+#}
