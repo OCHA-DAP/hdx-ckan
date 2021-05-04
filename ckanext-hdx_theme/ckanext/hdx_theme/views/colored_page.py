@@ -7,7 +7,7 @@ ValidationError = tk.ValidationError
 hdx_colored_page = Blueprint(u'hdx_colored_page', __name__, url_prefix=u'/colored_page')
 
 
-def read(title, color):
+def read(category, title, color='fff'):
     color = color if color else 'FFFFFF'
     title = '' if title is None else title
     _validate(color)
@@ -28,4 +28,5 @@ def _validate(color):
     raise ValidationError('Color format is incorrect')
 
 
-hdx_colored_page.add_url_rule(u'/<title>/<color>', view_func=read)
+hdx_colored_page.add_url_rule(u'/<category>/<title>', view_func=read)
+hdx_colored_page.add_url_rule(u'/<category>/<title>/<color>', view_func=read)
