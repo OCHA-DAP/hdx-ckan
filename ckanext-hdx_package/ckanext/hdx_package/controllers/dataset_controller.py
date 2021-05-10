@@ -974,12 +974,20 @@ class DatasetController(PackageController):
 
         params = request.params.items()
         url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key=" + config.get('hdx.google.dev_key', ''),
-                          data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
+        r = requests.post("https://api-ssl.bitly.com/v4/shorten",
+                          data=json.dumps({
+                              "group_guid": config.get('hdx.bitly.group', ''),
+                              "domain": "bit.ly",
+                              "long_url": url
+                          }),
+                          headers={
+                              'content-type': 'application/json',
+                              'Authorization': 'Bearer '+ config.get('hdx.bitly.token', '')
+                          })
 
         try:
             item = r.json()
-            short = item['id']
+            short = item['link']
         except Exception as e:
             log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))
             short = url
