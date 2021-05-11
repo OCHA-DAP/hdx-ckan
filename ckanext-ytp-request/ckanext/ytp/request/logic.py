@@ -1,8 +1,9 @@
 import logging
 
 from datetime import datetime
-from pylons import config
-from pylons import i18n
+import ckan.plugins.toolkit as tk
+
+from ckan.lib import i18n
 from sqlalchemy.sql.expression import or_
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
@@ -19,7 +20,7 @@ from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
 log = logging.getLogger(__name__)
 
 new_authz = authz
-
+config = tk.config
 # _SUBJECT_MEMBERSHIP_REQUEST = lambda: _("New membership request (%(organization)s)")
 # _MESSAGE_MEMBERSHIP_REQUEST = lambda: _("""\
 # User %(user)s (%(email)s) has requested membership to organization %(organization)s.
@@ -87,7 +88,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                                       subject, email_data,footer=user_obj.email,
                                       snippet='email/content/join_organization_request_confirmation_to_user.html')
 
-    except MailerException, e:
+    except MailerException as e:
         log.error(e)
     # finally:
     #     set_lang(current_locale)
@@ -141,7 +142,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
                 hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=member_user.email,
                                           snippet='email/content/join_organization_reject_to_admins.html')
 
-    except MailerException, e:
+    except MailerException as e:
         log.error(e)
 
 
