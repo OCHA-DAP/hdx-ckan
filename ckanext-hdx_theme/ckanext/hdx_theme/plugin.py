@@ -68,6 +68,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
         #self._add_resource('fanstatic', 'hdx_theme')
+        toolkit.add_public_directory(config, 'fanstatic')
         toolkit.add_resource('fanstatic', 'hdx_theme')
         # Add configs needed for checks
         self.__add_dataproxy_url_for_checks(config)

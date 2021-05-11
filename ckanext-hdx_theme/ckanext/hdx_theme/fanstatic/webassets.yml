@@ -1,0 +1,207 @@
+ckan:
+  output: ckanext-hdx_theme/%(version)s_ckan.js
+  extra:
+    preload:
+      - vendor/vendor
+      - base/main
+  contents:
+    - vendor/ckan/jquery.slug.js
+    - vendor/ckan/jquery.slug-preview.js
+    - vendor/ckan/slug-preview.js
+    - vendor/ckan/autocomplete.js
+    - vendor/lazysizes/lazysizes.js
+    - vendor/jquery.cookie/jquery.cookie.js
+    - vendor/bootstrap/js/bootstrap.js
+    - base/hdx-util-lib.js
+    - hdx_notify.js
+    - hdx_confirm-action.js
+    - hdx_click_stopper.js
+    - hdx_terms_checkbox.js
+    - hdx_visibility_toggler.js
+    - external-links.js
+    - google-analytics.js
+    - notifications/hdx_notifications_main.js
+    - metadata-button.js
+
+page-scripts:
+  output: ckanext-hdx_theme/%(version)s_page-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+  contents:
+    - base/header-init.js
+    - bs_popover.js
+    - bs_tooltip.js
+
+page-styles:
+  output: ckanext-hdx_theme/%(version)s_page-styles.css
+  contents:
+    - vendor/bootstrap/css/bootstrap.css
+    - base/base.css
+    - base/header.css
+    - css/hdx-icons.css
+    - css/Humanitarian-Icons-v02.css
+
+search-scripts:
+  output: ckanext-hdx_theme/%(version)s_search-scripts.js
+  extra:
+    preload:
+      - hdx_theme/jquery-extra
+  contents:
+    - highlight.js
+    - order-by-dropdown.js
+    - search/lunr/feature-index.js
+    - search/lunr.js
+    - search/search.js
+
+search-styles:
+  output: ckanext-hdx_theme/%(version)s_search-styles.css
+  contents:
+    - search/search.css
+
+jquery-extra:
+  contents:
+    - vendor/jquery.expander/jquery.expander.js
+    - vendor/jquery.highlight/jquery.highlight.js
+
+hdx-show-more:
+  output: ckanext-hdx_theme/%(version)s_hdx-show-more.js
+  extra:
+    preload:
+      - hdx_theme/jquery-extra
+  contents:
+    - hdx_show_more.js
+
+popup-scripts:
+  output: ckanext-hdx_theme/%(version)s_popup-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/popup-styles
+  contents:
+    - widget/popup/popup.js
+
+popup-styles:
+  output: ckanext-hdx_theme/%(version)s_popup-styles.css
+  contents:
+    - widget/popup/popup.css
+
+onboarding-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/onboarding-styles
+  contents:
+    - widget/onboarding/onboarding.js
+    - widget/onboarding/signup.js
+
+onboarding-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-styles.css
+  contents:
+    - widget/onboarding/onboarding.css
+    - widget/onboarding/two-column.css
+    - widget/onboarding/notification.css
+    - widget/onboarding/logout.css
+    - widget/onboarding/login.css
+    - widget/onboarding/signup.css
+
+dataset-scripts:
+  output: ckanext-hdx_theme/%(version)s_dataset-scripts.js
+  extra:
+    preload:
+      - hdx_theme/dataset-styles
+  contents:
+    - vendor/d3/d3.js
+    - vendor/c3/c3.js
+    - datasets/dataset.js
+    - datasets/hdx_custom_dataviz_show.js
+    - datasets/stats-chart.js
+
+dataset-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-styles.css
+  contents:
+      - vendor/c3/c3.css
+      - datasets/dataset.css
+      - datasets/datasets.css
+      - datasets/hdx_custom_dataviz_show.css
+      - datasets/related.css
+
+dataset-search-scripts:
+  output: ckanext-hdx_theme/%(version)s_dataset-search-scripts.js
+  extra:
+    preload:
+      - hdx_theme/dataset-search-styles
+  contents:
+    - vendor/multiple-select-1.1.0/jquery.multiple.select.js
+    - datasets/list-header.js
+
+dataset-search-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-search-styles.css
+  contents:
+      - vendor/multiple-select-1.1.0/multiple-select.css
+
+requestdata-scripts:
+  output: ckanext-hdx_theme/%(version)s_requestdata-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/requestdata-styles
+  contents:
+    - requestdata/modal-form.js
+
+requestdata-styles:
+  output: ckanext-hdx_theme/%(version)s_requestdata-styles.css
+  contents:
+    - requestdata/request-data.css
+
+resource-list-scripts:
+  output: ckanext-hdx_theme/%(version)s_resource-list-scripts.js
+  extra:
+    preload:
+      - hdx_theme/resource-list-styles
+  contents:
+    - resource-list.js
+
+resource-list-styles:
+  output: ckanext-hdx_theme/%(version)s_resource-list-styles.css
+  contents:
+    - resource-list.css
+
+activity-stream-styles:
+  output: ckanext-hdx_theme/%(version)s_resource-list-styles.css
+  contents:
+    - css/activity-stream.css
+
+hdx-autocomplete:
+  output: ckanext-hdx_theme/%(version)s_resource-hdx-autocomplete.js
+  contents:
+    - hdx_autocomplete.js
+
+crisis-base-scripts:
+  output: ckanext-hdx_theme/%(version)s_crisis-base-scripts.js
+  extra:
+    preload:
+      - hdx_theme/crisis-base-styles
+  contents:
+    - crisis/crisis-base.js
+
+crisis-base-styles:
+  output: ckanext-hdx_theme/%(version)s_crisis-base-styles.css
+  contents:
+    - crisis/crisis-base.css
+
+shape-view-scripts:
+  output: ckanext-hdx_theme/%(version)s_shape-view-scripts.js
+  extra:
+    preload:
+      - hdx_theme/shape-view-styles
+  contents:
+    - vendor/leaflet-0.7.3/leaflet.js
+    - vendor/leaflet.mvt/mapbox.vector.tile.js
+    - shape-view.js
+
+shape-view-styles:
+  output: ckanext-hdx_theme/%(version)s_shape-view-styles.css
+  contents:
+    - vendor/leaflet-0.7.3/leaflet.css

@@ -6,13 +6,8 @@
 
 {% set in_review = res.in_quarantine %}
 
-{# This should be included via page.html but it's not loading for me. Investigate after template upgrade to 2.3 in complete and delete this #}
-{% resource 'hdx_theme/package/tracking.js' %}
-{# #}
-{% resource 'hdx_theme/bs_popover.js' %}
-{% resource 'hdx_theme/jquery.expander' %}
-{% resource 'hdx_theme/hdx_show_more.js' %}
-{% resource 'hdx_theme/resource-list' %}
+{% asset 'hdx_theme/hdx-show-more' %}
+{% asset 'hdx_theme/resource-list-scripts' %}
 
 {% if pkg.x_show_grouping %}
   {% set resource_grouping =  h.hdx_munge_title(res.x_grouping) %}

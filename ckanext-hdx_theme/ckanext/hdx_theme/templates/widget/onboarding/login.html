@@ -7,8 +7,13 @@ Depends on:
 Example:
     {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
 #}
-{% resource 'hdx_theme/popup' %}
-{% resource 'hdx_theme/login-widget' %}
+{#{% resource 'hdx_theme/popup' %}#}
+{#{% resource 'hdx_theme/login-widget' %}#}
+{#{% asset 'hdx_theme/popup-styles' %}#}
+{% asset 'hdx_theme/popup-scripts' %}
+{#{% asset 'hdx_theme/onboarding-styles' %}#}
+{% asset 'hdx_theme/onboarding-scripts' %}
+
 {% set class = "popup-onboarding" %}
 
 {% extends "widget/popup/popup.html" %}

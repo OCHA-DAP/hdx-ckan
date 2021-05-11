@@ -54,8 +54,10 @@ mailchimp3==3.0.14
 ua-parser==0.7.2
 user_agents==1.1.0
 
-# Below lines are needed for ckanext-powerview
+# ckantoolkit is used by s3filestore and dcat (by powerview as well, but we're not using it anymore)
 ckantoolkit==0.0.3
+
+# Below lines are needed for ckanext-powerview
 # -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview
 
 # request data plugin

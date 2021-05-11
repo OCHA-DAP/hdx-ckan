@@ -14,9 +14,13 @@ Example:
 {% snippet 'snippets/package_list.html', packages=c.datasets, show_my_links=false %}
 
 #}
-{% resource 'hdx_theme/dataset-search' %}
-{% resource 'hdx_theme/dataset' %}
-{% resource 'hdx_theme/jquery.highlight' %}
+{#{% resource 'hdx_theme/dataset-search' %}#}
+{#{% resource 'hdx_theme/dataset' %}#}
+{#{% resource 'hdx_theme/jquery.highlight' %}#}
+{#{% asset 'hdx_theme/dataset-search-styles' %}#}
+{% asset 'hdx_theme/dataset-search-scripts' %}
+{#{% asset 'hdx_theme/dataset-styles' %}#}
+{% asset 'hdx_theme/dataset-scripts' %}
 
 {% set min_version = full_facet_info.get("filters_selected") or full_facet_info.get("query_selected") if "filters_selected" in full_facet_info or "query_selected" in full_facet_info %}
 

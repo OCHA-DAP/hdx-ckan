@@ -171,6 +171,8 @@
       {{ g.template_head_end | safe }}
     {% endblock %}
 
+    {# render all assets included in styles block #}
+    {{ h.render_assets('style') }}
     {%- block custom_styles %}
       {%- if g.site_custom_css -%}
       <style>
@@ -212,8 +214,8 @@
     #}
     {%- block scripts %}
       {# Keep this block to a minimum, use resource.config instead #}
-      {% resource 'hdx_theme/ckan' %}
-      {% resource 'hdx_theme/bootstrap' %}
+      {% asset 'hdx_theme/ckan' %}
+{#      {% resource 'hdx_theme/bootstrap' %}#}
     {% endblock -%}
 
 
@@ -223,10 +225,13 @@
       {{ g.template_footer_end | safe }}
     {%- endblock %}
 
-
-  </body>
-  {%- block scripts2 %}
+    {# render all assets included in scripts block and everywhere else #}
+    {# make sure there are no calls to `asset` tag after this point #}
     {{ h.render_assets('style') }}
     {{ h.render_assets('script') }}
+  </body>
+  {%- block scripts2 %}
   {% endblock -%}
+  {{ h.render_assets('style') }}
+  {{ h.render_assets('script') }}
 </html>
