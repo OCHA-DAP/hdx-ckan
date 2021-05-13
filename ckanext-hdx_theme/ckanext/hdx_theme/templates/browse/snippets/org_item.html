@@ -3,8 +3,9 @@
 {% set followers = h.get_group_followers(organization.id) %}
 {% set members = h.get_group_members(organization.id) %}
 
-{% resource 'hdx_theme/jquery.expander' %}
-{% resource 'hdx_theme/hdx_show_more.js' %}
+{#{% resource 'hdx_theme/jquery.expander' %}#}
+{#{% resource 'hdx_theme/hdx_show_more.js' %}#}
+{% asset 'hdx_theme/hdx-show-more' %}
 
 <li class="list-items dataset-item">
     <div class="row list-items dataset-content">
