@@ -125,8 +125,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='resource_read')
-        map.connect('shorten_url', '/package/tools/shorten',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
         map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='resource_datapreview')
