@@ -966,25 +966,6 @@ class DatasetController(PackageController):
         '''Deprecated in 2.3'''
         return bool(datapreview.get_preview_plugin(data_dict, return_first=True))
 
-    def shorten(self):
-        """
-        Use Google's url shorten to create social sharing links
-        """
-        import requests
-
-        params = request.params.items()
-        url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key=" + config.get('hdx.google.dev_key', ''),
-                          data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
-
-        try:
-            item = r.json()
-            short = item['id']
-        except Exception as e:
-            log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))
-            short = url
-        return self._finish(200, {'url': short}, content_type='json')
-
     def visibility(self, id):
         """
         Toggle the visibility of the dataset

@@ -103,6 +103,10 @@ hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/hxlpreview
 # GOOGLE DEV
 hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
 
+#Bit.ly DEV
+hdx.bitly.token = ${HDX_BITLY_TOKEN}
+hdx.bitly.group = ${HDX_BITLY_GROUP}
+
 # MAILCHIMP
 hdx.mailchimp.api.key = ${HDX_MAILCHIMP_API_KEY}
 #hdx.mailchimp.list.newsletter = ${HDX_MAILCHIMP_LIST_NEWSLETTER}
