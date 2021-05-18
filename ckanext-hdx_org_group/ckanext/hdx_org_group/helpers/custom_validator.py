@@ -22,6 +22,8 @@ log = logging.getLogger(__name__)
 
 
 def hdx_org_keep_prev_value_if_empty_unless_sysadmin(key, data, errors, context):
+    if data[key] is missing:
+        data.pop(key, None)
     user = context.get('user')
     ignore_auth = context.get('ignore_auth')
     allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
