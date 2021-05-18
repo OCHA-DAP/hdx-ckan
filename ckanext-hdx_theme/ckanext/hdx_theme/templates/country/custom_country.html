@@ -114,9 +114,10 @@
 
 {% block scripts2 %}
     {{ super() }}
+    {% asset 'hdx_theme/country-custom-scripts' %}
     {% if data.is_crisis %}
-        {% resource 'hdx_theme/nepal-quake-country-custom' %}
+        {% asset 'hdx_theme/nepal-quake-country-custom-styles' %}
     {% else %}
-        {% resource 'hdx_theme/country-custom' %}
+        {% asset 'hdx_theme/country-custom-styles' %}
     {% endif %}
 {% endblock %}

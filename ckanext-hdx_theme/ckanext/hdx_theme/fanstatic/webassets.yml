@@ -1,4 +1,11 @@
+common-js: &common-js
+  filters: rjsmin
+
+common-css: &common-css
+  filters: cssrewrite
+
 ckan:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_ckan.js
   extra:
     preload:
@@ -32,21 +39,37 @@ page-scripts:
     - base/header-init.js
     - bs_popover.js
     - bs_tooltip.js
+    - widget/contribute/contribute.js
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
+#  <<: *common-css
+  extra:
+    preload:
+      - vendor/select2-css
   contents:
     - vendor/bootstrap/css/bootstrap.css
     - base/base.css
     - base/header.css
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
+    - widget/contribute/details.css
+
+page-light-styles:
+  output: ckanext-hdx_theme/%(version)s_page-light-styles.css
+  contents:
+    - vendor/bootstrap/css/bootstrap.css
+    - css/hdx-icons.css
+    - css/Humanitarian-Icons-v02.css
+    - light/page-light.css
 
 search-scripts:
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
   extra:
     preload:
       - hdx_theme/jquery-extra
+      - hdx_theme/search-styles
+      - hdx_theme/hdx-show-more
   contents:
     - highlight.js
     - order-by-dropdown.js
@@ -58,6 +81,11 @@ search-styles:
   output: ckanext-hdx_theme/%(version)s_search-styles.css
   contents:
     - search/search.css
+
+search-light-styles:
+  output: ckanext-hdx_theme/%(version)s_search-light-styles.css
+  contents:
+    - light/search/search-light.css
 
 jquery-extra:
   contents:
@@ -106,14 +134,29 @@ onboarding-styles:
     - widget/onboarding/login.css
     - widget/onboarding/signup.css
 
+charting-scripts:
+  output: ckanext-hdx_theme/%(version)s_charting-scripts.js
+  extra:
+    preload:
+      - hdx_theme/charting-styles
+  contents:
+    - vendor/d3/d3.js
+    - vendor/c3/c3.js
+    - vendor/leaflet-0.7.3/leaflet.js
+
+charting-styles:
+  output: ckanext-hdx_theme/%(version)s_charting-styles.css
+  contents:
+    - vendor/c3/c3.css
+    - vendor/leaflet-0.7.3/leaflet.css
+
 dataset-scripts:
   output: ckanext-hdx_theme/%(version)s_dataset-scripts.js
   extra:
     preload:
       - hdx_theme/dataset-styles
+      - hdx_theme/charting-scripts
   contents:
-    - vendor/d3/d3.js
-    - vendor/c3/c3.js
     - datasets/dataset.js
     - datasets/hdx_custom_dataviz_show.js
     - datasets/stats-chart.js
@@ -121,7 +164,6 @@ dataset-scripts:
 dataset-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-styles.css
   contents:
-      - vendor/c3/c3.css
       - datasets/dataset.css
       - datasets/datasets.css
       - datasets/hdx_custom_dataviz_show.css
@@ -140,6 +182,34 @@ dataset-search-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-search-styles.css
   contents:
       - vendor/multiple-select-1.1.0/multiple-select.css
+
+
+dataset-light-scripts:
+  output: ckanext-hdx_theme/%(version)s_dataset-light-scripts.js
+  extra:
+    preload:
+      - hdx_theme/dataset-light-styles
+      - hdx_theme/jquery-extra
+      - hdx_theme/hdx-show-more
+  contents:
+    - light/dataset/dataset.js
+
+dataset-light-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-light-styles.css
+  extra:
+    preload:
+      - hdx_theme/requestdata-styles
+  contents:
+    - light/dataset/dataset-light.css
+
+requestdata-remove-class-scripts:
+  output: ckanext-hdx_theme/%(version)s_requestdata-remove-class-scripts-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/requestdata-styles
+  contents:
+    - requestdata/remove-class.js
 
 requestdata-scripts:
   output: ckanext-hdx_theme/%(version)s_requestdata-scripts.js
@@ -160,6 +230,7 @@ resource-list-scripts:
   extra:
     preload:
       - hdx_theme/resource-list-styles
+      - hdx_theme/hdx-show-more
   contents:
     - resource-list.js
 
@@ -169,7 +240,7 @@ resource-list-styles:
     - resource-list.css
 
 activity-stream-styles:
-  output: ckanext-hdx_theme/%(version)s_resource-list-styles.css
+  output: ckanext-hdx_theme/%(version)s_activity-stream-styles.css
   contents:
     - css/activity-stream.css
 
@@ -191,6 +262,25 @@ crisis-base-styles:
   contents:
     - crisis/crisis-base.css
 
+crisis-ebola-scripts:
+  output: ckanext-hdx_theme/%(version)s_crisis-ebola-scripts.js
+  extra:
+    preload:
+      - hdx_theme/crisis-ebola-styles
+  contents:
+    - crisis/ebola/crisis-ebola.js
+    - crisis/ebola/ebola_crisis_page_graph.js
+    - crisis/ebola/data.js
+    - crisis/ebola/medical_centres.js
+    - crisis/ebola/regions.js
+
+crisis-ebola-styles:
+  output: ckanext-hdx_theme/%(version)s_crisis-ebola-styles.css
+  contents:
+    - crisis/topline.css
+    - crisis/ebola/crisis-ebola.css
+    - crisis/ebola/ebola_crisis_page_graph.css
+
 shape-view-scripts:
   output: ckanext-hdx_theme/%(version)s_shape-view-scripts.js
   extra:
@@ -205,3 +295,250 @@ shape-view-styles:
   output: ckanext-hdx_theme/%(version)s_shape-view-styles.css
   contents:
     - vendor/leaflet-0.7.3/leaflet.css
+
+admin-styles:
+  output: ckanext-hdx_theme/%(version)s_admin-styles.css
+  contents:
+    - admin/admin-base.css
+    - admin/carousel.css
+    - admin/package_links.css
+    - admin/quick_links.css
+    - custom_pages/custom_pages.css
+    - dashboard.css
+
+admin-scripts:
+  output: ckanext-hdx_theme/%(version)s_admin-scripts.js
+  extra:
+    preload:
+      - hdx_theme/admin-styles
+      - hdx_theme/hdx-autocomplete
+  contents:
+    - contribute_flow/underscore-min.js
+    - contribute_flow/backbone.js
+    - contribute_flow/backbone-model-file-upload.js
+    - vendor/sortable/Sortable.js
+    - contribute_flow/form_element_manager.js
+    - admin/carousel.js
+    - admin/package_links.js
+    - admin/quick_links.js
+    - custom_pages/custom_pages.js
+
+custom-pages-light-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-pages-light-scripts.js
+  extra:
+    preload:
+      - hdx_theme/custom-pages-light-styles
+      - hdx_theme/jquery-extra
+      - hdx_theme/hdx-show-more
+  contents:
+    - light/custom_pages/custom-pages-light.js
+    - light/dataset/dataset.js
+
+custom-pages-light-styles:
+  output: ckanext-hdx_theme/%(version)s_custom-pages-light-styles.js
+  contents:
+    - custom_pages/custom_pages_view.css
+    - light/custom_pages/custom-pages-light.css
+
+faq-scripts:
+  output: ckanext-hdx_theme/%(version)s_faq-scripts.js
+  extra:
+    preload:
+      - hdx_theme/faq-styles
+  contents:
+    - faq/faq.js
+    - faq/faq-search.js
+
+faq-styles:
+  output: ckanext-hdx_theme/%(version)s_faq-styles.css
+  contents:
+    - faq/faq.css
+
+user-waiting-scripts:
+  output: ckanext-hdx_theme/%(version)s_user-waiting-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/user-waiting-styles
+  contents:
+    - widget/contribute/user_waiting.js
+
+user-waiting-styles:
+  output: ckanext-hdx_theme/%(version)s_user-waiting-styles.css
+  contents:
+    - widget/contribute/user_waiting.css
+
+contribute-flow-scripts:
+  output: ckanext-hdx_theme/%(version)s_contribute-flow-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/page-scripts
+      - hdx_theme/contribute-flow-styles
+      - hdx_theme/hdx-autocomplete
+  contents:
+    - jquery.ui.datepicker.js
+    - hdx-datepicker.js
+#    - bs_tooltip.js (it's in the page-scripts)
+    - contribute_flow/form_element_manager.js
+    - contribute_flow/tag_recommender.js
+    - contribute_flow/error_block_manager.js
+    - contribute_flow/hdx_custom_dataviz_manager.js
+    - contribute_flow/underscore-min.js
+    - contribute_flow/backbone.js
+    - contribute_flow/backbone-model-file-upload.js
+    - contribute_flow/hdx-google-picker.js
+    - contribute_flow/hdx-resource.js
+    - vendor/sortable/Sortable.js
+#    - vendor/ckan/autocomplete.js (it's in ckan)
+    - contribute_flow/contribute_flow_main.js
+
+contribute-flow-styles:
+  output: ckanext-hdx_theme/%(version)s_contribute-flow-styles.css
+  contents:
+    - contribute_flow/contribute.css
+
+country-scripts:
+  output: ckanext-hdx_theme/%(version)s_country-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_them/country-styles
+  contents:
+    - country/country.js
+
+country-styles:
+  output: ckanext-hdx_theme/%(version)s_country-styles.css
+  contents:
+    - crisis/topline.css
+    - country/country.css
+
+country-topline-scripts:
+  output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
+  extra:
+    preload:
+      - hdx_theme/country-topline-styles
+      - hdx_theme/country-scripts
+      - hdx_theme/charting-scripts
+      - hdx_theme/homepage-scripts
+
+country-topline-styles:
+  output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
+  extra:
+    preload:
+      - hdx_theme/country-styles
+  contents:
+    - country/topline.css
+
+topline-rw-styles:
+  output: ckanext-hdx_theme/%(version)s_topline-rw-styles.css
+  contents:
+    - crisis/topline-rw.css
+
+homepage-scripts:
+  output: ckanext-hdx_theme/%(version)s_homepage-scripts.js
+  extra:
+    preload:
+      - hdx_theme/homepage-styles
+  contents:
+    - homepage/count.js
+    - homepage/homepage-responsive.js
+    - vendor/hammer/hammer.js
+    - homepage/warning-bar.js
+
+homepage-styles:
+  output: ckanext-hdx_theme/%(version)s_homepage-styles.css
+  contents:
+    - homepage/homepage.css
+    - homepage/homepage-responsive.css
+    - homepage/homepage-warning-bar.css
+
+country-custom-scripts:
+  output: ckanext-hdx_theme/%(version)s_country-custom-scripts.js
+  contents:
+    - country/custom/country-custom.js
+
+country-custom-styles:
+  output: ckanext-hdx_theme/%(version)s_country-custom-styles.css
+  contents:
+    - crisis/topline-colombia.css
+    - country/custom/country-custom.css
+
+nepal-quake-country-custom-styles:
+  output: ckanext-hdx_theme/%(version)s_nepal-quake-country-custom-styles.css
+  contents:
+    - crisis/topline-nepal-quake.css
+    - country/custom/country-custom.css
+
+dataviewer:
+  output: ckanext-hdx_theme/%(version)s_dataviewer.js
+  contents:
+    - dataviewer.js
+
+group-form-scripts:
+  output: ckanext-hdx_theme/%(version)s_group-form-scripts.js
+  extra:
+    preload:
+      - hdx_theme/organization-form-styles
+  contents:
+    - custom_location.js
+
+group-scripts:
+  output: ckanext-hdx_theme/%(version)s_group-scripts.js
+  extra:
+    preload:
+      - hdx_theme/group-styles
+  contents:
+    - browse/world_json.js
+    - browse/countries.js
+    - browse/browse.js
+    - group/group-init.js
+
+group-styles:
+  output: ckanext-hdx_theme/%(version)s_group-styles.css
+  contents:
+    - browse/browse.css
+    - css/humanitarian_icons.css
+
+group-light-styles:
+  output: ckanext-hdx_theme/%(version)s_group-light-styles.css
+  contents:
+    - light/group/group-light.css
+
+organizations-scripts:
+  output: ckanext-hdx_theme/%(version)s_organizations-scripts.js
+  extra:
+    preload:
+      - hdx_theme/organizations-styles
+  contents:
+    - organization/organizations.js
+
+organizations-styles:
+  output: ckanext-hdx_theme/%(version)s_organizations-styles.css
+  contents:
+    - organization/organizations.css
+
+organization-styles:
+  output: ckanext-hdx_theme/%(version)s_organization-styles.css
+  contents:
+    - organization/organization-read.css
+
+organization-form-styles:
+  output: ckanext-hdx_theme/%(version)s_organization-form-styles.css
+  contents:
+    - organization/organization-form.css
+
+organization-light-styles:
+  output: ckanext-hdx_theme/%(version)s_organization-light-styles.css
+  contents:
+    - light/organization/org-light.css
+
+homepage-about-styles:
+  output: ckanext-hdx_theme/%(version)s_homepage-about-styles.css
+  contents:
+    - homepage/about.css
+
+homepage-qa-process-styles:
+  output: ckanext-hdx_theme/%(version)s_homepage-qa-process-styles.css
+  contents:
+    - qa/qa-process.css

@@ -11,9 +11,12 @@ Example:
 #}
 {% import 'macros/form.html' as form %}
 
-{% resource 'hdx_theme/requestdata/modal-form.js' %}
-{% resource 'requestdata/css/main.css' %}
-{% resource 'hdx_theme/bs_tooltip.js' %}
+{#{% resource 'hdx_theme/requestdata/modal-form.js' %}#}
+{#{% resource 'requestdata/css/main.css' %}#}
+{#{% resource 'hdx_theme/bs_tooltip.js' %}#}
+
+{% asset 'requestdata/main-styles' %}
+{% asset 'hdx_theme/requestdata-scripts' %}
 
 <div id="dataset-resources">
   <div class="requested-data-message"></div>
