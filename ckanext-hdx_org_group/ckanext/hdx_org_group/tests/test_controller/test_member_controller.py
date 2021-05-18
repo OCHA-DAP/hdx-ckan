@@ -110,7 +110,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         )
         try:
             self.app.post(url, params={'user': 'annaanderson2'}, extra_environ={"REMOTE_USER": "testsysadmin"})
-        except Exception, ex:
+        except Exception as ex:
             assert False
 
         context = {
