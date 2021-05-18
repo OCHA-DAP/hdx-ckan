@@ -250,9 +250,23 @@
 <input type="hidden" name="customization" id="customization-json">
 
 <input type="hidden" name="modified_at" id="field-modified_at">
+
+{% if c.userobj.sysadmin %}
+  <div class="org-control-container">
+    <h1 class="h1-title uppercase">
+      5. {{_('Optional User Survey')}}
+    </h1>
+  </div>
+
+  <div class="org-control-container">
+  {{ form.input('user_survey_url', label=_('User Survey Url'), id='field-user-survey-url', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
+        <div class="org-control-info info-field">
+          <div class="org-info-label">{{_('The user survey url that will be displayed after downloading a file')}}</div>
+        </div>
+  </div>
+{% endif %}
+
 </div>
-
-
   {% endblock %}
 
   {% block custom_fields %}

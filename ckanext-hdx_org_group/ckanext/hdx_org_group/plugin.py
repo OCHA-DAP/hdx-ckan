@@ -113,9 +113,12 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         schema.update({
             'description': [tk.get_validator('not_empty')],
             'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
-            'fts_id': [#tk.get_validator('ignore_missing'),
-                       tk.get_validator('hdx_org_keep_prev_value_if_empty_unless_sysadmin'),
+            'fts_id': [tk.get_validator('hdx_org_keep_prev_value_if_empty_unless_sysadmin'),
+                       tk.get_validator('ignore_missing'),
                        tk.get_converter('convert_to_extras')],
+            'user_survey_url': [tk.get_validator('hdx_org_keep_prev_value_if_empty_unless_sysadmin'),
+                                tk.get_validator('ignore_missing'),
+                                tk.get_converter('convert_to_extras')],
             'custom_org': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'request_membership': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -156,6 +159,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 'description': [tk.get_validator('not_empty')],
                 'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'user_survey_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'request_membership': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
@@ -176,7 +180,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             }
             schema.update(new_org_schema)
             return schema
-        except TypeError, e:
+        except TypeError as e:
             log.warn('Exception in db_to_form_schema: {}'.format(str(e)))
 
         return None
