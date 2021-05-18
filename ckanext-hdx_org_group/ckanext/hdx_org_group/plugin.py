@@ -9,6 +9,7 @@ import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_org_group.model as org_group_model
 import ckanext.hdx_package.helpers.screenshot as screenshot
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
+import ckanext.hdx_org_group.helpers.custom_validator as org_custom_validator
 from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
 
 import ckan.lib.plugins as lib_plugins
@@ -104,13 +105,17 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         org_type_keys = [t[1] for t in static_lists.ORGANIZATION_TYPE_LIST]
         return {
             'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
+            'hdx_org_keep_prev_value_if_empty_unless_sysadmin': org_custom_validator.hdx_org_keep_prev_value_if_empty_unless_sysadmin,
+
         }
 
     def _modify_group_schema(self, schema):
         schema.update({
             'description': [tk.get_validator('not_empty')],
             'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
-            'fts_id': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'fts_id': [#tk.get_validator('ignore_missing'),
+                       tk.get_validator('hdx_org_keep_prev_value_if_empty_unless_sysadmin'),
+                       tk.get_converter('convert_to_extras')],
             'custom_org': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'request_membership': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],

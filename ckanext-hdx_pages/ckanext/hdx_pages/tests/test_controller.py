@@ -117,7 +117,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
             page_new = self._get_url(url)
             assert 'Page not found' in page_new.body, 'a regular user can not not access a page creation form'
             assert '404 Not Found' in page_new.status
-        except Exception, ex:
+        except Exception as ex:
             assert False
 
         context['user'] = 'testsysadmin'
@@ -154,7 +154,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
             page_edit = self._get_url(url)
             assert 'Page not found' in page_edit.body, 'a regular user can not not access a page edit form'
             assert '404 Not Found' in page_edit.status
-        except Exception, ex:
+        except Exception as ex:
             assert False
 
         context['user'] = 'testsysadmin'
@@ -210,7 +210,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
             eldashbo_result = self._get_url(url, user.apikey)
             assert 'Page not found' in eldashbo_result.body, 'page doesn\'t exist'
             assert '404 Not Found' in eldashbo_result.status
-        except Exception, ex:
+        except Exception as ex:
             assert False
 
 
@@ -231,7 +231,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             assert 'El Deleted' in eldeleted_dict.get('title')
             assert 'eldeleted' in eldeleted_dict.get('name')
             assert 'El Deleted Lorem Ipsum' in eldeleted_dict.get('description')
-        except Exception, ex:
+        except Exception as ex:
             # page already exists
             assert False
 
@@ -247,7 +247,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             assert '404 Not Found' in page_delete.status
         except logic.NotAuthorized:
             assert False
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert False
 
