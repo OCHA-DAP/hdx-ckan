@@ -65,7 +65,7 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
                                               apikey=testsysadmin.apikey, status=200)
         tests.call_action_api(self.app, 'organization_member_create',
                               id=create_result['id'], username='tester', role='editor',
-                              apikey=user.apitest_auth.pykey, status=403)
+                              apikey=user.apikey, status=403)
         assert True, 'user shoudn\'t be allowed to add himself as a member'
 
     def test_remove_self_org_member(self):
