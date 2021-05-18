@@ -35,10 +35,10 @@ def hdx_org_keep_prev_value_if_empty_unless_sysadmin(key, data, errors, context)
             org_id = data.get(('id',))
             if org_id:
                 prev_org_dict = get_action('hdx_light_group_show')(context, {'id': org_id})
-                old_value = prev_org_dict[key[0]]
+                old_value = prev_org_dict.get(key[0])
                 if old_value:
                     data[key] = old_value
-    if key not in data:
-        raise StopOnError
+    # if key not in data:
+    #     raise StopOnError
 
 

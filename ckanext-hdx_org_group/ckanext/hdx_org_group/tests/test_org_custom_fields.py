@@ -29,7 +29,36 @@ class TestOrgFTSIDAPI(org_group_base.OrgGroupBaseTest):
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
 
-    def test_create_org(self):
+    def test_create_org_api(self):
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin', 'allow_partial_update': True}
+        new_org_dict = {
+            'name': 'test_org_dd',
+            'title': 'Test Org D',
+            'org_url': 'www.exampleorganization.org',
+            'description': 'just a simple description',
+            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
+        }
+        try:
+            org_dict = self._get_action('organization_create')(context_sysadmin, new_org_dict)
+            assert org_dict.get('name') == 'test_org_dd'
+        except Exception as ex:
+            assert False
+
+        edit_org_dict = {
+            'id': org_dict.get('id'),
+            'name': 'test_org_dd',
+            'title': 'Test Org DD',
+            'org_url': 'www.exampleorganization.org',
+            'description': 'just a simple description',
+            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
+        }
+        try:
+            org_dict = self._get_action('organization_update')(context_sysadmin, edit_org_dict)
+            assert org_dict.get('title') == 'Test Org DD'
+        except Exception as ex:
+            assert False
+
+    def test_fts_id_api(self):
         context_usr = {'model': model, 'session': model.Session, 'user': 'tester', 'allow_partial_update': True}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         new_org_dict = {
@@ -118,9 +147,9 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
 
-    def test_onboarding(self):
+    def test_fts_is_controller(self):
         context_usr = {'model': model, 'session': model.Session, 'user': 'tester', 'allow_partial_update': True}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin', 'allow_partial_update': True}
         testsysadmin = model.User.by_name('testsysadmin')
         sysadmin_auth = {'Authorization': str(testsysadmin.apikey)}
         tester = model.User.by_name('tester')
