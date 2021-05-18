@@ -423,6 +423,11 @@ def hdx_update_in_quarantine_by_microdata(key, data, errors, context):
             data[key[:2] + ('in_quarantine',)] = True
 
 
+def hdx_update_data_frequency_by_archived(key, data, errors, context):
+    if data.get(key) and data.get(key) == 'true':
+        data[(u'data_update_frequency',)] = '-1'
+
+
 def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, resource_level=False):
     def hdx_package_keep_prev_value_unless_field_in_context(key, data, errors, context):
         '''

@@ -110,6 +110,10 @@
 .media-image {
   width: 150px;
 }
+.dataset-title .humanitarianicons-Folder {
+  font-size: 24px;
+  margin-left: 5px;
+}
 .dataset-light .nav-tabs {
   margin: 0 -15px;
   padding: 0 15px;

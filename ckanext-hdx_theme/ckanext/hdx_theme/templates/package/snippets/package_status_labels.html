@@ -1,3 +1,6 @@
+{% if pkg.archived %}
+  <i class="icon humanitarianicons-Folder" title="{{ _('Archived Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"></i>
+{% endif %}
 {% if pkg.state.startswith('draft') %}
   <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
 {% elif pkg.state.startswith('deleted') %}
