@@ -1,9 +1,9 @@
 
 HDX_GISLAYER_URL=https://hub.docker.com/r/unocha/hdx-gislayer/tags/
-HDX_GISLAYER_TAG=0.6.5
+HDX_GISLAYER_TAG=0.6.6
 
 HDX_GISWORKER_URL=https://hub.docker.com/r/unocha/hdx-gisworker/tags/
-HDX_GISWORKER_TAG=0.6.5
+HDX_GISWORKER_TAG=0.6.6
 
 HDX_HXL_PREVIEW_URL=https://hub.docker.com/r/unocha/hdx-hxl-preview/tags/
 HDX_HXL_PREVIEW_TAG=1.8.1
