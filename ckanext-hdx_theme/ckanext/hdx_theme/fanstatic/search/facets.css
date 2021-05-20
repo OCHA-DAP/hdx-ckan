@@ -132,14 +132,14 @@
   line-height: 20px;
   color: #333333;
 }
-.filter-category .categ-list .categ-items li label {
+.filter-category .categ-list .categ-items li label.facet {
   margin-bottom: 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
 }
-.filter-category .categ-list .categ-items li label:after {
+.filter-category .categ-list .categ-items li label.facet:after {
   content: none;
 }
 .filter-category .categ-list .categ-items li input[type='checkbox'] {

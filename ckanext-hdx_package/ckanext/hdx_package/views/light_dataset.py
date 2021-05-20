@@ -68,7 +68,7 @@ def search():
 
     search_logic = SearchLogic()
 
-    search_logic._search(package_type, use_solr_collapse=True, hide_archived=True)
+    search_logic._search(package_type, use_solr_collapse=True)
 
     data_dict = {'data': search_logic.template_data}
     return render(u'light/search/search.html', data_dict)
