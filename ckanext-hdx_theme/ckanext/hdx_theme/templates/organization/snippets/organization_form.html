@@ -259,10 +259,11 @@
   </div>
 
   <div class="org-control-container">
-  {{ form.input('user_survey_url', label=_('User Survey Url'), id='field-user-survey-url', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
-        <div class="org-control-info info-field">
-          <div class="org-info-label">{{_('The user survey url that will be displayed after downloading a file')}}</div>
-        </div>
+    {% set user_survey_url = h.hdx_get_extras_element(data, value_key="user_survey_url") %}
+    {{ form.input('user_survey_url', label=_('User Survey Url'), id='field-user-survey-url', type='text', value=user_survey_url, classes=['control-full','org-control','field-with-info']) }}
+    <div class="org-control-info info-field">
+      <div class="org-info-label">{{_('The user survey url that will be displayed after downloading a file')}}</div>
+    </div>
   </div>
 {% endif %}
 
