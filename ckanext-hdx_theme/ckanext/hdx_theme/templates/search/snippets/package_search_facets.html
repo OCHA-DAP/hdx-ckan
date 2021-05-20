@@ -10,11 +10,12 @@ Example:
   <ul name="{{ ul_name }}" class="{{ ul_class }}">
     {% for option in items %}
       <li>
-        <label>
+        <label class="facet">
         <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
                {% if option.selected %}checked="checked"{% endif %}
                {% if option.get('items') %} class="parent-facet" {% endif %}
-               {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %}>
+               {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %} />
+          {% if option.category_key == 'ext_archived' %}<label class="label label-small label-new-feature">NEW</label>{% endif %}
           {{ option.display_name }}
           {% if option.explanation %}
             <a href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"

@@ -72,6 +72,9 @@ ul.dataset-resources li + li.label-icons {
   padding: 0 5px;
   margin-bottom: 3px;
 }
+.label.label-small.label-new-feature {
+  background-color: #F2645A;
+}
 /* Pill styling - seem to be the similar to labels, but gray and with a button*/
 .pill {
   font-family: 'Source Sans Pro', sans-serif;
