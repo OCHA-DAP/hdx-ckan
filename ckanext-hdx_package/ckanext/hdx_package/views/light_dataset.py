@@ -78,6 +78,7 @@ def _compute_analytics(dataset_dict):
     result = {}
     result['is_cod'] = analytics.is_cod(dataset_dict)
     result['is_indicator'] = analytics.is_indicator(dataset_dict)
+    result['is_archived'] = analytics.is_archived(dataset_dict)
     result['analytics_group_names'], result['analytics_group_ids'] = analytics.extract_locations_in_json(dataset_dict)
     result['analytics_dataset_availability'] = analytics.dataset_availability(dataset_dict)
     return result

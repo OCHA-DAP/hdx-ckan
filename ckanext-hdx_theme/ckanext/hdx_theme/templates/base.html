@@ -25,6 +25,7 @@
           'groupIds': {% block analytics_group_ids %}[]{% endblock %},
           'isCod': {% block analytics_is_cod %}null{% endblock %},
           'isIndicator': {% block analytics_is_indicator %}null{% endblock %},
+          'isArchived': {% block analytics_is_archived %}null{% endblock %},
           'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
           'datasetId': '{% block analytics_dataset_id %}None{% endblock %}',
           'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}',
@@ -59,9 +60,10 @@
                 ga('set', 'dimension1', analyticsInfo.organizationName);
             }
 
-            var dimension2Type = analyticsInfo.isCod ? 'cod' : '';
-            dimension2Type += analyticsInfo.isCod && analyticsInfo.isIndicator ? '~' : '';
-            dimension2Type += analyticsInfo.isIndicator ? 'indicator' : '';
+            var dimension2Type = analyticsInfo.isCod ? '~cod' : '';
+            dimension2Type += analyticsInfo.isIndicator ? '~indicator' : '';
+            dimension2Type += analyticsInfo.isArchived ? '~archived' : '';
+            dimension2Type = dimension2Type ? dimension2Type.substr(1) : dimension2Type;
 
             dimension2Type = analyticsInfo.datasetId != 'None' && dimension2Type == '' ? 'standard' : dimension2Type;
 

@@ -697,6 +697,7 @@ class DatasetController(PackageController):
         # set dataset type for google analytics - modified by HDX
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
         c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
+        c.analytics_is_archived = analytics.is_archived(c.pkg_dict)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
         c.analytics_dataset_availability = analytics.dataset_availability(c.pkg_dict)
 
@@ -1157,6 +1158,7 @@ class DatasetController(PackageController):
         # c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
         c.analytics_is_cod = analytics.is_cod(c.package)
         c.analytics_is_indicator = analytics.is_indicator(c.package)
+        c.analytics_is_archived = analytics.is_archived(c.package)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
         c.analytics_dataset_availability = analytics.dataset_availability(c.package)
 
