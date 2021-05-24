@@ -6,6 +6,7 @@
 {% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}
 {% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}
 {% block analytics_is_indicator %}{{ analytics.is_indicator }}{% endblock %}
+{% block analytics_is_archived %}{{ analytics.is_archived }}{% endblock %}
 {% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}
 {% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}
 {% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}

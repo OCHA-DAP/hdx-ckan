@@ -27,6 +27,12 @@ def is_cod(pkg_dict):
     return 'false'
 
 
+def is_archived(pkg_dict):
+    if pkg_dict.get('archived'):
+        return 'true'
+    return 'false'
+
+
 def is_private(pkg_dict):
     if pkg_dict.get('private'):
         return 'true'
@@ -104,6 +110,7 @@ def generate_analytics_data(dataset_dict):
                                                 if dataset_dict.get('organization') else None
         analytics_dict['isCod'] = is_cod(dataset_dict)
         analytics_dict['isIndicator'] = is_indicator(dataset_dict)
+        analytics_dict['isArchived'] = is_archived(dataset_dict)
         analytics_dict['groupNames'], analytics_dict['groupIds'] = extract_locations_in_json(dataset_dict)
         analytics_dict['datasetAvailability'] = dataset_availability(dataset_dict)
     else:
@@ -200,6 +207,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             dataset_title = dataset_dict.get('title', dataset_dict.get('name'))
             dataset_is_cod = is_cod(dataset_dict) == 'true'
             dataset_is_indicator = is_indicator(dataset_dict) == 'true'
+            dataset_is_archived = is_archived(dataset_dict) == 'true'
             authenticated = True if c.userobj else False
 
             self.analytics_dict = {
@@ -215,6 +223,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
                     "group ids": location_ids,
                     "is cod": dataset_is_cod,
                     "is indicator": dataset_is_indicator,
+                    "is archived": dataset_is_archived,
                     "authenticated": authenticated,
                     'event source': 'direct'
                 },
