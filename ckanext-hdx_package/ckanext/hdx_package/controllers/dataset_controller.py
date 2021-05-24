@@ -771,6 +771,7 @@ class DatasetController(PackageController):
             org_dict = c.pkg_dict.get('organization') or {}
             org_id = org_dict.get('id', None)
             org_info_dict = self._get_org_extras(org_id)
+            c.user_survey_url = org_info_dict.get('user_survey_url')
             if org_info_dict.get('custom_org', False):
                 self._process_customizations(org_info_dict.get('customization', None))
 
