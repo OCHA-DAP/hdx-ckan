@@ -706,7 +706,7 @@
                                         </p>
                                     </div>
                                     <div class="col-xs-7">
-                                      {% set archive_values = [{'value': True, 'text': 'Yes'}, {'value': False, 'text': 'No'}] %}
+                                      {% set archive_values = [{'value': False, 'text': 'No'}, {'value': True, 'text': 'Yes'}] %}
                                       <div id="archived_dataset_flag">
                                         {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources (?)'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}) }}
                                       </div>
