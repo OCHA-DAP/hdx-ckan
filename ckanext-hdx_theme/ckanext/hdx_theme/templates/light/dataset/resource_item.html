@@ -54,7 +54,7 @@
                    class="btn btn-primary btn-download hdx-btn resource-url-analytics ga-download"
                    title="{{ _('Download') }}"
                    tracking-type="{{res.url_type}}"
-{#                   onclick="showDataUseSurveyPopup('{{ res.id }}');return true;"#}
+                   onclick="showDataUseSurveyPopup('{{ res.id }}', '{{ user_survey_url }}');return true;"
                 >
                 <img src="/images/homepage/download-white.svg" alt="{{ _('Download') }}" />
                 {{ _('Download') }}
