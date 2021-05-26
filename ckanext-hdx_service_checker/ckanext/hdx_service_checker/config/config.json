@@ -32,5 +32,13 @@
     "class_name": "HttpResponseTextCheck",
     "url": "#{hdx_checks.hxl_proxy_url}",
     "included_text": "sample.test"
+  },
+  {
+    "name": "Centre WordPress Ultimate FAQ API",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx_checks.wp_faq_url}",
+    "basic_auth": "#{hdx_checks.wp_basic_auth}",
+    "included_text": "ufaq-category"
   }
 ]
