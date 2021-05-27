@@ -50,14 +50,19 @@
           <div class="actions">
             {% block resource_item_explore_links %}
               {% if not in_review and h.check_access('hdx_resource_download', res) %}
+                {% set btn_dict = {'title':'This will take you outside HDX to access the data', 'value':'Access Data', 'type':'external'} if h.hdx_get_ckan_config('ckan.resource_formats.external_system')==res.format else {'title':'Download', 'value':'Download', 'type':'download'} %}
                 <a href="{{ res.hdx_rel_url }}"
                    class="btn btn-primary btn-download hdx-btn resource-url-analytics ga-download"
-                   title="{{ _('Download') }}"
+                   title="{{ btn_dict.title }}"
                    tracking-type="{{res.url_type}}"
                    onclick="showDataUseSurveyPopup('{{ res.id }}', '{{ user_survey_url }}');return true;"
                 >
-                <img src="/images/homepage/download-white.svg" alt="{{ _('Download') }}" />
-                {{ _('Download') }}
+                {% if btn_dict.type == 'download' %}
+                  <img src="/images/homepage/download-white.svg" alt="{{ btn_dict.title }}" />
+                {% else %}
+                  <i class="icon humanitarianicons-Out-of-platform"></i>
+                {% endif %}
+                {{ btn_dict.value }}
                 <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                 <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
               </a>
