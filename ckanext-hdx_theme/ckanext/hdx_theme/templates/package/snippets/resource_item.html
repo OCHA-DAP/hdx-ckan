@@ -60,20 +60,24 @@
                 {% endif %}
              #}
             {% if not in_review and h.check_access('hdx_resource_download', res) %}
-
+              {% set btn_dict = {'title':'This will take you outside HDX to access the data', 'value':'Access Data', 'type':'external'} if h.hdx_get_ckan_config('ckan.resource_formats.external_system')==res.format else {'title':'Download', 'value':'Download', 'type':'download'} %}
               <a href="{{ res.hdx_rel_url }}"
                  class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download"
-                 title="{{ _('Download') }}"
+                 title="{{ btn_dict.title }}"
                  tracking-type="{{res.url_type}}"
 {#                 onclick="showDataUseSurveyPopup('{{ res.id }}');return true;"#}
               >
-                  <img src="/images/homepage/download.svg" alt="{{ _('Download') }}" />
-                  {{ _('Download') }}
+                  {% if btn_dict.type == 'download' %}
+                    <img src="/images/homepage/download.svg" alt="{{ btn_dict.title }}" />
+                    {% else %}
+                    <i class="icon humanitarianicons-Out-of-platform"></i>
+                  {% endif %}
+                  {{ btn_dict.value }}
                   <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                   <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
               </a>
 
-
+            {% if btn_dict.type == 'download' %}
               {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) or res.apihighways_id %}
                 <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
                   {{ _('More') }}
@@ -120,6 +124,7 @@
 
               {% endif %}
             {% endif %}
+          {% endif %}
 
             {% if in_review %}
               <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a"
