@@ -74,6 +74,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         self.__add_gis_layer_config_for_checks(config)
         self.__add_spatial_config_for_checks(config)
         self.__add_hxl_proxy_url_for_checks(config)
+        self.__add_wp_faq_url_for_checks(config)
 
     def __add_dataproxy_url_for_checks(self, config):
         dataproxy_url = config.get('ckan.recline.dataproxy_url', '')
@@ -98,6 +99,15 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def __add_hxl_proxy_url_for_checks(self, config):
         hxl_proxy_url = self._create_full_URL('/hxlproxy/data.json?url=sample.test')
         config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
+
+    def __add_wp_faq_url_for_checks(self, config):
+        wp_url = '{0}/wp-json/wp/v2/ufaq-category?parent={1}&per_page=100'\
+            .format(config.get('hdx.wordpress.url'), config.get('hdx.wordpress.category.faq'))
+        config['hdx_checks.wp_faq_url'] = wp_url
+        basic_auth = config.get('hdx.wordpress.auth.basic')
+        if not basic_auth:
+            basic_auth = "None"
+        config['hdx_checks.wp_basic_auth'] = basic_auth
 
     def _create_full_URL(self, url):
         '''

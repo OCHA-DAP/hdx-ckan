@@ -70,6 +70,13 @@ class HttpResponseTextCheck(checks.Check):
     type = 'HTTP Response Text Check'
     description = 'Makes a request to a specified url and checks that the HTTP response contains "included_text"'
 
+    def _basic_auth(self):
+        basic_auth = self.config.get('basic_auth')
+        if basic_auth and basic_auth != "None":
+            headers = {'Authorization': 'Basic {0}'.format(basic_auth)}
+            return headers
+        return None
+
     def run_check(self):
         url = self.config.get('url')
         included_text = self.config.get('included_text')
@@ -78,7 +85,7 @@ class HttpResponseTextCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = self._request_get(url)
+            r = self._request_get(url, None, self._basic_auth())
 
             if included_text in r.text:
                 self.result = 'Passed'
