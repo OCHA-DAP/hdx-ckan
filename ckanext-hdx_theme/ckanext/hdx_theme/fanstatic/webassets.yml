@@ -87,6 +87,25 @@ search-light-styles:
   contents:
     - light/search/search-light.css
 
+custom-org-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-org-scripts.js
+  contents:
+    - organization/wfp/organization-wfp.js
+
+custom-org-creation-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-org-creation-scripts.js
+  extra:
+    preload:
+      - hdx_theme/organization-form-styles
+  contents:
+    - custom_organization_creation.js
+
+custom-org-search-facets-styles:
+  output: ckanext-hdx_theme/%(version)s_custom-org-search-facets-styles.css
+  contents:
+    - search/facets/facets.css
+
+
 jquery-extra:
   contents:
     - vendor/jquery.expander/jquery.expander.js
@@ -113,6 +132,20 @@ popup-styles:
   output: ckanext-hdx_theme/%(version)s_popup-styles.css
   contents:
     - widget/popup/popup.css
+
+popup-embed-scripts:
+  output: ckanext-hdx_theme/%(version)s_popup-embed-scripts.js
+  extra:
+    preload:
+      - hdx_theme/popup-scripts
+      - hdx_theme/popup-embed-styles
+  contents:
+    - widget/popup/popup-embed.js
+
+popup-embed-styles:
+  output: ckanext-hdx_theme/%(version)s_popup-embed-styles.css
+  contents:
+    - widget/popup/popup-embed.css
 
 onboarding-scripts:
   output: ckanext-hdx_theme/%(version)s_onboarding-scripts.js
@@ -149,6 +182,70 @@ charting-styles:
   contents:
     - vendor/c3/c3.css
     - vendor/leaflet-0.7.3/leaflet.css
+
+custom-viz-3w-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-scripts.js
+  extra:
+    preload:
+      - hdx_theme/charting-scripts
+      - hdx_theme/custom-viz-3w-styles
+  contents:
+    - vendor/dc/dc.js
+    - vendor/dc/dc.leaflet.js
+    - widget/loading/loading.js
+    - widget/vis-3w/site.js
+    - vendor/crossfilter/crossfilter.js
+    - vendor/rangeslider.js-2.0.4/rangeslider.js
+      vendor/moment.js/moment.js
+
+custom-viz-3w-styles:
+  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-styles.css
+  contents:
+    - vendor/dc/dc.css
+    - widget/loading/loading.css
+    - widget/vis-3w/site.css
+    - vendor/rangeslider.js-2.0.4/rangeslider.css
+
+custom-viz-roea-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-scripts.js
+  extra:
+    preload:
+      - hdx_theme/charting-scripts
+      - hdx_theme/custom-viz-roea-styles
+  contents:
+    - vendor/d3/d3.js
+    - widget/loading/loading.js
+    - widget/vis-roea/dc.js
+    - widget/vis-roea/dc.leaflet.js
+    - vendor/crossfilter/crossfilter.js
+    - widget/vis-roea/site.js
+
+custom-viz-roea-styles:
+  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-styles.css
+  contents:
+    - vendor/dc/dc.css
+    - widget/loading/loading.css
+    - widget/vis-roea/site.css
+
+custom-viz-wfp-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-scripts.js
+  extra:
+    preload:
+      - hdx_theme/charting-scripts
+      - hdx_theme/custom-viz-wfp-styles
+  contents:
+    - vendor/d3/d3.js
+    - vendor/crossfilter/crossfilter.js
+    - vendor/topojson/topojson.js
+    - widget/loading/loading.js
+    - widget/vis-wfp/un_world_topo.js
+    - widget/vis-wfp/foodprices.js
+
+custom-viz-wfp-styles:
+  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-styles.css
+  contents:
+    - widget/loading/loading.css
+    - widget/vis-wfp/site.css
 
 dataset-scripts:
   output: ckanext-hdx_theme/%(version)s_dataset-scripts.js
@@ -285,26 +382,27 @@ shape-view-scripts:
   output: ckanext-hdx_theme/%(version)s_shape-view-scripts.js
   extra:
     preload:
-      - hdx_theme/shape-view-styles
+      - hdx_theme/charting-scripts
   contents:
-    - vendor/leaflet-0.7.3/leaflet.js
     - vendor/leaflet.mvt/mapbox.vector.tile.js
     - shape-view.js
 
-shape-view-styles:
-  output: ckanext-hdx_theme/%(version)s_shape-view-styles.css
-  contents:
-    - vendor/leaflet-0.7.3/leaflet.css
+#shape-view-styles:
+#  output: ckanext-hdx_theme/%(version)s_shape-view-styles.css
+#  contents:
+#    - vendor/leaflet-0.7.3/leaflet.css
 
 admin-styles:
   output: ckanext-hdx_theme/%(version)s_admin-styles.css
+  extra:
+    preload:
+      - hdx_theme/base-dashboard-styles
   contents:
     - admin/admin-base.css
     - admin/carousel.css
     - admin/package_links.css
     - admin/quick_links.css
     - custom_pages/custom_pages.css
-    - dashboard.css
 
 admin-scripts:
   output: ckanext-hdx_theme/%(version)s_admin-scripts.js
@@ -322,6 +420,19 @@ admin-scripts:
     - admin/package_links.js
     - admin/quick_links.js
     - custom_pages/custom_pages.js
+
+base-dashboard-scripts:
+  output: ckanext-hdx_theme/%(version)s_base-dashboard-scripts.js
+  extra:
+    preload:
+      - hdx_theme/base-dashboard-styles
+  contents:
+    - hdx_dashboard.js
+
+base-dashboard-styles:
+  output: ckanext-hdx_theme/%(version)s_base-dashboard-styles.css
+  contents:
+    - dashboard.css
 
 custom-pages-light-scripts:
   output: ckanext-hdx_theme/%(version)s_custom-pages-light-scripts.js
@@ -454,6 +565,7 @@ homepage-styles:
     - homepage/homepage-warning-bar.css
 
 country-custom-scripts:
+  # not preloading country-custom-styles as sometimes we need nepal-quake-country-custom-styles instead
   output: ckanext-hdx_theme/%(version)s_country-custom-scripts.js
   contents:
     - country/custom/country-custom.js
@@ -528,10 +640,20 @@ organization-form-styles:
   contents:
     - organization/organization-form.css
 
+organization-create-styles:
+  output: ckanext-hdx_theme/%(version)s_organization-create-styles.css
+  contents:
+    - organization/organization-create.css
+
 organization-light-styles:
   output: ckanext-hdx_theme/%(version)s_organization-light-styles.css
   contents:
     - light/organization/org-light.css
+
+organization-members-scripts:
+  output: ckanext-hdx_theme/%(version)s_organization-members-scripts.js
+  contents:
+    - organization/members.js
 
 homepage-about-styles:
   output: ckanext-hdx_theme/%(version)s_homepage-about-styles.css
@@ -542,3 +664,50 @@ homepage-qa-process-styles:
   output: ckanext-hdx_theme/%(version)s_homepage-qa-process-styles.css
   contents:
     - qa/qa-process.css
+
+base-fonts-styles:
+  output: ckanext-hdx_theme/%(version)s_base-fonts-styles.css
+  contents:
+    - base/fonts.css
+
+organization-stats-scripts:
+  output: ckanext-hdx_theme/%(version)s_organization-stats-scripts.js
+  extra:
+    preload:
+      - hdx_them/organization-stats-styles
+  contents:
+    - organization/stats.js
+    - datasets/stats-chart.js
+
+organization-stats-styles:
+  output: ckanext-hdx_theme/%(version)s_organization-stats-styles.css
+  contents:
+    - crisis/topline.css
+    - organization/stats.css
+
+colorpicker-scripts:
+  output: ckanext-hdx_theme/%(version)s_colorpicker-scripts.js
+  extra:
+    preload:
+      - hdx_them/colorpicker-styles
+  contents:
+    - vendor/colorpicker/spectrum.js
+    - vendor/colorpicker/rainbowvis.js
+
+colorpicker-styles:
+  output: ckanext-hdx_theme/%(version)s_colorpicker-styles.css
+  contents:
+    - vendor/colorpicker/spectrum.css
+
+image-upload-scripts:
+  output: ckanext-hdx_theme/%(version)s_image-upload-scripts.js
+  extra:
+    preload:
+      - hdx_them/image-upload-styles
+  contents:
+    - hdx-image-upload.js
+
+image-upload-styles:
+  output: ckanext-hdx_theme/%(version)s_image-upload-styles.css
+  contents:
+    - css/image-upload.css
