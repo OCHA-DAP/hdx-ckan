@@ -33,8 +33,8 @@ pages = [
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard_datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
-    {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-     'action': 'preselect', 'usertype': 'all'},
+    # {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+    #  'action': 'preselect', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController', 'action': 'read', 'has_id': True, 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.splash_page:SplashPageController', 'action': 'about_hrinfo', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.splash_page:SplashPageController', 'action': 'index', 'usertype': 'all'}
