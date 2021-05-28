@@ -18,7 +18,7 @@ ckan:
     - vendor/ckan/autocomplete.js
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
-    - vendor/bootstrap/js/bootstrap.js
+#    - vendor/bootstrap/js/bootstrap.js
     - base/hdx-util-lib.js
     - hdx_notify.js
     - hdx_confirm-action.js
