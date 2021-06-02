@@ -690,29 +690,31 @@
 
                                       </div>
                                   </div>
-                                  <div class="row">
-                                    <div class="col-xs-12">
-                                      <hr class="form-hr"/>
-                                    </div>
-                                  </div>
-                                  <div class="row form-horizontal form-section">
-                                    <div class="col-xs-3">
-                                        <h3>Archive dataset</h3>
-                                        <p>
-                                          A dataset should be archived when it is no longer of operational relevance
-                                          and will not be updated, but remains available primarily for historical
-                                          purposes. Archived datasets are still visible in search results when the
-                                          "Archived Datasets" filter is applied.
-                                        </p>
-                                    </div>
-                                    <div class="col-xs-7">
-                                      {% set archive_values = [{'value': False, 'text': 'No'}, {'value': True, 'text': 'Yes'}] %}
-                                      <div id="archived_dataset_flag">
-                                        {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources (?)'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}) }}
+                                  {% if data.id %}
+                                    <div class="row">
+                                      <div class="col-xs-12">
+                                        <hr class="form-hr"/>
                                       </div>
-
                                     </div>
-                                  </div>
+                                    <div class="row form-horizontal form-section">
+                                      <div class="col-xs-3">
+                                          <h3>Archive dataset</h3>
+                                          <p>
+                                            A dataset should be archived when it is no longer of operational relevance
+                                            and will not be updated, but remains available primarily for historical
+                                            purposes. Archived datasets are still visible in search results when the
+                                            "Archived Datasets" filter is applied.
+                                          </p>
+                                      </div>
+                                      <div class="col-xs-7">
+                                        {% set archive_values = [{'value': False, 'text': 'No'}, {'value': True, 'text': 'Yes'}] %}
+                                        <div id="archived_dataset_flag">
+                                          {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources (?)'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}) }}
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                  {% endif %}
                                 </section>
                         </div>
                     </div>
