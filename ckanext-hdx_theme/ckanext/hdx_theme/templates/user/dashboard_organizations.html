@@ -32,7 +32,8 @@
         <div class="row row-fluid">
         <h3 class="center sspRegular14"> {{ _('Thank you for becoming a registered user in HDX. If you plan on sharing data, you need to create an organisation or become an editor of an existing organisation.') }}</h3>
         <br/>
-        {% resource 'hdx_theme/popup' %}
+{#        {% resource 'hdx_theme/popup' %}#}
+        {% asset 'hdx_theme/popup-scripts' %}
         {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
         <center>
           <a href="#" onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');$('#create-organisation, #onboard-org-request-new-text').hide();$('#select-organisation, #onboard-org-join-text').show();" class="btn btn-primary">{{ _("Find Your Organisation")}}</a>

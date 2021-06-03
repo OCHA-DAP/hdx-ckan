@@ -16,10 +16,13 @@ ckan:
     - vendor/ckan/jquery.slug-preview.js
     - vendor/ckan/slug-preview.js
     - vendor/ckan/autocomplete.js
+    - vendor/ckan/api-info.js
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
 #    - vendor/bootstrap/js/bootstrap.js
     - base/hdx-util-lib.js
+    - modules/data-viewer.js
+    - modules/resource-view-embed.js
     - hdx_notify.js
     - hdx_confirm-action.js
     - hdx_click_stopper.js
@@ -39,7 +42,9 @@ page-scripts:
     - base/header-init.js
     - bs_popover.js
     - bs_tooltip.js
+    - follow.js
     - widget/contribute/contribute.js
+    - package/share_button.js # it's not used just for dataset pages
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
@@ -86,6 +91,11 @@ search-light-styles:
   output: ckanext-hdx_theme/%(version)s_search-light-styles.css
   contents:
     - light/search/search-light.css
+
+search-box-scripts:
+  output: ckanext-hdx_theme/%(version)s_search-box-scripts.js
+  contents:
+    - organization/organizations.js
 
 custom-org-scripts:
   output: ckanext-hdx_theme/%(version)s_custom-org-scripts.js
@@ -147,6 +157,20 @@ popup-embed-styles:
   contents:
     - widget/popup/popup-embed.css
 
+popup-hxl-scripts:
+  output: ckanext-hdx_theme/%(version)s_popup-hxl-scripts.js
+  extra:
+    preload:
+      - hdx_theme/popup-scripts
+      - hdx_theme/popup-hxl-styles
+  contents:
+    - widget/popup/popup-hxl.js
+
+popup-hxl-styles:
+  output: ckanext-hdx_theme/%(version)s_popup-hxl-styles.css
+  contents:
+    - widget/popup/popup-hxl.css
+
 onboarding-scripts:
   output: ckanext-hdx_theme/%(version)s_onboarding-scripts.js
   extra:
@@ -166,6 +190,20 @@ onboarding-styles:
     - widget/onboarding/logout.css
     - widget/onboarding/login.css
     - widget/onboarding/signup.css
+
+onboarding-password-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-password-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-password-styles
+  contents:
+    - widget/onboarding/forgot-password.js
+
+onboarding-password-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-password-styles.css
+  contents:
+    - widget/onboarding/verify.css
+    - widget/onboarding/forgot-password.css
 
 charting-scripts:
   output: ckanext-hdx_theme/%(version)s_charting-scripts.js
@@ -266,6 +304,11 @@ dataset-styles:
       - datasets/hdx_custom_dataviz_show.css
       - datasets/related.css
 
+dataset-related-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-related-styles.css
+  contents:
+    - datasets/related.css
+
 dataset-search-scripts:
   output: ckanext-hdx_theme/%(version)s_dataset-search-scripts.js
   extra:
@@ -280,6 +323,10 @@ dataset-search-styles:
   contents:
       - vendor/multiple-select-1.1.0/multiple-select.css
 
+dataset-diff-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-diff-styles.css
+  contents:
+      - datasets/diff.css
 
 dataset-light-scripts:
   output: ckanext-hdx_theme/%(version)s_dataset-light-scripts.js
@@ -298,6 +345,15 @@ dataset-light-styles:
       - hdx_theme/requestdata-styles
   contents:
     - light/dataset/dataset-light.css
+
+resource-groupings-scripts:
+  output: ckanext-hdx_theme/%(version)s_resource-groupings-scripts.js
+  extra:
+    preload:
+      - hdx_them/ckan
+  contents:
+    - resource_grouping/hdx_resource_grouping.js
+
 
 requestdata-remove-class-scripts:
   output: ckanext-hdx_theme/%(version)s_requestdata-remove-class-scripts-scripts.js
@@ -433,6 +489,22 @@ base-dashboard-styles:
   output: ckanext-hdx_theme/%(version)s_base-dashboard-styles.css
   contents:
     - dashboard.css
+
+custom-pages-scripts:
+  output: ckanext-hdx_theme/%(version)s_custom-pages-scripts.js
+  extra:
+    preload:
+      - hdx_theme/custom-pages-styles
+      - hdx_theme/hdx-autocomplete
+  contents:
+    - custom_pages/custom_pages.js
+    - contribute_flow/form_element_manager.js
+
+custom-pages-styles:
+  output: ckanext-hdx_theme/%(version)s_custom-pages-styles.css
+  contents:
+    - custom_pages/custom_pages.css
+    - custom_pages/custom_pages_view.css
 
 custom-pages-light-scripts:
   output: ckanext-hdx_theme/%(version)s_custom-pages-light-scripts.js
@@ -617,6 +689,23 @@ group-light-styles:
   contents:
     - light/group/group-light.css
 
+eaa-map-scripts:
+  output: ckanext-hdx_theme/%(version)s_eaa-map-scripts.js
+  extra:
+    preload:
+      - hdx_theme/eaa-map-styles
+  contents:
+    - browse/world_json.js
+    - browse/countries.js
+    - eaa/eaa-map.js
+    - eaa/eaa-init.js
+
+eaa-map-styles:
+  output: ckanext-hdx_theme/%(version)s_eaa-map-styles.css
+  contents:
+    - browse/browse.css
+    - eaa/eaa.css
+
 organizations-scripts:
   output: ckanext-hdx_theme/%(version)s_organizations-scripts.js
   extra:
@@ -664,6 +753,23 @@ homepage-qa-process-styles:
   output: ckanext-hdx_theme/%(version)s_homepage-qa-process-styles.css
   contents:
     - qa/qa-process.css
+
+qa-package-scripts:
+  output: ckanext-hdx_theme/%(version)s_qa-package-scripts.js
+  extra:
+    preload:
+      - hdx_theme/qa-package-styles
+  contents:
+    - qa/qa-checklist-widget.css
+    - qa/qa-package.js
+    - qa/qa-checklist.js
+    - qa/qa-sdc-micro.js
+
+qa-package-styles:
+  output: ckanext-hdx_theme/%(version)s_qa-package-styles.css
+  contents:
+    - qa/qa-package.css
+    - qa/qa-sdc-micro.css
 
 base-fonts-styles:
   output: ckanext-hdx_theme/%(version)s_base-fonts-styles.css

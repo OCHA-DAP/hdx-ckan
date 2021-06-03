@@ -3,8 +3,11 @@
 {% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
 
 {% block package_item_content %}
-  {% resource 'hdx_theme/qa-package' %}
-  {% resource 'hdx_theme/onboarding' %}
+{#  {% resource 'hdx_theme/qa-package' %}#}
+{#  {% resource 'hdx_theme/onboarding' %}#}
+
+  {% asset 'hdx_theme/qa-package-scripts' %}
+  {% asset 'hdx_theme/onboarding-scripts' %}
     <div class="dataset-content2 qa-package-item" data-index="{{loop.index}}">
       <div class="dataset-top">
         <div class="dataset-heading">

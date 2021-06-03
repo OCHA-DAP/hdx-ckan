@@ -1,0 +1,10 @@
+common-js: &common-js
+  filters: rjsmin
+
+hdx-hxl-preview:
+  <<: *common-js
+  output: ckanext-hdx_hxl_preview/%(version)s_page-scripts.js
+  contents:
+    - hdx_hxl_preview.js
+
+
