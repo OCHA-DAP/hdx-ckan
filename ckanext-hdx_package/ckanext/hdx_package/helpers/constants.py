@@ -56,6 +56,6 @@ COD_VALUES_MAP = OrderedDict((
 for i, cod_value in enumerate(COD_VALUES_MAP.values()):
     cod_value['index'] = i
 
-COD_GROUP_EXPLANATION_LINK = 'https://en.wikipedia.org/wiki/Common_Operational_Datasets'
+COD_GROUP_EXPLANATION_LINK = 'https://storymaps.arcgis.com/stories/dcf6135fc0e943a9b77823bb069e2578'
 
 UPDATE_FREQ_LIVE = '0'
