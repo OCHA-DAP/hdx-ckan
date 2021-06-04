@@ -83,14 +83,14 @@ search-scripts:
   contents:
     - highlight.js
     - order-by-dropdown.js
-    - search/lunr/feature-index.js
-    - search/lunr.js
-    - search/search.js
+    - search_/lunr/feature-index.js
+    - search_/lunr.js
+    - search_/search.js
 
 search-styles:
   output: ckanext-hdx_theme/%(version)s_search-styles.css
   contents:
-    - search/search.css
+    - search_/search.css
 
 search-light-styles:
   output: ckanext-hdx_theme/%(version)s_search-light-styles.css
@@ -118,7 +118,7 @@ custom-org-creation-scripts:
 custom-org-search-facets-styles:
   output: ckanext-hdx_theme/%(version)s_custom-org-search-facets-styles.css
   contents:
-    - search/facets/facets.css
+    - search_/facets/facets.css
 
 
 jquery-extra:
