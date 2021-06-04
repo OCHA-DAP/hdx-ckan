@@ -463,7 +463,7 @@ requestdata-remove-class-scripts:
       - hdx_theme/ckan
       - hdx_theme/requestdata-styles
   contents:
-    - requestdata/remove-class.js
+    - requestdata_/remove-class.js
 
 requestdata-scripts:
   output: ckanext-hdx_theme/%(version)s_requestdata-scripts.js
@@ -472,12 +472,12 @@ requestdata-scripts:
       - hdx_theme/ckan
       - hdx_theme/requestdata-styles
   contents:
-    - requestdata/modal-form.js
+    - requestdata_/modal-form.js
 
 requestdata-styles:
   output: ckanext-hdx_theme/%(version)s_requestdata-styles.css
   contents:
-    - requestdata/request-data.css
+    - requestdata_/request-data.css
 
 resource-list-scripts:
   output: ckanext-hdx_theme/%(version)s_resource-list-scripts.js
