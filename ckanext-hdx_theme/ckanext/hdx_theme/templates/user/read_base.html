@@ -122,7 +122,8 @@
 
 {% block styles %}
   {{ super() }}
-  {% resource 'hdx_theme/admin/admin-base.css' %}
-  {% resource 'hdx_theme/dashboard.css' %}
+{#  {% resource 'hdx_theme/admin/admin-base.css' %}#}
+{#  {% resource 'hdx_theme/dashboard.css' %}#}
 
+  {% asset 'hdx_theme/admin-styles' %}
 {% endblock %}

@@ -68,6 +68,11 @@ page-light-styles:
     - css/Humanitarian-Icons-v02.css
     - light/page-light.css
 
+bootstrap-styles:
+  output: ckanext-hdx_theme/%(version)s_bootstrap-styles.css
+  contents:
+    - vendor/bootstrap/css/bootstrap.css
+
 search-scripts:
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
   extra:
@@ -137,11 +142,13 @@ popup-scripts:
       - hdx_theme/popup-styles
   contents:
     - widget/popup/popup.js
+    - widget/loading/loading.js
 
 popup-styles:
   output: ckanext-hdx_theme/%(version)s_popup-styles.css
   contents:
     - widget/popup/popup.css
+    - widget/loading/loading.css
 
 popup-embed-scripts:
   output: ckanext-hdx_theme/%(version)s_popup-embed-scripts.js
@@ -204,6 +211,100 @@ onboarding-password-styles:
   contents:
     - widget/onboarding/verify.css
     - widget/onboarding/forgot-password.css
+
+onboarding-perform-reset-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-perform-reset-styles.css
+  contents:
+    - widget/onboarding/perform-reset.css
+
+onboarding-done-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-done-styles.css
+  contents:
+    - widget/onboarding/done.css
+
+onboarding-survey-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-survey-styles.css
+  contents:
+    - widget/onboarding/survey.css
+
+onboarding-follow-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-follow-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-follow-styles
+  contents:
+    - follow.js
+    - hdx_theme/widget/onboarding/follow.js
+
+onboarding-follow-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-follow-styles.css
+  contents:
+    - widget/onboarding/follow.css
+
+onboarding-invite-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-invite-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-invite-styles
+  contents:
+    - widget/onboarding/invite.js
+
+onboarding-invite-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-invite-styles.css
+  contents:
+    - widget/onboarding/invite.css
+
+onboarding-recover-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-recover-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-recover-styles
+  contents:
+    - widget/onboarding/recover.js
+
+onboarding-recover-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-recover-styles.css
+  contents:
+    - widget/onboarding/recover.css
+
+onboarding-register-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-register-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-register-styles
+  contents:
+    - widget/onboarding/register.js
+
+onboarding-register-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-register-styles.css
+  contents:
+    - widget/onboarding/register.css
+
+onboarding-registered-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-registered-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-registered-styles
+  contents:
+    - widget/onboarding/registered.js
+
+onboarding-registered-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-registered-styles.css
+  contents:
+    - widget/onboarding/registered.css
+
+onboarding-select-org-scripts:
+  output: ckanext-hdx_theme/%(version)s_onboarding-select-org-scripts.js
+  extra:
+    preload:
+      - hdx_theme/onboarding-select-org-styles
+  contents:
+    - widget/onboarding/select-organisation.js
+
+onboarding-select-org-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-select-org-styles.css
+  contents:
+    - widget/onboarding/select-organisation.css
 
 charting-scripts:
   output: ckanext-hdx_theme/%(version)s_charting-scripts.js
@@ -518,7 +619,7 @@ custom-pages-light-scripts:
     - light/dataset/dataset.js
 
 custom-pages-light-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-pages-light-styles.js
+  output: ckanext-hdx_theme/%(version)s_custom-pages-light-styles.css
   contents:
     - custom_pages/custom_pages_view.css
     - light/custom_pages/custom-pages-light.css
@@ -817,3 +918,61 @@ image-upload-styles:
   output: ckanext-hdx_theme/%(version)s_image-upload-styles.css
   contents:
     - css/image-upload.css
+
+login-scripts:
+  output: ckanext-hdx_theme/%(version)s_login-scripts.js
+  contents:
+    - new_user_form.js
+    - hdx_style_on_focus.js
+    - latinise.js
+    - login_form.js
+
+login-styles:
+  output: ckanext-hdx_theme/%(version)s_login-styles.css
+  contents:
+    - css/login.css
+    - new_user_form.css
+
+base-widget-styles:
+  output: ckanext-hdx_theme/%(version)s_base-widget-styles.css
+  contents:
+    - base/base-widget.css
+
+banner-scripts:
+  output: ckanext-hdx_theme/%(version)s_banner-scripts.js
+  extra:
+    preload:
+      - hdx_theme/banner-styles
+  contents:
+    - base/components/banner.js
+
+banner-styles:
+  output: ckanext-hdx_theme/%(version)s_banner-styles.css
+  contents:
+    - base/components/banner.css
+
+contact-contributor-scripts:
+  output: ckanext-hdx_theme/%(version)s_contact-contributor-scripts.js
+  extra:
+    preload:
+      - hdx_theme/contact-contributor-styles
+  contents:
+    - widget/membership/contact-contributor.js
+
+contact-contributor-styles:
+  output: ckanext-hdx_theme/%(version)s_contact-contributor-styles.css
+  contents:
+    - widget/membership/contact-contributor.css
+
+group-message-scripts:
+  output: ckanext-hdx_theme/%(version)s_group-message-scripts.js
+  extra:
+    preload:
+      - hdx_theme/group-message-styles
+  contents:
+    - widget/membership/group-message.js
+
+group-message-styles:
+  output: ckanext-hdx_theme/%(version)s_group-message-styles.css
+  contents:
+    - widget/membership/group-message.css

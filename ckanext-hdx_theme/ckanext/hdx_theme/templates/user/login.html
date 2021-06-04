@@ -46,6 +46,7 @@
 {% endblock %}
 
 {% block scripts2 %}
-  {% resource 'hdx_theme/login' %}
+{#  {% resource 'hdx_theme/login' %}#}
+  {% asset 'hdx_theme/login-styles' %}
   {{ super() }}
 {% endblock %}

@@ -6,7 +6,8 @@ Depends on:
 Example:
     {{ h.snippet('widget/contribute/contribute-dataset-review.html', id="datasetPopup") }}
 #}
-{% resource 'hdx_theme/widget/onboarding/done.css' %}
+{% asset 'hdx_theme/onboarding-done-styles' %}
+
 {% set class = "popup-onbording" %}
 {% set title = "Thank you for sharing your dataset! Please note:" %}
 

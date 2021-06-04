@@ -7,7 +7,9 @@ Depends on:
 Example:
     {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
 #}
-{% resource 'hdx_theme/widget/onboarding/survey.css' %}
+{#{% resource 'hdx_theme/widget/onboarding/survey.css' %}#}
+{% asset 'hdx_theme/onboarding-survey-styles' %}
+
 {% set class = "popup-onbording" %}
 {% set title = "Data Literacy Survey" %}
 
