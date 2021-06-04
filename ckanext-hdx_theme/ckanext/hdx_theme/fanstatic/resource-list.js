@@ -46,11 +46,14 @@ function showDataUseSurveyPopup(resId, userSurveyUrl) {
   if (userSurveyIsValid && !surveyStatus) {
     $("#dataUseSurveyPopup a.btn-primary").click(function (e) {
       hdxUtil.analytics.sendSurveyEvent('confirm popup');
-      // const pkgId = $("#dataUseSurveyPkgId").text();
-      // const orgName = $("#dataUseSurveyOrgName").text();
-      // const url = "https://docs.google.com/forms/d/e/1FAIpQLSfqFSzgbPSBsXCvzIwg8Mdq6dGmx4FA0ECse_FqzX23J0VXxQ/viewform?usp=pp_url&entry.373528326="+pkgId+"&entry.39727542="+resId+"&entry.730743274="+orgName;
-      // window.open(url, "_blank");
-      // $("#dataUseSurveyPopup").hide();
+      const pkgId = $("#dataUseSurveyPkgId").text() || "";
+      const orgName = $("#dataUseSurveyOrgName").text() || "";
+
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_organization_name', orgName);
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_dataset_id', pkgId);
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_resource_id', resId);
+      // console.log(`org[${orgName}] pkg[${pkgId}] res[${resId}]`);
+
       $("#dataUseSurveyPopup .survey-widget .survey-content").hide();
 
       iframe.show();
