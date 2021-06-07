@@ -59,13 +59,26 @@
   }
 }
 .survey-widget {
-  padding: 20px;
-  height: 200px;
   background-color: #fff;
   width: 100%;
+}
+.survey-widget .survey-content {
+  padding: 20px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
 }
 .survey-widget .right-side-actions {
   margin-top: auto;
+}
+.survey-widget iframe {
+  min-width: 100vw;
+  min-height: 80vh;
+}
+@media (min-width: 768px) {
+  .survey-widget iframe {
+    border: none;
+    min-width: 800px;
+    min-height: 80vh;
+  }
 }

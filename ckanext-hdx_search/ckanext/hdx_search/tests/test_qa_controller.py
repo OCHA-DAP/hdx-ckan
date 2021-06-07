@@ -96,7 +96,7 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             qa_pii_run = self._get_action('qa_pii_run')(context, {'resourceId': r1.get('id')})
-        except ValidationError, ex:
+        except ValidationError as ex:
             assert True
         assert True
 
@@ -125,6 +125,6 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         }
         try:
             qa_sdcmicro_run = self._get_action('qa_sdcmicro_run')(context, data_dict)
-        except ValidationError, ex:
+        except ValidationError as ex:
             assert True
         assert True

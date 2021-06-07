@@ -1,17 +1,4 @@
 $(document).ready(function(){
-  $('.share_button').click(function(e){
-    $.ajax({
-      url: $(this).attr('short-path'),
-      data:{'url':$(this).attr('target-url'), },
-      type: 'POST'
-    }).done(function(msg){
-      $('.change-link-wrapper a').each(function(){
-          var link = $(this).attr('href');
-          $(this).attr('href', link.replace("data.humdata.org", msg['url']));
-      });
-    });
-    return false;
-  });
 
   $('.direct-share-links a').click(function(e){
     e.preventDefault();

@@ -6,15 +6,26 @@
 @doneHeight: 260px - @notificationTitleHeight;
 
 .survey-widget {
-  padding: @notificationPaddingSize;
-  height: @doneHeight;
   background-color: @whiteColor;
   width: @popupContentWidth;
 
-  display: flex;
-  flex-direction: column;
-
+  .survey-content {
+    padding: @notificationPaddingSize;
+    min-height: @doneHeight;
+    display: flex;
+    flex-direction: column;
+  }
   .right-side-actions {
     margin-top: auto;
+  }
+  iframe {
+    min-width: 100vw;
+    min-height: 80vh;
+    @media(min-width: @cut-point-tablet) {
+      border: none;
+      min-width: 800px;
+      min-height: 80vh;
+    }
+
   }
 }

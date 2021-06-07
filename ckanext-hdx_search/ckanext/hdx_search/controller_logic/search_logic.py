@@ -94,7 +94,7 @@ class SearchLogic(object):
 
     def _search(self, package_type, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
-                ignore_capacity_check=False, use_solr_collapse=False, hide_archived=False):
+                ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
 
         from ckan.lib.search import SearchError
 
@@ -154,6 +154,8 @@ class SearchLogic(object):
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
                                      'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
                             featured_filters_set = True
+                        if param == 'ext_archived':
+                            hide_archived = False
                         search_extras[param] = value
 
             if self.template_data.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
@@ -161,6 +163,8 @@ class SearchLogic(object):
 
             self._set_filters_are_selected_flag()
 
+            if hide_archived:
+                tagged_fq_dict['archived'] = ['-extras_archived:"true"']
             fq_list = [u'{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
                        for key, value_list in tagged_fq_dict.items()]
 
@@ -172,10 +176,6 @@ class SearchLogic(object):
                         .format(sort=sort_by)
                 ]
                 solr_expand = 'true'
-
-            if hide_archived:
-                fq_list = fq_list or []
-                fq_list.append('-extras_archived:"true"')
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
@@ -462,6 +462,7 @@ class SearchLogic(object):
         num_of_requestdata = 0
         num_of_showcases = 0
         num_of_administrative_divisions = 0
+        num_of_archived = 0
 
         new_cod_filters_enabled = are_new_cod_filters_enabled()
 
@@ -502,6 +503,10 @@ class SearchLogic(object):
                 # has_showcases is a solr boolean that is transformed to the string 'true'
                 num_of_showcases = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'),
                                         0)
+            elif category_key == 'extras_archived':
+                # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
+                num_of_archived = next(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             else:
                 if category_key == 'vocab_Topics':
                     num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
@@ -539,6 +544,10 @@ class SearchLogic(object):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
+        archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
+                                 'but remains available primarily for historical purposes')
+        self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
+                                          num_of_archived, search_extras, explanation=archived_explanation)
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
@@ -611,13 +620,15 @@ class SearchLogic(object):
 
         return facets
 
-    def _add_item_to_featured_facets(self, featured_facet_items, key, display_name, num_of_cods, search_extras):
+    def _add_item_to_featured_facets(self, featured_facet_items, key, display_name, num_of_cods, search_extras,
+                                     explanation=None):
         featured_facet_items.append({
             'count': num_of_cods,
             'category_key': key,
             'name': '1',
             'display_name': display_name,
             'selected': search_extras.get(key),
+            'explanation': explanation
         })
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):

@@ -249,6 +249,7 @@ $(
                 "group ids": analyticsInfo.groupIds,
                 "is cod": analyticsInfo.isCod,
                 "is indicator": analyticsInfo.isIndicator,
+                "is archived": analyticsInfo.isArchived,
                 "authenticated": analyticsInfo.authenticated
             });
         });
@@ -504,7 +505,8 @@ $(
                 "group names": localAnalyticsInfo.groupNames,
                 "group ids": localAnalyticsInfo.groupIds,
                 "is cod": localAnalyticsInfo.isCod,
-                "is indicator": localAnalyticsInfo.isIndicator
+                "is indicator": localAnalyticsInfo.isIndicator,
+                "is archived": localAnalyticsInfo.isArchived
             });
         }
 

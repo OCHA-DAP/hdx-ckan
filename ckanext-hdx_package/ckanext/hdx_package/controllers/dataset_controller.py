@@ -697,6 +697,7 @@ class DatasetController(PackageController):
         # set dataset type for google analytics - modified by HDX
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
         c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
+        c.analytics_is_archived = analytics.is_archived(c.pkg_dict)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
         c.analytics_dataset_availability = analytics.dataset_availability(c.pkg_dict)
 
@@ -771,6 +772,7 @@ class DatasetController(PackageController):
             org_dict = c.pkg_dict.get('organization') or {}
             org_id = org_dict.get('id', None)
             org_info_dict = self._get_org_extras(org_id)
+            c.user_survey_url = org_info_dict.get('user_survey_url')
             if org_info_dict.get('custom_org', False):
                 self._process_customizations(org_info_dict.get('customization', None))
 
@@ -966,25 +968,6 @@ class DatasetController(PackageController):
         '''Deprecated in 2.3'''
         return bool(datapreview.get_preview_plugin(data_dict, return_first=True))
 
-    def shorten(self):
-        """
-        Use Google's url shorten to create social sharing links
-        """
-        import requests
-
-        params = request.params.items()
-        url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key=" + config.get('hdx.google.dev_key', ''),
-                          data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
-
-        try:
-            item = r.json()
-            short = item['id']
-        except Exception as e:
-            log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))
-            short = url
-        return self._finish(200, {'url': short}, content_type='json')
-
     def visibility(self, id):
         """
         Toggle the visibility of the dataset
@@ -1176,6 +1159,7 @@ class DatasetController(PackageController):
         # c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
         c.analytics_is_cod = analytics.is_cod(c.package)
         c.analytics_is_indicator = analytics.is_indicator(c.package)
+        c.analytics_is_archived = analytics.is_archived(c.package)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
         c.analytics_dataset_availability = analytics.dataset_availability(c.package)
 

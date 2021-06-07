@@ -29,12 +29,12 @@ Example:
             </div>
             {% block error_section %}
               {% for message in h.flash.pop_messages() | list %}
-                <div class="alert alert-warning fade in {{ message.category }}">
-                  {{ h.literal(message) }}
+                  <div class="alert alert-warning fade in {{ message.category }}">
+                    {{ h.literal(message) }}
+                  </div>
+                {% endfor %}
+                <div class="error-message" style="display: none;">
                 </div>
-              {% endfor %}
-              <div class="error-message" style="display: none;">
-              </div>
             {% endblock %}
         </div>
         <div class="mTop20">

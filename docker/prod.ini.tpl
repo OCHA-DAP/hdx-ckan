@@ -52,7 +52,7 @@ hdx.download_with_cache.folder = /srv/filestore/download_cache
 hdx_smtp.mail_from_please_reply   = please-reply@${HDX_SMTP_DOMAIN}
 
 hdx.cache.onstartup = true
-hdx.caching.redis_host = ${HDX_REDIS_HOST}
+hdx.caching.redis_host = ${HDX_REDIS_ADDR}
 hdx.caching.redis_port = ${HDX_REDIS_PORT}
 hdx.caching.redis_db = ${HDX_REDIS_DB}
 
@@ -102,6 +102,10 @@ hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/hxlpreview
 
 # GOOGLE DEV
 hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
+
+#Bit.ly DEV
+hdx.bitly.token = ${HDX_BITLY_TOKEN}
+hdx.bitly.group = ${HDX_BITLY_GROUP}
 
 # MAILCHIMP
 hdx.mailchimp.api.key = ${HDX_MAILCHIMP_API_KEY}

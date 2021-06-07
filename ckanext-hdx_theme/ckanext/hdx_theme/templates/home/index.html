@@ -3,12 +3,6 @@
 {% set carouselItems = h.hdx_get_carousel_list() %}
 {% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Welcome") %}
 
-{% block flash %}
-  {# eat the flash messages so they don't remain in the session #}
-  {% set flash_messages = h.flash.pop_messages() %}
-{% endblock %}
-
-
 {% block subtitle %}{{ page_subtitle }}{% endblock %}
 
 {% block maintag %}{% endblock %}
@@ -30,7 +24,6 @@
 {% if (data and data.current_step == 'hdx_onboarding_details') %}
   {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email, capcha_api_key = capcha_api_key) }}
 {% endif %}
-
 <div class="homepage-main">
   <div class="homepage-section hero-section">
     <div class="container">

@@ -125,8 +125,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='resource_read')
-        map.connect('shorten_url', '/package/tools/shorten',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
         map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='resource_datapreview')
@@ -256,6 +254,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'archived': [
                 tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_validator('hdx_boolean_string_converter'),
+                tk.get_validator('hdx_update_data_frequency_by_archived'),
                 tk.get_converter('convert_to_extras')
             ],
             'review_date': [tk.get_validator('ignore_missing'),
@@ -586,6 +585,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
             'hdx_update_microdata': vd.hdx_update_microdata,
             'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata,
+            'hdx_update_data_frequency_by_archived': vd.hdx_update_data_frequency_by_archived,
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
             'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange,
             'hdx_float_number': vd.hdx_float_number

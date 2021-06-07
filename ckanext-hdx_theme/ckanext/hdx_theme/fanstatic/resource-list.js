@@ -24,31 +24,45 @@ function showDataCheck(url){
   iframe.attr('src', url);
   iframe.focus();
 }
+var DATA_USE_SURVEY_LOAD_COUNT;
+function showDataUseSurveyPopup(resId, userSurveyUrl) {
+  const orgName = $("#dataUseSurveyOrgName").text();
 
-// function showDataUseSurveyPopup(res_id) {
-//   var org_name = $("#dataUseSurveyOrgName").text();
-//   var SURVEY_COOKIE = "hdx-data-use-survey-popup-" + org_name;
-//   var cookie = $.cookie(SURVEY_COOKIE);
-//   if (!cookie) {
-//     $("#dataUseSurveyPopup a.btn-primary").click(function (e) {
-//       hdxUtil.analytics.sendSurveyEvent('confirm popup');
-//       var pkg_id = $("#dataUseSurveyPkgId").text();
-//       var org_name = $("#dataUseSurveyOrgName").text();
-//       var url = "https://docs.google.com/forms/d/e/1FAIpQLSfqFSzgbPSBsXCvzIwg8Mdq6dGmx4FA0ECse_FqzX23J0VXxQ/viewform?usp=pp_url&entry.373528326="+pkg_id+"&entry.39727542="+res_id+"&entry.730743274="+org_name;
-//       window.open(url, "_blank");
-//       $("#dataUseSurveyPopup").hide();
-//       // var date = new Date();
-//       // date.setTime(date.getTime() + 1000);
-//       $.cookie(SURVEY_COOKIE, true, {
-//         expires: 30 //days
-//       });
-//     });
-//     // var date = new Date();
-//     // date.setTime(date.getTime() + 1000);
-//     // $.cookie(SURVEY_COOKIE, true, {
-//     //   expires: 30 //days
-//     // });
-//     hdxUtil.analytics.sendSurveyEvent('show popup');
-//     $("#dataUseSurveyPopup").show();
-//   }
-// }
+  const SURVEY_KEY = "/organization:" + "hdx-data-use-survey-popup-" + orgName;
+  DATA_USE_SURVEY_LOAD_COUNT = 0;
+  function _iframeOnLoadCount() {
+    DATA_USE_SURVEY_LOAD_COUNT++;
+    console.log(`Load count: ${DATA_USE_SURVEY_LOAD_COUNT}`);
+    if (DATA_USE_SURVEY_LOAD_COUNT > 1){
+      window.localStorage.setItem(SURVEY_KEY, "true");
+    }
+  }
+  let surveyStatus = window.localStorage.getItem(SURVEY_KEY);
+  const iframe = $("#dataUseSurveyPopup .survey-widget iframe");
+  iframe.prop('src', '');
+  iframe[0].removeEventListener("load", _iframeOnLoadCount);
+
+  const userSurveyIsValid = userSurveyUrl && userSurveyUrl !== '' && userSurveyUrl !== 'None';
+  if (userSurveyIsValid && !surveyStatus) {
+    $("#dataUseSurveyPopup a.btn-primary").click(function (e) {
+      hdxUtil.analytics.sendSurveyEvent('confirm popup');
+      const pkgId = $("#dataUseSurveyPkgId").text() || "";
+      const orgName = $("#dataUseSurveyOrgName").text() || "";
+
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_organization_name', orgName);
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_dataset_id', pkgId);
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_resource_id', resId);
+      // console.log(`org[${orgName}] pkg[${pkgId}] res[${resId}]`);
+
+      $("#dataUseSurveyPopup .survey-widget .survey-content").hide();
+
+      iframe.show();
+      iframe.prop('src', userSurveyUrl);
+      iframe[0].addEventListener("load", _iframeOnLoadCount);
+    });
+    hdxUtil.analytics.sendSurveyEvent('show popup');
+    $("#dataUseSurveyPopup .survey-widget .survey-content").show();
+    iframe.hide();
+    $("#dataUseSurveyPopup").show();
+  }
+}

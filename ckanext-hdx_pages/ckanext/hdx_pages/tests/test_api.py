@@ -99,7 +99,7 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             self._get_action('page_update')(context_sysadmin, {'id': page_dict.get('id')})
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert True
 
         grp_dict = self._get_action('group_show')(context_sysadmin, {'id': 'roger'})
