@@ -77,7 +77,7 @@ class YtpRequestController(base.BaseController):
             abort(404, _('Item not found'))
         except dict_fns.DataError:
             abort(400, _(u'Integrity Error'))
-        except ValidationError, e:
+        except ValidationError as e:
             errors = e.error_dict
             error_summary = e.error_summary
             helpers.flash_error(_('There was an error saving your request. Please try again.'))

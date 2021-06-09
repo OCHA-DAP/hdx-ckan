@@ -284,7 +284,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         mock_helper.populate_mock_as_c(org_helper_c, test_username)
         mock_helper.populate_mock_as_c(theme_c, test_username)
         request_c.referer = '/organization/wfp'
-        url = h.url_for('member_request_new')
+        url = h.url_for('ytp_request.new')
         ret_page = self.app.post(url, params={'organization': 'hdx-test-org', 'role': 'member', 'save': 'save',
                                    'message': 'add me to your organization'},
                       extra_environ={"REMOTE_USER": test_username})

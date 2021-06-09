@@ -1,11 +1,11 @@
 import logging
 
 from datetime import datetime
-from pylons import config
-from pylons import i18n
+import ckan.plugins.toolkit as tk
+
+from ckan.lib import i18n
 from sqlalchemy.sql.expression import or_
 
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from ckan import model, authz
 from ckan.common import _, c
 from ckan.lib import helpers
@@ -18,8 +18,18 @@ from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
 
 log = logging.getLogger(__name__)
 
-new_authz = authz
+try:
+    import ckanext.hdx_users.controllers.mailer as hdx_mailer
+except ImportError as ex:
+    hdx_mailer = None
+    log.warning('HDX: This is temporary for python3 migration. To be changed when hdx_users extension is migrated. '
+                'This is used for tests.')
 
+
+
+
+new_authz = authz
+config = tk.config
 # _SUBJECT_MEMBERSHIP_REQUEST = lambda: _("New membership request (%(organization)s)")
 # _MESSAGE_MEMBERSHIP_REQUEST = lambda: _("""\
 # User %(user)s (%(email)s) has requested membership to organization %(organization)s.
@@ -74,7 +84,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                 'user_email': user_obj.email,
                 'message': data_dict.get('message')
             }
-            hdx_mailer.mail_recipient(admin_list, subject, email_data,footer=user_obj.email,
+            hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=user_obj.email,
                                       snippet='email/content/join_organization_request.html')
 
             subject = u'Your request to join organisation ' + group.display_name
@@ -87,7 +97,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                                       subject, email_data,footer=user_obj.email,
                                       snippet='email/content/join_organization_request_confirmation_to_user.html')
 
-    except MailerException, e:
+    except MailerException as e:
         log.error(e)
     # finally:
     #     set_lang(current_locale)
@@ -141,7 +151,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
                 hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=member_user.email,
                                           snippet='email/content/join_organization_reject_to_admins.html')
 
-    except MailerException, e:
+    except MailerException as e:
         log.error(e)
 
 
@@ -216,7 +226,7 @@ def _create_member_request(context, data_dict):
 
     url = config.get('ckan.site_url', "")
     if url:
-        url = url + url_for('member_request_show', member_id=member.id)
+        url = url + url_for('ytp_request.show', member_id=member.id)
 
     admin_list = []
     if role == 'admin':

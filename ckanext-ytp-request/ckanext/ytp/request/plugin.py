@@ -11,16 +11,25 @@ from ckan.lib import helpers
 from ckanext.ytp.request.tools import get_user_member
 from ckanext.ytp.request.model import setup
 
+from ckan.plugins import implements, SingletonPlugin
+from ckan.plugins import IBlueprint
+
+from ckanext.ytp.request.view import ytp_request
+
 log = logging.getLogger(__name__)
 
 
 class YtpRequestPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IConfigurer, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IConfigurable)
+    implements(IBlueprint)
+
+    def get_blueprint(self):
+        return ytp_request
 
     def _add_to_translation(self):
         """ Include dynamic values to translation search. Never called. """
@@ -37,16 +46,16 @@ class YtpRequestPlugin(plugins.SingletonPlugin):
 
     def before_map(self, m):
         """ CKAN autocomplete discards vocabulary_id from request. Create own api for this. """
-        controller = 'ckanext.ytp.request.controller:YtpRequestController'
-        m.connect("member_request_new", '/member-request/new', action='new', controller=controller)
-        m.connect("member_request_list", '/member-request/list', action='list', controller=controller)
-        m.connect("member_request_show", '/member-request/show/{member_id}', action='show', controller=controller)
-        m.connect("member_request_reject", '/member-request/reject/{member_id}', action='reject', controller=controller)
-        m.connect("member_request_approve", '/member-request/approve/{member_id}', action='approve', controller=controller)
-        m.connect("member_request_process", '/member-request/process', action='process', controller=controller)
-        m.connect("member_request_cancel", '/member-request/cancel/{member_id}', action='cancel', controller=controller)
-        m.connect("member_request_show_organization", '/member-request/show-organization/{organization_id}', action='show_organization', controller=controller)
-        m.connect("member_request_membership_cancel", '/member-request/membership-cancel/{organization_id}', action='membership_cancel', controller=controller)
+        # controller = 'ckanext.ytp.request.controller:YtpRequestController'
+        # m.connect("member_request_new", '/member-request/new', action='new', controller=controller)
+        # m.connect("member_request_list", '/member-request/list', action='list', controller=controller)
+        # m.connect("member_request_show", '/member-request/show/{member_id}', action='show', controller=controller)
+        # m.connect("member_request_reject", '/member-request/reject/{member_id}', action='reject', controller=controller)
+        # m.connect("member_request_approve", '/member-request/approve/{member_id}', action='approve', controller=controller)
+        # m.connect("member_request_process", '/member-request/process', action='process', controller=controller)
+        # m.connect("member_request_cancel", '/member-request/cancel/{member_id}', action='cancel', controller=controller)
+        # m.connect("member_request_show_organization", '/member-request/show-organization/{organization_id}', action='show_organization', controller=controller)
+        # m.connect("member_request_membership_cancel", '/member-request/membership-cancel/{organization_id}', action='membership_cancel', controller=controller)
         return m
 
     # IConfigurer #
@@ -89,7 +98,8 @@ class YtpRequestPlugin(plugins.SingletonPlugin):
         member = get_user_member(organization_id)
 
         if not member:
-            return _('Request membership'), helpers.url_for('member_request_new', selected_organization=organization_name)
+            return _('Request membership'), helpers.url_for('ytp_request.new',
+                                                            selected_organization=organization_name)
 
         if member.state == 'pending':
             return _('Pending for approval'), helpers.url_for('member_request_show', member_id=member.id)
