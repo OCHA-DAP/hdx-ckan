@@ -75,7 +75,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
                 'user_email': user_obj.email,
                 'message': data_dict.get('message')
             }
-            hdx_mailer.mail_recipient(admin_list, subject, email_data,footer=user_obj.email,
+            hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=user_obj.email,
                                       snippet='email/content/join_organization_request.html')
 
             subject = u'Your request to join organisation ' + group.display_name
@@ -217,7 +217,7 @@ def _create_member_request(context, data_dict):
 
     url = config.get('ckan.site_url', "")
     if url:
-        url = url + url_for('member_request_show', member_id=member.id)
+        url = url + url_for('ytp_request.show', member_id=member.id)
 
     admin_list = []
     if role == 'admin':

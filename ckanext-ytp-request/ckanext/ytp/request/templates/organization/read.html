@@ -28,7 +28,7 @@ x{% ckan_extends %}
   <!-- End Add Dataset split button -->
 
   {% if h.check_access('member_request_create', {'organization_id': c.group_dict.id}) %}
-      <a class="btn btn-primary" href="{{ h.url_for('member_request_new', selected_organization=c.group_dict.name) }}">
+      <a class="btn btn-primary" href="{{ h.url_for('ytp_request.new', selected_organization=c.group_dict.name) }}">
           <i class="icon-circle-arrow-right"></i>
           {% trans %}Request membership{% endtrans %}
       </a>

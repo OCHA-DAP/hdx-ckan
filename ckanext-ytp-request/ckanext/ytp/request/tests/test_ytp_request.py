@@ -1,25 +1,22 @@
 import pytest
-from lxml import etree
+import mock
 
 import ckan.lib.search as search
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 import ckan.tests.helpers as test_helpers
-import ckanext.sitemap.tests.testdata as testdata
 from ckanext.ytp.request.tools import get_organization_admins
+import ckan.logic as logic
 
 _get_action = tk.get_action
 config = tk.config
 url_for = tk.url_for
-utf8_parser = etree.XMLParser(encoding='utf-8')
-siteschema = etree.XMLSchema(etree.fromstring(testdata.sitemap.encode('utf-8'), parser=utf8_parser))
-indexschema = etree.XMLSchema(etree.fromstring(testdata.sitemapindex.encode('utf-8'), parser=utf8_parser))
-
+NotAuthorized = logic.NotAuthorized
+NotFound = logic.NotFound
 
 @pytest.mark.usefixtures("with_request_context")
-class TestSitemap(object):
-
+class TestYtpRequestBase(object):
     def _create_context(self):
         context = {'model': model, 'session': model.Session, 'ignore_auth': True}
         admin_user = _get_action('get_site_user')(context, None)
@@ -68,8 +65,6 @@ class TestSitemap(object):
 
         cls.dataset1_dict = cls._create_package(cls.dataset1_name, sysadmin)
         cls.dataset2_dict = cls._create_package(cls.dataset2_name, sysadmin, create_org_and_group=False)
-
-
 
     @classmethod
     def _create_package(cls, pkg_name, user, create_org_and_group=True):
@@ -120,7 +115,65 @@ class TestSitemap(object):
         package_dict = _get_action('package_create')(context, package)
         return package_dict
 
-    def test_get_organization_admins(self):
+
+@pytest.mark.usefixtures("with_request_context")
+class TestYtpRequestCreate(TestYtpRequestBase):
+
+    @mock.patch('ckanext.hdx_users.controllers.mailer.mail_recipient')
+    def test_member_request_create(self, mail_recipient):
+        context = self._create_context()
+        admin_context = self._create_context()
+        self._create_user("tester")
+        context['user'] = "tester"
+
+        # self.assert_raises(NotFound, _get_action("member_request_create"), context,
+        #                    {"group": "test_organization", 'role': "editor"})
+        try:
+            _get_action("member_request_create")(context, {"group": "test_organization", 'role': "editor"})
+        except NotFound:
+            assert True
+        _get_action("organization_create")(admin_context, {"name": "test_organization"})
+        mrl = _get_action("member_request_list")(admin_context, {"group": "test_organization"})
+        assert len(mrl) == 0
+        # self.assert_len(_get_action("member_request_list")(admin_context, {"group": "test_organization"}), 0)
+
+        _get_action("member_request_create")(context, {"group": "test_organization", 'role': "editor"})
+        mrl = _get_action("member_request_list")(admin_context, {"group": "test_organization"})
+        assert len(mrl) == 1
+        # self.assert_len(_get_action("member_request_list")(admin_context, {"group": "test_organization"}), 1)
+
+
+@pytest.mark.usefixtures("with_request_context")
+class TestYtpRequestProcess(TestYtpRequestBase):
+
+    @mock.patch('ckanext.hdx_users.controllers.mailer.mail_recipient')
+    def test_member_request_process(self, mail_recipient):
+        context = self._create_context()
+        admin_context = self._create_context()
+        self._create_user("tester1")
+        context['user'] = "tester1"
+
+        for organization, approve, result in [('test_process_approve', True, "active"), ('test_process_reject1', True, "active")]:
+            try:
+                admin_context = self._create_context()
+                _get_action("organization_create")(admin_context, {"name": organization})
+            except Exception as ex:
+                a = 10
+
+            member = _get_action("member_request_create")(context, {"group": organization, 'role': "editor"})
+            show_member = _get_action("member_request_show")(context, {"member": member['id']})
+            assert show_member['state'] == "pending"
+
+            _get_action("member_request_process")(admin_context, {"member": member['id'], "approve": approve})
+            show_member = _get_action("member_request_show")(context, {"member": member['id']})
+            assert show_member['state'] == result
+
+
+@pytest.mark.usefixtures("with_request_context")
+class TestYtpRequestOrgAdmins(TestYtpRequestBase):
+
+    @mock.patch('ckanext.hdx_users.controllers.mailer.mail_recipient')
+    def test_get_organization_admins(self, mail_recipient):
         context_user = self._create_context()
         user = self._create_user("test_admins_1")
         context_user['user'] = "test_admins_1"
@@ -158,31 +211,3 @@ class TestSitemap(object):
 
         if not ok:
             assert False, "User not found from organization admins"
-
-    # def test_validity_index(self):
-    #     url = url_for('sitemap.view')
-    #     response = self.app.get(url)
-    #     content_file = response.body
-    #     assert indexschema.validate(etree.fromstring(content_file.encode('utf-8'), parser=utf8_parser))
-
-    # def test_validity_map(self):
-    #     url = url_for('sitemap.index', page=1)
-    #     response = self.app.get(url)
-    #     content_file = response.body
-    #     tree = etree.fromstring(content_file.encode('utf-8'), parser=utf8_parser)
-    #     assert siteschema.validate(tree)
-    #
-    #     assert self.dataset1_name in content_file
-    #     assert self.dataset2_name in content_file
-    #
-    #     # the datasets are fetched by default in desc order of the update time
-    #     dataset2_url = config.get('ckan.site_url') + url_for('dataset.read', id=self.dataset2_name)
-    #     assert tree[0][0].text == dataset2_url
-    #
-    #     res_url = config.get('ckan.site_url') + url_for('resource.read',
-    #                                                     id=self.dataset2_name,
-    #                                                     resource_id=self.dataset2_dict['resources'][0]['id'])
-    #     assert tree[1][0].text == res_url
-    #
-    #     dataset2_date = self.dataset2_dict['metadata_modified'][:10]
-    #     assert  tree[0][1].text == dataset2_date
