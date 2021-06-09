@@ -119,7 +119,7 @@ class TestYtpRequestBase(object):
 @pytest.mark.usefixtures("with_request_context")
 class TestYtpRequestCreate(TestYtpRequestBase):
 
-    @mock.patch('ckanext.hdx_users.controllers.mailer.mail_recipient')
+    @mock.patch('ckanext.ytp.request.logic.hdx_mailer')
     def test_member_request_create(self, mail_recipient):
         context = self._create_context()
         admin_context = self._create_context()
@@ -146,7 +146,7 @@ class TestYtpRequestCreate(TestYtpRequestBase):
 @pytest.mark.usefixtures("with_request_context")
 class TestYtpRequestProcess(TestYtpRequestBase):
 
-    @mock.patch('ckanext.hdx_users.controllers.mailer.mail_recipient')
+    @mock.patch('ckanext.ytp.request.logic.hdx_mailer')
     def test_member_request_process(self, mail_recipient):
         context = self._create_context()
         admin_context = self._create_context()
@@ -172,7 +172,7 @@ class TestYtpRequestProcess(TestYtpRequestBase):
 @pytest.mark.usefixtures("with_request_context")
 class TestYtpRequestOrgAdmins(TestYtpRequestBase):
 
-    @mock.patch('ckanext.hdx_users.controllers.mailer.mail_recipient')
+    @mock.patch('ckanext.ytp.request.logic.hdx_mailer')
     def test_get_organization_admins(self, mail_recipient):
         context_user = self._create_context()
         user = self._create_user("test_admins_1")

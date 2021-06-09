@@ -6,7 +6,6 @@ import ckan.plugins.toolkit as tk
 from ckan.lib import i18n
 from sqlalchemy.sql.expression import or_
 
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from ckan import model, authz
 from ckan.common import _, c
 from ckan.lib import helpers
@@ -18,6 +17,16 @@ from ckanext.ytp.request.model import MemberExtra
 from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
 
 log = logging.getLogger(__name__)
+
+try:
+    import ckanext.hdx_users.controllers.mailer as hdx_mailer
+except ImportError as ex:
+    hdx_mailer = None
+    log.warning('HDX: This is temporary for python3 migration. To be changed when hdx_users extension is migrated. '
+                'This is used for tests.')
+
+
+
 
 new_authz = authz
 config = tk.config
