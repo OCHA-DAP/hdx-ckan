@@ -34,6 +34,7 @@ ckan:
     - metadata-button.js
 
 page-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_page-scripts.js
   extra:
     preload:
@@ -74,6 +75,7 @@ bootstrap-styles:
     - vendor/bootstrap/css/bootstrap.css
 
 search-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
   extra:
     preload:
@@ -98,16 +100,19 @@ search-light-styles:
     - light/search/search-light.css
 
 search-box-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-box-scripts.js
   contents:
     - organization/organizations.js
 
 custom-org-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-org-scripts.js
   contents:
     - organization/wfp/organization-wfp.js
 
 custom-org-creation-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-org-creation-scripts.js
   extra:
     preload:
@@ -127,6 +132,7 @@ jquery-extra:
     - vendor/jquery.highlight/jquery.highlight.js
 
 hdx-show-more:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_hdx-show-more.js
   extra:
     preload:
@@ -135,6 +141,7 @@ hdx-show-more:
     - hdx_show_more.js
 
 popup-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_popup-scripts.js
   extra:
     preload:
@@ -151,6 +158,7 @@ popup-styles:
     - widget/loading/loading.css
 
 popup-embed-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_popup-embed-scripts.js
   extra:
     preload:
@@ -165,6 +173,7 @@ popup-embed-styles:
     - widget/popup/popup-embed.css
 
 popup-hxl-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_popup-hxl-scripts.js
   extra:
     preload:
@@ -179,6 +188,7 @@ popup-hxl-styles:
     - widget/popup/popup-hxl.css
 
 onboarding-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-scripts.js
   extra:
     preload:
@@ -199,6 +209,7 @@ onboarding-styles:
     - widget/onboarding/signup.css
 
 onboarding-password-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-password-scripts.js
   extra:
     preload:
@@ -228,6 +239,7 @@ onboarding-survey-styles:
     - widget/onboarding/survey.css
 
 onboarding-follow-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-follow-scripts.js
   extra:
     preload:
@@ -242,6 +254,7 @@ onboarding-follow-styles:
     - widget/onboarding/follow.css
 
 onboarding-invite-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-invite-scripts.js
   extra:
     preload:
@@ -255,6 +268,7 @@ onboarding-invite-styles:
     - widget/onboarding/invite.css
 
 onboarding-recover-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-recover-scripts.js
   extra:
     preload:
@@ -268,6 +282,7 @@ onboarding-recover-styles:
     - widget/onboarding/recover.css
 
 onboarding-register-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-register-scripts.js
   extra:
     preload:
@@ -281,6 +296,7 @@ onboarding-register-styles:
     - widget/onboarding/register.css
 
 onboarding-registered-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-registered-scripts.js
   extra:
     preload:
@@ -294,6 +310,7 @@ onboarding-registered-styles:
     - widget/onboarding/registered.css
 
 onboarding-select-org-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-select-org-scripts.js
   extra:
     preload:
@@ -308,6 +325,7 @@ onboarding-select-org-styles:
     - widget/onboarding/select-organisation.css
 
 charting-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_charting-scripts.js
   extra:
     preload:
@@ -324,6 +342,7 @@ charting-styles:
     - vendor/leaflet-0.7.3/leaflet.css
 
 custom-viz-3w-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-viz-3w-scripts.js
   extra:
     preload:
@@ -347,6 +366,7 @@ custom-viz-3w-styles:
     - vendor/rangeslider.js-2.0.4/rangeslider.css
 
 custom-viz-roea-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-viz-roea-scripts.js
   extra:
     preload:
@@ -368,6 +388,7 @@ custom-viz-roea-styles:
     - widget/vis-roea/site.css
 
 custom-viz-wfp-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-scripts.js
   extra:
     preload:
@@ -388,6 +409,7 @@ custom-viz-wfp-styles:
     - widget/vis-wfp/site.css
 
 dataset-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_dataset-scripts.js
   extra:
     preload:
@@ -412,6 +434,7 @@ dataset-related-styles:
     - datasets/related.css
 
 dataset-search-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_dataset-search-scripts.js
   extra:
     preload:
@@ -431,6 +454,7 @@ dataset-diff-styles:
       - datasets/diff.css
 
 dataset-light-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_dataset-light-scripts.js
   extra:
     preload:
@@ -449,6 +473,7 @@ dataset-light-styles:
     - light/dataset/dataset-light.css
 
 resource-groupings-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_resource-groupings-scripts.js
   extra:
     preload:
@@ -458,6 +483,7 @@ resource-groupings-scripts:
 
 
 requestdata-remove-class-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_requestdata-remove-class-scripts-scripts.js
   extra:
     preload:
@@ -467,6 +493,7 @@ requestdata-remove-class-scripts:
     - requestdata_/remove-class.js
 
 requestdata-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_requestdata-scripts.js
   extra:
     preload:
@@ -481,6 +508,7 @@ requestdata-styles:
     - requestdata_/request-data.css
 
 resource-list-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_resource-list-scripts.js
   extra:
     preload:
@@ -500,11 +528,13 @@ activity-stream-styles:
     - css/activity-stream.css
 
 hdx-autocomplete:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_resource-hdx-autocomplete.js
   contents:
     - hdx_autocomplete.js
 
 crisis-base-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_crisis-base-scripts.js
   extra:
     preload:
@@ -518,6 +548,7 @@ crisis-base-styles:
     - crisis/crisis-base.css
 
 crisis-ebola-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_crisis-ebola-scripts.js
   extra:
     preload:
@@ -537,6 +568,7 @@ crisis-ebola-styles:
     - crisis/ebola/ebola_crisis_page_graph.css
 
 shape-view-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_shape-view-scripts.js
   extra:
     preload:
@@ -563,6 +595,7 @@ admin-styles:
     - custom_pages/custom_pages.css
 
 admin-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_admin-scripts.js
   extra:
     preload:
@@ -580,6 +613,7 @@ admin-scripts:
     - custom_pages/custom_pages.js
 
 base-dashboard-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_base-dashboard-scripts.js
   extra:
     preload:
@@ -594,6 +628,7 @@ base-dashboard-styles:
     - dashboard.css
 
 custom-pages-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-pages-scripts.js
   extra:
     preload:
@@ -610,6 +645,7 @@ custom-pages-styles:
     - custom_pages/custom_pages_view.css
 
 custom-pages-light-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-pages-light-scripts.js
   extra:
     preload:
@@ -627,6 +663,7 @@ custom-pages-light-styles:
     - light/custom_pages/custom-pages-light.css
 
 faq-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_faq-scripts.js
   extra:
     preload:
@@ -641,6 +678,7 @@ faq-styles:
     - faq/faq.css
 
 user-waiting-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_user-waiting-scripts.js
   extra:
     preload:
@@ -655,6 +693,7 @@ user-waiting-styles:
     - widget/contribute/user_waiting.css
 
 contribute-flow-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_contribute-flow-scripts.js
   extra:
     preload:
@@ -685,6 +724,7 @@ contribute-flow-styles:
     - contribute_flow/contribute.css
 
 country-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_country-scripts.js
   extra:
     preload:
@@ -700,6 +740,7 @@ country-styles:
     - country/country.css
 
 country-topline-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
   extra:
     preload:
@@ -722,6 +763,7 @@ topline-rw-styles:
     - crisis/topline-rw.css
 
 homepage-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_homepage-scripts.js
   extra:
     preload:
@@ -741,6 +783,7 @@ homepage-styles:
 
 country-custom-scripts:
   # not preloading country-custom-styles as sometimes we need nepal-quake-country-custom-styles instead
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_country-custom-scripts.js
   contents:
     - country/custom/country-custom.js
@@ -758,11 +801,13 @@ nepal-quake-country-custom-styles:
     - country/custom/country-custom.css
 
 dataviewer:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_dataviewer.js
   contents:
     - dataviewer.js
 
 group-form-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_group-form-scripts.js
   extra:
     preload:
@@ -771,6 +816,7 @@ group-form-scripts:
     - custom_location.js
 
 group-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_group-scripts.js
   extra:
     preload:
@@ -793,6 +839,7 @@ group-light-styles:
     - light/group/group-light.css
 
 eaa-map-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_eaa-map-scripts.js
   extra:
     preload:
@@ -810,6 +857,7 @@ eaa-map-styles:
     - eaa/eaa.css
 
 organizations-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_organizations-scripts.js
   extra:
     preload:
@@ -843,6 +891,7 @@ organization-light-styles:
     - light/organization/org-light.css
 
 organization-members-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_organization-members-scripts.js
   contents:
     - organization/members.js
@@ -858,6 +907,7 @@ homepage-qa-process-styles:
     - qa/qa-process.css
 
 qa-package-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_qa-package-scripts.js
   extra:
     preload:
@@ -880,6 +930,7 @@ base-fonts-styles:
     - base/fonts.css
 
 organization-stats-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_organization-stats-scripts.js
   extra:
     preload:
@@ -895,6 +946,7 @@ organization-stats-styles:
     - organization/stats.css
 
 colorpicker-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_colorpicker-scripts.js
   extra:
     preload:
@@ -909,6 +961,7 @@ colorpicker-styles:
     - vendor/colorpicker/spectrum.css
 
 image-upload-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_image-upload-scripts.js
   extra:
     preload:
@@ -922,6 +975,7 @@ image-upload-styles:
     - css/image-upload.css
 
 login-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_login-scripts.js
   contents:
     - new_user_form.js
@@ -941,6 +995,7 @@ base-widget-styles:
     - base/base-widget.css
 
 banner-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_banner-scripts.js
   extra:
     preload:
@@ -955,6 +1010,7 @@ banner-styles:
     - base/components/banner.css
 
 contact-contributor-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_contact-contributor-scripts.js
   extra:
     preload:
@@ -968,6 +1024,7 @@ contact-contributor-styles:
     - widget/membership/contact-contributor.css
 
 group-message-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_group-message-scripts.js
   extra:
     preload:
