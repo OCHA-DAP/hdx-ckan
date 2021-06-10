@@ -48,7 +48,7 @@ page-scripts:
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
-#  <<: *common-css
+  <<: *common-css
   extra:
     preload:
       - vendor/select2-css
@@ -81,10 +81,10 @@ search-scripts:
       - hdx_theme/search-styles
       - hdx_theme/hdx-show-more
   contents:
+    - search_/lunr.js # lunr needs to be first cause it has problem with strict mode
+    - search_/lunr/feature-index.js
     - highlight.js
     - order-by-dropdown.js
-    - search_/lunr/feature-index.js
-    - search_/lunr.js
     - search_/search.js
 
 search-styles:
@@ -297,6 +297,7 @@ onboarding-select-org-scripts:
   output: ckanext-hdx_theme/%(version)s_onboarding-select-org-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/onboarding-select-org-styles
   contents:
     - widget/onboarding/select-organisation.js
@@ -582,6 +583,7 @@ base-dashboard-scripts:
   output: ckanext-hdx_theme/%(version)s_base-dashboard-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/base-dashboard-styles
   contents:
     - hdx_dashboard.js
@@ -942,6 +944,7 @@ banner-scripts:
   output: ckanext-hdx_theme/%(version)s_banner-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/banner-styles
   contents:
     - base/components/banner.js
