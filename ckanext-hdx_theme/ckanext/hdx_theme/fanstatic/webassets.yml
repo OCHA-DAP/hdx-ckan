@@ -667,15 +667,16 @@ faq-scripts:
   output: ckanext-hdx_theme/%(version)s_faq-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/faq-styles
   contents:
-    - faq/faq.js
-    - faq/faq-search.js
+    - faq_/faq.js
+    - faq_/faq-search.js
 
 faq-styles:
   output: ckanext-hdx_theme/%(version)s_faq-styles.css
   contents:
-    - faq/faq.css
+    - faq_/faq.css
 
 user-waiting-scripts:
   <<: *common-js
