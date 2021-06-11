@@ -32,7 +32,7 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
         self._load_config(load_site_user=False)
         if cmd == 'build':
             print 'Collecting Feature Pages...'
-            buildIndex('../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+            buildIndex('../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_')
             print 'Index successfully built...'
         else:
             print 'Error: command "{0}" not recognized'.format(cmd)
