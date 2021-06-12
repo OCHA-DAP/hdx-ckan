@@ -4,7 +4,7 @@ from ckanext.ytp.request.tools import get_user_member
 
 
 def _only_registered_user():
-    if not authz.auth_is_registered_user():
+    if not authz.auth_is_loggedin_user():
         return {'success': False, 'msg': _('User is not logged in')}
     return {'success': True}
 
@@ -12,7 +12,7 @@ def _only_registered_user():
 def member_request_create(context, data_dict):
     """ Create request access check """
 
-    if not authz.auth_is_registered_user():
+    if not authz.auth_is_loggedin_user():
         return {'success': False, 'msg': _('User is not logged in')}
 
     organization_id = None if not data_dict else data_dict.get('organization_id', None)
