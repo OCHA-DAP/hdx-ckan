@@ -191,11 +191,12 @@ def _save_new(context):
         data_dict['group'] = data_dict['organization']
         member = get_action('member_request_create')(context, data_dict)
         redirect_to_src_page = asbool(config.get('ytp.requests.redirect_to_src_page', 'true'))
-        if redirect_to_src_page:
+        if redirect_to_src_page and request.referrer:
             h.flash_success(_('Thank you for your request. The organisation admins were notified.'))
             return h.redirect_to(request.referrer)
         else:
-            h.redirect_to('member_request_show', member_id=member['id'])
+            response = h.redirect_to('organization_members', id=data_dict['organization'])
+            return response
     except NotAuthorized:
         abort(403, NOT_AUTH_MESSAGE)
     except NotFound:
