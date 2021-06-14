@@ -116,6 +116,7 @@ custom-org-creation-scripts:
   output: ckanext-hdx_theme/%(version)s_custom-org-creation-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/organization-form-styles
   contents:
     - custom_organization_creation.js
@@ -477,7 +478,7 @@ resource-groupings-scripts:
   output: ckanext-hdx_theme/%(version)s_resource-groupings-scripts.js
   extra:
     preload:
-      - hdx_them/ckan
+      - hdx_theme/ckan
   contents:
     - resource_grouping/hdx_resource_grouping.js
 
@@ -730,7 +731,7 @@ country-scripts:
   extra:
     preload:
       - hdx_theme/ckan
-      - hdx_them/country-styles
+      - hdx_theme/country-styles
   contents:
     - country/country.js
 
@@ -935,7 +936,7 @@ organization-stats-scripts:
   output: ckanext-hdx_theme/%(version)s_organization-stats-scripts.js
   extra:
     preload:
-      - hdx_them/organization-stats-styles
+      - hdx_theme/organization-stats-styles
   contents:
     - organization/stats.js
     - datasets/stats-chart.js
@@ -951,7 +952,8 @@ colorpicker-scripts:
   output: ckanext-hdx_theme/%(version)s_colorpicker-scripts.js
   extra:
     preload:
-      - hdx_them/colorpicker-styles
+      - hdx_theme/ckan
+      - hdx_theme/colorpicker-styles
   contents:
     - vendor/colorpicker/spectrum.js
     - vendor/colorpicker/rainbowvis.js
@@ -966,7 +968,7 @@ image-upload-scripts:
   output: ckanext-hdx_theme/%(version)s_image-upload-scripts.js
   extra:
     preload:
-      - hdx_them/image-upload-styles
+      - hdx_theme/image-upload-styles
   contents:
     - hdx-image-upload.js
 
