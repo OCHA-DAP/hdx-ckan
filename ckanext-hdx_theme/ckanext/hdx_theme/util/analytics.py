@@ -52,19 +52,22 @@ class AbstractAnalyticsSender(object):
 
     def send_to_queue(self):
         try:
-            if self.analytics_dict:
-                self._populate_defaults()
+            if self.analytics_enqueue_url:
+                if self.analytics_dict:
+                    self._populate_defaults()
 
-                self.response = requests.post(self.analytics_enqueue_url, allow_redirects=True, timeout=2,
-                                              data=json.dumps(self.analytics_dict),
-                                              headers={'Content-type': 'application/json'})
+                    self.response = requests.post(self.analytics_enqueue_url, allow_redirects=True, timeout=2,
+                                                  data=json.dumps(self.analytics_dict),
+                                                  headers={'Content-type': 'application/json'})
 
-                self.response.raise_for_status()
-                enq_result = self.response.json()
-                log.info('Enqueuing result was: {}'.format(enq_result.get('success')))
+                    self.response.raise_for_status()
+                    enq_result = self.response.json()
+                    log.info('Enqueuing result was: {}'.format(enq_result.get('success')))
 
+                else:
+                    log.error('The analytics dict is empty. Can\'t send it to the queue')
             else:
-                log.error('The analytics dict is empty. Can\'t send it to the queue')
+                log.warn('Analytics enqueque url is empty so event was NOT put in queue. This is normal for tests !')
 
         except requests.ConnectionError, e:
             log.error("There was a connection error to the analytics enqueuing service: {}".format(str(e)))

@@ -103,13 +103,15 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         mock_helper.populate_mock_as_c(org_helper_c, test_username)
         mock_helper.populate_mock_as_c(theme_c, test_username)
 
+        test_client = self.get_backwards_compatible_test_client()
+
         url = h.url_for(
             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
             action='member_delete',
             id='hdx-test-org'
         )
         try:
-            self.app.post(url, params={'user': 'annaanderson2'}, extra_environ={"REMOTE_USER": "testsysadmin"})
+            test_client.post(url, params={'user': 'annaanderson2'}, extra_environ={"REMOTE_USER": "testsysadmin"})
         except Exception as ex:
             assert False
 
@@ -129,7 +131,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             action='member_new',
             id='hdx-test-org'
         )
-        self.app.post(url, params={'username': 'annaanderson2', 'role': 'editor'},
+        test_client.post(url, params={'username': 'annaanderson2', 'role': 'editor'},
                       extra_environ={"REMOTE_USER": "testsysadmin"})
         org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
 
@@ -259,6 +261,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
         mailer.send_invite = mock_send_invite
         hdx_mailer._mail_recipient_html = mock_mail_recipient
+        test_client = self.get_backwards_compatible_test_client()
         context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
 
         # removing one member from organization
@@ -267,7 +270,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             action='member_delete',
             id='hdx-test-org'
         )
-        self.app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
+        test_client.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
 
         org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
         user_controller = MockedHDXOrgMemberController()
@@ -284,8 +287,8 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         mock_helper.populate_mock_as_c(org_helper_c, test_username)
         mock_helper.populate_mock_as_c(theme_c, test_username)
         request_c.referer = '/organization/wfp'
-        url = h.url_for('member_request_new')
-        ret_page = self.app.post(url, params={'organization': 'hdx-test-org', 'role': 'member', 'save': 'save',
+        url = h.url_for('ytp_request.new')
+        ret_page = test_client.post(url, params={'organization': 'hdx-test-org', 'role': 'member', 'save': 'save',
                                    'message': 'add me to your organization'},
                       extra_environ={"REMOTE_USER": test_username})
 

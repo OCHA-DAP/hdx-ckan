@@ -171,6 +171,7 @@ dt.uppercase {
 }
 .approval-request.request-approved .user-details .approval-actions button {
   opacity: 0;
+  pointer-events: none;
 }
 .approval-request.request-approved .user-details .approval-actions .approved-message {
   top: 0;
