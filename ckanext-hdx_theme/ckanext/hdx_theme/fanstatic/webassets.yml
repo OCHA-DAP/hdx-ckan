@@ -63,6 +63,7 @@ page-styles:
 
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
+  <<: *common-css
   contents:
     - vendor/bootstrap/css/bootstrap.css
     - css/hdx-icons.css
