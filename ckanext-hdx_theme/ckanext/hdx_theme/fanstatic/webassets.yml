@@ -248,7 +248,7 @@ onboarding-follow-scripts:
       - hdx_theme/onboarding-follow-styles
   contents:
     - follow.js
-    - hdx_theme/widget/onboarding/follow.js
+    - widget/onboarding/follow.js
 
 onboarding-follow-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-follow-styles.css
