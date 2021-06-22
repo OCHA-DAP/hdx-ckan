@@ -26,7 +26,7 @@ if isinstance(os.getenv('INI_FILE'), str):
 TS = ''
 
 SQL = dict(
-    SUPERUSER="ckan", HOST='dbckan',
+    HOST=str(os.getenv('HDX_CKANDB_ADDR')),
     PORT='5432',
     USER=str(os.getenv('HDX_CKANDB_USER')),
     PASSWORD=str(os.getenv('HDX_CKANDB_PASS')),
@@ -521,7 +521,7 @@ def db_test_refresh():
         db_empty(dbname)
 
 
-def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname='postgres', user=SQL['SUPERUSER']):
+def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname='postgres', user=SQL['USER']):
     # try:
     con = psycopg2.connect(host=host, port=port, database=dbname, user=user)
     # except:
@@ -817,7 +817,7 @@ def less_compile(verbose=False):
     print('Done.')
 
 
-def refresh_pgpass(host=SQL['HOST'], port=SQL['PORT'], user=SQL['SUPERUSER'], password=SQL['PASSWORD'], verbose=True):
+def refresh_pgpass(host=SQL['HOST'], port=SQL['PORT'], user=SQL['USER'], password=SQL['PASSWORD'], verbose=True):
 
     pgpass = '/root/.pgpass'
     partial_line = ''.join([':*:', user, ':'])
