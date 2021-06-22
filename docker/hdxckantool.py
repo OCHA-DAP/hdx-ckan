@@ -1135,7 +1135,7 @@ def user_search(user):
     con = db_connect_to_postgres(dbname=SQL['DB'])
     con.set_isolation_level(0)
     cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin from public.user where name like '%" + user + "%';"
+    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name like '%" + user + "%';"
     try:
         cur.execute(query)
         con.commit()
@@ -1154,7 +1154,7 @@ def user_search(user):
 def user_add(user):
     email = get_input('Email')
     password = get_input('Password', lower=False)
-    cmd = ['paster', 'user', 'add', user, 'email=' + email, 'password=' + password, '-c', INI_FILE]
+    cmd = ['ckan', 'user', 'add', user, 'email=' + email, 'password=' + password]
     os.chdir(BASEDIR)
     with open(os.devnull, 'wb') as devnull:
         subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
@@ -1169,7 +1169,7 @@ def user_add(user):
 def user_delete(user):
     if is_sysadmin(user):
         sysadmin_disable(user)
-    cmd = ['paster', 'user', 'remove', user, '-c', INI_FILE]
+    cmd = ['ckan', 'user', 'remove', user]
     os.chdir(BASEDIR)
     subprocess.call(cmd)
 
@@ -1177,12 +1177,13 @@ def user_delete(user):
 def user_pretty_list(userlist):
     for row in userlist:
         print('+++++++++++++++++++++++++++++++++++++++++++++++')
-        (username, displayname, email, state, is_sysadmin) = row
+        (username, displayname, email, state, sysadmin, apikey) = row
         print('User: ' + str(username))
         print('Full Name: ' + str(displayname))
         print('Email: ' + str(email))
         print('State: ' + str(state))
-        print('Sysadmin: ' + str(is_sysadmin))
+        print('Sysadmin: ' + str(sysadmin))
+        print('API Key: ' + str(apikey))
     print('+++++++++++++++++++++++++++++++++++++++++++++++')
     if len(userlist) > 1:
         print('Got a total of ' + str(len(userlist)) + ' users.')
