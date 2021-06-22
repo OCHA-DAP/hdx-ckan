@@ -141,8 +141,6 @@ def show_usage():
 
         tracking      - update tracking summary
 
-        update        - update this tool (directly from repo source)
-
         user
             add       - add user
             delete    - remove user
@@ -1048,18 +1046,6 @@ def tracking_update():
     subprocess.call(cmd)
 
 
-def update():
-    srcfile = 'https://raw.githubusercontent.com/OCHA-DAP/hdx-tools/master/hdxckantool.py'
-    line = ['curl', '-s', '-o', os.path.realpath(__file__), srcfile]
-    try:
-        subprocess.call(line)
-    except:
-        print('Update failed.')
-        exiting(1)
-    else:
-        print('Update completed.')
-
-
 def users():
     if len(opts) == 0:
         exiting(1)
@@ -1299,8 +1285,6 @@ def main():
         tracking_update()
     elif cmd == 'user':
         users()
-    elif cmd == 'update':
-        update()
     else:
         exiting(1)
 
