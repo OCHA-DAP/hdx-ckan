@@ -714,8 +714,8 @@ def filestore_restore(ts=TODAY, server=RESTORE['SERVER'], directory=RESTORE['DIR
 
 
 def gis_init():
-    gis_envs = ['HDX_GISDB_DB', 'HDX_GISDB_USER', 'HDX_GISDB_PASS']
-    gis_db_details = ['gisdb', '5432']
+    gis_envs = ['HDX_GISDB_ADDR', 'HDX_GISDB_PORT', 'HDX_GISDB_DB', 'HDX_GISDB_USER', 'HDX_GISDB_PASS']
+    gis_db_details = []
     for env in gis_envs:
         if isinstance(os.getenv(env), str):
             gis_db_details.append(os.getenv(env))
