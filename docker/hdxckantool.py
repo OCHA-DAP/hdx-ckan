@@ -948,7 +948,7 @@ def sysadmin_enable(user):
     if is_sysadmin(user):
         print('User ' + user + ' is already sysadmin.')
         exiting(0)
-    cmd = ['paster', 'sysadmin', 'add', user, '-c', INI_FILE]
+    cmd = ['ckan', 'sysadmin', 'add', user]
     os.chdir(BASEDIR)
     subprocess.call(cmd)
     exiting(0)
@@ -958,10 +958,9 @@ def sysadmin_disable(user):
     if not is_sysadmin(user):
         print('User ' + user + ' is not sysadmin.')
         exiting(0)
-    cmd = ['paster', 'sysadmin', 'remove', user, '-c', INI_FILE]
+    cmd = ['ckan', 'sysadmin', 'remove', user]
     os.chdir(BASEDIR)
     subprocess.call(cmd)
-    print('User ' + user + " has been (hopefully) made sysadmin (paster doesn't return anything useful)")
     exiting(0)
 
 
@@ -969,7 +968,7 @@ def sysadmins_list():
     con = db_connect_to_postgres(dbname=SQL['DB'])
     con.set_isolation_level(0)
     cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin from public.user where sysadmin='True' order by name asc;"
+    query = "select name,fullname,email,state,sysadmin,apikey from public.user where sysadmin='True' order by name asc;"
     try:
         cur.execute(query)
         con.commit()
