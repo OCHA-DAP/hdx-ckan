@@ -878,7 +878,7 @@ def restore_cleanup():
 
 def solr_reindex():
     valid_subcommands = ['fast', 'refresh']
-    cmd = ['paster', 'search-index']
+    cmd = ['ckan', 'search-index']
     cmd_suffix = ['rebuild', '-c', INI_FILE]
     while len(valid_subcommands) > 0:
         if len(opts) > 0:
