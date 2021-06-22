@@ -900,7 +900,7 @@ def solr_reindex():
 
 
 def show_logs():
-    logs = ['/var/log/ckan/ckan.access.log', '/var/log/ckan/ckan.error.log', '/var/log/ckan/ckan.pain.log']
+    logs = ['/var/log/ckan/access.log', '/var/log/ckan/error.log', '/var/log/ckan/ckan.log']
     if len(opts) == 1:
         opt = opts.pop(0)
         if opt == 'noaccess':
