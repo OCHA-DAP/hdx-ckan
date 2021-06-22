@@ -521,9 +521,9 @@ def db_test_refresh():
         db_empty(dbname)
 
 
-def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname='postgres', user=SQL['USER']):
+def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
     # try:
-    con = psycopg2.connect(host=host, port=port, database=dbname, user=user)
+    con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
     # except:
     #     print("I am unable to connect to the database, exiting.")
     #     exiting(2)
