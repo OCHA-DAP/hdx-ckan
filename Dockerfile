@@ -64,7 +64,7 @@ RUN apt-get -qq -y update && \
     mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
     cp -a docker/run_ckan /etc/services.d/ckan/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
-    curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-infra-tools/master/hdxckantool.py && \
+    cp -a docker/hdxckantool.py /srv/hdxckantool.py && \
     chmod +x /srv/hdxckantool.py && \
     ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
