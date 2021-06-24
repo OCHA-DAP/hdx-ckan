@@ -104,13 +104,13 @@ search-box-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-box-scripts.js
   contents:
-    - organization/organizations.js
+    - organization_/organizations.js
 
 custom-org-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-org-scripts.js
   contents:
-    - organization/wfp/organization-wfp.js
+    - organization_/wfp/organization-wfp.js
 
 custom-org-creation-scripts:
   <<: *common-js
@@ -866,27 +866,27 @@ organizations-scripts:
     preload:
       - hdx_theme/organizations-styles
   contents:
-    - organization/organizations.js
+    - organization_/organizations.js
 
 organizations-styles:
   output: ckanext-hdx_theme/%(version)s_organizations-styles.css
   contents:
-    - organization/organizations.css
+    - organization_/organizations.css
 
 organization-styles:
   output: ckanext-hdx_theme/%(version)s_organization-styles.css
   contents:
-    - organization/organization-read.css
+    - organization_/organization-read.css
 
 organization-form-styles:
   output: ckanext-hdx_theme/%(version)s_organization-form-styles.css
   contents:
-    - organization/organization-form.css
+    - organization_/organization-form.css
 
 organization-create-styles:
   output: ckanext-hdx_theme/%(version)s_organization-create-styles.css
   contents:
-    - organization/organization-create.css
+    - organization_/organization-create.css
 
 organization-light-styles:
   output: ckanext-hdx_theme/%(version)s_organization-light-styles.css
@@ -897,7 +897,7 @@ organization-members-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_organization-members-scripts.js
   contents:
-    - organization/members.js
+    - organization_/members.js
 
 homepage-about-styles:
   output: ckanext-hdx_theme/%(version)s_homepage-about-styles.css
@@ -939,14 +939,14 @@ organization-stats-scripts:
     preload:
       - hdx_theme/organization-stats-styles
   contents:
-    - organization/stats.js
+    - organization_/stats.js
     - datasets/stats-chart.js
 
 organization-stats-styles:
   output: ckanext-hdx_theme/%(version)s_organization-stats-styles.css
   contents:
     - crisis/topline.css
-    - organization/stats.css
+    - organization_/stats.css
 
 colorpicker-scripts:
   <<: *common-js
