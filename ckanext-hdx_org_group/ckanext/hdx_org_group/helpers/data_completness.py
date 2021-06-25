@@ -132,7 +132,7 @@ class DataCompletness(object):
 
         if override and override.get('display_state'):
             dataset['is_complete'] = override.get('display_state') == 'complete'
-            dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False) and dataset.get('is_complete')
+            dataset[GOODNESS_PROPERTY] = dataset.get('is_complete')
         else:
             dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False)
 
@@ -142,7 +142,7 @@ class DataCompletness(object):
         override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
         if override and override.get('comments'):
             comments.append(override.get('comments'))
-        if not dataset.get(FRESHNESS_PROPERTY):
+        if not dataset.get(GOODNESS_PROPERTY) and not dataset.get(FRESHNESS_PROPERTY):
             comments.append('The dataset is not up-to-date.')
 
         dataset['general_comment'] = ' '.join(comments)
