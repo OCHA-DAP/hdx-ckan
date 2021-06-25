@@ -129,6 +129,7 @@ custom-org-search-facets-styles:
 
 
 jquery-extra:
+  output: ckanext-hdx_theme/%(version)s_jquery-extra.js
   contents:
     - vendor/jquery.expander/jquery.expander.js
     - vendor/jquery.highlight/jquery.highlight.js
