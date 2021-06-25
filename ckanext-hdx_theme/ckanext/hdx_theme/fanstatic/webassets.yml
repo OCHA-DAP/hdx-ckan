@@ -247,7 +247,7 @@ onboarding-follow-scripts:
     preload:
       - hdx_theme/onboarding-follow-styles
   contents:
-    - follow.js
+#    - follow.js
     - widget/onboarding/follow.js
 
 onboarding-follow-styles:
@@ -674,11 +674,13 @@ faq-scripts:
   contents:
     - faq_/faq.js
     - faq_/faq-search.js
+    - widget/faq/faq.js
 
 faq-styles:
   output: ckanext-hdx_theme/%(version)s_faq-styles.css
   contents:
     - faq_/faq.css
+    - widget/faq/faq.css
 
 user-waiting-scripts:
   <<: *common-js
