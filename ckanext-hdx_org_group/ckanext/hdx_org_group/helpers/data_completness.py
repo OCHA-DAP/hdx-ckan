@@ -186,7 +186,8 @@ class DataCompletness(object):
                 'total_datasets_num': 0,
                 'good_datasets_num': 0,
                 'state': FLAG_NOT_APPLICABLE,
-                'state_comment': not_applicable_flag.get('comments') or ''
+                'state_comment': not_applicable_flag.get('comments') or
+                                 'This subcategory is not applicable in this context.'
             }
         else:
             datasets = ds.get('datasets', [])
