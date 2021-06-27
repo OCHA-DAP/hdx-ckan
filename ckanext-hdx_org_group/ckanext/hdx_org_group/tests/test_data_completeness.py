@@ -5,7 +5,7 @@ import datetime
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
-from ckanext.hdx_org_group.helpers.data_completness import DataCompletness
+from ckanext.hdx_org_group.helpers.data_completness import DataCompletness, FLAG_NOT_APPLICABLE
 
 from ckanext.hdx_org_group.controllers.country_controller import CountryController
 
@@ -165,13 +165,13 @@ class TestDataCompleteness(object):
         CountryController._get_data_completeness('test_location')
         data = mocked_data_completeness.config
 
-        dataseries_0 = data['categories'][0]['data_series'][0]
-        subcategory1_stats = dataseries_0['stats']
+        subcategory1 = data['categories'][0]['data_series'][0]
+        subcategory1_stats = subcategory1['stats']
         assert subcategory1_stats['state'] == 'not_good'
         assert subcategory1_stats['good_datasets_num'] == 0
         assert subcategory1_stats['total_datasets_num'] == 2
 
-        dataset = next(d for d in dataseries_0['datasets'] if d['name'] == incomplete_dataset)
+        dataset = next(d for d in subcategory1['datasets'] if d['name'] == incomplete_dataset)
         assert dataset['general_comment'] == incomplete_comment
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
@@ -189,11 +189,41 @@ class TestDataCompleteness(object):
         CountryController._get_data_completeness('test_location')
         data = mocked_data_completeness.config
 
-        dataseries_0 = data['categories'][0]['data_series'][0]
-        subcategory1_stats = dataseries_0['stats']
+        subcategory1 = data['categories'][0]['data_series'][0]
+        subcategory1_stats = subcategory1['stats']
         assert subcategory1_stats['state'] == 'good'
         assert subcategory1_stats['good_datasets_num'] == 2
         assert subcategory1_stats['total_datasets_num'] == 2
 
-        dataset = next(d for d in dataseries_0['datasets'] if d['name'] == complete_dataset)
+        dataset = next(d for d in subcategory1['datasets'] if d['name'] == complete_dataset)
         assert dataset['general_comment'] == complete_comment
+
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    def test_data_completeness_not_available(self, patched_DataCompleteness):
+        yaml_dict = _generate_test_yaml_dict()
+        not_applicable_comment = 'not applicable comment'
+        yaml_dict['categories'][0]['data_series'][1]['flags'] = [{
+            'key': FLAG_NOT_APPLICABLE,
+            'comments': not_applicable_comment
+        }]
+
+        mocked_data_completeness = MockedDataCompleteness(yaml_dict)
+        patched_DataCompleteness.return_value = mocked_data_completeness
+        CountryController._get_data_completeness('test_location')
+        data = mocked_data_completeness.config
+
+        general_stats = data['stats']
+        assert general_stats['state'] == 'good'
+
+        category1_stats = data['categories'][0]['stats']
+        assert category1_stats['good_dataseries_num'] == 1
+        assert category1_stats['not_good_dataseries_num'] == 0
+        assert category1_stats['total_dataseries_num'] == 1
+
+        assert category1_stats['dataseries_good_percentage'] == 1.0
+
+        subcategory1_stats = data['categories'][0]['data_series'][1]['stats']
+        assert subcategory1_stats['state'] == FLAG_NOT_APPLICABLE
+        assert subcategory1_stats['state_comment'] == not_applicable_comment
+        assert subcategory1_stats['good_datasets_num'] == 0
+        assert subcategory1_stats['total_datasets_num'] == 0

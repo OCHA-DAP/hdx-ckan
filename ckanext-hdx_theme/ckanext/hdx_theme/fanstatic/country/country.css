@@ -388,6 +388,13 @@ h1.country-title {
   font-size: 12px;
   text-transform: uppercase;
 }
+.data-completeness .data-item .data-item-details .sub-category .flag {
+  color: #888888;
+  font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
+  font-weight: 400;
+  font-size: 12px;
+}
 .data-completeness .data-item .data-item-details .sub-category .dataset {
   position: relative;
   padding-left: 16px;

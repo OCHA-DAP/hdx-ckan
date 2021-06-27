@@ -1,13 +1,16 @@
-import yaml
-import requests
 import logging
-import ckan.logic as logic
 
+import requests
+import yaml
+from six import string_types
+
+import ckan.logic as logic
 from ckanext.hdx_package.helpers.freshness_calculator import FRESHNESS_PROPERTY
 
 log = logging.getLogger(__name__)
 
 GOODNESS_PROPERTY = 'is_good'
+FLAG_NOT_APPLICABLE = 'not_applicable'
 
 
 class DataCompletness(object):
@@ -38,7 +41,7 @@ class DataCompletness(object):
             #     'fq': '(res_format:"DOCX") AND -(groups:"ken")'
             # })
             self.__populate_dataseries()
-        except Exception, e:
+        except Exception as e:
             logging.warn(str(e))
             self.config = None
 
@@ -55,28 +58,31 @@ class DataCompletness(object):
         for category in self.config.get('categories', []):
             category_dataset_map = {}
             for ds in category.get('data_series', []):
-                overrides_map = self.__get_map_of_overrides_from_dataseries(ds)
-                include_rules = ds.get('rules', {}).get('include') or ''
-                exclude_rules = ds.get('rules', {}).get('exclude') or ''
-                if isinstance(include_rules, basestring):
-                    include_rules = [include_rules]
-                if isinstance(exclude_rules, basestring):
-                    exclude_rules = [exclude_rules]
+                flags_map = self.__get_map_of_flags(ds)
+                not_applicable_flag = flags_map.get(FLAG_NOT_APPLICABLE)  # type: dict
+                if not not_applicable_flag:
+                    overrides_map = self.__get_map_of_overrides_from_dataseries(ds)
+                    include_rules = ds.get('rules', {}).get('include') or ''
+                    exclude_rules = ds.get('rules', {}).get('exclude') or ''
+                    if isinstance(include_rules, string_types):
+                        include_rules = [include_rules]
+                    if isinstance(exclude_rules, string_types):
+                        exclude_rules = [exclude_rules]
 
-                query_string = self.__build_query(include_rules, exclude_rules)
-                if query_string:
-                    query_params = {'fq': query_string}
-                    query_params.update(self.basic_query_params)
-                    search_result = logic.get_action('package_search')({}, query_params)
-                    ds['datasets'] = search_result.get('results', [])
-                    for dataset in ds['datasets']:
-                        self.__replace_org_name_with_title(dataset)
-                        self.__compute_goodness_flag(dataset, overrides_map)
-                        self.__add_general_comments(dataset, overrides_map)
-                        self.__add_dataset_to_map(category_dataset_map, dataset)
-                        self.__add_dataset_to_map(all_dataset_map, dataset)
+                    query_string = self.__build_query(include_rules, exclude_rules)
+                    if query_string:
+                        query_params = {'fq': query_string}
+                        query_params.update(self.basic_query_params)
+                        search_result = logic.get_action('package_search')({}, query_params)
+                        ds['datasets'] = search_result.get('results', [])
+                        for dataset in ds['datasets']:
+                            self.__replace_org_name_with_title(dataset)
+                            self.__compute_goodness_flag(dataset, overrides_map)
+                            self.__add_general_comments(dataset, overrides_map)
+                            self.__add_dataset_to_map(category_dataset_map, dataset)
+                            self.__add_dataset_to_map(all_dataset_map, dataset)
 
-                    self.__calculate_stats_for_dataseries(ds)
+                self.__calculate_stats_for_dataseries(ds, not_applicable_flag)
             self.__calculate_stats_for_category(category, category_dataset_map)
         self.__calculate_stats_general(self.config, all_dataset_map, self.__org_name_to_info_cache)
         pass
@@ -164,16 +170,34 @@ class DataCompletness(object):
         return map
 
     @staticmethod
-    def __calculate_stats_for_dataseries(ds):
-        datasets = ds.get('datasets', [])
-        total_datasets_num = len(datasets)
-        good_datasets_num = reduce(lambda acc, item: acc + (1 if item.get(GOODNESS_PROPERTY) else 0),
-                                    datasets, 0)
-        ds['stats'] = {
-            'total_datasets_num': total_datasets_num,
-            'good_datasets_num': good_datasets_num,
-            'state': 'empty' if total_datasets_num == 0 else 'good' if good_datasets_num > 0 else 'not_good'
-        }
+    def __get_map_of_flags(ds):
+        map = {}
+        flags = ds.get('flags', [])
+        for flag in flags:
+            key = flag.get('key')
+            if key:
+                map[key.strip()] = flag
+        return map
+
+    @staticmethod
+    def __calculate_stats_for_dataseries(ds, not_applicable_flag):
+        if not_applicable_flag:
+            ds['stats'] = {
+                'total_datasets_num': 0,
+                'good_datasets_num': 0,
+                'state': FLAG_NOT_APPLICABLE,
+                'state_comment': not_applicable_flag.get('comments') or ''
+            }
+        else:
+            datasets = ds.get('datasets', [])
+            total_datasets_num = len(datasets)
+            good_datasets_num = reduce(lambda acc, item: acc + (1 if item.get(GOODNESS_PROPERTY) else 0),
+                                        datasets, 0)
+            ds['stats'] = {
+                'total_datasets_num': total_datasets_num,
+                'good_datasets_num': good_datasets_num,
+                'state': 'empty' if total_datasets_num == 0 else 'good' if good_datasets_num > 0 else 'not_good'
+            }
 
     @staticmethod
     def __calculate_stats_for_category(category, category_dataset_map):
@@ -183,7 +207,9 @@ class DataCompletness(object):
 
         dataset_goodness_percentage = 0 if total_datasets_num == 0 else float(good_datasets_num) / total_datasets_num
 
-        dataseries = category.get('data_series', [])
+        # dataseries = category.get('data_series', [])
+        dataseries = [ds for ds in category.get('data_series', [])
+                      if ds.get('stats', {}).get('state') != FLAG_NOT_APPLICABLE]
         total_dataseries_num  = len(dataseries)
 
         good_dataseries = []
