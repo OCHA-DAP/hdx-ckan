@@ -1,10 +1,11 @@
 import datetime
 import logging
+from collections import OrderedDict
 
 import dateutil.parser
-from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
+from six import text_type
 
-from collections import OrderedDict
+from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 
 log = logging.getLogger(__name__)
 
@@ -134,8 +135,8 @@ class FreshnessCalculator(object):
                 self.extra_delinquent_days = UPDATE_FREQ_DELINQUENT_INFO[update_freq]
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
-        except Exception, e:
-            log.error(unicode(e))
+        except Exception as e:
+            log.error(text_type(e))
 
     def is_fresh(self, now=datetime.datetime.utcnow()):
         '''
