@@ -79,6 +79,7 @@ UPDATE_FREQ_OVERDUE_INFO = {key: val['overdue'] for key, val in UPDATE_FREQ_INFO
 UPDATE_FREQ_DELINQUENT_INFO = {key: val['delinquent'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
 
 FRESHNESS_PROPERTY = 'is_fresh'
+OVERDUE_PROPERTY = 'is_overdue'
 
 UPDATE_STATUS_PROPERTY = 'update_status'
 UPDATE_STATUS_URL_FILTER = 'ext_' + UPDATE_STATUS_PROPERTY
@@ -232,4 +233,11 @@ class DataCompletenessFreshnessCalculator(FreshnessCalculator):
             log.info('Update frequency for dataset "{}" is not a number'.format(self.dataset_dict.get('name')))
 
         return super(DataCompletenessFreshnessCalculator, self).is_fresh(now)
+
+    def populate_with_freshness(self):
+        is_overdue = self.is_overdue()
+        self.dataset_dict[OVERDUE_PROPERTY] = is_overdue
+        super(DataCompletenessFreshnessCalculator, self).populate_with_freshness()
+
+
 

@@ -5,7 +5,7 @@ import yaml
 from six import string_types
 
 import ckan.logic as logic
-from ckanext.hdx_package.helpers.freshness_calculator import FRESHNESS_PROPERTY
+from ckanext.hdx_package.helpers.freshness_calculator import OVERDUE_PROPERTY
 
 log = logging.getLogger(__name__)
 
@@ -140,7 +140,7 @@ class DataCompletness(object):
             dataset['is_complete'] = override.get('display_state') == 'complete'
             dataset[GOODNESS_PROPERTY] = dataset.get('is_complete')
         else:
-            dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False)
+            dataset[GOODNESS_PROPERTY] = not dataset.get(OVERDUE_PROPERTY, True)
 
     @staticmethod
     def __add_general_comments(dataset, overrides_map):
@@ -148,7 +148,7 @@ class DataCompletness(object):
         override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
         if override and override.get('comments'):
             comments.append(override.get('comments'))
-        if not dataset.get(GOODNESS_PROPERTY) and not dataset.get(FRESHNESS_PROPERTY):
+        if not dataset.get(GOODNESS_PROPERTY) and dataset.get(OVERDUE_PROPERTY):
             comments.append('The dataset is not up-to-date.')
 
         dataset['general_comment'] = ' '.join(comments)

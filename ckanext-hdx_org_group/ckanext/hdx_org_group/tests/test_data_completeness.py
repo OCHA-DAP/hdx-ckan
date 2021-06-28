@@ -18,6 +18,7 @@ _get_action = tk.get_action
 
 USER = 'some_user'
 LOCATION = 'some_location'
+ORG = 'org_name_4_completeness'
 
 
 def _generate_test_yaml_dict():
@@ -87,10 +88,9 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, review_date):
 @pytest.fixture()
 def setup_data():
     factories.User(name=USER, email='some_user@hdx.hdxtest.org')
-    org_name = 'org_name_4_completeness'
     group = factories.Group(name=LOCATION)
     factories.Organization(
-        name=org_name,
+        name=ORG,
         title='ORG NAME FOR COMPLETENESS',
         users=[
             {'name': USER, 'capacity': 'editor'},
@@ -100,10 +100,10 @@ def setup_data():
     )
 
     review_date1 = datetime.datetime.utcnow() - datetime.timedelta(days=60)
-    _generate_dataset_dict('dataset1-category1', org_name, group.get('name'), review_date1)
+    _generate_dataset_dict('dataset1-category1', ORG, group.get('name'), review_date1)
 
     review_date2 = datetime.datetime.utcnow()
-    _generate_dataset_dict('dataset2-category1', org_name, group.get('name'), review_date2)
+    _generate_dataset_dict('dataset2-category1', ORG, group.get('name'), review_date2)
 
 
 @pytest.fixture(scope='module')
@@ -126,10 +126,7 @@ class TestDataCompleteness(object):
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
     def test_data_completeness(self, patched_DataCompleteness):
-        mocked_data_completeness = MockedDataCompleteness(_generate_test_yaml_dict())
-        patched_DataCompleteness.return_value = mocked_data_completeness
-        CountryController._get_data_completeness('test_location')
-        data = mocked_data_completeness.config
+        data = self.__compute_data_completeness(_generate_test_yaml_dict(), patched_DataCompleteness)
 
         general_stats = data['stats']
         assert general_stats['state'] == 'not_good'
@@ -160,10 +157,7 @@ class TestDataCompleteness(object):
             'display_state': 'incomplete',
             'comments': incomplete_comment
         }]
-        mocked_data_completeness = MockedDataCompleteness(yaml_dict)
-        patched_DataCompleteness.return_value = mocked_data_completeness
-        CountryController._get_data_completeness('test_location')
-        data = mocked_data_completeness.config
+        data = self.__compute_data_completeness(yaml_dict, patched_DataCompleteness)
 
         subcategory1 = data['categories'][0]['data_series'][0]
         subcategory1_stats = subcategory1['stats']
@@ -184,10 +178,7 @@ class TestDataCompleteness(object):
             'display_state': 'complete',
             'comments': complete_comment
         }]
-        mocked_data_completeness = MockedDataCompleteness(yaml_dict)
-        patched_DataCompleteness.return_value = mocked_data_completeness
-        CountryController._get_data_completeness('test_location')
-        data = mocked_data_completeness.config
+        data = self.__compute_data_completeness(yaml_dict, patched_DataCompleteness)
 
         subcategory1 = data['categories'][0]['data_series'][0]
         subcategory1_stats = subcategory1['stats']
@@ -207,10 +198,7 @@ class TestDataCompleteness(object):
             'comments': not_applicable_comment
         }]
 
-        mocked_data_completeness = MockedDataCompleteness(yaml_dict)
-        patched_DataCompleteness.return_value = mocked_data_completeness
-        CountryController._get_data_completeness('test_location')
-        data = mocked_data_completeness.config
+        data = self.__compute_data_completeness(yaml_dict, patched_DataCompleteness)
 
         general_stats = data['stats']
         assert general_stats['state'] == 'good'
@@ -227,3 +215,33 @@ class TestDataCompleteness(object):
         assert subcategory1_stats['state_comment'] == not_applicable_comment
         assert subcategory1_stats['good_datasets_num'] == 0
         assert subcategory1_stats['total_datasets_num'] == 0
+
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    def test_data_completeness_dataset_up_to_date(self, patched_DataCompleteness):
+        review_date = datetime.datetime.utcnow() - datetime.timedelta(days=31)
+        _generate_dataset_dict('dataset3-category1', ORG, LOCATION, review_date)
+        yaml_dict = _generate_test_yaml_dict()
+        yaml_dict['categories'][0]['data_series'].append({
+            'rules': {
+                'exclude': None,
+                'include': [
+                    '(name:dataset3-category1)'
+                ]
+            },
+            'title': 'Subcategory 3',
+            'description': 'sub-description 3',
+            'name': 'sub-category-3'
+        })
+
+        data = self.__compute_data_completeness(yaml_dict, patched_DataCompleteness)
+
+        subcategory3_stats = data['categories'][0]['data_series'][2]['stats']
+        assert subcategory3_stats['state'] == 'good'
+        assert subcategory3_stats['good_datasets_num'] == 1
+
+    def __compute_data_completeness(self, yaml_dict, patched_DataCompleteness):
+        mocked_data_completeness = MockedDataCompleteness(yaml_dict)
+        patched_DataCompleteness.return_value = mocked_data_completeness
+        CountryController._get_data_completeness('test_location')
+        data = mocked_data_completeness.config
+        return data
