@@ -782,8 +782,8 @@ country-styles:
     - country/country.css
 
 country-topline-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_country-topline-scripts.js
   extra:
     preload:
       - hdx_theme/country-topline-styles
@@ -811,9 +811,9 @@ homepage-scripts:
     preload:
       - hdx_theme/homepage-styles
   contents:
+    - vendor/hammer/hammer.js
     - homepage/count.js
     - homepage/homepage-responsive.js
-    - vendor/hammer/hammer.js
     - homepage/warning-bar.js
 
 homepage-styles:
@@ -956,7 +956,6 @@ qa-package-scripts:
     preload:
       - hdx_theme/qa-package-styles
   contents:
-    - qa/qa-checklist-widget.css
     - qa/qa-package.js
     - qa/qa-checklist.js
     - qa/qa-sdc-micro.js
@@ -966,6 +965,7 @@ qa-package-styles:
   contents:
     - qa/qa-package.css
     - qa/qa-sdc-micro.css
+    - qa/qa-checklist-widget.css
 
 base-fonts-styles:
   output: ckanext-hdx_theme/%(version)s_base-fonts-styles.css
