@@ -853,6 +853,7 @@ group-form-scripts:
   output: ckanext-hdx_theme/%(version)s_group-form-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/organization-form-styles
   contents:
     - custom_location.js
