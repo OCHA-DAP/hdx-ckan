@@ -11,40 +11,52 @@ function mobileToolTabChange(){
   });
 
 }
-
+var mobileCarouselCurrentItem = 1;
+var mobileCarouselItemWidth;
 function initMobileCarousel(){
     var carousel = $(".mobile-carousel")[0];
     if(carousel) {
       var hammer = new Hammer(carousel);
-      var itemW = $(carousel).find('.item').outerWidth(true);
+      mobileCarouselItemWidth = $(carousel).find('.item').outerWidth(true);
       var numItems = $(carousel).find('.item').length;
-      var currItem = 1;
+
       hammer.on('swipeleft swiperight', function (ev) {
-          if (ev.type=="swipeleft" && currItem < numItems){
-              $(carousel).find('.mobile-carousel-inner').animate({
-                  left: "-=" + itemW
-              }, 400);
-              currItem++;
+          if (ev.type=="swipeleft" && mobileCarouselCurrentItem < numItems){
+              _carouselSwipe(-1);
           }
           else{
-              if (ev.type=="swiperight" && currItem > 1){
-                  $(carousel).find('.mobile-carousel-inner').animate({
-                      left: "+=" + itemW
-                  }, 400);
-                  currItem--;
+              if (ev.type=="swiperight" && mobileCarouselCurrentItem > 1){
+                  _carouselSwipe(+1);
               }
           }
-          setMobileCarouselPagination(currItem);
       });
       initMobileCarouselPagination();
     }
 }
 
+function _carouselSwipe(delta) {
+  let carousel = $(".mobile-carousel")[0];
+  const sign = delta > 0 ? "+=" : "-=";
+
+
+  $(carousel).find('.mobile-carousel-inner').animate({
+    left: sign + mobileCarouselItemWidth*Math.abs(delta)
+  }, 400);
+  mobileCarouselCurrentItem -= delta;
+  setMobileCarouselPagination(mobileCarouselCurrentItem);
+}
+
+function onCarouselPagination(el) {
+  let newItem = parseInt($(el).attr('data-idx'))
+  console.log(mobileCarouselCurrentItem + ' - '+ newItem);
+  _carouselSwipe(mobileCarouselCurrentItem - newItem);
+}
+
 function initMobileCarouselPagination(){
     var carousel = $(".mobile-carousel")[0];
     $(carousel).find('.carousel-indicators').html('');
-    for (var i=0; i<$(carousel).find('.item').length; i++){
-        $(carousel).find('.carousel-indicators').append('<li></li>');
+    for (let i = 0; i < $(carousel).find('.item').length; i++){
+        $(carousel).find('.carousel-indicators').append(`<li data-idx="${i + 1}" onclick="onCarouselPagination(this);"></li>`);
     }
     $(carousel).find('.carousel-indicators li:first-child').addClass('active');
     $(carousel).find('.carousel-indicators').show();
