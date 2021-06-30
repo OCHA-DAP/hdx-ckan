@@ -385,7 +385,7 @@ class ValidationController(ckan.controllers.user.UserController):
             check_access('user_can_validate', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
-        except ValidationError, e:
+        except ValidationError as e:
             error_summary = e.error_summary
             return self.error_message(error_summary)
 
@@ -395,9 +395,9 @@ class ValidationController(ckan.controllers.user.UserController):
             data_dict['user_id'] = token['user_id']
             # removed because it is saved in next step. User is allowed to click on /validate link several times
             # get_action('user_extra_update')(context, data_dict)
-        except NotFound, e:
+        except NotFound:
             return OnbUserNotFound
-        except Exception, e:
+        except Exception as e:
             error_summary = str(e)
             return self.error_message(error_summary)
 
@@ -903,9 +903,9 @@ class ValidationController(ckan.controllers.user.UserController):
                 return OnbUserNotFound
             try:
                 token = tokens.token_show(context, data_dict)
-            except NotFound, e:
+            except NotFound as e:
                 token = {'valid': True}  # Until we figure out what to do with existing users
-            except Exception, ex:
+            except Exception as ex:
                 return OnbErr
 
             if not token['valid']:
@@ -918,7 +918,7 @@ class ValidationController(ckan.controllers.user.UserController):
                     # hdx_mailer.send_reset_link(user_obj)
                     get_action('hdx_send_reset_link')(context, {'id': user_id})
                     return OnbSuccess
-                except hdx_mailer.MailerException, e:
+                except hdx_mailer.MailerException as e:
                     return OnbResetLinkErr
         # return render('user/request_reset.html')
         return render('home/index.html')
