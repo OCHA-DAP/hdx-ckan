@@ -48,7 +48,6 @@ EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 abort = base.abort
 check_access = logic.check_access
 get_action = logic.get_action
-render = base.render
 NotFound = logic.NotFound
 ValidationError = logic.ValidationError
 DataError = dictization_functions.DataError
@@ -846,7 +845,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
     # moved from login_controller.py
     def _new_login(self, message, page_subtitle, error=None):
-        self.login(error)
+        # self.login(error)
         # vars = {'contribute': True}
         # tmp = hdx_mail_c.ValidationController()
         return self.new_login(info_message=message, page_subtitle=page_subtitle)
