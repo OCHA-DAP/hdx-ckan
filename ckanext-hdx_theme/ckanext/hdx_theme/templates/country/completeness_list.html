@@ -41,20 +41,24 @@
             <div class="data-item-details" style="{% if hide_details == true %}display: none;{% endif %}">
               {% for subcateg in category.data_series %}
               <div class="sub-category">
-                {% set subcateg_hover_body = '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-column"></div></div>' %}
                 {% set subcateg_hover_title = '<div class="tooltip-content">' + subcateg.description + '</div>' %}
                 <div class="sub-categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
-                     data-original-title="{{ subcateg_hover_title }}" data-container="body" data-html="true" data-template="{{ subcateg_hover_body }}">
+                     data-original-title="{{ subcateg_hover_title }}" data-container="body" data-html="true" data-module-inner_class="tooltip-column">
                   {{ subcateg.title }}
                 </div>
-                {% if subcateg.datasets | length > 0 %}
+                {% if subcateg.stats.state == 'not_applicable' %}
+                  {% set not_applicable_hover_title = '<div class="tooltip-content">' + subcateg.stats.state_comment + '</div>' if subcateg.stats.state_comment else '' %}
+                  <div class="flag" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
+                    data-original-title="{{ not_applicable_hover_title }}" data-html="true" data-module-inner_class="tooltip-column">
+                    <span>Not applicable</span>
+                  </div>
+                {% elif subcateg.datasets | length > 0 %}
                   {% for dataset in subcateg.datasets %}
                     {% set dataset_hover_title = dataset.title + "<br/><b>Limitations</b>: " + dataset.general_comment if dataset.general_comment else dataset.title %}
                     {% set dataset_hover_title = '<div class="tooltip-content">' + dataset_hover_title + '</div>' %}
-                    {% set dataset_hover_body = '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-column"></div></div>' %}
                   <div class="dataset" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
                         data-original-title="{{ dataset_hover_title }}" data-container="body" data-html="true"
-                        data-template="{{ dataset_hover_body }}">
+                        data-module-inner_class="tooltip-column">
                     <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
                     <div class="dataset-link" >
                       <a href="{{ h.url_for('dataset_read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">

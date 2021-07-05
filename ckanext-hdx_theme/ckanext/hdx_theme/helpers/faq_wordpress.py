@@ -2,6 +2,7 @@ import logging
 import pylons.config as config
 import requests
 import re
+from HTMLParser import HTMLParser
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ def faq_for_category(category):
         section['id'] = s_id
         for question in section['questions']:
             try:
-                q_id = ''.join(i if i.isalnum() else '_' for i in question['q'])
+                q_id = ''.join(i if i.isalnum() else '_' for i in HTMLParser().unescape(question['q']))
                 question['id'] = q_id
             except Exception, ex:
                 log.error(ex)

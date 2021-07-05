@@ -1,10 +1,11 @@
 import datetime
 import logging
+from collections import OrderedDict
 
 import dateutil.parser
-from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
+from six import text_type
 
-from collections import OrderedDict
+from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 
 log = logging.getLogger(__name__)
 
@@ -78,6 +79,7 @@ UPDATE_FREQ_OVERDUE_INFO = {key: val['overdue'] for key, val in UPDATE_FREQ_INFO
 UPDATE_FREQ_DELINQUENT_INFO = {key: val['delinquent'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
 
 FRESHNESS_PROPERTY = 'is_fresh'
+OVERDUE_PROPERTY = 'is_overdue'
 
 UPDATE_STATUS_PROPERTY = 'update_status'
 UPDATE_STATUS_URL_FILTER = 'ext_' + UPDATE_STATUS_PROPERTY
@@ -134,8 +136,8 @@ class FreshnessCalculator(object):
                 self.extra_delinquent_days = UPDATE_FREQ_DELINQUENT_INFO[update_freq]
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
-        except Exception, e:
-            log.error(unicode(e))
+        except Exception as e:
+            log.error(text_type(e))
 
     def is_fresh(self, now=datetime.datetime.utcnow()):
         '''
@@ -231,4 +233,11 @@ class DataCompletenessFreshnessCalculator(FreshnessCalculator):
             log.info('Update frequency for dataset "{}" is not a number'.format(self.dataset_dict.get('name')))
 
         return super(DataCompletenessFreshnessCalculator, self).is_fresh(now)
+
+    def populate_with_freshness(self):
+        is_overdue = self.is_overdue()
+        self.dataset_dict[OVERDUE_PROPERTY] = is_overdue
+        super(DataCompletenessFreshnessCalculator, self).populate_with_freshness()
+
+
 
