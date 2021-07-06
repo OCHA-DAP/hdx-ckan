@@ -12,8 +12,11 @@
 <html>
     <head>
         {% block styles %}
-            {% resource 'hdx_theme/base/base-widget.css' %}
-            {% resource 'hdx_theme/base/fonts.css' %}
+{#            {% resource 'hdx_theme/base/base-widget.css' %}#}
+{#            {% resource 'hdx_theme/base/fonts.css' %}#}
+
+            {% asset 'hdx_theme/base-widget-styles' %}
+            {% asset 'hdx_theme/base-fonts-styles' %}
         {% endblock %}
     </head>
     <body>

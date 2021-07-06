@@ -11,8 +11,10 @@ Example:
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-select-organisation" %}
 
-{% resource 'hdx_theme/widget/onboarding/select-organisation.css' %}
-{% resource 'hdx_theme/widget/onboarding/select-organisation.js' %}
+{#{% resource 'hdx_theme/widget/onboarding/select-organisation.css' %}#}
+{#{% resource 'hdx_theme/widget/onboarding/select-organisation.js' %}#}
+{% asset 'hdx_theme/onboarding-select-org-scripts' %}
+
 {% extends "widget/onboarding/two-column.html" %}
 
 {% block left_content %}

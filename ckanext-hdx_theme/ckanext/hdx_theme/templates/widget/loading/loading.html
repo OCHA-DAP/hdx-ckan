@@ -7,8 +7,10 @@ Depends on:
 Example:
     {{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Please wait...") }}
 #}
-{% resource 'hdx_theme/popup' %}
-{% resource 'hdx_theme/widget/loading/loading.css' %}
+{#{% resource 'hdx_theme/popup' %}#}
+{#{% resource 'hdx_theme/widget/loading/loading.css' %}#}
+
+{% asset 'hdx_theme/popup-scripts' %}
 
 {% extends "widget/popup/popup.html" %}
 {% block all_content %}

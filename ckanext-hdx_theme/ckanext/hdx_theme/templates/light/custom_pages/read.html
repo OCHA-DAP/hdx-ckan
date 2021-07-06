@@ -89,11 +89,11 @@
 
 {%- block scripts %}
   {{ super() }}
-  {% resource 'hdx_theme/custom-pages-light' %}
-  {% resource 'hdx_theme/search' %}
-  {% resource 'hdx_theme/search-light' %}
-  {% resource 'hdx_theme/jquery.highlight' %}
+  {% asset 'hdx_theme/custom-pages-light-scripts' %}
+  {% asset 'hdx_theme/search-scripts' %}
+  {% asset 'hdx_theme/search-light-styles' %}
+{#  {% resource 'hdx_theme/jquery.highlight' %}#}
 
-  {% resource 'hdx_theme/dataset-search' %}
-  {% resource 'hdx_theme/dataset' %}
+  {% asset 'hdx_theme/dataset-search-scripts' %}
+  {% asset 'hdx_theme/dataset-scripts' %}
 {% endblock -%}

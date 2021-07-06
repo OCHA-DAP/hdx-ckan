@@ -120,6 +120,7 @@ def generate_analytics_data(dataset_dict):
         analytics_dict['organizationId'] = ''
         analytics_dict['isCod'] = 'false'
         analytics_dict['isIndicator'] = 'false'
+        analytics_dict['isArchived'] = 'false'
         analytics_dict['groupNames'] = '[]'
         analytics_dict['groupIds'] = '[]'
         analytics_dict['datasetAvailability'] = None

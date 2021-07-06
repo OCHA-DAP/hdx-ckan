@@ -46,7 +46,6 @@
 {% endblock %}
 
 {% block secondary_content %}
-{% resource 'hdx_theme/bs_tooltip.js' %}
   {% block secondary_help_content %}{% endblock %}
   {% block creation_information %}
   	<div class="info-wrapper mTop35">
@@ -119,10 +118,10 @@
     {% snippet "snippets/other_sidebar_links.html", pkg_dict=pkg %}
   {% endblock #}
 
-{% endblock %}
-
-
-{% block styles %}
-  {{ super() }}
-  {% resource 'hdx_theme/datasets/dataset.css' %}
-{% endblock %}
+{#{% endblock %}#}
+{##}
+{##}
+{#{% block styles %}#}
+{#  {{ super() }}#}
+{#  {% resource 'hdx_theme/datasets/dataset.css' %}#}
+{#{% endblock %}#}

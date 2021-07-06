@@ -197,5 +197,6 @@
 
 {% block scripts2 %}
     {{ super() }}
-    {% resource 'hdx_theme/custom-pages' %}
+{#    {% resource 'hdx_theme/custom-pages' %}#}
+    {% asset 'hdx_theme/custom-pages-scripts' %}
 {% endblock %}

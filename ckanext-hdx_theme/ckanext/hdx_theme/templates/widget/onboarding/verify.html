@@ -7,7 +7,9 @@ Depends on:
 Example:
     {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
 #}
-{% resource 'hdx_theme/widget/onboarding/verify.css' %}
+{#{% resource 'hdx_theme/widget/onboarding/verify.css' %}#}
+{% asset 'hdx_theme/onboarding-password-styles' %}
+
 {% set class = "popup-onboarding" %}
 {% set title = "We've received your request !" %}
 

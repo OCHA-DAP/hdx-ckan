@@ -25,18 +25,18 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
 
     def command(self):
         if not self.args or self.args[0] in ['-h', '--help', 'help'] or not len(self.args) in [1, 2]:
-            print self.usage
+            print(self.usage)
             return
 
         cmd = self.args[0]
         self._load_config(load_site_user=False)
         if cmd == 'build':
-            print 'Collecting Feature Pages...'
-            buildIndex('../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-            print 'Index successfully built...'
+            print('Collecting Feature Pages...')
+            buildIndex('../'+config.get('hdx.lunr.index_location'))
+            print('Index successfully built...')
         else:
-            print 'Error: command "{0}" not recognized'.format(cmd)
-            print self.usage
+            print('Error: command "{0}" not recognized'.format(cmd))
+            print(self.usage)
 
 
 def buildIndex(path):

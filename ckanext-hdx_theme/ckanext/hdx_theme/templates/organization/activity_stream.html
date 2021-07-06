@@ -1,6 +1,7 @@
 {% extends "organization/read.html" %}
 
-{% resource 'hdx_theme/activity-stream' %}
+{#{% resource 'hdx_theme/activity-stream' %}#}
+{% asset 'hdx_theme/activity-stream-styles' %}
 
 {% block subtitle %}{{ _('Activity Stream') }} - {{ c.group_dict.title or c.group_dict.name }}{% endblock %}
 
@@ -13,6 +14,8 @@
 
 {% block styles %}
 	{{ super() }}
-	{% resource 'hdx_theme/dashboard.css' %}
-	{% resource 'hdx_theme/hdx_dashboard.js' %}
+{#	{% resource 'hdx_theme/dashboard.css' %}#}
+{#	{% resource 'hdx_theme/hdx_dashboard.js' %}#}
+
+  {% asset 'hdx_theme/base-dashboard-scripts' %}
 {% endblock %}

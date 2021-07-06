@@ -13,7 +13,6 @@ Example:
     {% snippet 'snippets/organization, organization=c.group_dict, show_nums=true, show_members_num=show_members_num, user=c.user %}
 
 #}
-{% resource 'hdx_theme/bs_tooltip.js' %}
 
 {% with truncate=truncate or 0, url=h.url_for(controller='organization', action='read', id=organization.name) %}
       {% if show_nums %}

@@ -7,9 +7,11 @@ Depends on:
 Example:
     {{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Please wait...") }}
 #}
-{% resource 'hdx_theme/popup' %}
-{% resource 'hdx_theme/widget/loading/loading.css' %}
-{% resource 'hdx_theme/widget/loading/loading.js' %}
+{#{% resource 'hdx_theme/popup' %}#}
+{#{% resource 'hdx_theme/widget/loading/loading.css' %}#}
+{#{% resource 'hdx_theme/widget/loading/loading.js' %}#}
+
+{% asset 'hdx_theme/popup-scripts' %}
 
 <div style="position: absolute;" class="popup loading-embeddable">
     <div class="content" style="position: absolute; background-color: transparent;">

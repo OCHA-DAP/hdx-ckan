@@ -8,8 +8,10 @@ Example:
     {{ h.snippet('widget/onboarding/register.html', id="registerPopup") }}
 #}
 
-{% resource 'hdx_theme/widget/onboarding/register.css' %}
-{% resource 'hdx_theme/widget/onboarding/register.js' %}
+{#{% resource 'hdx_theme/widget/onboarding/register.css' %}#}
+{#{% resource 'hdx_theme/widget/onboarding/register.js' %}#}
+{% asset 'hdx_theme/onboarding-register-scripts' %}
+
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-register" %}
 

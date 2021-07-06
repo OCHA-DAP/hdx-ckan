@@ -33,7 +33,9 @@
 {% endblock %}
 
 {% block scripts2 %}
-  {% resource 'hdx_theme/login' %}
+{#  {% resource 'hdx_theme/login' %}#}
+  {% asset 'hdx_theme/login-styles' %}
   {{ super() }}
-  {% resource 'hdx_theme/latinise.js' %}
+{#  {% resource 'hdx_theme/latinise.js' %}#}
+  {% asset 'hdx_theme/login-scripts' %}
 {% endblock %}

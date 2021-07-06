@@ -36,8 +36,10 @@
 
 {% block scripts %}
   {{ super() }}
-  {% resource 'hdx_theme/d3' %}
-  {% resource 'hdx_theme/crisis-base' %}
-  {% resource 'hdx_theme/shape-view' %}
+{#  {% resource 'hdx_theme/d3' %}#}
+{#  {% asset 'hdx_theme/crisis-base-styles' %}#}
+  {% asset 'hdx_theme/crisis-base-scripts' %}
+{#  {% asset 'hdx_theme/shape-view-styles' %}#}
+  {% asset 'hdx_theme/shape-view-scripts' %}
   {# {% resource 'hdx_theme/explorer' %} #}
 {% endblock %}

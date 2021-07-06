@@ -9,7 +9,9 @@
 {% set is_dataset = ('dataset' == type) %}
 {% set sectionAnchor = sectionAnchor if sectionAnchor else "organizationsSection" %}
 
-{% resource 'hdx_theme/organization/organizations.js' %}
+{#{% resource 'hdx_theme/organization/organizations.js' %}#}
+
+{% asset 'hdx_theme/search-box-scripts' %}
 
 <form class="list-items search-form" method="get" data-module="select-switch">
     <div class="list-header crisis-list-header">

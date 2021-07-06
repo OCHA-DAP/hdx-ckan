@@ -1,48 +1,48 @@
-{% extends 'package/base_form_page.html' %}
-
-{% set pkg = c.pkg_dict %}
-{% set form_style = c.form_style or c.action %}
-
-{% block breadcrumb_content_selected %}{% endblock %}
-
-{% block resources_module %}
-  {% snippet 'package/snippets/resources.html', pkg=pkg, action='resource_edit' %}
-{% endblock %}
-
-{% block content_action %}
-  {% link_for _('View dataset'), 'dataset_read', id=pkg.name, class_='btn', icon='eye-open' %}
-{% endblock %}
-
-{% block secondary_content %}
-  {% snippet 'package/snippets/info.html', pkg=pkg, action='package_edit' %}
-{% endblock %}
-
-
-
-{% block page_header %}
-  <header class="paddingRowHack page-header page-header-gray">
-    <div class="paddingLeftHack paddingRightHack">
-      <ul class="no_icons nav nav-tabs nav-tabs-gray">
-        {% block content_primary_nav %}
-          {{ h.hdx_build_nav_no_icon('dataset_edit', _('Edit metadata'), id=pkg.name) }}
-          {{ h.hdx_build_nav_no_icon('dataset_resources', _('Resources'), id=pkg.name) }}
-        {% endblock %}
-      </ul>
-    </div>
-  </header>
-{% endblock %}
-
-
-{% block primary_content %}
-  <div class="paddingRowHack graybg">
-    <div class="paddingLeftHack paddingRightHack dataset-form-field-wrapper">
-      {{ super() }}
-    </div>
-  </div>
-{% endblock %}
-
-{% block styles %}
-  {{ super() }}
-  {% resource 'hdx_theme/datasets/dataset_create.css' %}
-
-{% endblock %}
+{#{% extends 'package/base_form_page.html' %}#}
+{##}
+{#{% set pkg = c.pkg_dict %}#}
+{#{% set form_style = c.form_style or c.action %}#}
+{##}
+{#{% block breadcrumb_content_selected %}{% endblock %}#}
+{##}
+{#{% block resources_module %}#}
+{#  {% snippet 'package/snippets/resources.html', pkg=pkg, action='resource_edit' %}#}
+{#{% endblock %}#}
+{##}
+{#{% block content_action %}#}
+{#  {% link_for _('View dataset'), 'dataset_read', id=pkg.name, class_='btn', icon='eye-open' %}#}
+{#{% endblock %}#}
+{##}
+{#{% block secondary_content %}#}
+{#  {% snippet 'package/snippets/info.html', pkg=pkg, action='package_edit' %}#}
+{#{% endblock %}#}
+{##}
+{##}
+{##}
+{#{% block page_header %}#}
+{#  <header class="paddingRowHack page-header page-header-gray">#}
+{#    <div class="paddingLeftHack paddingRightHack">#}
+{#      <ul class="no_icons nav nav-tabs nav-tabs-gray">#}
+{#        {% block content_primary_nav %}#}
+{#          {{ h.hdx_build_nav_no_icon('dataset_edit', _('Edit metadata'), id=pkg.name) }}#}
+{#          {{ h.hdx_build_nav_no_icon('dataset_resources', _('Resources'), id=pkg.name) }}#}
+{#        {% endblock %}#}
+{#      </ul>#}
+{#    </div>#}
+{#  </header>#}
+{#{% endblock %}#}
+{##}
+{##}
+{#{% block primary_content %}#}
+{#  <div class="paddingRowHack graybg">#}
+{#    <div class="paddingLeftHack paddingRightHack dataset-form-field-wrapper">#}
+{#      {{ super() }}#}
+{#    </div>#}
+{#  </div>#}
+{#{% endblock %}#}
+{##}
+{#{% block styles %}#}
+{#  {{ super() }}#}
+{#  {% resource 'hdx_theme/datasets/dataset_create.css' %}#}
+{##}
+{#{% endblock %}#}

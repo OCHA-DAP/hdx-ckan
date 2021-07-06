@@ -33,11 +33,13 @@
   {{ super() }}
   <script src='https://cdn.jsdelivr.net/npm/handsontable@8.0.0/dist/handsontable.full.min.js'></script>
   <link href='https://cdn.jsdelivr.net/npm/handsontable@8.0.0/dist/handsontable.full.min.css' rel='stylesheet' />
-  {% resource 'hdx_theme/bs_tooltip.js' %}
-  {% resource 'hdx_theme/jquery.highlight' %}
-  {% resource 'hdx_theme/jquery.expander' %}
-  {% resource 'hdx_theme/hdx_show_more.js' %}
-  {% resource 'hdx_theme/search/search_page.js' %}
+{#  {% resource 'hdx_theme/bs_tooltip.js' %}#}
+{#  {% resource 'hdx_theme/jquery.highlight' %}#}
+{#  {% resource 'hdx_theme/jquery.expander' %}#}
+{#  {% resource 'hdx_theme/hdx_show_more.js' %}#}
+{#  {% resource 'hdx_theme/search/search_page.js' %} DOESN'T SEEM TO BE USED ANYMORE #}
+
+  {% asset 'hdx_theme/hdx-show-more' %}
 {% endblock %}
 
 {% block styles %}
