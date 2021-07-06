@@ -7,10 +7,14 @@ Depends on:
 Example:
     {{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
 #}
-{% resource 'hdx_theme/popup' %}
-{% resource 'hdx_theme/onboarding' %}
-{% resource 'hdx_theme/widget/onboarding/invite.css' %}
-{% resource 'hdx_theme/widget/onboarding/invite.js' %}
+{#{% resource 'hdx_theme/popup' %}#}
+{#{% resource 'hdx_theme/onboarding' %}#}
+{#{% resource 'hdx_theme/widget/onboarding/invite.css' %}#}
+{#{% resource 'hdx_theme/widget/onboarding/invite.js' %}#}
+
+{% asset 'hdx_theme/popup-scripts' %}
+{% asset 'hdx_theme/onboarding-scripts' %}
+{% asset 'hdx_theme/onboarding-invite-scripts' %}
 
 {% set title = "Your request has been submitted. You will receive a confirmation in the next 24 hours." %}
 {% set class = "popup-onboarding popup-invite" %}

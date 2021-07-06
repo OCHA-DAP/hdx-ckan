@@ -266,27 +266,31 @@
 
 {% block scripts2 %}
   {{ super() }}
-  {% resource 'hdx_theme/activity-stream' %}
-  {% resource 'hdx_theme/jquery.highlight' %}
-  {% resource 'hdx_theme/jquery.expander' %}
-  {% resource 'hdx_theme/custom-org' %}
-  {% resource 'hdx_theme/search' %}
-  {% resource 'hdx_theme/popup' %}
-  {% resource 'hdx_theme/popup-embed' %}
-  {% resource 'hdx_theme/hdx_show_more.js' %}
-  {% resource 'hdx_theme/search-facets' %}
+{#  {% resource 'hdx_theme/activity-stream' %}#}
+{#  {% resource 'hdx_theme/jquery.highlight' %}#}
+{#  {% resource 'hdx_theme/jquery.expander' %}#}
+{#  {% resource 'hdx_theme/custom-org' %}#}
+{#  {% resource 'hdx_theme/search' %}#}
+{#  {% resource 'hdx_theme/popup' %}#}
+{#  {% resource 'hdx_theme/popup-embed' %}#}
+{#  {% resource 'hdx_theme/hdx_show_more.js' %}#}
+{#  {% resource 'hdx_theme/search-facets' %}#}
+
+  {% asset 'hdx_theme/activity-stream-styles' %}
+  {% asset 'hdx_theme/search-scripts' %}
+  {% asset 'hdx_theme/custom-org-scripts' %}
+  {% asset 'hdx_theme/popup-embed-scripts' %}
+
+  {% asset 'hdx_theme/custom-org-search-facets-styles' %}
 
     {% if data.visualization.config_type == '3W-dashboard' %}
-      {% resource 'hdx_theme/leaflet' %}
-      {% resource 'hdx_theme/custom-vis-3w' %}
+      {% asset 'hdx_theme/custom-viz-3w-scripts' %}
     {% endif %}
     {% if data.visualization.config_type == 'ROEA' %}
-      {% resource 'hdx_theme/leaflet' %}
-      {% resource 'hdx_theme/custom-vis-roea' %}
+      {% asset 'hdx_theme/custom-viz-roea-scripts' %}
     {% endif %}
     {% if data.visualization.config_type == 'WFP' %}
-      {% resource 'hdx_theme/leaflet' %}
-      {% resource 'hdx_theme/custom-vis-wfp' %}
+      {% asset 'hdx_theme/custom-viz-wfp-scripts' %}
     {% endif %}
 
 {% endblock %}

@@ -15,8 +15,11 @@ Example:
 
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-select-organisation" %}
-{% resource 'hdx_theme/widget/membership/contact-contributor.css' %}
-{% resource 'hdx_theme/widget/membership/contact-contributor.js' %}
+{#{% resource 'hdx_theme/widget/membership/contact-contributor.css' %}#}
+{#{% resource 'hdx_theme/widget/membership/contact-contributor.js' %}#}
+
+{% asset 'hdx_theme/contact-contributor-scripts' %}
+
 {% extends "widget/onboarding/two-column.html" %}
 
 {% block left_content %}

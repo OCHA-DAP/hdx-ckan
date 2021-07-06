@@ -22,12 +22,17 @@
         </div>
     {% endif %}
 
-    {% resource 'hdx_theme/base/fonts.css' %}
+{#    {% resource 'hdx_theme/base/fonts.css' %}#}
+{#    {% resource 'hdx_theme/d3' %}#}
+{#    {% resource 'hdx_theme/c3' %}#}
+{#    {% resource 'hdx_theme/crisis-base' %}#}
+{#    {% resource 'hdx_theme/country-custom' %}#}
 
-    {% resource 'hdx_theme/d3' %}
-    {% resource 'hdx_theme/c3' %}
-    {% resource 'hdx_theme/crisis-base' %}
-    {% resource 'hdx_theme/country-custom' %}
+    {% asset 'hdx_theme/base-font-styles' %}
+    {% asset 'hdx_theme/charting-scripts' %}
+    {% asset 'hdx_theme/crisis-base-scripts' %}
+    {% asset 'hdx_theme/country-custom-styles' %}
+    {% asset 'hdx_theme/country-custom-scripts' %}
 
 {% endblock %}
 

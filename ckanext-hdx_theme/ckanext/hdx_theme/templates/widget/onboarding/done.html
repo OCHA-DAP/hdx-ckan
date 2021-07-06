@@ -7,7 +7,9 @@ Depends on:
 Example:
     {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
 #}
-{% resource 'hdx_theme/widget/onboarding/done.css' %}
+{#{% resource 'hdx_theme/widget/onboarding/done.css' %}#}
+{% asset 'hdx_theme/onboarding-done-styles' %}
+
 {% set class = "popup-onbording" %}
 {% set title = "Thank you - you're all set." %}
 

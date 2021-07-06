@@ -19,7 +19,7 @@ mkdir -p /srv/filestore /srv/backup /var/log/ckan
 chown -R www-data:www-data /var/log/ckan
 
 # make sure we have the feature-index.js file
-lunr_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search/lunr
+lunr_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr
 [ -d $lunr_dir ] || mkdir -p $lunr_dir
 [ -f $lunr_dir/feature-index.js ] || touch $lunr_dir/feature-index.js
 

@@ -8,8 +8,10 @@ Example usage:
   {% snippet 'requestdata/snippets/section_item_archive.html', item=item %}
 
 #}
-{% resource 'requestdata/handle-reopen-request.js' %}
-{% resource 'requestdata/expand-dataset.js' %}
+{#{% resource 'requestdata/handle-reopen-request.js' %}#}
+{#{% resource 'requestdata/expand-dataset.js' %}#}
+
+{% asset 'requestdata/section-item-scripts' %}
 
 {% set package_url = h.url_for('dataset_read', id=item.package_id) %}
 

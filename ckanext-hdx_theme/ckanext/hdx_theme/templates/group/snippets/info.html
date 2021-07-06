@@ -1,11 +1,11 @@
-{% resource 'hdx_theme/bs_tooltip.js' %}
+{#{% resource 'hdx_theme/bs_tooltip.js' %}#}
 <div class="module-narrow module-shallow context-info org-info-wrapper">
   <section class="">
   {#
     <div class="image">
        <a href="{{ group.url }}">
         <img src="{{ group.image_url or h.url_for_static('/base/images/placeholder-group.png') }}" width="190" height="118" alt="{{ group.name }}" />
-      </a> 
+      </a>
     </div>
     <h1 class="heading">{{ group.display_name }}</h1>
     {% if group.description %}
@@ -26,9 +26,9 @@
           <dd>
                {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
         {% if user %}
-               <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"   
+               <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"
                 data-toggle="tooltip" title="{{ follow_tooltip }}">{{ _("What's this?") }}</a>
-        {% endif%} 
+        {% endif%}
           </dd>
         </dl>
         <dl>

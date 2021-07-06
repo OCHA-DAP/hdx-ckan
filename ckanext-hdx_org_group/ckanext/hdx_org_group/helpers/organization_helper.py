@@ -258,7 +258,7 @@ def hdx_organization_update(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = hdx_group_or_org_update(context, data_dict, is_org=True)
     if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+        lunr.buildIndex(config.get('hdx.lunr.index_location'))
 
     compile_less(result)
 
@@ -304,7 +304,7 @@ def hdx_organization_create(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = hdx_group_or_org_create(context, data_dict, is_org=True)
     if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+        lunr.buildIndex(config.get('hdx.lunr.index_location'))
     compile_less(result)
 
     hdx_generate_embedded_preview(result)
@@ -322,7 +322,7 @@ def _run_core_group_org_action(context, data_dict, core_action):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core_action(context, data_dict)
     if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+        lunr.buildIndex(config.get('hdx.lunr.index_location'))
     return result
 
 

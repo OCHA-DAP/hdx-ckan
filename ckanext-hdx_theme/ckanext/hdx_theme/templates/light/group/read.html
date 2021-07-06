@@ -137,14 +137,14 @@
 
 {%- block scripts %}
   {{ super() }}
-  {% resource 'hdx_theme/dataset-light' %}
-  {% resource 'hdx_theme/search' %}
-  {% resource 'hdx_theme/search-light' %}
-  {% resource 'hdx_theme/jquery.highlight' %}
-  {% resource 'hdx_theme/country' %}
-  {% resource 'hdx_theme/country-topline' %}
-  {% resource 'hdx_theme/dataset-search' %}
-  {% resource 'hdx_theme/dataset' %}
-  {% resource 'hdx_theme/light/group/group-light.css' %}
+  {% asset 'hdx_theme/dataset-light-scripts' %}
+  {% asset 'hdx_theme/search-scripts' %}
+  {% asset 'hdx_theme/search-light-styles' %}
+{#  {% resource 'hdx_theme/jquery.highlight' %}#}
+{#  {% asset 'hdx_theme/country-scripts' %}#}
+  {% asset 'hdx_theme/country-topline-scripts' %}
+  {% asset 'hdx_theme/dataset-search-scripts' %}
+  {% asset 'hdx_theme/dataset-scripts' %}
+  {% asset 'hdx_theme/group-light-styles' %}
 
 {% endblock -%}

@@ -1,4 +1,4 @@
-{# 
+{#
 Renders the login form.
 
 action        - The url that the form should be submitted to.
@@ -14,7 +14,8 @@ Example:
 {% set username_error = true if error_summary %}
 {% set password_error = true if error_summary %}
 
-{% resource 'hdx_theme/login_form.js' %}
+{#{% resource 'hdx_theme/login_form.js' %}#}
+{% asset 'hdx_theme/login-scripts' %}
 
 <form action="{{ action }}" method="post" class="hdx-form login-form">
   <div class="form-horizontal">

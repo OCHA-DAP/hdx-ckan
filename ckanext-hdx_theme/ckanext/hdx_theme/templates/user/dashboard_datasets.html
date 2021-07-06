@@ -4,9 +4,11 @@
 
 {% block scripts %}
   {{ super() }}
-  {% resource 'hdx_theme/jquery.highlight' %}
-  {% resource 'hdx_theme/jquery.expander' %}
-  {% resource 'hdx_theme/hdx_show_more.js' %}
+{#  {% resource 'hdx_theme/jquery.highlight' %}#}
+{#  {% resource 'hdx_theme/jquery.expander' %}#}
+{#  {% resource 'hdx_theme/hdx_show_more.js' %}#}
+
+  {% asset 'hdx_theme/hdx-show-more' %}
 {% endblock %}
 
 {% block add_action_content %}

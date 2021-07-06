@@ -11,9 +11,13 @@
 {%- block styles %}
   {{ super() }}
 
-  {% resource 'hdx_theme/page-styles' %}
-  {% resource 'requestdata/css/main.css' %}
-  {% resource 'hdx_theme/widget/onboarding/perform-reset.css' %}
+{#  {% resource 'hdx_theme/page-styles' %}#}
+{#  {% resource 'requestdata/css/main.css' %}#}
+{#  {% resource 'hdx_theme/widget/onboarding/perform-reset.css' %}#}
+
+  {% asset 'hdx_theme/page-styles' %}
+  {% asset 'requestdata/main-styles' %}
+  {% asset 'hdx_theme/onboarding-perform-reset-styles' %}
 {% endblock %}
 
 {% block mixpanel_init %} {% endblock %}

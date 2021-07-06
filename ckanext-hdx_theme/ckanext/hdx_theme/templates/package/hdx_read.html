@@ -175,7 +175,7 @@
 
 {% block styles %}
   {{ super() }}
-  {% resource 'hdx_theme/requestdata/request-data.css' %}
+  {% asset 'hdx_theme/requestdata-styles' %}
   <link rel="alternate" type="application/ld+json" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='jsonld', profiles='schemaorg', qualified=True) }}"/>
   <link rel="alternate" type="text/n3" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='n3', qualified=True) }}"/>
   <link rel="alternate" type="text/ttl" href="{{ h.url_for('dcat_dataset', _id=pkg.id, _format='ttl', qualified=True) }}"/>
@@ -186,15 +186,12 @@
 {% block scripts %}
   {{ super() }}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
-  {% resource 'hdx_theme/dataset' %}
-  {% resource 'hdx_theme/datasets/stats-chart.js' %}
-  {% resource 'hdx_theme/activity-stream' %}
-  {% resource 'hdx_theme/jquery.expander' %}
-  {% resource 'hdx_theme/bs_popover.js' %}
-  {% resource 'hdx_theme/hdx_show_more.js' %}
-  {% resource 'hdx_theme/hdx_autocomplete.js' %}
-  {% resource 'hdx_theme/confirm-ajax.js' %}
-  {% resource 'hdx_theme/datasets/related.css' %}
+{#  {% asset 'hdx_theme/dataset-styles' %}#}
+  {% asset 'hdx_theme/dataset-scripts' %}
+  {% asset 'hdx_theme/activity-stream-styles' %}
+  {% asset 'hdx_theme/hdx-show-more' %}
+  {% asset 'hdx_theme/hdx-autocomplete' %}
+{#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
   <script type="application/ld+json">
     {{ h.structured_data(pkg.id, ['schemaorg'])|safe }}
   </script>

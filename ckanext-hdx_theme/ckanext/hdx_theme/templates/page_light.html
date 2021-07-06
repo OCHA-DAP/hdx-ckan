@@ -101,9 +101,9 @@
 {%- block scripts %}
   {# Keep this block to a minimum, use resource.config instead #}
 
-  {% if g.tracking_enabled %}
-      {% resource 'hdx_theme/package/tracking.js' %}
-  {% endif %}
+{#  {% if g.tracking_enabled %}#}
+{#      {% resource 'hdx_theme/package/tracking.js' %}#}
+{#  {% endif %}#}
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   {{ super() }}
 {% endblock -%}
@@ -113,5 +113,5 @@
     @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
   </style>
   {{ super() }}
-  {% resource 'hdx_theme/page-light' %}
+  {% asset 'hdx_theme/page-light-styles' %}
 {% endblock %}
