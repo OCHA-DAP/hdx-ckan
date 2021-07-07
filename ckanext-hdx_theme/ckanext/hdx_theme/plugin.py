@@ -230,6 +230,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('dataset_image_serve', '/dataset_image/{label}',
                     controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='dataset_file')
 
+        map.connect('dataviz_gallery', '/dataviz', controller='ckanext.hdx_theme.controllers.dataviz:DatavizController', action='show')
+
         return map
 
     def get_helpers(self):

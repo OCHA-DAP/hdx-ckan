@@ -1,0 +1,76 @@
+{% extends "page_light.html" %}
+{% import 'macros/form.html' as form %}
+{% block subtitle %}{{ _("Dataviz Gallery") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Dataviz Gallery'),
+  	controller='ckanext.hdx_search.controllers.dataviz:DatavizController', action='show') }}</li>
+{% endblock %}
+
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block primary_content %}
+{% endblock %}
+
+{% block header_core %}
+  {% set page_has_desktop_version = False %}
+  {% set page_has_mobile_version = False  %}
+  {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
+{% endblock %}
+
+{% block content %}
+  <div class="container search-light">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="dataset-filter-start list-header">
+          <span class="mL15 list-header-title">{{ _("Dataviz") }} [{{ data.total_items }}]</span>
+          <div class="show-filters">
+            <a href="#" onclick="$('.mobile-facets').show();">
+              Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}
+              <span class="checkbox-slider" style="display: inline-block; top: 5px; margin-left: 5px;">
+                <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}/>
+                <label class="checkbox-slider-label" for="show-filter-toggle">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div class="search-list">
+          <ul class="hdx-bs3 list-items dataset-list unstyled">
+            {% for dataviz in data.page %}
+              {% snippet 'dataviz/dataviz_item.html', dataviz=dataviz %}
+            {% endfor %}
+
+            {% if data.page | length == 0 %}
+              <div class="search-empty">
+                <h3>Sorry no dataviz found for current filter selection</h3>
+              </div>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/search-light-styles' %}
+  {#  {% resource 'hdx_theme/jquery.highlight' %}#}
+
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
