@@ -230,7 +230,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('dataset_image_serve', '/dataset_image/{label}',
                     controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='dataset_file')
 
-        map.connect('dataviz_gallery', '/dataviz', controller='ckanext.hdx_theme.controllers.dataviz:DatavizController', action='show')
+        map.connect('test_dataviz_gallery', '/datavis', controller='ckanext.hdx_theme.controllers.dataviz:DatavizController', action='show')
 
         return map
 

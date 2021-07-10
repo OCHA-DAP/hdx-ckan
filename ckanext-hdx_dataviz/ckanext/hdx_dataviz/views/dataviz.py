@@ -5,7 +5,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.logic as logic
 import ckan.views.dataset as dataset
-
+import ckan.lib.helpers as h
 from ckan.common import _, config, g, request
 
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
@@ -70,37 +70,109 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
             'full_facet_info': {
                 'num_of_selected_filters': 1,
                 'filters_selected': True
-            },
-            'page': [
-                {
-                    'id': 1,
-                    'title': 'Displaced in Yemen',
-                    'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
-                    'date': '1 Dec 2020',
-                    'label': 'Yemen',
-                    'org': {
-                        'name': 'HDX',
-                        'url': 'https://data.humdata.local/org/hdx'
-                    },
-                    'image': 'https://data.humdata.local/org/hdx'
-                },
-                {
-                    'id': 2,
-                    'title': 'Cambodia - 4W Flood Response',
-                    'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
-                    'date': '1 Dec 2020',
-                    'label': 'Cambodia',
-                    'org': {
-                        'name': 'HDX',
-                        'url': 'https://data.humdata.local/org/hdx'
-                    },
-                    'image': 'https://data.humdata.local/org/hdx'
-                },
-            ]
+            }
         },
         'errors': '',
         'error_summary': '',
     }
+    template_data['data']['page'] = h.Page(collection=[
+        {
+            'id': 1,
+            'title': 'Displaced in Yemen',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Yemen',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://data.humdata.org/uploads/showcase/2020-03-31-094347.151256covid-19-map-2020-03-31.png'
+        },
+        {
+            'id': 2,
+            'title': 'Cambodia - 4W Flood Response',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Cambodia',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://reliefweb.int/sites/reliefweb.int/files/styles/location-image/public/country-location-images/pse.png'
+        },
+        {
+            'id': 1,
+            'title': 'Displaced in Yemen',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Yemen',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://data.humdata.org/uploads/showcase/2020-03-31-094347.151256covid-19-map-2020-03-31.png'
+        },
+        {
+            'id': 2,
+            'title': 'Cambodia - 4W Flood Response',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Cambodia',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://reliefweb.int/sites/reliefweb.int/files/styles/location-image/public/country-location-images/swe.png'
+        },
+        {
+            'id': 1,
+            'title': 'Displaced in Yemen',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Yemen',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://data.humdata.org/uploads/showcase/2020-03-31-094347.151256covid-19-map-2020-03-31.png'
+        },
+        {
+            'id': 2,
+            'title': 'Cambodia - 4W Flood Response',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Cambodia',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://reliefweb.int/sites/reliefweb.int/files/styles/location-image/public/country-location-images/pse.png'
+        },
+        {
+            'id': 1,
+            'title': 'Displaced in Yemen',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Yemen',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://data.humdata.local/org/hdx'
+        },
+        {
+            'id': 2,
+            'title': 'Cambodia - 4W Flood Response',
+            'description': 'A jouney of 426 kilometers in search of safety: Almost six years of conflict have left 80 percent of Yemen\'s population, over 24 million people have (more text more text more text more text more text more text more text more text )',
+            'date': '1 Dec 2020',
+            'label': 'Cambodia',
+            'org': {
+                'name': 'HDX',
+                'url': 'https://data.humdata.local/org/hdx'
+            },
+            'image': 'https://data.humdata.local/org/hdx'
+        },
+    ])
 
     return render(template_file, template_data)
 

@@ -1,0 +1,98 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.dataviz-light {
+  @datavizItemSize: 370px;
+  @datavizItemMargin: 30px;
+  background-color: @whiteColor;
+  padding-bottom: @datavizItemMargin;
+  .list-items.dataviz-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(@datavizItemSize, 1fr));
+    grid-gap: @datavizItemMargin;
+    flex-wrap: wrap;
+    background-color: @whiteColor;
+  }
+
+  .search-list {
+    background-color: @extraLightGrayColor;
+  }
+
+  .dataviz-item {
+    min-width: @datavizItemSize;
+    height: @datavizItemSize;
+    background-color: @whiteColor;
+    border: 1px solid @extraLightGrayAccent;
+
+    &:hover {
+      .preview {
+        .actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .preview {
+      height: 206px;
+      position: relative;
+      background-size: cover;
+      background-color: lightblue;
+      .actions {
+        display: none;
+        background-color: rgba(0, 124, 224, 0.2);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+
+        .btn {
+          width: 107px;
+        }
+      }
+
+      .label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        width: 104px;
+        z-index: 101;
+      }
+
+    }
+    .content {
+      padding: 18px 16px 26px;
+    }
+    .title {
+      .gothamBoldFont(16px);
+      color: @darkGrayColor;
+      line-height: 1;
+    }
+    .description {
+      .sourceSansProFont(400, 16px);
+      color: @grayColor;
+      margin: 10px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .others {
+      .sourceSansProFont(400, 12px);
+      color: @grayColor;
+      .separator {
+        margin: 0 2px;
+        &:after {
+          content: "|";
+          color: @grayColor;
+        }
+      }
+      line-height: 1;
+    }
+  }
+
+}
+

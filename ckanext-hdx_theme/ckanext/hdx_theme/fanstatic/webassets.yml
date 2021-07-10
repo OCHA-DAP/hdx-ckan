@@ -1091,3 +1091,13 @@ group-message-styles:
   output: ckanext-hdx_theme/%(version)s_group-message-styles.css
   contents:
     - widget/membership/group-message.css
+
+
+dataviz-scripts:
+  output: ckanext-hdx_theme/%(version)s_dataviz-scripts.js
+
+dataviz-styles:
+  output: ckanext-hdx_theme/%(version)s_dataviz-styles.css
+  contents:
+    - dataviz/dataviz_item.css
+

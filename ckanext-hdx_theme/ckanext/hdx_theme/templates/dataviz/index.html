@@ -22,7 +22,31 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container search-light">
+  {% set facet_list = data.full_facet_info.get('facets') %}
+  {# set searchValue = request.args.get('q') if request.args.get('q') else '' #}
+  <div class="mobile-facets" style="display: none;">
+    <div class="actions">
+      <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
+    </div>
+    <div>
+      <div class="">
+        <input class="text-search" autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all dataviz ..." value="{{searchValue}}">
+      </div>
+
+      {% snippet 'search/snippets/package_search_order.html', sort_param = data.sort_by_selected, class='mobile-order-by' %}
+
+      {%  set current_page_url = data.other_links.get('current_page_url') if 'current_page_url' in data.other_links else '' %}
+      <div class="filter-title">
+        Refine your search: <a href="{{current_page_url}}" class="filter-clear pull-right">Clear all</a>
+      </div>
+
+      {# snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  #}
+    </div>
+
+  </div>
+
+
+  <div class="container search-light dataviz-light">
     <div class="row">
       <div class="col-xs-12">
         <div class="dataset-filter-start list-header">
@@ -42,7 +66,7 @@
         </div>
 
         <div class="search-list">
-          <ul class="hdx-bs3 list-items dataset-list unstyled">
+          <ul class="hdx-bs3 list-items dataset-list unstyled dataviz-list">
             {% for dataviz in data.page %}
               {% snippet 'dataviz/dataviz_item.html', dataviz=dataviz %}
             {% endfor %}
@@ -58,6 +82,11 @@
     </div>
 
   </div>
+  <div class="container">
+    {% block page_pagination %}
+      {{ data.page.pager(q=data.q) }}
+    {% endblock %}
+  </div>
 {% endblock %}
 
 {% block secondary %}
@@ -67,10 +96,7 @@
 {% block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/search-light-styles' %}
+  {% asset 'hdx_theme/dataviz-styles' %}
   {#  {% resource 'hdx_theme/jquery.highlight' %}#}
 
-{% endblock %}
-
-{% block styles %}
-  {{ super() }}
 {% endblock %}

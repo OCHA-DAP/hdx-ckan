@@ -1,19 +1,20 @@
 
 <div class="dataviz-item">
-  <div class="preview">
-    <img src="" alt="">
-    <div class="label">
+  <div class="preview" style="background-image: url('{{ dataviz.image }}')">
+    <div class="actions">
+      <button class="btn btn-primary">Explore</button>
+    </div>
+    <div class="label label-inverse">
       {{ dataviz.label }}
     </div>
   </div>
-  <div>
+  <div class="content">
     <div class="title">{{ dataviz.title }}</div>
     <div class="description">{{ dataviz.description }}</div>
-    <div>
-      <ul>
-        <li>{{ dataviz.date }}</li>
-        <li><a href="{{ dataviz.org.url }}">{{ dataviz.org.name }}</a></li>
-      </ul>
+    <div class="others">
+      <span>Updated on {{ dataviz.date }}</span>
+      <span class="separator"></span>
+      <span><a href="{{ dataviz.org.url }}">{{ dataviz.org.name }}</a></span>
     </div>
   </div>
 </div>
