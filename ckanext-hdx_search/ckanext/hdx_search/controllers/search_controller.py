@@ -346,9 +346,7 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            if hide_archived:
-                tagged_fq_dict['archived'] = ['-extras_archived:"true"']
-            fq_list = [u'{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
+            fq_list = [self._create_filter_query(key, key, ' OR '.join(value_list))
                        for key, value_list in tagged_fq_dict.items()]
 
             # if the search is not filtered by query or facet group datasets
@@ -359,6 +357,10 @@ class HDXSearchController(PackageController):
                         .format(sort=sort_by)
                 ]
                 solr_expand = 'true'
+
+            # filtering archived datasets should happen after we decide whether to collapse/batch results
+            if hide_archived:
+                fq_list.append(self._create_filter_query('archived', 'archived', '-extras_archived:"true"'))
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
@@ -418,6 +420,10 @@ class HDXSearchController(PackageController):
             group[param] = [value]
         else:
             group[param].append(value)
+
+    def _create_filter_query(self, tag, category, value):
+        query_string = u'{{!tag={tag}}}{value}'.format(tag=tag, category=category, value=value)
+        return query_string
 
     def _is_facet_only_request(self):
         return request.params.get('ext_only_facets') == 'true'
