@@ -38,6 +38,7 @@
 
 {% block styles %}
   {{ super() }}
-  {% resource 'hdx_theme/organization/organization-read.css' %}
+
+  {% asset 'hdx_theme/organization-styles' %}
   {% snippet "widget/banner/hdx-dataset-banner.html" %}
 {% endblock %}

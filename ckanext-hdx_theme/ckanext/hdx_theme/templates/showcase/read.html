@@ -115,14 +115,16 @@
 
 {% block styles %}
     {{ super() }}
-    {% resource 'hdx_theme/jquery.highlight' %}
-    {% resource 'hdx_theme/jquery.expander' %}
-    {% resource 'hdx_theme/hdx_show_more.js' %}
-    {% resource 'hdx_theme/datasets/related.css' %}
+{#    {% resource 'hdx_theme/jquery.highlight' %}#}
+{#    {% resource 'hdx_theme/jquery.expander' %}#}
+{#    {% resource 'hdx_theme/hdx_show_more.js' %}#}
+{#    {% resource 'hdx_theme/datasets/related.css' %}#}
+    {% asset 'hdx_theme/dataset-related-styles' %}
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
+    {% asset 'hdx_theme/hdx-show-more' %}
 {% endblock %}
 
 

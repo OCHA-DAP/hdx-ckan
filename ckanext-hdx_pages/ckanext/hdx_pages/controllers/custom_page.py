@@ -69,7 +69,7 @@ class PagesController(HDXSearchController):
                     created_page = get_action('page_create')(context, page_dict)
                     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
                     if not test:
-                        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+                        lunr.buildIndex(config.get('hdx.lunr.index_location'))
                 except logic.ValidationError, e:
                     errors = e.error_dict
                     error_summary = e.error_summary
@@ -105,7 +105,7 @@ class PagesController(HDXSearchController):
                     updated_page = get_action('page_update')(context, page_dict)
                     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
                     if not test:
-                        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+                        lunr.buildIndex(config.get('hdx.lunr.index_location'))
                 except logic.ValidationError as e:
                     errors = e.error_dict
                     error_summary = e.error_summary
@@ -188,7 +188,7 @@ class PagesController(HDXSearchController):
         page_dict = logic.get_action('page_delete')(context, {'id': id})
         test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
         if not test:
-            lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+            lunr.buildIndex(config.get('hdx.lunr.index_location'))
 
         vars = {
             'data': page_dict,

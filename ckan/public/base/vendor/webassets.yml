@@ -33,7 +33,7 @@ bootstrap:
   output: vendor/%(version)s_bootstrap.js
   extra:
     preload:
-      - vendor/font-awesome
+#      - vendor/font-awesome
       - vendor/jquery
   contents:
     - bootstrap/js/bootstrap.js

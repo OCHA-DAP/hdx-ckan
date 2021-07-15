@@ -117,9 +117,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}',
         #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
         #             action='resource_download')
-        map.connect('dataset_preselect', '/dataset/preselect',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='preselect')
+        # map.connect('dataset_preselect', '/dataset/preselect',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='preselect')
         # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
         #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',

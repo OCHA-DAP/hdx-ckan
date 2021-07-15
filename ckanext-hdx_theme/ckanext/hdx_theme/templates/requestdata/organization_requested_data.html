@@ -47,6 +47,9 @@
 
 {% block styles %}
 	{{ super() }}
-  {% resource 'requestdata/css/main.css' %}
-  {% resource 'hdx_theme/requestdata/request-data.css' %}
+{#  {% resource 'requestdata/css/main.css' %}#}
+{#  {% resource 'hdx_theme/requestdata/request-data.css' %}#}
+
+  {% asset 'requestdata/main-styles' %}
+  {% asset 'hdx_theme/requestdata-styles' %}
 {% endblock %}

@@ -21,8 +21,8 @@ abort = base.abort
 
 def google_searchbox_data():
     SCHEMA = Namespace('http://schema.org/')
-    ckan_url = config.get('ckan.site_url', 'https://data.humdata.org').replace('http://', 'https://')
-    search_action_url = ckan_url + '/search?q={search_term_string}'
+    ckan_url = config.get('ckan.site_url', 'https://data.humdata.org').replace('http://', 'https://') + '/'
+    search_action_url = ckan_url + 'search?q={search_term_string}'
 
     website_node = BNode()
     g = Graph()
@@ -33,9 +33,31 @@ def google_searchbox_data():
 
     g.add((website_node, SCHEMA.potentialAction, search_action))
     g.add((search_action, RDF.type, SCHEMA.SearchAction))
-    g.add((search_action, SCHEMA.target, Literal(search_action_url)))
+    # g.add((search_action, SCHEMA.target, Literal(search_action_url)))
     g.add((search_action, SCHEMA['query-input'], Literal('required name=search_term_string')))
+
+    entry_point = BNode()
+    g.add((search_action, SCHEMA.target, entry_point))
+    g.add((entry_point, RDF.type, SCHEMA.EntryPoint))
+    g.add((entry_point, SCHEMA.urlTemplate, Literal(search_action_url)))
+
     return g.serialize(format='json-ld', auto_compact=True)
+    # data = '''
+    # {{
+    #   "@context": "https://schema.org",
+    #   "@type": "WebSite",
+    #   "url": "{ckan_url}",
+    #   "potentialAction": {{
+    #     "@type": "SearchAction",
+    #     "target": {{
+    #       "@type": "EntryPoint",
+    #       "urlTemplate": "{search_url_template}"
+    #     }},
+    #     "query-input": "required name=search_term_string"
+    #   }}
+    # }}
+    # '''.format(ckan_url=ckan_url, search_url_template=search_action_url)
+    # return data
 
 
 structured_data = google_searchbox_data()

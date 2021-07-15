@@ -34,6 +34,9 @@ ckan.recaptcha.privatekey = ${HDX_CKAN_RECAPTCHA_KEY}
 
 ckan.tracking_enabled = true
 
+# WEBASSETS
+ckan.webassets.path = ${HDX_WEBASSETS_PATH}
+
 ## Email settings
 
 email_to         = ckan@${HDX_SMTP_DOMAIN}

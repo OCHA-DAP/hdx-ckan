@@ -32,7 +32,10 @@
 
 {% block scripts %}
   {{ super() }}
-  {% resource 'hdx_hxl_preview/hdx_hxl_preview.js' %}
-  {% resource 'hdx_theme/popup' %}
-  {% resource 'hdx_theme/popup-hxl' %}
+{#  {% resource 'hdx_hxl_preview/hdx_hxl_preview.js' %}#}
+{#  {% resource 'hdx_theme/popup' %}#}
+{#  {% resource 'hdx_theme/popup-hxl' %}#}
+
+  {% asset 'hdx_hxl_preview/hdx-hxl-preview' %}
+  {% asset 'hdx_theme/popup-hxl-scripts' %}
 {% endblock %}

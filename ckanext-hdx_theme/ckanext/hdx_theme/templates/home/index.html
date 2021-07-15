@@ -416,7 +416,7 @@
 
 {% block scripts %}
    {{ super() }}
-   {% resource 'hdx_theme/homepage' %}
+   {% asset 'hdx_theme/homepage-scripts' %}
   {% if c.structured_data %}
      <script type="application/ld+json">
       {{ c.structured_data | safe }}

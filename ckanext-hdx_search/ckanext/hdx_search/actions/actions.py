@@ -35,7 +35,7 @@ def populate_showcase_items_count(context, data_dict):
                 _check_access('package_show', context, pkg_dict)
                 pkg_dict['showcase_count'] = len(
                     hdx_get_package_showcase_id_list(context, {'package_id': pkg_dict.get('id')}))
-            except Exception, e:
+            except Exception as e:
                 log.info('Package id' + pkg_dict.get('id') + ' not found')
                 log.exception(e)
     return pkg_dict_list
@@ -97,7 +97,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
             resource_dict = get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "sdc_report_flag": "QUEUED"})
             _run_sdcmicro_check(resource_dict, data_dict.get("data_columns_list"), data_dict.get("weight_column"),
                                 data_dict.get("columns_type_list"), data_dict.get("sheet", 0), context)
-        except Exception, e:
+        except Exception as e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request: ' + str(ex_msg)
             raise logic.ValidationError({'message': message}, error_summary=message)
@@ -133,7 +133,7 @@ def hdx_qa_pii_run(context, data_dict):
             old_pii_report_flag = resource_dict.get('pii_report_flag',"")
             get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
             _run_pii_check(resource_dict, context)
-        except Exception, e:
+        except Exception as e:
             get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": old_pii_report_flag})
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(ex_msg)
@@ -264,7 +264,7 @@ def aws_log_update(context, data_dict):
             dlpRun = data_dict.get("dlpRun", 'False')
             if dlpRun == 'True':
                 _run_aws_log_update(context, data_dict)
-        except Exception, e:
+        except Exception as e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(
                 ex_msg)

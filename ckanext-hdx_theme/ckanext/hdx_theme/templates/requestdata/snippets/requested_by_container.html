@@ -1,6 +1,8 @@
-{% resource 'hdx_theme/jquery.highlight' %}
-{% resource 'hdx_theme/jquery.expander' %}
-{% resource 'hdx_theme/hdx_show_more.js' %}
+{#{% resource 'hdx_theme/jquery.highlight' %}#}
+{#{% resource 'hdx_theme/jquery.expander' %}#}
+{#{% resource 'hdx_theme/hdx_show_more.js' %}#}
+
+{% asset 'hdx_theme/hdx-show-more' %}
 
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 {#{% set is_user_sysadmin = h.hdx_is_sysadmin(item.sender_user_id) %}#}
