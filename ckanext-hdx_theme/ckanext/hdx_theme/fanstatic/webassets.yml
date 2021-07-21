@@ -359,7 +359,7 @@ custom-viz-3w-scripts:
     - widget/vis-3w/site.js
     - vendor/crossfilter/crossfilter.js
     - vendor/rangeslider.js-2.0.4/rangeslider.js
-      vendor/moment.js/moment.js
+    - vendor/moment.js/moment.js
 
 custom-viz-3w-styles:
   output: ckanext-hdx_theme/%(version)s_custom-viz-3w-styles.css
