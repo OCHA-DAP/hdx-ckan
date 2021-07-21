@@ -340,6 +340,7 @@ charting-scripts:
 
 charting-styles:
   output: ckanext-hdx_theme/%(version)s_charting-styles.css
+  <<: *common-css
   contents:
     - vendor/c3/c3.css
     - vendor/leaflet-0.7.3/leaflet.css
@@ -448,6 +449,7 @@ dataset-search-scripts:
 
 dataset-search-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-search-styles.css
+  <<: *common-css
   contents:
       - vendor/multiple-select-1.1.0/multiple-select.css
 
@@ -872,6 +874,7 @@ group-scripts:
 
 group-styles:
   output: ckanext-hdx_theme/%(version)s_group-styles.css
+  <<: *common-css
   contents:
     - browse/browse.css
     - css/humanitarian_icons.css
