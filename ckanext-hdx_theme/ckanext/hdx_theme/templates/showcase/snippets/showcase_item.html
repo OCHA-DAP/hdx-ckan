@@ -12,7 +12,7 @@ truncate_title - The length to truncate the title to (default: 80).
 {% set title = package.title or package.name %}
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
 
-{% set url = package.url or h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) %}
+{% set url = package.url or h.url_for('showcase_blueprint.read', id=package.name) %}
 {% set has_url = package.url or False %}
 
 {% block package_item %}
@@ -42,7 +42,7 @@ truncate_title - The length to truncate the title to (default: 80).
         {% endif %}
       </div>
 
-      <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}">
+      <a href="{{ h.url_for('showcase_blueprint.read', id=package.name) }}">
         {% if package.num_datasets %}
           <div><strong class="count count-zero">{{ ungettext('{num} Dataset', '{num} Datasets', package.num_datasets).format(num=package.num_datasets) }}</strong></div>
         {% elif package.num_datasets == 0 %}
@@ -53,7 +53,7 @@ truncate_title - The length to truncate the title to (default: 80).
       <div class="showcase-hover" style="display: none;">
         <div class="showcase-hover-content">
           <div>
-            <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}"
+            <a href="{{ h.url_for('showcase_blueprint.read', id=package.name) }}"
                class="btn btn-empty-white">Read more</a>
           </div>
           <div style="margin-top: 14px;">
@@ -63,7 +63,7 @@ truncate_title - The length to truncate the title to (default: 80).
           </div>
           {% if h.check_access('ckanext_showcase_update', {'id':package.id }) %}
             <div style="margin-top: 14px;">
-              {% link_for _('Edit Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='edit', id=package.name, class_='white-link' %}
+              {% link_for _('Edit Showcase'), named_route='showcase_blueprint.edit', id=package.name, class_='white-link' %}
             </div>
           {% endif %}
 

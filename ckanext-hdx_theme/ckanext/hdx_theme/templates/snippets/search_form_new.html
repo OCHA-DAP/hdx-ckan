@@ -20,15 +20,17 @@
         {% if is_display_search_input %}
         {% block search_input %}
           <span class="mL30">
-              {% set searchValue = request.params.get('q') if request.params.get('q') else query %}
+{#              {% set searchValue = request.params.get('q') if request.params.get('q') else query %}#}
+              {% set searchValue = h.hdx_get_request_param('q', query) %}
               <input id="headerSearch" class="header-search search" type="text" name="q" placeholder="{{placeholder}}" value="{{searchValue}}">
           </span>
         {% endblock %}
         {% endif %}
 
         {% set sorting = sorting or [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
-        {% set sort_param = request.params.get('sort') %}
-        {% set sorting_selected = sorting_selected or (sort_param if sort_param else 'title asc') %}
+{#        {% set sort_param = request.params.get('sort') %}#}
+{#        {% set sorting_selected = sorting_selected or (sort_param if sort_param else 'title asc') %}#}
+        {% set sorting_selected = sorting_selected or h.hdx_get_request_param('sort', 'title asc') %}
         <div class="form-select control-group control-order-by pull-right">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
             <div class="dropdown orderDropdown" data-module-additional="#{{sectionAnchor}}">
@@ -52,8 +54,9 @@
         {% if is_display_limit %}
           <span class="mL15 list-header-showall pull-right mR45">
               {% set limits = [25, 50, 100] %}
-              {% set limit_param = request.params.get('limit') %}
-              {% set limit_selected = limit_param if limit_param else 25 %}
+{#              {% set limit_param = request.params.get('limit') %}#}
+{#              {% set limit_selected = limit_param if limit_param else 25 %}#}
+              {% set limit_selected = h.hdx_get_request_param('limit', 25) %}
 
               Show
               {% for value in limits %}
