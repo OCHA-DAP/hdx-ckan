@@ -10,7 +10,7 @@
       <br/>
       <div class="more">
         <div class="mTop15">
-          {% link_for _('Add Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='new', class_="btn btn-primary" %}
+          {% link_for _('Add Showcase'), named_route='showcase_blueprint.new', class_="btn btn-primary" %}
         </div>
       </div>
     {% endif %}
