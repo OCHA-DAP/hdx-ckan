@@ -176,9 +176,13 @@
 .dataviz-light .hero-item .hero-content .hero-title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 50px;
+  font-size: 40px;
   line-height: 1;
   margin-bottom: 30px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 @media (max-width: 768px) {
   .dataviz-light .hero-item .hero-content .hero-title {
@@ -196,16 +200,12 @@
   font-size: 16px;
   margin-top: 30px;
   margin-bottom: 30px;
+  display: -webkit-box;
+  -webkit-line-clamp: 14;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 @media (max-width: 768px) {
-  .dataviz-light .hero-item .hero-content .description {
-    display: -webkit-box;
-    -webkit-line-clamp: 7;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-@media (max-width: 425px) {
   .dataviz-light .hero-item .hero-content .description {
     -webkit-line-clamp: 6;
   }

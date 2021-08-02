@@ -111,9 +111,14 @@
 
       @heroContentMargin: 30px;
       .hero-title {
-        .gothamBoldFont(50px);
+        .gothamBoldFont(40px);
         line-height: 1;
         margin-bottom: @heroContentMargin;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
         @media (max-width: @cut-point-tablet) {
           font-size: 32px;
         }
@@ -125,17 +130,14 @@
         .sourceSansProFont(400, 16px);
         margin-top: @heroContentMargin;
         margin-bottom: @heroContentMargin;
+        display: -webkit-box;
+        -webkit-line-clamp: 14;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
 
         @media (max-width: @cut-point-tablet)  {
-          display: -webkit-box;
-          -webkit-line-clamp: 7;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        @media (max-width: @cut-point-mobile-l) {
           -webkit-line-clamp: 6;
         }
-
       }
     }
     .hero-photo {
