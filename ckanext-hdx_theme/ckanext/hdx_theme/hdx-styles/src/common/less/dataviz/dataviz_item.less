@@ -1,28 +1,16 @@
 @import "../base/variables";
 @import "../base/mixins";
 
-.dataviz-light {
-  @datavizItemSize: 370px;
-  @datavizItemMargin: 30px;
-  background-color: @whiteColor;
-  padding-bottom: @datavizItemMargin;
-  .list-items.dataviz-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(@datavizItemSize, 1fr));
-    grid-gap: @datavizItemMargin;
-    flex-wrap: wrap;
-    background-color: @whiteColor;
-  }
-
-  .search-list {
-    background-color: @extraLightGrayColor;
-  }
-
+.dataviz-item(@datavizItemSize) {
   .dataviz-item {
     min-width: @datavizItemSize;
     height: @datavizItemSize;
     background-color: @whiteColor;
     border: 1px solid @extraLightGrayAccent;
+
+    @media (max-width: @cut-point-mobile-l) {
+      min-width: 100%;
+    }
 
     &:hover {
       .preview {
@@ -47,10 +35,6 @@
         width: 100%;
         height: 100%;
         z-index: 100;
-
-        .btn {
-          width: 107px;
-        }
       }
 
       .label {
@@ -93,6 +77,4 @@
       line-height: 1;
     }
   }
-
 }
-

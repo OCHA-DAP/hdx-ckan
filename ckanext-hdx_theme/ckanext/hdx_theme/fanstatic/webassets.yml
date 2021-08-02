@@ -1099,5 +1099,5 @@ dataviz-scripts:
 dataviz-styles:
   output: ckanext-hdx_theme/%(version)s_dataviz-styles.css
   contents:
-    - dataviz/dataviz_item.css
+    - dataviz/dataviz.css
 

@@ -1,0 +1,224 @@
+.dataviz-light {
+  background-color: #fff;
+  padding-bottom: 30px;
+}
+.dataviz-light .list-items.dataviz-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  grid-gap: 30px;
+  flex-wrap: wrap;
+  background-color: #fff;
+}
+@media (max-width: 768px) {
+  .dataviz-light .list-items.dataviz-list {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  }
+}
+.dataviz-light .search-list {
+  background-color: #eeeeee;
+}
+.dataviz-light .dataviz-item {
+  min-width: 370px;
+  height: 370px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+@media (max-width: 425px) {
+  .dataviz-light .dataviz-item {
+    min-width: 100%;
+  }
+}
+.dataviz-light .dataviz-item:hover .preview .actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dataviz-light .dataviz-item .preview {
+  height: 206px;
+  position: relative;
+  background-size: cover;
+  background-color: lightblue;
+}
+.dataviz-light .dataviz-item .preview .actions {
+  display: none;
+  background-color: rgba(0, 124, 224, 0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.dataviz-light .dataviz-item .preview .label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  width: 104px;
+  z-index: 101;
+}
+.dataviz-light .dataviz-item .content {
+  padding: 18px 16px 26px;
+}
+.dataviz-light .dataviz-item .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1;
+}
+.dataviz-light .dataviz-item .description {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #888888;
+  margin: 10px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dataviz-light .dataviz-item .others {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  line-height: 1;
+}
+.dataviz-light .dataviz-item .others .separator {
+  margin: 0 2px;
+}
+.dataviz-light .dataviz-item .others .separator:after {
+  content: "|";
+  color: #888888;
+}
+.dataviz-light .btn {
+  width: 107px;
+}
+.dataviz-light .carousel .carousel-control {
+  background-image: none;
+  width: 80px;
+  opacity: 1;
+  text-shadow: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .dataviz-light .carousel .carousel-control {
+    width: 30px;
+  }
+}
+.dataviz-light .carousel .carousel-control .glyphicon {
+  width: 40px;
+  height: 40px;
+  background-color: #eeeeee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .dataviz-light .carousel .carousel-control .glyphicon {
+    width: 30px;
+    height: 30px;
+  }
+}
+.dataviz-light .carousel .carousel-control .glyphicon span {
+  color: #333333;
+  font-size: 16px;
+}
+@media (max-width: 768px) {
+  .dataviz-light .carousel .carousel-indicators {
+    bottom: 0;
+  }
+}
+.dataviz-light .carousel .carousel-indicators li {
+  border-radius: 0;
+  background-color: #fff;
+  margin: 1px 5px;
+  border: 1px solid #cccccc;
+  height: 12px;
+  width: 12px;
+}
+.dataviz-light .carousel .carousel-indicators li.active {
+  background-color: #007CE0;
+  margin: 1px 5px;
+  border: 1px solid #fff;
+}
+.dataviz-light .hero-item {
+  height: 570px;
+  display: flex;
+}
+@media (max-width: 768px) {
+  .dataviz-light .hero-item {
+    flex-direction: column-reverse;
+  }
+}
+.dataviz-light .hero-item .hero-content {
+  background-color: #f2d8d5;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .dataviz-light .hero-item .hero-content {
+    width: 100%;
+    height: 70%;
+    padding: 0 30px;
+  }
+}
+.dataviz-light .hero-item .hero-content .content-group {
+  max-width: 360px;
+}
+.dataviz-light .hero-item .hero-content .hero-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 1;
+  margin-bottom: 30px;
+}
+@media (max-width: 768px) {
+  .dataviz-light .hero-item .hero-content .hero-title {
+    font-size: 32px;
+  }
+}
+@media (max-width: 425px) {
+  .dataviz-light .hero-item .hero-content .hero-title {
+    font-size: 28px;
+  }
+}
+.dataviz-light .hero-item .hero-content .description {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+@media (max-width: 768px) {
+  .dataviz-light .hero-item .hero-content .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+@media (max-width: 425px) {
+  .dataviz-light .hero-item .hero-content .description {
+    -webkit-line-clamp: 6;
+  }
+}
+.dataviz-light .hero-item .hero-photo {
+  width: 50%;
+  min-height: 100px;
+  background-size: cover;
+  background-image: url("https://data.humdata.org/uploads/showcase/2020-07-30-142522.525741COVID-19_mapEx.gif");
+}
+@media (max-width: 768px) {
+  .dataviz-light .hero-item .hero-photo {
+    width: 100%;
+    height: 30%;
+  }
+}

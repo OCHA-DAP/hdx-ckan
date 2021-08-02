@@ -1,0 +1,153 @@
+@import "../base/variables";
+@import "../base/mixins";
+@import "./dataviz_item";
+
+.dataviz-light {
+  @datavizItemSize: 370px;
+  @datavizItemMargin: 30px;
+  background-color: @whiteColor;
+  padding-bottom: @datavizItemMargin;
+  .list-items.dataviz-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(@datavizItemSize, 1fr));
+    grid-gap: @datavizItemMargin;
+    flex-wrap: wrap;
+    background-color: @whiteColor;
+    @media (max-width: @cut-point-tablet) {
+      grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    }
+
+  }
+
+  .search-list {
+    background-color: @extraLightGrayColor;
+  }
+
+  .dataviz-item(@datavizItemSize);
+
+  .btn {
+    width: 107px;
+  }
+
+  .carousel {
+    .carousel-control {
+      background-image: none;
+      width: 80px;
+      opacity: 1;
+      text-shadow: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @media (max-width: @cut-point-tablet) {
+        width: 30px;
+      }
+
+      .glyphicon {
+        width: 40px;
+        height: 40px;
+        background-color: @extraLightGrayColor;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @media (max-width: @cut-point-tablet) {
+          width: 30px;
+          height: 30px;
+        }
+        span {
+          color: @darkGrayColor;
+          font-size: 16px;
+        }
+
+      }
+    }
+    .carousel-indicators {
+      @media (max-width: @cut-point-tablet) {
+        bottom: 0;
+      }
+      li {
+        border-radius: 0;
+        background-color: @whiteColor;
+        margin: 1px 5px;
+        border: 1px solid @lightGrayColor;
+        height: 12px;
+        width: 12px;
+
+        &.active {
+          background-color: @blueColor;
+          margin: 1px 5px;
+          border: 1px solid @whiteColor;
+        }
+      }
+    }
+  }
+
+  @heroItemHeight: 570px;
+  .hero-item {
+    height: @heroItemHeight;
+    display: flex;
+
+    @media (max-width: @cut-point-tablet) {
+      flex-direction: column-reverse;
+    }
+
+    .hero-content {
+      background-color: #f2d8d5;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      @media (max-width: @cut-point-tablet) {
+        width: 100%;
+        height: 70%;
+        padding: 0 30px;
+      }
+
+      .content-group {
+        max-width: 360px;
+      }
+
+      @heroContentMargin: 30px;
+      .hero-title {
+        .gothamBoldFont(50px);
+        line-height: 1;
+        margin-bottom: @heroContentMargin;
+        @media (max-width: @cut-point-tablet) {
+          font-size: 32px;
+        }
+        @media (max-width: @cut-point-mobile-l) {
+          font-size: 28px;
+        }
+      }
+      .description {
+        .sourceSansProFont(400, 16px);
+        margin-top: @heroContentMargin;
+        margin-bottom: @heroContentMargin;
+
+        @media (max-width: @cut-point-tablet)  {
+          display: -webkit-box;
+          -webkit-line-clamp: 7;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        @media (max-width: @cut-point-mobile-l) {
+          -webkit-line-clamp: 6;
+        }
+
+      }
+    }
+    .hero-photo {
+      width: 50%;
+      min-height: 100px;
+      background-size: cover;
+      background-image: url("https://data.humdata.org/uploads/showcase/2020-07-30-142522.525741COVID-19_mapEx.gif");
+      @media (max-width: @cut-point-tablet) {
+        width: 100%;
+        height: 30%;
+      }
+    }
+  }
+}
+
