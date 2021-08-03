@@ -35,6 +35,9 @@
                    <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                 {% endif %}
               {% endblock %}
+              {% if package.archived %}
+                <i class="icon humanitarianicons-Folder" title="{{ _('A dataset is archived when it is no longer being actively updated, but remains available primarily for historical purposes') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"></i>
+              {% endif %}
             </div>
             {% block updated_placeholder %}
             <div class="dataset-updated">
