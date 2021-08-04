@@ -87,12 +87,12 @@ def get_url_param_iterator():
 
 class SearchLogic(object):
 
-    def __init__(self):
+    def __init__(self, package_type='dataset'):
         super(SearchLogic, self).__init__()
-        self.package_type = 'dataset'
+        self.package_type = package_type
         self.template_data = DictProxy()
 
-    def _search(self, package_type, additional_fq='', additional_facets=None,
+    def _search(self, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
 
@@ -298,7 +298,8 @@ class SearchLogic(object):
         # get_action('populate_related_items_count')(
         #     context, {'pkg_dict_list': query['results']})
 
-        get_action('populate_showcase_items_count')(context, {'pkg_dict_list': query['results']})
+        if self.package_type == 'dataset':
+            get_action('populate_showcase_items_count')(context, {'pkg_dict_list': query['results']})
 
         self.template_data.page = h.Page(
             collection=query['results'],
@@ -309,17 +310,18 @@ class SearchLogic(object):
         )
 
         for dataset in query['results']:
-            downloads_list = (res['tracking_summary']['total'] for res in dataset.get('resources', []) if
-                              res.get('tracking_summary', {}).get('total'))
-            download_sum = sum(downloads_list)
+            if self.package_type == 'dataset':
+                downloads_list = (res['tracking_summary']['total'] for res in dataset.get('resources', []) if
+                                  res.get('tracking_summary', {}).get('total'))
+                download_sum = sum(downloads_list)
 
-            dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
+                dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
 
-            dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
-            if dataset.get('organization'):
-                dataset['batch_url'] = h.url_for(
-                    'hdx_light_dataset.search', organization=dataset['organization'].get('name'),
-                    ext_batch=dataset.get('batch'))
+                dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
+                if dataset.get('organization'):
+                    dataset['batch_url'] = h.url_for(
+                        'hdx_light_dataset.search', organization=dataset['organization'].get('name'),
+                        ext_batch=dataset.get('batch'))
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))

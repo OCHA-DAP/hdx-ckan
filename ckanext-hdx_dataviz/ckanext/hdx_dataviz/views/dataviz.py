@@ -1,20 +1,20 @@
 import logging
 from flask import Blueprint
 
-import ckan.model as model
+
 import ckan.plugins.toolkit as tk
 import ckan.logic as logic
-import ckan.views.dataset as dataset
 import ckan.lib.helpers as h
-from ckan.common import _, config, g, request
 
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_dataviz.controller_logic.dataviz_search_logic import DatavizSearchLogic
 
 get_action = tk.get_action
 check_access = tk.check_access
 render = tk.render
 abort = tk.abort
 log = logging.getLogger(__name__)
+asbool = tk.asbool
 
 NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
@@ -34,36 +34,27 @@ def read_dataviz(id):
 
 
 def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
-    # context = {
-    #     'model': model,
-    #     'session': model.Session,
-    #     'for_view': True,
-    #     'with_private': False
-    # }
-    # try:
-    #     check_access('site_read', context)
-    # except NotAuthorized:
-    #     abort(403, _('Not authorized to see this page'))
-    #
-    # try:
-    #     q = request.params.get('q', '')
-    #     page = int(request.params.get('page', 1))
-    #     limit = int(request.params.get('limit', 25))
-    #     sort_option = request.params.get('sort', 'title asc')
-    # except ValueError:
-    #     abort(404, 'Page not found')
-    #     sort_option = ''
-    #     q = ''
-    #
-    # template_data = {
-    #     'q': q,
-    #     'sorting_selected': sort_option,
-    #     'limit_selected': limit,
-    #     'page': page,
-    #     'page_has_desktop_version': show_switch_to_desktop,
-    #     'page_has_mobile_version': show_switch_to_mobile,
-    # }
 
+    search_logic = DatavizSearchLogic()
+    search_logic._search(default_sort_by='metadata_modified')
+    template_data = {'data': search_logic.template_data}
+    carousel_items = _fetch_carousel_items()
+    template_data['data']['carousel_items'] = carousel_items
+
+    return render(template_file, template_data)
+
+
+def _fetch_carousel_items():
+    result = get_action('package_search')({}, {
+        'q': '',
+        'fq': 'dataset_type:showcase extras_in_carousel_section:true',
+        'rows': 5,
+        'sort': 'metadata_modified desc'
+    })
+    return result['results']
+
+
+def __generate_sample_index_data():
     template_data = {
         'data': {
             'total_items': 10,
@@ -173,10 +164,7 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
             'image': 'https://data.humdata.local/org/hdx'
         },
     ])
-
-    return render(template_file, template_data)
-
-    # return dataset.search('showcase')
+    return template_data
 
 
 hdx_dataviz_gallery.add_url_rule(u'', view_func=index)

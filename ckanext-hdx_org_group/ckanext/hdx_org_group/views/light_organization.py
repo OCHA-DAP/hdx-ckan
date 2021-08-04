@@ -119,10 +119,10 @@ def _populate_template_data(org_dict):
     is_org_member = (user and new_authz.has_user_permission_for_group_or_org(org_dict.get('name'), user, 'read'))
     if is_org_member:
         ignore_capacity_check = True
-    package_type = 'dataset'
+
     search_logic = OrganizationSearchLogic(id=org_dict.get('name'))
     fq = 'organization:"{}"'.format(org_dict.get('name'))
-    search_logic._search(package_type, additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
+    search_logic._search(additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
     org_dict['template_data'] = search_logic.template_data
 
 

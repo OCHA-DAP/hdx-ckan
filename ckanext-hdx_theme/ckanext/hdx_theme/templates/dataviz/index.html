@@ -3,8 +3,7 @@
 {% block subtitle %}{{ _("Dataviz Gallery") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Dataviz Gallery'),
-  	controller='ckanext.hdx_search.controllers.dataviz:DatavizController', action='show') }}</li>
+  <li class="active">{{ h.nav_link(_('Dataviz Gallery'), 'hdx_dataviz_gallery.index') }}</li>
 {% endblock %}
 
 {% block meta %}
@@ -160,7 +159,7 @@
 
         <div class="search-list">
           <ul class="hdx-bs3 list-items dataset-list unstyled dataviz-list">
-            {% for dataviz in data.page %}
+            {% for dataviz in data.page.items %}
               {% snippet 'dataviz/dataviz_item.html', dataviz=dataviz %}
             {% endfor %}
 

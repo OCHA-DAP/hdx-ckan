@@ -166,13 +166,12 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
-    package_type = 'dataset'
     ignore_capacity_check = False
     country_dict = grp_h.get_country(id)
     country_code = country_dict.get('name', id)
     search_logic = GroupSearchLogic(id=country_code)
     fq = 'groups:"{}"'.format(country_code)
-    search_logic._search(package_type, additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
+    search_logic._search(additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
 
     # non_filtered_facet_info = search_logic._prepare_facets_info(query_result.get('search_facets'), {}, {},
     #                                                     facets, query_result.get('count'), u'')

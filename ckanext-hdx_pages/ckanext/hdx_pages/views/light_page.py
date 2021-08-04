@@ -75,10 +75,10 @@ def _populate_template_data(page_dict):
             page_h._compute_iframe_style(section, is_mobile=True)
             if section.get('type', '') == 'data_list':
                 saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
-                package_type = 'dataset'
+
                 cp_search_logic = CustomPagesSearchLogic(page_dict.get('name'), page_dict.get('type'))
                 search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'), saved_filters)
-                cp_search_logic._search(package_type, **search_params)
+                cp_search_logic._search(**search_params)
                 section['template_data'] = cp_search_logic.template_data
                 log.info(saved_filters)
                 # c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)

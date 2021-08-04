@@ -68,6 +68,17 @@
       {% endblock %}
     </div>
   {% endblock %}
+  {% block dataviz_gallery_fields %}
+      {% set in_dataviz_gallery = 'true' if data.in_dataviz_gallery else 'false' %}
+      {{ form.select('in_dataviz_gallery', label=_('Show in Dataviz Gallery'),  id='field-in-dataviz-gallery',
+            options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_dataviz_gallery,
+            error=errors.in_dataviz_gallery, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+      {% set in_carousel_section = 'true' if data.in_carousel_section else 'false' %}
+      {{ form.select('in_carousel_section', label=_('Show in the Carousel Section of the Dataviz Gallery'),  id='field-in-carousel-section',
+            options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_carousel_section,
+            error=errors.in_carousel_section, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+      {{ form.input('dataviz_label', label=_('Label'), id='field-dataviz-label', placeholder=_('Label to be shown over the gallery icon'), value=data.dataviz_label, error=errors.dataviz_label, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+  {% endblock %}
 
   {% block form_actions %}
     <div class="form-actions" style="margin-left: 0;">
