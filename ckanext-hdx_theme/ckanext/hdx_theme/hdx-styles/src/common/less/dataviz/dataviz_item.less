@@ -16,6 +16,7 @@
       .preview {
         .actions {
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
         }
@@ -35,6 +36,11 @@
         width: 100%;
         height: 100%;
         z-index: 100;
+
+        .white-link {
+          color: @whiteColor;
+          .gothamBoldFont(12px);
+        }
       }
 
       .label {
@@ -54,6 +60,11 @@
       .gothamBoldFont(16px);
       color: @darkGrayColor;
       line-height: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 32px;
     }
     .description {
       .sourceSansProFont(400, 16px);
@@ -63,6 +74,7 @@
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      height: 60px;
     }
     .others {
       .sourceSansProFont(400, 12px);

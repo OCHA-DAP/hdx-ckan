@@ -3,6 +3,9 @@
   <div class="preview" style="background-image: url('{{ dataviz.image_url }}')">
     <div class="actions">
       <button class="btn btn-primary">Explore</button>
+      {% if True %}
+      <a class="white-link mTop10" href="#">Edit Showcase</a>
+      {% endif %}
     </div>
     <div class="label label-inverse">
       {{ dataviz.dataviz_label or dataviz.title }}

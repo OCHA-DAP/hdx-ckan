@@ -23,6 +23,26 @@
     background-color: @extraLightGrayColor;
   }
 
+  .dataset-filter-start {
+    display: block;
+    .show-filters {
+      display: none;
+    }
+    .control-order-by {
+      justify-self: flex-end;
+    }
+    @media (max-width: @cut-point-laptop-s) {
+      display: flex;
+      .show-filters {
+        display: block;
+        justify-self: flex-end;
+      }
+      .header-search, .filter-pagination, .control-order-by {
+        display: none;
+      }
+    }
+  }
+
   .dataviz-item(@datavizItemSize);
 
   .btn {
