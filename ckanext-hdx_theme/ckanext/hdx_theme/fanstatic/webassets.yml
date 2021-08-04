@@ -120,6 +120,18 @@ custom-org-scripts:
   contents:
     - organization_/wfp/organization-wfp.js
 
+custom-showcase-creation-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_custom-showcase-creation-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/organization-form-styles
+  contents:
+    - custom_showcase_creation.js
+
+
+
 custom-org-creation-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-org-creation-scripts.js
