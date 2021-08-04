@@ -312,9 +312,9 @@
   background-color: #f2645a;
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-image .graphic {
-  max-height: 100%;
-  max-width: 215px;
-  height: 100%;
+  height: 215px;
+  width: 215px;
+  object-fit: cover;
 }
 .homepage-main .carousel-section .carousel .item .sub-item .sub-item-caption {
   text-align: left;
