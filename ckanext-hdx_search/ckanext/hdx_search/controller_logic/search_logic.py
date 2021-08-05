@@ -363,7 +363,7 @@ class SearchLogic(object):
     def _page_number(self):
         try:
             return int(request.params.get('page', 1))
-        except ValueError, e:
+        except ValueError as e:
             abort(400, ('"page" parameter must be an integer'))
 
     def _params_nopage(self):

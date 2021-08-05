@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 $(document).ready(function(){
   const showDatavizInGallery = "field-in-dataviz-gallery";
   $(`#${showDatavizInGallery}`).change(_onShowDatavizInGalleryChange);
@@ -7,14 +9,11 @@ $(document).ready(function(){
 function _onShowDatavizInGalleryChange(e){
   const showInGallery = $('#field-in-dataviz-gallery').val();
 
-  const showInCarouselEl = $('#field-in-carousel-section').closest('.control-group');
-  const galleryLabelEl = $('#field-dataviz-label').closest('.control-group');
+  const gallerySection = $('#dataviz-gallery-section');
   if (showInGallery === "true") {
-    showInCarouselEl.show();
-    galleryLabelEl.show();
+    gallerySection.show();
   } else {
-    showInCarouselEl.hide();
-    galleryLabelEl.hide();
+    gallerySection.hide();
   }
 }
 

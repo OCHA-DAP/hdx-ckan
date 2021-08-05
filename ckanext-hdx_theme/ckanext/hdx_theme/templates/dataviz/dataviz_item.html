@@ -4,7 +4,7 @@
     <div class="actions">
       <button class="btn btn-primary">Explore</button>
       {% if True %}
-      <a class="white-link mTop10" href="#">Edit Showcase</a>
+      <a class="white-link mTop10" href="{{ h.url_for('showcase_blueprint.edit', id=dataviz.name) }}">Edit Showcase</a>
       {% endif %}
     </div>
     <div class="label label-inverse">
@@ -17,9 +17,7 @@
     <div class="others">
       <span>Updated on {{ dataviz.metadata_modified }}</span>
       <span class="separator"></span>
-      {% if dataviz.org %}
-        <span><a href="{{ dataviz.org.url }}">{{ dataviz.org.name }}</a></span>
-      {% endif %}
+      <span><a href="{{ dataviz.data_url }}">DATA</a></span>
     </div>
   </div>
 </div>

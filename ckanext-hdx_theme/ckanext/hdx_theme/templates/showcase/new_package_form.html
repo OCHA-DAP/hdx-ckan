@@ -68,16 +68,23 @@
       {% endblock %}
     </div>
   {% endblock %}
+
   {% block dataviz_gallery_fields %}
+    {% if h.has_dataviz_gallery_permission() %}
       {% set in_dataviz_gallery = 'true' if data.in_dataviz_gallery else 'false' %}
       {{ form.select('in_dataviz_gallery', label=_('Show in Dataviz Gallery'),  id='field-in-dataviz-gallery',
             options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_dataviz_gallery,
             error=errors.in_dataviz_gallery, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
-      {% set in_carousel_section = 'true' if data.in_carousel_section else 'false' %}
-      {{ form.select('in_carousel_section', label=_('Show in the Carousel Section of the Dataviz Gallery'),  id='field-in-carousel-section',
-            options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_carousel_section,
-            error=errors.in_carousel_section, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
-      {{ form.input('dataviz_label', label=_('Label'), id='field-dataviz-label', placeholder=_('Label to be shown over the gallery icon'), value=data.dataviz_label, error=errors.dataviz_label, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+      <div id="dataviz-gallery-section">
+        {{ form.input('dataviz_label', label=_('Label'), id='field-dataviz-label', placeholder=_('Label to be shown over the gallery icon'), value=data.dataviz_label, is_required=True, error=errors.dataviz_label, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+        {{ form.input('data_url', label=_('Data URL (Defaults to showcase URL)'), id='field-data-url', placeholder=_('URL for visualisation data'), value=data.data_url, type='url', error=errors.data_url, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+        {% set in_carousel_section = 'true' if data.in_carousel_section else 'false' %}
+        {{ form.select('in_carousel_section', label=_('Show in the Carousel Section of the Dataviz Gallery'),  id='field-in-carousel-section',
+              options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_carousel_section,
+              error=errors.in_carousel_section, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+        {{ form.input('priority', label=_('Priority (Decides the order in the carousel)'), id='field-priority', placeholder=_('Enter a number, higher ones appear first'), value=data.priority, error=errors.priority, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+      </div>
+    {% endif %}
   {% endblock %}
 
   {% block form_actions %}
