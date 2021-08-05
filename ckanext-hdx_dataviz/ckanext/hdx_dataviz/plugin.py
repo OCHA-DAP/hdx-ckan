@@ -21,8 +21,8 @@ class HdxDatavizPlugin(plugins.SingletonPlugin):
     # IConfigurer
     def update_config(self, config_):
         # toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'hdx_dataviz')
+        # toolkit.add_public_directory(config_, 'public')
+        # toolkit.add_resource('fanstatic', 'hdx_dataviz')
 
         # We can't implement IDatasetForm for the 'showcase' type so we need to do an ugly hack
         # in order to modify the validation schema for showcases
