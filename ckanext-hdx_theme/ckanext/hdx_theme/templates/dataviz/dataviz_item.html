@@ -3,7 +3,7 @@
   <div class="preview" style="background-image: url('{{ dataviz.image_url }}')">
     <div class="actions">
       <button class="btn btn-primary">Explore</button>
-      {% if True %}
+      {% if h.has_dataviz_gallery_permission() %}
       <a class="white-link mTop10" href="{{ h.url_for('showcase_blueprint.edit', id=dataviz.name) }}">Edit Showcase</a>
       {% endif %}
     </div>
