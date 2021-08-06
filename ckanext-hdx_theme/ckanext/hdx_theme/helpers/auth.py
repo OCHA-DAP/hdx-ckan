@@ -67,44 +67,6 @@ def invalidate_region(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate region cache')}
 
 
-def _is_editor():
-    '''
-    Check if the current user is at least editor in some organization
-    :return: True if user is at least editor in some org
-    :rtype: bool
-    '''
-    organizations = helpers.hdx_organizations_available_with_roles()
-    for org in organizations:
-        if org.get('role') in ('admin', 'editor'):
-            return True
-    return False
-
-
-# showcase
-def showcase_create(context, data_dict):
-    return {'success': _is_editor()}
-
-
-# showcase
-def showcase_update(context, data_dict):
-    return {'success': _is_editor()}
-
-
-# showcase
-def showcase_delete(context, data_dict):
-    return {'success': _is_editor()}
-
-
-# showcase
-def showcase_package_association_create(context, data_dict):
-    return {'success': _is_editor()}
-
-
-# showcase
-def showcase_package_association_delete(context, data_dict):
-    return {'success': _is_editor()}
-
-
 def hdx_user_statistics(context, data_dict):
     '''
     Only sysadmins are allowed to call this action

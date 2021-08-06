@@ -5,6 +5,7 @@ import ckanext.showcase.logic.schema as showcase_schema
 
 import ckanext.hdx_dataviz.views.dataviz as dataviz
 import ckanext.hdx_dataviz.helpers.helpers as h
+import ckanext.hdx_dataviz.auth.auth_helper as auth
 from ckanext.hdx_dataviz.util.schema import showcase_update_schema_wrapper, showcase_show_schema_wrapper
 
 request = toolkit.request
@@ -14,6 +15,7 @@ class HdxDatavizPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IAuthFunctions)
 
     # IBlueprint
     def get_blueprint(self):
@@ -36,3 +38,28 @@ class HdxDatavizPlugin(plugins.SingletonPlugin):
         return {
             'has_dataviz_gallery_permission': h.has_dataviz_gallery_permission,
         }
+
+    # IAuthFunctions
+    def get_auth_functions(self):
+        def wrap_get_auth_functions(plugin):
+            original_get_auth_functions = plugin.get_auth_functions
+
+            def _showcase_auth_functions():
+                auth_functions = original_get_auth_functions()
+
+                auth_functions.update({
+                    'ckanext_showcase_create': auth.showcase_create,
+                    'ckanext_showcase_update': auth.showcase_update,
+                    'ckanext_showcase_delete': auth.showcase_delete,
+                    'ckanext_showcase_package_association_create': auth.showcase_package_association_create,
+                    'ckanext_showcase_package_association_delete': auth.showcase_package_association_delete,
+                })
+                return auth_functions
+
+            plugin.get_auth_functions = _showcase_auth_functions
+
+        for p in plugins.PluginImplementations(plugins.IAuthFunctions):
+            if p.name == 'showcase':
+                wrap_get_auth_functions(p)
+
+        return {}
