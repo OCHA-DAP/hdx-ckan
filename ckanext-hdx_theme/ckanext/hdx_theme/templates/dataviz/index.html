@@ -53,74 +53,34 @@
         <div id="dataviz-carousel" class="carousel slide" data-ride="carousel2">
           <!-- Indicators -->
           <ol class="carousel-indicators">
-            <li data-target="#dataviz-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#dataviz-carousel" data-slide-to="1"></li>
-            <li data-target="#dataviz-carousel" data-slide-to="2"></li>
+            {% for hero in data.carousel_items %}
+              <li data-target="#dataviz-carousel" data-slide-to="{{ loop.index - 1 }}" {% if loop.index == 1 %} class="active"{% endif %}></li>
+            {% endfor %}
           </ol>
 
            <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
-            <div class="item active">
-              <div class="hero-item">
-
-                <div class="hero-content">
-                  <div class="content-group">
-                    <div class="hero-title">
-                      Hero Title
-                    </div>
-                    <div class="description">
-                      Hero Description
-                    </div>
-
-                    <div>
-                      <a href="" class="btn btn-primary">Explore</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="hero-photo">
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="hero-item ">
-                <div class="hero-content">
-                  <div class="content-group">
-                    <div class="hero-title">
-                      Hero Title2
-                    </div>
-                    <div class="description">
-                      Hero Description
-                    </div>
-
-                    <div>
-                      <a href="" class="btn btn-primary">Explore</a>
+            {% for hero in data.carousel_items %}
+              <div class="item {% if loop.index == 1 %}active{% endif %}">
+                <div class="hero-item">
+                  <div class="hero-content">
+                    <div class="content-group">
+                      <div class="hero-title">
+                        {{ hero.title }}
+                      </div>
+                      <div class="description">
+                        {{ hero.notes}}
+                      </div>
+                      <div>
+                        <a href="{{ h.url_for('showcase_blueprint.read', id=hero.name) }}" class="btn btn-primary">Explore</a>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="hero-photo">
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="hero-item ">
-                <div class="hero-content">
-                  <div class="content-group">
-                    <div class="hero-title">
-                      Hero Title3
-                    </div>
-                    <div class="description">
-                      Hero Description
-                    </div>
-
-                    <div>
-                      <a href="" class="btn btn-primary">Explore</a>
-                    </div>
+                  <div class="hero-photo" style="background-image: url('{{ hero.image_url }}')">
                   </div>
                 </div>
-                <div class="hero-photo">
-                </div>
               </div>
-            </div>
+            {% endfor %}
           </div>
 
           <!-- Controls -->
