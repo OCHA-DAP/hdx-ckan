@@ -2,10 +2,12 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 import ckanext.showcase.logic.schema as showcase_schema
+import ckanext.showcase.logic.action.update as showcase_update
 
 import ckanext.hdx_dataviz.views.dataviz as dataviz
 import ckanext.hdx_dataviz.helpers.helpers as h
 import ckanext.hdx_dataviz.auth.auth_helper as auth
+import ckanext.hdx_dataviz.actions.update as update
 from ckanext.hdx_dataviz.util.schema import showcase_update_schema_wrapper, showcase_show_schema_wrapper
 
 request = toolkit.request
@@ -16,6 +18,7 @@ class HdxDatavizPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IActions)
 
     # IBlueprint
     def get_blueprint(self):
@@ -63,3 +66,10 @@ class HdxDatavizPlugin(plugins.SingletonPlugin):
                 wrap_get_auth_functions(p)
 
         return {}
+
+    # IActions
+    def get_actions(self):
+
+        return {
+            'ckanext_showcase_update': update.chained_showcase_update
+        }
