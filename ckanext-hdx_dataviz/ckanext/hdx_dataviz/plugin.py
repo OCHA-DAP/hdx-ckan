@@ -2,11 +2,10 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 import ckanext.showcase.logic.schema as showcase_schema
-import ckanext.showcase.logic.action.update as showcase_update
 
 import ckanext.hdx_dataviz.views.dataviz as dataviz
 import ckanext.hdx_dataviz.helpers.helpers as h
-import ckanext.hdx_dataviz.auth.auth_helper as auth
+import ckanext.hdx_dataviz.actions.auth as auth
 import ckanext.hdx_dataviz.actions.update as update
 from ckanext.hdx_dataviz.util.schema import showcase_update_schema_wrapper, showcase_show_schema_wrapper
 
