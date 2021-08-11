@@ -73,6 +73,9 @@ html > .contribute-body > .contribute-main > div {
   height: 100%;
   min-height: 760px;
 }
+html > .contribute-body > .contribute-main .btn.disabled {
+  pointer-events: none;
+}
 .contribute-splash-box {
   display: table-cell;
 }
