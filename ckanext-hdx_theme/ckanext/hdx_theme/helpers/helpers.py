@@ -1,3 +1,4 @@
+import json
 import datetime
 import logging
 import re
@@ -16,15 +17,15 @@ import ckanext.hdx_theme.version as version
 
 from six import text_type
 
-from ckan.common import (
-    _, ungettext, c, request, json,
-)
 from ckan.lib import munge
 from ckan.plugins import toolkit
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 
-# import ckanext.hdx_theme.helpers.counting_actions as counting
+_ = toolkit._
+request = toolkit.request
+c = toolkit.c
+ungettext = toolkit.ungettext
 
 log = logging.getLogger(__name__)
 
@@ -781,6 +782,21 @@ def hdx_check_http_response(response_code, comparison_http_code):
     except TypeError as e:
         log.info(text_type(e))
     return False
+
+
+def hdx_get_request_param(param_name, default_value):
+    '''
+    This should get the request param value whether we're in pylons or flask
+    '''
+    try:
+        value = request.args.get(param_name)
+    except Exception as e:
+        log.warning('Error when looking into "args" of request. This could be normal in a pylons request: '
+                    + text_type(e))
+        value = request.params.get(param_name)
+
+    value = default_value if value is None else value
+    return value
 
 
 def hdx_url_for(*args, **kw):

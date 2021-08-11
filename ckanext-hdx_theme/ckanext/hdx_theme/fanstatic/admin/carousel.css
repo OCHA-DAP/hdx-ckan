@@ -50,12 +50,12 @@
   margin: 15px 0;
 }
 #carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container {
-  height: 275px;
+  height: 285px;
   padding: 20px 0;
   width: 100%;
   border: 1px solid #888888;
   background-size: cover;
-  background: #fff;
+  background: #1ebfb3;
 }
 #carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item {
   width: 215px;
@@ -114,9 +114,9 @@
   background-color: #f2645a;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-image .graphic {
-  max-height: 100%;
-  max-width: 215px;
-  height: 100%;
+  height: 215px;
+  width: 215px;
+  object-fit: cover;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption {
   text-align: left;

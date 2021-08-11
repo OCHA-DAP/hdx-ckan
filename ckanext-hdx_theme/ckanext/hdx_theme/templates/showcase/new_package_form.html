@@ -16,8 +16,8 @@
       {% endblock %}
 
       {% block package_basic_fields_url %}
-        {% set prefix = h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id='') %}
-        {% set domain = h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id='', qualified=true) %}
+        {% set prefix = h.url_for('showcase_blueprint.read', id='') %}
+        {% set domain = h.url_for('showcase_blueprint.read', id='', qualified=true) %}
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<showcase>'} %}
 
@@ -74,7 +74,7 @@
       {% block delete_button %}
         {% if form_style == 'edit' and h.check_access('ckanext_showcase_delete', {'id': data.id}) and not data.state == 'deleted' %}
           {% set locale = h.dump_json({'content': _('Are you sure you want to delete this showcase?')}) %}
-          <a class="btn btn-danger pull-left" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='delete', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+          <a class="btn btn-danger pull-left" href="{% url_for 'showcase_blueprint.delete', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
       {% block save_button %}

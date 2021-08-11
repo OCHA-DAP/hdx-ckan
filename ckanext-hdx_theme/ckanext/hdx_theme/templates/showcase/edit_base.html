@@ -13,10 +13,10 @@
   <header class="page-header">
     <ul class="nav nav-tabs">
         {% block content_primary_nav %}
-            {{ h.build_nav_icon('ckanext_showcase_edit', _('Edit showcase'), id=pkg.name, class_='hdx-tab-button') }}
-            {{ h.build_nav_icon('ckanext_showcase_manage_datasets', _('Manage datasets'), id=pkg.name, class_='hdx-tab-button') }}
+            {{ h.build_nav_icon('showcase_blueprint.edit', _('Edit showcase'), id=pkg.name, class_='hdx-tab-button') }}
+            {{ h.build_nav_icon('showcase_blueprint.manage_datasets', _('Manage datasets'), id=pkg.name, class_='hdx-tab-button') }}
             <li class="pull-right">
-                {% link_for _('View showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='read', id=pkg.name, class_='hdx-tab-button', icon='eye-open' %}
+                {% link_for _('View showcase'), named_route='showcase_blueprint.read', id=pkg.name, class_='hdx-tab-button', icon='eye-open' %}
             </li>
         {% endblock %}
     </ul>

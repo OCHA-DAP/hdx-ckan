@@ -1,0 +1,25 @@
+{% ckan_extends %}
+
+{% block maintag %}<div role="main">{% endblock %}
+
+{% block main_content %}
+  <div class="paddingRowHack whitebg pTopBottom35">
+    <div class="paddingLeftHack paddingRightHack ">
+      <div class="row">
+        <div class="col-xs-12">
+          {{ super() }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block form %}
+  <p>{{ _('Are you sure you want to delete showcase - {showcase_name}?').format(showcase_name=pkg.name) }}</p>
+  <p class="form-actions">
+  <form action="{{ h.url_for(showcase_delete_route, id=c.pkg_dict.name) }}" method="post">
+    <button class="btn" type="submit" name="cancel" >{{ _('Cancel') }}</button>
+    <button class="btn btn-danger" type="submit" name="delete" >{{ _('Confirm Delete') }}</button>
+  </form>
+  </p>
+{% endblock %}

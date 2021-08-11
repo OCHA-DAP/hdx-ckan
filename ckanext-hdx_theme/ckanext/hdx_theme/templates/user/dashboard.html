@@ -1,7 +1,7 @@
 {% extends "user/edit_base.html" %}
 
 {% block breadcrumb_content %}
-  <li class="active"><a href="{{ h.url_for(controller='user', action='dashboard') }}">{{ _('Dashboard') }}</a></li>
+  <li class="active"><a href="{{ h.url_for('user_dashboard_datasets') }}">{{ _('Dashboard') }}</a></li>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -72,6 +72,6 @@
     {{ super() }}
 {#    {% resource 'hdx_theme/dashboard.css' %}#}
 {#    {% resource 'hdx_theme/hdx_dashboard.js' %}#}
-  
+
     {% asset 'hdx_theme/base-dashboard-scripts' %}
 {% endblock %}
