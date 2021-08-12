@@ -160,13 +160,39 @@
         }
       }
     }
-    .hero-photo {
+    .hero-image-container {
       width: 50%;
       min-height: 100px;
-      background-size: cover;
+      .hero-image {
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+      }
+
+      &.frame-mode {
+        background-color: @extraLightGrayAccent;
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-bottom: 30px;
+        .hero-image {
+          background-size: auto 100%;
+        }
+      }
+
       @media (max-width: @cut-point-tablet) {
         width: 100%;
         height: 30%;
+
+        &.frame-mode {
+          padding-top: 10px;
+          padding-left: 0;
+          padding-bottom: 10px;
+          .hero-image {
+            background-size: auto 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+          }
+        }
       }
     }
   }

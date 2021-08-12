@@ -76,7 +76,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="hero-photo" style="background-image: url('{{ hero.image_display_url }}')">
+                  <div class="hero-image-container {% if hero.image_frame_mode %}frame-mode{% endif %}">
+                    <div class="hero-image" style="background-image: url('{{ hero.image_display_url }}')"></div>
                   </div>
                 </div>
               </div>

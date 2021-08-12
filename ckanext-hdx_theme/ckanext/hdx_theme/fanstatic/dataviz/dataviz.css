@@ -60,8 +60,20 @@
 .dataviz-light .dataviz-item .preview {
   height: 206px;
   position: relative;
-  background-size: cover;
   background-color: lightblue;
+}
+.dataviz-light .dataviz-item .preview .preview-image {
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+.dataviz-light .dataviz-item .preview.frame-mode {
+  padding: 10px;
+}
+.dataviz-light .dataviz-item .preview.frame-mode .preview-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .dataviz-light .dataviz-item .preview .actions {
   display: none;
@@ -249,14 +261,37 @@
     -webkit-line-clamp: 6;
   }
 }
-.dataviz-light .hero-item .hero-photo {
+.dataviz-light .hero-item .hero-image-container {
   width: 50%;
   min-height: 100px;
+}
+.dataviz-light .hero-item .hero-image-container .hero-image {
   background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+.dataviz-light .hero-item .hero-image-container.frame-mode {
+  background-color: #ddd;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-bottom: 30px;
+}
+.dataviz-light .hero-item .hero-image-container.frame-mode .hero-image {
+  background-size: auto 100%;
 }
 @media (max-width: 768px) {
-  .dataviz-light .hero-item .hero-photo {
+  .dataviz-light .hero-item .hero-image-container {
     width: 100%;
     height: 30%;
+  }
+  .dataviz-light .hero-item .hero-image-container.frame-mode {
+    padding-top: 10px;
+    padding-left: 0;
+    padding-bottom: 10px;
+  }
+  .dataviz-light .hero-item .hero-image-container.frame-mode .hero-image {
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 }
