@@ -51,8 +51,6 @@ class Permissions(object):
         '''
         :param context:
         :type context: dict
-        :param user_name_or_id:
-        :type user_name_or_id: str
         :param permissions_list:
         :type permissions_list: list of str
         '''
