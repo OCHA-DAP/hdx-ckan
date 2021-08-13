@@ -1501,6 +1501,12 @@ ul.dataset-resources li + li.label-icons {
 .mR30 {
   margin-right: 30px;
 }
+.mL25 {
+  margin-left: 30px;
+}
+.mL20 {
+  margin-left: 30px;
+}
 hr {
   margin: 0;
 }

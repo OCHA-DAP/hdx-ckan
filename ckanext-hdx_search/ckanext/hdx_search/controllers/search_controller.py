@@ -781,6 +781,9 @@ class HDXSearchController(PackageController):
         )
         result['num_of_total_items'] = total_count
 
+        result['num_of_archived'] = num_of_archived
+        result['archived_explanation'] = archived_explanation
+
         result['query_selected'] = True if query and query.strip() else False
 
         return result

@@ -1770,6 +1770,12 @@ ul.dataset-resources li + li.label-icons {
 .mR30 {
   margin-right: 30px;
 }
+.mL25 {
+  margin-left: 30px;
+}
+.mL20 {
+  margin-left: 30px;
+}
 hr {
   margin: 0;
 }
@@ -2440,6 +2446,25 @@ textarea {
   font-size: 16px;
   color: #333333;
 }
+.list-header .list-header-title .counters-blue-header-title a {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  margin-bottom: 0;
+  line-height: 1;
+  font-size: 14px;
+  color: #007CE0;
+  text-decoration: none;
+}
+.list-header .list-header-title .counters-blue-header-title a.active,
+.list-header .list-header-title .counters-blue-header-title a:hover,
+.list-header .list-header-title .counters-blue-header-title a:focus {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #007CE0;
+  line-height: 1;
+  text-decoration: none;
+}
 .list-header .header-search {
   line-height: 18px;
   font-family: 'Source Sans Pro', sans-serif;
@@ -2447,7 +2472,7 @@ textarea {
   font-size: 14px;
   color: #888888;
   padding: 7px 6px;
-  width: 400px;
+  width: 270px;
   border: 1px solid #cccccc;
   border-radius: 6px;
 }

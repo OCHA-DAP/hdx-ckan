@@ -32,12 +32,18 @@ Example:
 
     <div id="base-filter-location" style="display: none;">{{current_page_url}}</div>
     <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
-        <span class="mL15 list-header-title">{{ _("Data") }} [{{ c.batch_total_items or c.page.item_count}}]</span>
+        <span class="mL15 list-header-title">{{ _("Data") }}
+          <span class="mL15 counters-blue-header-title">
+            <a href="#">{{ _("Datasets") }} [{{ c.batch_total_items or c.page.item_count}}]</a>
+            |
+            <a id="showArchivedDatasetsHeaderSearch" href="#">{{ _("Archived Datasets") }}[{{ full_facet_info.get("num_of_archived") }}]</a>
+          </span>
+        </span>
           <span class="mL30">
 
               <input autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
           </span>
-          <span class="mL45 list-header-showall filter-pagination">
+          <span class="mL30 list-header-showall filter-pagination">
               Show filter:
 
               <span>
@@ -56,7 +62,7 @@ Example:
           {% set limits = [25, 50, 100] %}
           {% set limit_param = request.params.get('ext_page_size') %}
           {% set limit_selected = limit_param if limit_param else 25 %}
-          <span class="mL45 list-header-showall filter-pagination">
+          <span class="mL25 list-header-showall filter-pagination">
               Show
               {% for value in limits %}
                   <span><input id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}><label for="ext_page_size_{{value}}">{{value}}</label></span>

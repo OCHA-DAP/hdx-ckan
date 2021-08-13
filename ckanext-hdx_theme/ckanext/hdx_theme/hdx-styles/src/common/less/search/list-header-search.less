@@ -23,6 +23,21 @@
   .list-header-title {
     .gothamBoldFont(16px);
     color: @darkGrayColor;
+    .counters-blue-header-title a{
+      .sourceSansProFont(700, 14px);
+      margin-bottom: 0;
+      line-height: 1;
+      font-size: 14px;
+      color: @defaultLinkColor;
+      text-decoration: none;
+      &.active, &:hover, &:focus {
+        .sourceSansProFont(700, 14px);
+        color: @defaultLinkColor;
+        //.letter-spacing-1();
+        line-height: 1;
+        text-decoration: none;
+      }
+    }
   }
 
   .header-search {
@@ -30,7 +45,7 @@
     .sourceSansProFont(400, 14px);
     color: @grayColor;
     padding: 7px 6px;
-    width: 400px;
+    width: 270px;
 
     border: 1px solid @lightGrayColor;
     border-radius: 6px;
