@@ -60,6 +60,14 @@ page-styles:
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
     - widget/contribute/details.css
+page-light-scripts:
+  output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
+  <<: *common-js
+  extra:
+    preload:
+      - hdx_theme/ckan
+  contents:
+    - base/header-init.js
 
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
