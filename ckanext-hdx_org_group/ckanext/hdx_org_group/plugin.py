@@ -291,8 +291,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('country_topline', '/country/topline/{id}',
                     controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
 
-        map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='feed_organization')
+        # map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #     action='feed_organization')
 
         # map.connect(
         #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
