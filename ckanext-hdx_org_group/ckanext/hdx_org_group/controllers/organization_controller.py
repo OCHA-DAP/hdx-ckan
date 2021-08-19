@@ -511,15 +511,15 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             error_summary = e.error_summary
             return self.edit(id, data_dict, errors, error_summary)
 
-    def feed_organization(self, id):
-        try:
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user, 'auth_user_obj': c.userobj}
-            group_dict = logic.get_action('organization_show')(context,
-                                                               {'id': id})
-        except logic.NotFound:
-            base.abort(404, _('Organization not found'))
-        except logic.NotAuthorized:
-            base.abort(404, _('Organization not found'))
-        fc = FeedController()
-        return fc._group_or_organization(group_dict, is_org=True)
+    # def feed_organization(self, id):
+    #     try:
+    #         context = {'model': model, 'session': model.Session,
+    #                    'user': c.user, 'auth_user_obj': c.userobj}
+    #         group_dict = logic.get_action('organization_show')(context,
+    #                                                            {'id': id})
+    #     except logic.NotFound:
+    #         base.abort(404, _('Organization not found'))
+    #     except logic.NotAuthorized:
+    #         base.abort(404, _('Organization not found'))
+    #     fc = FeedController()
+    #     return fc._group_or_organization(group_dict, is_org=True)
