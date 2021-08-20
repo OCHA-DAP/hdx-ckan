@@ -1,9 +1,14 @@
+import six
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 import ckanext.showcase.logic.schema as showcase_schema
 
-import ckanext.hdx_dataviz.views.dataviz as dataviz
+if not six.PY3:
+    import ckanext.hdx_dataviz.views.dataviz as dataviz
+else:
+    dataviz = None
 import ckanext.hdx_dataviz.helpers.helpers as h
 import ckanext.hdx_dataviz.actions.auth as auth
 import ckanext.hdx_dataviz.actions.update as update
@@ -14,7 +19,8 @@ request = toolkit.request
 
 class HdxDatavizPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.IBlueprint)
+    if dataviz:
+        plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IActions)

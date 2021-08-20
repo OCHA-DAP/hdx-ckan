@@ -15,8 +15,6 @@ import ckan.model as model
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 
-import ckanext.hdx_search.helpers.search_history as search_history
-
 from ckan.common import _, request, g
 
 
