@@ -7,6 +7,7 @@ WORKDIR /srv/ckan
 RUN apt-get -q -y update \
     && DEBIAN_FRONTEND=noninteractive apt-get -q -y upgrade \
     && apt-get -q -y install \
+        libmagic1 \
         libpq-dev \
         libxml2-dev \
         libxslt-dev \
