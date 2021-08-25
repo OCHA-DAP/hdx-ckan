@@ -674,3 +674,45 @@ class DictProxy(dict):
     def __setattr__(self, name, value):
         self[name] = value
 
+
+class ArchivedUrlHelper(object):
+
+    def __init__(self, num_of_unarchived, num_of_archived, base_search_url, params_no_page):
+        super(ArchivedUrlHelper, self).__init__()
+        self.num_of_unarchived = num_of_unarchived
+        self.num_of_archived = num_of_archived
+        self.url_for_search = base_search_url
+        self.on_archived_page = next((True for tpl in params_no_page if tpl[0] == 'ext_archived'), False)
+        self.params = (tpl for tpl in params_no_page if tpl[0] != 'ext_archived')
+
+    @property
+    def archived_url(self):
+        if self.num_of_archived > 0:
+            params = [('ext_archived', '1')]
+            params.extend(self.params)
+            url = url_with_params(self.url_for_search, params)
+            return url
+        return None
+
+    @property
+    def show_archived_link(self):
+        if self.on_archived_page or self.num_of_archived == 0:
+            return False
+        return True
+
+    @property
+    def unarchived_url(self):
+        if self.num_of_unarchived > 0:
+            url = url_with_params(self.url_for_search, self.params)
+            return url
+        return None
+
+    @property
+    def show_unarchived_link(self):
+        if not self.on_archived_page or self.num_of_unarchived == 0:
+            return False
+        return True
+
+    def redirect_if_needed(self):
+        if not self.on_archived_page and self.num_of_unarchived == 0 and self.num_of_archived > 0:
+            redirect(self.archived_url())

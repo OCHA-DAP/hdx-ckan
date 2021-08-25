@@ -34,9 +34,17 @@ Example:
     <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
         <span class="mL15 list-header-title">{{ _("Data") }}
           <span class="mL15 counters-blue-header-title">
-            <a href="#">{{ _("Datasets") }} [{{ c.batch_total_items or c.page.item_count}}]</a>
+            {% if full_facet_info.archived_url_helper.show_unarchived_link %}
+              <a href="{{ full_facet_info.archived_url_helper.unarchived_url }}" class="blue-header-label">{{ _("Datasets") }} [{{ full_facet_info.archived_url_helper.num_of_unarchived }}]</a>
+            {% else %}
+              <span class="blue-header-label">{{ _("Datasets") }} [{{ full_facet_info.archived_url_helper.num_of_unarchived }}]</span>
+            {% endif %}
             |
-            <a id="showArchivedDatasetsHeaderSearch" href="#">{{ _("Archived Datasets") }}[{{ full_facet_info.get("num_of_archived") }}]</a>
+            {% if full_facet_info.archived_url_helper.show_archived_link %}
+              <a id="showArchivedDatasetsHeaderSearch" href="{{ full_facet_info.archived_url_helper.archived_url }}" class="blue-header-label">{{ _("Archived Datasets") }}[{{ full_facet_info.archived_url_helper.num_of_archived }}]</a>
+            {% else %}
+              <span class="blue-header-label">{{ _("Archived Datasets") }}[{{ full_facet_info.archived_url_helper.num_of_archived }}]</span>
+            {% endif %}
           </span>
         </span>
           <span class="mL30">

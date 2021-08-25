@@ -23,19 +23,23 @@
   .list-header-title {
     .gothamBoldFont(16px);
     color: @darkGrayColor;
-    .counters-blue-header-title a{
-      .sourceSansProFont(700, 14px);
-      margin-bottom: 0;
-      line-height: 1;
-      font-size: 14px;
-      color: @defaultLinkColor;
-      text-decoration: none;
-      &.active, &:hover, &:focus {
+    .counters-blue-header-title {
+      .blue-header-label {
         .sourceSansProFont(700, 14px);
-        color: @defaultLinkColor;
-        //.letter-spacing-1();
+        margin-bottom: 0;
         line-height: 1;
+        font-size: 14px;
+        //color: @defaultLinkColor;
         text-decoration: none;
+      }
+      a.blue-header-label {
+        &:active, &:hover, &:focus {
+          .sourceSansProFont(700, 14px);
+          color: @defaultLinkColor;
+          //.letter-spacing-1();
+          line-height: 1;
+          text-decoration: none;
+        }
       }
     }
   }

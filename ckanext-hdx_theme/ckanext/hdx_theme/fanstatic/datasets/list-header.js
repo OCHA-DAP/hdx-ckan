@@ -54,18 +54,18 @@ $(document).ready(function() {
       } else {
         childInputs.prop('checked', false);
       }
-      window.location = getFilterUrlNew(false, false);
+      window.location = getFilterUrlNew(false);
     });
 
     $(".filter-category .categ-items li input").not(".parent-facet").on("change", function() {
-        var location = getFilterUrlNew(false, false);
+        var location = getFilterUrlNew(false);
         console.log("Refresh to: " + location);
         window.location = location;
     });
 
     $("#headerSearch").on("keydown", function(event){
         if (event.keyCode == '13'){
-            var location = getFilterUrlNew(false, false);
+            var location = getFilterUrlNew(false);
             console.log("Refresh to: " + location);
             window.location = location;
             event.preventDefault();
@@ -76,19 +76,13 @@ $(document).ready(function() {
         event.stopPropagation();
         event.preventDefault();
 
-        var location = getFilterUrlNew(true, false);
-        console.log("Refresh to: " + location);
-        window.location = location;
-    });
-
-    $("#showArchivedDatasetsHeaderSearch").on("click", function(event) {
-        var location = getFilterUrlNew(false, true);
+        var location = getFilterUrlNew(true);
         console.log("Refresh to: " + location);
         window.location = location;
     });
 
     $(".filter-pagination input[type='radio']").click(function(){
-        var location = getFilterUrlNew(false, false);
+        var location = getFilterUrlNew(false);
         console.log("Refresh to: " + location);
         window.location = location;
     });
@@ -104,18 +98,19 @@ $(document).ready(function() {
     });
 
     if (!filterConfig.showFilter) {
-        $("#show-filter-toggle").prop("checked", false);
-        $("#show-filter-toggle").change();
+        var toggleEl = $('#show-filter-toggle');
+        toggleEl.prop("checked", false);
+        toggleEl.change();
     }
     $.each(filterConfig.facets, function(key, val){
         if (!val){
             $(".filter-category .categ-title[data-value='"+ key +"']").click();
         }
-    })
+    });
 
 });
 
-function getFilterUrlNew(resetFilters, is_archived) {
+function getFilterUrlNew(resetFilters) {
     var params = "";
     if (!resetFilters){
         params = $(".filter-category .categ-items li input").not(".parent-facet").serialize();
@@ -126,14 +121,6 @@ function getFilterUrlNew(resetFilters, is_archived) {
             params += $(el).attr("name");
             params += "=1";
         });
-    }
-
-    if (is_archived){
-      if (params !== "") {
-        params += "&";
-      }
-      params += 'ext_archived';
-      params += "=1";
     }
 
     //check non filter params

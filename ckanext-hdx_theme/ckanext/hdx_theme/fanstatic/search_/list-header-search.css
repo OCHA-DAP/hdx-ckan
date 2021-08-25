@@ -197,18 +197,17 @@
   font-size: 16px;
   color: #333333;
 }
-.list-header .list-header-title .counters-blue-header-title a {
+.list-header .list-header-title .counters-blue-header-title .blue-header-label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
   margin-bottom: 0;
   line-height: 1;
   font-size: 14px;
-  color: #007CE0;
   text-decoration: none;
 }
-.list-header .list-header-title .counters-blue-header-title a.active,
-.list-header .list-header-title .counters-blue-header-title a:hover,
-.list-header .list-header-title .counters-blue-header-title a:focus {
+.list-header .list-header-title .counters-blue-header-title a.blue-header-label:active,
+.list-header .list-header-title .counters-blue-header-title a.blue-header-label:hover,
+.list-header .list-header-title .counters-blue-header-title a.blue-header-label:focus {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
   font-size: 14px;
@@ -239,8 +238,8 @@
 .list-header .list-header-showall > span:before {
   content: "|";
   color: #888888;
-  margin-left: 8px;
-  margin-right: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .list-header .list-header-showall > span:first-child:before {
   content: "";
