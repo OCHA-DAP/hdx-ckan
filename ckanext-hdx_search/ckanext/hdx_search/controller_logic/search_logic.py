@@ -715,4 +715,4 @@ class ArchivedUrlHelper(object):
 
     def redirect_if_needed(self):
         if not self.on_archived_page and self.num_of_unarchived == 0 and self.num_of_archived > 0:
-            redirect(self.archived_url())
+            redirect(self.archived_url)
