@@ -211,3 +211,5 @@ zope.interface==4.3.2
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
+
+pastedeploy==2.0.1        # manually kept - remove when #4802 is complete
