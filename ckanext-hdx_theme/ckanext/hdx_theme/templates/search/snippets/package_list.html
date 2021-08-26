@@ -33,19 +33,7 @@ Example:
     <div id="base-filter-location" style="display: none;">{{current_page_url}}</div>
     <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
         <span class="mL15 list-header-title">{{ _("Data") }}
-          <span class="mL15 counters-blue-header-title">
-            {% if full_facet_info.archived_url_helper.show_unarchived_link %}
-              <a href="{{ full_facet_info.archived_url_helper.unarchived_url }}" class="blue-header-label">{{ _("Datasets") }} [{{ full_facet_info.archived_url_helper.num_of_unarchived }}]</a>
-            {% else %}
-              <span class="blue-header-label">{{ _("Datasets") }} [{{ full_facet_info.archived_url_helper.num_of_unarchived }}]</span>
-            {% endif %}
-            |
-            {% if full_facet_info.archived_url_helper.show_archived_link %}
-              <a id="showArchivedDatasetsHeaderSearch" href="{{ full_facet_info.archived_url_helper.archived_url }}" class="blue-header-label">{{ _("Archived Datasets") }}[{{ full_facet_info.archived_url_helper.num_of_archived }}]</a>
-            {% else %}
-              <span class="blue-header-label">{{ _("Archived Datasets") }}[{{ full_facet_info.archived_url_helper.num_of_archived }}]</span>
-            {% endif %}
-          </span>
+          {% snippet 'search/snippets/archived_tabs.html', archived_url_helper=full_facet_info.archived_url_helper %}
         </span>
           <span class="mL30">
 

@@ -154,7 +154,7 @@ class SearchLogic(object):
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
                                      'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
                             featured_filters_set = True
-                        if param == 'ext_archived':
+                        if param == 'ext_archived' and value == '1':
                             hide_archived = False
                         search_extras[param] = value
 
@@ -176,8 +176,8 @@ class SearchLogic(object):
                 solr_expand = 'true'
 
             # filtering archived datasets should happen after we decide whether to collapse/batch results
-            if hide_archived:
-                fq_list.append(self._create_filter_query('archived', 'archived', '-extras_archived:"true"'))
+            fq_list.append(self._create_filter_query(
+                'archived', 'archived', '-extras_archived:"true"' if hide_archived else 'extras_archived:"true"'))
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
@@ -234,6 +234,10 @@ class SearchLogic(object):
         full_facet_info['results'] = self.template_data.get('page').collection if 'page' in self.template_data else []
         self.template_data['full_facet_info'] = full_facet_info
 
+        archived_url_helper = full_facet_info.get('archived_url_helper')  # type: ArchivedUrlHelper
+        redirect_result = archived_url_helper.redirect_if_needed()
+        return redirect_result
+
     def _get_pager_function(self, package_type):
         def pager_url(q=None, page=None):
             params = list(self._params_nopage())
@@ -263,6 +267,7 @@ class SearchLogic(object):
             'expand': expand,
             'expand.rows': 1,  # we anyway don't show the expanded datasets, but doesn't work with 0
             'fq': fq.strip(),
+            'f.extras_archived.facet.missing': 'true',
             'facet.field': facet_keys,
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
             'facet.limit': 2000,
@@ -469,6 +474,7 @@ class SearchLogic(object):
         num_of_showcases = 0
         num_of_administrative_divisions = 0
         num_of_archived = 0
+        num_of_unarchived = 0
 
         new_cod_filters_enabled = are_new_cod_filters_enabled()
 
@@ -513,6 +519,8 @@ class SearchLogic(object):
                 # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
                 num_of_archived = next(
                     (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+                num_of_unarchived = sum(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
                 if category_key == 'vocab_Topics':
                     num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
@@ -571,6 +579,13 @@ class SearchLogic(object):
             )
         )
         result['num_of_total_items'] = total_count
+        # result['num_of_archived'] = num_of_archived
+        # result['num_of_unarchived'] = num_of_unarchived
+        archived_url_helper = ArchivedUrlHelper(num_of_unarchived, num_of_archived,
+                                                self._current_url(), self._params_nopage())
+        result['archived_url_helper'] = archived_url_helper
+
+        result['archived_explanation'] = archived_explanation
 
         result['query_selected'] = True if query and query.strip() else False
 
@@ -715,4 +730,6 @@ class ArchivedUrlHelper(object):
 
     def redirect_if_needed(self):
         if not self.on_archived_page and self.num_of_unarchived == 0 and self.num_of_archived > 0:
-            redirect(self.archived_url)
+            result = redirect(self.archived_url)
+            return result
+        return None

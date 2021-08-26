@@ -92,7 +92,9 @@ def search():
 
     search_logic = SearchLogic()
 
-    search_logic._search(package_type, use_solr_collapse=True)
+    redirect_result = search_logic._search(package_type, use_solr_collapse=True)
+    if redirect_result:
+        return redirect_result
 
     data_dict = {'data': search_logic.template_data}
     return render(u'light/search/search.html', data_dict)
