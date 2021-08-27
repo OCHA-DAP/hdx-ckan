@@ -229,6 +229,8 @@ class HDXSearchController(PackageController):
             return self._search_url(params, package_type)
 
         c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
+        archived_url_helper = self.add_archived_url_helper(c.full_facet_info, c.other_links['current_page_url'])
+        archived_url_helper.redirect_if_needed()
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
@@ -244,6 +246,13 @@ class HDXSearchController(PackageController):
             self._setup_template_variables(context, {},
                                            package_type=package_type)
             return self._search_template()
+
+    def add_archived_url_helper(self, full_facet_info, base_url):
+        archived_url_helper = ArchivedUrlHelper(full_facet_info.get('num_of_unarchived'),
+                                                full_facet_info.get('num_of_archived'),
+                                                base_url, self._params_nopage())
+        full_facet_info['archived_url_helper'] = archived_url_helper
+        return archived_url_helper
 
     def _search(self, package_type, pager_url, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
@@ -414,8 +423,6 @@ class HDXSearchController(PackageController):
         # return render(self._search_template(package_type))
         full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, facets,
                                                     c.batch_total_items, c.q)
-        archived_url_helper = full_facet_info.get('archived_url_helper')  # type: ArchivedUrlHelper
-        archived_url_helper.redirect_if_needed()
 
         return full_facet_info
 
@@ -767,10 +774,10 @@ class HDXSearchController(PackageController):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
-        archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
-                                  'but remains available primarily for historical purposes')
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
-                                          num_of_archived, search_extras, explanation=archived_explanation)
+        # archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
+        #                           'but remains available primarily for historical purposes')
+        # self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
+        #                                   num_of_archived, search_extras, explanation=archived_explanation)
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
@@ -789,13 +796,10 @@ class HDXSearchController(PackageController):
         )
         result['num_of_total_items'] = total_count
 
-        # result['num_of_archived'] = num_of_archived
-        # result['num_of_unarchived'] = num_of_unarchived
-        archived_url_helper = ArchivedUrlHelper(num_of_unarchived, num_of_archived,
-                                                self._current_url(), self._params_nopage())
-        result['archived_url_helper'] = archived_url_helper
+        result['num_of_archived'] = num_of_archived
+        result['num_of_unarchived'] = num_of_unarchived
 
-        result['archived_explanation'] = archived_explanation
+        # result['archived_explanation'] = archived_explanation
 
         result['query_selected'] = True if query and query.strip() else False
 

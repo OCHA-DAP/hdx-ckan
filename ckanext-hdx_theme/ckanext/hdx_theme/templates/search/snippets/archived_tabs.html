@@ -21,4 +21,6 @@ Example:
   {% else %}
     <span class="blue-header-label">{{ _("Archived Datasets") }}[{{ archived_url_helper.num_of_archived }}]</span>
   {% endif %}
+  <a class="blue-header-label" href="javascript:void(0)" title="{{ archived_url_helper.archived_explanation }}"
+     data-module="bs_tooltip" data-toggle="tooltip">[?]</a>
 </span>

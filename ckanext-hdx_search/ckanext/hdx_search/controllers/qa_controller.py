@@ -10,7 +10,6 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.membership_data as membership
-import ckanext.hdx_search.helpers.search_history as search_history
 from ckan.common import _, json, request, c, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController
@@ -88,9 +87,12 @@ class HDXQAController(HDXSearchController):
             return url + u'?' + urlencode(params)
 
         c.full_facet_info = self._search(package_type, pager_url)
+        base_url =  h.url_for('qa_dashboard')
+        c.other_links['current_page_url'] = base_url
+        archived_url_helper = self.add_archived_url_helper(c.full_facet_info, base_url)
+        archived_url_helper.redirect_if_needed()
 
         c.cps_off = config.get('hdx.cps.off', 'false')
-        c.other_links['current_page_url'] = h.url_for('qa_dashboard')
         c.advanced_mode = request.params.get('_advanced_mode', 'true').lower()
         # query_string = request.params.get('q', u'')
         # if c.userobj and query_string:
