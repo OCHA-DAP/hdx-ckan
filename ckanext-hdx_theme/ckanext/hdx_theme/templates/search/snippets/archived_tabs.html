@@ -17,10 +17,10 @@ Example:
   {% endif %}
   |
   {% if archived_url_helper.show_archived_link %}
-    <a id="showArchivedDatasetsHeaderSearch" href="{{ archived_url_helper.archived_url }}" class="blue-header-label">{{ _("Archived Datasets") }}[{{ archived_url_helper.num_of_archived }}]</a>
+    <a href="{{ archived_url_helper.archived_url }}" class="blue-header-label">{{ _("Archived Datasets") }}[{{ archived_url_helper.num_of_archived }}]</a>
   {% else %}
     <span class="blue-header-label">{{ _("Archived Datasets") }}[{{ archived_url_helper.num_of_archived }}]</span>
   {% endif %}
-  <a class="blue-header-label" href="javascript:void(0)" title="{{ archived_url_helper.archived_explanation }}"
+  <a class="blue-header-label archived-explanation" href="javascript:void(0)" title="{{ archived_url_helper.archived_explanation }}"
      data-module="bs_tooltip" data-toggle="tooltip">[?]</a>
 </span>

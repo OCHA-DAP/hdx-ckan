@@ -2550,6 +2550,13 @@ textarea {
   visibility: hidden;
 }
 /* END List header */
+/* Mobile / Media query */
+@media (max-width: 425px) {
+  .list-header .list-header-title .archived-explanation {
+    display: none;
+  }
+}
+/* END Mobile / Media query */
 .hdx-form {
   color: #333333;
 }
