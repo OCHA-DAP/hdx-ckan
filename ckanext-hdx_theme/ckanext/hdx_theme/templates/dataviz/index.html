@@ -45,7 +45,7 @@
   </div>
 
   <div class="container search-light dataviz-light">
-    {% if data.carousel_items | length == 0 %}
+    {% if data.carousel_items | length > 0 %}
       <div class="row">
         <div class="col-xs-12">
           <h1>{{ _("Dataviz Gallery") }}</h1>
