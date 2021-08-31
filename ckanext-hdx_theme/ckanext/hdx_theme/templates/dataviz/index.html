@@ -29,7 +29,7 @@
     </div>
     <div>
       <div class="">
-        <input class="text-search" autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all dataviz ..." value="{{searchValue}}">
+        <input class="text-search headerSearchBox" autocomplete="off" id="headerSearchMobile" name="q" class="header-search" type="text" placeholder="Search all dataviz ..." value="{{searchValue}}">
       </div>
 
       {% snippet 'search/snippets/package_search_order.html', sort_param = data.sort_by_selected, class='mobile-order-by' %}
@@ -108,21 +108,25 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="dataset-filter-start list-header">
-          <span class="mL15 list-header-title">{{ _("Dataviz") }} [{{ data.total_items }}]</span>
+          <span class="mL15 list-header-title">{{ _("Dataviz") }} [{{ data.page.item_count }}]</span>
           <span class="">
               {% set searchValue = h.hdx_get_request_param('q', query) %}
-              <input id="headerSearch" class="header-search search mL30" type="text" name="q" placeholder="{{placeholder}}" value="{{searchValue}}">
+              <input id="headerSearch" class="header-search headerSearchBox search mL30" type="text" name="q" placeholder="{{placeholder}}" value="{{searchValue}}">
           </span>
           {% set limits = [9, 18, 27] %}
-          {# set limit_param = request.params.get('ext_page_size') #}
+          {% set limit_param = request.args.get('ext_page_size') %}
+          {% set sort_param = request.args.get('sort') %}
           {% set limit_selected = limit_param if limit_param else 9 %}
           <span class="mL45 list-header-showall filter-pagination">
               Show
               {% for value in limits %}
-                  <span><input id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}><label for="ext_page_size_{{value}}">{{value}}</label></span>
+                  <span>
+                    <input id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}>
+                    <label for="ext_page_size_{{value}}">{{value}}</label>
+                  </span>
               {% endfor %}
           </span>
-          {% snippet 'search/snippets/package_search_order.html', sort_param = c.sort_by_selected, admin_view=admin_view, used_default_sort_by=c.used_default_sort_by %}
+          {% snippet 'search/snippets/package_search_order.html', sort_param = sort_param, admin_view=admin_view, used_default_sort_by='metadata_created%20desc' %}
           <div class="show-filters">
             <a href="#" onclick="$('.mobile-facets').show();">
               Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}
@@ -169,6 +173,8 @@
   {{ super() }}
   {% asset 'hdx_theme/search-light-styles' %}
   {% asset 'hdx_theme/dataviz-styles' %}
+  {% asset 'hdx_theme/dataset-search-scripts' %}
+  {% asset 'hdx_theme/search-scripts' %}
   {#  {% resource 'hdx_theme/jquery.highlight' %}#}
 
 {% endblock %}

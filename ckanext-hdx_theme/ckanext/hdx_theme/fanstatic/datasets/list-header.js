@@ -63,7 +63,7 @@ $(document).ready(function() {
         window.location = location;
     });
 
-    $("#headerSearch").on("keydown", function(event){
+    $("#headerSearch, .headerSearchBox").on("keydown", function(event){
         if (event.keyCode == '13'){
             var location = getFilterUrlNew(false);
             console.log("Refresh to: " + location);
