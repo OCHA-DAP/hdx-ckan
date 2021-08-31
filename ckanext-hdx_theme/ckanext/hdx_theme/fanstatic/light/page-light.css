@@ -1715,6 +1715,36 @@ hr.dotted {
   color: #00447a;
 }
 /* END DropDown style */
+/* Items per page style - based on orderDropdown */
+.control-items-per-page.control-order-by {
+  padding-right: 20px;
+}
+.control-items-per-page.control-order-by label {
+  margin-right: 5px;
+}
+.control-items-per-page.control-order-by .dropdown .dropdown-menu {
+  min-width: initial;
+}
+.control-items-per-page.control-order-by .dropdown .dropdown-menu li {
+  line-height: 20px;
+}
+.control-items-per-page.control-order-by .dropdown .dropdown-menu li:hover,
+.control-items-per-page.control-order-by .dropdown .dropdown-menu li:active {
+  background-color: #f5f5f5;
+}
+.control-items-per-page.control-order-by .dropdown .dropdown-menu li input[type="radio"] {
+  visibility: hidden;
+  position: absolute;
+}
+.control-items-per-page.control-order-by .dropdown .dropdown-menu li label {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #333333;
+  font-size: 14px;
+  padding: 3px 15px;
+  text-align: right;
+  width: 90%;
+}
+/* END - Items per page  style */
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
 .container,
 .navbar-static-top .container,
