@@ -98,14 +98,15 @@ $(document).ready(function() {
     });
 
     if (!filterConfig.showFilter) {
-        $("#show-filter-toggle").prop("checked", false);
-        $("#show-filter-toggle").change();
+        var toggleEl = $('#show-filter-toggle');
+        toggleEl.prop("checked", false);
+        toggleEl.change();
     }
     $.each(filterConfig.facets, function(key, val){
         if (!val){
             $(".filter-category .categ-title[data-value='"+ key +"']").click();
         }
-    })
+    });
 
 });
 

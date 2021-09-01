@@ -173,6 +173,10 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
     search_logic = GroupSearchLogic(id=country_code)
     fq = 'groups:"{}"'.format(country_code)
     search_logic._search(package_type, additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
+    archived_url_helper = search_logic.add_archived_url_helper()
+    redirect_result = archived_url_helper.redirect_if_needed()
+    if redirect_result:
+        return redirect_result
 
     # non_filtered_facet_info = search_logic._prepare_facets_info(query_result.get('search_facets'), {}, {},
     #                                                     facets, query_result.get('count'), u'')

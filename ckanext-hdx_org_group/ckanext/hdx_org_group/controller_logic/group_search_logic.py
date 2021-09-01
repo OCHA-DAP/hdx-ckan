@@ -22,3 +22,7 @@ class GroupSearchLogic(sl.SearchLogic):
         suffix = '#datasets-section'
         url = h.url_for('hdx_light_group.light_read', id=self.group_id)
         return sl.url_with_params(url, params) + suffix
+
+    def _current_url(self):
+        url = h.url_for('hdx_light_group.light_read', id=self.group_id)
+        return url
