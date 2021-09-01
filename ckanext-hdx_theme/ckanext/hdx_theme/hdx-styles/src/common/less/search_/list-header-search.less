@@ -31,6 +31,9 @@
         font-size: 14px;
         //color: @defaultLinkColor;
         text-decoration: none;
+        &.disabled {
+          color: @grayColor;
+        }
       }
       a.blue-header-label {
         &:active, &:hover, &:focus {
@@ -67,6 +70,11 @@
 
   .list-header-showall {
     color: @darkGrayColor;
+    &.filter-hide-show {
+      .gothamBoldFont(12px);
+      color: @grayColor;
+      .letter-spacing-3;
+    }
     > span {
       &:before {
         content: "|";
@@ -129,6 +137,11 @@
 /* Mobile / Media query */
 @media (max-width: @cut-point-mobile-l) {
   .list-header .list-header-title .archived-explanation {
+    display: none;
+  }
+}
+@media (max-width: @cut-point-mobile-m) {
+  .list-header .list-header-title .archived-mobile-hideable {
     display: none;
   }
 }

@@ -13,13 +13,17 @@ Example:
   {% if archived_url_helper.show_unarchived_link %}
     <a href="{{ archived_url_helper.unarchived_url }}" class="blue-header-label">{{ _("Datasets") }} [{{ archived_url_helper.num_of_unarchived }}]</a>
   {% else %}
-    <span class="blue-header-label">{{ _("Datasets") }} [{{ archived_url_helper.num_of_unarchived }}]</span>
+    <span class="blue-header-label {{ 'disabled' if archived_url_helper.unarchived_disabled else '' }}">{{ _("Datasets") }} [{{ archived_url_helper.num_of_unarchived }}]</span>
   {% endif %}
   |
   {% if archived_url_helper.show_archived_link %}
-    <a href="{{ archived_url_helper.archived_url }}" class="blue-header-label">{{ _("Archived Datasets") }}[{{ archived_url_helper.num_of_archived }}]</a>
+    <a href="{{ archived_url_helper.archived_url }}" class="blue-header-label">
+      {{ _("Archived") }} <span class="archived-mobile-hideable">{{ _("Datasets") }}</span>[{{ archived_url_helper.num_of_archived }}]
+    </a>
   {% else %}
-    <span class="blue-header-label">{{ _("Archived Datasets") }}[{{ archived_url_helper.num_of_archived }}]</span>
+    <span class="blue-header-label {{ 'disabled' if archived_url_helper.archived_disabled else '' }}">
+      {{ _("Archived") }} <span class="archived-mobile-hideable">{{ _("Datasets") }}</span>[{{ archived_url_helper.num_of_archived }}]
+    </span>
   {% endif %}
   <a class="blue-header-label archived-explanation" href="javascript:void(0)" title="{{ archived_url_helper.archived_explanation }}"
      data-module="bs_tooltip" data-toggle="tooltip">[?]</a>

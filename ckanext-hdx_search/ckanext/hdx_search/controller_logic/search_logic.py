@@ -734,6 +734,18 @@ class ArchivedUrlHelper(object):
             return False
         return True
 
+    @property
+    def archived_disabled(self):
+        if self.num_of_archived > 0:
+            return False
+        return True
+
+    @property
+    def unarchived_disabled(self):
+        if self.num_of_unarchived > 0:
+            return False
+        return True
+
     def redirect_if_needed(self):
         if not self.on_archived_page and self.num_of_unarchived == 0 and self.num_of_archived > 0:
             result = redirect(self.archived_url)
