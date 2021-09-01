@@ -875,16 +875,16 @@ group-scripts:
     preload:
       - hdx_theme/group-styles
   contents:
-    - browse/world_json.js
-    - browse/countries.js
-    - browse/browse.js
+    - browse_/world_json.js
+    - browse_/countries.js
+    - browse_/browse.js
     - group/group-init.js
 
 group-styles:
   output: ckanext-hdx_theme/%(version)s_group-styles.css
   <<: *common-css
   contents:
-    - browse/browse.css
+    - browse_/browse.css
     - css/humanitarian_icons.css
 
 group-light-styles:
@@ -899,15 +899,15 @@ eaa-map-scripts:
     preload:
       - hdx_theme/eaa-map-styles
   contents:
-    - browse/world_json.js
-    - browse/countries.js
+    - browse_/world_json.js
+    - browse_/countries.js
     - eaa/eaa-map.js
     - eaa/eaa-init.js
 
 eaa-map-styles:
   output: ckanext-hdx_theme/%(version)s_eaa-map-styles.css
   contents:
-    - browse/browse.css
+    - browse_/browse.css
     - eaa/eaa.css
 
 organizations-scripts:
