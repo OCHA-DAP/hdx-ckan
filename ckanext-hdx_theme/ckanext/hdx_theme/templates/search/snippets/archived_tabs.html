@@ -1,0 +1,30 @@
+{# Shows the "Datasets [0] | Archived Datasets[0]" tabs in the blue header
+
+packages       - A list of packages to display.
+
+
+Example:
+
+{% snippet 'search/snippets/archived_tabs.html', archived_url_helper=full_facet_info.archived_url_helper %}
+
+#}
+
+<span class="mL15 counters-blue-header-title">
+  {% if archived_url_helper.show_unarchived_link %}
+    <a href="{{ archived_url_helper.unarchived_url }}" class="blue-header-label">{{ _("Datasets") }} [{{ archived_url_helper.num_of_unarchived }}]</a>
+  {% else %}
+    <span class="blue-header-label {{ 'disabled' if archived_url_helper.unarchived_disabled else '' }}">{{ _("Datasets") }} [{{ archived_url_helper.num_of_unarchived }}]</span>
+  {% endif %}
+  |
+  {% if archived_url_helper.show_archived_link %}
+    <a href="{{ archived_url_helper.archived_url }}" class="blue-header-label">
+      {{ _("Archived") }} <span class="archived-mobile-hideable">{{ _("Datasets") }}</span>[{{ archived_url_helper.num_of_archived }}]
+    </a>
+  {% else %}
+    <span class="blue-header-label {{ 'disabled' if archived_url_helper.archived_disabled else '' }}">
+      {{ _("Archived") }} <span class="archived-mobile-hideable">{{ _("Datasets") }}</span>[{{ archived_url_helper.num_of_archived }}]
+    </span>
+  {% endif %}
+  <a class="blue-header-label archived-explanation" href="javascript:void(0)" title="{{ archived_url_helper.archived_explanation }}"
+     data-module="bs_tooltip" data-toggle="tooltip">[?]</a>
+</span>

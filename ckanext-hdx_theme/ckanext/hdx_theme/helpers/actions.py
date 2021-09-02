@@ -115,17 +115,34 @@ def _refresh_pkg_count_on_org_list(orgs):
     query_params = {
         'start': 0,
         'rows': 1,
-        # 'fl': ['id', 'name'],
         'fl': 'id name',
-        'facet.field': ['organization'],
+        'facet': 'true',
+        'facet.pivot': ['organization,archived'],
         'facet.limit': 2000,
     }
     # search_result = tk.get_action('package_search')({}, query_params)
     query = search.query_for(model.Package)
     query.run(query_params)
-    org_name_to_pkg_count = query.facets.get('organization', {})
-    for org in orgs:
-        org['package_count'] = org_name_to_pkg_count.get(org['name'], 0)
+    org_name_to_pkg_count = query.raw_response.get('facet_counts', {}).get('facet_pivot', {}).get(
+        'organization,archived', {})
+    org_name_to_pkg_count_dict = {}
+    for org in org_name_to_pkg_count:
+        org_name_to_pkg_count_dict[org.get('value')] = org
+
+    try:
+        for org in orgs:
+            _org = org_name_to_pkg_count_dict.get(org['name'])
+            if _org and 'pivot' in _org:
+                for item in _org.get('pivot'):
+                    if item.get('field') == u'archived' and item.get('value') == 'false':
+                        org['package_count'] = item.get('count', 0)
+                    elif item.get('field') == u'archived' and item.get('value') == 'true':
+                        org['archived_package_count'] = item.get('count', 0)
+            else:
+                org['package_count'] = 0
+                org['archived_package_count'] = 0
+    except Exception as ex:
+        log.info(ex)
 
 
 def invalidate_cache_for_organizations(context, data_dict):

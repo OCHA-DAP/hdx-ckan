@@ -113,7 +113,7 @@ def light_read(id):
     return _read('light/organization/read.html', id, True, False)
 
 
-def _populate_template_data(org_dict):
+def _fetch_template_data(org_dict):
     user = c.user or c.author
     ignore_capacity_check = False
     is_org_member = (user and new_authz.has_user_permission_for_group_or_org(org_dict.get('name'), user, 'read'))
@@ -123,7 +123,8 @@ def _populate_template_data(org_dict):
     search_logic = OrganizationSearchLogic(id=org_dict.get('name'))
     fq = 'organization:"{}"'.format(org_dict.get('name'))
     search_logic._search(package_type, additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
-    org_dict['template_data'] = search_logic.template_data
+
+    return search_logic
 
 
 def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
@@ -144,9 +145,9 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         try:
             org_meta.fetch_all()
             org_dict = org_meta.org_dict
-        except NotFound, e:
+        except NotFound as e:
             abort(404)
-        except NotAuthorized, e:
+        except NotAuthorized as e:
             abort(403, _('Not authorized to see this page'))
     except NotAuthorized:
         abort(404, _('Page not found'))
@@ -154,9 +155,16 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         abort(404, _('Page not found'))
 
     if org_dict:
-        _populate_template_data(org_dict)
+        search_logic = _fetch_template_data(org_dict)
+        org_dict['template_data'] = search_logic.template_data
         org_dict['datasets_num'] = org_meta.datasets_num
         org_dict['custom_sq_logo_url'] = org_meta.custom_sq_logo_url
+
+
+        archived_url_helper = search_logic.add_archived_url_helper()
+        redirect_result = archived_url_helper.redirect_if_needed()
+        if redirect_result:
+            return redirect_result
 
     template_data = {
         'org_dict': org_dict,
@@ -169,6 +177,6 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
 hdx_org.add_url_rule(u'', view_func=index)
 hdx_light_org.add_url_rule(u'', view_func=light_index)
 hdx_light_org.add_url_rule(u'/<id>', view_func=light_read)
-hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_read)
-hdx_light_org.add_url_rule(u'/stats/<id>', view_func=light_read)
-hdx_light_org.add_url_rule(u'/members/<id>', view_func=light_read)
+# hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_read)
+# hdx_light_org.add_url_rule(u'/stats/<id>', view_func=light_read)
+# hdx_light_org.add_url_rule(u'/members/<id>', view_func=light_read)

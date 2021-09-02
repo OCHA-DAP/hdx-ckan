@@ -244,8 +244,10 @@ class PagesController(HDXSearchController):
 
         package_type = 'dataset'
         full_facet_info = self._search(package_type, pager_url, **search_params)
-
-        c.other_links['current_page_url'] = h.url_for(mapping_name, id=page_id)
+        base_url = h.url_for(mapping_name, id=page_id)
+        c.other_links['current_page_url'] = base_url
+        archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
+        archived_url_helper.redirect_if_needed()
 
         return full_facet_info
 
