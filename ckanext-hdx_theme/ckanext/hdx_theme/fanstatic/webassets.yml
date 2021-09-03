@@ -897,6 +897,7 @@ eaa-map-scripts:
   output: ckanext-hdx_theme/%(version)s_eaa-map-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/eaa-map-styles
   contents:
     - browse_/world_json.js
