@@ -88,11 +88,9 @@ def search():
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
-    package_type = 'dataset'
-
     search_logic = SearchLogic()
 
-    search_logic._search(package_type, use_solr_collapse=True)
+    search_logic._search(use_solr_collapse=True)
 
     archived_url_helper = search_logic.add_archived_url_helper()
     redirect_result = archived_url_helper.redirect_if_needed()

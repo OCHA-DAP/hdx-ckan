@@ -26,6 +26,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'hdx_pages')
 
+
     def before_map(self, map):
         map.connect('create_page', '/page/new',
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',

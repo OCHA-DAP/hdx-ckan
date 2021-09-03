@@ -17,7 +17,7 @@ Example:
 {% if admin_view %} {% set nothing=sorting.insert(0, (_('Due for Update'), 'due_date asc')) %}{% endif %}
 {% set extra_class = class if class else 'pull-right' %}
 
-{% set sorting_selected = sort_param if sort_param else 'score desc, metadata_modified desc' %}
+{% set sorting_selected = sort_param if sort_param else h.HDX_CONST('DEFAULT_SORTING') %}
 <div class="form-select control-group control-order-by {{extra_class}}">
   <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
   <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">

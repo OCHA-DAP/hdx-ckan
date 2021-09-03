@@ -15,7 +15,7 @@ class WrongPermissionNameException(BaseHdxException):
 class Permissions(object):
 
     PERMISSION_MANAGE_CAROUSEL = 'permission_manage_carousel'
-    LABEL_PERMISSION_MANAGE_CAROUSEL = 'Manage Carousel'
+    LABEL_PERMISSION_MANAGE_CAROUSEL = 'Manage Carousel and Dataviz Gallery'
     PERMISSION_MANAGE_COD = 'permission_manage_cod'
     LABEL_PERMISSION_MANAGE_COD = 'Manage COD'
     PERMISSION_MANAGE_CRISIS = 'permission_manage_crisis'
@@ -51,8 +51,6 @@ class Permissions(object):
         '''
         :param context:
         :type context: dict
-        :param user_name_or_id:
-        :type user_name_or_id: str
         :param permissions_list:
         :type permissions_list: list of str
         '''
