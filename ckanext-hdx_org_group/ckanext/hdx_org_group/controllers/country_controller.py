@@ -401,6 +401,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         locations = full_facet_info.get('facets', {}).get('groups', {}).get('items', [])
         locations[:] = [loc for loc in locations if loc.get('name', '') != country_code]
 
-        c.other_links['current_page_url'] = h.url_for('country_read', id=country_code)
+        base_url = h.url_for('country_read', id=country_code)
+        c.other_links['current_page_url'] = base_url
+        archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
+        archived_url_helper.redirect_if_needed()
 
         return full_facet_info

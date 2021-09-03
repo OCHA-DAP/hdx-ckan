@@ -22,3 +22,7 @@ class OrganizationSearchLogic(sl.SearchLogic):
         suffix = '#datasets-section'
         url = h.url_for('hdx_light_org.light_read', id=self.org_id)
         return sl.url_with_params(url, params) + suffix
+
+    def _current_url(self):
+        url = h.url_for('hdx_light_org.light_read', id=self.org_id)
+        return url

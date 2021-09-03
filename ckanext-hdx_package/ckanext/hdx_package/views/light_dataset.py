@@ -8,7 +8,7 @@ import ckan.logic as logic
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_pages as cp_h
-from ckanext.hdx_search.controller_logic.search_logic import SearchLogic
+from ckanext.hdx_search.controller_logic.search_logic import SearchLogic, ArchivedUrlHelper
 from ckanext.hdx_theme.util.http_exception_helper import catch_http_exceptions
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
@@ -91,6 +91,11 @@ def search():
     search_logic = SearchLogic()
 
     search_logic._search(use_solr_collapse=True)
+
+    archived_url_helper = search_logic.add_archived_url_helper()
+    redirect_result = archived_url_helper.redirect_if_needed()
+    if redirect_result:
+        return redirect_result
 
     data_dict = {'data': search_logic.template_data}
     return render(u'light/search/search.html', data_dict)

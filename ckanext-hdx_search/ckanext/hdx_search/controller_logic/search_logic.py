@@ -90,6 +90,15 @@ class SearchLogic(object):
         self.package_type = package_type
         self.template_data = DictProxy()
 
+    def add_archived_url_helper(self):
+        full_facet_info = self.template_data.get('full_facet_info', {})
+        base_url = self.template_data['other_links']['current_page_url']
+        archived_url_helper = ArchivedUrlHelper(full_facet_info.get('num_of_unarchived'),
+                                                full_facet_info.get('num_of_archived'),
+                                                base_url, self._params_nopage())
+        self.template_data['full_facet_info']['archived_url_helper'] = archived_url_helper
+        return archived_url_helper
+
     def _search(self, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
@@ -145,14 +154,14 @@ class SearchLogic(object):
                         if param not in tagged_fq_dict:
                             tagged_fq_dict[param] = []
                         tagged_fq_dict[param].append(u'{}:"{}"'.format(param, value))
-                        self.append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
+                        self._append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
                     elif param == UPDATE_STATUS_URL_FILTER:
-                        self.append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
+                        self._append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
                                      'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
                             featured_filters_set = True
-                        if param == 'ext_archived':
+                        if param == 'ext_archived' and value == '1':
                             hide_archived = False
                         search_extras[param] = value
 
@@ -174,8 +183,8 @@ class SearchLogic(object):
                 solr_expand = 'true'
 
             # filtering archived datasets should happen after we decide whether to collapse/batch results
-            if hide_archived:
-                fq_list.append(self._create_filter_query('archived', 'archived', '-extras_archived:"true"'))
+            fq_list.append(self._create_filter_query(
+                'archived', 'archived', '-extras_archived:"true"' if hide_archived else 'extras_archived:"true"'))
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
@@ -232,6 +241,7 @@ class SearchLogic(object):
         full_facet_info['results'] = self.template_data.get('page').collection if 'page' in self.template_data else []
         self.template_data['full_facet_info'] = full_facet_info
 
+
     def _get_pager_function(self, package_type):
         def pager_url(q=None, page=None):
             params = list(self._params_nopage())
@@ -239,7 +249,7 @@ class SearchLogic(object):
             return self._search_url(params, package_type)
         return pager_url
 
-    def append_selected_facet_to_group(self, group, param, value):
+    def _append_selected_facet_to_group(self, group, param, value):
         if param not in group:
             group[param] = [value]
         else:
@@ -261,6 +271,7 @@ class SearchLogic(object):
             'expand': expand,
             'expand.rows': 1,  # we anyway don't show the expanded datasets, but doesn't work with 0
             'fq': fq.strip(),
+            'f.extras_archived.facet.missing': 'true',
             'facet.field': facet_keys,
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
             'facet.limit': 2000,
@@ -469,6 +480,7 @@ class SearchLogic(object):
         num_of_showcases = 0
         num_of_administrative_divisions = 0
         num_of_archived = 0
+        num_of_unarchived = 0
 
         new_cod_filters_enabled = are_new_cod_filters_enabled()
 
@@ -513,6 +525,8 @@ class SearchLogic(object):
                 # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
                 num_of_archived = next(
                     (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+                num_of_unarchived = sum(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
                 if category_key == 'vocab_Topics':
                     num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
@@ -550,10 +564,10 @@ class SearchLogic(object):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
-        archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
-                                 'but remains available primarily for historical purposes')
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
-                                          num_of_archived, search_extras, explanation=archived_explanation)
+        # archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
+        #                          'but remains available primarily for historical purposes')
+        # self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
+        #                                   num_of_archived, search_extras, explanation=archived_explanation)
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
@@ -571,6 +585,10 @@ class SearchLogic(object):
             )
         )
         result['num_of_total_items'] = total_count
+        result['num_of_archived'] = num_of_archived
+        result['num_of_unarchived'] = num_of_unarchived
+
+        # result['archived_explanation'] = archived_explanation
 
         result['query_selected'] = True if query and query.strip() else False
 
@@ -674,3 +692,62 @@ class DictProxy(dict):
     def __setattr__(self, name, value):
         self[name] = value
 
+
+class ArchivedUrlHelper(object):
+
+    archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
+                             'but remains available primarily for historical purposes')
+
+    def __init__(self, num_of_unarchived, num_of_archived, base_search_url, params_no_page):
+        super(ArchivedUrlHelper, self).__init__()
+        self.num_of_unarchived = num_of_unarchived
+        self.num_of_archived = num_of_archived
+        self.url_for_search = base_search_url
+        self.on_archived_page = next((True for tpl in params_no_page if tpl[0] == 'ext_archived'), False)
+        self.params = (tpl for tpl in params_no_page if tpl[0] != 'ext_archived')
+
+    @property
+    def archived_url(self):
+        if self.num_of_archived > 0:
+            params = [('ext_archived', '1')]
+            params.extend(self.params)
+            url = url_with_params(self.url_for_search, params)
+            return url
+        return None
+
+    @property
+    def show_archived_link(self):
+        if self.on_archived_page or self.num_of_archived == 0:
+            return False
+        return True
+
+    @property
+    def unarchived_url(self):
+        if self.num_of_unarchived > 0:
+            url = url_with_params(self.url_for_search, self.params)
+            return url
+        return None
+
+    @property
+    def show_unarchived_link(self):
+        if not self.on_archived_page or self.num_of_unarchived == 0:
+            return False
+        return True
+
+    @property
+    def archived_disabled(self):
+        if self.num_of_archived > 0:
+            return False
+        return True
+
+    @property
+    def unarchived_disabled(self):
+        if self.num_of_unarchived > 0:
+            return False
+        return True
+
+    def redirect_if_needed(self):
+        if not self.on_archived_page and self.num_of_unarchived == 0 and self.num_of_archived > 0:
+            result = redirect(self.archived_url)
+            return result
+        return None

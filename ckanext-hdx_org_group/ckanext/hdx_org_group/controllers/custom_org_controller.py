@@ -7,6 +7,8 @@ import logging
 import collections
 import json
 
+from paste.httpexceptions import HTTPFound
+
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
@@ -193,7 +195,9 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             #     tab_results, all_results, tab, req_params)
             if tab == 'activities':
                 activities = self.get_activity_stream(org_info.get('id', org_id))
-        except Exception, e:
+        except HTTPFound as e:
+            raise
+        except Exception as e:
             log.warning(e)
             hdx_helpers.add_error('Fetching data problem', str(e), errors)
             if 'parameter must be an integer' in e.message:
@@ -429,7 +433,10 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                                        ignore_capacity_check=ignore_capacity_check)
         full_facet_info.get('facets', {}).pop('organization', {})
 
-        c.other_links['current_page_url'] = h.url_for('organization_read', id=org_code)
+        base_url = h.url_for('organization_read', id=org_code)
+        c.other_links['current_page_url'] = base_url
+        archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
+        archived_url_helper.redirect_if_needed()
 
         return full_facet_info
 

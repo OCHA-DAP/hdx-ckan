@@ -329,6 +329,10 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
         locations = full_facet_info.get('facets', {}).get('groups', {}).get('items', [])
         locations[:] = [loc for loc in locations if loc.get('name', '') != country_code]
+        base_url = h.url_for('country_read', id=country_code)
+        c.other_links['current_page_url'] = base_url
+        archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
+        archived_url_helper.redirect_if_needed()
 
         c.other_links['current_page_url'] = h.url_for('show_custom_country', id=country_code)
 

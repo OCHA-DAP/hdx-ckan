@@ -58,7 +58,9 @@ def _read(id, type, show_switch_to_desktop, show_switch_to_mobile):
     except NotFound:
         abort(404, _('Page not found'))
 
-    _populate_template_data(page_dict)
+    redirect_needed = _populate_template_data(page_dict)
+    if redirect_needed:
+        return redirect_needed
     template_data = {
         'page_dict': page_dict,
         'page_has_desktop_version': show_switch_to_desktop,
@@ -79,6 +81,11 @@ def _populate_template_data(page_dict):
                 cp_search_logic = CustomPagesSearchLogic(page_dict.get('name'), page_dict.get('type'))
                 search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'), saved_filters)
                 cp_search_logic._search(**search_params)
+                archived_url_helper = cp_search_logic.add_archived_url_helper()
+                redirect_result = archived_url_helper.redirect_if_needed()
+                if redirect_result:
+                    return redirect_result
+
                 section['template_data'] = cp_search_logic.template_data
                 log.info(saved_filters)
                 # c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
@@ -94,7 +101,7 @@ def _populate_template_data(page_dict):
         # if len(sections) > 0 and sections[0].get('type', '') == 'map':
         #     page_dict['title_section'] = sections[0]
         #     del sections[0]
-    return page_dict
+    return None
 
 
 hdx_light_event.add_url_rule(u'/<id>', view_func=read_event)
