@@ -105,9 +105,9 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
 
         fq = u'+text:ebola '
 
-        full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
-
+        c.full_facet_info = full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
         c.other_links['current_page_url'] = h.url_for('show_crisis')
+        archived_url_helper = self.add_archived_url_helper(c.full_facet_info, c.other_links['current_page_url'])
 
         return full_facet_info
 
