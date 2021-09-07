@@ -190,6 +190,10 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         Display basic dashboard, creates a filter for organizations
         to pass onto the template that is not included in CKAN core
         """
+        if not c.user:
+            h.flash_error(_(u'Not authorized to see this page'))
+            return h.redirect_to(u'home.index')
+
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'for_view': True}
@@ -228,6 +232,10 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         Dashboard tab for datasets. Modified to add the ability to change
         the order and ultimately filter datasets displayed
         """
+
+        if not c.user:
+            h.flash_error(_(u'Not authorized to see this page'))
+            return h.redirect_to(u'home.index')
 
         context = {'model': model, 'session': model.Session, 'for_view': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
