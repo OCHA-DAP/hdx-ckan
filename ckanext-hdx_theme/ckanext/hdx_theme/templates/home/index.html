@@ -1,5 +1,10 @@
 {% extends "page.html" %}
 
+{%- block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/homepage-styles' %}
+{% endblock %}
+
 {% set carouselItems = h.hdx_get_carousel_list() %}
 {% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Welcome") %}
 

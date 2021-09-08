@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{%- block styles %}
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
+  </style>
+  {{ super() }}
+  {% asset 'hdx_theme/page-light-styles' %}
+  {% if c.userobj %}
+    {% asset 'hdx_theme/onboarding-bulk-user-styles' %}
+  {% else %}
+    {% asset 'hdx_theme/onboarding-bulk-anon-styles' %}
+  {% endif %}
+{% endblock %}
+
 {% block meta %}
     {{ super() }}
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -109,10 +122,3 @@
   {{ super() }}
 {% endblock -%}
 
-{%- block styles %}
-  <style>
-    @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
-  </style>
-  {{ super() }}
-  {% asset 'hdx_theme/page-light-styles' %}
-{% endblock %}

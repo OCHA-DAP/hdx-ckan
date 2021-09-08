@@ -1,6 +1,14 @@
 {% extends "page.html" %}
-
 {% import 'macros/form.html' as form %}
+
+{% block styles %}
+    {{ super() }}
+    {% asset 'hdx_theme/contribute-flow-styles' %}
+    {% asset 'hdx_theme/user-waiting-styles' %}
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css">
+{% endblock %}
+
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ analytics.organizationName }}{% endblock %}
@@ -757,10 +765,6 @@
 </div>
 {% endblock %}
 
-{% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css">
-{% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="2ixptqvj5hknpzs"></script>
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>

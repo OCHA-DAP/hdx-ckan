@@ -1,5 +1,11 @@
 {% extends "crisis/crisis-base.html" %}
 {% set page_has_mobile_version = True %}
+
+{% block styles %}
+  {{ super() }}
+    {% asset 'hdx_theme/activity-stream-styles' %}
+{% endblock %}
+
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
 {% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
@@ -365,7 +371,6 @@
 
 {% block scripts2 %}
     {{ super() }}
-    {% asset 'hdx_theme/activity-stream-styles' %}
     {% asset 'hdx_theme/country-scripts' %}
     {% asset 'hdx_theme/hdx-show-more' %}
   {% snippet "widget/banner/hdx-dataset-banner.html" %}

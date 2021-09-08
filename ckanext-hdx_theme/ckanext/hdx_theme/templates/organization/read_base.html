@@ -1,5 +1,13 @@
 {% extends "page.html" %}
 {% set page_has_mobile_version = True %}
+
+{% block styles %}
+  {{ super() }}
+
+  {% asset 'hdx_theme/organization-styles' %}
+  {% snippet "widget/banner/hdx-dataset-banner.html" %}
+{% endblock %}
+
 {% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -36,9 +44,3 @@
     {%  endif %}
 {% endblock %}
 
-{% block styles %}
-  {{ super() }}
-
-  {% asset 'hdx_theme/organization-styles' %}
-  {% snippet "widget/banner/hdx-dataset-banner.html" %}
-{% endblock %}

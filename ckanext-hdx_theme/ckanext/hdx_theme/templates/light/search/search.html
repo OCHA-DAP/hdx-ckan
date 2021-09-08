@@ -1,4 +1,10 @@
 {% extends "page_light.html" %}
+{%- block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/dataset-search-scripts' %}
+  {% asset 'hdx_theme/dataset-styles' %}
+  {% asset 'hdx_theme/search-light-styles' %}
+{% endblock -%}
 
 {% block links %}
   <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
@@ -18,8 +24,6 @@
 {%- block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/search-scripts' %}
-  {% asset 'hdx_theme/search-light-styles' %}
-  {#{% resource 'hdx_theme/jquery.highlight' %}#}
   {% asset 'hdx_theme/dataset-search-scripts' %}
   {% asset 'hdx_theme/dataset-scripts' %}
 
