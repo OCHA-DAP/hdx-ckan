@@ -140,8 +140,7 @@ def buildIndex(path):
     #               'url': '//data.humdata.org/mpx/#/name/lake-chad ', 'type': 'visualization'})
 
     index.append({'title': 'WFP Food Market Prices',
-                  'url': '//data.humdata.org/widget/WFP?type=WFP&datastore_id=bd88a565-bf6f-4827-b07b-fb3a65bbb01a&data_link_url=https%3A%2F%2Fdata.humdata.org%2Fdataset%2Fwfp-food-prices&embedded=true&title=Food+Market+Prices  ', 'type': 'visualization'})
-
+                  'url': '//data.humdata.org/visualization/wfp-food-price/', 'type': 'visualization'})
 
     ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
     # topic = Session.execute("select id from vocabulary where name='Topics'")
