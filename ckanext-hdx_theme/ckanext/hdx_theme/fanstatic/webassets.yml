@@ -33,6 +33,18 @@ ckan:
     - notifications/hdx_notifications_main.js
     - metadata-button.js
 
+page-common-styles:
+  output: ckanext-hdx_theme/%(version)s_page-common-styles.css
+  extra:
+    preload:
+      - vendor/select2-css
+      - hdx_theme/banner-styles
+      - hdx_theme/search-styles
+  contents:
+    - vendor/bootstrap/css/bootstrap.css
+    - css/hdx-icons.css
+    - css/Humanitarian-Icons-v02.css
+
 page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_page-scripts.js
@@ -51,14 +63,12 @@ page-styles:
   <<: *common-css
   extra:
     preload:
-      - vendor/select2-css
+      - hdx_theme/page-common-styles
   contents:
-    - vendor/bootstrap/css/bootstrap.css
     - base/base.css
     - base/header.css
-    - css/hdx-icons.css
-    - css/Humanitarian-Icons-v02.css
     - widget/contribute/details.css
+
 page-light-scripts:
   output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
   <<: *common-js
@@ -71,10 +81,10 @@ page-light-scripts:
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
   <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/page-common-styles
   contents:
-    - vendor/bootstrap/css/bootstrap.css
-    - css/hdx-icons.css
-    - css/Humanitarian-Icons-v02.css
     - light/page-light.css
 
 bootstrap-styles:
@@ -222,6 +232,9 @@ onboarding-scripts:
 
 onboarding-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-styles.css
+  extra:
+    preload:
+      - hdx_theme/popup-styles
   contents:
     - widget/onboarding/onboarding.css
     - widget/onboarding/two-column.css
@@ -229,6 +242,26 @@ onboarding-styles:
     - widget/onboarding/logout.css
     - widget/onboarding/login.css
     - widget/onboarding/signup.css
+
+onboarding-bulk-user-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-bulk-user-styles.css
+  extra:
+    preload:
+      - hdx_theme/onboarding-styles
+      - hdx_theme/onboarding-registered-styles
+      - hdx_theme/onboarding-follow-styles
+      - hdx_theme/onboarding-invite-styles
+      - hdx_theme/onboarding-done-styles
+      - hdx_theme/onboarding-select-org-styles
+      - hdx_theme/onboarding-survey-styles
+
+onboarding-bulk-anon-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-bulk-anon-styles.css
+  extra:
+    preload:
+      - hdx_theme/onboarding-styles
+      - hdx_theme/onboarding-password-styles
+      - hdx_theme/onboarding-survey-styles
 
 onboarding-password-scripts:
   <<: *common-js
@@ -445,6 +478,12 @@ dataset-scripts:
 
 dataset-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-styles.css
+  extra:
+    preload:
+      - hdx_theme/dataset-search-styles
+      - hdx_theme/requestdata-styles
+      - hdx_theme/banner-styles
+      - hdx_theme/charting-styles
   contents:
       - datasets/dataset.css
       - datasets/datasets.css
@@ -476,6 +515,16 @@ dataset-diff-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-diff-styles.css
   contents:
       - datasets/diff.css
+
+dataset-read-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-read-styles.css
+  extra:
+    preload:
+      - hdx_theme/contact-contributor-styles
+      - hdx_theme/group-message-styles
+      - requestdata/main-styles
+      - hdx_theme/resource-list-styles
+      - hdx_theme/activity-stream-styles
 
 dataset-light-scripts:
   <<: *common-js
@@ -810,7 +859,7 @@ country-topline-scripts:
       - hdx_theme/country-topline-styles
       - hdx_theme/country-scripts
       - hdx_theme/charting-scripts
-      - hdx_theme/homepage-scripts
+      # this should not load here - hdx_theme/homepage-scripts
 
 country-topline-styles:
   output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
@@ -879,7 +928,7 @@ group-form-scripts:
   contents:
     - custom_location.js
 
-group-scripts:
+group-list-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_group-scripts.js
   extra:
@@ -891,15 +940,29 @@ group-scripts:
     - browse_/browse.js
     - group/group-init.js
 
-group-styles:
+group-list-styles:
   output: ckanext-hdx_theme/%(version)s_group-styles.css
   <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/charting-styles
   contents:
     - browse_/browse.css
     - css/humanitarian_icons.css
 
 group-light-styles:
   output: ckanext-hdx_theme/%(version)s_group-light-styles.css
+  extra:
+    preload:
+      - hdx_theme/charting-styles
+      - hdx_theme/group-styles
+      - hdx_theme/topline-rw-styles
+      - hdx_theme/requestdata-styles
+      - hdx_theme/dataset-search-styles
+      - hdx_theme/country-styles
+      - hdx_theme/dataset-styles
+      - hdx_theme/dataset-light-styles
+      - hdx_theme/country-topline-styles
   contents:
     - light/group/group-light.css
 
@@ -938,6 +1001,11 @@ organizations-styles:
 
 organization-styles:
   output: ckanext-hdx_theme/%(version)s_organization-styles.css
+  extra:
+    preload:
+      - hdx_theme/group-message-styles
+      - hdx_theme/dataset-search-styles
+      - hdx_theme/requestdata-styles
   contents:
     - organization_/organization-read.css
 
@@ -953,6 +1021,12 @@ organization-create-styles:
 
 organization-light-styles:
   output: ckanext-hdx_theme/%(version)s_organization-light-styles.css
+  extra:
+    preload:
+      - hdx_theme/dataset-light-styles
+      - hdx_theme/search-styles
+      - hdx_theme/dataset-search-styles
+      - hdx_theme/dataset-styles
   contents:
     - light/organization/org-light.css
 
@@ -1113,3 +1187,15 @@ dataviz-styles:
   contents:
     - dataviz/dataviz.css
 
+qa-dashboard-styles:
+  output: ckanext-hdx_theme/%(version)s_qa-dashboard-styles.css
+  extra:
+    preload:
+      - hdx_theme/contact-contributor-styles
+      - hdx_theme/dataset-search-styles
+      - hdx_theme/qa-package-styles
+      - hdx_theme/requestdata-styles
+      - hdx_theme/resource-list-styles
+      - requestdata/main-styles
+  contents:
+    - dataviz/dataviz.css

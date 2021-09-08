@@ -1,4 +1,11 @@
 {% extends "page_light.html" %}
+
+{% block styles %}
+    {{ super() }}
+    {% asset 'hdx_theme/search-scripts' %}
+    {% asset 'hdx_theme/organizations-styles' %}
+{% endblock %}
+
 {% set logged_in = true if c.userobj else false %}
 {% set is_sys_admin = c.userobj.sysadmin %}
 {% block subtitle %}{{ _('Organisations') }}{% endblock %}
