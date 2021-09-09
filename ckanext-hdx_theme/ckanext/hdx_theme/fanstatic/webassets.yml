@@ -45,7 +45,6 @@ page-scripts:
     - bs_tooltip.js
     - follow.js
     - widget/contribute/contribute.js
-    - package/share_button.js # it's not used just for dataset pages
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
