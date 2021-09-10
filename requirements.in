@@ -40,13 +40,11 @@ zope.interface==4.3.2
 # ADDED FOR HDX
 ipaddress==1.0.23
 # validate_email==1.2
-pyDNS==2.3.6
+# pyDNS==2.3.6
 ijson==2.2
 mailchimp3==3.0.14
 ua-parser==0.7.2
 user_agents==1.1.0
-
-PyYAML>=5.1,<=5.2
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.3
@@ -60,7 +58,7 @@ timeago==1.0.7
 -e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@2.2.0#egg=ckanext-requestdata
 
 # ckanext-showcase
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.3.0#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.302#egg=ckanext-showcase
 
 # reqs for ckanext-dcat
 rdflib==4.2.1

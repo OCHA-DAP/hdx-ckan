@@ -1,0 +1,109 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.dataviz-item(@datavizItemSize) {
+  .dataviz-item {
+    min-width: @datavizItemSize;
+    height: @datavizItemSize;
+    background-color: @whiteColor;
+    border: 1px solid @extraLightGrayAccent;
+
+    @media (max-width: @cut-point-mobile-l) {
+      min-width: 100%;
+    }
+
+    &:hover {
+      .preview {
+        .actions {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .preview {
+      height: 206px;
+      position: relative;
+      background-color: lightblue;
+      .preview-image {
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+      }
+
+      &.frame-mode {
+        padding: 10px;
+        .preview-image {
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+
+      .actions {
+        display: none;
+        background-color: rgba(0, 124, 224, 0.2);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+
+        .white-link {
+          color: @whiteColor;
+          .gothamBoldFont(12px);
+        }
+      }
+
+      .label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        width: 104px;
+        z-index: 101;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+    }
+    .content {
+      padding: 18px 16px 26px;
+    }
+    .title {
+      .gothamBoldFont(16px);
+      color: @darkGrayColor;
+      line-height: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 32px;
+    }
+    .description {
+      .sourceSansProFont(400, 16px);
+      color: @grayColor;
+      margin: 10px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 60px;
+    }
+    .others {
+      .sourceSansProFont(400, 12px);
+      color: @grayColor;
+      .separator {
+        margin: 0 2px;
+        &:after {
+          content: "|";
+          color: @grayColor;
+        }
+      }
+      line-height: 1;
+    }
+  }
+}

@@ -61,7 +61,7 @@ truncate_title - The length to truncate the title to (default: 80).
               Visit external site <i class="icon humanitarianicons-Out-of-platform"></i>
             </a>
           </div>
-          {% if h.check_access('ckanext_showcase_update', {'id':package.id }) %}
+          {% if h.check_access('ckanext_showcase_update', package) %}
             <div style="margin-top: 14px;">
               {% link_for _('Edit Showcase'), named_route='showcase_blueprint.edit', id=package.name, class_='white-link' %}
             </div>

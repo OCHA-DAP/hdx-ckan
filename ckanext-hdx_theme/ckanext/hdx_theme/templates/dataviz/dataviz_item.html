@@ -1,0 +1,27 @@
+
+<div class="dataviz-item">
+  <div class="preview {% if dataviz.image_frame_mode %}frame-mode{% endif %}">
+    <div class="preview-image" style="background-image: url('{{ dataviz.image_display_url }}')">
+
+    </div>
+    <div class="actions">
+      <a href="{{ h.url_for('showcase_blueprint.read', id=dataviz.name) }}" class="btn btn-primary">Explore</a>
+      {% if h.has_dataviz_gallery_permission() %}
+        <a class="white-link mTop10" href="{{ h.url_for('showcase_blueprint.edit', id=dataviz.name) }}">Edit Showcase</a>
+      {% endif %}
+    </div>
+    {% set dataviz_label = dataviz.dataviz_label or dataviz.title %}
+    <div class="label label-inverse" title="{{ dataviz_label }}">
+      {{ dataviz_label }}
+    </div>
+  </div>
+  <div class="content">
+    <div class="title">{{ dataviz.title }}</div>
+    <div class="description">{{ dataviz.notes }}</div>
+    <div class="others">
+      <span>Updated on {{ h.render_datetime(dataviz.metadata_modified) }}</span>
+      <span class="separator"></span>
+      <span><a href="{{ dataviz.data_url }}">DATA</a></span>
+    </div>
+  </div>
+</div>

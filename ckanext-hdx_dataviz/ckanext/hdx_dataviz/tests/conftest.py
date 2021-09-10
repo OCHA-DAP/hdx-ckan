@@ -1,0 +1,34 @@
+import pytest
+
+import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
+
+from ckan import model as model
+
+from ckanext.hdx_dataviz.tests import USER, SYSADMIN, ORG, LOCATION
+
+
+_get_action = tk.get_action
+NotAuthorized = tk.NotAuthorized
+
+
+@pytest.fixture()
+def setup_user_data():
+    factories.User(name=USER, email='some_user@hdx.hdxtest.org')
+    factories.User(name=SYSADMIN, email='some_sysadmin@hdx.hdxtest.org', sysadmin=True)
+    group = factories.Group(name=LOCATION)
+    factories.Organization(
+        name=ORG,
+        title='ORG NAME FOR COMPLETENESS',
+        users=[
+            {'name': USER, 'capacity': 'editor'},
+        ],
+        hdx_org_type='donor',
+        org_url='https://hdx.hdxtest.org/'
+    )
+
+
+@pytest.fixture(scope='module')
+def keep_db_tables_on_clean():
+    model.repo.tables_created_and_initialised = True
+

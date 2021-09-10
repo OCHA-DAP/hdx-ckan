@@ -45,7 +45,6 @@ page-scripts:
     - bs_tooltip.js
     - follow.js
     - widget/contribute/contribute.js
-    - package/share_button.js # it's not used just for dataset pages
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
@@ -119,6 +118,18 @@ custom-org-scripts:
   output: ckanext-hdx_theme/%(version)s_custom-org-scripts.js
   contents:
     - organization_/wfp/organization-wfp.js
+
+custom-showcase-creation-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_custom-showcase-creation-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+      - hdx_theme/organization-form-styles
+  contents:
+    - custom_showcase_creation.js
+
+
 
 custom-org-creation-scripts:
   <<: *common-js
@@ -1092,3 +1103,13 @@ group-message-styles:
   output: ckanext-hdx_theme/%(version)s_group-message-styles.css
   contents:
     - widget/membership/group-message.css
+
+
+dataviz-scripts:
+  output: ckanext-hdx_theme/%(version)s_dataviz-scripts.js
+
+dataviz-styles:
+  output: ckanext-hdx_theme/%(version)s_dataviz-styles.css
+  contents:
+    - dataviz/dataviz.css
+
