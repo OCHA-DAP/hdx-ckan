@@ -257,7 +257,6 @@ onboarding-bulk-user-styles:
       - hdx_theme/onboarding-survey-styles
 
 onboarding-bulk-anon-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-bulk-anon-styles.css
   extra:
     preload:
       - hdx_theme/onboarding-styles
