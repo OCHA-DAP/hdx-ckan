@@ -298,12 +298,8 @@ def less_compile(ctx):
 
 
 @cli.command(name='logs')
-@click.argument('deprecated', required=False)
-def show_logs(deprecated):
-    """Just a glorified tail -f /var/log/ckan/*log
-
-    DEPRECATED      Access logs are now in nginx. No need for this option.
-    """
+def show_logs():
+    """Just a glorified tail -f /var/log/ckan/*log"""
     logs = ['/var/log/ckan/access.log', '/var/log/ckan/error.log', '/var/log/ckan/ckan.log']
     cmd = ['tail', '-f']
     cmd.extend(logs)
