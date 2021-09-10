@@ -244,7 +244,6 @@ onboarding-styles:
     - widget/onboarding/signup.css
 
 onboarding-bulk-user-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-bulk-user-styles.css
   extra:
     preload:
       - hdx_theme/onboarding-styles
