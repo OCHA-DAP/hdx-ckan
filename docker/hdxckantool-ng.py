@@ -21,7 +21,49 @@ SQL = dict(
 )
 
 
-def is_sysadmin(user):
+def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
+    # try:
+    con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
+    # except:
+    #     print("I am unable to connect to the database, exiting.")
+    #     exiting(2)
+    return con
+
+
+def db_empty(dbname):
+    """Recreate the schema for a database."""
+
+    try:
+        print("Flushing database {}...".format(dbname))
+        con = db_connect_to_postgres(dbname=dbname)
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        query = "drop schema public cascade; create schema public;"
+        cur.execute(query)
+        con.commit()
+    except:
+        print("I can't flush database {}".format(dbname))
+    finally:
+        con.close()
+
+
+def db_query(query):
+    try:
+        con = db_connect_to_postgres(dbname=SQL['DB'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        cur.execute(query)
+        con.commit()
+        rows = cur.fetchall()
+    except:
+        print("I can't query that")
+        sys.exit(2)
+    finally:
+        con.close()
+    return rows
+
+
+def sysadmin_exists(user):
     query = "select sysadmin from public.user where name='{}';".format(user)
     rows = db_query(query)
     if len(rows) == 1:
@@ -43,6 +85,16 @@ def control(cmd):
     except:
         print("ckan {} failed.".format(cmd))
         sys.exit(1)
+
+
+def user_exists(user):
+    """Check if user exists."""
+    query = "select name,fullname,email,state,sysadmin from public.user where name='{}';".format(user)
+    rows =  (query)
+    if len(rows) == 1:
+        return True
+    else:
+        return False
 
 
 def user_pretty_list(userlist):
@@ -356,7 +408,7 @@ def solr_reindex(ctx, fast, refresh, clear):
 @click.argument('user')
 @click.pass_context
 def sysadmin_enable(ctx, user):
-    if is_sysadmin(user):
+    if sysadmin_exists(user):
         print('User ' + user + ' is already sysadmin.')
         sys.exit(0)
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'sysadmin', 'add', user]
@@ -367,7 +419,7 @@ def sysadmin_enable(ctx, user):
 @click.argument('user')
 @click.pass_context
 def sysadmin_disable(ctx, user):
-    if not is_sysadmin(user):
+    if not sysadmin_exists(user):
         print('User ' + user + ' is not sysadmin.')
         sys.exit(0)
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'sysadmin', 'remove', user]
@@ -408,16 +460,6 @@ def user_add(ctx, user, email, password):
         print('User %s has not been created' % user)
 
 
-def user_exists(user):
-    """Check if user exists."""
-    query = "select name,fullname,email,state,sysadmin from public.user where name='{}';".format(user)
-    rows =  (query)
-    if len(rows) == 1:
-        return True
-    else:
-        return False
-
-
 @user.command(name='list')
 def user_list():
     """List all users."""
@@ -450,48 +492,6 @@ def user_show(user):
     query = "select name,fullname,email,state,sysadmin,apikey from public.user where name='{}';".format(user)
     rows = db_query(query)
     user_pretty_list(rows)
-
-
-def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
-    # try:
-    con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
-    # except:
-    #     print("I am unable to connect to the database, exiting.")
-    #     exiting(2)
-    return con
-
-
-def db_empty(dbname):
-    """Recreate the schema for a database."""
-
-    try:
-        print("Flushing database {}...".format(dbname))
-        con = db_connect_to_postgres(dbname=dbname)
-        con.set_isolation_level(0)
-        cur = con.cursor()
-        query = "drop schema public cascade; create schema public;"
-        cur.execute(query)
-        con.commit()
-    except:
-        print("I can't flush database {}".format(dbname))
-    finally:
-        con.close()
-
-
-def db_query(query):
-    try:
-        con = db_connect_to_postgres(dbname=SQL['DB'])
-        con.set_isolation_level(0)
-        cur = con.cursor()
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        sys.exit(2)
-    finally:
-        con.close()
-    return rows
 
 
 if __name__ == '__main__':
