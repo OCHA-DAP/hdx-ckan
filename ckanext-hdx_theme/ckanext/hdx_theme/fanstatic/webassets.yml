@@ -516,7 +516,6 @@ dataset-diff-styles:
       - datasets/diff.css
 
 dataset-read-styles:
-  output: ckanext-hdx_theme/%(version)s_dataset-read-styles.css
   extra:
     preload:
       - hdx_theme/contact-contributor-styles
