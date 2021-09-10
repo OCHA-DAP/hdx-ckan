@@ -278,13 +278,9 @@ def feature(ctx):
 
 
 @cli.command(name='less')
-@click.argument('compile', required=False)
 @click.pass_context
-def less_compile(ctx, compile, verbose):
-    """Compile the custom stylesheets.
-
-    COMPILE is for backward compatibility only and will be removed in a future version.
-    """
+def less_compile(ctx):
+    """Compile the custom stylesheets."""
     cmd = ['paster', '--plugin=ckanext-hdx_theme', 'custom-less-compile', '-c', ctx.obj['CONFIG']]
     os.chdir(BASEDIR)
     less_wr_dirs = ["ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated", "/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp"]
