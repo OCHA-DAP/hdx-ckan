@@ -3,6 +3,7 @@
 import click
 import psycopg2
 import os
+import requests
 import subprocess
 import sys
 # import ckan.cli.sysadmin as ckan_sysadmin
@@ -63,6 +64,12 @@ def db_query(query):
     finally:
         con.close()
     return rows
+
+SOLR =  dict(
+    ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
+    PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
+    CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
+)
 
 
 def sysadmin_exists(user):
@@ -129,6 +136,12 @@ def cli(ctx, verbose):
 @cli.group()
 def db():
     """Database related commands."""
+    pass
+
+
+@cli.group()
+def solr():
+    """SOLR related commands."""
     pass
 
 
@@ -372,7 +385,52 @@ def reinstall_plugins(develop):
                         subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
 
 
-@cli.command(name='reindex')
+
+@solr.command(name='add')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
+@click.option('-s', '--config-set', default='hdx-solr-main', show_default=True, help="SOLR Configset to use.")
+@click.pass_context
+def solr_add(ctx, host, port, collection, config_set):
+    """Check the status of SOLR"""
+    try:
+        if ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+            print("Collection {} already exists.".format(collection))
+            return
+        query = "http://{}:{}/solr/admin/collections?action=CREATE&name={}&collection.configName={}&numShards=1" \
+            .format(host, port, collection, config_set)
+        r = requests.get(query)
+        if r.status_code != 200:
+            print(r.json()["error"]["msg"])
+            raise
+        print("The collection {} has been created successfully.".format(collection))
+    except:
+        print("Can't query SOLR")
+
+
+@solr.command(name='check')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Core (Collection actually).")
+def solr_exists(host, port, collection):
+    """Check the status of SOLR"""
+    try:
+        query = "http://{}:{}/solr/admin/collections?action=CLUSTERSTATUS" \
+            .format(host, port)
+        r = requests.get(query)
+        if r.status_code != 200:
+            raise
+        collections = r.json()["cluster"]["collections"].keys()
+        if collection in collections:
+            return True
+    except:
+        print("Can't query SOLR...")
+        print(sys.exc_info())
+    return False
+
+
+@solr.command(name='reindex')
 @click.option('--clear', is_flag=True, help="Clear solr index first.")
 @click.option('--fast', is_flag=True, help="Use multiple threaded processes.")
 @click.option('--refresh', is_flag=True, help="Will only refresh. Not usable with fast option.")
