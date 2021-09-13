@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           registry: ${{ steps.login-ecr.outputs.registry }}
-          repository: hdx-ckan
+          repository: unocha/hdx-ckan
           username: AWS  # temporary
           password: ${{ steps.get-ecr-password.outputs.password }}  # temporary
           add_git_labels: true
