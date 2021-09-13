@@ -29,6 +29,14 @@ class TestDatavizShowcaseApi(object):
         except NotAuthorized as e:
             assert True, 'An editor user should NOT be allowed to update a dataviz showcase'
 
+    def test_update_normal_showcase(self):
+        showcase_dict = generate_test_showcase(SYSADMIN, 'normal_showcase', False)
+        showcase_dict['notes'] = 'Modified'
+        assert 'dataviz_label' not in showcase_dict
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        modified_dict = _get_action('ckanext_showcase_update')(context, showcase_dict)
+        assert modified_dict['notes'] == 'Modified', 'A sysadmin should be able to update a normal showcase'
+
     def test_delete_normal_showcase(self):
         showcase_dict = generate_test_showcase(USER, 'normal_showcase', False)
 

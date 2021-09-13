@@ -21,9 +21,9 @@ def _showcase_update(context, data_dict):
     # it, otherwise use the default uploader.
     # https://github.com/ckan/ckan/pull/2510
     try:
-        upload = uploader.get_uploader('showcase', data_dict['image_url'])
+        upload = uploader.get_uploader('showcase', data_dict.get('image_url'))
     except AttributeError:
-        upload = uploader.Upload('showcase', data_dict['image_url'])
+        upload = uploader.Upload('showcase', data_dict.get('image_url'))
 
     if 'image_upload' in data_dict:
         # mimetype is needed before uploading to AWS S3

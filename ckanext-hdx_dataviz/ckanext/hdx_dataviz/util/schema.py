@@ -76,6 +76,11 @@ def _has_dataviz_gallery_permission(key, data, errors, context):
 def not_empty_if_in_dataviz_gallery(key, data, errors, context):
     value = data.get(key)
     other_value = data.get(('in_dataviz_gallery',))
-    if not value and six.text_type(other_value) == 'true':
+
+    if six.text_type(other_value) != 'true':
+        # if this is not a dataviz showcase then we don't care about this key
+        raise StopOnError
+    elif not value:
+        # if this is a dataviz showcase then the value of this key can't be missing
         errors[key].append(_('Missing value'))
         raise StopOnError
