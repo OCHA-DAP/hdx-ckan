@@ -13,47 +13,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Git Tag Info
-        id: git_tag_info
-        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
+      - name: Checkout code
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Tag Info
+        id: tag_info
+        run: |
+          export IMAGE_TAG="${GITHUB_REF#refs/*/}"
+          export IMAGE_TAG=${IMAGE_TAG//[^[:alnum:].-]/-}
+          echo ::set-output name=IMAGE_TAG::${IMAGE_TAG}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      # - name: Build and push
-      #   id: docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     file: ./Dockerfile.py3
-      #     push: true
-      #     tags: mgalex2/hdx-ckan-py3:${{ steps.git_tag_info.outputs.TAG_NAME }}
-      # - name: Image digest
-      #   run: echo ${{ steps.docker_build.outputs.digest }}
-      # - name: Get ECR password (temporary)
-      #   id: get-ecr-password
-      #   run: echo "::set-output name=password::$(aws ecr get-login-password)"
-      # - name: Build & Push image
-      #   uses: docker/build-push-action@v1
-      #   with:
-      #     registry: ${{ steps.login-ecr.outputs.registry }}
-      #     repository: unocha/hdx-ckan
-      #     file: Dockerfile.lol
-      #     username: AWS  # temporary
-      #     password: ${{ steps.get-ecr-password.outputs.password }}  # temporary
-      #     add_git_labels: true
-      #     tag_with_ref: true
-      - name: Build, tag, and push image to Amazon ECR
+
+      - name: Login to Public ECR
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: public.ecr.aws
+          username: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
         env:
-          ECR_REGISTRY: public.ecr.aws
-          # ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: unocha/hdx-ckan
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.lol .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          AWS_REGION: us-east-1
+
+      - name: Build, tag, and push image to Amazon ECR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: public.ecr.aws/unocha/hdx-ckan:${{ steps.tag_info.outputs.IMAGE_TAG }}
