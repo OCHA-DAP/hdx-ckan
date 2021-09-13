@@ -50,7 +50,8 @@ jobs:
       #     tag_with_ref: true
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: public.ecr.aws
+          # ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: unocha/hdx-ckan
           IMAGE_TAG: ${{ github.sha }}
         run: |
