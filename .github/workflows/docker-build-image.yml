@@ -3,7 +3,6 @@ name: HDX/CKAN create image
 on:
   push:
     branches:
-      - ops-7732
       - dev
       - prod
   release:
