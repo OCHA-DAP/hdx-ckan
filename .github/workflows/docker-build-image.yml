@@ -31,7 +31,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Login to Public ECR
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v1
         with:
           registry: public.ecr.aws
           username: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
