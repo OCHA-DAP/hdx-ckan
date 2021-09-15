@@ -1,6 +1,12 @@
 {% extends "page.html" %}
 {% import 'macros/form.html' as form %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/dataset-styles' %}
+  {% asset 'hdx_theme/dataset-search-styles' %}
+{% endblock %}
+
 {% set page_has_mobile_version = True %}
 
 {% block links %}
@@ -41,9 +47,6 @@
 
 {% endblock %}
 
-{% block styles %}
-  {{ super() }}
-{% endblock %}
 
 {% block  global_dataset_input_search%}
 	{% if c.other_links and c.other_links.params_noq %}

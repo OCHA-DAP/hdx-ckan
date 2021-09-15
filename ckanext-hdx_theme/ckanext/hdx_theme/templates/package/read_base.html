@@ -1,5 +1,10 @@
 {% extends "package/base.html" %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/dataset-read-styles' %}
+{% endblock %}
+
 {% block title %}{{ pkg.title or pkg.name }} - HDX{% endblock %}
 
 {% block links -%}
@@ -121,7 +126,3 @@
 {% endblock %}
 {##}
 {##}
-{#{% block styles %}#}
-{#  {{ super() }}#}
-{#  {% resource 'hdx_theme/datasets/dataset.css' %}#}
-{#{% endblock %}#}

@@ -1,5 +1,13 @@
 {% extends "page.html" %}
 {% import 'macros/form.html' as form %}
+
+{% block styles %}
+  {{ super() }}
+  <link href='https://cdn.jsdelivr.net/npm/handsontable@8.0.0/dist/handsontable.full.min.css' rel='stylesheet' />
+  {% asset 'hdx_theme/qa-dashboard-styles' %}
+
+{% endblock %}
+
 {% block subtitle %}{{ _("QA Dashboard") }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -32,7 +40,6 @@
 {% block scripts2 %}
   {{ super() }}
   <script src='https://cdn.jsdelivr.net/npm/handsontable@8.0.0/dist/handsontable.full.min.js'></script>
-  <link href='https://cdn.jsdelivr.net/npm/handsontable@8.0.0/dist/handsontable.full.min.css' rel='stylesheet' />
 {#  {% resource 'hdx_theme/bs_tooltip.js' %}#}
 {#  {% resource 'hdx_theme/jquery.highlight' %}#}
 {#  {% resource 'hdx_theme/jquery.expander' %}#}
@@ -42,9 +49,6 @@
   {% asset 'hdx_theme/hdx-show-more' %}
 {% endblock %}
 
-{% block styles %}
-  {{ super() }}
-{% endblock %}
 
 {% block  global_dataset_input_search%}
 	{% if c.other_links and c.other_links.params_noq %}
