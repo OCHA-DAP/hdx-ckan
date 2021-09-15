@@ -16,6 +16,12 @@ jobs:
         id: checkout
         uses: actions/checkout@v2
 
+      - name: Repo Info
+        id: repo_info
+        run: |
+          export REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          echo ::set-output name=REPO_NAME::${REPO_NAME}
+
       - name: Tag Info
         id: tag_info
         run: |
@@ -43,4 +49,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: public.ecr.aws/unocha/hdx-ckan:${{ steps.tag_info.outputs.IMAGE_TAG }}
+          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}
