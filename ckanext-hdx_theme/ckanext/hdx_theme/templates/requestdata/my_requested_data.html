@@ -4,6 +4,12 @@
 {% block dashboard_activity_stream_context %}{% endblock %}
 {% block page_header_inner %}{% endblock %}
 
+{% block styles %}
+    {{ super() }}
+    {% asset 'requestdata/main-styles' %}
+    {% asset 'hdx_theme/requestdata-styles' %}
+{% endblock %}
+
 {% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
 
 {% block primary_content_inner %}
@@ -28,8 +34,6 @@
 {#    {% resource 'requestdata/css/main.css' %}#}
 {#    {% resource 'hdx_theme/requestdata/request-data.css' %}#}
 
-    {% asset 'requestdata/main-styles' %}
-    {% asset 'hdx_theme/requestdata-styles' %}
 </div>
 
 {% endblock %}

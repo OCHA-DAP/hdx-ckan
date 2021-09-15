@@ -45,7 +45,7 @@ jobs:
       - name: Building UI search index and compiling org style sheets (should be removed?)
         run: |
           docker-compose exec -T ckan hdxckantool feature
-          docker-compose exec -T ckan hdxckantool less compile
+          docker-compose exec -T ckan hdxckantool less
       - name: Testing hdx_search
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
       - name: Testing hdx_users
