@@ -293,9 +293,21 @@ def feature(ctx):
 
 
 @cli.command(name='less')
+@click.argument('compile', required=False)
+@click.argument('verbose', required=False)
 @click.pass_context
-def less_compile(ctx):
-    """Compile the custom stylesheets."""
+def less_compile(ctx, compile, verbose):
+    """Compile the custom stylesheets.
+
+    COMPILE     Deprecated option. Skip it.
+
+    VERBOSE     Deprecated option. Use -v on script level instead.
+
+    """
+    if compile:
+        click.echo("Deprecated argument 'compile'. Just skip it.")
+    if verbose:
+        click.echo("Deprecated argument 'verbose'. Use -v at script level instead.")
     cmd = ['paster', '--plugin=ckanext-hdx_theme', 'custom-less-compile', '-c', ctx.obj['CONFIG']]
     os.chdir(BASEDIR)
     less_wr_dirs = ["ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated", "/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp"]
