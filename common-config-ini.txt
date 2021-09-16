@@ -76,6 +76,7 @@ ckan.site_id = default
 
 #ckan.simple_search = 1
 
+extra_public_paths = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/css
 
 ## Plugins Settings
 
