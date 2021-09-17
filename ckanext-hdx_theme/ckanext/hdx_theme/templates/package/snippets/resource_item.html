@@ -14,7 +14,7 @@
 
 {% endif %}
 
-<li class="resource-item {% if in_review %}in-review{% endif %}" data-grouping-id="{{ resource_grouping }}" style="display: {{ 'none' if pkg.x_show_grouping else '' }}">
+<li class="resource-item {% block in_review %}{% if in_review %}in-review{% endif %}{% endblock %}" data-grouping-id="{{ resource_grouping }}" style="display: {{ 'none' if pkg.x_show_grouping else '' }}">
   {% block resource_item_title %}
     <a class="heading" title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
