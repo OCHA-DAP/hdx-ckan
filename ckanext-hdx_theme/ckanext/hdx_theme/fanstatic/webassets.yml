@@ -35,6 +35,7 @@ ckan:
 
 page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
+  <<: *common-css
   extra:
     preload:
       - vendor/select2-css
