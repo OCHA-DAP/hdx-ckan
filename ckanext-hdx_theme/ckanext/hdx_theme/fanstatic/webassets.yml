@@ -32,6 +32,7 @@ ckan:
     - google-analytics.js
     - notifications/hdx_notifications_main.js
     - metadata-button.js
+    - select-switch.js
 
 page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
