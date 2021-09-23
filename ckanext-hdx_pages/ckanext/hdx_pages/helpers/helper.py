@@ -1,7 +1,7 @@
 import ckan.logic as logic
 import ckan.model as model
-from urlparse import parse_qs, urlparse
-from ckan.common import _, c, g, request, response
+from six.moves.urllib.parse import parse_qs, urlparse
+from ckan.common import _, c, g, request
 import ckan.lib.helpers as h
 
 

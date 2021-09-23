@@ -78,9 +78,12 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        hdx_pages=ckanext.hdx_pages.plugin:HdxPagesPlugin
-        hdx_events=ckanext.hdx_pages.plugin:HdxEventPlugin
-        hdx_dashboards=ckanext.hdx_pages.plugin:HdxDashboardPlugin
+        # hdx_pages=ckanext.hdx_pages.plugin:HdxPagesPlugin
+        hdx_pages=ckanext.hdx_pages.plugin:HdxCustomPagesPlugin
+        # hdx_events=ckanext.hdx_pages.plugin:HdxEventPlugin
+        # hdx_dashboards=ckanext.hdx_pages.plugin:HdxDashboardPlugin
+        # hdx_light_events=ckanext.hdx_pages.plugin:HdxLightEventPlugin
+        # hdx_light_dashboards=ckanext.hdx_pages.plugin:HdxLightDashboardPlugin
 
         [paste.paster_command]
         hdx_pages=ckanext.hdx_pages.command:InitDBCommand

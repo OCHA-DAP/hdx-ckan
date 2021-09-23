@@ -3,7 +3,7 @@ import re
 import datetime
 import sqlalchemy
 import json
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 from collections import OrderedDict
 
 from paste.deploy.converters import asbool

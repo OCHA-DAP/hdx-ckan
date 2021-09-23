@@ -115,8 +115,8 @@ class MembershipRequestsService(object):
             for request in requests_grouped_by_org:
                 try:
                     last_date = dateutil_parse(request.last_date_str)
-                except Exception, e:
-                    log.error('Cannot parse date for membership request, using "now": ' + unicode(e))
+                except Exception as e:
+                    log.error('Cannot parse date for membership request, using "now": ' + str(e))
                     last_date = datetime.datetime.utcnow()
                 notifications.append(
                     {

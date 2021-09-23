@@ -5,15 +5,19 @@ Created on March 19, 2019
 
 
 '''
-import logging as logging
+import pytest
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import logging as logging
 import ckan.logic as logic
+
+from ckanext.hdx_dataviz.tests import USER, SYSADMIN, ORG, LOCATION
 import unicodedata
 import ckan.lib.helpers as h
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
+_get_action = tk.get_action
+NotAuthorized = tk.NotAuthorized
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +27,7 @@ page_elnino = {
     'description': 'El Nino Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'ongoing',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
@@ -34,7 +38,7 @@ page_elpico = {
     'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'ongoing',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
@@ -42,7 +46,7 @@ page_elpico = {
 page_elgroupo = {
     'name': 'elgroupo',
     'title': 'El Groupo',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'ongoing',
@@ -53,7 +57,7 @@ page_elgroupo = {
 page_dashbo = {
     'name': 'eldashbo',
     'title': 'El Dashbo',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'description': 'El Dashbo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'dashboards',
     'status': 'archived',
@@ -64,66 +68,48 @@ page_dashbo = {
 page_eldeleted = {
     'name': 'eldeleted',
     'title': 'El Deleted',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'description': 'El Deleted Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
-    'status': 'archived',
-    'state': 'deleted',
+    'status': 'ongoing',
+    'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
+class TestHDXControllerPage(object):
 
-class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+    def _get_url(self, app, url, apikey=None):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
-
-    @classmethod
-    def _get_action(cls, action_name):
-        return tk.get_action(action_name)
-
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXControllerPage, cls)._create_test_data(create_datasets=True, create_members=True)
-
-    def _get_url(self, url, apikey=None):
-        test_client = self.get_backwards_compatible_test_client()
         if apikey:
-            page = test_client.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+            page = app.get(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')}, follow_redirects=True)
         else:
-            page = self.app.get(url)
+            page = app.get(url)
         return page
 
 
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+                         'with_request_context')
 class TestHDXControllerPageNew(TestHDXControllerPage):
 
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXControllerPageNew, cls)._create_test_data(create_datasets=True, create_members=True)
+    @pytest.mark.usefixtures('with_request_context')
+    def test_page_new(self, app):
 
-    def test_page_new(self):
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        # context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='new')
+        url = h.url_for('hdx_custom_page.new')
         try:
-            page_new = self._get_url(url)
+            page_new = self._get_url(app, url)
             assert 'Page not found' in page_new.body, 'a regular user can not not access a page creation form'
-            assert '404 Not Found' in page_new.status
+            assert '404 Not Found'.lower() in page_new.status.lower()
         except Exception as ex:
             assert False
 
-        context['user'] = 'testsysadmin'
-        user = model.User.by_name('testsysadmin')
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='new')
-        page = self._get_url(url, user.apikey)
+        context['user'] = SYSADMIN
+        user = model.User.by_name(SYSADMIN)
+        url = h.url_for('hdx_custom_page.new')
+        page = self._get_url(app, url, user.apikey)
         assert '200' in page.status
         assert 'Save This Page' in page.body
         assert 'field_title' in page.body
@@ -132,36 +118,32 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
         assert 'field_name' in page.body
 
 
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+                         'with_request_context')
 class TestHDXControllerPageEdit(TestHDXControllerPage):
 
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXControllerPageEdit, cls)._create_test_data(create_datasets=True, create_members=True)
+    def test_page_edit(self, app):
 
-    def test_page_edit(self):
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-
-        page_dict = self._get_action('page_create')(context_sysadmin, page_elpico)
+        page_dict = _get_action('page_create')(context_sysadmin, page_elpico)
         assert page_dict
         assert 'El Pico' in page_dict.get('title')
         assert 'Lorem Ipsum is simply dummy text' in page_dict.get('description')
 
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='edit',
-                        id=page_dict.get('id'))
+        url = h.url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         try:
-            page_edit = self._get_url(url)
+            page_edit = self._get_url(app, url)
             assert 'Page not found' in page_edit.body, 'a regular user can not not access a page edit form'
-            assert '404 Not Found' in page_edit.status
+            assert '404 Not Found'.lower() in page_edit.status.lower()
         except Exception as ex:
             assert False
 
-        context['user'] = 'testsysadmin'
-        user = model.User.by_name('testsysadmin')
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='edit',
-                        id=page_dict.get('id'))
-        page = self._get_url(url, user.apikey)
+        context['user'] = SYSADMIN
+        user = model.User.by_name(SYSADMIN)
+        url = h.url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
+        page = self._get_url(app, url, user.apikey)
         assert '200' in page.status
         assert 'Save This Page' in page.body
         assert 'field_title' in page.body
@@ -170,108 +152,92 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
         assert 'field_name' in page.body
 
 
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+                         'with_request_context')
 class TestHDXControllerPageRead(TestHDXControllerPage):
 
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXControllerPageRead, cls)._create_test_data(create_datasets=True, create_members=True)
+    def test_page_read(self, app):
 
-    def test_page_read(self):
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-
-        elnino = self._get_action('page_create')(context_sysadmin, page_elnino)
+        elnino = _get_action('page_create')(context_sysadmin, page_elnino)
         assert elnino
         assert 'El Nino' in elnino.get('description')
         assert 'Lorem Ipsum is simply dummy text' in elnino.get('description')
 
-        eldashbo = self._get_action('page_create')(context_sysadmin, page_dashbo)
+        eldashbo = _get_action('page_create')(context_sysadmin, page_dashbo)
         assert eldashbo
         assert 'El Dashbo' in eldashbo.get('description')
         assert 'Lorem Ipsum is simply dummy text' in eldashbo.get('description')
 
-        context['user'] = 'testsysadmin'
-        user = model.User.by_name('testsysadmin')
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',
-                        id=elnino.get('id'))
-        elnino_result = self._get_url(url, user.apikey)
+        context['user'] = SYSADMIN
+        user = model.User.by_name(SYSADMIN)
+        url = h.url_for(u'hdx_event.read_event', id=elnino.get('id'))
+
+        elnino_result = self._get_url(app, url, user.apikey)
         assert '200' in elnino_result.status
 
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                        action='read_dashboards',
-                        id=eldashbo.get('id'))
-        eldashbo_result = self._get_url(url, user.apikey)
+        url = h.url_for(u'hdx_dashboard.read_dashboard', id=eldashbo.get('id'))
+        eldashbo_result = self._get_url(app, url, user.apikey)
         assert '200' in eldashbo_result.status
 
         try:
-            url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',
-                            id='nopageid')
-            eldashbo_result = self._get_url(url, user.apikey)
+            url = h.url_for(u'hdx_event.read_event', id='nopageid')
+            eldashbo_result = self._get_url(app, url, user.apikey)
             assert 'Page not found' in eldashbo_result.body, 'page doesn\'t exist'
-            assert '404 Not Found' in eldashbo_result.status
+            assert '404 Not Found'.lower() in eldashbo_result.status.lower()
         except Exception as ex:
             assert False
 
 
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPageDelete(TestHDXControllerPage):
 
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXControllerPageDelete, cls)._create_test_data(create_datasets=True, create_members=True)
+    def test_page_delete(self, app):
 
-    def test_page_delete(self):
-
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
         try:
-            eldeleted_dict = self._get_action('page_create')(context_sysadmin, page_eldeleted)
+            eldeleted_dict = _get_action('page_create')(context_sysadmin, page_eldeleted)
             assert eldeleted_dict
             assert 'El Deleted' in eldeleted_dict.get('title')
             assert 'eldeleted' in eldeleted_dict.get('name')
             assert 'El Deleted Lorem Ipsum' in eldeleted_dict.get('description')
         except Exception as ex:
-            # page already exists
             assert False
 
-        eldeleted_page = self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
-        context['user'] = 'tester'
-        user = model.User.by_name('tester')
+        eldeleted_page = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
+        user = model.User.by_name(USER)
         try:
-            url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                            action='delete',
-                            id=eldeleted_page.get('id'))
-            page_delete = self._get_url(url, user.apikey)
+            url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
+            page_delete = app.get(url, extra_environ={"REMOTE_USER": USER})
             assert 'Page not found' in page_delete.body, 'page doesn\'t exist'
-            assert '404 Not Found' in page_delete.status
+            assert '404 Not Found'.lower() in page_delete.status.lower()
         except logic.NotAuthorized:
             assert False
         except Exception as ex:
             log.info(ex)
             assert False
 
-        context['user'] = 'testsysadmin'
-        user = model.User.by_name('testsysadmin')
+        context['user'] = SYSADMIN
+        sysadmin = model.User.by_name(SYSADMIN)
 
         try:
-            url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                            action='delete',
-                            id='nopageid')
-            page_delete = self._get_url(url, user.apikey)
-            assert 'Server Error' in page_delete.body, 'page doesn\'t exist'
-            assert '500 Internal Server Error' in page_delete.status
+            url = h.url_for(u'hdx_custom_page.delete_page', id='nopageid')
+            page_delete = self._get_url(app, url, sysadmin.apikey)
+            assert 'Page not found' in page_delete.body, 'page doesn\'t exist'
+            assert '404 NOT FOUND'.lower() in page_delete.status.lower()
         except Exception as ex:
             assert False
 
-        url = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                        action='delete',
-                        id=eldeleted_page.get('id'))
-        result = self._get_url(url, user.apikey)
-        assert '200' in result.status
-
+        context['user'] = SYSADMIN
         try:
-            result = self._get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
+            _url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
+            res = app.get(_url, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            assert '302 FOUND'.lower() in res.status.lower()
+            _res = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
             assert False
         except logic.NotFound:
             assert True
