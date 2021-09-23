@@ -28,8 +28,9 @@ jobs:
         run: |
           export IMAGE_TAG="${GITHUB_REF#refs/*/}"
           export IMAGE_TAG=${IMAGE_TAG//[^[:alnum:].-]/-}
-          echo ::set-output name=IMAGE_TAG::$([ -z "IMAGE_TAG" ] && echo "$GITHUB_SHA" || echo "IMAGE_TAG")
-
+          echo ::set-output name=IMAGE_TAG::$([ -z "$IMAGE_TAG" ] && echo "$GITHUB_SHA" || echo "$IMAGE_TAG")
+      - name: Show image tag
+        run: echo "Image tag is ${{ steps.tag_info.outputs.IMAGE_TAG }}"
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -47,7 +48,11 @@ jobs:
           AWS_REGION: us-east-1
 
       - name: Build, tag, and push image to Amazon ECR
+        id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
