@@ -1,5 +1,10 @@
 {% extends "page.html" %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/admin-styles' %}
+{% endblock %}
+
 {% block subtitle %}{{ _('Administration') }}{% endblock %}
 {% block primary_content_module_margin %} mTop30 {% endblock %}
 {% block breadcrumb_content %}{% endblock %}
@@ -67,8 +72,3 @@
   {% endif %}
 {% endblock %}
 
-{% block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/admin-styles' %}
-
-{% endblock %}
