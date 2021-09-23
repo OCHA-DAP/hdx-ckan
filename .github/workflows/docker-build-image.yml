@@ -7,6 +7,7 @@ on:
       - prod
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,7 +28,7 @@ jobs:
         run: |
           export IMAGE_TAG="${GITHUB_REF#refs/*/}"
           export IMAGE_TAG=${IMAGE_TAG//[^[:alnum:].-]/-}
-          echo ::set-output name=IMAGE_TAG::${IMAGE_TAG}
+          echo ::set-output name=IMAGE_TAG::$([ -z "IMAGE_TAG" ] && echo "$GITHUB_SHA" || echo "IMAGE_TAG")
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
