@@ -63,10 +63,8 @@ page-scripts:
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - hdx_theme/page-common-styles
   contents:
+    - page-common-styles
     - base/base.css
     - base/header.css
     - widget/contribute/details.css
@@ -83,10 +81,8 @@ page-light-scripts:
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - hdx_theme/page-common-styles
   contents:
+    - page-common-styles
     - light/page-light.css
 
 bootstrap-styles:
