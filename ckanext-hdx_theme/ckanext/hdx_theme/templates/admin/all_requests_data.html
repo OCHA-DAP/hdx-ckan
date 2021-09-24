@@ -1,8 +1,16 @@
 {% extends "admin/base.html" %}
-
 {% import 'macros/form.html' as form %}
-{% block primary_content_module_margin %}{% endblock %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'requestdata/main-styles' %}
+  {% asset 'hdx_theme/requestdata-styles' %}
+  {% asset 'hdx_theme/search-styles' %}
+  {% asset 'vendor/select2-css' %}
+
+{% endblock %}
+
+{% block primary_content_module_margin %}{% endblock %}
 
 {% block primary_content_inner_wrapper %}
   <div class="row">
@@ -52,8 +60,6 @@
           </div>
         </div>
         {% asset 'hdx_theme/requestdata-remove-class-scripts' %}
-        {% asset 'requestdata/main-styles' %}
-{#        {% resource 'hdx_theme/requestdata/request-data.css' %}#}
       {% endblock %}
 
     </div>
