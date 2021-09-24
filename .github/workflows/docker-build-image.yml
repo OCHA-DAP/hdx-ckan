@@ -30,7 +30,9 @@ jobs:
           export IMAGE_TAG=${IMAGE_TAG//[^[:alnum:].-]/-}
           echo ::set-output name=IMAGE_TAG::$([ -z "$IMAGE_TAG" ] && echo "$GITHUB_SHA" || echo "$IMAGE_TAG")
       - name: Show image tag
-        run: echo "Image tag is ${{ steps.tag_info.outputs.IMAGE_TAG }}"
+        run: |
+          echo "Image tag is ${{ steps.tag_info.outputs.IMAGE_TAG }}"
+          echo "Action is $GITHUB_EVENT_NAME"
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
