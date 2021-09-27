@@ -5,8 +5,7 @@ on:
     branches:
       - dev
       - prod
-  release:
-    types: [published]
+    tags: [ '*' ]
   workflow_dispatch:
 
 jobs:
