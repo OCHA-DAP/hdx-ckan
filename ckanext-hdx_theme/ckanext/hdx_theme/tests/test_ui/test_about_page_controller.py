@@ -31,9 +31,9 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         # # /about/license
         _old_get_post = fw.get_post
         fw.get_post = mh.mock_get_licens_page_content
-        page = self._get_about_page('license')
+        page = self._get_faqs_page('license')
         assert 'Data Licenses' in page.data, 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
-        page = self._get_about_page('license', testsysadmin.apikey)
+        page = self._get_faqs_page('license', testsysadmin.apikey)
         assert 'Data Licenses' in page.data, 'the url /about/license should redirect to the Data Licenses page, even when the user is logged in'
         fw.get_post = _old_get_post
 
@@ -41,10 +41,10 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
         _old_get_post = fw.get_post
         fw.get_post = mh.mock_get_terms_page_content
-        page = self._get_about_page('terms')
+        page = self._get_faqs_page('terms')
         assert 'OCHA HDX Terms of Service' in page.data, 'the url /about/terms should redirect to the Terms of Service page when no user is logged in'
         assert 'HDX does not allow data that includes personally identifiable information' in page.data, 'the url /about/terms should redirect to the Terms of Service page when no user is logged in'
-        page = self._get_about_page('terms', testsysadmin.apikey)
+        page = self._get_faqs_page('terms', testsysadmin.apikey)
         assert 'OCHA HDX Terms of Service' in page.data, 'the url /about/terms should redirect to the Terms of Service page, even when the user is logged in'
         fw.get_post = _old_get_post
 
@@ -72,6 +72,17 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         page = self._get_url_page(url, testsysadmin.apikey)
         assert 'Frequently Asked Questions' in page.data, 'the url /about/license should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
+
+    def _get_faqs_page(self, page, apikey=None):
+        # global pages
+        test_client = self.get_backwards_compatible_test_client()
+        url = '/faqs/' + page
+        if apikey:
+            page = test_client.get(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+        else:
+            page = test_client.get(url)
+        return page
 
     def _get_about_page(self, page, apikey=None):
         # global pages
