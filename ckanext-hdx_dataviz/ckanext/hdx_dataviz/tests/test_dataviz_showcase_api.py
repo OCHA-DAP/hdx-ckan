@@ -9,7 +9,7 @@ from ckanext.hdx_dataviz.tests import generate_test_showcase, USER, SYSADMIN, OR
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
-
+ValidationError = tk.ValidationError
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
 class TestDatavizShowcaseApi(object):
@@ -36,6 +36,16 @@ class TestDatavizShowcaseApi(object):
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN}
         modified_dict = _get_action('ckanext_showcase_update')(context, showcase_dict)
         assert modified_dict['notes'] == 'Modified', 'A sysadmin should be able to update a normal showcase'
+
+    def test_update_normal_showcase_with_in_dataviz_gallery_not_set(self):
+        showcase_dict = generate_test_showcase(SYSADMIN, 'normal_showcase_in_dataviz_gallery_not_set', False)
+        showcase_dict['notes'] = 'Modified'
+        assert 'dataviz_label' not in showcase_dict
+        del showcase_dict['in_dataviz_gallery']
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        modified_dict = _get_action('ckanext_showcase_update')(context, showcase_dict)
+        assert modified_dict['notes'] == 'Modified', 'A sysadmin should be able to update a normal showcase even ' \
+                                                     'without having the "in_dataviz_gallery" parameter'
 
     def test_delete_normal_showcase(self):
         showcase_dict = generate_test_showcase(USER, 'normal_showcase', False)
@@ -71,3 +81,10 @@ class TestDatavizShowcaseApi(object):
         showcase_dict = _get_action('ckanext_showcase_update')(context, showcase_dict)
         assert showcase_dict['in_dataviz_gallery'] is True, \
             'A user with carousel permission should be allowed to update a dataviz showcase'
+
+        del showcase_dict['dataviz_label']
+        try:
+            _get_action('ckanext_showcase_update')(context, showcase_dict)
+            assert False
+        except ValidationError as e:
+            assert True, 'Validation should fail for dataviz showcases without "dataviz_label"'
