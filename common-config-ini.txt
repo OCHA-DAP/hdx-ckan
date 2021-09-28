@@ -360,5 +360,5 @@ hdx.cod.new_filters.enabled = true
 hdx.wordpress.category.faq=554
 hdx.wordpress.category.covid=566
 hdx.wordpress.category.devs=568
-hdx.wordpress.post.licenses=83013
-hdx.wordpress.post.terms=83009
+hdx.wordpress.category.terms=577
+hdx.wordpress.category.licenses=581

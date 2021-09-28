@@ -158,6 +158,12 @@
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-more-button-wrapper {
   text-align: center;
 }
+.hdx-wrapper .top-banner-licenses {
+  background-image: url("/images/backgrounds/faq_terms_banner.jpg");
+}
+.hdx-wrapper .top-banner-terms {
+  background-image: url("/images/backgrounds/faq_licenses_banner.jpg");
+}
 .hdx-wrapper .top-banner-faq-data-responsibility {
   background-image: url("/images/backgrounds/faq_top_f.png");
   background-image: url("/images/backgrounds/faq_data_responsibility.jpg");
