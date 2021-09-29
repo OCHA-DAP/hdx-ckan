@@ -41,10 +41,10 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         _old_faq_for_category = fw.faq_for_category
         fw.faq_for_category = mh.mock_faqs_terms_page_content
         page = self._get_faqs_page('terms')
-        assert 'OCHA HDX Terms of Service' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
-        assert 'HDX does not allow data that includes personally identifiable information' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
+        assert 'HDX Terms of Service' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
+        assert 'HDX is an open platform and anyone can use it without creating a user account.' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
         page = self._get_faqs_page('terms', testsysadmin.apikey)
-        assert 'OCHA HDX Terms of Service' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page, even when the user is logged in'
+        assert 'HDX Terms of Service' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page, even when the user is logged in'
         fw.faq_for_category = _old_faq_for_category
 
         # /about/hdx-qa-process
