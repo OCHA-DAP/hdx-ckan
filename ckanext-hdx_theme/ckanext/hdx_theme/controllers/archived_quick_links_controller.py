@@ -25,7 +25,7 @@ def _prepare_pages(page_list):
     return res
 
 
-class ArchivedQuickLinksController(base.BaseController):
+class ArchivedDatavizController(base.BaseController):
     def show(self):
         context = {'model': model, 'session': model.Session,
                    'user': c.user, 'auth_user_obj': c.userobj,
