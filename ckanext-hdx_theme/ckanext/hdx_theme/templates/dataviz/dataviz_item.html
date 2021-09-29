@@ -5,7 +5,7 @@
 
     </div>
     <div class="actions">
-      <a href="{{ h.url_for('showcase_blueprint.read', id=dataviz.name) }}" class="btn btn-primary">Explore</a>
+      <a href="{{ dataviz.url }}" class="btn btn-primary" target="_blank">Explore</a>
       {% if h.has_dataviz_gallery_permission() %}
         <a class="white-link mTop10" href="{{ h.url_for('showcase_blueprint.edit', id=dataviz.name) }}">Edit Showcase</a>
       {% endif %}
