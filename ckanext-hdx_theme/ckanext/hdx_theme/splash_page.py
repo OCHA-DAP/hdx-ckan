@@ -17,6 +17,7 @@ NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
 get_action = logic.get_action
 abort = base.abort
+redirect = tk.redirect_to
 
 
 def google_searchbox_data():
@@ -150,8 +151,8 @@ class SplashPageController(HomeController):
             'hdx-qa-process': _('HDX QA Process')
         }
         html = {
-            'license': config.get('hdx.wordpress.post.licenses'),
-            'terms': config.get('hdx.wordpress.post.terms'),
+            'license': 'licenses',
+            'terms': 'terms',
             'hdx-qa-process': 'home/snippets/qa-process.html'
         }
         render = {
@@ -162,10 +163,11 @@ class SplashPageController(HomeController):
         if title_item is None:
             abort(404, _("The requested about page doesn't exist"))
 
-        render_item = render.get(page, 'wordpress')
-        if render_item == 'wordpress':
-            render_item = 'home/about2.html'
-            html_item = fw.get_post(html.get(page))
+        render_item = render.get(page, 'redirect')
+        if render_item == 'redirect':
+            html_item = html.get(page)
+            result = redirect('/faqs/'+html_item)
+            return result
         else:
             html_item = html.get(page)
 
