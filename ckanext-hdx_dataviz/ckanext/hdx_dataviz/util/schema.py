@@ -7,6 +7,7 @@ from ckan.lib.navl.validators import default, ignore_missing, ignore_empty
 from ckan.logic.validators import boolean_validator, url_validator, natural_number_validator
 
 
+missing = toolkit.missing
 get_converter = toolkit.get_converter
 Invalid = toolkit.Invalid
 StopOnError = toolkit.StopOnError
@@ -77,7 +78,7 @@ def not_empty_if_in_dataviz_gallery(key, data, errors, context):
     value = data.get(key)
     other_value = data.get(('in_dataviz_gallery',))
 
-    if six.text_type(other_value) != 'true':
+    if other_value is missing or six.text_type(other_value).lower() != 'true':
         # if this is not a dataviz showcase then we don't care about this key
         raise StopOnError
     elif not value:

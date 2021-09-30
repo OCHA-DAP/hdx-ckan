@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 abort = base.abort
 
 
-class QuickLinksCustomSettingsController(base.BaseController):
+class DatavizCustomSettingsController(base.BaseController):
     def show(self):
         context = {u'user': g.user}
         logic.check_access('hdx_quick_links_update', context, {})

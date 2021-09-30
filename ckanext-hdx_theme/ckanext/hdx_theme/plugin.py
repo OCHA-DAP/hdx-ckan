@@ -169,7 +169,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     action='show')
         map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
         map.connect('/archive',
-                    controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedQuickLinksController',
+                    controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController',
                     action='show')
         map.connect(
             '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
@@ -185,9 +185,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('carousel_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
-        map.connect('quick_links_settings', '/ckan-admin/quicklinks/show',
+        map.connect('quick_links_settings', '/ckan-admin/dataviz/show',
                     controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:'
-                               'QuickLinksCustomSettingsController',
+                               'DatavizCustomSettingsController',
                     action='show')
 
         map.connect('package_links_settings', '/ckan-admin/packagelinks/show',
@@ -210,11 +210,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     action='delete')
 
         map.connect('update_quick_links_settings', '/ckan-admin/quick-links/update',
-                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController',
+                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:DatavizCustomSettingsController',
                     action='update')
 
         map.connect('delete_quick_links_settings', '/ckan-admin/quick-links/delete/{id}',
-                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:QuickLinksCustomSettingsController',
+                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:DatavizCustomSettingsController',
                     action='delete')
 
         map.connect('update_package_links_settings', '/ckan-admin/package-links/update',
