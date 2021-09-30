@@ -4,6 +4,7 @@
 }
 .dataviz-light .list-items.dataviz-list {
   display: grid;
+  margin-top: 30px;
   grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
   grid-gap: 30px;
   flex-wrap: wrap;
