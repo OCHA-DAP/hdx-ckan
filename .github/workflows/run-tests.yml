@@ -29,7 +29,10 @@ jobs:
           docker-compose restart ckan
           docker-compose exec -T ckan-py3 sh -c "envsubst < /srv/ckan/docker/hdx-test-core.ini.tpl > /srv/ckan/hdx-test-core.ini"
       - name: Installing HDX/CKAN PY2 dev-requirements
-        run: docker-compose exec -T ckan pip install -r /srv/ckan/dev-requirements-py2.txt
+        run: |
+          docker-compose exec -T ckan pip install -r /srv/ckan/dev-requirements-py2.txt
+          apt-get update
+          apt-get -y install python-backports.ssl-match-hostname python-backports.tempfile
       - name: Installing HDX/CKAN PY3 dev-requirements
         run: docker-compose exec -T ckan-py3 pip install -r /srv/ckan/dev-requirements.txt
       - name: Preparing database
