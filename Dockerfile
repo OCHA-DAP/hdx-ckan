@@ -51,7 +51,9 @@ RUN apt-get -qq -y update && \
         libyaml-dev \
         python3-psycopg2 \
         libffi-dev \
-        libssl-dev && \
+        libssl-dev \
+        python-backports.ssl-match-hostname \
+        python-backports.tempfile && \
     curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get -qq -y install nodejs && \
     npm install -g less@3.13.1 && \
