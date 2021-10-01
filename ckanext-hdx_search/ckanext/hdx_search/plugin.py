@@ -40,7 +40,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IAuthFunctions)
-    plugins.implements(plugins.IBlueprint)
 
     # IConfigurable
     def configure(self, config):
@@ -57,10 +56,10 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         }
 
     def before_map(self, map):
-        map.connect('simple_search',
-            '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('search', '/search',
-                    controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        # map.connect('simple_search',
+        #     '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        # map.connect('search', '/search',
+        #             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('qa_dashboard', '/qa_dashboard',
                     controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
         map.connect('qa_pii_log', '/dataset/{id}/resource/{resource_id}/qa_pii_log/{file_name}',
@@ -70,10 +69,10 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return map
 
     def after_map(self, map):
-        map.connect('simple_search',
-            '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('search', '/search',
-                    controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        # map.connect('simple_search',
+        #     '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        # map.connect('search', '/search',
+        #             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('qa_dashboard', '/qa_dashboard',
                     controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
         return map
@@ -292,8 +291,3 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             'qa_sdcmicro_run': authorize.hdx_qa_sdcmicro_run,
             'qa_pii_run': authorize.hdx_qa_pii_run
         }
-
-    # IBlueprint
-    def get_blueprint(self):
-        import ckanext.hdx_package.views.light_dataset as light_dataset
-        return light_dataset.hdx_light_search

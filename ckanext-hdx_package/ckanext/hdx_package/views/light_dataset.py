@@ -81,6 +81,10 @@ def read(id):
 
 @check_redirect_needed
 def search():
+    return generic_search(u'light/search/search.html')
+
+
+def generic_search(html_template):
     try:
         context = {'model': model, 'user': g.user,
                    'auth_user_obj': g.userobj}
@@ -98,7 +102,7 @@ def search():
         return redirect_result
 
     data_dict = {'data': search_logic.template_data}
-    return render(u'light/search/search.html', data_dict)
+    return render(html_template, data_dict)
 
 
 def _compute_analytics(dataset_dict):

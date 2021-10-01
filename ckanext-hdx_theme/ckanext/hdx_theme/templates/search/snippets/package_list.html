@@ -11,7 +11,11 @@ truncate_title - The length to truncate the title to (default: 80).
 
 Example:
 
-{% snippet 'snippets/package_list.html', packages=c.datasets, show_my_links=false %}
+{{ h.snippet('search/snippets/package_list.html',
+                query=my_c.q, packages=my_c.page.items, packages_count=my_c.page.item_count,
+                full_facet_info=my_c.full_facet_info,
+                ext_page_size=my_c.ext_page_size, sorting_selected=my_c.sort_by_selected,
+                other_links=my_c.other_links, display_min=display_min) }}
 
 #}
 {#{% resource 'hdx_theme/dataset-search' %}#}
@@ -22,9 +26,9 @@ Example:
 
 {% set min_version = full_facet_info.get("filters_selected") or full_facet_info.get("query_selected") if "filters_selected" in full_facet_info or "query_selected" in full_facet_info %}
 
-{% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
+{% set searchValue = h.hdx_get_request_param('q', '') %}
 
-<div style="display: none;" id="analytics-number-of-results">{{c.page.item_count}}</div>
+<div style="display: none;" id="analytics-number-of-results">{{packages_count}}</div>
 {%  set current_page_url = other_links.get('current_page_url') if 'current_page_url' in other_links else '' %}
 <form id="dataset-filter-form" style="display: inline;">
 
@@ -56,7 +60,7 @@ Example:
           {% snippet 'search/snippets/package_search_order.html', sort_param = c.sort_by_selected, admin_view=admin_view, used_default_sort_by=c.used_default_sort_by %}
 
           {% set limits = [25, 50, 100] %}
-          {% set limit_param = request.params.get('ext_page_size') %}
+          {% set limit_param = ext_page_size %}
           {% set limit_selected = limit_param if limit_param else 25 %}
           <div class="list-header-showall filter-pagination control-order-by control-items-per-page">
             <label for="field-order-by" class="uppercase">{{ _('Show') }}</label>
@@ -92,11 +96,11 @@ Example:
         {% set facet_list = full_facet_info.get('facets') %}
         {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
     </div>
-        {% set ext_after_metadata_modified = request.params.get('ext_after_metadata_modified') %}
+        {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
         {%  if ext_after_metadata_modified %}
             <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
         {% endif %}
-        {% set ext_batch = request.params.get('ext_batch') %}
+        {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
         {% if ext_batch %}
             <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
         {% endif %}

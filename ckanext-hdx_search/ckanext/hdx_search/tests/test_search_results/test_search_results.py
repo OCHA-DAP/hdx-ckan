@@ -60,8 +60,6 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         search_controller.HDXSearchController._performing_search = performing_search_original
 
     def test_search_recommendations(self):
-        url = h.url_for(
-            controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search',
-            q='Nepal')
+        url = h.url_for('hdx_search.search', q='Nepal')
         result = self.app.get(url)
         assert '<div class="search-ahead"' in result.data

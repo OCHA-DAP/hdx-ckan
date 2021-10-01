@@ -21,7 +21,7 @@ pages = [
     {'controller': 'user', 'action': 'login', 'usertype': None},
     {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
      'action': 'contribute', 'usertype': None},
-    {'controller': 'ckanext.hdx_search.controllers.search_controller:HDXSearchController', 'action': 'search', 'usertype': 'all'},
+    {'url_name': 'hdx_dataset.search', 'usertype': 'all'},
     {'url_name': 'hdx_group.index', 'usertype': 'all'},
     {'url_name': 'hdx_org.index', 'usertype': 'all'},
     # {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
