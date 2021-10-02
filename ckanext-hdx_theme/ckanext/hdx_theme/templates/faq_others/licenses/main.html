@@ -3,8 +3,9 @@
 {% block subtitle %}{{ _("Data Licenses") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('DATA LICENSES'), named_route='hdx_faqs.licenses') }}</li>
-
+  <li class="active">
+    <a href="/faqs/terms">{{ _('DATA LICENSES') }}</a>
+  </li>
 {% endblock %}
 
 {% block pre_primary %}
