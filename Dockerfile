@@ -1,17 +1,17 @@
-FROM unocha/debian-base-s6:9-slim
+FROM public.ecr.aws/unocha/debian-base-s6:10-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
+    LANGUAGE=en_US:en_US \
     LC_ALL=en_US.UTF-8 \
     HDX_CKAN_WORKERS=4 \
     INI_FILE=/etc/ckan/prod.ini \
     HDX_CACHE_DIR=/srv/cache \
     HDX_LOG_LEVEL=INFO
 
-COPY . /srv/ckan/
-
 WORKDIR /srv/ckan
+
+COPY . .
 
 RUN apt-get -qq -y update && \
     apt-get -qq -y install locales && \
@@ -52,7 +52,7 @@ RUN apt-get -qq -y update && \
         python3-psycopg2 \
         libffi-dev \
         libssl-dev && \
-    curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get -qq -y install nodejs && \
     npm install -g less@3.13.1 && \
     apt-get -qq -y install python-pip && \
@@ -74,11 +74,6 @@ RUN apt-get -qq -y update && \
     chmod +x run_pytest_with_coverage.sh && \
     chmod +x setup_py_helper.sh && \
     ./setup_py_helper.sh && \
-    # curl https://codeload.github.com/okfn/ckanext-s3filestore/tar.gz/v0.1.1 -o s3f.tgz && \
-    # tar xvzf s3f.tgz && \
-    # rm -f s3f.tgz && \
-    # cd ckanext-s3filestore-0.1.1 && \
-    # python setup.py develop && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     pip install boto3 && \
@@ -97,7 +92,6 @@ RUN apt-get -qq -y update && \
     apt-get -y autoremove && \
     apt-get clean && \
     rm -rf \
-        .git \
         /root/.cache \
         /root/.npm \
         /usr/local/man \

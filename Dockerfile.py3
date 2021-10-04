@@ -1,7 +1,8 @@
 FROM python:3.8-slim
 
-COPY . /srv/ckan/
 WORKDIR /srv/ckan
+
+COPY . .
 
 # Install required system packages
 RUN apt-get -q -y update \
