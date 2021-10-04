@@ -3,16 +3,16 @@
 {% block subtitle %}{{ _("Data Responsibility for COVID-19") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Data Responsibility for COVID-19'),
-  controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqDataResponsibilityController',
-  action='show') }}</li>
+  <li class="active">
+    <a href="/faqs/covid">{{ _('Data Responsibility for COVID-19') }}</a>
+  </li>
 {% endblock %}
 
 {% block pre_primary %}
     {%- block faqwidget %}
         {{ h.snippet('widget/faq_data_responsibility/faq-send-message.html', id="faqSendMsgPopup", topics=data.topics, fullname=data.fullname,
                         email=data.email, capcha_api_key=capcha_api_key) }}
-        {{ h.snippet('widget/faq_data_responsibility/done.html', id="faqDonePopup") }}
+        {{ h.snippet('widget/faq/done.html', id="faqDonePopup") }}
     {% endblock -%}
     <div class="row top-banner-faq-data-responsibility">
         <div class="col-xs-12">
@@ -47,19 +47,12 @@
             </p>
         </div>
     </div>
-    {% snippet 'faq_data_responsibility/questions_sections.html', data=data.faq_data %}
+    {% snippet 'faq_others/questions_sections.html', data=data.faq_data %}
 {% endblock %}
 
 {% block secondary %}
     <div id="hdx-faq-sidebar-wrapper" class="mTop60">
         <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
-{#            <ul class="nav">#}
-{#            {% for section in data.faq_data %}#}
-{#                <li>#}
-{#                    <a id='menu-{{ section.id }}' href="#body-{{ section.id }}"> {{ section.title }} </a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#            </ul>#}
             <p class="no-answer-found mTop30">
                 <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
             </p>
