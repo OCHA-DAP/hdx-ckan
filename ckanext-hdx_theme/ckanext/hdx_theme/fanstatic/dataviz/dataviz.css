@@ -1,10 +1,9 @@
 .dataviz-light {
   background-color: #fff;
-  padding-bottom: 30px;
 }
 .dataviz-light .list-items.dataviz-list {
   display: grid;
-  margin-top: 30px;
+  margin: 30px 0;
   grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
   grid-gap: 30px;
   flex-wrap: wrap;
