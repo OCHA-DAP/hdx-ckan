@@ -6,15 +6,15 @@ Example:
 
 #}
 {% set sorting = [
-(_('Last Modified'), h.HDX_CONST('DEFAULT_SORTING')),
-(_('Last Created'), 'metadata_created desc'),
-(_('Relevance'), 'score desc, ' + h.HDX_CONST('DEFAULT_SORTING')),
-(_('Name Ascending'), 'title_case_insensitive asc'),
-(_('Name Descending'), 'title_case_insensitive desc'),
-(_('Trending'), 'pageviews_last_14_days desc'),
-(_('Most Downloads'), 'total_res_downloads desc')]
+(_('Last Modified'), h.HDX_CONST('DEFAULT_SORTING'), _('Last Modified')),
+(_('Last Created'), 'metadata_created desc', _('Last Created')),
+(_('Relevance'), 'score desc, ' + h.HDX_CONST('DEFAULT_SORTING'), _('Relevance')),
+(_('Name Ascending'), 'title_case_insensitive asc', _('Name Asc')),
+(_('Name Descending'), 'title_case_insensitive desc', _('Name Desc')),
+(_('Trending'), 'pageviews_last_14_days desc', _('Trending')),
+(_('Most Downloads'), 'total_res_downloads desc', _('Most Downloads'))]
 %}
-{% if admin_view %} {% set nothing=sorting.insert(0, (_('Due for Update'), 'due_date asc')) %}{% endif %}
+{% if admin_view %} {% set nothing=sorting.insert(0, (_('Due for Update'), 'due_date asc', _('Due for Update'))) %}{% endif %}
 {% set extra_class = class if class else 'pull-right' %}
 
 {% set sorting_selected = sort_param if sort_param else h.HDX_CONST('DEFAULT_SORTING') %}
@@ -22,21 +22,21 @@ Example:
   <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
   <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">
     <a id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
-      {% for label, value in sorting %}
+      {% for label, value, short_label in sorting %}
       {% if sorting_selected == value %}
       <input id="header-search-sort_initial_values" type="hidden" style="display: none" value="{{value}}" label="{{label}}" />
       {% if not used_default_sort_by %}<input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>{% endif %}
       <label class="dropdown-toggle-text">
           {% if label == _('Trending') %}
               <span title="{{ _('Trending is determined by page views last 14 days') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
-                 {{ label }}
+                 {{ short_label }}
               </span>
           {% elif label == _('Due for Update') %}
               <span title="{{ _('Show datasets that need to be updated at the top of the list') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
-                 {{ label }}
+                 {{ short_label }}
               </span>
           {% else %}
-              {{ label }}
+              {{ short_label }}
           {% endif %}
       </label>
       {% endif %}
@@ -44,7 +44,7 @@ Example:
       <i class="humanitarianicons-Down"></i>
     </a>
     <ul class="dropdown-menu dropdown-inverse dropdown-menu-right" role="menu" style="max-height: 241px; overflow-y: auto;">
-      {% for label, value in sorting %}
+      {% for label, value, short_label in sorting %}
       {% if label and value %}
       <li><a href="#" tabindex="-1" val="{{ value }}">{{ label }}</a></li>
       {% endif %}
