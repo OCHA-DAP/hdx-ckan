@@ -1,17 +1,16 @@
-import pytest
-import mock
-
 import datetime
 
-from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
-
-from ckanext.hdx_org_group.helpers.data_completness import DataCompletness, FLAG_NOT_APPLICABLE
-
-from ckanext.hdx_org_group.controllers.country_controller import CountryController
+import mock
+import pytest
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
+
+import ckanext.hdx_org_group.helpers.country_helper as grp_h
+
+from ckanext.hdx_org_group.helpers.data_completness import DataCompletness, FLAG_NOT_APPLICABLE
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 _get_action = tk.get_action
 
@@ -242,6 +241,6 @@ class TestDataCompleteness(object):
     def __compute_data_completeness(self, yaml_dict, patched_DataCompleteness):
         mocked_data_completeness = MockedDataCompleteness(yaml_dict)
         patched_DataCompleteness.return_value = mocked_data_completeness
-        CountryController._get_data_completeness('test_location')
+        grp_h._get_data_completeness('test_location')
         data = mocked_data_completeness.config
         return data

@@ -276,7 +276,7 @@ def get_not_filtered_facet_info(country_dict):
 
     # The facet titles are not really needed in this case but we need to follow the process
     facets = {'vocab_Topics': 'tags', 'organization': 'organization'}
-    search_logic = GroupSearchLogic(id=country_dict.get('name'))
+    search_logic = GroupSearchLogic(country_dict.get('name'), None)
     query_result = search_logic._performing_search(u'', fq, facets.keys(), 2, 1, DEFAULT_SORTING, None,
                                                    None, context)
     non_filtered_facet_info = search_logic._prepare_facets_info(query_result.get('search_facets'), {}, {},
