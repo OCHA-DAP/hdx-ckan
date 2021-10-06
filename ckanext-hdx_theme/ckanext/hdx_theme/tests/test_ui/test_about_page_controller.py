@@ -113,11 +113,11 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_data_responsability_page_content
-        url = h.url_for(controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqDataResponsibilityController', action='show')
-        page = self._get_url_page(url)
+        # url = h.url_for(controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqDataResponsibilityController', action='show')
+        page = self._get_faqs_page('covid')
         assert 'Data Responsibility in the COVID-19 Response' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'About Data Responsibility for COVID-19' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        page = self._get_url_page(url, testsysadmin.apikey)
+        page = self._get_faqs_page('covid', testsysadmin.apikey)
         assert 'Data Responsibility in the COVID-19 Response' in page.data, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
