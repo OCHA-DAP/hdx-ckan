@@ -184,17 +184,10 @@
   }
 }
 .dataviz-light .carousel .carousel-indicators li {
-  border-radius: 0;
-  background-color: #fff;
-  margin: 1px 5px;
-  border: 1px solid #cccccc;
-  height: 12px;
-  width: 12px;
+  background-color: #cccccc;
 }
 .dataviz-light .carousel .carousel-indicators li.active {
-  background-color: #007CE0;
-  margin: 1px 5px;
-  border: 1px solid #fff;
+  background-color: #fff;
 }
 .dataviz-light .hero-item {
   height: 570px;
