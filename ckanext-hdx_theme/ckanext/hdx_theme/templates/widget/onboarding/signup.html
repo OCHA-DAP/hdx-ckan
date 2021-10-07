@@ -43,7 +43,7 @@ Example:
                     <!--<a class="btn btn-demo signup-action" type="button" href="https://www.youtube.com/watch?v=P8XDNmcQI0o" target="_blank"> {{_('See HDX in action')}} <i class="glyphicon glyphicon-play"></i></a>-->
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <form id="signup-form">
+                    <form id="signup-form" onsubmit="return false;">
                         <div class="signup-box">
                             <div class="control">
                                 <input id="field-email" name="email" class="full-width required" type="text" autocomplete="off">
@@ -58,7 +58,10 @@ Example:
                                     <input id="signup-terms" name="signup-terms" type="checkbox" checked="checked"><label for="signup-terms">{{_('I have read and accept the')}} <a target="_blank" href="/faqs/terms">HDX Terms of Service</a></label>
                                 </div>
                             </div>
-                            <input id="recaptcha" class="mTop10 full-width btn btn-primary btn-large hdx-recaptcha" type="submit" value="Sign up" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="signupFormOnSubmit" data-size="invisible" data-badge="inline">
+                            <input id="recaptcha" class="mTop10 full-width btn btn-primary btn-large hdx-recaptcha"
+                                   type="submit" value="Sign up" data-sitekey="{{ g.recaptcha_publickey }}"
+                                   data-callback="signupFormOnSubmit" data-size="invisible" data-badge="inline"
+                                   >
                             <div class="member center mTop10">Already a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#loginPopup');" aria-label="sign in">Sign in</a></div>
                         </div>
                     </form>
