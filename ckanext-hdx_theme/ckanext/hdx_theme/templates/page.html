@@ -1,5 +1,14 @@
-
 {% extends "base.html" %}
+
+{%- block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/page-styles' %}
+  {% if c.userobj %}
+    {% asset 'hdx_theme/onboarding-bulk-user-styles' %}
+  {% else %}
+    {% asset 'hdx_theme/onboarding-bulk-anon-styles' %}
+  {% endif %}
+{% endblock %}
 
 {%- block page -%}
 
@@ -215,10 +224,3 @@
   {{ super() }}
   {% asset 'hdx_theme/search-scripts' %}
 {% endblock -%}
-
-{%- block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/page-styles' %}
-  {% asset 'hdx_theme/search-styles' %}
-{#  {% resource 'requestdata/css/main.css' %}#}
-{% endblock %}

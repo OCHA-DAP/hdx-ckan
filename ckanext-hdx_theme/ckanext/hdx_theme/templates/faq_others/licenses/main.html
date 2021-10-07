@@ -1,0 +1,50 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Data Licenses") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">
+    <a href="/faqs/terms">{{ _('DATA LICENSES') }}</a>
+  </li>
+{% endblock %}
+
+{% block pre_primary %}
+    <div class="row top-banner top-banner-licenses">
+        <div class="col-xs-12">
+            <div class="top-banner-text-wrapper">
+                <div class="top-banner-title">
+                   {{ _('Data Licenses') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block primary %}
+    <div class="row mTop60">
+        <div class="col-xs-12">
+            <div id="body-about-hdx" class="section-flag" style="">HDX Data Licenses</div>
+            <p class="mTop10">
+              You can share your data on HDX under one of the following Creative Commons licenses.
+              Note: If you would like us to include other license options for data shared through HDX, please send us an email with your request at <a href="mailto:hdx@un.org">hdx@un.org</a>.
+            </p>
+        </div>
+    </div>
+    {% snippet 'faq_others/questions_sections.html', data=data.faq_data %}
+{% endblock %}
+
+{% block secondary %}
+    <div id="hdx-faq-sidebar-wrapper" class="mTop60">
+        <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+            <p>
+              {% snippet 'faq/search.html' %}
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{%- block styles %}
+    {{ super() }}
+    {% asset 'hdx_theme/faq-scripts' %}
+{% endblock %}

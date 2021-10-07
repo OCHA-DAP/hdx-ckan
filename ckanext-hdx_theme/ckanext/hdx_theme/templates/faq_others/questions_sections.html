@@ -1,8 +1,4 @@
-
 {% for section in data %}
-{#    <p class="mTop30 mBottom15">#}
-{#        <div class="section-flag" id='body-{{ section.id }}' > {{ section.title }} </div>#}
-{#    </p>#}
     <div class="panel-group hdx-panel-group" id="accordion-{{ section.id }}" role="tablist" aria-multiselectable="false">
         {% for question in section.questions %}
             {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}

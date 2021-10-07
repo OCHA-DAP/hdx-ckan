@@ -619,7 +619,7 @@ def feature():
     if os.path.isdir(lunr_folder):
         feature_index_file = os.path.join(lunr_folder,'feature-index.js')
     else:
-        feature_index_file = os.path.join(BASEDIR, 'ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search/lunr/feature-index.js')
+        feature_index_file = os.path.join(BASEDIR, 'ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr/feature-index.js')
     os.chown(feature_index_file, 33, 0)
     print('Done.')
 

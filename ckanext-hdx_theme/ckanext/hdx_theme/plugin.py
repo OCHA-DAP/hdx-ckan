@@ -14,6 +14,7 @@ from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddlewa
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
+from ckanext.hdx_theme.views.faqs import hdx_faqs
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -176,10 +177,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         # map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
-
-        map.connect('faq-data-responsibility-covid-19', '/faq-data-responsibility-covid-19',
-                    controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqDataResponsibilityController',
-                    action='show')
 
         map.connect('carousel_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
@@ -382,4 +379,4 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_colored_page]
+        return [hdx_colored_page, hdx_faqs]

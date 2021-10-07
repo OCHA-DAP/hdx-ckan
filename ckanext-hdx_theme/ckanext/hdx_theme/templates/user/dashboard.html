@@ -1,4 +1,8 @@
 {% extends "user/edit_base.html" %}
+{% block styles %}
+    {{ super() }}
+
+{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="active"><a href="{{ h.url_for('user_dashboard_datasets') }}">{{ _('Dashboard') }}</a></li>
@@ -68,10 +72,11 @@
     </div>
   </article>
 {% endblock %}
-{% block styles %}
+
+{% block scripts %}
     {{ super() }}
-{#    {% resource 'hdx_theme/dashboard.css' %}#}
-{#    {% resource 'hdx_theme/hdx_dashboard.js' %}#}
+    {#    {% resource 'hdx_theme/dashboard.css' %}#}
+    {#    {% resource 'hdx_theme/hdx_dashboard.js' %}#}
 
     {% asset 'hdx_theme/base-dashboard-scripts' %}
 {% endblock %}

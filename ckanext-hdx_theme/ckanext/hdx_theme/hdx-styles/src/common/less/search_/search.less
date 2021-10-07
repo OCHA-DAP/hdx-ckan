@@ -280,9 +280,9 @@
 
 @media (max-width: 465px){
   .header-search-form .search-ahead {
-    width: 100%;
-    position: fixed;
-    top: @headerNavHeight + @global-header-height - 2px;
+    //width: 100%;
+    //position: fixed;
+    //top: @headerNavHeight + @global-header-height - 2px;
     li {
       font-size: 16px;
     }
@@ -294,9 +294,10 @@
 
 @media(max-width: 767px) {
   .header-search-form .search-ahead {
-    width: 100%;
-    position: fixed;
-    top: @headerNavHeight + @global-header-height - 2px;
+    width: 100vw;
+    left: -90px;
+    padding: 0 15px;
+    //top: @headerNavHeight + @global-header-height - 2px;
 
     .ahead-type{
       font-size: 14px;

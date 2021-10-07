@@ -239,11 +239,6 @@
   position: relative;
 }
 @media (max-width: 465px) {
-  .header-search-form .search-ahead {
-    width: 100%;
-    position: fixed;
-    top: 90px;
-  }
   .header-search-form .search-ahead li {
     font-size: 16px;
   }
@@ -253,9 +248,9 @@
 }
 @media (max-width: 767px) {
   .header-search-form .search-ahead {
-    width: 100%;
-    position: fixed;
-    top: 90px;
+    width: 100vw;
+    left: -90px;
+    padding: 0 15px;
   }
   .header-search-form .search-ahead .ahead-type {
     font-size: 14px;
