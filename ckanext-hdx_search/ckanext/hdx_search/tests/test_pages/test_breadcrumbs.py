@@ -34,6 +34,6 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'
-        search_strings = ['<a href="/dataset">Datasets</a>']
+        search_strings = ['href="/dataset">Datasets</a>']
 
         hdx_test_util.are_strings_in_text(page, search_strings, begin_str, end_str)

@@ -3,61 +3,56 @@ import logging as logging
 
 
 import ckanext.hdx_theme.helpers.helpers as h
-import ckan.common as common
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
-import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_search.controller_logic.search_logic as search_logic
 
-c = common.c
 
 log = logging.getLogger(__name__)
 
-indicator_counts = 0
 dataset_counts = 0
 
-performing_search_original = search_controller.HDXSearchController._performing_search
+prepare_facets_info_original = search_logic.SearchLogic._prepare_facets_info
 
 
-def performing_search_wrapper(self, *args, **kwargs):
+def prepare_facet_info_wrapper(self, *args, **kwargs):
     global indicator_counts
     global dataset_counts
-    ret = performing_search_original(self, *args, **kwargs)
-    facet_item_list = c.search_facets.get('indicator', {}).get('items', [])
-    indicator_counts = next((item.get('count', 0) for item in facet_item_list if item.get('name', '') == '1'), 0)
-    dataset_counts = c.count - indicator_counts
+    ret = prepare_facets_info_original(self, *args, **kwargs)
+    dataset_counts = ret.get('num_of_total_items')
     return ret
 
 
-search_controller.HDXSearchController._performing_search = performing_search_wrapper
-
-
 class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
+    @classmethod
+    def setup_class(cls):
+        super(TestHDXSearchResults, cls).setup_class()
+        search_logic.SearchLogic._prepare_facets_info = prepare_facet_info_wrapper
+
+    @classmethod
+    def teardown_class(cls):
+        super(TestHDXSearchResults, cls).teardown_class()
+        search_logic.SearchLogic._prepare_facets_info = prepare_facets_info_original
 
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin('hdx_search hdx_package hdx_theme')
 
     def test_hdx_search_results(self):
-        global packages
-
         # Testing search on all tab
-        url = h.url_for(
-            'search', q='hdxtest')
+        url = h.url_for('hdx_dataset.search', q='hdxtest')
         self.app.get(url)
 
-        assert indicator_counts == 2, '2 indicator'
-        assert dataset_counts == 1, '1 dataset, 3 in total'
+        assert dataset_counts == 3, '3 datasets in total'
 
         # Testing search with indicator filter
         url = h.url_for(
             'search', q='hdxtest', ext_indicator='1')
         self.app.get(url)
 
-        assert indicator_counts == 2, '2 indicator'
-        assert dataset_counts == 0, '0 datasets because of the filter'
-
-        search_controller.HDXSearchController._performing_search = performing_search_original
+        assert dataset_counts == 2, 'only 2 datasets have the indicator flag'
 
     def test_search_recommendations(self):
         url = h.url_for('hdx_search.search', q='Nepal')
