@@ -1,5 +1,7 @@
 {% extends "page_light.html" %}
 
+
+
 {%- block styles %}
   {{ super() }}
   {% asset 'hdx_theme/search-light-styles' %}
@@ -13,6 +15,14 @@
 
 {% set grp = grp_dict %}
 {% set data = widgets_data.data %}
+
+{# The lines below are for analytics #}
+{% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
+{% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
+
+{% block subtitle %}
+    {{ data.country_dict.display_name }}
+{% endblock %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
