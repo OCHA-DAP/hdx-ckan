@@ -65,8 +65,10 @@ function prepareMap(countDatasets, openNewWindow){
   closeTooltip = window.setTimeout(function() {
     return map.closePopup();
   }, 100);
+  var shownPopup = false;
   highlightFeature = function(e) {
     var countryID, layer;
+    shownPopup = true;
     clearTimeout(closePopupTimeout);
     layer = e.target;
     countryID = layer.feature.id;
@@ -104,11 +106,16 @@ function prepareMap(countDatasets, openNewWindow){
     var layer;
     layer = e.target;
     layer.setStyle(getStyle(layer.feature));
+    shownPopup = false;
     closePopupTimeout = setTimeout(function() {
       map.closePopup();
     }, 200);
   };
   featureClicked = function(e) {
+    if (!shownPopup) {
+      highlightFeature(e);
+      return;
+    }
     var code, layer;
     layer = e.target;
     code = layer.feature.id.toLowerCase();
