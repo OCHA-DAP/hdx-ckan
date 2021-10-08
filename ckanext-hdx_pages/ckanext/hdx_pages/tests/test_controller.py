@@ -6,7 +6,7 @@ Created on March 19, 2019
 
 '''
 import pytest
-
+import six
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import logging as logging
@@ -92,6 +92,7 @@ class TestHDXControllerPage(object):
                          'with_request_context')
 class TestHDXControllerPageNew(TestHDXControllerPage):
 
+    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     @pytest.mark.usefixtures('with_request_context')
     def test_page_new(self, app):
 
@@ -108,7 +109,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
 
         context['user'] = SYSADMIN
         user = model.User.by_name(SYSADMIN)
-        url = h.url_for('hdx_custom_page.new')
+        # url = h.url_for('hdx_custom_page.new')
         page = self._get_url(app, url, user.apikey)
         assert '200' in page.status
         assert 'Save This Page' in page.body
@@ -122,6 +123,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
                          'with_request_context')
 class TestHDXControllerPageEdit(TestHDXControllerPage):
 
+    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_edit(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}
@@ -156,6 +158,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
                          'with_request_context')
 class TestHDXControllerPageRead(TestHDXControllerPage):
 
+    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_read(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}
@@ -194,6 +197,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPageDelete(TestHDXControllerPage):
 
+    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_delete(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}

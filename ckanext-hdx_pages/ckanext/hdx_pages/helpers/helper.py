@@ -87,3 +87,12 @@ def _get_default_facet_titles():
         'res_format': _('Formats'),
         'license_id': _('Licenses'),
     }
+
+
+def has_permission(username_or_id):
+    try:
+        from ckanext.hdx_users.helpers.permissions import Permissions
+        result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CRISIS)
+    except ImportError:
+        return False
+    return result

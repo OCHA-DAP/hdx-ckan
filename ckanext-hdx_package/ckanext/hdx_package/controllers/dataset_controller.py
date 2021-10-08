@@ -170,17 +170,17 @@ class DatasetController(PackageController):
                 pkg_dict['name'], 'new', package_type=package_type)
         except NotAuthorized:
             abort(403, _('Unauthorized to read package %s') % '')
-        except NotFound, e:
+        except NotFound as e:
             abort(404, _('Dataset not found'))
         except dict_fns.DataError:
             abort(400, _(u'Integrity Error'))
-        except SearchIndexError, e:
+        except SearchIndexError as e:
             try:
                 exc_str = unicode(repr(e.args))
             except Exception:  # We don't like bare excepts
                 exc_str = unicode(str(e))
             abort(500, _(u'Unable to add package to search index.') + exc_str)
-        except ValidationError, e:
+        except ValidationError as e:
             errors = e.error_dict
             error_summary = e.error_summary
             if is_an_update:

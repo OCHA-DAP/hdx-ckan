@@ -67,6 +67,7 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     def get_helpers(self):
         return {
             'hdx_events_list': helper.hdx_events_list,
+            'hdx_user_has_page_permission': helper.has_permission,
         }
 
     # IConfigurer
