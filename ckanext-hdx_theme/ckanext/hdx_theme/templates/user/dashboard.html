@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active"><a href="{{ h.url_for('user_dashboard_datasets') }}">{{ _('Dashboard') }}</a></li>
+  <li class="active"><a href="{{ h.url_for('hdx_dashboard.datasets') }}">{{ _('Dashboard') }}</a></li>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -26,7 +26,7 @@
       <header class="page-header paddingRowHack" style="position: relative;">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
           {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
-          {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('hdx_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
 

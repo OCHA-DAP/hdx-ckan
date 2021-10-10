@@ -9,6 +9,7 @@ import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
 import ckanext.hdx_users.views.user as hdx_user
+import ckanext.hdx_users.views.dashboard as dashboard
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -148,10 +149,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard',
                     ckan_icon='list')
-        map.connect('user_dashboard_datasets', '/dashboard/datasets',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='dashboard_datasets',
-                    ckan_icon='sitemap')
+        # map.connect('user_dashboard_datasets', '/dashboard/datasets',
+        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+        #             action='dashboard_datasets',
+        #             ckan_icon='sitemap')
         # map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
         #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
         #             action='dashboard_visualizations',
@@ -241,10 +242,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard',
                     ckan_icon='list')
-        map.connect('user_dashboard_datasets', '/dashboard/datasets',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='dashboard_datasets',
-                    ckan_icon='sitemap')
+        # map.connect('user_dashboard_datasets', '/dashboard/datasets',
+        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+        #             action='dashboard_datasets',
+        #             ckan_icon='sitemap')
         # map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
         #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
         #             action='dashboard_visualizations',
@@ -254,7 +255,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
-            'hdx_user_show': get.hdx_user_show,
             'hdx_user_fullname_show': get.hdx_user_fullname_show,
             'user_show': get.user_show,
         }
@@ -265,3 +265,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_name_validator': hdx_validators.user_name_validator
         }
 
+    # IBlueprint
+    def get_blueprint(self):
+        return dashboard.hdx_dashboard

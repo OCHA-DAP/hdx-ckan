@@ -217,7 +217,7 @@ class ExpiredDatasetsService(object):
                     'last_date': last_date,
                     'count': count,
                     'html_template': 'light/notifications/expired_datasets_snippet.html',
-                    'my_dashboard_url': h.url_for('user_dashboard_datasets', **param_dict),
+                    'my_dashboard_url': h.url_for('hdx_dashboard.datasets', **param_dict),
                     'for_sysadmin': False,
                     'is_sysadmin': self.is_sysadmin
                 }
