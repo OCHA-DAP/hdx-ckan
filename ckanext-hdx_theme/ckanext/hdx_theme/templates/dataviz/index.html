@@ -148,7 +148,7 @@
               {% snippet 'dataviz/dataviz_item.html', dataviz=dataviz %}
             {% endfor %}
 
-            {% if data.page | length == 0 %}
+            {% if data.page.items | length == 0 %}
               <div class="search-empty">
                 <h3>Sorry no dataviz found for current filter selection</h3>
               </div>
