@@ -37,11 +37,6 @@ ckan:
 page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - vendor/select2-css
-      - hdx_theme/banner-styles
-      - hdx_theme/search-styles
   contents:
     - vendor/bootstrap/css/bootstrap.css
     - css/hdx-icons.css
@@ -63,6 +58,11 @@ page-scripts:
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
   <<: *common-css
+  extra:
+    preload:
+      - vendor/select2-css
+      - hdx_theme/banner-styles
+      - hdx_theme/search-styles
   contents:
     - page-common-styles
     - base/base.css
@@ -81,6 +81,11 @@ page-light-scripts:
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
   <<: *common-css
+  extra:
+    preload:
+      - vendor/select2-css
+      - hdx_theme/banner-styles
+      - hdx_theme/search-styles
   contents:
     - page-common-styles
     - light/page-light.css
@@ -252,12 +257,30 @@ onboarding-bulk-user-styles:
       - hdx_theme/onboarding-select-org-styles
       - hdx_theme/onboarding-survey-styles
 
+onboarding-bulk-user-scripts:
+  extra:
+    preload:
+      - hdx_theme/onboarding-scripts
+      - hdx_theme/onboarding-registered-scripts
+      - hdx_theme/onboarding-follow-scripts
+      - hdx_theme/onboarding-invite-scripts
+      - hdx_theme/onboarding-done-scripts
+      - hdx_theme/onboarding-select-org-scripts
+      - hdx_theme/onboarding-survey-scripts
+
 onboarding-bulk-anon-styles:
   extra:
     preload:
       - hdx_theme/onboarding-styles
       - hdx_theme/onboarding-password-styles
       - hdx_theme/onboarding-survey-styles
+
+onboarding-bulk-anon-scripts:
+  extra:
+    preload:
+      - hdx_theme/onboarding-scripts
+      - hdx_theme/onboarding-password-scripts
+      - hdx_theme/onboarding-survey-scripts
 
 onboarding-password-scripts:
   <<: *common-js
@@ -804,8 +827,6 @@ contribute-flow-scripts:
   output: ckanext-hdx_theme/%(version)s_contribute-flow-scripts.js
   extra:
     preload:
-      - hdx_theme/ckan
-      - hdx_theme/page-scripts
       - hdx_theme/contribute-flow-styles
       - hdx_theme/hdx-autocomplete
   contents:
@@ -827,6 +848,9 @@ contribute-flow-scripts:
 
 contribute-flow-styles:
   output: ckanext-hdx_theme/%(version)s_contribute-flow-styles.css
+  extra:
+    preload:
+      - hdx_theme/search-styles
   contents:
     - contribute_flow/contribute.css
 

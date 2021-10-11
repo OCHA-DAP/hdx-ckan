@@ -223,4 +223,9 @@
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   {{ super() }}
   {% asset 'hdx_theme/search-scripts' %}
+  {% if c.userobj %}
+    {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
+  {% else %}
+    {% asset 'hdx_theme/onboarding-bulk-anon-scripts' %}
+  {% endif %}
 {% endblock -%}
