@@ -405,7 +405,7 @@ def reinstall_plugins(develop):
 @click.option('-s', '--config-set', default='hdx-solr-main', show_default=True, help="SOLR Configset to use.")
 @click.pass_context
 def solr_add(ctx, host, port, collection, config_set):
-    """Check the status of SOLR"""
+    """Create a SOLR collection"""
     try:
         if ctx.invoke(solr_exists, host=host, port=port, collection=collection):
             print("Collection {} already exists.".format(collection))
