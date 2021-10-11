@@ -116,15 +116,15 @@ def hdx_topline_num_for_group(context, data_dict):
 
     common_format = data_dict.get('common_format', True) not in ['false', '0']  # type: bool
 
-    if group_info.get('custom_loc', False) and datastore_id:
-        # source is datastore
-        crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
-        crisis_data_access.fetch_data(context)
-        top_line_items = crisis_data_access.get_top_line_items()
-        for item in top_line_items:
-            item['source_system'] = 'datastore'
-            del item['units']
-    elif group_info.get('activity_level') == 'active':
+    # if group_info.get('custom_loc', False) and datastore_id:
+    #     # source is datastore
+    #     crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
+    #     crisis_data_access.fetch_data(context)
+    #     top_line_items = crisis_data_access.get_top_line_items()
+    #     for item in top_line_items:
+    #         item['source_system'] = 'datastore'
+    #         del item['units']
+    if group_info.get('activity_level') == 'active':
         top_line_items = __get_toplines_for_active_country(group_info, common_format)
     else:
         top_line_items = __get_toplines_for_standard_country(group_info, common_format)

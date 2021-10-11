@@ -2,7 +2,9 @@ import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_pages.model as pages_model
-from ckanext.hdx_users.helpers.permissions import Permissions
+# from ckanext.hdx_users.helpers.permissions import Permissions
+
+import ckanext.hdx_pages.helpers.helper as h
 
 NotFound = tk.ObjectNotFound
 _ = tk._
@@ -13,7 +15,8 @@ def page_create(context, data_dict):
     Only sysadmins are allowed to call this action
     '''
     username_or_id = context.get('user')
-    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CRISIS)
+    result = h.has_permission(username_or_id)
+    # (Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CRISIS)
     return {'success': result}
 
 

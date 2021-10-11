@@ -5,13 +5,17 @@ Created on March 19, 2019
 
 
 '''
-import logging as logging
+import pytest
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import logging as logging
 import ckan.logic as logic
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
+from ckanext.hdx_dataviz.tests import USER, SYSADMIN, LOCATION
+
+_get_action = tk.get_action
+NotAuthorized = tk.NotAuthorized
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +42,7 @@ page_elpico = {
 page_elgroupo = {
     'name': 'elgroupo',
     'title': 'El Groupo',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'ongoing',
@@ -49,7 +53,7 @@ page_elgroupo = {
 page_eldeleted = {
     'name': 'eldeleted',
     'title': 'El Deleted',
-    'groups': ['roger'],
+    'groups': [LOCATION],
     'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     'type': 'event',
     'status': 'archived',
@@ -58,35 +62,20 @@ page_eldeleted = {
 }
 
 
-class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
-
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
-
-    @classmethod
-    def _get_action(cls, action_name):
-        return tk.get_action(action_name)
-
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXApiPage, cls)._create_test_data(create_datasets=True, create_members=True)
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+class TestHDXApiPage(object):
 
     def test_page_api(self):
 
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        page_dict = self._get_action('page_create')(context_sysadmin, page_elnino)
+        page_dict = _get_action('page_create')(context_sysadmin, page_elnino)
         assert page_dict
         assert 'El Pico' not in page_dict.get('title')
         assert 'Lorem Ipsum is simply dummy text' in page_dict.get('description')
 
-        elnino = self._get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+        elnino = _get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
         assert elnino
         assert 'El Pico' not in elnino.get('title')
         assert 'El Nino' == elnino.get('title')
@@ -97,113 +86,111 @@ class TestHDXApiPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'https://data.humdata.org/dataset/wfp-and-fao-overview' in elnino.get('sections')
 
         try:
-            self._get_action('page_update')(context_sysadmin, {'id': page_dict.get('id')})
+            _get_action('page_update')(context_sysadmin, {'id': page_dict.get('id')})
             assert False
         except Exception as ex:
             assert True
 
-        grp_dict = self._get_action('group_show')(context_sysadmin, {'id': 'roger'})
-        new_page_dict = self._get_action('page_update')(context_sysadmin, {'name': page_elpico.get('name'),
-                                                                           'id': page_dict.get('id'),
-                                                                           'title': page_elpico.get('title'),
-                                                                           'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-                                                                           'groups': [grp_dict.get('id')]
-                                                                           }
-                                                        )
+        grp_dict = _get_action('group_show')(context_sysadmin, {'id': LOCATION})
+        new_page_dict = _get_action('page_update')(context_sysadmin, {'name': page_elpico.get('name'),
+                                                                      'id': page_dict.get('id'),
+                                                                      'title': page_elpico.get('title'),
+                                                                      'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+                                                                      'groups': [grp_dict.get('id')]
+                                                                      }
+                                                   )
         assert new_page_dict
         assert 'El Pico' in new_page_dict.get('title')
 
         try:
-            self._get_action('page_create')(context, page_elpico)
+            _get_action('page_create')(context, page_elpico)
             assert False
         except logic.NotAuthorized:
             assert True
-
-        try:
-            self._get_action('page_update')(context, {'title': 'El Pico Lorem Ipsum'})
-            assert False
-        except logic.NotAuthorized:
+        except Exception as ex:
             assert True
 
         try:
-            self._get_action('page_delete')(context, {'id': page_dict.get('id') or page_dict.get('name')})
+            _get_action('page_update')(context, {'title': 'El Pico Lorem Ipsum'})
             assert False
         except logic.NotAuthorized:
             assert True
+        except Exception as ex:
+            assert True
 
         try:
-            self._get_action('page_update')(context_sysadmin, {'id': 'nopageid'})
+            _get_action('page_delete')(context, {'id': page_dict.get('id') or page_dict.get('name')})
+            assert False
+        except logic.NotAuthorized:
+            assert True
+        except Exception as ex:
+            assert True
+
+        try:
+            _get_action('page_update')(context_sysadmin, {'id': 'nopageid'})
             assert False
         except logic.NotFound:
             assert True
         except logic.ValidationError:
             assert True
+        except Exception as ex:
+            assert True
 
         try:
-            self._get_action('page_delete')(context_sysadmin, {'id': 'nopageid'})
+            _get_action('page_delete')(context_sysadmin, {'id': 'nopageid'})
             assert False
         except logic.NotFound:
             assert True
         except logic.ValidationError:
             assert True
+        except Exception as ex:
+            assert True
 
-        self._get_action('page_delete')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+        _get_action('page_delete')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
         try:
-            self._get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+            _get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
             assert False
         except logic.NotFound:
+            assert True
+        except Exception as ex:
             assert True
 
         assert True
 
-class TestHDXPageWithGroups(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
-
-    @classmethod
-    def _get_action(cls, action_name):
-        return tk.get_action(action_name)
-
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXPageWithGroups, cls)._create_test_data(create_datasets=True, create_members=True)
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+class TestHDXPageWithGroups(object):
 
     def test_page_with_groups(self):
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        page_dict = self._get_action('page_create')(context_sysadmin, page_elgroupo)
+        page_dict = _get_action('page_create')(context_sysadmin, page_elgroupo)
 
         try:
-            self._get_action('page_create')(context_sysadmin, page_elgroupo)
-        except Exception, ex:
+            _get_action('page_create')(context_sysadmin, page_elgroupo)
+        except Exception as ex:
             log.info(ex)
             assert True
 
-        elgroupo = self._get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+        elgroupo = _get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
 
-        page_group_list = self._get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('id')})
+        page_group_list = _get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('id')})
         assert page_group_list
 
-        page_list = self._get_action('page_list')(context_sysadmin, {})
+        page_list = _get_action('page_list')(context_sysadmin, {})
         assert page_list
 
-        grp_dict = self._get_action('group_show')(context_sysadmin, {'id':'roger'})
-        group_page_list = self._get_action('group_page_list')(context_sysadmin, {'id': grp_dict.get('id')})
+        grp_dict = _get_action('group_show')(context_sysadmin, {'id': LOCATION})
+        group_page_list = _get_action('group_page_list')(context_sysadmin, {'id': grp_dict.get('id')})
         assert group_page_list
 
         try:
             page_elgroupo['name'] = 'elgroupo2'
             page_elgroupo['groups'] = [grp_dict.get('id'), grp_dict.get('id')]
-            self._get_action('page_create')(context_sysadmin, page_elgroupo)
+            _get_action('page_create')(context_sysadmin, page_elgroupo)
             assert False
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert True
 
@@ -211,80 +198,50 @@ class TestHDXPageWithGroups(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             page_elgroupo['name'] = 'elgroupo3'
             page_elgroupo['title'] = 'None'
             page_elgroupo['groups'] = [grp_dict.get('id')]
-            self._get_action('page_create')(context_sysadmin, page_elgroupo)
+            _get_action('page_create')(context_sysadmin, page_elgroupo)
             assert False
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert True
 
-class TestHDXValidationPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
-
-    @classmethod
-    def _get_action(cls, action_name):
-        return tk.get_action(action_name)
-
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXValidationPage, cls)._create_test_data(create_datasets=True, create_members=True)
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+class TestHDXValidationPage(object):
 
     def test_validation_page(self):
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        page_elpico['name'] = None
+        del page_elpico['name']
         try:
-            self._get_action('page_create')(context_sysadmin, page_elpico)
+            _get_action('page_create')(context_sysadmin, page_elpico)
         except logic.ValidationError:
             assert True
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert True
 
-class TestHDXPageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_pages hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
-
-    @classmethod
-    def _get_action(cls, action_name):
-        return tk.get_action(action_name)
-
-    @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
-        super(TestHDXPageShow, cls)._create_test_data(create_datasets=True, create_members=True)
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+class TestHDXPageShow(object):
 
     def test_page_show(self):
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-        page = self._get_action('page_create')(context_sysadmin, page_eldeleted)
+        page = _get_action('page_create')(context_sysadmin, page_eldeleted)
 
-        eldeleted = self._get_action('page_show')(context_sysadmin, {'id': page.get('id')})
+        eldeleted = _get_action('page_show')(context_sysadmin, {'id': page.get('id')})
         assert 'deleted' == eldeleted.get('state')
 
         try:
-            self._get_action('page_show')(context, {'id': page.get('id')})
-        except Exception, ex:
+            _get_action('page_show')(context, {'id': page.get('id')})
+        except Exception as ex:
             log.info(ex)
             assert True
 
         try:
-            self._get_action('page_show')(context_sysadmin, {})
+            _get_action('page_show')(context_sysadmin, {})
             assert False
         except logic.ValidationError:
             assert True
-
-

@@ -718,8 +718,16 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def get_blueprint(self):
         import ckanext.hdx_package.views.light_dataset as light_dataset
+        import ckanext.hdx_package.views.dataset as dataset
         import ckanext.hdx_package.views.dataset_changes as dataset_changes
-        return [light_dataset.hdx_light_dataset, dataset_changes.hdx_dataset_changes]
+        return [
+            light_dataset.hdx_light_dataset,
+            light_dataset.hdx_light_search,
+            dataset.hdx_dataset,
+            dataset.hdx_search,
+            dataset_changes.hdx_dataset_changes,
+        ]
+
 
 class HDXAnalyticsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IMiddleware, inherit=True)

@@ -80,3 +80,5 @@ jobs:
         run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-ytp-request/ckanext/ytp/request/tests"
       - name: PY3/Testing hdx_dataviz
         run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_dataviz/ckanext/hdx_dataviz/tests"
+      - name: PY3/Testing hdx_pages
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_pages/ckanext/hdx_pages/tests"

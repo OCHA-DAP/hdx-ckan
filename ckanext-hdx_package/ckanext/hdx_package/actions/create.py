@@ -339,6 +339,6 @@ def reindex_package_on_hdx_hxl_preview_view(view_type, context, data_dict):
                 rebuild(package_id)
         except NotFound:
             log.error("Error: package {} not found.".format(package_id))
-        except Exception, e:
+        except Exception as e:
             log.error(str(e))
 

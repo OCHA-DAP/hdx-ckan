@@ -18,14 +18,14 @@
 
 {% block breadcrumb_content %}
   <li class="active">{{ h.nav_link(_('Datasets'),
-  	controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', highlight_actions = 'new index') }}</li>
+  	'hdx_dataset.search', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block primary_content %}
     {% block search_results_wrapper %}
         <div id="search-recs"></div>
         {% snippet 'search/snippets/search_results_wrapper.html',
-                            tracking_enabled=g.tracking_enabled, my_c=c, display_min=true %}
+                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true %}
 
     {% endblock %}
   {% block package_search_results_api %}

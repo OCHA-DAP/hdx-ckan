@@ -285,11 +285,11 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         map.connect('group_new', '/group/new', controller='group', action='new')
 
-        map.connect('country_read', '/group/{id}',
-                    controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
-
-        map.connect('country_topline', '/country/topline/{id}',
-                    controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
+        # map.connect('country_read', '/group/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+        #
+        # map.connect('country_topline', '/country/topline/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
 
         # map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #     action='feed_organization')
@@ -420,28 +420,12 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             context = {'ignore_auth': True}
             try:
                 tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
-            except Exception, ex:
+            except Exception as ex:
                 log.error(ex)
 
     # IBlueprint
     def get_blueprint(self):
-        import ckanext.hdx_org_group.views.light_group as group
-        return group.hdx_group
+        import ckanext.hdx_org_group.views.group as group
+        import ckanext.hdx_org_group.views.light_group as light_group
+        return [group.hdx_group, group.hdx_country_topline, light_group.hdx_light_group, light_group.hdx_group_eaa_maps]
 
-
-class HDXGroupEaaMapPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IBlueprint)
-
-    # IBlueprint
-    def get_blueprint(self):
-        import ckanext.hdx_org_group.views.light_group as group
-        return group.hdx_group_eaa_maps
-
-
-class HDXLightGroupPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IBlueprint)
-
-    # IBlueprint
-    def get_blueprint(self):
-        import ckanext.hdx_org_group.views.light_group as group
-        return group.hdx_light_group

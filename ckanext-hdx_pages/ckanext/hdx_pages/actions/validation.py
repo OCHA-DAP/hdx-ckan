@@ -19,6 +19,6 @@ def page_name_validator(page_dict, context):
             message = _('Page name already exists')
             ex = logic.ValidationError({'name': [message]})
             raise ex
-    except logic.NotFound, e:
+    except logic.NotFound as e:
         # This is good: means there's no page with the same name.
         pass

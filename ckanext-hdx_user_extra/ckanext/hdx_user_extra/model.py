@@ -107,21 +107,21 @@ def delete_table():
     '''
     Delete information from user_extra table
     '''
-    print 'User Extra trying to delete table...'
+    print('User Extra trying to delete table...')
     if user_extra_table.exists():
-        print 'User Extra delete table...'
+        print('User Extra delete table...')
         user_extra_table.delete()
         log.debug('Validation Token table deleted')
-        print 'DONE User Extra delete table...'
+        print('DONE User Extra delete table...')
 
 
 def drop_table():
     '''
     Drop user_extra table
     '''
-    print 'User Extra trying to drop table...'
+    print('User Extra trying to drop table...')
     if user_extra_table.exists():
-        print 'User Extra drop table...'
+        print('User Extra drop table...')
         user_extra_table.drop()
         log.debug('Validation Token table dropped')
-        print 'DONE User Extra drop table...'
+        print('DONE User Extra drop table...')

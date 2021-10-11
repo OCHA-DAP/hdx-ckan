@@ -115,8 +115,8 @@ class MembershipRequestsService(object):
             for request in requests_grouped_by_org:
                 try:
                     last_date = dateutil_parse(request.last_date_str)
-                except Exception, e:
-                    log.error('Cannot parse date for membership request, using "now": ' + unicode(e))
+                except Exception as e:
+                    log.error('Cannot parse date for membership request, using "now": ' + str(e))
                     last_date = datetime.datetime.utcnow()
                 notifications.append(
                     {
@@ -217,7 +217,7 @@ class ExpiredDatasetsService(object):
                     'last_date': last_date,
                     'count': count,
                     'html_template': 'light/notifications/expired_datasets_snippet.html',
-                    'my_dashboard_url': h.url_for('user_dashboard_datasets', **param_dict),
+                    'my_dashboard_url': h.url_for('hdx_user_dashboard.datasets', **param_dict),
                     'for_sysadmin': False,
                     'is_sysadmin': self.is_sysadmin
                 }
