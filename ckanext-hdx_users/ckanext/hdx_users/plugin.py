@@ -267,4 +267,4 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return dashboard.hdx_dashboard
+        return dashboard.hdx_user_dashboard

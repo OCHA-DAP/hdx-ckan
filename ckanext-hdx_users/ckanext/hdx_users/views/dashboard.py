@@ -14,7 +14,7 @@ g = tk.g
 h= tk.h
 _ = tk._
 
-hdx_dashboard = Blueprint(u'hdx_dashboard', __name__, url_prefix=u'/dashboard')
+hdx_user_dashboard = Blueprint(u'hdx_user_dashboard', __name__, url_prefix=u'/dashboard')
 
 
 def datasets():
@@ -37,4 +37,4 @@ def datasets():
         })
 
 
-hdx_dashboard.add_url_rule(u'/datasets', view_func=datasets)
+hdx_user_dashboard.add_url_rule(u'/datasets', view_func=datasets)

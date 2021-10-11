@@ -14,7 +14,7 @@ class DashboardSearchLogic(sl.SearchLogic):
 
     def __init__(self):
         super(DashboardSearchLogic, self).__init__()
-        self.flask_route_name = 'hdx_dashboard.datasets'
+        self.flask_route_name = 'hdx_user_dashboard.datasets'
 
     def _search_url(self, params, package_type=None):
         '''

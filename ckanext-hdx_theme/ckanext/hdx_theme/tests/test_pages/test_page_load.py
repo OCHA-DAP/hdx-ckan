@@ -30,7 +30,7 @@ pages = [
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard', 'usertype': 'all'},
-    {'url_name': 'hdx_dashboard.datasets', 'usertype': 'all'},
+    {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
     # {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
     #  'action': 'preselect', 'usertype': 'all'},
