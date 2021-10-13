@@ -100,6 +100,25 @@ class SearchLogic(object):
         self.template_data['full_facet_info']['archived_url_helper'] = archived_url_helper
         return archived_url_helper
 
+    def init_archived_url_helper(self):
+        self.add_archived_url_helper()
+        return self
+
+    def redirect_if_needed(self):
+        return self.archived_url_helper.redirect_if_needed()
+
+    @property
+    def archived_url_helper(self):
+        '''
+        :return:
+        :rtype: ArchivedUrlHelper
+        '''
+        try:
+            return self.template_data['full_facet_info']['archived_url_helper']
+        except KeyError as ke:
+            log.error('archived_url_helper object is only available after calling _search() '
+                      'and add_archived_url_helper()')
+
     def _search(self, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
