@@ -957,7 +957,7 @@ group-list-scripts:
     - browse_/world_json.js
     - browse_/countries.js
     - browse_/browse.js
-    - group/group-init.js
+    - browse_/group-init.js
 
 group-list-styles:
   output: ckanext-hdx_theme/%(version)s_group-styles.css
