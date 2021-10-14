@@ -53,21 +53,21 @@ overriding the form blocks depending on the current context
   	</div>
   </div>
 
-  {% set featured_section = data.get('featured_section', '') %}
-  <div class="control-group control-full">
-  	<label class="control-label" for="field-featured-section">{{ _("Featured Section")}}</label>
-  	<div class="controls">
-        <select id="field-featured-section" name="featured_section">
-            <option value="inactive" {% if featured_section == 'inactive' %}selected="selected"{% endif %}>
-                {{ _('Inactive') }}
-            </option>
-            <option value="active"
-                    {% if featured_section == 'active' %}selected="selected"{% endif %}>
-                {{ _('Active') }}
-            </option>
-        </select>
-  	</div>
-  </div>
+{#  {% set featured_section = data.get('featured_section', '') %}#}
+{#  <div class="control-group control-full">#}
+{#  	<label class="control-label" for="field-featured-section">{{ _("Featured Section")}}</label>#}
+{#  	<div class="controls">#}
+{#        <select id="field-featured-section" name="featured_section">#}
+{#            <option value="inactive" {% if featured_section == 'inactive' %}selected="selected"{% endif %}>#}
+{#                {{ _('Inactive') }}#}
+{#            </option>#}
+{#            <option value="active"#}
+{#                    {% if featured_section == 'active' %}selected="selected"{% endif %}>#}
+{#                {{ _('Active') }}#}
+{#            </option>#}
+{#        </select>#}
+{#  	</div>#}
+{#  </div>#}
 
   {% set key_figures = data.get('key_figures', '') %}
   <div class="control-group control-full">

@@ -15,6 +15,7 @@ g = common.g
 request = common.request
 render = tk.render
 redirect = tk.redirect_to
+url_for = tk.url_for
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
 check_access = tk.check_access
@@ -71,6 +72,8 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         check_access('site_read', context)
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
+    if id == 'ebola':
+        return redirect(url_for('hdx_ebola.read'))
 
     group_read_logic = GroupReadLogic(group_id=id).read()
     if group_read_logic.redirect_result:

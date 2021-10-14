@@ -82,8 +82,7 @@ def buildIndex(path):
     ## when new crisis are added
 
     index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
-        controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
-        action='read', qualified=True), 'type': 'event'})
+        'hdx_ebola.read', qualified=True), 'type': 'event'})
     index.append({'title': 'Nepal Earthquake', 'url': h.url_for(
         controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
         action='read', id='nepal-earthquake', qualified=True), 'type': 'event'})

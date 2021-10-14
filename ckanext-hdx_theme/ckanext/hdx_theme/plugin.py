@@ -2,7 +2,7 @@ import logging
 import inspect
 import json
 import os
-import urlparse
+from six.moves.urllib.parse import urlparse
 
 import pylons.config as config
 
@@ -15,6 +15,7 @@ from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validit
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 from ckanext.hdx_theme.views.faqs import hdx_faqs
+from ckanext.hdx_theme.views.ebola import hdx_ebola
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -120,10 +121,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         :param url: the url to be modified if needed
         :type url: str
         '''
-        urlobj = urlparse.urlparse(url)
+        urlobj = urlparse(url)
         if not urlobj.netloc:
             base_url = config.get('ckan.site_url')
-            base_urlobj = urlparse.urlparse(base_url)
+            base_urlobj = urlparse(base_url)
             urlobj = urlobj._replace(scheme=base_urlobj.scheme)
             urlobj = urlobj._replace(netloc=base_urlobj.netloc)
 
@@ -379,4 +380,4 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_colored_page, hdx_faqs]
+        return [hdx_colored_page, hdx_faqs, hdx_ebola]
