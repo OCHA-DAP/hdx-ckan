@@ -15,7 +15,7 @@ import ckanext.hdx_search.command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
+# from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
 
@@ -683,13 +683,13 @@ def recompile_everything(context):
             compile_less(org, translate_func=lambda str: str)
 
 
-def hdx_capturejs(uri, output_file, selector, renderdelay=90000, waitcapturedelay=10000, viewportsize='1200x800'):
-    quoted_selector = '"{}"'.format(selector)
-    screenshot_creator = ScreenshotCreator(uri, output_file, quoted_selector,
-                                           renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
-                                           http_timeout=None,
-                                           viewportsize=viewportsize, mogrify=True, resize='40%')
-    return screenshot_creator.execute()
+# def hdx_capturejs(uri, output_file, selector, renderdelay=90000, waitcapturedelay=10000, viewportsize='1200x800'):
+#     quoted_selector = '"{}"'.format(selector)
+#     screenshot_creator = ScreenshotCreator(uri, output_file, quoted_selector,
+#                                            renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
+#                                            http_timeout=None,
+#                                            viewportsize=viewportsize, mogrify=True, resize='40%')
+#     return screenshot_creator.execute()
 
 def notify_admins(data_dict):
     try:

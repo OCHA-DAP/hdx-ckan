@@ -110,9 +110,9 @@ def hdx_topline_num_for_group(context, data_dict):
     id = _get_or_bust(data_dict, "id")
     grp_result = get_group(id)
     group_info = grp_result.get('group_info')
-    custom_dict = grp_result.get('custom_dict')
+    # custom_dict = grp_result.get('custom_dict')
 
-    datastore_id = custom_dict.get('topline_resource', None)
+    # datastore_id = custom_dict.get('topline_resource', None)
 
     common_format = data_dict.get('common_format', True) not in ['false', '0']  # type: bool
 

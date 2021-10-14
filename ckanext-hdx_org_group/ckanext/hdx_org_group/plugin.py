@@ -106,6 +106,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return {
             'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
             'hdx_org_keep_prev_value_if_empty_unless_sysadmin': org_custom_validator.hdx_org_keep_prev_value_if_empty_unless_sysadmin,
+            'active_if_missing': org_custom_validator.active_if_missing
 
         }
 
@@ -354,10 +355,10 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         schema.update({'hr_info_url': [
             tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
         schema.update({'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       # 'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       # 'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       # 'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'key_figures': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'data_completeness': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
                        })
@@ -375,22 +376,22 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         schema.update({'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        # schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        # schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({
             'activity_level': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')]
         })
-        schema.update({
-            'featured_section': [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
-        })
+        # schema.update({
+        #     'featured_section': [
+        #         tk.get_converter('convert_from_extras'),
+        #         tk.get_validator('ignore_missing')]
+        # })
         schema.update({
             'key_figures': [
                 tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
+                tk.get_validator('active_if_missing')]
         })
         schema.update({
             'data_completeness': [
@@ -411,17 +412,17 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
 
         # Screenshot generation for latest COD when country is edited
-        cod_dict = country_helper.get_latest_cod_dataset(country.name)
-        shape_infos = []
-        if cod_dict:
-            shape_infos = [r.get('shape_info') for r in cod_dict.get('resources', []) if r.get('shape_info')]
-
-        if shape_infos and not screenshot.screenshot_exists(cod_dict):
-            context = {'ignore_auth': True}
-            try:
-                tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
-            except Exception as ex:
-                log.error(ex)
+        # cod_dict = country_helper.get_latest_cod_dataset(country.name)
+        # shape_infos = []
+        # if cod_dict:
+        #     shape_infos = [r.get('shape_info') for r in cod_dict.get('resources', []) if r.get('shape_info')]
+        #
+        # if shape_infos and not screenshot.screenshot_exists(cod_dict):
+        #     context = {'ignore_auth': True}
+        #     try:
+        #         tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
+        #     except Exception as ex:
+        #         log.error(ex)
 
     # IBlueprint
     def get_blueprint(self):

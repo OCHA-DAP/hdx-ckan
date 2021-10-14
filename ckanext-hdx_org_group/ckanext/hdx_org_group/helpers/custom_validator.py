@@ -42,3 +42,8 @@ def hdx_org_keep_prev_value_if_empty_unless_sysadmin(key, data, errors, context)
     #     raise StopOnError
 
 
+def active_if_missing(key, data, errors, context):
+    value = data.get(key)
+    if value is missing or value is None:
+        data[key] = 'active'
+
