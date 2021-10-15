@@ -59,10 +59,7 @@
 {% block scripts %}
     {{ super() }}
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
-{#    {% resource 'hdx_theme/leaflet' %}#}
     {% asset 'hdx_theme/charting-scripts' %}
     {% asset 'hdx_theme/search-scripts' %}
-{#    {% resource 'hdx_theme/jquery.expander' %}#}
-{#    {% resource 'hdx_theme/hdx_show_more.js' %}#}
     {% asset 'hdx_theme/group-list-scripts' %}
 {% endblock %}
