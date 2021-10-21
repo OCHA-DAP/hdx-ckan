@@ -17,7 +17,7 @@ import ckan.lib.helpers as h
 import ckan.authz as new_authz
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
-import ckanext.hdx_crisis.dao.data_access as data_access
+import ckanext.hdx_theme.helpers.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 import ckan.controllers.organization as org

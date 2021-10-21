@@ -26,7 +26,6 @@ import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.util.jql as jql
 from ckan.common import c, request, _
 from ckan.controllers.api import CONTENT_TYPES
-from ckan.controllers.feed import FeedController as FeedController
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 abort = base.abort

@@ -8,14 +8,11 @@ import json
 import logging
 import os
 import six
-from datetime import datetime, timedelta
 
-import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_search.command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-# from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
 
@@ -82,48 +79,48 @@ def filter_and_sort_results_case_insensitive(results, sort_by, q=None, has_datas
     return filtered_results
 
 
-def hdx_get_featured_orgs(context, data_dict):
-    orgs = list()
-    # Pull resource with data on our featured orgs
-    resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
-    user = context.get('user')
-    userobj = context.get('auth_user_obj')
-    reset_thumbnails = data_dict.get('reset_thumbnails', 'false')
-    featured_config = get_featured_orgs_config(user, userobj, resource_id)
-
-    for cfg in featured_config:
-        # getting the first 3 rows/organizations
-        if len(orgs) < 3:
-            # Check for screencap
-            file_path = BUCKET + cfg.get('org_name') + '_thumbnail.png'
-            exists = os.path.isfile(file_path)
-            expired = False
-            if exists:
-                timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
-                expire = timestamp + timedelta(days=7)
-                expired = datetime.utcnow() > expire
-            reset = not exists or expired
-            if reset or reset_thumbnails == 'true':
-                # Build new screencap
-                context['reset'] = reset
-                context['file_path'] = file_path
-                context['cfg'] = cfg
-                log.info("Triggering screenshot for " + cfg.get('org_name'))
-                get_action('hdx_trigger_screencap')(context, data_dict)
-
-            org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
-
-            # Build highlight data
-            org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
-
-            # checking again here if the file was generated
-            exists = os.path.isfile(file_path)
-            if exists:
-                org_dict['featured_org_thumbnail'] = "/image/" + cfg['org_name'] + '_thumbnail.png'
-            else:
-                org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder" + str(len(orgs)) + ".png"
-            orgs.append(org_dict)
-    return orgs
+# def hdx_get_featured_orgs(context, data_dict):
+#     orgs = list()
+#     # Pull resource with data on our featured orgs
+#     resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
+#     user = context.get('user')
+#     userobj = context.get('auth_user_obj')
+#     reset_thumbnails = data_dict.get('reset_thumbnails', 'false')
+#     featured_config = get_featured_orgs_config(user, userobj, resource_id)
+#
+#     for cfg in featured_config:
+#         # getting the first 3 rows/organizations
+#         if len(orgs) < 3:
+#             # Check for screencap
+#             file_path = BUCKET + cfg.get('org_name') + '_thumbnail.png'
+#             exists = os.path.isfile(file_path)
+#             expired = False
+#             if exists:
+#                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
+#                 expire = timestamp + timedelta(days=7)
+#                 expired = datetime.utcnow() > expire
+#             reset = not exists or expired
+#             if reset or reset_thumbnails == 'true':
+#                 # Build new screencap
+#                 context['reset'] = reset
+#                 context['file_path'] = file_path
+#                 context['cfg'] = cfg
+#                 log.info("Triggering screenshot for " + cfg.get('org_name'))
+#                 get_action('hdx_trigger_screencap')(context, data_dict)
+#
+#             org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
+#
+#             # Build highlight data
+#             org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
+#
+#             # checking again here if the file was generated
+#             exists = os.path.isfile(file_path)
+#             if exists:
+#                 org_dict['featured_org_thumbnail'] = "/image/" + cfg['org_name'] + '_thumbnail.png'
+#             else:
+#                 org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder" + str(len(orgs)) + ".png"
+#             orgs.append(org_dict)
+#     return orgs
 
 
 def get_viz_title_from_extras(org_dict):
@@ -162,20 +159,20 @@ def get_featured_org_highlight(context, org_dict, config):
     return {'link': link, 'description': description, 'type': config.get('highlight_asset_type'), 'title': title}
 
 
-def get_featured_orgs_config(user, userobj, resource_id):
-    context = {'model': model, 'session': model.Session,
-               'user': user, 'for_view': True,
-               'auth_user_obj': userobj}
-    featured_org_dict = {
-        'datastore_config': {
-            'resource_id': resource_id
-        }
-    }
-    datastore_access = data_access.DataAccess(featured_org_dict)
-    datastore_access.fetch_data_generic(context)
-    org_items = datastore_access.get_top_line_items()
-
-    return org_items
+# def get_featured_orgs_config(user, userobj, resource_id):
+#     context = {'model': model, 'session': model.Session,
+#                'user': user, 'for_view': True,
+#                'auth_user_obj': userobj}
+#     featured_org_dict = {
+#         'datastore_config': {
+#             'resource_id': resource_id
+#         }
+#     }
+#     datastore_access = data_access.DataAccess(featured_org_dict)
+#     datastore_access.fetch_data_generic(context)
+#     org_items = datastore_access.get_top_line_items()
+#
+#     return org_items
 
 
 def hdx_get_group_activity_list(context, data_dict):

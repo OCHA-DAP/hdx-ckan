@@ -4,31 +4,21 @@ Created on April 24, 2015
 @author: alexandru-m-g
 '''
 
-import pylons.config as config
-
-import ckan.logic as logic
-import ckan.model as model
-import ckan.common as common
-import ckan.lib.dictization as d
-from ckan.common import c
-import ckan.lib.helpers as helpers
-
-import ckanext.hdx_crisis.dao.location_data_access as location_data_access
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
-
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
-
-from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
-
-import shlex
-import subprocess
-import random
-
 import logging
 
-import ckan.lib.dictization.model_dictize as model_dictize
+import pylons.config as config
+
+import ckan.common as common
+import ckan.lib.dictization as d
+import ckan.lib.helpers as helpers
 import ckan.lib.navl.dictization_functions
+import ckan.logic as logic
+import ckan.model as model
+import ckanext.hdx_org_group.dao.indicator_access as indicator_access
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+from ckan.common import c
+from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
