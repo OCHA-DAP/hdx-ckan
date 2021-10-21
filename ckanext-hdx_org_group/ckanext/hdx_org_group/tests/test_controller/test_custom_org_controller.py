@@ -117,7 +117,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             'colors': ["red", "green", "blue"]
         }
 
-    @mock.patch('ckanext.hdx_crisis.dao.data_access.DataAccess')
+    @mock.patch('ckanext.hdx_theme.helpers.data_access.DataAccess')
     @mock.patch('ckanext.hdx_org_group.controllers.custom_org_controller.request')
     @mock.patch('ckanext.hdx_org_group.controllers.custom_org_controller.c')
     @mock.patch('ckan.lib.helpers.c')
