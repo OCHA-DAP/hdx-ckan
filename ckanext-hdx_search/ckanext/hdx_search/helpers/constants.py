@@ -5,3 +5,11 @@ NEW_DATASETS_FACET_NAME = 'new_datasets'
 UPDATED_DATASETS_FACET_NAME = 'updated_datasets'
 DELINQUENT_DATASETS_FACET_NAME = 'delinquent_datasets'
 BULK_DATASETS_FACET_NAME = 'bulk_datasets'
+
+STATUS_PRIORITIES = {
+    '': 0,
+    'OK': 1,
+    'RUNNING': 2,
+    'QUEUED': 3,
+    'ERROR': 4
+}
