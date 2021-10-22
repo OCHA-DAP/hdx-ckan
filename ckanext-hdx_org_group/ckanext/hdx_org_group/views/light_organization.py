@@ -6,13 +6,11 @@ import ckan.common as common
 import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
-from ckan.common import c
-import ckan.authz as new_authz
+
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+from ckanext.hdx_org_group.controller_logic.organization_read_logic import LightOrgReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-from ckanext.hdx_org_group.controller_logic.organization_search_logic import OrganizationSearchLogic
-import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 
 g = common.g
 request = common.request
@@ -28,7 +26,6 @@ _ = tk._
 log = logging.getLogger(__name__)
 
 
-hdx_org = Blueprint(u'hdx_org', __name__, url_prefix=u'/organization')
 hdx_light_org = Blueprint(u'hdx_light_org', __name__, url_prefix=u'/m/organization')
 
 
@@ -113,20 +110,6 @@ def light_read(id):
     return _read('light/organization/read.html', id, True, False)
 
 
-def _fetch_template_data(org_dict):
-    user = c.user or c.author
-    ignore_capacity_check = False
-    is_org_member = (user and new_authz.has_user_permission_for_group_or_org(org_dict.get('name'), user, 'read'))
-    if is_org_member:
-        ignore_capacity_check = True
-
-    search_logic = OrganizationSearchLogic(id=org_dict.get('name'))
-    fq = 'organization:"{}"'.format(org_dict.get('name'))
-    search_logic._search(additional_fq=fq, ignore_capacity_check=ignore_capacity_check)
-
-    return search_logic
-
-
 def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
     context = {
         'model': model,
@@ -139,42 +122,32 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
-    org_dict = None
     try:
-        org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
-        try:
-            org_meta.fetch_all()
-            org_dict = org_meta.org_dict
-        except NotFound as e:
-            abort(404)
-        except NotAuthorized as e:
-            abort(403, _('Not authorized to see this page'))
-    except NotAuthorized:
+        read_logic = LightOrgReadLogic(id, g.user, g.userobj)
+        read_logic.read()
+        if read_logic.redirect_result:
+            return read_logic.redirect_result
+
+        org_dict = read_logic.org_meta.org_dict
+        org_dict.update({
+            'template_data': read_logic.search_template_data,
+            'datasets_num': read_logic.org_meta.datasets_num,
+            'custom_sq_logo_url': read_logic.org_meta.custom_sq_logo_url,
+        })
+
+        template_data = {
+            'org_dict': org_dict,
+            'page_has_desktop_version': show_switch_to_desktop,
+            'page_has_mobile_version': show_switch_to_mobile,
+        }
+        return render(template_file, template_data)
+    except NotFound as e:
         abort(404, _('Page not found'))
-    except NotFound:
-        abort(404, _('Page not found'))
-
-    if org_dict:
-        search_logic = _fetch_template_data(org_dict)
-        org_dict['template_data'] = search_logic.template_data
-        org_dict['datasets_num'] = org_meta.datasets_num
-        org_dict['custom_sq_logo_url'] = org_meta.custom_sq_logo_url
+    except NotAuthorized as e:
+        abort(403, _('Not authorized to see this page'))
 
 
-        archived_url_helper = search_logic.add_archived_url_helper()
-        redirect_result = archived_url_helper.redirect_if_needed()
-        if redirect_result:
-            return redirect_result
 
-    template_data = {
-        'org_dict': org_dict,
-        'page_has_desktop_version': show_switch_to_desktop,
-        'page_has_mobile_version': show_switch_to_mobile,
-    }
-    return render(template_file, template_data)
-
-
-hdx_org.add_url_rule(u'', view_func=index)
 hdx_light_org.add_url_rule(u'', view_func=light_index)
 hdx_light_org.add_url_rule(u'/<id>', view_func=light_read)
 # hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_read)

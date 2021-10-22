@@ -1,5 +1,6 @@
 {% extends "page.html" %}
 {% set page_has_mobile_version = True %}
+{% set org_dict = org_dict or c.group_dict %}
 
 {% block styles %}
   {{ super() }}
@@ -8,23 +9,23 @@
   {% snippet "widget/banner/hdx-dataset-banner.html" %}
 {% endblock %}
 
-{% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
+{% block subtitle %}{{ org_dict.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organisations'), controller='organization', action='index', position=2 %}
-  <li>{% link_for c.group_dict.display_name|truncate(35), controller='organization', action='read', id=c.group_dict.name %}</li>
+  <li>{% link_for org_dict.display_name|truncate(35), controller='organization', action='read', id=org_dict.name %}</li>
 {% endblock %}
 
 
 {% block content_action %}
-  {% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
-    {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
+  {% if h.check_access('organization_update', {'id': org_dict.id}) %}
+    {% link_for _('Edit'), controller='organization', action='edit', id=org_dict.name, class_='btn hdx-btn org-edit-btn' %}
   {% endif %}
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('organization_read', _('Datasets'), id=c.group_dict.name, class_='hdx-tab-button') }}
-  {{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
+  {{ h.build_nav_icon('hdx_org.read', _('Datasets'), id=org_dict.name, class_='hdx-tab-button') }}
+  {{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=org_dict.name, class_='hdx-tab-button') }}
   {# h.build_nav_icon('organization_about', _('About'), id=c.group_dict.name) #}
 {% endblock %}
 
@@ -32,14 +33,14 @@
 {% block secondary_content %}
   {# snippet 'snippets/organization_info.html', organization=c.group_dict, show_nums=true #}
   {% set show_members_num = c.action != 'members' %}
-  {% snippet 'snippets/organization.html', organization=c.group_dict, show_nums=true, show_members_num=show_members_num, user=c.user %}
+  {% snippet 'snippets/organization.html', organization=org_dict, show_nums=true, show_members_num=show_members_num, user=c.user %}
   {% block organization_facets %}{% endblock %}
 {% endblock %}
 
 {% block links %}
   {{ super() }}
-    {% if 'country_dict' in c.group_dict %}
-      {% set group_dict = c.group_dict %}
+    {% if 'country_dict' in org_dict %}
+      {% set group_dict = org_dict %}
       {% include "organization/snippets/feeds.html" %}
     {%  endif %}
 {% endblock %}

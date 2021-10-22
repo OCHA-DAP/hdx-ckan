@@ -187,9 +187,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return None
 
     def after_map(self, map):
-        map.connect('organization_read', '/organization/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='read')
+        # map.connect('organization_read', '/organization/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='read')
         map.connect('organization_members', '/organization/members/{id}',
                     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
                     action='members')
@@ -260,9 +260,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         # since the pattern of organization_read is so general it needs to be the last
         # otherwise it will override other /organization routes
-        map.connect('organization_read', '/organization/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='read')
+        # map.connect('organization_read', '/organization/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='read')
 
         map.connect('hdx_organization_stats', '/organization/stats/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
@@ -319,7 +319,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     # IBlueprint
     def get_blueprint(self):
-        import ckanext.hdx_org_group.views.light_organization as org
+        import ckanext.hdx_org_group.views.organization as org
         return org.hdx_org
 
 
