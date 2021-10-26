@@ -1,14 +1,11 @@
 import logging
 
 from flask import Blueprint
-from six.moves.urllib.parse import urlencode
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckanext.hdx_search.controller_logic.qa_read_logic import QAReadLogic
 from ckanext.hdx_search.controller_logic.qa_search_logic import QASearchLogic
-
-from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 g = tk.g
 config = tk.config
