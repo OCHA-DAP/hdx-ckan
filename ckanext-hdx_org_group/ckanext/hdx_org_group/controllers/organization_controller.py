@@ -167,62 +167,62 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 return render(self._read_template(c.group_dict['type']),
                           {'group_dict': c.group_dict})
 
-    def _get_org(self, org_id):
-        group_type = 'organization'
+    # def _get_org(self, org_id):
+    #     group_type = 'organization'
+    #
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author,
+    #                'schema': self._db_to_form_schema(group_type=group_type),
+    #                'for_view': True}
+    #     data_dict = {'id': org_id}
+    #
+    #     try:
+    #         context['include_datasets'] = False
+    #         result = get_action(
+    #             'hdx_light_group_show')(context, data_dict)
+    #
+    #         return result
+    #
+    #     except NotFound:
+    #         abort(404, _('Org not found'))
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to read org %s') % id)
+    #
+    #     return {}
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'schema': self._db_to_form_schema(group_type=group_type),
-                   'for_view': True}
-        data_dict = {'id': org_id}
-
-        try:
-            context['include_datasets'] = False
-            result = get_action(
-                'hdx_light_group_show')(context, data_dict)
-
-            return result
-
-        except NotFound:
-            abort(404, _('Org not found'))
-        except NotAuthorized:
-            abort(403, _('Unauthorized to read org %s') % id)
-
-        return {}
-
-    def _get_dataset_search_results(self, org_code):
-
-        user = c.user or c.author
-        ignore_capacity_check = False
-        is_org_member = (user and
-                         new_authz.has_user_permission_for_group_or_org(org_code, user, 'read'))
-        if is_org_member:
-            ignore_capacity_check = True
-
-        package_type = 'dataset'
-
-        suffix = '#datasets-section'
-
-        params_nopage = {
-            k: v for k, v in request.params.items() if k != 'page'}
-
-        def pager_url(q=None, page=None):
-            params = params_nopage
-            params['page'] = page
-            return h.url_for('organization_read', id=org_code, **params) + suffix
-
-        fq = 'organization:"{}"'.format(org_code)
-
-        full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
-                                       ignore_capacity_check=ignore_capacity_check)
-        full_facet_info.get('facets', {}).pop('organization', {})
-
-        base_url = h.url_for('organization_read', id=org_code)
-        c.other_links['current_page_url'] = base_url
-        archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
-        archived_url_helper.redirect_if_needed()
-
-        return full_facet_info
+    # def _get_dataset_search_results(self, org_code):
+    #
+    #     user = c.user or c.author
+    #     ignore_capacity_check = False
+    #     is_org_member = (user and
+    #                      new_authz.has_user_permission_for_group_or_org(org_code, user, 'read'))
+    #     if is_org_member:
+    #         ignore_capacity_check = True
+    #
+    #     package_type = 'dataset'
+    #
+    #     suffix = '#datasets-section'
+    #
+    #     params_nopage = {
+    #         k: v for k, v in request.params.items() if k != 'page'}
+    #
+    #     def pager_url(q=None, page=None):
+    #         params = params_nopage
+    #         params['page'] = page
+    #         return h.url_for('organization_read', id=org_code, **params) + suffix
+    #
+    #     fq = 'organization:"{}"'.format(org_code)
+    #
+    #     full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
+    #                                    ignore_capacity_check=ignore_capacity_check)
+    #     full_facet_info.get('facets', {}).pop('organization', {})
+    #
+    #     base_url = h.url_for('organization_read', id=org_code)
+    #     c.other_links['current_page_url'] = base_url
+    #     archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
+    #     archived_url_helper.redirect_if_needed()
+    #
+    #     return full_facet_info
 
     def new(self, data=None, errors=None, error_summary=None):
         group_type = self._guess_group_type(True)
