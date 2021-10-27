@@ -18,6 +18,7 @@ $('document').ready(function(){
     });
 
     var performSearchQuery = function(query) {
+      query = hdxUtil.text.sanitize(query);
       var termList = query.split(' ');
       var modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
       modifiedQ += modifiedQ.length > 0 ? '*' : '';

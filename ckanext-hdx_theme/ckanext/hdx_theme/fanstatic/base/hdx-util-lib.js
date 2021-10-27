@@ -1,6 +1,7 @@
 (function() {
     var hdxUtil = {
         'ui': {},
+        'text': {},
         'compute': {},
         'eventUtil': {},
         'analytics': {} // This will be populated from analytics.js
@@ -14,6 +15,13 @@
         $('html, body').animate({
             'scrollTop': $(target).offset().top - delta
         }, 700);
+    };
+    hdxUtil.text.sanitize = function (theString) {
+        if (theString !== null && theString.length > 0){
+            return new DOMParser().parseFromString(theString, 'text/html').body.textContent;
+        } else {
+          return '';
+        }
     };
 
     hdxUtil.compute.strHash = function (theString, startHash) {
