@@ -56,7 +56,7 @@
   <div class="org-control-container">
       {% set hdx_org_type = h.hdx_get_extras_element(data, value_key='hdx_org_type') %}
 
-      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
+      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list or data.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
       <div class="org-control-info info-field">
           <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
       </div>

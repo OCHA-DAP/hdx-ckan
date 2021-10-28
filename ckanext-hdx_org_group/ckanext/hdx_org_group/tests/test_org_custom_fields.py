@@ -157,9 +157,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
         tester_auth = {'Authorization': str(tester.apikey)}
         test_client = self.get_backwards_compatible_test_client()
 
-        new_org_url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='new')
+        new_org_url = h.url_for('hdx_org.new')
         new_org_params = {
             'name': 'test_org_d',
             'title': 'Test Org D',
@@ -173,7 +171,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             result = test_client.post(new_org_url, data=new_org_params, extra_environ=sysadmin_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert '123456' == org_dict.get('fts_id')
-            assert '302 Found' in result.body
+            assert result.status_code == 302
         except Exception as ex:
             assert False
 
@@ -368,9 +366,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
         tester_auth = {'Authorization': str(tester.apikey)}
         test_client = self.get_backwards_compatible_test_client()
 
-        new_org_url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='new')
+        new_org_url = h.url_for('hdx_org.new')
         new_org_params = {
             'name': 'test_org_d',
             'title': 'Test Org D',
@@ -384,7 +380,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             result = test_client.post(new_org_url, data=new_org_params, extra_environ=sysadmin_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert self.USER_SURVEY_URL == org_dict.get('user_survey_url')
-            assert '302 Found' in result.body
+            assert result.status_code == 302
         except Exception as ex:
             assert False
 

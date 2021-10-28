@@ -5,9 +5,10 @@ from six.moves.urllib.parse import urlencode
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 
-from ckan.views.group import _get_group_template
+from ckan.views.group import _get_group_template, CreateGroupView
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
@@ -167,5 +168,20 @@ def _generate_template_data_for_custom_org(org_read_logic):
     return template_data
 
 
+def new_org_template_variables(context, data_dict):
+    data_dict['hdx_org_type_list'] = [{'value': '-1', 'text': _('-- Please select --')}] + \
+                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
+
+
+
 hdx_org.add_url_rule(u'', view_func=index)
+hdx_org.add_url_rule(
+        u'/new',
+        methods=[u'GET', u'POST'],
+        view_func=CreateGroupView.as_view(str(u'new')),
+        defaults={
+            'group_type': 'organization',
+            'is_organization': True
+        }
+)
 hdx_org.add_url_rule(u'/<id>', view_func=read)

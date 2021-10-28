@@ -1,20 +1,19 @@
 import logging
 
-import ckanext.hdx_org_group.actions.authorize as authorize
-import ckanext.hdx_org_group.actions.get as get_actions
-import ckanext.hdx_org_group.actions.create as create_actions
-import ckanext.hdx_org_group.actions.update as update_actions
-import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_org_group.helpers.static_lists as static_lists
-import ckanext.hdx_org_group.model as org_group_model
-import ckanext.hdx_package.helpers.screenshot as screenshot
-import ckanext.hdx_theme.helpers.custom_validator as custom_validator
-import ckanext.hdx_org_group.helpers.custom_validator as org_custom_validator
-from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
-
 import ckan.lib.plugins as lib_plugins
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+
+import ckanext.hdx_org_group.actions.authorize as authorize
+import ckanext.hdx_org_group.actions.create as create_actions
+import ckanext.hdx_org_group.actions.get as get_actions
+import ckanext.hdx_org_group.actions.update as update_actions
+import ckanext.hdx_org_group.helpers.custom_validator as org_custom_validator
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
+import ckanext.hdx_org_group.model as org_group_model
+import ckanext.hdx_org_group.views.organization as org
+import ckanext.hdx_theme.helpers.custom_validator as custom_validator
+from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
 
 log = logging.getLogger(__name__)
 
@@ -31,15 +30,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IBlueprint)
-
-    num_times_new_template_called = 0
-    num_times_read_template_called = 0
-    num_times_edit_template_called = 0
-    num_times_search_template_called = 0
-    num_times_history_template_called = 0
-    num_times_package_form_called = 0
-    num_times_check_data_dict_called = 0
-    num_times_setup_template_variables_called = 0
 
     # IConfigurer
     def update_config(self, config):
@@ -94,11 +84,17 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     #             'hdx_send_request_membership': helpers.auth.hdx_send_request_membership
     #             }
 
+    # IGroupForm
     def is_fallback(self):
         return False
 
+    # IGroupForm
     def group_types(self):
         return ['organization']
+
+    # IGroupForm
+    def setup_template_variables(self, context, data_dict):
+        org.new_org_template_variables(context, data_dict)
 
     # IValidators
     def get_validators(self):
@@ -132,6 +128,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         })
         return schema
 
+    # IGroupForm
     def form_to_db_schema(self):
         schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
         schema = self._modify_group_schema(schema)
@@ -152,6 +149,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     #     schema.update({'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
     #     return schema
 
+    # IGroupForm
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
@@ -215,9 +213,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('organizations_index', '/organization',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #             action='index')
-        map.connect('organization_new', '/organization/new',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='new')
+        # map.connect('organization_new', '/organization/new',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='new')
         map.connect('organization_edit', '/organization/edit/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='edit', ckan_icon='edit')
@@ -319,7 +317,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     # IBlueprint
     def get_blueprint(self):
-        import ckanext.hdx_org_group.views.organization as org
         return org.hdx_org
 
 

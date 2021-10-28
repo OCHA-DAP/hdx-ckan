@@ -259,20 +259,20 @@ def hdx_organization_update(context, data_dict):
 
     compile_less(result)
 
-    hdx_generate_embedded_preview(result)
+    # hdx_generate_embedded_preview(result)
     return result
 
 
-def hdx_generate_embedded_preview(result):
-    org_name = result.get('name') or result.get('id')
-    vis_config = get_value_dict_from_extras(result, 'visualization_config')
-    if vis_config and vis_config.get('visualization-select') == 'embedded-preview':
-        selector = vis_config.get('vis-preview-selector', None)
-        url = vis_config.get('vis-url')
-        file_path = BUCKET + org_name + '_embedded_preview.png'
-        hdx_capturejs(url, file_path, selector, renderdelay=15000)
-        return True
-    return False
+# def hdx_generate_embedded_preview(result):
+#     org_name = result.get('name') or result.get('id')
+#     vis_config = get_value_dict_from_extras(result, 'visualization_config')
+#     if vis_config and vis_config.get('visualization-select') == 'embedded-preview':
+#         selector = vis_config.get('vis-preview-selector', None)
+#         url = vis_config.get('vis-url')
+#         file_path = BUCKET + org_name + '_embedded_preview.png'
+#         hdx_capturejs(url, file_path, selector, renderdelay=15000)
+#         return True
+#     return False
 
 
 def remove_image(filename):
@@ -304,7 +304,7 @@ def hdx_organization_create(context, data_dict):
         lunr.buildIndex(config.get('hdx.lunr.index_location'))
     compile_less(result)
 
-    hdx_generate_embedded_preview(result)
+    # hdx_generate_embedded_preview(result)
     return result
 
 
@@ -580,7 +580,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
         # to ensure they still work
         try:
             group_plugin.check_data_dict(data_dict, schema)
-        except TypeError:
+        except TypeError as e:
             group_plugin.check_data_dict(data_dict)
 
     data, errors = lib_plugins.plugin_validate(
