@@ -6,7 +6,7 @@ $(document).ready(function(){
         if (result.success){
             $.each(result.result, function(idx, el){
                 if (el.request_membership !== "false") {
-                  $('#existing-org-selector').append("<option value='"+ el.id +"'>"+ el.title +"</option>");
+                    $('#existing-org-selector').append("<option value='"+ el.id +"'>"+ hdxUtil.text.sanitize(el.title) +"</option>");
                 }
             });
             $('#existing-org-selector').select2();
