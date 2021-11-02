@@ -282,7 +282,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('group_eaa_worldmap', '/eaa-worldmap',
         #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
 
-        map.connect('group_new', '/group/new', controller='group', action='new')
+        # map.connect('group_new', '/group/new', controller='group', action='new')
 
         # map.connect('country_read', '/group/{id}',
         #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
@@ -345,60 +345,58 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         return True
 
     def _modify_group_schema(self, schema):
-        schema.update({'language_code': [
-            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')], })
-        schema.update({'relief_web_url': [
-            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
-        schema.update({'hr_info_url': [
-            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
-        schema.update({'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       # 'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       # 'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       # 'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'key_figures': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'data_completeness': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-                       })
+        schema.update({
+            'language_code': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'relief_web_url': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'hr_info_url': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            # 'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            # 'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            # 'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'key_figures': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'data_completeness': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+        })
         return schema
 
+    # IGroupForm
     def form_to_db_schema(self):
         schema = super(HDXGroupPlugin, self).form_to_db_schema()
         schema = self._modify_group_schema(schema)
         return schema
 
+    # IGroupForm
     def db_to_form_schema(self):
 
         schema = super(HDXGroupPlugin, self).form_to_db_schema()
-        schema.update({'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        # schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        # schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({
+            'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'activity_level': [
                 tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
+                tk.get_validator('ignore_missing')
+            ],
+            'key_figures': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('active_if_missing')
+            ],
+            'data_completeness': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')
+            ],
+            'package_count': [tk.get_validator('ignore_missing')],
+            'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+
         })
+        # schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        # schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         # schema.update({
         #     'featured_section': [
         #         tk.get_converter('convert_from_extras'),
         #         tk.get_validator('ignore_missing')]
         # })
-        schema.update({
-            'key_figures': [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('active_if_missing')]
-        })
-        schema.update({
-            'data_completeness': [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
-        })
-        schema.update({
-            'package_count': [tk.get_validator('ignore_missing')]
-        })
-        schema.update({'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         return schema
 
     def create(self, country):
