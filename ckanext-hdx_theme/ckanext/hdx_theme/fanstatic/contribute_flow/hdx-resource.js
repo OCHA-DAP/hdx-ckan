@@ -870,6 +870,7 @@ $(function(){
             var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
             this.resourceCollection.unshift(newResourceModel);
+            this.resourceListView.onSortOrderChange();
         },
         onFileViaDragAndDrop: function(file){
             var data = this.resourceDefaults();
