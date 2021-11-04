@@ -12,6 +12,7 @@ from ckan.views.group import _get_group_template, CreateGroupView
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_theme.util.mail import NoRecipientException
 
 g = tk.g
 config = tk.config
@@ -20,9 +21,10 @@ render = tk.render
 redirect = tk.redirect_to
 url_for = tk.url_for
 get_action = tk.get_action
-NotFound = tk.ObjectNotFound
 check_access = tk.check_access
+NotFound = tk.ObjectNotFound
 NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
 abort = tk.abort
 _ = tk._
 h = tk.h
@@ -168,6 +170,101 @@ def _generate_template_data_for_custom_org(org_read_logic):
     return template_data
 
 
+def request_new():
+    context = {'model': model, 'session': model.Session, 'user': g.user}
+    try:
+        check_access('hdx_send_new_org_request', context)
+    except NotAuthorized:
+        abort(403, _('Unauthorized to send a new org request'))
+
+    errors = {}
+    error_summary = {}
+    data = {'from': request.form.get('from', '')}
+
+    sent_successfully = False
+    if 'save' in request.form and request.method == 'POST':
+        try:
+            data = _process_new_org_request()
+            _validate_new_org_request_field(data)
+
+            get_action('hdx_send_new_org_request')(context, _transform_dict_for_mailing(data))
+
+            data.clear()
+            h.flash_success(_('Request sent successfully'))
+            sent_successfully = True
+        except NoRecipientException as e:
+            h.flash_error(_(str(e)))
+        except ValidationError as e:
+            errors = e.error_dict
+            error_summary = e.error_summary
+        except Exception as e:
+            log.error(str(e))
+            h.flash_error(_('Request can not be sent. Contact an administrator'))
+        if sent_successfully:
+            h.redirect_to('user_dashboard_organizations')
+
+    hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
+                        [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
+    template_data = {
+        'data': {
+            'action': 'new',
+            'hdx_org_type_list': hdx_org_type_list
+        },
+        'form_data': data,
+        'errors': errors,
+        'error_summary': error_summary,
+
+    }
+    g.form = render('organization/request_organization_form.html', template_data)
+    return render('organization/request_new.html')
+
+
+def _process_new_org_request():
+    hdx_org_type = None
+    hdx_org_type_code = request.form.get('hdx_org_type', '')
+
+    if hdx_org_type_code:
+        hdx_org_type = next(
+            (type[0] for type in static_lists.ORGANIZATION_TYPE_LIST if type[1] == hdx_org_type_code), '-1')
+
+    data = {
+        'name': request.form.get('name', ''),
+        'title': request.form.get('title', ''),
+        'org_url': request.form.get('org_url', ''),
+        'description': request.form.get('description', ''),
+        'your_email': request.form.get('your_email', ''),
+        'your_name': request.form.get('your_name', ''),
+        'org_acronym': request.form.get('org_acronym', ''),
+        'hdx_org_type': hdx_org_type,
+        'hdx_org_type_code': hdx_org_type_code,  # This is needed for the form when validation fails
+    }
+    return data
+
+
+def _validate_new_org_request_field(data):
+    errors = {}
+    for field in ['title', 'description', 'your_email', 'your_name', 'hdx_org_type']:
+        if data[field].strip() in ['', '-1']:
+            errors[field] = [_('should not be empty')]
+
+    if len(errors) > 0:
+        raise ValidationError(errors)
+
+
+def _transform_dict_for_mailing(data_dict):
+    data_dict_for_mailing = {
+        'name': data_dict.get('title'),
+        'acronym': data_dict.get('org_acronym'),
+        'description': data_dict.get('description'),
+        'org_type': data_dict.get('hdx_org_type', ''),
+        'org_url': data_dict.get('org_url', ''),
+
+        'work_email': data_dict.get('your_email', ''),
+        'your_name': data_dict.get('your_name', ''),
+    }
+    return data_dict_for_mailing
+
+
 def new_org_template_variables(context, data_dict):
     data_dict['hdx_org_type_list'] = [{'value': '-1', 'text': _('-- Please select --')}] + \
                               [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
@@ -184,4 +281,5 @@ hdx_org.add_url_rule(
             'is_organization': True
         }
 )
+hdx_org.add_url_rule(u'/request_new', view_func=request_new, methods=[u'GET', u'POST'])
 hdx_org.add_url_rule(u'/<id>', view_func=read)

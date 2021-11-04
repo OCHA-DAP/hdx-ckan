@@ -224,9 +224,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
                     controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
                     action='request_editor_for_org')
-        map.connect('/organization/request_new',
-                    controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
-                    action='request_new_organization')
+        # map.connect('/organization/request_new',
+        #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+        #             action='request_new_organization')
         map.connect('organization_members',
                     '/organization/members/{id}',
                     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
