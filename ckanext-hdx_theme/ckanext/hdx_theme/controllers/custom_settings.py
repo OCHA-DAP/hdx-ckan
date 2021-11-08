@@ -130,7 +130,7 @@ class CustomSettingsController(base.BaseController):
                 'upload': graphic_upload
             })
             upload.upload()
-            item['graphic'] = helpers.url_for('global_file_download', filename=upload.filename)
+            item['graphic'] = helpers.url_for('hdx_global_file_server.global_file_download', filename=upload.filename)
             del item['graphic_upload']
 
     @staticmethod

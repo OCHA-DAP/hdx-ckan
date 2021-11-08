@@ -16,6 +16,7 @@ from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 from ckanext.hdx_theme.views.faqs import hdx_faqs
 from ckanext.hdx_theme.views.ebola import hdx_ebola
+from ckanext.hdx_theme.views.global_file_server import hdx_global_file_server
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -195,9 +196,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('pages_show', '/ckan-admin/pages/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show_pages')
 
-        map.connect('global_file_download', '/global/{filename}',
-                    controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
-                    action='global_file_download')
+        # map.connect('global_file_download', '/global/{filename}',
+        #             controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
+        #             action='global_file_download')
 
         map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
@@ -380,4 +381,4 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_colored_page, hdx_faqs, hdx_ebola]
+        return [hdx_colored_page, hdx_faqs, hdx_ebola, hdx_global_file_server]
