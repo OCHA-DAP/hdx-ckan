@@ -28,7 +28,7 @@
           <tbody>
               <tr>
                   <th>{% trans %}Organization{% endtrans %}</th>
-                  <td><a href="{{ h.url('organization_read', id=member.group.name) }}">{{ member.group.title }} ({{ member.group.name }})</a></td>
+                  <td><a href="{{ h.url('hdx_org.read', id=member.group.name) }}">{{ member.group.title }} ({{ member.group.name }})</a></td>
               </tr>
               <tr>
                   <th>{% trans %}User{% endtrans %}</th>

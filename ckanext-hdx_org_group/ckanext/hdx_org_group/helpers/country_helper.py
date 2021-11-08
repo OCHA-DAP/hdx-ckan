@@ -4,15 +4,13 @@ import ckan.model as model
 import ckan.common as common
 import ckan.lib.base as base
 import ckan.logic as logic
-import ckan.controllers.group as group
 import ckanext.hdx_org_group.helpers.caching as caching
-import ckanext.hdx_package.helpers.screenshot as screenshot
-import ckanext.hdx_search.controllers.search_controller as search_controller
+# import ckanext.hdx_package.helpers.screenshot as screenshot
+
 from ckanext.hdx_org_group.controller_logic.group_search_logic import GroupSearchLogic
 import ckan.lib.helpers as h
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 from ckan.common import config
-from operator import itemgetter
 
 c = common.c
 render = base.render
@@ -28,18 +26,18 @@ log = logging.getLogger(__name__)
 lookup_group_plugin = ckan.lib.plugins.lookup_group_plugin
 GROUP_TYPES = ['group']
 
-def get_latest_cod_dataset(country_name):
-    context = {'model': model, 'session': model.Session,
-               'user': c.user or c.author, 'for_view': True,
-               'auth_user_obj': c.userobj}
-
-    search = search_controller.HDXSearchController()
-
-    fq = 'groups:"{}" tags:cod +dataset_type:dataset'.format(country_name)
-    query_result = search._performing_search(u'', fq, ['organization', 'tags'], 1, 1, DEFAULT_SORTING, None,
-                                             None, context)
-
-    return next(iter(query_result.get('results', [])), None)
+# def get_latest_cod_dataset(country_name):
+#     context = {'model': model, 'session': model.Session,
+#                'user': c.user or c.author, 'for_view': True,
+#                'auth_user_obj': c.userobj}
+#
+#     search = search_controller.HDXSearchController()
+#
+#     fq = 'groups:"{}" tags:cod +dataset_type:dataset'.format(country_name)
+#     query_result = search._performing_search(u'', fq, ['organization', 'tags'], 1, 1, DEFAULT_SORTING, None,
+#                                              None, context)
+#
+#     return next(iter(query_result.get('results', [])), None)
 
 
 def _sort_datasets_by_is_good(data_completeness):
@@ -75,7 +73,7 @@ def country_topline(id):
 
 def get_template_data(country_dict, not_filtered_facet_info):
 
-    latest_cod_dataset = get_latest_cod_dataset(country_dict.get('name'))
+    # latest_cod_dataset = get_latest_cod_dataset(country_dict.get('name'))
 
     follower_count = get_action('group_follower_count')(
         {'model': model, 'session': model.Session},
@@ -85,12 +83,12 @@ def get_template_data(country_dict, not_filtered_facet_info):
     top_line_data_list = caching.cached_topline_numbers(country_dict['id'], country_dict.get('activity_level'))
 
     organization_list = _get_org_list_for_menu_from_facets(not_filtered_facet_info)
-    f_event_list = _get_event_list_for_featured(country_dict['id'])
-    f_thumbnail_list = _get_thumbnail_list_for_featured(country_dict, f_event_list,
-                                                        not_filtered_facet_info.get('results'),
-                                                        latest_cod_dataset)
-    f_organization_list = _get_org_list_for_featured_from_facets(not_filtered_facet_info)
-    f_tag_list = _get_tag_list_for_featured_from_facets(not_filtered_facet_info)
+    # f_event_list = _get_event_list_for_featured(country_dict['id'])
+    # f_thumbnail_list = _get_thumbnail_list_for_featured(country_dict, f_event_list,
+    #                                                     not_filtered_facet_info.get('results'),
+    #                                                     latest_cod_dataset)
+    # f_organization_list = _get_org_list_for_featured_from_facets(not_filtered_facet_info)
+    # f_tag_list = _get_tag_list_for_featured_from_facets(not_filtered_facet_info)
 
     data_completness = _get_data_completeness(country_dict.get('name')) \
         if country_dict.get('data_completeness') == 'active' else None
@@ -114,13 +112,13 @@ def get_template_data(country_dict, not_filtered_facet_info):
                 # 'chart_data_list': chart_data_list,
                 'show': len(top_line_data_list) > 0  # or len(chart_data_list) > 0
             },
-            'featured_section': {
-                'thumbnail_list': f_thumbnail_list,
-                'event_list': f_event_list,
-                'organization_list': f_organization_list[:5],
-                'tag_list': f_tag_list[:10],
-                'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
-            },
+            # 'featured_section': {
+            #     'thumbnail_list': f_thumbnail_list,
+            #     'event_list': f_event_list,
+            #     'organization_list': f_organization_list[:5],
+            #     'tag_list': f_tag_list[:10],
+            #     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
+            # },
             'data_completness': data_completness,
 
         },
@@ -143,94 +141,94 @@ def _get_org_list_for_menu_from_facets(full_facet_info):
     return org_list
 
 
-def _get_org_list_for_featured_from_facets(full_facet_info):
-    org_list = [
-        {
-            'display_name': org.get('display_name'),
-            'name': org.get('name'),
-            'count': org.get('count'),
-            'url': h.url_for('organization_read', id=org.get('name'))
-        }
-        for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if
-        org.get('name') != 'hdx'
-    ]
-    result = sorted(org_list, key=itemgetter('count'), reverse=True)
-    return result
+# def _get_org_list_for_featured_from_facets(full_facet_info):
+#     org_list = [
+#         {
+#             'display_name': org.get('display_name'),
+#             'name': org.get('name'),
+#             'count': org.get('count'),
+#             'url': h.url_for('organization_read', id=org.get('name'))
+#         }
+#         for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if
+#         org.get('name') != 'hdx'
+#     ]
+#     result = sorted(org_list, key=itemgetter('count'), reverse=True)
+#     return result
 
 
-def _get_tag_list_for_featured_from_facets(full_facet_info):
-    tag_list = [
-        {
-            'display_name': tag.get('display_name'),
-            'count': tag.get('count'),
-            'name': tag.get('name'),
-            'url': '?tags=' + tag.get('name') + '#dataset-filter-start'
-        }
-        for tag in full_facet_info.get('facets', {}).get('vocab_Topics', {}).get('items', [])
-    ]
-    tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
-    return tag_list_by_count
+# def _get_tag_list_for_featured_from_facets(full_facet_info):
+#     tag_list = [
+#         {
+#             'display_name': tag.get('display_name'),
+#             'count': tag.get('count'),
+#             'name': tag.get('name'),
+#             'url': '?tags=' + tag.get('name') + '#dataset-filter-start'
+#         }
+#         for tag in full_facet_info.get('facets', {}).get('vocab_Topics', {}).get('items', [])
+#     ]
+#     tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
+#     return tag_list_by_count
 
 
-def _get_thumbnail_list_for_featured(country_dict, event_list, latest_datasets, latest_cod_dataset):
-    '''
-    :param country_dict:
-    :type country_dict: dict
-    :param event_list: if this was already fetched in the controller we can reuse it
-    :type event_list: list
-    :param latest_datasets: a list of the latest updated datasets for the country
-    :type latest_datasets: list
-    :return: list of dicts containing display_name, type and url for the featured thumbnails
-    :rtype: list
-    '''
-
-    cloned_latest_datasets = latest_datasets[:]
-    default_thumbnail_url = '/images/featured_locs_placeholder1.png'
-    thumbnail_list = [None, None]
-    if event_list:
-        thumbnail_list[0] = __event_as_thumbnail_dict(event_list[0], default_thumbnail_url)
-    elif cloned_latest_datasets:
-        thumbnail_list[0] = __dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
-        del cloned_latest_datasets[0]
-    if latest_cod_dataset:
-        cod_thumbnail_url = screenshot.create_download_link(latest_cod_dataset, default_thumbnail_url)
-        thumbnail_list[1] = __dataset_as_thumbnail_dict(latest_cod_dataset, cod_thumbnail_url, True)
-    elif cloned_latest_datasets:
-        thumbnail_list[1] = __dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
-        del cloned_latest_datasets[0]
-
-    if thumbnail_list[0] and thumbnail_list[1] \
-        and thumbnail_list[0].get('url') == thumbnail_list[1].get('url') and cloned_latest_datasets:
-        thumbnail_list[0] = __dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
-        del cloned_latest_datasets[0]
-
-    # thumbnail_list[0]['thumbnail_url'] = '/images/featured_locs_placeholder1.png'
-    # thumbnail_list[1]['thumbnail_url'] = '/images/featured_locs_placeholder2.png'
-    return thumbnail_list
-
-
-def __dataset_as_thumbnail_dict(dataset_dict, thumbnail_url, is_cod=False):
-    return {
-        'display_name': dataset_dict.get('title'),
-        'type': 'COD' if is_cod else 'Dataset',
-        'url': h.url_for('dataset_read', id=dataset_dict.get('name')),
-        'thumbnail_url': thumbnail_url
-    }
+# def _get_thumbnail_list_for_featured(country_dict, event_list, latest_datasets, latest_cod_dataset):
+#     '''
+#     :param country_dict:
+#     :type country_dict: dict
+#     :param event_list: if this was already fetched in the controller we can reuse it
+#     :type event_list: list
+#     :param latest_datasets: a list of the latest updated datasets for the country
+#     :type latest_datasets: list
+#     :return: list of dicts containing display_name, type and url for the featured thumbnails
+#     :rtype: list
+#     '''
+#
+#     cloned_latest_datasets = latest_datasets[:]
+#     default_thumbnail_url = '/images/featured_locs_placeholder1.png'
+#     thumbnail_list = [None, None]
+#     if event_list:
+#         thumbnail_list[0] = __event_as_thumbnail_dict(event_list[0], default_thumbnail_url)
+#     elif cloned_latest_datasets:
+#         thumbnail_list[0] = __dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
+#         del cloned_latest_datasets[0]
+#     if latest_cod_dataset:
+#         cod_thumbnail_url = screenshot.create_download_link(latest_cod_dataset, default_thumbnail_url)
+#         thumbnail_list[1] = __dataset_as_thumbnail_dict(latest_cod_dataset, cod_thumbnail_url, True)
+#     elif cloned_latest_datasets:
+#         thumbnail_list[1] = __dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
+#         del cloned_latest_datasets[0]
+#
+#     if thumbnail_list[0] and thumbnail_list[1] \
+#         and thumbnail_list[0].get('url') == thumbnail_list[1].get('url') and cloned_latest_datasets:
+#         thumbnail_list[0] = __dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
+#         del cloned_latest_datasets[0]
+#
+#     # thumbnail_list[0]['thumbnail_url'] = '/images/featured_locs_placeholder1.png'
+#     # thumbnail_list[1]['thumbnail_url'] = '/images/featured_locs_placeholder2.png'
+#     return thumbnail_list
 
 
-def __event_as_thumbnail_dict(event_dict, thumbnail_url, is_cod=False):
-    return {
-        'display_name': event_dict.get('title'),
-        'type': 'Event',
-        'url': h.url_for('read_event', id=event_dict.get('name')),
-        'thumbnail_url': thumbnail_url
-    }
+# def __dataset_as_thumbnail_dict(dataset_dict, thumbnail_url, is_cod=False):
+#     return {
+#         'display_name': dataset_dict.get('title'),
+#         'type': 'COD' if is_cod else 'Dataset',
+#         'url': h.url_for('dataset_read', id=dataset_dict.get('name')),
+#         'thumbnail_url': thumbnail_url
+#     }
 
 
-def _get_event_list_for_featured(group_id):
-    context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
-    pages_list = get_action('group_page_list')(context, {'id': group_id})
-    return pages_list
+# def __event_as_thumbnail_dict(event_dict, thumbnail_url, is_cod=False):
+#     return {
+#         'display_name': event_dict.get('title'),
+#         'type': 'Event',
+#         'url': h.url_for('read_event', id=event_dict.get('name')),
+#         'thumbnail_url': thumbnail_url
+#     }
+
+
+# def _get_event_list_for_featured(group_id):
+#     context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+#     pages_list = get_action('group_page_list')(context, {'id': group_id})
+#     return pages_list
 
 
 def get_country(id):

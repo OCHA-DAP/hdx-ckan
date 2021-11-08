@@ -596,7 +596,7 @@ def count_public_datasets_for_group(datasets_list):
 
 
 def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
-    for key, value in dictionary.iteritems():
+    for key, value in dictionary.items():
         if key not in skipped_keys:
             value = value.strip() if value else value
             if not value:

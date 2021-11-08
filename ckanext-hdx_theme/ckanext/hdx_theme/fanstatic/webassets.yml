@@ -944,8 +944,6 @@ group-form-scripts:
     preload:
       - hdx_theme/ckan
       - hdx_theme/organization-form-styles
-  contents:
-    - custom_location.js
 
 group-list-scripts:
   <<: *common-js

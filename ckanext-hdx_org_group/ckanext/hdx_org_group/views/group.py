@@ -6,6 +6,8 @@ import ckan.common as common
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
+from ckan.views.group import _get_group_template, CreateGroupView
+
 from ckanext.hdx_org_group.controller_logic.group_read_logic import GroupIndexReadLogic, GroupReadLogic, \
     CountryToplineReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
@@ -15,6 +17,7 @@ g = common.g
 request = common.request
 render = tk.render
 redirect = tk.redirect_to
+url_for = tk.url_for
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
 check_access = tk.check_access
@@ -71,6 +74,8 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         check_access('site_read', context)
     except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
+    if id == 'ebola':
+        return redirect(url_for('hdx_ebola.read'))
 
     group_read_logic = GroupReadLogic(group_id=id).read()
     if group_read_logic.redirect_result:
@@ -81,6 +86,15 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
 
 
 hdx_group.add_url_rule(u'', view_func=index)
+hdx_group.add_url_rule(
+        u'/new',
+        methods=[u'GET', u'POST'],
+        view_func=CreateGroupView.as_view(str(u'new')),
+        defaults={
+            'group_type': 'group',
+            'is_organization': False
+        }
+)
 hdx_group.add_url_rule(u'/<id>', view_func=read)
 
 hdx_country_topline.add_url_rule(u'/topline/<id>', view_func=country_topline)
