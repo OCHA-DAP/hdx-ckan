@@ -64,7 +64,7 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_faq_page_content
-        url = h.url_for(controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+        url = '/faq'
         page = self._get_url_page(url)
         assert 'Frequently Asked Questions' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'FAQ' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
