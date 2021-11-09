@@ -169,12 +169,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/documentation/resources-for-developers',
                     controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController',
                     action='show')
-        # map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
         map.connect('/archive',
                     controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController',
                     action='show')
-        # map.connect(
-        #     '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
         # map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
 
