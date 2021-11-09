@@ -264,9 +264,7 @@ onboarding-bulk-user-scripts:
       - hdx_theme/onboarding-registered-scripts
       - hdx_theme/onboarding-follow-scripts
       - hdx_theme/onboarding-invite-scripts
-      - hdx_theme/onboarding-done-scripts
       - hdx_theme/onboarding-select-org-scripts
-      - hdx_theme/onboarding-survey-scripts
 
 onboarding-bulk-anon-styles:
   extra:
@@ -280,7 +278,6 @@ onboarding-bulk-anon-scripts:
     preload:
       - hdx_theme/onboarding-scripts
       - hdx_theme/onboarding-password-scripts
-      - hdx_theme/onboarding-survey-scripts
 
 onboarding-password-scripts:
   <<: *common-js

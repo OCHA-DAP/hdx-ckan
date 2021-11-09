@@ -1,4 +1,5 @@
 {% for section in data %}
+    {% block section_title %}{% endblock %}
     <div class="panel-group hdx-panel-group" id="accordion-{{ section.id }}" role="tablist" aria-multiselectable="false">
         {% for question in section.questions %}
             {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}

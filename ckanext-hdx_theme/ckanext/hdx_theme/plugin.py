@@ -14,7 +14,7 @@ from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddlewa
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
-from ckanext.hdx_theme.views.faqs import hdx_faqs
+from ckanext.hdx_theme.views.faqs import hdx_faqs, hdx_main_faq
 from ckanext.hdx_theme.views.ebola import hdx_ebola
 from ckanext.hdx_theme.views.global_file_server import hdx_global_file_server
 
@@ -169,12 +169,12 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/documentation/resources-for-developers',
                     controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController',
                     action='show')
-        map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+        # map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
         map.connect('/archive',
                     controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController',
                     action='show')
-        map.connect(
-            '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
+        # map.connect(
+        #     '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
         # map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
 
@@ -381,4 +381,4 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_colored_page, hdx_faqs, hdx_ebola, hdx_global_file_server]
+        return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server]

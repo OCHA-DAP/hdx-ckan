@@ -3,7 +3,9 @@
 {% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('FAQ'), controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show') }}</li>
+  <li class="active">
+    <a href="/faq">{{ _('FAQ') }}</a>
+  </li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -124,7 +126,7 @@
             </p>
         </div>
     </div>
-    {% snippet 'faq/questions_sections.html', data=data.faq_data %}
+    {% snippet 'faq_others/faq/questions_sections.html', data=data.faq_data %}
 {% endblock %}
 
 {% block secondary %}
@@ -141,7 +143,7 @@
                 <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
             </p>
             <p>
-              {% snippet 'faq/search.html' %}
+              {% snippet 'faq_others/faq/search.html' %}
             </p>
         </div>
     </div>
