@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/base-font-styles' %}
+  {% asset 'hdx_theme/nepal-quake-country-custom-styles' %}
 
+{% endblock %}
 {% block page %}
 
     <div class="container-fluid">
@@ -15,6 +20,4 @@
         </div>
     </div>
 
-    {% asset 'hdx_theme/base-font-styles' %}
-    {% asset 'hdx_theme/nepal-quake-country-custom-styles' %}
 {% endblock %}
