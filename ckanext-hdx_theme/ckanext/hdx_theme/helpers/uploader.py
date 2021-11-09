@@ -12,13 +12,18 @@ from ckanext.hdx_theme.helpers.exception import BaseHdxException
 log = logging.getLogger(__name__)
 
 
+def get_base_path():
+    path = uploader.get_storage_path()
+    return path
+
+
 class GlobalUpload(object):
     '''
     This is heavily based on ckan.logic.uploader.ResourceUpload
     '''
 
     def __init__(self, file_dict):
-        path = uploader.get_storage_path()
+        path = get_base_path()
         if not path:
             self.storage_path = None
             return

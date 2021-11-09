@@ -183,7 +183,7 @@ class OrgReadLogic(LightOrgReadLogic):
                 'height': visualization.get('vis-height', '600px') if visualization.get('vis-height', '600px') != '' else '600px',
                 'width': visualization.get('vis-width', '100%') if visualization.get('vis-width', '100%') != '' else '100%',
                 'selector': visualization.get('vis-preview-selector', ''),
-                'embedded_preview': h.url_for('image_serve', label=org_id + '_embedded_preview.png')
+                'embedded_preview': h.url_for('hdx_local_image_server.org_file', filename=org_id + '_embedded_preview.png')
             })
 
         if visualization.get('visualization-select', '') == 'WFP':
