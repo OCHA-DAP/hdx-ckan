@@ -3,9 +3,7 @@
 {% block subtitle %}{{ _("Terms of Service") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">
-    <a href="/faqs/terms">{{ _('TERMS OF SERVICE') }}</a>
-  </li>
+  <li class="active">{{ h.nav_link(_('TERMS OF SERVICE'), named_route='hdx_faqs.read', category='terms') }}</li>
 {% endblock %}
 
 {% block pre_primary %}

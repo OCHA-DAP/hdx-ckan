@@ -3,9 +3,7 @@
 {% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">
-    <a href="/faq">{{ _('FAQ') }}</a>
-  </li>
+  <li class="active">{{ h.nav_link(_('FAQ'), named_route='hdx_main_faq.main_faq') }}</li>
 {% endblock %}
 
 {% block pre_primary %}

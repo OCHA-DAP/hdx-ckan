@@ -27,6 +27,7 @@ pages = [
     # {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
     # {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'about', 'usertype': 'all'},
     # {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
+    {'url_name': 'hdx_main_faq', 'usertype': 'all'},
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard', 'usertype': 'all'},

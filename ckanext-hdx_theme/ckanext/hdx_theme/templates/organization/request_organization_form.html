@@ -110,7 +110,7 @@ overriding the form blocks depending on the current context
 <div class="mTB15">
 	<label class="terms-of-service" data-module="hdx_terms_checkbox" data-module-button="request-new-org-submit" style="font-style: normal;">
 		<input type="checkbox" style="top: 0;">
-		I have read and accept the <a target="_blank" href="/faqs/terms">HDX Terms of Service</a>
+		I have read and accept the <a target="_blank" href="{{ h.url_for('hdx_faqs.read', category='terms') }}">HDX Terms of Service</a>
 	</label>
 </div>
 <div class="org-control-container button-align">

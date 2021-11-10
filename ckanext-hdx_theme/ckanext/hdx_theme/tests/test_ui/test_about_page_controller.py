@@ -75,7 +75,8 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
     def _get_faqs_page(self, page, apikey=None):
         # global pages
         test_client = self.get_backwards_compatible_test_client()
-        url = '/faqs/' + page
+        #url = '/faqs/' + page
+        url = h.url_for('hdx_faqs.read', category=page)
         if apikey:
             page = test_client.get(url, headers={
                 'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
@@ -94,13 +95,12 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
             page = test_client.get(url)
         return page
 
-    # {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
+    # Resources for developers
     def test_documentation_page(self):
         testsysadmin = model.User.by_name('testsysadmin')
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_documentation_page_content
-        # url = h.url_for(controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show')
         page = self._get_faqs_page('devs')
         assert 'Resources for Developers' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'Accessing HDX by API' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
