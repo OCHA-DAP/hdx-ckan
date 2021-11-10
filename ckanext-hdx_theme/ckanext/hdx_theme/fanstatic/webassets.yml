@@ -927,6 +927,9 @@ country-custom-styles:
 
 nepal-quake-country-custom-styles:
   output: ckanext-hdx_theme/%(version)s_nepal-quake-country-custom-styles.css
+  extra:
+    preload:
+      - hdx_theme/page-common-styles
   contents:
     - crisis/topline-nepal-quake.css
     - country/custom/country-custom.css
