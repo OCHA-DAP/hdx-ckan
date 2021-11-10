@@ -100,11 +100,11 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_documentation_page_content
-        url = h.url_for(controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show')
-        page = self._get_url_page(url)
+        # url = h.url_for(controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show')
+        page = self._get_faqs_page('devs')
         assert 'Resources for Developers' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'Accessing HDX by API' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        page = self._get_url_page(url, testsysadmin.apikey)
+        page = self._get_faqs_page('devs', testsysadmin.apikey)
         assert 'Resources for Developers' in page.data, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
