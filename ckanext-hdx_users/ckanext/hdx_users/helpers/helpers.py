@@ -28,7 +28,7 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('hdx_carousel_update', context, {})
-            url = h.url_for('carousel_settings')
+            url = h.url_for('hdx_carousel.show')
         except NotAuthorized as e:
             pass
 

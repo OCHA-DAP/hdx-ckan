@@ -17,6 +17,7 @@ from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 from ckanext.hdx_theme.views.faqs import hdx_faqs
 from ckanext.hdx_theme.views.ebola import hdx_ebola
 from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_local_image_server
+from ckanext.hdx_theme.views.custom_settings import hdx_carousel
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -180,8 +181,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
-        map.connect('carousel_settings', '/ckan-admin/carousel/show',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
+        # map.connect('carousel_settings', '/ckan-admin/carousel/show',
+        #             controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
         map.connect('quick_links_settings', '/ckan-admin/dataviz/show',
                     controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:'
@@ -200,12 +201,12 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         #             controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
         #             action='global_file_download')
 
-        map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
+        # map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
+        #             controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
 
-        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
-                    action='delete')
+        # map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
+        #             controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+        #             action='delete')
 
         map.connect('update_quick_links_settings', '/ckan-admin/quick-links/update',
                     controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:DatavizCustomSettingsController',
@@ -379,4 +380,5 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_colored_page, hdx_faqs, hdx_ebola, hdx_global_file_server, hdx_local_image_server]
+        return [hdx_colored_page, hdx_faqs, hdx_ebola, hdx_global_file_server,
+                hdx_local_image_server, hdx_carousel]
