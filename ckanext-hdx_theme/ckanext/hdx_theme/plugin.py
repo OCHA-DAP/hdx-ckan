@@ -161,8 +161,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/widget/WFP', controller='ckanext.hdx_theme.controllers.widget_WFP:WidgetWFPController', action='show')
 
-        map.connect('about', '/about', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='about')
-
         map.connect('/archive',
                     controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController',
                     action='show')
