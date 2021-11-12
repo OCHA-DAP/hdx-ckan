@@ -166,7 +166,8 @@ class SplashPageController(HomeController):
         render_item = render.get(page, 'redirect')
         if render_item == 'redirect':
             html_item = html.get(page)
-            result = redirect('/faqs/'+html_item)
+            url = h.url_for('hdx_faqs.read', category=html_item)
+            result = redirect(url)
             return result
         else:
             html_item = html.get(page)

@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("Resources for Developers") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Resources for Developers'), controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show') }}</li>
+  <li class="active">{{ h.nav_link(_('Resources for Developers'), named_route='hdx_faqs.read', category='devs') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -51,7 +51,7 @@
             </p>
         </div>
     </div>
-    {% snippet 'documentation/questions_sections.html', data=data.faq_data %}
+    {% snippet 'faq_others/devs/questions_sections.html', data=data.faq_data %}
 {% endblock %}
 
 {% block secondary %}

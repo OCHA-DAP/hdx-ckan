@@ -9,10 +9,18 @@ import ckanext.hdx_user_extra.model as ue_model
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.mock_helper as mh
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
+import mock
 
+
+contact_form = {
+    'topic': 'Getting Started',
+    'fullname': 'hdx',
+    'email': 'hdx.feedback@gmail.com',
+    'faq-mesg': 'my question',
+}
 
 # @pytest.mark.skip(reason="Skipping for now as the page needs WP data")
-class TestAboutPageController(hdx_test_base.HdxBaseTest):
+class TestFaqPageController(hdx_test_base.HdxBaseTest):
 
     # loads missing plugins
     @classmethod
@@ -21,9 +29,20 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def setup_class(cls):
-        super(TestAboutPageController, cls).setup_class()
+        super(TestFaqPageController, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
+
+    @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
+    def test_faq_contact_us(self, mocked_mail_recipient):
+
+        try:
+            res = self.app.post('/faq/contact_us', params=contact_form)
+        except Exception, ex:
+            assert False
+        assert '200 OK' in res.status
+        assert "success" in res.body and "true" in res.body
+        assert True
 
     def test_resulting_page(self):
         testsysadmin = model.User.by_name('testsysadmin')
@@ -64,7 +83,7 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_faq_page_content
-        url = h.url_for(controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+        url = '/faq'
         page = self._get_url_page(url)
         assert 'Frequently Asked Questions' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'FAQ' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
@@ -75,7 +94,8 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
     def _get_faqs_page(self, page, apikey=None):
         # global pages
         test_client = self.get_backwards_compatible_test_client()
-        url = '/faqs/' + page
+        #url = '/faqs/' + page
+        url = h.url_for('hdx_faqs.read', category=page)
         if apikey:
             page = test_client.get(url, headers={
                 'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
@@ -94,17 +114,16 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
             page = test_client.get(url)
         return page
 
-    # {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
+    # Resources for developers
     def test_documentation_page(self):
         testsysadmin = model.User.by_name('testsysadmin')
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_documentation_page_content
-        url = h.url_for(controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show')
-        page = self._get_url_page(url)
+        page = self._get_faqs_page('devs')
         assert 'Resources for Developers' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'Accessing HDX by API' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        page = self._get_url_page(url, testsysadmin.apikey)
+        page = self._get_faqs_page('devs', testsysadmin.apikey)
         assert 'Resources for Developers' in page.data, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
