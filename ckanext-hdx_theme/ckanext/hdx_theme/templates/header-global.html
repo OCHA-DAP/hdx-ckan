@@ -187,7 +187,7 @@
                               </li>
                               {% endif %}
                               {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
-                                {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
+                                {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
                                 {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
                               {% endif %}
                               {% if user_is_sysadmin %}

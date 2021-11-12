@@ -93,43 +93,6 @@ class DatavizCustomSettingsController(base.BaseController):
                 break
         return index, element
 
-    # def _delete_unneeded_files(self, settings_list):
-    #     links_map = {item.get('graphic'): item for item in settings_list if item.get('graphic')}
-    #     existing_setting_list = logic.get_action('hdx_quick_links_settings_show')({}, {})
-    #     for item in existing_setting_list:
-    #         if not links_map.get(item.get('graphic')):
-    #             existing_upload = GlobalUpload({
-    #                 'filename': item.get('graphic'),
-    #                 'upload': None
-    #             })
-    #             existing_upload.delete()
-
-    # def _remove_file_by_path(self, path):
-    #     '''
-    #     :param path: something like /global/[uuid].png
-    #     '''
-    #     if path:
-    #         existing_upload = GlobalUpload({
-    #             'filename': path,
-    #             'upload': None
-    #         })
-    #         existing_upload.delete()
-
-    # def _persist_file(self, item):
-    #     # For some reason FieldStorage has the boolean value of false so we compare to None
-    #     graphic_upload = item.get('graphic_upload')
-    #     if graphic_upload is not None and graphic_upload != 'undefined':
-    #
-    #         # remove previous file if exists
-    #         self._remove_file_by_path(item.get('graphic'))
-    #
-    #         upload = GlobalUpload({
-    #             'filename': '{}_{}'.format(item.get('id')[0:4], unicode(uuid.uuid4())),
-    #             'upload': graphic_upload
-    #         })
-    #         upload.upload()
-    #         item['graphic'] = helpers.url_for('global_file_download', filename=upload.filename)
-    #         del item['graphic_upload']
 
     @staticmethod
     def _process_request():
