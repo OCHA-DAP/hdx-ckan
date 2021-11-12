@@ -49,7 +49,7 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('hdx_quick_links_update', context, {})
-            url = h.url_for('quick_links_settings')
+            url = h.url_for('hdx_quick_links.show')
         except NotAuthorized as e:
             pass
 
