@@ -4,6 +4,8 @@ import ckan.plugins.toolkit as tk
 
 import ckan.logic as logic
 
+import ckanext.hdx_search.helpers.search_history as search_history
+
 from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_search.controller_logic.qa_logs_logic import QALogsLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
@@ -15,6 +17,7 @@ render = tk.render
 abort = tk.abort
 redirect = tk.redirect_to
 _ = tk._
+g = tk.g
 
 NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
@@ -25,6 +28,9 @@ hdx_search = Blueprint(u'hdx_search', __name__, url_prefix=u'/search')
 
 @check_redirect_needed
 def search():
+    query_string = request.args.get('q', u'')
+    if g.userobj and query_string:
+        search_history.store_search(query_string, g.userobj.id)
     return generic_search(u'search/search.html')
 
 
