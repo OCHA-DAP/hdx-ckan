@@ -20,7 +20,7 @@ render = tk.render
 
 log = logging.getLogger(__name__)
 
-hdx_quick_links = flask.Blueprint(u'hdx_quick_links', __name__, url_prefix=u'/ckan-admin/dataviz')
+hdx_quick_links = flask.Blueprint(u'hdx_quick_links', __name__, url_prefix=u'/ckan-admin/quick-links')
 
 
 def show():
@@ -40,7 +40,7 @@ def show():
 def delete(id):
     context = {u'user': g.user}
     check_access('hdx_quick_links_update', context, {})
-    # delete_id = request.params.get('id')
+    # delete_id = request.form.get('id')
     existing_setting_list = get_action('hdx_quick_links_settings_show')({'not_initial': True}, {})
     remove_index, remove_element = _find_quick_links_item_by_id(existing_setting_list, id)
 
@@ -91,7 +91,7 @@ def update():
 
 
 def _sort_quick_links_items(quick_links_items):
-    return sorted(carousel_items, key=lambda x: x.get('order'))
+    return sorted(quick_links_items, key=lambda x: x.get('order'))
 
 
 def _find_quick_links_item_by_id(quick_links_items, id):
@@ -123,24 +123,24 @@ def _process_request():
     :rtype: dict
     '''
 
-    title = request.params.get('title')
+    title = request.form.get('title')
     if not title:
         return None
     else:
         item = {
             'title': title,
-            # 'description': request.params.get('description'),
-            # 'graphic': request.params.get('graphic'),
-            # 'graphic_upload': request.params.get('graphic_upload'),
-            'url': request.params.get('url'),
-            'order': int(request.params.get('order', -1)),
-            'newTab': True if request.params.get('newTab') == 'true' else False,
-            # 'embed': True if request.params.get('embed') == 'true' else False,
-            'new': False if request.params.get('id') else True,
-            'id': request.params.get('id') if request.params.get('id') else unicode(uuid.uuid4())
+            # 'description': request.form.get('description'),
+            # 'graphic': request.form.get('graphic'),
+            # 'graphic_upload': request.form.get('graphic_upload'),
+            'url': request.form.get('url'),
+            'order': int(request.form.get('order', -1)),
+            'newTab': True if request.form.get('newTab') == 'true' else False,
+            # 'embed': True if request.form.get('embed') == 'true' else False,
+            'new': False if request.form.get('id') else True,
+            'id': request.form.get('id') if request.form.get('id') else text_type(uuid.uuid4())
         }
-        if request.params.get('buttonText'):
-            item['buttonText'] = request.params.get('buttonText')
+        if request.form.get('buttonText'):
+            item['buttonText'] = request.form.get('buttonText')
 
     return item
 
