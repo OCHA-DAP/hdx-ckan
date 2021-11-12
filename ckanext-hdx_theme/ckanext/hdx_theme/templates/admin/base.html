@@ -42,7 +42,7 @@
     <li><a href="/user/">{{ _('All users') }}</a></li>
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
-    {{ h.build_nav_icon('carousel_settings', _('Carousel')) }}
+    {{ h.build_nav_icon('hdx_carousel.show', _('Carousel')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
     {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}

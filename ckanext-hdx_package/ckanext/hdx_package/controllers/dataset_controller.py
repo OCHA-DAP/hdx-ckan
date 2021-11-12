@@ -870,7 +870,7 @@ class DatasetController(PackageController):
             custom_dict = json.loads(json_string)
             image_name = custom_dict.get('image_rect', None)
             if image_name:
-                c.logo_config['image_url'] = h.url_for('image_serve', label=image_name)
+                c.logo_config['image_url'] = h.url_for('hdx_local_image_server.org_file', filename=image_name)
 
             if 'true' == custom_dict.get('use_org_color', False):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
