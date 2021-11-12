@@ -188,7 +188,7 @@
                               {% endif %}
                               {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
                                 {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
-                                {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
+                                {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
                               {% endif %}
                               {% if user_is_sysadmin %}
                                 {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
