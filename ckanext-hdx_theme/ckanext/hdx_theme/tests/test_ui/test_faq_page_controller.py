@@ -9,10 +9,18 @@ import ckanext.hdx_user_extra.model as ue_model
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.mock_helper as mh
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
+import mock
 
+
+contact_form = {
+    'topic': 'Getting Started',
+    'fullname': 'hdx',
+    'email': 'hdx.feedback@gmail.com',
+    'faq-mesg': 'my question',
+}
 
 # @pytest.mark.skip(reason="Skipping for now as the page needs WP data")
-class TestAboutPageController(hdx_test_base.HdxBaseTest):
+class TestFaqPageController(hdx_test_base.HdxBaseTest):
 
     # loads missing plugins
     @classmethod
@@ -21,9 +29,20 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def setup_class(cls):
-        super(TestAboutPageController, cls).setup_class()
+        super(TestFaqPageController, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
+
+    @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
+    def test_faq_contact_us(self, mocked_mail_recipient):
+
+        try:
+            res = self.app.post('/faq/contact_us', params=contact_form)
+        except Exception, ex:
+            assert False
+        assert '200 OK' in res.status
+        assert "success" in res.body and "true" in res.body
+        assert True
 
     def test_resulting_page(self):
         testsysadmin = model.User.by_name('testsysadmin')

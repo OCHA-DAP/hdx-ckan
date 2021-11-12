@@ -24,7 +24,6 @@ pages = [
     {'url_name': 'hdx_dataset.search', 'usertype': 'all'},
     {'url_name': 'hdx_group.index', 'usertype': 'all'},
     {'url_name': 'hdx_org.index', 'usertype': 'all'},
-    {'url_name': 'hdx_main_faq', 'usertype': 'all'},
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard', 'usertype': 'all'},
