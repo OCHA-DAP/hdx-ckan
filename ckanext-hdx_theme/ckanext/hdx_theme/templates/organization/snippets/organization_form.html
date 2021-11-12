@@ -134,7 +134,7 @@
 {% if is_url %}
   {% set image_preview = customizations['image_sq'] %}
 {% elif is_upload %}
-  {% set image_preview = h.url_for('image_serve', label= customizations['image_sq']) %}
+  {% set image_preview = h.url_for('hdx_local_image_server.org_file', filename=customizations['image_sq']) %}
 {% else %}
   {% set image_preview = 'https://placehold.it/75x75' %}
 {% endif %}
@@ -156,7 +156,7 @@
 {% if is_url %}
   {% set image_preview = customizations['image_rect'] %}
 {% elif is_upload %}
-  {% set image_preview = h.url_for('image_serve', label= customizations['image_rect']) %}
+  {% set image_preview = h.url_for('hdx_local_image_server.org_file', filename=customizations['image_rect']) %}
 {% else %}
   {% set image_preview = 'https://placehold.it/300x125' %}
 {% endif %}
