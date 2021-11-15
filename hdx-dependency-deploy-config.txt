@@ -16,6 +16,3 @@ HDX_GISRESTAPI_TAG=4.2.6
 
 HDX_DATAPROXY_URL=https://gallery.ecr.aws/r/unocha/hdx-dataproxy/
 HDX_DATAPROXY_TAG=2.7
-
-HDX_MAP_EXPLORER_URL=https://gallery.ecr.aws/r/unocha/hdx-map-explorer/
-HDX_MAP_EXPLORER_TAG=0.0.13
