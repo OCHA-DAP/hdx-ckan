@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Archived Dataviz'), controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController', action='show') }}</li>
+  <li class="active">{{ h.nav_link(_('Archived Dataviz'), 'hdx_archived_quick_links.show') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
