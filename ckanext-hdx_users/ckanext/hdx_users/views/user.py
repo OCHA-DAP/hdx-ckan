@@ -201,7 +201,7 @@ class HDXPerformResetView(PerformResetView):
                     u'If the problem persists please '
                     u'<a href="/faq#auto-faq-Contact-How_do_I_contact_the_HDX_team_-a">contact us</a>.')
             h.flash(msg, category='alert-error', allow_html=True)
-            return HDXRequestResetView.get()
+            return h.redirect_to(u'hdx_user.request_reset')
 
         try:
             user_dict = get_action(u'user_show')(context, {u'id': id})
@@ -212,6 +212,7 @@ class HDXPerformResetView(PerformResetView):
             u'user_dict': user_dict
         })
 
+# HDXRegisterView(MethodView):
 
 user.add_url_rule(u'/reset', view_func=HDXRequestResetView.as_view(str(u'request_reset')))
 user.add_url_rule(u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'perform_reset')))
