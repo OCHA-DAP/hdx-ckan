@@ -1,8 +1,8 @@
 import logging
-import pylons.config as config
+from ckan.common import config
 import requests
 import re
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 log = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ def faq_for_category(category):
             try:
                 q_id = ''.join(i if i.isalnum() else '_' for i in HTMLParser().unescape(question['q']))
                 question['id'] = q_id
-            except Exception, ex:
+            except Exception as ex:
                 log.error(ex)
 
     topics = {}
