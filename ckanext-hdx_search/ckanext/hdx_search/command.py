@@ -106,7 +106,7 @@ def buildIndex(path):
     #                                action='read_dashboards', id='poc', qualified=True), 'type': 'topic'})
     pages = Session.execute("select name, title, type, description from page where state='active'")
     for name, title, _type, description in pages:
-        action = 'hdx_event.read_event' if type == 'event' else 'hdx_dashboard.read_dashboard'
+        action = 'hdx_event.read_event' if _type == 'event' else 'hdx_dashboard.read_dashboard'
         index.append({'title': title or name,
                       'extra_terms': description,
                       'url': h.url_for(action, id=name, qualified=True),
