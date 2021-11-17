@@ -106,11 +106,10 @@ def buildIndex(path):
     #                                action='read_dashboards', id='poc', qualified=True), 'type': 'topic'})
     pages = Session.execute("select name, title, type, description from page where state='active'")
     for name, title, _type, description in pages:
-        action = 'read_event' if _type == 'event' else 'read_dashboards'
+        action = 'hdx_event.read_event' if type == 'event' else 'hdx_dashboard.read_dashboard'
         index.append({'title': title or name,
                       'extra_terms': description,
-                      'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                       action=action, id=name, qualified=True),
+                      'url': h.url_for(action, id=name, qualified=True),
                       'type': 'event'})
 
     # visualizations
