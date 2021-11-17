@@ -105,8 +105,8 @@ class PagesController(HDXSearchController):
                 mapped_action = self.generate_action_name(updated_page.get("type"))
                 h.redirect_to(mapped_action, id=updated_page.get('name') or updated_page.get('id'))
             elif delete_page:
-                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='delete',
-                              id=id)
+                h.redirect_to(u'hdx_custom_page.delete_page', id=id)
+
         else:
             extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
             extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
