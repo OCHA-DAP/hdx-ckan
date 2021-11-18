@@ -8,7 +8,7 @@ Example:
     {{ h.snippet('widget/onboarding/verify.html', id="recoverSuccessPopup") }}
 #}
 {% set class = "popup-onboarding" %}
-{% set title = "Forgot your password?" %}
+{% set title = "Please check your email" %}
 
 {% extends "widget/onboarding/notification.html" %}
 
@@ -16,7 +16,7 @@ Example:
     <div class="verify-widget">
         <div class="center">
             <img class="gif mTop45 lazyload" data-src="/images/onboarding/incomingmail.gif">
-            <div class="notification-message mTop20">Please check your inbox for the reset link.</div>
+            <div class="notification-message mTop20">Email was sent if the username or <br/>email address matched in our system.</div>
         </div>
     </div>
 {% endblock %}

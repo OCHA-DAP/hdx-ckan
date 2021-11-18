@@ -899,25 +899,29 @@ class ValidationController(ckan.controllers.user.UserController):
                 data_dict = get_action('user_show')(context, {'id': user_id})
                 user_obj = context['user_obj']
             except NotFound:
-                return OnbUserNotFound
+                # return OnbUserNotFound
+                return OnbSuccess
             try:
                 token = tokens.token_show(context, data_dict)
             except NotFound as e:
                 token = {'valid': True}  # Until we figure out what to do with existing users
             except Exception as ex:
-                return OnbErr
+                # return OnbErr
+                return OnbSuccess
 
             if not token['valid']:
                 # redirect to validation page
                 if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
                     return OnbSuccess
-                return OnbErr
+                # return OnbErr
+                return OnbSuccess
             if user_obj:
                 try:
                     # hdx_mailer.send_reset_link(user_obj)
                     get_action('hdx_send_reset_link')(context, {'id': user_id})
                     return OnbSuccess
                 except hdx_mailer.MailerException as e:
-                    return OnbResetLinkErr
+                    # return OnbResetLinkErr
+                    return OnbSuccess
         # return render('user/request_reset.html')
         return render('home/index.html')
