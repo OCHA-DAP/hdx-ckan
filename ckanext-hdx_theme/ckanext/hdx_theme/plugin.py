@@ -20,6 +20,7 @@ from ckanext.hdx_theme.views.faqs import hdx_faqs, hdx_main_faq
 from ckanext.hdx_theme.views.ebola import hdx_ebola
 from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_local_image_server
 from ckanext.hdx_theme.views.custom_settings import hdx_carousel
+from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
 from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
 from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
@@ -171,9 +172,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/widget/WFP', controller='ckanext.hdx_theme.controllers.widget_WFP:WidgetWFPController', action='show')
 
-        map.connect('pages_show', '/ckan-admin/pages/show',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
-                    action='show_pages')
+        # map.connect('pages_show', '/ckan-admin/pages/show',
+        #             controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+        #             action='show_pages')
 
         return map
 
@@ -326,7 +327,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     # IBlueprint
     def get_blueprint(self):
         return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server,
-                hdx_local_image_server, hdx_carousel, hdx_quick_links, hdx_package_links, hdx_archived_quick_links]
+                hdx_local_image_server, hdx_carousel, hdx_custom_pages,
+                hdx_quick_links, hdx_package_links, hdx_archived_quick_links]
 
     # IClick
     def get_commands(self):
