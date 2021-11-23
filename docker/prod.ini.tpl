@@ -20,7 +20,7 @@ ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB
 
 ## Site Settings
 ckan.site_url = https://${HDX_DOMAIN}
-beaker.session.secret = 2yD+TJxTgW+VtA38OzxQJNPPO
+beaker.session.secret = ${BEAKER_SECRET}
 app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
 ## Search Settings
