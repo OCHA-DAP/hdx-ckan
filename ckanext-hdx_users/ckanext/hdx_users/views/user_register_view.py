@@ -1,17 +1,19 @@
-import json
 import hashlib
+import json
+import logging as logging
+
+from mailchimp3 import MailChimp
+
+import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
 import ckan.model as model
-import logging as logging
-from ckan.common import _, request, config, c
-import ckan.lib.navl.dictization_functions as dictization_functions
 import ckanext.hdx_users.helpers.helpers as usr_h
-import ckanext.hdx_users.logic.schema as user_reg_schema
-from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
-from ckanext.hdx_users.controllers.mail_validation_controller import name_validator_with_changed_msg
-import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.helpers.tokens as tokens
-from mailchimp3 import MailChimp
+import ckanext.hdx_users.helpers.user_extra as ue_helpers
+import ckanext.hdx_users.logic.schema as user_reg_schema
+from ckan.common import _, request, config, c
+from ckan.logic.validators import name_validator
+from ckanext.hdx_users.controllers.mail_validation_controller import name_validator_with_changed_msg
 
 log = logging.getLogger(__name__)
 unflatten = dictization_functions.unflatten
@@ -32,7 +34,7 @@ class HDXRegisterView:
     def __init__(self):
         pass
 
-    def register_email(self, data=None, errors=None, error_summary=None):
+    def register_email(self):
 
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.form))))
 
@@ -101,7 +103,7 @@ class HDXRegisterView:
         except NotAuthorized:
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')
-        except NotFound as e:
+        except NotFound:
             return OnbTokenNotFound
             # abort(404, _('User not found'))
         except DataError:
@@ -134,7 +136,7 @@ class HDXRegisterView:
                 try:
                     m.ping.get()
                     list_id = config.get('hdx.mailchimp.list.newsletter')
-                    if (list_id):
+                    if list_id:
                         m.lists.members.create(list_id, {
                             'email_address': data['email'],
                             'status': 'subscribed'

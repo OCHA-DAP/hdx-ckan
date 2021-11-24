@@ -11,7 +11,7 @@ import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
-from ckan.common import _, request
+from ckan.common import _
 from ckan.views.user import EditView as EditView
 from ckan.views.user import set_repoze_user as set_repoze_user
 from ckanext.hdx_users.views.user_register_view import HDXRegisterView
