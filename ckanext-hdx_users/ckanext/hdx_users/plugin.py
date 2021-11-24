@@ -43,9 +43,6 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='register')
-        map.connect('/user/register_email',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='register_email')
         map.connect('/user/request_new_organization',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='request_new_organization')
