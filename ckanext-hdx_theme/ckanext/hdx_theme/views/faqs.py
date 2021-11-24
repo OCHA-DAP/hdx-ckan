@@ -1,14 +1,13 @@
-from flask import Blueprint
-import ckan.plugins.toolkit as tk
 import json
 import logging
 import requests
-import exceptions as exceptions
-from ckan.common import _, c, config, g, request, response
-from ckan.controllers.api import CONTENT_TYPES
-from ckanext.hdx_theme.util.mail import hdx_validate_email
+from flask import Blueprint
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+from ckan.common import _, c, config, request
+from ckanext.hdx_theme.util.mail import hdx_validate_email
+
 render = tk.render
 hdx_faqs = Blueprint(u'hdx_faqs', __name__, url_prefix=u'/faqs')
 hdx_main_faq = Blueprint(u'hdx_main_faq', __name__, url_prefix=u'/faq')
@@ -63,13 +62,13 @@ def contact_us():
 
         hdx_validate_email(email)
 
-    except ValidationError, e:
+    except ValidationError as e:
         error_summary = e.error_summary
         if error_summary == CaptchaNotValid:
             return FaqCaptchaErr
         return error_message(error_summary)
-    except exceptions.Exception, e:
-        error_summary = e.error or str(e)
+    except Exception as e:
+        error_summary = str(e)
         return error_message(error_summary)
 
     try:
@@ -106,8 +105,8 @@ def contact_us():
         hdx_mailer.mail_recipient([{'display_name': fullname, 'email': email}],
                                   subject, email_data, snippet=snippet)
 
-    except exceptions.Exception, e:
-        error_summary = e.error or str(e)
+    except Exception as e:
+        error_summary = str(e)
         return error_message(error_summary)
     return FaqSuccess
 

@@ -631,7 +631,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         try:
             result = test_client.post(url, data=params)
             res = json.loads(result.body)
-            assert_false(res['success'])
+            assert_true(res['success'])
         except Exception as ex:
             assert False
 

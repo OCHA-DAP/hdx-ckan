@@ -797,7 +797,7 @@ def less_compile(verbose=False):
         ini_file = '/etc/ckan/less.ini'
     else:
         ini_file = INI_FILE
-    cmd = ['paster', '--plugin=ckanext-hdx_theme', 'custom-less-compile', '-c', ini_file]
+    cmd = ['ckan', '-c', ini_file, 'custom-less-compile']
     os.chdir(BASEDIR)
     less_wr_dirs = ["ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated", "/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp"]
     # for location in less_wr_dirs:

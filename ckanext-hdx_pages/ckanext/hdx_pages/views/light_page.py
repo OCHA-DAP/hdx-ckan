@@ -109,7 +109,7 @@ def delete_page(id):
         'errors': {},
         'error_summary': {},
     }
-    url = h.url_for('pages_show')
+    url = h.url_for('hdx_custom_pages.index')
     return h.redirect_to(url)
     # return render('home/index.html', vars)
 

@@ -42,7 +42,7 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('admin_page_list', context, {})
-            url = h.url_for('pages_show')
+            url = h.url_for('hdx_custom_pages.index')
         except NotAuthorized as e:
             pass
 
