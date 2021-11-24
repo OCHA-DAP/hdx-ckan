@@ -37,7 +37,7 @@ Example:
             {% endblock %}
         </div>
         <div class="mTop20">
-          <input class="btn btn-primary btn-large" type="submit" value="Reset">
+          <input class="btn btn-primary btn-large hdx-recaptcha mTop20" type="submit" value="Reset" data-sitekey="{{ g.recaptcha_publickey }}" data-callback='onSubmit' data-size="invisible" data-badge="inline">
         </div>
         {#<div class="mTop20 center not-member">
           Not a member? <a href="">Register</a>

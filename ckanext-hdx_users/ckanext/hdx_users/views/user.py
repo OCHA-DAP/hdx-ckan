@@ -12,10 +12,11 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
-from ckan.common import _, request
+from ckan.common import _, request, config
 from ckan.views.user import EditView as EditView, RequestResetView
 from ckan.views.user import PerformResetView
 from ckan.views.user import set_repoze_user as set_repoze_user
+import ckanext.hdx_users.helpers.helpers as usr_h
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ redirect = tk.redirect_to
 
 NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
 
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
 
@@ -132,7 +134,10 @@ class HDXEditView(EditView):
 
 class HDXRequestResetView(RequestResetView):
     def get(self):
-        return render('user/forgot_password.html')
+        template_data = {
+            'capcha_api_key': config.get('ckan.recaptcha.publickey')
+        }
+        return render('user/forgot_password.html', template_data)
 
     def post(self):
         """
@@ -142,8 +147,12 @@ class HDXRequestResetView(RequestResetView):
                    'auth_user_obj': g.userobj}
         try:
             check_access('request_reset', context)
+            usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
         except NotAuthorized:
             base.abort(403, _('Unauthorized to request reset password.'))
+        except ValidationError:
+            return json.dumps(
+                {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
 
         if request.method == 'POST':
             # user_id should be lowercase (for name and email)
