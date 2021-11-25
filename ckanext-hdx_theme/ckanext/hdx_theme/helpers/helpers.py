@@ -596,7 +596,7 @@ def count_public_datasets_for_group(datasets_list):
 
 
 def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
-    for key, value in dictionary.iteritems():
+    for key, value in dictionary.items():
         if key not in skipped_keys:
             value = value.strip() if value else value
             if not value:
@@ -805,6 +805,14 @@ def hdx_url_for(*args, **kw):
     It appears when url_for() thinks it can return a flask route. But if it's a pylons
     controller that needs to render the page the '/' gets in the way.
     '''
+
+    # If the html template calls this with both named route and controller + action, just use named route
+    if len(args) > 0 and args[0]:
+        kw.pop('controller', None)
+        kw.pop('action', None)
+    else:
+        args = []
+
     url = tk.url_for(*args, **kw)
     if url and len(url) > 1:
         if url.endswith('/'):

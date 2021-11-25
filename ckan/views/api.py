@@ -521,7 +521,8 @@ for rule, view_func in util_rules:
 
 # Added by HDX to send analytics for API
 try:
-    from ckanext.hdx_theme.util.analytics_api import send_api_analytics
-    api.before_request(send_api_analytics)
+    if not six.PY3:
+        from ckanext.hdx_theme.util.analytics_api import send_api_analytics
+        api.before_request(send_api_analytics)
 except ImportError as error:
     log.error('API request will not be tracked')

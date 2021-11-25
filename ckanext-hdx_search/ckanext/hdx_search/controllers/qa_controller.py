@@ -93,7 +93,7 @@ class HDXQAController(HDXSearchController):
         archived_url_helper.redirect_if_needed()
 
         c.cps_off = config.get('hdx.cps.off', 'false')
-        c.advanced_mode = request.params.get('_advanced_mode', 'true').lower()
+        # c.advanced_mode = request.params.get('_advanced_mode', 'true').lower()
         # query_string = request.params.get('q', u'')
         # if c.userobj and query_string:
         #     search_history.store_search(query_string, c.userobj.id)

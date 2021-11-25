@@ -117,7 +117,7 @@ Example:
             <div class="mTop20 control">
                 <label class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="new-org-req-submit">
                     <input type="checkbox">
-                    I have read and accept the <a target="_blank" href="/faqs/terms">HDX Terms of Service</a>
+                    I have read and accept the <a target="_blank" href="{{ h.url_for('hdx_faqs.read', category='terms') }}">HDX Terms of Service</a>
                 </label>
             </div>
             <div class="right-side-actions">

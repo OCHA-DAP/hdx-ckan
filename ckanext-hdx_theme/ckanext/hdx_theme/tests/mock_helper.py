@@ -197,9 +197,9 @@ def mock_faq_page_content(id):
                               'id': u'What_does_it_mean_for_a_dataset_to_be___8216_under_review__8217__'}],
                           'title': u'Metadata and Data Quality'}, {'id': 'faq-Resources_for_Developers', 'questions': [
                     {'q': u'How do I access the HDX API?',
-                     'a': u'<p>Please see our <a href="https://data.humdata.org/documentation" target="_blank" rel="noopener noreferrer">Resources for Developers</a> page for more information.</p>\n',
+                     'a': u'<p>Please see our <a href="https://data.humdata.org/faqs/devs" target="_blank" rel="noopener noreferrer">Resources for Developers</a> page for more information.</p>\n',
                      'id': u'How_do_I_access_the_HDX_API_'}, {'q': u'Where can I read about coding with HDX?',
-                                                              'a': u'<p>Please see our <a href="https://data.humdata.org/documentation" target="_blank" rel="noopener noreferrer">Resources for Developers</a> page for more information.</p>\n',
+                                                              'a': u'<p>Please see our <a href="https://data.humdata.org/faqs/devs" target="_blank" rel="noopener noreferrer">Resources for Developers</a> page for more information.</p>\n',
                                                               'id': u'Where_can_I_read_about_coding_with_HDX_'}],
                                                                    'title': u'Resources for Developers'},
                          {'id': 'faq-HXL_and_HDX_Tools', 'questions': [

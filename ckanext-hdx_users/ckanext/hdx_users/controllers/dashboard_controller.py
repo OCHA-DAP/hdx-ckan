@@ -4,10 +4,7 @@
 
 """
 import logging
-import json
-import datetime
 
-from collections import OrderedDict
 from pylons import config
 
 import ckan.lib.base as base
@@ -19,13 +16,11 @@ import ckan.common as common
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.controllers.user as uc
 import ckan.plugins as p
-from ckan.controllers.api import CONTENT_TYPES
 
 from ckan.common import _, c, g, request
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER,\
-    UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
+
 
 log = logging.getLogger(__name__)
 
@@ -227,65 +222,65 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         get_action('dashboard_mark_activities_old')(context, {})
         return render('user/dashboard.html', extra_vars={'user_dict': user_dict})
 
-    def dashboard_datasets(self):
-        """
-        Dashboard tab for datasets. Modified to add the ability to change
-        the order and ultimately filter datasets displayed
-        """
-
-        if not c.user:
-            h.flash_error(_(u'Not authorized to see this page'))
-            return h.redirect_to(u'home.index')
-
-        context = {'model': model, 'session': model.Session, 'for_view': True,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   # Do NOT fetch the datasets we will fetch via package_search
-                   'return_minimal': True,  # This is being deprecated
-                   'include_num_followers': False,
-                   'include_datasets': False
-                   }
-        data_dict = {'user_obj': c.userobj}
-
-        try:
-            user_dict = get_action('user_show')(context, data_dict)
-        except NotFound:
-            came_from = h.url_for(controller='user', action='dashboard_datasets', __ckan_no_root=True)
-            h.redirect_to(controller='user', action='login', came_from=came_from)
-
-        try:
-            page = int(request.params.get('page', 1))
-        except ValueError, e:
-            abort(400, ('"page" parameter must be an integer'))
-        limit = 20
-        data_dict['limit'] = limit
-        data_dict['offset'] = (page - 1) * limit
-        data_dict['sort'] = request.params.get('sort', 'metadata_modified desc')
-        c.sort_by_selected = data_dict['sort']
-        c.is_sysadmin = new_authz.is_sysadmin(c.user)
-        try:
-            user_dict = get_action('hdx_user_show')(context, data_dict)
-            c.active_datasets = [dataset for dataset in user_dict.get('datasets', []) if
-                               dataset.get('state', 'deleted') == 'active']
-        except NotFound:
-            abort(404, _('User not found'))
-        except NotAuthorized:
-            abort(403, _('Not authorized to see this page'))
-
-        c.is_myself = user_dict['name'] == c.user
-        if self._is_facet_only_request():
-            c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
-            response.headers['Content-Type'] = CONTENT_TYPES['json']
-            return json.dumps(c.full_facet_info)
-
-        else:
-            c.user_dict = user_dict
-            c.about_formatted = h.render_markdown(user_dict['about'])
-
-            c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
-
-            return render('user/dashboard_datasets.html', extra_vars={
-                'user_dict': user_dict
-            })
+    # def dashboard_datasets(self):
+    #     """
+    #     Dashboard tab for datasets. Modified to add the ability to change
+    #     the order and ultimately filter datasets displayed
+    #     """
+    #
+    #     if not c.user:
+    #         h.flash_error(_(u'Not authorized to see this page'))
+    #         return h.redirect_to(u'home.index')
+    #
+    #     context = {'model': model, 'session': model.Session, 'for_view': True,
+    #                'user': c.user or c.author, 'auth_user_obj': c.userobj,
+    #                # Do NOT fetch the datasets we will fetch via package_search
+    #                'return_minimal': True,  # This is being deprecated
+    #                'include_num_followers': False,
+    #                'include_datasets': False
+    #                }
+    #     data_dict = {'user_obj': c.userobj}
+    #
+    #     try:
+    #         user_dict = get_action('user_show')(context, data_dict)
+    #     except NotFound:
+    #         came_from = h.url_for(controller='user', action='dashboard_datasets', __ckan_no_root=True)
+    #         h.redirect_to(controller='user', action='login', came_from=came_from)
+    #
+    #     try:
+    #         page = int(request.params.get('page', 1))
+    #     except ValueError, e:
+    #         abort(400, ('"page" parameter must be an integer'))
+    #     limit = 20
+    #     data_dict['limit'] = limit
+    #     data_dict['offset'] = (page - 1) * limit
+    #     data_dict['sort'] = request.params.get('sort', 'metadata_modified desc')
+    #     c.sort_by_selected = data_dict['sort']
+    #     c.is_sysadmin = new_authz.is_sysadmin(c.user)
+    #     try:
+    #         user_dict = get_action('hdx_user_show')(context, data_dict)
+    #         c.active_datasets = [dataset for dataset in user_dict.get('datasets', []) if
+    #                            dataset.get('state', 'deleted') == 'active']
+    #     except NotFound:
+    #         abort(404, _('User not found'))
+    #     except NotAuthorized:
+    #         abort(403, _('Not authorized to see this page'))
+    #
+    #     c.is_myself = user_dict['name'] == c.user
+    #     if self._is_facet_only_request():
+    #         c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
+    #         response.headers['Content-Type'] = CONTENT_TYPES['json']
+    #         return json.dumps(c.full_facet_info)
+    #
+    #     else:
+    #         c.user_dict = user_dict
+    #         c.about_formatted = h.render_markdown(user_dict['about'])
+    #
+    #         c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
+    #
+    #         return render('user/dashboard_datasets.html', extra_vars={
+    #             'user_dict': user_dict
+    #         })
 
     # def dashboard_visualizations(self):
     #     """
@@ -342,73 +337,40 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
     #     h.redirect_to(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='dashboard_visualizations')
 
 
-    def _get_dataset_search_results(self, user_id):
-
-        ignore_capacity_check = False
-        if c.is_myself:
-            ignore_capacity_check = True
-
-        package_type = 'dataset'
-
-        suffix = '#datasets-section'
-
-        params_nopage = {
-            k: v for k, v in request.params.items() if k != 'page'}
-
-        def pager_url(q=None, page=None):
-            params = params_nopage
-            params['page'] = page
-            return h.url_for('user_dashboard_datasets', **params) + suffix
-
-        fq = 'maintainer:"{}"'.format(user_id)
-
-        full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
-                                       ignore_capacity_check=ignore_capacity_check, default_sort_by='due_date asc')
-
-        old_facets = full_facet_info.get('facets')
-        if UPDATE_STATUS_URL_FILTER in old_facets:
-            new_facets = OrderedDict()
-            new_facets[UPDATE_STATUS_URL_FILTER] = old_facets[UPDATE_STATUS_URL_FILTER]
-            new_facets.update(old_facets)
-            full_facet_info['facets'] = new_facets
-
-        base_url = h.url_for('user_dashboard_datasets')
-        c.other_links['current_page_url'] = base_url
-        archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
-        archived_url_helper.redirect_if_needed()
-
-        return full_facet_info
-
-    def _add_additional_faceting_queries(self, search_data_dict):
-        super(DashboardController, self)._add_additional_faceting_queries(search_data_dict)
-        now_string = datetime.datetime.utcnow().isoformat() + 'Z'
-        freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
-        search_data_dict.update({
-            'facet.range': '{{!{extra}}}due_date'.format(extra=freshness_facet_extra),
-            'f.due_date.facet.range.start': now_string + '-100YEARS',
-            'f.due_date.facet.range.end': now_string + '+100YEARS',
-            'f.due_date.facet.range.gap': '+100YEARS',
-            'f.due_date.facet.mincount': '0',
-            'facet.query': '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra),
-        })
-
-    def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
-        super(DashboardController, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
-                                                                     search_extras)
-        freshness_facet_name = 'due_date'
-        if existing_facets and freshness_facet_name in existing_facets:
-            item_list = existing_facets.get(freshness_facet_name).get('items')
-            if item_list and len(item_list) == 2:
-                item_list[0]['display_name'] = _('Needing update')
-                item_list[0]['name'] = UPDATE_STATUS_NEEDS_UPDATE
-                item_list[1]['display_name'] = _('Up to date')
-                item_list[1]['name'] = UPDATE_STATUS_FRESH
-                unknown_item = next((i for i in existing_facets.get('queries', []) if i.get('name') == 'unknown'), None)
-                unknown_item['display_name'] = _('Unknown')
-                unknown_item['name'] = UPDATE_STATUS_UNKNOWN
-                item_list.append(unknown_item)
-
-                title_translations[UPDATE_STATUS_URL_FILTER] = _('Update status')
-                existing_facets[UPDATE_STATUS_URL_FILTER] = existing_facets[freshness_facet_name]
-                del existing_facets[freshness_facet_name]
+    # def _get_dataset_search_results(self, user_id):
+    #
+    #     ignore_capacity_check = False
+    #     if c.is_myself:
+    #         ignore_capacity_check = True
+    #
+    #     package_type = 'dataset'
+    #
+    #     suffix = '#datasets-section'
+    #
+    #     params_nopage = {
+    #         k: v for k, v in request.params.items() if k != 'page'}
+    #
+    #     def pager_url(q=None, page=None):
+    #         params = params_nopage
+    #         params['page'] = page
+    #         return h.url_for('user_dashboard_datasets', **params) + suffix
+    #
+    #     fq = 'maintainer:"{}"'.format(user_id)
+    #
+    #     full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
+    #                                    ignore_capacity_check=ignore_capacity_check, default_sort_by='due_date asc')
+    #
+    #     old_facets = full_facet_info.get('facets')
+    #     if UPDATE_STATUS_URL_FILTER in old_facets:
+    #         new_facets = OrderedDict()
+    #         new_facets[UPDATE_STATUS_URL_FILTER] = old_facets[UPDATE_STATUS_URL_FILTER]
+    #         new_facets.update(old_facets)
+    #         full_facet_info['facets'] = new_facets
+    #
+    #     base_url = h.url_for('user_dashboard_datasets')
+    #     c.other_links['current_page_url'] = base_url
+    #     archived_url_helper = self.add_archived_url_helper(full_facet_info, base_url)
+    #     archived_url_helper.redirect_if_needed()
+    #
+    #     return full_facet_info
 

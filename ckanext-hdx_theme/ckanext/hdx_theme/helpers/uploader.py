@@ -2,6 +2,8 @@ import os
 import cgi
 import logging
 
+from werkzeug.datastructures import FileStorage as FlaskFileStorage
+
 import pylons.config as config
 
 import ckan.lib.uploader as uploader
@@ -11,6 +13,13 @@ from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 log = logging.getLogger(__name__)
 
+ALLOWED_UPLOAD_TYPES = (cgi.FieldStorage, FlaskFileStorage)
+
+
+def get_base_path():
+    path = uploader.get_storage_path()
+    return path
+
 
 class GlobalUpload(object):
     '''
@@ -18,7 +27,7 @@ class GlobalUpload(object):
     '''
 
     def __init__(self, file_dict):
-        path = uploader.get_storage_path()
+        path = get_base_path()
         if not path:
             self.storage_path = None
             return
@@ -33,11 +42,12 @@ class GlobalUpload(object):
 
         upload_field_storage = file_dict.pop('upload', None)
 
-        if isinstance(upload_field_storage, cgi.FieldStorage):
+        if isinstance(upload_field_storage, ALLOWED_UPLOAD_TYPES):
             self._update_filename(upload_field_storage)
             self.filename = munge.munge_filename(self.filename)
             file_dict['filename'] = self.filename
-            self.upload_file = upload_field_storage.file
+            self.upload_file = upload_field_storage.stream if isinstance(upload_field_storage, FlaskFileStorage) \
+                else upload_field_storage.file
 
     def _update_filename(self, upload_field_storage):
         '''

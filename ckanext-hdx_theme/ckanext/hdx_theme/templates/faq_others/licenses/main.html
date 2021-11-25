@@ -3,9 +3,7 @@
 {% block subtitle %}{{ _("Data Licenses") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">
-    <a href="/faqs/terms">{{ _('DATA LICENSES') }}</a>
-  </li>
+  <li class="active">{{ h.nav_link(_('DATA LICENSES'), named_route='hdx_faqs.read', category='licenses') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -37,7 +35,7 @@
     <div id="hdx-faq-sidebar-wrapper" class="mTop60">
         <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
             <p>
-              {% snippet 'faq/search.html' %}
+              {% snippet 'faq_others/faq/search.html' %}
             </p>
         </div>
     </div>

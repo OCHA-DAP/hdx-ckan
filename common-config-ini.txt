@@ -87,7 +87,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_events hdx_dashboards hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_light_group hdx_light_org hdx_group_eaa_map  hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata s3filestore showcase stats resource_proxy text_view recline_view datastore
+ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_light_org hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata s3filestore showcase stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -144,7 +144,7 @@ ckan.resource_formats.external_system = External System
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
 ckan.resource_proxy.max_file_size = 2097152
 
-ckan.legacy_route_mappings = {"search": "search", "organization_read": "organization_read", "organization_activity": "organization_activity", "organization_members": "organization_members"}
+ckan.legacy_route_mappings = {"search": "search", "organization_activity": "organization_activity", "organization_members": "organization_members"}
 ckan.webassets.path = /tmp/ckan/webassets
 
 ckan.recline.dataproxy_url = /dataproxy

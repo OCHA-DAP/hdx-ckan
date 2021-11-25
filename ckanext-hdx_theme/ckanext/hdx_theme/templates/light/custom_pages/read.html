@@ -9,9 +9,11 @@
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=page.type, controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_' + page.type, id=page.name, position=2 %}
+{#    {% snippet "snippets/other_breadcrumb_item.html", title=page.type, 'hdx_' + page.type + '.read_' + page.type, id=page.name, position=2 %}#}
+    <li property="itemListElement" typeof="ListItem">{{ _('Event') }}
+    </li>
 	{% endblock %}
-  <li class="active">{{ h.nav_link( page.title|truncate(120), controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_' + page.type, id=page.name, highlight_actions = 'new index') }}</li>
+  <li class="active">{{ h.nav_link( page.title|truncate(120), 'hdx_' + page.type + '.read_' + page.type, id=page.name, highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block content %}

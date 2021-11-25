@@ -65,13 +65,13 @@ function prepareMap(countDatasets, openNewWindow){
   closeTooltip = window.setTimeout(function() {
     return map.closePopup();
   }, 100);
-  var shownPopup = false;
+  var shownPopup = null;
   highlightFeature = function(e) {
     var countryID, layer;
-    shownPopup = true;
     clearTimeout(closePopupTimeout);
     layer = e.target;
     countryID = layer.feature.id;
+    shownPopup = e;
     layer.setStyle({
       weight: 1,
       opacity: 0.2,
@@ -106,19 +106,22 @@ function prepareMap(countDatasets, openNewWindow){
     var layer;
     layer = e.target;
     layer.setStyle(getStyle(layer.feature));
-    shownPopup = false;
+    shownPopup = null;
     closePopupTimeout = setTimeout(function() {
       map.closePopup();
     }, 200);
   };
   featureClicked = function(e) {
-    if (!shownPopup) {
-      highlightFeature(e);
-      return;
-    }
     var code, layer;
     layer = e.target;
     code = layer.feature.id.toLowerCase();
+    if (!shownPopup || code != shownPopup.target.feature.id.toLowerCase()) {
+      if (shownPopup) {
+        resetFeature(shownPopup);
+      }
+      highlightFeature(e);
+      return;
+    }
     openURL("group/" + code);
   };
 

@@ -869,7 +869,8 @@ $(function(){
         onCreateBtn: function(e) {
             var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
-            this.resourceCollection.add(newResourceModel);
+            this.resourceCollection.unshift(newResourceModel);
+            this.resourceListView.onSortOrderChange();
         },
         onFileViaDragAndDrop: function(file){
             var data = this.resourceDefaults();

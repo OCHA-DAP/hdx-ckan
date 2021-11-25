@@ -10,7 +10,7 @@ class CustomPagesSearchLogic(sl.SearchLogic):
         self.type = type
 
     def _generate_action_name(self, type):
-        return 'hdx_light_event.read_event' if type == 'event' else 'hdx_light_dashboard.read_dashboard'
+        return 'hdx_event.read_event' if type == 'event' else 'hdx_dashboard.read_dashboard'
 
     def _search_url(self, params, package_type=None):
         '''
@@ -22,7 +22,7 @@ class CustomPagesSearchLogic(sl.SearchLogic):
 
         :rtype: string
         '''
-        url = h.url_for(self._generate_action_name(self.type), id=self.page_id)
+        url = self._current_url()
         return sl.url_with_params(url, params) + '#datasets-section'
 
     def _current_url(self):

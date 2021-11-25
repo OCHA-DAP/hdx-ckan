@@ -35,14 +35,6 @@ section_types = {
     "interactive_data": '',
     "data_list": ''
 }
-# section_types = {
-#     "empty": '',
-#     "description": _(''),
-#     "map": _(''),
-#     "key_figures": _(''),
-#     "interactive_data": _(''),
-#     "data_list": _('')
-# }
 
 
 class PagesController(HDXSearchController):
@@ -70,7 +62,7 @@ class PagesController(HDXSearchController):
                     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
                     if not test:
                         lunr.buildIndex(config.get('hdx.lunr.index_location'))
-                except logic.ValidationError, e:
+                except logic.ValidationError as e:
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.new(page_dict, errors, error_summary)
@@ -113,8 +105,8 @@ class PagesController(HDXSearchController):
                 mapped_action = self.generate_action_name(updated_page.get("type"))
                 h.redirect_to(mapped_action, id=updated_page.get('name') or updated_page.get('id'))
             elif delete_page:
-                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='delete',
-                              id=id)
+                h.redirect_to(u'hdx_custom_page.delete_page', id=id)
+
         else:
             extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
             extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
@@ -164,7 +156,7 @@ class PagesController(HDXSearchController):
                 del sections[0]
 
         vars = {
-            'data': page_dict,
+            'page_dict': page_dict,
             'errors': {},
             'error_summary': {},
         }
@@ -251,7 +243,7 @@ class PagesController(HDXSearchController):
 
         return full_facet_info
 
-    def _init_data(self, data, error_summary, errors, id=None):
+    def _init_data(self, data, error_summary, errors):
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
         errors = errors or {}
         data_dict = {'content_type': [{'value': 'empty', 'text': _('Select content type')},

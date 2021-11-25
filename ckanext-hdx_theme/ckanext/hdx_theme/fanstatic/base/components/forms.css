@@ -368,7 +368,7 @@ ul.list-horizontal li:first-child:before {
 .drag-drop-component {
   padding: 15px;
   padding-bottom: 0;
-  margin-bottom: 10px;
+  margin-top: 10px;
   background-color: #fff;
 }
 .drag-drop-component.drag-drop-ghost {

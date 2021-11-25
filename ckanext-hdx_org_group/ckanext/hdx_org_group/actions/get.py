@@ -4,31 +4,21 @@ Created on April 24, 2015
 @author: alexandru-m-g
 '''
 
-import pylons.config as config
-
-import ckan.logic as logic
-import ckan.model as model
-import ckan.common as common
-import ckan.lib.dictization as d
-from ckan.common import c
-import ckan.lib.helpers as helpers
-
-import ckanext.hdx_crisis.dao.location_data_access as location_data_access
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
-
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
-
-from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
-
-import shlex
-import subprocess
-import random
-
 import logging
 
-import ckan.lib.dictization.model_dictize as model_dictize
+import pylons.config as config
+
+import ckan.common as common
+import ckan.lib.dictization as d
+import ckan.lib.helpers as helpers
 import ckan.lib.navl.dictization_functions
+import ckan.logic as logic
+import ckan.model as model
+import ckanext.hdx_org_group.dao.indicator_access as indicator_access
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+from ckan.common import c
+from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -110,21 +100,21 @@ def hdx_topline_num_for_group(context, data_dict):
     id = _get_or_bust(data_dict, "id")
     grp_result = get_group(id)
     group_info = grp_result.get('group_info')
-    custom_dict = grp_result.get('custom_dict')
+    # custom_dict = grp_result.get('custom_dict')
 
-    datastore_id = custom_dict.get('topline_resource', None)
+    # datastore_id = custom_dict.get('topline_resource', None)
 
     common_format = data_dict.get('common_format', True) not in ['false', '0']  # type: bool
 
-    if group_info.get('custom_loc', False) and datastore_id:
-        # source is datastore
-        crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
-        crisis_data_access.fetch_data(context)
-        top_line_items = crisis_data_access.get_top_line_items()
-        for item in top_line_items:
-            item['source_system'] = 'datastore'
-            del item['units']
-    elif group_info.get('activity_level') == 'active':
+    # if group_info.get('custom_loc', False) and datastore_id:
+    #     # source is datastore
+    #     crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
+    #     crisis_data_access.fetch_data(context)
+    #     top_line_items = crisis_data_access.get_top_line_items()
+    #     for item in top_line_items:
+    #         item['source_system'] = 'datastore'
+    #         del item['units']
+    if group_info.get('activity_level') == 'active':
         top_line_items = __get_toplines_for_active_country(group_info, common_format)
     else:
         top_line_items = __get_toplines_for_standard_country(group_info, common_format)

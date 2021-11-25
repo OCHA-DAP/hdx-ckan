@@ -20,6 +20,7 @@ from ckanext.hdx_package.helpers.reindex_helper import before_indexing_clean_res
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
+from ckanext.hdx_search.views.qa import hdx_qa
 
 NotFound = tk.ObjectNotFound
 
@@ -57,26 +58,26 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         }
 
     def before_map(self, map):
-        map.connect('simple_search',
-            '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('search', '/search',
-                    controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('qa_dashboard', '/qa_dashboard',
-                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        map.connect('qa_pii_log', '/dataset/{id}/resource/{resource_id}/qa_pii_log/{file_name}',
-                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_pii_log')
-        map.connect('qa_sdcmicro_log', '/dataset/{id}/resource/{resource_id}/qa_sdcmicro_log',
-                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_sdcmicro_log')
+        # map.connect('simple_search',
+        #     '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        # map.connect('search', '/search',
+        #             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        # map.connect('qa_dashboard', '/qa_dashboard',
+        #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
+        # map.connect('qa_pii_log', '/dataset/{id}/resource/{resource_id}/qa_pii_log/{file_name}',
+        #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_pii_log')
+        # map.connect('qa_sdcmicro_log', '/dataset/{id}/resource/{resource_id}/qa_sdcmicro_log',
+        #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_sdcmicro_log')
         return map
 
-    def after_map(self, map):
-        map.connect('simple_search',
-            '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('search', '/search',
-                    controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('qa_dashboard', '/qa_dashboard',
-                    controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        return map
+    # def after_map(self, map):
+    #     # map.connect('simple_search',
+    #     #     '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+    #     # map.connect('search', '/search',
+    #     #             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+    #     map.connect('qa_dashboard', '/qa_dashboard',
+    #                 controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
+    #     return map
 
     def before_search(self, search_params):
         #Do not allow a sort without a sort directions
@@ -286,6 +287,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
         return facets_dict
 
+    # IAuthFunctions
     def get_auth_functions(self):
         return {
             'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
@@ -295,5 +297,4 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        import ckanext.hdx_package.views.light_dataset as light_dataset
-        return light_dataset.hdx_light_search
+        return hdx_qa

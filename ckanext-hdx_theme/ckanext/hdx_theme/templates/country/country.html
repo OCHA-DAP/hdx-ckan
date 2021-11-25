@@ -56,37 +56,10 @@
                             {% endif %}
                         </li>
                         <li>
-                            {# TODO: #}
-                            {# remove "and false" when enabling the followers dropdown #}
-                            {# #}
 
-                            {% if c.user and false %}
-                                <span class="dropdown dropdown-on-hover">
-                                    <a href="#" data-toggle="dropdown" data-module-trigger="hover focus click" data-module-placement="bottom" title="cosdalkj">
-                            {% endif %}
                             {% set num_of_followers = data.stats_section.num_of_followers %}
                                         <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
-                            {% if c.user and false %}
-                                    </a>
-                                    <div class="followers-list-popup dropdown-menu bottom">
-                                      <ul class="followers-list">
-                                        <li class="follower-item">
-                                            <a href="https://gravatar.com/" target="_blank" title="Update your avatar at gravatar.com" alt=""><img class="lazyload" data-src="//gravatar.com/avatar/5ca1b02fb7f34474f03aeccc6686ce88?s=20&amp;d=identicon" class="gravatar image" width="20" height="20"></a>
-                                            <a href="/user/amcguire">aidan macguire</a>
-                                            |
-                                            <a href="/user/amcguire">amcguire</a>
-                                        </li>
-                                        <li class="follower-item">
-                                            <a href="https://gravatar.com/" target="_blank" title="Update your avatar at gravatar.com" alt=""><img class="lazyload" data-src="//gravatar.com/avatar/5ca1b02fb7f34474f03aeccc6686ce88?s=20&amp;d=identicon" class="gravatar image" width="20" height="20"></a>
-                                            <a href="/user/amcguire">aidan macguire</a>
-                                            |
-                                            <a href="/user/amcguire">amcguire</a>
-                                        </li>
 
-                                      </ul>
-                                    </div>
-                                </span>
-                            {% endif %}
                         </li>
                         <li>
                             <span class="dropdown dropdown-on-hover">
@@ -117,109 +90,6 @@
         </div>
     </div>
 
-    {% if (not data.country_dict.featured_section or data.country_dict.featured_section == 'active') and data.featured_section.show and country_active %}
-    <div class="row featured-section">
-        <div class="col-xs-12">
-            <div class="list-header crisis-list-header">
-                <span class="mL15 list-header-title">
-                    {{ _("Featured") }}
-                </span>
-            </div>
-        </div>
-        <div class="col-xs-12 mTop30">
-            <div class="row">
-                {% for thumbnail in data.featured_section.thumbnail_list %}
-                    <div class="col-xs-4">
-                        <div class="featured-thumbnail">
-                            <img class="lazyload" data-src="{{ thumbnail.thumbnail_url }}">
-                            <div class="overlay">
-                                <div class="featured-thumbnail-content">
-                                    <div>
-                                        <span class="type">{{ thumbnail.type }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="title">{{ thumbnail.display_name }}</span>
-                                    </div>
-                                    <div class="mTop10">
-                                        <a href="{{ thumbnail.url }}" class="action btn btn-large" >Explore</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-
-
-
-                <div class="col-xs-4">
-                    {% if data.featured_section.event_list | length > 0 %}
-                        <div class="featured-info-block">
-                            <div class="info-title">
-                                {{ _("Events affecting this location") }}:
-                            </div>
-                            <div class="info-list">
-                                <ul>
-                                    {% for item in data.featured_section.event_list %}
-                                        <li>
-                                            <span>{{ item.title }} -</span>
-                                            <ul>
-                                                {% if item.count %}
-                                                <li  class="inline"><a href="{{ item.url }}">{{item.count}} Datasets</a> | </li>
-                                                {% endif %}
-                                                <li class="inline"><a href="/{{ item.type }}/{{ item.name }}">Go to event page</a></li>
-                                            </ul>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    {% if data.featured_section.organization_list | length > 0 %}
-                        <div class="featured-info-block">
-                            <div class="info-title">
-                                {{ _("Most active organisations") }}:
-                            </div>
-                            <div class="info-list">
-                                <ul>
-                                    {% for item in data.featured_section.organization_list %}
-                                        <li>
-                                            <span>{{ item.display_name }} -</span>
-                                            <ul>
-                                                {% if item.count %}
-                                                {% set filtered_by_org_url = h.url_for("group_read", id=data.country_dict.id) + "?organization="+ item.name +"#dataset-filter-start" %}
-                                                <li  class="inline"><a href="{{filtered_by_org_url}}">{{item.count}} Datasets</a> | </li>
-                                                {% endif %}
-                                                <li  class="inline"><a href="{{ item.url }}">Go to org page</a></li>
-                                            </ul>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    {% if data.featured_section.tag_list | length > 0 %}
-                        <div class="featured-info-block">
-                            <div class="info-title">
-                                {{ _("Most used tags") }}:
-                            </div>
-                            <div class="info-list">
-                                <ul>
-                                    {% for item in data.featured_section.tag_list %}
-                                        <li class="inline">
-                                            <a href="{{ item.url }}" class="label label-small">{{ item.display_name }}</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
     {% if (not data.country_dict.key_figures or data.country_dict.key_figures == 'active') and data.widgets.top_line_data_list %}
     <div class="row">
         <div class="col-xs-12">
@@ -358,7 +228,7 @@
                     </div>
                 {% endif %}
 	        	<div class="col-xs-12">
-                    {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=c %}
+                    {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data %}
 	        	</div>
     		</div>
         </div>

@@ -3,7 +3,7 @@ import re
 import datetime
 import sqlalchemy
 import json
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 from collections import OrderedDict
 
 from paste.deploy.converters import asbool
@@ -14,8 +14,6 @@ import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
-
-from ckan.common import _, request, g
 
 
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
@@ -39,6 +37,9 @@ _text = sqlalchemy.text
 
 log = logging.getLogger(__name__)
 
+g = tk.g
+_ = tk._
+request = tk.request
 render = tk.render
 abort = tk.abort
 redirect = tk.redirect_to
@@ -74,10 +75,10 @@ def url_with_params(url, params):
 
 
 def get_url_param_iterator():
-    keys = set(request.params.keys())
+    keys = set(request.args.keys())
 
     def list_of_values(key):
-        return request.params.getlist(key) if hasattr(request.params, 'getlist') else request.params.getall(key)
+        return request.args.getlist(key) if hasattr(request.args, 'getlist') else request.args.getall(key)
 
     param_values = ((param, value) for param in keys for value in list_of_values(param))
     return param_values
@@ -99,6 +100,25 @@ class SearchLogic(object):
         self.template_data['full_facet_info']['archived_url_helper'] = archived_url_helper
         return archived_url_helper
 
+    def init_archived_url_helper(self):
+        self.add_archived_url_helper()
+        return self
+
+    def redirect_if_needed(self):
+        return self.archived_url_helper.redirect_if_needed()
+
+    @property
+    def archived_url_helper(self):
+        '''
+        :return:
+        :rtype: ArchivedUrlHelper
+        '''
+        try:
+            return self.template_data['full_facet_info']['archived_url_helper']
+        except KeyError as ke:
+            log.error('archived_url_helper object is only available after calling _search() '
+                      'and add_archived_url_helper()')
+
     def _search(self, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
@@ -106,13 +126,13 @@ class SearchLogic(object):
         from ckan.lib.search import SearchError
 
         # unicode format (decoded from utf8)
-        q = self.template_data.q = request.params.get('q', u'')
+        q = self.template_data.q = request.args.get('q', u'')
         self.template_data.query_error = False
 
         page = self._page_number()
         package_type = self.package_type
 
-        req_sort_by = request.params.get('sort', None)
+        req_sort_by = request.args.get('sort', None)
         if not req_sort_by and q:
             req_sort_by = 'score desc, ' + DEFAULT_SORTING
 
@@ -187,7 +207,7 @@ class SearchLogic(object):
                 'archived', 'archived', '-extras_archived:"true"' if hide_archived else 'extras_archived:"true"'))
 
             try:
-                limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
+                limit = 1 if self._is_facet_only_request() else int(request.args.get('ext_page_size', num_of_items))
             except:
                 limit = num_of_items
 
@@ -226,7 +246,7 @@ class SearchLogic(object):
         for facet in self.template_data.search_facets.keys():
             limit = 1000
             try:
-                limit = int(request.params.get('_%s_limit' % facet,
+                limit = int(request.args.get('_%s_limit' % facet,
                                                1000))
             except ValueError:
                 abort(400, _('Parameter "{parameter_name}" is not '
@@ -260,7 +280,7 @@ class SearchLogic(object):
         return query_string
 
     def _is_facet_only_request(self):
-        return request.params.get('ext_only_facets') == 'true'
+        return request.args.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context, fq_list=None, expand='false',
@@ -364,21 +384,21 @@ class SearchLogic(object):
 
     def _set_filters_are_selected_flag(self):
         if len(self.template_data.fields_grouped) > 0 \
-                and ('_show_filters' not in request.params or request.params['_show_filters'] != 'false'):
+                and ('_show_filters' not in request.args or request.args['_show_filters'] != 'false'):
             self.template_data.filters_are_selected = True
         else:
             self.template_data.filters_are_selected = False
 
     def _page_number(self):
         try:
-            return int(request.params.get('page', 1))
+            return int(request.args.get('page', 1))
         except ValueError as e:
             abort(400, ('"page" parameter must be an integer'))
 
     def _params_nopage(self):
         params_to_skip = ['_show_filters']
         # most search operations should reset the page counter:
-        return [(k, v) for k, v in request.params.items()
+        return [(k, v) for k, v in request.args.items()
                 if k != 'page' and k not in params_to_skip]
 
     def _set_search_url_params(self):
@@ -391,7 +411,7 @@ class SearchLogic(object):
         # named_route = self._get_named_route()
         params = {}
 
-        for k, v in request.params.items():
+        for k, v in request.args.items():
             if k in url_param_list:
                 if k in params:
                     params[k].append(v)

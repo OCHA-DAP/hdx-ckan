@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active"><a href="{{ h.url_for('user_dashboard_datasets') }}">{{ _('Dashboard') }}</a></li>
+  <li class="active"><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('Dashboard') }}</a></li>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -26,7 +26,7 @@
       <header class="page-header paddingRowHack" style="position: relative;">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
           {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
-          {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
 
@@ -44,7 +44,7 @@
                       <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">Carousel</a>
                     </li>
                     {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}
-                    {{ h.build_nav_icon('pages_show', _('Custom/Event Page')) }}
+                    {{ h.build_nav_icon('hdx_custom_pages.index', _('Custom/Event Page')) }}
                     <li>
                       <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
                     </li>

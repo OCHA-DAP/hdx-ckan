@@ -170,17 +170,17 @@ class DatasetController(PackageController):
                 pkg_dict['name'], 'new', package_type=package_type)
         except NotAuthorized:
             abort(403, _('Unauthorized to read package %s') % '')
-        except NotFound, e:
+        except NotFound as e:
             abort(404, _('Dataset not found'))
         except dict_fns.DataError:
             abort(400, _(u'Integrity Error'))
-        except SearchIndexError, e:
+        except SearchIndexError as e:
             try:
                 exc_str = unicode(repr(e.args))
             except Exception:  # We don't like bare excepts
                 exc_str = unicode(str(e))
             abort(500, _(u'Unable to add package to search index.') + exc_str)
-        except ValidationError, e:
+        except ValidationError as e:
             errors = e.error_dict
             error_summary = e.error_summary
             if is_an_update:
@@ -870,7 +870,7 @@ class DatasetController(PackageController):
             custom_dict = json.loads(json_string)
             image_name = custom_dict.get('image_rect', None)
             if image_name:
-                c.logo_config['image_url'] = h.url_for('image_serve', label=image_name)
+                c.logo_config['image_url'] = h.url_for('hdx_local_image_server.org_file', filename=image_name)
 
             if 'true' == custom_dict.get('use_org_color', False):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')

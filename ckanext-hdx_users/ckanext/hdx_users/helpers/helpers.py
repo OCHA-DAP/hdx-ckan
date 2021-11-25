@@ -28,7 +28,7 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('hdx_carousel_update', context, {})
-            url = h.url_for('carousel_settings')
+            url = h.url_for('hdx_carousel.show')
         except NotAuthorized as e:
             pass
 
@@ -42,14 +42,14 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('admin_page_list', context, {})
-            url = h.url_for('pages_show')
+            url = h.url_for('hdx_custom_pages.index')
         except NotAuthorized as e:
             pass
 
     if not url:
         try:
             check_access('hdx_quick_links_update', context, {})
-            url = h.url_for('quick_links_settings')
+            url = h.url_for('hdx_quick_links.show')
         except NotAuthorized as e:
             pass
 

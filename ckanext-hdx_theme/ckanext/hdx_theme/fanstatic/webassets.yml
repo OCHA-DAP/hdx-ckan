@@ -62,12 +62,12 @@ page-styles:
     preload:
       - vendor/select2-css
       - hdx_theme/banner-styles
-      - hdx_theme/search-styles
   contents:
     - page-common-styles
     - base/base.css
     - base/header.css
     - widget/contribute/details.css
+    - search-styles
 
 page-light-scripts:
   output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
@@ -85,10 +85,10 @@ page-light-styles:
     preload:
       - vendor/select2-css
       - hdx_theme/banner-styles
-      - hdx_theme/search-styles
   contents:
     - page-common-styles
     - light/page-light.css
+    - search-styles
 
 bootstrap-styles:
   output: ckanext-hdx_theme/%(version)s_bootstrap-styles.css
@@ -162,6 +162,9 @@ custom-org-search-facets-styles:
 
 jquery-extra:
   output: ckanext-hdx_theme/%(version)s_jquery-extra.js
+  extra:
+    preload:
+      - hdx_theme/ckan
   contents:
     - vendor/jquery.expander/jquery.expander.js
     - vendor/jquery.highlight/jquery.highlight.js
@@ -264,9 +267,7 @@ onboarding-bulk-user-scripts:
       - hdx_theme/onboarding-registered-scripts
       - hdx_theme/onboarding-follow-scripts
       - hdx_theme/onboarding-invite-scripts
-      - hdx_theme/onboarding-done-scripts
       - hdx_theme/onboarding-select-org-scripts
-      - hdx_theme/onboarding-survey-scripts
 
 onboarding-bulk-anon-styles:
   extra:
@@ -280,7 +281,6 @@ onboarding-bulk-anon-scripts:
     preload:
       - hdx_theme/onboarding-scripts
       - hdx_theme/onboarding-password-scripts
-      - hdx_theme/onboarding-survey-scripts
 
 onboarding-password-scripts:
   <<: *common-js
@@ -519,6 +519,7 @@ dataset-search-scripts:
   output: ckanext-hdx_theme/%(version)s_dataset-search-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/dataset-search-styles
   contents:
     - vendor/multiple-select-1.1.0/jquery.multiple.select.js
@@ -927,6 +928,9 @@ country-custom-styles:
 
 nepal-quake-country-custom-styles:
   output: ckanext-hdx_theme/%(version)s_nepal-quake-country-custom-styles.css
+  extra:
+    preload:
+      - hdx_theme/page-common-styles
   contents:
     - crisis/topline-nepal-quake.css
     - country/custom/country-custom.css
@@ -944,8 +948,6 @@ group-form-scripts:
     preload:
       - hdx_theme/ckan
       - hdx_theme/organization-form-styles
-  contents:
-    - custom_location.js
 
 group-list-scripts:
   <<: *common-js
@@ -957,7 +959,7 @@ group-list-scripts:
     - browse_/world_json.js
     - browse_/countries.js
     - browse_/browse.js
-    - group/group-init.js
+    - browse_/group-init.js
 
 group-list-styles:
   output: ckanext-hdx_theme/%(version)s_group-styles.css

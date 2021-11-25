@@ -3,9 +3,7 @@
 {% block subtitle %}{{ _("Data Responsibility for COVID-19") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">
-    <a href="/faqs/covid">{{ _('Data Responsibility for COVID-19') }}</a>
-  </li>
+  <li class="active">{{ h.nav_link(_('Data Responsibility for COVID-19'), named_route='hdx_faqs.read', category='covid') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -57,7 +55,7 @@
                 <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
             </p>
             <p>
-              {% snippet 'faq/search.html' %}
+              {% snippet 'faq_others/faq/search.html' %}
             </p>
         </div>
     </div>

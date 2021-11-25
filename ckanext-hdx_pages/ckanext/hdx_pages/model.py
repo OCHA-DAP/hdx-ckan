@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sqlalchemy.orm as orm
 import sqlalchemy.types as types
 import logging
@@ -149,6 +151,7 @@ class PageTagAssociation(PageBaseModel):
         result = [res.page_id for res in page_tag_list]
         return result
 
+
 def define_page_group_association_table():
     global page_group_association_table
 
@@ -193,13 +196,13 @@ def create_table():
     if model.group_table.exists():
         if not page_table.exists():
             page_table.create()
-            print 'Page table created'
+            print('Page table created')
         if not page_group_association_table.exists():
             page_group_association_table.create()
-            print 'page group association table created'
+            print('page group association table created')
         if not page_tag_association_table.exists():
             page_tag_association_table.create()
-            print 'page tag association table created'
+            print('page tag association table created')
 
 #
 # def delete_table():

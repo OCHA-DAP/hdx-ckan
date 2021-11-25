@@ -56,7 +56,7 @@
   <div class="org-control-container">
       {% set hdx_org_type = h.hdx_get_extras_element(data, value_key='hdx_org_type') %}
 
-      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
+      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list or data.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
       <div class="org-control-info info-field">
           <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
       </div>
@@ -134,7 +134,7 @@
 {% if is_url %}
   {% set image_preview = customizations['image_sq'] %}
 {% elif is_upload %}
-  {% set image_preview = h.url_for('image_serve', label= customizations['image_sq']) %}
+  {% set image_preview = h.url_for('hdx_local_image_server.org_file', filename=customizations['image_sq']) %}
 {% else %}
   {% set image_preview = 'https://placehold.it/75x75' %}
 {% endif %}
@@ -156,7 +156,7 @@
 {% if is_url %}
   {% set image_preview = customizations['image_rect'] %}
 {% elif is_upload %}
-  {% set image_preview = h.url_for('image_serve', label= customizations['image_rect']) %}
+  {% set image_preview = h.url_for('hdx_local_image_server.org_file', filename=customizations['image_rect']) %}
 {% else %}
   {% set image_preview = 'https://placehold.it/300x125' %}
 {% endif %}

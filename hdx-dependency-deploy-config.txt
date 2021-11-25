@@ -1,21 +1,18 @@
 
-HDX_GISLAYER_URL=https://hub.docker.com/r/unocha/hdx-gislayer/tags/
-HDX_GISLAYER_TAG=0.6.6
+HDX_GISLAYER_URL=https://gallery.ecr.aws/r/unocha/hdx-gislayer/
+HDX_GISLAYER_TAG=0.6.7
 
-HDX_GISWORKER_URL=https://hub.docker.com/r/unocha/hdx-gisworker/tags/
-HDX_GISWORKER_TAG=0.6.6
+HDX_GISWORKER_URL=https://gallery.ecr.aws/r/unocha/hdx-gisworker/
+HDX_GISWORKER_TAG=0.6.7
 
-HDX_HXL_PREVIEW_URL=https://hub.docker.com/r/unocha/hdx-hxl-preview/tags/
+HDX_HXL_PREVIEW_URL=https://gallery.ecr.aws/r/unocha/hdx-hxl-preview/
 HDX_HXL_PREVIEW_TAG=1.8.3
 
 HDX_DEMO_LITION_URL=https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
 HDX_DEMO_LITION_TAG=1.2
 
-HDX_GISRESTAPI_URL=https://hub.docker.com/r/unocha/hdx-gisrestapi/tags/
+HDX_GISRESTAPI_URL=https://gallery.ecr.aws/r/unocha/hdx-gisrestapi/
 HDX_GISRESTAPI_TAG=4.2.6
 
-HDX_DATAPROXY_URL=https://hub.docker.com/r/unocha/hdx-dataproxy/tags/
-HDX_DATAPROXY_TAG=2.5
-
-HDX_MAP_EXPLORER_URL=https://hub.docker.com/r/unocha/hdx-map-explorer/tags/
-HDX_MAP_EXPLORER_TAG=0.0.13
+HDX_DATAPROXY_URL=https://gallery.ecr.aws/r/unocha/hdx-dataproxy/
+HDX_DATAPROXY_TAG=2.7
