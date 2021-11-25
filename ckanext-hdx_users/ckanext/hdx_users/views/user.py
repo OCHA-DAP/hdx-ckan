@@ -1,5 +1,4 @@
 # encoding: utf-8
-import json
 import logging
 
 from flask import Blueprint
@@ -14,8 +13,10 @@ import ckanext.hdx_users.helpers.tokens as tokens
 from ckan.common import _, request, config
 from ckan.views.user import PerformResetView
 from ckan.views.user import RequestResetView
+from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
 from ckanext.hdx_users.views.user_register_view import HDXRegisterView
 from ckanext.hdx_users.views.user_edit_view import HDXEditView
+from ckanext.hdx_users.views.user_view_helper import *
 
 log = logging.getLogger(__name__)
 
@@ -35,13 +36,8 @@ NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
 hdx_register_view = HDXRegisterView()
+user_onboarding_view = HDXUserOnboardingView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
-
-OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
-OnbErr = json.dumps({'success': False, 'error': {'message': _('Something went wrong. Please contact support.')}})
-OnbSuccess = json.dumps({'success': True})
-OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
-
 
 class HDXRequestResetView(RequestResetView):
     def get(self):
@@ -144,3 +140,9 @@ user.add_url_rule(u'/edit', view_func=_edit_view)
 user.add_url_rule(u'/edit/<id>', view_func=_edit_view)
 
 user.add_url_rule(u'/register_email', view_func=hdx_register_view.register_email, methods=(u'POST', ))
+user.add_url_rule(u'/register_details', view_func=hdx_register_view.register_details, methods=(u'POST', ))
+
+user.add_url_rule(u'/follow_details', view_func=user_onboarding_view.follow_details, methods=(u'POST', ))
+user.add_url_rule(u'/request_membership', view_func=user_onboarding_view.request_membership, methods=(u'POST', ))
+user.add_url_rule(u'/request_new_organization', view_func=user_onboarding_view.request_new_organization, methods=(u'POST', ))
+user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_friends, methods=(u'POST', ))

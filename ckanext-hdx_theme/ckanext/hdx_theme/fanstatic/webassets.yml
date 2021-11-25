@@ -361,6 +361,7 @@ onboarding-register-scripts:
   output: ckanext-hdx_theme/%(version)s_onboarding-register-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/onboarding-register-styles
   contents:
     - widget/onboarding/register.js

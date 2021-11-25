@@ -5,7 +5,6 @@ enabled it will override them when enabled
 """
 import datetime
 # import exceptions as exceptions
-import hashlib
 import json
 import logging as logging
 import re
@@ -13,10 +12,7 @@ import urllib2 as urllib2
 
 import dateutil
 import pylons.configuration as configuration
-
-from mailchimp3 import MailChimp
 from pylons import config
-from sqlalchemy.exc import IntegrityError
 
 import ckan.controllers.user
 import ckan.controllers.user
@@ -35,8 +31,6 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
-import ckanext.hdx_users.helpers.helpers as usr_h
-import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
 from ckan.common import _, c, g, request, response
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
@@ -240,13 +234,6 @@ class ValidationController(ckan.controllers.user.UserController):
         # return render('user/logout.html')
 
 
-    def _get_exc_msg_by_key(self, e, key):
-        if e and e.args:
-            for arg in e.args:
-                if key in arg:
-                    return arg[key]
-        return None
-
     def validate(self, token):
         '''
         Step 2: user click on validate link from email
@@ -285,250 +272,7 @@ class ValidationController(ckan.controllers.user.UserController):
         template_data['capcha_api_key'] = configuration.config.get('ckan.recaptcha.publickey')
         return render('home/index.html', extra_vars=template_data)
 
-    def register_details(self, data=None, errors=None, error_summary=None):
-        '''
-        Step 3: user enters details for registration (username, password, firstname, lastname and captcha
-        :param data:
-        :param errors:
-        :param error_summary:
-        :return:
-        '''
-        temp_schema = user_reg_schema.register_details_user_schema()
-        if 'name' in temp_schema:
-            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
-                                   temp_schema['name']]
-        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        user_obj = model.User.get(data_dict['id'])
-        context = {'model': model, 'session': model.Session, 'user': user_obj.name,
-                   'schema': temp_schema}
-        # data_dict['name'] = data_dict['email']
-        first_name = data_dict['first-name']
-        last_name = data_dict['last-name']
-        data_dict['fullname'] = first_name + ' ' + last_name
-        try:
-            # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
-            # if is_captcha_enabled == 'true':
-            #     captcha_response = data_dict.get('g-recaptcha-response', None)
-            #     if not self.is_valid_captcha(response=captcha_response):
-            #         raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
-            check_access('user_update', context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        # except ValidationError, e:
-        #     error_summary = e.error_summary
-        #     if error_summary == CaptchaNotValid:
-        #         return OnbCaptchaErr
-        #     return self.error_message(error_summary)
-        except Exception, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        # hack to disable check if user is logged in
-        save_user = c.user
-        c.user = None
-        try:
-            token_dict = tokens.token_show(context, data_dict)
-            data_dict['token'] = token_dict['token']
-            get_action('user_update')(context, data_dict)
-            tokens.token_update(context, data_dict)
 
-            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
-            # get_action('user_extra_update')(context, ue_dict)
-            #
-            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
-            # get_action('user_extra_update')(context, ue_dict)
-
-            ue_data_dict = {'user_id': data_dict.get('id'), 'extras': [
-                {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'},
-                {'key': user_model.HDX_ONBOARDING_DETAILS, 'new_value': 'True'},
-                {'key': user_model.HDX_FIRST_NAME, 'new_value': first_name},
-                {'key': user_model.HDX_LAST_NAME, 'new_value': last_name},
-            ]}
-            get_action('user_extra_update')(context, ue_data_dict)
-
-            if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
-                link = config['ckan.site_url'] + '/login'
-                full_name = data_dict.get('fullname')
-                subject = u'Thank you for joining the HDX community!'
-                email_data = {
-                    'user_first_name': first_name,
-                    'username': data_dict.get('name'),
-                }
-                hdx_mailer.mail_recipient([{'display_name': full_name, 'email': data_dict.get('email')}], subject,
-                                          email_data, footer=data_dict.get('email'),
-                                          snippet='email/content/onboarding_confirmation_of_registration.html')
-
-        except NotAuthorized:
-            return OnbNotAuth
-        except NotFound, e:
-            return OnbUserNotFound
-        except DataError:
-            return OnbIntegrityErr
-        except ValidationError, e:
-            error_summary = ''
-            if 'Name' in e.error_summary:
-                error_summary += str(e.error_summary.get('Name'))
-            if 'Password' in e.error_summary:
-                error_summary += str(e.error_summary.get('Password'))
-            return self.error_message(error_summary or e.error_summary)
-        except IntegrityError:
-            return OnbExistingUsername
-        except Exception, e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-        c.user = save_user
-        return OnbSuccess
-
-    def follow_details(self, data=None, errors=None, error_summary=None):
-        '''
-        Step 4: user follows key entities
-        :param data:
-        :param errors:
-        :param error_summary:
-        :return:
-        '''
-        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        name = c.user or data_dict['id']
-        user_obj = model.User.get(name)
-        user_id = user_obj.id
-        context = {'model': model, 'session': model.Session, 'user': user_obj.name, 'auth_user_obj': c.userobj}
-        try:
-            ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
-            get_action('user_extra_update')(context, ue_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        except NotFound, e:
-            return OnbUserNotFound
-        except DataError:
-            return OnbIntegrityErr
-        except ValidationError, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        except Exception, e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-        return OnbSuccess
-
-    def request_new_organization(self):
-        '''
-        Step 5a: user can request to create a new organization
-        :return:
-        '''
-        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
-                   'user': c.user}
-        try:
-            check_access('hdx_send_new_org_request', context)
-        except NotAuthorized:
-            return OnbNotAuth
-
-        try:
-            user = model.User.get(context['user'])
-            data = self._process_new_org_request(user)
-            self._validate_new_org_request_field(data,context)
-
-            get_action('hdx_send_new_org_request')(context, data)
-
-            if data.get('user_extra'):
-                ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
-                get_action('user_extra_update')(context, ue_dict)
-
-        except hdx_mail.NoRecipientException, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        except logic.ValidationError, e:
-            error_summary = e.error_summary.get('Message') if 'Message' in e.error_summary else e.error_summary
-            return self.error_message(error_summary)
-        except Exception, e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-        return OnbSuccess
-
-    def request_membership(self):
-        '''
-        Step 5b: user can request membership to an existing organization
-        :return:
-        '''
-
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user, 'auth_user_obj': c.userobj}
-        try:
-            check_access('hdx_send_new_org_request', context)
-        except NotAuthorized:
-            return OnbNotAuth
-
-        try:
-            org_id = request.params.get('org_id', '')
-            msg = request.params.get('message', 'please add me to this organization')
-
-            data_dict = {
-                'organization': org_id,
-                'message': msg,
-                'save': u'save',
-                'role': u'member',
-                'group': org_id
-            }
-            member = get_action('member_request_create')(context, data_dict)
-
-            ue_dict = self._get_ue_dict(c.userobj.id, user_model.HDX_ONBOARDING_ORG)
-            get_action('user_extra_update')(context, ue_dict)
-
-        except hdx_mail.NoRecipientException, e:
-            return self.error_message(_(str(e)))
-        except ValidationError as e:
-            log.error(str(e))
-            if isinstance(e.error_summary, dict):
-                error_summary = ' '.join(e.error_summary.values())
-            else:
-                error_summary = json.dumps(e.error_summary)
-            return self.error_message(error_summary)
-        except Exception, e:
-            log.error(str(e))
-            return self.error_message(_('Request can not be sent. Contact an administrator.'))
-        return OnbSuccess
-
-    def invite_friends(self):
-        '''
-        Step 6: user can invite friends by email to access HDX
-        :return:
-        '''
-
-        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
-                   'user': c.user}
-        try:
-            check_access('hdx_basic_user_info', context)
-        except NotAuthorized:
-            return OnbNotAuth
-        try:
-            if not c.user:
-                return OnbNotAuth
-            # usr = c.userobj.display_name or c.user
-            user_id = c.userobj.id or c.user
-            ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
-            get_action('user_extra_update')(context, ue_dict)
-
-            subject = u'Invitation to join the Humanitarian Data Exchange (HDX)'
-            email_data = {
-                'user_fullname': c.userobj.fullname,
-                'user_email': c.userobj.email,
-            }
-            cc_recipients_list = [{'display_name': c.userobj.fullname, 'email': c.userobj.email}]
-            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
-            for f in friends:
-                if f and configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, email_data,
-                                              cc_recipients_list=cc_recipients_list,
-                                              snippet='email/content/onboarding_invite_others.html')
-        except Exception, e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-        return OnbSuccess
-
-    def _get_ue_dict(self, user_id, key, value='True'):
-        ue_dict = self._build_extras_dict(key, value)
-        ue_dict['user_id'] = user_id
-        return ue_dict
-
-    def _build_extras_dict(self, key, value='True'):
-        return {'extras': [{'key': key, 'new_value': value}]}
 
     # def _get_ue_dict_for_key_list(self, user_id, data_list):
     #     ue_dict = {'user_id': user_id}
@@ -685,38 +429,6 @@ class ValidationController(ckan.controllers.user.UserController):
 
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
-
-    def _validate_new_org_request_field(self, data, context):
-        errors = {}
-        for field in ['name', 'description', 'description_data', 'work_email', 'your_name', 'your_email']:
-            if data[field] is None or data[field].strip() == '':
-                errors[field] = [_('should not be empty')]
-
-        if len(errors) > 0:
-            raise logic.ValidationError(errors)
-
-        user_email_validator = tk.get_validator('email_validator')
-        schema = {'work_email': [user_email_validator, unicode]}
-        data_dict, _errors = _validate(data, schema, context)
-
-        if _errors:
-            raise logic.ValidationError(_errors.get('work_email'))
-
-    def _process_new_org_request(self, user):
-        data = {'name': request.params.get('name', ''),
-                # 'title': request.params.get('name', ''),
-                'description': request.params.get('description', ''),
-                'description_data': request.params.get('description_data', ''),
-                'work_email': request.params.get('work_email', ''),
-                'org_url': request.params.get('url', ''),
-                'acronym': request.params.get('acronym', ''),
-                'org_type': request.params.get('org_type') if request.params.get('org_type') != '-1' else '',
-                'your_email': request.params.get('your_email') or user.email,
-                'your_name': request.params.get('your_name') or user.fullname or user.name,
-                'user_extra': request.params.get('user_extra') if request.params.get('user_extra') == 'True' else None
-                }
-        return data
-
 
     # moved from login_controller.py
     def _new_login(self, message, page_subtitle, error=None):

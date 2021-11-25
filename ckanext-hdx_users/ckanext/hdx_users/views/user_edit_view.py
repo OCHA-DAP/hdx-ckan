@@ -15,6 +15,7 @@ from ckan.common import _
 from ckan.views.user import EditView as EditView
 from ckan.views.user import set_repoze_user as set_repoze_user
 from ckanext.hdx_users.views.user_register_view import HDXRegisterView
+from ckanext.hdx_users.views.user_view_helper import *
 
 log = logging.getLogger(__name__)
 
@@ -35,12 +36,6 @@ ValidationError = tk.ValidationError
 
 hdx_register_view = HDXRegisterView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
-
-OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
-OnbErr = json.dumps({'success': False, 'error': {'message': _('Something went wrong. Please contact support.')}})
-OnbSuccess = json.dumps({'success': True})
-OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
-
 
 class HDXEditView(EditView):
 
