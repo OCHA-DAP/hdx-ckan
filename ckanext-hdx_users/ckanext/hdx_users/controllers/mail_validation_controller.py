@@ -38,8 +38,8 @@ from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_L
 _validate = dictization_functions.validate
 log = logging.getLogger(__name__)
 render = base.render
-EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 abort = base.abort
+EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 check_access = logic.check_access
 get_action = logic.get_action
 NotFound = logic.NotFound
@@ -353,32 +353,6 @@ class ValidationController(ckan.controllers.user.UserController):
                 'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
         c.form = render(self.request_register_form, extra_vars=vars)
         return base.render(self.request_register_form, cache_force=True, extra_vars=vars)
-
-    def register(self, data=None, errors=None, error_summary=None):
-        """
-        Creates a new user, but allows logged in users to create
-        additional accounts as per HDX requirements at the time.
-        """
-        context = {'model': model, 'session': model.Session, 'user': c.user}
-        try:
-            check_access('user_create', context)
-        except NotAuthorized:
-            abort(403, _('Unauthorized to register as a user.'))
-        # hack to disable check if user is logged in
-        # save_user = c.user
-        # c.user = None
-        # result = self.new(data, errors, error_summary)
-        # c.user = save_user
-        if c.user:
-            # #1799 Don't offer the registration form if already logged in
-            return render('user/logout_first.html')
-
-        template_data = {}
-        if not c.user:
-            template_data = ue_helpers.get_register(True, "")
-        return render('home/index.html', extra_vars=template_data)
-
-        # return result
 
     def post_register(self):
         """

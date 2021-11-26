@@ -3,7 +3,7 @@ import logging as logging
 
 from mailchimp3 import MailChimp
 from sqlalchemy.exc import IntegrityError
-
+import ckan.lib.base as base
 import ckan.model as model
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.helpers as usr_h
@@ -21,6 +21,8 @@ unflatten = dictization_functions.unflatten
 ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
+render = base.render
+abort = base.abort
 
 
 class HDXRegisterView:
@@ -28,7 +30,6 @@ class HDXRegisterView:
         pass
 
     def register_email(self):
-
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.form))))
 
         try:
@@ -206,6 +207,24 @@ class HDXRegisterView:
             return error_message(error_summary)
         c.user = save_user
         return OnbSuccess
+
+    def register(self):
+        """
+        Creates a new user, but allows logged in users to create
+        additional accounts as per HDX requirements at the time.
+        """
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        try:
+            check_access('user_create', context)
+        except NotAuthorized:
+            abort(403, _('Unauthorized to register as a user.'))
+        if c.user:
+            # #1799 Don't offer the registration form if already logged in
+            return render('user/logout_first.html')
+        template_data = {}
+        if not c.user:
+            template_data = ue_helpers.get_register(True, "")
+        return render('home/index.html', extra_vars=template_data)
 
     def _signup_newsletter(self, data):
         if 'signup' in data:

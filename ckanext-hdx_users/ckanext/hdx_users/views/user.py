@@ -139,6 +139,7 @@ _edit_view = HDXEditView.as_view(str(u'edit'))
 user.add_url_rule(u'/edit', view_func=_edit_view)
 user.add_url_rule(u'/edit/<id>', view_func=_edit_view)
 
+user.add_url_rule(u'/register', view_func=hdx_register_view.register)
 user.add_url_rule(u'/register_email', view_func=hdx_register_view.register_email, methods=(u'POST', ))
 user.add_url_rule(u'/register_details', view_func=hdx_register_view.register_details, methods=(u'POST', ))
 

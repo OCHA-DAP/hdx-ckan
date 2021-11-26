@@ -40,9 +40,6 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def before_map(self, map):
         # map.redirect('/user/', '/user')
         map.connect('user_generate_apikey', '/user/generate_key/{id}', action='generate_apikey', controller='user')
-        map.connect('/user/register',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='register')
         map.connect('/user/validate/{token}',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='validate')
