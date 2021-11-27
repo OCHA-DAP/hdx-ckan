@@ -172,17 +172,17 @@ class HDXUserOnboardingView:
         return {'extras': [{'key': key, 'new_value': value}]}
 
     def _process_new_org_request(self, user):
-        data = {'name': request.params.get('name', ''),
-                # 'title': request.params.get('name', ''),
-                'description': request.params.get('description', ''),
-                'description_data': request.params.get('description_data', ''),
-                'work_email': request.params.get('work_email', ''),
-                'org_url': request.params.get('url', ''),
-                'acronym': request.params.get('acronym', ''),
-                'org_type': request.params.get('org_type') if request.params.get('org_type') != '-1' else '',
-                'your_email': request.params.get('your_email') or user.email,
-                'your_name': request.params.get('your_name') or user.fullname or user.name,
-                'user_extra': request.params.get('user_extra') if request.params.get('user_extra') == 'True' else None
+        data = {'name': request.form.get('name', ''),
+                # 'title': request.form.get('name', ''),
+                'description': request.form.get('description', ''),
+                'description_data': request.form.get('description_data', ''),
+                'work_email': request.form.get('work_email', ''),
+                'org_url': request.form.get('url', ''),
+                'acronym': request.form.get('acronym', ''),
+                'org_type': request.form.get('org_type') if request.form.get('org_type') != '-1' else '',
+                'your_email': request.form.get('your_email') or user.email,
+                'your_name': request.form.get('your_name') or user.fullname or user.name,
+                'user_extra': request.form.get('user_extra') if request.form.get('user_extra') == 'True' else None
                 }
         return data
 
