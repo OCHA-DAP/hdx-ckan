@@ -416,29 +416,29 @@ charting-styles:
     - vendor/c3/c3.css
     - vendor/leaflet-0.7.3/leaflet.css
 
-custom-viz-3w-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-scripts.js
-  extra:
-    preload:
-      - hdx_theme/charting-scripts
-      - hdx_theme/custom-viz-3w-styles
-  contents:
-    - vendor/dc/dc.js
-    - vendor/dc/dc.leaflet.js
-    - widget/loading/loading.js
-    - widget/vis-3w/site.js
-    - vendor/crossfilter/crossfilter.js
-    - vendor/rangeslider.js-2.0.4/rangeslider.js
-    - vendor/moment.js/moment.js
-
-custom-viz-3w-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-styles.css
-  contents:
-    - vendor/dc/dc.css
-    - widget/loading/loading.css
-    - widget/vis-3w/site.css
-    - vendor/rangeslider.js-2.0.4/rangeslider.css
+#custom-viz-3w-scripts:
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-scripts.js
+#  extra:
+#    preload:
+#      - hdx_theme/charting-scripts
+#      - hdx_theme/custom-viz-3w-styles
+#  contents:
+#    - vendor/dc/dc.js
+#    - vendor/dc/dc.leaflet.js
+#    - widget/loading/loading.js
+#    - widget/vis-3w/site.js
+#    - vendor/crossfilter/crossfilter.js
+#    - vendor/rangeslider.js-2.0.4/rangeslider.js
+#    - vendor/moment.js/moment.js
+#
+#custom-viz-3w-styles:
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-styles.css
+#  contents:
+#    - vendor/dc/dc.css
+#    - widget/loading/loading.css
+#    - widget/vis-3w/site.css
+#    - vendor/rangeslider.js-2.0.4/rangeslider.css
 
 custom-viz-roea-scripts:
   <<: *common-js
@@ -462,26 +462,26 @@ custom-viz-roea-styles:
     - widget/loading/loading.css
     - widget/vis-roea/site.css
 
-custom-viz-wfp-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-scripts.js
-  extra:
-    preload:
-      - hdx_theme/charting-scripts
-      - hdx_theme/custom-viz-wfp-styles
-  contents:
-    - vendor/d3/d3.js
-    - vendor/crossfilter/crossfilter.js
-    - vendor/topojson/topojson.js
-    - widget/loading/loading.js
-    - widget/vis-wfp/un_world_topo.js
-    - widget/vis-wfp/foodprices.js
+#custom-viz-wfp-scripts:
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-scripts.js
+#  extra:
+#    preload:
+#      - hdx_theme/charting-scripts
+#      - hdx_theme/custom-viz-wfp-styles
+#  contents:
+#    - vendor/d3/d3.js
+#    - vendor/crossfilter/crossfilter.js
+#    - vendor/topojson/topojson.js
+#    - widget/loading/loading.js
+#    - widget/vis-wfp/un_world_topo.js
+#    - widget/vis-wfp/foodprices.js
 
-custom-viz-wfp-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-styles.css
-  contents:
-    - widget/loading/loading.css
-    - widget/vis-wfp/site.css
+#custom-viz-wfp-styles:
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-styles.css
+#  contents:
+#    - widget/loading/loading.css
+#    - widget/vis-wfp/site.css
 
 dataset-scripts:
   <<: *common-js

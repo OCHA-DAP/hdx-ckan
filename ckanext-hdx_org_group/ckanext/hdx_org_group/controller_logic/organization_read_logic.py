@@ -109,7 +109,7 @@ class OrgReadLogic(LightOrgReadLogic):
             self.viz_config = self._assemble_viz_config(self.org_meta.org_dict.get('visualization_config', ''), org_id)
 
             self.links = Links(
-                embed_url=self._get_embed_url(),
+                embed_url=None,
                 edit=h.url_for('organization_edit', id=org_id),
                 members=h.url_for('organization_members', id=org_id),
                 request_membership=h.url_for('request_membership', org_id=org_id),
@@ -233,20 +233,20 @@ class OrgReadLogic(LightOrgReadLogic):
 
         return config
 
-    def _get_embed_url(self):
-        ckan_url = config.get('ckan.site_url', '').strip()
-        position = ckan_url.find('//')
-        if position >= 0:
-            ckan_url = ckan_url[position:]
-
-        widget_url = ""
-        if self.viz_config['type'] == '3W-dashboard':
-            widget_url = "/widget/3W"
-        if self.viz_config['type'] == 'WFP':
-            widget_url = "/widget/WFP"
-
-        url = ckan_url + widget_url
-        return url
+    # def _get_embed_url(self):
+    #     ckan_url = config.get('ckan.site_url', '').strip()
+    #     position = ckan_url.find('//')
+    #     if position >= 0:
+    #         ckan_url = ckan_url[position:]
+    #
+    #     widget_url = ""
+    #     if self.viz_config['type'] == '3W-dashboard':
+    #         widget_url = "/widget/3W"
+    #     if self.viz_config['type'] == 'WFP':
+    #         widget_url = "/widget/WFP"
+    #
+    #     url = ckan_url + widget_url
+    #     return url
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
