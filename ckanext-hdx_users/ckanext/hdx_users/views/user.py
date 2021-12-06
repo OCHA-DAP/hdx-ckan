@@ -142,6 +142,7 @@ user.add_url_rule(u'/edit/<id>', view_func=_edit_view)
 user.add_url_rule(u'/register', view_func=hdx_register_view.register)
 user.add_url_rule(u'/register_email', view_func=hdx_register_view.register_email, methods=(u'POST', ))
 user.add_url_rule(u'/register_details', view_func=hdx_register_view.register_details, methods=(u'POST', ))
+user.add_url_rule(u'/validate/<token>', view_func=hdx_register_view.validate)
 
 user.add_url_rule(u'/follow_details', view_func=user_onboarding_view.follow_details, methods=(u'POST', ))
 user.add_url_rule(u'/request_membership', view_func=user_onboarding_view.request_membership, methods=(u'POST', ))

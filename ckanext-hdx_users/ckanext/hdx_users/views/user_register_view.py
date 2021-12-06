@@ -226,6 +226,44 @@ class HDXRegisterView:
             template_data = ue_helpers.get_register(True, "")
         return render('home/index.html', extra_vars=template_data)
 
+    def validate(self, token):
+        '''
+        Step 2: user click on validate link from email
+        :param token:
+        :return:
+        '''
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        data_dict = {'token': token,
+                     'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
+
+        try:
+            check_access('user_can_validate', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError as e:
+            error_summary = e.error_summary
+            return error_message(error_summary)
+
+        try:
+            # Update token for user
+            token = tokens.token_show_by_id(context, data_dict)
+            data_dict['user_id'] = token['user_id']
+            # removed because it is saved in next step. User is allowed to click on /validate link several times
+            # get_action('user_extra_update')(context, data_dict)
+        except NotFound:
+            return OnbUserNotFound
+        except Exception as e:
+            error_summary = str(e)
+            return error_message(error_summary)
+
+        user = model.User.get(data_dict['user_id'])
+        template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
+        template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
+        template_data['data']['email'] = user.email
+        template_data['data']['name'] = user.name
+        template_data['capcha_api_key'] = config.get('ckan.recaptcha.publickey')
+        return render('home/index.html', extra_vars=template_data)
+
     def _signup_newsletter(self, data):
         if 'signup' in data:
             signup = data['signup']

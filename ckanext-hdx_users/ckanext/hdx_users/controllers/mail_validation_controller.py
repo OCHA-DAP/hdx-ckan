@@ -228,49 +228,11 @@ class ValidationController(ckan.controllers.user.UserController):
                 return render('home/index.html', extra_vars=template_data)
                 # return self.login(error=err)
 
-    def logged_out_page(self):
-        template_data = ue_helpers.get_logout(True, _('User logged out with success'))
-        return render('home/index.html', extra_vars=template_data)
-        # return render('user/logout.html')
+    # def logged_out_page(self):
+    #     template_data = ue_helpers.get_logout(True, _('User logged out with success'))
+    #     return render('home/index.html', extra_vars=template_data)
+    #     # return render('user/logout.html')
 
-
-    def validate(self, token):
-        '''
-        Step 2: user click on validate link from email
-        :param token:
-        :return:
-        '''
-        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
-        data_dict = {'token': token,
-                     'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
-
-        try:
-            check_access('user_can_validate', context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        except ValidationError as e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-
-        try:
-            # Update token for user
-            token = tokens.token_show_by_id(context, data_dict)
-            data_dict['user_id'] = token['user_id']
-            # removed because it is saved in next step. User is allowed to click on /validate link several times
-            # get_action('user_extra_update')(context, data_dict)
-        except NotFound:
-            return OnbUserNotFound
-        except Exception as e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-
-        user = model.User.get(data_dict['user_id'])
-        template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
-        template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
-        template_data['data']['email'] = user.email
-        template_data['data']['name'] = user.name
-        template_data['capcha_api_key'] = configuration.config.get('ckan.recaptcha.publickey')
-        return render('home/index.html', extra_vars=template_data)
 
 
 
@@ -353,53 +315,6 @@ class ValidationController(ckan.controllers.user.UserController):
                 'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
         c.form = render(self.request_register_form, extra_vars=vars)
         return base.render(self.request_register_form, cache_force=True, extra_vars=vars)
-
-    def post_register(self):
-        """
-            If the user has registered but not validated their email
-            redirect to a special page reminding them why they can't
-            login.
-        """
-        if not c.user:
-            user = request.params.get('user')
-            vars = {'user': user}
-            return render('user/post_register.html', extra_vars=vars)
-        else:
-            return render('user/logout_first.html')
-
-    def validation_resend(self, id):
-        # Get user by id
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   'for_view': True}
-        data_dict = {'id': id,
-                     'user_obj': c.userobj}
-
-        try:
-            user = get_action('user_show')(context, data_dict)
-        except NotFound, e:
-            abort(404, _('User not found'))
-        except:
-            abort(500, _('Error'))
-
-        # Get token for user
-        try:
-            token = tokens.token_show(context, data_dict)
-        except NotFound, e:
-            abort(404, _('User not found'))
-        except:
-            abort(500, _('Error'))
-
-        # Send Validation email
-        tokens.send_validation_email(user, token)
-
-        post_register_url = h.url_for(
-            controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-            action='post_register')
-        redirect_url = '{0}?user={1}'
-        h.redirect_to(redirect_url.format(
-            post_register_url,
-            user['id']))
 
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
