@@ -440,27 +440,27 @@ charting-styles:
 #    - widget/vis-3w/site.css
 #    - vendor/rangeslider.js-2.0.4/rangeslider.css
 
-custom-viz-roea-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-scripts.js
-  extra:
-    preload:
-      - hdx_theme/charting-scripts
-      - hdx_theme/custom-viz-roea-styles
-  contents:
-    - vendor/d3/d3.js
-    - widget/loading/loading.js
-    - widget/vis-roea/dc.js
-    - widget/vis-roea/dc.leaflet.js
-    - vendor/crossfilter/crossfilter.js
-    - widget/vis-roea/site.js
+#custom-viz-roea-scripts:
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-scripts.js
+#  extra:
+#    preload:
+#      - hdx_theme/charting-scripts
+#      - hdx_theme/custom-viz-roea-styles
+#  contents:
+#    - vendor/d3/d3.js
+#    - widget/loading/loading.js
+#    - widget/vis-roea/dc.js
+#    - widget/vis-roea/dc.leaflet.js
+#    - vendor/crossfilter/crossfilter.js
+#    - widget/vis-roea/site.js
 
-custom-viz-roea-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-styles.css
-  contents:
-    - vendor/dc/dc.css
-    - widget/loading/loading.css
-    - widget/vis-roea/site.css
+#custom-viz-roea-styles:
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-styles.css
+#  contents:
+#    - vendor/dc/dc.css
+#    - widget/loading/loading.css
+#    - widget/vis-roea/site.css
 
 #custom-viz-wfp-scripts:
 #  <<: *common-js
