@@ -84,33 +84,33 @@ def _update_lunr():
             lunr.buildIndex(config.get('hdx.lunr.index_location'))
 
 
-def delete_page(id):
-    context = {
-        u'model': model,
-        u'session': model.Session,
-        u'user': g.user,
-        u'auth_user_obj': g.userobj,
-    }
-    try:
-        check_access('page_delete', context, {})
-    except NotAuthorized:
-        abort(404, _('Page not found'))
-
-    try:
-        page_dict = logic.get_action('page_delete')(context, {'id': id})
-    except NotFound:
-        abort(404, _('Page not found'))
-    except Exception as ex:
-        abort(404, _('Page not found'))
-    _update_lunr()
-
-    vars = {
-        'data': page_dict,
-        'errors': {},
-        'error_summary': {},
-    }
-    url = h.url_for('hdx_custom_pages.index')
-    return h.redirect_to(url)
+# def delete_page(id):
+#     context = {
+#         u'model': model,
+#         u'session': model.Session,
+#         u'user': g.user,
+#         u'auth_user_obj': g.userobj,
+#     }
+#     try:
+#         check_access('page_delete', context, {})
+#     except NotAuthorized:
+#         abort(404, _('Page not found'))
+#
+#     try:
+#         page_dict = logic.get_action('page_delete')(context, {'id': id})
+#     except NotFound:
+#         abort(404, _('Page not found'))
+#     except Exception as ex:
+#         abort(404, _('Page not found'))
+#     _update_lunr()
+#
+#     vars = {
+#         'data': page_dict,
+#         'errors': {},
+#         'error_summary': {},
+#     }
+#     url = h.url_for('hdx_custom_pages.index')
+#     return h.redirect_to(url)
     # return render('home/index.html', vars)
 
 
@@ -380,8 +380,7 @@ class EditView(MethodView):
                 # _blueprint = 'read_event' if type == 'event' else 'read_dashboards'
                 return h.redirect_to(_blueprint, id=updated_page.get("id"))
 
-
-            elif delete_page:
+            elif _delete_page:
                 return h.redirect_to(u'hdx_custom_page.delete_page', id=id)
 
     def get(self, id, data=None, errors=None, error_summary=None):
@@ -399,6 +398,48 @@ class EditView(MethodView):
         return render('pages/edit_page.html', extra_vars=extra_vars)
 
 
+class DeleteView(MethodView):
+    def post(self, id, data=None, errors=None, error_summary=None):
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user,
+            u'auth_user_obj': g.userobj,
+        }
+        try:
+            check_access('page_delete', context, {})
+        except NotAuthorized:
+            abort(404, _('Page not found'))
+        try:
+            page_dict = logic.get_action('page_delete')(context, {'id': id})
+        except NotFound:
+            abort(404, _('Page not found'))
+        except Exception as ex:
+            abort(404, _('Page not found'))
+        _update_lunr()
+
+        vars = {
+            'data': page_dict,
+            'errors': {},
+            'error_summary': {},
+        }
+        url = h.url_for('hdx_custom_pages.index')
+        return h.redirect_to(url)
+
+    # def get(self, id, data=None, errors=None, error_summary=None):
+    #     context, extra_vars = _init_data(data, error_summary, errors)
+    #
+    #     try:
+    #         check_access('page_update', context, {})
+    #     except NotAuthorized:
+    #         abort(404, _('Page not found'))
+    #
+    #     extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
+    #     extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
+    #     _init_extra_vars_edit(extra_vars)
+    #
+    #     return render('pages/edit_page.html', extra_vars=extra_vars)
+
 # Rules definitions
 
 hdx_light_event.add_url_rule(u'/<id>', view_func=read_light_event)
@@ -410,4 +451,4 @@ hdx_dashboard.add_url_rule(u'/<id>', view_func=read_dashboard)
 
 hdx_custom_page.add_url_rule(u'/new', view_func=CreateView.as_view(str(u'new')))
 hdx_custom_page.add_url_rule(u'/edit/<id>', view_func=EditView.as_view(str(u'edit')))
-hdx_custom_page.add_url_rule(u'/delete/<id>', view_func=delete_page)
+hdx_custom_page.add_url_rule(u'/delete/<id>', view_func=DeleteView.as_view(str(u'delete_page')))
