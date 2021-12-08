@@ -41,6 +41,8 @@ page-common-styles:
     - vendor/bootstrap/css/bootstrap.css
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
+    - widget/contribute/details.css
+
 
 page-scripts:
   <<: *common-js
@@ -66,7 +68,6 @@ page-styles:
     - page-common-styles
     - base/base.css
     - base/header.css
-    - widget/contribute/details.css
     - search-styles
 
 page-light-scripts:
@@ -77,6 +78,7 @@ page-light-scripts:
       - hdx_theme/ckan
   contents:
     - base/header-init.js
+    - widget/contribute/contribute.js
 
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
