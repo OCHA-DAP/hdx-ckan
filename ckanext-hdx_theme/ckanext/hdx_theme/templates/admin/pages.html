@@ -26,7 +26,10 @@
           <td>{{ p.status }}</td>
           <td>{{ p.state }}</td>
           <td><a href="/page/edit/{{p.id}}" >Edit</a> |
-            <a href="/page/delete/{{p.id}}" >Delete</a>
+            <form action="{% url_for 'hdx_custom_page.delete_page', id=p.id %}" method="POST">
+              <input type="hidden" name="id" value="{{ p.id }}"/>
+              <a href="javascript:;" onclick="parentNode.submit();">Delete</a>
+            </form>
           </td>
         </tr>
       {% endfor %}

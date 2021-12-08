@@ -354,19 +354,18 @@ h1.country-title {
     }
 
     .progress-stripes-pattern() {
-        background: repeating-linear-gradient(
-            -45deg,
-            @blueColor,
-            @blueColor 2px,
-            @whiteColor 2px,
-            @whiteColor 4px
-        );
+      //no stripes anymore
+      background-color: #c0d7eb;
     }
 
     .progress-breakdown {
         height: 20px;
         border: 1px solid @lightGrayColor;
         background: @extraLightGrayColor;
+        vertical-align: center;
+        text-align: right;
+        font-size: 14px;
+        line-height: 18px;
 
         &.progress-header {
             display: inline-block;
@@ -389,9 +388,15 @@ h1.country-title {
 
         .progress-blue {
             background: @blueColor;
+            color: @whiteColor;
         }
+
         .progress-striped {
             .progress-stripes-pattern();
+            color: @blueColor;
+        }
+        .progress-empty {
+            color: @orangeColor;
         }
     }
 

@@ -216,7 +216,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
         user = model.User.by_name(USER)
         try:
             url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
-            page_delete = app.get(url, extra_environ={"REMOTE_USER": USER})
+            page_delete = app.post(url, extra_environ={"REMOTE_USER": USER})
             assert 'Page not found' in page_delete.body, 'page doesn\'t exist'
             assert '404 Not Found'.lower() in page_delete.status.lower()
         except logic.NotAuthorized:
@@ -239,7 +239,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
         context['user'] = SYSADMIN
         try:
             _url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
-            res = app.get(_url, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            res = app.post(_url, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert '302 FOUND'.lower() in res.status.lower()
             _res = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
             assert False
