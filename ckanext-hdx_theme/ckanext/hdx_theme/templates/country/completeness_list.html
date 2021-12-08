@@ -25,15 +25,22 @@
               </div>
               <div class="completeness-progress">
                   <div class="progress-breakdown">
-                    <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
+                    {% set dataseries_good_percentage = 100*category.stats.dataseries_good_percentage %}
+                    <span class="progress-blue" style="width: {{ dataseries_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
                        data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.good_dataseries_text }}">
+                      {% if dataseries_good_percentage > 10 %} {{ dataseries_good_percentage | int }}%&nbsp; {% endif %}
                     </span>
-                    <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
-                       data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.not_good_dataseries_text }}"></span>
+                    {% set dataseries_not_good_percentage = 100*category.stats.dataseries_not_good_percentage %}
+                    <span class="progress-striped" style="width: {{ dataseries_not_good_percentage }}%;" data-module="bs_tooltip" data-module-placement="top"
+                       data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.not_good_dataseries_text }}">
+                      {% if dataseries_not_good_percentage > 10 %} {{ dataseries_not_good_percentage | int }}%&nbsp; {% endif %}
+                    </span>
+                    {% set dataseries_other_percentage = 100*(1 - category.stats.dataseries_good_percentage - category.stats.dataseries_not_good_percentage) %}
                     <span class="progress-empty"
-                       style="width: {{ 100*(1 - category.stats.dataseries_good_percentage - category.stats.dataseries_not_good_percentage) }}%;"
+                       style="width: {{ dataseries_other_percentage }}%;"
                           data-module="bs_tooltip" data-module-placement="top"
                        data-toggle="tooltip" data-html="true" data-original-title="{{ category.stats.empty_dataseries_text }}">
+                      {% if dataseries_other_percentage > 10 %} {{ dataseries_other_percentage | int }}%&nbsp; {% endif %}
                     </span>
                   </div>
               </div>
