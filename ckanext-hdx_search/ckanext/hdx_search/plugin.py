@@ -139,6 +139,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                                                      include=True))
         adapt_solr_fq(BULK_DATASETS_FACET_NAME, ' +extras_updated_by_script:[* TO *]',
                       ' -extras_updated_by_script:[* TO *]')
+        adapt_solr_fq('sadd', ' +vocab_Topics:"sex and age disaggregated data - sadd"',
+                      ' -vocab_Topics:"sex and age disaggregated data - sadd"')
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()
