@@ -46,11 +46,6 @@ mailchimp3==3.0.14
 ua-parser==0.7.2
 user_agents==1.1.0
 
-# We want to use repoze.who.plugins.use_beaker in who.ini with sessions in redis
-# Based on ideas from https://github.com/data-govt-nz/ckanext-security
-git+https://github.com/akissa/repoze.who-use_beaker@780379fd58b10264c0756feb6d3f232f797ba0cb#egg=repoze.who-use_beaker
-beaker-redis~=1.1.0
-
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.3
 # -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview

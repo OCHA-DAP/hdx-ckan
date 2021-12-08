@@ -14,24 +14,13 @@
 use = egg:ckan
 full_stack = true
 cache_dir = /tmp/%(ckan.site_id)s/
-beaker.session.key = ckan_session
+beaker.session.key = ckan
 
 # This is the secret token that the beaker library uses to hash the cookie sent
 # to the client. `paster make-config` generates a unique value for this each
 # time it generates a config file.
 #
 #!beaker.session.secret = 2yD+TjjiiW+VtA38OcfQJNPPO
-beaker.session.data_serializer = json
-beaker.session.httponly = true
-beaker.session.secure = true
-# 3 days in seconds
-beaker.session.timeout = 259200
-beaker.session.save_accessed_time = true
-beaker.session.type = ext:redis
-beaker.session.url = redis://gisredis:6379/5
-beaker.session.cookie_expires = true
-# Your domain should show here.
-beaker.session.cookie_domain = data.humdata.local
 
 # `paster make-config` generates a unique value for this each time it generates
 # a config file.
@@ -40,7 +29,7 @@ beaker.session.cookie_domain = data.humdata.local
 #!app_instance_uuid = {0b55a427-a808-470f-a341-37abcd46ba1}
 
 # repoze.who config
-who.config_file = %(here)s/ckanext-hdx_theme/ckanext/hdx_theme/config/who.ini
+who.config_file = %(here)s/ckan/config/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
 # 3 days in seconds
