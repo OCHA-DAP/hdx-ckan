@@ -754,6 +754,14 @@ def hdx_dataset_is_hxl(tag_list):
     return False
 
 
+def hdx_dataset_has_sadd(tag_list):
+    for tag in tag_list:
+        if tag.get('name') == 'sex and age disaggregated data - sadd' and tag.get(
+            'display_name') == 'sex and age disaggregated data - sadd':
+            return True
+    return False
+
+
 def hdx_switch_url_path():
     return switch_url_path()
 
