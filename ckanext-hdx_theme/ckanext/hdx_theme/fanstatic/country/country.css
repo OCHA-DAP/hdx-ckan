@@ -326,6 +326,9 @@ h1.country-title {
   background-color: #c0d7eb;
   color: #007CE0;
 }
+.data-completeness .progress-breakdown .progress-empty {
+  color: #f2645a;
+}
 .data-completeness .data-item {
   margin: 15px 0;
 }
