@@ -100,8 +100,8 @@ hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 # This should be overriden in your own prod.ini
 hdx.hxlproxy.url = https://${HDX_DOMAIN}/hxlproxy
 
-# HXL Preview
-hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/hxlpreview
+# Quickcharts!
+hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts
 
 # GOOGLE DEV
 hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
