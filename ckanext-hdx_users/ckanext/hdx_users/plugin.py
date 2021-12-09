@@ -40,45 +40,16 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def before_map(self, map):
         # map.redirect('/user/', '/user')
         map.connect('user_generate_apikey', '/user/generate_key/{id}', action='generate_apikey', controller='user')
-        map.connect('/user/register',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='register')
-        map.connect('/user/register_email',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='register_email')
-        map.connect('/user/request_new_organization',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='request_new_organization')
-        map.connect('/user/register_details',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='register_details')
-        map.connect('/user/follow_details',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='follow_details')
-        map.connect('/user/request_membership',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='request_membership')
-        map.connect('/user/invite_friends',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='invite_friends')
-        map.connect('/user/validate/{token}',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='validate')
-        map.connect('/user/post_register',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action="post_register")
-        map.connect('/user/validation_resend/{id}',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action="validation_resend")
-        map.connect('/user/logged_out_page',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='logged_out_page')
+
+        # map.connect('/user/logged_out_page',
+        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        #             action='logged_out_page')
         # map.connect('/user/logged_out',
         #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='logged_out')
-        map.connect('/user/logged_out_redirect',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='logged_out_page')
+        # map.connect('/user/logged_out_redirect',
+        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        #             action='logged_out_page')
         map.connect('/user/logged_in',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='logged_in')
@@ -165,9 +136,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     action='permission')
         # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
         #             action='logged_in')
-        map.connect('/user/reset',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='request_reset')
         map.connect('/contribute',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contribute')
@@ -193,7 +161,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/_logout', controller='user', action='logout')
         map.connect('/user/logged_in', controller='user', action='logged_in')
         map.connect('/user/logged_out', controller='user', action='logged_out')
-        map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
+        # map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
         # map.connect('/user/reset', controller='user', action='request_reset')
         # map.connect('/user/me', controller='user', action='me')
         # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')

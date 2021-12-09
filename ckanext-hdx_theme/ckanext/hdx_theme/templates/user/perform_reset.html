@@ -1,20 +1,18 @@
 {% extends "base.html" %}
 {% block subtitle %}{{ _('Reset Your Password') }}{% endblock %}
 
-{%- block styles %}
+{% block styles %}
   {{ super() }}
-
-{#  {% resource 'hdx_theme/page-styles' %}#}
-{#  {% resource 'requestdata/css/main.css' %}#}
-{#  {% resource 'hdx_theme/widget/onboarding/perform-reset.css' %}#}
-
   {% asset 'hdx_theme/page-styles' %}
-  {% asset 'requestdata/main-styles' %}
   {% asset 'hdx_theme/onboarding-perform-reset-styles' %}
 {% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+{% endblock %}
+
 {% block page %}
-  <div >
+  <div>
     {{ h.snippet('widget/onboarding/password-reset.html', id="recoverPopup", user_dict=user_dict) }}
   </div>
 {% endblock %}
