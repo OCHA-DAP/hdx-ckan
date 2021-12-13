@@ -153,6 +153,10 @@ ckanext.s3filestore.signature_version = s3v4
 ckanext.s3filestore.check_access_on_startup = true
 ckan.storage_path = ${HDX_FILESTORE}
 
+# jwt
+api_token.jwt.decode.secret = string\:${HDX_JWT_SECRET}
+api_token.jwt.encode.secret = string\:${HDX_JWT_SECRET}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer
