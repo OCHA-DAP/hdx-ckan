@@ -13,6 +13,7 @@ import ckanext.hdx_users.helpers.tokens as tokens
 from ckan.common import _, request, config
 from ckan.views.user import PerformResetView
 from ckan.views.user import RequestResetView
+from ckanext.hdx_users.views.user_auth_view import HDXUserAuthView
 from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
 from ckanext.hdx_users.views.user_register_view import HDXRegisterView
 from ckanext.hdx_users.views.user_edit_view import HDXEditView
@@ -36,8 +37,10 @@ NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
 hdx_register_view = HDXRegisterView()
+hdx_auth_view = HDXUserAuthView()
 user_onboarding_view = HDXUserOnboardingView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
+hdx_login_link = Blueprint(u'hdx_login_link', __name__)
 
 class HDXRequestResetView(RequestResetView):
     def get(self):
@@ -148,3 +151,9 @@ user.add_url_rule(u'/follow_details', view_func=user_onboarding_view.follow_deta
 user.add_url_rule(u'/request_membership', view_func=user_onboarding_view.request_membership, methods=(u'POST', ))
 user.add_url_rule(u'/request_new_organization', view_func=user_onboarding_view.request_new_organization, methods=(u'POST', ))
 user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_friends, methods=(u'POST', ))
+
+user.add_url_rule(u'/logged_out_redirect', view_func=hdx_auth_view.logged_out_page)
+user.add_url_rule(u'/logged_out_page', view_func=hdx_auth_view.logged_out_page)
+user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in)
+user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in)
+hdx_login_link.add_url_rule(u'/login', view_func=hdx_auth_view.new_login)
