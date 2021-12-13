@@ -22,6 +22,7 @@ ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB
 ckan.site_url = https://${HDX_DOMAIN}
 beaker.session.secret = ${BEAKER_SECRET}
 beaker.session.cookie_domain = ${HDX_DOMAIN}
+beaker.session.url = redis://${HDX_SESSION_REDIS_ADDR}:${HDX_SESSION_REDIS_PORT}/${HDX_SESSION_REDIS_DB}
 app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
 ## Search Settings
