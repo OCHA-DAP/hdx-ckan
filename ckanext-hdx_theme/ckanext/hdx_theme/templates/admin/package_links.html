@@ -70,6 +70,14 @@
                               </div>
                             </div>
                             <div class="control-group form-group control-full control-large hdx-section-field">
+                              <label class="control-label" for="label_field">Text to be displayed</label>
+                              <div class="controls ">
+                                <input id="label_field" type="text" name="label" value="<%= label %>"
+                                       placeholder="eg. This dataset can be viewed in the " class="form-control">
+                                <span class="error-block"></span>
+                              </div>
+                            </div>
+                            <div class="control-group form-group control-full control-large hdx-section-field">
                               <label class="control-label" for="package_list">Datasets to highlight</label>
                               <div class="controls ">
                                 <textarea id="package_list" rows="10" name="package_list" placeholder="dataset1,dataset2,..." class="form-control"><%= package_list %></textarea>
