@@ -40,25 +40,6 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def before_map(self, map):
         # map.redirect('/user/', '/user')
         map.connect('user_generate_apikey', '/user/generate_key/{id}', action='generate_apikey', controller='user')
-
-        # map.connect('/user/logged_out_page',
-        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        #             action='logged_out_page')
-        # map.connect('/user/logged_out',
-        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        #             action='logged_out')
-        # map.connect('/user/logged_out_redirect',
-        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        #             action='logged_out_page')
-        map.connect('/user/logged_in',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='logged_in')
-        map.connect('/login',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='new_login')
-        # map.connect('/user/first_login',
-        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        #             action='first_login')
         return map
 
     def after_map(self, map):
@@ -90,7 +71,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
 
     #IBlueprint
     def get_blueprint(self):
-        return hdx_user.user
+        return [hdx_user.user, hdx_user.hdx_login_link]
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
@@ -134,16 +115,12 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('user_permission', '/user/permission/{id}',
                     controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
                     action='permission')
-        # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        #             action='logged_in')
         map.connect('/contribute',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contribute')
         map.connect('/contact_hdx',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contact_hdx')
-        # map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        #             action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
         # map.connect('/user/edit', controller='user', action='edit')
         # map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
