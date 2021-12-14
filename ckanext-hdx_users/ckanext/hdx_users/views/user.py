@@ -154,5 +154,6 @@ user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_frie
 
 user.add_url_rule(u'/logged_out_redirect', view_func=hdx_auth_view.logged_out_page)
 user.add_url_rule(u'/logged_out_page', view_func=hdx_auth_view.logged_out_page)
-user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in)
+user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in, methods=(u'GET', u'POST', ))
+
 hdx_login_link.add_url_rule(u'/login', view_func=hdx_auth_view.new_login)
