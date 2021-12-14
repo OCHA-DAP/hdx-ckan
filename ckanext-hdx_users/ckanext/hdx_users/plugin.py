@@ -71,7 +71,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
 
     #IBlueprint
     def get_blueprint(self):
-        return hdx_user.user
+        return [hdx_user.user, hdx_user.hdx_login_link]
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
