@@ -43,8 +43,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         test_client = self.get_backwards_compatible_test_client()
 
         # step 1 register
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         data = {'email': 'newuser@hdx.org', 'nosetest': 'true'}
         res = test_client.post(url, data = data)
         assert_true(json.loads(res.body)['success'])
@@ -66,12 +65,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         # step 3 details
         context = {'model': model, 'session': model.Session, 'auth_user_obj': user}
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_details')
+        url = h.url_for('hdx_user.register_details')
 
         try:
             res = test_client.post(url, data={})
-            assert '500 Internal Server Error' in res.status
+            assert '500 INTERNAL SERVER ERROR' in res.status
         except Exception as ex:
             assert False
 
@@ -85,7 +83,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                 'login': 'newuser@hdx.org',
                 'id': '123123123123'
             })
-            assert '500 Internal Server Error' in res.status
+            assert '500 INTERNAL SERVER ERROR' in res.status
         except AttributeError as ex:
             assert False
         except Exception as ex:
@@ -174,13 +172,12 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
 
         # step 4 follow
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='follow_details')
+        url = h.url_for('hdx_user.follow_details')
 
         try:
             res = test_client.post(url, data={})
-            assert '500 Internal Server Error' in res.status
-            assert 'Something went wrong' in res.body
+            assert '500 INTERNAL SERVER ERROR' in res.status
+            assert 'Server Error' in res.body
         except KeyError as ex:
             False
         except Exception as ex:
@@ -199,8 +196,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert self._get_user_extra_by_key(res, user_model.HDX_ONBOARDING_FOLLOWS) == 'True'
 
         # step 5b request_membership
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='request_membership')
+        url = h.url_for('hdx_user.request_membership')
 
         try:
             res = test_client.post(url, {})
@@ -220,7 +216,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         auth = {'Authorization': str(user.apikey)}
         try:
             res = test_client.post(url, data=data, extra_environ=auth)
-            assert '{"success": true}' in res.body
+            assert_true(json.loads(res.body)['success'])
         except Exception as ex:
             assert False
 

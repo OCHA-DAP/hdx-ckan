@@ -21,6 +21,8 @@ ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB
 ## Site Settings
 ckan.site_url = https://${HDX_DOMAIN}
 beaker.session.secret = ${BEAKER_SECRET}
+beaker.session.cookie_domain = ${HDX_DOMAIN}
+beaker.session.url = redis://${HDX_SESSION_REDIS_ADDR}:${HDX_SESSION_REDIS_PORT}/${HDX_SESSION_REDIS_DB}
 app_instance_uuid = {0bcda427-a808-470f-a141-37eb1ac46ba1}
 
 ## Search Settings
@@ -100,8 +102,8 @@ hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 # This should be overriden in your own prod.ini
 hdx.hxlproxy.url = https://${HDX_DOMAIN}/hxlproxy
 
-# HXL Preview
-hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/hxlpreview
+# Quickcharts!
+hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts
 
 # GOOGLE DEV
 hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
@@ -150,6 +152,10 @@ ckanext.s3filestore.region_name= ${REGION_NAME}
 ckanext.s3filestore.signature_version = s3v4
 ckanext.s3filestore.check_access_on_startup = true
 ckan.storage_path = ${HDX_FILESTORE}
+
+# jwt
+api_token.jwt.decode.secret = string\:${HDX_JWT_SECRET}
+api_token.jwt.encode.secret = string\:${HDX_JWT_SECRET}
 
 ## Logging configuration
 [loggers]

@@ -237,6 +237,7 @@ onboarding-scripts:
   contents:
     - widget/onboarding/onboarding.js
     - widget/onboarding/signup.js
+    - popup-scripts
 
 onboarding-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-styles.css
@@ -275,7 +276,7 @@ onboarding-bulk-anon-styles:
   extra:
     preload:
       - hdx_theme/onboarding-styles
-      - hdx_theme/onboarding-password-styles
+      - hdx_theme/onboarding-verify-styles
       - hdx_theme/onboarding-survey-styles
 
 onboarding-bulk-anon-scripts:
@@ -283,6 +284,11 @@ onboarding-bulk-anon-scripts:
     preload:
       - hdx_theme/onboarding-scripts
       - hdx_theme/onboarding-password-scripts
+
+onboarding-verify-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-verify-styles.css
+  contents:
+    - widget/onboarding/verify.css
 
 onboarding-password-scripts:
   <<: *common-js
@@ -292,15 +298,24 @@ onboarding-password-scripts:
       - hdx_theme/onboarding-password-styles
   contents:
     - widget/onboarding/forgot-password.js
+    - widget/onboarding/recover.js
+
 
 onboarding-password-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-password-styles.css
+  extra:
+    preload:
+      - hdx_theme/onboarding-verify-styles
   contents:
-    - widget/onboarding/verify.css
     - widget/onboarding/forgot-password.css
+    - widget/onboarding/recover.css
 
 onboarding-perform-reset-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-perform-reset-styles.css
+  extra:
+    preload:
+      - hdx_theme/popup-styles
+      - hdx_theme/onboarding-password-styles
   contents:
     - widget/onboarding/perform-reset.css
 
@@ -343,25 +358,12 @@ onboarding-invite-styles:
   contents:
     - widget/onboarding/invite.css
 
-onboarding-recover-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_onboarding-recover-scripts.js
-  extra:
-    preload:
-      - hdx_theme/onboarding-recover-styles
-  contents:
-    - widget/onboarding/recover.js
-
-onboarding-recover-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-recover-styles.css
-  contents:
-    - widget/onboarding/recover.css
-
 onboarding-register-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-register-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/onboarding-register-styles
   contents:
     - widget/onboarding/register.js

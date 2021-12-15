@@ -10,7 +10,8 @@ function showDataCheck(url){
   var iframe = $(id + ' iframe');
 
   var baseUrl = window.location.origin;
-  var datacheckUrl = 'https://tools.humdata.org/wizard/datacheck';
+  // var datacheckUrl = 'https://tools.humdata.org/wizard/datacheck';
+  var datacheckUrl = '/tools/datacheck';
   if (!url.startsWith("http")) {
     url = baseUrl + url;
   }

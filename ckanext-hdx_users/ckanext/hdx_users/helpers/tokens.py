@@ -42,21 +42,7 @@ def token_update(context, data_dict):
 
 
 def send_validation_email(user, token):
-    # link = '{0}{1}'
-    # html = """\
-    #         <p>Hello,</p>
-    #         <br/>
-    #         <p>Thank you for your interest in the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>. Please complete the registration process by clicking the link below.</p>
-    #         <br/>
-    #         <p><a href="{link}">Verify Email</a></p>
-    #         <br/>
-    #         <p>Best wishes,</p>
-    #         <p>The HDX team</p>
-    #     """.format(link=link.format(config['ckan.site_url'], validate_link))
-    validation_link = h.url_for(
-        controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-        action='validate',
-        token=token['token'])
+    validation_link = h.url_for('hdx_user.validate', token=token['token'])
     link = '{0}{1}'
     subject = "Complete your HDX registration"
     email_data = {
