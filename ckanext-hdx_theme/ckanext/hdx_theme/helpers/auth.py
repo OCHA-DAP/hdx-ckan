@@ -1,14 +1,15 @@
 import ckan.authz as new_authz
-import ckan.logic as logic
 import ckan.logic.auth.create as create
 
 import ckan.plugins.toolkit as tk
 
-import ckanext.hdx_theme.helpers.helpers as helpers
+from ckan.logic.auth.update import user_generate_apikey
+from ckan.logic.auth import get_user_object
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 _ = tk._
-
+auth_sysadmins_check = tk.auth_sysadmins_check
+NotFound = tk.ObjectNotFound
 
 ## ORGS
 def _simple_logged_in_auth(fail_message):
@@ -21,14 +22,14 @@ def _simple_logged_in_auth(fail_message):
 
 
 ## ORGS
-@logic.auth_sysadmins_check
+@auth_sysadmins_check
 def group_member_create(context, data_dict):
     try:
         group_dict = tk.get_action('organization_show')(context, {'id': data_dict['id']})
         # if the above call returns we already know it is an organization
         # otherwise a NotFound is raised
         return create.group_member_create(context, data_dict)
-    except logic.NotFound:
+    except NotFound:
         # means the specific group is surely not an org or doesn't exist at all
         return {'success': False, 'msg': _('Nobody can add a member to a country in HDX')}
 
@@ -90,3 +91,12 @@ def hdx_request_data_admin_list(context, data_dict):
     username_or_id = context.get('user')
     result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_VIEW_REQUEST_DATA)
     return {'success': result}
+
+
+@auth_sysadmins_check
+def hdx_user_generate_apikey(context, data_dict):
+    user_obj = get_user_object(context, data_dict)
+    if user_obj.sysadmin:
+        return {'success': False, 'msg': _('API keys are disabled for sysadmins')}
+    else:
+        return user_generate_apikey(context, data_dict)
