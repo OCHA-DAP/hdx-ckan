@@ -78,44 +78,44 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     def _create_test_data(cls):
         super(TestCustomOrgController, cls)._create_test_data(create_datasets=True, create_members=True)
 
-    def test_assemble_viz_config(self):
-        # custom_org_controller = controller.CustomOrgController()
-
-        # Testing the WFP viz part
-        org_read_logic = OrgReadLogic('test_org', 'some_user', None)
-        config = org_read_logic._assemble_viz_config(json_config_wfp, org_id='test_org')
-
-        assert config == {
-            'title': 'Test Visualization Title',
-            'data_link_url': 'https://data.humdata.org/dataset/wfp-food-prices',
-            'type': 'WFP',
-            'embedded': 'true',
-            # 'resource_id': 'test-resource-id',
-            'datastore_id': 'test-resource-id'
-        }
-
-        # Testing the 3W viz part
-        config = org_read_logic._assemble_viz_config(json_config_3w, org_id='test_org')
-
-        assert config, 'Config dict should not be empty'
-        assert config == {
-            'type': '3W-dashboard',
-            'title': "Who's doing what and where ?",
-            'geotype': 'filestore',
-            'geo': '/dataset/json-repository/resource/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5/download',
-            'data_link_url': 'https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium',
-            'data': '/api/action/datastore_search?resource_id=1d5b6821-fe99-4a5d-a0cf-d6987868027b&limit=10000000',
-            'datatype': 'datastore',
-            'joinAttribute': 'DIS_CODE',
-            'whereFieldName': 'DIST_NO',
-            'whoFieldName': 'Organisation',
-            'whatFieldName': 'Sector',
-            'startFieldName': '2000',
-            'endFieldName': '2015',
-            'formatFieldName': 'YYYY/MM/DD',
-            'nameAttribute': 'DIST_NAME',
-            'colors': ["red", "green", "blue"]
-        }
+    # def test_assemble_viz_config(self):
+    #     # custom_org_controller = controller.CustomOrgController()
+    #
+    #     # Testing the WFP viz part
+    #     org_read_logic = OrgReadLogic('test_org', 'some_user', None)
+    #     config = org_read_logic._assemble_viz_config(json_config_wfp, org_id='test_org')
+    #
+    #     assert config == {
+    #         'title': 'Test Visualization Title',
+    #         'data_link_url': 'https://data.humdata.org/dataset/wfp-food-prices',
+    #         'type': 'WFP',
+    #         'embedded': 'true',
+    #         # 'resource_id': 'test-resource-id',
+    #         'datastore_id': 'test-resource-id'
+    #     }
+    #
+    #     # Testing the 3W viz part
+    #     config = org_read_logic._assemble_viz_config(json_config_3w, org_id='test_org')
+    #
+    #     assert config, 'Config dict should not be empty'
+    #     assert config == {
+    #         'type': '3W-dashboard',
+    #         'title': "Who's doing what and where ?",
+    #         'geotype': 'filestore',
+    #         'geo': '/dataset/json-repository/resource/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5/download',
+    #         'data_link_url': 'https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium',
+    #         'data': '/api/action/datastore_search?resource_id=1d5b6821-fe99-4a5d-a0cf-d6987868027b&limit=10000000',
+    #         'datatype': 'datastore',
+    #         'joinAttribute': 'DIS_CODE',
+    #         'whereFieldName': 'DIST_NO',
+    #         'whoFieldName': 'Organisation',
+    #         'whatFieldName': 'Sector',
+    #         'startFieldName': '2000',
+    #         'endFieldName': '2015',
+    #         'formatFieldName': 'YYYY/MM/DD',
+    #         'nameAttribute': 'DIST_NAME',
+    #         'colors': ["red", "green", "blue"]
+    #     }
 
     @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_theme.helpers.data_access.DataAccess')
