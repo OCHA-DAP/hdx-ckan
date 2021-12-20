@@ -137,7 +137,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
                 'config': org_read_logic.viz_config,
                 'config_type': org_read_logic.viz_config['type'],
                 'config_url': urlencode(org_read_logic.viz_config, True),
-                'embed_url': org_read_logic.links.embed_url,
+                # 'embed_url': org_read_logic.links.embed_url,
                 'basemap_url': config.get('hdx.orgmap.url')
             },
 

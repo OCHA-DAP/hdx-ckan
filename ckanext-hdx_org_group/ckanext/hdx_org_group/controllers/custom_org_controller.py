@@ -41,21 +41,21 @@ log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
 
-
-def _get_embed_url(viz_config):
-    ckan_url = config.get('ckan.site_url', '').strip()
-    position = ckan_url.find('//')
-    if position >= 0:
-        ckan_url = ckan_url[position:]
-
-    widget_url = ""
-    if viz_config['type'] == '3W-dashboard':
-        widget_url = "/widget/3W"
-    if viz_config['type'] == 'WFP':
-        widget_url = "/widget/WFP"
-
-    url = ckan_url + widget_url
-    return url
+#
+# def _get_embed_url(viz_config):
+#     ckan_url = config.get('ckan.site_url', '').strip()
+#     position = ckan_url.find('//')
+#     if position >= 0:
+#         ckan_url = ckan_url[position:]
+#
+#     widget_url = ""
+#     if viz_config['type'] == '3W-dashboard':
+#         widget_url = "/widget/3W"
+#     if viz_config['type'] == 'WFP':
+#         widget_url = "/widget/WFP"
+#
+#     url = ckan_url + widget_url
+#     return url
 
 
 class CustomOrgController(org.OrganizationController, search_controller.HDXSearchController):
