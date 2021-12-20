@@ -3,6 +3,8 @@ import logging
 
 log = logging.getLogger(__name__)
 
+NOT_ALLOWED_FLASK_ROUTES = {'/<path:filename>', '/global/<filename>', '/webassets/<path:path>', '/api/i18n/<lang>'}
+
 
 class CookieMiddleware(object):
 
@@ -11,11 +13,10 @@ class CookieMiddleware(object):
         self.config = config
 
     def __call__(self, environ, start_response):
-        if (environ['ckan.app'] == 'flask_app' and
-                (environ['HDXflask_route'] == '/<path:filename>' or
-                 environ['HDXflask_route'] == '/global/<filename>' or
-                 environ['HDXflask_route'] == '/webassets/<path:path>')) or \
-            (environ['ckan.app'] == 'pylons_app' and not environ['HDXpylons_route']):
+        flask_route = environ.get('HDXflask_route')
+        pylons_route = environ.get('HDXpylons_route')
+        if (environ['ckan.app'] == 'flask_app' and flask_route in NOT_ALLOWED_FLASK_ROUTES) or \
+            (environ['ckan.app'] == 'pylons_app' and not pylons_route):
 
             environ.get('beaker.session')._headers['cookie_out'] = None
         else:
