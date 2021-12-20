@@ -1,0 +1,18 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.quick-edit {
+  position: relative;
+  &:hover {
+    .quick-link {
+      display: block;
+    }
+  }
+  .quick-link {
+    display: none;
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+}
