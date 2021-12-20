@@ -477,6 +477,9 @@ class CKANFlask(MultiStaticFlask):
             # logic is not flexible enough for this purpose
             environ['SCRIPT_NAME'] = ''
 
+            # Added by HDX to have route information in environment
+            environ['HDXflask_route'] = rule.rule
+
             return (True, self.app_name, origin)
         except HTTPException:
             return (False, self.app_name)

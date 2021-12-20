@@ -221,6 +221,10 @@ class CKANPylonsApp(PylonsApp):
                 origin = 'extension'
             log.debug('Pylons route match: {0} Origin: {1}'.format(
                 match, origin))
+
+            # Added by HDX to have route information in environment
+            environ['HDXpylons_route'] = match.get('controller')
+
             return (True, self.app_name, origin)
         else:
             return (False, self.app_name)

@@ -12,7 +12,8 @@ import ckanext.hdx_theme.helpers.auth as auth
 
 from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
 from ckanext.hdx_theme.cli.click_analytics_changes_reindex import analytics_changes_reindex
-from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
+from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
+from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
@@ -304,14 +305,15 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IMiddleware
     def make_middleware(self, app, config):
-        new_app = RedirectionMiddleware(app, config)
+        cookie_app = CookieMiddleware(app, config)
+        redirection_app = RedirectionMiddleware(cookie_app, config)
         if app.app_name == 'flask_app':
             from logging.handlers import SMTPHandler
             for handler in app.logger.handlers:
                 if isinstance(handler, SMTPHandler):
                     handler.setLevel(logging.ERROR)
             app.logger.addFilter(FlaskEmailFilter())
-        return new_app
+        return redirection_app
 
     # IValidators
     def get_validators(self):
