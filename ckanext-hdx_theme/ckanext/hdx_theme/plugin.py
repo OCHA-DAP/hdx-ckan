@@ -300,6 +300,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_carousel_update': auth.hdx_carousel_update,
             'hdx_request_data_admin_list': auth.hdx_request_data_admin_list,
             'hdx_quick_links_update': auth.hdx_quick_links_update,
+            'user_generate_apikey': auth.hdx_user_generate_apikey,
         }
 
     # IMiddleware
