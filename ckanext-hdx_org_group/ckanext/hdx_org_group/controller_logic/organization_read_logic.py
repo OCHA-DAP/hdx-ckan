@@ -67,7 +67,7 @@ class LightOrgReadLogic(object):
         return search_logic
 
 
-Links = collections.namedtuple('Links', ['embed_url', 'edit', 'members', 'request_membership', 'add_data'])
+Links = collections.namedtuple('Links', ['edit', 'members', 'request_membership', 'add_data'])
 
 
 class OrgReadLogic(LightOrgReadLogic):
@@ -109,7 +109,6 @@ class OrgReadLogic(LightOrgReadLogic):
             self.viz_config = self._assemble_viz_config(self.org_meta.org_dict.get('visualization_config', ''), org_id)
 
             self.links = Links(
-                embed_url=self._get_embed_url(),
                 edit=h.url_for('organization_edit', id=org_id),
                 members=h.url_for('organization_members', id=org_id),
                 request_membership=h.url_for('request_membership', org_id=org_id),
@@ -165,15 +164,15 @@ class OrgReadLogic(LightOrgReadLogic):
             'type': visualization.get('visualization-select', '')
         }
 
-        if visualization.get('visualization-select', '') == 'ROEA':
-            config.update({
-                'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id',
-                                                                                        '') + "&limit=10000000",
-                'geo': h.url_for('resource_download',
-                                 id=visualization.get('viz-geo-dataset-id', ''),
-                                 resource_id=visualization.get('viz-geo-resource-id', '')),
-                'source': visualization.get('viz-data-source', '')
-            })
+        # if visualization.get('visualization-select', '') == 'ROEA':
+        #     config.update({
+        #         'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id',
+        #                                                                                 '') + "&limit=10000000",
+        #         'geo': h.url_for('resource_download',
+        #                          id=visualization.get('viz-geo-dataset-id', ''),
+        #                          resource_id=visualization.get('viz-geo-resource-id', '')),
+        #         'source': visualization.get('viz-data-source', '')
+        #     })
 
         if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded-preview':
             config.update({
@@ -186,67 +185,67 @@ class OrgReadLogic(LightOrgReadLogic):
                 'embedded_preview': h.url_for('hdx_local_image_server.org_file', filename=org_id + '_embedded_preview.png')
             })
 
-        if visualization.get('visualization-select', '') == 'WFP':
-            config.update({
-                'embedded': "true",
-                'datastore_id': visualization.get('viz-resource-id', '')
-            })
+        # if visualization.get('visualization-select', '') == 'WFP':
+        #     config.update({
+        #         'embedded': "true",
+        #         'datastore_id': visualization.get('viz-resource-id', '')
+        #     })
 
-        else:
-            if visualization.get('datatype_1', '') == 'filestore':
-                datatype = "filestore"
-                data = h.url_for('resource_download',
-                                 id=visualization.get('dataset_id_1', ''),
-                                 resource_id=visualization.get('resource_id_1', ''))
-            else:
-                datatype = "datastore"
-                data = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_1',
-                                                                                       '') + "&limit=10000000"
-
-            if visualization.get('datatype_2', '') == 'filestore':
-                geotype = "filestore"
-                geo = h.url_for('resource_download',
-                                id=visualization.get('dataset_id_2', ''),
-                                resource_id=visualization.get('resource_id_2', ''))
-            else:
-                geotype = "datastore"
-                geo = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_2',
-                                                                                      '') + "&limit=10000000"
-
-            # beware that visualisation type constants are also used
-            # in the template to select different resource bundles
-            if visualization.get('visualization-select', '') == '3W-dashboard':
-                config.update({'datatype': datatype,
-                               'data': data,
-                               'whoFieldName': visualization.get('who-column', ''),
-                               'whatFieldName': visualization.get('what-column', ''),
-                               'whereFieldName': visualization.get('where-column', ''),
-                               'startFieldName': visualization.get('start-column', ''),
-                               'endFieldName': visualization.get('end-column', ''),
-                               'formatFieldName': visualization.get('format-column', ''),
-                               'geotype': geotype,
-                               'geo': geo,
-                               'joinAttribute': visualization.get('where-column-2', ''),
-                               'nameAttribute': visualization.get('map_district_name_column', ''),
-                               'colors': visualization.get('colors', '')
-                               })
+        # else:
+        #     if visualization.get('datatype_1', '') == 'filestore':
+        #         datatype = "filestore"
+        #         data = h.url_for('resource_download',
+        #                          id=visualization.get('dataset_id_1', ''),
+        #                          resource_id=visualization.get('resource_id_1', ''))
+        #     else:
+        #         datatype = "datastore"
+        #         data = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_1',
+        #                                                                                '') + "&limit=10000000"
+        #
+        #     if visualization.get('datatype_2', '') == 'filestore':
+        #         geotype = "filestore"
+        #         geo = h.url_for('resource_download',
+        #                         id=visualization.get('dataset_id_2', ''),
+        #                         resource_id=visualization.get('resource_id_2', ''))
+        #     else:
+        #         geotype = "datastore"
+        #         geo = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_2',
+        #                                                                               '') + "&limit=10000000"
+        #
+        #     # beware that visualisation type constants are also used
+        #     # in the template to select different resource bundles
+        #     if visualization.get('visualization-select', '') == '3W-dashboard':
+        #         config.update({'datatype': datatype,
+        #                        'data': data,
+        #                        'whoFieldName': visualization.get('who-column', ''),
+        #                        'whatFieldName': visualization.get('what-column', ''),
+        #                        'whereFieldName': visualization.get('where-column', ''),
+        #                        'startFieldName': visualization.get('start-column', ''),
+        #                        'endFieldName': visualization.get('end-column', ''),
+        #                        'formatFieldName': visualization.get('format-column', ''),
+        #                        'geotype': geotype,
+        #                        'geo': geo,
+        #                        'joinAttribute': visualization.get('where-column-2', ''),
+        #                        'nameAttribute': visualization.get('map_district_name_column', ''),
+        #                        'colors': visualization.get('colors', '')
+        #                        })
 
         return config
 
-    def _get_embed_url(self):
-        ckan_url = config.get('ckan.site_url', '').strip()
-        position = ckan_url.find('//')
-        if position >= 0:
-            ckan_url = ckan_url[position:]
-
-        widget_url = ""
-        if self.viz_config['type'] == '3W-dashboard':
-            widget_url = "/widget/3W"
-        if self.viz_config['type'] == 'WFP':
-            widget_url = "/widget/WFP"
-
-        url = ckan_url + widget_url
-        return url
+    # def _get_embed_url(self):
+    #     ckan_url = config.get('ckan.site_url', '').strip()
+    #     position = ckan_url.find('//')
+    #     if position >= 0:
+    #         ckan_url = ckan_url[position:]
+    #
+    #     widget_url = ""
+    #     if self.viz_config['type'] == '3W-dashboard':
+    #         widget_url = "/widget/3W"
+    #     if self.viz_config['type'] == 'WFP':
+    #         widget_url = "/widget/WFP"
+    #
+    #     url = ckan_url + widget_url
+    #     return url
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:

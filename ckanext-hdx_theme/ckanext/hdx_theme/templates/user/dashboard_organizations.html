@@ -15,10 +15,12 @@
   {{ super() }}
   {% asset 'hdx_theme/popup-scripts' %}
   {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
+  {% asset 'hdx_theme/onboarding-bulk-user-complete-onboarding-scripts' %}
 {% endblock %}
 
 
 {% block primary_content_inner %}
+  {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
   {% set organizations = h.hdx_organizations_available_with_roles() %}
     {% if organizations %}
       <div class="pull-right">
