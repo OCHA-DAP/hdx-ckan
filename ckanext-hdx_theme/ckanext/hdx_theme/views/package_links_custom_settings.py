@@ -130,6 +130,7 @@ def _process_request():
         item = {
             'title': title,
             'url': request.form.get('url'),
+            'label': request.form.get('label'),
             'order': int(request.form.get('order', -1)),
             'newTab': True if request.form.get('newTab') == 'true' else False,
             'package_list': request.form.get('package_list').replace(' ', ''),

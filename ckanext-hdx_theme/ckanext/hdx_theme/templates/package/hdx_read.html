@@ -69,17 +69,22 @@
                 </div>
             {% endif %}
             {%  if pkg.links_list %}
+              {% for link in pkg.links_list %}
                 <div class="row">
                     <div class="col-xs-12 mTop_25 mBottom30">
                         <div class="itemSubTitle">
+                          {%  if link.label %}
+                            {{ link.label }}
+                          {% else %}
                             This dataset can be viewed in the
-                            {% for link in pkg.links_list %}
-                              <a href="{{ link.url }}"
+                          {% endif %}
+                            <a href="{{ link.url }}"
                                  target="{% if link.newTab == True %}_blank{% else %}_self{% endif %}"> {{ link.title }} </a>
-                            {% endfor %}
+
                         </div>
                     </div>
                 </div>
+              {% endfor %}
             {% endif %}
                 <div class="row mBottom15">
                     <div class="col-xs-12">

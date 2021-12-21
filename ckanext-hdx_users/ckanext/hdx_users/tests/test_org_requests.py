@@ -70,8 +70,8 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test User'
         }
-        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                           action='request_new_organization')
+
+        offset = h.url_for('hdx_user.request_new_organization')
         self.app.post(offset, params=postparams, extra_environ=auth)
         args, kw_args = mocked_mail_recipient.call_args
 
@@ -106,8 +106,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test êßȘ'
         }
-        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                           action='request_new_organization')
+        offset = h.url_for('hdx_user.request_new_organization')
         self.app.post(offset, params=postparams, extra_environ=auth)
         args0, kw_args0 = mocked_mail_recipient.call_args_list[0]
         args1, kw_args1 = mocked_mail_recipient.call_args_list[1]

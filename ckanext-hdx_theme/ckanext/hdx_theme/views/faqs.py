@@ -7,6 +7,7 @@ import ckanext.hdx_theme.helpers.faq_wordpress as fw
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from ckan.common import _, c, config, request
 from ckanext.hdx_theme.util.mail import hdx_validate_email
+import ckanext.hdx_users.helpers.helpers as usr_h
 
 render = tk.render
 hdx_faqs = Blueprint(u'hdx_faqs', __name__, url_prefix=u'/faqs')
@@ -17,7 +18,7 @@ ValidationError = tk.ValidationError
 CaptchaNotValid = _('Captcha is not valid')
 FaqSuccess = {'success': True}
 FaqCaptchaErr = {'success': False, 'error': {'message': CaptchaNotValid}}
-
+is_valid_captcha = usr_h.validate_captcha
 
 def read(category):
     fullname = c.userobj.display_name if c.userobj and c.userobj.display_name is not None else ''

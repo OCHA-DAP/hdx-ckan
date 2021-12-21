@@ -8,6 +8,7 @@
             id: null,
             graphic: null,
             url: null,
+            label: null,
             embed: false,
             buttonText: null,
             newTab: false,

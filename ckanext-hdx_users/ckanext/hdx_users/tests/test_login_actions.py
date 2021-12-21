@@ -65,8 +65,7 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
         assert True
 
     # test_new_login
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='new_login')
+        url = h.url_for('hdx_login_link.new_login')
         try:
             login_redirect_result = self._get_url(url, None)
         except Exception, ex:
@@ -76,8 +75,7 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
 
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='new_login')
+        url = h.url_for('hdx_login_link.new_login')
         try:
             login_redirect_result = self._get_url(url, user.apikey)
         except Exception, ex:
