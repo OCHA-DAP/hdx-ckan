@@ -9,7 +9,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('About'), controller='home', action='about', position=2 %}
-  <li class="active">{% link_for title, controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page=page %}</li>
+  <li class="active">{% link_for title, named_route='hdx_splash.about', page=page %}</li>
 
 {% endblock %}
 

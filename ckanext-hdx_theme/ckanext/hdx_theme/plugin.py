@@ -4,8 +4,6 @@ import json
 import os
 from six.moves.urllib.parse import urlparse
 
-import pylons.config as config
-
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_theme.helpers.auth as auth
@@ -25,6 +23,8 @@ from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
 from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
 from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
+from ckanext.hdx_theme.views.splash_page import hdx_splash
+from ckanext.hdx_theme.views.count import hdx_count
 
 
 # def run_on_startup():
@@ -45,10 +45,12 @@ from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_arc
 #                                                   license.License(hdx_licenses.LicenseHdxOther())
 #                                                   ]
 
+config = toolkit.config
+
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
@@ -144,26 +146,24 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         return urlobj.geturl()
 
-    def before_map(self, map):
-        map.connect(
-            'hdx_home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
-        map.connect(
-            '/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
-        map.connect(
-            '/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
-        map.connect(
-            '/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
+    # def before_map(self, map):
+        # map.connect(
+        #     'hdx_home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
+        # map.connect(
+        #     '/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
+        # map.connect(
+        #     '/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
+        # map.connect(
+        #     '/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
         # map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
         # map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
 
-        map.connect(
-            '/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
-        map.connect(
-            '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+        # map.connect(
+        #     '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
 
-        map.connect(
-            '/about/license/legacy_hrinfo', controller='ckanext.hdx_theme.splash_page:SplashPageController',
-            action='about_hrinfo')
+        # map.connect(
+        #     '/about/license/legacy_hrinfo', controller='ckanext.hdx_theme.splash_page:SplashPageController',
+        #     action='about_hrinfo')
 
         # map.connect(
         #     '/widget/topline', controller='ckanext.hdx_theme.controllers.widget_topline:WidgetToplineController',
@@ -177,7 +177,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         #             controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
         #             action='show_pages')
 
-        return map
+        # return map
 
     def get_helpers(self):
         from ckanext.hdx_theme.helpers import helpers as hdx_helpers
@@ -331,7 +331,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server,
                 hdx_local_image_server, hdx_carousel, hdx_custom_pages,
-                hdx_quick_links, hdx_package_links, hdx_archived_quick_links]
+                hdx_quick_links, hdx_package_links, hdx_archived_quick_links, hdx_splash, hdx_count]
 
     # IClick
     def get_commands(self):
