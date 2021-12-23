@@ -53,9 +53,9 @@
                 <div class="col-xs-4">
                   <div class="row">
                     <div class="col-xs-12 item-count">
-                      <a href="{% url_for 'simple_search' %}"
+                      <a href="{% url_for 'hdx_dataset.search' %}"
                          data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                         data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
+                         data-url="{% url_for 'hdx_count.dataset' %}">
                         0
                       </a>
                     </div>
@@ -69,9 +69,9 @@
                 <div class="col-xs-4">
                   <div class="row">
                     <div class="col-xs-12 item-count">
-                      <a href="{% url_for 'group_index' %}"
+                      <a href="{% url_for 'hdx_group.index' %}"
                          data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                         data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
+                         data-url="{% url_for 'hdx_count.country' %}">
                         0
                       </a>
                     </div>
@@ -85,9 +85,9 @@
                 <div class="col-xs-4">
                   <div class="row">
                     <div class="col-xs-12 item-count">
-                      <a href="#"
+                      <a href="javascript:void(0);"
                          data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                         data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
+                         data-url="{% url_for 'hdx_count.source' %}">
                         0
                       </a>
                     </div>
