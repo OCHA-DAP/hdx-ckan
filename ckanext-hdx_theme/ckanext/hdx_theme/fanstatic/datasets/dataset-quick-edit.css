@@ -1,0 +1,13 @@
+.quick-edit {
+  position: relative;
+}
+.quick-edit:hover .quick-link {
+  display: block;
+}
+.quick-edit .quick-link {
+  display: none;
+  position: absolute;
+  left: -15px;
+  top: 50%;
+  transform: translate(0, -50%);
+}
