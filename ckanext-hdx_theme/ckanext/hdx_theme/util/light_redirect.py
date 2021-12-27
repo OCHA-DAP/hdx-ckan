@@ -1,5 +1,6 @@
 import logging
-import urlparse
+import six
+import six.moves.urllib.parse as urlparse
 
 from flask import make_response
 from decorator import decorator
@@ -7,10 +8,11 @@ from decorator import decorator
 import ua_parser.user_agent_parser as useragent
 
 import ckan.plugins.toolkit as tk
-from ckan.common import response
 
 redirect = tk.redirect_to
 request = tk.request
+if not six.PY3:
+    response = tk.response
 
 FORCE_REDIRECT_COOKIE = 'hdx_force_layout'
 FORCE_REDIRECT_URL_PARAM = 'force_layout'
@@ -42,7 +44,7 @@ def check_redirect_needed(original_action, *args, **kw):
         if is_flask and new_cookie_value:
             result = make_response(result)
             result.set_cookie(FORCE_REDIRECT_COOKIE, new_cookie_value)
-        if not is_flask and new_cookie_value:
+        if not six.PY3 and not is_flask and new_cookie_value:
             response.set_cookie(FORCE_REDIRECT_COOKIE, new_cookie_value)
         return result
 

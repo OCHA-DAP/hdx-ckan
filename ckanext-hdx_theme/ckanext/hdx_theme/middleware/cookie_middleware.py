@@ -15,8 +15,9 @@ class CookieMiddleware(object):
     def __call__(self, environ, start_response):
         flask_route = environ.get('HDXflask_route')
         pylons_route = environ.get('HDXpylons_route')
-        if (environ['ckan.app'] == 'flask_app' and flask_route in NOT_ALLOWED_FLASK_ROUTES) or \
-            (environ['ckan.app'] == 'pylons_app' and not pylons_route):
+        ckan_app = environ.get('ckan.app', 'flask_app')
+        if (ckan_app == 'flask_app' and flask_route in NOT_ALLOWED_FLASK_ROUTES) or \
+            (ckan_app == 'pylons_app' and not pylons_route):
 
             environ.get('beaker.session')._headers['cookie_out'] = None
         else:

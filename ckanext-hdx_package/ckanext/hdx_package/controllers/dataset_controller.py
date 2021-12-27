@@ -19,6 +19,7 @@ import ckan.model as model
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckan.controllers.home import CACHE_PARAMETERS
+from ckan.controllers.package import PackageController
 from ckan.lib.mailer import MailerException
 
 
@@ -27,7 +28,7 @@ import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers, resource_grouping
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
-from ckanext.hdx_theme.helpers import helpers as hdx_helpers
+from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import hdx_validate_email
@@ -55,30 +56,6 @@ DataError = ckan.lib.navl.dictization_functions.DataError
 SUCCESS = json.dumps({'success': True})
 
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
-
-from ckan.controllers.package import PackageController
-
-
-def find_approx_download(exact_downloads):
-    '''
-
-    :param exact_downloads: the total number of downloads
-    :type exact_downloads: int
-    :return: something like 1000+
-    :rtype: int
-    '''
-
-    if exact_downloads >= 10 and exact_downloads < 100:
-        divider = 10
-    # for 9999 we want 9900+
-    elif exact_downloads >= 100 and exact_downloads < 10000:
-        divider = 100
-    elif exact_downloads >= 10000:
-        divider = 1000
-    else:
-        return 0
-
-    return (exact_downloads / divider) * divider
 
 
 class DatasetController(PackageController):

@@ -3,14 +3,16 @@ import requests
 import time
 # import datetime
 # import dateutil.parser
-import pylons.config as config
 
 from dogpile.cache import make_region
 from dogpile.cache.region import RegionInvalidationStrategy, CacheRegion
 
 from redis import StrictRedis
 
+import ckan.plugins.toolkit as tk
+
 log = logging.getLogger(__name__)
+config = tk.config
 
 dogpile_config_filter = 'cache.redis.' if config.get('hdx.caching.use_redis') == 'true' else 'cache.local.'
 dogpile_standard_config = {

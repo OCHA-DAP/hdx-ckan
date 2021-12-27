@@ -12,7 +12,7 @@
           </div>
           <div class="header-nav-search table-valign pull-left">
             <div id="previous-searches" style="display: none;">
-                {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) }}
+                {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) if not h.HDX_CONST('PY3') else [] }}
             </div>
             <form class="header-search-form" method="get" action="/search?sort=metadata_modified+desc">
               <div id="input-search">
@@ -36,6 +36,7 @@
             <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Data') }}</a></li>
             <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Locations') }}</a></li>
             <li><a href="{{ orgLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Organisations') }}</a></li>
+            {% if not h.HDX_CONST('PY3') %}
             <li style="position: relative">
               <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
                 <span id="crises-label" >{{ _('Dataviz') }} <i class="humanitarianicons-Down"></i></span>
@@ -107,9 +108,10 @@
                 {# endif #}
               </ul>
             </li>
+            {% endif %}
             {% endblock %}
           </ul>
-
+            {% if not h.HDX_CONST('PY3') %}
             <span class="submit-data">
                   {% set add_data_obj = h.hdx_check_add_data() %}
                   {% if add_data_obj %}
@@ -124,6 +126,7 @@
                   </div>
                 </a>
             </span>
+            {% endif %}
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -132,6 +135,7 @@
                 <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Data</a></li>
                 <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Locations</a></li>
                 <li><a href="{{ orgLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Organisations</a></li>
+                {% if not h.HDX_CONST('PY3') %}
                 <li class="crisis"><a class="crisis-title"><span>Dataviz</span></a></li>
                 {% set ongoing_links = h.hdx_get_quick_links_list() %}
                 <li class="crisis"><a href="{{ h.url_for('hdx_dataviz_gallery.index') }}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="_self">{{ _("Dataviz Gallery") }}</a></li>
@@ -150,9 +154,9 @@
 
 {#                <li class="crisis"><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></li>#}
 {#                <li class="crisis"><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></li>#}
-
+                {% endif %}
                 <li class="sub-nav"><a href="{{ faqLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">FAQ</a></li>
-              <li class="sub-nav"><a class="action-red" href="{{ faqCovid19Link }}" data-module="hdx_click_stopper" data-module-link_type="main nav"><span class="full-text">Data Responsibility for </span>COVID-19</a></li>
+                <li class="sub-nav"><a class="action-red" href="{{ faqCovid19Link }}" data-module="hdx_click_stopper" data-module-link_type="main nav"><span class="full-text">Data Responsibility for </span>COVID-19</a></li>
                 {% if page_has_desktop_version %}
                   <li class="sub-nav"><a href="{{ h.hdx_switch_url_path() }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Switch to full desktop site</a></li>
                 {% endif %}
