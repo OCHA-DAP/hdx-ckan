@@ -305,9 +305,8 @@ h1.country-title {
 .data-completeness .progress-breakdown.progress-header {
   display: inline-block;
   width: 100px;
-  height: 15px;
   position: relative;
-  top: 3px;
+  top: 5px;
   margin-right: 10px;
 }
 .data-completeness .progress-breakdown.mini {
