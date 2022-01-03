@@ -950,8 +950,6 @@ dataviewer:
     - dataviewer.js
 
 group-form-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_group-form-scripts.js
   extra:
     preload:
       - hdx_theme/ckan
