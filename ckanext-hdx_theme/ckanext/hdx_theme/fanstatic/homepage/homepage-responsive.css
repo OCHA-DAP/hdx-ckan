@@ -58,35 +58,6 @@
     margin-left: 0;
     margin-top: 30px;
   }
-  body.home .homepage-main .tools-section .tool-categories {
-    display: none;
-  }
-  body.home .homepage-main .tools-section .tool-set {
-    align-items: center;
-    margin-top: 0;
-    padding-top: 40px;
-    margin-bottom: 40px;
-  }
-  body.home .homepage-main .tools-section .mobile-tool-categories {
-    display: block;
-  }
-  body.home .homepage-main .tools-section .tool-list {
-    margin-top: 85px;
-    flex-direction: column;
-  }
-  body.home .homepage-main .tools-section .tool-list .tool {
-    display: none;
-    max-width: 400px;
-  }
-  body.home .homepage-main .tools-section .tool-list .tool.mobile-show {
-    display: block;
-  }
-  body.home .homepage-main .tools-section .tool-list .tool ~ .tool {
-    margin-left: 0;
-  }
-  body.home .homepage-main .tools-section .tool-set-extra {
-    max-width: 300px;
-  }
   body.home .homepage-main .carousel {
     bottom: auto;
     margin-bottom: 30px;
@@ -144,9 +115,6 @@
   }
   body.home .homepage-main .homepage-section .hero-boxes .action-box {
     width: 380px;
-  }
-  body.home .homepage-main .tools-section .tool-list .tool .secondary-actions {
-    visibility: hidden;
   }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
     left: 15px;
@@ -206,9 +174,6 @@
   body.home .homepage-main .homepage-section .section-title {
     font-size: 28px;
     line-height: 1.3;
-  }
-  body.home .homepage-main .tools-section .tool-set {
-    padding: 15px;
   }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
     left: 37px;
