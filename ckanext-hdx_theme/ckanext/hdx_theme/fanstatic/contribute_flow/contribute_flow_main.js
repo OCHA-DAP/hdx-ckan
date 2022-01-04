@@ -1,8 +1,9 @@
-"use strict";
+(function () {
+  "use strict";
 
-ckan.module('contribute_flow_main', function($, _) {
-	return {
-		initialize : function() {
+  ckan.module('contribute_flow_main', function($, _) {
+    return {
+		    initialize : function() {
             var moduleLog = this.moduleLog;
             var sandbox = this.sandbox;
             var formBodyId = this.options.form_body_id;
@@ -330,7 +331,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     }.bind(callbackContext))
                     //DISABLED functionality for now
                     // .then(function () {
-                    //   let { contributeGlobal, data } = this;
+                    //   let { contributeGlobal, data } = this;+
                     //   return contributeGlobal.displayContributeDatasetReviewPopup(data)
                     // }.bind(callbackContext))
                     .then(function () {
@@ -427,7 +428,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     var i = 'first_resource';
                     $.each(newOptions, function(index, value) {
                         var resName = value.get('name') ? value.get('name') : 'Resource '+(index+1);
-                        if (value.get('dataset_preview_enabled') === 'True'){
+                        if (value.get('dataset_preview_enabled') === true){
                             selectOptions[selectOptions.length] = new Option(resName, index+'', true, true);
                             i = index+'';
                         }
@@ -583,5 +584,6 @@ ckan.module('contribute_flow_main', function($, _) {
             dataset_id: null
         }
 
-	};
-});
+    };
+  });
+}());
