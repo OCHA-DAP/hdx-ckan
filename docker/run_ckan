@@ -17,7 +17,7 @@
 [ -z "$HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS" ] && export HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS=
 [ -z "$HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER" ]    && export HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER=
 
-[ -z "$BEAKER_SECRET"] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
+[ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
 
 # preparing to run ckan...
 bash /srv/ckan/docker/ckan_helper.sh
