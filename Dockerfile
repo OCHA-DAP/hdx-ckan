@@ -61,7 +61,7 @@ RUN apt-get -qq -y update && \
         gevent \
         gunicorn \
         lxml && \
-    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
+    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/services.d/unit && \
     cp -a docker/run_ckan /etc/services.d/ckan/run && \
     cp -a docker/run_unit /etc/services.d/unit/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
