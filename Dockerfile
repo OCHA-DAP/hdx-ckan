@@ -83,7 +83,7 @@ RUN apt-get -qq -y update && \
     echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/debian/ buster unit" > /etc/apt/sources.list.d/unit.list && \
     echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/debian/ buster unit" >> /etc/apt/sources.list.d/unit.list && \
     apt-get update && \
-    apt-get install unit unit-python2.7 && \
+    apt-get install -y unit unit-python2.7 && \
     apt-get -qq -y remove \
         build-essential \
         gpg \
