@@ -87,7 +87,7 @@ class HDXUserAuthView:
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
                 res = h.redirect_to("user_dashboard", locale=None)
-                res.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age)
+                res.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age, secure=True)
                 return res
         else:
             err = _('Login failed. Bad username or password.')
