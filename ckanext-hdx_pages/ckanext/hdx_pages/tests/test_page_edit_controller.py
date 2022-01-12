@@ -71,10 +71,10 @@ class TestHDXControllerPage(object):
         post_params = self._get_page_post_param()
         post_params['hdx_page_id'] = page_dict.get('id')
 
-        url = url_for(u'hdx_custom_page.edit')
+        url = url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         try:
             res = app.post(url, data=post_params, extra_environ={"REMOTE_USER": USER})
-            assert '404 Not Found' in res.status
+            assert '404 Not Found'.lower() in res.status.lower()
             assert 'Sorry, the page you are looking for could not be found.' in res.body
             assert 'Please check the URL, try the search or go back to our homepage.' in res.body
         except AssertionError as ex:
