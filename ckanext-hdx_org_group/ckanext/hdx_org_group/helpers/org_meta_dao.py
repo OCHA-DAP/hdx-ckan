@@ -169,8 +169,8 @@ class OrgMetaDao(search_controller.HDXSearchController):
             css_dest_dir = '/organization/' + self.org_dict['name']
 
             self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'], self.org_dict.get('modified_at'), True)
-            self.custom_sq_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_sq'))
-            self.custom_rect_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_rect'))
+            self.custom_sq_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file', filename=self.customization.get('image_sq'))
+            self.custom_rect_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file', filename=self.customization.get('image_rect'))
 
     def __check_access(self, action_name, data_dict=None):
         if data_dict is None:

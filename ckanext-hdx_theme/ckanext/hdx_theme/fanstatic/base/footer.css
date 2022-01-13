@@ -75,9 +75,6 @@
     margin-top: 30px;
   }
 }
-.hdx-footer .other-services {
-  text-align: center;
-}
 .hdx-footer .other-services img {
   max-height: 40px;
   max-width: 100%;
@@ -193,16 +190,6 @@
   margin-left: 3px;
   height: 12px;
   width: 12px;
-}
-.hdx-footer .links-list .logo-tools-gray {
-  height: 24px;
-  margin: 10px 0;
-}
-@media (max-width: 1024px) {
-  .hdx-footer .links-list .logo-tools-gray {
-    height: auto;
-    width: 100%;
-  }
 }
 .hdx-footer .social-footer {
   position: relative;

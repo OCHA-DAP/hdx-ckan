@@ -27,9 +27,6 @@
                         <a href="https://centre.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
                       </li>
                       <li>
-                        <a href="https://tools.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">HDX Tools</a>
-                      </li>
-                      <li>
                         <a href="https://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Exchange Language (HXL)</a>
                       </li>
                     </ul>
@@ -114,7 +111,7 @@
               <ul class="separated-list">
                 {% block header_top_right_side_menu %}
                 <li>
-                  <a class="action-red" href="/faqs/covid" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="faq link">
+                  <a class="action-red" href="{{ h.url_for('hdx_faqs.read', category='covid') }}" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="faq link">
                     <span class="action-text">
                       <span class="full-text">Data Responsibility for </span>COVID-19
                     </span>
@@ -164,7 +161,7 @@
                               {% endif %}
                               {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
                               <li>
-                                <a href="{{ h.url_for('carousel_settings') }}" title="{{ _('Carousel') }}">
+                                <a href="{{ h.url_for('hdx_carousel.show') }}" title="{{ _('Carousel') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('Carousel') }}</span>
                                 </a>
@@ -180,15 +177,15 @@
                               {% endif %}
                               {% if user_is_sysadmin or h.check_access('admin_page_list') %}
                               <li>
-                                <a href="{{ h.url_for('pages_show') }}" title="{{ _('Custom/Event Pages') }}">
+                                <a href="{{ h.url_for('hdx_custom_pages.index') }}" title="{{ _('Custom/Event Pages') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('Custom/Event Pages') }}</span>
                                 </a>
                               </li>
                               {% endif %}
                               {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
-                                {{ h.build_nav_icon('quick_links_settings', _('Quick Links')) }}
-                                {{ h.build_nav_icon('package_links_settings', _('Package Links')) }}
+                                {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
+                                {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
                               {% endif %}
                               {% if user_is_sysadmin %}
                                 {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}

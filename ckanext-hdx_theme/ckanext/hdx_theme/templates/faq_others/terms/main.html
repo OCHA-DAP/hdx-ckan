@@ -3,15 +3,13 @@
 {% block subtitle %}{{ _("Terms of Service") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">
-    <a href="/faqs/terms">{{ _('TERMS OF SERVICE') }}</a>
-  </li>
+  <li class="active">{{ h.nav_link(_('TERMS OF SERVICE'), named_route='hdx_faqs.read', category='terms') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
     <div class="row top-banner top-banner-terms">
         <div class="col-xs-12">
-            <div class="top-banner-text-wrapper">
+            <div class="top-banner-text-wrapper" style="margin-top:140px">
                 <div class="top-banner-title">
                    {{ _('HDX Terms of Service') }}
                 </div>
@@ -45,7 +43,7 @@
     <div id="hdx-faq-sidebar-wrapper" class="mTop60">
         <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
             <p>
-              {% snippet 'faq/search.html' %}
+              {% snippet 'faq_others/faq/search.html' %}
             </p>
         </div>
     </div>

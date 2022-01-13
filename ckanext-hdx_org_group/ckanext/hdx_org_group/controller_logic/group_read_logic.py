@@ -28,11 +28,8 @@ class LightGroupReadLogic(object):
     def _fetch_group_info_and_datasets(self):
         country_dict = grp_h.get_country(self.id)
         country_code = country_dict.get('name', self.id)
-        search_logic = GroupSearchLogic(country_code, self.flask_route_name)
-        fq = 'groups:"{}"'.format(country_code)
-        search_logic._search(additional_fq=fq)
-        archived_url_helper = search_logic.add_archived_url_helper()
-        redirect_result = archived_url_helper.redirect_if_needed()
+        search_logic = GroupSearchLogic(country_code, self.flask_route_name).search().init_archived_url_helper()
+        redirect_result = search_logic.redirect_if_needed()
         if redirect_result:
             self.redirect_result = redirect_result
             return None

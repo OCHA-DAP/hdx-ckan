@@ -5,7 +5,7 @@
 {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
 {% set ebolaLink = "/ebola" %}
 {% set faqLink = "/faq" %}
-{% set faqCovid19Link = "/faqs/covid" %}
+{% set faqCovid19Link = h.url_for('hdx_faqs.read', category='covid') %}
 {% set events = h.hdx_events_list() %}
 
 {% block header_content %}

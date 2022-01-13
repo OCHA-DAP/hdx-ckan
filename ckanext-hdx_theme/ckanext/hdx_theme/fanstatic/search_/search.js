@@ -61,27 +61,29 @@ $('document').ready(function(){
 
         if (prevSearch != null && prevSearch.length > 0){
             $(prevSearch).each(function(idx, el){
-                html += '<li data-href="'+el.url+'" data-toggle="tooltip" title="'+ el.text +'"><div class="ahead-link"><i class="icon icon-previoussearches"></i>'+process_title(el.text, searchInfo.termList)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
+                const prevSearchQuery = hdxUtil.text.sanitize(el.text);
+                html += '<li data-href="'+el.url+'" data-toggle="tooltip" title="'+ prevSearchQuery +'"><div class="ahead-link"><i class="icon icon-previoussearches"></i>'+process_title(prevSearchQuery, searchInfo.termList)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
             });
         }
 
         if(search.length >0){
             var limit = search.length > 5 ? 5 : search.length;
             for(let i=0; i<limit; i++){
+                const featureTitle = hdxUtil.text.sanitize(feature_index[search[i].ref].title);
                 html += '<li data-search-term="'+searchInfo.q+'" data-search-type="'+feature_index[search[i]['ref']]['type']+
                     '" data-href="'+feature_index[search[i]['ref']]['url']+'" ' +
-                    'data-toggle="tooltip" title="'+ feature_index[search[i]['ref']]['title'] +'"><div class="ahead-link"><i class="empty"></i>'+
-                    process_title(feature_index[search[i]['ref']]['title'], searchInfo.termList)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
+                    'data-toggle="tooltip" title="'+ featureTitle +'"><div class="ahead-link"><i class="empty"></i>'+
+                    process_title(featureTitle, searchInfo.termList)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 
             }
         }
-
+        const searchQuery = hdxUtil.text.sanitize(searchInfo.q);
         html +=
-            '<li data-href="/search?q='+ searchInfo.q +'&ext_search_source=main-nav"><div class="ahead-link">' +
-            '<i class="icon icon-search"></i>Search <b>'+ searchInfo.q +'</b> in <b>datasets</b>' +
+            '<li data-href="/search?q='+ searchQuery +'&ext_search_source=main-nav"><div class="ahead-link">' +
+            '<i class="icon icon-search"></i>Search <b>'+ searchQuery +'</b> in <b>datasets</b>' +
             '</div></li>' +
-            '<li data-href="/showcase?q='+ searchInfo.q +'&ext_search_source=main-nav"><div class="ahead-link">' +
-            '<i class="icon icon-dataviz"></i>Search <b>'+ searchInfo.q +'</b> in <b>dataviz</b>' +
+            '<li data-href="/showcase?q='+ searchQuery +'&ext_search_source=main-nav"><div class="ahead-link">' +
+            '<i class="icon icon-dataviz"></i>Search <b>'+ searchQuery +'</b> in <b>dataviz</b>' +
             '</div></li>';
         html += '</ul>';
         $results.html(html);

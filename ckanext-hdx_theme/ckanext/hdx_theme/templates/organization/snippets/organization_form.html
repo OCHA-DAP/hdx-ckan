@@ -56,7 +56,7 @@
   <div class="org-control-container">
       {% set hdx_org_type = h.hdx_get_extras_element(data, value_key='hdx_org_type') %}
 
-      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
+      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list or data.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
       <div class="org-control-info info-field">
           <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
       </div>
@@ -134,9 +134,9 @@
 {% if is_url %}
   {% set image_preview = customizations['image_sq'] %}
 {% elif is_upload %}
-  {% set image_preview = h.url_for('image_serve', label= customizations['image_sq']) %}
+  {% set image_preview = h.url_for('hdx_local_image_server.org_file', filename=customizations['image_sq']) %}
 {% else %}
-  {% set image_preview = 'https://placehold.it/75x75' %}
+  {% set image_preview = 'https://plchldr.co/i/75x75?&bg=cccccc&fc=ffffff' %}
 {% endif %}
 
 <div class="image-upload-wrapper-sq">
@@ -156,9 +156,9 @@
 {% if is_url %}
   {% set image_preview = customizations['image_rect'] %}
 {% elif is_upload %}
-  {% set image_preview = h.url_for('image_serve', label= customizations['image_rect']) %}
+  {% set image_preview = h.url_for('hdx_local_image_server.org_file', filename=customizations['image_rect']) %}
 {% else %}
-  {% set image_preview = 'https://placehold.it/300x125' %}
+  {% set image_preview = 'https://plchldr.co/i/300x125?&bg=cccccc&fc=ffffff' %}
 {% endif %}
 <div class="image-upload-wrapper-rect">
 <div class="image-upload-wrapper">
@@ -221,24 +221,24 @@
   <label class="control-label" for="visualization-select">Visualization Type</label>
           <select id="visualization-select" name="visualization-select" style="width:95%;" class="visualization_config">
               <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
-              <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option>
-              <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option>
-              <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
+              {# <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option> #}
+              {# <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option> #}
+              {# <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>  #}
               <option value="embedded" {% if visualization['visualization-select'] == 'embedded' %}selected{% endif %}>Embedded</option>
               <option value="embedded-preview" {% if visualization['visualization-select'] == 'embedded-preview' %}selected{% endif %}>Embedded with Preview</option>
           </select>
 </div>
 </div>
 
-<div class="visualization-div" id="3W-dashboard" {% if visualization['visualization-select'] != '3W-dashboard' %}style="display:none;"{% endif %}>
+{#  <div class="visualization-div" id="3W-dashboard" {% if visualization['visualization-select'] != '3W-dashboard' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/3w.html', visualization=visualization %}
-</div>
-<div class="visualization-div" id="ROEA" {% if visualization['visualization-select'] != 'ROEA' %}style="display:none;"{% endif %}>
+</div>  #}
+{# <div class="visualization-div" id="ROEA" {% if visualization['visualization-select'] != 'ROEA' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/roea.html',visualization=visualization %}
-</div>
-<div class="visualization-div" id="WFP" {% if visualization['visualization-select'] != 'WFP' %}style="display:none;"{% endif %}>
+</div> #}
+{#  <div class="visualization-div" id="WFP" {% if visualization['visualization-select'] != 'WFP' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/wfp.html',visualization=visualization %}
-</div>
+</div>  #}
 <div class="visualization-div" id="embedded" {% if visualization['visualization-select'] != 'embedded' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/embedded.html',visualization=visualization %}
 </div>

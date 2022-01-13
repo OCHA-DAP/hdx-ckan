@@ -596,7 +596,7 @@ def count_public_datasets_for_group(datasets_list):
 
 
 def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
-    for key, value in dictionary.iteritems():
+    for key, value in dictionary.items():
         if key not in skipped_keys:
             value = value.strip() if value else value
             if not value:
@@ -750,6 +750,14 @@ def hdx_organization_list_for_user(user_id):
 def hdx_dataset_is_hxl(tag_list):
     for tag in tag_list:
         if tag.get('name') == 'hxl' and tag.get('display_name') == 'hxl':
+            return True
+    return False
+
+
+def hdx_dataset_has_sadd(tag_list):
+    for tag in tag_list:
+        if tag.get('name') == 'sex and age disaggregated data - sadd' and tag.get(
+            'display_name') == 'sex and age disaggregated data - sadd':
             return True
     return False
 

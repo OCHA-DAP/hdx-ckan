@@ -297,13 +297,16 @@ h1.country-title {
   height: 20px;
   border: 1px solid #cccccc;
   background: #eeeeee;
+  vertical-align: center;
+  text-align: right;
+  font-size: 14px;
+  line-height: 18px;
 }
 .data-completeness .progress-breakdown.progress-header {
   display: inline-block;
   width: 100px;
-  height: 15px;
   position: relative;
-  top: 3px;
+  top: 5px;
   margin-right: 10px;
 }
 .data-completeness .progress-breakdown.mini {
@@ -316,9 +319,14 @@ h1.country-title {
 }
 .data-completeness .progress-breakdown .progress-blue {
   background: #007CE0;
+  color: #fff;
 }
 .data-completeness .progress-breakdown .progress-striped {
-  background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 2px, #fff 2px, #fff 4px);
+  background-color: #c0d7eb;
+  color: #007CE0;
+}
+.data-completeness .progress-breakdown .progress-empty {
+  color: #f2645a;
 }
 .data-completeness .data-item {
   margin: 15px 0;
@@ -415,7 +423,7 @@ h1.country-title {
   background-color: #007CE0;
 }
 .data-completeness .data-item .data-item-details .sub-category .dataset .data-completeness.striped {
-  background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 2px, #fff 2px, #fff 4px);
+  background-color: #c0d7eb;
 }
 .data-completeness .data-item .data-item-details .sub-category .dataset .dataset-link {
   width: 100%;

@@ -1,20 +1,19 @@
 import logging
 
-import ckanext.hdx_org_group.actions.authorize as authorize
-import ckanext.hdx_org_group.actions.get as get_actions
-import ckanext.hdx_org_group.actions.create as create_actions
-import ckanext.hdx_org_group.actions.update as update_actions
-import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_org_group.helpers.static_lists as static_lists
-import ckanext.hdx_org_group.model as org_group_model
-import ckanext.hdx_package.helpers.screenshot as screenshot
-import ckanext.hdx_theme.helpers.custom_validator as custom_validator
-import ckanext.hdx_org_group.helpers.custom_validator as org_custom_validator
-from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
-
 import ckan.lib.plugins as lib_plugins
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+
+import ckanext.hdx_org_group.actions.authorize as authorize
+import ckanext.hdx_org_group.actions.create as create_actions
+import ckanext.hdx_org_group.actions.get as get_actions
+import ckanext.hdx_org_group.actions.update as update_actions
+import ckanext.hdx_org_group.helpers.custom_validator as org_custom_validator
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
+import ckanext.hdx_org_group.model as org_group_model
+import ckanext.hdx_org_group.views.organization as org
+import ckanext.hdx_theme.helpers.custom_validator as custom_validator
+from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
 
 log = logging.getLogger(__name__)
 
@@ -31,15 +30,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IBlueprint)
-
-    num_times_new_template_called = 0
-    num_times_read_template_called = 0
-    num_times_edit_template_called = 0
-    num_times_search_template_called = 0
-    num_times_history_template_called = 0
-    num_times_package_form_called = 0
-    num_times_check_data_dict_called = 0
-    num_times_setup_template_variables_called = 0
 
     # IConfigurer
     def update_config(self, config):
@@ -94,11 +84,17 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     #             'hdx_send_request_membership': helpers.auth.hdx_send_request_membership
     #             }
 
+    # IGroupForm
     def is_fallback(self):
         return False
 
+    # IGroupForm
     def group_types(self):
         return ['organization']
+
+    # IGroupForm
+    def setup_template_variables(self, context, data_dict):
+        org.new_org_template_variables(context, data_dict)
 
     # IValidators
     def get_validators(self):
@@ -106,6 +102,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return {
             'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
             'hdx_org_keep_prev_value_if_empty_unless_sysadmin': org_custom_validator.hdx_org_keep_prev_value_if_empty_unless_sysadmin,
+            'active_if_missing': org_custom_validator.active_if_missing
 
         }
 
@@ -131,6 +128,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         })
         return schema
 
+    # IGroupForm
     def form_to_db_schema(self):
         schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
         schema = self._modify_group_schema(schema)
@@ -151,6 +149,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     #     schema.update({'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
     #     return schema
 
+    # IGroupForm
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
@@ -186,9 +185,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return None
 
     def after_map(self, map):
-        map.connect('organization_read', '/organization/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='read')
+        # map.connect('organization_read', '/organization/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='read')
         map.connect('organization_members', '/organization/members/{id}',
                     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
                     action='members')
@@ -214,9 +213,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('organizations_index', '/organization',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #             action='index')
-        map.connect('organization_new', '/organization/new',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='new')
+        # map.connect('organization_new', '/organization/new',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='new')
         map.connect('organization_edit', '/organization/edit/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='edit', ckan_icon='edit')
@@ -225,9 +224,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
                     controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
                     action='request_editor_for_org')
-        map.connect('/organization/request_new',
-                    controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
-                    action='request_new_organization')
+        # map.connect('/organization/request_new',
+        #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+        #             action='request_new_organization')
         map.connect('organization_members',
                     '/organization/members/{id}',
                     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
@@ -259,9 +258,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         # since the pattern of organization_read is so general it needs to be the last
         # otherwise it will override other /organization routes
-        map.connect('organization_read', '/organization/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='read')
+        # map.connect('organization_read', '/organization/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='read')
 
         map.connect('hdx_organization_stats', '/organization/stats/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
@@ -283,7 +282,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('group_eaa_worldmap', '/eaa-worldmap',
         #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
 
-        map.connect('group_new', '/group/new', controller='group', action='new')
+        # map.connect('group_new', '/group/new', controller='group', action='new')
 
         # map.connect('country_read', '/group/{id}',
         #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
@@ -318,7 +317,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     # IBlueprint
     def get_blueprint(self):
-        import ckanext.hdx_org_group.views.light_organization as org
         return org.hdx_org
 
 
@@ -347,60 +345,58 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         return True
 
     def _modify_group_schema(self, schema):
-        schema.update({'language_code': [
-            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')], })
-        schema.update({'relief_web_url': [
-            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
-        schema.update({'hr_info_url': [
-            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
-        schema.update({'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'key_figures': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-                       'data_completeness': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-                       })
+        schema.update({
+            'language_code': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'relief_web_url': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'hr_info_url': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            # 'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            # 'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            # 'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'key_figures': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'data_completeness': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+        })
         return schema
 
+    # IGroupForm
     def form_to_db_schema(self):
         schema = super(HDXGroupPlugin, self).form_to_db_schema()
         schema = self._modify_group_schema(schema)
         return schema
 
+    # IGroupForm
     def db_to_form_schema(self):
 
         schema = super(HDXGroupPlugin, self).form_to_db_schema()
-        schema.update({'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({
+            'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'activity_level': [
                 tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
-        })
-        schema.update({
-            'featured_section': [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
-        })
-        schema.update({
+                tk.get_validator('ignore_missing')
+            ],
             'key_figures': [
                 tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
-        })
-        schema.update({
+                tk.get_validator('active_if_missing')
+            ],
             'data_completeness': [
                 tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
+                tk.get_validator('ignore_missing')
+            ],
+            'package_count': [tk.get_validator('ignore_missing')],
+            'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+
         })
-        schema.update({
-            'package_count': [tk.get_validator('ignore_missing')]
-        })
-        schema.update({'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        # schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        # schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        # schema.update({
+        #     'featured_section': [
+        #         tk.get_converter('convert_from_extras'),
+        #         tk.get_validator('ignore_missing')]
+        # })
         return schema
 
     def create(self, country):
@@ -411,17 +407,17 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
 
         # Screenshot generation for latest COD when country is edited
-        cod_dict = country_helper.get_latest_cod_dataset(country.name)
-        shape_infos = []
-        if cod_dict:
-            shape_infos = [r.get('shape_info') for r in cod_dict.get('resources', []) if r.get('shape_info')]
-
-        if shape_infos and not screenshot.screenshot_exists(cod_dict):
-            context = {'ignore_auth': True}
-            try:
-                tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
-            except Exception as ex:
-                log.error(ex)
+        # cod_dict = country_helper.get_latest_cod_dataset(country.name)
+        # shape_infos = []
+        # if cod_dict:
+        #     shape_infos = [r.get('shape_info') for r in cod_dict.get('resources', []) if r.get('shape_info')]
+        #
+        # if shape_infos and not screenshot.screenshot_exists(cod_dict):
+        #     context = {'ignore_auth': True}
+        #     try:
+        #         tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
+        #     except Exception as ex:
+        #         log.error(ex)
 
     # IBlueprint
     def get_blueprint(self):

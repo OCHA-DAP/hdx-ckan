@@ -115,6 +115,14 @@ $(
                         '1': 'on'
                     }
                 },
+                'ext_sadd': {
+                    'name': 'sadd filter',
+                    'isList': false,
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
+                },
                 'ext_showcases': {
                     'name': 'showcases filter',
                     'isList': false,

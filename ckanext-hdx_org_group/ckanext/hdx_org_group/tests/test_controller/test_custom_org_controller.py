@@ -3,23 +3,22 @@ Created on Jun 26, 2015
 
 @author: alexandru-m-g
 '''
-
+import pytest
 import logging
-from time import sleep
+import json
 import mock
-import os
 import ckan.lib.helpers as h
 import ckan.model as model
-import ckan.lib.uploader as uploader
-from pylons import config
+import ckan.plugins.toolkit as tk
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_org_group.controllers.custom_org_controller as controller
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.tests as org_group_base
-
+from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
+from ckanext.hdx_org_group.views import organization
 
 log = logging.getLogger(__name__)
+
+_get_action = tk.get_action
 
 json_config_wfp = '''
             {
@@ -79,65 +78,80 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     def _create_test_data(cls):
         super(TestCustomOrgController, cls)._create_test_data(create_datasets=True, create_members=True)
 
-    def test_assemble_viz_config(self):
-        custom_org_controller = controller.CustomOrgController()
+    # def test_assemble_viz_config(self):
+    #     # custom_org_controller = controller.CustomOrgController()
+    #
+    #     # Testing the WFP viz part
+    #     org_read_logic = OrgReadLogic('test_org', 'some_user', None)
+    #     config = org_read_logic._assemble_viz_config(json_config_wfp, org_id='test_org')
+    #
+    #     assert config == {
+    #         'title': 'Test Visualization Title',
+    #         'data_link_url': 'https://data.humdata.org/dataset/wfp-food-prices',
+    #         'type': 'WFP',
+    #         'embedded': 'true',
+    #         # 'resource_id': 'test-resource-id',
+    #         'datastore_id': 'test-resource-id'
+    #     }
+    #
+    #     # Testing the 3W viz part
+    #     config = org_read_logic._assemble_viz_config(json_config_3w, org_id='test_org')
+    #
+    #     assert config, 'Config dict should not be empty'
+    #     assert config == {
+    #         'type': '3W-dashboard',
+    #         'title': "Who's doing what and where ?",
+    #         'geotype': 'filestore',
+    #         'geo': '/dataset/json-repository/resource/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5/download',
+    #         'data_link_url': 'https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium',
+    #         'data': '/api/action/datastore_search?resource_id=1d5b6821-fe99-4a5d-a0cf-d6987868027b&limit=10000000',
+    #         'datatype': 'datastore',
+    #         'joinAttribute': 'DIS_CODE',
+    #         'whereFieldName': 'DIST_NO',
+    #         'whoFieldName': 'Organisation',
+    #         'whatFieldName': 'Sector',
+    #         'startFieldName': '2000',
+    #         'endFieldName': '2015',
+    #         'formatFieldName': 'YYYY/MM/DD',
+    #         'nameAttribute': 'DIST_NAME',
+    #         'colors': ["red", "green", "blue"]
+    #     }
 
-        # Testing the WFP viz part
-        config = custom_org_controller.assemble_viz_config(json_config_wfp)
-
-        assert config == {
-            'title': 'Test Visualization Title',
-            'data_link_url': 'https://data.humdata.org/dataset/wfp-food-prices',
-            'type': 'WFP',
-            'embedded': 'true',
-            # 'resource_id': 'test-resource-id',
-            'datastore_id': 'test-resource-id'
-        }
-
-        # Testing the 3W viz part
-        config = custom_org_controller.assemble_viz_config(json_config_3w)
-
-        assert config, 'Config dict should not be empty'
-        assert config == {
-            'type': '3W-dashboard',
-            'title': "Who's doing what and where ?",
-            'geotype': 'filestore',
-            'geo': '/dataset/json-repository/resource/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5/download',
-            'data_link_url': 'https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium',
-            'data': '/api/action/datastore_search?resource_id=1d5b6821-fe99-4a5d-a0cf-d6987868027b&limit=10000000',
-            'datatype': 'datastore',
-            'joinAttribute': 'DIS_CODE',
-            'whereFieldName': 'DIST_NO',
-            'whoFieldName': 'Organisation',
-            'whatFieldName': 'Sector',
-            'startFieldName': '2000',
-            'endFieldName': '2015',
-            'formatFieldName': 'YYYY/MM/DD',
-            'nameAttribute': 'DIST_NAME',
-            'colors': ["red", "green", "blue"]
-        }
-
-    @mock.patch('ckanext.hdx_crisis.dao.data_access.DataAccess')
-    @mock.patch('ckanext.hdx_org_group.controllers.custom_org_controller.request')
-    @mock.patch('ckanext.hdx_org_group.controllers.custom_org_controller.c')
-    @mock.patch('ckan.lib.helpers.c')
-    def test_generate_template_data(self, helper_c_mock, controller_c_mock, req_mock, data_access_cls):
+    @pytest.mark.usefixtures('with_request_context')
+    @mock.patch('ckanext.hdx_theme.helpers.data_access.DataAccess')
+    @mock.patch('ckanext.hdx_search.controller_logic.search_logic.request')
+    @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
+    @mock.patch('ckanext.hdx_theme.helpers.less.generate_custom_css_path')
+    def test_generate_template_data(self, custom_css_path_mock, org_helper_c_mock, req_mock, data_access_cls):
         def mock_get_top_line_items():
             return top_line_items
 
-        data_access_cls.return_value.get_top_line_items.side_effect = mock_get_top_line_items
-        req_mock.params = {}
-        controller_c_mock.user = 'testsysadmin'
-        custom_org_controller = controller.CustomOrgController()
-        org_info = {
-            'display_name': 'HDX Test Org',
-            'name': 'hdx-test-org',
-            'id': 'hdx-test-org',
+        org_id = 'hdx-test-org'
+        sysadmin_user = 'testsysadmin'
+        context = {'model': model, 'session': model.Session, 'user': sysadmin_user}
+        org_dict = _get_action('organization_show')(context, {'id': org_id})
+        org_dict.update({
             'visualization_config': json_config_wfp,
-            'topline_resource': 'test-topline-resource'
-        }
+            'custom_org': '1',
+            'customization': json.dumps({
+                'topline_resource': 'test-topline-resource',
+            }),
+        })
+        org_dict = _get_action('organization_update')(context, org_dict)
 
-        template_data = custom_org_controller.generate_template_data(org_info)
+        data_access_cls.return_value.get_top_line_items.side_effect = mock_get_top_line_items
+        req_mock.args = {}
+        tk.g.user = sysadmin_user
+        tk.g.userobj = None
+        org_helper_c_mock.user = sysadmin_user
+
+        org_read_logic = OrgReadLogic(org_id, sysadmin_user, None)
+        org_read_logic.read()
+
+
+        template_data = organization._generate_template_data_for_custom_org(org_read_logic)
+
+        # template_data = custom_org_controller.generate_template_data(org_info)
 
         assert 'data' in template_data and 'top_line_items' in template_data['data']
 
@@ -147,8 +161,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert top_lines[0]['latest_date'] == 'Jun 01, 2015'
         assert top_lines[0]['formatted_value'] == '34.6'
 
-        assert 'member_count' in template_data['data']
-        assert template_data['data']['member_count'] == 4
+        assert template_data['data'].get('org_meta', {}).get('members_num') == 4
 
     def test_edit_custom_orgs(self):
         url = h.url_for(

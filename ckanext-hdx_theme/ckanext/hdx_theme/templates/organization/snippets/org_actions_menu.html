@@ -6,12 +6,12 @@
 {% set base_type = 'group' %}
 {% set base_title = 'organisation' %}
 
-{% set membership = c.org_meta.group_message_info %}
+{% set membership = organization.group_message_info if 'group_message_info' in organization else c.org_meta.group_message_info %}
 {% set group_topics = membership.data.group_topics %}
 {% set hide_contact_contributor = true %}
 {% set org_id = organization.id %}
 {% set follow_id = org_id %}
-{% set request_membership_flag = c.group_dict.request_membership or "true" %}
+{% set request_membership_flag = organization.request_membership or "true" %}
 
 {% block user_actions %}
     {% if can_create_dataset %}
@@ -23,7 +23,7 @@
     {% endif %}
     {% if can_edit %}
         <li>
-            {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='' %}
+            {% link_for _('Edit'), controller='organization', action='edit', id=organization.name, class_='' %}
         </li>
     {% endif %}
     {% if request_membership and request_membership_flag == 'true' %}
@@ -34,7 +34,7 @@
             {% snippet 'organization/snippets/req_membership_new.html',
                 modal_div_id='req-membership-div', modal_div_class='',
                 modal_submit_id='req-membership-popup-submit', form_action=h.url_for('ytp_request.new'),
-                org_id=c.org_meta.org_dict.id %}
+                org_id=organization.id %}
         </li>
     {% endif %}
 {% endblock %}}

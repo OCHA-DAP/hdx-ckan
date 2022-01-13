@@ -41,6 +41,8 @@ page-common-styles:
     - vendor/bootstrap/css/bootstrap.css
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
+    - widget/contribute/details.css
+
 
 page-scripts:
   <<: *common-js
@@ -62,12 +64,11 @@ page-styles:
     preload:
       - vendor/select2-css
       - hdx_theme/banner-styles
-      - hdx_theme/search-styles
   contents:
     - page-common-styles
     - base/base.css
     - base/header.css
-    - widget/contribute/details.css
+    - search-styles
 
 page-light-scripts:
   output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
@@ -77,6 +78,7 @@ page-light-scripts:
       - hdx_theme/ckan
   contents:
     - base/header-init.js
+    - widget/contribute/contribute.js
 
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
@@ -85,10 +87,10 @@ page-light-styles:
     preload:
       - vendor/select2-css
       - hdx_theme/banner-styles
-      - hdx_theme/search-styles
   contents:
     - page-common-styles
     - light/page-light.css
+    - search-styles
 
 bootstrap-styles:
   output: ckanext-hdx_theme/%(version)s_bootstrap-styles.css
@@ -162,6 +164,9 @@ custom-org-search-facets-styles:
 
 jquery-extra:
   output: ckanext-hdx_theme/%(version)s_jquery-extra.js
+  extra:
+    preload:
+      - hdx_theme/ckan
   contents:
     - vendor/jquery.expander/jquery.expander.js
     - vendor/jquery.highlight/jquery.highlight.js
@@ -232,6 +237,7 @@ onboarding-scripts:
   contents:
     - widget/onboarding/onboarding.js
     - widget/onboarding/signup.js
+    - popup-scripts
 
 onboarding-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-styles.css
@@ -261,18 +267,20 @@ onboarding-bulk-user-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
+
+onboarding-bulk-user-complete-onboarding-scripts:
+  extra:
+    preload:
       - hdx_theme/onboarding-registered-scripts
       - hdx_theme/onboarding-follow-scripts
       - hdx_theme/onboarding-invite-scripts
-      - hdx_theme/onboarding-done-scripts
       - hdx_theme/onboarding-select-org-scripts
-      - hdx_theme/onboarding-survey-scripts
 
 onboarding-bulk-anon-styles:
   extra:
     preload:
       - hdx_theme/onboarding-styles
-      - hdx_theme/onboarding-password-styles
+      - hdx_theme/onboarding-verify-styles
       - hdx_theme/onboarding-survey-styles
 
 onboarding-bulk-anon-scripts:
@@ -280,7 +288,11 @@ onboarding-bulk-anon-scripts:
     preload:
       - hdx_theme/onboarding-scripts
       - hdx_theme/onboarding-password-scripts
-      - hdx_theme/onboarding-survey-scripts
+
+onboarding-verify-styles:
+  output: ckanext-hdx_theme/%(version)s_onboarding-verify-styles.css
+  contents:
+    - widget/onboarding/verify.css
 
 onboarding-password-scripts:
   <<: *common-js
@@ -290,15 +302,24 @@ onboarding-password-scripts:
       - hdx_theme/onboarding-password-styles
   contents:
     - widget/onboarding/forgot-password.js
+    - widget/onboarding/recover.js
+
 
 onboarding-password-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-password-styles.css
+  extra:
+    preload:
+      - hdx_theme/onboarding-verify-styles
   contents:
-    - widget/onboarding/verify.css
     - widget/onboarding/forgot-password.css
+    - widget/onboarding/recover.css
 
 onboarding-perform-reset-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-perform-reset-styles.css
+  extra:
+    preload:
+      - hdx_theme/popup-styles
+      - hdx_theme/onboarding-password-styles
   contents:
     - widget/onboarding/perform-reset.css
 
@@ -341,25 +362,12 @@ onboarding-invite-styles:
   contents:
     - widget/onboarding/invite.css
 
-onboarding-recover-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_onboarding-recover-scripts.js
-  extra:
-    preload:
-      - hdx_theme/onboarding-recover-styles
-  contents:
-    - widget/onboarding/recover.js
-
-onboarding-recover-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-recover-styles.css
-  contents:
-    - widget/onboarding/recover.css
-
 onboarding-register-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-register-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/onboarding-register-styles
   contents:
     - widget/onboarding/register.js
@@ -416,72 +424,72 @@ charting-styles:
     - vendor/c3/c3.css
     - vendor/leaflet-0.7.3/leaflet.css
 
-custom-viz-3w-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-scripts.js
-  extra:
-    preload:
-      - hdx_theme/charting-scripts
-      - hdx_theme/custom-viz-3w-styles
-  contents:
-    - vendor/dc/dc.js
-    - vendor/dc/dc.leaflet.js
-    - widget/loading/loading.js
-    - widget/vis-3w/site.js
-    - vendor/crossfilter/crossfilter.js
-    - vendor/rangeslider.js-2.0.4/rangeslider.js
-    - vendor/moment.js/moment.js
+#custom-viz-3w-scripts:
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-scripts.js
+#  extra:
+#    preload:
+#      - hdx_theme/charting-scripts
+#      - hdx_theme/custom-viz-3w-styles
+#  contents:
+#    - vendor/dc/dc.js
+#    - vendor/dc/dc.leaflet.js
+#    - widget/loading/loading.js
+#    - widget/vis-3w/site.js
+#    - vendor/crossfilter/crossfilter.js
+#    - vendor/rangeslider.js-2.0.4/rangeslider.js
+#    - vendor/moment.js/moment.js
+#
+#custom-viz-3w-styles:
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-styles.css
+#  contents:
+#    - vendor/dc/dc.css
+#    - widget/loading/loading.css
+#    - widget/vis-3w/site.css
+#    - vendor/rangeslider.js-2.0.4/rangeslider.css
 
-custom-viz-3w-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-viz-3w-styles.css
-  contents:
-    - vendor/dc/dc.css
-    - widget/loading/loading.css
-    - widget/vis-3w/site.css
-    - vendor/rangeslider.js-2.0.4/rangeslider.css
+#custom-viz-roea-scripts:
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-scripts.js
+#  extra:
+#    preload:
+#      - hdx_theme/charting-scripts
+#      - hdx_theme/custom-viz-roea-styles
+#  contents:
+#    - vendor/d3/d3.js
+#    - widget/loading/loading.js
+#    - widget/vis-roea/dc.js
+#    - widget/vis-roea/dc.leaflet.js
+#    - vendor/crossfilter/crossfilter.js
+#    - widget/vis-roea/site.js
 
-custom-viz-roea-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-scripts.js
-  extra:
-    preload:
-      - hdx_theme/charting-scripts
-      - hdx_theme/custom-viz-roea-styles
-  contents:
-    - vendor/d3/d3.js
-    - widget/loading/loading.js
-    - widget/vis-roea/dc.js
-    - widget/vis-roea/dc.leaflet.js
-    - vendor/crossfilter/crossfilter.js
-    - widget/vis-roea/site.js
+#custom-viz-roea-styles:
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-styles.css
+#  contents:
+#    - vendor/dc/dc.css
+#    - widget/loading/loading.css
+#    - widget/vis-roea/site.css
 
-custom-viz-roea-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-viz-roea-styles.css
-  contents:
-    - vendor/dc/dc.css
-    - widget/loading/loading.css
-    - widget/vis-roea/site.css
+#custom-viz-wfp-scripts:
+#  <<: *common-js
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-scripts.js
+#  extra:
+#    preload:
+#      - hdx_theme/charting-scripts
+#      - hdx_theme/custom-viz-wfp-styles
+#  contents:
+#    - vendor/d3/d3.js
+#    - vendor/crossfilter/crossfilter.js
+#    - vendor/topojson/topojson.js
+#    - widget/loading/loading.js
+#    - widget/vis-wfp/un_world_topo.js
+#    - widget/vis-wfp/foodprices.js
 
-custom-viz-wfp-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-scripts.js
-  extra:
-    preload:
-      - hdx_theme/charting-scripts
-      - hdx_theme/custom-viz-wfp-styles
-  contents:
-    - vendor/d3/d3.js
-    - vendor/crossfilter/crossfilter.js
-    - vendor/topojson/topojson.js
-    - widget/loading/loading.js
-    - widget/vis-wfp/un_world_topo.js
-    - widget/vis-wfp/foodprices.js
-
-custom-viz-wfp-styles:
-  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-styles.css
-  contents:
-    - widget/loading/loading.css
-    - widget/vis-wfp/site.css
+#custom-viz-wfp-styles:
+#  output: ckanext-hdx_theme/%(version)s_custom-viz-wfp-styles.css
+#  contents:
+#    - widget/loading/loading.css
+#    - widget/vis-wfp/site.css
 
 dataset-scripts:
   <<: *common-js
@@ -519,6 +527,7 @@ dataset-search-scripts:
   output: ckanext-hdx_theme/%(version)s_dataset-search-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/dataset-search-styles
   contents:
     - vendor/multiple-select-1.1.0/jquery.multiple.select.js
@@ -927,6 +936,9 @@ country-custom-styles:
 
 nepal-quake-country-custom-styles:
   output: ckanext-hdx_theme/%(version)s_nepal-quake-country-custom-styles.css
+  extra:
+    preload:
+      - hdx_theme/page-common-styles
   contents:
     - crisis/topline-nepal-quake.css
     - country/custom/country-custom.css
@@ -938,14 +950,10 @@ dataviewer:
     - dataviewer.js
 
 group-form-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_group-form-scripts.js
   extra:
     preload:
       - hdx_theme/ckan
       - hdx_theme/organization-form-styles
-  contents:
-    - custom_location.js
 
 group-list-scripts:
   <<: *common-js

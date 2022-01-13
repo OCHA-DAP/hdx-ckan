@@ -1,6 +1,6 @@
 {% asset 'hdx_theme/hdx-show-more' %}
 
-{% set updated_time = c.org_meta.org_dict.dataset_last_updated %}
+{% set updated_time = c.org_meta.org_dict.created %}
 {% set f_updated_time = h.render_datetime(updated_time) %}
 {% block custom_header %}
     <div id="floatingLogo" style="display: none;">
@@ -10,7 +10,7 @@
                 {% if c.org_meta.custom_sq_logo_url %}
                     <img class="org-logo lazyload" data-src="{{ c.org_meta.custom_sq_logo_url }}" alt="{{ _('small logo') }}">
                 {% else %}
-                    <img class="org-logo lazyload" data-src="https://placehold.it/75x75" />
+                    <img class="org-logo lazyload" data-src="https://plchldr.co/i/75x75?&bg=cccccc&fc=ffffff" />
                 {% endif %}
             </div>
         </div>
@@ -71,7 +71,7 @@
                             </ul>
                             <div class="dataset-updated">
                                 {% block updated %}
-                                    Last updated on {{f_updated_time}}
+                                    Member since {{f_updated_time}}
                                 {% endblock %}
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                                 {% if c.org_meta.custom_sq_logo_url %}
                                     <img class="lazyload" data-src="{{c.org_meta.custom_rect_logo_url}}"/>
                                 {% else %}
-                                    <img class="lazyload" data-src="https://placehold.it/300x125"/>
+                                    <img class="lazyload" data-src="https://plchldr.co/i/300x125?&bg=cccccc&fc=ffffff"/>
                                 {% endif %}
                             </div>
                         </div>

@@ -64,7 +64,6 @@ def make_pylons_stack(conf, full_stack=True, static_files=True,
     # we want to be able to retrieve the routes middleware to be able to update
     # the mapper.  We store it in the pylons config to allow this.
     config['routes.middleware'] = app
-    app = SessionMiddleware(app, config)
     app = CacheMiddleware(app, config)
 
     # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
@@ -136,7 +135,8 @@ def make_pylons_stack(conf, full_stack=True, static_files=True,
         logging.WARN,  # ignored
         who_parser.remote_user_key
     )
-
+    # Moved as part of ckanext-security patch
+    app = SessionMiddleware(app, config)
     # Establish the Registry for this application
     app = RegistryManager(app, streaming=False)
 
@@ -221,6 +221,10 @@ class CKANPylonsApp(PylonsApp):
                 origin = 'extension'
             log.debug('Pylons route match: {0} Origin: {1}'.format(
                 match, origin))
+
+            # Added by HDX to have route information in environment
+            environ['HDXpylons_route'] = match.get('controller')
+
             return (True, self.app_name, origin)
         else:
             return (False, self.app_name)

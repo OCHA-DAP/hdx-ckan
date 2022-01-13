@@ -100,6 +100,25 @@ class SearchLogic(object):
         self.template_data['full_facet_info']['archived_url_helper'] = archived_url_helper
         return archived_url_helper
 
+    def init_archived_url_helper(self):
+        self.add_archived_url_helper()
+        return self
+
+    def redirect_if_needed(self):
+        return self.archived_url_helper.redirect_if_needed()
+
+    @property
+    def archived_url_helper(self):
+        '''
+        :return:
+        :rtype: ArchivedUrlHelper
+        '''
+        try:
+            return self.template_data['full_facet_info']['archived_url_helper']
+        except KeyError as ke:
+            log.error('archived_url_helper object is only available after calling _search() '
+                      'and add_archived_url_helper()')
+
     def _search(self, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
@@ -160,7 +179,7 @@ class SearchLogic(object):
                         self._append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
                     else:
                         if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
-                                     'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions']:
+                                     'ext_hxl', 'ext_showcases', 'ext_archived', 'ext_administrative_divisions', 'ext_sadd']:
                             featured_filters_set = True
                         if param == 'ext_archived' and value == '1':
                             hide_archived = False
@@ -465,7 +484,7 @@ class SearchLogic(object):
 
         checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
                       'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases', 'ext_archive',
-                      'ext_administrative_divisions']
+                      'ext_administrative_divisions', 'ext_sadd']
 
         for param in checkboxes:
             if param in search_extras:
@@ -477,6 +496,7 @@ class SearchLogic(object):
         num_of_quickcharts = 0
         num_of_geodata = 0
         num_of_hxl = 0
+        num_of_sadd = 0
         num_of_requestdata = 0
         num_of_showcases = 0
         num_of_administrative_divisions = 0
@@ -531,6 +551,7 @@ class SearchLogic(object):
             else:
                 if category_key == 'vocab_Topics':
                     num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
+                    num_of_sadd = self._get_facet_item_count_from_list(item_list, 'sex and age disaggregated data - sadd')
                     num_of_administrative_divisions = \
                         self._get_facet_item_count_from_list(item_list, 'administrative divisions')
 
@@ -565,6 +586,8 @@ class SearchLogic(object):
                                           num_of_showcases, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
                                           num_of_hxl, search_extras)
+        self._add_item_to_featured_facets(featured_facet_items, 'ext_sadd', 'Datasets with SADD tags',
+                                          num_of_sadd, search_extras)
         # archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
         #                          'but remains available primarily for historical purposes')
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
@@ -576,6 +599,7 @@ class SearchLogic(object):
         result['num_of_quickcharts'] = num_of_quickcharts
         result['num_of_geodata'] = num_of_geodata
         result['num_of_hxl'] = num_of_hxl
+        result['num_of_sadd'] = num_of_sadd
         result['num_of_requestdata'] = num_of_requestdata
         result['num_of_showcases'] = num_of_showcases
         result['num_of_administrative_divisions'] = num_of_administrative_divisions

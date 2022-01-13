@@ -58,9 +58,9 @@
         {{ h.snippet('widget/onboarding/follow.html', id="followPopup") }}
         {{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
         {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
-      {% endif %}
         {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
-        {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
+      {% endif %}
+      {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
     {% else %}
       {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
       {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
@@ -121,7 +121,16 @@
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   {{ super() }}
   {% if c.userobj %}
+    {% set data = h.get_user_extra(c.userobj.id) %}
+    {% if data is not string %}
+      {% set step = data.data.current_step %}
+    {% else %}
+      {% set step = 'hdx_onboarding_details' %}
+    {% endif %}
     {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
+    {% if step %}
+      {% asset 'hdx_theme/onboarding-bulk-user-complete-onboarding-scripts' %}
+    {% endif %}
   {% else %}
     {% asset 'hdx_theme/onboarding-bulk-anon-scripts' %}
   {% endif %}

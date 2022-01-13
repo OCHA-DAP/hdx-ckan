@@ -51,13 +51,11 @@ Example:
                     <span class="checkbox-slider-inner"></span>
                     <span class="checkbox-slider-switch"></span>
                   </label>
-
                 </span>
 
               </span>
           </span>
-
-          {% snippet 'search/snippets/package_search_order.html', sort_param = c.sort_by_selected, admin_view=admin_view, used_default_sort_by=c.used_default_sort_by %}
+          {% snippet 'search/snippets/package_search_order.html', sort_param = sorting_selected, admin_view=admin_view, used_default_sort_by=c.used_default_sort_by %}
 
           {% set limits = [25, 50, 100] %}
           {% set limit_param = ext_page_size %}

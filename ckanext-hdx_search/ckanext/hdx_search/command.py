@@ -82,8 +82,7 @@ def buildIndex(path):
     ## when new crisis are added
 
     index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
-        controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
-        action='read', qualified=True), 'type': 'event'})
+        'hdx_ebola.read', qualified=True), 'type': 'event'})
     index.append({'title': 'Nepal Earthquake', 'url': h.url_for(
         controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
         action='read', id='nepal-earthquake', qualified=True), 'type': 'event'})
@@ -107,11 +106,10 @@ def buildIndex(path):
     #                                action='read_dashboards', id='poc', qualified=True), 'type': 'topic'})
     pages = Session.execute("select name, title, type, description from page where state='active'")
     for name, title, _type, description in pages:
-        action = 'read_event' if _type == 'event' else 'read_dashboards'
+        action = 'hdx_event.read_event' if _type == 'event' else 'hdx_dashboard.read_dashboard'
         index.append({'title': title or name,
                       'extra_terms': description,
-                      'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                       action=action, id=name, qualified=True),
+                      'url': h.url_for(action, id=name, qualified=True),
                       'type': 'event'})
 
     # visualizations

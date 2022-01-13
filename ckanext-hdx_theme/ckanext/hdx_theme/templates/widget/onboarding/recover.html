@@ -7,9 +7,7 @@ Depends on:
 Example:
     {{ h.snippet('widget/onboarding/recover.html', id="recoverPopup") }}
 #}
-{#{% resource 'hdx_theme/widget/onboarding/recover.css' %}#}
-{#{% resource 'hdx_theme/widget/onboarding/recover.js' %}#}
-{% asset 'hdx_theme/onboarding-recover-scripts' %}
+
 {% set class = "popup-onboarding" %}
 {% set title = "Forgot your password?" %}
 
@@ -39,7 +37,7 @@ Example:
             {% endblock %}
         </div>
         <div class="mTop20">
-          <input class="btn btn-primary btn-large" type="submit" value="Reset">
+          <input class="btn btn-primary btn-large hdx-recaptcha mTop20" type="submit" value="Reset" data-sitekey="{{ g.recaptcha_publickey }}" data-callback='onSubmit' data-size="invisible" data-badge="inline">
         </div>
         {#<div class="mTop20 center not-member">
           Not a member? <a href="">Register</a>

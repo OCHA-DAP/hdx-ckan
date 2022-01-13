@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Archived Dataviz'), controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController', action='show') }}</li>
+  <li class="active">{{ h.nav_link(_('Archived Dataviz'), 'hdx_archived_quick_links.show') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -30,13 +30,6 @@
 {% block secondary %}
     <div id="hdx-faq-sidebar-wrapper" class="mTop60">
         <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
-{#            <ul class="nav">#}
-{#            {% for page in data.pages %}#}
-{#                <li>#}
-{#                    <a id='menu-{{ page.id }}' href="#body-{{ page.id }}"> {{ page.title }} </a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#            </ul>#}
           <p>The list includes archived humanitarian crisis pages.</p>
           <p>Country pages that were displayed under Quick Links can be found
             <a href="/group">here</a></p>
@@ -50,6 +43,5 @@
 
 {%- block styles %}
     {{ super() }}
-{#    {% resource 'hdx_theme/faq/faq.css' %}#}
     {% asset 'hdx_theme/faq-scripts' %}
 {% endblock %}

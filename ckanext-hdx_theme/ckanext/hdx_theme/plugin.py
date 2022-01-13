@@ -2,19 +2,30 @@ import logging
 import inspect
 import json
 import os
-import urlparse
-
-import pylons.config as config
+from six.moves.urllib.parse import urlparse
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_theme.helpers.auth as auth
 
-from ckanext.hdx_theme.helpers.redirection_middleware import RedirectionMiddleware
+from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
+from ckanext.hdx_theme.cli.click_analytics_changes_reindex import analytics_changes_reindex
+from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
+from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
-from ckanext.hdx_theme.views.faqs import hdx_faqs
+from ckanext.hdx_theme.views.faqs import hdx_faqs, hdx_main_faq
+from ckanext.hdx_theme.views.ebola import hdx_ebola
+from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_local_image_server
+from ckanext.hdx_theme.views.custom_settings import hdx_carousel
+from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
+from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
+from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
+from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
+from ckanext.hdx_theme.views.splash_page import hdx_splash
+from ckanext.hdx_theme.views.count import hdx_count
+
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -34,10 +45,12 @@ from ckanext.hdx_theme.views.faqs import hdx_faqs
 #                                                   license.License(hdx_licenses.LicenseHdxOther())
 #                                                   ]
 
+config = toolkit.config
+
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
@@ -45,6 +58,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.IClick)
 
     def _add_resource(cls, path, name):
         '''OVERRIDE toolkit.add_resource in order to allow adding a resource library
@@ -68,7 +82,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
-        #self._add_resource('fanstatic', 'hdx_theme')
+        # self._add_resource('fanstatic', 'hdx_theme')
         toolkit.add_public_directory(config, 'fanstatic')
         toolkit.add_resource('fanstatic', 'hdx_theme')
         # Add configs needed for checks
@@ -94,7 +108,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         search_str = '/services'
         spatial_url = config.get('hdx.gis.resource_pbf_url', '')
         url_index = spatial_url.find(search_str)
-        spatial_check_url = spatial_url[0:url_index+len(search_str)]
+        spatial_check_url = spatial_url[0:url_index + len(search_str)]
         spatial_check_url = self._create_full_URL(spatial_check_url)
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
 
@@ -103,7 +117,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
 
     def __add_wp_faq_url_for_checks(self, config):
-        wp_url = '{0}/ufaq-category-custom/apex/{1}'\
+        wp_url = '{0}/custom-ufaq-category/{1}'\
             .format(config.get('hdx.wordpress.url'), config.get('hdx.wordpress.category.faq'))
         config['hdx_checks.wp_faq_url'] = wp_url
         basic_auth = config.get('hdx.wordpress.auth.basic')
@@ -120,10 +134,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         :param url: the url to be modified if needed
         :type url: str
         '''
-        urlobj = urlparse.urlparse(url)
+        urlobj = urlparse(url)
         if not urlobj.netloc:
             base_url = config.get('ckan.site_url')
-            base_urlobj = urlparse.urlparse(base_url)
+            base_urlobj = urlparse(base_url)
             urlobj = urlobj._replace(scheme=base_urlobj.scheme)
             urlobj = urlobj._replace(netloc=base_urlobj.netloc)
 
@@ -132,104 +146,38 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         return urlobj.geturl()
 
-    def before_map(self, map):
-        map.connect(
-            'hdx_home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
-        map.connect(
-            '/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
-        map.connect(
-            '/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
-        map.connect(
-            '/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
-        #map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
-        #map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
+    # def before_map(self, map):
+        # map.connect(
+        #     'hdx_home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
+        # map.connect(
+        #     '/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
+        # map.connect(
+        #     '/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
+        # map.connect(
+        #     '/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
+        # map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
+        # map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
 
-        map.connect(
-            '/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
-        map.connect(
-            '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+        # map.connect(
+        #     '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
 
-        map.connect(
-            '/about/license/legacy_hrinfo', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about_hrinfo')
+        # map.connect(
+        #     '/about/license/legacy_hrinfo', controller='ckanext.hdx_theme.splash_page:SplashPageController',
+        #     action='about_hrinfo')
 
-        map.connect(
-            '/widget/topline', controller='ckanext.hdx_theme.controllers.widget_topline:WidgetToplineController', action='show')
-        map.connect(
-            '/widget/3W', controller='ckanext.hdx_theme.controllers.widget_3W:Widget3WController', action='show')
-        map.connect(
-            '/widget/WFP', controller='ckanext.hdx_theme.controllers.widget_WFP:WidgetWFPController', action='show')
+        # map.connect(
+        #     '/widget/topline', controller='ckanext.hdx_theme.controllers.widget_topline:WidgetToplineController',
+        #     action='show')
+        # map.connect(
+        #     '/widget/3W', controller='ckanext.hdx_theme.controllers.widget_3W:Widget3WController', action='show')
+        # map.connect(
+        #     '/widget/WFP', controller='ckanext.hdx_theme.controllers.widget_WFP:WidgetWFPController', action='show')
 
-        map.connect('about', '/about', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='about')
+        # map.connect('pages_show', '/ckan-admin/pages/show',
+        #             controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+        #             action='show_pages')
 
-        map.connect('/documentation',
-                    controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController',
-                    action='show')
-        map.connect('/documentation/resources-for-developers',
-                    controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController',
-                    action='show')
-        map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
-        map.connect('/archive',
-                    controller='ckanext.hdx_theme.controllers.archived_quick_links_controller:ArchivedDatavizController',
-                    action='show')
-        map.connect(
-            '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
-
-        # map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
-
-        #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
-
-        map.connect('carousel_settings', '/ckan-admin/carousel/show',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
-
-        map.connect('quick_links_settings', '/ckan-admin/dataviz/show',
-                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:'
-                               'DatavizCustomSettingsController',
-                    action='show')
-
-        map.connect('package_links_settings', '/ckan-admin/packagelinks/show',
-                    controller='ckanext.hdx_theme.controllers.package_links_custom_settings:'
-                               'PackageLinksCustomSettingsController',
-                    action='show')
-
-        map.connect('pages_show', '/ckan-admin/pages/show',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show_pages')
-
-        map.connect('global_file_download', '/global/{filename}',
-                    controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
-                    action='global_file_download')
-
-        map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
-
-        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
-                    action='delete')
-
-        map.connect('update_quick_links_settings', '/ckan-admin/quick-links/update',
-                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:DatavizCustomSettingsController',
-                    action='update')
-
-        map.connect('delete_quick_links_settings', '/ckan-admin/quick-links/delete/{id}',
-                    controller='ckanext.hdx_theme.controllers.quick_links_custom_settings:DatavizCustomSettingsController',
-                    action='delete')
-
-        map.connect('update_package_links_settings', '/ckan-admin/package-links/update',
-                    controller='ckanext.hdx_theme.controllers.package_links_custom_settings:PackageLinksCustomSettingsController',
-                    action='update')
-
-        map.connect('delete_package_links_settings', '/ckan-admin/package-links/delete/{id}',
-                    controller='ckanext.hdx_theme.controllers.package_links_custom_settings:PackageLinksCustomSettingsController',
-                    action='delete')
-
-        map.connect('image_serve', '/image/{label}',
-                    controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='org_file')
-
-        map.connect('dataset_image_serve', '/dataset_image/{label}',
-                    controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='dataset_file')
-
-        map.connect('test_dataviz_gallery', '/datavis', controller='ckanext.hdx_theme.controllers.dataviz:DatavizController', action='show')
-
-        return map
+        # return map
 
     def get_helpers(self):
         from ckanext.hdx_theme.helpers import helpers as hdx_helpers
@@ -294,6 +242,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_is_sysadmin': hdx_helpers.hdx_is_sysadmin,
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
             'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
+            'hdx_dataset_has_sadd': hdx_helpers.hdx_dataset_has_sadd,
             'hdx_switch_url_path': hdx_helpers.switch_url_path,
             'hdx_munge_title': hdx_helpers.hdx_munge_title,
             'hdx_url_for': hdx_helpers.hdx_url_for,
@@ -326,7 +275,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_carousel_settings_show': hdx_actions.hdx_carousel_settings_show,
             'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update,
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
-            #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
+            # 'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
             'hdx_general_statistics': hdx_actions.hdx_general_statistics,
             'hdx_user_statistics': hdx_actions.hdx_user_statistics,
             'hdx_organization_statistics': hdx_actions.hdx_organization_statistics,
@@ -352,18 +301,20 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_carousel_update': auth.hdx_carousel_update,
             'hdx_request_data_admin_list': auth.hdx_request_data_admin_list,
             'hdx_quick_links_update': auth.hdx_quick_links_update,
+            'user_generate_apikey': auth.hdx_user_generate_apikey,
         }
 
     # IMiddleware
     def make_middleware(self, app, config):
-        new_app = RedirectionMiddleware(app, config)
+        cookie_app = CookieMiddleware(app, config)
+        redirection_app = RedirectionMiddleware(cookie_app, config)
         if app.app_name == 'flask_app':
             from logging.handlers import SMTPHandler
             for handler in app.logger.handlers:
                 if isinstance(handler, SMTPHandler):
                     handler.setLevel(logging.ERROR)
             app.logger.addFilter(FlaskEmailFilter())
-        return new_app
+        return redirection_app
 
     # IValidators
     def get_validators(self):
@@ -379,4 +330,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_colored_page, hdx_faqs]
+        return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server,
+                hdx_local_image_server, hdx_carousel, hdx_custom_pages,
+                hdx_quick_links, hdx_package_links, hdx_archived_quick_links, hdx_splash, hdx_count]
+
+    # IClick
+    def get_commands(self):
+        return [custom_less_compile, analytics_changes_reindex]

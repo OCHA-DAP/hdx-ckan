@@ -9,6 +9,12 @@ class GroupSearchLogic(sl.SearchLogic):
         self.group_id = id
         self.flask_route_name = flask_route_name
 
+        self.additional_fq = 'groups:"{}"'.format(self.group_id)
+
+    def search(self):
+        self._search(additional_fq=self.additional_fq)
+        return self
+
     def _search_url(self, params, package_type=None):
         '''
         Returns the url of the current search type

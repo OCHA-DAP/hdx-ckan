@@ -7,20 +7,22 @@
 # normalize log bucket env var (remove this after 2021.05.30)
 [ -z "$HDX_ECHO_LOG_BUCKET_NAME" ] && export HDX_ECHO_LOG_BUCKET_NAME=${AWS_BUCKET_NAME}-log
 
-# preparing to run ckan...
-bash /srv/ckan/docker/ckan_helper.sh
-
-cd /srv/ckan
-
 [ -z "$NEW_RELIC_APP_NAME"     ] && export NEW_RELIC_APP_NAME="Python Application"
 [ -z "$NEW_RELIC_CONFIG_FILE"  ] && export NEW_RELIC_CONFIG_FILE=/srv/newrelic.ini
 [ -z "$NEW_RELIC_ENABLED"      ] && export NEW_RELIC_ENABLED=false
 [ -z "$NEW_RELIC_LICENSE_KEY"  ] && export NEW_RELIC_LICENSE_KEY="LICENSE"
 [ -z "$NEW_RELIC_LOG"          ] && export NEW_RELIC_LOG=false
 
-[ -z "HDX_ANALYTICS_TRACK_API" ]                    && export HDX_ANALYTICS_TRACK_API=false
-[ -z "HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS" ]   && export HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS=
-[ -z "HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER" ]      && export HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER=
+[ -z "$HDX_ANALYTICS_TRACK_API" ]                  && export HDX_ANALYTICS_TRACK_API=false
+[ -z "$HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS" ] && export HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS=
+[ -z "$HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER" ]    && export HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER=
+
+[ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
+
+# preparing to run ckan...
+bash /srv/ckan/docker/ckan_helper.sh
+
+cd /srv/ckan
 
 ln -sf /etc/ckan/prod.ini ckan.ini
 

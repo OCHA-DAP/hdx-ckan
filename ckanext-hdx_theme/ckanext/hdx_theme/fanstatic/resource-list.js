@@ -10,7 +10,8 @@ function showDataCheck(url){
   var iframe = $(id + ' iframe');
 
   var baseUrl = window.location.origin;
-  var datacheckUrl = 'https://tools.humdata.org/wizard/datacheck';
+  // var datacheckUrl = 'https://tools.humdata.org/wizard/datacheck';
+  var datacheckUrl = '/tools/datacheck';
   if (!url.startsWith("http")) {
     url = baseUrl + url;
   }
@@ -47,10 +48,12 @@ function showDataUseSurveyPopup(resId, userSurveyUrl) {
     $("#dataUseSurveyPopup a.btn-primary").click(function (e) {
       hdxUtil.analytics.sendSurveyEvent('confirm popup');
       const pkgId = $("#dataUseSurveyPkgId").text() || "";
+      const pkgUrl = $("#dataUseSurveyPkgUrl").text() || "";
       const orgName = $("#dataUseSurveyOrgName").text() || "";
 
       userSurveyUrl = userSurveyUrl.replaceAll('hdx_organization_name', orgName);
-      userSurveyUrl = userSurveyUrl.replaceAll('hdx_dataset_id', pkgId);
+      // userSurveyUrl = userSurveyUrl.replaceAll('hdx_dataset_id', pkgId);
+      userSurveyUrl = userSurveyUrl.replaceAll('hdx_dataset_id', pkgUrl);
       userSurveyUrl = userSurveyUrl.replaceAll('hdx_resource_id', resId);
       // console.log(`org[${orgName}] pkg[${pkgId}] res[${resId}]`);
 

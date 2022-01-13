@@ -28,7 +28,7 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('hdx_carousel_update', context, {})
-            url = h.url_for('carousel_settings')
+            url = h.url_for('hdx_carousel.show')
         except NotAuthorized as e:
             pass
 
@@ -42,14 +42,14 @@ def find_first_global_settings_url():
     if not url:
         try:
             check_access('admin_page_list', context, {})
-            url = h.url_for('pages_show')
+            url = h.url_for('hdx_custom_pages.index')
         except NotAuthorized as e:
             pass
 
     if not url:
         try:
             check_access('hdx_quick_links_update', context, {})
-            url = h.url_for('quick_links_settings')
+            url = h.url_for('hdx_quick_links.show')
         except NotAuthorized as e:
             pass
 
@@ -81,14 +81,14 @@ def is_valid_captcha(captcha_response):
     is_captcha_enabled = config.get('hdx.captcha', 'false')
     if is_captcha_enabled == 'true':
         # captcha_response = request.params.get('g-recaptcha-response')
-        if not _is_valid_captcha(response=captcha_response):
+        if not validate_captcha(response=captcha_response):
             raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
         return True
     else:
         return None
 
 
-def _is_valid_captcha(response):
+def validate_captcha(response):
     url = config.get('hdx.captcha.url')
     secret = config.get('ckan.recaptcha.privatekey')
     params = {'secret': secret, "response": response}

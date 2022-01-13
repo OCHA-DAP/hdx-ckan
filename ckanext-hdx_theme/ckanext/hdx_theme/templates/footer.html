@@ -87,11 +87,6 @@
                       </div>
                     </div>
                     <div class="col-xs-12 col-md-4 other-services">
-                      <a href="https://tools.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="hdx tools">
-                        <img class="lazyload logo-tools" data-src="/images/homepage/logo-tools-gray.png" alt="HDX Tools logo">
-                      </a>
-                    </div>
-                    <div class="col-xs-12 col-md-4 other-services">
                       <a href="https://centre.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="the centre for humanitarian data">
                         <img class="lazyload logo-centre" data-src="/images/homepage/logo-centre-gray.png" alt="The Centre for Humanitarian Data logo">
                       </a>
@@ -123,7 +118,7 @@
           <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="social-footer">
               <div class="terms">
-                <a href="/faqs/terms" data-module="hdx_click_stopper" data-module-link_type="footer">
+                <a href="{{ h.url_for('hdx_faqs.read', category='terms') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
                   TERMS OF SERVICE
                 </a>
                 <a href="https://data.humdata.org/about/hdx-qa-process" data-module="hdx_click_stopper" data-module-link_type="footer">
@@ -132,10 +127,10 @@
                 <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
                   OPEN SOURCE <i class="icon humanitarianicons-Out-of-platform"></i>
                 </a>
-                <a href="/documentation" data-module="hdx_click_stopper" data-module-link_type="footer">
+                <a href="{{ h.url_for('hdx_faqs.read', category='devs') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
                   RESOURCES FOR DEVELOPERS
                 </a>
-                <a href="/faqs/licenses" data-module="hdx_click_stopper" data-module-link_type="footer">
+                <a href="{{ h.url_for('hdx_faqs.read', category='licenses') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
                   DATA LICENSES
                 </a>
                 <a href="https://centre.humdata.org/category/blog/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">

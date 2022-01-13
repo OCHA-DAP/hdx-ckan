@@ -48,14 +48,14 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         user = model.User.by_name('tester')
 
-        url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
+        url = h.url_for('hdx_qa.dashboard')
 
         result = self._get_url(url, user.apikey)
-        assert result.status_code == 404
+        assert result.status_code == 403
 
 
         user = model.User.by_name('testsysadmin')
-        url = h.url_for(controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search', page=2)
+        url = h.url_for('hdx_qa.dashboard', page=2)
         qa_dashboard_result = self._get_url(url, user.apikey)
         assert qa_dashboard_result.status_code == 200
 

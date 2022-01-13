@@ -150,8 +150,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         assert '<span class="label label-important">Deleted</span>' in profile_result.data
 
     def _create_user(self, email='valid@example.com'):
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         params = {'email': email, 'nosetest': 'true'}
         res = self.app.post(url, data=params)
         return res
@@ -173,8 +172,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         user_list = test_helpers.call_action('user_list')
         before_len = len(user_list)
 
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         params = {'email': 'valid@example.com', 'nosetest': 'true'}
         res = self.app.post(url, data=params)
         assert_true(json.loads(res.body)['success'])
@@ -190,8 +188,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_create_user_duplicate_email(self):
         '''Creating a new user with identical email is unsuccessful.'''
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         params = {'email': 'valid@example.com', 'nosetest': 'true'}
         # create 1
         self.app.post(url, data=params)
@@ -204,8 +201,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     def test_create_user_duplicate_email_case_different(self):
         '''Creating a new user with same email (differently cased) is
         unsuccessful.'''
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         params_one = {'email': 'valid@example.com', 'nosetest': 'true'}
         params_two = {'email': 'VALID@example.com', 'nosetest': 'true'}
         # create 1
@@ -220,8 +216,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     def test_create_user_email_saved_as_lowercase(self):
         '''A newly created user will have their email transformed to lowercase
         before saving.'''
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         params = {'email': 'VALID@example.com', 'nosetest': 'true'}
         self.app.post(url, data=params)
         user = model.User.get('valid@example.com')
@@ -231,8 +226,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_create_user_email_format(self):
         '''Email must be valid email format.'''
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='register_email')
+        url = h.url_for('hdx_user.register_email')
         params = {'email': 'invalidexample.com', 'nosetest': 'true'}
 
         res = json.loads(self.app.post(url, data=params).data)
@@ -472,9 +466,9 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
         try:
             reset_password.create_reset_key(user_obj, 3)
             subject = u'HDX password reset'
+            password_reset_url = h.url_for('hdx_user.perform_reset', id=user_obj.id, key=user_obj.reset_key)
             reset_link = urljoin(config.get('ckan.site_url'),
-                                 h.url_for(controller='user', action='perform_reset', id=user_obj.id,
-                                           key=user_obj.reset_key))
+                                 password_reset_url)
 
             email_data = {
                 'user_fullname': user_obj.fullname,
@@ -509,8 +503,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         # user_obj = model.User.get(user.get('name'))
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='request_reset')
+        url = h.url_for('hdx_user.request_reset')
         params = {
             'user': user.get('name')
         }
@@ -545,8 +538,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         # user_obj = model.User.get(user.get('name'))
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='request_reset')
+        url = h.url_for('hdx_user.request_reset')
         params = {
             'user': user.get('email')
         }
@@ -581,8 +573,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         # user_obj = model.User.get(user.get('name'))
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='request_reset')
+        url = h.url_for('hdx_user.request_reset')
         params = {
             'user': user.get('email').upper()
         }
@@ -617,8 +608,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         # user_obj = model.User.get(user.get('name'))
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                        action='request_reset')
+        url = h.url_for('hdx_user.request_reset')
         params = {
             'user': "test" + user.get('email').upper()
         }
@@ -631,7 +621,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         try:
             result = test_client.post(url, data=params)
             res = json.loads(result.body)
-            assert_false(res['success'])
+            assert_true(res['success'])
         except Exception as ex:
             assert False
 

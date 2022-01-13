@@ -44,13 +44,6 @@
                 <li class="crises-group">
                   {% set ongoing_links = h.hdx_get_quick_links_list() %}
                   <ul>
-                    <li>
-                      <div>
-                        <a href="{{ h.url_for('hdx_dataviz_gallery.index') }}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="_self">
-                          {{ _("Dataviz Gallery") }}
-                        </a>
-                      </div>
-                    </li>
                     {% for on_link in ongoing_links %}
                     <li>
                       <div><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">
@@ -134,7 +127,6 @@
                 <li><a href="{{ orgLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Organisations</a></li>
                 <li class="crisis"><a class="crisis-title"><span>Dataviz</span></a></li>
                 {% set ongoing_links = h.hdx_get_quick_links_list() %}
-                <li class="crisis"><a href="{{ h.url_for('hdx_dataviz_gallery.index') }}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="_self">{{ _("Dataviz Gallery") }}</a></li>
                 {% for on_link in ongoing_links %}
                   <li class="crisis"><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">{{ on_link.title }}</a></li>
                 {% endfor %}

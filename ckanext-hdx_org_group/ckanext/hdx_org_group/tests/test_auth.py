@@ -113,7 +113,7 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
 
 
     def test_new_org_request_page(self):
-        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
+        offset = h.url_for('hdx_org.request_new')
         result = self.app.get(offset)
         assert result.status_code == 403
         assert 'You don\'t have permission to access this page' in result.data
