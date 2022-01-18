@@ -19,6 +19,9 @@
 
 [ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
 
+[ -z "$HDX_GEOPREVIEW_API" ] && export HDX_GEOPREVIEW_API="gislayer:5000"
+[ -z "$HDX_ANALYTICS_API" ]  && export HDX_ANALYTICS_API="gislayer:5000"
+
 # preparing to run ckan...
 bash /srv/ckan/docker/ckan_helper.sh
 
