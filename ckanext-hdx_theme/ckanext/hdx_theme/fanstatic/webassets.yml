@@ -267,6 +267,10 @@ onboarding-bulk-user-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
+
+onboarding-bulk-user-complete-onboarding-scripts:
+  extra:
+    preload:
       - hdx_theme/onboarding-registered-scripts
       - hdx_theme/onboarding-follow-scripts
       - hdx_theme/onboarding-invite-scripts
@@ -957,8 +961,6 @@ dataviewer:
     - dataviewer.js
 
 group-form-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_group-form-scripts.js
   extra:
     preload:
       - hdx_theme/ckan

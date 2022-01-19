@@ -198,7 +198,7 @@
                     {% trans %}
                         What are the Terms of Use for this dataset ? How can others re-use it?
                     {% endtrans %}
-                    {% link_for _('Read More.'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
+                    {% link_for _('Read More.'), named_route='hdx_faqs.read', category='licenses' %}
                 </div>
             </div>
         {% endif %}

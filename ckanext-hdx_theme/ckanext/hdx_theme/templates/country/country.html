@@ -185,9 +185,24 @@
 
 
           <div class="progress-breakdown progress-header">
-            <span class="progress-blue" style="width: {{100*data.data_completness.stats.dataseries_good_percentage}}%;">
+            {% set dataseries_good_percentage = 100*data.data_completness.stats.dataseries_good_percentage %}
+            <span class="progress-blue" style="width: {{ dataseries_good_percentage }}%;"
+                  data-module="bs_tooltip" data-module-placement="top"
+                  data-toggle="tooltip" data-html="true" data-original-title="{{ dataseries_good_percentage | int }}%">
+              {% if dataseries_good_percentage > 30 %} {{ dataseries_good_percentage | int }}%&nbsp; {% endif %}
             </span>
-            <span class="progress-striped" style="width: {{100*data.data_completness.stats.dataseries_not_good_percentage}}%;"></span>
+            {% set dataseries_not_good_percentage = 100*data.data_completness.stats.dataseries_not_good_percentage %}
+            <span class="progress-striped" style="width: {{ dataseries_not_good_percentage }}%;"
+                  data-module="bs_tooltip" data-module-placement="top"
+                  data-toggle="tooltip" data-html="true" data-original-title="{{ dataseries_not_good_percentage | int }}%">
+              {% if dataseries_not_good_percentage > 30 %} {{ dataseries_not_good_percentage | int }}%&nbsp; {% endif %}
+            </span>
+            {% set dataseries_other_percentage = 100*(1 - data.data_completness.stats.dataseries_good_percentage - data.data_completness.stats.dataseries_not_good_percentage) %}
+            <span class="progress-empty" style="width: {{ dataseries_other_percentage }}%;"
+                  data-module="bs_tooltip" data-module-placement="top"
+                  data-toggle="tooltip" data-html="true" data-original-title="{{ dataseries_other_percentage | int }}%">
+              {% if dataseries_other_percentage > 30 %} {{ dataseries_other_percentage | int }}%&nbsp; {% endif %}
+            </span>
           </div>
 
           <span class="mL45 list-header-showall list-completeness">

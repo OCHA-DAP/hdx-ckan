@@ -127,8 +127,9 @@
     {% else %}
       {% set step = 'hdx_onboarding_details' %}
     {% endif %}
+    {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
     {% if step %}
-      {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
+      {% asset 'hdx_theme/onboarding-bulk-user-complete-onboarding-scripts' %}
     {% endif %}
   {% else %}
     {% asset 'hdx_theme/onboarding-bulk-anon-scripts' %}
