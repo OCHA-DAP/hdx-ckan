@@ -23,7 +23,7 @@ function positionWarningBar() {
             if ('absolute' != currentPosition.toLowerCase()) {
                 // warningBar.css('position', 'absolute');
                 warningBar[0].style.position = 'absolute';
-                $('.homepage-main').css('position', 'relative');
+                // $('.homepage-main').css('position', 'relative'); //included in LESS, should be set always on container
             }
         }
 
