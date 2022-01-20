@@ -8,7 +8,7 @@ python setup.py develop
 mv -f requirements-py2-tmp.txt requirements-py2.txt
 mv -f requirements-tmp.txt requirements.txt
 
-plugins="hdx_service_checker sitemap ytp-request hdx_dataviz hdx_pages"
+plugins="hdx_service_checker sitemap ytp-request hdx_dataviz hdx_pages hdx_theme"
 for p in $plugins; do cd /srv/ckan/ckanext-$p || exit; python setup.py develop; done
 cd /srv/ckan || exit
 
