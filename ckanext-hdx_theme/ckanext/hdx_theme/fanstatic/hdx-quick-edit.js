@@ -23,8 +23,8 @@ this.ckan.module('hdx-quick-edit', function (jQuery, _, i18n) {
       //base template
       this.options.template.push(
         `
-          <a class="quick-link" href="#" onclick="contributeAddDetails('${dataset}', 'quick-edit', '#${anchor}'); return false;">
-            <i class="humanitarianicons-Link" aria-hidden="true"></i>
+          <a class="btn btn-square quick-link" href="#" onclick="contributeAddDetails('${dataset}', 'quick-edit', '#${anchor}'); return false;">
+            Edit
           </a>
         `
       );
