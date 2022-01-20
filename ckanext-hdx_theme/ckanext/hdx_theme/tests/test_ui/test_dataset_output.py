@@ -5,11 +5,14 @@ Created on May 16, 2014
 
 '''
 
+import pytest
+import six
+import unicodedata
+
 import ckan.tests.legacy as tests
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
-import unicodedata
 
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
@@ -46,6 +49,7 @@ organization = {
 }
 
 
+@pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     # loads missing plugins
     @classmethod

@@ -3,8 +3,6 @@ Created on Nov 12, 2014
 
 @author: alexandru-m-g
 '''
-import pylons.config as config
-
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 
@@ -12,6 +10,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
+config = tk.config
 
 def get_packages():
     packages = [

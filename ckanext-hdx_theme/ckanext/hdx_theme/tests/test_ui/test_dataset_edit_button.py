@@ -4,8 +4,9 @@ Created on September 25, 2015
 @author: aartimon
 
 '''
+import pytest
+import six
 
-import ckan.tests as tests
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -47,6 +48,7 @@ organization = {
 }
 
 
+@pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     # loads missing plugins
     @classmethod

@@ -1,15 +1,17 @@
 import pytest
+import six
+import unicodedata
+import mock
 
 import ckan.model as model
-import unicodedata
 import ckan.lib.helpers as h
+
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.mock_helper as mh
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
-import mock
 
 
 contact_form = {
@@ -19,7 +21,8 @@ contact_form = {
     'faq-mesg': 'my question',
 }
 
-# @pytest.mark.skip(reason="Skipping for now as the page needs WP data")
+
+@pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
 class TestFaqPageController(hdx_test_base.HdxBaseTest):
 
     # loads missing plugins
@@ -38,7 +41,7 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
 
         try:
             res = self.app.post('/faq/contact_us', params=contact_form)
-        except Exception, ex:
+        except Exception as ex:
             assert False
         assert '200 OK' in res.status
         assert "success" in res.body and "true" in res.body
