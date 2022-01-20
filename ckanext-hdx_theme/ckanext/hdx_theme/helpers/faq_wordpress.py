@@ -20,7 +20,7 @@ def get_headers():
 def get_faq_data(category):
     wp_url = config.get('hdx.wordpress.url')
     headers = get_headers()
-    response = requests.get('{0}/wp-json/wp/v2/ufaq-category?parent={1}&per_page=100'.format(wp_url, category),
+    response = requests.get('{0}/custom-ufaq-category/{1}'.format(wp_url, category),
                             headers=headers)
     json = response.json()
     # log.error(json)
@@ -31,7 +31,7 @@ def get_faq_data(category):
             'questions': []
         }
     id_csv = ','.join(str(v) for v in map.keys())
-    faq_items_url = '{0}/wp-json/wp/v2/ufaq?ufaq-category={1}&orderby=meta_value_num&meta_key=ufaq_order&order=asc&per_page=500'.format(
+    faq_items_url = '{0}/custom-ufaq-list/{1}'.format(
         wp_url, id_csv)
     # log.error(faq_items_url)
     response = requests.get(faq_items_url, headers=headers)
@@ -58,8 +58,9 @@ def process_content(content):
     content = replace_iframe_src(content)
     return content
 
+# this is not used?
 def get_post(id):
-    response = requests.get('{0}/wp-json/wp/v2/ufaq/{1}'.format(config.get('hdx.wordpress.url'), id),
+    response = requests.get('{0}/custom-ufaq/{1}'.format(config.get('hdx.wordpress.url'), id),
                             headers=get_headers())
     json = response.json()
     return process_content(json['content']['rendered'])

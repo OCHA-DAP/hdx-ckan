@@ -81,7 +81,7 @@ hdx.less.basepath          = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less
 hdx.less_compile.onstartup = False
 
 # GIS
-hdx.gis.layer_import_url = http://gislayer:5000/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
+hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
 # at Alex suggestion, i made this proto unaware
@@ -90,7 +90,7 @@ hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resour
 hdx.analytics.hotjar.site_id = ${HDX_HOTJAR_SITEID}
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
 hdx.analytics.mixpanel.secret = ${HDX_MIXPANEL_SECRET}
-hdx.analytics.enqueue_url    = http://gislayer:5000/api/send-analytics
+hdx.analytics.enqueue_url    = http://${HDX_ANALYTICS_API}/api/send-analytics
 #hdx.analytics.enqueue_url    = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/send-analytics
 hdx.analytics.hours_for_results_in_cache = ${HDX_HOURS_MIXPANEL_CACHE}
 #API Tracking
