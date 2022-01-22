@@ -117,4 +117,4 @@ services:
       AWS_SECRET_ACCESS_KEY: RANDOM_SECRET_KEY
       AWS_BUCKET_NAME: RANDOM_BUCKET
       REGION_NAME: eu-central-1
-      HDX_ENABLED_PLUGINS: hdx_dataviz expire_api_token ytp_request hdx_service_checker sitemap hdx_theme showcase resource_proxy text_view recline_view datastore
+      HDX_ENABLED_PLUGINS: hdx_dataviz expire_api_token ytp_request hdx_pages hdx_service_checker sitemap hdx_theme showcase resource_proxy text_view recline_view datastore
