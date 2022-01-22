@@ -72,6 +72,8 @@ jobs:
       - name: Publish in Coveralls
         if: success()
         run: docker-compose exec -T ckan sh -c "coveralls"
+      - name: TEMPORARY workaround for feature-index.js missing
+        run: docker-compose exec -T ckan-py3 sh -c "touch ./ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr/feature-index.js"
       - name: PY3/Testing hdx_service_checker
         run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_service_checker/ckanext/hdx_service_checker/tests"
       - name: PY3/Testing sitemap
