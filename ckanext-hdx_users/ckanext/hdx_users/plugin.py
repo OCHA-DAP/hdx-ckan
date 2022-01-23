@@ -182,21 +182,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         #             action='hdx_delete_powerview', )
         return map
 
-    def after_map(self, map):
-        map.connect('user_dashboard', '/dashboard',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='dashboard',
-                    ckan_icon='list')
-        # map.connect('user_dashboard_datasets', '/dashboard/datasets',
-        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        #             action='dashboard_datasets',
-        #             ckan_icon='sitemap')
-        # map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
-        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        #             action='dashboard_visualizations',
-        #             ckan_icon='sitemap')
-        return map
-
     def get_actions(self):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,

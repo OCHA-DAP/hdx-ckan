@@ -21,7 +21,6 @@ import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
-import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.util.jql as jql
 from ckan.common import c, request, _
@@ -59,7 +58,7 @@ log = logging.getLogger(__name__)
 #     return True
 
 
-class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
+class HDXOrganizationController(org.OrganizationController):
     # def index(self):
     #     context = {'model': model, 'session': model.Session,
     #                'for_view': True,
@@ -122,50 +121,50 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
     #
     #     return base.render('organization/index.html')
 
-    @check_redirect_needed
-    def read(self, id, limit=20):
-        self._ensure_controller_matches_group_type(id)
-
-        # unicode format (decoded from utf8)
-        q = c.q = request.params.get('q', '')
-
-        c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
-        try:
-            org_meta.fetch_all()
-        except NotFound, e:
-            abort(404)
-        except NotAuthorized, e:
-            abort(403, _('Not authorized to see this page'))
-
-        helper.org_add_last_updated_field([org_meta.org_dict])
-
-        c.group_dict = org_meta.org_dict
-
-        # If custom_org set to true, redirect to the correct route
-        if org_meta.is_custom:
-            custom_org_controller = custom_org.CustomOrgController()
-            return custom_org_controller.org_read(id, org_meta)
-        else:
-            org_info = self._get_org(id)
-            c.full_facet_info = self._get_dataset_search_results(org_info['name'])
-
-            # setting the count with the value that was populated from search_controller so that templates find it
-            c.group_dict['package_count'] = c.count
-            c.group_dict['type'] = 'organization'
-
-            # This was moved in OrgMetaDao
-            # allow_basic_user_info = self.check_access('hdx_basic_user_info')
-            # allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
-            # c.request_membership = allow_req_membership
-            # c.request_membership_url = h.url_for('request_membership', org_id=org_info['id'])
-
-            if self._is_facet_only_request():
-                response.headers['Content-Type'] = CONTENT_TYPES['json']
-                return json.dumps(c.full_facet_info)
-            else:
-                # self._read(id, limit)
-                return render(self._read_template(c.group_dict['type']),
-                          {'group_dict': c.group_dict})
+    # @check_redirect_needed
+    # def read(self, id, limit=20):
+    #     self._ensure_controller_matches_group_type(id)
+    #
+    #     # unicode format (decoded from utf8)
+    #     q = c.q = request.params.get('q', '')
+    #
+    #     c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+    #     try:
+    #         org_meta.fetch_all()
+    #     except NotFound, e:
+    #         abort(404)
+    #     except NotAuthorized, e:
+    #         abort(403, _('Not authorized to see this page'))
+    #
+    #     helper.org_add_last_updated_field([org_meta.org_dict])
+    #
+    #     c.group_dict = org_meta.org_dict
+    #
+    #     # If custom_org set to true, redirect to the correct route
+    #     if org_meta.is_custom:
+    #         custom_org_controller = custom_org.CustomOrgController()
+    #         return custom_org_controller.org_read(id, org_meta)
+    #     else:
+    #         org_info = self._get_org(id)
+    #         c.full_facet_info = self._get_dataset_search_results(org_info['name'])
+    #
+    #         # setting the count with the value that was populated from search_controller so that templates find it
+    #         c.group_dict['package_count'] = c.count
+    #         c.group_dict['type'] = 'organization'
+    #
+    #         # This was moved in OrgMetaDao
+    #         # allow_basic_user_info = self.check_access('hdx_basic_user_info')
+    #         # allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
+    #         # c.request_membership = allow_req_membership
+    #         # c.request_membership_url = h.url_for('request_membership', org_id=org_info['id'])
+    #
+    #         if self._is_facet_only_request():
+    #             response.headers['Content-Type'] = CONTENT_TYPES['json']
+    #             return json.dumps(c.full_facet_info)
+    #         else:
+    #             # self._read(id, limit)
+    #             return render(self._read_template(c.group_dict['type']),
+    #                       {'group_dict': c.group_dict})
 
     # def _get_org(self, org_id):
     #     group_type = 'organization'
