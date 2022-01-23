@@ -128,9 +128,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='resource_datapreview')
-        map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
-                    controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
-                    action='edit')
+        # map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
+        #             controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
+        #             action='edit')
 
         map.connect('add dataset', '/dataset/new',
                     controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
