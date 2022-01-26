@@ -4,7 +4,7 @@ import six
 from decorator import decorator
 from flask import Blueprint
 from flask.views import MethodView
-
+from six import string_types
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.logic as logic
@@ -49,7 +49,6 @@ section_types = {
 hdx_light_event = Blueprint(u'hdx_light_event', __name__, url_prefix=u'/m/event')
 hdx_light_dashboard = Blueprint(u'hdx_light_dashboard', __name__, url_prefix=u'/m/dashboards')
 
-# HDX-7859 TO BE uncommented when search extension is migrated to py3
 hdx_event = Blueprint(u'hdx_event', __name__, url_prefix=u'/event')
 hdx_dashboard = Blueprint(u'hdx_dashboard', __name__, url_prefix=u'/dashboards')
 
@@ -257,7 +256,7 @@ def _populate_sections():
 
 
 def _process_groups(groups):
-    return groups if not isinstance(groups, basestring) else [groups]
+    return groups if not isinstance(groups, string_types) else [groups]
 
 
 def _process_tags(tag_string):
@@ -325,11 +324,8 @@ class CreateView(MethodView):
                 error_summary = e.error_summary
                 return self.post(page_dict, errors, error_summary)
 
-            # HDX-7859 TO BE uncommented when search extension is migrated to py3
             _blueprint = _generate_action_name(created_page.get("type"))
 
-            # HDX-7859 TO BE commented when search extension is migrated to py3
-            # _blueprint = 'read_event' if type == 'event' else 'read_dashboards'
             return h.redirect_to(_blueprint, id=created_page.get("name"))
 
         return render('pages/edit_page.html', extra_vars)
@@ -353,6 +349,8 @@ class EditView(MethodView):
             check_access('page_update', context, {})
         except NotAuthorized:
             abort(404, _('Page not found'))
+        except Exception as ex:
+            log.error(ex)
 
         # checking pressed button
         active_page = request.form.get('save_custom_page')
@@ -371,13 +369,9 @@ class EditView(MethodView):
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.post(id, page_dict, errors, error_summary)
-                # _blueprint = _generate_action_name(updated_page.get("type"))
-                # return h.redirect_to(_blueprint, id=updated_page.get('id'))
-                # HDX-7859 TO BE uncommented when search extension is migrated to py3
+
                 _blueprint = _generate_action_name(updated_page.get("type"))
 
-                # HDX-7859 TO BE commented when search extension is migrated to py3
-                # _blueprint = 'read_event' if type == 'event' else 'read_dashboards'
                 return h.redirect_to(_blueprint, id=updated_page.get("id"))
 
             elif _delete_page:
@@ -441,11 +435,9 @@ class DeleteView(MethodView):
     #     return render('pages/edit_page.html', extra_vars=extra_vars)
 
 # Rules definitions
-
 hdx_light_event.add_url_rule(u'/<id>', view_func=read_light_event)
 hdx_light_dashboard.add_url_rule(u'/<id>', view_func=read_light_dashboard)
 
-# HDX-7859 TO BE uncommented when search extension is migrated to py3
 hdx_event.add_url_rule(u'/<id>', view_func=read_event)
 hdx_dashboard.add_url_rule(u'/<id>', view_func=read_dashboard)
 
