@@ -7,7 +7,7 @@ ckan.module('hdx_error_block_manager', function($, _) {
             var moduleLog = this.moduleLog;
 
             var thisEl = this.el;
-            var errorEl = this.el.find('ul');
+            // var errorEl = this.el.find('ul');
 
             var processKey = function (key) {
                 var processedKey = null;
@@ -21,55 +21,55 @@ ckan.module('hdx_error_block_manager', function($, _) {
                 return processedKey;
             }.bind(this);
 
-            var generateErrorHtml = function (errorObj) {
-                var resultingHtml = '';
-                for (var key in errorObj) {
-                    var val = errorObj[key];
-                    var processedKey = processKey(key);
-                    if (typeof val === 'string')
-                        resultingHtml += '<li>' + processedKey + ': ' + val + '</li>';
-                    else if (typeof val === 'object') {
-                        // Resource 0 should be actually shown as resource 1
-                        var pat = /Resource\s(\d+)/;
-                        var result = pat.exec(processedKey);
-                        if (result) {
-                            processedKey = "Resource " + (parseInt(result[1]) + 1);
-                        }
-
-                        resultingHtml += '<li>' + processedKey + ':';
-                        resultingHtml += '<ul>';
-                        resultingHtml += generateErrorHtml(val);
-                        resultingHtml += '</ul>';
-                        resultingHtml += '</li>';
-                    }
-                }
-                return resultingHtml;
-            };
+            // var generateErrorHtml = function (errorObj) {
+            //     var resultingHtml = '';
+            //     for (var key in errorObj) {
+            //         var val = errorObj[key];
+            //         var processedKey = processKey(key);
+            //         if (typeof val === 'string')
+            //             resultingHtml += '<li>' + processedKey + ': ' + val + '</li>';
+            //         else if (typeof val === 'object') {
+            //             // Resource 0 should be actually shown as resource 1
+            //             var pat = /Resource\s(\d+)/;
+            //             var result = pat.exec(processedKey);
+            //             if (result) {
+            //                 processedKey = "Resource " + (parseInt(result[1]) + 1);
+            //             }
+            //
+            //             resultingHtml += '<li>' + processedKey + ':';
+            //             resultingHtml += '<ul>';
+            //             resultingHtml += generateErrorHtml(val);
+            //             resultingHtml += '</ul>';
+            //             resultingHtml += '</li>';
+            //         }
+            //     }
+            //     return resultingHtml;
+            // };
 
             this.sandbox.subscribe('hdx-form-validation',
                 function (message) {
                     if (message.type == 'reset' ) {
                         thisEl.addClass('hdx-invisible-element');
                         thisEl.removeClass('hdx-visible-element');
-                        if (errorEl.length){
-                            errorEl.html('');
-                        }
+                        // if (errorEl.length){
+                        //     errorEl.html('');
+                        // }
                     }
                     else
                         if (message.elementName == 'error_block' && message.errorBlock) {
                             thisEl.removeClass('hdx-invisible-element');
                             thisEl.addClass('hdx-visible-element');
 
-                            if (errorEl.length){
-                                var existingText = errorEl.html().trim();
-                                var errorBlock = message.errorBlock;
-                                var newHtml= generateErrorHtml(message.errorBlock);
-
-                                moduleLog("The new error block HTML is: " + newHtml);
-
-                                existingText += newHtml;
-                                errorEl.html(existingText);
-                            }
+                            // if (errorEl.length){
+                            //     var existingText = errorEl.html().trim();
+                            //     var errorBlock = message.errorBlock;
+                            //     var newHtml= generateErrorHtml(message.errorBlock);
+                            //
+                            //     moduleLog("The new error block HTML is: " + newHtml);
+                            //
+                            //     existingText += newHtml;
+                            //     errorEl.html(existingText);
+                            // }
 
                             thisEl.get(0).scrollIntoView();
                         }
