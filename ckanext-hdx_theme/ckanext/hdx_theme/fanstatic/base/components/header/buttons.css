@@ -58,6 +58,9 @@
   background-color: #007CE0;
   color: #fff;
 }
+.btn-square {
+  border-radius: 0;
+}
 .btn-danger {
   background-color: #f2645a;
 }
