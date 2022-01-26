@@ -82,7 +82,7 @@ ckan.module('contribute_flow_main', function($, _) {
                                     moduleLog('Validation finished');
 
                                 }
-                            );
+                            ).fail(contributeGlobal.recoverFromServerError);
 
                         }.bind(this)
                     );
@@ -159,7 +159,7 @@ ckan.module('contribute_flow_main', function($, _) {
                                             contributeGlobal.updateInnerState(data, status);
                                             deferred.resolve(data, status, xhr);
                                         }
-                                    );
+                                    ).fail(contributeGlobal.recoverFromServerError);
                                 });
                             }
                         }
@@ -488,6 +488,15 @@ ckan.module('contribute_flow_main', function($, _) {
                       this.browseToDataset();
                     }
 
+                },
+                'recoverFromServerError': function() {
+                    contributeGlobal.controlUserWaitingWidget(false);
+                    const errMsg = 'A connection or server error occurred. Please try again in a few moments or contact HDX support.';
+                    const errorSummary = {
+                      'server_or_connection_error': errMsg
+                    };
+                    contributeGlobal.updateValidationUi({'error_summary': errorSummary});
+                    //alert(errMsg);
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;

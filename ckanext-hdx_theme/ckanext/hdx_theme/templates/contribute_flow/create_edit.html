@@ -167,8 +167,9 @@
                     {% endif %}
                     <div class="background-gray">
                         <div class="paddingLeftHack paddingRightHack">
-                                <div id="hdx_error" class="error-explanation alert alert-danger hdx-invisible-element" data-module="hdx_error_block_manager">
-                                    <p>{{ _('The form contains invalid entries. These are highlighted below. Please scroll down and correct them.') }}</p>
+                                <div id="hdx_error" class="error-explanation alert alert-danger hdx-invisible-element" data-module="hdx_error_block_manager"
+                                    data-module-default_error_message="{{ _('The form contains invalid entries. These are highlighted below. Please scroll down and correct them.') }}">
+                                    <p></p>
                                     <!--<ul>-->
                                       <!--<li data-field-label="type of error">type of error: error</li>-->
                                     <!--</ul>-->
