@@ -9,12 +9,10 @@ import datetime
 import sys
 import json
 import urllib
-import urlparse
+import six.moves.urllib.parse as urlparse
 import os
-from string import lower
-from pylons import config
 
-import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 import ckan.model as model
 import ckan.lib.helpers as h
 
@@ -33,8 +31,10 @@ GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT, KML_FORMAT, KMZ_FORMAT]
 
 PROCESSING = 'processing'
 
-_get_or_bust = logic.get_or_bust
-get_action = logic.get_action
+_get_or_bust = tk.get_or_bust
+get_action = tk.get_action
+
+config = tk.config
 
 
 def detect_format_from_extension(url):
@@ -71,7 +71,7 @@ def add_to_shape_info_list(shape_info_json, resource):
             existing_shape_info = existing_shape_info[-10:]
             return json.dumps(existing_shape_info)
 
-        except Exception, e:
+        except Exception as e:
             log.error('There was an error processing the shape info from geopreview: {}'.format(str(e)))
 
     return None
@@ -117,7 +117,7 @@ def add_init_shape_info_data_if_needed(resource_data):
     # If this is the first time that a resource has been uploaded it might not have a format.
     # The format detection only happens during the actual 'create' action.
     # That's why we're applying the same format detection function to name and url in case there's no format provided.
-    file_format = lower(resource_data.get('format', '')) or detect_format_from_extension(
+    file_format = resource_data.get('format', '').lower() or detect_format_from_extension(
         resource_data.get('name')) or detect_format_from_extension(resource_data.get('url'))
 
     if file_format in GIS_FORMATS:
@@ -214,7 +214,7 @@ def _after_ckan_action(context, resource_dict):
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
                      and get_shape_info_state(resource_dict) == PROCESSING
 
-    if do_geo_preview and lower(resource_dict.get('format', '')) in GIS_FORMATS:
+    if do_geo_preview and resource_dict.get('format', '').lower() in GIS_FORMATS:
         do_geo_transformation_process(context, resource_dict)
 
 
@@ -228,7 +228,7 @@ def get_latest_shape_info(resource_dict):
                     return shape_info_obj[-1]
                 else:
                     return shape_info_obj
-            except ValueError, e:
+            except ValueError as e:
                 log.error("Couldn't load following string as json: {}".format(shape_info))
     return None
 
@@ -267,7 +267,7 @@ def geopreview_4_packages(original_package_action):
             try:
                 # We compute a hash code for "old" resource to see if they have changed
                 resource_id_to_hash_dict = generate_hash_dict(old_resources_list, 'id', fields)
-            except Exception, e:
+            except Exception as e:
                 log.error(str(e))
 
         for resource_dict in package_dict.get('resources', []):
@@ -277,7 +277,7 @@ def geopreview_4_packages(original_package_action):
                     rid = resource_dict['id']
                     hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
                     modified_or_new = False if resource_id_to_hash_dict.get(rid) == hash_code else True
-            except Exception, e:
+            except Exception as e:
                 log.error(str(e))
 
             if modified_or_new:

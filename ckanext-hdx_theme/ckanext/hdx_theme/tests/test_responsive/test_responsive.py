@@ -5,15 +5,12 @@ Created on Febr 13, 2020
 
 
 '''
-import logging as logging
-import ckan.lib.helpers as h
-import ckan.model as model
-import ckan.plugins as p
-import ckan.tests.legacy as tests
-import json
+import logging
+import pytest
+import six
+
 import unicodedata
-import ckanext.hdx_search.actions.actions as actions
-from ckan.common import config
+
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -22,6 +19,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
 class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
@@ -54,7 +52,7 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         # user.email = 'test@test.com'
         try:
             res = self.app.get('/m/dataset/test_dataset_1?force_layout=light')
-        except Exception, ex:
+        except Exception as ex:
             assert False
         assert 'hdx-dataset-light-banner' in res.body
         assert '\"dataset-light\"' in res.body

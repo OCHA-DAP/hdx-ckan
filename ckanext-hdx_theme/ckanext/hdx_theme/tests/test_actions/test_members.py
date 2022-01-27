@@ -3,11 +3,13 @@ Created on Jun 17, 2014
 
 @author: alexandru-m-g
 '''
+import pytest
+import six
+import mock
 
 import ckan.tests.legacy as tests
 import ckan.plugins.toolkit as tk
 import ckan.model as model
-import mock
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
@@ -121,6 +123,7 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
                                            apikey=user.get('apikey'))
         return basic_info
 
+    @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_hdx_send_editor_request_for_org(self, mocked_mail_recipient):
 
@@ -132,6 +135,6 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'janedoe3'}
         try:
             res = self._get_action('hdx_send_editor_request_for_org')(context, contact_form)
-        except Exception, ex:
+        except Exception as ex:
             assert False
         assert True

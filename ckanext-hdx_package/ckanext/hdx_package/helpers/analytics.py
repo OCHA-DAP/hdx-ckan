@@ -1,17 +1,18 @@
 import json
 import logging
-import urlparse
+import six.moves.urllib.parse as urlparse
 import datetime
 
-import pylons.config as config
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 from ckan.common import _, c, g, request
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 
 def is_indicator(pkg_dict):

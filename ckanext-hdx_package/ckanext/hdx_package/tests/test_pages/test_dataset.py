@@ -13,9 +13,7 @@ log = logging.getLogger(__name__)
 class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_edit_dataset_page(self):
-        url = h.url_for(
-            controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-            action='edit', id='test_dataset_1')
+        url = h.url_for('hdx_contribute.edit', id='test_dataset_1')
         user = model.User.by_name('testsysadmin')
         result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
             'NFKD', user.apikey).encode('ascii', 'ignore')})

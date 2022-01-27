@@ -4,14 +4,14 @@ import logging
 
 from werkzeug.datastructures import FileStorage as FlaskFileStorage
 
-import pylons.config as config
-
 import ckan.lib.uploader as uploader
 import ckan.lib.munge as munge
+import ckan.plugins.toolkit as tk
 
 from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 ALLOWED_UPLOAD_TYPES = (cgi.FieldStorage, FlaskFileStorage)
 

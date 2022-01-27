@@ -2,13 +2,17 @@ import logging
 import datetime
 import uuid
 
+from six import text_type
+
 import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 
-from pylons import config
 from ckanext.hdx_org_group.model import OrganizationBatch
 
 log = logging.getLogger(__name__)
+
+config = tk.config
 
 BATCH_PERIOD_CONFIG = 'hdx.batch.period_in_mins'
 
@@ -17,8 +21,8 @@ def get_batch_or_generate(org_identifier):
     try:
         batch_id = get_batch(org_identifier)
         log.info('Batch id is ' + batch_id)
-    except Exception, e:
-        batch_id = 'MANUAL-' + unicode(uuid.uuid4())
+    except Exception as e:
+        batch_id = 'MANUAL-' + text_type(uuid.uuid4())
         log.error(str(e))
 
     return batch_id
@@ -54,7 +58,7 @@ def get_batch(org_identifier):
         minutes = (right_now - organization_batch.last_modified).seconds / 60
         organization_batch.last_modified = right_now
         if minutes > max_minutes:
-            organization_batch.batch = unicode(uuid.uuid4())
+            organization_batch.batch = text_type(uuid.uuid4())
         organization_batch.save()
         batch = organization_batch.batch
 

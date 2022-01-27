@@ -19,8 +19,6 @@ import ckan.plugins as p
 
 from ckan.common import _, c, g, request
 
-import ckanext.hdx_search.controllers.search_controller as search_controller
-
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +36,7 @@ unflatten = dictization_functions.unflatten
 
 response = common.response
 
-class DashboardController(uc.UserController, search_controller.HDXSearchController):
+class DashboardController(uc.UserController):
     def _get_dashboard_context(self, filter_type=None, filter_id=None, q=None):
         '''Return a dict needed by the dashboard view to determine context.'''
 

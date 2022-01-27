@@ -155,7 +155,7 @@ ckan.resource_formats.external_system = External System
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
 ckan.resource_proxy.max_file_size = 2097152
 
-ckan.legacy_route_mappings = {"search": "search", "organization_activity": "organization_activity", "organization_members": "organization_members"}
+ckan.legacy_route_mappings = {"organization_activity": "organization_activity", "organization_members": "organization_members"}
 ckan.webassets.path = /tmp/ckan/webassets
 
 ckan.recline.dataproxy_url = /dataproxy

@@ -66,6 +66,8 @@ flask==1.1.1
     #   -r requirements.in
     #   flask-babel
     #   flask-multistatic
+future==0.18.2
+    # via -r requirements.in
 git+https://github.com/geomet/geomet.git
     # via -r requirements.in
 idna==2.8

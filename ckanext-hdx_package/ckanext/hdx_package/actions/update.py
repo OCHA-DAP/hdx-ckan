@@ -217,7 +217,7 @@ def package_update(context, data_dict):
                 batch_extras = pkg._extras.get('batch')
                 if batch_extras and batch_extras.state == 'active':
                     data_dict['batch'] = batch_extras.value
-            except Exception, e:
+            except Exception as e:
                 log.info(str(e))
         elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
             data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
@@ -479,7 +479,7 @@ def hdx_package_update_metadata(context, data_dict):
 
     package = _get_action('package_show')(context, data_dict)
     requested_groups = [el.get('id', el.get('name','')) for el in data_dict.get('groups',[])]
-    for key, value in data_dict.iteritems():
+    for key, value in data_dict.items():
         if key in allowed_fields:
             package[key] = value
     if not package['notes']:
@@ -519,7 +519,7 @@ def hdx_resource_update_metadata(context, data_dict):
     if data_dict.get('shape_info'):
         data_dict['shape_info'] = geopreview.add_to_shape_info_list(data_dict.get('shape_info'), resource)
 
-    for key, value in data_dict.iteritems():
+    for key, value in data_dict.items():
         if key in allowed_fields:
             resource_was_modified = True
             resource[key] = value

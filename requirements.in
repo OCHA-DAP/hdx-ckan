@@ -50,6 +50,8 @@ user_agents==1.1.0
 # Based on ideas from https://github.com/data-govt-nz/ckanext-security
 git+https://github.com/akissa/repoze.who-use_beaker@780379fd58b10264c0756feb6d3f232f797ba0cb#egg=repoze.who-use_beaker
 beaker-redis~=1.1.0
+# needed by who-use-beaker
+future==0.18.2
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.3
