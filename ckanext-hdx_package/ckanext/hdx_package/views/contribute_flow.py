@@ -79,8 +79,6 @@ def new(id=None, action_name='package_create'):
                 read_logic = ContributeFlowReadLogic(dataset_dict)
                 read_logic.process_all()
 
-
-
     except NotAuthorized as e:
         status_code = 401
         ex_msg = e.message if hasattr(e, 'message') else str(e)
@@ -136,7 +134,7 @@ def _prepare_and_render(save_type='', data=None, errors=None, error_summary=None
         return render('contribute_flow/create_edit.html', extra_vars=template_data)
 
 
-def _abort(self, save_type, status_code, message):
+def _abort(save_type, status_code, message):
     if '-json' in save_type:
         response_data = {
             'aborted': True,
@@ -227,6 +225,6 @@ def _prepare_data_for_saving(context, package_type):
     return data_dict
 
 
-hdx_contribute.add_url_rule(u'/new', view_func=new, methods=[u'GET'])
+hdx_contribute.add_url_rule(u'/new', view_func=new, methods=[u'GET', u'POST'])
 hdx_contribute.add_url_rule(u'/edit/<id>', view_func=edit, methods=[u'GET', u'POST'])
 hdx_contribute.add_url_rule(u'/validate', view_func=validate, methods=[u'POST'])
