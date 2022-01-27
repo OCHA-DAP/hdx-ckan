@@ -72,12 +72,12 @@ factory-boy==2.12.0
     # via -r dev-requirements.in
 faker==10.0.0
     # via factory-boy
-flask-debugtoolbar==0.11.0
-    # via -r dev-requirements.in
 flask==1.1.1
     # via
     #   -c requirements.txt
     #   flask-debugtoolbar
+flask-debugtoolbar==0.11.0
+    # via -r dev-requirements.in
 freezegun==0.3.15
     # via
     #   -r dev-requirements.in
@@ -98,17 +98,15 @@ incremental==21.3.0
     # via towncrier
 ipdb==0.13.2
     # via -r dev-requirements.in
-ipython==7.30.1
+ipython==7.16.3
     # via ipdb
 itsdangerous==1.1.0
     # via
     #   -c requirements.txt
     #   flask
     #   flask-debugtoolbar
-jedi==0.18.1
+jedi==0.17.2
     # via ipython
-jinja2-time==0.2.0
-    # via cookiecutter
 jinja2==2.10.1
     # via
     #   -c requirements.txt
@@ -118,6 +116,8 @@ jinja2==2.10.1
     #   moto
     #   sphinx
     #   towncrier
+jinja2-time==0.2.0
+    # via cookiecutter
 jmespath==0.10.0
     # via
     #   boto3
@@ -127,8 +127,6 @@ markupsafe==1.1.1
     #   -c requirements.txt
     #   jinja2
     #   moto
-matplotlib-inline==0.1.3
-    # via ipython
 mock==2.0.0
     # via -r dev-requirements.in
 more-itertools==8.12.0
@@ -139,7 +137,7 @@ packaging==21.3
     # via
     #   pytest
     #   sphinx
-parso==0.8.3
+parso==0.7.1
     # via jedi
 pathtools==0.1.2
     # via
@@ -177,6 +175,13 @@ pyparsing==2.4.7
     # via
     #   -c requirements.txt
     #   packaging
+pytest==4.6.5
+    # via
+    #   -r dev-requirements.in
+    #   pytest-cov
+    #   pytest-freezegun
+    #   pytest-rerunfailures
+    #   pytest-split-tests
 pytest-cov==2.7.1
     # via -r dev-requirements.in
 pytest-freezegun==0.4.1
@@ -185,13 +190,6 @@ pytest-rerunfailures==8.0
     # via -r dev-requirements.in
 pytest-split-tests==1.0.9
     # via -r dev-requirements.in
-pytest==4.6.5
-    # via
-    #   -r dev-requirements.in
-    #   pytest-cov
-    #   pytest-freezegun
-    #   pytest-rerunfailures
-    #   pytest-split-tests
 python-dateutil==2.8.1
     # via
     #   -c requirements.txt
@@ -232,12 +230,12 @@ snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.3.1
     # via beautifulsoup4
-sphinx-rtd-theme==0.4.3
-    # via -r dev-requirements.in
 sphinx==1.8.5
     # via
     #   -r dev-requirements.in
     #   sphinx-rtd-theme
+sphinx-rtd-theme==0.4.3
+    # via -r dev-requirements.in
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinxcontrib-websupport
 sphinxcontrib-websupport==1.2.4
@@ -249,9 +247,7 @@ toml==0.10.2
 towncrier==19.2.0
     # via -r dev-requirements.in
 traitlets==5.1.1
-    # via
-    #   ipython
-    #   matplotlib-inline
+    # via ipython
 urllib3==1.25.8
     # via
     #   -c requirements.txt
