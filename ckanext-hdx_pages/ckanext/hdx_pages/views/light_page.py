@@ -375,7 +375,11 @@ class EditView(MethodView):
                 return h.redirect_to(_blueprint, id=updated_page.get("id"))
 
             elif _delete_page:
-                return h.redirect_to(u'hdx_custom_page.delete_page', id=id)
+                try:
+                    get_action('page_delete')(context, {'id': id})
+                except Exception as ex:
+                    abort(404, _('There was an error. Please contact the admin'))
+                return h.redirect_to(u'home.index')
 
     def get(self, id, data=None, errors=None, error_summary=None):
         context, extra_vars = _init_data(data, error_summary, errors)
