@@ -1,17 +1,17 @@
 .quick-edit {
   position: relative;
-  background-color: #f4f4f4;
 }
 .quick-edit td.dataset-details {
   padding-right: 90px;
 }
-.quick-edit ~ .quick-edit {
-  border-top: 5px white solid;
+.quick-edit:hover {
+  background-color: #f4f4f4;
 }
 .quick-edit:hover .quick-link {
   display: block;
 }
 .quick-edit .quick-link {
+  display: none;
   background-color: #fff;
   color: #007CE0;
   border-color: #007CE0;
