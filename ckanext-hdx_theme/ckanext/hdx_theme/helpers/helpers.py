@@ -184,6 +184,24 @@ def hdx_get_user_info(user_id):
         base.abort(403, _('Unauthorized to see organization member list'))
     return user
 
+def hdx_get_org_member_info(user_id, org):
+    context = {'model': model, 'session': model.Session,
+               'user': c.user or c.author}
+    try:
+        user = tk.get_action('hdx_basic_user_info')(context, {'id': user_id})
+        maint_pkgs = _get_packages_for_maintainer(context, user_id, org)
+        user['maint_pkgs'] = maint_pkgs
+    except logic.NotAuthorized:
+        base.abort(403, _('Unauthorized to see organization member list'))
+    return user
+
+def _get_packages_for_maintainer(context, id, org):
+    result = logic.get_action('package_search')(context, {
+        'q': '*:*',
+        'fq': 'maintainer:{0}, organization:{1}'.format(id, org),
+        'rows': 100,
+    })
+    return result['results']
 
 def markdown_extract_strip(text, extract_length=190):
     ''' return the plain text representation of markdown encoded text.  That
