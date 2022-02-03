@@ -49,9 +49,9 @@ Example:
                     {% do pkgs_list.append(pkg.title) %}
                   {% endfor %}
                   {% if c.current_user.name == member.name %}
-                    {% set confirm_delete_message = 'You can\'t leave this organisation. Please change maintainer for the following packages: ' %}
+                    {% set confirm_delete_message = 'You can\'t leave this organisation. Please change maintainer for the following datasets: ' %}
                   {% else %}
-                    {% set confirm_delete_message = 'User cannot be removed from organisation. Please change maintainer for the following packages: ' %}
+                    {% set confirm_delete_message = 'User cannot be removed from this organisation. Please change maintainer for the following datasets: ' %}
                   {% endif %}
                   {% set disabled = True %}
                 {% else %}

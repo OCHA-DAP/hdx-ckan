@@ -37,7 +37,7 @@ Example:
       {% if (member.maint_pkgs | length > 0)%}
         <div>
           <p class="mTop8">
-            <span class="red">*</span> Can't change role to "member" because member is maintainer of these datasets:
+            <span class="red">*</span> Can't change role to "member" because the user is maintainer of these datasets:
           </p>
           <ul>
             {% for p in member.maint_pkgs %}
