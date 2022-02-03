@@ -97,11 +97,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
-    def after_map(self, map):
-        map.connect('dataset_edit', '/dataset/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='show_notification_page')
-        return map
+    # def after_map(self, map):
+    #     map.connect('dataset_edit', '/dataset/edit/{id}',
+    #                 controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+    #                 action='show_notification_page')
+    #     return map
 
     # def before_delete(context, data_dict, resource, resources):
     #     try:
@@ -132,21 +132,21 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #             controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
         #             action='edit')
 
-        map.connect('add dataset', '/dataset/new',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='new_notification_page')
-        map.connect('dataset_edit', '/dataset/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='edit_notification_page')
-        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='resource_edit_notification_page', ckan_icon='edit')
-        map.connect('new_resource', '/dataset/new_resource/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='resource_new_notification_page')
-        map.connect('dataset_resources', '/dataset/resources/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='resources_notification_page')
+        # map.connect('add dataset', '/dataset/new',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='new_notification_page')
+        # map.connect('dataset_edit', '/dataset/edit/{id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='edit_notification_page')
+        # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='resource_edit_notification_page', ckan_icon='edit')
+        # map.connect('new_resource', '/dataset/new_resource/{id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='resource_new_notification_page')
+        # map.connect('dataset_resources', '/dataset/resources/{id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='resources_notification_page')
         map.connect('/membership/contact_contributor',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='contact_contributor')
@@ -721,6 +721,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         import ckanext.hdx_package.views.dataset as dataset
         import ckanext.hdx_package.views.dataset_changes as dataset_changes
         import ckanext.hdx_package.views.contribute_flow as contribute_flow
+        import ckanext.hdx_package.views.dataset_old_links as dataset_old_links
         return [
             light_dataset.hdx_light_dataset,
             light_dataset.hdx_light_search,
@@ -728,6 +729,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             dataset.hdx_search,
             dataset_changes.hdx_dataset_changes,
             contribute_flow.hdx_contribute,
+            dataset_old_links.hdx_dataset_old_links,
         ]
 
 
