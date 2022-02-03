@@ -22,7 +22,7 @@ def setup():
 def create_table():
     if group_table.exists() and organization_batch_table is not None and not organization_batch_table.exists():
         organization_batch_table.create()
-        print 'Org batch table created'
+        # print ('Org batch table created')
 
 
 class OrganizationBatch(domain_object.DomainObject):

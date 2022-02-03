@@ -1,7 +1,7 @@
 import json
 import logging
 import time
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 
 import ipaddress
 import requests
@@ -46,7 +46,7 @@ class AbstractAnalyticsSender(object):
             else:
                 log.error('User agent could not be parsed for {}'.format(request.user_agent))
 
-        except Exception, e:
+        except Exception as e:
             log.warn('request specific info could not be found. This is normal for nose tests. Exception is {}'.format(
                 str(e)))
 
@@ -69,13 +69,13 @@ class AbstractAnalyticsSender(object):
             else:
                 log.warn('Analytics enqueque url is empty so event was NOT put in queue. This is normal for tests !')
 
-        except requests.ConnectionError, e:
+        except requests.ConnectionError as e:
             log.error("There was a connection error to the analytics enqueuing service: {}".format(str(e)))
-        except requests.HTTPError, e:
+        except requests.HTTPError as e:
             log.error("Bad HTTP response from analytics enqueuing service: {}".format(str(e)))
-        except requests.Timeout, e:
+        except requests.Timeout as e:
             log.error("Request timed out: {}".format(str(e)))
-        except Exception, e:
+        except Exception as e:
             log.error('Unexpected error {}'.format(e))
 
     def __check_ip_addr_public(self):

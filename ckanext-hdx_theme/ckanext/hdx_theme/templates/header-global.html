@@ -125,131 +125,140 @@
                     </span>
                   </a>
                 </li>
-                {% if c.userobj %}
-                      {% snippet 'light/notifications/notification_snippet.html' %}
-                <li>
-                  <div class="dropdown">
-                      <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
-                        <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
-                        <div class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</div>
-                      </a>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        {% block header_account_logged %}
-                        {% set user_is_sysadmin = h.check_access('sysadmin') %}
-                        {% set def_url = h.find_first_global_settings_url() %}
-                        {% if def_url %}
-                          <li>
-                            <a href="#" class="collapsible-submenu-item" title="{{ _('Sysadmin Dashboard') }}">
-                              {{ _('Sysadmin Dashboard') }} <i class="humanitarianicons-Down"></i>
-                            </a>
-                            <ul id="user-menu-sysadmin-submenu" class="dropdown-submenu collapse in">
-                              {% if user_is_sysadmin %}
-                              <li>
-                                <a href="{{def_url}}" title="{{ _('All Sysadmins') }}">
-                                  <i class="icon-legal"></i>
-                                  <span>{{ _('All Sysadmins') }}</span>
-                                </a>
-                              </li>
-                              {% endif %}
-                              {% if user_is_sysadmin %}
-                              <li>
-                                <a href="/user/" title="{{ _('All Users') }}">
-                                  <i class="icon-legal"></i>
-                                  <span>{{ _('All Users') }}</span>
-                                </a>
-                              </li>
-                              {% endif %}
-                              {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
-                              <li>
-                                <a href="{{ h.url_for('hdx_carousel.show') }}" title="{{ _('Carousel') }}">
-                                  <i class="icon-legal"></i>
-                                  <span>{{ _('Carousel') }}</span>
-                                </a>
-                              </li>
-                              {% endif %}
-                              {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
-                              <li>
-                                <a href="{{ h.url_for('ckanadmin_requests_data') }}" title="{{ _('HDX Connect Dashboard') }}">
-                                  <i class="icon-legal"></i>
-                                  <span>{{ _('HDX Connect Dashboard') }}</span>
-                                </a>
-                              </li>
-                              {% endif %}
-                              {% if user_is_sysadmin or h.check_access('admin_page_list') %}
-                              <li>
-                                <a href="{{ h.url_for('hdx_custom_pages.index') }}" title="{{ _('Custom/Event Pages') }}">
-                                  <i class="icon-legal"></i>
-                                  <span>{{ _('Custom/Event Pages') }}</span>
-                                </a>
-                              </li>
-                              {% endif %}
-                              {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
-                                {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
-                                {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
-                              {% endif %}
-                              {% if user_is_sysadmin %}
-                                {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
-                                {{ h.build_nav_icon('admin.config', _('Config')) }}
-                              {% endif %}
-                            </ul>
-                          </li>
-                        {% endif %}
-                        {% if def_url and h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
-                          <li>
-                            <a href="/qa_dashboard?ext_bulk_datasets=0&ext_qa_completed=0" title="{{ _('QA Dashboard') }}">
-                              <i class="icon-legal"></i>
-                              <span>{{ _('QA Dashboard') }}</span>
-                            </a>
-                          </li>
-                        {% endif %}
-                        <li class="notifications">
-                            <a href="#" class="collapsible-submenu-item" title="{{ _('User Dashboard') }}">
-                              {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
-                            </a>
-                            <ul class="dropdown-submenu collapse {% if not def_url %}in{% endif %}">
-                              {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
-                              {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
-                              {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
-                              {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
-                              {{ h.build_nav_icon('requestdata_my_requests', _('HDX Connect Requests'), id=c.userobj.name) }}
-                              {% if user_is_sysadmin %}
-                                <li>
-                                  <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
-                                </li>
-                              {% endif %}
 
-                            </ul>
-                        </li>
-                        <li class="notifications">
-                          <a href="#" class="collapsible-submenu-item" title="{{ _('User Settings') }}">
-                            {{ _('User Settings') }} <i class="humanitarianicons-Up"></i>
-                          </a>
-                          <ul class="dropdown-submenu collapse">
-                            {{ h.build_nav_icon('user.read', _('Datasets'), id=c.userobj.name) }}
-                            {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=c.userobj.name) }}
-                            {% if h.check_access('sysadmin') %}
-                              {{ h.build_nav_icon('user_permission', _('User Permission'), id=c.userobj.name) }}
+                {% if not h.HDX_CONST('PY3') %}
+                  {% if c.userobj %}
+                    {% snippet 'light/notifications/notification_snippet.html' %}
+                    <li>
+                      <div class="dropdown">
+                        <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
+                          <svg class="icon-o-user" viewBox="0 0 48 48">
+                            <path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/>
+                            <rect x="15" y="4" width="18" height="18" rx="9" ry="9"/>
+                          </svg>
+                          <div
+                            class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                          {% block header_account_logged %}
+                            {% set user_is_sysadmin = h.check_access('sysadmin') %}
+                            {% set def_url = h.find_first_global_settings_url() %}
+                            {% if def_url %}
+                              <li>
+                                <a href="#" class="collapsible-submenu-item" title="{{ _('Sysadmin Dashboard') }}">
+                                  {{ _('Sysadmin Dashboard') }} <i class="humanitarianicons-Down"></i>
+                                </a>
+                                <ul id="user-menu-sysadmin-submenu" class="dropdown-submenu collapse in">
+                                  {% if user_is_sysadmin %}
+                                    <li>
+                                      <a href="{{ def_url }}" title="{{ _('All Sysadmins') }}">
+                                        <i class="icon-legal"></i>
+                                        <span>{{ _('All Sysadmins') }}</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                  {% if user_is_sysadmin %}
+                                    <li>
+                                      <a href="/user/" title="{{ _('All Users') }}">
+                                        <i class="icon-legal"></i>
+                                        <span>{{ _('All Users') }}</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                  {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
+                                    <li>
+                                      <a href="{{ h.url_for('hdx_carousel.show') }}" title="{{ _('Carousel') }}">
+                                        <i class="icon-legal"></i>
+                                        <span>{{ _('Carousel') }}</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                  {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
+                                    <li>
+                                      <a href="{{ h.url_for('ckanadmin_requests_data') }}"
+                                         title="{{ _('HDX Connect Dashboard') }}">
+                                        <i class="icon-legal"></i>
+                                        <span>{{ _('HDX Connect Dashboard') }}</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                  {% if user_is_sysadmin or h.check_access('admin_page_list') %}
+                                    <li>
+                                      <a href="{{ h.url_for('hdx_custom_pages.index') }}"
+                                         title="{{ _('Custom/Event Pages') }}">
+                                        <i class="icon-legal"></i>
+                                        <span>{{ _('Custom/Event Pages') }}</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                  {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
+                                    {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
+                                    {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
+                                  {% endif %}
+                                  {% if user_is_sysadmin %}
+                                    {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+                                    {{ h.build_nav_icon('admin.config', _('Config')) }}
+                                  {% endif %}
+                                </ul>
+                              </li>
                             {% endif %}
-                            {% if h.check_access('api_token_list', {'user': c.userobj['name']}) %}
-                              {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=c.userobj.name) }}
+                            {% if def_url and h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
+                              <li>
+                                <a href="/qa_dashboard?ext_bulk_datasets=0&ext_qa_completed=0"
+                                   title="{{ _('QA Dashboard') }}">
+                                  <i class="icon-legal"></i>
+                                  <span>{{ _('QA Dashboard') }}</span>
+                                </a>
+                              </li>
                             {% endif %}
-                          </ul>
-                        </li>
+                            <li class="notifications">
+                              <a href="#" class="collapsible-submenu-item" title="{{ _('User Dashboard') }}">
+                                {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
+                              </a>
+                              <ul class="dropdown-submenu collapse {% if not def_url %}in{% endif %}">
+                                {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
+                                {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
+                                {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
+                                {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
+                                {{ h.build_nav_icon('requestdata_my_requests', _('HDX Connect Requests'), id=c.userobj.name) }}
+                                {% if user_is_sysadmin %}
+                                  <li>
+                                    <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
+                                  </li>
+                                {% endif %}
+
+                              </ul>
+                            </li>
+                            <li class="notifications">
+                              <a href="#" class="collapsible-submenu-item" title="{{ _('User Settings') }}">
+                                {{ _('User Settings') }} <i class="humanitarianicons-Up"></i>
+                              </a>
+                              <ul class="dropdown-submenu collapse">
+                                {{ h.build_nav_icon('user.read', _('Datasets'), id=c.userobj.name) }}
+                                {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=c.userobj.name) }}
+                                {% if h.check_access('sysadmin') %}
+                                  {{ h.build_nav_icon('user_permission', _('User Permission'), id=c.userobj.name) }}
+                                {% endif %}
+                                {% if h.check_access('api_token_list', {'user': c.userobj['name']}) %}
+                                  {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=c.userobj.name) }}
+                                {% endif %}
+                              </ul>
+                            </li>
 
 
-                        {% block header_account_log_out_link %}
-                        <li>
-                          <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
-                            <i class="icon-signout"></i>
-                            <span>{{ _('Log out') }}</span>
-                          </a>
-                        </li>
-                        {% endblock %}
-                        {% endblock %}
-                      </ul>
-                    </div>
-                </li>
-                {#
+                            {% block header_account_log_out_link %}
+                              <li>
+                                <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                                  <i class="icon-signout"></i>
+                                  <span>{{ _('Log out') }}</span>
+                                </a>
+                              </li>
+                            {% endblock %}
+                          {% endblock %}
+                        </ul>
+                      </div>
+                    </li>
+                    {#
                 <li class="logout-action">
                   <a class="action" href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
                     <i class="glyphicon glyphicon-log-out"></i>
@@ -257,27 +266,37 @@
                   </a>
                 </li>
                 #}
-                {% else %}
-                {% block header_account_notlogged %}
-                <li>
-                      <a class="action" class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">
-                        <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
-                        <span class="action-text">
+                  {% else %}
+                    {% block header_account_notlogged %}
+                      <li>
+                        <a class="action" class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');"
+                           href="#" aria-label="login">
+                          <svg class="icon-o-user" viewBox="0 0 48 48">
+                            <path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/>
+                            <rect x="15" y="4" width="18" height="18" rx="9" ry="9"/>
+                          </svg>
+                          <span class="action-text">
                           {{ _('Log in') }}
                         </span>
 
-                    </a>
-                </li>
-                <li>
-                  <a class="action" onclick="spawnRecaptcha('#signupPopup');showOnboardingWidget('#signupPopup');" href="#" aria-label="sign up">
-                    <svg class="icon-o-checked" viewBox="0 0 48 48"><path d="M24,2A22,22,0,1,0,46,24,22,22,0,0,0,24,2ZM38.06,18.37,23,33.83a2.92,2.92,0,0,1-2.9.8,3,3,0,0,1-1.6-.83L10,25.29A3,3,0,0,1,14.2,21l6.5,6.5L33.77,14.17a3,3,0,1,1,4.29,4.19Z"/></svg>
-                    <span class="action-text">
-                            {{_('Sign up')}}
+                        </a>
+                      </li>
+                      <li>
+                        <a class="action" onclick="spawnRecaptcha('#signupPopup');showOnboardingWidget('#signupPopup');"
+                           href="#" aria-label="sign up">
+                          <svg class="icon-o-checked" viewBox="0 0 48 48">
+                            <path
+                              d="M24,2A22,22,0,1,0,46,24,22,22,0,0,0,24,2ZM38.06,18.37,23,33.83a2.92,2.92,0,0,1-2.9.8,3,3,0,0,1-1.6-.83L10,25.29A3,3,0,0,1,14.2,21l6.5,6.5L33.77,14.17a3,3,0,1,1,4.29,4.19Z"/>
+                          </svg>
+                          <span class="action-text">
+                            {{ _('Sign up') }}
                           </span>
-                  </a>
-                </li>
-                {% endblock %}
+                        </a>
+                      </li>
+                    {% endblock %}
+                  {% endif %}
                 {% endif %}
+
                 {% if page_has_mobile_version %}
                 <li class="less-important">
                   <a class="action" href="{{ h.hdx_switch_url_path() }}">

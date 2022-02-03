@@ -4,16 +4,14 @@ Created on Jul 31, 2014
 @author: alexandru-m-g
 '''
 
-import exceptions as exceptions
 import logging as logging
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import pylons.config as config
 
 import ckan.plugins.toolkit as tk
 
 get_validator = tk.get_validator
-
+config = tk.config
 log = logging.getLogger(__name__)
 
 
@@ -44,7 +42,7 @@ def send_mail(rawRecipients, subject, body, one_email=False):
         raise NoRecipientException('The are no recipients for this request. Contact an administrator ')
 
 
-class NoRecipientException(exceptions.Exception):
+class NoRecipientException(Exception):
     def __init__(self, value):
         self.value = value
 

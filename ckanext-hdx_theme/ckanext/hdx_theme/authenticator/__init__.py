@@ -1,10 +1,10 @@
-from zope.interface import implements
+from zope.interface import implementer
 from repoze.who.interfaces import IAuthenticator
 
 
 # Based on PR from ckanext-security to CKAN: https://github.com/ckan/ckan/pull/4656/files
+@implementer(IAuthenticator)
 class BeakerRedisAuth(object):
-    implements(IAuthenticator)
 
     def authenticate(self, environ, identity):
         # At this stage, the identity has already been validated from the cookie

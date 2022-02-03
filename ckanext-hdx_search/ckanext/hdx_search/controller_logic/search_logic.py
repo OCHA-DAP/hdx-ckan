@@ -17,7 +17,7 @@ import ckan.plugins.toolkit as tk
 
 
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
-from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
+from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER

@@ -3,11 +3,13 @@ import json
 import os
 from collections import OrderedDict
 
-from pylons import config
+import ckan.plugins.toolkit as tk
 
 import ckan
 
-_ALLOWED_FORMATS = None # type dict
+config = tk.config
+
+_ALLOWED_FORMATS = None  # type dict
 
 
 def guess_format_from_extension(extension):

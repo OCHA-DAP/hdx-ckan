@@ -128,9 +128,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='resource_datapreview')
-        map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
-                    controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
-                    action='edit')
+        # map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
+        #             controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
+        #             action='edit')
 
         map.connect('add dataset', '/dataset/new',
                     controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
@@ -174,15 +174,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             action='read')
 
         # map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
-        map.connect('/contribute/new',
-                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-                    action='new')
-        map.connect('/contribute/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-                    action='edit')
-        map.connect('/contribute/validate',
-                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-                    action='validate')
+        # map.connect('/contribute/new',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='new')
+        # map.connect('/contribute/edit/{id}',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='edit')
+        # map.connect('/contribute/validate',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='validate')
 
         return map
 
@@ -720,12 +720,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         import ckanext.hdx_package.views.light_dataset as light_dataset
         import ckanext.hdx_package.views.dataset as dataset
         import ckanext.hdx_package.views.dataset_changes as dataset_changes
+        import ckanext.hdx_package.views.contribute_flow as contribute_flow
         return [
             light_dataset.hdx_light_dataset,
             light_dataset.hdx_light_search,
             dataset.hdx_dataset,
             dataset.hdx_search,
             dataset_changes.hdx_dataset_changes,
+            contribute_flow.hdx_contribute,
         ]
 
 

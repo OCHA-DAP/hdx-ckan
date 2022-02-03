@@ -231,7 +231,7 @@ def package_search(context, data_dict):
     try:
         for item in plugins.PluginImplementations(plugins.IPackageController):
             data_dict = item.before_search(data_dict)
-    except NotFound, e:
+    except NotFound as e:
         base_abort(404, 'Wrong parameter value in url')
 
     # the extension may have decided that it is not necessary to perform

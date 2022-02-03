@@ -1,6 +1,9 @@
 import requests
 
-from pylons import config
+import ckan.plugins.toolkit as tk
+
+config = tk.config
+
 
 def do_hxl_transformation(source_url, transformer):
     '''
