@@ -398,16 +398,6 @@ class HDXOrgMemberController(org.OrganizationController):
             self._redirect_to_this_controller(action='members', id=id)
 
         context = self._get_context()
-        user_id = request.params.get('user')
-        result = logic.get_action('package_search')(context, {
-            'q':'*:*',
-            'fq': 'maintainer:{0}, organization:{1}'.format(user_id, id),
-            'rows': 100,
-        })
-
-        if len(result['results']) > 0:
-            abort(403, _('User is set as maintainer for datasets belonging to this org. Can\t delete, please change maintainer first'))
-
         try:
             self._check_access('group_member_delete', context, {'id': id})
         except NotAuthorized:
