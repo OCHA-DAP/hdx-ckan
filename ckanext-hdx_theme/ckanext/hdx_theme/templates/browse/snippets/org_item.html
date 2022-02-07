@@ -16,7 +16,7 @@
                     {% if light=='True' %}
                       {{ h.nav_link( organization.title, named_route='hdx_light_org.light_read', id=organization.name, highlight_actions = 'new index') }}
                     {% else %}
-                      {{ h.link_to(organization.title, h.url_for(controller='organization', action='read', id=organization.name)) }}
+                      {{ h.link_to(organization.title, h.url_for('hdx_org.read', id=organization.name)) }}
                     {% endif %}
                     </h3>
                 {% endblock %}
@@ -29,7 +29,7 @@
                                 {% set num_of_pack = organization.datasets_num %}
                             {% endif %}
                             <span class="sspBold14">
-                                <a class="sspBold14" href="{{ h.url_for('hdx_org.read', action='read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                                <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
                             </span>
                         {% else %}
                             <span class="sspBold14">{{ _('0 Datasets') }}</span>
@@ -38,7 +38,7 @@
                         {% if organization.archived_package_count %}
                           {% set num_of_pack = organization.archived_package_count %}
                           <span class="sspBold14">
-                              <a class="sspBold14" href="{{ h.url_for('hdx_org.read', action='read', id=organization.name, sort='metadata_modified desc', ext_archived=1)}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Archived Datasets') }}{% else %}{{ _('Archived Dataset') }}{% endif %}</a>
+                              <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc', ext_archived=1)}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Archived Datasets') }}{% else %}{{ _('Archived Dataset') }}{% endif %}</a>
                           </span>
                         {% else %}
                             <span class="sspBold14">{{ _('0 Archived Datasets') }}</span>
