@@ -59,6 +59,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'group_update': hdx_org_actions.hdx_group_update,
             'group_create': hdx_org_actions.hdx_group_create,
             'group_delete': hdx_org_actions.hdx_group_delete,
+            'organization_member_delete': hdx_org_actions.organization_member_delete,
+            'organization_member_create': hdx_org_actions.organization_member_create,
             'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
             'hdx_get_locations_info_from_rw': get_actions.hdx_get_locations_info_from_rw,
             'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location,

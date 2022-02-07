@@ -28,11 +28,14 @@ import ckan.logic.action as core
 import ckan.model as model
 import ckan.plugins as plugins
 from ckan.common import _, c, config
+import ckan.plugins.toolkit as toolkit
+import ckan.lib.base as base
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
+abort = base.abort
 
 log = logging.getLogger(__name__)
-
+chained_action = toolkit.chained_action
 get_action = logic.get_action
 check_access = logic.check_access
 _get_or_bust = logic.get_or_bust
@@ -295,6 +298,32 @@ def hdx_group_update(context, data_dict):
 def hdx_group_delete(context, data_dict):
     return _run_core_group_org_action(context, data_dict, core.delete.group_delete)
 
+def _check_user_is_maintainer(context, user_id, org_id):
+    group = model.Group.get(org_id)
+    result = logic.get_action('package_search')(context, {
+        'q': '*:*',
+        'fq': 'maintainer:{0}, organization:{1}'.format(user_id, group.name),
+        'rows': 100,
+    })
+
+    if len(result['results']) > 0:
+        return True
+    return False
+
+@chained_action
+def organization_member_delete(original_action, context, data_dict):
+    if _check_user_is_maintainer(context, data_dict.get('user_id'), data_dict.get('id')):
+        abort(403, _('User is set as maintainer for datasets belonging to this org. Can\t delete, please change maintainer first'))
+
+    return original_action(context, data_dict)
+
+@chained_action
+def organization_member_create(original_action, context, data_dict):
+    if data_dict.get('role') == 'member':
+        if _check_user_is_maintainer(context, data_dict.get('user'), data_dict.get('id')):
+            abort(403, _('User is set as maintainer for datasets belonging to this org. Can\'t change role to \'member\', please change maintainer first'))
+
+    return original_action(context, data_dict)
 
 def hdx_organization_create(context, data_dict):
     data_dict['type'] = 'organization'

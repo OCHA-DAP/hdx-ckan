@@ -58,7 +58,8 @@
                     <ul class="search-list list-items dataset-list unstyled" style="padding: 0;">
                         {% for user_id, user, translated_role, role, user_name in member_list %}
                              {% snippet 'organization/snippets/member_item.html', id=user_id,
-                                translated_role= translated_role, role=role, roles=roles, group_id=c.group_dict.id, authorized=authorized, is_single_admin=is_single_admin %}
+                                translated_role=translated_role, role=role, roles=roles, group_id=c.group_dict.id,
+                                authorized=authorized, is_single_admin=is_single_admin, group_name=c.group_dict.name %}
                         {% endfor %}
                     </ul>
 
@@ -122,10 +123,13 @@
                                                     {% endif %}
                                                 {% endif %}
 
+                                              {#
+                                                ### Popup should've been rendered in the list already :)
                                                 {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
                                                 {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
                                                 action='member_delete', id=c.group_dict.id, user=current_member.id),
                                                 body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+current_member.id %}
+                                              #}
                                             </div>
                                         </div>
                                     </div>

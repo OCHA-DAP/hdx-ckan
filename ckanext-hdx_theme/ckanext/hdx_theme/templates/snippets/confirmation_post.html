@@ -1,7 +1,7 @@
 {#
 Example:
 
-  {% snippet 'snippets/confirmation_post.html', form_url=form_url, modal_div_id='confirmation-div', 
+  {% snippet 'snippets/confirmation_post.html', form_url=form_url, modal_div_id='confirmation-div',
   		header='Confirm', body="message", confirm_btn_label='Confirm' %}
 
 #}
@@ -23,17 +23,23 @@ Example:
 				</h3>
 			</div>
 			<div class="modal-body">
-				<div class="hdx-modal-text-body">{{ body }}</div>
+				<div class="hdx-modal-text-body">
+          {% block body %}
+            {{ body }}
+          {% endblock %}
+        </div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-empty btn-large" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
-				<button class="btn btn-danger btn-large">
-					{% if header %}
-						{{ confirm_btn_label }}
-					{% else %}
-						{{ _('Confirm')  }}
-					{% endif %}
-				</button>
+        {% block footer %}
+          <button class="btn btn-empty btn-large" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+          <button class="btn btn-danger btn-large">
+            {% if header %}
+              {{ confirm_btn_label }}
+            {% else %}
+              {{ _('Confirm')  }}
+            {% endif %}
+          </button>
+        {% endblock %}
 			</div>
 		</div>
 		</div>

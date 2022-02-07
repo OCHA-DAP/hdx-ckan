@@ -398,7 +398,6 @@ class HDXOrgMemberController(org.OrganizationController):
             self._redirect_to_this_controller(action='members', id=id)
 
         context = self._get_context()
-
         try:
             self._check_access('group_member_delete', context, {'id': id})
         except NotAuthorized:

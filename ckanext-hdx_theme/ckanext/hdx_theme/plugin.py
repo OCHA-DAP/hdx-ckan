@@ -202,6 +202,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_num_of_new_related_items': hdx_helpers.hdx_num_of_new_related_items,
             'hdx_get_extras_element': hdx_helpers.hdx_get_extras_element,
             'hdx_get_user_info': hdx_helpers.hdx_get_user_info,
+            'hdx_get_org_member_info': hdx_helpers.hdx_get_org_member_info,
             'hdx_linked_user': hdx_helpers.hdx_linked_user,
             'hdx_show_singular_plural': hdx_helpers.hdx_show_singular_plural,
             'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,
