@@ -399,8 +399,9 @@ def ckan_after_request(response):
 
     r_time = time.time() - g.__timer
     url = request.environ['PATH_INFO']
+    status_code = response.status_code
 
-    log.info(' %s render time %.3f seconds' % (url, r_time))
+    log.info(' %s %s render time %.3f seconds' % (status_code, url, r_time))
 
     return response
 
@@ -528,7 +529,9 @@ def _register_error_handler(app):
 
     def error_handler(e):
         log.error(e, exc_info=sys.exc_info)
+        debug = asbool(config.get('debug', config.get('DEBUG', False)))
         if isinstance(e, HTTPException):
+            log.error(e, exc_info=sys.exc_info) if debug else log.error(e)
             extra_vars = {
                 u'code': e.code,
                 u'content': e.description,
@@ -537,6 +540,7 @@ def _register_error_handler(app):
 
             return base.render(
                 u'error_document_template.html', extra_vars), e.code
+        log.error(e, exc_info=sys.exc_info)
         extra_vars = {u'code': [500], u'content': u'Internal server error'}
         return base.render(u'error_document_template.html', extra_vars), 500
 
