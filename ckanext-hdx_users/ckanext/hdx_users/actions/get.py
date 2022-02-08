@@ -1,17 +1,15 @@
 import logging
-import pylons.config as config
-from ckan.plugins import toolkit as tk
-import ckan.model as model
 
 import ckan.logic as logic
 import ckan.logic.action.get as user_get
-import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 
+config = tk.config
 log = logging.getLogger(__name__)
-_check_access = logic.check_access
+_check_access = tk.check_access
 NotFound = logic.NotFound
-get_action = logic.get_action
+get_action = tk.get_action
 NoOfLocs = 5
 NoOfOrgs = 5
 c_nepal_earthquake = config.get('hdx.crisis.nepal_earthquake')
@@ -85,9 +83,13 @@ def hdx_user_autocomplete(context, data_dict):
     if data_dict['__extras']:
         org = data_dict['__extras']['org']
     limit = data_dict.get('limit', 20)
+    ignore_self = data_dict.get('ignore_self', False)
 
     query = model.User.search(q).order_by(None)
     query = query.filter(model.User.state == model.State.ACTIVE)
+    if ignore_self:
+        query = query.filter(model.User.name != user)
+
     if org:
         query1 = query.filter(model.User.id == model.Member.table_id) \
             .filter(model.Member.table_name == "user") \
@@ -123,13 +125,6 @@ def hdx_user_fullname_show(context, data_dict):
 
     user_id = data_dict.get('id')
     user_dict = {'id': user_id}
-    # if 'include_user_dict' in data_dict and data_dict.get('include_user_dict') == 'true':
-    # try:
-    #     user_dict = get_action('user_show')(context, {'id': user_id})
-    # except Exception, ex:
-    #     log.error(ex)
-    #     raise NotFound("user not found")
-    # user_obj = model.User.get(user_id)
     _set_user_names(context, user_dict)
     return user_dict
 
@@ -141,14 +136,14 @@ def _set_user_names(context, user_dict):
                                                                     {'user_id': user_dict.get('id'),
                                                                      'key': user_model.HDX_FIRST_NAME})
             user_dict['firstname'] = first_name.get(user_model.HDX_FIRST_NAME)
-        except Exception, ex:
+        except Exception as ex:
             user_dict['firstname'] = None
         try:
             last_name = get_action('user_extra_value_by_key_show')(context,
                                                                    {'user_id': user_dict.get('id'),
                                                                     'key': user_model.HDX_LAST_NAME})
             user_dict['lastname'] = last_name.get(user_model.HDX_LAST_NAME)
-        except  Exception, ex:
+        except Exception as ex:
             user_dict['lastname'] = None
     return user_dict
 

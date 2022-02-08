@@ -6,7 +6,7 @@
   {% endif %}
   {% set is_hdx = h.requestdata_is_hdx_portal() %}
   {% set redirect_url = h.url_for(controller='user', action='login') %}
-  {% set requestdata_action = h.url_for('requestdata_send_request') %}
+  {% set requestdata_action = h.url_for('requestdata_send_request.send_request') %}
   {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name, 'package_title':pkg.title}) %}
   {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
   {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}

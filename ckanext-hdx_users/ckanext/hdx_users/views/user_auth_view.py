@@ -1,26 +1,31 @@
 import datetime
 import logging as logging
-from urllib import quote
+
 import dateutil
-import ckan.lib.base as base
-import ckan.lib.helpers as h
+from six.moves.urllib.parse import quote
+
 import ckan.model as model
 import ckan.plugins as p
+
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
-from ckan.common import _, request, c, config, response
 from ckanext.hdx_users.views.user_view_helper import *
 
-abort = base.abort
-render = base.render
+abort = tk.abort
+render = tk.render
 log = logging.getLogger(__name__)
 unflatten = dictization_functions.unflatten
 _validate = dictization_functions.validate
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
+ValidationError = tk.ValidationError
+check_access = tk.check_access
+get_action = tk.get_action
 g = tk.g
+request = tk.request
+_ = tk._
+config = tk.config
+h = tk.h
+asbool = tk.asbool
 
 class HDXUserAuthView:
     def __init__(self):
@@ -36,9 +41,9 @@ class HDXUserAuthView:
         if h.url_is_local(came_from):
             return h.redirect_to(str(came_from))
 
-        if c.user:
+        if g.user:
             context = None
-            data_dict = {'id': c.user}
+            data_dict = {'id': g.user}
             user_dict = get_action('user_show')(context, data_dict)
 
             # IAuthenticator too buggy, doing this instead
@@ -66,13 +71,13 @@ class HDXUserAuthView:
 
                 return h.redirect_to('dashboard.organizations')
             else:
-                userobj = c.userobj if c.userobj else model.User.get(c.user)
+                userobj = g.userobj if g.userobj else model.User.get(g.user)
                 login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
                               'email_hash': userobj.email_hash, 'login': userobj.name}
 
                 max_age = int(14 * 24 * 3600)
                 # response.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age)
-                if not c.user:
+                if not g.user:
                     h.redirect_to(locale=None, controller='user', action='login', id=None)
 
                 # do we need this?
@@ -98,7 +103,7 @@ class HDXUserAuthView:
             except:
                 pass
 
-            if p.toolkit.asbool(config.get('ckan.legacy_templates', 'false')):
+            if asbool(config.get('ckan.legacy_templates', 'false')):
                 h.flash_error(err)
                 h.redirect_to(controller='user',
                               action='login', came_from=came_from)
@@ -111,7 +116,7 @@ class HDXUserAuthView:
 
     def new_login(self, error=None, info_message=None, page_subtitle=None):
         template_data = {}
-        if not c.user:
+        if not g.user:
             template_data = ue_helpers.get_login(True, "")
         if info_message:
             if 'data' not in template_data:
@@ -119,5 +124,4 @@ class HDXUserAuthView:
             template_data['data']['info_message'] = info_message
             template_data['data']['page_subtitle'] = page_subtitle
         return render('home/index.html', extra_vars=template_data)
-
 

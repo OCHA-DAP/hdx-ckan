@@ -1,17 +1,14 @@
-import ckan.model as model
-import pylons.config as config
-
 import ckan.logic as logic
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.reset_password as reset_password
 import ckanext.hdx_users.model as umodel
 
-import ckanext.hdx_users.helpers.reset_password as reset_password
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-
-
 NotFound = logic.NotFound
-_check_access = logic.check_access
-get_action = logic.get_action
-
+_check_access = tk.check_access
+get_action = tk.get_action
+config = tk.config
 
 def token_update(context, data_dict):
     token = data_dict.get('token')
@@ -45,7 +42,8 @@ def user_fullname_update(context, data_dict):
 
 
 def hdx_send_reset_link(context, data_dict):
-    from urlparse import urljoin
+    from six.moves.urllib.parse import urljoin
+
     import ckan.lib.helpers as h
 
     model = context['model']
@@ -81,5 +79,3 @@ def hdx_send_reset_link(context, data_dict):
         hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject,
                                   email_data, footer=recipient_mail,
                                   snippet='email/content/password_reset.html')
-        # hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
-

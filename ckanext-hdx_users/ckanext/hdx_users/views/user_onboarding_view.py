@@ -1,22 +1,29 @@
 import logging as logging
 
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.logic as logic
-import ckan.model as model
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckanext.hdx_users.model as user_model
-from ckan.common import _, request, c, config
-from ckanext.hdx_users.views.user_view_helper import *
 import ckanext.hdx_theme.util.mail as hdx_mail
-import ckan.plugins.toolkit as tk
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
+import ckanext.hdx_users.model as user_model
+from ckan import model
+from ckan.plugins import toolkit as tk
+from ckanext.hdx_users.views.user_view_helper import *
 
+abort = tk.abort
+g = tk.g
+_ = tk._
+request = tk.request
+h = tk.h
+_check_access = tk.check_access
+_get_action = tk.get_action
+config = tk.config
+render = tk.render
+_get_validator = tk.get_validator
 log = logging.getLogger(__name__)
 unflatten = dictization_functions.unflatten
 _validate = dictization_functions.validate
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
 
+NotFound = logic.NotFound
+NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
 
 class HDXUserOnboardingView:
     def __init__(self):
@@ -28,13 +35,13 @@ class HDXUserOnboardingView:
         :return:
         """
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.form))))
-        name = c.user or data_dict['id']
+        name = g.user or data_dict['id']
         user_obj = model.User.get(name)
         user_id = user_obj.id
-        context = {'model': model, 'session': model.Session, 'user': user_obj.name, 'auth_user_obj': c.userobj}
+        context = {'model': model, 'session': model.Session, 'user': user_obj.name, 'auth_user_obj': g.userobj}
         try:
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
-            get_action('user_extra_update')(context, ue_dict)
+            _get_action('user_extra_update')(context, ue_dict)
         except NotAuthorized:
             return OnbNotAuth
         except NotFound as e:
@@ -54,10 +61,10 @@ class HDXUserOnboardingView:
         Step 5a: user can request to create a new organization
         :return:
         '''
-        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
-                   'user': c.user}
+        context = {'model': model, 'session': model.Session, 'auth_user_obj': g.userobj,
+                   'user': g.user}
         try:
-            check_access('hdx_send_new_org_request', context)
+            _check_access('hdx_send_new_org_request', context)
         except NotAuthorized:
             return OnbNotAuth
 
@@ -66,11 +73,11 @@ class HDXUserOnboardingView:
             data = self._process_new_org_request(user)
             self._validate_new_org_request_field(data,context)
 
-            get_action('hdx_send_new_org_request')(context, data)
+            _get_action('hdx_send_new_org_request')(context, data)
 
             if data.get('user_extra'):
                 ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
-                get_action('user_extra_update')(context, ue_dict)
+                _get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException as e:
             error_summary = str(e)
@@ -90,9 +97,9 @@ class HDXUserOnboardingView:
         '''
 
         context = {'model': model, 'session': model.Session,
-                   'user': c.user, 'auth_user_obj': c.userobj}
+                   'user': g.user, 'auth_user_obj': g.userobj}
         try:
-            check_access('hdx_send_new_org_request', context)
+            _check_access('hdx_send_new_org_request', context)
         except NotAuthorized:
             return OnbNotAuth
 
@@ -107,10 +114,10 @@ class HDXUserOnboardingView:
                 'role': u'member',
                 'group': org_id
             }
-            member = get_action('member_request_create')(context, data_dict)
+            member = _get_action('member_request_create')(context, data_dict)
 
-            ue_dict = self._get_ue_dict(c.userobj.id, user_model.HDX_ONBOARDING_ORG)
-            get_action('user_extra_update')(context, ue_dict)
+            ue_dict = self._get_ue_dict(g.userobj.id, user_model.HDX_ONBOARDING_ORG)
+            _get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException as e:
             return error_message(_(str(e)))
@@ -132,26 +139,26 @@ class HDXUserOnboardingView:
         :return:
         '''
 
-        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
-                   'user': c.user}
+        context = {'model': model, 'session': model.Session, 'auth_user_obj': g.userobj,
+                   'user': g.user}
         try:
-            check_access('hdx_basic_user_info', context)
+            _check_access('hdx_basic_user_info', context)
         except NotAuthorized:
             return OnbNotAuth
         try:
-            if not c.user:
+            if not g.user:
                 return OnbNotAuth
-            # usr = c.userobj.display_name or c.user
-            user_id = c.userobj.id or c.user
+            # usr = g.userobj.display_name or g.user
+            user_id = g.userobj.id or g.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
-            get_action('user_extra_update')(context, ue_dict)
+            _get_action('user_extra_update')(context, ue_dict)
 
             subject = u'Invitation to join the Humanitarian Data Exchange (HDX)'
             email_data = {
-                'user_fullname': c.userobj.fullname,
-                'user_email': c.userobj.email,
+                'user_fullname': g.userobj.fullname,
+                'user_email': g.userobj.email,
             }
-            cc_recipients_list = [{'display_name': c.userobj.fullname, 'email': c.userobj.email}]
+            cc_recipients_list = [{'display_name': g.userobj.fullname, 'email': g.userobj.email}]
             friends = [request.form.get('email1'), request.form.get('email2'), request.form.get('email3')]
             for f in friends:
                 if f and config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
@@ -195,7 +202,7 @@ class HDXUserOnboardingView:
         if len(errors) > 0:
             raise logic.ValidationError(errors)
 
-        user_email_validator = tk.get_validator('email_validator')
+        user_email_validator = _get_validator('email_validator')
         schema = {'work_email': [user_email_validator, unicode]}
         data_dict, _errors = _validate(data, schema, context)
 

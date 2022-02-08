@@ -45,7 +45,7 @@
     {{ h.build_nav_icon('hdx_carousel.show', _('Carousel')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
-    {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}
+    {{ h.build_nav_icon('requestdata_ckanadmin.requests_data', _('HDX Connect Dashboard')) }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('admin_page_list') %}
     {{ h.build_nav_icon('hdx_custom_pages.index', _('Custom/Event Pages')) }}
@@ -62,7 +62,7 @@
               {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
               {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
             {% endif %}
-            {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+            {{ h.build_nav_icon('requestdata_ckanadmin.email', _('Email')) }}
             {{ h.build_nav_icon('admin.config', _('Config')) }}
 
           </ul>

@@ -21,21 +21,21 @@ class InitDBCommand(p.toolkit.CkanCommand):
 
     def command(self):
         if not self.args or self.args[0] in ['-h', '--help', 'help'] or not len(self.args) in [1, 2]:
-            print self.usage
+            print(self.usage)
             return
 
         cmd = self.args[0]
         self._load_config(load_site_user=False)
         if cmd == 'initdb':
-            print 'Initializing Database...'
+            print('Initializing Database...')
             self.initdb()
-            print 'DONE Initializing Database...'
+            print('DONE Initializing Database...')
         elif cmd == 'cleandb':
-            print 'Cleandb Database...'
+            print('Cleandb Database...')
             self.cleandb()
         else:
-            print 'Error: command "{0}" not recognized'.format(cmd)
-            print self.usage
+            print('Error: command "{0}" not recognized'.format(cmd))
+            print(self.usage)
 
     def initdb(self):
         '''

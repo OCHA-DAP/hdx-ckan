@@ -11,7 +11,7 @@ import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
 
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.mock_helper as mock_helper

@@ -25,13 +25,12 @@
     {% block page_header %}
       <header class="page-header paddingRowHack" style="position: relative;">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
-          {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('dashboard.index', _('Newsfeed'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
 
-{#          {{ h.build_nav_icon('user_dashboard_visualizations', _('My Visualizations')) }}#}
-          {{ h.build_nav_icon('requestdata_my_requests', _('HDX Connect Requests'), id=c.userobj.name) }}
+          {{ h.build_nav_icon('requestdata.my_requested_data', _('HDX Connect Requests'), id=c.userobj.name) }}
           {% if c.userobj.sysadmin %}
             <li class="nav-tabs-more">
               <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
@@ -43,7 +42,7 @@
                     <li>
                       <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">Carousel</a>
                     </li>
-                    {{ h.build_nav_icon('ckanadmin_requests_data', _('HDX Connect Dashboard')) }}
+                    {{ h.build_nav_icon('requestdata_ckanadmin.requests_data', _('HDX Connect Dashboard')) }}
                     {{ h.build_nav_icon('hdx_custom_pages.index', _('Custom/Event Page')) }}
                     <li>
                       <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
@@ -56,7 +55,7 @@
         </ul>
         <div class="paddingRightHack" style="position: absolute; top: 50px; right: 0">
           {% block page_header_inner %}
-            {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
+            {% snippet 'user/snippets/followee_dropdown.html', context=dashboard_activity_stream_context, followees=followee_list %}
           {% endblock %}
         </div>
       </header>
@@ -65,7 +64,7 @@
       {% block primary_content_inner %}
         <div data-module="dashboard">
           {% block activity_stream %}
-         	{% snippet 'snippets/activity_stream.html', activity_stream=c.dashboard_activity_stream %}
+         	{% snippet 'snippets/activity_stream.html', activity_stream=dashboard_activity_stream %}
           {% endblock %}
         </div>
       {% endblock %}

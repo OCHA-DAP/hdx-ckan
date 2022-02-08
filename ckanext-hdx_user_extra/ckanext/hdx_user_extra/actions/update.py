@@ -39,5 +39,5 @@ def user_extra_update(context, data_dict):
             session.commit()
             result.append(user_extra.as_dict())
         except:
-            print sys.exc_info()[0]
+            print(sys.exc_info()[0])
     return result

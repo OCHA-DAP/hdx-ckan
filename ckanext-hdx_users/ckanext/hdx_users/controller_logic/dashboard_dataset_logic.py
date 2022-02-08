@@ -37,11 +37,6 @@ class DashboardDatasetLogic(object):
         return get_action('user_show')(context, data_dict)
 
     def _fetch_dataset_search_results(self):
-
-        # ignore_capacity_check = False
-        # if c.is_myself:
-        #     ignore_capacity_check = True
-
         fq = 'maintainer:"{}"'.format(self.userobj.id)
         search_logic = DashboardSearchLogic()
         search_logic._search(additional_fq=fq, default_sort_by='due_date asc', ignore_capacity_check=True)

@@ -9,10 +9,11 @@ import logging
 import os
 import six
 
-import ckanext.hdx_search.command as lunr
+# import ckanext.hdx_search.command as lunr
+import ckanext.hdx_search.cli.click_feature_search_command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.helpers.less as less
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
 
@@ -258,7 +259,7 @@ def hdx_organization_update(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = hdx_group_or_org_update(context, data_dict, is_org=True)
     if not test:
-        lunr.buildIndex(config.get('hdx.lunr.index_location'))
+        lunr.hdx_feature_search()
 
     compile_less(result)
 
@@ -338,7 +339,7 @@ def hdx_organization_create(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = hdx_group_or_org_create(context, data_dict, is_org=True)
     if not test:
-        lunr.buildIndex(config.get('hdx.lunr.index_location'))
+        lunr.hdx_feature_search()
     compile_less(result)
 
     # hdx_generate_embedded_preview(result)
@@ -356,7 +357,7 @@ def _run_core_group_org_action(context, data_dict, core_action):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core_action(context, data_dict)
     if not test:
-        lunr.buildIndex(config.get('hdx.lunr.index_location'))
+        lunr.hdx_feature_search()
     return result
 
 

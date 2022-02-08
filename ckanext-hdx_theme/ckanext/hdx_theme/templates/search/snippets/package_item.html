@@ -179,7 +179,7 @@
                     {% endif %}
                     {# {% set is_hdx = h.requestdata_is_hdx_portal() %}  #}
                     {% set redirect_url = h.url_for(controller='user', action='login') %}
-                    {% set requestdata_action = h.url_for('requestdata_send_request') %}
+                    {% set requestdata_action = h.url_for('requestdata_send_request.send_request') %}
                     {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
                     {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
                     <a href="#" class="btn btn-primary" style="margin-top: 10px;"

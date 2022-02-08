@@ -5,21 +5,21 @@ Created on June 11, 2019
 
 
 '''
-import pytest
 
+import pytest
 import logging as logging
+import unicodedata
+import six
+import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckan.logic as logic
-import unicodedata
-import ckan.lib.helpers as h
-
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_users.helpers.permissions as ph
 
 log = logging.getLogger(__name__)
 NotFound = logic.NotFound
+h = tk.h
 
 permission = {
     'permission_manage_carousel': 'permission_manage_carousel',
@@ -34,7 +34,7 @@ permission_carousel = {
     'update_permissions': 'update'
 }
 
-
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
@@ -54,12 +54,11 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         super(TestHDXControllerPage, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_permission_page_load(self):
-        url = h.url_for(controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
-                        action='permission', id='tester')
+        url = h.url_for(u'hdx_user_permission.read', id='tester')
         try:
             result = self.app.get(url)
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert True
 
         user = model.User.by_name('tester')
@@ -67,7 +66,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             res = self.app.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', user.apikey).encode('ascii', 'ignore')})
             assert False
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert True
 
@@ -76,7 +75,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             res = self.app.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
             assert True
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert False
 
@@ -86,13 +85,12 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert value in res.body
 
     def test_manage_permissions(self):
-        url = h.url_for(controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
-                        action='permission', id='tester')
+        url = h.url_for(u'hdx_user_permission.read', id='tester')
         test_client = self.get_backwards_compatible_test_client()
         try:
             res = test_client.post(url, params=permission)
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert True
 
         tester = model.User.by_name('tester')
@@ -101,7 +99,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         try:
             res = test_client.post(url, params=permission, extra_environ=auth)
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert True
 
         sysadmin = model.User.by_name('testsysadmin')
@@ -109,16 +107,16 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         auth = {'Authorization': str(sysadmin.apikey)}
         try:
             res = test_client.post(url, params=permission, extra_environ=auth)
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert False
-        assert ('302' in res.status), 'HTTP OK'
+        assert ('200' in res.status), 'HTTP OK'
 
         try:
             res = test_client.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
             assert True
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert False
 
@@ -129,16 +127,16 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         try:
             res = test_client.post(url, params=permission_carousel, extra_environ=auth)
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert False
-        assert ('302' in res.status), 'HTTP OK'
+        assert ('200' in res.status), 'HTTP OK'
 
         try:
             res = test_client.get(url, headers={'Authorization': unicodedata.normalize(
                 'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
             assert True
-        except Exception, ex:
+        except Exception as ex:
             log.info(ex)
             assert False
 

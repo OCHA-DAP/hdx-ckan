@@ -157,7 +157,7 @@ class RequestDataService(object):
                     'last_date': data_requests[0].last_date,
                     'count': data_requests[0].count,
                     'html_template': 'light/notifications/requestdata_snippet.html',
-                    'my_requests_url': h.url_for('requestdata_my_requests', id=self.username),
+                    'my_requests_url': h.url_for('requestdata.my_requested_data', id=self.username),
                     'for_sysadmin': False,
                     'is_sysadmin': self.is_sysadmin
 
@@ -181,7 +181,7 @@ class SysadminRequestDataService(RequestDataService):
                     'last_date': request.last_date,
                     'count': request.count,
                     'html_template': 'light/notifications/requestdata_snippet.html',
-                    'my_requests_url': h.url_for('requestdata_organization_requests', id=request.name),
+                    'my_requests_url': h.url_for('requestdata_organization_requests.requested_data', id=request.name),
                     'org_title': request.title,
                     'org_name': request.name,
                     'for_sysadmin': True,

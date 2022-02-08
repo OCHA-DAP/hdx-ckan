@@ -1,12 +1,14 @@
 import hashlib
 import json
+
 import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 
-ValidationError = logic.ValidationError
-_check_access = logic.check_access
+ValidationError = tk.ValidationError
+_check_access = tk.check_access
 NotFound = logic.NotFound
-get_action = logic.get_action
+get_action = tk.get_action
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
 OnbSuccess = json.dumps({'success': True})
 
@@ -31,9 +33,9 @@ def hdx_first_login(context, data_dict):
         try:
             data_dict['user_id'] = user.id
             get_action('user_extra_update')(context, data_dict)
-        except NotFound, e:
+        except NotFound as e:
             raise NotFound('User not found')
-        except Exception, e:
+        except Exception as e:
             return error_message(str(e))
     else:
         raise NotFound('User not found')

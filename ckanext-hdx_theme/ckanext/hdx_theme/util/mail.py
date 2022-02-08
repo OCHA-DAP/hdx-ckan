@@ -6,7 +6,7 @@ Created on Jul 31, 2014
 
 import logging as logging
 
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 import ckan.plugins.toolkit as tk
 

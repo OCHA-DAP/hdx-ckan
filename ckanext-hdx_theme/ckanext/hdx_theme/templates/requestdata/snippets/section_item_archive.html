@@ -53,7 +53,7 @@ Example usage:
 
         <div class="requested-data-container__collapse--request-status">
             <div >
-              {% set action_reopen = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+              {% set action_reopen = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}
               {% set post_data_reopen = h.dump_json({'id': x.id, 'package_id': x.package_id, 'state': 'open', 'data_shared': True}) %}
               <span class="mL30">
                 <a data-module="handle-reopen-request"

@@ -1,5 +1,4 @@
 # encoding: utf-8
-import json
 import logging
 
 from flask import Blueprint
@@ -7,8 +6,6 @@ from flask import Blueprint
 import ckan.lib.authenticator as authenticator
 import ckan.lib.base as base
 import ckan.lib.helpers as h
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 from ckan.common import _

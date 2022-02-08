@@ -17,22 +17,21 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 log = logging.getLogger(__name__)
 
 pages = [
-    {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
-     'action': 'register', 'usertype': None},
-    {'controller': 'user', 'action': 'login', 'usertype': None},
-    {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-     'action': 'contribute', 'usertype': None},
+    # {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
+    #  'action': 'register', 'usertype': None},
+    {'url_name': 'user.login', 'usertype': None},
+    {'url_name': 'hdx_contribute_check.contribute', 'usertype': None},
+    # {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+    #  'action': 'contribute', 'usertype': None},
     {'url_name': 'hdx_dataset.search', 'usertype': 'all'},
     {'url_name': 'hdx_group.index', 'usertype': 'all'},
     {'url_name': 'hdx_org.index', 'usertype': 'all'},
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
-    {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-     'action': 'dashboard', 'usertype': 'all'},
+    {'url_name': 'dashboard.index', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
-    # {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-    #  'action': 'preselect', 'usertype': 'all'},
-    {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController', 'action': 'read', 'has_id': True, 'usertype': 'all'},
+    {'url_name': 'hdx_user_dashboard.datasets', 'has_id': True, 'usertype': 'all'},
+    {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
     {'url_name': 'hdx_splash.index', 'usertype': 'all'}
 ]

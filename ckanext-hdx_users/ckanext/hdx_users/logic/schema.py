@@ -5,13 +5,14 @@ Created on July 2nd, 2015
 '''
 
 from ckan.logic.schema import validator_args
+from six import text_type
 
 @validator_args
 def register_user_schema(not_empty, user_email_validator):
 
     schema = {
-        'name': [not_empty, unicode],
-        'email': [not_empty, user_email_validator, unicode],
+        'name': [not_empty, text_type],
+        'email': [not_empty, user_email_validator, text_type],
     }
     return schema
 
@@ -22,11 +23,11 @@ def register_details_user_schema(ignore_missing, not_empty, name_validator, user
                                  user_email_validator):
 
     schema = {
-        'id': [ignore_missing, unicode],
-        'name': [not_empty, name_validator, user_name_validator, unicode],
-        'fullname': [ignore_missing, unicode],
-        'password': [user_password_validator, user_password_not_empty, ignore_missing, unicode],
-        'email': [not_empty, user_email_validator, unicode],
+        'id': [ignore_missing, text_type],
+        'name': [not_empty, name_validator, user_name_validator, text_type],
+        'fullname': [ignore_missing, text_type],
+        'password': [user_password_validator, user_password_not_empty, ignore_missing, text_type],
+        'email': [not_empty, user_email_validator, text_type],
         'state': [ignore_missing],
     }
     return schema

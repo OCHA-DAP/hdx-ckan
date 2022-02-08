@@ -1,12 +1,11 @@
-import exceptions as exceptions
 import logging as logging
 
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import ckanext.hdx_users.model as umodel
-import pylons.config as config
+from ckantoolkit import config as config
 
 import ckan.lib.helpers as h
 import ckan.logic as logic
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
+import ckanext.hdx_users.model as umodel
 
 log = logging.getLogger(__name__)
 
@@ -49,11 +48,11 @@ def send_validation_email(user, token):
         'validation_link': link.format(config['ckan.site_url'], validation_link),
     }
     try:
-        print validation_link
+        print(validation_link)
         hdx_mailer.mail_recipient([{'email': user['email']}], subject, email_data, footer=user['email'],
                                   snippet='email/content/onboarding_email_validation.html')
         return True
-    except exceptions.Exception, e:
+    except Exception as e:
         error_summary = str(e)
         log.error(error_summary)
         return False

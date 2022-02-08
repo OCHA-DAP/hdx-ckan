@@ -19,7 +19,7 @@ from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
 log = logging.getLogger(__name__)
 
 try:
-    import ckanext.hdx_users.controllers.mailer as hdx_mailer
+    import ckanext.hdx_users.helpers.mailer as hdx_mailer
 except ImportError as ex:
     hdx_mailer = None
     log.warning('HDX: This is temporary for python3 migration. To be changed when hdx_users extension is migrated. '
