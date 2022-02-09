@@ -312,15 +312,23 @@ def _check_user_is_maintainer(context, user_id, org_id):
 
 @chained_action
 def organization_member_delete(original_action, context, data_dict):
-    if _check_user_is_maintainer(context, data_dict.get('user_id'), data_dict.get('id')):
+    user_id = data_dict.get('user_id') or data_dict.get('user')
+    if not user_id:
+        user_id = model.User.get(data_dict.get('username')).id
+
+    if _check_user_is_maintainer(context, user_id, data_dict.get('id')):
         abort(403, _('User is set as maintainer for datasets belonging to this org. Can\t delete, please change maintainer first'))
 
     return original_action(context, data_dict)
 
 @chained_action
 def organization_member_create(original_action, context, data_dict):
+    user_id = data_dict.get('user') or data_dict.get('user_id')
+    if not user_id:
+        user_id = model.User.get(data_dict.get('username')).id
+
     if data_dict.get('role') == 'member':
-        if _check_user_is_maintainer(context, data_dict.get('user'), data_dict.get('id')):
+        if _check_user_is_maintainer(context, user_id, data_dict.get('id')):
             abort(403, _('User is set as maintainer for datasets belonging to this org. Can\'t change role to \'member\', please change maintainer first'))
 
     return original_action(context, data_dict)
