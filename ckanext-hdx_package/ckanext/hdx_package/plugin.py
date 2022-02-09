@@ -122,12 +122,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #             action='preselect')
         # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
         #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
-        map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='resource_read')
-        map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='resource_datapreview')
+        # map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='resource_read')
+        # map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='resource_datapreview')
         # map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
         #             controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
         #             action='edit')
@@ -154,24 +154,24 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                     action='contact_members')
 
-        with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
+        # with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             # m.connect('add dataset', '/dataset/new', action='new')
-            m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
-            m.connect('/dataset/{id}.{format}', action='read')
-            m.connect('dataset_read', '/dataset/{id}', action='read',
-                      ckan_icon='sitemap')
-            m.connect('/dataset/{action}/{id}',
-                      requirements=dict(action='|'.join([
-                          'new_metadata',
-                          # 'new_resource',
-                          'visibility',
-                          'delete',
-                          # 'edit',
-                      ])))
+            # m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
+            # m.connect('/dataset/{id}.{format}', action='read')
+            # m.connect('dataset_read', '/dataset/{id}', action='read',
+            #           ckan_icon='sitemap')
+            # m.connect('/dataset/{action}/{id}',
+            #           requirements=dict(action='|'.join([
+            #               'new_metadata',
+            #               # 'new_resource',
+            #               # 'visibility',
+            #               'delete',
+            #               # 'edit',
+            #           ])))
 
-        map.connect(
-            '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController',
-            action='read')
+        # map.connect(
+        #     '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController',
+        #     action='read')
 
         # map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
         # map.connect('/contribute/new',
@@ -494,6 +494,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
             'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date,
             'hdx_render_resource_updated_date': hdx_helpers.hdx_render_resource_updated_date,
+            'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
         }
 
     def get_actions(self):

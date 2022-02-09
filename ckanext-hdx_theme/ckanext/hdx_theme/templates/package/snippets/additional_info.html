@@ -57,7 +57,7 @@
     {# Metadata-only datasets are public, so this option is only for full datasets #}
 {% if not pkg_dict.is_requestdata_type %}
     {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
-    	<hidden id="controller_url" value="{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}">
+{#    	<hidden id="controller_url" value="{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}">#}
 		<tr>
 			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
 			<td class="dataset-details">
