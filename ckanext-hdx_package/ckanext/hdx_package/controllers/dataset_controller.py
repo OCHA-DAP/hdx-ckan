@@ -1,49 +1,42 @@
 """
 Functions for creating and maintaining datasets.
 """
-import logging
-
-from pylons import config
-
-import ckan.lib.base as base
-import ckan.lib.captcha as captcha
-import ckan.lib.helpers as h
-import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.lib.plugins
-import ckan.logic as logic
-import ckan.model as model
-import ckanext.hdx_package.helpers.membership_data as membership_data
-import ckanext.hdx_users.helpers.helpers as usr_h
-from ckan.common import _, json, request, c, response
-from ckan.controllers.api import CONTENT_TYPES
-from ckan.controllers.package import PackageController
-from ckan.lib.mailer import MailerException
-from ckanext.hdx_theme.util.mail import hdx_validate_email
-
-log = logging.getLogger(__name__)
-
-render = base.render
-abort = base.abort
-redirect = h.redirect_to
-
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
-tuplize_dict = logic.tuplize_dict
-clean_dict = logic.clean_dict
-parse_params = logic.parse_params
-flatten_to_string_key = logic.flatten_to_string_key
-DataError = ckan.lib.navl.dictization_functions.DataError
+# import logging
+#
+# import ckan.lib.base as base
+# import ckan.lib.helpers as h
+# import ckan.lib.navl.dictization_functions as dict_fns
+# import ckan.lib.plugins
+# import ckan.logic as logic
+# from ckan.common import _, json, request, c, response
+# from ckan.controllers.package import PackageController
+# from ckan.lib.mailer import MailerException
+# from ckanext.hdx_theme.util.mail import hdx_validate_email
+#
+# log = logging.getLogger(__name__)
+#
+# render = base.render
+# abort = base.abort
+# redirect = h.redirect_to
+#
+# NotFound = logic.NotFound
+# NotAuthorized = logic.NotAuthorized
+# ValidationError = logic.ValidationError
+# check_access = logic.check_access
+# get_action = logic.get_action
+# tuplize_dict = logic.tuplize_dict
+# clean_dict = logic.clean_dict
+# parse_params = logic.parse_params
+# flatten_to_string_key = logic.flatten_to_string_key
+# DataError = ckan.lib.navl.dictization_functions.DataError
 # _check_group_auth = logic.auth.create._check_group_auth
 
-SUCCESS = json.dumps({'success': True})
+# SUCCESS = json.dumps({'success': True})
+#
+# lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
-lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
-
-class DatasetController(PackageController):
+# class DatasetController(PackageController):
 
 
     # def _create_perma_link_if_needed(self, dataset_id, resource):
@@ -205,116 +198,3 @@ class DatasetController(PackageController):
     #         abort(403, _('Unauthorized to read resource %s') % id)
     #     else:
     #         return render(preview_plugin.preview_template(context, data_dict))
-
-    def contact_contributor(self):
-        '''
-        Send a contact request form
-        :return:
-        '''
-        context = {
-            'model': model,
-            'session': model.Session,
-            'user': c.user or c.author,
-            'auth_user_obj': c.userobj
-        }
-        data_dict = {}
-        response.headers['Content-Type'] = CONTENT_TYPES['json']
-        try:
-            usr_h.is_valid_captcha(request.params.get('g-recaptcha-response'))
-
-            check_access('hdx_send_mail_contributor', context, data_dict)
-            # for k, v in membership_data.get('contributor_topics').iteritems():
-            #     if v == request.params.get('topic'):
-            #         data_dict['topic'] = v
-            data_dict['topic'] = request.params.get('topic')
-            data_dict['fullname'] = request.params.get('fullname')
-            data_dict['email'] = request.params.get('email')
-            data_dict['msg'] = request.params.get('msg')
-            data_dict['pkg_owner_org'] = request.params.get('pkg_owner_org')
-            data_dict['pkg_title'] = request.params.get('pkg_title')
-            data_dict['pkg_id'] = request.params.get('pkg_id')
-            data_dict['pkg_url'] = h.url_for('dataset_read', id=request.params.get('pkg_id'), qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
-
-            hdx_validate_email(data_dict['email'])
-
-        except NotAuthorized:
-            return json.dumps(
-                {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
-        except captcha.CaptchaError:
-            return json.dumps(
-                {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
-        except Exception as e:
-            log.error(e)
-            return json.dumps({'success': False, 'error': {'message': u'There was an error. Please contact support'}})
-
-        try:
-            get_action('hdx_send_mail_contributor')(context, data_dict)
-        except MailerException, e:
-            error_summary = _('Could not send request for: %s') % unicode(e)
-            log.error(error_summary)
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
-        except Exception as e:
-            # error_summary = e.error or str(e)
-            log.error(e)
-            return json.dumps({'success': False, 'error': {'message': u'There was an error. Please contact support'}})
-        return SUCCESS
-
-    def contact_members(self):
-        '''
-        Send a contact request form
-        :return:
-        '''
-        context = {
-            'model': model,
-            'session': model.Session,
-            'user': c.user or c.author,
-            'auth_user_obj': c.userobj
-        }
-        data_dict = {}
-        response.headers['Content-Type'] = CONTENT_TYPES['json']
-        try:
-            _captcha = usr_h.is_valid_captcha(request.params.get('g-recaptcha-response'))
-            source_type = request.params.get('source_type')
-            data_dict['source_type'] = source_type
-            org_id = request.params.get('org_id')
-            check_access('hdx_send_mail_members', context, {'org_id': org_id})
-            data_dict['topic_key'] = request.params.get('topic')
-            data_dict['topic'] = membership_data.membership_data.get('group_topics').get(request.params.get('topic'))
-            data_dict['fullname'] = request.params.get('fullname')
-            data_dict['email'] = request.params.get('email')
-            data_dict['msg'] = request.params.get('msg')
-            data_dict['pkg_owner_org_id'] = org_id
-            try:
-                owner_org = get_action("organization_show")(context, {'id': org_id, 'include_datasets': False})
-                data_dict['pkg_owner_org'] = owner_org.get("display_name") or owner_org.get("title")
-            except Exception, e:
-                data_dict['pkg_owner_org'] = org_id
-            data_dict['pkg_title'] = request.params.get('title')
-            if source_type == 'dataset':
-                data_dict['pkg_id'] = request.params.get('pkg_id')
-                data_dict['pkg_url'] = h.url_for('dataset_read', id=request.params.get('pkg_id'),
-                                                 qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
-
-            hdx_validate_email(data_dict['email'])
-
-            get_action('hdx_send_mail_members')(context, data_dict)
-
-        except NotAuthorized:
-            return json.dumps(
-                {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
-        except captcha.CaptchaError:
-            return json.dumps(
-                {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
-        except Exception, e:
-            error_summary = str(e)
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
-
-        # try:
-        #
-        # except Exception, e:
-        #     error_summary = e.error_summary or str(e)
-        #     return json.dumps({'success': False, 'error': {'message': error_summary}})
-        return SUCCESS
-
