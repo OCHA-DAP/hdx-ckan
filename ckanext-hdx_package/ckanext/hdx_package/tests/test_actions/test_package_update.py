@@ -90,7 +90,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         self._get_action('resource_create')(context, resource)
 
         test_url = h.url_for('dataset.read', id=package['name'])
-        result = self.app.post(
+        result = self.app.get(
             test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
         assert '<a class="heading" title="hdx_test.csv">' in result.data

@@ -106,7 +106,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         p = self._get_action('package_show')(context, {"id": package['name']})
 
         test_url = h.url_for('dataset.read', id=package['name'])
-        result = self.app.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        result = self.app.get(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
 
         assert 'Request data directly from the maintainer of this dataset.' in result.data
