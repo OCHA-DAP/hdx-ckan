@@ -4,6 +4,8 @@ import re
 import six.moves.urllib.parse as urlparse
 
 import ckanext.hdx_package.helpers.custom_validator as vd
+import ckanext.hdx_package.helpers.analytics as analytics
+
 from ckanext.hdx_package.exceptions import NoOrganization
 from ckanext.hdx_package.helpers.caching import cached_group_iso_to_title
 from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE
@@ -471,3 +473,15 @@ def hdx_render_resource_updated_date(resource_dict, package_dict):
         return 'Live'
     else:
         return h.render_datetime(resource_dict.get('last_modified'))
+
+
+def hdx_compute_analytics(package_dict):
+    analytics_group_names, analytics_group_ids = analytics.extract_locations_in_json(package_dict)
+    ret_dict = {
+        'analytics_is_cod': analytics.is_cod(package_dict),
+        'analytics_is_indicator': analytics.is_indicator(package_dict),
+        'analytics_is_archived': analytics.is_archived(package_dict),
+        'analytics_dataset_availability': analytics.dataset_availability(package_dict),
+        'analytics_group_names': analytics_group_names, 'analytics_group_ids': analytics_group_ids
+    }
+    return ret_dict

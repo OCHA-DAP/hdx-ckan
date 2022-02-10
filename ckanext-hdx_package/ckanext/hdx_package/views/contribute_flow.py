@@ -70,7 +70,7 @@ def new(id=None, action_name='package_create'):
     abort_message = None
 
     try:
-        if request.form and save_type:
+        if request.method == 'POST' and request.form and save_type:
             # update or create dataset
             dataset_dict, errors, error_summary = _save_or_update(context)
         else:

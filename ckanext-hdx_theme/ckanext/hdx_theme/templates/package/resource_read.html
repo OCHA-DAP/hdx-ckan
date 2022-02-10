@@ -1,34 +1,35 @@
 {% extends "page.html" %}
 
-{% set res = c.resource %}
-{% set pkg = c.pkg_dict or pkg_dict %}
+{% set res = resource %}
+{% set pkg = pkg_dict %}
+{% set analytics = h.hdx_compute_analytics(pkg_dict) %}
 
 {# The lines below are for analytics #}
-{% block analytics_org_name %}{{ c.package.organization.name }}{% endblock %}
-{% block analytics_org_id %}{{ c.package.organization.id }}{% endblock %}
-{% block analytics_is_cod %}{{ c.analytics_is_cod }}{% endblock %}
-{% block analytics_is_indicator %}{{ c.analytics_is_indicator }}{% endblock %}
-{% block analytics_is_archived %}{{ c.analytics_is_archived }}{% endblock %}
-{% block analytics_group_names %}{{ c.analytics_group_names | safe }}{% endblock %}
-{% block analytics_group_ids %}{{ c.analytics_group_ids | safe }}{% endblock %}
-{% block analytics_dataset_name %}{{ c.package.name  }}{% endblock %}
-{% block analytics_dataset_id %}{{ c.package.id }}{% endblock %}
-{% block analytics_dataset_availability %}{{ c.analytics_dataset_availability }}{% endblock %}
+{% block analytics_org_name %}{{ package.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ package.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ analytics.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ analytics.analytics_is_indicator }}{% endblock %}
+{% block analytics_is_archived %}{{ analytics.analytics_is_archived }}{% endblock %}
+{% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ package.name  }}{% endblock %}
+{% block analytics_dataset_id %}{{ package.id }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}
 
 {% block head_extras -%}
   {{ super() }}
-  {% set description = h.markdown_extract(res.description, extract_length=200) if res.description else h.markdown_extract(c.package.notes, extract_length=200) %}
-  <meta property="og:title" content="{{ h.dataset_display_name(c.package) }} - {{ h.resource_display_name(res) }} - {{ g.site_title }}">
+  {% set description = h.markdown_extract(res.description, extract_length=200) if res.description else h.markdown_extract(package.notes, extract_length=200) %}
+  <meta property="og:title" content="{{ h.dataset_display_name(package) }} - {{ h.resource_display_name(res) }} - {{ g.site_title }}">
   <meta property="og:description" content="{{ description|forceescape }}">
 {% endblock -%}
 
-{% block subtitle %}{{ h.dataset_display_name(c.package) }} - {{ h.resource_display_name(res) }}{% endblock %}
+{% block subtitle %}{{ h.dataset_display_name(package) }} - {{ h.resource_display_name(res) }}{% endblock %}
 
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='read', id=pkg.id, position=3 %}
+  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), named_route='hdx_dataset.read', id=pkg.name, position=3 %}
   <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 
@@ -66,8 +67,8 @@
                 </a>
               </li>
             {% endif %}
-            {% if 'datastore' in g.plugins %}
-              <li>{% snippet 'package/snippets/data_api_button.html', resource=res, datastore_root_url=c.datastore_api %}</li>
+            {% if res.datastore_active %}
+              <li>{% snippet 'package/snippets/data_api_button.html', resource=res %}</li>
             {% endif %}
             {% endblock %}
           </ul>
@@ -80,7 +81,7 @@
              <p class="muted ellipsis">{{ _('URL:') }}
               {% if h.check_access('hdx_resource_download', res) %}
                 {% if res.url and h.is_url(res.url) %}
-                  <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.original_url }}</a>
+                  <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.url }}</a>
                 {% elif res.url %}
                   {{ res.hdx_rel_url }}
                 {% endif %}
@@ -96,10 +97,10 @@
             {% else %}
               <p class="empty">{{ _('There is no description for this resource') }}</p>
             {% endif %}
-            {% if not res.description and c.package.notes %}
+            {% if not res.description and package.notes %}
               <h3>{{ _('From the dataset abstract') }}</h3>
-              <blockquote>{{ h.markdown_extract(c.package.get('notes')) }}</blockquote>
-              <p>{% trans dataset=c.package.title, url=h.url_for('dataset_read', id=c.package['name']) %}Source: <a href="{{ url }}">{{ dataset }}</a>{% endtrans %}
+              <blockquote>{{ h.markdown_extract(package.get('notes')) }}</blockquote>
+              <p>{% trans dataset=package.title, url=h.url_for('dataset_read', id=package['name']) %}Source: <a href="{{ url }}">{{ dataset }}</a>{% endtrans %}
             {% endif %}
           </div>
         {% endblock %}
@@ -108,32 +109,32 @@
           {% if h.check_access('hdx_resource_download', res) %}
           {% block resource_view %}
             {% block resource_view_nav %}
-              {% set resource_preview = h.resource_preview(c.resource, c.package) %}
+              {% set resource_preview = h.resource_preview(resource, package) %}
               {% snippet "package/snippets/resource_views_list.html",
                  views=resource_views,
                  pkg=pkg,
                  is_edit=false,
                  view_id=current_resource_view['id'],
                  resource_preview=resource_preview,
-                 resource=c.resource,
+                 resource=resource,
                  extra_class="nav-tabs-plain"
                %}
             {% endblock %}
             <div class="module-content">
               {% block resource_view_content %}
                 <div class="resource-view">
-                  {% set resource_preview = h.resource_preview(c.resource, c.package) %}
+                  {% set resource_preview = h.resource_preview(resource, package) %}
                   {% set views_created = res.has_views or resource_preview %}
                   {% if views_created %}
                     {% if resource_preview and not current_resource_view %}
-                      {{ h.resource_preview(c.resource, c.package) }}
+                      {{ h.resource_preview(resource, package) }}
                     {% else %}
                       {% for resource_view in resource_views %}
                         {% if resource_view == current_resource_view %}
                           {% snippet 'package/snippets/resource_view.html',
                              resource_view=resource_view,
-                             resource=c.resource,
-                             package=c.package
+                             resource=resource,
+                             package=package
                            %}
                         {% endif %}
                       {% endfor %}
@@ -142,7 +143,7 @@
                     {# Views not created #}
                     <div class="module-content data-viewer-info">
                       <p>{{ _("There are no views created for this resource yet.") }}</p>
-                      {% if h.check_access('resource_view_create', {'resource_id': c.resource.id}) %}
+                      {% if h.check_access('resource_view_create', {'resource_id': resource.id}) %}
                         <p class="muted">
                           <i class="icon-info-sign"></i>
                           {{ _("Not seeing the views you were expecting?")}}

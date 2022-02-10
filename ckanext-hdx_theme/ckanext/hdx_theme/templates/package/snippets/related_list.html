@@ -1,6 +1,6 @@
 {% block related_list %}
     {% if showcases %}
-        {% snippet "showcase/snippets/showcase_list.html", packages=showcases, pkg_id=c.pkg_dict.name, dataset=True %}
+        {% snippet "showcase/snippets/showcase_list.html", packages=showcases, pkg_id=pkg.name, dataset=True %}
 
     {% else %}
         <p class="empty">{{ _('There are no showcases for this')}} {% if pkg.indicator == 1%}indicator{% else %}dataset{% endif %}.</p>

@@ -89,9 +89,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         self._get_action('resource_create')(context, resource)
 
-        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                             action='read', id=package['name'])
-        result = self.app.post(
+        test_url = h.url_for('dataset.read', id=package['name'])
+        result = self.app.get(
             test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
         assert '<a class="heading" title="hdx_test.csv">' in result.data
@@ -119,8 +118,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         # self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
-        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                             action='delete', id=package['name'])
+        test_url = h.url_for('dataset.delete', id=package['name'])
         test_client = self.get_backwards_compatible_test_client()
         result = test_client.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 302
