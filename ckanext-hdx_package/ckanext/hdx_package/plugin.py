@@ -110,7 +110,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     #     except Exception, ex:
     #         log.error(ex)
 
-    def before_map(self, map):
+    # def before_map(self, map):
         # map.connect('storage_file', '/storage/f/{label:.*}',
         #             controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
         #             action='file')
@@ -147,12 +147,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # map.connect('dataset_resources', '/dataset/resources/{id}',
         #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
         #             action='resources_notification_page')
-        map.connect('/membership/contact_contributor',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='contact_contributor')
-        map.connect('/membership/contact_members',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='contact_members')
+        # map.connect('/membership/contact_contributor',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='contact_contributor')
+        # map.connect('/membership/contact_members',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='contact_members')
 
         # with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             # m.connect('add dataset', '/dataset/new', action='new')
@@ -184,7 +184,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
         #             action='validate')
 
-        return map
+        # return map
 
     def is_fallback(self):
         return True
@@ -723,6 +723,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         import ckanext.hdx_package.views.dataset_changes as dataset_changes
         import ckanext.hdx_package.views.contribute_flow as contribute_flow
         import ckanext.hdx_package.views.dataset_old_links as dataset_old_links
+        import ckanext.hdx_package.views.contact as contact
         return [
             light_dataset.hdx_light_dataset,
             light_dataset.hdx_light_search,
@@ -731,6 +732,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             dataset_changes.hdx_dataset_changes,
             contribute_flow.hdx_contribute,
             dataset_old_links.hdx_dataset_old_links,
+            contact.hdx_contact,
         ]
 
 
@@ -865,9 +867,9 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
         return format in GIS_FORMATS
 
     def setup_template_variables(self, context, data_dict):
-        from ckanext.hdx_package.controllers.dataset_controller import DatasetController
+        from ckanext.hdx_package.controller_logic.dataset_view_logic import process_shapes
 
-        shape_info = DatasetController.process_shapes([data_dict['resource']])
+        shape_info = process_shapes([data_dict['resource']])
 
         return {
             'shape_info': json.dumps(shape_info)
@@ -880,39 +882,39 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
         return 'new_views/geopreview_view_form.html'
 
 
-class HDXKeyFiguresPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IResourceView, inherit=True)
-
-    def info(self):
-        return {
-            'name': 'hdx_key_figures_view',
-            'title': 'Key Figures',
-            'filterable': False,
-            'preview_enabled': True,
-            'requires_datastore': True,
-            'iframed': True,
-            'default_title': p.toolkit._('Key Figures')
-        }
-
-    def can_view(self, data_dict):
-        resource = data_dict['resource']
-        return (resource.get('datastore_active') or
-                resource.get('url') == '_datastore_only_resource')
-
-    def setup_template_variables(self, context, data_dict):
-        import ckanext.hdx_crisis.dao.location_data_access as location_data_access
-        id = data_dict['resource']['id']
-        key_figures = location_data_access.get_formatted_topline_numbers(id)
-
-        return {
-            'key_figures': key_figures
-        }
-
-    def view_template(self, context, data_dict):
-        return 'new_views/key_figures_view.html'
-
-    def form_template(self, context, data_dict):
-        return 'new_views/key_figures_view_form.html'
+# class HDXKeyFiguresPlugin(plugins.SingletonPlugin):
+#     plugins.implements(plugins.IResourceView, inherit=True)
+#
+#     def info(self):
+#         return {
+#             'name': 'hdx_key_figures_view',
+#             'title': 'Key Figures',
+#             'filterable': False,
+#             'preview_enabled': True,
+#             'requires_datastore': True,
+#             'iframed': True,
+#             'default_title': p.toolkit._('Key Figures')
+#         }
+#
+#     def can_view(self, data_dict):
+#         resource = data_dict['resource']
+#         return (resource.get('datastore_active') or
+#                 resource.get('url') == '_datastore_only_resource')
+#
+#     def setup_template_variables(self, context, data_dict):
+#         import ckanext.hdx_crisis.dao.location_data_access as location_data_access
+#         id = data_dict['resource']['id']
+#         key_figures = location_data_access.get_formatted_topline_numbers(id)
+#
+#         return {
+#             'key_figures': key_figures
+#         }
+#
+#     def view_template(self, context, data_dict):
+#         return 'new_views/key_figures_view.html'
+#
+#     def form_template(self, context, data_dict):
+#         return 'new_views/key_figures_view_form.html'
 
 
 class HDXChoroplethMapPlugin(plugins.SingletonPlugin):

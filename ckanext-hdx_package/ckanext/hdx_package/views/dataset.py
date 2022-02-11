@@ -12,11 +12,11 @@ import ckanext.hdx_package.helpers.custom_pages as cp_h
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 import ckanext.hdx_search.helpers.search_history as search_history
+import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
 
 from ckan.views.dataset import _setup_template_variables
 
 from ckanext.hdx_package.helpers import resource_grouping
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_search.controller_logic.qa_logs_logic import QALogsLogic
@@ -210,7 +210,8 @@ def read(id):
             if _res_view is None:
                 continue
             if _res_view.get('type') == 'hdx_geo_preview':
-                template_data['shapes'] = json.dumps(_process_shapes(pkg_dict['resources'], r.get('id')))
+                template_data['shapes'] = json.dumps(
+                    dataset_view_logic.process_shapes(pkg_dict['resources'], r.get('id')))
                 return render('package/hdx-read-shape.html', template_data)
             if _res_view.get('type') == 'hdx_hxl_preview':
                 template_data['default_view'] = _res_view
@@ -235,37 +236,6 @@ def read(id):
     if org_info_dict.get('custom_org', False):
         return render('package/custom_hdx_read.html', template_data)
     return render('package/hdx_read.html', template_data)
-
-
-def _process_shapes(resources, id=None):
-    result = []
-
-    for resource in resources:
-        if _has_shape_info(resource):
-            res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
-            shp_info = get_latest_shape_info(resource)
-
-            res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
-            name = resource['name']
-            shp_dict = {
-                'resource_name': name,
-                'url': res_pbf_url,
-                'bounding_box': shp_info['bounding_box'],
-                'layer_fields': shp_info.get('layer_fields', [])
-            }
-            if resource.get('id') == id:
-                result.insert(0, shp_dict)
-            else:
-                result.append(shp_dict)
-    return result
-
-
-def _has_shape_info(resource):
-    if resource.get('format', '').lower() in GIS_FORMATS and resource.get('shape_info'):
-        shp_info = get_latest_shape_info(resource)
-        if shp_info.get('state', '') == 'success':
-            return {'type': 'hdx_geo_preview', 'default': None}
-    return None
 
 
 def _get_org_extras(org_id):
@@ -321,7 +291,7 @@ def _find_default_view(resource, resource_views):
 
 
 def _check_resource(resource):
-    shape_info = _has_shape_info(resource)
+    shape_info = dataset_view_logic.has_shape_info(resource)
     if shape_info:
         return shape_info
     hxl_preview = _has_hxl_views(resource)
