@@ -9,6 +9,7 @@ import re
 import datetime
 import logging
 import json
+import six
 
 import ckan.model as model
 import ckan.authz as authz
