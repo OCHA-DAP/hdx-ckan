@@ -216,7 +216,8 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         assert saved_dataset.get('id')
 
         post_params['id'] = saved_dataset.get('id')
-        post_params["dataset_date"] = "[2016-09-17 TO 2016-09-27]"
+        post_params['dataset_date'] = '[2016-09-17 TO 2016-09-27]'
+        post_params['customviz__0__url'] = 'http://test-domain.test/test'
 
         res2 = self.app.post('/contribute/edit/{}'.format(post_params.get('id')), params=post_params,
                             extra_environ=auth)
@@ -227,6 +228,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         saved_dataset2 = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-edit'})
 
         assert saved_dataset2 and saved_dataset2.get('dataset_date') == "[2016-09-17T00:00:00 TO 2016-09-27T23:59:59]"
+        assert saved_dataset2.get('customviz')[0]['url'] == 'http://test-domain.test/test'
 
         type(self).use_package_create_wrapper = True
 

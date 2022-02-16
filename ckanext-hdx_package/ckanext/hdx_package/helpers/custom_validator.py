@@ -9,6 +9,7 @@ import re
 import datetime
 import logging
 import json
+import six
 
 import ckan.model as model
 import ckan.authz as authz
@@ -301,7 +302,7 @@ def hdx_convert_from_extras_to_list_item(key, data, errors, context):
     key_value_to_add = []
 
     for data_key, data_value in data.items():
-        if isinstance(data_value, str):
+        if isinstance(data_value, six.string_types):
             data_value_parts = data_value.split('__')  # Example: ['customviz', 0, 'url']
             key_parts = key[-1].split('__')  # Example ['customviz', 'url']
             if data_key[0] == 'extras' and data_key[-1] == 'key' \
