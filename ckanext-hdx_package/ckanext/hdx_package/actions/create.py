@@ -54,7 +54,7 @@ def resource_create(context, data_dict):
             data_dict['size'] = request.content_length
             data_dict['mimetype'] = request.files['upload'].mimetype
         except RuntimeError as re:
-            log.debug('This usually happens for tests when there is no HTTP request: ' + unicode(re))
+            log.debug('This usually happens for tests when there is no HTTP request: ' + six.text_type(re))
 
     result_dict = core_create.resource_create(context, data_dict)
     return result_dict

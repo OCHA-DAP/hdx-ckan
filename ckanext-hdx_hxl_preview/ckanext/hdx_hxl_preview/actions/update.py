@@ -1,19 +1,18 @@
 import requests
-import urlparse
+import six.moves.urllib.parse as urlparse
 import logging
-import json
 
 import ckan.plugins.toolkit as toolkit
 import ckan.model as model
-
-from pylons import config
 
 _get_action = toolkit.get_action
 _get_or_bust = toolkit.get_or_bust
 
 log = logging.getLogger(__name__)
+config = toolkit.config
 
 PROXY_CHECK_PATH = '/hxl-test.json'
+
 
 def _check_has_hxl_tags(url):
     '''

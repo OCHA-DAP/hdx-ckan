@@ -1,4 +1,6 @@
+import pytest
 import datetime
+import six
 import dateutil.parser as dateutil_parser
 
 import ckan.model as model
@@ -21,6 +23,7 @@ class TestResourceDaterangeForData(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrg
         dataset_dict = cls._get_action('package_show')(cls.context_sysadmin, {'id': 'test_private_dataset_1'})
         cls.resource_id = dataset_dict['resources'][0]['id']
 
+    @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
     def test_save_update_daterange_field(self):
 
         context_sysadmin = self.context_sysadmin

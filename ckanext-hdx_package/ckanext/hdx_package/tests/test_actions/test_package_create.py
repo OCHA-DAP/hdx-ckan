@@ -3,8 +3,10 @@ Created on Aug 25, 2015
 
 @author: alexandru-m-g
 '''
-
+import pytest
 import logging as logging
+import six
+
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 import ckan.logic as logic
@@ -30,6 +32,7 @@ organization = {
 }
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
@@ -155,5 +158,5 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
             dataset_dict = self._get_action('package_create')(context, package)
             assert dataset_dict and dataset_dict.get('groups') and dataset_dict.get('groups')[0].get(
                 'name') == 'roger', 'The group needs to be part of the created dataset'
-        except logic.ValidationError, e:
+        except logic.ValidationError as e:
             assert False, str(e)

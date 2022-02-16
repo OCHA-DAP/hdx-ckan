@@ -3,8 +3,9 @@ Created on Nov 12, 2014
 
 @author: alexandru-m-g
 '''
-
+import pytest
 import logging as logging
+import six
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_util as hdx_test_util
@@ -15,6 +16,7 @@ import ckan.lib.helpers as h
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     @classmethod
     def _load_plugins(cls):
