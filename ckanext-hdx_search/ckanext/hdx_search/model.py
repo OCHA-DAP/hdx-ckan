@@ -1,10 +1,9 @@
 import datetime
 import logging
-import pylons.config as config
 
 from sqlalchemy import types, Table, Column, ForeignKey, UniqueConstraint, Index, desc
 
-from paste.deploy.converters import asint
+import ckan.plugins.toolkit as tk
 
 from ckan.model import meta, domain_object
 from ckan.model import types as ckan_types
@@ -12,6 +11,8 @@ from ckan.model import types as ckan_types
 from ckan.model.user import user_table
 
 log = logging.getLogger(__name__)
+config = tk.config
+asint = tk.asint
 
 searched_string_table = None
 

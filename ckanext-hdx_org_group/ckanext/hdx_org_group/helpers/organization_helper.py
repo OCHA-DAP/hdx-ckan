@@ -730,7 +730,7 @@ def notify_admins(data_dict):
         if data_dict.get('admins'):
             # for admin in data_dict.get('admins'):
             hdx_mailer.mail_recipient(data_dict.get('admins'), data_dict.get('subject'), data_dict.get('message'))
-    except Exception, e:
+    except Exception as e:
         log.error("Email server error: can not send email to admin users" + e.message)
         return False
     log.info("admin users where notified by email")

@@ -1,4 +1,6 @@
+import pytest
 import mock
+import six
 
 import ckan.plugins.toolkit as toolkit
 import ckan.model as model
@@ -8,6 +10,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestContactContributor(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
@@ -37,9 +40,9 @@ class TestContactContributor(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
 
         try:
             self._get_action('hdx_send_mail_contributor')({}, data_dict)
-        except toolkit.NotAuthorized, e:
+        except toolkit.NotAuthorized as e:
             assert True, 'Calling hdx_send_mail_contributor without user should raise NotAuthorized'
-        except Exception, e:
+        except Exception as e:
             assert False, 'Calling hdx_send_mail_contributor without user should raise NotAuthorized and not {}'.format(
                 type(e).__name__)
 

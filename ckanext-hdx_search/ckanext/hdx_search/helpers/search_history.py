@@ -47,7 +47,7 @@ def num_of_results_for_prev_searches(userobj):
                         'url': h.url_for('search', ext_after_metadata_modified=last_search_time,
                                          ext_search_source='main-nav', q=s.search_string)
                     })
-            except Exception, ex:
+            except Exception as ex:
                 log.error(ex)
             if len(num_of_results_per_search) >= 3:
                 break

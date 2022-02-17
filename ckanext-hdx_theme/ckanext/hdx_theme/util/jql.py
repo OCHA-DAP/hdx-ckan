@@ -1,17 +1,19 @@
 import requests
 import logging
-import pylons.config as config
 
 from dogpile.cache import make_region
 from datetime import datetime, timedelta
 from collections import OrderedDict
 from functools import wraps
 
+import ckan.plugins.toolkit as tk
+
 import ckanext.hdx_theme.util.jql_queries as jql_queries
 from ckanext.hdx_theme.util.timer import Timer
 from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
     HDXRedisInvalidationStrategy
 
+config = tk.config
 
 log = logging.getLogger(__name__)
 

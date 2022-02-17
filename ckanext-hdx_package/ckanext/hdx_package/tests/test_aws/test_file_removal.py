@@ -1,5 +1,8 @@
+import pytest
 import os
-from werkzeug import FileStorage
+import six
+
+from werkzeug.datastructures import FileStorage
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -10,6 +13,7 @@ config = tk.config
 _get_action = tk.get_action
 
 
+@pytest.mark.skipif(six.PY3, reason=u"S3 plugin not on PY3 yet")
 class TestFileRemovalS3(HDXS3TestBase):
 
     def test_resource_delete(self):

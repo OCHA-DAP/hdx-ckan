@@ -26,6 +26,7 @@ membership_data = {
     'group_topics': group_topics
 }
 
+
 def get_membership_by_user(user, org, userobj):
     if user:
         group_message_topics = get_message_groups(user, org)
@@ -73,7 +74,7 @@ def get_message_groups(current_user, org_id):
                 group_topics.append(('members', membership_data['group_topics']['members'] + ' [' + str(
                     cnt_members_list.get('members_counter', 0)) + ']'))
             group_message_topics = collections.OrderedDict(group_topics)
-    except Exception, e:
+    except Exception as e:
         log.warning("Exception occured while getting message groups for org {}".format(org_id) + str(e.args))
 
     return group_message_topics

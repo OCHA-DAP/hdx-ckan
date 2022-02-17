@@ -480,7 +480,7 @@ def hdx_keep_prev_value_if_empty(key, data, errors, context):
             if old_value:
                 data[key] = old_value
 
-    if isinstance(new_value, (str, unicode)) and not new_value.strip():
+    if isinstance(new_value, six.string_types) and not new_value.strip():
         data.pop(key, None)
 
     if key not in data:

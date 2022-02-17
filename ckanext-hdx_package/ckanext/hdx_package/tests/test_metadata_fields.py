@@ -7,22 +7,15 @@ Created on May 16, 2014
 
 
 import json
-import webtest
 import logging
 
 import ckan.plugins as p
-import ckan.lib.create_test_data as ctd
-import ckan.lib.search as search
 import ckan.model as model
 import ckan.logic as logic
-import ckan.lib.helpers as h
 import ckan.tests.legacy as legacy_tests
 
-from ckan.config.middleware import make_app
-from pylons import config
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_package.helpers.caching as caching
 
 log = logging.getLogger(__name__)
 

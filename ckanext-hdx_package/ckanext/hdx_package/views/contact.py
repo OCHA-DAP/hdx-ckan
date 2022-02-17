@@ -8,7 +8,7 @@ import ckan.lib.captcha as captcha
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
-from ckan.controllers.api import CONTENT_TYPES
+from ckan.views.api import CONTENT_TYPES
 from ckan.lib.mailer import MailerException
 
 import ckanext.hdx_package.helpers.membership_data as membership_data
