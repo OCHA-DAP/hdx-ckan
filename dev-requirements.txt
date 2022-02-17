@@ -31,13 +31,13 @@ botocore==1.23.24
     #   boto3
     #   moto
     #   s3transfer
-certifi==2019.11.28
+certifi==2021.5.30
     # via
     #   -c requirements.txt
     #   requests
 cffi==1.15.0
     # via cryptography
-chardet==3.0.4
+chardet==4.0.0
     # via
     #   -c requirements.txt
     #   binaryornot
@@ -58,7 +58,7 @@ coveralls==3.3.1
     # via -r dev-requirements.in
 cryptography==36.0.1
     # via moto
-decorator==4.4.1
+decorator==5.1.1
     # via
     #   -c requirements.txt
     #   ipython
@@ -141,14 +141,8 @@ packaging==21.3
     #   sphinx
 parso==0.8.3
     # via jedi
-pathtools==0.1.2
-    # via
-    #   -c requirements.txt
-    #   watchdog
 pbr==5.4.4
-    # via
-    #   -c requirements.txt
-    #   mock
+    # via mock
 pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
@@ -173,7 +167,7 @@ pygments==2.10.0
     # via
     #   ipython
     #   sphinx
-pyparsing==2.4.7
+pyparsing==3.0.7
     # via
     #   -c requirements.txt
     #   packaging
@@ -192,7 +186,7 @@ pytest==4.6.5
     #   pytest-freezegun
     #   pytest-rerunfailures
     #   pytest-split-tests
-python-dateutil==2.8.1
+python-dateutil==2.8.2
     # via
     #   -c requirements.txt
     #   arrow
@@ -205,7 +199,7 @@ pytz==2016.7
     #   -c requirements.txt
     #   babel
     #   moto
-requests==2.22.0
+requests==2.25.1
     # via
     #   -c requirements.txt
     #   cookiecutter
@@ -219,7 +213,7 @@ responses==0.10.14
     #   moto
 s3transfer==0.5.0
     # via boto3
-six==1.13.0
+six==1.16.0
     # via
     #   -c requirements.txt
     #   freezegun
@@ -252,12 +246,12 @@ traitlets==5.1.1
     # via
     #   ipython
     #   matplotlib-inline
-urllib3==1.25.8
+urllib3==1.26.6
     # via
     #   -c requirements.txt
     #   botocore
     #   requests
-watchdog==0.10.2
+watchdog==2.1.5
     # via
     #   -c requirements.txt
     #   werkzeug
