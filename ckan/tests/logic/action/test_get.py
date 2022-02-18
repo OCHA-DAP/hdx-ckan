@@ -916,6 +916,19 @@ class TestUserList(object):
         got_user = got_users[0]
         assert got_user == user["name"]
 
+    def test_user_list_return_query(self):
+        user_a = factories.User(email="a@example.com")
+        query = helpers.call_action(
+            "user_list",
+            {"return_query": True},
+            email="a@example.com"
+        )
+        user = query.one()
+
+        expected = ["name", "fullname", "about", "email"]
+        for prop in expected:
+            assert user_a[prop] == getattr(user, prop), prop
+
     def test_user_list_filtered_by_email(self):
 
         user_a = factories.User(email="a@example.com")
@@ -4338,14 +4351,44 @@ class TestDashboardNewActivities(object):
         user = factories.User()
         another_user = factories.Sysadmin()
         group = factories.Group(user=user)
+        helpers.call_action(
+            "follow_group", context={"user": user["name"]}, **group
+        )
         _clear_activities()
         dataset = factories.Dataset(
             groups=[{"name": group["name"]}], user=another_user
         )
         dataset["title"] = "Dataset with changed title"
         helpers.call_action(
-            "follow_dataset", context={"user": user["name"]}, **dataset
+            "package_update", context={"user": another_user["name"]}, **dataset
         )
+
+        activities = helpers.call_action(
+            "dashboard_activity_list", context={"user": user["id"]}
+        )
+        assert [
+            (activity["activity_type"], activity["is_new"])
+            for activity in activities[::-1]
+        ] == [("new package", True), ("changed package", True)]
+        assert (
+            helpers.call_action(
+                "dashboard_new_activities_count", context={"user": user["id"]}
+            )
+            == 2
+        )
+
+    def test_activities_on_a_dataset_in_a_followed_org(self):
+        user = factories.User()
+        another_user = factories.Sysadmin()
+        org = factories.Organization(user=user)
+        helpers.call_action(
+            "follow_group", context={"user": user["name"]}, **org
+        )
+        _clear_activities()
+        dataset = factories.Dataset(
+            owner_org=org['id'], user=another_user
+        )
+        dataset["title"] = "Dataset with changed title"
         helpers.call_action(
             "package_update", context={"user": another_user["name"]}, **dataset
         )

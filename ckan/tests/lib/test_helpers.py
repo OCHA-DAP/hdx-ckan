@@ -103,6 +103,7 @@ class TestHelpersUrlFor(BaseUrlFor):
                 {"qualified": True, "locale": "de"},
                 "http://example.com/de/dataset/my_dataset",
             ),
+            ({"__no_cache__": True}, "/dataset/my_dataset?__no_cache__=True"),
         ],
     )
     def test_url_for_default(self, extra, exp):
@@ -159,6 +160,32 @@ class TestHelpersUrlFor(BaseUrlFor):
         expected = "/my/custom/path/_debug_toolbar/static/test.js"
         url = url_for('_debug_toolbar.static', filename='test.js')
         assert url == expected
+
+    @pytest.mark.parametrize(
+        "extra,exp",
+        [
+            ({"param": "foo"}, "/dataset/my_dataset?param=foo"),
+            ({"param": 27}, "/dataset/my_dataset?param=27"),
+            ({"param": 27.3}, "/dataset/my_dataset?param=27.3"),
+            ({"param": True}, "/dataset/my_dataset?param=True"),
+            ({"param": None}, "/dataset/my_dataset"),
+            ({"param": {}}, "/dataset/my_dataset?param=%7B%7D"),
+        ],
+    )
+    def test_url_for_string_route_with_query_param(self, extra, exp):
+        assert (
+            h.url_for("/dataset/my_dataset", **extra) ==
+            h.url_for("dataset.read", id="my_dataset", **extra) ==
+            exp
+        )
+
+    def test_url_for_string_route_with_list_query_param(self):
+        extra = {'multi': ['foo', 27, 27.3, True, None]}
+        assert (
+            h.url_for("/dataset/my_dataset", **extra) ==
+            h.url_for("dataset.read", id="my_dataset", **extra) ==
+            "/dataset/my_dataset?multi=foo&multi=27&multi=27.3&multi=True"
+        )
 
 
 class TestHelpersUrlForFlaskandPylons(BaseUrlFor):
@@ -828,3 +855,24 @@ class TestAddUrlParam(object):
             assert h.add_url_param(
                 controller=controller, action=action, extras=extras
             ) == h.url_for(controller + '.' + action, **extras)
+
+
+def test_sanitize_url():
+    assert h.sanitize_url(
+        u'http://example.com/some-path/to_a/file.jpg'
+    ) == u'http://example.com/some-path/to_a/file.jpg'
+    assert h.sanitize_url(
+        u'sh+eme://[net:loc]:12345/a/path?a=b&c=d'
+    ) == u'sh+eme://[net:loc]:12345/a/path?a=b&c=d'
+    assert h.sanitize_url(
+        u'http://éxàmple.com/some:path/to+a/fil[e].jpg'
+    ) == u'http://éxàmple.com/some%3Apath/to%2Ba/fil%5Be%5D.jpg'
+    assert h.sanitize_url('http://bad host/path') == ''
+    assert h.sanitize_url(
+        u'http://x/things" onerror=alert(document.domain)>'
+    ) == u'http://x/things%22%20onerror%3Dalert%28document.domain%29%3E'
+    assert h.sanitize_url(
+        h.sanitize_url(
+            u'http://éxàmple.com/some:path/to+a/fil[e].jpg'
+        )
+    ) == h.sanitize_url(u'http://éxàmple.com/some:path/to+a/fil[e].jpg')
