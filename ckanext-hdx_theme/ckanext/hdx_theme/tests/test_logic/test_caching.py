@@ -4,12 +4,12 @@ Created on Jun 3, 2014
 @author: alexandru-m-g
 '''
 
+import pytest
+import six
+
 import ckan.plugins.toolkit as tk
-import ckan.lib.create_test_data as ctd
 import ckan.tests.legacy as tests
-import ckan.lib.search as search
 import ckan.model as model
-import ckan.plugins as p
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -125,6 +125,7 @@ class TestGroupsCaching(hdx_test_base.HdxBaseTest):
     #         'number of calls to filter_focus_countries should be 1 , instead {num}'.format(
     #             num=num_filter_focus_countries)
 
+    @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
     def test_group_cache_invalidation_on_change(self):
         global num_invalidate_group_caches
         # resetting counter

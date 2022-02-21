@@ -3,8 +3,10 @@ Created on Jul 25, 2014
 
 @author: alexandru-m-g
 '''
-
+import pytest
 import logging as logging
+import six
+
 import ckan.model as model
 import ckan.tests.legacy as tests
 
@@ -13,6 +15,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
 class TestDatasetAuth(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
@@ -39,7 +42,7 @@ class TestDatasetAuth(hdx_test_base.HdxBaseTest):
                                   apikey=user.apikey, status=403)
         assert True, "tester is not part of Test Org E so he can't create a dataset for it"
 
-        tests.call_action_api(self.app, 'organization_member_create',
+        ret = tests.call_action_api(self.app, 'organization_member_create',
                               id=org_result['id'], username='tester', role='editor',
                               apikey=testsysadmin.apikey, status=200)
 
@@ -50,5 +53,5 @@ class TestDatasetAuth(hdx_test_base.HdxBaseTest):
                                   title='Test Dataset', notes='some_description',
                                   groups=[{'id':group_result['id']}], owner_org=org_result['id'],
                                   apikey=user.apikey, status=200)
-            
+
         assert True, "tester is now editor of Test Org E so he can create a dataset for it"

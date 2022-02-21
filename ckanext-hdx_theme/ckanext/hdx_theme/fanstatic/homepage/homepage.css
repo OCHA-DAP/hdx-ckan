@@ -30,6 +30,7 @@
   background-position: center;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
+  position: relative;
 }
 .homepage-main .homepage-section .section-content {
   padding-bottom: 0;

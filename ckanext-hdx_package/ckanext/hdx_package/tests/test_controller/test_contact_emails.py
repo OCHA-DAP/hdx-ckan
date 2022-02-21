@@ -28,8 +28,7 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'msg': 'This is a test message'
         }
 
-        url = url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                        action='contact_members')
+        url = url_for('hdx_contact.contact_members')
 
         res = self.app.post(url, params=post_params,
                             extra_environ=auth)

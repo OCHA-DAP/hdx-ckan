@@ -59,7 +59,7 @@ def _generate_test_yaml_dict():
     return input_yaml_for_1_country
 
 
-def _generate_dataset_dict(dataset_name, org_id, group_name, review_date):
+def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=USER, ignore_auth=False):
     dataset = {
         "package_creator": "test function",
         "private": False,
@@ -76,10 +76,12 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, review_date):
         "groups": [{"name": group_name}],
         "review_date": review_date.isoformat(),
         "data_update_frequency": "30",
-        "maintainer": USER
+        "maintainer": user
     }
 
-    context = {'model': model, 'session': model.Session, 'user': USER}
+    context = {'model': model, 'session': model.Session, 'user': user}
+    if ignore_auth:
+        context['ignore_auth'] = True
     dataset_dict = _get_action('package_create')(context, dataset)
     return dataset_dict
 

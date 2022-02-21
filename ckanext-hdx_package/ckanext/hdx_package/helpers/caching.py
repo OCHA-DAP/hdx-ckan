@@ -8,7 +8,6 @@ import logging
 import unicodedata
 import requests
 from dogpile.cache import make_region
-from pylons import config
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
@@ -16,6 +15,7 @@ from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_c
     HDXRedisInvalidationStrategy
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 dogpile_org_group_config = {
     'cache.redis.expiration_time': 60 * 60 * 24,
@@ -181,7 +181,7 @@ def cached_resource_id_apihighways():
             response = requests.get(config.get('hdx.apihighways.url'))
             response.raise_for_status()
             result = response.json()
-        except Exception, ex:
+        except Exception as ex:
             log.error(ex)
     return result
 

@@ -1,0 +1,33 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.quick-edit {
+  position: relative;
+  td.dataset-details {
+    padding-right: 90px;
+  }
+
+  &:hover {
+    background-color: #f4f4f4;
+    .quick-link {
+      display: block;
+    }
+  }
+  .quick-link {
+    display: none;
+    background-color: @whiteColor;
+    color: @blueColor;
+    border-color: @blueColor;
+    position: absolute;
+    font-size: 11px;
+    right: 15px;
+    top: 50%;
+    transform: translate(0, -50%);
+    padding: 4px 8px;
+    line-height: 1;
+    &:hover {
+      background-color: @blueColor;
+      color: @whiteColor;
+    }
+  }
+}

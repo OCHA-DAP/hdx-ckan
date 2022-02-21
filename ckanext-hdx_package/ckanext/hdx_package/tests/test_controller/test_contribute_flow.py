@@ -6,7 +6,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_package.controllers.contribute_flow_controller as contribute_flow_controller
+import ckanext.hdx_package.views.contribute_flow as contribute_flow
 import ckanext.hdx_package.helpers.caching as caching
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
@@ -87,19 +87,19 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
     #     routes_util.request_config = original_request_config
     #     super(TestContributeFlowController, cls).teardown_class()
 
-    @mock.patch('ckanext.hdx_package.controllers.contribute_flow_controller.request')
-    @mock.patch('ckanext.hdx_package.controllers.contribute_flow_controller.c')
-    def test_edit_resource_link(self, controller_c_mock, req_mock):
+    @mock.patch('ckanext.hdx_package.views.contribute_flow.request')
+    @mock.patch('ckanext.hdx_package.views.contribute_flow.g')
+    @mock.patch('ckanext.hdx_package.views.contribute_flow._prepare_and_render')
+    def test_edit_resource_link(self, _prepare_mock, controller_c_mock, req_mock):
 
         controller_c_mock.user = 'testsysadmin'
-        req_mock.POST = {}
+        req_mock.form = {}
 
-        contribute_flow_controller = MockedContributeFlowController()
-        contribute_flow_controller.edit('test_contribute_ds')
+        contribute_flow.edit('test_contribute_ds')
 
-        assert contribute_flow_controller.data.get('resources')
+        assert _prepare_mock.call_args[1]['data'].get('resources')
 
-        res = contribute_flow_controller.data.get('resources')[0]
+        res = _prepare_mock.call_args[1]['data'].get('resources')[0]
 
         assert res.get('url') == 'hdx_contribute_test.csv', \
             'The dataset is loaded for editing so the uploaded resource "url" field should NOT be the full URL'
@@ -216,7 +216,8 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         assert saved_dataset.get('id')
 
         post_params['id'] = saved_dataset.get('id')
-        post_params["dataset_date"] = "[2016-09-17 TO 2016-09-27]"
+        post_params['dataset_date'] = '[2016-09-17 TO 2016-09-27]'
+        post_params['customviz__0__url'] = 'http://test-domain.test/test'
 
         res2 = self.app.post('/contribute/edit/{}'.format(post_params.get('id')), params=post_params,
                             extra_environ=auth)
@@ -227,6 +228,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         saved_dataset2 = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-edit'})
 
         assert saved_dataset2 and saved_dataset2.get('dataset_date') == "[2016-09-17T00:00:00 TO 2016-09-27T23:59:59]"
+        assert saved_dataset2.get('customviz')[0]['url'] == 'http://test-domain.test/test'
 
         type(self).use_package_create_wrapper = True
 
@@ -273,12 +275,3 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         assert saved_dataset2 and len(saved_dataset2.get('groups', [])) == 0 and len(saved_dataset2.get('tags', [])) == 0
 
         type(self).use_package_create_wrapper = True
-
-
-class MockedContributeFlowController(contribute_flow_controller.ContributeFlowController):
-
-    def _prepare_and_render(self, save_type='', data=None, errors=None, error_summary=None):
-        self.save_type = save_type
-        self.data = data
-        self.errors = errors
-        self.error_summary = error_summary

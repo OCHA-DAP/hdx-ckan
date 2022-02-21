@@ -517,6 +517,17 @@ dataset-styles:
       - datasets/hdx_custom_dataviz_show.css
       - datasets/related.css
 
+dataset-quick-edit-styles:
+  output: ckanext-hdx_theme/%(version)s_dataset-quick-edit-styles.css
+  contents:
+    - datasets/dataset-quick-edit.css
+
+dataset-quick-edit-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_dataset-quick-edit-scripts.js
+  contents:
+    - hdx-quick-edit.js
+
 dataset-related-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-related-styles.css
   contents:

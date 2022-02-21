@@ -1,6 +1,8 @@
+import pytest
 import os
+import six
 
-from werkzeug import FileStorage
+from werkzeug.datastructures import FileStorage
 
 import ckan.logic as logic
 import ckan.model as model
@@ -14,6 +16,7 @@ NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAPIIIsSensitiveNormalUser(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -97,6 +100,7 @@ class TestQAPIIIsSensitiveNormalUser(hdx_test_base.HdxBaseTest):
         assert 'pii_is_sensitive' not in package_dict.get('resources')[3]
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAPIIIsSensitiveQAOfficer(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -206,6 +210,7 @@ class TestQAPIIIsSensitiveQAOfficer(hdx_test_base.HdxBaseTest):
         assert package_dict.get('resources')[3]['pii_is_sensitive']
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAPIIIsSensitiveReset(hdx_test_base.HdxBaseTest):
 
     SYSADMIN_USER = 'testsysadmin'

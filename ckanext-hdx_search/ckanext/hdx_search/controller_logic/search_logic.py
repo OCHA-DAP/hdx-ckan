@@ -17,7 +17,7 @@ import ckan.plugins.toolkit as tk
 
 
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
-from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
+from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
@@ -231,7 +231,7 @@ class SearchLogic(object):
 
             facets = self._generate_facet_name_to_title_map(package_type)
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
-            facet_keys = ['{!ex=batch}site_id'] + facets.keys()
+            facet_keys = ['{!ex=batch}site_id'] + list(facets)
             self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras,
                                     self._get_pager_function(package_type), context,
                                     fq_list=fq_list, expand=solr_expand)

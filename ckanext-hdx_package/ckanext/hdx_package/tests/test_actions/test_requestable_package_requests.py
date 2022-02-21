@@ -3,23 +3,25 @@ Created on Sep 9, 2014
 
 @author: alexandru-m-g
 '''
-
 # -*- coding: utf-8 -*-
 
 import logging as logging
-import ckan.plugins.toolkit as tk
-import ckan.model as model
-import ckan.lib.helpers as h
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_users.model as umodel
-import ckanext.hdx_user_extra.model as ue_model
-import mock
 
-import ckanext.hdx_theme.tests.mock_helper as mock_helper
-from ckanext.requestdata.model import ckanextRequestdata
-from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+import mock
+import pytest
+import six
 from nose.tools import assert_raises
+
+import ckan.lib.helpers as h
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import ckanext.hdx_theme.tests.mock_helper as mock_helper
+import ckanext.hdx_user_extra.model as ue_model
+import ckanext.hdx_users.model as umodel
 from ckan import logic
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+from ckanext.requestdata.model import ckanextRequestdata
 
 log = logging.getLogger(__name__)
 
@@ -51,6 +53,7 @@ organization = {
 }
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
@@ -105,9 +108,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         p = self._get_action('package_show')(context, {"id": package['name']})
 
-        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                             action='read', id=package['name'])
-        result = self.app.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        test_url = h.url_for('dataset.read', id=package['name'])
+        result = self.app.get(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
 
         assert 'Request data directly from the maintainer of this dataset.' in result.data

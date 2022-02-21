@@ -10,14 +10,12 @@ import os
 
 import dateutil.parser
 import sqlalchemy
+
 from botocore.exceptions import ClientError
-from paste.deploy.converters import asbool
-from pylons import config
+from six import text_type
 
 import ckan.authz as authz
-import ckan.lib.base as base
 import ckan.lib.helpers as h
-import ckan.lib.navl.dictization_functions
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.search as search
 import ckan.logic as logic
@@ -32,7 +30,6 @@ import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
-from ckan.common import _, c
 from ckan.lib import uploader
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
@@ -44,15 +41,20 @@ from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 from ckanext.s3filestore.helpers import generate_temporary_link
 
-_validate = ckan.lib.navl.dictization_functions.validate
-ValidationError = logic.ValidationError
-NotFound = ckan.logic.NotFound
-NotAuthorized = ckan.logic.NotAuthorized
-_check_access = logic.check_access
+config = tk.config
+asbool = tk.asbool
+_validate = tk.navl_validate
+ValidationError = tk.ValidationError
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+_check_access = tk.check_access
+get_action = tk.get_action
+base_abort = tk.abort
+get_or_bust = tk.get_or_bust
+_ = tk._
+g = tk.g
+
 log = logging.getLogger(__name__)
-get_action = logic.get_action
-base_abort = base.abort
-get_or_bust = logic.get_or_bust
 
 # _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 # _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
@@ -231,7 +233,7 @@ def package_search(context, data_dict):
     try:
         for item in plugins.PluginImplementations(plugins.IPackageController):
             data_dict = item.before_search(data_dict)
-    except NotFound, e:
+    except NotFound as e:
         base_abort(404, 'Wrong parameter value in url')
 
     # the extension may have decided that it is not necessary to perform
@@ -794,7 +796,7 @@ def hdx_member_list(context, data_dict):
     result = {}
     try:
         org_members = get_action('member_list')(context, {'id': data_dict.get('org_id'), 'object_type': 'user'})
-    except Exception, e:
+    except Exception as e:
         return None
 
     admins = []
@@ -987,7 +989,7 @@ def hdx_test_recommend_tags(context, data_dict):
 def hdx_get_s3_link_for_resource(context, data_dict):
     resource_id = get_or_bust(data_dict, 'id')
     context = {'model': model, 'session': model.Session,
-               'user': c.user or c.author, 'auth_user_obj': c.userobj}
+               'user': g.user or g.author, 'auth_user_obj': g.userobj}
 
     # this does check_access('resource_show') so we don't need to do the check
     res_dict = get_action('resource_show')(context, {'id': resource_id})
@@ -1014,8 +1016,8 @@ def hdx_get_s3_link_for_resource(context, data_dict):
             return {'s3_url': url}
 
         except ClientError as ex:
-            log.error(unicode(ex))
-            base_abort(404, _('Resource data not found'))
+            log.error(text_type(ex))
+            return base_abort(404, _('Resource data not found'))
 
     else:
         return {'s3_url': res_dict.get('url')}

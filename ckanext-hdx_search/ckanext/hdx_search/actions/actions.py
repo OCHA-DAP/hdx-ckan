@@ -2,16 +2,19 @@ import json
 import logging
 import urllib
 import requests
-from pylons import config
+
 import ckan.lib.munge as munge
-import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_search.helpers.qa_data as qa_data
 
 log = logging.getLogger(__name__)
 
-get_action = logic.get_action
-_check_access = logic.check_access
+get_action = tk.get_action
+_check_access = tk.check_access
+side_effect_free = tk.side_effect_free
+config = tk.config
+ValidationError = tk.ValidationError
 
 
 def populate_related_items_count(context, data_dict):
@@ -43,29 +46,28 @@ def populate_showcase_items_count(context, data_dict):
 
 # code adapted from ckanext-showcase.../logic/action/get.py:94
 def hdx_get_package_showcase_id_list(context, data_dict):
-    import ckan.plugins.toolkit as toolkit
     from ckan.lib.navl.dictization_functions import validate
     from ckanext.showcase.logic.schema import (package_showcase_list_schema)
     from ckanext.showcase.model import ShowcasePackageAssociation
 
-    toolkit.check_access('ckanext_package_showcase_list', context, data_dict)
+    _check_access('ckanext_package_showcase_list', context, data_dict)
     # validate the incoming data_dict
     validated_data_dict, errors = validate(data_dict, package_showcase_list_schema(), context)
 
     if errors:
-        raise toolkit.ValidationError(errors)
+        raise ValidationError(errors)
 
     # get a list of showcase ids associated with the package id
     showcase_id_list = ShowcasePackageAssociation.get_showcase_ids_for_package(validated_data_dict['package_id'])
     return showcase_id_list
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_qa_questions_list(context, data_dict):
     return qa_data.questions_list
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_qa_sdcmicro_run(context, data_dict):
     '''
     Add sdc micro flag "running" to resource
@@ -100,7 +102,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
         except Exception as e:
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request: ' + str(ex_msg)
-            raise logic.ValidationError({'message': message}, error_summary=message)
+            raise ValidationError({'message': message}, error_summary=message)
     else:
         return {
             'message': "Resource ID not provided or not found"
@@ -108,7 +110,7 @@ def hdx_qa_sdcmicro_run(context, data_dict):
     return data_dict
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_qa_pii_run(context, data_dict):
     '''
     Add sdc micro flag "running" to resource
@@ -137,7 +139,7 @@ def hdx_qa_pii_run(context, data_dict):
             get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": old_pii_report_flag})
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(ex_msg)
-            raise logic.ValidationError({'message': message}, error_summary=message)
+            raise ValidationError({'message': message}, error_summary=message)
     else:
         return json.dumps({'success': False, 'error': {'message': 'Resource ID not provided or not found'}})
     return True
@@ -235,7 +237,7 @@ def _get_resource_s3_path(resource_dict):
     return munged_resource_name
 
 
-# @logic.side_effect_free
+# @side_effect_free
 def aws_log_update(context, data_dict):
     '''
     Add key/value to the json log from aws
@@ -268,7 +270,7 @@ def aws_log_update(context, data_dict):
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)
             message = e.error_summary if hasattr(e, 'error_summary') and e.error_summary else 'Something went wrong while processing the request:' + str(
                 ex_msg)
-            raise logic.ValidationError({'message': message}, error_summary=message)
+            raise ValidationError({'message': message}, error_summary=message)
     else:
         return json.dumps({'success': False, 'error': {'message': 'Resource ID not provided or not found'}})
     return True

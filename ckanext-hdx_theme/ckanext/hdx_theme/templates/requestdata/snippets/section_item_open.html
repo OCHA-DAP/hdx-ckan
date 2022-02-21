@@ -11,6 +11,7 @@ Example usage:
 
 {#{% resource 'requestdata/handle-open-request.js' %}#}
 {% asset 'requestdata/section-item-scripts' %}
+{% asset 'requestdata/handle-open-req-scripts' %}
 
 {% set package_url = h.url_for('dataset_read', id=item.package_id) %}
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}

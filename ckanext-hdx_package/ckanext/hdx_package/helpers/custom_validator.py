@@ -9,6 +9,7 @@ import re
 import datetime
 import logging
 import json
+import six
 
 import ckan.model as model
 import ckan.authz as authz
@@ -92,7 +93,7 @@ def groups_not_empty(key, data, errors, context):
         problem_appeared = False
         try:
             num_of_groups = max((key[1] for key in data.keys() if key[0] == 'groups')) + 1
-        except ValueError, e:
+        except ValueError as e:
             num_of_groups = 0
             problem_appeared = True
 
@@ -195,7 +196,7 @@ def find_package_creator(key, data, errors, context):
 def hdx_find_package_maintainer(key, data, errors, context):
     try:
         user_obj = model.User.get(data.get(key))
-    except Exception, ex:
+    except Exception as ex:
         raise df.Invalid(_('Maintainer does not exist. Please add valid user ID'))
 
     org_id = data.get(('owner_org',))
@@ -217,7 +218,7 @@ def hdx_dataset_preview_validator(key, data, errors, context):
         if dataset_preview and dataset_preview in DATASET_PREVIEW_VALUES_LIST:
             return data[key]
         data[key] = _DATASET_PREVIEW_FIRST_RESOURCE
-    except Exception, ex:
+    except Exception as ex:
         data[key] = _DATASET_PREVIEW_FIRST_RESOURCE
     return data[key]
 
@@ -290,7 +291,7 @@ def hdx_convert_list_item_to_extras(key, data, errors, context):
 def hdx_convert_from_extras_to_list_item(key, data, errors, context):
     def remove_from_extras(data, key):
         to_remove = []
-        for data_key, data_value in data.iteritems():
+        for data_key, data_value in data.items():
             if (data_key[0] == 'extras'
                 and data_key[1] == key):
                 to_remove.append(data_key)
@@ -300,8 +301,8 @@ def hdx_convert_from_extras_to_list_item(key, data, errors, context):
     keys_to_remove = []
     key_value_to_add = []
 
-    for data_key, data_value in data.iteritems():
-        if isinstance(data_value, basestring):
+    for data_key, data_value in data.items():
+        if isinstance(data_value, six.string_types):
             data_value_parts = data_value.split('__')  # Example: ['customviz', 0, 'url']
             key_parts = key[-1].split('__')  # Example ['customviz', 'url']
             if data_key[0] == 'extras' and data_key[-1] == 'key' \
@@ -479,7 +480,7 @@ def hdx_keep_prev_value_if_empty(key, data, errors, context):
             if old_value:
                 data[key] = old_value
 
-    if isinstance(new_value, (str, unicode)) and not new_value.strip():
+    if isinstance(new_value, six.string_types) and not new_value.strip():
         data.pop(key, None)
 
     if key not in data:

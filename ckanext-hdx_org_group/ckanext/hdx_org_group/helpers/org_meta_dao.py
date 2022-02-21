@@ -1,26 +1,25 @@
 import json
 
-import ckan.logic as logic
 import ckan.model as model
 import ckan.authz as new_authz
-import ckan.lib.base as base
 import ckan.lib.helpers as ckan_helpers
+import ckan.plugins.toolkit as tk
 
-from ckan.common import c, _
 
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_org_group.helpers.organization_helper as org_helpers
-import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_package.helpers.membership_data as membership_data
 
-abort = base.abort
+_ = tk._
+abort = tk.abort
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+_get_action = tk.get_action
+_check_access = tk.check_access
 
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
 
-
-class OrgMetaDao(search_controller.HDXSearchController):
+class OrgMetaDao(object):
     def __init__(self, org_id, username, userobj):
         self.id = org_id
         self._username = username
@@ -96,7 +95,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
             'extras': {}
         }
 
-        query = logic.get_action('package_search')(context, data_dict)
+        query = _get_action('package_search')(context, data_dict)
 
         self.datasets_num = query['count']
 
@@ -111,7 +110,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
                 'include_datasets': False,
                 'for_view': True
             }
-            self.org_dict = logic.get_action('hdx_light_group_show')(context, {'id': self.id})
+            self.org_dict = _get_action('hdx_light_group_show')(context, {'id': self.id})
 
             self.__process_custom()
         except NotFound:
@@ -127,8 +126,8 @@ class OrgMetaDao(search_controller.HDXSearchController):
 
         self.allow_edit = self.__check_access('organization_update', {'id': self.id})
         self.allow_add_dataset = self.__check_access('package_create',
-                                              {'organization_id': self.id,
-                                               'owner_org': self.id})
+                                                     {'organization_id': self.id,
+                                                      'owner_org': self.id})
 
     def fetch_followers(self):
         self._fetched_followers = True
@@ -136,7 +135,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
 
     def fetch_members(self):
         self._fetched_members = True
-        self.members = logic.get_action('member_list')(
+        self.members = _get_action('member_list')(
             {'model': model, 'session': model.Session},
             {'id': self.id, 'object_type': 'user'}
         )
@@ -154,8 +153,6 @@ class OrgMetaDao(search_controller.HDXSearchController):
             }
         }
 
-
-
     def __process_custom(self):
         org_extras = {item.get('key'): item.get('value') for item in self.org_dict.get('extras', []) if item.get('key')}
         self.org_dict['extras'] = org_extras
@@ -168,9 +165,12 @@ class OrgMetaDao(search_controller.HDXSearchController):
 
             css_dest_dir = '/organization/' + self.org_dict['name']
 
-            self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'], self.org_dict.get('modified_at'), True)
-            self.custom_sq_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file', filename=self.customization.get('image_sq'))
-            self.custom_rect_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file', filename=self.customization.get('image_rect'))
+            self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'],
+                                                                 self.org_dict.get('modified_at'), True)
+            self.custom_sq_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file',
+                                                           filename=self.customization.get('image_sq'))
+            self.custom_rect_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file',
+                                                             filename=self.customization.get('image_rect'))
 
     def __check_access(self, action_name, data_dict=None):
         if data_dict is None:
@@ -181,8 +181,8 @@ class OrgMetaDao(search_controller.HDXSearchController):
             'user': self._username
         }
         try:
-            result = logic.check_access(action_name, context, data_dict)
-        except logic.NotAuthorized:
+            result = _check_access(action_name, context, data_dict)
+        except NotAuthorized:
             result = False
 
         return result

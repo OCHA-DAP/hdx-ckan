@@ -6,6 +6,7 @@ Created on Aug 28, 2014
 import pytest
 import unicodedata
 import logging as logging
+import six
 
 import ckan.model as model
 import ckan.lib.helpers as h
@@ -36,7 +37,7 @@ pages = [
     {'url_name': 'hdx_splash.index', 'usertype': 'all'}
 ]
 
-
+@pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
 class TestPageLoad(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):

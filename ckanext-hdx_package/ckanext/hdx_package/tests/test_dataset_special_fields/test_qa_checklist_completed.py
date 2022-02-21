@@ -1,3 +1,5 @@
+import pytest
+import six
 import ckan.tests.factories as factories
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -10,6 +12,7 @@ config = tk.config
 NotAuthorized = tk.NotAuthorized
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAChecklistCompleted(hdx_test_base.HdxBaseTest):
 
     NORMAL_USER = 'qa_checklist_completed_user'

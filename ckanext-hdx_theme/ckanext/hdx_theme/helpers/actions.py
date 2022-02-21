@@ -1,7 +1,6 @@
 import logging
 import json
 
-from pylons import config
 import sqlalchemy
 
 import ckan.logic as logic
@@ -17,7 +16,6 @@ import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.hxl.transformers.transformers as transformers
 import ckan.authz as authz
-import pylons.configuration as configuration
 
 from ckan.common import c, _
 from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
@@ -25,6 +23,7 @@ from sqlalchemy import func
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
+config = tk.config
 NotFound = logic.NotFound
 
 log = logging.getLogger(__name__)
@@ -231,7 +230,7 @@ def hdx_send_editor_request_for_org(context, data_dict):
              '(This is an automated mail)' \
              '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'],
                         org=data_dict['organization'], msg=data_dict.get('message', ''))
-    if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
+    if config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
         hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body, one_email=True)
 
 

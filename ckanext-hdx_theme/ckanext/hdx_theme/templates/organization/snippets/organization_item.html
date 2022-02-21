@@ -12,7 +12,7 @@ Example:
     </ul>
 #}
 
-{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc') %}
+{% set url = h.url_for(organization.type + '.read', id=organization.name, sort='metadata_modified desc') %}
 {% set f_updated_time = h.render_datetime(organization.dataset_last_updated) %}
 {% set followers = h.get_group_followers(organization.id) %}
 {% set members = h.get_group_members(organization.id) %}
@@ -57,7 +57,7 @@ Example:
 		  				{% set num_of_pack = organization.packages|length %}
 			    {% endif %}
 			   <span class="sspBold14">
-			   		 <a class="sspBold14" href="{{ h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+			   		 <a class="sspBold14" href="{{ h.url_for(organization.type + '.read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
 			   	</span>
 			   {% else %}
 			      <span class="sspBold14">{{ _('0 Datasets') }}</span>

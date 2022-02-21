@@ -17,14 +17,15 @@
 # With debug mode enabled, a visitor to your site could execute malicious commands.
 debug = false
 
-[server:main]
-use = egg:Paste#http
-host = 0.0.0.0
-port = 5000
-
 [app:main]
 use = egg:ckan
-full_stack = true
+
+## Development settings
+ckan.devserver.host = localhost
+ckan.devserver.port = 5000
+
+
+## Session settings
 cache_dir = /tmp/%(ckan.site_id)s/
 beaker.session.key = ckan
 
@@ -60,6 +61,10 @@ ckan.datastore.default_fts_index_method = gist
 
 ckan.site_url =
 #ckan.use_pylons_response_cleanup_middleware = true
+
+# Default timeout for Requests
+#ckan.requests.timeout = 10
+
 
 ## Authorization Settings
 
@@ -185,6 +190,8 @@ ckan.feeds.author_link =
 #ckan.resource_proxy.max_file_size = 1048576
 # Size of chunks to read/write.
 #ckan.resource_proxy.chunk_size = 4096
+# Default timeout for fetching proxied items
+#ckan.resource_proxy.timeout = 10
 
 ## Activity Streams Settings
 

@@ -1,32 +1,34 @@
 import json
 import logging
 import re
-import urlparse
+import six.moves.urllib.parse as urlparse
 
 import ckanext.hdx_package.helpers.custom_validator as vd
+import ckanext.hdx_package.helpers.analytics as analytics
+
 from ckanext.hdx_package.exceptions import NoOrganization
 from ckanext.hdx_package.helpers.caching import cached_group_iso_to_title
 from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
-from pylons import config
+
 
 import ckan.lib.base as base
 import ckan.lib.helpers as h
-import ckan.logic as logic
 import ckan.model as model
 import ckan.model.misc as misc
 import ckan.model.package as package
 import ckan.plugins.toolkit as tk
 from ckan.common import _, c, request
 
-get_action = logic.get_action
 log = logging.getLogger(__name__)
-_check_access = logic.check_access
-_get_or_bust = logic.get_or_bust
-NotFound = logic.NotFound
-ValidationError = logic.ValidationError
-_get_action = logic.get_action
 
+config = tk.config
+get_action = tk.get_action
+_check_access = tk.check_access
+_get_or_bust = tk.get_or_bust
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
+NotAuthorized = tk.NotAuthorized
 
 def build_additions(groups):
     """
@@ -39,7 +41,7 @@ def build_additions(groups):
                 # grp_list = cached_group_iso_to_title()
                 # country = grp_list[g.get('name')] if g.get('name') in grp_list else g.get('name')
                 countries.append(cached_group_iso_to_title()[g.get('name')])
-        except Exception, e:
+        except Exception as e:
             ex_msg = e.message if hasattr(e, 'message') else str(e)
             log.error(ex_msg)
     return json.dumps({'countries':countries})
@@ -52,9 +54,9 @@ def hdx_user_org_num(user_id):
     context = {'model': model, 'session': model.Session,
                'user': c.user or c.author}
     try:
-        user = tk.get_action('organization_list_for_user')(
+        user = get_action('organization_list_for_user')(
             context, {'id': user_id, 'permission': 'create_dataset'})
-    except logic.NotAuthorized:
+    except NotAuthorized:
         base.abort(403, _('Unauthorized to see organization member list'))
 
     return user
@@ -99,7 +101,7 @@ def hdx_get_activity_list(context, data_dict):
     """
     try:
         activity_stream = get_action('package_activity_list')(context, data_dict)
-    except Exception, ex:
+    except Exception as ex:
         log.exception(ex)
         activity_stream = []
     #activity_stream = package_activity_list(context, data_dict)
@@ -146,7 +148,7 @@ def _activity_list(context, activity_stream, extra_vars):
         activity_type = activity['activity_type']
         # Some activity types may have details.
         if activity_type in activity_streams.activity_stream_actions_with_detail:
-            details = logic.get_action('activity_detail_list')(context=context,
+            details = get_action('activity_detail_list')(context=context,
                                                                data_dict={'id': activity['id']})
             # If an activity has just one activity detail then render the
             # detail instead of the activity.
@@ -238,7 +240,7 @@ def _tag_search(context, data_dict):
     model = context['model']
 
     terms = data_dict.get('query') or data_dict.get('q') or []
-    if isinstance(terms, basestring):
+    if isinstance(terms, str):
         terms = [terms]
     terms = [t.strip() for t in terms if t.strip()]
 
@@ -328,7 +330,7 @@ def filesize_format(size_in_bytes):
                 return "%3.1f%s" % (size, unit)
             size /= d
         return "%.1f%s" % (size, 'Yi')
-    except Exception, e:
+    except Exception as e:
         log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
         return size_in_bytes
 
@@ -358,7 +360,7 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
             resource_id=data_dict['resource']['id'])
         log.info('Proxified url is {0}'.format(url))
     else:
-        url = urlparse.urlunparse((None, None) + parsed_url[2:])
+        url = urlparse.urlunparse(('', '') + parsed_url[2:])
     return url
 
 
@@ -384,7 +386,7 @@ def make_url_relative(url):
     :rtype: str
     '''
     parsed_url = urlparse.urlparse(url)
-    return urlparse.urlunparse((None, None) + parsed_url[2:])
+    return urlparse.urlunparse(('', '') + parsed_url[2:])
 
 def generate_mandatory_fields():
     '''
@@ -431,8 +433,8 @@ def hdx_check_add_data():
                    'save': 'save' in request.params}
     dataset_dict = None
     try:
-        logic.check_access("package_create", context, dataset_dict)
-    except logic.NotAuthorized, e:
+        _check_access("package_create", context, dataset_dict)
+    except NotAuthorized as e:
         data_dict['data_module'] = 'hdx_click_stopper'
         data_dict['data_module_link_type'] = 'header add data'
         if c.userobj or c.user:
@@ -471,3 +473,15 @@ def hdx_render_resource_updated_date(resource_dict, package_dict):
         return 'Live'
     else:
         return h.render_datetime(resource_dict.get('last_modified'))
+
+
+def hdx_compute_analytics(package_dict):
+    analytics_group_names, analytics_group_ids = analytics.extract_locations_in_json(package_dict)
+    ret_dict = {
+        'analytics_is_cod': analytics.is_cod(package_dict),
+        'analytics_is_indicator': analytics.is_indicator(package_dict),
+        'analytics_is_archived': analytics.is_archived(package_dict),
+        'analytics_dataset_availability': analytics.dataset_availability(package_dict),
+        'analytics_group_names': analytics_group_names, 'analytics_group_ids': analytics_group_ids
+    }
+    return ret_dict

@@ -12,12 +12,6 @@ import ckanext.hdx_pages.model as pages_model
 
 import ckanext.hdx_pages.views.light_page as light_page
 
-
-# class HdxPagesPlugin(plugins.SingletonPlugin):
-#
-#
-#
-
 class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IActions, inherit=True)
@@ -32,7 +26,6 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
         return [
             light_page.hdx_light_event,
             light_page.hdx_light_dashboard,
-            # HDX-7859 TO BE uncommented when search extension is migrated to py3
             light_page.hdx_event,
             light_page.hdx_dashboard,
             light_page.hdx_custom_page
@@ -78,57 +71,9 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
 
     # IRoutes
     def before_map(self, map):
-        # map.connect('create_page', '/page/new',
-        #             controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-        #             action='new',
-        #             )
-        # map.connect('edit_page', '/page/edit/{id}',
-        #             controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-        #             action='edit',
-        #             )
-        # map.connect('delete_page', '/page/delete/{id}',
-        #             controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-        #             action='delete',
-        #             )
 
-        # HDX-7859 TO BE commented when search extension is migrated to py3
-        # map.connect('read_event', '/event/{id}',
-        #             controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-        #             action='read_event',
-        #             )
-        # map.connect('read_dashboards', '/dashboards/{id}',
-        #             controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-        #             action='read_dashboards',
-        #             )
         return map
 
     # IConfigurable
     def configure(self, config):
         pages_model.setup()
-
-# class HdxLightEventPlugin(plugins.SingletonPlugin):
-#     plugins.implements(plugins.IBlueprint)
-#
-#     def get_blueprint(self):
-#         return light_page.hdx_light_event
-#
-#
-# class HdxLightDashboardPlugin(plugins.SingletonPlugin):
-#     plugins.implements(plugins.IBlueprint)
-#
-#     def get_blueprint(self):
-#         return light_page.hdx_light_dashboard
-#
-#
-# class HdxEventPlugin(plugins.SingletonPlugin):
-#     plugins.implements(plugins.IBlueprint)
-#
-#     def get_blueprint(self):
-#         return light_page.hdx_event
-#
-#
-# class HdxDashboardPlugin(plugins.SingletonPlugin):
-#     plugins.implements(plugins.IBlueprint)
-#
-#     def get_blueprint(self):
-#         return light_page.hdx_dashboard

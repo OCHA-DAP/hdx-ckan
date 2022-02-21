@@ -12,7 +12,7 @@ import ckan.logic.schema as core_schema
 import ckan.model as core_model
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
-from ckan.common import c
+from ckan.common import c, _
 
 _validate = core_df.validate
 _check_access = logic.check_access

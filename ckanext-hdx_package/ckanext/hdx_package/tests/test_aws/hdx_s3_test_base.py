@@ -1,5 +1,5 @@
 import os
-from werkzeug import FileStorage
+from werkzeug.datastructures import FileStorage
 
 import boto3 as boto3
 from moto import mock_s3

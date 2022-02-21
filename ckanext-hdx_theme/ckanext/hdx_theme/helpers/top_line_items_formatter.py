@@ -200,5 +200,5 @@ class TopLineItemsWithDateFormatter (TopLineItemsFormatter):
         try:
             d = dt.datetime.strptime(date_getter(r), self.src_date_format)
             date_setter(r, dt.datetime.strftime(d, self.dest_date_format))
-        except Exception, e:
+        except Exception as e:
             log.error('Problem reading date: ' + str(e))

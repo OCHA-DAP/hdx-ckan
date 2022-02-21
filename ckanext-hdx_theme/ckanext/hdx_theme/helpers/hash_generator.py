@@ -42,8 +42,8 @@ class HashCodeGenerator(object):
                     self.__inner_dict[field] = src_dict.get(field)
             else:
                 raise HashGenerationException('Either field list or source dict are null')
-        except Exception, e:
-            raise HashGenerationException('Exception while trying to generate hash code'), None, sys.exc_info()[2]
+        except Exception as e:
+            raise HashGenerationException('Exception while trying to generate hash code')
 
     def compute_hash(self):
         return hash(frozenset(self.__inner_dict.items()))

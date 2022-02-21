@@ -2,9 +2,7 @@ import json
 import datetime
 import logging
 import re
-import urlparse as urlparse
-
-import pylons.config as config
+import six.moves.urllib.parse as urlparse
 
 import ckan.authz as new_authz
 import ckan.lib.base as base
@@ -25,6 +23,7 @@ from ckanext.hdx_theme.util.light_redirect import switch_url_path
 _ = toolkit._
 request = toolkit.request
 c = toolkit.c
+config = toolkit.config
 ungettext = toolkit.ungettext
 
 log = logging.getLogger(__name__)
@@ -184,6 +183,24 @@ def hdx_get_user_info(user_id):
         base.abort(403, _('Unauthorized to see organization member list'))
     return user
 
+def hdx_get_org_member_info(user_id, org):
+    context = {'model': model, 'session': model.Session,
+               'user': c.user or c.author}
+    try:
+        user = tk.get_action('hdx_basic_user_info')(context, {'id': user_id})
+        maint_pkgs = _get_packages_for_maintainer(context, user_id, org)
+        user['maint_pkgs'] = maint_pkgs
+    except logic.NotAuthorized:
+        base.abort(403, _('Unauthorized to see organization member list'))
+    return user
+
+def _get_packages_for_maintainer(context, id, org):
+    result = logic.get_action('package_search')(context, {
+        'q': '*:*',
+        'fq': 'maintainer:{0}, organization:{1}'.format(id, org),
+        'rows': 100,
+    })
+    return result['results']
 
 def markdown_extract_strip(text, extract_length=190):
     ''' return the plain text representation of markdown encoded text.  That
@@ -232,7 +249,7 @@ def _hdx_strftime(_date):
     result = None
     try:
         result = _date.strftime('%B %d, %Y')
-    except ValueError, e:
+    except ValueError as e:
         month = datetime.date(1900, _date.month, 1).strftime('%B')
         result = month + " " + str(_date.day) + ", " + str(_date.year)
     return result
@@ -261,7 +278,7 @@ def render_date_from_concat_str(_str, separator='-'):
                     result += render_strdate
                     if index < len(strdate_list) - 1:
                         result += ' - '
-                except ValueError, e:
+                except ValueError as e:
                     log.warning(e)
 
     return result
@@ -280,14 +297,14 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
 
 def hdx_build_nav_no_icon(menu_item, title, **kw):
     html_result = str(h.build_nav_icon(menu_item, title, **kw))
-    print html_result
+    # print html_result
     start = html_result.find('<i ') - 1
     end = html_result.find('</i>') + 4
     if start > 0:
         new_result = html_result[0:start] + ' class="no-icon">' + html_result[end:]
     else:
         new_result = html_result
-    print new_result
+    # print new_result
     return h.literal(new_result)
 
 

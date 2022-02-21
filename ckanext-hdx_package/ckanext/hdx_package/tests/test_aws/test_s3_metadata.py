@@ -1,7 +1,8 @@
 import pytest
 import os
+import six
 
-from werkzeug import FileStorage
+from werkzeug.datastructures import FileStorage
 
 from ckanext.hdx_package.tests.test_aws.hdx_s3_test_base import HDXS3TestBase
 
@@ -22,6 +23,7 @@ TEST_DATA = [
 ]
 
 
+@pytest.mark.skipif(six.PY3, reason=u"S3 plugin not on PY3 yet")
 class TestS3Metadata(HDXS3TestBase):
 
     @pytest.mark.parametrize('test_item', TEST_DATA)

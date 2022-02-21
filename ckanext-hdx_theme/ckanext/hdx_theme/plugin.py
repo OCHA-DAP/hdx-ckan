@@ -117,7 +117,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
 
     def __add_wp_faq_url_for_checks(self, config):
-        wp_url = '{0}/wp-json/wp/v2/ufaq-category?parent={1}&per_page=100' \
+        wp_url = '{0}/custom-ufaq-category/{1}'\
             .format(config.get('hdx.wordpress.url'), config.get('hdx.wordpress.category.faq'))
         config['hdx_checks.wp_faq_url'] = wp_url
         basic_auth = config.get('hdx.wordpress.auth.basic')
@@ -202,6 +202,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_num_of_new_related_items': hdx_helpers.hdx_num_of_new_related_items,
             'hdx_get_extras_element': hdx_helpers.hdx_get_extras_element,
             'hdx_get_user_info': hdx_helpers.hdx_get_user_info,
+            'hdx_get_org_member_info': hdx_helpers.hdx_get_org_member_info,
             'hdx_linked_user': hdx_helpers.hdx_linked_user,
             'hdx_show_singular_plural': hdx_helpers.hdx_show_singular_plural,
             'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,

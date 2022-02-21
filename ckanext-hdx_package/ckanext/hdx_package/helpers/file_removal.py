@@ -3,7 +3,7 @@ import os.path as path
 import logging
 
 import ckan.lib.munge as munge
-import urlparse
+import six.moves.urllib.parse as urlparse
 
 from ckan.lib import uploader
 
@@ -29,7 +29,7 @@ def file_remove(resource_id, resource_url, resource_url_type):
             # remove empty parent directories
             os.removedirs(directory)
             log.info(u'File %s is deleted.' % filepath)
-        except OSError, e:
+        except OSError as e:
             log.debug(u'Error: %s - %s.' % (e.filename, e.strerror))
 
         pass
@@ -41,7 +41,7 @@ def file_remove(resource_id, resource_url, resource_url_type):
             munged_resource_name = munge.munge_filename(resource_url)
             filepath = uploader.get_path(resource_id, munged_resource_name)
             uploader.clear_key(filepath)
-        except Exception, e:
+        except Exception as e:
             msg = 'Couldn\'t delete file from S3'
             log.warning(msg + str(e))
 

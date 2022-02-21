@@ -4,7 +4,9 @@ Created on Dec 24, 2014
 @author: alexandru-m-g
 '''
 
+import pytest
 import logging as logging
+import six
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -17,6 +19,7 @@ log = logging.getLogger(__name__)
 config = tk.config
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
@@ -94,7 +97,7 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         }
 
         r1 = self._get_action('resource_create')(context, resource)
-        for key, value in resource.iteritems():
+        for key, value in resource.items():
             assert value == r1.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
         assert 'shape_info' not in r1, "shape_info should be missing since 'hdx.gis.layer_import_url' config is missing"
 
@@ -104,13 +107,13 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         r2 = self._get_action('resource_create')(context, resource)
         assert 'shape_info' in r2, "shape_info should exist since 'hdx.gis.layer_import_url' config is set"
         del resource['shape_info']
-        for key, value in resource.iteritems():
+        for key, value in resource.items():
             assert value == r2.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
 
         context['do_geo_preview'] = False
         r3 = self._get_action('resource_create')(context, resource)
         assert 'shape_info' not in r3, "shape_info should be missing since 'do_geo_preview' is False"
-        for key, value in resource.iteritems():
+        for key, value in resource.items():
             assert value == r3.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
 
         del config['hdx.gis.layer_import_url']
@@ -134,7 +137,7 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         resource_data = self._get_action('resource_create')(context, resource)
 
         r1 = self._get_action('resource_update')(context, resource_data)
-        for key, value in resource.iteritems():
+        for key, value in resource.items():
             assert value == r1.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
         assert 'shape_info' not in r1, "shape_info should be missing since 'hdx.gis.layer_import_url' config is missing"
 
@@ -143,7 +146,7 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         r2 = self._get_action('resource_update')(context, resource_data)
         assert 'shape_info' not in r2, "shape_info should be missing since 'do_geo_preview' is False"
-        for key, value in resource.iteritems():
+        for key, value in resource.items():
             assert value == r2.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
 
         context['do_geo_preview'] = True
@@ -151,5 +154,5 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         r3 = self._get_action('resource_update')(context, resource_data)
         assert 'shape_info' in r3, "shape_info should exist since 'hdx.gis.layer_import_url' config is set"
         del resource_data['shape_info']
-        for key, value in resource.iteritems():
+        for key, value in resource.items():
             assert value == r3.get(key), "The pair {} - {} should appear in the resource data".format(key, value)

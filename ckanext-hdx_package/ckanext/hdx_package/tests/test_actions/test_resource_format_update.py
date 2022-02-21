@@ -1,3 +1,6 @@
+import pytest
+import six
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -6,6 +9,8 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 config = tk.config
 h = tk.h
 
+
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXUpdateResourceFormat(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_resource_create(self):
@@ -35,9 +40,7 @@ class TestHDXUpdateResourceFormat(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgs
             assert value == r2.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
 
         test_client = self.get_backwards_compatible_test_client()
-        read_pkg_url = h.url_for(
-            controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-            action='read', id=dataset['id'])
+        read_pkg_url = h.url_for('dataset.read', id=dataset['id'])
 
         result = test_client.get(read_pkg_url)
         assert 'resource_create_test1.geojson' in result.body

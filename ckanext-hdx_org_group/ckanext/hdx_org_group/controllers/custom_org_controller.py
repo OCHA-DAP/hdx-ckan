@@ -16,7 +16,6 @@ import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.authz as new_authz
 
-import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
@@ -58,7 +57,7 @@ suffix = '#datasets-section'
 #     return url
 
 
-class CustomOrgController(org.OrganizationController, search_controller.HDXSearchController):
+class CustomOrgController(org.OrganizationController):
     # def org_read(self, id, org_meta=None):
     #     '''
     #

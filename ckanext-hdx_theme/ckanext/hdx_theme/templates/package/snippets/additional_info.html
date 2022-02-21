@@ -4,12 +4,13 @@
     <tbody>
 
 {% block package_additional_info %}
-	<tr>
+  {% set edit_mode = h.check_access('package_update', {'id':pkg_dict.id })  %}
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_dataset_source" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Source') }}</th>
 		<td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
 	</tr>
 
-	<tr>
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_owner_org" data-module-dataset="{{pkg_dict.id}}" {% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
 		<td class="dataset-details metadata-link">
 		{% if pkg_dict.owner_org %}
@@ -21,7 +22,7 @@
 	    {% endif %}
 		</td>
     </tr>
-	<tr>
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="ui_date_range1" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Date of Dataset') }}</th>
 		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
   </tr>
@@ -39,11 +40,11 @@
       </span>
     </td>
   </tr>
-	<tr>
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_data_update_frequency" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Expected Update Frequency') }}</th>
 		<td class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</td>
-    </tr>
-	<tr>
+  </tr>
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_locations" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link mx-country">
 			<span data-module="hdx_show_more" style="visibility:hidden"><div>
@@ -52,11 +53,11 @@
 				{% endfor %}
 			<br/></div></span>
 		</td>
-    </tr>
+  </tr>
     {# Metadata-only datasets are public, so this option is only for full datasets #}
 {% if not pkg_dict.is_requestdata_type %}
     {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
-    	<hidden id="controller_url" value="{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}">
+{#    	<hidden id="controller_url" value="{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}">#}
 		<tr>
 			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
 			<td class="dataset-details">
@@ -84,7 +85,7 @@
 {% endif %}
 
     {% if not pkg_dict.is_requestdata_type %}
-    <tr>
+    <tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_license_id" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">
         	{% if pkg_dict.license_id %}
@@ -124,7 +125,7 @@
             <td class="dataset-details">{{ pkg_dict.num_of_rows }}</td>
         </tr>
     {% endif %}
-	<tr>
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_methodology" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
 		{% set methodology, methodology_other = h.methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
 	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">
@@ -137,12 +138,12 @@
 			  {% endif %}
 		  </span></td>
 	</tr>
-	<tr>
+	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_caveats" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
 		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
 	</tr>
 
-  <tr>
+  <tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_autogen11" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label">{{ _('Tags') }}</th>
 		<td class="dataset-details">
 			{% for tag in pkg_dict.tags %}
