@@ -1,1 +1,1 @@
-{"listeners":{"*:5001":{"application":"ckan"}},"applications":{"ckan":{"type":"python","processes":3,"module":"wsgi-unit-nr","path":"/srv/ckan"}}}
+{"listeners":{"*:5000":{"application":"ckan"}},"applications":{"ckan":{"type":"python","processes":3,"module":"wsgi-unit-nr","path":"/srv/ckan"}}}
