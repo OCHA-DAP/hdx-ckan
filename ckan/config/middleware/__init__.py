@@ -152,7 +152,7 @@ class AskAppDispatcherMiddleware(object):
         log.debug('Serving request via {0} app'.format(app_name))
         environ['ckan.app'] = app_name
         # no SCRIPT_NAME provided by nginx unit for old wsgi
-        if 'SCRIPT_NAME' not it environ:
+        if 'SCRIPT_NAME' not in environ:
             environ['SCRIPT_NAME'] = ''
 
         if app_name == 'flask_app':
