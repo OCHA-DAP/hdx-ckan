@@ -58,10 +58,8 @@ RUN apt-get -qq -y update && \
     apt-get -qq -y install python-pip && \
     python -m pip install --upgrade pip && \
     pip -q install --upgrade \
-        gevent \
-        gunicorn \
         lxml && \
-    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/services.d/unit /etc/ckan && \
+    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/unit /etc/ckan && \
     cp -a docker/run_unit /etc/services.d/unit/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
     cp -a docker/hdxckantool-ng.py /srv/hdxckantool-ng.py && \
