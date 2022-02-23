@@ -464,7 +464,7 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert msgs == []
 
         try:
-            reset_password.create_reset_key(user_obj, 3)
+            reset_password.create_reset_key(user_obj, 20)
             subject = u'HDX password reset'
             password_reset_url = h.url_for('hdx_user.perform_reset', id=user_obj.id, key=user_obj.reset_key)
             reset_link = urljoin(config.get('ckan.site_url'),
@@ -473,7 +473,7 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
             email_data = {
                 'user_fullname': user_obj.fullname,
                 'user_reset_link': reset_link,
-                'expiration_in_hours': 3,
+                'expiration_in_minutes': 20,
             }
             hdx_mailer.mail_recipient([{'display_name': user_obj.fullname, 'email': user_obj.email}], subject,
                                       email_data, footer=user_obj.email,
