@@ -62,9 +62,9 @@ def hdx_send_reset_link(context, data_dict):
         if user is None:
             raise NotFound
 
-    expiration_in_hours = int(config.get('hdx.password.reset_key.expiration_in_hours', 3))
+    expiration_in_minutes = int(config.get('hdx.password.reset_key.expiration_in_minutes', 20))
     if user:
-        reset_password.create_reset_key(user, expiration_in_hours)
+        reset_password.create_reset_key(user, expiration_in_minutes)
 
         recipient_mail = user.email if user.email else None
         user_fullname = user.fullname or ''
@@ -74,7 +74,7 @@ def hdx_send_reset_link(context, data_dict):
     email_data = {
         'user_fullname': user_fullname,
         'user_reset_link': reset_link,
-        'expiration_in_hours': expiration_in_hours,
+        'expiration_in_minutes': expiration_in_minutes,
     }
     if recipient_mail:
         subject = u'HDX password reset'
