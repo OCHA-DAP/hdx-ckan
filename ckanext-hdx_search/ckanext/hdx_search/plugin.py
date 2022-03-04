@@ -21,6 +21,7 @@ from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATE
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.views.qa import hdx_qa
+from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
 
 NotFound = tk.ObjectNotFound
 
@@ -42,6 +43,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.IClick)
 
     # IConfigurable
     def configure(self, config):
@@ -300,3 +302,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     # IBlueprint
     def get_blueprint(self):
         return hdx_qa
+
+    # IClick
+    def get_commands(self):
+        return [hdx_feature_search]

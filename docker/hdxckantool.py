@@ -610,8 +610,8 @@ def db_create(dbname, owner=SQL['USER']):
 
 def feature():
     '''rebuilds the feature-index.js'''
-    cmd = ['paster', 'hdx-feature-search', 'build', '-c', INI_FILE]
-    os.chdir(os.path.join(BASEDIR, 'ckanext-hdx_search'))
+    cmd = ['ckan', '-c', INI_FILE, 'hdx-feature-search']
+    os.chdir(BASEDIR)
     print('Rebuilding feature index...')
     subprocess.call(cmd)
     print('Fixing permissions on feature-index.js...')
