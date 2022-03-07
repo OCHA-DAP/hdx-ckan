@@ -57,4 +57,4 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_search_recommendations(self):
         url = h.url_for('hdx_search.search', q='Nepal')
         result = self.app.get(url)
-        assert '<div class="search-ahead"' in result.data
+        assert '<div class="search-ahead"' in result.body

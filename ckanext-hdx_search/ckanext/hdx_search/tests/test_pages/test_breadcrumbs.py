@@ -30,7 +30,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_breadcrumb_on_dataset_page(self):
         url = h.url_for('hdx_dataset.search')
         result = self.app.get(url)
-        page = result.data
+        page = result.body
 
         begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'

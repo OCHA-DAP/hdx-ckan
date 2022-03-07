@@ -1,6 +1,8 @@
 import datetime
 import re
 import unicodedata
+import logging
+import six
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
@@ -24,6 +26,8 @@ from ckanext.hdx_search.views.qa import hdx_qa
 from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
 
 NotFound = tk.ObjectNotFound
+
+log = logging.getLogger(__name__)
 
 
 def convert_country(q):
@@ -243,7 +247,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         '''
         new_dict = {}
         for key, values in pkg_dict.items():
-            key = key.encode('ascii', 'ignore')
+            key = six.text_type(key.encode('ascii', 'ignore'))
             if key.startswith('res_extras_daterange') and values:
                 new_list = []
                 for value in values:
