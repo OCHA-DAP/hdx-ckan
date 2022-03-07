@@ -383,7 +383,7 @@ def package_search(context, data_dict):
     for facet in search_results['search_facets']:
         search_results['search_facets'][facet]['items'] = sorted(
             search_results['search_facets'][facet]['items'],
-            key=lambda facet: facet['display_name'], reverse=True)
+            key=lambda facet: facet['display_name'] or '', reverse=True)
 
     # ranges and pivot facets shouldn't be sorted so we process them after the sorting was done
     _process_facet_ranges(restructured_facets, facet_ranges)
