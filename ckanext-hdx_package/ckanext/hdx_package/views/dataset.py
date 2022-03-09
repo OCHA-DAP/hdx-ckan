@@ -170,6 +170,7 @@ def read(id):
     org_id = org_dict.get('id', None)
     org_info_dict = _get_org_extras(org_id)
     user_survey_url = org_info_dict.get('user_survey_url')
+    pkg_dict['user_survey_url'] = user_survey_url
     if org_info_dict.get('custom_org', False):
         logo_config = _process_customizations(org_info_dict.get('customization', None))
     else:

@@ -1193,6 +1193,7 @@ contact-contributor-scripts:
   output: ckanext-hdx_theme/%(version)s_contact-contributor-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/contact-contributor-styles
   contents:
     - widget/membership/contact-contributor.js
@@ -1207,6 +1208,7 @@ group-message-scripts:
   output: ckanext-hdx_theme/%(version)s_group-message-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/group-message-styles
   contents:
     - widget/membership/group-message.js
