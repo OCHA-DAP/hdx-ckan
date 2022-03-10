@@ -10,7 +10,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.3#egg=ckanext-s3filestore
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.302#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.303#egg=ckanext-showcase
     # via -r requirements.in
 alembic==1.0.0
     # via -r requirements.in
