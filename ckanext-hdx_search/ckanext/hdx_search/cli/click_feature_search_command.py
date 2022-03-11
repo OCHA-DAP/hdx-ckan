@@ -48,8 +48,7 @@ def _buildIndex(path):
     for name, title, is_org, code in groups:
         if is_org:
             page_type = 'organisation'
-            url = h.url_for(controller='organization',
-                            action='read',
+            url = h.url_for('organization.read',
                             id=name,
                             qualified=True)
         else:
@@ -57,8 +56,7 @@ def _buildIndex(path):
                 continue
             page_type = "location"
 
-            url = h.url_for(controller='group',
-                            action='read',
+            url = h.url_for('group.read',
                             id=name,
                             qualified=True)
 
@@ -73,9 +71,8 @@ def _buildIndex(path):
 
     index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
         'hdx_ebola.read', qualified=True), 'type': 'event'})
-    index.append({'title': 'Nepal Earthquake', 'url': h.url_for(
-        controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
-        action='read', id='nepal-earthquake', qualified=True), 'type': 'event'})
+    index.append({'title': 'Nepal Earthquake', 'url': h.url_for('group.read',id='nepal-earthquake',qualified=True),
+                  'type': 'event'})
 
     # pages
 

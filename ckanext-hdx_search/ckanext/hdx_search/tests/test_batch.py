@@ -1,5 +1,6 @@
 import pytest
 import logging as logging
+import six
 
 import ckan.model as model
 
@@ -9,6 +10,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
 class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_results_are_batched(self):
@@ -28,9 +30,9 @@ class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         self._get_action('package_patch')(context, data_dict1)
         self._get_action('package_patch')(context, data_dict2)
 
-        url = h.url_for('simple_search')
+        url = h.url_for('hdx_dataset.search')
         result = self.app.get(url)
-        assert 'Show 2 other updates from' in result.data
+        assert 'Show 2 other updates from' in result.body
 
         url_mobile = h.url_for('hdx_light_search.search')
 
@@ -40,4 +42,4 @@ class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'
         }
         result_mobile = test_client.get(url_mobile, headers=headers)
-        assert 'Show 2 other updates from' in result_mobile.data
+        assert 'Show 2 other updates from' in result_mobile.body
