@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import pytest
 import os
 import six
@@ -71,6 +73,22 @@ class TestFileRemovalS3(HDXS3TestBase):
 
         _get_action('resource_delete')(context, {'id': resource_id})
         assert not self.__file_exists(resource_id, self.file1_name)
+
+    def test_resource_update_with_special_chars(self):
+
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        resource_dict = self._resource_create_with_upload(context, self.file1_name, u'Annual data for Côte d\'Ivoire',
+                                                           self.dataset1_name)
+
+        resource_id = resource_dict['id']
+        assert self.__file_exists(resource_id, self.file1_name)
+
+        self._resource_update_with_upload(context, self.file2_name, u'Annual data for Côte d\'Ivoire 2', resource_id)
+        assert not self.__file_exists(resource_id, self.file1_name)
+        assert self.__file_exists(resource_id, self.file2_name)
+
+        _get_action('resource_delete')(context, {'id': resource_id})
+        assert not self.__file_exists(resource_id, self.file2_name)
 
     def test_package_purge(self):
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}

@@ -97,11 +97,11 @@ def _delete_old_file_if_necessary(prev_resource_dict, resource_dict):
     munged_prev_filename = munge.munge_filename(prev_resource_dict['url'])
     new_file_has_same_name = munged_current_filename == munged_prev_filename
     if prev_resource_is_upload and (new_resource_is_api or not new_file_has_same_name):
-        log.info('Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
+        log.info(u'Deleting resource {}/{}'.format(prev_resource_dict['id'], prev_resource_dict['name']))
         file_remove(prev_resource_dict['id'], prev_resource_dict['url'], prev_resource_dict['url_type'])
     else:
-        log.info('Not deleting resource: prev_resource_is_upload {} '
-                 '/ new_file_has_same_name {} / new_resource_is_api {}'
+        log.info(u'Not deleting resource: prev_resource_is_upload {} '
+                 u'/ new_file_has_same_name {} / new_resource_is_api {}'
                  .format(prev_resource_is_upload, new_file_has_same_name, new_resource_is_api))
 
 
