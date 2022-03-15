@@ -9,6 +9,132 @@ Changelog
 
 .. towncrier release notes start
 
+v.2.9.5 2022-01-19
+==================
+
+
+Major features
+--------------
+
+- Solr 8 support. Starting from version 2.9.5, CKAN supports Solr versions 6 and 8. Support for Solr 6 will be dropped in the next
+  CKAN minor version (2.10). Note that if you want to use Solr 8 you need to use the ``ckan/config/solr/schema.solr8.xml`` file, or
+  alternatively you can use the ``ckan/ckan-solr:2.9-solr8`` Docker image which comes pre-configured. (`#6530 <https://github.com/ckan/ckan/pull/6530>`_)
+
+
+Bugfixes
+--------
+
+- Consistent CLI behavior when no command is provided and when using `--help` (`#6120 <https://github.com/ckan/ckan/pull/6120>`_)
+- Fix regression when validating resource subfields (`#6546 <https://github.com/ckan/ckan/pull/6546>`_)
+- Fix user create/edit email validators (`#6399 <https://github.com/ckan/ckan/pull/6399>`_)
+- Error opening JS translations on Python 2 (`#6531 <https://github.com/ckan/ckan/pull/6531>`_)
+- Set logging level to error in error mail handler (`#6577 <https://github.com/ckan/ckan/pull/6577>`_)
+- Add RootPathMiddleware to flask stack to support non-root installs running on python 3 (`#6556 <https://github.com/ckan/ckan/pull/6577>`_)
+- Use correct auth function when editing organizations (`#6622 <https://github.com/ckan/ckan/pull/6622>`_)
+- Fix invite user with existing email error (`#5880 <https://github.com/ckan/ckan/pull/5880>`_)
+- Accept empty string in one of validator (`#6612 <https://github.com/ckan/ckan/pull/6612>`_)
+
+
+Minor changes
+-------------
+
+- Add timeouts to requests calls (see :ref:`ckan.requests.timeout`) (`#6408 <https://github.com/ckan/ckan/pull/6408>`_)
+- Types of file uploads for group and user imags can be restricted via the `ckan.upload.{object_type}.types` and `ckan.upload.{object_type}.mimetypes`  config options (eg :ref:`ckan.upload.group.types`,  :ref:`ckan.upload.user.mimetypes`) (`#6477 <https://github.com/ckan/ckan/pull/6477>`_)
+- Allow children elements on select2 lists (`#6503 <https://github.com/ckan/ckan/pull/6503>`_)
+- Enable ``minimumInputLength`` and fix loading message in select2 (`#6554 <https://github.com/ckan/ckan/pull/6554>`_)
+
+
+
+v.2.9.4 2021-09-22
+==================
+
+Note: This release includes requirements upgrades to address security issues
+
+
+Bugfixes
+--------
+
+- Don't show snippet names in non-debug mode (`#6406 <https://github.com/ckan/ckan/pull/6406>`_)
+- Show job title on job start/finish log messages (`#6387 <https://github.com/ckan/ckan/pull/6387>`_)
+- Fix unpriviledged users being able to access bulk process (`#6290 <https://github.com/ckan/ckan/pull/6290>`_)
+- Allow UTF-8 in JS translations (`#6051 <https://github.com/ckan/ckan/pull/6051>`_)
+- Handle Traceback Exception for HTTP and HTTP status Code in logging (`#6340 <https://github.com/ckan/ckan/pull/6340>`_)
+- Fix object list validation output (`#6149 <https://github.com/ckan/ckan/pull/6149>`_)
+- Coerce query string keys/values before passing to quote() (`#6099 <https://github.com/ckan/ckan/pull/6099>`_)
+- Fix datetime formatting when listing user tokens on py2. (`#6319 <https://github.com/ckan/ckan/pull/6319>`_)
+- Fix Solr HTTP basic auth cred handling (`#6286 <https://github.com/ckan/ckan/pull/6286>`_)
+- Remove not accessed user object in resource_update (`#6220 <https://github.com/ckan/ckan/pull/6220>`_)
+- Fix for g.__timer (`#6207 <https://github.com/ckan/ckan/pull/6207>`_)
+- Fix guard clause on has_more_facets, #6190 (`#6190 <https://github.com/ckan/ckan/pull/6190>`_)
+- Fix page render errors when search facets are not defined (`#6181 <https://github.com/ckan/ckan/pull/6181>`_)
+- Fix exception when using solr_user and solr_password on Py3 (`#6179 <https://github.com/ckan/ckan/pull/6179>`_)
+- Fix pagination links for custom org types (`#6162 <https://github.com/ckan/ckan/pull/6162>`_)
+- Fixture for plugin DB migrations (`#6139 <https://github.com/ckan/ckan/pull/6139>`_)
+- Render activity timestamps with title= attribute (`#6109 <https://github.com/ckan/ckan/pull/6109>`_)
+- Fix db init error in alembic (`#5998 <https://github.com/ckan/ckan/pull/5998>`_)
+- Fix user email validator when using name as id parameter (`#6113 <https://github.com/ckan/ckan/pull/6113>`_)
+- Fix DataPusher error during resource_update (`#5597 <https://github.com/ckan/ckan/pull/5597>`_)
+- render_datetime helper does not respect ckan.display_timezone configuration (`#6252 <https://github.com/ckan/ckan/pull/6252>`_)
+- Fix SQLAlchemy configuration for DataStore (`#6087 <https://github.com/ckan/ckan/pull/6086>`_)
+- Don't cache license translations across requests (`#5586 <https://github.com/ckan/ckan/pull/5586>`_)
+- Fix tracking.js module preventing links to be opened in new tabs (`#6386 <https://github.com/ckan/ckan/pull/6384>`_)
+- Fix deleted org/group feeds (`#6368 <https://github.com/ckan/ckan/pull/6368>`_)
+- Fix runaway preview height (`#6284 <https://github.com/ckan/ckan/pull/6283>`_)
+- Stable default ordering when consuming resource content from datastore
+  (`#2317 <https://github.com/ckan/ckan/pull/2317>`_)
+- Several documentation fixes and improvements
+
+
+v.2.9.3 2021-05-19
+==================
+
+Bugfixes
+--------
+
+- Fix Chinese locales. Note that the URLs for the `zh_CN` and `zh_TW` locales
+  have changed but there are redirects in place, eg
+  http://localhost:5000/zh_CN/dataset ->
+  http://localhost:5000/zh_Hans_CN/dataset (`#6008
+  <https://github.com/ckan/ckan/pull/6008>`_)
+- Fix performance bottleneck in activity queries (`#6028
+  <https://github.com/ckan/ckan/pull/6028>`_)
+- Keep repeatable facets inside pagination links (`#6084
+  <https://github.com/ckan/ckan/pull/6084>`_)
+- Ensure order of plugins in PluginImplementations (`#5965 <https://github.com/ckan/ckan/pull/5965>`_)
+- Fix for Datastore file dump extension (`#5593  <https://github.com/ckan/ckan/pull/5593>`_)
+- Allow package activity migration on py3 (`#5930 <https://github.com/ckan/ckan/pull/5930>`_)
+- Fix TemplateSyntaxError in snippets/changes/license.html (`#5972 <https://github.com/ckan/ckan/pull/5972>`_)
+- Remove hardcoded logging level (`#5941 <https://github.com/ckan/ckan/pull/5941>`_)
+- Include extra files into ckanext distribution (`#5995 <https://github.com/ckan/ckan/pull/5995>`_)
+- Fix db init in docker as the directory is not empty (`#6027 <https://github.com/ckan/ckan/pull/6027>`_)
+- Fix sqlalchemy configuration, add doc (`#5932 <https://github.com/ckan/ckan/pull/5932>`_)
+- Fix issue with purging custom entity types (`#5859 <https://github.com/ckan/ckan/pull/5859>`_)
+- Only load view filters on templates that need them
+- Sanitize user image url
+- Allow installation of requirements without any additional actions using pip (`#5408 <https://github.com/ckan/ckan/pull/5408>`_)
+- Include requirements files in Manifest (`#5726 <https://github.com/ckan/ckan/pull/5726>`_)
+- Dockerfile: pin pip version (`#5929 <https://github.com/ckan/ckan/pull/5929>`_)
+- Allow uploaders to only override asset / resource uploading (`#6088 <https://github.com/ckan/ckan/pull/6088>`_)
+- Catch TypeError from invalid thrown by dateutils (`#6085 <https://github.com/ckan/ckan/pull/6085>`_)
+- Display proper message when sysadmin password is incorect (`#5911 <https://github.com/ckan/ckan/pull/5911>`_)
+- Use external library to parse view filter params
+- Fix auth error when deleting a group/org (`#6006 <https://github.com/ckan/ckan/pull/6006>`_)
+- Fix datastore_search language parameter (`#5974 <https://github.com/ckan/ckan/pull/5974>`_)
+- make SQL function whitelist case-insensitive unless quoted (`#5969 <https://github.com/ckan/ckan/pull/5969>`_)
+- Fix Explore button not working (`#3720 <https://github.com/ckan/ckan/pull/3720>`_)
+- remove unused var in task_status_update (`#5861 <https://github.com/ckan/ckan/pull/5861>`_)
+- Prevent guessing format and mimetype from resource urls without path (`#5852 <https://github.com/ckan/ckan/pull/5852>`_)
+- Multiple documentation improvements
+
+
+Minor changes
+-------------
+
+- Support for setting host and port on the ini file (`#5939 <https://github.com/ckan/ckan/pull/5939>`_)
+- Allow to set path to INI file in the WSGI script (`#5987  <https://github.com/ckan/ckan/pull/5987>`_)
+- Allow multi-level config inheritance (`#6000
+  <https://github.com/ckan/ckan/pull/6000>`_)
+
 v.2.9.2 2021-02-10
 ==================
 

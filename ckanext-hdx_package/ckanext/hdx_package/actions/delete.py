@@ -70,7 +70,7 @@ def dataset_purge(context, data_dict):
     pkg.purge()
     try:
         model.repo.commit_and_remove()
-    except Exception, ex:
+    except Exception as ex:
         log.error(ex)
 
     # if is_requested_data_type:

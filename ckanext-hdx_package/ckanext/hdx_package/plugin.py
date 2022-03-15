@@ -6,21 +6,19 @@ Created on Apr 10, 2014
 import io
 import json
 import logging
+import ijson
+import six
 
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.delete as hdx_delete
 import ckanext.hdx_package.actions.get as hdx_get
 import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.actions.patch as hdx_patch
-import ckanext.hdx_package.helpers.download_wrapper as download_wrapper
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
-import ijson
-import pylons.config as config
-from routes.mapper import SubMapper
+
 
 import ckan.logic as logic
 import ckan.model as model
@@ -30,7 +28,6 @@ import ckan.authz as authz
 import ckan.plugins as p
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-import ckan.plugins.toolkit as toolkit
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
@@ -39,7 +36,11 @@ from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 
 log = logging.getLogger(__name__)
 
-ignore_empty = p.toolkit.get_validator('ignore_empty')
+config = tk.config
+get_action = tk.get_action
+navl_validate = tk.navl_validate
+ignore_empty = tk.get_validator('ignore_empty')
+text_type = six.text_type
 
 
 def run_on_startup():
@@ -50,6 +51,7 @@ def run_on_startup():
 
     compile_less_on_startup = config.get('hdx.less_compile.onstartup', 'false')
     if 'true' == compile_less_on_startup:
+        import ckanext.hdx_org_group.helpers.organization_helper as org_helper
         org_helper.recompile_everything({'model': model, 'session': model.Session,
                                          'user': 'hdx', 'ignore_auth': True})
 
@@ -97,11 +99,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
-    def after_map(self, map):
-        map.connect('dataset_edit', '/dataset/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='show_notification_page')
-        return map
+    # def after_map(self, map):
+    #     map.connect('dataset_edit', '/dataset/edit/{id}',
+    #                 controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+    #                 action='show_notification_page')
+    #     return map
 
     # def before_delete(context, data_dict, resource, resources):
     #     try:
@@ -110,7 +112,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     #     except Exception, ex:
     #         log.error(ex)
 
-    def before_map(self, map):
+    # def before_map(self, map):
         # map.connect('storage_file', '/storage/f/{label:.*}',
         #             controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
         #             action='file')
@@ -122,56 +124,56 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #             action='preselect')
         # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
         #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
-        map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='resource_read')
-        map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='resource_datapreview')
+        # map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='resource_read')
+        # map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='resource_datapreview')
         # map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
         #             controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
         #             action='edit')
 
-        map.connect('add dataset', '/dataset/new',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='new_notification_page')
-        map.connect('dataset_edit', '/dataset/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='edit_notification_page')
-        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='resource_edit_notification_page', ckan_icon='edit')
-        map.connect('new_resource', '/dataset/new_resource/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='resource_new_notification_page')
-        map.connect('dataset_resources', '/dataset/resources/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-                    action='resources_notification_page')
-        map.connect('/membership/contact_contributor',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='contact_contributor')
-        map.connect('/membership/contact_members',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                    action='contact_members')
+        # map.connect('add dataset', '/dataset/new',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='new_notification_page')
+        # map.connect('dataset_edit', '/dataset/edit/{id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='edit_notification_page')
+        # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='resource_edit_notification_page', ckan_icon='edit')
+        # map.connect('new_resource', '/dataset/new_resource/{id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='resource_new_notification_page')
+        # map.connect('dataset_resources', '/dataset/resources/{id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+        #             action='resources_notification_page')
+        # map.connect('/membership/contact_contributor',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='contact_contributor')
+        # map.connect('/membership/contact_members',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+        #             action='contact_members')
 
-        with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
+        # with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             # m.connect('add dataset', '/dataset/new', action='new')
-            m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
-            m.connect('/dataset/{id}.{format}', action='read')
-            m.connect('dataset_read', '/dataset/{id}', action='read',
-                      ckan_icon='sitemap')
-            m.connect('/dataset/{action}/{id}',
-                      requirements=dict(action='|'.join([
-                          'new_metadata',
-                          # 'new_resource',
-                          'visibility',
-                          'delete',
-                          # 'edit',
-                      ])))
+            # m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
+            # m.connect('/dataset/{id}.{format}', action='read')
+            # m.connect('dataset_read', '/dataset/{id}', action='read',
+            #           ckan_icon='sitemap')
+            # m.connect('/dataset/{action}/{id}',
+            #           requirements=dict(action='|'.join([
+            #               'new_metadata',
+            #               # 'new_resource',
+            #               # 'visibility',
+            #               'delete',
+            #               # 'edit',
+            #           ])))
 
-        map.connect(
-            '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController',
-            action='read')
+        # map.connect(
+        #     '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController',
+        #     action='read')
 
         # map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
         # map.connect('/contribute/new',
@@ -184,7 +186,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
         #             action='validate')
 
-        return map
+        # return map
 
     def is_fallback(self):
         return True
@@ -230,7 +232,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'methodology_other': [tk.get_validator('not_empty_if_methodology_other'),
                                   tk.get_converter('convert_to_extras')],
-            'license_id': [tk.get_validator('not_empty'), unicode],
+            'license_id': [tk.get_validator('not_empty'), text_type],
             'license_other': [tk.get_validator('not_empty_if_license_other'), tk.get_converter('convert_to_extras')],
             'solr_additions': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'subnational': [tk.get_validator('hdx_show_subnational'), tk.get_validator('ignore_missing'),
@@ -247,7 +249,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
                              tk.get_converter('convert_to_extras')],
-            'author_email': [tk.get_validator('ignore_missing'), unicode],
+            'author_email': [tk.get_validator('ignore_missing'), text_type],
             'customviz': {
                 'url': [tk.get_validator('hdx_is_url'), tk.get_validator('hdx_convert_list_item_to_extras')],
             },
@@ -288,15 +290,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema['resources'].update(
             {
-                'name': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
+                'name': [tk.get_validator('not_empty'), text_type, tk.get_validator('remove_whitespace')],
                 'format': [
                     tk.get_validator('hdx_detect_format'),
                     tk.get_validator('not_empty'),
                     tk.get_validator('hdx_to_lower'),
                     tk.get_validator('clean_format'),
-                    unicode
+                    text_type
                 ],
-                'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
+                'url': [tk.get_validator('not_empty'), text_type, tk.get_validator('remove_whitespace')],
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),
@@ -494,6 +496,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
             'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date,
             'hdx_render_resource_updated_date': hdx_helpers.hdx_render_resource_updated_date,
+            'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
         }
 
     def get_actions(self):
@@ -635,7 +638,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             if is_requestdata_type:
                 self._update_with_requestdata_show_package_schema(schema)
 
-        return toolkit.navl_validate(data_dict, schema, context)
+        return navl_validate(data_dict, schema, context)
 
     def _is_requestdata_type(self, data_dict):
         is_requestdata_type_show = False
@@ -721,6 +724,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         import ckanext.hdx_package.views.dataset as dataset
         import ckanext.hdx_package.views.dataset_changes as dataset_changes
         import ckanext.hdx_package.views.contribute_flow as contribute_flow
+        import ckanext.hdx_package.views.dataset_old_links as dataset_old_links
+        import ckanext.hdx_package.views.contact as contact
         return [
             light_dataset.hdx_light_dataset,
             light_dataset.hdx_light_search,
@@ -728,6 +733,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             dataset.hdx_search,
             dataset_changes.hdx_dataset_changes,
             contribute_flow.hdx_contribute,
+            dataset_old_links.hdx_dataset_old_links,
+            contact.hdx_contact,
         ]
 
 
@@ -738,8 +745,10 @@ class HDXAnalyticsPlugin(plugins.SingletonPlugin):
     __startup_tasks_done = False
 
     def run_on_startup(self):
-        # wrap resource download function so that we can track download events
-        download_wrapper.wrap_resource_download_function()
+        if not six.PY3:
+            import ckanext.hdx_package.helpers.download_wrapper as download_wrapper
+            # wrap resource download function so that we can track download events
+            download_wrapper.wrap_resource_download_function()
 
     def make_middleware(self, app, config):
         if not HDXAnalyticsPlugin.__startup_tasks_done:
@@ -835,7 +844,7 @@ class HDXChartViewsPlugin(plugins.SingletonPlugin):
         Returns a list of columns found in this resource's datastore
         '''
         data = {'resource_id': resource['id'], 'limit': 0}
-        fields = toolkit.get_action('datastore_search')({}, data)['fields']
+        fields = get_action('datastore_search')({}, data)['fields']
         return [{'value': col['id'], 'text': col['id']} for col in fields if col != '_id']
 
 
@@ -862,9 +871,9 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
         return format in GIS_FORMATS
 
     def setup_template_variables(self, context, data_dict):
-        from ckanext.hdx_package.controllers.dataset_controller import DatasetController
+        from ckanext.hdx_package.controller_logic.dataset_view_logic import process_shapes
 
-        shape_info = DatasetController.process_shapes([data_dict['resource']])
+        shape_info = process_shapes([data_dict['resource']])
 
         return {
             'shape_info': json.dumps(shape_info)
@@ -877,39 +886,39 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
         return 'new_views/geopreview_view_form.html'
 
 
-class HDXKeyFiguresPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IResourceView, inherit=True)
-
-    def info(self):
-        return {
-            'name': 'hdx_key_figures_view',
-            'title': 'Key Figures',
-            'filterable': False,
-            'preview_enabled': True,
-            'requires_datastore': True,
-            'iframed': True,
-            'default_title': p.toolkit._('Key Figures')
-        }
-
-    def can_view(self, data_dict):
-        resource = data_dict['resource']
-        return (resource.get('datastore_active') or
-                resource.get('url') == '_datastore_only_resource')
-
-    def setup_template_variables(self, context, data_dict):
-        import ckanext.hdx_crisis.dao.location_data_access as location_data_access
-        id = data_dict['resource']['id']
-        key_figures = location_data_access.get_formatted_topline_numbers(id)
-
-        return {
-            'key_figures': key_figures
-        }
-
-    def view_template(self, context, data_dict):
-        return 'new_views/key_figures_view.html'
-
-    def form_template(self, context, data_dict):
-        return 'new_views/key_figures_view_form.html'
+# class HDXKeyFiguresPlugin(plugins.SingletonPlugin):
+#     plugins.implements(plugins.IResourceView, inherit=True)
+#
+#     def info(self):
+#         return {
+#             'name': 'hdx_key_figures_view',
+#             'title': 'Key Figures',
+#             'filterable': False,
+#             'preview_enabled': True,
+#             'requires_datastore': True,
+#             'iframed': True,
+#             'default_title': p.toolkit._('Key Figures')
+#         }
+#
+#     def can_view(self, data_dict):
+#         resource = data_dict['resource']
+#         return (resource.get('datastore_active') or
+#                 resource.get('url') == '_datastore_only_resource')
+#
+#     def setup_template_variables(self, context, data_dict):
+#         import ckanext.hdx_crisis.dao.location_data_access as location_data_access
+#         id = data_dict['resource']['id']
+#         key_figures = location_data_access.get_formatted_topline_numbers(id)
+#
+#         return {
+#             'key_figures': key_figures
+#         }
+#
+#     def view_template(self, context, data_dict):
+#         return 'new_views/key_figures_view.html'
+#
+#     def form_template(self, context, data_dict):
+#         return 'new_views/key_figures_view_form.html'
 
 
 class HDXChoroplethMapPlugin(plugins.SingletonPlugin):

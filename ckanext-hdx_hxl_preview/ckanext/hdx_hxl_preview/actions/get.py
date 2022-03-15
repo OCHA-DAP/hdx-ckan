@@ -1,14 +1,13 @@
 import logging
 import urllib
-import urlparse
-
-from pylons import config
+import six.moves.urllib.parse as urlparse
 
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 
 _get_action = toolkit.get_action
 log = logging.getLogger(__name__)
+config = toolkit.config
 
 
 def hxl_preview_iframe_url_show(context, data_dict):

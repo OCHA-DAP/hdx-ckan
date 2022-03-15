@@ -1,4 +1,6 @@
+import pytest
 import logging as logging
+import six
 
 
 import ckan.model as model
@@ -10,6 +12,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestResourceViewActions(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod

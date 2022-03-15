@@ -5,13 +5,10 @@ Created on Jun 20, 2018
 '''
 
 import logging as logging
-import pylons.config as config
 
 import ckan.model as model
-import ckan.lib.helpers as h
 import ckan.tests.legacy as tests
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)

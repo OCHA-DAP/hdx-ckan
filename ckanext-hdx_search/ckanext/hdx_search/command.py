@@ -1,14 +1,14 @@
 import json
 import os
 
-from pylons import config
-
 import ckan.lib.helpers as h
-import ckan.plugins as p
+import ckan.plugins.toolkit as tk
 from ckan.model import Session
 
+config = tk.config
 
-class FeatureSearchCommand(p.toolkit.CkanCommand):
+
+class FeatureSearchCommand(tk.CkanCommand):
     '''
     Usage:
         paster hdx-feature-search build   or use   hdxckantool feature

@@ -10,7 +10,7 @@ class TestDatasetPropertiesInSolr(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgs
     def test_dataset_properties_in_solr(self):
         try:
             search_result = search.show('test_private_dataset_1')
-        except Exception, e:
+        except Exception as e:
             assert False, 'search query needs to succeed'
 
 

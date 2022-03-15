@@ -5,15 +5,16 @@ Created on Dec 24, 2014
 '''
 
 import logging as logging
-import pylons.config as config
 
 import ckan.model as model
-from ckan.common import c
 import ckan.logic as logic
+import ckan.plugins.toolkit as tk
+
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 
 class TestHDXCreateResourceForRequestData(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
@@ -48,7 +49,7 @@ class TestHDXCreateResourceForRequestData(hdx_test_with_inds_and_orgs.HDXWithInd
         try:
             self._get_action('package_create')(context, package)
             assert True
-        except logic.ValidationError, ex:
+        except logic.ValidationError as ex:
             assert False
 
         dataset = self._get_action('package_show')(context, {'id': 'test_activity_request_data'})

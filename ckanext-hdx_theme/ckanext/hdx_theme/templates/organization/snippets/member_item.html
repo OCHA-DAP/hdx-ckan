@@ -2,15 +2,15 @@
 Example:
 
   {% snippet 'organization/snippets/member_item.html', translated_role= translated_role,
-  	id=user_id, role=role, roles=roles, group_id=c.group_dict.id, authorized=True %}
+  	id=user_id, role=role, roles=roles, group_id=c.group_dict.id, authorized=True, group_name=c.group_dict.name  %}
 
 #}
 
-{% set member = h.hdx_get_user_info(id) %}
+{% set member = h.hdx_get_org_member_info(id, group_name) %}
 
 {% snippet 'organization/snippets/edit_member.html', form_url=h.url_for(controller='organization',
 	action='member_new', id=group_id, user=id),
-	user=member.name, role=role, roles=roles, modal_div_id='edit-member-div-'+member.name %}
+	user=member.name, role=role, roles=roles, modal_div_id='edit-member-div-'+member.name, member=member %}
 
 {% set disable_change = is_single_admin and (role == 'admin') %}
 
@@ -42,10 +42,27 @@ Example:
 									{% block delete_button_text %}{{ _('Remove from this organization') }}{% endblock %}
 								</a>
 
-							  {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
-							  {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
+                {% if member.maint_pkgs | length > 0 %}
+
+                  {% set pkgs_list = [] %}
+                  {% for pkg in member.maint_pkgs %}
+                    {% do pkgs_list.append(pkg.title) %}
+                  {% endfor %}
+                  {% if c.current_user.name == member.name %}
+                    {% set confirm_delete_message = 'You can\'t leave this organisation. Please change maintainer for the following datasets: ' %}
+                  {% else %}
+                    {% set confirm_delete_message = 'User cannot be removed from this organisation. Please change maintainer for the following datasets: ' %}
+                  {% endif %}
+                  {% set disabled = True %}
+                {% else %}
+                  {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
+                  {% set disabled = False %}
+                {% endif %}
+
+							  {% snippet 'snippets/confirmation_member_delete.html', form_url=h.url_for(controller='organization',
 									action='member_delete', id=group_id, user=id),
-									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id %}
+									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id,
+                  packages=member.maint_pkgs, disabled=disabled %}
 							  </div>
 						{% else %}
 							<div><small>Please add another admin to be able to change this user</small></div>

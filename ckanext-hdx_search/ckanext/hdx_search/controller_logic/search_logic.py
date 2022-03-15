@@ -3,6 +3,7 @@ import re
 import datetime
 import sqlalchemy
 import json
+from six import string_types, text_type
 from six.moves.urllib.parse import urlencode
 from collections import OrderedDict
 
@@ -65,7 +66,7 @@ def get_default_facet_titles():
 
 
 def _encode_params(params):
-    return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
+    return [(k, v.encode('utf-8') if isinstance(v, string_types) else text_type(v))
             for k, v in params]
 
 
@@ -231,7 +232,7 @@ class SearchLogic(object):
 
             facets = self._generate_facet_name_to_title_map(package_type)
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
-            facet_keys = ['{!ex=batch}site_id'] + facets.keys()
+            facet_keys = ['{!ex=batch}site_id'] + list(facets)
             self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras,
                                     self._get_pager_function(package_type), context,
                                     fq_list=fq_list, expand=solr_expand)

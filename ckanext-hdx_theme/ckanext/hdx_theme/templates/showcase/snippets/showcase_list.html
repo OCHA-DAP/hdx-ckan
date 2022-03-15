@@ -9,7 +9,7 @@ truncate_title - The length to truncate the title to (default: 80).
 
 #}
 {% block package_list %}
-    <div style="display: none;" id="analytics-number-of-results">{{c.page.item_count}}</div>
+    <div style="display: none;" id="analytics-number-of-results">{{c.page.item_count if c.page else 0}}</div>
     {% if packages %}
     <div class="row mTop10">
         <div class="col-xs-12">

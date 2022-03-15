@@ -1,3 +1,5 @@
+import pytest
+import six
 import logging as logging
 import unicodedata
 
@@ -10,6 +12,7 @@ import ckan.lib.helpers as h
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_edit_dataset_page(self):

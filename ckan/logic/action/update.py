@@ -50,6 +50,10 @@ def resource_update(context, data_dict):
     To update a resource you must be authorized to update the dataset that the
     resource belongs to.
 
+    .. note:: Update methods may delete parameters not explicitly provided in the
+        data_dict. If you want to edit only a specific attribute use `resource_patch`
+        instead.
+
     For further parameters see
     :py:func:`~ckan.logic.action.create.resource_create`.
 
@@ -61,7 +65,6 @@ def resource_update(context, data_dict):
 
     '''
     model = context['model']
-    user = context['user']
     id = _get_or_bust(data_dict, "id")
 
     if not data_dict.get('url'):
@@ -217,6 +220,10 @@ def package_update(context, data_dict):
 
     You must be authorized to edit the dataset and the groups that it belongs
     to.
+
+    .. note:: Update methods may delete parameters not explicitly provided in the
+        data_dict. If you want to edit only a specific attribute use `package_patch`
+        instead.
 
     It is recommended to call
     :py:func:`ckan.logic.action.get.package_show`, make the desired changes to
@@ -403,7 +410,7 @@ def package_revise(context, data_dict):
     * Change description in dataset, checking for old description::
 
         match={"notes": "old notes", "name": "xyz"}
-        date={"notes": "new notes"}
+        update={"notes": "new notes"}
 
     * Identical to above, but using flattened keys::
 
@@ -752,6 +759,10 @@ def group_update(context, data_dict):
 
     You must be authorized to edit the group.
 
+    .. note:: Update methods may delete parameters not explicitly provided in the
+        data_dict. If you want to edit only a specific attribute use `group_patch`
+        instead.
+
     Plugins may change the parameters of this function depending on the value
     of the group's ``type`` attribute, see the
     :py:class:`~ckan.plugins.interfaces.IGroupForm` plugin interface.
@@ -776,6 +787,10 @@ def organization_update(context, data_dict):
 
     You must be authorized to edit the organization.
 
+    .. note:: Update methods may delete parameters not explicitly provided in the
+        data_dict. If you want to edit only a specific attribute use `organization_patch`
+        instead.
+
     For further parameters see
     :py:func:`~ckan.logic.action.create.organization_create`.
 
@@ -799,6 +814,10 @@ def user_update(context, data_dict):
 
     Normal users can only update their own user accounts. Sysadmins can update
     any user account. Can not modify exisiting user's name.
+
+    .. note:: Update methods may delete parameters not explicitly provided in the
+        data_dict. If you want to edit only a specific attribute use `user_patch`
+        instead.
 
     For further parameters see
     :py:func:`~ckan.logic.action.create.user_create`.
@@ -879,8 +898,6 @@ def user_generate_apikey(context, data_dict):
     :rtype: dictionary
     '''
     model = context['model']
-    user = context['user']
-    session = context['session']
     schema = context.get('schema') or schema_.default_generate_apikey_user_schema()
     context['schema'] = schema
     # check if user id in data_dict
@@ -929,10 +946,8 @@ def task_status_update(context, data_dict):
 
     '''
     model = context['model']
-    session = model.Session
-    context['session'] = session
+    session = context['session']
 
-    user = context['user']
     id = data_dict.get("id")
     schema = context.get('schema') or schema_.default_task_status_schema()
 
@@ -1158,7 +1173,6 @@ def package_owner_org_update(context, data_dict):
     :type organization_id: string
     '''
     model = context['model']
-    user = context['user']
     name_or_id = data_dict.get('id')
     organization_id = data_dict.get('organization_id')
 

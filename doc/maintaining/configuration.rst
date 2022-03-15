@@ -147,6 +147,34 @@ maintain compatibility.
 Development Settings
 --------------------
 
+.. _ckan.devserver.host:
+
+ckan.devserver.host
+^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.devserver.host = 0.0.0.0
+
+Default value: localhost
+
+Host name to use when running the development server.
+
+
+.. _ckan.devserver.port:
+
+ckan.devserver.port
+^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.devserver.port = 5005
+
+Default value: 5000
+
+Port to use when running the development server.
+
+
 .. _ckan.devserver.threaded:
 
 ckan.devserver.threaded
@@ -305,6 +333,25 @@ Example::
 This defines the database that CKAN is to use. The format is::
 
  sqlalchemy.url = postgres://USERNAME:PASSWORD@HOST/DBNAME
+
+.. _sqlalchemy.any:
+
+sqlalchemy.*
+^^^^^^^^^^^^
+
+Example::
+
+ sqlalchemy.pool_pre_ping=True
+ sqlalchemy.pool_size=10
+ sqlalchemy.max_overflow=20
+
+Custom sqlalchemy config parameters used to establish the main
+database connection.
+
+To get the list of all the available properties check the `SQLAlchemy documentation`_
+
+.. _SQLAlchemy documentation: http://docs.sqlalchemy.org/en/rel_0_9/core/engines.html#engine-creation-api
+
 
 .. start_config-datastore-urls
 
@@ -609,6 +656,34 @@ Example::
 Default value: ``http https ftp``
 
 Controls what uri schemes are rendered as links.
+
+.. _ckan.requests.timeout:
+
+ckan.requests.timeout
+^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.requests.timeout = 3
+
+Default value: 5
+
+Default timeout for GET requests performed by the requests library.
+
+
+.. _ckan.resource_proxy.timeout:
+
+ckan.resource_proxy.timeout
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.resource_proxy.timeout = 5
+
+Default value: 10
+
+Default timeout for GET requests performed in the resourceproxy plugin by the requests library.
+
 
 .. _config-authorization:
 
@@ -1037,7 +1112,7 @@ ckan.search.default_package_sort
 
 Example::
 
- ckan.search.default_package_sort = "name asc"
+ ckan.search.default_package_sort = name asc
 
 Default value:  ``score desc, metadata_modified desc``
 
@@ -1822,6 +1897,61 @@ Example::
 Default value: ``2``
 
 The maximum in megabytes an image upload can be.
+
+Uploader Settings
+-----------------
+
+.. _ckan.upload.user.types:
+
+ckan.upload.user.types
+^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+    ckan.upload.user.types = image text
+
+Default value: <empty>
+
+File types allowed to upload as user's avatar. No restrictions applied when empty
+
+.. _ckan.upload.user.mimetypes:
+
+ckan.upload.user.mimetypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+    ckan.upload.user.mimetypes = image/png text/svg
+
+Default value: <empty>
+
+File MIMETypes allowed to upload as user's avatar. No restrictions applied when empty
+
+.. _ckan.upload.group.types:
+
+ckan.upload.group.types
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+    ckan.upload.group.types = image text
+
+Default value: <empty>
+
+File types allowed to upload as group image. No restrictions applied when empty
+
+.. _ckan.upload.group.mimetypes:
+
+ckan.upload.group.mimetypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+    ckan.upload.group.mimetypes = image/png text/svg
+
+Default value: <empty>
+
+File MIMETypes allowed to upload as group image. No restrictions applied when empty
 
 
 Webassets Settings

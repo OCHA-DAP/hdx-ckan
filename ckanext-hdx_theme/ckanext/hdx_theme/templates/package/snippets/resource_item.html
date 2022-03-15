@@ -1,5 +1,5 @@
-{% set url_action = 'resource_read' %}
-{% set url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action=url_action, id=pkg.name, resource_id=res.id) %}
+{#{% set url_action = 'resource_read' %}#}
+{% set url = h.url_for('dataset_resource.read', id=pkg.name, resource_id=res.id) %}
 {% set is_downloadable = h.is_downloadable(res) %}
 {% set is_not_zipped = h.is_not_zipped(res) %}
 {% set resource_display_name = h.resource_display_name(res) %}
@@ -60,7 +60,7 @@
                  class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download"
                  title="{{ btn_dict.title }}"
                  tracking-type="{{res.url_type}}"
-                 onclick="showDataUseSurveyPopup('{{ res.id }}', '{{ c.user_survey_url }}');return true;"
+                 onclick="showDataUseSurveyPopup('{{ res.id }}', '{{ pkg.user_survey_url }}');return true;"
               >
                   {% if btn_dict.type == 'download' %}
                     <img src="/images/homepage/download.svg" alt="{{ btn_dict.title }}" />

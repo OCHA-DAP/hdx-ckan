@@ -10,7 +10,7 @@ import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.analytics as analytics
 
-from ckan.controllers.api import CONTENT_TYPES
+from ckan.views.api import CONTENT_TYPES
 from ckan.lib.search import SearchIndexError
 from ckanext.hdx_package.controller_logic.contribute_flow_read_logic import ContributeFlowReadLogic
 from ckanext.hdx_package.controller_logic.contribute_flow_write_logic import ContributeFlowWriteLogic
@@ -70,7 +70,7 @@ def new(id=None, action_name='package_create'):
     abort_message = None
 
     try:
-        if request.form and save_type:
+        if request.method == 'POST' and request.form and save_type:
             # update or create dataset
             dataset_dict, errors, error_summary = _save_or_update(context)
         else:

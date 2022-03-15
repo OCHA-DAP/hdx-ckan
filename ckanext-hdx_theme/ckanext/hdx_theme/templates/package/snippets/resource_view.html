@@ -32,7 +32,7 @@
         </p>#}
       </div>
       {% if not to_preview %}
-        {% set current_filters = request.str_GET.get('filters') %}
+        {% set current_filters = request.args.get('filters') %}
         {% if current_filters %}
           {% set src = h.url_for('resource_view', qualified=true, id=package['name'], resource_id=resource['id'],
                              view_id=resource_view['id'],

@@ -2,9 +2,9 @@
 
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
 {% set title = pkg.title %}
-{% set contact_topics = c.membership.data.contributor_topics %}
-{% set membership = c.membership %}
-{% set group_topics = c.membership.data.group_topics %}
+{% set contact_topics = membership.data.contributor_topics %}
+{% set membership = membership %}
+{% set group_topics = membership.data.group_topics %}
 
 {% set base_type = "dataset" %}
 {% set base_title = base_type %}

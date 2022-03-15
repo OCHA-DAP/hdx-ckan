@@ -3,14 +3,16 @@ Created on Jul 24, 2014
 
 @author: alexandru-m-g
 '''
-
+import datetime
 import logging as logging
 import ckan.model as model
 import ckan.tests.legacy as tests
 import ckan.lib.helpers as h
-
+import ckan.tests.factories as factories
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_org_group.tests as org_group_base
+import ckan.tests.helpers as helpers
+from test_data_completeness import _generate_dataset_dict
 
 log = logging.getLogger(__name__)
 
@@ -111,6 +113,39 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
 
         assert True, 'any member should be able to remove himself from an org'
 
+    def test_maintainer_protection(self):
+        testsysadmin = model.User.by_name('testsysadmin')
+        user = model.User.by_name('tester')
+        create_result = tests.call_action_api(self.app, 'organization_create',
+                                              name='test_org_maintainer', title='Test Org Maintainer',
+                                              apikey=testsysadmin.apikey, status=200)
+
+        tests.call_action_api(self.app, 'organization_member_create',
+                              id=create_result['id'], username='tester', role='editor',
+                              apikey=testsysadmin.apikey, status=200)
+
+        group = factories.Group(name='some_location')
+        dataset = _generate_dataset_dict('dataset-maintainer1', 'test_org_maintainer', group.get('name'), datetime.datetime.utcnow(), user.id, True)
+
+        tests.call_action_api(self.app, 'organization_member_delete',
+                              id=create_result['id'], username=user.id,
+                              apikey=testsysadmin.apikey, status=500)
+        assert True, 'an admin should not be able to remove member if maintainer of a dataset belonging to current org'
+
+        tests.call_action_api(self.app, 'organization_member_create',
+                              id=create_result['id'], username=user.id, role='member',
+                              apikey=testsysadmin.apikey, status=500)
+        assert True, 'an admin should not be able to change role to member if user is maintainer of a dataset belonging to current org'
+
+        #remove dataset
+        helpers.call_action(
+            "package_delete", context={"user": testsysadmin.name}, **dataset
+        )
+
+        tests.call_action_api(self.app, 'organization_member_delete',
+                              id=create_result['id'], username=user.id,
+                              apikey=testsysadmin.apikey, status=200)
+        assert True, 'an admin should be able to remove member if not maintainer'
 
     def test_new_org_request_page(self):
         offset = h.url_for('hdx_org.request_new')

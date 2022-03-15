@@ -5,12 +5,12 @@ Created on Sep 9, 2014
 '''
 
 # -*- coding: utf-8 -*-
-
+import pytest
 import logging as logging
-import pylons.config as config
+import six
 import json
+
 import ckan.plugins.toolkit as tk
-import ckan.tests as tests
 import ckan.tests.legacy as legacy_tests
 import ckan.model as model
 import ckan.lib.helpers as h
@@ -23,6 +23,7 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 from nose import tools as nosetools
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 
 organization = {
@@ -36,6 +37,7 @@ organization = {
 }
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
@@ -89,9 +91,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         self._get_action('resource_create')(context, resource)
 
-        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                             action='read', id=package['name'])
-        result = self.app.post(
+        test_url = h.url_for('dataset.read', id=package['name'])
+        result = self.app.get(
             test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
         assert '<a class="heading" title="hdx_test.csv">' in result.data
@@ -119,8 +120,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         # self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
-        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                             action='delete', id=package['name'])
+        test_url = h.url_for('dataset.delete', id=package['name'])
         test_client = self.get_backwards_compatible_test_client()
         result = test_client.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 302
@@ -133,7 +133,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         try:
             self._get_action('organization_create')(context, organization)
-        except Exception, ex:
+        except Exception as ex:
             log.error(ex)
         package = {"package_creator": "test function",
                    "private": False,
