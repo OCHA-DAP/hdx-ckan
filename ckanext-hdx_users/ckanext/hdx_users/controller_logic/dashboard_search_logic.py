@@ -1,10 +1,10 @@
 import datetime
 
-import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_search.controller_logic.search_logic as sl
 
 _ = tk._
+h = tk.h
 
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER, \
     UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE

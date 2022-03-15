@@ -1,5 +1,5 @@
 import logging as logging
-
+import ckan.logic as logic
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as user_model
@@ -21,9 +21,10 @@ log = logging.getLogger(__name__)
 unflatten = dictization_functions.unflatten
 _validate = dictization_functions.validate
 
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 NotAuthorized = tk.NotAuthorized
 ValidationError = tk.ValidationError
+
 
 class HDXUserOnboardingView:
     def __init__(self):
@@ -71,7 +72,7 @@ class HDXUserOnboardingView:
         try:
             user = model.User.get(context['user'])
             data = self._process_new_org_request(user)
-            self._validate_new_org_request_field(data,context)
+            self._validate_new_org_request_field(data, context)
 
             _get_action('hdx_send_new_org_request')(context, data)
 
@@ -82,7 +83,7 @@ class HDXUserOnboardingView:
         except hdx_mail.NoRecipientException as e:
             error_summary = str(e)
             return error_message(error_summary)
-        except logic.ValidationError as e:
+        except ValidationError as e:
             error_summary = e.error_summary.get('Message') if 'Message' in e.error_summary else e.error_summary
             return error_message(error_summary)
         except Exception as e:
@@ -200,12 +201,11 @@ class HDXUserOnboardingView:
                 errors[field] = [_('should not be empty')]
 
         if len(errors) > 0:
-            raise logic.ValidationError(errors)
+            raise ValidationError(errors)
 
         user_email_validator = _get_validator('email_validator')
         schema = {'work_email': [user_email_validator, unicode]}
         data_dict, _errors = _validate(data, schema, context)
 
         if _errors:
-            raise logic.ValidationError(_errors.get('work_email'))
-
+            raise ValidationError(_errors.get('work_email'))

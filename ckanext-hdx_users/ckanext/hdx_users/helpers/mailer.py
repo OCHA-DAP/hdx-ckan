@@ -1,20 +1,18 @@
+import cgi
+import logging
 import smtplib
 import socket
-import logging
-import cgi
 import unicodedata
+from email import encoders
 from email import utils
 from email.header import Header
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from time import time
-from email.mime.base import MIMEBase
-from email import encoders
-import ckan.plugins.toolkit as tk
-
 
 import ckan
-from ckan.common import _
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +20,7 @@ from ckan.lib.mailer import MailerException
 from ckan.lib.base import render_jinja2
 
 config = tk.config
-
+_ = tk._
 CHARSET = 'utf-8'
 
 

@@ -1,16 +1,14 @@
 import logging as logging
 
-from ckantoolkit import config as config
-
-import ckan.lib.helpers as h
-import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as umodel
 
 log = logging.getLogger(__name__)
 
-NotFound = logic.NotFound
-
+NotFound = tk.ObjectNotFound
+config = tk.config
+h = tk.h
 
 def token_show(context, user):
     id = user.get('id')

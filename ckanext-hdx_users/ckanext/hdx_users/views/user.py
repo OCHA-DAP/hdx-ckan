@@ -4,24 +4,20 @@ import logging
 from flask import Blueprint
 
 import ckan.authz as new_authz
-import ckan.lib.base as base
-import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.helpers as usr_h
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
-from ckan.common import _, request, config
 from ckan.views.user import PerformResetView
 from ckan.views.user import RequestResetView
-from ckan.views.user import logged_out as _logged_out
-from ckan.views.user import logout as _logout
-from ckan.views.user import login as _login
 from ckan.views.user import follow as _follow
-from ckan.views.user import unfollow as _unfollow
 from ckan.views.user import followers as _followers
 from ckan.views.user import generate_apikey as _generate_apikey
-
+from ckan.views.user import logged_out as _logged_out
+from ckan.views.user import login as _login
+from ckan.views.user import logout as _logout
+from ckan.views.user import unfollow as _unfollow
 from ckanext.hdx_users.views.user_auth_view import HDXUserAuthView
 from ckanext.hdx_users.views.user_edit_view import HDXEditView
 from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
@@ -38,7 +34,7 @@ request = tk.request
 h = tk.h
 _ = tk._
 g = tk.g
-
+config = tk.config
 redirect = tk.redirect_to
 
 NotAuthorized = tk.NotAuthorized
@@ -69,7 +65,7 @@ class HDXRequestResetView(RequestResetView):
             check_access('request_reset', context)
             usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
         except NotAuthorized:
-            base.abort(403, _('Unauthorized to request reset password.'))
+            abort(403, _('Unauthorized to request reset password.'))
         except ValidationError:
             return json.dumps(
                 {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})

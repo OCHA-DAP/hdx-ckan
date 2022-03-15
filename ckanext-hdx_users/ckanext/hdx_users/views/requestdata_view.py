@@ -1,23 +1,23 @@
-from flask import Blueprint
-
-import ckan.lib.helpers as h
-import ckanext.hdx_users.helpers.mailer as hdx_mailer
-from ckan import logic
-
-from ckan.plugins import toolkit
-
-import ckan.model as model
-import ckan.plugins as p
 import json
 
-get_action = toolkit.get_action
-NotFound = logic.NotFound
-NotAuthorized = toolkit.NotAuthorized
-ValidationError = toolkit.ValidationError
-abort = toolkit.abort
-g = toolkit.g
-config = toolkit.config
-_ = toolkit._
+from flask import Blueprint
+
+import ckan.model as model
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
+from ckan import logic
+from ckan.plugins import toolkit as tk
+
+get_action = tk.get_action
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
+abort = tk.abort
+g = tk.g
+config = tk.config
+_ = tk._
+h = tk.h
+url_for = tk.url_for
+request = tk.request
 
 requestdata_send_request = Blueprint(u'requestdata_send_request', __name__)
 
@@ -38,7 +38,7 @@ def _get_context():
 
 
 def _get_action(action, data_dict):
-    return toolkit.get_action(action)(_get_context(), data_dict)
+    return get_action(action)(_get_context(), data_dict)
 
 
 def _get_email_configuration(
@@ -65,7 +65,7 @@ def _get_email_configuration(
         return email_body
     for i in range(0, len(available_terms)):
         if available_terms[i] == '{dataset}' and new_terms[i]:
-            url = toolkit.url_for(
+            url = tk.url_for(
                 controller='package',
                 action='read',
                 id=new_terms[i], qualified=True)
@@ -98,8 +98,8 @@ def _get_email_configuration(
     if only_org_admins:
         owner_org = _get_action('package_show',
                                 {'id': dataset_name}).get('owner_org')
-        url = toolkit.url_for('requestdata_organization_requests.requested_data',
-                              id=owner_org, qualified=True)
+        url = url_for('requestdata_organization_requests.requested_data',
+                      id=owner_org, qualified=True)
         email_body += '<br><br> This dataset\'s maintainer does not exist.\
          Go to your organisation\'s <a href="' + url + '">Requested Data</a>\
           page to see the new request. Please also edit the dataset and assign\
@@ -107,9 +107,9 @@ def _get_email_configuration(
     else:
         if len(data_maintainers_ids) > 1:
             owner_org = _get_action('package_show', {'id': dataset_name}).get('owner_org')
-            url = toolkit.url_for('requestdata_organization_requests.requested_data', id=owner_org, qualified=True)
+            url = url_for('requestdata_organization_requests.requested_data', id=owner_org, qualified=True)
         else:
-            url = toolkit.url_for('requestdata.my_requested_data', id=data_maintainers_ids[0], qualified=True)
+            url = url_for('requestdata.my_requested_data', id=data_maintainers_ids[0], qualified=True)
         email_body += '<br><br><strong> Please accept or decline the request\
          as soon as you can by visiting the \
          <a href="' + url + '">My Requests</a> page.</strong>'
@@ -123,8 +123,8 @@ def _get_email_configuration(
         for org in organizations:
             if org['name'] in organization and package['owner_org'] == org['id']:
                 url = \
-                    toolkit.url_for('requestdata_organization_requests.requested_data',
-                                    id=org['name'], qualified=True)
+                    url_for('requestdata_organization_requests.requested_data',
+                            id=org['name'], qualified=True)
                 email_body += '<br><br> Go to <a href="' + url + '">Requested data</a> page in organization admin.'
 
     site_url = config.get('ckan.site_url')
@@ -166,8 +166,8 @@ def send_request():
     context = {'model': model, 'session': model.Session,
                'user': g.user, 'auth_user_obj': g.userobj}
     try:
-        if p.toolkit.request.method == 'POST':
-            data = toolkit.request.form.to_dict()
+        if request.method == 'POST':
+            data = request.form.to_dict()
             _get_action('requestdata_request_create', data)
         else:
             abort(403, _('Unauthorized to access this page'))
@@ -238,9 +238,7 @@ def send_request():
         user = {}
         for id in maintainers:
             try:
-                user = \
-                    toolkit.get_action('user_show')(context_sysadmin,
-                                                    {'id': id})
+                user = get_action('user_show')(context_sysadmin, {'id': id})
                 data_dict['users'].append(user)
                 users_email.append({'display_name': user.get('fullname'), 'email': user.get('email')})
                 data_maintainers.append(user['fullname'] or user['name'])

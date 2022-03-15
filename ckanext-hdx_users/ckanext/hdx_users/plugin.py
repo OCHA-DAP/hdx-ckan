@@ -11,7 +11,6 @@ import ckanext.hdx_users.model as users_model
 import ckanext.hdx_users.views.user as hdx_user
 import ckanext.hdx_users.views.dashboard as dashboard
 import ckanext.hdx_users.views.api as api
-import ckanext.hdx_users.views.api as api
 import ckanext.hdx_users.views.user_checks_login as ucl
 import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv

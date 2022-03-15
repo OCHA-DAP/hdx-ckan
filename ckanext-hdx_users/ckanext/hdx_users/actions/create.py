@@ -1,13 +1,12 @@
 import hashlib
 import json
 
-import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 
 ValidationError = tk.ValidationError
 _check_access = tk.check_access
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 get_action = tk.get_action
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
 OnbSuccess = json.dumps({'success': True})
@@ -24,7 +23,7 @@ def token_create(context, user):
     return token_obj.as_dict()
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def hdx_first_login(context, data_dict):
     _check_access('hdx_first_login', context, data_dict)
     data_dict = {'extras': [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]}

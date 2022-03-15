@@ -3,22 +3,21 @@ import json
 from flask import Blueprint
 from paste.deploy.converters import asbool
 
-import ckan.lib.helpers as h
 import ckan.model as model
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
-from ckan import logic
-from ckan.plugins import toolkit
+from ckan.plugins import toolkit as tk
 from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
 
-get_action = toolkit.get_action
-NotFound = logic.NotFound
-NotAuthorized = toolkit.NotAuthorized
-ValidationError = toolkit.ValidationError
-_get_action = toolkit.get_action
-abort = toolkit.abort
-request = toolkit.request
-_ = toolkit._
-g = toolkit.g
+get_action = tk.get_action
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+ValidationError = tk.ValidationError
+_get_action = tk.get_action
+abort = tk.abort
+request = tk.request
+_ = tk._
+g = tk.g
+h = tk.h
 
 hdx_requestdata_user = Blueprint(u'hdx_requestdata_user', __name__)
 

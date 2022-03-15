@@ -2,17 +2,14 @@
 import logging
 
 from flask import Blueprint
-
+import ckan.logic as logic
 import ckan.lib.authenticator as authenticator
-import ckan.lib.base as base
-import ckan.lib.helpers as h
-import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
-from ckan.common import _
 from ckan.views.user import EditView as EditView
 from ckan.views.user import set_repoze_user as set_repoze_user
 from ckanext.hdx_users.views.user_register_view import HDXRegisterView
 from ckanext.hdx_users.views.user_view_helper import *
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
 
@@ -58,7 +55,7 @@ class HDXEditView(EditView):
                 dictization_functions.unflatten(
                     logic.tuplize_dict(logic.parse_params(request.form))))
         except dictization_functions.DataError:
-            base.abort(400, _(u'Integrity Error'))
+            abort(400, _(u'Integrity Error'))
         data_dict.setdefault(u'activity_streams_email_notifications', False)
 
         context[u'message'] = data_dict.get(u'log_message', u'')
@@ -82,18 +79,18 @@ class HDXEditView(EditView):
 
         try:
             data_dict['fullname'] = data_dict.get('firstname', "") + u' ' + data_dict.get('lastname', "")
-            user = logic.get_action(u'user_update')(context, data_dict)
+            user = get_action(u'user_update')(context, data_dict)
             if user:
                 ue_data_dict = {'user_id': user.get('id'), 'extras': [
                     {'key': user_model.HDX_FIRST_NAME, 'new_value': data_dict.get('firstname', '')},
                     {'key': user_model.HDX_LAST_NAME, 'new_value': data_dict.get('lastname', '')},
                 ]}
-                logic.get_action('user_extra_update')(context, ue_data_dict)
-        except logic.NotAuthorized:
-            base.abort(403, _(u'Unauthorized to edit user %s') % id)
-        except logic.NotFound as ex:
-            base.abort(404, _(u'User not found'))
-        except logic.ValidationError as e:
+                get_action('user_extra_update')(context, ue_data_dict)
+        except NotAuthorized:
+            abort(403, _(u'Unauthorized to edit user %s') % id)
+        except NotFound as ex:
+            abort(404, _(u'User not found'))
+        except ValidationError as e:
             errors = e.error_dict
             error_summary = e.error_summary
             return self.get(id, data_dict, errors, error_summary)
@@ -113,13 +110,13 @@ class HDXEditView(EditView):
             context, id = self._prepare(id)
             data_dict = {u'id': id}
             try:
-                data = logic.get_action(u'user_show')(context, data_dict)
+                data = get_action(u'user_show')(context, data_dict)
                 # if data.get('firstname') is None or data.get('lastname') is None
-                # names_dict = logic.get_action(u'hdx_user_fullname_show')(context, {'user_id': data.get('id')})
+                # names_dict = get_action(u'hdx_user_fullname_show')(context, {'user_id': data.get('id')})
                 # data['firstname'] = names_dict.get('firstname')
                 # data['lastname'] = names_dict.get('lastname')
-            except logic.NotAuthorized:
-                base.abort(403, _(u'Unauthorized to edit user %s') % u'')
-            except logic.NotFound:
-                base.abort(404, _(u'User not found'))
+            except NotAuthorized:
+                abort(403, _(u'Unauthorized to edit user %s') % u'')
+            except NotFound:
+                abort(404, _(u'User not found'))
         return super(HDXEditView, self).get(id, data, errors, error_summary)

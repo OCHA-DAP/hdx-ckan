@@ -5,7 +5,6 @@ import six
 import mock
 from nose.tools import assert_true
 
-import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -13,7 +12,7 @@ import ckanext.hdx_users.helpers.tokens as tkh
 import ckanext.hdx_users.model as user_model
 
 log = logging.getLogger(__name__)
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 h = tk.h
 
 @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')

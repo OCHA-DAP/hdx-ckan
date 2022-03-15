@@ -4,8 +4,10 @@ Created on July 2nd, 2015
 @author: dan
 '''
 
-from ckan.logic.schema import validator_args
 from six import text_type
+
+from ckan.logic.schema import validator_args
+
 
 @validator_args
 def register_user_schema(not_empty, user_email_validator):

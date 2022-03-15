@@ -18,7 +18,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 import ckanext.hdx_users.helpers.permissions as ph
 
 log = logging.getLogger(__name__)
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 h = tk.h
 
 permission = {

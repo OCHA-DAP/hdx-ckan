@@ -1,11 +1,10 @@
-import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
 import ckanext.hdx_users.model as umodel
 
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 _check_access = tk.check_access
 get_action = tk.get_action
 config = tk.config

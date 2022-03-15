@@ -1,6 +1,6 @@
 import hashlib
 import logging as logging
-
+import ckan.logic as logic
 from mailchimp3 import MailChimp
 from sqlalchemy.exc import IntegrityError
 
@@ -140,19 +140,9 @@ class HDXRegisterView:
         last_name = data_dict['last-name']
         data_dict['fullname'] = first_name + ' ' + last_name
         try:
-            # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
-            # if is_captcha_enabled == 'true':
-            #     captcha_response = data_dict.get('g-recaptcha-response', None)
-            #     if not self.is_valid_captcha(response=captcha_response):
-            #         raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
-        # except ValidationError, e:
-        #     error_summary = e.error_summary
-        #     if error_summary == CaptchaNotValid:
-        #         return OnbCaptchaErr
-        #     return error_message(error_summary)
         except Exception as e:
             error_summary = str(e)
             return error_message(error_summary)
@@ -164,12 +154,6 @@ class HDXRegisterView:
             data_dict['token'] = token_dict['token']
             get_action('user_update')(context, data_dict)
             tokens.token_update(context, data_dict)
-
-            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
-            # get_action('user_extra_update')(context, ue_dict)
-            #
-            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
-            # get_action('user_extra_update')(context, ue_dict)
 
             ue_data_dict = {'user_id': data_dict.get('id'), 'extras': [
                 {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'},

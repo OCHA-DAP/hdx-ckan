@@ -2,11 +2,10 @@ import json
 
 import ckan.lib.navl.dictization_functions as dictization_functions
 from ckan.plugins import toolkit as tk
-import ckan.logic as logic
 
 _ = tk._
 NotAuthorized = tk.NotAuthorized
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 DataError = dictization_functions.DataError
 CaptchaNotValid = _('Captcha is not valid')
 OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})

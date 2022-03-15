@@ -1,22 +1,19 @@
-import logging
 import datetime
-
-import ckan.lib.helpers as h
-import ckan.authz as authz
-import ckan.model as model
+import logging
 
 from dateutil.parser import parse as dateutil_parse
 
-from ckan.logic import NotFound
-from ckan.common import g
-
-from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, RequestDataDao, ExpiredDatasetsDao,\
+import ckan.authz as authz
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_NEEDS_UPDATE
+from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, RequestDataDao, ExpiredDatasetsDao, \
     QuarantinedDatasetsDao
-from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator,\
-    UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 
 log = logging.getLogger(__name__)
-
+h = tk.h
+NotFound = tk.ObjectNotFound
+g = tk.g
 
 def get_notification_service():
     if not g.user:

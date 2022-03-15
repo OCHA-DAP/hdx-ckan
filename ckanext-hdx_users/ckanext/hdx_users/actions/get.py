@@ -8,14 +8,14 @@ import ckanext.hdx_users.model as user_model
 config = tk.config
 log = logging.getLogger(__name__)
 _check_access = tk.check_access
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 get_action = tk.get_action
 NoOfLocs = 5
 NoOfOrgs = 5
 c_nepal_earthquake = config.get('hdx.crisis.nepal_earthquake')
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def onboarding_followee_list(context, data_dict):
     # TODO check if user is following org&locs
     result = []
@@ -116,7 +116,7 @@ def hdx_user_autocomplete(context, data_dict):
     return user_list
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def hdx_user_fullname_show(context, data_dict):
     if 'id' not in data_dict:
         raise NotFound("Id not provided")
@@ -148,7 +148,7 @@ def _set_user_names(context, user_dict):
     return user_dict
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def user_show(context, data_dict):
     user_dict = user_get.user_show(context, data_dict)
     if user_dict:

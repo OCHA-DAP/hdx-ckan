@@ -6,13 +6,10 @@ Created on July 2nd, 2015
 
 import sys
 
-import ckan.logic as logic
-
+import ckanext.hdx_user_extra.model as ue_model
 from ckan.plugins import toolkit as tk
 
-import ckanext.hdx_user_extra.model as ue_model
-
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 
 check_access = tk.check_access
 

@@ -6,7 +6,6 @@ from six.moves.urllib.parse import quote
 
 import ckan.model as model
 import ckan.plugins as p
-
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers

@@ -11,13 +11,12 @@ import unicodedata
 import pytest
 import six
 
-import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 log = logging.getLogger(__name__)
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 config = tk.config
 h = tk.h
 

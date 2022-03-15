@@ -1,11 +1,11 @@
-import ckan.logic as logic
+from flask import Blueprint, jsonify
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckan.common import request
-from flask import Blueprint, jsonify
 
 # shortcuts
-get_action = logic.get_action
+get_action = tk.get_action
 g = tk.g
 
 hdx_user_autocomplete = Blueprint(u'hdx_user_autocomplete', __name__)

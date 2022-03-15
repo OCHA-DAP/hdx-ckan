@@ -1,16 +1,16 @@
-import logging
-import ckan.plugins.toolkit as tk
-import ckan.logic as logic
-import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import datetime
+import logging
 
-from ckan.common import c, _
+import ckan.plugins.toolkit as tk
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 config = tk.config
+g = tk.g
+_ = tk._
 
 
 def hdx_send_new_org_request(context, data_dict):
@@ -21,10 +21,10 @@ def hdx_send_new_org_request(context, data_dict):
         email = 'hdx@un.org'
     display_name = 'HDX Feedback'
 
-    ckan_username = c.user
+    ckan_username = g.user
     ckan_email = ''
-    if c.userobj:
-        ckan_email = c.userobj.email
+    if g.userobj:
+        ckan_email = g.userobj.email
     if config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
         hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
         subject = u'Request to create a new organisation on HDX'

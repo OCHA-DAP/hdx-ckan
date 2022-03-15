@@ -11,31 +11,27 @@ import ckanext.hdx_users.helpers.permissions as ph
 from ckan.views.home import CACHE_PARAMETERS
 from ckanext.hdx_users.helpers.permissions import Permissions
 
-# shortcuts
-get_action = logic.get_action
-g = tk.g
-_ = tk._
-request = tk.request
-h=tk.h
-
-
-
 log = logging.getLogger(__name__)
 
 # shortcuts
-get_action = logic.get_action
-NotAuthorized = logic.NotAuthorized
-NotFound = logic.NotFound
-ValidationError = logic.ValidationError
+h = tk.h
+get_action = tk.get_action
+NotAuthorized = tk.NotAuthorized
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
 clean_dict = logic.clean_dict
 tuplize_dict = logic.tuplize_dict
 parse_params = logic.parse_params
 redirect = h.redirect_to
-check_access = logic.check_access
+check_access = tk.check_access
 abort = tk.abort
 render = tk.render
+g = tk.g
+_ = tk._
+request = tk.request
 
 hdx_user_permission = Blueprint(u'hdx_user_permission', __name__, url_prefix=u'/user/permission')
+
 
 def _extra_template_variables(context, data_dict):
     """
