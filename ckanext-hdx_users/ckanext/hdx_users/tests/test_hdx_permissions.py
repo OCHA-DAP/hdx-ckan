@@ -1,16 +1,14 @@
 import pytest
-
 import logging
-
+import six
 import ckan.plugins.toolkit as tk
-
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
 NotAuthorized = tk.NotAuthorized
 
-
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHdxPermissions(hdx_test_base.HdxBaseTest):
 
     def test_permission_save(self):

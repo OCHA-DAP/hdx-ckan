@@ -1,14 +1,15 @@
 import json
 import os
-
+import ckan.plugins as p
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 from ckan.model import Session
+from ckan.lib.cli import CkanCommand as CkanCommand
 
 config = tk.config
 
 
-class FeatureSearchCommand(tk.CkanCommand):
+class FeatureSearchCommand(CkanCommand):
     '''
     Usage:
         paster hdx-feature-search build   or use   hdxckantool feature

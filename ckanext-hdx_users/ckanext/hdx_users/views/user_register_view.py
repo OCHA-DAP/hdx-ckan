@@ -1,28 +1,32 @@
 import hashlib
 import logging as logging
-
+import ckan.logic as logic
 from mailchimp3 import MailChimp
 from sqlalchemy.exc import IntegrityError
-import ckan.lib.base as base
+
 import ckan.model as model
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.helpers as usr_h
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
-from ckan.common import request, config, c
 from ckan.logic.validators import name_validator
-from ckanext.hdx_users.controllers.mail_validation_controller import name_validator_with_changed_msg
+from ckan.plugins import toolkit as tk
+from ckanext.hdx_users.helpers.helpers import name_validator_with_changed_msg
 from ckanext.hdx_users.views.user_view_helper import *
 
 log = logging.getLogger(__name__)
 unflatten = dictization_functions.unflatten
-ValidationError = logic.ValidationError
-check_access = logic.check_access
-get_action = logic.get_action
-render = base.render
-abort = base.abort
+ValidationError = tk.ValidationError
+check_access = tk.check_access
+get_action = tk.get_action
+render = tk.render
+abort = tk.abort
+request = tk.request
+config = tk.config
+g = tk.g
+_ = tk._
 
 
 class HDXRegisterView:
@@ -55,7 +59,7 @@ class HDXRegisterView:
         if 'name' in temp_schema:
             temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
                                    temp_schema['name']]
-        context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
+        context = {'model': model, 'session': model.Session, 'user': g.user, 'auth_user_obj': g.userobj,
                    'schema': temp_schema, 'save': 'save' in request.form}
 
         if 'email' in data_dict:
@@ -81,8 +85,8 @@ class HDXRegisterView:
             return error_message(error_summary)
 
         # hack to disable check if user is logged in
-        save_user = c.user
-        c.user = None
+        save_user = g.user
+        g.user = None
         try:
 
             user = get_action('user_create')(context, data_dict)
@@ -111,11 +115,11 @@ class HDXRegisterView:
             error_summary = str(e)
             return error_message(error_summary)
 
-        if not c.user:
+        if not g.user:
             # Send validation email
             tokens.send_validation_email(user, token)
 
-        c.user = save_user
+        g.user = save_user
         return OnbSuccess
 
     def register_details(self):
@@ -136,36 +140,20 @@ class HDXRegisterView:
         last_name = data_dict['last-name']
         data_dict['fullname'] = first_name + ' ' + last_name
         try:
-            # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
-            # if is_captcha_enabled == 'true':
-            #     captcha_response = data_dict.get('g-recaptcha-response', None)
-            #     if not self.is_valid_captcha(response=captcha_response):
-            #         raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
-        # except ValidationError, e:
-        #     error_summary = e.error_summary
-        #     if error_summary == CaptchaNotValid:
-        #         return OnbCaptchaErr
-        #     return error_message(error_summary)
         except Exception as e:
             error_summary = str(e)
             return error_message(error_summary)
         # hack to disable check if user is logged in
-        save_user = c.user
-        c.user = None
+        save_user = g.user
+        g.user = None
         try:
             token_dict = tokens.token_show(context, data_dict)
             data_dict['token'] = token_dict['token']
             get_action('user_update')(context, data_dict)
             tokens.token_update(context, data_dict)
-
-            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
-            # get_action('user_extra_update')(context, ue_dict)
-            #
-            # ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
-            # get_action('user_extra_update')(context, ue_dict)
 
             ue_data_dict = {'user_id': data_dict.get('id'), 'extras': [
                 {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'},
@@ -205,7 +193,7 @@ class HDXRegisterView:
         except Exception as e:
             error_summary = str(e)
             return error_message(error_summary)
-        c.user = save_user
+        g.user = save_user
         return OnbSuccess
 
     def register(self):
@@ -213,16 +201,16 @@ class HDXRegisterView:
         Creates a new user, but allows logged in users to create
         additional accounts as per HDX requirements at the time.
         """
-        context = {'model': model, 'session': model.Session, 'user': c.user}
+        context = {'model': model, 'session': model.Session, 'user': g.user}
         try:
             check_access('user_create', context)
         except NotAuthorized:
             abort(403, _('Unauthorized to register as a user.'))
-        if c.user:
+        if g.user:
             # #1799 Don't offer the registration form if already logged in
             return render('user/logout_first.html')
         template_data = {}
-        if not c.user:
+        if not g.user:
             template_data = ue_helpers.get_register(True, "")
         return render('home/index.html', extra_vars=template_data)
 
@@ -232,7 +220,7 @@ class HDXRegisterView:
         :param token:
         :return:
         '''
-        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        context = {'model': model, 'session': model.Session, 'user': g.user, 'auth_user_obj': g.userobj}
         data_dict = {'token': token,
                      'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
 

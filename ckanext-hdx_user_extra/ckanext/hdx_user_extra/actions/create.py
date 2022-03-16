@@ -5,8 +5,8 @@ Created on July 2nd, 2015
 '''
 
 import ckanext.hdx_user_extra.model as ue_model
-import ckan.logic as logic
-_check_access = logic.check_access
+import ckan.plugins.toolkit as tk
+_check_access = tk.check_access
 
 
 def user_extra_create(context, data_dict):

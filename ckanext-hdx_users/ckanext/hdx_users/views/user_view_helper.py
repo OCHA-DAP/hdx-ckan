@@ -1,11 +1,11 @@
 import json
 
 import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.logic as logic
-from ckan.common import _
+from ckan.plugins import toolkit as tk
 
-NotAuthorized = logic.NotAuthorized
-NotFound = logic.NotFound
+_ = tk._
+NotAuthorized = tk.NotAuthorized
+NotFound = tk.ObjectNotFound
 DataError = dictization_functions.DataError
 CaptchaNotValid = _('Captcha is not valid')
 OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
@@ -17,6 +17,7 @@ OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not f
 OnbExistingUsername = json.dumps({'success': False, 'error': {'message': 'Username is already used'}})
 OnbErr = json.dumps({'success': False, 'error': {'message': _('Something went wrong. Please contact support.')}})
 OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
+
 
 def error_message(error_summary):
     return json.dumps({'success': False, 'error': {'message': error_summary}})

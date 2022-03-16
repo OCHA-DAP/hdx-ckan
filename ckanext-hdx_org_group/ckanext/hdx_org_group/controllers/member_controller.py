@@ -13,7 +13,7 @@ import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 import ckanext.hdx_org_group.helpers.analytics as analytics
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckanext.hdx_theme.util.mail as mailutil
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 import ckan.controllers.organization as org
 import ckan.lib.base as base

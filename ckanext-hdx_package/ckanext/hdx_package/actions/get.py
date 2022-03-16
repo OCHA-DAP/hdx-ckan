@@ -28,7 +28,7 @@ import ckanext.hdx_package.helpers.caching as pkg_caching
 import ckanext.hdx_package.helpers.freshness_calculator as freshness
 import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_theme.util.jql as jql
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset

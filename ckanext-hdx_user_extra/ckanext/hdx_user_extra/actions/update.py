@@ -6,13 +6,10 @@ Created on July 2nd, 2015
 
 import sys
 
-import ckan.logic as logic
-
+import ckanext.hdx_user_extra.model as ue_model
 from ckan.plugins import toolkit as tk
 
-import ckanext.hdx_user_extra.model as ue_model
-
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 
 check_access = tk.check_access
 
@@ -39,5 +36,5 @@ def user_extra_update(context, data_dict):
             session.commit()
             result.append(user_extra.as_dict())
         except:
-            print sys.exc_info()[0]
+            print(sys.exc_info()[0])
     return result

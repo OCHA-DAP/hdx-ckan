@@ -1,56 +1,36 @@
-import logging
 import inspect
 import json
+import logging
 import os
+
 from six.moves.urllib.parse import urlparse
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_theme.helpers.auth as auth
-
-from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
 from ckanext.hdx_theme.cli.click_analytics_changes_reindex import analytics_changes_reindex
-from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
-from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
+from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
 from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
+from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
+from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
-from ckanext.hdx_theme.views.colored_page import hdx_colored_page
-from ckanext.hdx_theme.views.faqs import hdx_faqs, hdx_main_faq
-from ckanext.hdx_theme.views.ebola import hdx_ebola
-from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_local_image_server
-from ckanext.hdx_theme.views.custom_settings import hdx_carousel
-from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
-from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
-from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
 from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
-from ckanext.hdx_theme.views.splash_page import hdx_splash
+from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 from ckanext.hdx_theme.views.count import hdx_count
-
-
-# def run_on_startup():
-#     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
-#     if 'true' == cache_on_startup:
-#         _generate_license_list()
-#         caching.cached_get_group_package_stuff()
-
-
-# def _generate_license_list():
-#     package.Package._license_register = license.LicenseRegister()
-#     package.Package._license_register.licenses = [
-#                                                   license.License(hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
-#                                                   license.License(license.LicenseCreativeCommonsAttribution()),
-#                                                   license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
-#                                                   license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
-#                                                   license.License(hdx_licenses.LicenseHdxMultiple()),
-#                                                   license.License(hdx_licenses.LicenseHdxOther())
-#                                                   ]
+from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
+from ckanext.hdx_theme.views.custom_settings import hdx_carousel
+from ckanext.hdx_theme.views.ebola import hdx_ebola
+from ckanext.hdx_theme.views.faqs import hdx_faqs, hdx_main_faq
+from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_local_image_server
+from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
+from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
+from ckanext.hdx_theme.views.splash_page import hdx_splash
 
 config = toolkit.config
 
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)

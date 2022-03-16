@@ -1,11 +1,10 @@
 import datetime
-import dateutil.parser
 
+import dateutil.parser
 from sqlalchemy import func
 
 import ckan.model as ckan_model
 import ckan.plugins.toolkit as tk
-
 import ckanext.requestdata.model as requestdata_model
 import ckanext.ytp.request.model as membership_model
 

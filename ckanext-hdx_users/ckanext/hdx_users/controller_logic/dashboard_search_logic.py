@@ -1,12 +1,12 @@
 import datetime
 
-import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_search.controller_logic.search_logic as sl
 
 _ = tk._
+h = tk.h
 
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER,\
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER, \
     UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 
 
@@ -48,8 +48,9 @@ class DashboardSearchLogic(sl.SearchLogic):
         })
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
-        super(DashboardSearchLogic, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
-                                                                     search_extras)
+        super(DashboardSearchLogic, self)._process_complex_facet_data(existing_facets, title_translations,
+                                                                      result_facets,
+                                                                      search_extras)
         freshness_facet_name = 'due_date'
         if existing_facets and freshness_facet_name in existing_facets:
             item_list = existing_facets.get(freshness_facet_name).get('items')

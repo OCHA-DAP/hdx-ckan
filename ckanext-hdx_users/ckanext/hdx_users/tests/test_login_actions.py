@@ -5,22 +5,22 @@ Created on Febr 17, 2020
 
 
 '''
-import pytest
-
 import logging as logging
+import unicodedata
+
+import pytest
+import six
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckan.logic as logic
-import unicodedata
-import ckan.lib.helpers as h
-
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 log = logging.getLogger(__name__)
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 config = tk.config
+h = tk.h
 
-
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
 
     @classmethod
@@ -50,7 +50,7 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
         try:
             self._get_action('hdx_first_login')(context_nouser, {})
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert True
             assert 'requires an authenticated user' in ex.message
         assert True
@@ -59,16 +59,16 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
         try:
             self._get_action('hdx_first_login')(context_usernotfound, {})
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert True
             assert 'requires an authenticated user' in ex.message
         assert True
 
-    # test_new_login
+        # test_new_login
         url = h.url_for('hdx_login_link.new_login')
         try:
             login_redirect_result = self._get_url(url, None)
-        except Exception, ex:
+        except Exception as ex:
             assert False
         assert '200' in login_redirect_result.status
         assert 'Forgot your password?' in login_redirect_result.body
@@ -78,12 +78,12 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
         url = h.url_for('hdx_login_link.new_login')
         try:
             login_redirect_result = self._get_url(url, user.apikey)
-        except Exception, ex:
+        except Exception as ex:
             assert False
         assert 200 == login_redirect_result.status_code
         assert 'Forgot your password?' not in login_redirect_result.data
 
-    # test_login
+        # test_login
         test_url = "/login_generic"
         params = {
             'login': 'testsysadmin',
@@ -95,7 +95,7 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
         redirect_location1 = login_result.location.replace(config.get('ckan.site_url'), '')
         login_redirect_result = test_client.post(redirect_location1)
         assert True
-        assert '302' in login_redirect_result.status
+        assert 302 == login_redirect_result.status_code
         redirect_location1 = login_redirect_result.location.replace(config.get('ckan.site_url'), '')
         test_client.get(redirect_location1)
 
@@ -108,10 +108,9 @@ class TestHDXControllerPage(hdx_test_base.HdxBaseTest):
             res1 = test_client.get('/user/logout')
             message = '302 Found\n\nThe resource was found at {}/user/logged_out?came_from=%2F; ' \
                       'you should be redirected automatically.'.format(config.get('ckan.site_url'))
-            assert message  in res1.data
+            assert message in res1.data
             res2 = test_client.get('/user/logged_out')
             assert False
-        except Exception, ex:
+        except Exception as ex:
             assert 302 == res2.status_code
         assert True
-

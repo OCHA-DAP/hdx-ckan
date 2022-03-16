@@ -1,9 +1,8 @@
-import ckan.plugins.toolkit as tk
-
-from ckanext.hdx_users.helpers.permissions import Permissions
-from ckanext.hdx_users.helpers.notifications import NotificationsInfo
-
 import logging
+
+import ckan.plugins.toolkit as tk
+from ckanext.hdx_users.helpers.notifications import NotificationsInfo
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 _ = tk._
 log = logging.getLogger(__name__)
