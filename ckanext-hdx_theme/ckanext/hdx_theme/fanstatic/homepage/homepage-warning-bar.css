@@ -1,12 +1,13 @@
 .hdx-warning {
   position: absolute;
+  left: 0;
   bottom: 0;
   min-width: 1260px;
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #F2645A;
-  z-index: 101;
+  z-index: 1000;
 }
 .hdx-warning .hdx-warning-text {
   width: 1170px;
@@ -14,14 +15,14 @@
   margin-right: auto;
   color: #fff;
   text-decoration: underline;
-}
-.hdx-warning .hdx-warning-text .light-text {
-  font-family: "Gotham-Light", sans-serif;
+  font-family: "Gotham-Bold", sans-serif;
 }
 .hdx-warning .hdx-warning-text .hdx-warning-text-important {
-  font-family: "Gotham-Bold", sans-serif;
   font-size: 16px;
   color: inherit;
+}
+.hdx-warning .hdx-warning-text .hdx-warning-text-arrow {
+  font-size: 14px;
 }
 .hdx-warning.hdx-announcement {
   background-color: #fff;
