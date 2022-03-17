@@ -883,12 +883,14 @@ country-scripts:
       - hdx_theme/country-styles
   contents:
     - country/country.js
+#    - homepage/warning-bar.js
 
 country-styles:
   output: ckanext-hdx_theme/%(version)s_country-styles.css
   contents:
     - crisis/topline.css
     - country/country.css
+    - homepage/homepage-warning-bar.css
 
 country-topline-scripts:
 #  <<: *common-js

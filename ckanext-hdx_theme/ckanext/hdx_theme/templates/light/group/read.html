@@ -1,7 +1,5 @@
 {% extends "page_light.html" %}
 
-
-
 {%- block styles %}
   {{ super() }}
   {% asset 'hdx_theme/search-light-styles' %}
@@ -15,6 +13,7 @@
 
 {% set grp = grp_dict %}
 {% set data = widgets_data.data %}
+{% set show_warning_bar = data.country_dict.id == 'ukr' %}
 
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
@@ -147,7 +146,23 @@
   </div>
 </div>
 
-{% snippet "widget/banner/hdx-light-banner.html" %}
+{% if not show_warning_bar %}
+  {% snippet "widget/banner/hdx-light-banner.html" %}
+{%  endif %}
+{% endblock %}
+
+{% block page_warning_bar %}
+  {% if show_warning_bar %}
+    <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" target="" href="https://data.humdata.org/visualization/ukraine-humanitarian-operations/">
+      <div class="hdx-warning">
+        <div class="hdx-warning-text">
+          {#<span class="light-text">Announcement:</span>#}
+          <span class="hdx-warning-text-important">Ukraine Data Explorer</span>
+          <span class="hdx-warning-text-arrow">&raquo;</span>
+        </div>
+      </div>
+    </a>
+  {% endif %}
 {% endblock %}
 
 
@@ -155,7 +170,6 @@
   {{ super() }}
   {% asset 'hdx_theme/dataset-light-scripts' %}
   {% asset 'hdx_theme/search-scripts' %}
-{#  {% resource 'hdx_theme/jquery.highlight' %}#}
 {#  {% asset 'hdx_theme/country-scripts' %}#}
   {% asset 'hdx_theme/country-topline-scripts' %}
   {% asset 'hdx_theme/dataset-search-scripts' %}
