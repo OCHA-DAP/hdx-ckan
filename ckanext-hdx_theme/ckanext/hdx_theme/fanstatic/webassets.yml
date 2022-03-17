@@ -883,7 +883,7 @@ country-scripts:
       - hdx_theme/country-styles
   contents:
     - country/country.js
-    - homepage/warning-bar.js
+#    - homepage/warning-bar.js
 
 country-styles:
   output: ckanext-hdx_theme/%(version)s_country-styles.css

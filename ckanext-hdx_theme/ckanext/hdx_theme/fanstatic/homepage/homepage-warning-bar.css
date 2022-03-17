@@ -1,5 +1,5 @@
 .hdx-warning {
-  position: absolute;
+  position: fixed;
   left: 0;
   bottom: 0;
   min-width: 1260px;

@@ -1,5 +1,6 @@
 {% extends "crisis/crisis-base.html" %}
 {% set page_has_mobile_version = True %}
+{% set show_warning_bar = data.country_dict.id == 'ukr' %}
 
 {% block styles %}
   {{ super() }}
@@ -252,7 +253,7 @@
 {% endblock %}
 
 {% block page_warning_bar %}
-  {% if data.country_dict.id == 'ukr' %}
+  {% if show_warning_bar %}
     <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" target="" href="https://data.humdata.org/visualization/ukraine-humanitarian-operations/">
       <div class="hdx-warning">
         <div class="hdx-warning-text">
@@ -272,5 +273,7 @@
     {{ super() }}
     {% asset 'hdx_theme/country-scripts' %}
     {% asset 'hdx_theme/hdx-show-more' %}
-  {% snippet "widget/banner/hdx-dataset-banner.html" %}
+  {% if not show_warning_bar %}
+    {% snippet "widget/banner/hdx-dataset-banner.html" %}
+  {% endif %}
 {% endblock %}
