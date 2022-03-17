@@ -6,32 +6,20 @@ Created on February 13, 2020
 
 '''
 import logging as logging
-import ckan.lib.helpers as h
-import ckan.model as model
-import ckan.plugins as p
-import ckan.tests.legacy as tests
-import json
-import unicodedata
-import ckanext.hdx_search.actions.actions as actions
-from ckan.common import config
-import ckan.plugins.toolkit as tk
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import pytest
+import six
+
+import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXUserExtra(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
-
-    # @classmethod
-    # def _load_plugins(cls):
-    #     try:
-    #         hdx_test_base.load_plugin('hdx_package hdx_search hdx_org_group hdx_theme')
-    #     except Exception as e:
-    #         log.warn('Module already loaded')
-    #         log.info(str(e))
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
