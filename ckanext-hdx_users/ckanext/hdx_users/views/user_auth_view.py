@@ -90,7 +90,7 @@ class HDXUserAuthView:
                     h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                res = h.redirect_to("user_dashboard", locale=None)
+                res = h.redirect_to('dashboard.index', locale=None)
                 res.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age, secure=True)
                 return res
         else:
