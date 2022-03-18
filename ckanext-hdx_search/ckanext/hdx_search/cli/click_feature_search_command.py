@@ -23,10 +23,13 @@ def hdx_feature_search():
          We'll need to be changed in the event that we make crisis or
          Topics its own entity.
     '''
+    build_index()
+
+
+def build_index():
     log.info('Collecting Feature Pages...')
     _buildIndex(config.get('hdx.lunr.index_location'))
     log.info('Index successfully built...')
-
 
 
 def _buildIndex(path):
