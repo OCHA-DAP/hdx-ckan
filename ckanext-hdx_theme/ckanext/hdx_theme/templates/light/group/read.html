@@ -13,7 +13,6 @@
 
 {% set grp = grp_dict %}
 {% set data = widgets_data.data %}
-{% set show_warning_bar = data.country_dict.id == 'ukr' %}
 
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
@@ -146,22 +145,14 @@
   </div>
 </div>
 
-{% if not show_warning_bar %}
+{% if not data.country_dict.alert_bar_url %}
   {% snippet "widget/banner/hdx-light-banner.html" %}
 {%  endif %}
 {% endblock %}
 
 {% block page_warning_bar %}
-  {% if show_warning_bar %}
-    <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" target="" href="https://data.humdata.org/visualization/ukraine-humanitarian-operations/">
-      <div class="hdx-warning">
-        <div class="hdx-warning-text">
-          {#<span class="light-text">Announcement:</span>#}
-          <span class="hdx-warning-text-important">Ukraine Data Explorer</span>
-          <span class="hdx-warning-text-arrow">&raquo;</span>
-        </div>
-      </div>
-    </a>
+  {% if data.country_dict.alert_bar_url %}
+    {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url=data.country_dict.alert_bar_url, alert_bar_title=data.country_dict.alert_bar_title, skip_js=True %}
   {% endif %}
 {% endblock %}
 

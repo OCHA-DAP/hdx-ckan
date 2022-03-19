@@ -9,6 +9,7 @@ from ckan.logic.validators import boolean_validator, url_validator, natural_numb
 
 missing = toolkit.missing
 get_converter = toolkit.get_converter
+get_validator = toolkit.get_validator
 Invalid = toolkit.Invalid
 StopOnError = toolkit.StopOnError
 _ = toolkit._
@@ -25,7 +26,7 @@ def showcase_update_schema_wrapper(original_schema):
             'in_carousel_section': [_has_dataviz_gallery_permission, default('false'), boolean_validator,
                                     get_converter('convert_to_extras')],
             'dataviz_label': [_has_dataviz_gallery_permission, not_empty_if_in_dataviz_gallery, six.text_type,
-                              _check_string_length, get_converter('convert_to_extras')],
+                              get_validator('hdx_check_string_length_wrapper')(12), get_converter('convert_to_extras')],
             'data_url': [_has_dataviz_gallery_permission, ignore_empty, _is_https_url, url_validator,
                          get_converter('convert_to_extras')],
             'priority': [_has_dataviz_gallery_permission, ignore_empty, natural_number_validator,
@@ -54,12 +55,6 @@ def showcase_show_schema_wrapper(original_schema):
 def _is_https_url(value, context):
     if 'https://' not in value:
         raise Invalid(_('Only HTTPS URLs are allowed'))
-    return value
-
-
-def _check_string_length(value, context):
-    if len(value) > 12:
-        raise Invalid(_('The text shouldn\'t be longer than 12 chars'))
     return value
 
 

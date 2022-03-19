@@ -8,9 +8,9 @@ from six.moves.urllib.parse import urlparse
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_theme.helpers.auth as auth
+import ckanext.hdx_theme.helpers.custom_validator as custom_validator
 from ckanext.hdx_theme.cli.click_analytics_changes_reindex import analytics_changes_reindex
 from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
-from ckanext.hdx_theme.helpers.custom_validator import doesnt_exceed_max_validity_period
 from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
 from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
@@ -125,6 +125,25 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             urlobj = urlobj._replace(scheme='https')
 
         return urlobj.geturl()
+
+    # IConfigurer
+    def update_config_schema(self, schema):
+        _clean_alert_bar_title_when_no_url = \
+            toolkit.get_converter('hdx_clean_field_based_on_other_field_wrapper')('hdx.alert_bar_url')
+        schema.update({
+            'hdx.alert_bar_url': [
+                toolkit.get_validator('ignore_empty'),
+                toolkit.get_validator('unicode_only'),
+                toolkit.get_validator('hdx_is_url'),
+            ],
+            'hdx.alert_bar_title': [
+                _clean_alert_bar_title_when_no_url,
+                toolkit.get_validator('ignore_empty'),
+                toolkit.get_validator('unicode_only'),
+                toolkit.get_validator('hdx_check_string_length_wrapper')(40),
+            ],
+        })
+        return schema
 
     # def before_map(self, map):
         # map.connect(
@@ -300,7 +319,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     # IValidators
     def get_validators(self):
         return {
-            'doesnt_exceed_max_validity_period': doesnt_exceed_max_validity_period,
+            'doesnt_exceed_max_validity_period': custom_validator.doesnt_exceed_max_validity_period,
+            'hdx_is_url': custom_validator.hdx_is_url,
+            'hdx_check_string_length_wrapper': custom_validator.hdx_check_string_length_wrapper,
+            'hdx_clean_field_based_on_other_field_wrapper':
+                custom_validator.hdx_clean_field_based_on_other_field_wrapper,
         }
 
     # IApiToken
