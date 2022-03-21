@@ -560,7 +560,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_values_to_boolean_for_dataset_preview': vd.hdx_convert_values_to_boolean_for_dataset_preview,
             'hdx_convert_list_item_to_extras': vd.hdx_convert_list_item_to_extras,
             'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
-            'hdx_is_url':  vd.hdx_is_url,
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
             'hdx_assume_missing_is_true': vd.hdx_assume_missing_is_true,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
