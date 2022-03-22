@@ -124,12 +124,12 @@ class QASearchLogic(sl.SearchLogic):
                 'show_everything': True
             }
 
-            self.__add_facet_item_to_list(NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets,
-                                          item_list, search_extras)
-            self.__add_facet_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets,
-                                          item_list, search_extras)
-            self.__add_facet_item_to_list(DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'), existing_facets,
-                                          item_list, search_extras)
+            self._add_facet_query_item_to_list(NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets,
+                                               item_list, search_extras)
+            self._add_facet_query_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets,
+                                               item_list, search_extras)
+            self._add_facet_query_item_to_list(DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'), existing_facets,
+                                               item_list, search_extras)
             self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
@@ -142,21 +142,9 @@ class QASearchLogic(sl.SearchLogic):
 
             self.__process_pii_is_sensitive_facet(existing_facets, title_translations, search_extras, item_list)
 
-    def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
-        category_key = 'ext_' + item_name
-        item = next(
-            (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
-        item['display_name'] = item_display_name
-        item['category_key'] = category_key
-        item['name'] = '1'  # this gets displayed as value in HTML <input>
-        item['selected'] = search_extras.get(category_key) == '1'
-        qa_only_item_list.append(item)
-
-        return item
-
     def __process_bulk_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
-        bulk_facet_item = self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
-                                                        qa_only_item_list, search_extras)
+        bulk_facet_item = self._add_facet_query_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'),
+                                                             existing_facets, qa_only_item_list, search_extras)
 
         non_bulk_facet_item = dict(bulk_facet_item)
         non_bulk_facet_item['display_name'] = _('Non-bulk upload')

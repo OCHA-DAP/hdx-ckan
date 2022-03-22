@@ -17,7 +17,11 @@ import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 
 
-from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE
+from ckanext.hdx_search.helpers.constants import \
+    DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE, \
+    HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY, \
+    ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
+    COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
@@ -294,6 +298,13 @@ class SearchLogic(object):
             'fq': fq.strip(),
             'f.extras_archived.facet.missing': 'true',
             'facet.field': facet_keys,
+            'facet.query': [
+                '{{!key={} ex=batch}} {}'.format(HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY),
+                '{{!key={} ex=batch}} {}'.format(SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY),
+                '{{!key={} ex=batch}} {}'.format(ADMIN_DIVISIONS_DATASETS_FACET_NAME,
+                                                 ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
+                '{{!key={} ex=batch}} {}'.format(COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY),
+            ],
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
             'facet.limit': 2000,
             'rows': limit,
@@ -492,15 +503,15 @@ class SearchLogic(object):
                 result['filters_selected'] = True
 
         num_of_indicators = 0
-        num_of_cods = 0
+        # num_of_cods = 0
         num_of_subnational = 0
         num_of_quickcharts = 0
         num_of_geodata = 0
-        num_of_hxl = 0
-        num_of_sadd = 0
+        # num_of_hxl = 0
+        # num_of_sadd = 0
         num_of_requestdata = 0
         num_of_showcases = 0
-        num_of_administrative_divisions = 0
+        # num_of_administrative_divisions = 0
         num_of_archived = 0
         num_of_unarchived = 0
 
@@ -550,14 +561,14 @@ class SearchLogic(object):
                 num_of_unarchived = sum(
                     (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
-                if category_key == 'vocab_Topics':
-                    num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
-                    num_of_sadd = self._get_facet_item_count_from_list(item_list, 'sex and age disaggregated data - sadd')
-                    num_of_administrative_divisions = \
-                        self._get_facet_item_count_from_list(item_list, 'administrative divisions')
+                # if category_key == 'vocab_Topics':
+                    # num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
+                    # num_of_sadd = self._get_facet_item_count_from_list(item_list, 'sex and age disaggregated data - sadd')
+                    # num_of_administrative_divisions = \
+                    #     self._get_facet_item_count_from_list(item_list, 'administrative divisions')
 
-                    if not new_cod_filters_enabled:
-                        num_of_cods = self._get_facet_item_count_from_list(item_list, 'common operational dataset - cod')
+                    # if not new_cod_filters_enabled:
+                    #     num_of_cods = self._get_facet_item_count_from_list(item_list, 'common operational dataset - cod')
 
                 standard_facet_category, anything_selected = \
                     self._create_standard_facet_category(category_key, category_title, item_list, selected_facets)
@@ -572,38 +583,47 @@ class SearchLogic(object):
                 featured_facet_items.append(modified_cod_category)
 
         if not new_cod_filters_enabled:
-            self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
+            # self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
+            self._add_facet_query_item_to_list(COD_DATASETS_FACET_NAME, _('CODs'), existing_facets,
+                                               featured_facet_items, search_extras)
 
         self._add_item_to_featured_facets(featured_facet_items, 'ext_subnational', 'Sub-national',
                                           num_of_subnational, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_geodata', 'Geodata', num_of_geodata, search_extras)
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
-                                          num_of_administrative_divisions, search_extras)
+        # self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
+        #                                   num_of_administrative_divisions, search_extras)
+        self._add_facet_query_item_to_list(ADMIN_DIVISIONS_DATASETS_FACET_NAME, _('Administrative Divisions'),
+                                           existing_facets, featured_facet_items, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_requestdata', 'Datasets on request (HDX Connect)',
                                           num_of_requestdata, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_quickcharts', 'Datasets with Quick Charts',
                                           num_of_quickcharts, search_extras)
         self._add_item_to_featured_facets(featured_facet_items, 'ext_showcases', 'Datasets with Showcase',
                                           num_of_showcases, search_extras)
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
-                                          num_of_hxl, search_extras)
-        self._add_item_to_featured_facets(featured_facet_items, 'ext_sadd', 'Datasets with SADD tags',
-                                          num_of_sadd, search_extras)
+        # self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
+        #                                   num_of_hxl, search_extras)
+        self._add_facet_query_item_to_list(HXLATED_DATASETS_FACET_NAME, _('Datasets with HXL tags'), existing_facets,
+                                           featured_facet_items, search_extras)
+        # self._add_item_to_featured_facets(featured_facet_items, 'ext_sadd', 'Datasets with SADD tags',
+        #                                   num_of_sadd, search_extras)
+        self._add_facet_query_item_to_list(SADD_DATASETS_FACET_NAME, _('Datasets with SADD tags'), existing_facets,
+                                           featured_facet_items, search_extras)
+
         # archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
         #                          'but remains available primarily for historical purposes')
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
         #                                   num_of_archived, search_extras, explanation=archived_explanation)
 
         result['num_of_indicators'] = num_of_indicators
-        result['num_of_cods'] = num_of_cods
+        # result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
         result['num_of_quickcharts'] = num_of_quickcharts
         result['num_of_geodata'] = num_of_geodata
-        result['num_of_hxl'] = num_of_hxl
-        result['num_of_sadd'] = num_of_sadd
+        # result['num_of_hxl'] = num_of_hxl
+        # result['num_of_sadd'] = num_of_sadd
         result['num_of_requestdata'] = num_of_requestdata
         result['num_of_showcases'] = num_of_showcases
-        result['num_of_administrative_divisions'] = num_of_administrative_divisions
+        # result['num_of_administrative_divisions'] = num_of_administrative_divisions
         result['num_of_selected_filters'] = sum(
             map(
                 lambda facet_group: sum((1 if i.get('selected') else 0 for i in facet_group.get('items', []))),
@@ -680,6 +700,32 @@ class SearchLogic(object):
             'selected': search_extras.get(key),
             'explanation': explanation
         })
+
+    def _add_facet_query_item_to_list(self, item_name, item_display_name, existing_facets, item_list, search_extras):
+        '''
+        :param item_name: the facet key, the name that appears in existing_facets->queries list
+        :type item_name: string
+        :param item_display_name: facet display name
+        :type item_display_name: string
+        :param existing_facets: dictionary containing facet numbers
+        :type existing_facets: dict
+        :param item_list: the list where the new facet item should be added
+        :type item_list: list
+        :param search_extras: dicitionary containing currently selected facets
+        :type search_extras: dict
+
+        :rtype: string
+        '''
+        category_key = 'ext_' + item_name
+        item = next(
+            (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
+        item['display_name'] = item_display_name
+        item['category_key'] = category_key
+        item['name'] = '1'  # this gets displayed as value in HTML <input>
+        item['selected'] = search_extras.get(category_key) == '1'
+        item_list.append(item)
+
+        return item
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         # to be overridden in sub-classes that need to process the results of the solr query in order to
