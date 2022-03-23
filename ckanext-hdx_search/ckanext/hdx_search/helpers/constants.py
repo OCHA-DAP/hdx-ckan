@@ -18,6 +18,13 @@ ADMIN_DIVISIONS_DATASETS_FACET_QUERY = 'vocab_Topics:"administrative divisions"'
 COD_DATASETS_FACET_NAME = 'cod'
 COD_DATASETS_FACET_QUERY = 'vocab_Topics:"common operational dataset - cod"'
 
+SUBNATIONAL_DATASETS_FACET_NAME = 'subnational'
+QUICKCHARTS_DATASETS_FACET_NAME = 'quickcharts'
+GEODATA_DATASETS_FACET_NAME = 'geodata'
+REQUESTDATA_DATASETS_FACET_NAME = 'requestdata'
+SHOWCASE_DATASETS_FACET_NAME = 'showcases'
+ARCHIVED_DATASETS_FACET_NAME = 'archived'
+
 STATUS_PRIORITIES = {
     '': 0,
     'OK': 1,
@@ -25,3 +32,4 @@ STATUS_PRIORITIES = {
     'QUEUED': 3,
     'ERROR': 4
 }
+

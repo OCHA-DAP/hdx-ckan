@@ -47,13 +47,6 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         assert dataset_counts == 3, '3 datasets in total'
 
-        # Testing search with indicator filter
-        url = h.url_for(
-            'search', q='hdxtest', ext_indicator='1')
-        self.app.get(url)
-
-        assert dataset_counts == 2, 'only 2 datasets have the indicator flag'
-
     def test_search_recommendations(self):
         url = h.url_for('hdx_search.search', q='Nepal')
         result = self.app.get(url)

@@ -23,7 +23,9 @@ from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATE
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
     HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY, \
     ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
-    COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY
+    COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
+    SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
+    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.views.qa import hdx_qa
 from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
@@ -121,16 +123,17 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 raise NotFound('Wrong parameter value for fq')
 
         # If indicator flag is set, search only that type
-        adapt_solr_fq('indicator')
-        adapt_solr_fq('subnational')
+        # adapt_solr_fq('indicator')
+        adapt_solr_fq(SUBNATIONAL_DATASETS_FACET_NAME)
         adapt_solr_fq(COD_DATASETS_FACET_NAME,
                       ' +{}'.format(COD_DATASETS_FACET_QUERY), ' -{}'.format(COD_DATASETS_FACET_QUERY))
         adapt_solr_fq(HXLATED_DATASETS_FACET_NAME,
                       ' +{}'.format(HXLATED_DATASETS_FACET_QUERY), ' -{}'.format(HXLATED_DATASETS_FACET_QUERY))
-        adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
-        adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
-        adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
-        adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
+        adapt_solr_fq(QUICKCHARTS_DATASETS_FACET_NAME, ' +has_quickcharts:true', ' -has_quickcharts:true')
+        adapt_solr_fq(GEODATA_DATASETS_FACET_NAME, ' +has_geodata:true', ' -has_geodata:true')
+        adapt_solr_fq(REQUESTDATA_DATASETS_FACET_NAME,
+                      ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
+        adapt_solr_fq(SHOWCASE_DATASETS_FACET_NAME, ' +has_showcases:true', ' -has_showcases:true')
         # adapt_solr_fq('archived', ' +extras_archived:true', ' -extras_archived:true')
         adapt_solr_fq(ADMIN_DIVISIONS_DATASETS_FACET_NAME, ' +{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
                       ' -{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY))
