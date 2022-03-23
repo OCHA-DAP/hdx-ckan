@@ -5,7 +5,6 @@ Created on Apr 11, 2014
 '''
 
 import bisect
-import re
 import datetime
 import logging
 import json
@@ -38,18 +37,6 @@ _DATASET_PREVIEW_RESOURCE_ID = 'resource_id'
 _DATASET_PREVIEW_NO_PREVIEW = 'no_preview'
 DATASET_PREVIEW_VALUES_LIST = [_DATASET_PREVIEW_FIRST_RESOURCE, _DATASET_PREVIEW_RESOURCE_ID,
                                _DATASET_PREVIEW_NO_PREVIEW]
-
-# Regular expression for validating urls based on
-# https://stackoverflow.com/questions/7160737/python-how-to-validate-a-url-in-python-malformed-or-not
-# from Django framework
-
-url_regex = re.compile(
-    r'^(?:http|ftp)s?://'  # http:// or https://
-    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-    r'localhost|'  # localhost...
-    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-    r'(?::\d+)?'  # optional port
-    r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
 # same as not_empty, but ignore whitespaces
@@ -116,14 +103,6 @@ def groups_not_empty(key, data, errors, context):
             errors[key].append(error_msg)
             raise StopOnError
     return None
-
-
-def hdx_is_url(key, data, errors, context):
-    value = data.get(key)
-    match_result = re.match(url_regex, value)
-    if match_result is None:
-        errors[key].append(_('Value is not a URL'))
-        raise StopOnError
 
 
 def _in_sorted_list(value, sorted_list):

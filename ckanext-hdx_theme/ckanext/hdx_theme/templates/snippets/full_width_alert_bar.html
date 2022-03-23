@@ -1,0 +1,28 @@
+{#
+Displays the alert bar at the bottom of the page ( Ex: on the homepage )
+
+alert_bar_url        - The url to which the link should point to
+alert_bar_title      - The title displayed on the bar
+skip_js              - Whether to load the javascript logic. Only needed if the bar should land on the footer when scrolling down
+
+Example:
+
+  {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url='https://example.com', alert_bar_title='Important', skip_js=False %}
+
+#}
+{% asset 'hdx_theme/alert-bar-styles' %}
+
+{% if not skip_js %}
+  {% asset 'hdx_theme/alert-bar-scripts' %}
+{% endif %}
+
+{% set alert_bar_title = alert_bar_title or 'Important' %}
+<a data-module="hdx_click_stopper" data-module-link_type="crisis bar" target="" href="{{ alert_bar_url }}">
+  <div class="hdx-warning">
+    <div class="hdx-warning-text">
+      {#<span class="light-text">Announcement:</span>#}
+      <span class="hdx-warning-text-important">{{ alert_bar_title}}</span>
+      <span class="hdx-warning-text-arrow">&raquo;</span>
+    </div>
+  </div>
+</a>

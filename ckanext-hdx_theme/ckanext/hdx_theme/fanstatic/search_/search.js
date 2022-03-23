@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 $('document').ready(function(){
     var index = lunr(function () {
         this.field('title', {boost: 10});
@@ -18,10 +19,16 @@ $('document').ready(function(){
     });
 
     var performSearchQuery = function(query) {
-      var termList = query.split(' ');
-      var modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
-      modifiedQ += modifiedQ.length > 0 ? '*' : '';
-      var results = modifiedQ.length > 0 ? index.search(modifiedQ) : [];
+      const termList = query.split(' ').filter(item => item.length);
+      const modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
+      let results = [];
+      if (modifiedQ.length > 0) {
+        var modifiedQWithWildcard = modifiedQ + '*';
+        results = index.search(modifiedQ);
+        if (results.length === 0) {
+          results = index.search(modifiedQWithWildcard);
+        }
+      }
       return {
         'q': query,
         'termList': termList,

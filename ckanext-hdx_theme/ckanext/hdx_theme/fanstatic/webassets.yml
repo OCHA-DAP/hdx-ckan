@@ -913,6 +913,16 @@ topline-rw-styles:
   contents:
     - crisis/topline-rw.css
 
+alert-bar-scripts:
+  output: ckanext-hdx_theme/%(version)s_alert-bar-scripts.js
+  contents:
+    - alert_bar/warning-bar.js
+
+alert-bar-styles:
+  output: ckanext-hdx_theme/%(version)s_alert-bar-styles.css
+  contents:
+    - alert_bar/warning-bar.css
+
 homepage-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_homepage-scripts.js
@@ -923,14 +933,12 @@ homepage-scripts:
     - vendor/hammer/hammer.js
     - homepage/count.js
     - homepage/homepage-responsive.js
-    - homepage/warning-bar.js
 
 homepage-styles:
   output: ckanext-hdx_theme/%(version)s_homepage-styles.css
   contents:
     - homepage/homepage.css
     - homepage/homepage-responsive.css
-    - homepage/homepage-warning-bar.css
 
 country-custom-scripts:
   # not preloading country-custom-styles as sometimes we need nepal-quake-country-custom-styles instead
@@ -1193,6 +1201,7 @@ contact-contributor-scripts:
   output: ckanext-hdx_theme/%(version)s_contact-contributor-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/contact-contributor-styles
   contents:
     - widget/membership/contact-contributor.js
@@ -1207,6 +1216,7 @@ group-message-scripts:
   output: ckanext-hdx_theme/%(version)s_group-message-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/group-message-styles
   contents:
     - widget/membership/group-message.js

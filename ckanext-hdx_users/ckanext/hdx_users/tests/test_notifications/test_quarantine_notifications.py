@@ -1,21 +1,21 @@
 import pytest
+import six
 
-import ckan.tests.factories as factories
-import ckan.plugins.toolkit as tk
 import ckan.authz as authz
 import ckan.model as model
-
+import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
-from ckanext.hdx_users.helpers.notifications_dao import QuarantinedDatasetsDao
 from ckanext.hdx_users.helpers.notification_service import QuarantinedDatasetsService, \
     SysadminQuarantinedDatasetsService
+from ckanext.hdx_users.helpers.notifications_dao import QuarantinedDatasetsDao
 
 config = tk.config
 NotAuthorized = tk.NotAuthorized
 _get_action = tk.get_action
 
-
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQuarantineNotifications(hdx_test_base.HdxBaseTest):
 
     EDITOR_USER = 'editor_user'

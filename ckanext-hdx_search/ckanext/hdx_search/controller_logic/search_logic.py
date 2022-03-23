@@ -3,6 +3,7 @@ import re
 import datetime
 import sqlalchemy
 import json
+from six import string_types, text_type
 from six.moves.urllib.parse import urlencode
 from collections import OrderedDict
 
@@ -65,7 +66,7 @@ def get_default_facet_titles():
 
 
 def _encode_params(params):
-    return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
+    return [(k, v.encode('utf-8') if isinstance(v, string_types) else text_type(v))
             for k, v in params]
 
 

@@ -1,6 +1,6 @@
 {% extends "package/hdx_read.html" %}
 
-{% set pkg = c.pkg_dict or pkg_dict %}
+{% set pkg = pkg_dict %}
 
 {% block pre_primary_content %}
   <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -8,7 +8,7 @@
     <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
     <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
     <div id="shapeData" style="display: none;">
-      {{ c.shapes }}
+      {{ shapes }}
     </div>
 
     <div class="row mTop20">

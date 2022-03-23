@@ -10,6 +10,11 @@ import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
 import ckanext.hdx_users.views.user as hdx_user
 import ckanext.hdx_users.views.dashboard as dashboard
+import ckanext.hdx_users.views.api as api
+import ckanext.hdx_users.views.user_checks_login as ucl
+import ckanext.hdx_users.views.permission as permission
+import ckanext.hdx_users.views.requestdata_user_view as rduv
+import ckanext.hdx_users.views.requestdata_view as rdv
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -23,7 +28,7 @@ def user_create(context, data_dict=None):
 class HDXValidatePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IBlueprint)
@@ -31,19 +36,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
 
-    def get_helpers(self):
-        return {}
-
     def is_fallback(self):
         return False
-
-    def before_map(self, map):
-        # map.redirect('/user/', '/user')
-        map.connect('user_generate_apikey', '/user/generate_key/{id}', action='generate_apikey', controller='user')
-        return map
-
-    def after_map(self, map):
-        return map
 
     def get_actions(self):
         return {
@@ -69,14 +63,13 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def configure(self, config):
         users_model.setup()
 
-    #IBlueprint
+    # IBlueprint
     def get_blueprint(self):
         return [hdx_user.user, hdx_user.hdx_login_link]
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IValidators)
@@ -96,92 +89,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def is_fallback(self):
         return False
 
-    def before_map(self, map):
-        map.connect('user_dashboard', '/dashboard',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='dashboard',
-                    ckan_icon='list')
-        # map.connect('user_dashboard_datasets', '/dashboard/datasets',
-        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        #             action='dashboard_datasets',
-        #             ckan_icon='sitemap')
-        # map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
-        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        #             action='dashboard_visualizations',
-        #             ckan_icon='sitemap')
-        map.connect('/user/register',
-                    controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
-                    action='register')
-        map.connect('user_permission', '/user/permission/{id}',
-                    controller='ckanext.hdx_users.controllers.permission_controller:PermissionController',
-                    action='permission')
-        map.connect('/contribute',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='contribute')
-        map.connect('/contact_hdx',
-                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                    action='contact_hdx')
-        # Included to fix fussiness when overriding user profile route
-        # map.connect('/user/edit', controller='user', action='edit')
-        # map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
-        # map.connect('user_activity_stream', '/user/activity/{id}',
-        #             controller='user', action='activity', ckan_icon='time')
-        map.connect('user_follow', '/user/follow/{id}', controller='user', action='follow')
-        map.connect('/user/unfollow/{id}', controller='user', action='unfollow')
-        map.connect('user_followers', '/user/followers/{id:.*}',
-                    controller='user', action='followers', ckan_icon='group')
-        # map.connect('user_edit', '/user/edit/{id:.*}', controller='user', action='edit',
-        #             ckan_icon='cog')
-        # map.connect('user_delete', '/user/delete/{id}', controller='user', action='delete')
-        # map.connect('register', '/user/register', controller='user', action='register')
-        map.connect('login', '/user/login', controller='user', action='login')
-        map.connect('/user/_logout', controller='user', action='logout')
-        map.connect('/user/logged_in', controller='user', action='logged_in')
-        map.connect('/user/logged_out', controller='user', action='logged_out')
-        # map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
-        # map.connect('/user/reset', controller='user', action='request_reset')
-        # map.connect('/user/me', controller='user', action='me')
-        # map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
-        map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
-
-        # requestdata mapping
-        user_controller = 'ckanext.requestdata.controllers.user:UserController'
-        # request_data_controller = 'ckanext.requestdata.controllers.request_data:RequestDataController'
-        hdx_request_data_controller = 'ckanext.hdx_users.controllers.request_data:HDXRequestDataController'
-        map.connect('requestdata_my_requests',
-                    '/user/my_requested_data/{id}',
-                    controller=user_controller,
-                    action='my_requested_data', ckan_icon='list')
-
-        map.connect('requestdata_handle_new_request_action',
-                    '/user/my_requested_data/{username}/' +
-                    '{request_action:reply|reject}',
-                    controller='ckanext.hdx_users.controllers.requestdata_user_controller:HDXRequestdataUserController',
-                    action='handle_new_request_action')
-
-        map.connect('requestdata_handle_open_request_action',
-                    '/user/my_requested_data/{username}/' +
-                    '{request_action:shared|notshared}',
-                    controller=user_controller,
-                    action='handle_open_request_action')
-
-        map.connect('requestdata_send_request', '/request_data',
-                    controller=hdx_request_data_controller,
-                    action='send_request')
-        map.connect('/util/user/hdx_autocomplete',
-                    controller='ckanext.hdx_users.controllers.api:APIExtensionController',
-                    action='hdx_user_autocomplete')
-
-        #######
-        map.connect('user_datasets', '/user/{id:((?!edit)[^/])+}',
-                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-                    action='read',
-                    ckan_icon='sitemap')
-        # map.connect('delete_page', '/dashboard/visualization/delete/{id}',
-        #             controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        #             action='hdx_delete_powerview', )
-        return map
-
     def get_actions(self):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
@@ -197,4 +104,12 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return dashboard.hdx_user_dashboard
+        return [
+            dashboard.hdx_user_dashboard,
+            api.hdx_user_autocomplete,
+            ucl.hdx_contribute,
+            ucl.hdx_contact_hdx,
+            permission.hdx_user_permission,
+            rduv.hdx_requestdata_user,
+            rdv.requestdata_send_request
+        ]

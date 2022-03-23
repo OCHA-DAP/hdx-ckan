@@ -5,12 +5,12 @@ Created on July 2nd, 2015
 '''
 
 import ckanext.hdx_user_extra.model as ue_model
-import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def user_extra_show(context, data_dict):
     '''
     Retrieves user extra list based on 'user_id'
@@ -27,7 +27,7 @@ def user_extra_show(context, data_dict):
     return user_extra_dict_list
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def user_extra_value_by_key_show(context, data_dict):
     '''
     Retrieves user extra list based on 'user_id'

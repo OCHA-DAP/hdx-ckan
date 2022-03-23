@@ -33,7 +33,7 @@
               <tr>
                   <th>{% trans %}User{% endtrans %}</th>
                   <td>
-                      <a href="{{ h.url_for('user_datasets', controller='user', id=member_user.name) }}">
+                      <a href="{{ h.url_for('hdx_user.read', id=member_user.name) }}">
                         {% if member_user.fullname %}
                         {{ member_user.fullname }} ({{ member_user.name }})
                         {% else %}

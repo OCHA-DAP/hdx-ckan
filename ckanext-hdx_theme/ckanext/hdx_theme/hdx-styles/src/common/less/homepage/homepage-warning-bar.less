@@ -1,14 +1,15 @@
 @import "../base/variables";
 
 .hdx-warning {
-    position: absolute;
+    position: fixed;
+    left: 0;
     bottom: 0;
     min-width: 1260px;
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
     background-color: @lightRedColor;
-    z-index: 101;
+    z-index: 1000;
 
     .hdx-warning-text {
         width: 1170px;
@@ -16,15 +17,13 @@
         margin-right: auto;
         color: @whiteColor;
         text-decoration: underline;
-
-        .light-text{
-            font-family: "Gotham-Light", sans-serif;
-        }
-
+        font-family: "Gotham-Bold", sans-serif;
         .hdx-warning-text-important {
-            font-family: "Gotham-Bold", sans-serif;
             font-size: 16px;
             color: inherit;
+        }
+        .hdx-warning-text-arrow {
+          font-size: 14px;
         }
     }
 

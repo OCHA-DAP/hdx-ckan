@@ -5,7 +5,7 @@
   {% block breadcrumb_content_inner %}
     <li>{% link_for c.group_dict.display_name|truncate(35), controller='organization', action='read', id=org_name %}</li>
     <li class="active">
-      {% set requested_data_url = h.url_for('requestdata_organization_requests', id=org_name) %}
+      {% set requested_data_url = h.url_for('requestdata_organization_requests.requested_data', id=org_name) %}
       <a href="{{ requested_data_url }}">Dataset Requests</a>
     </li>
   {% endblock %}
@@ -31,7 +31,7 @@
     {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
 
     {% if requests_archive %}
-      {% set service_url = h.url_for('requestdata_organization_requests', id=c.id) %}
+      {% set service_url = h.url_for('requestdata_organization_requests.requested_data', id=c.id) %}
       {% snippet 'requestdata/snippets/order_requests.html', service_url=service_url, org_name=org_name, current_order_name=current_order_name %}
     {% endif %}
 

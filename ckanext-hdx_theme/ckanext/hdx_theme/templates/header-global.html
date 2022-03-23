@@ -110,13 +110,13 @@
 
               <ul class="separated-list">
                 {% block header_top_right_side_menu %}
-                <li>
+<!--                 <li>
                   <a class="action-red" href="{{ h.url_for('hdx_faqs.read', category='covid') }}" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="faq link">
                     <span class="action-text">
                       <span class="full-text">Data Responsibility for </span>COVID-19
                     </span>
                   </a>
-                </li>
+                </li> -->
                 <li>
                   <a class="action" href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="faq link">
                     <svg class="icon-o-help" viewBox="0 0 48 48"><path d="M29,43a5,5,0,0,1-5,5,5,5,0,1,1,3.53-8.53A4.82,4.82,0,0,1,29,43Z"/><path d="M24,0A11,11,0,0,0,13,11a4,4,0,0,0,8,0,3,3,0,0,1,6,0h0c0,2-.64,3-2.33,4.67-2,2-4.67,4.67-4.67,9.33v5a4,4,0,0,0,8,0V25c0-1.23.64-2,2.33-3.67A14.43,14.43,0,0,0,35,11h0A11,11,0,0,0,24,0Z"/></svg>
@@ -175,7 +175,7 @@
                                   {% endif %}
                                   {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
                                     <li>
-                                      <a href="{{ h.url_for('ckanadmin_requests_data') }}"
+                                      <a href="{{ h.url_for('requestdata_ckanadmin.requests_data') }}"
                                          title="{{ _('HDX Connect Dashboard') }}">
                                         <i class="icon-legal"></i>
                                         <span>{{ _('HDX Connect Dashboard') }}</span>
@@ -196,7 +196,7 @@
                                     {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
                                   {% endif %}
                                   {% if user_is_sysadmin %}
-                                    {{ h.build_nav_icon('ckanadmin_email', _('Email')) }}
+                                    {{ h.build_nav_icon('requestdata_ckanadmin.email', _('Email')) }}
                                     {{ h.build_nav_icon('admin.config', _('Config')) }}
                                   {% endif %}
                                 </ul>
@@ -216,11 +216,11 @@
                                 {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
                               </a>
                               <ul class="dropdown-submenu collapse {% if not def_url %}in{% endif %}">
-                                {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
+                                {{ h.build_nav_icon('dashboard.index', _('Newsfeed'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
-                                {{ h.build_nav_icon('requestdata_my_requests', _('HDX Connect Requests'), id=c.userobj.name) }}
+                                {{ h.build_nav_icon('requestdata.my_requested_data', _('HDX Connect Requests'), id=c.userobj.name) }}
                                 {% if user_is_sysadmin %}
                                   <li>
                                     <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
@@ -237,7 +237,7 @@
                                 {{ h.build_nav_icon('user.read', _('Datasets'), id=c.userobj.name) }}
                                 {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=c.userobj.name) }}
                                 {% if h.check_access('sysadmin') %}
-                                  {{ h.build_nav_icon('user_permission', _('User Permission'), id=c.userobj.name) }}
+                                  {{ h.build_nav_icon('hdx_user_permission.read', _('User Permission'), id=c.userobj.name) }}
                                 {% endif %}
                                 {% if h.check_access('api_token_list', {'user': c.userobj['name']}) %}
                                   {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=c.userobj.name) }}

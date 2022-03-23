@@ -1,7 +1,10 @@
 from six import string_types
-from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
-import ckan.plugins.toolkit as tk
 
+import ckan.plugins.toolkit as tk
+from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
+
+_ = tk._
+Invalid = tk.Invalid
 
 def user_email_validator(key, data, errors, context):
     '''HDX validator for emails as identifiers.'''
@@ -11,10 +14,10 @@ def user_email_validator(key, data, errors, context):
     email = data[key]
 
     if not validate_email(email):
-        raise tk.Invalid(tk._('Email address is not valid'))
+        raise Invalid(_('Email address is not valid'))
 
-    if not isinstance(email, basestring):
-        raise tk.Invalid(tk._('User names must be strings'))
+    if not isinstance(email, string_types):
+        raise Invalid(_('User names must be strings'))
 
     users = model.User.by_email(email)
     if users:
@@ -26,7 +29,7 @@ def user_email_validator(key, data, errors, context):
                 # user found in the db, then we must be doing a user_update
                 # and not updating the user name, so don't return an error.
                 return
-        errors[key].append(tk._('The email address is already registered on HDX. Please use the sign in screen below.'))
+        errors[key].append(_('The email address is already registered on HDX. Please use the sign in screen below.'))
 
     return
 
@@ -45,7 +48,7 @@ def user_name_validator(key, data, errors, context):
     new_user_name = data[key]
 
     if not isinstance(new_user_name, string_types):
-        raise tk.Invalid(tk._('User names must be strings'))
+        raise Invalid(_('User names must be strings'))
 
     user = model.User.get(new_user_name)
     user_obj_from_context = context.get('user_obj')
@@ -60,5 +63,4 @@ def user_name_validator(key, data, errors, context):
             # Otherwise return an error: there's already another user with that
             # name, so you can create a new user with that name or update an
             # existing user's name to that name.
-            errors[key].append(tk._('That login name is not available.'))
-
+            errors[key].append(_('That login name is not available.'))

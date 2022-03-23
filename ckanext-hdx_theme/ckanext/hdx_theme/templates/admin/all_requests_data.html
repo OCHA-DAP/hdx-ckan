@@ -17,7 +17,7 @@
     <div class="col-xs-12">
       {% block primary_content_inner %}
         <div class="request-data-module">
-          {% set service_url = h.url_for('download_requests_data') %}
+          {% set service_url = h.url_for('requestdata_ckanadmin.download_requests_data') %}
           {% set csv = '?format=csv'%}
           {% set json = '?format=json'%}
           {% if organizations %}

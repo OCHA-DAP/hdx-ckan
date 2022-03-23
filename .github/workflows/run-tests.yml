@@ -88,3 +88,9 @@ jobs:
         run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_theme/ckanext/hdx_theme/tests"
       - name: PY3/Testing hdx_package
         run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_package/ckanext/hdx_package/tests"
+      - name: PY3/Testing hdx_search
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_search/ckanext/hdx_search/tests"
+      - name: PY3/Testing hdx_users
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_users/ckanext/hdx_users/tests"
+      - name: PY3/Testing hdx_user_extra
+        run: docker-compose exec -T ckan-py3 sh -c "pytest --ckan-ini=hdx-test-core.ini ./ckanext-hdx_user_extra/ckanext/hdx_user_extra/tests"

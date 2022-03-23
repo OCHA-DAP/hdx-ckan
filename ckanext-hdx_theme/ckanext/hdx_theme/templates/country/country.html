@@ -251,6 +251,12 @@
 
 {% endblock %}
 
+{% block page_warning_bar %}
+  {% if data.country_dict.alert_bar_url %}
+    {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url=data.country_dict.alert_bar_url, alert_bar_title=data.country_dict.alert_bar_title, skip_js=True %}
+  {% endif %}
+{% endblock %}
+
 {% block package_search_results %}
 {% endblock %}
 
@@ -258,5 +264,7 @@
     {{ super() }}
     {% asset 'hdx_theme/country-scripts' %}
     {% asset 'hdx_theme/hdx-show-more' %}
-  {% snippet "widget/banner/hdx-dataset-banner.html" %}
+  {% if not data.country_dict.alert_bar_url %}
+    {% snippet "widget/banner/hdx-dataset-banner.html" %}
+  {% endif %}
 {% endblock %}

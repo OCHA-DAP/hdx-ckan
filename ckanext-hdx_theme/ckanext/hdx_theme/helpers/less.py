@@ -2,7 +2,7 @@ import logging
 import os
 import subprocess
 
-import pylons.config as config
+from ckantoolkit import config as config
 
 import ckan.common as common
 

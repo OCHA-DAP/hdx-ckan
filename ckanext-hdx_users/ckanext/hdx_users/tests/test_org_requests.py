@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
-
-import pytest
+import logging as logging
 
 import mock
-import ckan.model as model
-import logging as logging
-import ckan.lib.helpers as h
+import pytest
+import six
 
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+import ckanext.hdx_org_group.tests as org_group_base
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.util.mail as hdx_mail
-import ckanext.hdx_org_group.tests as org_group_base
-import ckanext.hdx_users.actions.misc as hdx_new_mail
-
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 log = logging.getLogger(__name__)
 
 mail_info = None
 original_send_mail = None
+h = tk.h
 
 
 def send_mail(recipients, subject, body):
@@ -28,6 +27,7 @@ def send_mail(recipients, subject, body):
                     body=body)
 
 
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
 
     @classmethod
@@ -38,7 +38,6 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         global original_send_mail
         original_send_mail = hdx_mail.send_mail
         hdx_mail.send_mail = send_mail
-
 
     def teardown(self):
         global original_send_mail

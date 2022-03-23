@@ -1,23 +1,21 @@
 import pytest
-
-import mock
+import json
 import logging as logging
+import six
+import mock
+from nose.tools import assert_true
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckan.logic as logic
-import unicodedata
-import ckan.lib.helpers as h
-import json
-
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_users.helpers.tokens as tkh
 import ckanext.hdx_users.model as user_model
 
-from nose.tools import assert_true
 log = logging.getLogger(__name__)
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
+h = tk.h
 
-
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
@@ -45,7 +43,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         # step 1 register
         url = h.url_for('hdx_user.register_email')
         data = {'email': 'newuser@hdx.org', 'nosetest': 'true'}
-        res = test_client.post(url, data = data)
+        res = test_client.post(url, data=data)
         assert_true(json.loads(res.body)['success'])
 
         user = model.User.get('newuser@hdx.org')

@@ -171,6 +171,9 @@ def do_geo_transformation_process(context, result_dict):
                         filename=url,
                         qualified=True)
     # result_dict = get_action('resource_show')(context, {'id': resource_dict['id']})
+    if not url or 'http' not in url:
+        log.error('Something wrong with URL ({}) sent to geopreview for dataset {} and resource {}'
+                  .format(url, result_dict['package_id'], result_dict['id']))
 
     dataset_id = _get_or_bust(result_dict, 'package_id')
     resource_id = result_dict['id']

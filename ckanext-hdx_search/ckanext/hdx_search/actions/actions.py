@@ -133,8 +133,8 @@ def hdx_qa_pii_run(context, data_dict):
         try:
             resource_dict = get_action("resource_show")(context, {"id": resource_id})
             old_pii_report_flag = resource_dict.get('pii_report_flag',"")
-            get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
             _run_pii_check(resource_dict, context)
+            get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": "QUEUED"})
         except Exception as e:
             get_action("hdx_qa_resource_patch")(context, {"id": resource_id, "pii_report_flag": old_pii_report_flag})
             ex_msg = e.message if hasattr(e, 'message') and e.message else str(e)

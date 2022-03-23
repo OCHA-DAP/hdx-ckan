@@ -28,7 +28,7 @@ import ckanext.hdx_package.helpers.caching as pkg_caching
 import ckanext.hdx_package.helpers.freshness_calculator as freshness
 import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_theme.util.jql as jql
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
@@ -61,8 +61,8 @@ log = logging.getLogger(__name__)
 
 GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service', 'file geodatabase',
                    'garmin img', 'gdb', 'geodatabase', 'geonode', 'geotiff', 'map server', 'map service', 'obf',
-                   'topojson', 'wkt', 'zipped gdb', 'zipped geodatabase', 'zipped geopackage', 'zipped geotiff',
-                   'zipped grd', 'zipped img', 'zipped kml', 'zipped raster', 'zipped shapefiles']
+                   'topojson', 'wkt', 'zipped gdb', 'zipped geodatabase', 'geopackage', 'zipped geotiff',
+                   'arc/info grid', 'zipped img', 'zipped kml', 'zipped raster', 'zipped shapefiles']
 
 
 @logic.side_effect_free
@@ -383,7 +383,7 @@ def package_search(context, data_dict):
     for facet in search_results['search_facets']:
         search_results['search_facets'][facet]['items'] = sorted(
             search_results['search_facets'][facet]['items'],
-            key=lambda facet: facet['display_name'], reverse=True)
+            key=lambda facet: facet['display_name'] or '', reverse=True)
 
     # ranges and pivot facets shouldn't be sorted so we process them after the sorting was done
     _process_facet_ranges(restructured_facets, facet_ranges)
@@ -573,7 +573,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
         if _should_manually_load_property_value(context, package_dict, 'has_geodata'):
             package_dict['has_geodata'] = False
             for resource_dict in package_dict.get('resources', []):
-                if resource_dict.get('format') in GEODATA_FORMATS:
+                if resource_dict.get('format', '').lower() in GEODATA_FORMATS:
                     package_dict['has_geodata'] = True
                     break
 
