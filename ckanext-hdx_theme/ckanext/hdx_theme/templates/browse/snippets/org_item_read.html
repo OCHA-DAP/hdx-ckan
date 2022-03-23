@@ -1,6 +1,6 @@
 {% extends "browse/snippets/org_item.html" %}
 
-{% set org_url = organization.extras.org_url %}
+{% set org_url = organization.org_url or h.url_for('organization.read', id=organization.name)  %}
 
 {% block org_title %}
     <h1 class="itemTitle">
