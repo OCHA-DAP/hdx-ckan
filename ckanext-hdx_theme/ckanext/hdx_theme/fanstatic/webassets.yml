@@ -616,7 +616,7 @@ requestdata-scripts:
 requestdata-styles:
   output: ckanext-hdx_theme/%(version)s_requestdata-styles.css
   contents:
-    - requestdata_/request-data.css
+    - requestdata/request-data.css
 
 resource-list-scripts:
   <<: *common-js
