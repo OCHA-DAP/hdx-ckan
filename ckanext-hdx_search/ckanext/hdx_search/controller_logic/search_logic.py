@@ -502,7 +502,7 @@ class SearchLogic(object):
             if param in search_extras:
                 result['filters_selected'] = True
 
-        num_of_indicators = 0
+        # num_of_indicators = 0
         # num_of_cods = 0
         num_of_subnational = 0
         num_of_quickcharts = 0
@@ -534,9 +534,9 @@ class SearchLogic(object):
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
             # We're only interested in the number of items of the "indicator" facet
-            if category_key == 'indicator':
-                num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
-            elif category_key == 'subnational':
+            # if category_key == 'indicator':
+            #     num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+            if category_key == 'subnational':
                 num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'),
                                           0)
             elif category_key == 'has_quickcharts':
@@ -614,7 +614,7 @@ class SearchLogic(object):
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
         #                                   num_of_archived, search_extras, explanation=archived_explanation)
 
-        result['num_of_indicators'] = num_of_indicators
+        # result['num_of_indicators'] = num_of_indicators
         # result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
         result['num_of_quickcharts'] = num_of_quickcharts
@@ -695,7 +695,7 @@ class SearchLogic(object):
         featured_facet_items.append({
             'count': num_of_cods,
             'category_key': key,
-            'name': '1',
+            'name': '1', # this gets displayed as value in HTML <input>
             'display_name': display_name,
             'selected': search_extras.get(key),
             'explanation': explanation
