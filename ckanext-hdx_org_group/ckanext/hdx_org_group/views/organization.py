@@ -1,12 +1,16 @@
 import logging
 
+from ckanext.hdx_org_group.controller_logic.organization_stats_logic import OrganizationStatsLogic
 from flask import Blueprint
 from six.moves.urllib.parse import urlencode
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
+import ckanext.hdx_theme.util.jql as jql
 
 from ckan.views.group import _get_group_template, CreateGroupView
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
@@ -270,6 +274,25 @@ def new_org_template_variables(context, data_dict):
                               [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
 
 
+def stats(id, org_meta=None):
+    stats_logic = OrganizationStatsLogic(id, g.user, g.userobj)
+    org_dict = stats_logic.org_meta_dao.org_dict
+    org_dict.update({
+        'allow_req_membership': stats_logic.org_meta_dao.allow_req_membership,
+        'group_message_info': stats_logic.org_meta_dao.group_message_info,
+    })
+    template_data = {
+        'data': stats_logic.fetch_stats(),
+        'org_meta': stats_logic.org_meta_dao,
+        'org_dict': org_dict,
+    }
+
+    if stats_logic.is_custom():
+        return render('organization/custom_stats.html', template_data)
+    else:
+        return render('organization/stats.html', template_data)
+
+
 
 hdx_org.add_url_rule(u'', view_func=index)
 hdx_org.add_url_rule(
@@ -283,3 +306,4 @@ hdx_org.add_url_rule(
 )
 hdx_org.add_url_rule(u'/request_new', view_func=request_new, methods=[u'GET', u'POST'])
 hdx_org.add_url_rule(u'/<id>', view_func=read)
+hdx_org.add_url_rule(u'/stats/<id>', view_func=stats)

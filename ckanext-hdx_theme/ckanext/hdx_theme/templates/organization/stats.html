@@ -1,6 +1,6 @@
 {% extends "organization/read.html" %}
 
-{% block subtitle %}{{ _('Stats') }} - {{ c.group_dict.title or c.group_dict.name }}{% endblock %}
+{% block subtitle %}{{ _('Stats') }} - {{ org_meta.org_dict.title or org_meta.name }}{% endblock %}
 
 {% block primary_content_inner %}
     <div id="stats-data-single-dataset-downloads"  style="display: none">

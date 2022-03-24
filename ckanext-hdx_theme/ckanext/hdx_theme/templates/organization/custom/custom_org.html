@@ -33,7 +33,7 @@
                     {% if h.check_access('organization_update', {'id': data.org_info.id}) %}
                         {{ h.build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=data.org_info.name) }}
                     {% endif %}
-                    {{ h.build_nav_icon('hdx_organization_stats', _('Stats'), id=data.org_info.name, class_='hdx-tab-button') }}
+                    {{ h.build_nav_icon('hdx_org.stats', _('Stats'), id=data.org_info.name, class_='hdx-tab-button') }}
                {% endblock %}
             </ul>
         </header>
