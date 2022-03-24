@@ -44,8 +44,10 @@ class DashboardSearchLogic(sl.SearchLogic):
             'f.due_date.facet.range.end': now_string + '+100YEARS',
             'f.due_date.facet.range.gap': '+100YEARS',
             'f.due_date.facet.mincount': '0',
-            'facet.query': '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra),
         })
+        search_data_dict.setdefault('facet.query', []).append(
+            '{{!key=unknown {extra}}}-due_date:[* TO *]'.format(extra=freshness_facet_extra)
+        )
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         super(DashboardSearchLogic, self)._process_complex_facet_data(existing_facets, title_translations,
