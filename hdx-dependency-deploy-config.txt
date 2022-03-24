@@ -1,9 +1,9 @@
 
 HDX_GISLAYER_URL=https://gallery.ecr.aws/r/unocha/hdx-gislayer/
-HDX_GISLAYER_TAG=0.6.8
+HDX_GISLAYER_TAG=0.6.10
 
 HDX_GISWORKER_URL=https://gallery.ecr.aws/r/unocha/hdx-gisworker/
-HDX_GISWORKER_TAG=0.6.8
+HDX_GISWORKER_TAG=0.6.10
 
 HDX_QUICKCHARTS_URL=https://gallery.ecr.aws/r/unocha/hdx-tools-quickcharts/
 HDX_QUICKCHARTS_TAG=1.9.4
