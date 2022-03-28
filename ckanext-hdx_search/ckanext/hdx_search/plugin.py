@@ -288,7 +288,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             del facets_dict[f]
             facets_dict['{{!ex={},batch}}{}'.format(f, f)] = translation
 
-        facets_dict['{!ex=batch}indicator'] = _('Indicators')
+        # facets_dict['{!ex=batch}indicator'] = _('Indicators')
         facets_dict['{!ex=batch}subnational'] = _('Subnational')
         facets_dict['{!ex=batch}has_quickcharts'] = _('Quick charts')
         facets_dict['{!ex=batch}has_geodata'] = _('Geodata')
