@@ -196,12 +196,12 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('organization_activity', '/organization/activity/{id}',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #             action='activity_stream')
-        map.connect('organization_activity', '/organization/activity/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='activity_stream')
-        map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='activity_stream')
+        # map.connect('organization_activity', '/organization/activity/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='activity_stream')
+        # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='activity_stream')
         return map
 
     def before_map(self, map):
@@ -218,9 +218,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('organization_new', '/organization/new',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #             action='new')
-        map.connect('organization_edit', '/organization/edit/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='edit', ckan_icon='edit')
+        # map.connect('organization_edit', '/organization/edit/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='edit', ckan_icon='edit')
         # map.connect('request_membership', '/organization/{org_id}/request_membership',
         #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
         # map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
@@ -246,14 +246,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
                     action='bulk_member_new')
 
-        map.connect('organization_activity', '/organization/activity/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='activity_stream'
-                    # conditions={'function': organization_controller.is_not_custom}
-                    )
-        map.connect('organization_activity_offset', '/organization/activity/{id}/{offset:([0-9]+)}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                    action='activity_stream')
+        # map.connect('organization_activity', '/organization/activity/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='activity_stream'
+        #             # conditions={'function': organization_controller.is_not_custom}
+        #             )
+        # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset:([0-9]+)}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='activity_stream')
         # map.connect('custom_org_activity', '/organization/activity/{id}',
         #             controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController',
         #             action='activity_stream')

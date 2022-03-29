@@ -1,46 +1,46 @@
-'''
-Created on Jan 13, 2015
-
-@author: alexandru-m-g
-'''
-
-import itertools
-import json
-import logging
-
-import ckan.authz as new_authz
-import ckan.common as common
-import ckan.controllers.organization as org
-import ckan.lib.base as base
-import ckan.lib.helpers as h
-import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.logic as logic
-import ckan.model as model
-import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
-import ckanext.hdx_org_group.dao.common_functions as common_functions
-import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
-import ckanext.hdx_org_group.helpers.organization_helper as helper
-import ckanext.hdx_org_group.helpers.static_lists as static_lists
-import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
-import ckanext.hdx_theme.util.jql as jql
-from ckan.common import c, request, _
-from ckan.controllers.api import CONTENT_TYPES
-from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-
-abort = base.abort
-render = base.render
-
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-ValidationError = logic.ValidationError
-tuplize_dict = logic.tuplize_dict
-clean_dict = logic.clean_dict
-parse_params = logic.parse_params
-get_action = logic.get_action
-
-response = common.response
-
-log = logging.getLogger(__name__)
+# '''
+# Created on Jan 13, 2015
+#
+# @author: alexandru-m-g
+# '''
+#
+# import itertools
+# import json
+# import logging
+#
+# import ckan.authz as new_authz
+# import ckan.common as common
+# import ckan.controllers.organization as org
+# import ckan.lib.base as base
+# import ckan.lib.helpers as h
+# import ckan.lib.navl.dictization_functions as dict_fns
+# import ckan.logic as logic
+# import ckan.model as model
+# import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
+# import ckanext.hdx_org_group.dao.common_functions as common_functions
+# import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+# import ckanext.hdx_org_group.helpers.organization_helper as helper
+# import ckanext.hdx_org_group.helpers.static_lists as static_lists
+# import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+# import ckanext.hdx_theme.util.jql as jql
+# from ckan.common import c, request, _
+# from ckan.controllers.api import CONTENT_TYPES
+# from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+#
+# abort = base.abort
+# render = base.render
+#
+# NotFound = logic.NotFound
+# NotAuthorized = logic.NotAuthorized
+# ValidationError = logic.ValidationError
+# tuplize_dict = logic.tuplize_dict
+# clean_dict = logic.clean_dict
+# parse_params = logic.parse_params
+# get_action = logic.get_action
+#
+# response = common.response
+#
+# log = logging.getLogger(__name__)
 
 
 # def is_not_custom(environ, result):
@@ -58,7 +58,7 @@ log = logging.getLogger(__name__)
 #     return True
 
 
-class HDXOrganizationController(org.OrganizationController):
+# class HDXOrganizationController(org.OrganizationController):
     # def index(self):
     #     context = {'model': model, 'session': model.Session,
     #                'for_view': True,
@@ -223,90 +223,90 @@ class HDXOrganizationController(org.OrganizationController):
     #
     #     return full_facet_info
 
-    def new(self, data=None, errors=None, error_summary=None):
-        group_type = self._guess_group_type(True)
-        if data:
-            data['type'] = group_type
+    # def new(self, data=None, errors=None, error_summary=None):
+    #     group_type = self._guess_group_type(True)
+    #     if data:
+    #         data['type'] = group_type
+    #
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author,
+    #                'save': 'save' in request.params,
+    #                'parent': request.params.get('parent', None)}
+    #     try:
+    #         self._check_access('group_create', context)
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to create a group'))
+    #
+    #     if context['save'] and not data:
+    #         return self._save_new(context, group_type)
+    #
+    #     data = data or {}
+    #     if not data.get('image_url', '').startswith('http'):
+    #         data.pop('image_url', None)
+    #
+    #     errors = errors or {}
+    #     error_summary = error_summary or {}
+    #     vars = {'data': data, 'errors': errors,
+    #             'error_summary': error_summary, 'action': 'new'}
+    #
+    #     self._setup_template_variables(context, data, group_type=group_type)
+    #     c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
+    #                           [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
+    #     c.form = render(self._group_form(group_type=group_type),
+    #                     extra_vars=vars)
+    #     return render(self._new_template(group_type))
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'save': 'save' in request.params,
-                   'parent': request.params.get('parent', None)}
-        try:
-            self._check_access('group_create', context)
-        except NotAuthorized:
-            abort(403, _('Unauthorized to create a group'))
-
-        if context['save'] and not data:
-            return self._save_new(context, group_type)
-
-        data = data or {}
-        if not data.get('image_url', '').startswith('http'):
-            data.pop('image_url', None)
-
-        errors = errors or {}
-        error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'action': 'new'}
-
-        self._setup_template_variables(context, data, group_type=group_type)
-        c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
-                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
-        c.form = render(self._group_form(group_type=group_type),
-                        extra_vars=vars)
-        return render(self._new_template(group_type))
-
-    def edit(self, id, data=None, errors=None, error_summary=None):
-        group_type = 'organization'
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'save': 'save' in request.params,
-                   'restore': 'restore' in request.params,
-                   'for_edit': True,
-                   'parent': request.params.get('parent', None)
-                   }
-        data_dict = {'id': id}
-
-        if context['save'] and not data:
-            return self._save_edit(id, context)
-        if context['restore'] and not data:
-            return self._restore_org(id, context)
-
-        try:
-            old_data = self._action('group_show')(context, data_dict)
-            c.grouptitle = old_data.get('title')
-            c.groupname = old_data.get('name')
-            data = data or old_data
-        except NotFound:
-            abort(404, _('Group not found'))
-        except NotAuthorized:
-            abort(403, _('Unauthorized to read group %s') % '')
-
-        group = context.get("group")
-        c.group = group
-        c.group_dict = self._action('group_show')(context, data_dict)
-
-        try:
-            self._check_access('group_update', context)
-        except NotAuthorized, e:
-            abort(403, _('User %r not authorized to edit %s') % (c.user, id))
-
-        errors = errors or {}
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'action': 'edit'}
-
-        self._setup_template_variables(context, data, group_type=group_type)
-        c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] +\
-                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
-        form = render(self._group_form(group_type), extra_vars=vars)
-
-        #  The extra_vars are needed here to send analytics information like org name and id
-        extra_vars = {
-            'data': data,
-            'form': form,
-            'group_type': group_type
-        }
-        return render(self._edit_template(c.group.type), extra_vars=extra_vars)
+    # def edit(self, id, data=None, errors=None, error_summary=None):
+    #     group_type = 'organization'
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author,
+    #                'save': 'save' in request.params,
+    #                'restore': 'restore' in request.params,
+    #                'for_edit': True,
+    #                'parent': request.params.get('parent', None)
+    #                }
+    #     data_dict = {'id': id}
+    #
+    #     if context['save'] and not data:
+    #         return self._save_edit(id, context)
+    #     if context['restore'] and not data:
+    #         return self._restore_org(id, context)
+    #
+    #     try:
+    #         old_data = self._action('group_show')(context, data_dict)
+    #         c.grouptitle = old_data.get('title')
+    #         c.groupname = old_data.get('name')
+    #         data = data or old_data
+    #     except NotFound:
+    #         abort(404, _('Group not found'))
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to read group %s') % '')
+    #
+    #     group = context.get("group")
+    #     c.group = group
+    #     c.group_dict = self._action('group_show')(context, data_dict)
+    #
+    #     try:
+    #         self._check_access('group_update', context)
+    #     except NotAuthorized, e:
+    #         abort(403, _('User %r not authorized to edit %s') % (c.user, id))
+    #
+    #     errors = errors or {}
+    #     vars = {'data': data, 'errors': errors,
+    #             'error_summary': error_summary, 'action': 'edit'}
+    #
+    #     self._setup_template_variables(context, data, group_type=group_type)
+    #     c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] +\
+    #                           [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
+    #     form = render(self._group_form(group_type), extra_vars=vars)
+    #
+    #     #  The extra_vars are needed here to send analytics information like org name and id
+    #     extra_vars = {
+    #         'data': data,
+    #         'form': form,
+    #         'group_type': group_type
+    #     }
+    #     return render(self._edit_template(c.group.type), extra_vars=extra_vars)
 
     # def stats(self, id, org_meta=None, offset=0):
     #     if not org_meta:
@@ -435,82 +435,82 @@ class HDXOrganizationController(org.OrganizationController):
     #
     #     return ret, total_downloads, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name
 
-    def check_access(self, action_name, data_dict=None):
-        if data_dict is None:
-            data_dict = {}
+    # def check_access(self, action_name, data_dict=None):
+    #     if data_dict is None:
+    #         data_dict = {}
+    #
+    #     context = {'model': model,
+    #                'user': c.user or c.author}
+    #     try:
+    #         result = logic.check_access(action_name, context, data_dict)
+    #     except logic.NotAuthorized:
+    #         result = False
+    #
+    #     return result
 
-        context = {'model': model,
-                   'user': c.user or c.author}
-        try:
-            result = logic.check_access(action_name, context, data_dict)
-        except logic.NotAuthorized:
-            result = False
-
-        return result
-
-    def activity_stream(self, id, org_meta=None, offset=0):
-        '''
-         Modified core functionality to use the new OrgMetaDao class
-        for fetching information needed on all org-related pages.
-
-        Render this group's public activity stream page.
-
-        :param id:
-        :type id: str
-        :param offset:
-        :type offset: int
-        :param org_meta:
-        :type org_meta: org_meta_dao.OrgMetaDao
-        :return:
-        '''
-        if not org_meta:
-            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
-        c.org_meta = org_meta
-        org_meta.fetch_all()
-        helper.org_add_last_updated_field([org_meta.org_dict])
-        c.group_dict = org_meta.org_dict
-
-        # Add the group's activity stream (already rendered to HTML) to the
-        # template context for the group/read.html template to retrieve later.
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True}
-        c.group_activity_stream = get_action('organization_activity_list')(
-            context, {'id': c.group_dict['id'], 'offset': offset})
-
-        extra_vars = {'group_dict': c.group_dict}
-        if org_meta.is_custom:
-            return render(custom_org.CustomOrgController()._activity_template('organization'), extra_vars)
-        else:
-            return render(self._activity_template('organization'), extra_vars)
-
-    def _restore_org(self, id, context):
-
-        try:
-            self._check_access('organization_delete', context)
-        except NotAuthorized:
-            abort(403, _('Unauthorized to restore this organization'))
-
-        try:
-            data_dict = clean_dict(dict_fns.unflatten(
-                tuplize_dict(parse_params(request.params))))
-            context['message'] = data_dict.get('log_message', '')
-            data_dict['id'] = id
-            context['allow_partial_update'] = True
-            data_dict['state'] = 'active'
-            group = self._action('group_update')(context, data_dict)
-            if id != group['name']:
-                self._force_reindex(group)
-            h.redirect_to('%s_read' % group['type'], id=group['name'])
-        except NotAuthorized:
-            abort(403, _('Unauthorized to read group %s') % id)
-        except NotFound, e:
-            abort(404, _('Group not found'))
-        except dict_fns.DataError:
-            abort(400, _(u'Integrity Error'))
-        except ValidationError, e:
-            errors = e.error_dict
-            error_summary = e.error_summary
-            return self.edit(id, data_dict, errors, error_summary)
+    # def activity_stream(self, id, org_meta=None, offset=0):
+    #     '''
+    #      Modified core functionality to use the new OrgMetaDao class
+    #     for fetching information needed on all org-related pages.
+    #
+    #     Render this group's public activity stream page.
+    #
+    #     :param id:
+    #     :type id: str
+    #     :param offset:
+    #     :type offset: int
+    #     :param org_meta:
+    #     :type org_meta: org_meta_dao.OrgMetaDao
+    #     :return:
+    #     '''
+    #     if not org_meta:
+    #         org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+    #     c.org_meta = org_meta
+    #     org_meta.fetch_all()
+    #     helper.org_add_last_updated_field([org_meta.org_dict])
+    #     c.group_dict = org_meta.org_dict
+    #
+    #     # Add the group's activity stream (already rendered to HTML) to the
+    #     # template context for the group/read.html template to retrieve later.
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author, 'for_view': True}
+    #     c.group_activity_stream = get_action('organization_activity_list')(
+    #         context, {'id': c.group_dict['id'], 'offset': offset})
+    #
+    #     extra_vars = {'group_dict': c.group_dict}
+    #     if org_meta.is_custom:
+    #         return render(custom_org.CustomOrgController()._activity_template('organization'), extra_vars)
+    #     else:
+    #         return render(self._activity_template('organization'), extra_vars)
+    #
+    # def _restore_org(self, id, context):
+    #
+    #     try:
+    #         self._check_access('organization_delete', context)
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to restore this organization'))
+    #
+    #     try:
+    #         data_dict = clean_dict(dict_fns.unflatten(
+    #             tuplize_dict(parse_params(request.params))))
+    #         context['message'] = data_dict.get('log_message', '')
+    #         data_dict['id'] = id
+    #         context['allow_partial_update'] = True
+    #         data_dict['state'] = 'active'
+    #         group = self._action('group_update')(context, data_dict)
+    #         if id != group['name']:
+    #             self._force_reindex(group)
+    #         h.redirect_to('%s_read' % group['type'], id=group['name'])
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to read group %s') % id)
+    #     except NotFound, e:
+    #         abort(404, _('Group not found'))
+    #     except dict_fns.DataError:
+    #         abort(400, _(u'Integrity Error'))
+    #     except ValidationError, e:
+    #         errors = e.error_dict
+    #         error_summary = e.error_summary
+    #         return self.edit(id, data_dict, errors, error_summary)
 
     # def feed_organization(self, id):
     #     try:

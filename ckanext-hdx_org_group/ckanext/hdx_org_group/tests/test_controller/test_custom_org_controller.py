@@ -164,9 +164,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert template_data['data'].get('org_meta', {}).get('members_num') == 4
 
     def test_edit_custom_orgs(self):
-        url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='edit', id='hdx-test-org')
+        url = h.url_for('organization.edit', id='hdx-test-org')
         testsysadmin = model.User.by_name('testsysadmin')
         result = self.app.get(url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert 'id="customization-trigger"' in result.data
