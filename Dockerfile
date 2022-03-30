@@ -58,11 +58,9 @@ RUN apt-get -qq -y update && \
     apt-get -qq -y install python-pip && \
     python -m pip install --upgrade pip && \
     pip -q install --upgrade \
-        gevent \
-        gunicorn \
         lxml && \
-    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/ckan /etc/ckan && \
-    cp -a docker/run_ckan /etc/services.d/ckan/run && \
+    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/unit /etc/ckan && \
+    cp -a docker/run_unit /etc/services.d/unit/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
     cp -a docker/hdxckantool-ng.py /srv/hdxckantool-ng.py && \
     chmod +x /srv/hdxckantool-ng.py && \
@@ -78,6 +76,11 @@ RUN apt-get -qq -y update && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     pip install boto3 && \
     chown -R www-data ckan/public/base/i18n && \
+    curl --output /usr/share/keyrings/nginx-keyring.gpg https://unit.nginx.org/keys/nginx-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/debian/ buster unit" > /etc/apt/sources.list.d/unit.list && \
+    echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/debian/ buster unit" >> /etc/apt/sources.list.d/unit.list && \
+    apt-get update && \
+    apt-get install -y unit unit-python2.7 && \
     apt-get -qq -y remove \
         build-essential \
         gpg \
@@ -103,4 +106,4 @@ RUN apt-get -qq -y update && \
 
 VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
 
-EXPOSE 5000
+EXPOSE 5000 5001

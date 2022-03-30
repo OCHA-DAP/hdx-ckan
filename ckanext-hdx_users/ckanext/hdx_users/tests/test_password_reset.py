@@ -1,13 +1,12 @@
 import pytest
+from datetime import datetime, timedelta
+import six
 import mock
 
-from datetime import datetime, timedelta
-
-import ckan.tests.factories as factories
 import ckan.lib.mailer as ckan_mailer
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-
+import ckan.tests.factories as factories
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_users.helpers.reset_password as reset_password
 
@@ -15,7 +14,7 @@ _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
 url_for = tk.url_for
 
-
+@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestPasswordReset(hdx_test_base.HdxBaseTest):
 
     def test_old_style_reset_key_is_invalid(self):

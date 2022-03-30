@@ -16,17 +16,31 @@ overriding the form blocks depending on the current context
   	</div>
   </div>
 
-   <div class="control-group control-full">
+  <div class="control-group control-full">
   	<label class="control-label" for="field-relief_web_url">{{ _("Relief Web URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-relief_web_url" name="relief_web_url" value="{{data.get('relief_web_url', '')}}">
   	</div>
   </div>
 
-   <div class="control-group control-full">
+  <div class="control-group control-full">
   	<label class="control-label" for="field-hr_info_url">{{ _("HR.info URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-hr_info_url" name="hr_info_url" value="{{data.get('hr_info_url', '')}}">
+  	</div>
+  </div>
+
+  <div class="control-group control-full">
+  	<label class="control-label" for="field-alert_bar_title">{{ _("Alert Bar Title")}}</label>
+  	<div class="controls">
+  		<input type="text" id="field-alert_bar_title" name="alert_bar_title" {% if data.get('alert_bar_title', False)%} value="{{data.get('alert_bar_title', False)}}"{% endif %}>
+  	</div>
+  </div>
+
+  <div class="control-group control-full">
+  	<label class="control-label" for="field-alert_bar_url">{{ _("Alert Bar URL")}}</label>
+  	<div class="controls">
+  		<input type="text" id="field-alert_bar_url" name="alert_bar_url" value="{{data.get('alert_bar_url', '')}}">
   	</div>
   </div>
 

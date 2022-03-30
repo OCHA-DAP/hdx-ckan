@@ -4,7 +4,7 @@ import requests
 from flask import Blueprint
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from ckan.common import _, c, config, request
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 import ckanext.hdx_users.helpers.helpers as usr_h

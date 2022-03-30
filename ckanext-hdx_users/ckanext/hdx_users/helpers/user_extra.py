@@ -4,12 +4,13 @@ Created on July 2nd, 2015
 @author: dan
 '''
 
-import ckanext.hdx_users.model as user_model
-import ckan.logic as logic
 import ckan.model as model
-from ckan.common import _, c
+import ckan.plugins.toolkit as tk
+import ckanext.hdx_users.model as user_model
 
-get_action = logic.get_action
+get_action = tk.get_action
+_ = tk._
+g = tk.g
 
 
 def get_default_extras():
@@ -36,10 +37,10 @@ def update_extras(extras, data_dict):
 
 def get_user_extra(user_id=None):
     context = {'model': model, 'session': model.Session,
-               'user': c.user or c.author, 'auth_user_obj': c.userobj}
-    id = c.userobj.id if user_id is None else user_id
+               'user': g.user, 'auth_user_obj': g.userobj}
+    id = g.userobj.id if user_id is None else user_id
 
-    data_dict = {'user_obj': c.userobj, 'user_id': id}
+    data_dict = {'user_obj': g.userobj, 'user_id': id}
     user_extra_list = get_action('user_extra_show')(context, data_dict)
     crt_step = get_current_step(user_extra_list)
     result = {
@@ -58,8 +59,10 @@ def get_user_extra(user_id=None):
 def get_login(success=True, message=None):
     return get_current_step_dict(user_model.HDX_LOGIN, success, message)
 
+
 def get_register(success=True, message=None):
     return get_current_step_dict(user_model.HDX_REGISTER, success, message)
+
 
 def get_new_login(success=True, message=None):
     return get_current_step_dict(user_model.HDX_FIRST_LOGIN, success, message)

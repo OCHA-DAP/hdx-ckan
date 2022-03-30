@@ -124,12 +124,12 @@ class QASearchLogic(sl.SearchLogic):
                 'show_everything': True
             }
 
-            self.__add_facet_item_to_list(NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets,
-                                          item_list, search_extras)
-            self.__add_facet_item_to_list(UPDATED_DATASETS_FACET_NAME, _('Updated datasets'), existing_facets,
-                                          item_list, search_extras)
-            self.__add_facet_item_to_list(DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'), existing_facets,
-                                          item_list, search_extras)
+            self._add_facet_query_item_to_list(item_list, NEW_DATASETS_FACET_NAME, _('New datasets'), existing_facets,
+                                               search_extras)
+            self._add_facet_query_item_to_list(item_list, UPDATED_DATASETS_FACET_NAME, _('Updated datasets'),
+                                               existing_facets, search_extras)
+            self._add_facet_query_item_to_list(item_list, DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'),
+                                               existing_facets, search_extras)
             self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
@@ -142,28 +142,16 @@ class QASearchLogic(sl.SearchLogic):
 
             self.__process_pii_is_sensitive_facet(existing_facets, title_translations, search_extras, item_list)
 
-    def __add_facet_item_to_list(self, item_name, item_display_name, existing_facets, qa_only_item_list, search_extras):
-        category_key = 'ext_' + item_name
-        item = next(
-            (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
-        item['display_name'] = item_display_name
-        item['category_key'] = category_key
-        item['name'] = '1'  # this gets displayed as value in HTML <input>
-        item['selected'] = search_extras.get(category_key) == '1'
-        qa_only_item_list.append(item)
-
-        return item
-
     def __process_bulk_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
-        bulk_facet_item = self.__add_facet_item_to_list(BULK_DATASETS_FACET_NAME, _('Bulk upload'), existing_facets,
-                                                        qa_only_item_list, search_extras)
+        bulk_facet_item = self._add_facet_query_item_to_list(qa_only_item_list, BULK_DATASETS_FACET_NAME,
+                                                             _('Bulk upload'), existing_facets, search_extras)
 
-        non_bulk_facet_item = dict(bulk_facet_item)
-        non_bulk_facet_item['display_name'] = _('Non-bulk upload')
-        non_bulk_facet_item['name'] = '0'
-        non_bulk_facet_item['count'] = self.template_data.batch_total_items - bulk_facet_item.get('count', 0)
-        non_bulk_facet_item['selected'] = search_extras.get('ext_' + BULK_DATASETS_FACET_NAME) == '0'
-        qa_only_item_list.append(non_bulk_facet_item)
+        non_bulk_facet_item_count = self.template_data.batch_total_items - bulk_facet_item.get('count', 0)
+        non_bulk_facet_item_selected = search_extras.get('ext_' + BULK_DATASETS_FACET_NAME) == '0'
+        qa_only_item_list.append(
+            self._create_facet_item(BULK_DATASETS_FACET_NAME, _('Non-bulk upload'), non_bulk_facet_item_count,
+                                    force_selected=non_bulk_facet_item_selected, value='0')
+        )
 
     def __process_qa_completed_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('qa_completed', None)
@@ -173,26 +161,17 @@ class QASearchLogic(sl.SearchLogic):
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}
         ))
-
-        qa_category_key = 'ext_qa_completed'
-        qa_completed_item['category_key'] = qa_category_key
-        qa_completed_item['display_name'] = 'QA Completed'
-        qa_completed_item['name'] = '1'
-        qa_completed_item['count'] = qa_completed_item.get('count', 0)
-        qa_completed_item['selected'] = search_extras.get(qa_category_key) == '1'
-
-        qa_only_item_list.append(qa_completed_item)
+        qa_name = 'qa_completed'
+        self._add_facet_item_to_list(qa_only_item_list, qa_name, 'QA Completed',
+                                     qa_completed_item.get('count', 0), search_extras)
 
         qa_not_completed_count = sum(
             (i.get('count', 0) for i in facet_data.get('items', []) if i.get('name') != 'true')
         )
-        qa_not_completed_item = {}
-        qa_not_completed_item['category_key'] = qa_category_key
-        qa_not_completed_item['display_name'] = 'QA Not Completed'
-        qa_not_completed_item['name'] = '0'
-        qa_not_completed_item['count'] = qa_not_completed_count
-        qa_not_completed_item['selected'] = search_extras.get(qa_category_key) == '0'
-        qa_only_item_list.append(qa_not_completed_item)
+        selected = search_extras.get('ext_'+qa_name) == '0'
+        qa_only_item_list.append(
+            self._create_facet_item(qa_name, 'QA Not Completed', qa_not_completed_count, force_selected=selected, value='0')
+        )
 
     def __process_broken_link_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('res_extras_broken_link', None)
@@ -202,15 +181,8 @@ class QASearchLogic(sl.SearchLogic):
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}
         )
-
-        qa_category_key = 'ext_broken_link'
-        item['category_key'] = qa_category_key
-        item['display_name'] = 'Broken links'
-        item['name'] = '1'
-        item['count'] = item.get('count', 0)
-        item['selected'] = search_extras.get(qa_category_key)
-
-        qa_only_item_list.append(item)
+        self._add_facet_item_to_list(qa_only_item_list, 'broken_link', 'Broken links', item.get('count', 0),
+                                     search_extras=search_extras)
 
     def __process_pii_is_sensitive_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('res_extras_pii_is_sensitive', None)
@@ -220,15 +192,8 @@ class QASearchLogic(sl.SearchLogic):
             (i for i in facet_data.get('items', []) if i.get('name') is None),
             {}
         )
-
-        qa_category_key = 'ext_pii_is_sensitive'
-        item['category_key'] = qa_category_key
-        item['display_name'] = 'Unconfirmed Sensitivity Classification'
-        item['name'] = '1'
-        item['count'] = item.get('count', 0)
-        item['selected'] = search_extras.get(qa_category_key)
-
-        qa_only_item_list.append(item)
+        self._add_facet_item_to_list(qa_only_item_list, 'pii_is_sensitive', 'Unconfirmed Sensitivity Classification',
+                                     item.get('count', 0), search_extras=search_extras)
 
     def __process_in_quarantine_facet(self, existing_facets, title_translations, search_extras, qa_only_item_list):
         title_translations.pop('res_extras_in_quarantine', None)
@@ -238,15 +203,8 @@ class QASearchLogic(sl.SearchLogic):
             (i for i in facet_data.get('items', []) if i.get('name') == 'true'),
             {}
         )
-
-        qa_category_key = 'ext_in_quarantine'
-        item['category_key'] = qa_category_key
-        item['display_name'] = 'Under review'
-        item['name'] = '1'
-        item['count'] = item.get('count', 0)
-        item['selected'] = search_extras.get(qa_category_key)
-
-        qa_only_item_list.append(item)
+        self._add_facet_item_to_list(qa_only_item_list, 'in_quarantine', 'Under review',
+                                     item.get('count', 0), search_extras=search_extras)
 
     def __process_methodology(self, title_translations):
         '''

@@ -347,10 +347,25 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         return True
 
     def _modify_group_schema(self, schema):
+        _clean_alert_bar_title_when_no_url = \
+            tk.get_converter('hdx_clean_field_based_on_other_field_wrapper')('alert_bar_url')
         schema.update({
             'language_code': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'relief_web_url': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'hr_info_url': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'alert_bar_title': [
+                _clean_alert_bar_title_when_no_url,
+                tk.get_validator('ignore_empty'),
+                tk.get_validator('unicode_only'),
+                tk.get_validator('hdx_check_string_length_wrapper')(40),
+                tk.get_converter('convert_to_extras')
+            ],
+            'alert_bar_url': [
+                tk.get_validator('ignore_empty'),
+                tk.get_validator('unicode_only'),
+                tk.get_validator('hdx_is_url'),
+                tk.get_converter('convert_to_extras')
+            ],
             'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             # 'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             # 'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -375,6 +390,8 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'alert_bar_title': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'alert_bar_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'activity_level': [
                 tk.get_converter('convert_from_extras'),

@@ -19,9 +19,6 @@
 
 [ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
 
-[ -z "$HDX_GEOPREVIEW_API" ] && export HDX_GEOPREVIEW_API="gislayer:5000"
-[ -z "$HDX_ANALYTICS_API" ]  && export HDX_ANALYTICS_API="gislayer:5000"
-
 # preparing to run ckan...
 bash /srv/ckan/docker/ckan_helper.sh
 
@@ -31,9 +28,13 @@ ln -sf /etc/ckan/prod.ini ckan.ini
 
 if [ "$NEW_RELIC_ENABLED" = true ]; then
     echo "new relic is enabled."
-    newrelic-admin generate-config $NEW_RELIC_LICENSE_KEY $NEW_RELIC_CONFIG_FILE
-    exec newrelic-admin run-program gunicorn -w ${HDX_CKAN_WORKERS} -c /srv/ckan/docker/gunicorn_conf.py wsgi:application
+    cp /srv/ckan/docker/unit-nr.json /var/lib/unit/conf.json
+    chmod 600 /var/lib/unit/conf.json
 else
     echo "new relic is disabled."
-    exec gunicorn -w ${HDX_CKAN_WORKERS} -c /srv/ckan/docker/gunicorn_conf.py wsgi:application
+    cp /srv/ckan/docker/unit.json /var/lib/unit/conf.json
+    chmod 600 /var/lib/unit/conf.json
 fi
+
+# do this when all is peachy: curl -X PUT --data-binary '{"application":"ckan"}' 'localhost:8080/config/listeners/*:5000'
+exec unitd --no-daemon --control 127.0.0.1:8080 --user www-data --group www-data --log /var/log/ckan/error.log

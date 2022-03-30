@@ -90,7 +90,12 @@ def index():
             h.flash_notice(msg, allow_html=True)
 
     template_data = {
-        'structured_data': structured_data
+        'structured_data': structured_data,
+        'alert_bar': {
+            'title': config.get('hdx.alert_bar_title'),
+            'url': config.get('hdx.alert_bar_url'),
+
+        }
     }
     return render('home/index.html', template_data)
 

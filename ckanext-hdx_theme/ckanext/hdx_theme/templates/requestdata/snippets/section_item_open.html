@@ -25,10 +25,10 @@ Example usage:
     {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
 
     <div class="requested-data-container__content-item--actions requested-data-container__content-item--actions-open" style="margin-right: 20px; margin-top: -4px;">
-      {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+      {% set action_shared = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}
       {% set post_data_shared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': True}) %}
 
-      {% set action_notshared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+      {% set action_notshared = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}
       {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
 
       <div class="requested-data-container__content-item--actions-text">Keep track of who you share data with. Did you share the data?</div>

@@ -1,0 +1,1 @@
+{"listeners":{"*:5000":{"application":"ckan"}},"applications":{"ckan":{"type":"python","processes":3,"module":"wsgi","path":"/srv/ckan"}}}

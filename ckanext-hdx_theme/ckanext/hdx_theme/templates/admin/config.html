@@ -1,0 +1,10 @@
+{% ckan_extends %}
+
+{% block admin_form %}
+  {{ super() }}
+  <br /> <hr />
+
+  {{ form.input('hdx.alert_bar_title', id='field-hdx-alert-bar-title', label=_('Alert Bar Title'), value=data['hdx.alert_bar_title'], error=error, classes=['control-full']) }}
+  {{ form.input('hdx.alert_bar_url', id='field-hdx-alert-bar-url', label=_('Alert Bar URL'), value=data['hdx.alert_bar_url'], error=error, classes=['control-full']) }}
+  <br />
+{% endblock %}

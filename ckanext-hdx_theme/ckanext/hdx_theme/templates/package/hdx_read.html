@@ -171,7 +171,7 @@
      {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
      <br>
     {% if h.follow_status('dataset', pkg.name) %}
-      <span class="more">See more in <a href="{{ h.url_for('user_dashboard') }}">your dashboard</a></span>
+      <span class="more">See more in <a href="{{ h.url_for('dashboard.index') }}">your dashboard</a></span>
     {% endif %}
   </div>
 {% endblock %}

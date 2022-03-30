@@ -1,8 +1,9 @@
 import logging
+
 from flask import Blueprint
 
+import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
-
 from ckanext.hdx_users.controller_logic.dashboard_dataset_logic import DashboardDatasetLogic
 
 log = logging.getLogger(__name__)
@@ -11,8 +12,11 @@ render = tk.render
 get_action = tk.get_action
 request = tk.request
 g = tk.g
-h= tk.h
+h = tk.h
 _ = tk._
+abort = base.abort
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
 
 hdx_user_dashboard = Blueprint(u'hdx_user_dashboard', __name__, url_prefix=u'/dashboard')
 
