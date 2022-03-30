@@ -2,7 +2,9 @@
 Example:
 
   {% snippet 'organization/snippets/member_item.html', translated_role= translated_role,
-  	id=user_id, role=role, roles=roles, group_id=c.group_dict.id, authorized=True, group_name=c.group_dict.name  %}
+  	id=user_id, role=role, roles=roles, group_id=c.group_dict.id, authorized=True, group_name=c.group_dict.name,
+  	current_user=current_user
+  %}
 
 #}
 
@@ -48,7 +50,7 @@ Example:
                   {% for pkg in member.maint_pkgs %}
                     {% do pkgs_list.append(pkg.title) %}
                   {% endfor %}
-                  {% if c.current_user.name == member.name %}
+                  {% if current_user.name == member.name %}
                     {% set confirm_delete_message = 'You can\'t leave this organisation. Please change maintainer for the following datasets: ' %}
                   {% else %}
                     {% set confirm_delete_message = 'User cannot be removed from this organisation. Please change maintainer for the following datasets: ' %}
@@ -59,8 +61,8 @@ Example:
                   {% set disabled = False %}
                 {% endif %}
 
-							  {% snippet 'snippets/confirmation_member_delete.html', form_url=h.url_for(controller='organization',
-									action='member_delete', id=group_id, user=id),
+							  {% snippet 'snippets/confirmation_member_delete.html', form_url=h.url_for('hdx_members.member_delete',
+							    id=group_id, user=id),
 									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id,
                   packages=member.maint_pkgs, disabled=disabled %}
 							  </div>

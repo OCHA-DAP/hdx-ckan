@@ -195,7 +195,7 @@ def _save_new(context):
             h.flash_success(_('Thank you for your request. The organisation admins were notified.'))
             return h.redirect_to(request.referrer)
         else:
-            response = h.redirect_to('organization_members', id=data_dict['organization'])
+            response = h.redirect_to('hdx_members.members', id=data_dict['organization'])
             return response
     except NotAuthorized:
         abort(403, NOT_AUTH_MESSAGE)

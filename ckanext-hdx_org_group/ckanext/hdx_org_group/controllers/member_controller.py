@@ -38,78 +38,78 @@ log = logging.getLogger(__name__)
 
 
 class HDXOrgMemberController(org.OrganizationController):
-    def members(self, id):
-        '''
-        Modified core method from 'group' controller.
-        Added search & sort functionality.
+    # def members(self, id):
+    #     '''
+    #     Modified core method from 'group' controller.
+    #     Added search & sort functionality.
+    #
+    #     :param id: id of the organization for which the member list is requested
+    #     :type id: string
+    #     :return: the rendered template
+    #     :rtype: unicode
+    #     '''
+    #     context = self._get_context()
+    #
+    #     q, sort = self._find_filter_params()
+    #     reverse = True if sort == u'title desc' else False
+    #
+    #     org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+    #     org_meta.fetch_all()
+    #
+    #     try:
+    #         member_list = self._action('member_list')(
+    #             context, {'id': id, 'object_type': 'user',
+    #                       'q': q, 'user_info': True}
+    #         )
+    #         member_list.sort(key=lambda y: y[4].lower(), reverse=reverse)
+    #
+    #         member_groups = {}
+    #         for m in member_list:
+    #             role = m[3]
+    #             if not member_groups.get(role):
+    #                 member_groups[role] = []
+    #             member_groups[role].append(m)
+    #
+    #         member_groups = collections.OrderedDict(sorted(member_groups.items()))
+    #
+    #         data_dict = {'id': id}
+    #         data_dict['include_datasets'] = False
+    #         current_user = self._current_user_info(member_list)
+    #         is_sysadmin = c.userobj and c.userobj.sysadmin
+    #         c_params = {
+    #             'sort': sort,
+    #             'members': [a[0:4] for a in member_list],
+    #             'member_groups': member_groups,
+    #             'org_meta': org_meta,
+    #             'current_user': current_user,
+    #             'allow_view_right_side':  is_sysadmin or bool(current_user.get('role')),
+    #             'allow_approve': is_sysadmin or current_user.get('role') == 'admin',
+    #             'request_list': self._get_member_requests_for_org(id)
+    #         }
+    #         self._set_c_params(c_params)
+    #     except NotAuthorized:
+    #         base.abort(403, _('Unauthorized to view member list %s') % '')
+    #     except NotFound:
+    #         base.abort(404, _('Group not found'))
+    #     except Exception, ex:
+    #         log.error(str(ex))
+    #         base.abort(404, _('Server error'))
+    #     extra_vars = {'group_dict': c.group_dict}
+    #     if org_meta.is_custom:
+    #         return render('organization/custom_members.html', extra_vars)
+    #     else:
+    #         return render('organization/members.html', extra_vars)
 
-        :param id: id of the organization for which the member list is requested
-        :type id: string
-        :return: the rendered template
-        :rtype: unicode
-        '''
-        context = self._get_context()
-
-        q, sort = self._find_filter_params()
-        reverse = True if sort == u'title desc' else False
-
-        org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
-        org_meta.fetch_all()
-
-        try:
-            member_list = self._action('member_list')(
-                context, {'id': id, 'object_type': 'user',
-                          'q': q, 'user_info': True}
-            )
-            member_list.sort(key=lambda y: y[4].lower(), reverse=reverse)
-
-            member_groups = {}
-            for m in member_list:
-                role = m[3]
-                if not member_groups.get(role):
-                    member_groups[role] = []
-                member_groups[role].append(m)
-
-            member_groups = collections.OrderedDict(sorted(member_groups.items()))
-
-            data_dict = {'id': id}
-            data_dict['include_datasets'] = False
-            current_user = self._current_user_info(member_list)
-            is_sysadmin = c.userobj and c.userobj.sysadmin
-            c_params = {
-                'sort': sort,
-                'members': [a[0:4] for a in member_list],
-                'member_groups': member_groups,
-                'org_meta': org_meta,
-                'current_user': current_user,
-                'allow_view_right_side':  is_sysadmin or bool(current_user.get('role')),
-                'allow_approve': is_sysadmin or current_user.get('role') == 'admin',
-                'request_list': self._get_member_requests_for_org(id)
-            }
-            self._set_c_params(c_params)
-        except NotAuthorized:
-            base.abort(403, _('Unauthorized to view member list %s') % '')
-        except NotFound:
-            base.abort(404, _('Group not found'))
-        except Exception, ex:
-            log.error(str(ex))
-            base.abort(404, _('Server error'))
-        extra_vars = {'group_dict': c.group_dict}
-        if org_meta.is_custom:
-            return render('organization/custom_members.html', extra_vars)
-        else:
-            return render('organization/members.html', extra_vars)
-
-    def _get_member_requests_for_org(self, org_id):
-        context = self._get_context()
-        req_list = logic.get_action('member_request_list')(context, {'group': org_id})
-        for req in req_list:
-
-            req['revision_last_updated'] = ''
-            user_dict = logic.get_action('user_show')(context, {'id': req.get('user_name')})
-            req['user_display_name'] = user_dict.get('display_name', user_dict.get('name'))
-
-        return req_list
+    # def _get_member_requests_for_org(self, org_id):
+    #     context = self._get_context()
+    #     req_list = logic.get_action('member_request_list')(context, {'group': org_id})
+    #     for req in req_list:
+    #
+    #         req['revision_last_updated'] = ''
+    #         user_dict = logic.get_action('user_show')(context, {'id': req.get('user_name')})
+    #         req['user_display_name'] = user_dict.get('display_name', user_dict.get('name'))
+    #
+    #     return req_list
 
     def _current_user_info(self, member_list):
         if c.userobj:
@@ -127,21 +127,21 @@ class HDXOrgMemberController(org.OrganizationController):
                    'user': c.user or c.author}
         return context
 
-    def _set_c_params(self, params):
-        c.sort_by_selected = params.get('sort')
-        c.members = params.get('members')
-        c.member_groups = params.get('member_groups')
-        c.allow_view_right_side = params.get('allow_view_right_side')
-        c.allow_approve = params.get('allow_approve')
-        c.current_user = params.get('current_user')
-        c.org_meta = params.get('org_meta')
-        c.group_dict = c.org_meta.org_dict
-        c.request_list = params.get('request_list')
+    # def _set_c_params(self, params):
+    #     c.sort_by_selected = params.get('sort')
+    #     c.members = params.get('members')
+    #     c.member_groups = params.get('member_groups')
+    #     c.allow_view_right_side = params.get('allow_view_right_side')
+    #     c.allow_approve = params.get('allow_approve')
+    #     c.current_user = params.get('current_user')
+    #     c.org_meta = params.get('org_meta')
+    #     c.group_dict = c.org_meta.org_dict
+    #     c.request_list = params.get('request_list')
 
-    def _find_filter_params(self):
-        q = c.q = request.params.get('q', '')
-        sort = request.params.get('sort', '')
-        return q, sort
+    # def _find_filter_params(self):
+    #     q = c.q = request.params.get('q', '')
+    #     sort = request.params.get('sort', '')
+    #     return q, sort
 
     def _redirect_to_this_controller(self, *args, **kw):
         kw['controller'] = 'ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController'
@@ -231,68 +231,68 @@ class HDXOrgMemberController(org.OrganizationController):
             h.flash_error(e.error_summary)
         self._redirect_to_this_controller(action='members', id=id)
 
-    def bulk_member_new(self, id):
-
-        try:
-            req_dict = clean_dict(dict_fns.unflatten(
-                tuplize_dict(parse_params(request.params))))
-            role = req_dict.get('role')
-            emails = req_dict.get('emails', '').strip()
-            new_members = []
-            invited_members = []
-            org_obj = model.Group.get(id)
-            if emails and role:
-                for email in emails.split(','):
-                    context = self._get_context()
-                    email = email.strip()
-                    try:
-                        if email:
-                            # Check if email is used
-                            _user_obj = self._get_user_obj(email)
-                            if _user_obj:
-                                added = self._add_existing_user_as_member(context, id, role, _user_obj, org_obj.display_name)
-                                if added:
-                                    new_members.append(_user_obj)
-                            else:
-                                user_data_dict = {
-                                    'email': email,
-                                    'group_id': id,
-                                    'role': role,
-                                    'id': id  # This is something staging/prod need
-                                }
-                                user_dict = self._action('hdx_user_invite')(context, user_data_dict)
-                                invited_members.append(email)
-                                # h.flash_success(email + ' has been invited as ' + role)
-                                log.info('{} was invited as a new user'.format(email))
-                    except tk.Invalid as e:
-                        h.flash_error(_('Invalid email address or unknown username provided: ') + email)
-
-                # if new_members:
-                #     new_members_msg = _(' were added to the organization.') if len(new_members) != 1 else _(
-                #         ' was added to the organization.')
-                #     h.flash_success(', '.join([m.display_name for m in new_members]) + new_members_msg)
-                #
-                # if invited_members:
-                #     invited_members_msg = _(
-                #         ' were invited to join the organization. An account was created for them.') if len(
-                #         invited_members) != 1 else _(
-                #         ' was invited to join the organization. An account was created for her/him.')
-                #     h.flash_success(', '.join(invited_members) + invited_members_msg)
-
-
-                # self.notify_admin_users(org_obj, new_members, invited_members, role)
-                self._send_analytics_info(org_obj, new_members, invited_members)
-            else:
-                h.flash_error(_('''No user or role was specified'''))
-            self._redirect_to_this_controller(action='members', id=id)
-
-        except NotAuthorized:
-            abort(403, _('Unauthorized to add member to group %s') % '')
-        except NotFound:
-            abort(404, _('Group not found'))
-        except ValidationError, e:
-            h.flash_error(e.error_summary)
-        self._redirect_to_this_controller(action='members', id=id)
+    # def bulk_member_new(self, id):
+    #
+    #     try:
+    #         req_dict = clean_dict(dict_fns.unflatten(
+    #             tuplize_dict(parse_params(request.params))))
+    #         role = req_dict.get('role')
+    #         emails = req_dict.get('emails', '').strip()
+    #         new_members = []
+    #         invited_members = []
+    #         org_obj = model.Group.get(id)
+    #         if emails and role:
+    #             for email in emails.split(','):
+    #                 context = self._get_context()
+    #                 email = email.strip()
+    #                 try:
+    #                     if email:
+    #                         # Check if email is used
+    #                         _user_obj = self._get_user_obj(email)
+    #                         if _user_obj:
+    #                             added = self._add_existing_user_as_member(context, id, role, _user_obj, org_obj.display_name)
+    #                             if added:
+    #                                 new_members.append(_user_obj)
+    #                         else:
+    #                             user_data_dict = {
+    #                                 'email': email,
+    #                                 'group_id': id,
+    #                                 'role': role,
+    #                                 'id': id  # This is something staging/prod need
+    #                             }
+    #                             user_dict = self._action('hdx_user_invite')(context, user_data_dict)
+    #                             invited_members.append(email)
+    #                             # h.flash_success(email + ' has been invited as ' + role)
+    #                             log.info('{} was invited as a new user'.format(email))
+    #                 except tk.Invalid as e:
+    #                     h.flash_error(_('Invalid email address or unknown username provided: ') + email)
+    #
+    #             # if new_members:
+    #             #     new_members_msg = _(' were added to the organization.') if len(new_members) != 1 else _(
+    #             #         ' was added to the organization.')
+    #             #     h.flash_success(', '.join([m.display_name for m in new_members]) + new_members_msg)
+    #             #
+    #             # if invited_members:
+    #             #     invited_members_msg = _(
+    #             #         ' were invited to join the organization. An account was created for them.') if len(
+    #             #         invited_members) != 1 else _(
+    #             #         ' was invited to join the organization. An account was created for her/him.')
+    #             #     h.flash_success(', '.join(invited_members) + invited_members_msg)
+    #
+    #
+    #             # self.notify_admin_users(org_obj, new_members, invited_members, role)
+    #             self._send_analytics_info(org_obj, new_members, invited_members)
+    #         else:
+    #             h.flash_error(_('''No user or role was specified'''))
+    #         self._redirect_to_this_controller(action='members', id=id)
+    #
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to add member to group %s') % '')
+    #     except NotFound:
+    #         abort(404, _('Group not found'))
+    #     except ValidationError, e:
+    #         h.flash_error(e.error_summary)
+    #     self._redirect_to_this_controller(action='members', id=id)
 
     def _get_user_obj(self, mail_or_username):
         userobj = None
@@ -387,63 +387,63 @@ class HDXOrgMemberController(org.OrganizationController):
         }
         org_helper.notify_admins(data_dict)
 
-    def member_delete(self, id):
-        ''' This is a modified version of the member_delete from the
-            ckan group controller.
-            The changes are: ( if you modify this function please add below)
-            - flash msg changed to reflect it's an org member ( not group member )
-            - the delete confirmation is done with js ( DHTML )
-        '''
-        if 'cancel' in request.params:
-            self._redirect_to_this_controller(action='members', id=id)
-
-        context = self._get_context()
-        try:
-            self._check_access('group_member_delete', context, {'id': id})
-        except NotAuthorized:
-            abort(403, _('Unauthorized to delete group %s members') % '')
-
-        try:
-            user_id = request.params.get('user')
-            if request.method == 'POST':
-                self._action('group_member_delete')(
-                    context, {'id': id, 'user_id': user_id})
-                # modified by HDX
-                h.flash_notice(_('Organization member has been deleted.'))
-
-                org_obj = model.Group.get(id)
-                analytics.RemoveMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
-                usr_obj = model.User.get(user_id)
-                org_admins = self._action('member_list')(context, {'id': org_obj.id, 'capacity': 'admin',
-                                                                   'object_type': 'user'})
-                admins = []
-                for admin_tuple in org_admins:
-                    admin_id = admin_tuple[0]
-                    admins.append(hdx_h.hdx_get_user_info(admin_id))
-                admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('email')} for
-                                     admin in admins if admin['email']]
-                user_display_name = usr_obj.display_name or usr_obj.fullname
-                subject = u'HDX Organisation ' + org_obj.display_name + ' membership removal'
-                email_data = {
-                    'user_fullname': user_display_name,
-                    'user_username': usr_obj.name,
-                    'org_name': org_obj.display_name,
-                }
-                hdx_mailer.mail_recipient(admins_with_email, subject,
-                                          email_data,
-                                          snippet='email/content/membership_removal_to_admins.html')
-
-                hdx_mailer.mail_recipient([{'display_name': user_display_name, 'email': usr_obj.email}], subject,
-                                          email_data,
-                                          snippet='email/content/membership_removal_to_user.html')
-
-                self._redirect_to_this_controller(action='members', id=id)
-            c.user_dict = self._action('user_show')(context, {'id': user_id})
-            c.user_id = user_id
-            c.group_id = id
-        except NotAuthorized:
-            abort(403, _('Unauthorized to delete group %s') % '')
-        except NotFound:
-            abort(404, _('Group not found'))
-        # modified by HDX
-        self._redirect_to_this_controller(action='members', id=id)
+    # def member_delete(self, id):
+    #     ''' This is a modified version of the member_delete from the
+    #         ckan group controller.
+    #         The changes are: ( if you modify this function please add below)
+    #         - flash msg changed to reflect it's an org member ( not group member )
+    #         - the delete confirmation is done with js ( DHTML )
+    #     '''
+    #     if 'cancel' in request.params:
+    #         self._redirect_to_this_controller(action='members', id=id)
+    #
+    #     context = self._get_context()
+    #     try:
+    #         self._check_access('group_member_delete', context, {'id': id})
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to delete group %s members') % '')
+    #
+    #     try:
+    #         user_id = request.params.get('user')
+    #         if request.method == 'POST':
+    #             self._action('group_member_delete')(
+    #                 context, {'id': id, 'user_id': user_id})
+    #             # modified by HDX
+    #             h.flash_notice(_('Organization member has been deleted.'))
+    #
+    #             org_obj = model.Group.get(id)
+    #             analytics.RemoveMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
+    #             usr_obj = model.User.get(user_id)
+    #             org_admins = self._action('member_list')(context, {'id': org_obj.id, 'capacity': 'admin',
+    #                                                                'object_type': 'user'})
+    #             admins = []
+    #             for admin_tuple in org_admins:
+    #                 admin_id = admin_tuple[0]
+    #                 admins.append(hdx_h.hdx_get_user_info(admin_id))
+    #             admins_with_email = [{'display_name': admin.get('display_name'), 'email': admin.get('email')} for
+    #                                  admin in admins if admin['email']]
+    #             user_display_name = usr_obj.display_name or usr_obj.fullname
+    #             subject = u'HDX Organisation ' + org_obj.display_name + ' membership removal'
+    #             email_data = {
+    #                 'user_fullname': user_display_name,
+    #                 'user_username': usr_obj.name,
+    #                 'org_name': org_obj.display_name,
+    #             }
+    #             hdx_mailer.mail_recipient(admins_with_email, subject,
+    #                                       email_data,
+    #                                       snippet='email/content/membership_removal_to_admins.html')
+    #
+    #             hdx_mailer.mail_recipient([{'display_name': user_display_name, 'email': usr_obj.email}], subject,
+    #                                       email_data,
+    #                                       snippet='email/content/membership_removal_to_user.html')
+    #
+    #             self._redirect_to_this_controller(action='members', id=id)
+    #         c.user_dict = self._action('user_show')(context, {'id': user_id})
+    #         c.user_id = user_id
+    #         c.group_id = id
+    #     except NotAuthorized:
+    #         abort(403, _('Unauthorized to delete group %s') % '')
+    #     except NotFound:
+    #         abort(404, _('Group not found'))
+    #     # modified by HDX
+    #     self._redirect_to_this_controller(action='members', id=id)

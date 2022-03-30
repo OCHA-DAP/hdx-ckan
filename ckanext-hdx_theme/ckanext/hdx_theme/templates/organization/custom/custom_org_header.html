@@ -55,7 +55,7 @@
                                 <li>
                                     <a
                                         {% if org_meta.allow_basic_user_info %}
-                                            href="{{ h.url_for('organization_members', id=org_meta.id) }}"
+                                            href="{{ h.url_for('hdx_members.members', id=org_meta.id) }}"
                                         {% else %}
                                             href="#" class="disabled"
                                         {% endif %} >
