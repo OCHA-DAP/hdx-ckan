@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IGroupForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IActions)
@@ -186,7 +186,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         return None
 
-    def after_map(self, map):
+    # def after_map(self, map):
         # map.connect('organization_read', '/organization/{id}',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #             action='read')
@@ -202,9 +202,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
         #             action='activity_stream')
-        return map
+        # return map
 
-    def before_map(self, map):
+    # def before_map(self, map):
         # map.connect('organization_bulk_process',
         #             '/organization/bulk_process/{org_id}',
         #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
@@ -233,18 +233,18 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         #             '/organization/members/{id}',
         #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
         #             action='members')
-        map.connect(
-            '/organization/member_new/{id}',
-            controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-            action='member_new')
+        # map.connect(
+        #     '/organization/member_new/{id}',
+        #     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+        #     action='member_new')
         # map.connect(
         #     '/organization/member_delete/{id}',
         #     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
         #     action='member_delete')
 
-        map.connect('/organization/bulk_member_new/{id}',
-                    controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-                    action='bulk_member_new')
+        # map.connect('/organization/bulk_member_new/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+        #             action='bulk_member_new')
 
         # map.connect('organization_activity', '/organization/activity/{id}',
         #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
@@ -298,7 +298,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # map.connect(
         #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
 
-        return map
+        # return map
 
     # IOrganizationController
     def create(self, org):
