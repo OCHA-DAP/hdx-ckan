@@ -69,7 +69,8 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert len(user_list) == 1, "Only one user should be found for query"
         assert user_list[0] == 'Anna Anderson2'
 
-    def test_members_delete_add(self):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_members_delete_add(self, _mail_recipient_html):
         test_client = self.get_backwards_compatible_test_client()
 
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
@@ -132,7 +133,8 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     #     mailer.send_invite = original_send_invite
     #
 
-    def test_bulk_members_invite(self):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_bulk_members_invite(self, _mail_recipient_html):
         test_username = 'testsysadmin'
 
         context = {'model': model, 'session': model.Session, 'user': test_username}
