@@ -7,25 +7,11 @@ Created on Jun 23, 2015
 import logging
 import mock
 import ckan.model as model
-import ckan.common as common
 import ckan.lib.helpers as h
-import ckan.lib.mailer as mailer
 
-import ckanext.hdx_users.helpers.mailer as hdx_mailer
-
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.mock_helper as mock_helper
-import ckanext.hdx_org_group.views.members as member_view
 import ckanext.hdx_org_group.tests as org_group_base
 
-c = common.c
 log = logging.getLogger(__name__)
-
-q = None
-sort = None
-c_dict = None
-
-invited_user = None
 
 
 class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
@@ -145,64 +131,51 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     #
     #     mailer.send_invite = original_send_invite
     #
-    # @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
-    # @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
-    # @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
-    # def test_bulk_members_invite(self, member_c, org_helper_c, theme_c):
-    #     test_username = 'testsysadmin'
-    #     mock_helper.populate_mock_as_c(member_c, test_username)
-    #     mock_helper.populate_mock_as_c(org_helper_c, test_username)
-    #     mock_helper.populate_mock_as_c(theme_c, test_username)
-    #     original_send_invite = mailer.send_invite
-    #
-    #     def mock_send_invite(user):
-    #         global invited_user
-    #         invited_user = user
-    #
-    #     mailer.send_invite = mock_send_invite
-    #     context = {'model': model, 'session': model.Session, 'user': test_username}
-    #
-    #     # removing one member from organization
-    #     url = h.url_for(
-    #         controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-    #         action='member_delete',
-    #         id='hdx-test-org'
-    #     )
-    #     self.app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_username})
-    #
-    #     org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
-    #     user_controller = MockedHDXOrgMemberController()
-    #     user_controller.members('hdx-test-org')
-    #     user_list = self._populate_member_names(c_dict['members'], org['users'])
-    #     deleted_length = len(user_list)
-    #     assert 'John Doe1' not in user_list
-    #
-    #     # bulk adding members
-    #     url = h.url_for(
-    #         controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-    #         action='bulk_member_new',
-    #         id='hdx-test-org'
-    #     )
-    #
-    #     self.app.post(url, params={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'},
-    #                   extra_environ={"REMOTE_USER": test_username})
-    #     org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
-    #
-    #     assert len(org['users']) == deleted_length + 2, 'Number of members should have increased by 2'
-    #     new_member = next((user for user in org['users'] if 'johndoe1' in user['name']), None)
-    #     assert new_member, 'Invited user needs to be a member of the org'
-    #     assert new_member['capacity'] == 'editor', 'Invited user needs to be an editor'
-    #
-    #     # making john doe1 a member back
-    #     self.app.post(url, params={'emails': 'johndoe1', 'role': 'member'},
-    #                   extra_environ={"REMOTE_USER": test_username})
-    #     org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
-    #     new_member = next((user for user in org['users'] if 'johndoe1' in user['name']), None)
-    #     assert new_member, 'Invited user needs to be a member of the org'
-    #     assert new_member['capacity'] == 'member', 'Invited user needs to be an member'
-    #
-    #     mailer.send_invite = original_send_invite
 
+    def test_bulk_members_invite(self):
+        test_username = 'testsysadmin'
+
+        context = {'model': model, 'session': model.Session, 'user': test_username}
+
+        # removing one member from organization
+        url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
+        self.app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_username})
+
+        member_list = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+        deleted_length = len(member_list)
+        assert 'John Doe1' not in (m[4] for m in member_list)
+
+        # bulk adding members
+        url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
+
+        self.app.post(url, params={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'},
+                      extra_environ={"REMOTE_USER": test_username})
+        member_list2 = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+
+        assert len(member_list2) == deleted_length + 2, 'Number of members should have increased by 2'
+        new_member = next((m for m in member_list2 if 'John Doe1' == m[4]), None)
+        assert new_member, 'Invited user needs to be a member of the org'
+        assert new_member[3] == 'editor', 'Invited user needs to be an editor'
+
+        # making john doe1 a member back
+        self.app.post(url, params={'emails': 'johndoe1', 'role': 'member'},
+                      extra_environ={"REMOTE_USER": test_username})
+        member_list3 = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+        new_member = next((m for m in member_list3 if 'John Doe1' == m[4]), None)
+        assert new_member, 'Invited user needs to be a member of the org'
+        assert new_member[3] == 'member', 'Invited user needs to be a member'
 
     def test_request_membership(self):
         test_sysadmin = 'testsysadmin'
@@ -235,19 +208,3 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         member_requests = self._get_action('member_request_list')(context, {'group': 'hdx-test-org'})
         assert len(member_requests) == 1, 'Exactly one member request should exist for this org'
         assert member_requests[0].get('user_name') == test_username
-
-
-# class MockedHDXOrgMemberController(member_controller.HDXOrgMemberController):
-#     def _find_filter_params(self):
-#         return q, sort
-#
-#     def _set_c_params(self, params):
-#         global c_dict
-#         c_dict = params
-#
-#     def _get_context(self):
-#         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-#         return context
-#
-#     def _render_template(self, template_name, group_type):
-#         pass

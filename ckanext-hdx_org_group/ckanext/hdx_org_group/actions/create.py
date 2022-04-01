@@ -85,7 +85,7 @@ def hdx_user_invite(context, data_dict):
                                                {'id': data['group_id']})
     try:
         expiration_in_hours = int(config.get('hdx.password.invitation_reset_key.expiration_in_hours', 48))
-        reset_password.create_reset_key(user, expiration_in_hours=expiration_in_hours)
+        reset_password.create_reset_key(user, expiration_in_minutes=60*expiration_in_hours)
         subject = u'HDX account creation'
         email_data = {
             'org_name': group_dict.get('display_name'),

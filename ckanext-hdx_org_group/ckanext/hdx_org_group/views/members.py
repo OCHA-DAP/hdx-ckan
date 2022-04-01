@@ -288,7 +288,7 @@ def bulk_member_new(id):
 
     try:
         req_dict = clean_dict(dict_fns.unflatten(
-            tuplize_dict(parse_params(request.params))))
+            tuplize_dict(parse_params(request.params or request.form))))
         role = req_dict.get('role')
         emails = req_dict.get('emails', '').strip()
         new_members = []
