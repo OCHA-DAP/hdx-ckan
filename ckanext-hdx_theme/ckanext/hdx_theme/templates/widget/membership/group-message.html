@@ -49,7 +49,7 @@ Example:
                     </div>
                     <select class="required mTop15" id="group-message-topics-selector" name="topic" required="required" onchange="_groupMessageValidator();">
                         <option id="" value="">{{ _("Select recipient group(s)") }}</option>
-                        {% for key, value in groups.iteritems() %}
+                        {% for key, value in groups.items() %}
                             <option id="group-message-{{key}}" value="{{key}}">{{value}}</option>
                         {% endfor %}
                     </select>

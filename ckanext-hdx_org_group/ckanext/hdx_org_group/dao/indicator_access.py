@@ -48,7 +48,7 @@ class IndicatorAccess(object):
                         unit = common_functions.compute_simplifying_units(value)
                         element['units'] = unit
 
-        except Exception, e:
+        except Exception as e:
             self.__country_data = {}
         return self.__country_data
 

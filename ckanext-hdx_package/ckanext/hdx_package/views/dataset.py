@@ -151,7 +151,7 @@ def read(id):
     # analytics charts
     log.debug('Reading dataset {}: getting data for analytics charts'.format(pkg_dict.get('name')))
     downloads_last_weeks = fetch_downloads_per_week_for_dataset(pkg_dict['id']).values()
-    stats_downloads_last_weeks = downloads_last_weeks
+    stats_downloads_last_weeks = list(downloads_last_weeks)
 
     # tags&custom_pages
     log.debug('Reading dataset {}: finding custom page list for this dataset'.format(pkg_dict.get('name')))

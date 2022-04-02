@@ -123,12 +123,12 @@ def _generate_template_data_for_custom_org(org_read_logic):
             # 'activities': activities,
             # 'query_placeholder': query_placeholder
             # },
-            'links': {
-                'edit': org_read_logic.links.edit,
-                'members': org_read_logic.links.members,
-                'request_membership': org_read_logic.links.request_membership,
-                'add_data': org_read_logic.links.add_data
-            },
+            # 'links': {
+            #     'edit': org_read_logic.links.edit,
+            #     'members': org_read_logic.links.members,
+            #     'request_membership': org_read_logic.links.request_membership,
+            #     'add_data': org_read_logic.links.add_data
+            # },
             'request_params': request.params,
             'permissions': {
                 'edit': org_read_logic.allow_edit,

@@ -67,7 +67,7 @@ class LightOrgReadLogic(object):
         return search_logic
 
 
-Links = collections.namedtuple('Links', ['edit', 'members', 'request_membership', 'add_data'])
+# Links = collections.namedtuple('Links', ['edit', 'members', 'request_membership', 'add_data'])
 
 
 class OrgReadLogic(LightOrgReadLogic):
@@ -88,7 +88,7 @@ class OrgReadLogic(LightOrgReadLogic):
 
         self.show_visualization = False
 
-        self.links = None  # type Links
+        # self.links = None  # type Links
 
         self.viz_config = {}
 
@@ -108,12 +108,12 @@ class OrgReadLogic(LightOrgReadLogic):
             })
             self.viz_config = self._assemble_viz_config(self.org_meta.org_dict.get('visualization_config', ''), org_id)
 
-            self.links = Links(
-                edit=h.url_for('organization.edit', id=org_id),
-                members=h.url_for('hdx_members.members', id=org_id),
-                request_membership=h.url_for('request_membership', org_id=org_id),
-                add_data=h.url_for('add dataset') + '?organization_id={}'.format(org_id)
-            )
+            # self.links = Links(
+            #     edit=h.url_for('organization.edit', id=org_id),
+            #     members=h.url_for('hdx_members.members', id=org_id),
+            #     request_membership=h.url_for('request_membership', org_id=org_id),
+            #     add_data=h.url_for('add dataset') + '?organization_id={}'.format(org_id)
+            # )
 
             self.follower_count = get_action('group_follower_count')(
                 {'model': model, 'session': model.Session},
