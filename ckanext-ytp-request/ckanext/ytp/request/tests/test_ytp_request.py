@@ -132,7 +132,12 @@ class TestYtpRequestCreate(TestYtpRequestBase):
             _get_action("member_request_create")(context, {"group": "test_organization", 'role': "editor"})
         except NotFound:
             assert True
-        _get_action("organization_create")(admin_context, {"name": "test_organization"})
+        _get_action("organization_create")(admin_context, {
+            "name": "test_organization",
+            "description": "Test Description",
+            'hdx_org_type': 'united_nations',
+            "org_url": "https://test.test/test",
+        })
         mrl = _get_action("member_request_list")(admin_context, {"group": "test_organization"})
         assert len(mrl) == 0
         # self.assert_len(_get_action("member_request_list")(admin_context, {"group": "test_organization"}), 0)
@@ -156,9 +161,14 @@ class TestYtpRequestProcess(TestYtpRequestBase):
         for organization, approve, result in [('test_process_approve', True, "active"), ('test_process_reject1', True, "active")]:
             try:
                 admin_context = self._create_context()
-                _get_action("organization_create")(admin_context, {"name": organization})
+                _get_action("organization_create")(admin_context, {
+                    "name": organization,
+                    "description": "Test Description",
+                    'hdx_org_type': 'united_nations',
+                    "org_url": "https://test.test/test",
+                })
             except Exception as ex:
-                a = 10
+                assert False, 'There shouldn\'t be any exception'
 
             member = _get_action("member_request_create")(context, {"group": organization, 'role': "editor"})
             show_member = _get_action("member_request_show")(context, {"member": member['id']})
@@ -184,7 +194,12 @@ class TestYtpRequestOrgAdmins(TestYtpRequestBase):
 
         context_admin = self._create_context()
 
-        organization = _get_action("organization_create")(context_admin, {"name": 'test_admins'})
+        organization = _get_action("organization_create")(context_admin, {
+            "name": 'test_admins',
+            "description": "Test Description",
+            'hdx_org_type': 'united_nations',
+            "org_url": "https://test.test/test",
+        })
 
         for admin in get_organization_admins(organization['id']):
             assert admin.id != user.id
