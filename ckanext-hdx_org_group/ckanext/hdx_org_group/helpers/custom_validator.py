@@ -3,7 +3,7 @@ Created on May 18, 2020
 
 @author: dan mihaila
 '''
-
+import six
 import logging
 
 import ckan.authz as authz
@@ -31,7 +31,7 @@ def hdx_org_keep_prev_value_if_empty_unless_sysadmin(key, data, errors, context)
     if not allowed_to_change:
         data.pop(key, None)
         new_value = data.get(key)
-        if new_value is None and isinstance(data.get(('id',)), unicode):
+        if new_value is None and isinstance(data.get(('id',)), six.text_type):
             org_id = data.get(('id',))
             if org_id:
                 prev_org_dict = get_action('hdx_light_group_show')(context, {'id': org_id})
