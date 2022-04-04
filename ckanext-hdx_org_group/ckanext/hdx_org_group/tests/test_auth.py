@@ -5,14 +5,16 @@ Created on Jul 24, 2014
 '''
 import datetime
 import logging as logging
-import ckan.model as model
-import ckan.tests.legacy as tests
+
 import ckan.lib.helpers as h
+import ckan.model as model
 import ckan.tests.factories as factories
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_org_group.tests as org_group_base
 import ckan.tests.helpers as helpers
-from test_data_completeness import _generate_dataset_dict
+import ckan.tests.legacy as tests
+import ckanext.hdx_org_group.tests as org_group_base
+import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+
+from ckanext.hdx_org_group.tests.test_data_completeness import _generate_dataset_dict
 
 log = logging.getLogger(__name__)
 
@@ -151,7 +153,7 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
         offset = h.url_for('hdx_org.request_new')
         result = self.app.get(offset)
         assert result.status_code == 403
-        assert 'You don\'t have permission to access this page' in result.data
+        assert 'You don\'t have permission to access this page' in result.body
 
     def test_new_org_request(self):
         tests.call_action_api(self.app, 'hdx_send_new_org_request',

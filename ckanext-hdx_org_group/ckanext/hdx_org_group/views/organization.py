@@ -1,6 +1,5 @@
 import logging
 
-from ckanext.hdx_org_group.controller_logic.organization_stats_logic import OrganizationStatsLogic
 from flask import Blueprint
 from six.moves.urllib.parse import urlencode
 
@@ -15,6 +14,7 @@ import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 
 from ckan.views.group import _get_group_template, CreateGroupView, EditGroupView
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
+from ckanext.hdx_org_group.controller_logic.organization_stats_logic import OrganizationStatsLogic
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import NoRecipientException
@@ -73,7 +73,7 @@ def read(id):
                 'search_template_data': read_logic.search_template_data,
                 'datasets_num': read_logic.org_meta.datasets_num,
                 'allow_req_membership': read_logic.org_meta.allow_req_membership,
-                'group_message_info': read_logic.org_meta.group_message_info,
+                # 'group_message_info': read_logic.org_meta.group_message_info,
             })
 
             template_data = {
@@ -98,7 +98,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
     org_dict = org_meta.org_dict
     org_id = org_dict['id']
 
-    org_dict['group_message_info'] = org_meta.group_message_info
+    # org_dict['group_message_info'] = org_meta.group_message_info
     template_data = {
         'data': {
             'org_info': {
@@ -123,12 +123,12 @@ def _generate_template_data_for_custom_org(org_read_logic):
             # 'activities': activities,
             # 'query_placeholder': query_placeholder
             # },
-            'links': {
-                'edit': org_read_logic.links.edit,
-                'members': org_read_logic.links.members,
-                'request_membership': org_read_logic.links.request_membership,
-                'add_data': org_read_logic.links.add_data
-            },
+            # 'links': {
+            #     'edit': org_read_logic.links.edit,
+            #     'members': org_read_logic.links.members,
+            #     'request_membership': org_read_logic.links.request_membership,
+            #     'add_data': org_read_logic.links.add_data
+            # },
             'request_params': request.params,
             'permissions': {
                 'edit': org_read_logic.allow_edit,
@@ -280,7 +280,7 @@ def stats(id):
     org_dict = stats_logic.org_meta_dao.org_dict
     org_dict.update({
         'allow_req_membership': stats_logic.org_meta_dao.allow_req_membership,
-        'group_message_info': stats_logic.org_meta_dao.group_message_info,
+        # 'group_message_info': stats_logic.org_meta_dao.group_message_info,
     })
     template_data = {
         'data': stats_logic.fetch_stats(),
@@ -343,7 +343,7 @@ def activity_offset(id, offset=0):
     org_meta = org_meta_dao.OrgMetaDao(id, g.user, g.userobj)
     org_meta.fetch_all()
     org_dict = org_meta.org_dict
-    org_dict['group_message_info'] = org_meta.group_message_info
+    # org_dict['group_message_info'] = org_meta.group_message_info
 
     helper.org_add_last_updated_field([org_dict])
 

@@ -3,6 +3,7 @@ import logging
 import requests
 import yaml
 from six import string_types
+from six.moves import reduce
 
 import ckan.logic as logic
 from ckanext.hdx_package.helpers.freshness_calculator import OVERDUE_PROPERTY

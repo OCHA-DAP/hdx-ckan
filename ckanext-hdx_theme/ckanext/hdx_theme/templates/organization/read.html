@@ -1,7 +1,7 @@
 {% extends "organization/read_base.html" %}
 
-{% set org_dict = org_dict or c.group_dict %}
 {% set org_meta = org_meta or c.org_meta %}
+{% set org_dict = org_dict or org_meta.org_dict or c.group_dict %}
 {% set allow_req_membership = org_dict.allow_req_membership if 'allow_req_membership' in org_dict else org_meta.allow_req_membership %}
 
 {# The lines below are for analytics #}
@@ -35,7 +35,7 @@
 			   	{{ h.build_nav_icon('hdx_org.read', _('Datasets'), id=org_dict.name, class_='hdx-tab-button') }}
 			   	{{ h.build_nav_icon('hdx_org.activity', _('Activity Stream'), id=org_dict.name, class_='hdx-tab-button') }}
 				{% if c.user %}
-					{{ h.build_nav_icon('organization_members', _('Members'), id=org_dict.name, class_='hdx-tab-button') }}
+					{{ h.build_nav_icon('hdx_members.members', _('Members'), id=org_dict.name, class_='hdx-tab-button') }}
 				{% endif %}
 				{% if h.check_access('organization_update', {'id': org_dict.id}) %}
 				  {{ h.build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=org_dict.name) }}

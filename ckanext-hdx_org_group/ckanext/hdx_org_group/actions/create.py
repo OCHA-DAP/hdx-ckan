@@ -1,25 +1,27 @@
 import random
 from socket import error as socket_error
 
-from pylons import config
-
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as core_df
-import ckan.logic as logic
 import ckan.logic.action.create as core_create
 import ckan.logic.schema as core_schema
 import ckan.model as core_model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
-from ckan.common import c, _
 
 _validate = core_df.validate
-_check_access = logic.check_access
-_get_action = logic.get_action
-ValidationError = logic.ValidationError
-NotFound = logic.NotFound
-_get_or_bust = logic.get_or_bust
+_check_access = tk.check_access
+_get_action = tk.get_action
+_get_validator = tk.get_validator
+_get_or_bust = tk.get_or_bust
+ValidationError = tk.ValidationError
+NotFound = tk.ObjectNotFound
+config = tk.config
+h = tk.h
+g = tk.g
+_ = tk._
+
 
 def hdx_user_invite(context, data_dict):
     '''Invite a new user.
@@ -59,8 +61,7 @@ def hdx_user_invite(context, data_dict):
             for _ in range(12))
         # Occasionally it won't meet the constraints, so check
         errors = {}
-        logic.validators.user_password_validator(
-            'password', {'password': password}, errors, None)
+        _get_validator('user_password_validator')('password', {'password': password}, errors, None)
         if not errors:
             break
 
@@ -85,12 +86,12 @@ def hdx_user_invite(context, data_dict):
                                                {'id': data['group_id']})
     try:
         expiration_in_hours = int(config.get('hdx.password.invitation_reset_key.expiration_in_hours', 48))
-        reset_password.create_reset_key(user, expiration_in_hours=expiration_in_hours)
+        reset_password.create_reset_key(user, expiration_in_minutes=60*expiration_in_hours)
         subject = u'HDX account creation'
         email_data = {
             'org_name': group_dict.get('display_name'),
             'capacity': data['role'],
-            'user_fullname': c.userobj.display_name,
+            'user_fullname': g.userobj.display_name,
             'expiration_in_hours': expiration_in_hours,
             'user_reset_link': h.url_for(controller='user',
                                          action='perform_reset',

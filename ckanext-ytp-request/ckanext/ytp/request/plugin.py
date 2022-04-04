@@ -44,7 +44,7 @@ class YtpRequestPlugin(plugins.SingletonPlugin):
 
     # IRoutes #
 
-    def before_map(self, m):
+    # def before_map(self, m):
         """ CKAN autocomplete discards vocabulary_id from request. Create own api for this. """
         # controller = 'ckanext.ytp.request.controller:YtpRequestController'
         # m.connect("member_request_new", '/member-request/new', action='new', controller=controller)
@@ -56,7 +56,7 @@ class YtpRequestPlugin(plugins.SingletonPlugin):
         # m.connect("member_request_cancel", '/member-request/cancel/{member_id}', action='cancel', controller=controller)
         # m.connect("member_request_show_organization", '/member-request/show-organization/{organization_id}', action='show_organization', controller=controller)
         # m.connect("member_request_membership_cancel", '/member-request/membership-cancel/{organization_id}', action='membership_cancel', controller=controller)
-        return m
+        # return m
 
     # IConfigurer #
 

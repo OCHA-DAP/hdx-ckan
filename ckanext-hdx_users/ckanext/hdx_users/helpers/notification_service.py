@@ -119,7 +119,7 @@ class MembershipRequestsService(object):
                     {
                         'org_title': request.title,
                         'org_name': request.name,
-                        'org_hdx_url': h.url_for('organization_members', id=request.name),
+                        'org_hdx_url': h.url_for('hdx_members.members', id=request.name),
                         'html_template': 'light/notifications/org_membership_snippet.html',
                         'last_date': last_date,
                         'count': request.count,
