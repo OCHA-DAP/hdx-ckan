@@ -15,6 +15,7 @@ import ckanext.hdx_users.views.user_checks_login as ucl
 import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
+import ckanext.hdx_users.views.user_register_view as urv
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -65,7 +66,10 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
 
     # IBlueprint
     def get_blueprint(self):
-        return [hdx_user.user, hdx_user.hdx_login_link]
+        return [
+            hdx_user.user,
+            hdx_user.hdx_login_link
+        ]
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
@@ -111,5 +115,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             ucl.hdx_contact_hdx,
             permission.hdx_user_permission,
             rduv.hdx_requestdata_user,
-            rdv.requestdata_send_request
+            rdv.requestdata_send_request,
+            urv.user_register
         ]

@@ -5,10 +5,10 @@ import ckan.plugins.toolkit as toolkit
 
 import ckanext.showcase.logic.schema as showcase_schema
 
-if not six.PY3:
-    import ckanext.hdx_dataviz.views.dataviz as dataviz
-else:
-    dataviz = None
+# if not six.PY3:
+import ckanext.hdx_dataviz.views.dataviz as dataviz
+# else:
+#     dataviz = None
 import ckanext.hdx_dataviz.helpers.helpers as h
 import ckanext.hdx_dataviz.actions.auth as auth
 import ckanext.hdx_dataviz.actions.update as update
@@ -19,15 +19,17 @@ request = toolkit.request
 
 class HdxDatavizPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    if dataviz:
-        plugins.implements(plugins.IBlueprint)
+    # if dataviz:
+    plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IActions)
 
     # IBlueprint
     def get_blueprint(self):
-        return dataviz.hdx_dataviz_gallery
+        return [
+            dataviz.hdx_dataviz_gallery
+        ]
 
     # IConfigurer
     def update_config(self, config_):

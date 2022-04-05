@@ -16,7 +16,8 @@ def token_create(context, user):
     _check_access('user_create', context, None)
     model = context['model']
     token = hashlib.md5()
-    token.update(user['email'] + user['name'])
+    token_content = user['email'] + user['name']
+    token.update(token_content.encode())
     token_obj = user_model.ValidationToken(user_id=user['id'], token=token.hexdigest(), valid=False)
     model.Session.add(token_obj)
     model.Session.commit()

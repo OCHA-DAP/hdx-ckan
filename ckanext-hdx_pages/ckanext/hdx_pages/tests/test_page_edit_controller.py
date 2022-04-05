@@ -56,7 +56,7 @@ class TestHDXControllerPage(object):
             'hdx_page_id': ''
         }
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_edit(self, app):
         context = {'model': model, 'session': model.Session, 'user': USER}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}

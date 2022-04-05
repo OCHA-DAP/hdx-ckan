@@ -2,10 +2,10 @@ import six
 import ckan.authz as authz
 import ckan.plugins.toolkit as tk
 
-if not six.PY3:
-    from ckanext.hdx_users.helpers.permissions import Permissions
-else:
-    Permissions = None
+# if not six.PY3:
+from ckanext.hdx_users.helpers.permissions import Permissions
+# else:
+#     Permissions = None
 
 g = tk.g
 

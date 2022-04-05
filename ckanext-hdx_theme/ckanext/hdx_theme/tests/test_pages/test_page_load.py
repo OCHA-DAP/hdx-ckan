@@ -36,7 +36,7 @@ pages = [
     {'url_name': 'hdx_splash.index', 'usertype': 'all'}
 ]
 
-@pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
+# @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
 class TestPageLoad(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):

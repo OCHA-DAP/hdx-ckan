@@ -10,7 +10,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 config = tk.config
 
 
-@pytest.mark.skipif(six.PY3, reason=u"The hdx_dataset plugin is not available on PY3 yet")
+# @pytest.mark.skipif(six.PY3, reason=u"The hdx_dataset plugin is not available on PY3 yet")
 class TestResponsiveRedirect(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_responsive_redirect(self):

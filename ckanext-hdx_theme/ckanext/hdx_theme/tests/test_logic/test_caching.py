@@ -125,7 +125,7 @@ class TestGroupsCaching(hdx_test_base.HdxBaseTest):
     #         'number of calls to filter_focus_countries should be 1 , instead {num}'.format(
     #             num=num_filter_focus_countries)
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
     def test_group_cache_invalidation_on_change(self):
         global num_invalidate_group_caches
         # resetting counter

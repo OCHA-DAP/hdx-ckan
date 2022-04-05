@@ -14,7 +14,7 @@ _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
 url_for = tk.url_for
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestPasswordReset(hdx_test_base.HdxBaseTest):
 
     def test_old_style_reset_key_is_invalid(self):
@@ -122,4 +122,4 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
 
         reset_page_url = url_for('hdx_user.perform_reset', id=user.id, key=expired_key)
         response = self.app.get(reset_page_url)
-        assert 'has expired' in response.data
+        assert 'has expired' in response.body

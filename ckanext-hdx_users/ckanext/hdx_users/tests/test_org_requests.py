@@ -4,7 +4,7 @@ import logging as logging
 import mock
 import pytest
 import six
-
+from six import text_type
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.tests as org_group_base
@@ -27,7 +27,7 @@ def send_mail(recipients, subject, body):
                     body=body)
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
 
     @classmethod
@@ -71,7 +71,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         }
 
         offset = h.url_for('hdx_user.request_new_organization')
-        self.app.post(offset, params=postparams, extra_environ=auth)
+        res_post = self.app.post(offset, params=postparams, extra_environ=auth)
         args, kw_args = mocked_mail_recipient.call_args
 
         assert args, 'This needs to contain the email that will be sent'
@@ -82,6 +82,11 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         assert 'Test User' in args[2].get('user_fullname')
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args.get('snippet')
         assert 'test@test.com' in kw_args.get('footer')
+
+    def convert_to_unicode(self, text):
+        if isinstance(text, text_type):
+            return text
+        return text_type(text, encoding='utf8', errors='ignore')
 
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_new_org_req_with_special_chars(self, mocked_mail_recipient):
@@ -106,19 +111,19 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_name': 'Test êßȘ'
         }
         offset = h.url_for('hdx_user.request_new_organization')
-        self.app.post(offset, params=postparams, extra_environ=auth)
+        res_post = self.app.post(offset, params=postparams, extra_environ=auth)
         args0, kw_args0 = mocked_mail_recipient.call_args_list[0]
         args1, kw_args1 = mocked_mail_recipient.call_args_list[1]
 
         req_dict = args0[2]
-        assert unicode(postparams.get('name'), "utf-8") == req_dict.get('org_name')
-        assert unicode(postparams.get('acronym'), "utf-8") == req_dict.get('org_acronym')
-        assert unicode(postparams.get('org_type'), "utf-8") == req_dict.get('org_type')
-        assert unicode(postparams.get('url'), "utf-8") == req_dict.get('org_website')
-        assert unicode(postparams.get('description'), "utf-8") == req_dict.get('org_description')
-        assert unicode(postparams.get('description_data'), "utf-8") == req_dict.get('data_description')
-        assert unicode(postparams.get('work_email'), "utf-8") == req_dict.get('requestor_work_email')
-        assert unicode(postparams.get('your_name'), "utf-8") == req_dict.get('user_fullname')
+        assert self.convert_to_unicode(postparams.get('name')) == req_dict.get('org_name')
+        assert self.convert_to_unicode(postparams.get('acronym')) == req_dict.get('org_acronym')
+        assert self.convert_to_unicode(postparams.get('org_type')) == req_dict.get('org_type')
+        assert self.convert_to_unicode(postparams.get('url')) == req_dict.get('org_website')
+        assert self.convert_to_unicode(postparams.get('description')) == req_dict.get('org_description')
+        assert self.convert_to_unicode(postparams.get('description_data')) == req_dict.get('data_description')
+        assert self.convert_to_unicode(postparams.get('work_email')) == req_dict.get('requestor_work_email')
+        assert self.convert_to_unicode(postparams.get('your_name')) == req_dict.get('user_fullname')
 
         assert 'email/content/new_org_request_hdx_team_notification.html' in kw_args0.get('snippet')
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args1.get('snippet')

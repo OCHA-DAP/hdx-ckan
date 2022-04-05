@@ -22,11 +22,11 @@ import ckan.tests.helpers as test_helpers
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
-import ckanext.hdx_users.model as umodel
+import ckanext.hdx_users.helpers.tokens as tkh
 from ckan.tests import factories
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -113,14 +113,18 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         res = self._create_user()
         user = model.User.get('valid@example.com')
         assert user
-        token = umodel.ValidationToken.get(user.id)
+        # token = umodel.ValidationToken.get(user.id)
+        try:
+            token = tkh.token_show({}, {'id': user.id})
+        except Exception as ex:
+            assert False
         assert token
 
     def test_no_duplicate_tokens(self):
         res = self._create_user()
         try:
             res2 = self._create_user()
-            assert False
+            assert 'The email address is already registered on HDX' in res2.body
         except:
             assert True
 
@@ -147,21 +151,19 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         assert '404' in profile_result2.status
 
-        assert '<span class="label label-important">Deleted</span>' in profile_result.data
+        assert '<span class="label label-important">Deleted</span>' in profile_result.body
 
     def _create_user(self, email='valid@example.com'):
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         params = {'email': email, 'nosetest': 'true'}
         res = self.app.post(url, data=params)
         return res
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
         super(TestUserEmailRegistration, cls).setup_class()
-        # umodel.setup()
-        # ue_model.create_table()
 
     def setup(self):
         test_helpers.reset_db()
@@ -172,7 +174,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         user_list = test_helpers.call_action('user_list')
         before_len = len(user_list)
 
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         params = {'email': 'valid@example.com', 'nosetest': 'true'}
         res = self.app.post(url, data=params)
         assert_true(json.loads(res.body)['success'])
@@ -188,7 +190,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_create_user_duplicate_email(self):
         '''Creating a new user with identical email is unsuccessful.'''
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         params = {'email': 'valid@example.com', 'nosetest': 'true'}
         # create 1
         self.app.post(url, data=params)
@@ -201,7 +203,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     def test_create_user_duplicate_email_case_different(self):
         '''Creating a new user with same email (differently cased) is
         unsuccessful.'''
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         params_one = {'email': 'valid@example.com', 'nosetest': 'true'}
         params_two = {'email': 'VALID@example.com', 'nosetest': 'true'}
         # create 1
@@ -216,7 +218,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     def test_create_user_email_saved_as_lowercase(self):
         '''A newly created user will have their email transformed to lowercase
         before saving.'''
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         params = {'email': 'VALID@example.com', 'nosetest': 'true'}
         self.app.post(url, data=params)
         user = model.User.get('valid@example.com')
@@ -226,7 +228,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_create_user_email_format(self):
         '''Email must be valid email format.'''
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         params = {'email': 'invalidexample.com', 'nosetest': 'true'}
 
         res = json.loads(self.app.post(url, data=params).data)
@@ -266,7 +268,7 @@ def _get_user_params(user_dict):
     }
     return params
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -374,7 +376,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         # error message in response
-        assert '<li data-field-label="Email">Email: Email {} is not a valid format</li>'.format(params['email']) in user_updated.body
+        assert '<li data-field-label="Email">Email: Email {} is not a valid format</li>'.format(
+            params['email']) in user_updated.body
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -444,7 +447,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         user = model.Session.query(model.User).get(sue_user['id'])
         assert_equal(user.email, sue_user.get('email'))
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -484,7 +488,8 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
         except Exception as ex:
             assert False
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -627,7 +632,6 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         # no email has been sent
         msgs = mail_server.get_smtp_messages()
         assert_equal(len(msgs), 0)
-
 
         # TODO create user according to the last onboarding. Note CAPTCHA!
         # def test_login_not_valid(self):

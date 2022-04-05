@@ -64,7 +64,7 @@ class TestDatavizShowcaseApi(object):
         except NotAuthorized as e:
             assert True, 'An editor user should NOT be allowed to delete a dataviz showcase'
 
-    @pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
     def test_update_dataviz_with_carousel_permission(self):
         from ckanext.hdx_users.helpers.permissions import Permissions
 
