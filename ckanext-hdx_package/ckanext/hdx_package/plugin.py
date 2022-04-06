@@ -12,13 +12,13 @@ import six
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.delete as hdx_delete
+import ckanext.hdx_package.helpers.download_wrapper as download_wrapper
 import ckanext.hdx_package.actions.get as hdx_get
 import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.actions.patch as hdx_patch
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
-
 
 import ckan.logic as logic
 import ckan.model as model
@@ -738,23 +738,28 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
 
 class HDXAnalyticsPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IMiddleware, inherit=True)
-    plugins.implements(plugins.IPackageController, inherit=True)
+    # plugins.implements(plugins.IMiddleware, inherit=True)
+    # plugins.implements(plugins.IPackageController, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
-    __startup_tasks_done = False
+    def get_blueprint(self):
+        import ckanext.hdx_package.views.download_wrapper as download_wrapper
+        return [download_wrapper.hdx_download_wrapper]
 
-    def run_on_startup(self):
-        if not six.PY3:
-            import ckanext.hdx_package.helpers.download_wrapper as download_wrapper
-            # wrap resource download function so that we can track download events
-            download_wrapper.wrap_resource_download_function()
 
-    def make_middleware(self, app, config):
-        if not HDXAnalyticsPlugin.__startup_tasks_done:
-            self.run_on_startup()
-            HDXAnalyticsPlugin.__startup_tasks_done = True
 
-        return app
+    # __startup_tasks_done = False
+
+    # def run_on_startup(self):
+    #     # wrap resource download function so that we can track download events
+    #     download_wrapper.wrap_resource_download_function()
+    #
+    # def make_middleware(self, app, config):
+    #     if not HDXAnalyticsPlugin.__startup_tasks_done:
+    #         self.run_on_startup()
+    #         HDXAnalyticsPlugin.__startup_tasks_done = True
+    #
+    #     return app
 
     # def after_create(self, context, data_dict):
     #     if not context.get('contribute_flow'):
