@@ -179,7 +179,8 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert new_member, 'Invited user needs to be a member of the org'
         assert new_member[3] == 'member', 'Invited user needs to be a member'
 
-    def test_request_membership(self):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_request_membership(self, _mail_recipient_html):
         test_sysadmin = 'testsysadmin'
         test_username = 'johndoe1'
         test_client = self.get_backwards_compatible_test_client()
