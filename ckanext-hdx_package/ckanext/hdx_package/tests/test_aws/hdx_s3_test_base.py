@@ -42,8 +42,9 @@ class HDXS3TestBase(object):
         cls.m_s3 = mock_s3()
         cls.m_s3.start()
 
-        cls.conn = boto3.resource('s3', region_name=config['ckanext.s3filestore.region_name'])
-        cls.conn.create_bucket(Bucket=cls.bucket_name)
+        region_name = config['ckanext.s3filestore.region_name']
+        cls.conn = boto3.resource('s3', region_name=region_name)
+        cls.conn.create_bucket(Bucket=cls.bucket_name, CreateBucketConfiguration={'LocationConstraint': '{}'.format(region_name)})
 
         cls.app = helpers._get_test_app()
 

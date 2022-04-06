@@ -1,12 +1,20 @@
+import mock
 import six
 if not six.PY3:
     import ckan.plugins.toolkit as tk
+    import ckanext.s3filestore.view as s3_view
 
-    from ckanext.s3filestore.controller import S3Controller
     from ckanext.s3filestore.helpers import CachedDownloadStorageHelper
 
     config = tk.config
     _get_action = tk.get_action
+
+    mocked_helper = None  # type: MockedHelper
+
+    def create_storage_helper(*args, **kwargs):
+        global mocked_helper
+        mocked_helper = MockedHelper(*args, **kwargs)
+        return mocked_helper
 
 
     class TestCachedDownload(object):
@@ -23,25 +31,28 @@ if not six.PY3:
             test_config['hdx.download_with_cache.folder'] = cls.download_folder
 
         def test_should_use_download_with_cache(self):
-            controller = S3Controller()
-            assert controller._should_use_download_with_cache('test-dataset1')
-            assert controller._should_use_download_with_cache('test-dataset2')
-            assert not controller._should_use_download_with_cache('test-dataset3')
+            assert s3_view._should_use_download_with_cache('test-dataset1')
+            assert s3_view._should_use_download_with_cache('test-dataset2')
+            assert not s3_view._should_use_download_with_cache('test-dataset3')
 
-        def test_resource_download_with_cache(self):
+        @mock.patch('ckanext.s3filestore.view._prepare_cached_response')
+        @mock.patch('ckanext.s3filestore.view._get_cached_download_storage_helper', wraps=create_storage_helper)
+        def test_resource_download_with_cache(self, storage_helper_func_mock, chached_response_mock):
+            chached_response_mock.return_value = None
+
             url1 = 'http://fake1.url.org'
             filename1 = 'filename1'
             resource_dict1 = {'id': 'id1', 'last_modified': '2018-02-14T16:01:58.230736'}
 
-            controller1 = MockedS3Controller()
-            controller1._resource_download_with_cache(url1, filename1, resource_dict1)
-            mocked_helper1 = controller1.mocked_helper
+            # controller1 = MockedS3Controller()
+            s3_view._resource_download_with_cache(url1, filename1, resource_dict1)
+            mocked_helper1 = mocked_helper
             assert mocked_helper1.file_downloaded
             assert mocked_helper1.folder_created
 
-            controller1_2 = MockedS3Controller()
-            controller1_2._resource_download_with_cache(url1, filename1, resource_dict1)
-            mocked_helper1 = controller1_2.mocked_helper
+            # controller1_2 = MockedS3Controller()
+            s3_view._resource_download_with_cache(url1, filename1, resource_dict1)
+            mocked_helper1 = mocked_helper
             assert not mocked_helper1.file_downloaded
             assert not mocked_helper1.folder_created
 
@@ -49,23 +60,23 @@ if not six.PY3:
             filename2 = 'filename1'  # same filename as above
             resource_dict2 = {'id': 'id1', 'last_modified': '2019-02-14T16:01:58.230736'} # same resource that was updated
 
-            controller2 = MockedS3Controller()
-            controller2._resource_download_with_cache(url2, filename2, resource_dict2)
-            mocked_helper1 = controller2.mocked_helper
+            # controller2 = MockedS3Controller()
+            s3_view._resource_download_with_cache(url2, filename2, resource_dict2)
+            mocked_helper1 = mocked_helper
             assert mocked_helper1.file_downloaded
             assert not mocked_helper1.folder_created
 
 
-    class MockedS3Controller(S3Controller):
-        def __init__(self):
-            super(MockedS3Controller, self).__init__()
-
-        def _prepare_cached_response(self, full_file_path):
-            return None
-
-        def _get_cached_download_storage_helper(self, filename, url):
-            self.mocked_helper = MockedHelper(filename, url)
-            return self.mocked_helper
+    # class MockedS3Controller(S3Controller):
+    #     def __init__(self):
+    #         super(MockedS3Controller, self).__init__()
+    #
+    #     def _prepare_cached_response(self, full_file_path):
+    #         return None
+    #
+    #     def _get_cached_download_storage_helper(self, filename, url):
+    #         self.mocked_helper = MockedHelper(filename, url)
+    #         return self.mocked_helper
 
 
     class MockedHelper(CachedDownloadStorageHelper):
