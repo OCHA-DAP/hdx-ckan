@@ -50,7 +50,7 @@ organization = {
 }
 
 
-# @pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
+@pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     # loads missing plugins
     @classmethod
@@ -67,8 +67,6 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         super(TestDatasetOutput, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
-
-
 
     def test_contact_members_button_appears(self):
         '''
@@ -97,28 +95,27 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert not 'contact-members' in page.data, 'Anonymous users should not see the contact members button'
+        assert not 'contact-members' in page.body, 'Anonymous users should not see the contact members button'
 
         # test sysadmin can see the button
         page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        assert 'contact-members' in page.data, 'Sysadmin users should see the contact members button'
+        assert 'contact-members' in page.body, 'Sysadmin users should see the contact members button'
 
         # test member/owner can see the button
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-members' in page.data, 'Member/owner should see the edit button'
+        assert 'contact-members' in page.body, 'Member/owner should see the edit button'
 
         # test editor can see the button
         context['user'] = 'tester'
         user = model.User.by_name('tester')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-members' in page.data, 'Editor should see the edit button'
+        assert 'contact-members' in page.body, 'Editor should see the edit button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
         user = model.User.by_name('joeadmin')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-members' in page.data, 'Admin should see the edit button'
-
+        assert 'contact-members' in page.body, 'Admin should see the edit button'
 
         # any logged in user and not member of organization can NOT see the button
         factories.User(name='bob')
@@ -127,14 +124,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         model.Session.commit()
         context['user'] = 'bob'
         page = self._getPackagePage(dataset_name, user_bob.apikey)
-        assert 'contact-members' not in page.data, 'Any loggedin user & not member should NOT see the edit button'
-
-
-        # self._get_action('organization_member_create')(context_sysadmin,
-        #                                                {'id': org_obj.get('id'), 'username': 'joeadmin',
-        #                                                 'role': 'editor'})
-        # page = self._getPackagePage(dataset_name, user.apikey)
-        # assert 'Edit Dataset' in str(page.response), 'Editor should see the edit button'
+        assert 'contact-members' not in page.body, 'Any loggedin user & not member should NOT see the edit button'
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None

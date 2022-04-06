@@ -32,7 +32,6 @@ pages = [
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'has_id': True, 'usertype': 'all'},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
-    {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
     {'url_name': 'hdx_splash.index', 'usertype': 'all'}
 ]
 
