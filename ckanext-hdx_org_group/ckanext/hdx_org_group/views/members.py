@@ -155,7 +155,7 @@ def member_delete(id):
         abort(403, _('Unauthorized to delete group %s members') % '')
 
     try:
-        user_id = request.form.get('user')
+        user_id = request.args.get('user')
         if request.method == 'POST':
             get_action('group_member_delete')(
                 context, {'id': id, 'user_id': user_id})
