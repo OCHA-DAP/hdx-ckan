@@ -12,13 +12,13 @@ import six
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.delete as hdx_delete
-import ckanext.hdx_package.helpers.download_wrapper as download_wrapper
 import ckanext.hdx_package.actions.get as hdx_get
 import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.actions.patch as hdx_patch
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
+import ckanext.hdx_package.views.download_wrapper as download_wrapper
 
 import ckan.logic as logic
 import ckan.model as model
@@ -743,7 +743,6 @@ class HDXAnalyticsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IBlueprint)
 
     def get_blueprint(self):
-        import ckanext.hdx_package.views.download_wrapper as download_wrapper
         return [download_wrapper.hdx_download_wrapper]
 
 
