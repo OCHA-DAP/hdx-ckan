@@ -78,7 +78,7 @@ def read_dashboard(id):
 def _update_lunr():
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     if not test:
-        lunr.buildIndex()
+        lunr.build_index()
 
 
 # def delete_page(id):
