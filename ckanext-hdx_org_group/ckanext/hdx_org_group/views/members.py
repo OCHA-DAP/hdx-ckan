@@ -420,4 +420,4 @@ def _send_membership_confirmation(org_display_name, org_id, role, user_info):
 hdx_members.add_url_rule(u'/members/<id>', view_func=members)
 hdx_members.add_url_rule(u'/member_delete/<id>', view_func=member_delete, methods=[u'POST'])
 hdx_members.add_url_rule(u'/member_new/<id>', view_func=member_new, methods=[u'POST'])
-hdx_members.add_url_rule(u'/bulk_member_new/<id>', view_func=bulk_member_new, methods=[u'POST', u'GET'])
+hdx_members.add_url_rule(u'/bulk_member_new/<id>', view_func=bulk_member_new, methods=[u'POST'])
