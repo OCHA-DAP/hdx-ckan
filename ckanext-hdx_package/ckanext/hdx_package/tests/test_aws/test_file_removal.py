@@ -15,7 +15,6 @@ config = tk.config
 _get_action = tk.get_action
 
 
-@pytest.mark.skipif(six.PY3, reason=u"S3 plugin not on PY3 yet")
 class TestFileRemovalS3(HDXS3TestBase):
 
     def test_resource_delete(self):

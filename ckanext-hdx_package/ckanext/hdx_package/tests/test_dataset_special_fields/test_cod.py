@@ -11,7 +11,6 @@ from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD, CO
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestCod(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod

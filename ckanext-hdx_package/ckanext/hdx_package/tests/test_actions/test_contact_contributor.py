@@ -10,7 +10,6 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestContactContributor(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod

@@ -16,7 +16,6 @@ import ckan.lib.helpers as h
 log = logging.getLogger(__name__)
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     @classmethod
     def _load_plugins(cls):
@@ -25,7 +24,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_breadcrumb_on_indicator_page(self):
         url = h.url_for('dataset_read', id='test_indicator_1')
         result = self.app.get(url)
-        page = result.data
+        page = result.body
 
         begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'
@@ -36,7 +35,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_breadcrumb_on_dataset_page(self):
         url = h.url_for('dataset_read', id='test_dataset_1')
         result = self.app.get(url)
-        page = result.data
+        page = result.body
 
         begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
         end_str = '</ol>'

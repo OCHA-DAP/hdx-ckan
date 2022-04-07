@@ -1,6 +1,5 @@
 import pytest
 import os
-import six
 
 from werkzeug.datastructures import FileStorage
 
@@ -23,14 +22,13 @@ TEST_DATA = [
 ]
 
 
-@pytest.mark.skipif(six.PY3, reason=u"S3 plugin not on PY3 yet")
 class TestS3Metadata(HDXS3TestBase):
 
     @pytest.mark.parametrize('test_item', TEST_DATA)
     def test_metadata_saved_on_create(self, test_item):
         file_path = os.path.join(os.path.dirname(__file__), self.file1_name)
         resource_name = 'test_resource_from_browser.csv'
-        with open(file_path) as f:
+        with open(file_path, 'rb') as f:
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/resource_create',
                                    extra_environ={
@@ -54,7 +52,7 @@ class TestS3Metadata(HDXS3TestBase):
     @pytest.mark.parametrize('test_item', TEST_DATA)
     def test_metadata_saved_on_update(self, test_item):
         file_path = os.path.join(os.path.dirname(__file__), self.file1_name)
-        with open(file_path) as f:
+        with open(file_path, 'rb') as f:
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/resource_update',
                                    extra_environ={
@@ -78,7 +76,7 @@ class TestS3Metadata(HDXS3TestBase):
     @pytest.mark.parametrize('test_item', TEST_DATA)
     def test_metadata_saved_on_revise(self, test_item):
         file_path = os.path.join(os.path.dirname(__file__), self.file1_name)
-        with open(file_path) as f:
+        with open(file_path, 'rb') as f:
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/package_revise',
                                    extra_environ={

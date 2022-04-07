@@ -90,7 +90,7 @@ class HdxSolrReindexer(object):
             try:
                 pkg_dicts = reindex_helper.package_list_show_for_reindex(context, package_ids[start:stop])
                 package_index.index_packages(pkg_dicts, defer_commit)
-            except Exception, e:
+            except Exception as e:
                 log.error(u'Error while indexing dataset %s: %s' %
                           (str(start), repr(e)))
                 if force:

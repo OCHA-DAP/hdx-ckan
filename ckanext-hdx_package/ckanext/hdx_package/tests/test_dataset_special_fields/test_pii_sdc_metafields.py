@@ -13,7 +13,6 @@ config = tk.config
 NotAuthorized = tk.NotAuthorized
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
 
     NORMAL_USER = 'quarantine_user'
