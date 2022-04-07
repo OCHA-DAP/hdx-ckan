@@ -7,6 +7,24 @@
   z-index: 99;
   max-width: 270px;
 }
+@media (max-width: 991px) {
+  .hdx-faq-sidebar.sticky {
+    position: static;
+  }
+  .hdx-faq-sidebar.sticky.ongoing {
+    position: fixed;
+    top: -240px;
+  }
+  .hdx-faq-sidebar.sticky.ongoing .search-box {
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    background-color: #eeeeee;
+    width: 100%;
+    padding: 0 15px;
+    left: 0;
+  }
+}
 .hdx-faq-sidebar .nav li a {
   padding: 0;
   color: #333333;
@@ -54,17 +72,45 @@
   background-color: #FFFFFF;
   background-image: url("/images/backgrounds/faq_top_f.png");
   background-repeat: no-repeat;
-  background-position: left bottom;
-  background-size: 100% auto;
+  background-position: center;
+  background-size: cover;
   height: 315px;
-  margin-left: -45px;
-  margin-right: -45px;
 }
 .hdx-wrapper .top-banner .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
   margin-top: 90px;
   width: 50%;
+  min-width: 530px;
+}
+@media (max-width: 1024px) {
+  .hdx-wrapper .top-banner .top-banner-text-wrapper {
+    min-width: 530px;
+  }
+}
+@media (max-width: 768px) {
+  .hdx-wrapper .top-banner .top-banner-text-wrapper {
+    min-width: 400px;
+    margin-top: 45px;
+  }
+}
+@media (max-width: 425px) {
+  .hdx-wrapper .top-banner .top-banner-text-wrapper {
+    min-width: 325px;
+  }
+}
+@media (max-width: 375px) {
+  .hdx-wrapper .top-banner .top-banner-text-wrapper {
+    min-width: 310px;
+  }
+}
+@media (max-width: 320px) {
+  .hdx-wrapper .top-banner .top-banner-text-wrapper {
+    min-width: 295px;
+  }
+  .hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more {
+    margin-top: 30px;
+  }
 }
 .hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-title {
   font-family: 'Gotham-Medium', sans-serif;
@@ -72,6 +118,7 @@
   color: #FFFFFF;
   letter-spacing: 0.01em;
   text-align: center;
+  line-height: 1em;
 }
 .hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more {
   font-family: 'Gotham-Book', sans-serif;
@@ -128,11 +175,9 @@
   background-color: #FFFFFF;
   background-image: url("/images/backgrounds/faq_top_f.png");
   background-repeat: no-repeat;
-  background-position: left bottom;
-  background-size: 100% auto;
+  background-position: center;
+  background-size: cover;
   height: 315px;
-  margin-left: -45px;
-  margin-right: -45px;
   background-image: url("/images/backgrounds/documentation_top_f.jpg");
 }
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
@@ -140,6 +185,36 @@
   margin-right: auto;
   margin-top: 90px;
   width: 50%;
+  min-width: 530px;
+}
+@media (max-width: 1024px) {
+  .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
+    min-width: 530px;
+  }
+}
+@media (max-width: 768px) {
+  .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
+    min-width: 400px;
+    margin-top: 45px;
+  }
+}
+@media (max-width: 425px) {
+  .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
+    min-width: 325px;
+  }
+}
+@media (max-width: 375px) {
+  .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
+    min-width: 310px;
+  }
+}
+@media (max-width: 320px) {
+  .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
+    min-width: 295px;
+  }
+  .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-more {
+    margin-top: 30px;
+  }
 }
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-title {
   font-family: 'Gotham-Medium', sans-serif;
@@ -147,6 +222,7 @@
   color: #FFFFFF;
   letter-spacing: 0.01em;
   text-align: center;
+  line-height: 1em;
 }
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-more {
   font-family: 'Gotham-Book', sans-serif;
@@ -166,6 +242,8 @@
 }
 .hdx-wrapper .top-banner-faq-data-responsibility {
   background-image: url("/images/backgrounds/faq_top_f.png");
+  background-position: center;
+  background-size: cover;
   background-image: url("/images/backgrounds/faq_data_responsibility.jpg");
   background-color: #FFFFFF;
   background-repeat: no-repeat;
@@ -180,6 +258,36 @@
   margin-right: auto;
   margin-top: 90px;
   width: 50%;
+  min-width: 530px;
+}
+@media (max-width: 1024px) {
+  .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
+    min-width: 530px;
+  }
+}
+@media (max-width: 768px) {
+  .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
+    min-width: 400px;
+    margin-top: 45px;
+  }
+}
+@media (max-width: 425px) {
+  .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
+    min-width: 325px;
+  }
+}
+@media (max-width: 375px) {
+  .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
+    min-width: 310px;
+  }
+}
+@media (max-width: 320px) {
+  .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
+    min-width: 295px;
+  }
+  .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-more {
+    margin-top: 30px;
+  }
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title {
   font-family: 'Gotham-Medium', sans-serif;
@@ -187,6 +295,7 @@
   color: #FFFFFF;
   letter-spacing: 0.01em;
   text-align: center;
+  line-height: 1em;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-more {
   font-family: 'Gotham-Book', sans-serif;
