@@ -32,7 +32,6 @@ organization = {
 }
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):

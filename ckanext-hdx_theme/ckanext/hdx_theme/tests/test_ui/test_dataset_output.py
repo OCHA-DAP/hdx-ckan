@@ -49,7 +49,6 @@ organization = {
 }
 
 
-@pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     # loads missing plugins
     @classmethod
