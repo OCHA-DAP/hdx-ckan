@@ -42,12 +42,24 @@
     .two-column-left {
       background-color: #1ebfb3;
       height: @widgetHeight;
+      @media (max-width: @cut-point-tablet) {
+        height: auto;
+      }
     }
 
     @extraPaddingTwoColumnRight: 50px;
     .two-column-right {
       height: @widgetHeight;
       padding: @paddingLarge;
+
+      @media (max-width: @cut-point-mobile-m) {
+        padding: 10px;
+
+        .right-side-actions {
+          right: 25px;
+        }
+      }
+
     }
   }
 }
