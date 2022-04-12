@@ -38,7 +38,8 @@ Since it's easier to read and also easier to use I'll assume for the rest of thi
 POST Query Example
 ------------------
 
-Below you can see a simple example that queries for the "health" term and filters by the location "rou" (Romania).
+Below you can see a simple example that queries for the "health" term and filters by the location "rou" (Romania)
+and organizations "world-bank-group" (World Bank Group ) or world-health-organization (World Health Organization).
 
 .. code-block:: json
 
@@ -46,7 +47,8 @@ Below you can see a simple example that queries for the "health" term and filter
     "q": "health",
     "fq": "+dataset_type:dataset -extras_archived:true",
     "fq_list": [
-      "{!tag=groups}groups:\"rou\""
+      "{!tag=groups}groups:\"rou\"",
+      "{!tag=organization}organization:\"world-bank-group\" OR organization:\"world-health-organization\""
     ],
     "facet.field": [
       "{!ex=groups}groups",
@@ -150,7 +152,7 @@ Example::
   {
       "success": true,
       "result": {
-          "count": 27,
+          "count": 12,
           ....
           "results": [
               {
