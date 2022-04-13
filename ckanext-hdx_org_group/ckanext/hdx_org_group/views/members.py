@@ -50,15 +50,17 @@ def members(id):
     :return: the rendered template
     :rtype: unicode
     '''
-    context = _get_context()
-
-    q, sort = _find_filter_params()
-    reverse = True if sort == u'title desc' else False
-
-    org_meta = org_meta_dao.OrgMetaDao(id, g.user, g.userobj)
-    org_meta.fetch_all()
 
     try:
+        context = _get_context()
+        check_access(u'group_edit_permissions', context, {u'id': id})
+
+        q, sort = _find_filter_params()
+        reverse = True if sort == u'title desc' else False
+
+        org_meta = org_meta_dao.OrgMetaDao(id, g.user, g.userobj)
+        org_meta.fetch_all()
+
         member_list = get_action('member_list')(
             context, {'id': id, 'object_type': 'user',
                       'q': q, 'user_info': True}
