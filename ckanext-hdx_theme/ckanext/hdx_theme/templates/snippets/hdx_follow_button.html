@@ -9,7 +9,7 @@
 
 {% if following %}
 <a href="{{ h.url_for(controller=controller, action='unfollow', id=obj_id) }}"
-	{% for key,value in params.iteritems() %}
+	{% for key,value in params.items() %}
 	 {{ key }}="{{ value }}"
 	 {% endfor%}
 	data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="unfollow" data-module-extra_text='{{ follow_extra_text }}'>
@@ -17,7 +17,7 @@
 </a>
 {% else %}
 <a href="{{ h.url_for(controller=controller, action='follow', id=obj_id) }}"
-	 {% for key,value in params.iteritems() %}
+	 {% for key,value in params.items() %}
 	 {{ key }}="{{ value }}"
 	 {% endfor%}
 	 data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="follow" data-module-extra_text='{{ follow_extra_text }}'>
