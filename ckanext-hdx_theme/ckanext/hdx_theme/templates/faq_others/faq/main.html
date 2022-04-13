@@ -5,6 +5,17 @@
     {% asset 'hdx_theme/faq-styles' %}
 {% endblock %}
 
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block header_core %}
+  {% set page_has_desktop_version = False %}
+  {% set page_has_mobile_version = False  %}
+  {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
+{% endblock %}
+
 {% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
 
 {% block breadcrumb_content %}
