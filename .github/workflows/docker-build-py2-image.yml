@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - prod
+      - hdx-*
     tags: [ '*' ]
   workflow_dispatch:
 
