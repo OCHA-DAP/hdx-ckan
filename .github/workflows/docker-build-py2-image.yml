@@ -1,4 +1,4 @@
-name: HDX/CKAN create image
+name: HDX/CKAN create Python2 image
 
 on:
   push:
@@ -52,4 +52,5 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}
+          file: ./Dockerfile.py2
+          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}-py2

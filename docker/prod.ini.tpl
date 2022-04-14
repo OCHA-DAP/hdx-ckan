@@ -11,7 +11,6 @@ host = 0.0.0.0
 port = 5000
 
 [app:main]
-use = egg:ckan
 use = config:/srv/ckan/common-config-ini.txt
 ## Database Settings
 sqlalchemy.url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB}
@@ -73,8 +72,6 @@ hdx.mapbox.labelslayer.url = /mapbox-layer-tiles/{z}/{x}/{y}.png
 # disabled during work on HDX-6899
 # hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
 # hdx.rest.indicator.endpoint.facets = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2
-
-ckan.storage_path = ${HDX_FILESTORE}
 
 hdx.css.basepath           = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated
 hdx.less.basepath          = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less
