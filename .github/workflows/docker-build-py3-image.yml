@@ -1,4 +1,4 @@
-name: HDX/CKAN create Python2 image
+name: HDX/CKAN create Python3 image
 
 on:
   push:
