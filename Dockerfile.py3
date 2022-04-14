@@ -22,7 +22,8 @@ RUN apt-get -qq -y update && \
     cp docker/locale /etc/default/locale && \
     locale-gen en_US.UTF-8 && \
     dpkg-reconfigure locales && \
-    update-locale LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8apt-get -q -y update && \
+    update-locale LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8 && \
+    apt-get -q -y update && \
     apt-get -q -y install \
         build-essential \
         curl \
