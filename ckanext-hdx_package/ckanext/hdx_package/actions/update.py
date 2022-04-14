@@ -8,6 +8,7 @@ import datetime
 import json
 import logging
 
+from six import text_type
 from flask import request
 from sqlalchemy import or_
 
@@ -74,7 +75,7 @@ def resource_update(context, data_dict):
                 data_dict['size'] = request.content_length
                 data_dict['mimetype'] = request.files['upload'].mimetype
         except RuntimeError as re:
-            log.debug('This usually happens for tests when there is no HTTP request: ' + unicode(re))
+            log.debug('This usually happens for tests when there is no HTTP request: ' + text_type(re))
 
     if data_dict.get('datastore_active', 'false') in ('false', 'False'):
         data_dict['datastore_active'] = False

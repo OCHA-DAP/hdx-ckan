@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 NotFound = tk.ObjectNotFound
 h = tk.h
 
+
 @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
@@ -41,7 +42,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         test_client = self.get_backwards_compatible_test_client()
 
         # step 1 register
-        url = h.url_for('hdx_user.register_email')
+        url = h.url_for('hdx_user_register.register_email')
         data = {'email': 'newuser@hdx.org', 'nosetest': 'true'}
         res = test_client.post(url, data=data)
         assert_true(json.loads(res.body)['success'])
@@ -63,7 +64,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         # step 3 details
         context = {'model': model, 'session': model.Session, 'auth_user_obj': user}
-        url = h.url_for('hdx_user.register_details')
+        url = h.url_for('hdx_user_register.register_details')
 
         try:
             res = test_client.post(url, data={})
@@ -167,7 +168,6 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert self._get_user_extra_by_key(res, user_model.HDX_FIRST_NAME) == data.get('first-name')
         assert self._get_user_extra_by_key(res, user_model.HDX_LAST_NAME) == data.get('last-name')
         assert self._get_user_extra_by_key(res, user_model.HDX_ONBOARDING_DETAILS) == 'True'
-
 
         # step 4 follow
         url = h.url_for('hdx_user.follow_details')

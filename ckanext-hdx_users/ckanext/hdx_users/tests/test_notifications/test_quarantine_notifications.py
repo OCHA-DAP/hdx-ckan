@@ -15,9 +15,9 @@ config = tk.config
 NotAuthorized = tk.NotAuthorized
 _get_action = tk.get_action
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
-class TestQuarantineNotifications(hdx_test_base.HdxBaseTest):
 
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+class TestQuarantineNotifications(hdx_test_base.HdxBaseTest):
     EDITOR_USER = 'editor_user'
     SYSADMIN_USER = 'testsysadmin'
     PACKAGE_ID = 'test_dataset_4_quarantine'
@@ -70,7 +70,7 @@ class TestQuarantineNotifications(hdx_test_base.HdxBaseTest):
         is_sysadmin = authz.is_sysadmin(username)
         quarantined_datasets_dao = QuarantinedDatasetsDao(model, userobj, is_sysadmin)
 
-        quarantine_service = SysadminQuarantinedDatasetsService (quarantined_datasets_dao, username) if is_sysadmin \
+        quarantine_service = SysadminQuarantinedDatasetsService(quarantined_datasets_dao, username) if is_sysadmin \
             else QuarantinedDatasetsService(quarantined_datasets_dao, username)
 
         return quarantine_service

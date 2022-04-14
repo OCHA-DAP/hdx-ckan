@@ -74,7 +74,6 @@ RUN apt-get -qq -y update && \
     ./setup_py_helper.sh && \
     cd /srv/ckan && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
-    pip install boto3 && \
     chown -R www-data ckan/public/base/i18n && \
     curl --output /usr/share/keyrings/nginx-keyring.gpg https://unit.nginx.org/keys/nginx-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/debian/ buster unit" > /etc/apt/sources.list.d/unit.list && \

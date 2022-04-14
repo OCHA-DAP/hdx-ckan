@@ -21,7 +21,6 @@ from ckan.views.user import unfollow as _unfollow
 from ckanext.hdx_users.views.user_auth_view import HDXUserAuthView
 from ckanext.hdx_users.views.user_edit_view import HDXEditView
 from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
-from ckanext.hdx_users.views.user_register_view import HDXRegisterView
 from ckanext.hdx_users.views.user_view_helper import *
 
 log = logging.getLogger(__name__)
@@ -41,10 +40,10 @@ NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
-hdx_register_view = HDXRegisterView()
 hdx_auth_view = HDXUserAuthView()
 user_onboarding_view = HDXUserOnboardingView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
+
 hdx_login_link = Blueprint(u'hdx_login_link', __name__)
 
 
@@ -203,11 +202,6 @@ user.add_url_rule(u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'pe
 _edit_view = HDXEditView.as_view(str(u'edit'))
 user.add_url_rule(u'/edit', view_func=_edit_view)
 user.add_url_rule(u'/edit/<id>', view_func=_edit_view)
-
-user.add_url_rule(u'/register', view_func=hdx_register_view.register)
-user.add_url_rule(u'/register_email', view_func=hdx_register_view.register_email, methods=(u'POST',))
-user.add_url_rule(u'/register_details', view_func=hdx_register_view.register_details, methods=(u'POST',))
-user.add_url_rule(u'/validate/<token>', view_func=hdx_register_view.validate)
 
 user.add_url_rule(u'/follow_details', view_func=user_onboarding_view.follow_details, methods=(u'POST',))
 user.add_url_rule(u'/request_membership', view_func=user_onboarding_view.request_membership, methods=(u'POST',))

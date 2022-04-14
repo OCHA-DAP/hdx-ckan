@@ -20,6 +20,24 @@
     top: 15px;
     z-index: 99;
     max-width: 270px;
+    @media (max-width: 991px) {
+      position: static;
+      &.ongoing {
+        position: fixed;
+        top: -240px;
+
+        .search-box {
+          position: fixed;
+          top: 0;
+          z-index: 99;
+          background-color: @extraLightGrayColor;
+          width: 100%;
+          padding: 0 15px;
+          left: 0;
+        }
+      }
+
+    }
   }
   .nav li a {
     padding: 0;
@@ -74,17 +92,36 @@
     background-color: #FFFFFF;
     background-image: url("/images/backgrounds/faq_top_f.png");
     background-repeat: no-repeat;
-    background-position: left bottom;
-    background-size: 100% auto;
+    background-position: center;
+    background-size: cover;
     height: 315px;
-    margin-left: -@containerMarginSize;
-    margin-right: -@containerMarginSize;
 
     .top-banner-text-wrapper{
       margin-left: auto;
       margin-right: auto;
       margin-top: 90px;
       width: 50%;
+      min-width: 530px;
+
+      @media (max-width: @cut-point-laptop-s) {
+        min-width: 530px;
+      }
+      @media (max-width: @cut-point-tablet) {
+        min-width: 400px;
+        margin-top: 45px;
+      }
+      @media (max-width: @cut-point-mobile-l) {
+        min-width: 325px;
+      }
+      @media (max-width: @cut-point-mobile-m) {
+        min-width: 310px;
+      }
+      @media (max-width: @cut-point-mobile-s) {
+        min-width: 295px;
+        .top-banner-more {
+          margin-top: 30px;
+        }
+      }
 
       .top-banner-title {
         font-family: @gothamMediumFont;
@@ -92,6 +129,7 @@
         color: #FFFFFF;
         letter-spacing: 0.01em;
         text-align: center;
+        line-height: 1em;
       }
 
       .top-banner-more {

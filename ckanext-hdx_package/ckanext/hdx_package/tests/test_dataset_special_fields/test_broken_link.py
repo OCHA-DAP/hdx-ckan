@@ -7,7 +7,6 @@ from ckan.tests import factories
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestBrokenLinkInResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     context = {'model': model, 'session': model.Session, 'user': 'editor_user'}

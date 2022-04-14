@@ -15,6 +15,7 @@ h = tk.h
 NotFound = tk.ObjectNotFound
 g = tk.g
 
+
 def get_notification_service():
     if not g.user:
         raise NotFound('Seems like user is not logged in so no notification service can be created')
@@ -77,7 +78,6 @@ class NotificationService(object):
                 if notification.get('last_date') else ''
             if not any_personal_notifications and not notification['for_sysadmin']:
                 any_personal_notifications = True
-
 
         return {
             'any_personal_notifications': any_personal_notifications,

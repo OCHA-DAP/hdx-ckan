@@ -8,7 +8,7 @@ from ckanext.hdx_dataviz.tests import generate_test_showcase, USER, SYSADMIN, OR
 _url_for = tk.url_for
 
 
-@pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
+# @pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
 def test_dataviz_page_load(app):
     generate_test_showcase(SYSADMIN, 'dataviz-gallery-1', True)

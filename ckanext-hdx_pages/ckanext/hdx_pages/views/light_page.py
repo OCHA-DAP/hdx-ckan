@@ -11,17 +11,17 @@ import ckan.logic as logic
 
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
-
+import ckanext.hdx_search.cli.click_feature_search_command as lunr
 from ckan.common import _, config, g, request
 import ckanext.hdx_pages.helpers.helper as page_h
 # import ckanext.hdx_package.helpers.helpers as pkg_h
 
-if not six.PY3:
-    from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-else:
-    @decorator
-    def check_redirect_needed(original_action, *args, **kw):
-        return original_action(*args, **kw)
+# if not six.PY3:
+from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+# else:
+#     @decorator
+#     def check_redirect_needed(original_action, *args, **kw):
+#         return original_action(*args, **kw)
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -76,11 +76,9 @@ def read_dashboard(id):
 
 
 def _update_lunr():
-    if not six.PY3:
-        import ckanext.hdx_search.command as lunr
-        test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-        if not test:
-            lunr.buildIndex(config.get('hdx.lunr.index_location'))
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+    if not test:
+        lunr.build_index()
 
 
 # def delete_page(id):

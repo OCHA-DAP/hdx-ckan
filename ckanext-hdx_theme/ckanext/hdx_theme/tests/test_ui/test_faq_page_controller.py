@@ -22,7 +22,7 @@ contact_form = {
 }
 
 
-@pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
+# @pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
 class TestFaqPageController(hdx_test_base.HdxBaseTest):
 
     # loads missing plugins
@@ -54,26 +54,26 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         _old_faq_for_category = fw.faq_for_category
         fw.faq_for_category = mh.mock_faqs_license_page_content
         page = self._get_faqs_page('licenses')
-        assert 'Data Licenses' in page.data, 'the url /faqs/license should redirect to the Data Licenses page when no user is logged in'
+        assert 'Data Licenses' in page.body, 'the url /faqs/license should redirect to the Data Licenses page when no user is logged in'
         page = self._get_faqs_page('licenses', testsysadmin.apikey)
-        assert 'Data Licenses' in page.data, 'the url /faqs/license should redirect to the Data Licenses page, even when the user is logged in'
+        assert 'Data Licenses' in page.body, 'the url /faqs/license should redirect to the Data Licenses page, even when the user is logged in'
         fw.faq_for_category = _old_faq_for_category
 
         # /faqs/terms
         _old_faq_for_category = fw.faq_for_category
         fw.faq_for_category = mh.mock_faqs_terms_page_content
         page = self._get_faqs_page('terms')
-        assert 'HDX Terms of Service' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
-        assert 'HDX is an open platform and anyone can use it without creating a user account.' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
+        assert 'HDX Terms of Service' in page.body, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
+        assert 'HDX is an open platform and anyone can use it without creating a user account.' in page.body, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
         page = self._get_faqs_page('terms', testsysadmin.apikey)
-        assert 'HDX Terms of Service' in page.data, 'the url /faqs/terms should redirect to the Terms of Service page, even when the user is logged in'
+        assert 'HDX Terms of Service' in page.body, 'the url /faqs/terms should redirect to the Terms of Service page, even when the user is logged in'
         fw.faq_for_category = _old_faq_for_category
 
         # /about/hdx-qa-process
         page = self._get_about_page('hdx-qa-process')
-        assert 'Responsible Data Sharing on HDX' in page.data, 'the url /about/hdx-qa-proces should redirect to the QA process page when no user is logged in'
+        assert 'Responsible Data Sharing on HDX' in page.body, 'the url /about/hdx-qa-proces should redirect to the QA process page when no user is logged in'
         page = self._get_about_page('hdx-qa-process', testsysadmin.apikey)
-        assert 'Responsible Data Sharing on HDX' in page.data, 'the url /about/hdx-qa-proces should redirect to the QA process page, even when the user is logged in'
+        assert 'Responsible Data Sharing on HDX' in page.body, 'the url /about/hdx-qa-proces should redirect to the QA process page, even when the user is logged in'
 
         page = self._get_about_page('fake')
         assert page.status_code == 404
@@ -88,10 +88,10 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         fw.faq_for_category = mh.mock_faq_page_content
         url = '/faq'
         page = self._get_url_page(url)
-        assert 'Frequently Asked Questions' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        assert 'FAQ' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'Frequently Asked Questions' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'FAQ' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         page = self._get_url_page(url, testsysadmin.apikey)
-        assert 'Frequently Asked Questions' in page.data, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
+        assert 'Frequently Asked Questions' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
     def _get_faqs_page(self, page, apikey=None):
@@ -124,10 +124,10 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_documentation_page_content
         page = self._get_faqs_page('devs')
-        assert 'Resources for Developers' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        assert 'Accessing HDX by API' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'Resources for Developers' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'Accessing HDX by API' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         page = self._get_faqs_page('devs', testsysadmin.apikey)
-        assert 'Resources for Developers' in page.data, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
+        assert 'Resources for Developers' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
     def test_data_responsability_page(self):
@@ -137,10 +137,10 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         fw.faq_for_category = mh.mock_data_responsability_page_content
         # url = h.url_for(controller='ckanext.hdx_theme.controllers.faq_data_responsibility:FaqDataResponsibilityController', action='show')
         page = self._get_faqs_page('covid')
-        assert 'Data Responsibility in the COVID-19 Response' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        assert 'About Data Responsibility for COVID-19' in page.data, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'Data Responsibility in the COVID-19 Response' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'About Data Responsibility for COVID-19' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         page = self._get_faqs_page('covid', testsysadmin.apikey)
-        assert 'Data Responsibility in the COVID-19 Response' in page.data, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
+        assert 'Data Responsibility in the COVID-19 Response' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
     def _get_url_page(self, url, apikey=None):

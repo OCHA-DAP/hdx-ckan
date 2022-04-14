@@ -15,7 +15,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 log = logging.getLogger(__name__)
 
 
-@pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
+# @pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
 class TestDatasetAuth(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):

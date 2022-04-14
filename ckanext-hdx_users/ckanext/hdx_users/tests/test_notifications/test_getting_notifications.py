@@ -16,9 +16,9 @@ from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, R
 
 get_action = tk.get_action
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
-class TestGettingNotifications(hdx_test_base.HdxBaseTest):
 
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+class TestGettingNotifications(hdx_test_base.HdxBaseTest):
     ORG_NAME = 'notification_test_org'
     ORG_TITLE = 'Notification Test Org'
     ADMIN_USER = 'organization_administrator1'
@@ -165,7 +165,6 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
         assert result['list'][3]['last_date'] == sorted_dates[3]['formatted_date']
         assert 'org_hdx_url' in result['list'][3], 'The notification should be of type membership request'
 
-
     @staticmethod
     def get_membership_request_service(username):
         userobj = model.User.get(username)
@@ -182,7 +181,7 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
         is_sysadmin = authz.is_sysadmin(username)
         request_data_dao = RequestDataDao(model, userobj, is_sysadmin)
 
-        request_data_service = SysadminRequestDataService(request_data_dao, username)\
+        request_data_service = SysadminRequestDataService(request_data_dao, username) \
             if is_sysadmin else RequestDataService(request_data_dao, username)
 
         return request_data_service
@@ -244,4 +243,3 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
     @classmethod
     def _delete_request_data_request(cls, package_id):
         get_action('requestdata_request_delete_by_package_id')({'user': cls.ADMIN_USER}, {'package_id': package_id})
-

@@ -13,7 +13,6 @@ config = tk.config
 NotAuthorized = tk.NotAuthorized
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestMicrodataInQuarantineMetafields(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -132,7 +131,6 @@ class TestMicrodataInQuarantineMetafields(hdx_test_base.HdxBaseTest):
         return self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestMicrodataInQuarantineMetafieldsNormalUser(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -251,7 +249,6 @@ class TestMicrodataInQuarantineMetafieldsNormalUser(hdx_test_base.HdxBaseTest):
         return self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestMicrodataInQuarantineMetafieldsCreateNewDataset(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'

@@ -6,13 +6,18 @@ import datetime
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
 import ckan.lib.base as base
-import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-from ckan.common import _, c, g, request
 
 log = logging.getLogger(__name__)
+
+NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+get_action = tk.get_action
 config = tk.config
+request = tk.request
+g = tk.g
+_ = tk._
 
 
 def is_indicator(pkg_dict):
@@ -147,10 +152,10 @@ def _ga_location(location_names):
     return result
 
 
-def resource_download_with_analytics(self, id, resource_id, filename=None):
+def resource_download_with_analytics(id, resource_id, filename=None):
 
     send_event = True
-    referer_url = request.referer
+    referer_url = request.referrer
 
     if referer_url:
         ckan_url = config.get('ckan.site_url', '//localhost:5000')
@@ -201,8 +206,8 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
 
         try:
             context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author, 'auth_user_obj': c.userobj}
-            dataset_dict = logic.get_action('package_show')(context, {'id': package_id})
+                       'user': g.user or g.author, 'auth_user_obj': g.userobj}
+            dataset_dict = get_action('package_show')(context, {'id': package_id})
             resource_dict = next(r for r in dataset_dict.get('resources', {}) if r.get('id') == resource_id)
             location_names, location_ids = extract_locations(dataset_dict)
 
@@ -210,7 +215,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             dataset_is_cod = is_cod(dataset_dict) == 'true'
             dataset_is_indicator = is_indicator(dataset_dict) == 'true'
             dataset_is_archived = is_archived(dataset_dict) == 'true'
-            authenticated = True if c.userobj else False
+            authenticated = True if g.userobj else False
 
             self.analytics_dict = {
                 'event_name': 'resource download',
@@ -240,9 +245,9 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
                 }
             }
 
-        except logic.NotFound:
+        except NotFound:
             base.abort(404, _('Resource not found'))
-        except logic.NotAuthorized:
+        except NotAuthorized:
             base.abort(403, _('Unauthorized to read resource %s') % id)
         except Exception as e:
             log.error('Unexpected error {}'.format(e))

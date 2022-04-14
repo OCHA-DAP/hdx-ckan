@@ -15,6 +15,8 @@ SEARCH ENGINE
 +++++++++++++
 Information about how the CKAN search results are being computed can be found here `Search Documentation <search/index.rst>`_
 
+Information about how to use the API endpoint :code:`package_search()` can be found here `Using the API to Search on HDX <search/package_search.rst>`_
+
 
 DATASET FIELDS
 ++++++++++++++

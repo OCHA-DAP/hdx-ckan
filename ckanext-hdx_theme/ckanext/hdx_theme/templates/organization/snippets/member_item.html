@@ -62,7 +62,8 @@ Example:
                 {% endif %}
 
 							  {% snippet 'snippets/confirmation_member_delete.html', form_url=h.url_for('hdx_members.member_delete',
-							    id=group_id, user=id),
+							    id=group_id),
+							    user=id,
 									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id,
                   packages=member.maint_pkgs, disabled=disabled %}
 							  </div>

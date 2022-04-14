@@ -19,9 +19,22 @@
   background-color: #1ebfb3;
   height: 560px;
 }
+@media (max-width: 768px) {
+  #faqSendMsgPopup .two-column-widget .two-column-left {
+    height: auto;
+  }
+}
 #faqSendMsgPopup .two-column-widget .two-column-right {
   height: 560px;
   padding: 60px;
+}
+@media (max-width: 375px) {
+  #faqSendMsgPopup .two-column-widget .two-column-right {
+    padding: 10px;
+  }
+  #faqSendMsgPopup .two-column-widget .two-column-right .right-side-actions {
+    right: 25px;
+  }
 }
 #faqDonePopup .notification-widget .notification-title {
   text-align: center;

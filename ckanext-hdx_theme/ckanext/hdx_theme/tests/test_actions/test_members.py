@@ -123,7 +123,7 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
                                            apikey=user.get('apikey'))
         return basic_info
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_hdx_send_editor_request_for_org(self, mocked_mail_recipient):
 

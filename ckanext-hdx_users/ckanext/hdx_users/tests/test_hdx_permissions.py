@@ -8,12 +8,14 @@ from ckanext.hdx_users.helpers.permissions import Permissions
 log = logging.getLogger(__name__)
 NotAuthorized = tk.NotAuthorized
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHdxPermissions(hdx_test_base.HdxBaseTest):
 
     def test_permission_save(self):
         first_list = [Permissions.PERMISSION_MANAGE_CRISIS, Permissions.PERMISSION_MANAGE_COD]
-        second_list = [Permissions.PERMISSION_VIEW_REQUEST_DATA, Permissions.PERMISSION_MANAGE_CRISIS, Permissions.PERMISSION_MANAGE_COD]
+        second_list = [Permissions.PERMISSION_VIEW_REQUEST_DATA, Permissions.PERMISSION_MANAGE_CRISIS,
+                       Permissions.PERMISSION_MANAGE_COD]
 
         permissions = Permissions('tester')
 
@@ -40,4 +42,3 @@ class TestHdxPermissions(hdx_test_base.HdxBaseTest):
             assert False
         except NotAuthorized as e:
             assert True
-

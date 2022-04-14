@@ -4,6 +4,7 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as user_model
 from ckan import model
+from six import text_type
 from ckan.plugins import toolkit as tk
 from ckanext.hdx_users.views.user_view_helper import *
 
@@ -204,7 +205,7 @@ class HDXUserOnboardingView:
             raise ValidationError(errors)
 
         user_email_validator = _get_validator('email_validator')
-        schema = {'work_email': [user_email_validator, unicode]}
+        schema = {'work_email': [user_email_validator, text_type]}
         data_dict, _errors = _validate(data, schema, context)
 
         if _errors:

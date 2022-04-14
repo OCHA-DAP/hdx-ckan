@@ -92,7 +92,7 @@ class TestHDXControllerPage(object):
                          'with_request_context')
 class TestHDXControllerPageNew(TestHDXControllerPage):
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     @pytest.mark.usefixtures('with_request_context')
     def test_page_new(self, app):
 
@@ -123,7 +123,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
                          'with_request_context')
 class TestHDXControllerPageEdit(TestHDXControllerPage):
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_edit(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}
@@ -158,7 +158,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
                          'with_request_context')
 class TestHDXControllerPageRead(TestHDXControllerPage):
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_read(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}
@@ -197,7 +197,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPageDelete(TestHDXControllerPage):
 
-    @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
     def test_page_delete(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}
