@@ -69,6 +69,7 @@ RUN apt-get -qq -y update && \
     python -m pip install --upgrade pip && \
     pip install -r requirement-setuptools.txt && \
     pip install --upgrade -r requirements.txt && \
+    pip install newrelic && \
     chmod +x run_pytest_with_coverage.sh && \
     chmod +x setup_py_helper.sh && \
     ./setup_py3_helper.sh && \
