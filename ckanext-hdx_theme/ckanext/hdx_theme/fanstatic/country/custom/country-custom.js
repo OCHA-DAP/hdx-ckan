@@ -1,34 +1,13 @@
 $(document).ready(function() {
-    var crisisMapDiv = $("#crisis-map");
+    let crisisMapDiv = $("#crisis-map");
     if (crisisMapDiv.length){
-        var confJsonText = $("#map-configuration").text();
-        var confJson = JSON.parse(confJsonText);
+        let confJsonText = $("#map-configuration").text();
+        let confJson = JSON.parse(confJsonText);
 
-        var map = L.map('crisis-map', { attributionControl: false });
-        map.scrollWheelZoom.disable();
-        if ( confJson.is_crisis=='false' ) {
-             L.tileLayer($('#mapbox-baselayer-url-div').text(), {
-                attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
-                maxZoom: 7
-            }).addTo(map);
+        let map = L.map('crisis-map', { attributionControl: false });
+        setHDXBaseMap(map, 7);
 
-            L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-                maxZoom: 7
-            }).addTo(map);
-        }
-        else {
-            var attribution = '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>' +
-                ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
-            L.tileLayer(confJson.basemap_url, {
-                attribution: attribution,
-                //maxZoom: 14
-            }).addTo(map);
-        }
-
-        L.control.attribution({position: 'topright'}).addTo(map);
-        //map.setView([5, -70], 5);
-
-        var layers = [];
+        let layers = [];
 
         loadMapData(map, confJson, layers);
     }

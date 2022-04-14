@@ -294,16 +294,8 @@ function computeBoundaryPoly(options, data) {
 }
 
 function buildMap(options){
-    var map = L.map('map', { attributionControl: false });
-    map.scrollWheelZoom.disable();
-    L.tileLayer($('#crisis-map-url-div').text(), {
-        attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxZoom: 16
-    }).addTo(map);
-
-    L.control.attribution({position: 'topright'}).addTo(map);
-    map.setView([0, 0], 1);
-
+    let map = L.map('map', { attributionControl: false });
+    setHDXBaseMap(map, 16);
     options.map = map;
     getData(options);
 }

@@ -143,7 +143,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
                 'config_type': org_read_logic.viz_config['type'],
                 'config_url': urlencode(org_read_logic.viz_config, True),
                 # 'embed_url': org_read_logic.links.embed_url,
-                'basemap_url': config.get('hdx.orgmap.url')
+
             },
 
             # This is hear for compatibility with the custom_org_header.html template, which is still
