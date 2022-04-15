@@ -1,6 +1,8 @@
 FROM ubuntu:focal
 # FROM public.ecr.aws/unocha/debian-base-s6:11-slim
 
+ARG S6_VERSION=v2.2.0.3
+
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en_US \
@@ -71,7 +73,7 @@ RUN apt-get -qq -y update && \
     pip install --upgrade -r requirements.txt && \
     pip install newrelic && \
     chmod +x run_pytest_with_coverage.sh && \
-    chmod +x setup_py_helper.sh && \
+    chmod +x setup_py3_helper.sh && \
     ./setup_py3_helper.sh && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     chown -R www-data ckan/public/base/i18n && \
@@ -102,8 +104,17 @@ RUN apt-get -qq -y update && \
         /usr/share/man \
         /var/lib/apt/lists/* \
         /var/tmp/* \
-        /tmp/*
+        /tmp/* && \
+    S6_ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+    echo "Installing s6 version: $S6_VERSION for $S6_ARCH" && \
+    curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
+    tar xzf /tmp/s6-overlay.tar.gz -C / && \
+    rm -f /tmp/s6-overlay.tar.gz
 
 VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
 
 EXPOSE 5000
+
+ENTRYPOINT ["/init"]
+
+CMD []
