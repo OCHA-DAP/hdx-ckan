@@ -20,23 +20,22 @@ Example usage:
     <h4>
       <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
     </h4>
-
-    {% set counters = h.requestdata_get_request_counters(item.package_id) %}
+  
     <div class="requested-data-container__content-item-counters">
-      <span><span style="font-size: 20px;">{{ counters.requests }}</span> Requests</span>
+      <span><span style="font-size: 20px;">{{ item.requests }}</span> Requests</span>
       <span>
         <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
-        <span>{{ counters.replied }} Replied</span>
+        <span>{{ item.replied }} Replied</span>
       </span>
 
       <span>
         <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
-        <span>{{ counters.declined }} Denied</span>
+        <span>{{ item.declined }} Denied</span>
       </span>
 
       <span>
         <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
-        <span>{{ counters.shared }} Shared</span>
+        <span>{{ item.shared }} Shared</span>
       </span>
     </div>
 
