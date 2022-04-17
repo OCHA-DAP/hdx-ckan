@@ -196,7 +196,7 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
         for i in range(10):
             result = self._get_action('requestdata_request_create')(context, data_dict)
 
-        context = {'user': testsysadmin_obj.id}
+        context = {'auth_user_obj': testsysadmin_obj}
 
         try:
             result = self._get_action('requestdata_request_list_for_current_user')(context, {})
