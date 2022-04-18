@@ -15,7 +15,7 @@
         <a onclick="openSDCMicro('{{ pkg.name }}', '{{ res.id }}', '{{ res.url }}')">Run SDC Micro</a>
       </li>
       <li>
-        <a href="{{ h.url_for('resource_read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
+        <a href="{{ h.url_for('resource.read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
       </li>
       {% if h.check_access('hdx_resource_download', res) %}
         <li>
@@ -37,7 +37,7 @@
           DISK. RISK:
         </span>
         {% set sdc_status_text = 'ERR' if res.sdc_report_flag  == 'ERROR' else res.sdc_report_flag %}
-        {% set sdc_report_url = h.url_for('qa_sdcmicro_log', id=pkg.id, resource_id=res.id) %}
+        {% set sdc_report_url = h.url_for('hdx_dataset.qa_sdcmicro_log', id=pkg.id, resource_id=res.id) %}
         {{ qa_macros.qa_check_item(res.sdc_report_flag, sdc_status_text, isodate_string=res.sdc_timestamp,
             link_to_log=sdc_report_url) }}
       </li>
@@ -50,9 +50,9 @@
         {% set debug_file_name = main_file_name | replace('main.json', 'debug.txt') %}
         {% set dlp_file_name = main_file_name | replace('main.json', 'dlp.json') %}
 
-        {% set main_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=main_file_name) %}
-        {% set debug_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=debug_file_name) %}
-        {% set dlp_report_url = h.url_for('qa_pii_log', id=pkg.id, resource_id=res.id, file_name=dlp_file_name) %}
+        {% set main_report_url = h.url_for('hdx_dataset.qa_pii_log', id=pkg.id, resource_id=res.id, file_name=main_file_name) %}
+        {% set debug_report_url = h.url_for('hdx_dataset.qa_pii_log', id=pkg.id, resource_id=res.id, file_name=debug_file_name) %}
+        {% set dlp_report_url = h.url_for('hdx_dataset.qa_pii_log', id=pkg.id, resource_id=res.id, file_name=dlp_file_name) %}
         {% set dlp_run = 'pii_report_flag' in res and 'pii_report_id' in res %}
         {{ qa_macros.qa_check_pii_item(res.pii_report_flag, pii_status_text, isodate_string=res.pii_timestamp,
             link_to_log=main_report_url, link_to_debug=debug_report_url, link_to_dlp=dlp_report_url, resource=res, dlp_run=dlp_run ) }}
