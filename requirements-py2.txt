@@ -6,7 +6,7 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.201#egg=ckanext-dcat
     # via -r requirements-py2.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.6#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.8#egg=ckanext-requestdata
     # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements-py2.in
