@@ -2,6 +2,7 @@ import json
 import datetime
 import logging
 import re
+import six
 import six.moves.urllib.parse as urlparse
 
 import ckan.authz as new_authz
@@ -347,7 +348,10 @@ def hdx_member_roles_list():
 
 
 def hdx_version():
-    return version.hdx_version
+    ver = version.hdx_version
+    if six.PY3:
+        ver += ' PY3'
+    return ver
 
 
 def hdx_get_extras_element(data_dict, key='key', value_key='org_url', ret_key='value'):
