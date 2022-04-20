@@ -805,7 +805,7 @@ def hdx_check_http_response(response_code, comparison_http_code):
         elif response_code[0] == comparison_http_code:
             return True
     except TypeError as e:
-        log.info(text_type(e))
+        log.info('Follwing error was generated from hdx_check_http_response():' + text_type(e))
     return False
 
 
