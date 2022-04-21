@@ -58,7 +58,7 @@ def new(id=None, action_name='package_create'):
         _check_access(action_name, context, dataset_dict)
     except NotAuthorized as e:
         if g.userobj or g.user:
-            h.redirect_to('user_dashboard_organizations')
+            return h.redirect_to('dashboard.organizations')
         return abort(403, _('Unauthorized to create a package'))
 
     save_type = request.form.get('save')

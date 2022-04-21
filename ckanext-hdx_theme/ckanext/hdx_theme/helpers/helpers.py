@@ -2,6 +2,7 @@ import json
 import datetime
 import logging
 import re
+import six
 import six.moves.urllib.parse as urlparse
 
 import ckan.authz as new_authz
@@ -347,7 +348,10 @@ def hdx_member_roles_list():
 
 
 def hdx_version():
-    return version.hdx_version
+    ver = version.hdx_version
+    if six.PY3:
+        ver += ' PY3'
+    return ver
 
 
 def hdx_get_extras_element(data_dict, key='key', value_key='org_url', ret_key='value'):
@@ -805,7 +809,7 @@ def hdx_check_http_response(response_code, comparison_http_code):
         elif response_code[0] == comparison_http_code:
             return True
     except TypeError as e:
-        log.info(text_type(e))
+        log.info('Follwing error was generated from hdx_check_http_response():' + text_type(e))
     return False
 
 
