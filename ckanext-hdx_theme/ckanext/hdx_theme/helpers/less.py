@@ -2,12 +2,11 @@ import logging
 import os
 import subprocess
 
-from ckantoolkit import config as config
-
-import ckan.common as common
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
-_ = common._
+config = tk.config
+_ = tk._
 
 
 def generate_custom_css_path(css_dest_dir, css_filename_base, timestamp, relative_path=False):
@@ -67,7 +66,7 @@ class LessCompiler(object):
 
                 css = subprocess.check_output(['lessc', self.less_tmp_filepath], stderr=subprocess.STDOUT)
 
-                self._write_string_to_fs(self.css_file_path, css)
+                self._write_string_to_fs(self.css_file_path, css.decode())
 
                 log.info('CSS file created: ' + self.css_file_path)
 
@@ -76,8 +75,7 @@ class LessCompiler(object):
                     'message': self.translate_func('CSS compiled successfully.')
                 }
             except Exception as e:
-                message = e.output if hasattr(e, 'output') else e.message
-                message = message if message else str(e)
+                message = e.output if hasattr(e, 'output') else str(e)
                 log.error('Exception while compiling less' + message)
                 return {
                     'success': False,

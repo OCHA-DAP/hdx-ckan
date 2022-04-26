@@ -9,7 +9,6 @@ import logging
 import os
 import six
 
-# import ckanext.hdx_search.command as lunr
 import ckanext.hdx_search.cli.click_feature_search_command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.helpers.less as less

@@ -34,7 +34,7 @@ permission_carousel = {
     'update_permissions': 'update'
 }
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod

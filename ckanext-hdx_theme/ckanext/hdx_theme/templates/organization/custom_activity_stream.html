@@ -1,11 +1,11 @@
 {% extends "organization/activity_stream.html" %}
 
 {% block item_title_contrib %}
-    {% snippet 'organization/custom/custom_org_header.html', c=c, data=data %}
+    {% snippet 'organization/custom/custom_org_header.html', org_meta=org_meta %}
 {% endblock %}
 
 {% block custom_styles %}
     {{ super() }}
     <link rel="stylesheet" type="text/css"
-          href="{{ c.org_meta.custom_css_path }}" />
+          href="{{ org_meta.custom_css_path }}" />
 {% endblock %}

@@ -15,6 +15,7 @@ h = tk.h
 NotFound = tk.ObjectNotFound
 g = tk.g
 
+
 def get_notification_service():
     if not g.user:
         raise NotFound('Seems like user is not logged in so no notification service can be created')
@@ -78,7 +79,6 @@ class NotificationService(object):
             if not any_personal_notifications and not notification['for_sysadmin']:
                 any_personal_notifications = True
 
-
         return {
             'any_personal_notifications': any_personal_notifications,
             'count': len(notifications),
@@ -119,7 +119,7 @@ class MembershipRequestsService(object):
                     {
                         'org_title': request.title,
                         'org_name': request.name,
-                        'org_hdx_url': h.url_for('organization_members', id=request.name),
+                        'org_hdx_url': h.url_for('hdx_members.members', id=request.name),
                         'html_template': 'light/notifications/org_membership_snippet.html',
                         'last_date': last_date,
                         'count': request.count,
@@ -251,7 +251,7 @@ class QuarantinedDatasetsService(object):
                         'last_date': dataset.get('last_date'),
                         'html_template': 'light/notifications/quarantined_datasets_snippet.html',
                         'dataset': dataset,
-                        'dataset_url': h.url_for('dataset_read', id=dataset.get('name')),
+                        'dataset_url': h.url_for('dataset.read', id=dataset.get('name')),
                         'for_sysadmin': for_sysadmin,
                         'is_sysadmin': self.is_sysadmin
                     }

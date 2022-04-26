@@ -1,9 +1,8 @@
 import ckan
 import logging
 import ckan.model as model
-import ckan.common as common
 import ckan.lib.base as base
-import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.caching as caching
 # import ckanext.hdx_package.helpers.screenshot as screenshot
 
@@ -12,17 +11,16 @@ import ckan.lib.helpers as h
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 from ckan.common import config
 
-c = common.c
-render = base.render
-abort = base.abort
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-get_action = logic.get_action
-c = common.c
-request = common.request
-_ = common._
-response = common.response
+c = tk.c
+render = tk.render
+abort = tk.abort
+NotFound = NotFound = tk.ObjectNotFound
+NotAuthorized = tk.NotAuthorized
+get_action = tk.get_action
+request = tk.request
+_ = tk._
 log = logging.getLogger(__name__)
+
 lookup_group_plugin = ckan.lib.plugins.lookup_group_plugin
 GROUP_TYPES = ['group']
 
@@ -275,7 +273,7 @@ def get_not_filtered_facet_info(country_dict):
     # The facet titles are not really needed in this case but we need to follow the process
     facets = {'vocab_Topics': 'tags', 'organization': 'organization'}
     search_logic = GroupSearchLogic(country_dict.get('name'), None)
-    query_result = search_logic._performing_search(u'', fq, facets.keys(), 2, 1, DEFAULT_SORTING, None,
+    query_result = search_logic._performing_search(u'', fq, list(facets.keys()), 2, 1, DEFAULT_SORTING, None,
                                                    None, context)
     non_filtered_facet_info = search_logic._prepare_facets_info(query_result.get('search_facets'), {}, {},
                                                                 facets, query_result.get('count'), u'')

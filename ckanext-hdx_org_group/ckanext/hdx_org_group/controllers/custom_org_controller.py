@@ -1,44 +1,44 @@
-'''
-Created on Feb 18, 2015
-
-@author: alexandru-m-g
-'''
-import logging
-import collections
-import json
-
-from paste.httpexceptions import HTTPFound
-
-import ckan.lib.base as base
-import ckan.logic as logic
-import ckan.model as model
-import ckan.common as common
-import ckan.lib.helpers as h
-import ckan.authz as new_authz
-
-import ckanext.hdx_theme.helpers.data_access as data_access
-import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
-import ckanext.hdx_theme.helpers.helpers as hdx_helpers
-import ckan.controllers.organization as org
-import ckanext.hdx_theme.helpers.less as less
-from urllib import urlencode
-from pylons import config
-from ckan.controllers.api import CONTENT_TYPES
-import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
-
-render = base.render
-abort = base.abort
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
-get_action = logic.get_action
-c = common.c
-request = common.request
-response = common.response
-_ = common._
-
-log = logging.getLogger(__name__)
-
-suffix = '#datasets-section'
+# '''
+# Created on Feb 18, 2015
+#
+# @author: alexandru-m-g
+# '''
+# import logging
+# import collections
+# import json
+#
+# from paste.httpexceptions import HTTPFound
+#
+# import ckan.lib.base as base
+# import ckan.logic as logic
+# import ckan.model as model
+# import ckan.common as common
+# import ckan.lib.helpers as h
+# import ckan.authz as new_authz
+#
+# import ckanext.hdx_theme.helpers.data_access as data_access
+# import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+# import ckanext.hdx_theme.helpers.helpers as hdx_helpers
+# import ckan.controllers.organization as org
+# import ckanext.hdx_theme.helpers.less as less
+# from urllib import urlencode
+# from pylons import config
+# from ckan.controllers.api import CONTENT_TYPES
+# import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+#
+# render = base.render
+# abort = base.abort
+# NotFound = logic.NotFound
+# NotAuthorized = logic.NotAuthorized
+# get_action = logic.get_action
+# c = common.c
+# request = common.request
+# response = common.response
+# _ = common._
+#
+# log = logging.getLogger(__name__)
+#
+# suffix = '#datasets-section'
 
 #
 # def _get_embed_url(viz_config):
@@ -57,7 +57,7 @@ suffix = '#datasets-section'
 #     return url
 
 
-class CustomOrgController(org.OrganizationController):
+# class CustomOrgController(org.OrganizationController):
     # def org_read(self, id, org_meta=None):
     #     '''
     #
@@ -482,5 +482,5 @@ class CustomOrgController(org.OrganizationController):
     #
     #     return result
 
-    def _activity_template(self, group_type):
-        return 'organization/custom_activity_stream.html'
+    # def _activity_template(self, group_type):
+    #     return 'organization/custom_activity_stream.html'

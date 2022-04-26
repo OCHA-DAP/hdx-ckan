@@ -164,16 +164,14 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert template_data['data'].get('org_meta', {}).get('members_num') == 4
 
     def test_edit_custom_orgs(self):
-        url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='edit', id='hdx-test-org')
+        url = h.url_for('organization.edit', id='hdx-test-org')
         testsysadmin = model.User.by_name('testsysadmin')
         result = self.app.get(url, extra_environ={'Authorization': str(testsysadmin.apikey)})
-        assert 'id="customization-trigger"' in result.data
+        assert 'id="customization-trigger"' in result.body
 
         testadmin = model.User.by_name('janedoe3')
         result = self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
-        assert 'You don\'t have permission to access this page' in result.data
+        assert 'You don\'t have permission to access this page' in result.body
         assert result.status_code == 403
 
         # assert 'id="customization-trigger"' not in str(result.response)

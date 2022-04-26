@@ -183,9 +183,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
         except Exception as ex:
             assert False
 
-        edit_org_url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='edit', id=org_dict.get('id'))
+        edit_org_url = h.url_for('organization.edit', id=org_dict.get('id'))
         edit_org_params = {
             'id': org_dict.get('id'),
             'name': 'test_org_d',
@@ -392,9 +390,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
         except Exception as ex:
             assert False
 
-        edit_org_url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-            action='edit', id=org_dict.get('id'))
+        edit_org_url = h.url_for('organization.edit', id=org_dict.get('id'))
         edit_org_params = {
             'id': org_dict.get('id'),
             'name': 'test_org_d',

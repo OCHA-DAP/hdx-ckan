@@ -6,9 +6,9 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.201#egg=ckanext-dcat
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.5#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.9#egg=ckanext-requestdata
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.3.3#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.304#egg=ckanext-showcase
     # via -r requirements.in
@@ -27,8 +27,12 @@ beaker==1.11.0
     #   repoze.who-use-beaker
 bleach==3.1.4
     # via -r requirements.in
-boto==2.49.0
+boto3==1.17.112
     # via ckanext-s3filestore
+botocore==1.20.112
+    # via
+    #   boto3
+    #   s3transfer
 certifi==2021.5.30
     # via requests
 chardet==4.0.0
@@ -86,6 +90,10 @@ jinja2==2.10.1
     #   -r requirements.in
     #   flask
     #   flask-babel
+jmespath==0.10.0
+    # via
+    #   boto3
+    #   botocore
 lxml==4.6.3
     # via feedgen
 mailchimp3==3.0.14
@@ -122,6 +130,7 @@ python-dateutil==2.8.2
     # via
     #   -r requirements.in
     #   alembic
+    #   botocore
     #   feedgen
 python-editor==1.0.4
     # via alembic
@@ -164,6 +173,8 @@ routes==1.13
     # via -r requirements.in
 rq==1.0
     # via -r requirements.in
+s3transfer==0.4.2
+    # via boto3
 shutilwhich==1.1.0
     # via fanstatic
 simplejson==3.10.0
@@ -194,7 +205,9 @@ ua-parser==0.7.2
 unicodecsv==0.14.1
     # via -r requirements.in
 urllib3==1.26.6
-    # via requests
+    # via
+    #   botocore
+    #   requests
 user_agents==1.1.0
     # via -r requirements.in
 watchdog==2.1.5

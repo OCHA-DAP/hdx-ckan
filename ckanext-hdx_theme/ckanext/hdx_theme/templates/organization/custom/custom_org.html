@@ -19,21 +19,21 @@
 {% endblock %}
 
 {% block primary_content %}
-    {% snippet 'organization/custom/custom_org_header.html', c={'org_meta': data.org_meta}, data=data %}
+    {% snippet 'organization/custom/custom_org_header.html', org_meta=data.org_meta %}
 
     <div>
         <header class="module-content page-header paddingRowHack mTop20 mBottom10">
             <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
                {% block content_primary_nav %}
                     {{ h.build_nav_icon('hdx_org.read', _('Datasets'), id=data.org_info.name, class_='hdx-tab-button') }}
-                    {{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=data.org_info.name, class_='hdx-tab-button') }}
+                    {{ h.build_nav_icon('hdx_org.activity', _('Activity Stream'), id=data.org_info.name, class_='hdx-tab-button') }}
                     {% if c.user %}
-                        {{ h.build_nav_icon('organization_members', _('Members'), id=data.org_info.name, class_='hdx-tab-button') }}
+                        {{ h.build_nav_icon('hdx_members.members', _('Members'), id=data.org_info.name, class_='hdx-tab-button') }}
                     {% endif %}
                     {% if h.check_access('organization_update', {'id': data.org_info.id}) %}
                         {{ h.build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=data.org_info.name) }}
                     {% endif %}
-                    {{ h.build_nav_icon('hdx_organization_stats', _('Stats'), id=data.org_info.name, class_='hdx-tab-button') }}
+                    {{ h.build_nav_icon('hdx_org.stats', _('Stats'), id=data.org_info.name, class_='hdx-tab-button') }}
                {% endblock %}
             </ul>
         </header>

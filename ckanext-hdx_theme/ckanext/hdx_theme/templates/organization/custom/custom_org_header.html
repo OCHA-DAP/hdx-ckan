@@ -1,21 +1,21 @@
 {% asset 'hdx_theme/hdx-show-more' %}
 
-{% set updated_time = c.org_meta.org_dict.created %}
+{% set updated_time = org_meta.org_dict.created %}
 {% set f_updated_time = h.render_datetime(updated_time) %}
 {% block custom_header %}
     <div id="floatingLogo" style="display: none;">
         <div class="logo pull-left table-valign">
             <div class="table-valign-content">
                 <!-- TODO: add correct image url after functionality is ready  -->
-                {% if c.org_meta.custom_sq_logo_url %}
-                    <img class="org-logo lazyload" data-src="{{ c.org_meta.custom_sq_logo_url }}" alt="{{ _('small logo') }}">
+                {% if org_meta.custom_sq_logo_url %}
+                    <img class="org-logo lazyload" data-src="{{ org_meta.custom_sq_logo_url }}" alt="{{ _('small logo') }}">
                 {% else %}
                     <img class="org-logo lazyload" data-src="https://plchldr.co/i/75x75?&bg=cccccc&fc=ffffff" />
                 {% endif %}
             </div>
         </div>
         <div class="title-share pull-left">
-            <div class="floating-org-title">{{c.org_meta.org_dict.display_name |truncate(60,True)}}</div>
+            <div class="floating-org-title">{{org_meta.org_dict.display_name |truncate(60,True)}}</div>
             <div class="floating-org-links">
                 <span id="dataset_social_wrapper_floating" class="popover-wrapper mx-analytics-wrapper"></span>
                 <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
@@ -23,10 +23,10 @@
                    data-original-title="Share">
                     {{ _("Share") }}
                 </a>
-                <a href="{{ c.org_meta.org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a>
-                {{ h.hdx_follow_button('group', c.org_meta.id, follow_extra_text=' ' ) }}
+                <a href="{{ org_meta.org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a>
+                {{ h.hdx_follow_button('group', org_meta.id, follow_extra_text=' ' ) }}
 
-                {% if c.org_meta.allow_req_membership %}
+                {% if org_meta.allow_req_membership %}
                     <a href="#" data-toggle="modal" data-target="#req-membership-div">
                         {{ _("Request Membership") }}
                     </a>
@@ -43,8 +43,8 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="org-title">
-                              {{c.org_meta.org_dict.display_name}}
-                              {% if c.org_meta.org_dict.state == 'deleted' %}<span class="label label-important">{{ _('Deleted') }}</span>{% endif %}
+                              {{org_meta.org_dict.display_name}}
+                              {% if org_meta.org_dict.state == 'deleted' %}<span class="label label-important">{{ _('Deleted') }}</span>{% endif %}
                             </div>
 
                         </div>
@@ -54,20 +54,20 @@
                             <ul class="mainLinks org-info-links">
                                 <li>
                                     <a
-                                        {% if c.org_meta.allow_basic_user_info %}
-                                            href="{{ h.url_for('organization_members', id=c.org_meta.id) }}"
+                                        {% if org_meta.allow_basic_user_info %}
+                                            href="{{ h.url_for('hdx_members.members', id=org_meta.id) }}"
                                         {% else %}
                                             href="#" class="disabled"
                                         {% endif %} >
-                                        {{ c.org_meta.members_num }} {{ _('Members') }}
+                                        {{ org_meta.members_num }} {{ _('Members') }}
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="followersNumber disabled">
-                                        <span>{{ c.org_meta.followers_num }}</span> {{ _('Followers') }}
+                                        <span>{{ org_meta.followers_num }}</span> {{ _('Followers') }}
                                     </a>
                                 </li>
-                                <li><a href="{{ c.org_meta.org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a></li>
+                                <li><a href="{{ org_meta.org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a></li>
                             </ul>
                             <div class="dataset-updated">
                                 {% block updated %}
@@ -80,7 +80,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <span data-module="hdx_show_more" data-module-points="320" style="visibility: hidden;" class="org-description">
-                                {{ h.render_markdown(c.org_meta.org_dict.description) }}
+                                {{ h.render_markdown(org_meta.org_dict.description) }}
                             </span>
                         </div>
                     </div>
@@ -89,8 +89,8 @@
                     <div class="pull-left">
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
-                                {% if c.org_meta.custom_sq_logo_url %}
-                                    <img class="lazyload" data-src="{{c.org_meta.custom_rect_logo_url}}"/>
+                                {% if org_meta.custom_sq_logo_url %}
+                                    <img class="lazyload" data-src="{{org_meta.custom_rect_logo_url}}"/>
                                 {% else %}
                                     <img class="lazyload" data-src="https://plchldr.co/i/300x125?&bg=cccccc&fc=ffffff"/>
                                 {% endif %}
@@ -101,7 +101,7 @@
             </div>
             <div class="row mTop20">
                 <div class="col-xs-12">
-                    {% snippet "organization/snippets/org_actions_menu.html", request_membership=c.org_meta.allow_req_membership, organization=c.org_meta.org_dict, can_create_dataset=c.org_meta.allow_add_dataset, can_edit=c.org_meta.allow_edit, classes='base-actions-menu followButtonContainer pull-right' %}
+                    {% snippet "organization/snippets/org_actions_menu.html", request_membership=org_meta.allow_req_membership, organization=org_meta.org_dict, can_create_dataset=org_meta.allow_add_dataset, can_edit=org_meta.allow_edit, classes='base-actions-menu followButtonContainer pull-right' %}
                 </div>
             </div>
         </div>

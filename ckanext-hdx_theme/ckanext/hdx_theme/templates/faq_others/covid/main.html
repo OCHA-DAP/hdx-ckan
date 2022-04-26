@@ -1,4 +1,4 @@
-{% extends "page.html" %}
+{% extends "faq_others/faq/main.html" %}
 
 {% block subtitle %}{{ _("Data Responsibility for COVID-19") }}{% endblock %}
 
@@ -12,7 +12,7 @@
                         email=data.email, capcha_api_key=capcha_api_key) }}
         {{ h.snippet('widget/faq/done.html', id="faqDonePopup") }}
     {% endblock -%}
-    <div class="row top-banner-faq-data-responsibility">
+    <div class="top-banner-faq-data-responsibility">
         <div class="col-xs-12">
             <div class="top-banner-text-wrapper">
                 <div class="top-banner-title">
@@ -59,10 +59,4 @@
             </p>
         </div>
     </div>
-{% endblock %}
-
-
-{%- block styles %}
-    {{ super() }}
-    {% asset 'hdx_theme/faq-scripts' %}
 {% endblock %}

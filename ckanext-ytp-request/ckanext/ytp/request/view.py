@@ -1,25 +1,27 @@
 import logging
 import ckan.model as model
-import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.lib.base as base
 from flask import Blueprint
-from ckan.common import _, request, g, asbool
 from ckanext.ytp.request.tools import get_user_member
 from ckan.logic import tuplize_dict, clean_dict, parse_params, ValidationError
 
 get_action = tk.get_action
 check_access = tk.check_access
-render = base.render
+asbool = tk.asbool
+request = tk.request
+render = tk.render
 abort = tk.abort
 _ = tk._
+g = tk.g
 url_for = tk.url_for
 config = tk.config
-NotAuthorized = logic.NotAuthorized
-NotFound = logic.NotFound
+NotAuthorized = tk.NotAuthorized
+NotFound = tk.ObjectNotFound
+
 log = logging.getLogger(__file__)
+
 ytp_request = Blueprint(u'ytp_request', __name__, url_prefix=u'/member-request')
 
 NOT_AUTH_MESSAGE = _('Unauthorized')
@@ -195,7 +197,7 @@ def _save_new(context):
             h.flash_success(_('Thank you for your request. The organisation admins were notified.'))
             return h.redirect_to(request.referrer)
         else:
-            response = h.redirect_to('organization_members', id=data_dict['organization'])
+            response = h.redirect_to('hdx_members.members', id=data_dict['organization'])
             return response
     except NotAuthorized:
         abort(403, NOT_AUTH_MESSAGE)

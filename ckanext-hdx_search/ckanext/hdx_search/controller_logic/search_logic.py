@@ -711,10 +711,12 @@ class SearchLogic(object):
 
         item = next(
             (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
-        new_facet_item = self._create_facet_item(item_name, item_display_name, item['count'],
-                                                 search_extras=search_extras)
-        item_list.append(new_facet_item)
-        return new_facet_item
+        if item:
+            new_facet_item = self._create_facet_item(item_name, item_display_name, item['count'],
+                                                     search_extras=search_extras)
+            item_list.append(new_facet_item)
+            return new_facet_item
+        return {}
 
     def _create_facet_item(self, item_name, display_name, count, search_extras=None,
                            search_extras_value=None, force_selected=None, explanation=None, value=None):

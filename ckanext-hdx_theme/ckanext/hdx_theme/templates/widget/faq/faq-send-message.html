@@ -35,7 +35,7 @@ Example:
                     <!--<div class="bold-regular-text">Please fill out the following: </div>-->
                     <select class="required" id="topics-selector" name="topic">
                         <option id="" value="">Your question is regarding ...</option>
-                        {% for key, value in topics.iteritems() %}
+                        {% for key, value in topics.items() %}
                             <option id="{{key}}" value="{{value}}">{{value}}</option>
                         {% endfor %}
                     </select>

@@ -11,13 +11,7 @@ arrow==0.17.0
 atomicwrites==1.4.0
     # via pytest
 attrs==20.2.0
-    # via
-    #   jsonschema
-    #   pytest
-aws-sam-translator==1.28.1
-    # via cfn-lint
-aws-xray-sdk==2.6.0
-    # via moto
+    # via pytest
 babel==2.7.0
     # via
     #   -c requirements-py2.txt
@@ -29,8 +23,6 @@ backports.functools-lru-cache==1.6.1
     #   wcwidth
 backports.shutil-get-terminal-size==1.0.0
     # via ipython
-backports.ssl-match-hostname==3.7.0.1
-    # via docker
 backports.tempfile==1.0
     # via moto
 backports.weakref==1.0.post1
@@ -41,17 +33,13 @@ binaryornot==0.4.4
     # via cookiecutter
 blinker==1.4
     # via flask-debugtoolbar
-boto3==1.16.9
-    # via
-    #   aws-sam-translator
-    #   moto
-boto==2.49.0
+boto3==1.17.112
     # via
     #   -c requirements-py2.txt
     #   moto
-botocore==1.19.9
+botocore==1.20.112
     # via
-    #   aws-xray-sdk
+    #   -c requirements-py2.txt
     #   boto3
     #   moto
     #   s3transfer
@@ -62,8 +50,6 @@ certifi==2019.3.9
     #   urllib3
 cffi==1.14.3
     # via cryptography
-cfn-lint==0.39.0
-    # via moto
 chardet==3.0.4
     # via
     #   -c requirements-py2.txt
@@ -76,11 +62,12 @@ click==7.1.2
     #   flask
     #   towncrier
 configparser==4.0.2
-    # via importlib-metadata
+    # via
+    #   importlib-metadata
+    #   moto
 contextlib2==0.6.0.post1
     # via
     #   importlib-metadata
-    #   importlib-resources
     #   zipp
 cookiecutter==1.7.0
     # via -r dev-requirements-py2.in
@@ -92,34 +79,24 @@ coverage==5.3
     #   pytest-cov
 coveralls==1.11.1
     # via -r dev-requirements-py2.in
-cryptography==3.2.1
+cryptography==3.3.2
     # via
     #   moto
     #   pyopenssl
-    #   sshpubkeys
     #   urllib3
 decorator==4.4.0
     # via
     #   -c requirements-py2.txt
     #   ipython
-    #   networkx
     #   traitlets
-docker==4.3.1
-    # via moto
 docopt==0.6.2
     # via coveralls
 docutils==0.12
     # via
     #   -r dev-requirements-py2.in
     #   sphinx
-ecdsa==0.14.1
-    # via
-    #   python-jose
-    #   sshpubkeys
 enum34==1.1.10
     # via
-    #   aws-sam-translator
-    #   aws-xray-sdk
     #   cryptography
     #   traitlets
 factory-boy==2.12.0
@@ -141,39 +118,31 @@ funcsigs==1.0.2
     #   -c requirements-py2.txt
     #   mock
     #   pytest
-functools32==3.2.3.post2
-    # via jsonschema
 future==0.18.2
     # via
     #   -c requirements-py2.txt
-    #   aws-xray-sdk
     #   cookiecutter
 futures==3.3.0
-    # via s3transfer
+    # via
+    #   -c requirements-py2.txt
+    #   s3transfer
 idna==2.8
     # via
     #   -c requirements-py2.txt
-    #   moto
     #   requests
     #   urllib3
 imagesize==1.2.0
     # via sphinx
 importlib-metadata==2.0.0
     # via
-    #   importlib-resources
-    #   jsonpickle
-    #   jsonschema
     #   pluggy
     #   pytest
-importlib-resources==1.5.0
-    # via cfn-lint
 incremental==17.5.0
     # via towncrier
 ipaddress==1.0.23
     # via
     #   -c requirements-py2.txt
     #   cryptography
-    #   docker
     #   faker
     #   urllib3
 ipdb==0.13.2
@@ -200,46 +169,32 @@ jinja2==2.10.1
     #   towncrier
 jmespath==0.10.0
     # via
+    #   -c requirements-py2.txt
     #   boto3
     #   botocore
-jsondiff==1.1.2
-    # via moto
-jsonpatch==1.26
-    # via cfn-lint
-jsonpickle==1.4.1
-    # via aws-xray-sdk
-jsonpointer==2.0
-    # via jsonpatch
-jsonschema==3.2.0
-    # via
-    #   aws-sam-translator
-    #   cfn-lint
-junit-xml==1.9
-    # via cfn-lint
 markupsafe==1.1.1
     # via
     #   -c requirements-py2.txt
     #   jinja2
+    #   moto
 mock==2.0.0
     # via
     #   -r dev-requirements-py2.in
     #   moto
     #   responses
 more-itertools==5.0.0
-    # via pytest
-moto==1.3.14
+    # via
+    #   moto
+    #   pytest
+moto==2.1.0
     # via -r dev-requirements-py2.in
-networkx==2.2
-    # via cfn-lint
 packaging==20.4
     # via
     #   pytest
     #   sphinx
 pathlib2==2.3.5
     # via
-    #   cfn-lint
     #   importlib-metadata
-    #   importlib-resources
     #   ipython
     #   pickleshare
     #   pytest
@@ -266,9 +221,7 @@ ptyprocess==0.6.0
 py==1.9.0
     # via pytest
 pyasn1==0.4.8
-    # via
-    #   python-jose
-    #   rsa
+    # via rsa
 pycodestyle==2.5.0
     # via -r dev-requirements-py2.in
 pycparser==2.20
@@ -286,11 +239,6 @@ pyparsing==2.4.7
     # via
     #   -c requirements-py2.txt
     #   packaging
-pyrsistent==0.16.0
-    # via
-    #   aws-sam-translator
-    #   cfn-lint
-    #   jsonschema
 pytest-cov==2.7.1
     # via -r dev-requirements-py2.in
 pytest-freezegun==0.4.1
@@ -314,24 +262,16 @@ python-dateutil==2.8.0
     #   faker
     #   freezegun
     #   moto
-python-jose==3.2.0
-    # via moto
 pytz==2016.7
     # via
     #   -c requirements-py2.txt
     #   babel
-    #   moto
-pyyaml==5.3.1
-    # via
-    #   -c requirements-py2.txt
-    #   cfn-lint
     #   moto
 requests==2.22.0
     # via
     #   -c requirements-py2.txt
     #   cookiecutter
     #   coveralls
-    #   docker
     #   moto
     #   responses
     #   sphinx
@@ -339,28 +279,22 @@ responses==0.10.14
     # via
     #   -r dev-requirements-py2.in
     #   moto
-rsa==4.5
-    # via python-jose
-s3transfer==0.3.3
-    # via boto3
+rsa==4.0
+    # via moto
+s3transfer==0.4.2
+    # via
+    #   -c requirements-py2.txt
+    #   boto3
 scandir==1.10.0
     # via pathlib2
 simplegeneric==0.8.1
     # via ipython
-singledispatch==3.4.0.3
-    # via importlib-resources
 six==1.12.0
     # via
     #   -c requirements-py2.txt
-    #   aws-sam-translator
-    #   cfn-lint
     #   cryptography
-    #   docker
-    #   ecdsa
     #   faker
     #   freezegun
-    #   jsonschema
-    #   junit-xml
     #   mock
     #   more-itertools
     #   moto
@@ -368,14 +302,11 @@ six==1.12.0
     #   pathlib2
     #   prompt-toolkit
     #   pyopenssl
-    #   pyrsistent
     #   pytest
     #   python-dateutil
-    #   python-jose
     #   responses
     #   sphinx
     #   traitlets
-    #   websocket-client
 snowballstemmer==2.0.0
     # via sphinx
 soupsieve==1.9.6
@@ -388,8 +319,6 @@ sphinx==1.8.5
     #   sphinx-rtd-theme
 sphinxcontrib-websupport==1.1.2
     # via sphinx
-sshpubkeys==3.1.0
-    # via moto
 text-unidecode==1.3
     # via faker
 toml==0.10.2
@@ -399,9 +328,7 @@ towncrier==19.2.0
 traitlets==4.3.3
     # via ipython
 typing==3.7.4.3
-    # via
-    #   importlib-resources
-    #   sphinx
+    # via sphinx
 urllib3[secure]==1.25.8
     # via
     #   -c requirements-py2.txt
@@ -416,8 +343,6 @@ wcwidth==0.2.5
     # via
     #   prompt-toolkit
     #   pytest
-websocket-client==0.57.0
-    # via docker
 werkzeug[watchdog]==0.16.1
     # via
     #   -c requirements-py2.txt
@@ -426,14 +351,10 @@ werkzeug[watchdog]==0.16.1
     #   moto
 whichcraft==0.6.1
     # via cookiecutter
-wrapt==1.12.1
-    # via aws-xray-sdk
 xmltodict==0.12.0
     # via moto
 zipp==1.2.0
-    # via
-    #   importlib-metadata
-    #   importlib-resources
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

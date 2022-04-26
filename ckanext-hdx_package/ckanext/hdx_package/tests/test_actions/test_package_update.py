@@ -37,7 +37,6 @@ organization = {
 }
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
@@ -95,7 +94,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         result = self.app.get(
             test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
-        assert '<a class="heading" title="hdx_test.csv">' in result.data
+        assert '<a class="heading" title="hdx_test.csv">' in result.body
 
     def test_hdx_package_delete_redirect(self):
 
@@ -215,7 +214,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         # Checking that all fields in the modified_package come either
         # from original package or were modified
-        for key, value in modified_package.iteritems():
+        for key, value in modified_package.items():
             if key not in modified_fields.keys():
                 if key != 'groups' and key in package and key != 'owner_org':
                     assert package[key] == value, 'Problem with key {}: has value {} instead of {}'.format(
@@ -225,7 +224,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                     key, value, modified_fields[key])
 
         # Checking that all modifications were applied
-        for key, value in modified_fields.iteritems():
+        for key, value in modified_fields.items():
             assert value == modified_package[key], 'Problem with key {}: has value {} instead of {}'.format(
                 key, modified_package[key], value)
 

@@ -3,17 +3,16 @@ Created on April 24, 2015
 
 @author: alexandru-m-g
 '''
-
+import json
 import logging
 
-import pylons.config as config
-
-import ckan.common as common
 import ckan.lib.dictization as d
 import ckan.lib.helpers as helpers
 import ckan.lib.navl.dictization_functions
 import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
+
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
@@ -21,19 +20,21 @@ from ckan.common import c
 from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
 
 _validate = ckan.lib.navl.dictization_functions.validate
-ValidationError = logic.ValidationError
 
 log = logging.getLogger(__name__)
 
-json = common.json
-get_action = logic.get_action
-_get_or_bust = logic.get_or_bust
-NotFound = logic.NotFound
+config = tk.config
+get_action = tk.get_action
+_check_access = tk.check_access
+_get_or_bust = tk.get_or_bust
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
+side_effect_free = tk.side_effect_free
 
 IndicatorAccess = indicator_access.IndicatorAccess
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_datasets_for_group(context, data_dict):
     '''
     Returns a paginated list of datasets for a group with 25 items per page.
@@ -88,7 +89,7 @@ def hdx_datasets_for_group(context, data_dict):
     return query
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_topline_num_for_group(context, data_dict):
     '''
     :param id: the id of the group for which top line numbers are requested
@@ -194,7 +195,7 @@ def __get_toplines_for_standard_country(group_info, common_format):
     return top_line_items
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_light_group_show(context, data_dict):
     '''
     Return a lightweight ( less resource intensive,faster but without datasets ) version of the group details
@@ -221,7 +222,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['type'] = group.type
 
     result_list = []
-    for name, extra in group._extras.iteritems():
+    for name, extra in group._extras.items():
         dictized = d.table_dictize(extra, context)
         if not extra.state == 'active':
             continue
@@ -253,7 +254,7 @@ def get_group(id):
     return {'group_info': group_info, 'custom_dict': custom_dict}
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_trigger_screencap(context, data_dict):
     cfg = context['cfg']
     file_path = context['file_path']
@@ -261,7 +262,7 @@ def hdx_trigger_screencap(context, data_dict):
     sysadmin = False
     if data_dict.get('reset_thumbnails', 'false') == 'true':
         try:
-            logic.check_access('hdx_trigger_screencap', context, data_dict)
+            _check_access('hdx_trigger_screencap', context, data_dict)
             sysadmin = True
         except:
             return False
@@ -274,7 +275,7 @@ def hdx_trigger_screencap(context, data_dict):
                                     file_path, cfg['screen_cap_asset_selector'])
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_get_locations_info_from_rw(context, data_dict):
     try:
         url = data_dict.get('rw_url')
@@ -286,7 +287,7 @@ def hdx_get_locations_info_from_rw(context, data_dict):
         return None
 
 
-@logic.side_effect_free
+@side_effect_free
 def hdx_organization_follower_list(context, data_dict):
     '''Return the list of users that are following the given organization.
 
@@ -296,7 +297,7 @@ def hdx_organization_follower_list(context, data_dict):
     :rtype: list of dictionaries
 
     '''
-    logic.check_access('hdx_organization_follower_list', context, data_dict)
+    _check_access('hdx_organization_follower_list', context, data_dict)
     context['keep_email'] = True
     return _follower_list(
         context, data_dict,

@@ -3,12 +3,12 @@ import logging as logging
 import six
 
 import ckan.model as model
-
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
-
+get_action = tk.get_action
 
 @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
 class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):

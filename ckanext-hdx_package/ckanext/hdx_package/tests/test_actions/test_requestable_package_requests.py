@@ -53,7 +53,6 @@ organization = {
 }
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
@@ -112,9 +111,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         result = self.app.get(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
 
-        assert 'Request data directly from the maintainer of this dataset.' in result.data
+        assert 'Request data directly from the maintainer of this dataset.' in result.body
 
-        assert 'This data is by request only' in result.data
+        assert 'This data is by request only' in result.body
 
         context['user'] = 'tester'
         data_dict = {

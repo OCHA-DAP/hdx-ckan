@@ -6,9 +6,9 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.201#egg=ckanext-dcat
     # via -r requirements-py2.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.5#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.9#egg=ckanext-requestdata
     # via -r requirements-py2.in
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.4.3#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.304#egg=ckanext-showcase
     # via -r requirements-py2.in
@@ -27,8 +27,12 @@ beakeredis==0.1.0
     # via -r requirements-py2.in
 bleach==3.1.4
     # via -r requirements-py2.in
-boto==2.49.0
+boto3==1.17.112
     # via ckanext-s3filestore
+botocore==1.20.112
+    # via
+    #   boto3
+    #   s3transfer
 certifi==2019.3.9
     # via requests
 chardet==3.0.4
@@ -73,6 +77,8 @@ funcsigs==1.0.2
     # via beaker
 future==0.18.2
     # via -r requirements-py2.in
+futures==3.3.0
+    # via s3transfer
 git+https://github.com/geomet/geomet.git
     # via -r requirements-py2.in
 html5lib==1.1
@@ -95,6 +101,10 @@ jinja2==2.10.1
     #   -r requirements-py2.in
     #   flask
     #   flask-babel
+jmespath==0.10.0
+    # via
+    #   boto3
+    #   botocore
 lxml==4.4.2
     # via feedgen
 mailchimp3==3.0.14
@@ -156,6 +166,7 @@ python-dateutil==2.8.0
     # via
     #   -r requirements-py2.in
     #   alembic
+    #   botocore
     #   feedgen
 python-editor==1.0.4
     # via alembic
@@ -205,6 +216,8 @@ routes==1.13
     #   pylons
 rq==1.0
     # via -r requirements-py2.in
+s3transfer==0.4.2
+    # via boto3
 simplejson==3.10.0
     # via
     #   -r requirements-py2.in
@@ -248,7 +261,9 @@ ua-parser==0.7.2
 unicodecsv==0.14.1
     # via -r requirements-py2.in
 urllib3==1.25.8
-    # via requests
+    # via
+    #   botocore
+    #   requests
 user_agents==1.1.0
     # via -r requirements-py2.in
 watchdog==0.10.2

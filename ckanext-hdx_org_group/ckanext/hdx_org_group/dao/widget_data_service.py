@@ -1,8 +1,5 @@
 import logging
-import json
-import datetime as dt
 
-import pylons.config as config
 
 import ckan.plugins.toolkit as tk
 import ckan.model as model
@@ -15,6 +12,7 @@ import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 log = logging.getLogger(__name__)
 
 _get_action = tk.get_action
+config = tk.config
 
 
 def build_widget_data_access(country_dict):
@@ -75,7 +73,7 @@ class RWWidgetDataService(WidgetDataService):
         resource_id = config.get('hdx.active_locations_reliefweb.resource_id')
         try:
             resource_dict = _get_action('resource_show')(context, {'id': resource_id})
-        except logic.NotFound, e:
+        except logic.NotFound as e:
             resource_dict = None
             log.error(
                 'No resource was found for "hdx.active_locations_reliefweb.resource_id" = {}. Exception: NotFound'.format(

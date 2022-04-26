@@ -8,7 +8,6 @@ import requests
 import datetime
 import sys
 import json
-import urllib
 import six.moves.urllib.parse as urlparse
 import os
 
@@ -81,7 +80,7 @@ def _get_shape_info_as_json(gis_data):
     resource_id = gis_data['resource_id']
 
     layer_import_url = config.get('hdx.gis.layer_import_url')
-    encoded_download_url = urllib.quote_plus(gis_data['url'])
+    encoded_download_url = urlparse.quote_plus(gis_data['url'])
     gis_url = layer_import_url.format(dataset_id=gis_data['dataset_id'], resource_id=resource_id,
                                       resource_download_url=encoded_download_url, url_type=gis_data['url_type'])
     # gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",

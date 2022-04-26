@@ -10,7 +10,6 @@ config = tk.config
 h = tk.h
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXUpdateResourceFormat(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_resource_create(self):

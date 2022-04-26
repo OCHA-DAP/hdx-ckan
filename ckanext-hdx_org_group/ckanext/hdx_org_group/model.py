@@ -3,6 +3,7 @@ import logging
 import uuid
 
 from sqlalchemy import types, Table, Column, ForeignKey
+from six import text_type
 
 from ckan.model import meta, domain_object
 from ckan.model import types as ckan_types
@@ -30,7 +31,7 @@ class OrganizationBatch(domain_object.DomainObject):
     def __init__(self, organization_id):
         self.organization = organization_id
         self.last_modified = datetime.datetime.utcnow()
-        self.batch = unicode(uuid.uuid4())
+        self.batch = text_type(uuid.uuid4())
 
     def _update_last_modified(self):
         self.last_modified = datetime.datetime.utcnow()
@@ -39,7 +40,7 @@ class OrganizationBatch(domain_object.DomainObject):
     def _get_by_organization_id(cls, organization_id, for_update=False):
         '''
         :param organization_id:
-        :type organization_id: unicode
+        :type organization_id: text_type
         :param for_update:
         :type for_update: bool
         :return:

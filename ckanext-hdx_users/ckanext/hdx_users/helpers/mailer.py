@@ -10,6 +10,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from time import time
+from six import text_type
 
 import ckan
 import ckan.plugins.toolkit as tk
@@ -20,6 +21,7 @@ from ckan.lib.mailer import MailerException
 from ckan.lib.base import render_jinja2
 
 config = tk.config
+render = tk.render
 _ = tk._
 CHARSET = 'utf-8'
 
@@ -59,7 +61,8 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx-email.png'
         },
     }
-    body_html = render_jinja2('email/email.html', template_data)
+    # body_html = render_jinja2('email/email.html', template_data)
+    body_html = render('email/email.html', template_data)
 
     # msg = MIMEMultipart('alternative')
     msg = MIMEMultipart()
@@ -174,7 +177,7 @@ def _get_decoded_str(display_name):
     if display_name:
         try:
             # encoded_display_name = display_name.encode(CHARSET)
-            decoded_display_name = unicodedata.normalize('NFKD', unicode(display_name)).encode('ascii', 'ignore')
+            decoded_display_name = unicodedata.normalize('NFKD', text_type(display_name)).encode('ascii', 'ignore')
             return decoded_display_name
         except Exception as ex:
             log.error(ex)

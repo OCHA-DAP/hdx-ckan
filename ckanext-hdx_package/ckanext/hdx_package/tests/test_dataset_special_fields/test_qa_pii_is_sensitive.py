@@ -16,7 +16,6 @@ NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAPIIIsSensitiveNormalUser(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -100,7 +99,6 @@ class TestQAPIIIsSensitiveNormalUser(hdx_test_base.HdxBaseTest):
         assert 'pii_is_sensitive' not in package_dict.get('resources')[3]
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAPIIIsSensitiveQAOfficer(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -210,7 +208,6 @@ class TestQAPIIIsSensitiveQAOfficer(hdx_test_base.HdxBaseTest):
         assert package_dict.get('resources')[3]['pii_is_sensitive']
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestQAPIIIsSensitiveReset(hdx_test_base.HdxBaseTest):
 
     SYSADMIN_USER = 'testsysadmin'
@@ -282,7 +279,7 @@ class TestQAPIIIsSensitiveReset(hdx_test_base.HdxBaseTest):
 
         file_path1 = os.path.join(os.path.dirname(__file__), self.FILE1_NAME)
         file_path2 = os.path.join(os.path.dirname(__file__), self.FILE2_NAME)
-        with open(file_path1) as f1, open(file_path2) as f2:
+        with open(file_path1, 'rb') as f1, open(file_path2, 'rb') as f2:
             file_upload1 = FileStorage(f1)
             file_upload2 = FileStorage(f2)
             revise_dict = self._get_action('package_revise')(self.CONTEXT,
@@ -311,7 +308,7 @@ class TestQAPIIIsSensitiveReset(hdx_test_base.HdxBaseTest):
 
         file_path1 = os.path.join(os.path.dirname(__file__), self.FILE1_NAME)
         file_path2 = os.path.join(os.path.dirname(__file__), self.FILE2_NAME)
-        with open(file_path1) as f1, open(file_path2) as f2:
+        with open(file_path1, 'rb') as f1, open(file_path2, 'rb') as f2:
             file_upload0 = FileStorage(f1)
             file_upload1 = FileStorage(f2)
             modified_resource0 = self._get_action('resource_update')(self.CONTEXT,

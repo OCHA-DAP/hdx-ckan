@@ -4,6 +4,7 @@
   <p>
     {{ body }}
   </p>
+  <input type="hidden" name="user" value="{{ user }}">
   {% if packages %}
     <ul>
       {% for p in packages %}

@@ -1,1 +1,1 @@
-{"listeners":{"*:5000":{"application":"ckan"}},"applications":{"ckan":{"type":"python","processes":3,"module":"wsgi","path":"/srv/ckan"}}}
+{"listeners":{"*:5000":{"application":"ckan"}},"applications":{"ckan":{"type":"python","processes":{"max":20,"spare":3,"idle_timeout":20},"module":"wsgi","path":"/srv/ckan"}},"settings":{"http":{"max_body_size":1584000000}}}

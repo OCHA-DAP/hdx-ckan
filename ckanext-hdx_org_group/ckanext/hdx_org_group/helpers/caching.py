@@ -1,5 +1,4 @@
 import logging
-import pylons.config as config
 from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
@@ -8,6 +7,7 @@ from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_c
     HDXRedisInvalidationStrategy
 
 log = logging.getLogger(__name__)
+config = tk.config
 
 dogpile_config = {
     'cache.redis.expiration_time': 60 * 60,

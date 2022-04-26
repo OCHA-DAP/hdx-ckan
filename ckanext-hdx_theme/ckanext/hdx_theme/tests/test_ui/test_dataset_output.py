@@ -49,7 +49,6 @@ organization = {
 }
 
 
-@pytest.mark.skipif(six.PY3, reason=u"The hdx_package plugin is not available on PY3 yet")
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     # loads missing plugins
     @classmethod
@@ -78,14 +77,14 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
 
         page = self._getPackagePage(dataset_name)
-        assert not 'Deleted' in page.data, 'Page should not have deleted badge as it was not deleted'
+        assert not 'Deleted' in page.body, 'Page should not have deleted badge as it was not deleted'
 
         deleted_result = tests.call_action_api(self.app, 'package_delete',
                                                apikey=testsysadmin.apikey, id=dataset_name)
 
         deleted_page = self._getPackagePage(dataset_name, testsysadmin.apikey)
         # print deleted_page.response
-        assert 'Deleted' in deleted_page.data, 'Page needs to have deleted badge'
+        assert 'Deleted' in deleted_page.body, 'Page needs to have deleted badge'
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None

@@ -5,11 +5,16 @@ from six.moves.urllib.parse import urlencode
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckan.lib.plugins as lib_plugins
+
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 
-from ckan.views.group import _get_group_template, CreateGroupView
+from ckan.views.group import _get_group_template, CreateGroupView, EditGroupView
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
+from ckanext.hdx_org_group.controller_logic.organization_stats_logic import OrganizationStatsLogic
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import NoRecipientException
@@ -68,7 +73,7 @@ def read(id):
                 'search_template_data': read_logic.search_template_data,
                 'datasets_num': read_logic.org_meta.datasets_num,
                 'allow_req_membership': read_logic.org_meta.allow_req_membership,
-                'group_message_info': read_logic.org_meta.group_message_info,
+                # 'group_message_info': read_logic.org_meta.group_message_info,
             })
 
             template_data = {
@@ -93,7 +98,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
     org_dict = org_meta.org_dict
     org_id = org_dict['id']
 
-    org_dict['group_message_info'] = org_meta.group_message_info
+    # org_dict['group_message_info'] = org_meta.group_message_info
     template_data = {
         'data': {
             'org_info': {
@@ -118,12 +123,12 @@ def _generate_template_data_for_custom_org(org_read_logic):
             # 'activities': activities,
             # 'query_placeholder': query_placeholder
             # },
-            'links': {
-                'edit': org_read_logic.links.edit,
-                'members': org_read_logic.links.members,
-                'request_membership': org_read_logic.links.request_membership,
-                'add_data': org_read_logic.links.add_data
-            },
+            # 'links': {
+            #     'edit': org_read_logic.links.edit,
+            #     'members': org_read_logic.links.members,
+            #     'request_membership': org_read_logic.links.request_membership,
+            #     'add_data': org_read_logic.links.add_data
+            # },
             'request_params': request.params,
             'permissions': {
                 'edit': org_read_logic.allow_edit,
@@ -270,6 +275,100 @@ def new_org_template_variables(context, data_dict):
                               [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
 
 
+def stats(id):
+    stats_logic = OrganizationStatsLogic(id, g.user, g.userobj)
+    org_dict = stats_logic.org_meta_dao.org_dict
+    org_dict.update({
+        'allow_req_membership': stats_logic.org_meta_dao.allow_req_membership,
+        # 'group_message_info': stats_logic.org_meta_dao.group_message_info,
+    })
+    template_data = {
+        'data': stats_logic.fetch_stats(),
+        'org_meta': stats_logic.org_meta_dao,
+        'org_dict': org_dict,
+    }
+
+    if stats_logic.is_custom():
+        return render('organization/custom_stats.html', template_data)
+    else:
+        return render('organization/stats.html', template_data)
+
+
+def restore(id):
+    context = {
+        'model': model, 'session': model.Session,
+        'user': g.user,
+        'for_edit': True,
+    }
+
+    try:
+        check_access('organization_patch', context, {'id': id})
+    except NotAuthorized as e:
+        return abort(403, _('Unauthorized to restore this organization'))
+
+    try:
+        get_action('organization_patch')(context, {
+            'id': id,
+            'state': 'active'
+        })
+        return redirect('organization.read', id=id)
+    except NotAuthorized:
+        return abort(403, _('Unauthorized to read group %s') % id)
+    except NotFound:
+        return abort(404, _('Group not found'))
+    except ValidationError as e:
+        errors = e.error_dict
+        error_summary = e.error_summary
+        core_view = EditGroupView()
+        return core_view.get(id, 'organization', True, errors=errors, error_summary=error_summary)
+
+
+def activity(id):
+    return activity_offset(id)
+
+
+def activity_offset(id, offset=0):
+    '''
+     Modified core functionality to use the new OrgMetaDao class
+    for fetching information needed on all org-related pages.
+
+    Render this group's public activity stream page.
+
+    :param id:
+    :type id: str
+    :param offset:
+    :type offset: int
+    :return:
+    '''
+    org_meta = org_meta_dao.OrgMetaDao(id, g.user, g.userobj)
+    org_meta.fetch_all()
+    org_dict = org_meta.org_dict
+    # org_dict['group_message_info'] = org_meta.group_message_info
+
+    helper.org_add_last_updated_field([org_dict])
+
+    # Add the group's activity stream (already rendered to HTML) to the
+    # template context for the group/read.html template to retrieve later.
+    context = {'model': model, 'session': model.Session,
+               'user': g.user, 'for_view': True}
+    group_activity_stream = get_action('organization_activity_list')(
+        context, {'id': org_dict['id'], 'offset': offset})
+
+
+
+    extra_vars = {
+        'org_dict': org_dict,
+        'org_meta': org_meta,
+        'group_activity_stream': group_activity_stream,
+
+    }
+    template = None
+    if org_meta.is_custom:
+        template = 'organization/custom_activity_stream.html'
+    else:
+        template = lib_plugins.lookup_group_plugin('organization').activity_template()
+    return render(template, extra_vars)
+
 
 hdx_org.add_url_rule(u'', view_func=index)
 hdx_org.add_url_rule(
@@ -283,3 +382,7 @@ hdx_org.add_url_rule(
 )
 hdx_org.add_url_rule(u'/request_new', view_func=request_new, methods=[u'GET', u'POST'])
 hdx_org.add_url_rule(u'/<id>', view_func=read)
+hdx_org.add_url_rule(u'/stats/<id>', view_func=stats)
+hdx_org.add_url_rule(u'/restore/<id>', view_func=restore, methods=[u'POST'])
+hdx_org.add_url_rule(u'/activity/<id>', view_func=activity)
+hdx_org.add_url_rule(u'/activity/<id>/<int:offset>', view_func=activity_offset, defaults={'offset': 0})

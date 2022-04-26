@@ -153,6 +153,10 @@ class OrgMetaDao(object):
             }
         }
 
+        # small hack because many templates are looking for 'group_message_topics' inside the org_dict
+        if self.org_dict:
+            self.org_dict['group_message_info'] = self.group_message_info
+
     def __process_custom(self):
         org_extras = {item.get('key'): item.get('value') for item in self.org_dict.get('extras', []) if item.get('key')}
         self.org_dict['extras'] = org_extras

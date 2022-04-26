@@ -18,7 +18,7 @@ import ckanext.hdx_users.helpers.user_extra as ue_helpers
 log = logging.getLogger(__name__)
 
 
-@pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
+# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestHDXUserExtra(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod

@@ -7,7 +7,6 @@ import ckan.lib.authenticator as authenticator
 import ckanext.hdx_users.model as user_model
 from ckan.views.user import EditView as EditView
 from ckan.views.user import set_repoze_user as set_repoze_user
-from ckanext.hdx_users.views.user_register_view import HDXRegisterView
 from ckanext.hdx_users.views.user_view_helper import *
 import ckan.plugins.toolkit as tk
 
@@ -28,7 +27,6 @@ NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
-hdx_register_view = HDXRegisterView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
 
 class HDXEditView(EditView):

@@ -44,7 +44,7 @@ def num_of_results_for_prev_searches(userobj):
                     num_of_results_per_search.append({
                         'text': s.search_string,
                         'count': count,
-                        'url': h.url_for('search', ext_after_metadata_modified=last_search_time,
+                        'url': h.url_for('hdx_dataset.search', ext_after_metadata_modified=last_search_time,
                                          ext_search_source='main-nav', q=s.search_string)
                     })
             except Exception as ex:
