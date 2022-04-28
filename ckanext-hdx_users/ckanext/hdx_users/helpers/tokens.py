@@ -39,11 +39,11 @@ def token_update(context, data_dict):
 
 
 def send_validation_email(user, token):
-    validation_link = h.url_for('hdx_user.validate', token=token['token'])
-    link = '{0}{1}'
+    validation_link = h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
+    # link = '{0}{1}'
     subject = "Complete your HDX registration"
     email_data = {
-        'validation_link': link.format(config['ckan.site_url'], validation_link),
+        'validation_link': validation_link
     }
     try:
         print(validation_link)
