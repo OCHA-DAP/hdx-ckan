@@ -65,7 +65,7 @@
             {% endfor %}
             </ul>
             <p class="no-answer-found mTop30">
-                <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
+                <a onclick="closeCurrentWidget(this);spawnRecaptcha('#faqSendMsgPopup');showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
             </p>
         </div>
     </div>
