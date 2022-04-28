@@ -375,6 +375,7 @@ class EditView(MethodView):
             elif _delete_page:
                 try:
                     get_action('page_delete')(context, {'id': id})
+                    _update_lunr()
                 except Exception as ex:
                     abort(404, _('There was an error. Please contact the admin'))
                 return h.redirect_to(u'home.index')

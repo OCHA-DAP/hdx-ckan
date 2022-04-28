@@ -1,8 +1,9 @@
 {% extends "page.html" %}
 {% set page_has_mobile_version = True %}
 {% set data = page_dict %}
+{% set page_title = data.title if data.title and data.title!='' else data.name %}
 
-{% block subtitle %}{{ data.title }}{% endblock %}
+{% block subtitle %}{{ data.title or data.name }}{% endblock %}
 
 {% block breadcrumb_content %}
     <li><a>{{ data.type }}</a></li>
