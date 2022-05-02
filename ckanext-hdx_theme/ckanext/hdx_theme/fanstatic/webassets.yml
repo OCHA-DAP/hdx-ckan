@@ -416,6 +416,7 @@ charting-scripts:
     - vendor/d3/d3.js
     - vendor/c3/c3.js
     - vendor/leaflet-0.7.3/leaflet.js
+    - map_base.js
 
 charting-styles:
   output: ckanext-hdx_theme/%(version)s_charting-styles.css
@@ -665,6 +666,7 @@ crisis-ebola-scripts:
     preload:
       - hdx_theme/crisis-ebola-styles
   contents:
+    - map_base.js
     - crisis/ebola/crisis-ebola.js
     - crisis/ebola/ebola_crisis_page_graph.js
     - crisis/ebola/data.js

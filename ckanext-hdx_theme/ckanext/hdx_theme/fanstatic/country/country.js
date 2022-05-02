@@ -1,31 +1,18 @@
 function drawMap() {
-    var crisisMapDiv = $("#crisis-map");
+    let crisisMapDiv = $("#crisis-map");
     if (!crisisMapDiv.length){
         return;
     }
 
-    var maxZoomValue = 4;
-    var map = L.map('crisis-map', { attributionControl: false });
-    map.scrollWheelZoom.disable();
-    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
-        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
-        minZoom: 0,
-        maxZoom: maxZoomValue
-    }).addTo(map);
+    let maxZoomValue = 4;
+    let map = L.map('crisis-map', { attributionControl: false });
+    setHDXBaseMap(map, maxZoomValue);
 
-    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-        minZoom: 0,
-        maxZoom: maxZoomValue
-    }).addTo(map);
-
-    L.control.attribution({position: 'topright'}).addTo(map);
-    map.setView([0, 0], 1);
-
-    var countryMapPolygon = $("#countryMapPolygon");
-    var rawData = countryMapPolygon.text();
+    let countryMapPolygon = $("#countryMapPolygon");
+    let rawData = countryMapPolygon.text();
     countryMapPolygon.text("");
     try{
-        var data = JSON.parse(rawData);
+        let data = JSON.parse(rawData);
     } catch (err) {
         console.log("Error parsing json - set default map");
         return;
@@ -36,8 +23,8 @@ function drawMap() {
     }
 
     //Need to compute Top-Left corner and Bottom-Right corner for polygon.
-    var minLat, minLng, maxLat, maxLng;
-    var init = false;
+    let minLat, minLng, maxLat, maxLng;
+    let init = false;
 
     //Use a stack to traverse the geojson since we can gave many levels of arrays in arrays
     var stackArrays = [];
@@ -85,12 +72,12 @@ function drawMap() {
 
 
 
-    var latitude = minLat + (maxLat-minLat)/2;
-    var longitude = minLng + (maxLng-minLng)/2;
-    var zoom = maxZoomValue;
-
-    console.log(latitude);
-    console.log(longitude);
+    // var latitude = minLat + (maxLat-minLat)/2;
+    // var longitude = minLng + (maxLng-minLng)/2;
+    // var zoom = maxZoomValue;
+    //
+    // console.log(latitude);
+    // console.log(longitude);
 
     L.geoJson(data,{
       style: function(feature){
