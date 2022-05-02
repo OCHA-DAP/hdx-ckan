@@ -186,6 +186,7 @@ def send_request():
     data_dict = {'id': data['package_id']}
     package = _get_action('package_show', data_dict)
     sender_name = data.get('sender_name', '')
+    sender_email = data.get('email_address', '')
     user_obj = context['auth_user_obj']
     data_dict = {
         'id': user_obj.id,
@@ -283,7 +284,8 @@ def send_request():
             'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
             'dataset_title': dataset_title,
         }
-        hdx_mailer.mail_recipient(users_email, subject, email_data, footer=email,
+        senders_email = [{'display_name': sender_name, 'email': sender_email}]
+        hdx_mailer.mail_recipient(senders_email, subject, email_data, footer=email,
                                   snippet='email/content/request_data_to_user.html')
 
         # notify package creator that new data request was made
