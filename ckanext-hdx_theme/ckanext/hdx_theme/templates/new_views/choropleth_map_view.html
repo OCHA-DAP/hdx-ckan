@@ -4,7 +4,6 @@
     <div style="position: relative;">
     {% block crisis_map %}
         <div id="map-configuration" style="display: none">{{ h.dump_json(map) }}</div>
-        <div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
         <div id="mapbox-baselayer-url-div"
              style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
         <div id="mapbox-labelslayer-url-div"

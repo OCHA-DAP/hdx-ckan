@@ -249,19 +249,13 @@ function prepareMap(countDatasets, openNewWindow){
 
   topPane = map._createPane('leaflet-top-pane', map.getPanes().mapPane);
 
-  topLayer = L.tileLayer($('#mapbox-baselayer-url-div').text(), {
-    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
-    maxZoom: 7
-  }).addTo(map);
+  topLayer = getHDXBaseLayer(map, 7);
   topPane.appendChild(topLayer.getContainer());
 
-  var topLayer2 = L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-    maxZoom: 6
-  }).addTo(map);
+  var topLayer2 = getHDXLabelsLayer(map, 6);
   topLayer2.setZIndex(7);
 
   topPane.appendChild(topLayer2.getContainer());
-
   topLayer.setZIndex(1);
 }
 
