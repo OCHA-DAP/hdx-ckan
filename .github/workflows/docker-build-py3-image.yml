@@ -1,39 +1,57 @@
-name: HDX/CKAN create PY3 image
+name: HDX/CKAN create Python3 image
 
 on:
   push:
-    tags: [ '*-py3' ]
+    branches:
+      - dev
+      - prod
+      - hdx-*
+    tags: [ '*' ]
   workflow_dispatch:
-    inputs:
-      image_tag:
-        required: true
-        description: The tag for the docker image
 
 jobs:
-  create-py3-image:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Git Tag Info
-        id: git_tag_info
-        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
-      - name: Compute Tag Name
+      - name: Checkout code
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Repo Info
+        id: repo_info
+        run: |
+          export REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          echo ::set-output name=REPO_NAME::${REPO_NAME}
+
+      - name: Tag Info
         id: tag_info
-        run: echo ::set-output name=TAG_NAME::$([ -z "$MANUAL_TAG_NAME" ] && echo "$GIT_TAG_NAME" || echo "$MANUAL_TAG_NAME")
-        env:
-          MANUAL_TAG_NAME: ${{ github.event.inputs.image_tag }}
-          GIT_TAG_NAME: ${{ steps.git_tag_info.outputs.TAG_NAME }}
-      - name: Login to DockerHub
+        run: |
+          export IMAGE_TAG="${GITHUB_REF#refs/*/}"
+          export IMAGE_TAG=${IMAGE_TAG//[^[:alnum:].-]/-}
+          echo ::set-output name=IMAGE_TAG::$([[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] && echo "$GITHUB_SHA" || echo "$IMAGE_TAG")
+      - name: Show image tag
+        run: |
+          echo "Image tag is ${{ steps.tag_info.outputs.IMAGE_TAG }}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Public ECR
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.TEMP_HDX_CKAN_PY3_DOCKERHUB_USER }}
-          password: ${{ secrets.TEMP_HDX_CKAN_PY3_DOCKERHUB_TOKEN }}
-      - name: Build and push
-        id: docker_build
+          registry: public.ecr.aws
+          username: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
+        env:
+          AWS_REGION: us-east-1
+
+      - name: Build, tag, and push image to Amazon ECR
         uses: docker/build-push-action@v2
         with:
-          file: ./Dockerfile.py3
           push: true
-          tags: mgalex2/hdx-ckan-py3:${{ steps.tag_info.outputs.TAG_NAME }}
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          file: ./Dockerfile.py3
+          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}-py3

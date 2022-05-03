@@ -41,7 +41,9 @@ services:
           - dbckan
 
   ckan:
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.py2
     hostname: ckan
     container_name: ckan
     privileged: true
