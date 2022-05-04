@@ -15,9 +15,14 @@ Notes
 Compilation steps
 -----------------
 
-#. Make sure to have *pip-tools* installed, at least version 5.0.0::
+#. Make sure to have *pip-tools* installed, at least version 5.5.0 for python2 and 6.6.0 for python3:
+    *  FOR PYTHON 2::
 
-    pip install pip-tools==5.5.0
+        pip install pip-tools==5.5.0
+        
+    *  FOR PYTHON 3::
+
+        pip install pip-tools==6.6.0
 
 #. Compile the main dependencies:
 
