@@ -98,7 +98,7 @@ def members(id):
         return abort(404, _('Group not found'))
     except Exception as ex:
         log.error(str(ex))
-        return  abort(404, _('Server error'))
+        return abort(404, _('Server error'))
     if org_meta.is_custom:
         return render('organization/custom_members.html', template_dict)
     else:
