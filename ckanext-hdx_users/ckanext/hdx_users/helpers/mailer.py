@@ -177,7 +177,7 @@ def _get_decoded_str(display_name):
     if display_name:
         try:
             # encoded_display_name = display_name.encode(CHARSET)
-            decoded_display_name = unicodedata.normalize('NFKD', text_type(display_name)).encode('ascii', 'ignore')
+            decoded_display_name = unicodedata.normalize(u'NFKD', text_type(display_name)).encode('ascii', 'ignore').decode('utf8')
             return decoded_display_name
         except Exception as ex:
             log.error(ex)
