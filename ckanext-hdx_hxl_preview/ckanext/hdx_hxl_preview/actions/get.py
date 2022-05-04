@@ -1,6 +1,6 @@
 import logging
-import urllib
-import six.moves.urllib.parse as urlparse
+# import six.moves.urllib.parse as urlparse
+from six.moves.urllib.parse import (urlencode, quote, urlsplit, urlunsplit)
 
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
@@ -42,13 +42,13 @@ def hxl_preview_iframe_url_show(context, data_dict):
     resource_last_modified = h.render_datetime(resource_dict.get('last_modified') or resource_dict.get('created'))
     params = {
         'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),
-        'resource_url': urllib.urlencode({'url': resource_dict.get('url')}),
-        'resource_view_id': urllib.urlencode({'resource_view_id': resource_view_dict.get('id')}),
-        'hdx_domain': urllib.urlencode({'hdx_domain': __get_ckan_domain_without_protocol()}),
-        'has_modify_permission': urllib.urlencode({'has_modify_permission': has_modify_permission}),
-        'embedded_source': urllib.urlencode({'embeddedSource': urllib.quote(package_source.encode('utf-8'))}),
-        'embedded_url': urllib.urlencode({'embeddedUrl': package_url}),
-        'embedded_date': urllib.urlencode({'embeddedDate': urllib.quote(resource_last_modified.encode('utf-8'))})
+        'resource_url': urlencode({'url': resource_dict.get('url')}),
+        'resource_view_id': urlencode({'resource_view_id': resource_view_dict.get('id')}),
+        'hdx_domain': urlencode({'hdx_domain': __get_ckan_domain_without_protocol()}),
+        'has_modify_permission': urlencode({'has_modify_permission': has_modify_permission}),
+        'embedded_source': urlencode({'embeddedSource': quote(package_source.encode('utf-8'))}),
+        'embedded_url': urlencode({'embeddedUrl': package_url}),
+        'embedded_date': urlencode({'embeddedDate': quote(resource_last_modified.encode('utf-8'))})
         # 'edit_mode': urllib.urlencode({'editMode': start_edit_mode}),
         # 'only_view_mode': urllib.urlencode({'onlyViewMode': only_view_mode}),
     }
@@ -60,6 +60,6 @@ def hxl_preview_iframe_url_show(context, data_dict):
 
 def __get_ckan_domain_without_protocol():
     ckan_site_url = config.get('ckan.site_url')
-    url_parts = urlparse.urlsplit(ckan_site_url)
+    url_parts = urlsplit(ckan_site_url)
 
-    return urlparse.urlunsplit([''] + list(url_parts[1:]))
+    return urlunsplit([''] + list(url_parts[1:]))
