@@ -53,7 +53,8 @@ def members(id):
 
     try:
         context = _get_context()
-        check_access(u'group_edit_permissions', context, {u'id': id})
+        if not g.user:
+            raise NotAuthorized('Only logged in users can see the list of members')
 
         q, sort = _find_filter_params()
         reverse = True if sort == u'title desc' else False
