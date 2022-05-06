@@ -52,7 +52,6 @@ RUN apt-get -qq -y update && \
     # make python3 and pip3 available as python and pip
     ln -sf /usr/bin/python3 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip && \
-    ln -sf /usr/bin/bash /bin/bash && \
     ln -sf /usr/bin/sh /bin/sh && \
     # perpare nginx unit installation
     curl --output /usr/share/keyrings/nginx-keyring.gpg https://unit.nginx.org/keys/nginx-keyring.gpg && \
