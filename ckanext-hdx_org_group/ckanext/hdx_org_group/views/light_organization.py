@@ -19,6 +19,7 @@ get_action = tk.get_action
 check_access = tk.check_access
 render = tk.render
 abort = tk.abort
+redirect = tk.redirect_to
 NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
 _ = tk._
@@ -147,9 +148,14 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         abort(403, _('Not authorized to see this page'))
 
 
+@check_redirect_needed
+def light_fake(id):
+    return redirect('hdx_light_org.light_read', id=id)
+
 
 hdx_light_org.add_url_rule(u'', view_func=light_index)
 hdx_light_org.add_url_rule(u'/<id>', view_func=light_read)
-# hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_read)
-# hdx_light_org.add_url_rule(u'/stats/<id>', view_func=light_read)
-# hdx_light_org.add_url_rule(u'/members/<id>', view_func=light_read)
+hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_fake)
+hdx_light_org.add_url_rule(u'/stats/<id>', view_func=light_fake)
+hdx_light_org.add_url_rule(u'/members/<id>', view_func=light_fake)
+hdx_light_org.add_url_rule(u'/requested_data/<id>', view_func=light_fake)
