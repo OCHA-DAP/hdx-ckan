@@ -6,7 +6,7 @@ HDX_DATACHECK_URL=https://gallery.ecr.aws/r/unocha/hdx-tools-datacheck/
 HDX_DATACHECK_TAG=1.3.1
 
 HDX_DATAPROXY_URL=https://gallery.ecr.aws/r/unocha/hdx-dataproxy/
-HDX_DATAPROXY_TAG=2.7
+HDX_DATAPROXY_TAG=2.8
 
 HDX_GISAPI_URL=https://gallery.ecr.aws/r/unocha/hdx-gislayer/
 HDX_GISAPI_TAG=4.2.6
