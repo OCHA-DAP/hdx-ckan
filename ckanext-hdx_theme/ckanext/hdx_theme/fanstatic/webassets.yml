@@ -415,7 +415,7 @@ charting-scripts:
   contents:
     - vendor/d3/d3.js
     - vendor/c3/c3.js
-    - vendor/leaflet-0.7.3/leaflet.js
+    - vendor/leaflet-1.7.1/leaflet.js
     - map_base.js
 
 charting-styles:
@@ -423,7 +423,7 @@ charting-styles:
   <<: *common-css
   contents:
     - vendor/c3/c3.css
-    - vendor/leaflet-0.7.3/leaflet.css
+    - vendor/leaflet-1.7.1/leaflet.css
 
 #custom-viz-3w-scripts:
 #  <<: *common-js
@@ -687,7 +687,7 @@ shape-view-scripts:
     preload:
       - hdx_theme/charting-scripts
   contents:
-    - vendor/leaflet.mvt/mapbox.vector.tile.js
+    - vendor/leaflet-vector-grid/Leaflet.VectorGrid.bundled.js
     - shape-view.js
 
 #shape-view-styles:
