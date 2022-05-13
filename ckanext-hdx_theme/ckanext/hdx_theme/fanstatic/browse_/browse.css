@@ -104,9 +104,6 @@
 .leaflet-container .leaflet-top {
   z-index: 999;
 }
-.leaflet-container .leaflet-popup-pane {
-  z-index: 10;
-}
 .leaflet-container .leaflet-popup-close-button {
   display: none;
 }
@@ -144,11 +141,13 @@
 .leaflet-container .leaflet-bottom.leaflet-right .leaflet-control-attribution.leaflet-control {
   display: none;
 }
+.leaflet-container .leaflet-bar.leaflet-control.leaflet-control-zoom a {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+}
 .leaflet-container.map-selection .leaflet-bar.leaflet-control {
   margin-left: 45px;
-}
-.leaflet-container.map-selection .leaflet-bar.leaflet-control.leaflet-control-zoom {
-  margin-top: 30px;
 }
 .leaflet-container path {
   -webkit-transition: fill 200ms;
