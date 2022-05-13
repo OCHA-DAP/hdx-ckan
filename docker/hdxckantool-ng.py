@@ -174,6 +174,11 @@ def user():
     """Manage users."""
     pass
 
+@cli.group()
+def token():
+    """Manage API tokens."""
+    pass
+
 
 @db.command(name='restore')
 @click.option('-d', '--database', default=SQL['DB'], show_default=True, help="Database to restore")
@@ -496,6 +501,47 @@ def sysadmin_list():
     rows = db_query(query)
     user_pretty_list(rows)
 
+@token.command(name='add')
+@click.argument('user')
+@click.argument('name')
+@click.argument('expire')
+@click.pass_context
+def token_add(ctx, user, name, expire):
+    """Add a new token for a user.
+
+    USER        Username.
+
+    NAME        New token name.
+
+    EXPIRE      Expires after this many days (max 180).
+    """
+    if expire > 180:
+        print('Maximum token validity is 180 days.')
+        sys.exit(0)
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'add', user, name, 'expires_in='+str(expire), 'unit=86400']
+    subprocess.call(cmd)
+
+@token.command(name='list')
+@click.argument('user')
+@click.pass_context
+def token_list(ctx, user):
+    """List tokens belonging to a user.
+
+    USER    The user to list tokens for.
+    """
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'list', user]
+    subprocess.call(cmd)
+
+@token.command(name='revoke')
+@click.argument('token_id')
+@click.pass_context
+def token_revoke(ctx, token_id):
+    """Revoke a token.
+
+    TOKEN_ID    The ID of the token to be revoked.
+    """
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'revoke', token_id]
+    subprocess.call(cmd)
 
 @user.command(name='add')
 @click.argument('user', type=str)
