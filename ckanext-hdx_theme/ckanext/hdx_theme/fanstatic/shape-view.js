@@ -42,6 +42,11 @@
   };
 
   function layerStyling(properties, zoom, geometryDimension) {
+    if (!properties.__geometryDimension) {
+      properties.__geometryDimension = geometryDimension;
+    } else if (!geometryDimension) {
+      geometryDimension = properties.__geometryDimension;
+    }
     if (geometryDimension === 1) {   // point
       return defaultPointStyle;
     } else if (geometryDimension === 2) {   // line
