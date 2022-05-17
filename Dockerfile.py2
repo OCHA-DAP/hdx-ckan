@@ -105,4 +105,4 @@ RUN apt-get -qq -y update && \
 
 VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
 
-EXPOSE 5000 5001
+EXPOSE 5000

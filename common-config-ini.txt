@@ -142,8 +142,8 @@ ckan.feeds.author_link =
 
 # Local file storage:
 ofs.impl = pairtree
-ofs.storage_dir = /opt/www/data
-ckan.storage_path = /opt/www/data
+ofs.storage_dir = /srv/filestore
+ckan.storage_path = /srv/filestore
 ckan.max_resource_size = 300
 ckan.max_image_size = 2
 

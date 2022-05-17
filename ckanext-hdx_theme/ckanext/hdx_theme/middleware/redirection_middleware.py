@@ -27,6 +27,6 @@ class RedirectionMiddleware(object):
             new_path = unquote(new_path)
             new_path = self.config['ckan.site_url'] + new_path
             start_response('302 Found', [('Location', new_path)])
-            return ['1']
+            return [b'']
         app = self.app(environ, start_response)
         return app

@@ -53,7 +53,8 @@ def members(id):
 
     try:
         context = _get_context()
-        check_access(u'group_edit_permissions', context, {u'id': id})
+        if not g.user:
+            raise NotAuthorized('Only logged in users can see the list of members')
 
         q, sort = _find_filter_params()
         reverse = True if sort == u'title desc' else False
@@ -98,7 +99,7 @@ def members(id):
         return abort(404, _('Group not found'))
     except Exception as ex:
         log.error(str(ex))
-        return  abort(404, _('Server error'))
+        return abort(404, _('Server error'))
     if org_meta.is_custom:
         return render('organization/custom_members.html', template_dict)
     else:

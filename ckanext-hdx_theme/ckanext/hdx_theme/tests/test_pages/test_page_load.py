@@ -30,9 +30,9 @@ pages = [
     {'url_name': 'dashboard.index', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
-    {'url_name': 'hdx_user_dashboard.datasets', 'has_id': True, 'usertype': 'all'},
+    {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all', 'url_params': {'id': 'tester'}},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
-    {'url_name': 'hdx_splash.index', 'usertype': 'all'}
+    {'url_name': 'hdx_splash.index', 'usertype': 'all'},
 ]
 
 # @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
@@ -59,38 +59,27 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         # global pages
         test_client = self.get_backwards_compatible_test_client()
         # for page in pages:
-        controller = page.get('controller')
-        action = page.get('action')
+        # controller = page.get('controller')
+        # action = page.get('action')
         url_name = page.get('url_name')
-        id = page.get('id')
+        url_params = page.get('url_params')
         if not page['usertype']:
-            self._try_page_load(test_client, url_name, controller, action, None)
+            self._try_page_load(test_client, url_name, None, url_params)
         else:
-            id = None
-            has_id = page.get('has_id', False)
-
             if page['usertype'] == 'user' or page['usertype'] == 'all':
-                if has_id:
-                    id = 'tester'
-                self._try_page_load(test_client, url_name, controller, action, 'tester', id)
+                self._try_page_load(test_client, url_name, 'tester', url_params)
             if page['usertype'] == 'sysadmin' or page['usertype'] == 'all':
-                if has_id:
-                    id = 'testsysadmin'
-                self._try_page_load(test_client,
-                    url_name, controller, action, 'testsysadmin', id)
+                self._try_page_load(test_client, url_name, 'testsysadmin', url_params)
 
-    def _try_page_load(self, test_client, url_name, controller, action, username, id=None):
+    def _try_page_load(self, test_client, url_name, username, url_params=None):
         result = None
         args = []
         kw = {}
         url_for = h.url_for if url_name and '.' in url_name else hdx_h.url_for
-        if url_name:
-            args.append(url_name)
-        else:
-            kw['controller'] = controller
-            kw['action'] = action
-        if id:
-            kw['id'] = id
+        args.append(url_name)
+
+        if url_params:
+            kw = url_params
         url = url_for(*args, **kw)
         log.info('Testing url: ' + url)
         if username:

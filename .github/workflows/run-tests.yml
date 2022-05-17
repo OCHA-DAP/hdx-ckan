@@ -49,25 +49,25 @@ jobs:
         run: |
           docker-compose exec -T ckan hdxckantool feature
           docker-compose exec -T ckan hdxckantool less
-      - name: Testing hdx_search
+      - name: PY2/Testing hdx_search
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
-      - name: Testing hdx_users
+      - name: PY2/Testing hdx_users
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_users"
-      - name: Testing hdx_user_extra
+      - name: PY2/Testing hdx_user_extra
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_user_extra"
-      - name: Testing hdx_theme
+      - name: PY2/Testing hdx_theme
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_theme"
-      - name: Testing hdx_package
+      - name: PY2/Testing hdx_package
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package"
-      - name: Testing hdx_pages
+      - name: PY2/Testing hdx_pages
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
-      - name: Testing hdx_org_group
+      - name: PY2/Testing hdx_org_group
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_org_group"
-      - name: Testing hdx_service_checker
+      - name: PY2/Testing hdx_service_checker
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_service_checker"
-      - name: Testing hdx_dataviz
+      - name: PY2/Testing hdx_dataviz
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_dataviz"
-      - name: Testing sitemap
+      - name: PY2/Testing sitemap
         run: docker-compose exec -T ckan sh -c "./run_pytest_with_coverage.sh sitemap"
       - name: Publish in Coveralls
         if: success()

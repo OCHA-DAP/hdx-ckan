@@ -220,11 +220,11 @@
                                 {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('requestdata.my_requested_data', _('HDX Connect Requests'), id=c.userobj.name) }}
-                                {% if user_is_sysadmin %}
-                                  <li>
-                                    <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
-                                  </li>
-                                {% endif %}
+{#                                {% if user_is_sysadmin %}#}
+{#                                  <li>#}
+{#                                    <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>#}
+{#                                  </li>#}
+{#                                {% endif %}#}
 
                               </ul>
                             </li>
