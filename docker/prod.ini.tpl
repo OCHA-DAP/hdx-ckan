@@ -81,7 +81,7 @@ hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{d
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
 # at Alex suggestion, i made this proto unaware
-hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resource_id}/wkb_geometry/{z}/{x}/{y}.pbf
+hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/{resource_id}/{z}/{x}/{y}.pbf
 
 hdx.analytics.hotjar.site_id = ${HDX_HOTJAR_SITEID}
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
