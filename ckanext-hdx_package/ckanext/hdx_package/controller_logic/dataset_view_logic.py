@@ -19,7 +19,8 @@ def process_shapes(resources, id=None):
                 'resource_name': name,
                 'url': res_pbf_url,
                 'bounding_box': shp_info['bounding_box'],
-                'layer_fields': shp_info.get('layer_fields', [])
+                'layer_fields': shp_info.get('layer_fields', []),
+                'layer_id': shp_info['layer_id'],
             }
             if resource.get('id') == id:
                 result.insert(0, shp_dict)

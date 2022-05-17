@@ -16,9 +16,13 @@ function getHDXBaseLayer(map, maxZoomValue){
   }).addTo(map);
 }
 
-function getHDXLabelsLayer(map, maxZoomValue){
-  return L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+function getHDXLabelsLayer(map, maxZoomValue, paneName){
+  let options = {
     minZoom: 0,
     maxZoom: maxZoomValue
-  }).addTo(map);
+  };
+  if (paneName){
+    options.pane = paneName;
+  }
+  return L.tileLayer($('#mapbox-labelslayer-url-div').text(), options).addTo(map);
 }
