@@ -283,7 +283,7 @@ def db_set_perms():
 @click.pass_context
 def feature(ctx):
     '''Rebuild the feature index.'''
-    cmd = ['paster', 'hdx-feature-search', 'build', '-c', ctx.obj['CONFIG']]
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'hdx-feature-search']
     os.chdir(os.path.join(BASEDIR, 'ckanext-hdx_search'))
     print('Rebuilding feature index...')
     subprocess.call(cmd)
@@ -313,7 +313,7 @@ def less_compile(ctx, compile, verbose):
         click.echo("Deprecated argument 'compile'. Just skip it.")
     if verbose:
         click.echo("Deprecated argument 'verbose'. Use -v at script level instead.")
-    cmd = ['paster', '--plugin=ckanext-hdx_theme', 'custom-less-compile', '-c', ctx.obj['CONFIG']]
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'custom-less-compile']
     os.chdir(BASEDIR)
     less_wr_dirs = ["ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated", "/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp"]
     print('Compiling...')
