@@ -139,7 +139,7 @@ class OrganizationStatsLogic(object):
         if ret and len(ret) == 1:
             dataset_id = ret[0].get('dataset_id')
             stats_1_dataset_downloads_last_weeks = \
-                jql.fetch_downloads_per_week_for_dataset(dataset_id).values()
+                list(jql.fetch_downloads_per_week_for_dataset(dataset_id).values())
             stats_1_dataset_name = ret[0].get('name')
 
         return ret, total_downloads, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name
