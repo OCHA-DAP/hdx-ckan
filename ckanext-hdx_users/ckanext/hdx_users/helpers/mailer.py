@@ -10,7 +10,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from time import time
-from six import text_type
+from six import text_type, PY3
 
 import ckan
 import ckan.plugins.toolkit as tk
@@ -87,7 +87,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             # no recipient list provided
             recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
-    msg['To'] = Header(recipients, CHARSET)
+    msg['To'] = recipients if PY3 else Header(recipients, CHARSET)
 
     if bcc_recipients_list:
         for r in bcc_recipients_list:
@@ -99,13 +99,16 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             cc_recipient = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(r.get('display_name')),
                                                                 email=r.get('email'))
             cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
-        msg['Cc'] = Header(cc_recipients, CHARSET) if cc_recipients else ''
+        if cc_recipients:
+            msg['Cc'] = cc_recipients if PY3 else Header(cc_recipients, CHARSET)
+        else:
+            msg['Cc'] = ''
 
     msg['Date'] = utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     # if sender_email:
     reply_to = u'"{display_name}" <{email}>'.format(display_name=_get_decoded_str(sender_name), email=sender_email)
-    msg['Reply-To'] = Header(reply_to, CHARSET)
+    msg['Reply-To'] = reply_to if PY3 else Header(reply_to, CHARSET)
     part = MIMEText(body_html, 'html', CHARSET)
     msg.attach(part)
 
