@@ -252,10 +252,10 @@ function prepareMap(countDatasets, openNewWindow){
   topLayer = getHDXBaseLayer(map, 7);
   topPane.appendChild(topLayer.getContainer());
 
-  var topLayer2 = getHDXLabelsLayer(map, 6);
-  topLayer2.setZIndex(7);
+  // var topLayer2 = getHDXLabelsLayer(map, 6);
+  // topLayer2.setZIndex(7);
 
-  topPane.appendChild(topLayer2.getContainer());
+  // topPane.appendChild(topLayer2.getContainer());
   topLayer.setZIndex(1);
 }
 

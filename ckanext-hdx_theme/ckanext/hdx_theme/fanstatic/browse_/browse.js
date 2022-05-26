@@ -195,9 +195,9 @@ function prepareMap(countDatasets, openNewWindow){
 
   topPane = map.createPane('leaflet-labels-layer');
   topPane.style.zIndex = 450;
-  var topLayer2 = getHDXLabelsLayer(map, 6, 'leaflet-labels-layer');
+  // var topLayer2 = getHDXLabelsLayer(map, 6, 'leaflet-labels-layer');
   // topLayer2.setZIndex(7);
-  topPane.appendChild(topLayer2.getContainer());
+  // topPane.appendChild(topLayer2.getContainer());
   // topLayer.setZIndex(1);
 }
 
