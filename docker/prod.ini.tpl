@@ -66,7 +66,6 @@ hdx.orgrequest.sendmails = true
 #https://{s}.tiles.mapbox.com/v3/reliefweb.l43d4f5j/{z}/{x}/{y}.png
 hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
 #https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/{z}/{x}/{y}.png
-hdx.mapbox.labelslayer.url = /mapbox-layer-tiles/{z}/{x}/{y}.png
 
 # disabled during work on HDX-6899
 # hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
