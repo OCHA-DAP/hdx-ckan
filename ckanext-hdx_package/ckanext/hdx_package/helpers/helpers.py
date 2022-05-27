@@ -354,8 +354,7 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
 
     if not same_domain and scheme in proxy_schemes:
         url = h.url_for(
-            action='proxy_resource',
-            controller='ckanext.resourceproxy.controller:ProxyController',
+            'resource_proxy.proxy_view',
             id=data_dict['package']['name'],
             resource_id=data_dict['resource']['id'])
         log.info('Proxified url is {0}'.format(url))
