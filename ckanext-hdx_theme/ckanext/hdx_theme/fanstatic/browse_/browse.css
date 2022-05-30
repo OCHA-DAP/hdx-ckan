@@ -98,6 +98,9 @@
   z-index: 10000;
   width: 1260px;
 }
+#map .leaflet-popup .leaflet-popup-content-wrapper .leaflet-popup-content {
+  margin: 0;
+}
 .leaflet-container .leaflet-top-pane {
   pointer-events: none;
 }
@@ -155,13 +158,16 @@
 }
 .leaflet-container .marker-container {
   position: relative;
-  width: 60px;
-  height: 40px;
-  padding: 0 !important;
+  min-width: 60px;
+  max-width: 120px;
+  min-height: 40px;
+  max-heigh: 60px;
+  padding: 0;
   margin: 20px;
 }
 .leaflet-container .marker-container .marker-number {
-  font-family: 'Gotham-Light', sans-serif !important;
+  font-family: 'Gotham-Light', sans-serif;
+  font-display: auto;
   font-size: 30px;
   line-height: 30px;
   font-weight: 400;
@@ -170,9 +176,10 @@
   color: #fff;
 }
 .leaflet-container .marker-container .marker-label {
-  font-family: 'Source Sans Pro', sans-serif !important;
-  font-size: 10px !important;
-  line-height: 10px !important;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 10px;
   text-transform: uppercase;
   text-align: center;
   color: #fff;
@@ -180,6 +187,9 @@
 .leaflet-like-container .leaflet-popup-content-wrapper {
   background: #333;
   color: white;
+}
+.leaflet-like-container .leaflet-popup-content {
+  margin: 0;
 }
 .leaflet-like-container .leaflet-popup-tip-container {
   width: 16px;
@@ -247,10 +257,10 @@
 }
 .marker-container {
   position: relative;
-  width: 70px !important;
-  height: 75px !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  min-width: 70px;
+  min-height: 75px;
+  margin: 0;
+  padding: 0;
 }
 .marker-container .line-break {
   position: absolute;
@@ -261,9 +271,7 @@
   top: 12px;
 }
 .marker-container .marker-box {
-  width: 70px;
-  height: 75px;
-  float: left;
+  min-width: 70px;
 }
 .marker-container .marker-box .marker-number {
   font-family: 'Gotham-Light', sans-serif;
@@ -272,7 +280,7 @@
   font-weight: 400;
   text-align: center;
   padding: 0;
-  margin: 15px auto 5px auto;
+  margin: 5px auto 5px auto;
 }
 .marker-container .marker-box .marker-label {
   font-family: 'Source Sans Pro', sans-serif;
