@@ -102,7 +102,7 @@
             </li>
             {% endblock %}
           </ul>
-            <span class="submit-data contribute-popup-init" dataset-id="null">
+            <span class="submit-data contribute-popup-init" dataset-id="{% if h.check_access('package_create') %}null{% else %}DO_IGNORE{% endif %}">
                   {% set add_data_obj = h.hdx_check_add_data() %}
                   {% if add_data_obj %}
                     <a href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
