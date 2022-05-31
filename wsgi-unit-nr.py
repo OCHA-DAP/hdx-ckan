@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import newrelic.agent
+newrelic.agent.initialize()
+
 import os
 from ckan.config.middleware import make_app
 from ckan.cli import CKANConfigLoader
 from logging.config import fileConfig as loggingFileConfig
-
-newrelic.agent.initialize()
 
 config_filepath = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), u'ckan.ini')
