@@ -79,6 +79,7 @@ function prepareMap(countDatasets, openNewWindow){
     });
     popup.setLatLng(e.latlng);
     popup.setContent("<div class='marker-container'>" +
+      "<div class='marker-label'>"+layer.feature.properties.name +"</div>" +
       "<div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.datasets +
       "</div> <div class='marker-label'>datasets</div>" +
       "</div> </div>");

@@ -127,6 +127,16 @@
   }
 }
 
+#map {
+  .leaflet-popup {
+    .leaflet-popup-content-wrapper {
+      .leaflet-popup-content{
+        margin: 0;
+      }
+    }
+  }
+}
+
 
 .leaflet-container{
   .leaflet-top-pane {
@@ -186,34 +196,40 @@
   }
   .marker-container {
     position: relative;
-    width: 60px;
-    height: 40px;
-    padding: 0 !important;
+    min-width: 60px;
+    max-width: 120px;
+    min-height: 40px;
+    max-heigh: 60px;
+    padding: 0;
     margin: 20px;
+
+    .marker-number {
+      .gothamLightFont(30px);
+      line-height: 30px;
+      font-weight: 400;
+      text-align: center;
+      padding: 0 0 5px 0;
+      color: @whiteColor;
+    }
+
+    .marker-label {
+      .sourceSansProFont(400, 10px);
+      line-height: 10px;
+      text-transform: uppercase;
+      text-align: center;
+      color: @whiteColor;
+    }
   }
-  .marker-container .marker-number {
-    font-family: 'Gotham-Light', sans-serif !important;
-    font-size: 30px;
-    line-height: 30px;
-    font-weight: 400;
-    text-align: center;
-    padding: 0 0 5px 0;
-    color: @whiteColor;
-  }
-  .marker-container .marker-label {
-    font-family: 'Source Sans Pro', sans-serif !important;
-    font-size: 10px !important;
-    line-height: 10px !important;
-    text-transform: uppercase;
-    text-align: center;
-    color: @whiteColor;
-  }
+
 }
 .leaflet-like-container {
   .leaflet-popup-content-wrapper {
     background: #333;
     color: white;
   }
+  .leaflet-popup-content {
+      margin: 0;
+    }
   .leaflet-popup-tip-container {
     width: 16px;
     height: 8px;
@@ -286,10 +302,10 @@
 
 .marker-container {
   position: relative;
-  width: 70px !important;
-  height: 75px !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  min-width: 70px;
+  min-height: 75px;
+  margin: 0;
+  padding: 0;
 
   .line-break {
     position: absolute;
@@ -300,9 +316,7 @@
     top: 12px;
   }
   .marker-box {
-    width: 70px;
-    height: 75px;
-    float: left;
+    min-width: 70px;
 
     .marker-number {
       font-family: 'Gotham-Light', sans-serif;
@@ -311,7 +325,7 @@
       font-weight: 400;
       text-align: center;
       padding: 0;
-      margin: 15px auto 5px auto;
+      margin: 5px auto 5px auto;
     }
     .marker-label {
       font-family: 'Source Sans Pro', sans-serif;
