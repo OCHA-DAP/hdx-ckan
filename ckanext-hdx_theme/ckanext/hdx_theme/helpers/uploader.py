@@ -71,7 +71,7 @@ class GlobalUpload(object):
 
     def upload(self):
 
-        max_size = config.get('ckan.max_image_size', 2)
+        max_size = int(config.get('ckan.max_image_size', 2))
 
         if not self.storage_path:
             raise GlobalUploadException("No storage_path")
