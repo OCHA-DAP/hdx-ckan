@@ -12,6 +12,7 @@ from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 log = logging.getLogger(__name__)
 config = tk.config
+asint = tk.asint
 
 ALLOWED_UPLOAD_TYPES = (cgi.FieldStorage, FlaskFileStorage)
 
@@ -71,7 +72,7 @@ class GlobalUpload(object):
 
     def upload(self):
 
-        max_size = int(config.get('ckan.max_image_size', 2))
+        max_size = asint(config.get('ckan.max_image_size', 2))
 
         if not self.storage_path:
             raise GlobalUploadException("No storage_path")
