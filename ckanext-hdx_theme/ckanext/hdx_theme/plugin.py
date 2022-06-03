@@ -9,6 +9,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_theme.helpers.auth as auth
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
+import ckanext.hdx_theme.helpers.http_headers as http_headers
 from ckanext.hdx_theme.cli.click_analytics_changes_reindex import analytics_changes_reindex
 from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
 from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
@@ -314,6 +315,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                 if isinstance(handler, SMTPHandler):
                     handler.setLevel(logging.ERROR)
             app.logger.addFilter(FlaskEmailFilter())
+            app.after_request(http_headers.set_http_headers)
         return redirection_app
 
     # IValidators
