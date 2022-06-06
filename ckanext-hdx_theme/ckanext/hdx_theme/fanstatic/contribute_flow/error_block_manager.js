@@ -69,10 +69,10 @@ ckan.module('hdx_error_block_manager', function($, _) {
                     else if (message.elementName === 'error_block' && message.errorBlock) {
                         thisEl.removeClass('hdx-invisible-element');
                         thisEl.addClass('hdx-visible-element');
-                        if (message.errorBlock.server_or_connection_error) {
-                          setMainErrorMessage(message.errorBlock.server_or_connection_error);
-                        }
-                        else {
+                        if (message.errorBlock !== null) {
+                          let errorMsg = Object.values(message.errorBlock).join(';');
+                          setMainErrorMessage(errorMsg);
+                        } else {
                           setMainErrorMessage();
                         }
 
