@@ -9,7 +9,7 @@ HDX_DATAPROXY_URL=https://gallery.ecr.aws/r/unocha/hdx-dataproxy/
 HDX_DATAPROXY_TAG=2.8
 
 HDX_GISAPI_URL=https://gallery.ecr.aws/r/unocha/hdx-postile/
-HDX_GISAPI_TAG=1.0.2
+HDX_GISAPI_TAG=1.0.4
 
 HDX_GISLAYER_URL=https://gallery.ecr.aws/r/unocha/hdx-gislayer/
 HDX_GISLAYER_TAG=0.6.10
