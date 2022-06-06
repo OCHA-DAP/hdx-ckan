@@ -283,8 +283,6 @@ hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
 # HDX Snap Service
 hdx.snap_service.url = http://snap:8080
 
-
-
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
@@ -369,3 +367,7 @@ hdx.wordpress.category.covid=566
 hdx.wordpress.category.devs=568
 hdx.wordpress.category.terms=577
 hdx.wordpress.category.licenses=581
+
+# HDX http headers
+hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
+hdx.http_headers.mimetypes = application/json,text/html,text/json

@@ -138,6 +138,10 @@ hdx.cod.new_filters.enabled = ${HDX_COD_NEW_FILTERS_ENABLED}
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}
 hdx.wordpress.auth.basic = ${HDX_WORDPRESS_AUTH_BASIC}
 
+# HDX http headers
+#hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
+#hdx.http_headers.mimetypes = application/json,text/html,text/json
+
 # add s3 config
 ckanext.s3filestore.aws_access_key_id = ${AWS_ACCESS_KEY_ID}
 ckanext.s3filestore.aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
