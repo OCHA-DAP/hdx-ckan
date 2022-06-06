@@ -95,7 +95,7 @@ hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
-hdx.hxlproxy.url = https://${HDX_DOMAIN}/hxlproxy
+hdx.hxlproxy.url = ${HDX_HXLPROXY}
 
 # Quickcharts!
 hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts
