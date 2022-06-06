@@ -128,6 +128,10 @@ hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/dat
 
 # hdx.caching.dogpile_filename = /tmp/hdx_dogpile_cache.dbm
 
+# HDX http headers
+hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
+hdx.http_headers.mimetypes = application/json,text/html,text/json
+
 # Logging configuration
 [loggers]
 keys = root, ckan, sqlalchemy

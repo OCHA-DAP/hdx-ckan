@@ -2,7 +2,7 @@ function setHDXBaseMap(map, maxZoomValue) {
   map.scrollWheelZoom.disable();
 
   getHDXBaseLayer(map, maxZoomValue);
-  getHDXLabelsLayer(map, maxZoomValue);
+  // getHDXLabelsLayer(map, maxZoomValue);
 
   L.control.attribution({position: 'topright'}).addTo(map);
   map.setView([0, 0], 1);
@@ -16,9 +16,14 @@ function getHDXBaseLayer(map, maxZoomValue){
   }).addTo(map);
 }
 
-function getHDXLabelsLayer(map, maxZoomValue){
-  return L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-    minZoom: 0,
-    maxZoom: maxZoomValue
-  }).addTo(map);
-}
+// We're currently not planning to use the Labels layer anymore
+// function getHDXLabelsLayer(map, maxZoomValue, paneName){
+//   let options = {
+//     minZoom: 0,
+//     maxZoom: maxZoomValue
+//   };
+//   if (paneName){
+//     options.pane = paneName;
+//   }
+//   return L.tileLayer($('#mapbox-labelslayer-url-div').text(), options).addTo(map);
+// }

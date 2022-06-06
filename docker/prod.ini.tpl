@@ -66,7 +66,6 @@ hdx.orgrequest.sendmails = true
 #https://{s}.tiles.mapbox.com/v3/reliefweb.l43d4f5j/{z}/{x}/{y}.png
 hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
 #https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/{z}/{x}/{y}.png
-hdx.mapbox.labelslayer.url = /mapbox-layer-tiles/{z}/{x}/{y}.png
 
 # disabled during work on HDX-6899
 # hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
@@ -81,7 +80,7 @@ hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{d
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
 # at Alex suggestion, i made this proto unaware
-hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/services/hdx/vector_tiles/{resource_id}/wkb_geometry/{z}/{x}/{y}.pbf
+hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/{resource_id}/{z}/{x}/{y}.pbf
 
 hdx.analytics.hotjar.site_id = ${HDX_HOTJAR_SITEID}
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
@@ -96,7 +95,7 @@ hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
-hdx.hxlproxy.url = https://${HDX_DOMAIN}/hxlproxy
+hdx.hxlproxy.url = ${HDX_HXLPROXY}
 
 # Quickcharts!
 hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts
@@ -138,6 +137,10 @@ hdx.cod.new_filters.enabled = ${HDX_COD_NEW_FILTERS_ENABLED}
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}
 hdx.wordpress.auth.basic = ${HDX_WORDPRESS_AUTH_BASIC}
+
+# HDX http headers
+#hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
+#hdx.http_headers.mimetypes = application/json,text/html,text/json
 
 # add s3 config
 ckanext.s3filestore.aws_access_key_id = ${AWS_ACCESS_KEY_ID}

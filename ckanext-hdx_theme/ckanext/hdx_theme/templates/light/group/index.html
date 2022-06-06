@@ -2,7 +2,6 @@
 
 {% block styles %}
     {{ super() }}
-    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet' />
     {% asset 'hdx_theme/group-list-styles' %}
 {% endblock %}
 
@@ -15,7 +14,6 @@
 {% block content %}
   <div class="container">
     <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
-    <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
     <div id="datasetCounts" style="display: none;">
         {{ countries }}
     </div>
@@ -58,7 +56,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
     {% asset 'hdx_theme/charting-scripts' %}
     {% asset 'hdx_theme/search-scripts' %}
     {% asset 'hdx_theme/group-list-scripts' %}

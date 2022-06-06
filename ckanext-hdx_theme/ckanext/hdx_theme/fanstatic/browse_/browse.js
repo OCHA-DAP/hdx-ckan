@@ -56,8 +56,7 @@ function prepareCountryList(countDatasets) {
 }
 
 function prepareMap(countDatasets, openNewWindow){
-  var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref, closePopupTimeout;
-  //mapID = 'yumiendo.ijchbik8';
+  var closeTooltip, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, map, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, _i, _len, _ref, closePopupTimeout;
   var openTarget = openNewWindow ? "_blank" : "_self";
   openURL = function(url) {
     return window.open(url, openTarget).focus();
@@ -67,10 +66,9 @@ function prepareMap(countDatasets, openNewWindow){
   }, 100);
   var shownPopup = null;
   highlightFeature = function(e) {
-    var countryID, layer;
+    var layer;
     clearTimeout(closePopupTimeout);
     layer = e.target;
-    countryID = layer.feature.id;
     shownPopup = e;
     layer.setStyle({
       weight: 1,
@@ -80,7 +78,11 @@ function prepareMap(countDatasets, openNewWindow){
       fillColor: '#f5837b'
     });
     popup.setLatLng(e.latlng);
-    popup.setContent("<div class='marker-container'> <div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.datasets + "</div> <div class='marker-label'>datasets</div> </div> </div>");
+    popup.setContent("<div class='marker-container'>" +
+      "<div class='marker-label'>"+layer.feature.properties.name +"</div>" +
+      "<div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.datasets +
+      "</div> <div class='marker-label'>datasets</div>" +
+      "</div> </div>");
     if (!popup._map) {
       popup.openOn(map);
     }
@@ -92,7 +94,7 @@ function prepareMap(countDatasets, openNewWindow){
         weight: 0,
         fillOpacity: 0.5,
         fillColor: '#f5837b'
-      }
+      };
     }
 
     return {
@@ -187,14 +189,17 @@ function prepareMap(countDatasets, openNewWindow){
     map.fitBounds(specificCountryLayer.getBounds());
   }
 
-  topPane = map._createPane('leaflet-top-pane', map.getPanes().mapPane);
-  topLayer = getHDXBaseLayer(map, 7);
-  topPane.appendChild(topLayer.getContainer());
 
-  var topLayer2 = getHDXLabelsLayer(map, 6);
-  topLayer2.setZIndex(7);
-  topPane.appendChild(topLayer2.getContainer());
-  topLayer.setZIndex(1);
+  topLayer = getHDXBaseLayer(map, 7);
+  // map.addBaseLayer(topLayer);
+  // topPane.appendChild(topLayer.getContainer());
+
+  topPane = map.createPane('leaflet-labels-layer');
+  topPane.style.zIndex = 450;
+  // var topLayer2 = getHDXLabelsLayer(map, 6, 'leaflet-labels-layer');
+  // topLayer2.setZIndex(7);
+  // topPane.appendChild(topLayer2.getContainer());
+  // topLayer.setZIndex(1);
 }
 
 var parseQueryString = function(url) {
@@ -207,7 +212,7 @@ var parseQueryString = function(url) {
   );
 
   return urlParams;
-}
+};
 
 function prepareCount() {
   var countDatasets = {};

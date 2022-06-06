@@ -63,5 +63,8 @@ function _contributePopupReset() {
 
 $(document).ready(function() {
   let link = $('.contribute-popup-init:last');
-  prepareContributePopup(link.attr('dataset-id'));
+  let datasetId = link.attr('dataset-id');
+  if (datasetId !== "DO_IGNORE") {
+    prepareContributePopup(datasetId);
+  }
 });
