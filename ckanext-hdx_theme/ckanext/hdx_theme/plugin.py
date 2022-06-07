@@ -3,7 +3,7 @@ import json
 import logging
 import os
 
-from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import urlparse, urlunparse
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -88,8 +88,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def __add_spatial_config_for_checks(self, config):
         search_str = '/services'
         spatial_url = config.get('hdx.gis.resource_pbf_url', '')
-        url_index = spatial_url.find(search_str)
-        spatial_check_url = spatial_url[0:url_index + len(search_str)]
+        url_parts = urlparse(spatial_url)
+        spatial_check_url = urlunparse((url_parts.scheme, url_parts.netloc, '/test', '', '', ''))
+        # url_index = spatial_url.find(search_str)
+        # spatial_check_url = spatial_url[0:url_index + len(search_str)]
         spatial_check_url = self._create_full_URL(spatial_check_url)
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
 

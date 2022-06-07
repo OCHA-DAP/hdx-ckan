@@ -11,7 +11,7 @@
     "module_name": "ckanext.hdx_service_checker.checks.checks",
     "class_name": "HttpResponseTextCheck",
     "url": "#{hdx_checks.spatial_checks_url}",
-    "included_text": "geoprocessing"
+    "included_text": "Postile is running"
   },
   {
     "name": "Redis monitor check (includes redis and worker)",
