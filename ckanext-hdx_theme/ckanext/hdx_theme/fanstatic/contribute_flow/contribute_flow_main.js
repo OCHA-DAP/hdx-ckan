@@ -69,7 +69,8 @@
 
                                     // Resources are not required for metadata-only datasets
                                     if (!data.data.is_requestdata_type && (!resourceDataArray || resourceDataArray.length === 0)) {
-                                        data.error_summary['Resources'] = 'Please add at least 1 resource to the dataset';
+                                        data.error_summary['resource-list'] = 'Please add at least 1 resource to the dataset';
+
                                     }
 
                                     // Tags are required for metadata-only datasets
