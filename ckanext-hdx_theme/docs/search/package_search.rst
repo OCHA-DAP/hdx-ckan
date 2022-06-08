@@ -190,3 +190,253 @@ Example::
              ....
           }
   }
+
+
+Featured Filters
+----------------
+The featured filters are built in different ways:
+
+*  some of them are simple facet fields (facet.field). These facets are based on a dataset property.
+*  while others are built on facet queries (facet.query). These generally check which datasets have a certain tag.
+
+Below is a list of the featured filters:
+
+Sub-national (facet.field)
+__________________________
+
+**Facet**::
+
+  {
+    "facet.field": [
+      ...
+      "subnational",
+      ...
+    ],
+  }
+In the response we're interested in the facet item with the *name* "true".
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_subnational` with value 1::
+
+  {
+    "q": ....,
+    "fq": ....,
+    "ext_subnational": 1
+  }
+
+
+Geodata (facet.field)
+_____________________
+
+**Facet**::
+
+  {
+    "facet.field": [
+      ...
+      "has_geodata",
+      ...
+    ],
+  }
+
+In the response we're interested in the facet item with the *name* "true".
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_geodata` with value 1::
+
+  {
+    "q": ....,
+    "fq": ....,
+    "ext_geodata": 1
+  }
+
+
+Datasets on request (facet.field)
+_________________________________
+
+**Facet**::
+
+  {
+    "facet.field": [
+      ...
+      "extras_is_requestdata_type",
+      ...
+    ],
+  }
+
+**NOTE:** Because this field is of type text one of the facet items names will be "fals" instead of "false".
+In the response we're anyway only interested in the facet item with the *name* "true".
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_requestdata` with value 1::
+
+  {
+    "q": ....,
+    "fq": ....,
+    "ext_requestdata": 1
+  }
+
+
+Datasets with Quick Charts (facet.field)
+________________________________________
+
+**Facet**::
+
+  {
+    "facet.field": [
+      ...
+      "has_quickcharts",
+      ...
+    ],
+  }
+
+
+In the response we're interested in the facet item with the *name* "true".
+
+**Filter** - when filtering  a new field should be set in the query :code:`ext_quickcharts`::
+
+  {
+    "q": ....,
+    "fq": ....,
+    "ext_quickcharts": 1
+  }
+
+Datasets with Showcases (facet.field)
+_____________________________________
+
+**Facet**::
+
+  {
+    "facet.field": [
+      ...
+      "has_showcases",
+      ...
+    ],
+  }
+
+In the response we're interested in the facet item with the *name* "true".
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_showcases` with value 1::
+
+  {
+    "q": ....,
+    "fq": ....,
+    "ext_showcases": 1
+  }
+
+
+Administrative Divisions (facet.query)
+______________________________________
+In this case we're NOT building the facet as before ( this facet is not based on a property of the dataset). The
+actual logic here is: does the dataset have the *"administrative divisions" tag* ?
+For this we use the :code:`facet.query` field in the query.
+
+**Facet**::
+
+  {
+    "facet.field": ...,
+    "facet.query": [
+      "{!key=administrative_divisions} vocab_Topics:\"administrative divisions\""
+    ],
+  }
+
+In this case, because we have used the key _administrative_divisions_ the response will contain an item with
+the *name* "administrative_divisions" in the :code:`$.result.search_facets.queries` list. Example::
+
+  {
+    "success": true,
+    "result": {
+        "count": 12,
+        ....
+        "results": [...],
+        "search_facets": {
+          "organization": {...},
+          "vocab_Topics": {...},
+          ....
+          "queries": [
+            {
+              "count": 2,
+              "name": "administrative_divisions",
+              "display_name": "administrative_divisions"
+            }
+          ],
+        }
+  }
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_administrative_divisions` with value 1::
+
+  {
+    "q": ....
+    "fq": ....
+    "ext_administrative_divisions": 1
+  }
+
+
+Datasets with HXL tags (facet.query)
+_____________________________________
+(please check the section about the `Administrative Divisions (facet.query)`_ featured filter for more information on
+facet queries - :code:`facet.query`.
+That section also contains an example on how to find the facet items in the response.)
+
+**Facet**::
+
+  {
+    "facet.field": ...,
+    "facet.query": [
+      "{!key=hxl} vocab_Topics:hxl"
+    ],
+  }
+
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_hxl` with value 1::
+
+  {
+    "q": ....
+    "fq": ....
+    "ext_hxl": 1
+  }
+
+
+Datasets with SADD tags (facet.query)
+_____________________________________
+(please check the section about the `Administrative Divisions (facet.query)`_ featured filter for more information on
+facet queries - :code:`facet.query`.
+That section also contains an example on how to find the facet items in the response.)
+
+**Facet**::
+
+  {
+    "facet.field": ...,
+    "facet.query": [
+      "{!key=sadd} vocab_Topics:\"sex and age disaggregated data - sadd\""
+    ],
+  }
+
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_sadd` with value 1::
+
+  {
+    "q": ....
+    "fq": ....
+    "ext_sadd": 1
+  }
+
+CODs (facet.query)
+_____________________________________
+(please check the section about the `Administrative Divisions (facet.query)`_ featured filter for more information on
+facet queries - :code:`facet.query`.
+That section also contains an example on how to find the facet items in the response.)
+
+**Facet**::
+
+  {
+    "facet.field": ...,
+    "facet.query": [
+      "{!key=cod} vocab_Topics:\"common operational dataset - cod\""
+    ],
+  }
+
+
+**Filter** - when filtering a new field should be set in the query :code:`ext_cod` with value 1::
+
+  {
+    "q": ....
+    "fq": ....
+    "ext_cod": 1
+  }
