@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+import six
 from six.moves.urllib.parse import urlparse
 
 import ipaddress
@@ -30,7 +31,7 @@ class AbstractAnalyticsSender(object):
             self.request_url = request.url
 
             ua = request.user_agent if request.user_agent else ''
-            self.user_agent = ua if isinstance(ua, basestring) else ua.string
+            self.user_agent = ua if isinstance(ua, six.string_types) else ua.string
             ua_dict = useragent.Parse(self.user_agent)
 
             self.is_api_call = False
@@ -80,7 +81,8 @@ class AbstractAnalyticsSender(object):
 
     def __check_ip_addr_public(self):
         if self.user_addr:
-            ip_addr = ipaddress.ip_address(unicode(self.user_addr))
+            user_address = self.user_addr.split(',')[0]
+            ip_addr = ipaddress.ip_address(six.text_type(user_address))
             if ip_addr.is_private:
                 log.warn('IP address used in analytics event {} is not public.'
                          'This could be normal for tests and dev env.'.format(self.__class__.__name__))
