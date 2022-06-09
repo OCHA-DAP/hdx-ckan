@@ -49,6 +49,9 @@ class TestS3Metadata(HDXS3TestBase):
         s3obj = self._fetch_s3_object(resource_dict['id'], self.file1_name)
         assert test_item['autoscan'] == bool(s3obj.get('Metadata', {}).get('autoscan'))
 
+        assert resource_dict.get('download_url').split('/download/')[0]+'/download/' == resource_dict.get('alt_url')
+
+
     @pytest.mark.parametrize('test_item', TEST_DATA)
     def test_metadata_saved_on_update(self, test_item):
         file_path = os.path.join(os.path.dirname(__file__), self.file1_name)
@@ -72,6 +75,8 @@ class TestS3Metadata(HDXS3TestBase):
         resource_dict = result.json['result']
         s3obj = self._fetch_s3_object(resource_dict['id'], self.file1_name)
         assert test_item['autoscan'] == bool(s3obj.get('Metadata', {}).get('autoscan'))
+
+        assert resource_dict.get('download_url').split('/download/')[0] + '/download/' == resource_dict.get('alt_url')
 
     @pytest.mark.parametrize('test_item', TEST_DATA)
     def test_metadata_saved_on_revise(self, test_item):
