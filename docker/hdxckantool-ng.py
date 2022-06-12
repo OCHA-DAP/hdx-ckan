@@ -88,7 +88,7 @@ def control(cmd):
         stop="-d",
         restart="-r"
     )
-    line = ["s6-svc", flag[cmd], '/var/run/s6/services/ckan']
+    line = ["s6-svc", flag[cmd], '/var/run/s6/services/unit']
     try:
         subprocess.call(line)
     except:
@@ -181,6 +181,7 @@ def token():
 
 
 @db.command(name='restore')
+@click.option('-S', '--server', default=SQL['HOST'], show_default=True, help="Server to retore to")
 @click.option('-d', '--database', default=SQL['DB'], show_default=True, help="Database to restore")
 @click.option('-f', '--filename', default='/srv/backup/{}.pg_restore'.format(SQL['DB']), show_default=True, help="File name to restore from")
 @click.option('-m', '--minimal', is_flag=True, default=False, show_default=True, help="Skip larger tables (like activity).")
@@ -188,7 +189,7 @@ def token():
 @click.option('-k', '--keep-ckan-running', is_flag=True, show_default=True, default=False, help="Do not stop ckan during restore.")
 @click.option('-c', '--clear-database', is_flag=True, show_default=True, default=False, help="Recreate the schema.")
 @click.pass_context
-def db_restore(ctx, database, filename, minimal, skip_tables, keep_ckan_running, clear_database):
+def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_running, clear_database):
     # click.echo('{} {}'.format(database,file))
     if not keep_ckan_running:
         print('Stopping ckan ...')
@@ -196,7 +197,7 @@ def db_restore(ctx, database, filename, minimal, skip_tables, keep_ckan_running,
     else:
         print('Ckan will keep running in the background.')
 
-    restore = "pg_restore -vOx -n public".split()
+    restore = "pg_restore -h {} -vOx -n public".format(server).split()
     if clear_database:
         db_empty(database)
         # two hammers should be better than one hammer
@@ -209,7 +210,7 @@ def db_restore(ctx, database, filename, minimal, skip_tables, keep_ckan_running,
     if minimal:
         print('Restoring minimal database {} from {} ...'.format(database,filename))
         cmd0 = 'pg_restore -l {}'.format(filename).split()
-        get_tables = subprocess.check_output(cmd0).split('\n')
+        get_tables = subprocess.check_output(cmd0).decode("utf-8").split('\n')
         schema_only = []
         full_tables = []
         for line in get_tables:
@@ -223,20 +224,19 @@ def db_restore(ctx, database, filename, minimal, skip_tables, keep_ckan_running,
                 continue
             if not len(line):
                 continue
-            full_tables.append(line)
-        with open('{}.tables'.format(filename), 'wb') as f:
+            full_tables.append(str(line))
+        with open('{}.tables'.format(filename), 'w') as f:
             for line in full_tables:
-                f.write('{}\n'.format(line))
-        with open('{}.schema_only'.format(filename), 'wb') as f:
+                f.write('{}\n'.format(str(line)))
+        with open('{}.schema_only'.format(filename), 'w') as f:
             for line in schema_only:
-                f.write('{}\n'.format(line))
+                f.write('{}\n'.format(str(line)))
         restore.extend("-U {} -d {} -L {}.tables {}" \
             .format(SQL['USER'], database, filename, filename).split())
     else:
         print('Restoring minimal database {} from {} ...'.format(database,filename))
         restore.extend("-U {} -d {} {}" \
             .format(SQL['USER'], database, filename).split())
-
     if ctx.obj['VERBOSE']:
         subprocess.call(restore, stderr=subprocess.STDOUT)
     else:
@@ -454,12 +454,10 @@ def solr_exists(host, port, collection):
 @click.pass_context
 def solr_reindex(ctx, fast, refresh, clear):
     """Reindex solr."""
-    click.echo(ctx.obj['CONFIG'])
-    click.echo("{} {} {}".format(fast,refresh,clear))
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'search-index']
     if clear:
         print("Clearing solr index...")
-        # subprocess.call(cmd + ['clear'])
+        subprocess.call(cmd + ['clear'])
     if fast:
         cmd.append('rebuild-fast')
         if refresh:
@@ -469,8 +467,7 @@ def solr_reindex(ctx, fast, refresh, clear):
         if refresh:
             cmd.append('-r')
     os.chdir(BASEDIR)
-    click.echo(' '.join(cmd))
-    # subprocess.call(cmd)
+    subprocess.call(cmd)
 
 
 @sysadmin.command(name='enable')
