@@ -284,7 +284,7 @@ def db_set_perms():
 def feature(ctx):
     '''Rebuild the feature index.'''
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'hdx-feature-search']
-    os.chdir(os.path.join(BASEDIR, 'ckanext-hdx_search'))
+    os.chdir(BASEDIR)
     print('Rebuilding feature index...')
     subprocess.call(cmd)
     print('Fixing permissions on feature-index.js...')
