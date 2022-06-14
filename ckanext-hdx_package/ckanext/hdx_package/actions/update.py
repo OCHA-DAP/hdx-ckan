@@ -82,7 +82,10 @@ def resource_update(context, data_dict):
     else:
         if data_dict.get('datastore_active', 'true') in ('true', 'True'):
             data_dict['datastore_active'] = True
+
+    context['do_geo_preview'] = False
     result_dict = core_update.resource_update(context, data_dict)
+    context.pop('do_geo_preview', None)
 
     # if new_file_uploaded:
     #     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
@@ -339,6 +342,7 @@ def package_resource_reorder(context, data_dict):
 
     process_batch_mode(context, data_dict)
 
+    context['do_geo_preview'] = False
     result_dict = core_update.package_resource_reorder(context, data_dict)
 
     return result_dict

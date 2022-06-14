@@ -258,39 +258,44 @@ def geopreview_4_packages(original_package_action):
 
     def package_action(context, package_dict):
 
-        old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
-            if 'id' in package_dict else {}
+        # package_update() can be done with: context['allow_partial_update'] = True - which allows skipping
+        # the resource list from the dataset_dict. In this case geopreview should be skipped.
+        new_resources = package_dict.get('resources', [])
 
-        old_resources_list = old_package_dict.get('resources')
-        fields = ['name', 'description', 'url', 'format']
-        resource_id_to_hash_dict = {}
+        if new_resources:
+            old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
+                if 'id' in package_dict else {}
 
-        if old_resources_list:
-            try:
-                # We compute a hash code for "old" resource to see if they have changed
-                resource_id_to_hash_dict = generate_hash_dict(old_resources_list, 'id', fields)
-            except Exception as e:
-                log.error(str(e))
+            old_resources_list = old_package_dict.get('resources')
+            fields = ['name', 'description', 'url', 'format']
+            resource_id_to_hash_dict = {}
 
-        for resource_dict in package_dict.get('resources', []):
-            modified_or_new = True
-            try:
-                if 'id' in resource_dict:
-                    rid = resource_dict['id']
-                    hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
-                    modified_or_new = False if resource_id_to_hash_dict.get(rid) == hash_code else True
-            except Exception as e:
-                log.error(str(e))
+            if old_resources_list:
+                try:
+                    # We compute a hash code for "old" resource to see if they have changed
+                    resource_id_to_hash_dict = generate_hash_dict(old_resources_list, 'id', fields)
+                except Exception as e:
+                    log.error(str(e))
 
-            if modified_or_new:
-                _before_ckan_action(context, resource_dict)
+            for resource_dict in new_resources:
+                modified_or_new = True
+                try:
+                    if 'id' in resource_dict:
+                        rid = resource_dict['id']
+                        hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
+                        modified_or_new = False if resource_id_to_hash_dict.get(rid) == hash_code else True
+                except Exception as e:
+                    log.error(str(e))
+
+                if modified_or_new:
+                    _before_ckan_action(context, resource_dict)
 
         result_dict = original_package_action(context, package_dict)
 
         # If it comes from resource_create / resource_update the transaction is not yet committed
         # (resource is not yet saved )
         if isinstance(result_dict, dict):
-            if not context.get('defer_commit', False):
+            if new_resources and not context.get('defer_commit', False):
                 for resource_dict in result_dict.get('resources', []):
                     _after_ckan_action(context, resource_dict)
         else:
