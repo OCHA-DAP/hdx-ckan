@@ -9,6 +9,7 @@ import ckan.plugins.toolkit as tk
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 _get_action = tk.get_action
+ValidationError = tk.ValidationError
 
 SYSADMIN_USER = 'some_sysadmin_user'
 DATASET_NAME = 'dataset_name_for_geopreview'
@@ -75,7 +76,7 @@ class TestGeopreviewTrigger(object):
         try:
             resource_dict1 = _get_action('resource_create')(context, resource1)
             resource_dict2 = _get_action('resource_create')(context, resource2)
-        except tk.ValidationError as e:
+        except ValidationError as e:
             assert False
         return resource_dict1, resource_dict2
 
@@ -90,9 +91,24 @@ class TestGeopreviewTrigger(object):
         try:
             resource_dict2_modified = _get_action('resource_update')(context, resource_dict2)
             assert resource_dict2_modified['name'] == resource_dict2['name']
-        except tk.ValidationError as e:
+        except ValidationError as e:
             assert False
         assert get_shape_info_as_json_mock.call_count == 3
+
+    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    def test_delete_resource(self, get_shape_info_as_json_mock):
+        get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        resource_dict1, resource_dict2 = self._create_2_resources(context)
+        assert get_shape_info_as_json_mock.call_count == 2
+
+        try:
+            _get_action('resource_delete')(context, {'id': resource_dict2['id']})
+            dataset_dict = _get_action('package_show')(context, {'id': DATASET_NAME})
+            assert len(dataset_dict['resources']) == 1
+        except ValidationError as e:
+            assert False
+        assert get_shape_info_as_json_mock.call_count == 2
 
     @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
     def test_update_package(self, get_shape_info_as_json_mock):
@@ -108,9 +124,45 @@ class TestGeopreviewTrigger(object):
             dataset_dict_modified = _get_action('package_update')(context, dataset_dict)
             assert dataset_dict_modified['notes'] == dataset_dict['notes']
             assert len(dataset_dict_modified['resources']) == 2
-        except tk.ValidationError as e:
+        except ValidationError as e:
             assert False
+
         assert get_shape_info_as_json_mock.call_count == 2
+
+        try:
+            dataset_dict_modified['resources'][0]['name'] = 'hdx_test1_modified.shp.zip'
+            dataset_dict_modified2 = _get_action('package_update')(context, dataset_dict_modified)
+            assert dataset_dict_modified2['resources'][0]['name'] == 'hdx_test1_modified.shp.zip'
+        except ValidationError as e:
+            assert False
+        assert get_shape_info_as_json_mock.call_count == 3
+
+    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    def test_revise_package(self, get_shape_info_as_json_mock):
+        get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        resource_dict1, resource_dict2 = self._create_2_resources(context)
+        assert get_shape_info_as_json_mock.call_count == 2
+
+        try:
+            data_dict = {
+                'match__name': DATASET_NAME,
+                'update__resources__extend': [
+                    {
+                        'url': tk.config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+                        'resource_type': 'file.upload',
+                        'format': 'SHP',
+                        'name': 'hdx_test3.shp.zip',
+                        'package_id': DATASET_NAME,
+                    }
+                ],
+            }
+            result = _get_action('package_revise')(context, data_dict)
+            assert len(result['package']['resources']) == 3
+        except ValidationError as e:
+            assert False
+
+        assert get_shape_info_as_json_mock.call_count == 3
 
     @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
     def test_reorder_resources(self, get_shape_info_as_json_mock):
@@ -131,6 +183,6 @@ class TestGeopreviewTrigger(object):
             dataset_dict = _get_action('package_show')(context, {'id': DATASET_NAME})
             assert dataset_dict['resources'][0]['id'] == r2_id
             assert dataset_dict['resources'][1]['id'] == r1_id
-        except tk.ValidationError as e:
+        except ValidationError as e:
             assert False
         assert get_shape_info_as_json_mock.call_count == 2

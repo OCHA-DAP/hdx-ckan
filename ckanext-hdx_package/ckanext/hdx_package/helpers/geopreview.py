@@ -8,6 +8,8 @@ import requests
 import datetime
 import sys
 import json
+
+import six
 import six.moves.urllib.parse as urlparse
 import os
 
@@ -262,30 +264,33 @@ def geopreview_4_packages(original_package_action):
         # the resource list from the dataset_dict. In this case geopreview should be skipped.
         new_resources = package_dict.get('resources', [])
 
+        resource_id_to_modified_map = {}
         if new_resources:
             old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
                 if 'id' in package_dict else {}
 
             old_resources_list = old_package_dict.get('resources')
             fields = ['name', 'description', 'url', 'format']
-            resource_id_to_hash_dict = {}
+
+            resource_id_to_hash_map = {}
 
             if old_resources_list:
                 try:
                     # We compute a hash code for "old" resource to see if they have changed
-                    resource_id_to_hash_dict = generate_hash_dict(old_resources_list, 'id', fields)
+                    resource_id_to_hash_map = generate_hash_dict(old_resources_list, 'id', fields)
                 except Exception as e:
-                    log.error(str(e))
+                    log.error(six.text_type(e))
 
             for resource_dict in new_resources:
                 modified_or_new = True
                 try:
-                    if 'id' in resource_dict:
+                    if 'id' in resource_dict and not 'upload' in resource_dict:
                         rid = resource_dict['id']
                         hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
-                        modified_or_new = False if resource_id_to_hash_dict.get(rid) == hash_code else True
+                        modified_or_new = False if resource_id_to_hash_map.get(rid) == hash_code else True
+                        resource_id_to_modified_map[rid] = modified_or_new
                 except Exception as e:
-                    log.error(str(e))
+                    log.error(six.text_type(e))
 
                 if modified_or_new:
                     _before_ckan_action(context, resource_dict)
@@ -297,7 +302,10 @@ def geopreview_4_packages(original_package_action):
         if isinstance(result_dict, dict):
             if new_resources and not context.get('defer_commit', False):
                 for resource_dict in result_dict.get('resources', []):
-                    _after_ckan_action(context, resource_dict)
+
+                    # default is True, because new resources wouldn't be in the map at all
+                    if resource_id_to_modified_map.get(resource_dict['id'], True):
+                        _after_ckan_action(context, resource_dict)
         else:
             log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
 

@@ -85,6 +85,7 @@ def resource_delete(context, data_dict):
     '''
     process_batch_mode(context, data_dict)
 
+    context['do_geo_preview'] = False
     result_dict = core_delete.resource_delete(context, data_dict)
 
     _resource_purge(context, data_dict)
