@@ -83,12 +83,22 @@ def resource_update(context, data_dict):
         if data_dict.get('datastore_active', 'true') in ('true', 'True'):
             data_dict['datastore_active'] = True
 
-    context['do_geo_preview'] = False
-    result_dict = core_update.resource_update(context, data_dict)
-    context.pop('do_geo_preview', None)
+    result_dict = run_action_without_geo_preview(core_update.resource_update, context, data_dict)
 
     # if new_file_uploaded:
     #     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
+
+    return result_dict
+
+
+def run_action_without_geo_preview(action, context, data_dict):
+    do_geo_preview_in_context = 'do_geo_preview' in context
+    if not do_geo_preview_in_context:
+        context['do_geo_preview'] = False
+        result_dict = action(context, data_dict)
+        context.pop('do_geo_preview', None)
+    else:
+        result_dict = action(context, data_dict)
 
     return result_dict
 

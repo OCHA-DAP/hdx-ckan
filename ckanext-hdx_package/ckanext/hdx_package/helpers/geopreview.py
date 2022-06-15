@@ -243,7 +243,7 @@ def geopreview_4_resources(original_resource_action):
         It triggers the geopreview creation process.
         '''
 
-        # _before_ckan_action(context, resource_dict, 'resource_action')
+        _before_ckan_action(context, resource_dict)
 
         result_dict = original_resource_action(context, resource_dict)
 
