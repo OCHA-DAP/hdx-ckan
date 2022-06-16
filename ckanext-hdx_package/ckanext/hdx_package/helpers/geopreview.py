@@ -8,6 +8,8 @@ import requests
 import datetime
 import sys
 import json
+
+import six
 import six.moves.urllib.parse as urlparse
 import os
 
@@ -243,7 +245,7 @@ def geopreview_4_resources(original_resource_action):
         It triggers the geopreview creation process.
         '''
 
-        # _before_ckan_action(context, resource_dict, 'resource_action')
+        _before_ckan_action(context, resource_dict)
 
         result_dict = original_resource_action(context, resource_dict)
 
@@ -258,41 +260,52 @@ def geopreview_4_packages(original_package_action):
 
     def package_action(context, package_dict):
 
-        old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
-            if 'id' in package_dict else {}
+        # package_update() can be done with: context['allow_partial_update'] = True - which allows skipping
+        # the resource list from the dataset_dict. In this case geopreview should be skipped.
+        new_resources = package_dict.get('resources', [])
 
-        old_resources_list = old_package_dict.get('resources')
-        fields = ['name', 'description', 'url', 'format']
-        resource_id_to_hash_dict = {}
+        resource_id_to_modified_map = {}
+        if new_resources:
+            old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
+                if 'id' in package_dict else {}
 
-        if old_resources_list:
-            try:
-                # We compute a hash code for "old" resource to see if they have changed
-                resource_id_to_hash_dict = generate_hash_dict(old_resources_list, 'id', fields)
-            except Exception as e:
-                log.error(str(e))
+            old_resources_list = old_package_dict.get('resources')
+            fields = ['name', 'description', 'url', 'format']
 
-        for resource_dict in package_dict.get('resources', []):
-            modified_or_new = True
-            try:
-                if 'id' in resource_dict:
-                    rid = resource_dict['id']
-                    hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
-                    modified_or_new = False if resource_id_to_hash_dict.get(rid) == hash_code else True
-            except Exception as e:
-                log.error(str(e))
+            resource_id_to_hash_map = {}
 
-            if modified_or_new:
-                _before_ckan_action(context, resource_dict)
+            if old_resources_list:
+                try:
+                    # We compute a hash code for "old" resource to see if they have changed
+                    resource_id_to_hash_map = generate_hash_dict(old_resources_list, 'id', fields)
+                except Exception as e:
+                    log.error(six.text_type(e))
+
+            for resource_dict in new_resources:
+                modified_or_new = True
+                try:
+                    if 'id' in resource_dict and not 'upload' in resource_dict:
+                        rid = resource_dict['id']
+                        hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
+                        modified_or_new = False if resource_id_to_hash_map.get(rid) == hash_code else True
+                        resource_id_to_modified_map[rid] = modified_or_new
+                except Exception as e:
+                    log.error(six.text_type(e))
+
+                if modified_or_new:
+                    _before_ckan_action(context, resource_dict)
 
         result_dict = original_package_action(context, package_dict)
 
         # If it comes from resource_create / resource_update the transaction is not yet committed
         # (resource is not yet saved )
         if isinstance(result_dict, dict):
-            if not context.get('defer_commit', False):
+            if new_resources and not context.get('defer_commit', False):
                 for resource_dict in result_dict.get('resources', []):
-                    _after_ckan_action(context, resource_dict)
+
+                    # default is True, because new resources wouldn't be in the map at all
+                    if resource_id_to_modified_map.get(resource_dict['id'], True):
+                        _after_ckan_action(context, resource_dict)
         else:
             log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
 
