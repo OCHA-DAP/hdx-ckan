@@ -12,7 +12,7 @@ import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_package.helpers.screenshot as screenshot
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded
+from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
 from ckanext.hdx_package.helpers.analytics import is_cod
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
 from flask import request
@@ -30,6 +30,7 @@ _get_or_bust = logic.get_or_bust
 NotFound = logic.NotFound
 
 log = logging.getLogger(__name__)
+
 
 @geopreview.geopreview_4_resources
 def resource_create(context, data_dict):
@@ -56,7 +57,7 @@ def resource_create(context, data_dict):
         except RuntimeError as re:
             log.debug('This usually happens for tests when there is no HTTP request: ' + six.text_type(re))
 
-    result_dict = core_create.resource_create(context, data_dict)
+    result_dict = run_action_without_geo_preview(core_create.resource_create,context, data_dict)
     return result_dict
 
 

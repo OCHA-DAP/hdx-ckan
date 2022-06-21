@@ -59,10 +59,12 @@ log = logging.getLogger(__name__)
 # _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 # _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
 
-GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service', 'file geodatabase',
-                   'garmin img', 'gdb', 'geodatabase', 'geonode', 'geotiff', 'map server', 'map service', 'obf',
-                   'topojson', 'wkt', 'zipped gdb', 'zipped geodatabase', 'geopackage', 'zipped geotiff',
-                   'arc/info grid', 'zipped img', 'zipped kml', 'zipped raster', 'zipped shapefiles']
+GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service',
+                                 'file geodatabase',
+                                 'garmin img', 'gdb', 'geodatabase', 'geonode', 'geotiff', 'map server', 'map service',
+                                 'obf',
+                                 'topojson', 'wkt', 'zipped gdb', 'zipped geodatabase', 'geopackage', 'zipped geotiff',
+                                 'arc/info grid', 'zipped img', 'zipped kml', 'zipped raster', 'zipped shapefiles']
 
 
 @logic.side_effect_free
@@ -274,7 +276,7 @@ def package_search(context, data_dict):
             labels = None
         else:
             labels = lib_plugins.get_permission_labels(
-                ).get_user_dataset_labels(context['auth_user_obj'])
+            ).get_user_dataset_labels(context['auth_user_obj'])
 
         # ADDED BY HDX - setting default query params
         _set_default_value_if_needed('qf', data_dict)
@@ -291,7 +293,7 @@ def package_search(context, data_dict):
         if result_fl:
             for package in query.results:
                 if package.get('extras'):
-                    package.update(package['extras'] )
+                    package.update(package['extras'])
                     package.pop('extras')
                 results.append(package)
         else:
@@ -304,7 +306,7 @@ def package_search(context, data_dict):
                     package_dict = json.loads(package_dict)
                     if context.get('for_view'):
                         for item in plugins.PluginImplementations(
-                                plugins.IPackageController):
+                            plugins.IPackageController):
                             package_dict = item.before_view(package_dict)
                     results.append(package_dict)
                 else:
@@ -342,8 +344,8 @@ def package_search(context, data_dict):
         group_names.extend(facets.get(field_name, {}).keys())
 
     groups = (session.query(model.Group.name, model.Group.title)
-                    .filter(model.Group.name.in_(group_names))
-                    .all()
+              .filter(model.Group.name.in_(group_names))
+              .all()
               if group_names else [])
     group_titles_by_name = dict(groups)
 
@@ -476,7 +478,7 @@ def _generate_facet_queries_list(query_dict):
             'name': key,
             'display_name': key
         }
-    for key, value in query_dict.items()]
+        for key, value in query_dict.items()]
 
 
 def _remove_unwanted_dataset_properties(dataset_list):
@@ -513,7 +515,8 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
     if config.get('hdx.apihighways.enabled') == 'true':
         resource_dict['apihighways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
         if resource_dict['apihighways_id']:
-            resource_dict['apihighways_url'] = config.get('hdx.apihighways.baseurl') + resource_dict.get('apihighways_id')
+            resource_dict['apihighways_url'] = config.get('hdx.apihighways.baseurl') + resource_dict.get(
+                'apihighways_id')
     else:
         if 'apihighways_id' in resource_dict:
             del resource_dict['apihighways_id']
@@ -521,6 +524,10 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
             del resource_dict['apihighways_url']
     if resource_dict.get('url'):
         resource_dict['download_url'] = resource_dict.get('url')
+        if resource_dict.get('url_type') == "upload" and resource_dict.get('resource_type') == "file.upload" and \
+            config.get('ckan.site_url') in resource_dict.get('url'):
+            resource_dict['alt_url'] = resource_dict.get('url').split('/download/')[0] + '/download/'
+
 
 @logic.side_effect_free
 def package_show(context, data_dict):
@@ -643,7 +650,8 @@ def __compute_resource_grouping(context, package_dict):
 def shape_info_show(context, data_dict):
     dataset_dict = get_action('package_show')(context, data_dict)
 
-    shape_infos = [{r.get('name'): json.loads(r.get('shape_info'))} for r in dataset_dict.get('resources', []) if r.get('shape_info')]
+    shape_infos = [{r.get('name'): json.loads(r.get('shape_info'))} for r in dataset_dict.get('resources', []) if
+                   r.get('shape_info')]
 
     return shape_infos
 
@@ -716,7 +724,7 @@ def _get_resource_filesize(resource_dict):
             value = os.path.getsize(upload.get_path(resource_dict['id']))
         except Exception as e:
             log.debug(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
-                                                                                         str(e)))
+                                                                                          str(e)))
         return value
     return None
 
@@ -750,10 +758,12 @@ def _get_resource_id_apihighways(resource_id):
     ah_dict = pkg_caching.cached_resource_id_apihighways()
     if ah_dict:
         for res in ah_dict.get('data'):
-            _id = res.get('attributes', {}).get('metadata', {})[0].get('attributes', {}).get('info', {}).get('resourceId', None)
+            _id = res.get('attributes', {}).get('metadata', {})[0].get('attributes', {}).get('info', {}).get(
+                'resourceId', None)
             if _id and resource_id == _id:
                 return res.get('id')
     return None
+
 
 @logic.side_effect_free
 def package_validate(context, data_dict):
@@ -952,10 +962,11 @@ def hdx_send_mail_members(context, data_dict):
                               snippet='email/content/group_message.html')
     return None
 
+
 @logic.validate(logic.schema.default_pagination_schema)
 @logic.side_effect_free
 def recently_changed_packages_activity_list(context, data_dict):
-    result = logic_get.recently_changed_packages_activity_list(context,data_dict)
+    result = logic_get.recently_changed_packages_activity_list(context, data_dict)
     user_obj = context.get('auth_user_obj')
     is_sysadmin = user_obj and user_obj.sysadmin
     if is_sysadmin:
@@ -1025,7 +1036,6 @@ def hdx_get_s3_link_for_resource(context, data_dict):
 
 @logic.side_effect_free
 def hdx_format_autocomplete(context, data_dict):
-
     q = data_dict['q']
     if not q:
         return []
@@ -1035,7 +1045,6 @@ def hdx_format_autocomplete(context, data_dict):
 
 @logic.side_effect_free
 def hdx_guess_format_from_extension(context, data_dict):
-
     q = data_dict['q']
     if not q:
         return None
