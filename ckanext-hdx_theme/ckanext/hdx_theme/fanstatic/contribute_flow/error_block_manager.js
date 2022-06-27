@@ -70,7 +70,14 @@ ckan.module('hdx_error_block_manager', function($, _) {
                         thisEl.removeClass('hdx-invisible-element');
                         thisEl.addClass('hdx-visible-element');
                         if (message.errorBlock !== null) {
-                          let errorMsg = Object.values(message.errorBlock).join(';');
+                          let errorItems = [];
+                          Object.keys(message.errorBlock).forEach((item) => {
+                            if (['server_or_connection_error', 'resource-list'].includes(item)) {
+                              errorItems.push(message.errorBlock[item]);
+                            }
+                          });
+
+                          let errorMsg = errorItems.join(';');
                           setMainErrorMessage(errorMsg);
                         } else {
                           setMainErrorMessage();
