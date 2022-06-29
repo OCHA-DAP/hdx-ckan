@@ -30,3 +30,15 @@ HOW TO ADD A NEW FIELD
 ----------------------
 Adding a new field to dataset. Please note that doesn't necessarily mean storing a new field. It might be a computed field also:
 `Adding a new field to datasets <tech_add_field/index.rst>`_
+
+DOWNLOAD RESOURCES
+--------------
+Resources can be downloaded using the following urls:
+- if resource is uploaded in HDX and specifying filename:
+  - :code:`/dataset/<dataset_id>/resource/<resource_id>/download/<filename>
+- if resource is uploaded in HDX and NOT specifying filename:
+  - :code:`/dataset/<dataset_id>/resource/<resource_id>/download/
+- by specifying the position of the resource (starting with index 0):
+  - :code:`/dataset/<dataset_id>/resource_at_position/<position>/download/
+- getting the first resource in the dataset:
+  - :code:`/dataset/<dataset_id>/resource_first/download/
