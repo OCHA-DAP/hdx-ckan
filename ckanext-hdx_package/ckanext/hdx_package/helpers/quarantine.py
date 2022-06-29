@@ -7,13 +7,13 @@ NotFound = tk.ObjectNotFound
 NotAuthorized = tk.NotAuthorized
 abort = tk.abort
 _ = tk._
-c = tk.c
+g = tk.g
 
 
 def resource_download_with_quarantine_check(id, resource_id, filename=None):
 
     context = {'model': model, 'session': model.Session,
-               'user': c.user, 'auth_user_obj': c.userobj}
+               'user': g.user, 'auth_user_obj': g.userobj}
 
     try:
         resource_dict = get_action('resource_show')(context, {'id': resource_id})
