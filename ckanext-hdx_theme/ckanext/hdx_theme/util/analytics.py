@@ -24,6 +24,8 @@ class AbstractAnalyticsSender(object):
         self.analytics_dict = None
         self.response = None
 
+        self.pushed_successfully = False
+
         try:
             self.referer_url = request.referrer
             self.user_addr = request.environ.get('HTTP_X_REAL_IP')
@@ -64,7 +66,7 @@ class AbstractAnalyticsSender(object):
                     self.response.raise_for_status()
                     enq_result = self.response.json()
                     log.info('Enqueuing result was: {}'.format(enq_result.get('success')))
-
+                    self.pushed_successfully = True
                 else:
                     log.error('The analytics dict is empty. Can\'t send it to the queue')
             else:
@@ -143,7 +145,7 @@ class AbstractAnalyticsSender(object):
             called_url = urlparse(url)
             return called_url.path
         except Exception as e:
-            log.error('Exception while trying get current url', unicode(e))
+            log.error('Exception while trying get current url', six.text_type(e))
 
         return None
 
