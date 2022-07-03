@@ -59,11 +59,7 @@ class AbstractAnalyticsSender(object):
                 if self.analytics_dict:
                     self._populate_defaults()
 
-                    self.response = requests.post(self.analytics_enqueue_url, allow_redirects=True, timeout=2,
-                                                  data=json.dumps(self.analytics_dict),
-                                                  headers={'Content-type': 'application/json'})
-
-                    self.response.raise_for_status()
+                    self.response = self._make_http_call()
                     enq_result = self.response.json()
                     log.info('Enqueuing result was: {}'.format(enq_result.get('success')))
                     self.pushed_successfully = True
@@ -80,6 +76,13 @@ class AbstractAnalyticsSender(object):
             log.error("Request timed out: {}".format(str(e)))
         except Exception as e:
             log.error('Unexpected error {}'.format(e))
+
+    def _make_http_call(self):
+        response = requests.post(self.analytics_enqueue_url, allow_redirects=True, timeout=2,
+                                      data=json.dumps(self.analytics_dict),
+                                      headers={'Content-type': 'application/json'})
+        response.raise_for_status()
+        return response
 
     def __check_ip_addr_public(self):
         if self.user_addr:
