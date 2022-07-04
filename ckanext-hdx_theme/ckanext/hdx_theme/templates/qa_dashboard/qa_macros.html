@@ -1,4 +1,4 @@
-{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None) %}
+{% macro qa_check_item(status, status_text, isodate_string=None, link_to_log=None, package=None) %}
   {# status - OK, ERROR, RUNNIG/QUEUED, None/False #}
   {# status_text - not needed in case it's still RUNNING/QUEUED #}
 
@@ -9,9 +9,32 @@
     <span class="pii-status">
       In progress
     </span>
-  {% elif status == 'OK' or status == 'ERROR' %}
-    {% set status_class = 'ok' if status  == 'OK' else 'warn' %}
-    {% set icon_class = 'humanitarianicons-Selected' if status_class  == 'ok' else 'humanitarianicons-Alert' %}
+  {% elif status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION' or status == 'ERROR' or status=='' or not status  %}
+    {% if status == 'OK' %}
+      {% set status_class = 'ok' %}
+      {% set icon_class = 'humanitarianicons-Selected' %}
+    {% elif status == 'FINDINGS' or status == 'ERROR' %}
+      {# status ERROR triggered by checklist #}
+      {% set status_class = 'warn' %}
+      {% set icon_class = 'humanitarianicons-Alert' %}
+      {% if status == 'FINDINGS' %}
+        {% set status_text = 'Find.' %}
+      {% endif %}
+    {% elif status == 'EXCEPTION'%}
+      {% set status_class = 'error' %}
+      {% set icon_class = 'humanitarianicons-Alert' %}
+      {% set status_text = 'Error' %}
+    {% endif %}
+    {# Overrides if pii_is_sensitive is set #}
+    {% if package.pii_is_sensitive == True %}
+      {% set status_class = 'warn' %}
+      {% set icon_class = 'humanitarianicons-Alert' %}
+      {% set status_text = 'Sensitive' %}
+    {% elif package.pii_is_sensitive == False %}
+      {% set status_class = 'ok' %}
+      {% set icon_class = 'humanitarianicons-Selected' %}
+      {% set status_text = 'OK' %}
+    {% endif %}
 
     <span class="pii-label {{ status_class }}">
       <span class="pii-label-text">
@@ -23,14 +46,14 @@
       {% if link_to_log %}
         <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">[LOG]</a>
       {% else %}
-        {{ h.render_datetime(isodate_string) }}
+        {{ h.render_datetime(isodate_string, date_format='%Y-%m-%d') }}
       {% endif %}
     </span>
   {% endif %}
 {% endmacro %}
 
 {% macro qa_check_pii_item(status, status_text, isodate_string=None, link_to_log=None, link_to_debug=None, link_to_dlp=None, resource=None, dlp_run=False) %}
-  {# status - OK, FINDINGS, EXCEPTION, RUNNIG/QUEUED, None/False #}
+  {# status - OK, FINDINGS, EXCEPTION, RUNNING/QUEUED, None/False #}
   {# status_text - not needed in case it's still RUNNING/QUEUED #}
 
   {% if status == 'RUNNING' or status == 'QUEUED' %}
