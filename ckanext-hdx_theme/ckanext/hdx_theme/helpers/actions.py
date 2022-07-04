@@ -17,13 +17,16 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.hxl.transformers.transformers as transformers
 import ckan.authz as authz
 
-from ckan.common import c, _
+from ckanext.hdx_theme.helpers.hdx_stats import HDXStatsHelper
 from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
-from sqlalchemy import func
+
+from ckanext.hdx_theme.util.analytics_stats import HDXStats, HDXStatsAnalyticsSender
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
 config = tk.config
+g = tk.g
+_ = tk._
 NotFound = logic.NotFound
 
 log = logging.getLogger(__name__)
@@ -44,7 +47,7 @@ def member_list(context, data_dict=None):
     if not group:
         raise logic.NotFound
     # user = context.get('user')
-    if group.state == 'deleted' and (not c.userobj or not c.userobj.sysadmin):
+    if group.state == 'deleted' and (not g.userobj or not g.userobj.sysadmin):
         raise logic.NotFound
 
     obj_type = data_dict.get('object_type', None)
@@ -553,47 +556,47 @@ def hdx_organization_list_for_user(context, data_dict):
     return orgs_list
 
 
+def hdx_push_general_stats(context, data_dict):
+
+    _check_access('hdx_push_general_stats', context, {})
+    stats_helper = HDXStatsHelper(context, compute_user_stats=False).fetch_data()
+
+    analytics_sender = HDXStatsAnalyticsSender(stats_helper)
+    analytics_sender.send_to_queue()
+
+    if analytics_sender.pushed_successfully:
+        return analytics_sender.stats_dict
+    else:
+        raise Exception('There was a problem pushing the stats to the server')
+
+
 @logic.side_effect_free
 def hdx_general_statistics(context, data_dict):
-    model = context['model']
 
-    active_users_completed = model.Session.query(func.count(model.User.id)).filter(model.User.state == 'active').filter(
-        model.User.fullname != None).first()[0]
-    active_users_not_completed = model.Session.query(func.count(model.User.id)).filter(
-        model.User.state == 'active').filter(model.User.fullname == None).first()[0]
-
-    org_list = tk.get_action('organization_list')(context, {})
-    pkg_results = tk.get_action('package_search')(context, {
-        'fq': '+dataset_type:dataset',
-        'facet.field': [
-            'organization',
-            'has_geodata',
-            'has_showcases'
-        ],
-        'facet.limit': 2000,
-        'q': u'',
-        'rows': 1,
-        'start': 0
-    })
-
-    total_orgs = len(org_list)
-    orgs_with_datasets = len(pkg_results['facets'].get('organization', {}))
+    stats_helper = HDXStatsHelper(context).fetch_data()
 
     results = {
         'datasets': {
-            'total': pkg_results.get('count'),
-            'with_geodata': pkg_results['facets'].get('has_geodata', {}).get('true'),
-            'with_showcases': pkg_results['facets'].get('has_showcases', {}).get('true'),
+            'total': stats_helper.datasets_total,
+            'with_geodata': stats_helper.datasets_with_geodata,
+            'with_showcases': stats_helper.datasets_with_showcases,
+            'qa': {
+                'in_quarantine': stats_helper.datasets_qa_in_quarantine,
+                HDXStatsHelper.IN_QA: stats_helper.datasets_qa_in_qa,
+                HDXStatsHelper.QA_COMPLETED: stats_helper.datasets_qa_qa_completed,
+            }
         },
         'organizations': {
-            'total': total_orgs,
-            'with_datasets': orgs_with_datasets,
-            'without_datasets': total_orgs - orgs_with_datasets
+            'total': stats_helper.orgs_total,
+            'with_datasets': stats_helper.orgs_with_datasets,
+            'without_datasets': stats_helper.orgs_total - stats_helper.orgs_with_datasets,
+            'active_last_year': stats_helper.orgs_updating_data_past_year,
+            'not_active_last_year': stats_helper.orgs_total - stats_helper.orgs_updating_data_past_year,
         },
         'users': {
-            'total': active_users_completed + active_users_not_completed,
-            'completed_registration': active_users_completed,
-            'not_completed_registration': active_users_not_completed
+            'total': stats_helper.active_users_completed + stats_helper.active_users_not_completed,
+            'completed_registration': stats_helper.active_users_completed,
+            'not_completed_registration': stats_helper.active_users_not_completed
         }
     }
 
@@ -605,6 +608,7 @@ def hdx_general_statistics(context, data_dict):
 #     Only sysadmins are allowed to call this action
 #     '''
 #     return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
+
 
 @logic.side_effect_free
 def hdx_user_statistics(context, data_dict):
