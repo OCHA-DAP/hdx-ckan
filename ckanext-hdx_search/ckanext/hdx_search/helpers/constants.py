@@ -30,6 +30,11 @@ STATUS_PRIORITIES = {
     'OK': 1,
     'RUNNING': 2,
     'QUEUED': 3,
-    'ERROR': 4
+    'FINDINGS': 4,
+    'ERROR': 5,
+    'EXCEPTION': 5,
+    False: 1,
+    True: 2
 }
+
 
