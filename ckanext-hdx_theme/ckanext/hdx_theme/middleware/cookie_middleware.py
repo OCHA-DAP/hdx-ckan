@@ -35,7 +35,8 @@ class CookieMiddleware(object):
 
         # Run function after each request to potentially update the cookie that specifies whether the current user is
         # logged in
-        self.app.after_request(update_login_cookie)
+        if self.app.app_name == 'flask_app':
+            self.app.after_request(update_login_cookie)
 
     def __call__(self, environ, start_response):
         flask_route = environ.get('HDXflask_route')
