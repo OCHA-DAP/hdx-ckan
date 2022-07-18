@@ -33,4 +33,4 @@ Adding a new field to dataset. Please note that doesn't necessarily mean storing
 
 HOW TO DOWNLOAD FILES/RESOURCES FROM HDX
 --------------
-Information about how to download the files from HDX can be found here `DOWNLOAD FILES FROM HDX <download/index.rst>`_
+Information about how to download the files from HDX can be found here `Download Files from HDX <download/index.rst>`_
