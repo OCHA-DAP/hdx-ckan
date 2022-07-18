@@ -125,6 +125,7 @@ class HDXS3TestBase(object):
                     'package_id': pkg_name,
                     'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
                     'resource_type': 'file.upload',
+                    'url_type': 'upload',
                     'format': 'CSV',
                     'name': 'hdx_test.csv'
                 }

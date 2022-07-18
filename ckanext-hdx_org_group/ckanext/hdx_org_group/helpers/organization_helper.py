@@ -400,36 +400,8 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization'] = {}
 
     # If we're removing the image
-    if 'clear_image_sq' in data_dict and data_dict['clear_image_sq']:
-        remove_image(customization['image_sq'])
-        data_dict['customization']['image_sq'] = ''
-        customization['image_rect'] = ''
-
-    if 'clear_image_rect' in data_dict and data_dict['clear_image_rect']:
-        remove_image(customization['image_rect'])
-        data_dict['customization']['image_rect'] = ''
-        customization['image_rect'] = ''
-
-    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
-        # Although weird, the FieldStorage instance has a boolean value of False so we need to compare to None
-
-        # If old image was uploaded remove it
-        if customization['image_sq']:
-            remove_image(customization['image_sq'])
-
-        upload1 = uploader.Upload('group', customization['image_sq'])
-        upload1.update_data_dict(data_dict, 'image_sq',
-                                 'image_sq_upload', 'clear_upload')
-
-    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' \
-            and data_dict['image_rect_upload'] != None:
-        # Although weird, the FieldStorage instance has a boolean value of False so we need to compare to None
-
-        if customization['image_rect']:
-            remove_image(customization['image_rect'])
-        upload2 = uploader.Upload('group', customization['image_rect'])
-        upload2.update_data_dict(data_dict, 'image_rect',
-                                 'image_rect_upload', 'clear_upload')
+    upload_sq = _manage_image_upload_for_org('image_sq', customization, data_dict)
+    upload_rect = _manage_image_upload_for_org('image_rect', customization, data_dict)
 
     storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
@@ -526,20 +498,37 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         # TODO: Also create an activity detail recording what exactly changed
         # in the group.
 
-    try:
-        upload1.upload(uploader.get_max_image_size())
-    except:
-        pass
+    if upload_sq:
+        upload_sq.upload(uploader.get_max_image_size())
 
-    try:
-        upload2.upload(uploader.get_max_image_size())
-    except:
-        pass
+    if upload_rect:
+        upload_rect.upload(uploader.get_max_image_size())
 
     if not context.get('defer_commit'):
         model.repo.commit()
 
     return model_dictize.group_dictize(group, context)
+
+
+def _manage_image_upload_for_org(image_field, customization, data_dict):
+    clear_field = 'clear_{}'.format(image_field)
+    if clear_field in data_dict and data_dict[clear_field]:
+        remove_image(customization[image_field])
+        data_dict['customization'][image_field] = ''
+        # customization[image_field] = ''
+
+    upload_field = '{}_upload'.format(image_field)
+    if data_dict.get(upload_field):
+        # If old image exists remove it
+        if customization[image_field]:
+            remove_image(customization[image_field])
+
+        upload_obj = uploader.Upload('group', customization[image_field])
+        upload_obj.update_data_dict(data_dict, image_field,
+                                 upload_field, 'clear_upload')
+
+        return upload_obj
+    return None
 
 
 def hdx_group_or_org_create(context, data_dict, is_org=False):

@@ -676,6 +676,7 @@ ul.dataset-resources li + li.label-icons {
   margin: -14px 0 0 -14px;
 }
 .format-label[data-format=geo],
+.format-label[data-format=shp],
 .format-label[data-format*=geo] {
   width: 60px;
   height: 65px;

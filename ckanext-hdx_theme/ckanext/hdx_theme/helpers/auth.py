@@ -75,6 +75,10 @@ def hdx_user_statistics(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
 
 
+def hdx_push_general_stats(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can push analytics stats')}
+
+
 def hdx_carousel_update(context, data_dict):
     username_or_id = context.get('user')
     result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CAROUSEL)

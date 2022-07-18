@@ -8,11 +8,6 @@ import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
 
 
-@pytest.fixture(scope='module')
-def keep_db_tables_on_clean():
-    model.repo.tables_created_and_initialised = True
-
-
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db')
 class TestApiToken(object):
     LIMIT = 180  # days

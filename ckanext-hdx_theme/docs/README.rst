@@ -30,3 +30,7 @@ HOW TO ADD A NEW FIELD
 ----------------------
 Adding a new field to dataset. Please note that doesn't necessarily mean storing a new field. It might be a computed field also:
 `Adding a new field to datasets <tech_add_field/index.rst>`_
+
+HOW TO DOWNLOAD FILES/RESOURCES FROM HDX
+--------------
+Information about how to download the files from HDX can be found here `Download Files from HDX <download/index.rst>`_
