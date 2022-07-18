@@ -1,5 +1,7 @@
-DOWNLOAD FILES/RESOURCES IN HDX
+DOWNLOAD FILES/RESOURCES FROM HDX
 ================
+
+There are several ways to download the files/resources from HDX.
 
 DOWNLOAD RESOURCES
 --------------
