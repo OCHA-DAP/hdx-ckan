@@ -11,18 +11,21 @@ HDX_LOGGED_IN_COOKIE = 'hdx_logged_in'
 
 
 def update_login_cookie(response):
-    if request.url_rule and request.url_rule.rule not in NOT_ALLOWED_FLASK_ROUTES:
-        new_cookie_value = None
-        hdx_logged_in_cookie = int(request.cookies.get(HDX_LOGGED_IN_COOKIE, 0))
-        logged_in = bool(g.user)
-        if logged_in and not hdx_logged_in_cookie:
-            new_cookie_value = "1"
-        elif not logged_in and hdx_logged_in_cookie:
-            new_cookie_value = "0"
+    try:
+        if request.url_rule and request.url_rule.rule not in NOT_ALLOWED_FLASK_ROUTES:
+            new_cookie_value = None
+            hdx_logged_in_cookie = int(request.cookies.get(HDX_LOGGED_IN_COOKIE, 0))
+            logged_in = bool(g.user)
+            if logged_in and not hdx_logged_in_cookie:
+                new_cookie_value = "1"
+            elif not logged_in and hdx_logged_in_cookie:
+                new_cookie_value = "0"
 
-        if new_cookie_value:
-            response.set_cookie(HDX_LOGGED_IN_COOKIE, value=new_cookie_value, secure=True, httponly=True)
-            log.info('Setting logged in cookie to {} for request {}'.format(new_cookie_value, request.path))
+            if new_cookie_value:
+                response.set_cookie(HDX_LOGGED_IN_COOKIE, value=new_cookie_value, secure=True, httponly=True)
+                log.info('Setting logged in cookie to {} for request {}'.format(new_cookie_value, request.path))
+    except Exception as e:
+        log.warning(str(e))
 
     return response
 
