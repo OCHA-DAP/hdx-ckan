@@ -32,7 +32,7 @@ class AbstractAnalyticsSender(object):
             self.__check_ip_addr_public()
             self.request_url = request.url
 
-            ua = request.user_agent if request.user_agent else ''
+            ua = request.user_agent if request.user_agent is not None else ''
             self.user_agent = ua if isinstance(ua, six.string_types) else ua.string
             ua_dict = useragent.Parse(self.user_agent)
 
@@ -40,6 +40,9 @@ class AbstractAnalyticsSender(object):
             rq_headers = request.headers if request.headers else request._headers
             if rq_headers and rq_headers.environ:
                 self.is_api_call = self.is_ckan_api_call(rq_headers.environ)
+
+            if not self.user_agent or not self.user_agent.strip():
+                log.warning('User agent is empty for IP address {}'.format(self.user_addr))
 
             if ua_dict:
                 self.ua_browser = ua_dict.get('user_agent', {}).get('family')
@@ -50,7 +53,7 @@ class AbstractAnalyticsSender(object):
                 log.error('User agent could not be parsed for {}'.format(request.user_agent))
 
         except Exception as e:
-            log.warn('request specific info could not be found. This is normal for nose tests. Exception is {}'.format(
+            log.warning('request specific info could not be found. This is normal for nose tests. Exception is {}'.format(
                 str(e)))
 
     def send_to_queue(self):
@@ -66,7 +69,7 @@ class AbstractAnalyticsSender(object):
                 else:
                     log.error('The analytics dict is empty. Can\'t send it to the queue')
             else:
-                log.warn('Analytics enqueque url is empty so event was NOT put in queue. This is normal for tests !')
+                log.warning('Analytics enqueque url is empty so event was NOT put in queue. This is normal for tests !')
 
         except requests.ConnectionError as e:
             log.error("There was a connection error to the analytics enqueuing service: {}".format(str(e)))
