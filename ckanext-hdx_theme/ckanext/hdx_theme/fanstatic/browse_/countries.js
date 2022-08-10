@@ -278,7 +278,7 @@ var countries = {
         ["TZA", "United Republic of Tanzania"],
         ["USA", "United States"],
         ["UMI", "United States Minor Outlying Islands"],
-        ["VIR", "United States Virgin Islands"]
+        ["VIR", "United States Virgin Islands"],
         ["URY", "Uruguay"],
         ["UZB", "Uzbekistan"]
     ],
