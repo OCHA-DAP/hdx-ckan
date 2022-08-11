@@ -1,6 +1,9 @@
-import sys
+import hashlib
+import logging
 
 from ckanext.hdx_theme.helpers.exception import BaseHdxException
+
+log = logging.getLogger(__name__)
 
 
 def generate_hash_dict(src_dict_list, dict_identifier, field_list):
@@ -35,18 +38,23 @@ class HashCodeGenerator(object):
         if not field_list and src_dict:
             field_list = list(src_dict.keys())
 
+        field_list.sort()
         try:
-            self.__inner_dict = {}
+            self.__inner_string = ''
             if field_list and src_dict:
                 for field in field_list:
-                    self.__inner_dict[field] = src_dict.get(field)
+                    self.__inner_string += '{}-{},'.format(field, src_dict.get(field))
             else:
                 raise HashGenerationException('Either field list or source dict are null')
         except Exception as e:
             raise HashGenerationException('Exception while trying to generate hash code')
 
     def compute_hash(self):
-        return hash(frozenset(self.__inner_dict.items()))
+        hash_builder = hashlib.md5()
+        hash_builder.update(self.__inner_string.encode())
+        hash_code = hash_builder.hexdigest()
+        log.info('Generated code for {} is {}'.format(self.__inner_string, hash_code))
+        return hash_code
 
 
 class HashGenerationException(BaseHdxException):
