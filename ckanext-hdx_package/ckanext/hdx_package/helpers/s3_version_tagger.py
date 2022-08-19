@@ -4,6 +4,9 @@ import botocore
 
 import ckan.lib.munge as munge
 import ckan.plugins.toolkit as tk
+
+from ckanext.hdx_package.helpers.constants import S3_TAG_KEY_SENSITIVE, S3_TAG_VALUE_SENSITIVE_TRUE, \
+    S3_TAG_VALUE_SENSITIVE_FALSE
 from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 from ckanext.s3filestore.uploader import S3ResourceUploader
@@ -42,15 +45,16 @@ def tag_s3_version(resource_id, resource_url, in_quarantine):
         munged_resource_name = munge.munge_filename(resource_url)
         filepath = uploader.get_path(resource_id, munged_resource_name)
         bucket_name = _config.get('ckanext.s3filestore.aws_bucket_name')
+        tag_set = _create_tag_set(in_quarantine)
         client.put_object_tagging(
             Bucket=bucket_name,
             Key=filepath,
             Tagging={
-                'TagSet': _create_tag_set(in_quarantine)
+                'TagSet': tag_set
             },
         )
     except Exception as e:
-        msg = 'Couldn\'t tag S3 object {}'.format(str(e))
+        msg = 'Couldn\'t tag S3 object: {}'.format(str(e))
         log.warning(msg)
         raise S3VersionTaggingException(msg)
 
@@ -74,10 +78,10 @@ def _create_s3_client():
 def _create_tag_set(in_quarantine):
     return [
         {
-            'Key': 'Sensitive',
-            'Value': 'yes'
+            'Key': S3_TAG_KEY_SENSITIVE,
+            'Value': S3_TAG_VALUE_SENSITIVE_TRUE if in_quarantine else S3_TAG_VALUE_SENSITIVE_FALSE
         },
-    ] if in_quarantine else []
+    ]
 
 
 class S3VersionTaggingException(BaseHdxException):
