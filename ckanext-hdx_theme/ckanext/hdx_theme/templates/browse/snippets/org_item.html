@@ -44,11 +44,11 @@
                             <span class="sspBold14">{{ _('0 Archived Datasets') }}</span>
                         {% endif %}
                         -
-                        {% set group_members_url = h.url_for(controller='organization', action='members', id=organization.name or organization.title, sort='metadata_modified desc') %}
-                        {% if members == 0 %}
-                            <span class="sspBold14">{{members}} {{ _('Members') }}</span>
-                            {% else %}
-                            <a class="sspBold14" href="{{ group_members_url }}">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</a>
+                        {% if g.user %}
+                          {% set group_members_url = h.url_for(controller='organization', action='members', id=organization.name or organization.title, sort='metadata_modified desc') %}
+                          <a class="sspBold14" href="{{ group_members_url }}">{{ h.hdx_show_singular_plural(members, _('Member'), _('Members')) }}</a>
+                        {% else %}
+                          <span class="sspBold14">{{ h.hdx_show_singular_plural(members, _('Member'), _('Members')) }}</span>
                         {% endif %}
                         -
                         <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
