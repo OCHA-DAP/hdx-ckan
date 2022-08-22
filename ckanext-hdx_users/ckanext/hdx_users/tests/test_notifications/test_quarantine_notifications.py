@@ -1,5 +1,5 @@
 import pytest
-import six
+import mock
 
 import ckan.authz as authz
 import ckan.model as model
@@ -89,7 +89,8 @@ class TestQuarantineNotifications(hdx_test_base.HdxBaseTest):
             pass
         return _get_action('package_show')({}, {'id': package_id})
 
-    def test_quarantine(self):
+    @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
+    def test_quarantine(self, tag_s3_mock):
         self.__hdx_qa_resource_patch(self.PACKAGE_ID, self.RESOURCE_ID, 'in_quarantine', True, self.SYSADMIN_USER)
         quarantine_service = self.__get_quarantine_service(self.EDITOR_USER)
         notifications_list = quarantine_service.get_quarantined_datasets_info()

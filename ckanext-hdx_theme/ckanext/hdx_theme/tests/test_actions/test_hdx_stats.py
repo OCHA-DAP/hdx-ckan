@@ -91,9 +91,10 @@ class FakeResponse:
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'with_request_context', 'setup_data')
 class TestGeneralStats(object):
 
+    @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
     @mock.patch('ckanext.hdx_theme.util.analytics_stats.HDXStatsAnalyticsSender._populate_defaults')
     @mock.patch('ckanext.hdx_theme.util.analytics_stats.HDXStatsAnalyticsSender._make_http_call')
-    def test_general_datasets_stats(self, make_http_call_mock, populate_defaults_mock):
+    def test_general_datasets_stats(self, make_http_call_mock, populate_defaults_mock, tag_s3_mock):
         make_http_call_mock.return_value = FakeResponse()
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         result = _get_action('hdx_push_general_stats')(context, {})

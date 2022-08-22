@@ -1,5 +1,5 @@
 import pytest
-import six
+import mock
 
 import ckan.tests.factories as factories
 import ckan.model as model
@@ -66,7 +66,8 @@ class TestMicrodataInQuarantineMetafields(hdx_test_base.HdxBaseTest):
         dataset_dict = cls._get_action('package_create')(context, package)
         cls.RESOURCE_ID = dataset_dict['resources'][0]['id']
 
-    def test_normal_user_change_microdata(self):
+    @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
+    def test_normal_user_change_microdata(self, tag_s3_mock):
         package_dict = self._change_resource_field_via_resource_patch(self.RESOURCE_ID, 'microdata', True,
                                                                       self.SYSADMIN_USER)
         assert package_dict['resources'][0]['microdata'] is True
@@ -184,7 +185,8 @@ class TestMicrodataInQuarantineMetafieldsNormalUser(hdx_test_base.HdxBaseTest):
         dataset_dict = cls._get_action('package_create')(context, package)
         cls.RESOURCE_ID = dataset_dict['resources'][0]['id']
 
-    def test_normal_user_change_microdata(self):
+    @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
+    def test_normal_user_change_microdata(self, tag_s3_mock):
         package_dict = self._change_resource_field_via_resource_patch(self.RESOURCE_ID, 'microdata', True,
                                                                       self.NORMAL_USER)
         assert package_dict['resources'][0]['microdata'] is True
