@@ -2688,7 +2688,7 @@ textarea {
     display: none;
   }
 }
-@media (max-width: 375px) {
+@media (max-width: 425px) {
   .list-header .list-header-title .archived-mobile-hideable {
     display: none;
   }

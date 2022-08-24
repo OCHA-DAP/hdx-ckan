@@ -64,16 +64,19 @@ def members(id):
 
         member_list = get_action('member_list')(
             context, {'id': id, 'object_type': 'user',
-                      'q': q, 'user_info': True}
+                      'q': q, 'user_info': True, 'sysadmin_info': True}
         )
         member_list.sort(key=lambda y: y[4].lower(), reverse=reverse)
 
+        non_sysadmin_admins = 0
         member_groups = {}
         for m in member_list:
             role = m[3]
             if not member_groups.get(role):
                 member_groups[role] = []
             member_groups[role].append(m)
+            if role == 'admin' and m[5] == False:
+                non_sysadmin_admins+=1
 
         member_groups = collections.OrderedDict(sorted(member_groups.items()))
 
@@ -92,6 +95,7 @@ def members(id):
             'org_meta': org_meta,
             'group_dict': org_meta.org_dict,
             'request_list': _get_member_requests_for_org(id),
+            'non_sysadmin_admins': non_sysadmin_admins,
         }
     except NotAuthorized:
         return abort(403, _('Unauthorized to view member list %s') % '')
