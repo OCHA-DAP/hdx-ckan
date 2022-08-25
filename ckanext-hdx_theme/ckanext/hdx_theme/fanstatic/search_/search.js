@@ -53,7 +53,8 @@ $('document').ready(function(){
     }
 
     var onSearch = function(){
-        var searchInfo = performSearchQuery($(this).val());
+        let value = hdxUtil.text.sanitize($(this).val());
+        var searchInfo = performSearchQuery(value);
 
         var prevSearch = JSON.parse($("#previous-searches").text());
 
