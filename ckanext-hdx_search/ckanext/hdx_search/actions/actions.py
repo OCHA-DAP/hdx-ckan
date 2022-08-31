@@ -1,7 +1,8 @@
 import json
 import logging
-import urllib
 import requests
+
+from six.moves.urllib.parse import urlencode
 
 import ckan.lib.munge as munge
 import ckan.model as model
@@ -222,7 +223,7 @@ def _set_resource_proxy_url(context, data_dict, resource_dict, sheet=None):
     params_dict = {'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))}
     if sheet:
         params_dict['sheet'] = sheet
-    params = urllib.urlencode(params_dict)
+    params = urlencode(params_dict)
     # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
     return proxy_data_preview_url + '?{params}'.format(params=params)
 
