@@ -6,7 +6,7 @@ import ckan.lib.munge as munge
 import ckan.plugins.toolkit as tk
 
 from ckanext.hdx_package.helpers.constants import S3_TAG_KEY_SENSITIVE, S3_TAG_VALUE_SENSITIVE_TRUE, \
-    S3_TAG_VALUE_SENSITIVE_FALSE
+    S3_TAG_VALUE_SENSITIVE_FALSE, S3_TAG_KEY_DATASET_NAME
 from ckanext.hdx_theme.helpers.exception import BaseHdxException
 
 from ckanext.s3filestore.uploader import S3ResourceUploader
@@ -27,10 +27,11 @@ def tag_s3_version_by_resource_id(context, resource_id, in_quarantine):
     :type in_quarantine: bool
     '''
     resource_dict = _get_action('resource_show')(context, {'id': resource_id})
-    return tag_s3_version(resource_dict['id'], resource_dict['url'], in_quarantine)
+    dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
+    return tag_s3_version(resource_dict['id'], resource_dict['url'], in_quarantine, dataset_dict['name'])
 
 
-def tag_s3_version(resource_id, resource_url, in_quarantine):
+def tag_s3_version(resource_id, resource_url, in_quarantine, dataset_name=None):
     '''
         :param resource_id:
         :type resource_id: str
@@ -45,7 +46,7 @@ def tag_s3_version(resource_id, resource_url, in_quarantine):
         munged_resource_name = munge.munge_filename(resource_url)
         filepath = uploader.get_path(resource_id, munged_resource_name)
         bucket_name = _config.get('ckanext.s3filestore.aws_bucket_name')
-        tag_set = _create_tag_set(in_quarantine)
+        tag_set = _create_tag_set(in_quarantine, dataset_name)
         client.put_object_tagging(
             Bucket=bucket_name,
             Key=filepath,
@@ -75,13 +76,20 @@ def _create_s3_client():
     return s3.meta.client
 
 
-def _create_tag_set(in_quarantine):
-    return [
+def _create_tag_set(in_quarantine, dataset_name):
+    tag_set = [
         {
             'Key': S3_TAG_KEY_SENSITIVE,
             'Value': S3_TAG_VALUE_SENSITIVE_TRUE if in_quarantine else S3_TAG_VALUE_SENSITIVE_FALSE
         },
     ]
+    if dataset_name:
+        tag_set.append({
+            'Key': S3_TAG_KEY_DATASET_NAME,
+            'Value': dataset_name
+        })
+
+    return tag_set
 
 
 class S3VersionTaggingException(BaseHdxException):
