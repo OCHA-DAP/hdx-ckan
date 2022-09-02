@@ -14,7 +14,7 @@ Example:
 	action='member_new', id=group_id, user=id),
 	user=member.name, role=role, roles=roles, modal_div_id='edit-member-div-'+member.name, member=member %}
 
-{% set disable_change = is_single_admin and (role == 'admin') %}
+{% set disable_change = (role == 'admin') and ((sysadmin==False and non_sysadmin_admins < 2) or (no_admins < 2)) %}
 
 <li class="list-items dataset-item" id="mx-member-item-{{member.name}}">
 	<div class="list-items dataset-content member-item mTB15 mLR15">
@@ -75,7 +75,7 @@ Example:
 		</div>
 			<div class="dataset-updated">
 			<div class="updatedNameColor">
-				<span class="less-visible mx-member-role">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }} </span>
+				<span class="less-visible mx-member-role">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }}{% if sysadmin %} - <b>Sysadmin</b>{% endif %} </span>
 			</div>
 			<div class="list-items counter">
 				<span class="count"> {{ h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) }}</span>

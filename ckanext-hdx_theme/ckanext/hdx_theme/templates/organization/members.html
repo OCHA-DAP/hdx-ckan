@@ -10,7 +10,7 @@
 
 {% set roles=h.hdx_member_roles_list() %}
 {% set authorized = allow_approve %}
-{% set is_single_admin = (member_groups['admin'] | length) == 1 %}
+{% set is_single_admin = non_sysadmin_admins < 2 %}
 {% set current_member = current_user %}
 
 {% block breadcrumb_content %}
@@ -56,11 +56,11 @@
                         {% endif %}
                     </div>
                     <ul class="search-list list-items dataset-list unstyled" style="padding: 0;">
-                        {% for user_id, user, translated_role, role, user_name in member_list %}
+                        {% for user_id, user, translated_role, role, user_name, sysadmin in member_list %}
                              {% snippet 'organization/snippets/member_item.html', id=user_id,
                                 translated_role=translated_role, role=role, roles=roles, group_id=group_dict.id,
-                                authorized=authorized, is_single_admin=is_single_admin, group_name=group_dict.name,
-                                current_user=current_user%}
+                                authorized=authorized, group_name=group_dict.name,
+                                current_user=current_user, sysadmin=sysadmin, non_sysadmin_admins=non_sysadmin_admins, no_admins=(member_groups['admin'] | length) %}
                         {% endfor %}
                     </ul>
 
