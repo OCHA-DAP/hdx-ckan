@@ -22,27 +22,29 @@
                 {% endblock %}
                 <div class="list-items mTop20">
                     {% block links %}
-                        {% if organization.package_count or organization.datasets_num %}
+                        <span class="sspBold14" data-module="bs_tooltip" data-module-placement="top"
+                              data-toggle="tooltip" data-original-title="{{ _('Total non-private datasets') }}">
+                          {% if organization.package_count or organization.datasets_num %}
                             {% if organization.package_count is number %}
                                 {% set num_of_pack = organization.package_count %}
                             {% else %}
                                 {% set num_of_pack = organization.datasets_num %}
                             {% endif %}
-                            <span class="sspBold14">
-                                <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
-                            </span>
-                        {% else %}
-                            <span class="sspBold14">{{ _('0 Datasets') }}</span>
-                        {% endif %}
+                            <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                          {% else %}
+                            {{ _('0 Datasets') }}
+                          {% endif %}
+                        </span>
                         -
+                        <span class="sspBold14" data-module="bs_tooltip" data-module-placement="top"
+                              data-toggle="tooltip" data-original-title="{{ _('Total non-private datasets') }}">
                         {% if organization.archived_package_count %}
                           {% set num_of_pack = organization.archived_package_count %}
-                          <span class="sspBold14">
-                              <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc', ext_archived=1)}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Archived Datasets') }}{% else %}{{ _('Archived Dataset') }}{% endif %}</a>
-                          </span>
+                            <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc', ext_archived=1)}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Archived Datasets') }}{% else %}{{ _('Archived Dataset') }}{% endif %}</a>
                         {% else %}
-                            <span class="sspBold14">{{ _('0 Archived Datasets') }}</span>
+                          {{ _('0 Archived Datasets') }}
                         {% endif %}
+                        </span>
                         -
                         {% if g.user %}
                           {% set group_members_url = h.url_for(controller='organization', action='members', id=organization.name or organization.title, sort='metadata_modified desc') %}

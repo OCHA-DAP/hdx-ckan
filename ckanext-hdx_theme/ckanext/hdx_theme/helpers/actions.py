@@ -122,6 +122,7 @@ def _refresh_pkg_count_on_org_list(orgs):
     query_params = {
         'start': 0,
         'rows': 1,
+        'fq': 'private: false',
         'fl': 'id name',
         'facet': 'true',
         'facet.pivot': ['organization,archived'],
