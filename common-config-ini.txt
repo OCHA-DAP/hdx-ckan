@@ -279,6 +279,7 @@ hdx.file_structure.check_url = http://gislayer:5000/api/file-structure-check/dat
 # Hxl Proxy
 # This should be overriden in your own prod.ini
 hdx.hxlproxy.url = https://proxy.hxlstandard.org
+hdx.hxlproxy.source_info_url = https://data.humdata.org/hxlproxy/api/source-info?url={url}
 
 # HXL Preview
 hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview

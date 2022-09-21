@@ -94,11 +94,12 @@ hdx.analytics.track_api.exclude_browsers = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_BRO
 hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 #file structure check
-hdx.file_structure.check_url = http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
+hdx.file_structure.check_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
 hdx.hxlproxy.url = ${HDX_HXLPROXY}
+hdx.hxlproxy.source_info_url = ${HDX_HXLPROXY}/api/source-info?url={url}
 
 # Quickcharts!
 hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts
