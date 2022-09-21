@@ -99,95 +99,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
-    # def after_map(self, map):
-    #     map.connect('dataset_edit', '/dataset/edit/{id}',
-    #                 controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-    #                 action='show_notification_page')
-    #     return map
-
-    # def before_delete(context, data_dict, resource, resources):
-    #     try:
-    #         if resource.get('id'):
-    #             file_remove(resource.get('id'))
-    #     except Exception, ex:
-    #         log.error(ex)
-
-    # def before_map(self, map):
-        # map.connect('storage_file', '/storage/f/{label:.*}',
-        #             controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
-        #             action='file')
-        # map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        #             action='resource_download')
-        # map.connect('dataset_preselect', '/dataset/preselect',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        #             action='preselect')
-        # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
-        # map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        #             action='resource_read')
-        # map.connect('resource_datapreview', '/dataset/{id}/resource/{resource_id}/preview',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        #             action='resource_datapreview')
-        # map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}',
-        #             controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
-        #             action='edit')
-
-        # map.connect('add dataset', '/dataset/new',
-        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-        #             action='new_notification_page')
-        # map.connect('dataset_edit', '/dataset/edit/{id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-        #             action='edit_notification_page')
-        # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-        #             action='resource_edit_notification_page', ckan_icon='edit')
-        # map.connect('new_resource', '/dataset/new_resource/{id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-        #             action='resource_new_notification_page')
-        # map.connect('dataset_resources', '/dataset/resources/{id}',
-        #             controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
-        #             action='resources_notification_page')
-        # map.connect('/membership/contact_contributor',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        #             action='contact_contributor')
-        # map.connect('/membership/contact_members',
-        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        #             action='contact_members')
-
-        # with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
-            # m.connect('add dataset', '/dataset/new', action='new')
-            # m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
-            # m.connect('/dataset/{id}.{format}', action='read')
-            # m.connect('dataset_read', '/dataset/{id}', action='read',
-            #           ckan_icon='sitemap')
-            # m.connect('/dataset/{action}/{id}',
-            #           requirements=dict(action='|'.join([
-            #               'new_metadata',
-            #               # 'new_resource',
-            #               # 'visibility',
-            #               'delete',
-            #               # 'edit',
-            #           ])))
-
-        # map.connect(
-        #     '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController',
-        #     action='read')
-
-        # map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
-        # map.connect('/contribute/new',
-        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-        #             action='new')
-        # map.connect('/contribute/edit/{id}',
-        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-        #             action='edit')
-        # map.connect('/contribute/validate',
-        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-        #             action='validate')
-
-        # return map
-
     def is_fallback(self):
         return True
 
@@ -248,7 +159,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'batch': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
-                             tk.get_converter('convert_to_extras')],
+                                tk.get_converter('convert_to_extras')],
             'author_email': [tk.get_validator('ignore_missing'), text_type],
             'customviz': {
                 'url': [tk.get_validator('hdx_is_url'), tk.get_validator('hdx_convert_list_item_to_extras')],
@@ -268,13 +179,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                              tk.get_validator('hdx_boolean_string_converter'),
                              tk.get_converter('convert_to_extras')],
             'qa_checklist_completed': [tk.get_validator('hdx_reset_unless_allow_qa_checklist_completed'),
-                             tk.get_validator('ignore_missing'),
-                             tk.get_validator('hdx_boolean_string_converter'),
-                             tk.get_converter('convert_to_extras')],
+                                       tk.get_validator('ignore_missing'),
+                                       tk.get_validator('hdx_boolean_string_converter'),
+                                       tk.get_converter('convert_to_extras')],
             'qa_checklist': [tk.get_validator('hdx_keep_unless_allow_qa_checklist_field'),
-                            tk.get_converter('convert_to_extras')],
-            'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
                              tk.get_converter('convert_to_extras')],
+            'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
+                                  tk.get_converter('convert_to_extras')],
             'cod_level': [
                 tk.get_validator('hdx_delete_unless_authorized_to_update_cod'),
                 tk.get_validator('hdx_keep_prev_value_if_empty'),
@@ -372,6 +283,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ],
                 'grouping': [
                     tk.get_validator('ignore_missing')
+                ],
+                'fs_check_info': [
+                    tk.get_validator('hdx_keep_if_excel_format'),
+                    tk.get_validator('hdx_add_update_fs_check_info'),
+                    tk.get_validator('hdx_keep_unless_allow_fs_check_field'),
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_convert_to_json_string_if_not_string')
                 ]
             }
         )
@@ -420,6 +338,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'pii_is_sensitive': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
+                ],
+                'fs_check_info': [
+                    tk.get_validator('ignore_missing'),
+                    # tk.get_converter('hdx_convert_from_json_string')
                 ]
             }
         )
@@ -453,8 +375,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'has_quickcharts': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_geodata': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'batch': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')],
-            'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'), tk.get_validator('ignore_missing')],
+            'dataset_preview': [tk.get_converter('convert_from_extras'),
+                                tk.get_validator('hdx_dataset_preview_validator')],
+            'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'),
+                               tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
@@ -542,7 +466,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
             'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed,
             'hdx_qa_resource_patch': hdx_patch.hdx_qa_resource_patch,
-            'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource
+            'hdx_fs_check_resource_revise': hdx_patch.hdx_fs_check_resource_revise,
+            'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
 
         }
 
@@ -575,6 +500,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_resource_qa_script_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_resource_qa_script_field',
                                                                                resource_level=True),
+            'hdx_keep_unless_allow_fs_check_field':
+                vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_fs_check_field',
+                                                                               resource_level=True),
             'hdx_delete_unless_authorized_to_update_cod':
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_in_cod_values':
@@ -584,13 +512,16 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_daterange_possible_infinite_end': vd.hdx_daterange_possible_infinite_end,
             'hdx_daterange_possible_infinite_end_dataset_date': vd.hdx_daterange_possible_infinite_end_dataset_date,
             'hdx_convert_to_json_string': vd.hdx_convert_to_json_string,
+            'hdx_convert_to_json_string_if_not_string': vd.hdx_convert_to_json_string_if_not_string,
             'hdx_convert_from_json_string': vd.hdx_convert_from_json_string,
             'hdx_update_microdata': vd.hdx_update_microdata,
             'hdx_update_in_quarantine_by_microdata': vd.hdx_update_in_quarantine_by_microdata,
             'hdx_update_data_frequency_by_archived': vd.hdx_update_data_frequency_by_archived,
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
             'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange,
-            'hdx_float_number': vd.hdx_float_number
+            'hdx_float_number': vd.hdx_float_number,
+            'hdx_keep_if_excel_format': vd.hdx_keep_if_excel_format,
+            'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info
         }
 
     def get_auth_functions(self):
@@ -604,6 +535,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
                 'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
                 'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
+                'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
                 'hdx_cod_update': authorize.hdx_cod_update
                 }
 
@@ -630,7 +562,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
             fields_to_skip = config.get('hdx.validation.allow_skip_for_sysadmin', '').split(',')
             if len(fields_to_skip) > 0 and fields_to_skip[0] and \
-                    authz.is_sysadmin(c.user) and context.get(hdx_update.SKIP_VALIDATION):
+                authz.is_sysadmin(c.user) and context.get(hdx_update.SKIP_VALIDATION):
                 self._update_with_skip_validation(schema, fields_to_skip)
 
         if action == 'package_show':
@@ -744,8 +676,6 @@ class HDXAnalyticsPlugin(plugins.SingletonPlugin):
 
     def get_blueprint(self):
         return [download_wrapper.hdx_download_wrapper]
-
-
 
     # __startup_tasks_done = False
 
