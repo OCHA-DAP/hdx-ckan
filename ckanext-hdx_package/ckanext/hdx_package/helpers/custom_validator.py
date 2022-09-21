@@ -9,7 +9,6 @@ import datetime
 import logging
 import json
 import six
-
 import ckan.model as model
 import ckan.authz as authz
 import ckan.plugins.toolkit as tk
@@ -133,6 +132,15 @@ def detect_format(key, data, errors, context):
         raise df.StopOnError()
 
     return current_format
+
+
+def hdx_keep_if_excel_format(key, data, errors, context):
+    _format = data.get((key[0], key[1], 'format'))
+    if _format and 'xls' in _format.lower():
+        return data.get(key)
+    else:
+        data.pop(key, None)
+        raise df.StopOnError()
 
 
 def to_lower(current_value):
@@ -408,6 +416,42 @@ def hdx_update_data_frequency_by_archived(key, data, errors, context):
         data[(u'data_update_frequency',)] = '-1'
 
 
+def hdx_add_update_fs_check_info(key, data, errors, context):
+    try:
+        if data.get(key):
+            if context.get('allow_fs_check_field'):
+                pkg_id = data.get(('id',))
+                resource_id = data.get(key[:-1] + ('id',))
+                if resource_id:
+                    resource_dict = __get_previous_resource_dict(context, pkg_id, resource_id) or {}
+                    specific_key = key[2]
+                    old_value = resource_dict.get(specific_key)
+
+                    # if fs_check_info exists, then append new value
+                    if old_value is not None:
+                        if isinstance(old_value, str):
+                            old_value = json.loads(old_value.replace('\'', '"'))
+                        if not isinstance(old_value, list):
+                            old_value = [old_value]
+                        old_value.append(data[key])
+                    else:
+                        old_value = [data[key]]
+                    data[key] = old_value[-10:]
+                else:
+                    if not isinstance(data[key], list):
+                        data[key] = [data[key]]
+            else:
+                if isinstance(data.get(key), str):
+                    try:
+                        data[key] = json.loads(data[key].replace('\'', '"'))
+                    except:
+                        log.error("fs_check_info contains a strange string: " + str(data[key]))
+
+            log.info("done with add update fs_check_info")
+    except Exception as ex:
+        log.info(ex)
+
+
 def hdx_package_keep_prev_value_unless_field_in_context_wrapper(context_field, resource_level=False):
     def hdx_package_keep_prev_value_unless_field_in_context(key, data, errors, context):
         '''
@@ -535,8 +579,9 @@ def hdx_convert_old_date_to_daterange(key, data, errors, context):
                     end_date = datetime.datetime.strptime(dates_list[1].strip(), '%m/%d/%Y')
                 else:
                     end_date = start_date
-                data[key] = "[{start_date}T00:00:00 TO {end_date}T23:59:59]".format(start_date=start_date.strftime("%Y-%m-%d"),
-                                                                                    end_date=end_date.strftime("%Y-%m-%d"))
+                data[key] = "[{start_date}T00:00:00 TO {end_date}T23:59:59]".format(
+                    start_date=start_date.strftime("%Y-%m-%d"),
+                    end_date=end_date.strftime("%Y-%m-%d"))
     except TypeError as e:
         raise df.Invalid(_('Invalid old HDX date format MM/DD/YYYY. Please use [start_datetime TO end_datetime]'))
     except ValueError as e:
@@ -551,12 +596,19 @@ def hdx_convert_to_json_string(key, data, errors, context):
         raise df.Invalid(_('Input is not valid'))
 
 
+def hdx_convert_to_json_string_if_not_string(key, data, errors, context):
+    value = data[key]
+    if value and not isinstance(value, str):
+        return hdx_convert_to_json_string(key, data, errors, context)
+
+
 def hdx_convert_from_json_string(key, data, errors, context):
     value = data[key]
     try:
         data[key] = json.loads(value)
     except (ValueError, TypeError) as e:
         raise df.Invalid(_('Could not parse JSON'))
+
 
 # def hdx_autocompute_grouping(key, data, errors, context):
 #     current_value = data.get(key)

@@ -20,6 +20,7 @@ import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.fs_check as fs_check
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
@@ -42,6 +43,7 @@ log = logging.getLogger(__name__)
 SKIP_VALIDATION = 'skip_validation'
 
 
+@fs_check.fs_check_4_resources
 @geopreview.geopreview_4_resources
 def resource_update(context, data_dict):
     '''

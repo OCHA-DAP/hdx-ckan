@@ -6,6 +6,7 @@ from ckan.logic import (
     get_or_bust as _get_or_bust,
 )
 
+import ckanext.hdx_package.helpers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
@@ -13,6 +14,8 @@ from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_reso
 NotFound = logic.NotFound
 
 
+
+@fs_check.fs_check_4_resources
 def resource_patch(context, data_dict):
     '''
     Cloned from core. It adds a 'no_compute_extra_hdx_show_properties' in contexts to
@@ -140,6 +143,22 @@ def hdx_qa_resource_patch(context, data_dict):
         )
 
     return _get_action('resource_patch')(context, data_dict)
+
+
+def hdx_fs_check_resource_revise(context, data_dict):
+    _check_access('hdx_fs_check_resource_revise', context, data_dict)
+
+    context['allow_fs_check_field'] = True
+    pkg_id = data_dict.get('package_id')
+    res_id = data_dict.get('id')
+    key = data_dict.get('key')
+    value = data_dict.get('value')
+
+    data_revise_dict = {
+        "match": {"id": pkg_id}
+    }
+    data_revise_dict['update__resources__' + res_id[:5]] = {key: value}
+    return _get_action('package_revise')(context, data_revise_dict)
 
 
 def hdx_qa_package_revise_resource(context, data_dict):
