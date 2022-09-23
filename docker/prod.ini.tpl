@@ -94,7 +94,7 @@ hdx.analytics.track_api.exclude_browsers = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_BRO
 hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 #file structure check
-hdx.file_structure.check_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
+hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
