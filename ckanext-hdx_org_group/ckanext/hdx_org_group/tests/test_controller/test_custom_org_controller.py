@@ -121,7 +121,6 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     @mock.patch('ckanext.hdx_theme.helpers.data_access.DataAccess')
     @mock.patch('ckanext.hdx_search.controller_logic.search_logic.request')
     @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
-    @mock.patch('ckanext.hdx_theme.helpers.less.generate_custom_css_path')
     def test_generate_template_data(self, custom_css_path_mock, org_helper_c_mock, req_mock, data_access_cls):
         def mock_get_top_line_items():
             return top_line_items

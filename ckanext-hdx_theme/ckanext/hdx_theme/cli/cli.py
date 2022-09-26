@@ -11,10 +11,10 @@ class CustomLessCompile(cli.CkanCommand):
         import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
         self.log = logging.getLogger(__name__)
-        self.log.info("Recompiling all custom less themes")
+        self.log.info("Recompiling all custom less themes is DEPRECATED, not doing anything!")
 
-        org_helper.recompile_everything({'model': model, 'session': model.Session,
-                                         'user': 'hdx', 'ignore_auth': True})
+        # org_helper.recompile_everything({'model': model, 'session': model.Session,
+        #                                  'user': 'hdx', 'ignore_auth': True})
 
         self.log.info("Done")
 

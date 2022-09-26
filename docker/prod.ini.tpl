@@ -73,7 +73,7 @@ hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
 
 hdx.css.basepath           = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated
 hdx.less.basepath          = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less
-hdx.less_compile.onstartup = False
+#DEPRECATED hdx.less_compile.onstartup = False
 
 # GIS
 hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}

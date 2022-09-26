@@ -242,7 +242,7 @@
   padding-right: 35px;
   outline: none;
   border: none;
-  border-radius: 0;
+  xborder-radius: 0;
 }
 .hdx-form .form-group .form-control.select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close {
   background-color: white;
@@ -311,7 +311,7 @@
 .hdx-form .form-horizontal .control-label {
   float: left;
   text-align: left;
-  padding-top: 15px;
+  padding-top: 30px/2;
   width: 160px;
 }
 .hdx-form .form-horizontal .checkbox {

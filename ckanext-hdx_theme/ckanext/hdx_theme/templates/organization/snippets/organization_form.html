@@ -150,8 +150,6 @@
 <div class="org-control-container">
     {% set is_upload = customizations['image_rect'] and not customizations['image_rect'].startswith('http') %}
     {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
-    {% set is_use_org_color = customizations['use_org_color'] %}
-
 
 {% if is_url %}
   {% set image_preview = customizations['image_rect'] %}
@@ -170,30 +168,17 @@
 
 
 <div class="org-control-container" style="margin-top:30px;">
-{{ form.input('highlight_color', label=_('Base Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_("Pick the color which this page\'s color scheme will be based on." )}}</div>
-      </div>
+  {{ form.input('highlight_color', label=_('Base Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
+  <div class="org-control-info info-field">
+    <div class="org-info-label">{{_("Pick the color which the header section\'s color scheme will be based on." )}}</div>
+  </div>
 </div>
 
-
-<div class="org-control-container" style="margin-bottom:30px;">
-    <label class="control-label" for="use_org_color" style="display: inline-block;">{{ _("Background logo same as base color ") }}</label>
-    <div class="controls" style="display:inline-block">
-        <input type="checkbox" name="use_org_color" id="use_org_color" value="true" {% if is_use_org_color=='true' %}checked{% endif %} style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
-    </div>
-</div>
-
-<div class="org-control-container">
-{% if h.hdx_get_extras_element(data, value_key="less") %}
-  {% set less = h.hdx_get_extras_element(data, value_key="less") %}
-{% else %}
-  {% set less = h.hdx_less_default() %}
-{% endif %}
-{{ form.textarea('less', label=_('Custom Styling'), id='field-less', value=less, rows=10, classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Use less to add your own styling to further customize your page.')}}</div>
-      </div>
+<div class="org-control-container" style="margin-top:30px;">
+  {{ form.input('logo_bg_color', label=_('Logo Background Color'), id='field-logo-bg-color', type='text', value=customizations['logo_bg_color'], classes=['control-full','org-control','field-with-info']) }}
+  <div class="org-control-info info-field">
+    <div class="org-info-label">{{_("Pick the color for the logo background color." )}}</div>
+  </div>
 </div>
 
 <div class="org-control-container">

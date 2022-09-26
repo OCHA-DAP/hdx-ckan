@@ -114,7 +114,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
                 # 'visualization_config': result.get('visualization_config', ''),
             },
             'search_template_data': org_read_logic.search_template_data,
-            'custom_css_path': org_read_logic.org_meta.custom_css_path,
+            #'custom_css_path': org_read_logic.org_meta.custom_css_path,
             # 'member_count': hdx_helpers.get_group_members(org_id),
             'follower_count': org_read_logic.follower_count,
             'top_line_items': org_read_logic.top_line_items,

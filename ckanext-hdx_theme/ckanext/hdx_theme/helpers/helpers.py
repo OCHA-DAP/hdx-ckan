@@ -367,27 +367,6 @@ def hdx_get_extras_element(data_dict, key='key', value_key='org_url', ret_key='v
     return res
 
 
-def hdx_less_default():
-    return """
-@bodyBackgroundColor: @greenColor;
-@navTabsActiveColor: @wfpBlueColor;
-@orderByDropdownColor: @wfpBlueColor;
-@defaultLinkColor: @wfpBlueColor;
-
-@paginationActiveBackground: @wfpBlueColor;
-
-@topLineItemNumberFontSize: 56px;
-@topLineItemUnitFontSize: 28px;
-
-
-@modalSubmitButtonBackgrColor: #FFFFFF;
-
-@modalSubmitButtonColor: #888888;
-
-@modalHeaderBackgroundColor: #EEEEEE;
-@modalFooterBackgroundColor: #EEEEEE;"""
-
-
 def load_json(obj, **kw):
     return json.loads(obj, **kw)
 

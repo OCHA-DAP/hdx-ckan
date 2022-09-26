@@ -5,6 +5,9 @@
   {{ super() }}
   {% asset 'hdx_theme/activity-stream-styles' %}
   {% asset 'hdx_theme/custom-org-search-facets-styles' %}
+
+  {% set customizations = h.load_json(h.hdx_get_extras_element(data.org_meta.org_dict, value_key="customization")) %}
+  {% snippet "organization/custom/custom_style.html", customizations=customizations %}
 {% endblock %}
 
 {# The lines below are for analytics #}
@@ -165,10 +168,4 @@
 {% block meta %}
   {{ super() }}
   {% snippet "widget/banner/hdx-dataset-banner.html" %}
-{% endblock %}
-
-{% block custom_styles %}
-    {{ super() }}
-    <link rel="stylesheet" type="text/css"
-          href="{{ data.custom_css_path }}" />
 {% endblock %}
