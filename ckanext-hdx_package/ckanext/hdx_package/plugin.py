@@ -468,6 +468,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_qa_resource_patch': hdx_patch.hdx_qa_resource_patch,
             'hdx_fs_check_resource_revise': hdx_patch.hdx_fs_check_resource_revise,
             'hdx_fs_check_resource_reset': hdx_patch.hdx_fs_check_resource_reset,
+            'hdx_fs_check_package_reset': hdx_patch.hdx_fs_check_package_reset,
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
 
         }
