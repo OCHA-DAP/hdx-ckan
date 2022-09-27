@@ -4,11 +4,14 @@ import pytest
 import ckan.tests.factories as factories
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import logging as logging
+import six
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 _get_action = tk.get_action
 ValidationError = tk.ValidationError
+log = logging.getLogger(__name__)
 
 SYSADMIN_USER = 'some_sysadmin_user'
 HDX_TEST_USER = 'hdx_test_user'
@@ -63,7 +66,7 @@ def keep_db_tables_on_clean():
 
 @pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
 @pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
-class TestFSCheck(object):
+class TestFSCheckTestUser(object):
     FILE1_NAME = 'data1.xlsx'
 
     def _create_2_resources(self, context):
@@ -83,9 +86,10 @@ class TestFSCheck(object):
             assert False
         return resource_dict1, resource_dict2
 
+    @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
     @mock.patch('ckanext.hdx_package.helpers.fs_check._is_upload_xls')
     @mock.patch('ckanext.hdx_package.helpers.fs_check._file_structure_check')
-    def test_create_update_resources(self, file_structure_check_mock, is_upload_xls_mock):
+    def test_create_update_resources_test_user(self, file_structure_check_mock, is_upload_xls_mock):
         file_structure_check_mock.return_value = FS_CHECK_RESPONSE
         is_upload_xls_mock.return_value = True
         context = {'model': model, 'session': model.Session, 'user': HDX_TEST_USER}
@@ -100,7 +104,76 @@ class TestFSCheck(object):
 
         resource_dict2['name'] = 'hdx_test_modified'
         try:
+            is_upload_xls_mock.return_value = True
+            resource_dict2_modified = _get_action('resource_update')(context, resource_dict2)
+            fs_check_info = json.loads(resource_dict2_modified.get("fs_check_info"))
+            assert len(fs_check_info) == 2
+            for item in fs_check_info:
+                log.info('----------------')
+                log.info(item)
+                assert 'message' in item
+                assert 'The processing of the file structure check has started' == item.get('message')
+            assert resource_dict2_modified['name'] == resource_dict2['name']
+        except ValidationError as e:
+            assert False
+        assert file_structure_check_mock.call_count == 3
+
+        resource_dict2['name'] = 'hdx_test_modified_again'
+        try:
             is_upload_xls_mock.return_value = False
+            context['user'] = HDX_TEST_USER
+            _resource_dict2_modified = _get_action('resource_update')(context, resource_dict2)
+            fs_check_info = json.loads(_resource_dict2_modified.get("fs_check_info"))
+            assert len(fs_check_info) == 2
+            for item in fs_check_info:
+                assert 'message' in item
+                assert 'The processing of the file structure check has started' == item.get('message')
+            assert _resource_dict2_modified['name'] == resource_dict2['name']
+        except ValidationError as e:
+            assert False
+
+
+@pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+class TestFSCheckSysadmin(object):
+    FILE1_NAME = 'data1.xlsx'
+
+    def _create_2_resources(self, context):
+        resource1 = {
+            'url': tk.config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+            'resource_type': 'file.upload',
+            'format': 'XLS',
+            'name': self.FILE1_NAME,
+            'package_id': DATASET_NAME,
+        }
+        resource2 = resource1.copy()
+        resource2['name'] = 'hdx_test2.xls'
+        try:
+            resource_dict1 = _get_action('resource_create')(context, resource1)
+            resource_dict2 = _get_action('resource_create')(context, resource2)
+        except ValidationError as e:
+            assert False
+        return resource_dict1, resource_dict2
+
+    @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
+    @mock.patch('ckanext.hdx_package.helpers.fs_check._is_upload_xls')
+    @mock.patch('ckanext.hdx_package.helpers.fs_check._file_structure_check')
+    def test_create_update_resources_sysadmin_user(self, file_structure_check_mock, is_upload_xls_mock):
+        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+        is_upload_xls_mock.return_value = True
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        resource_dict1, resource_dict2 = self._create_2_resources(context)
+        assert file_structure_check_mock.call_count == 2
+        assert 'fs_check_info' in resource_dict1
+        assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
+            'fs_check_info')
+        assert 'fs_check_info' in resource_dict2
+        assert '"message": "The processing of the file structure check has started"' in resource_dict2.get(
+            'fs_check_info')
+
+        resource_dict2['name'] = 'hdx_test_modified'
+        try:
+            is_upload_xls_mock.return_value = True
             resource_dict2_modified = _get_action('resource_update')(context, resource_dict2)
             fs_check_info = json.loads(resource_dict2_modified.get("fs_check_info"))
             assert len(fs_check_info) == 2
@@ -126,94 +199,104 @@ class TestFSCheck(object):
         except ValidationError as e:
             assert False
 
-    # @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
-    # def test_delete_resource(self, get_shape_info_as_json_mock):
-    #     get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
-    #     context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
-    #     resource_dict1, resource_dict2 = self._create_2_resources(context)
-    #     assert get_shape_info_as_json_mock.call_count == 2
-    #
-    #     try:
-    #         _get_action('resource_delete')(context, {'id': resource_dict2['id']})
-    #         dataset_dict = _get_action('package_show')(context, {'id': DATASET_NAME})
-    #         assert len(dataset_dict['resources']) == 1
-    #     except ValidationError as e:
-    #         assert False
-    #     assert get_shape_info_as_json_mock.call_count == 2
-    #
-    # @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
-    # def test_update_package(self, get_shape_info_as_json_mock):
-    #     get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
-    #     context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
-    #     resource_dict1, resource_dict2 = self._create_2_resources(context)
-    #     assert get_shape_info_as_json_mock.call_count == 2
-    #
-    #     try:
-    #         dataset_dict = DATASET_DICT.copy()
-    #         dataset_dict['notes'] += ' - modified'
-    #         context['allow_partial_update'] = True
-    #         dataset_dict_modified = _get_action('package_update')(context, dataset_dict)
-    #         assert dataset_dict_modified['notes'] == dataset_dict['notes']
-    #         assert len(dataset_dict_modified['resources']) == 2
-    #     except ValidationError as e:
-    #         assert False
-    #
-    #     assert get_shape_info_as_json_mock.call_count == 2
-    #
-    #     try:
-    #         dataset_dict_modified['resources'][0]['name'] = 'hdx_test1_modified.shp.zip'
-    #         dataset_dict_modified2 = _get_action('package_update')(context, dataset_dict_modified)
-    #         assert dataset_dict_modified2['resources'][0]['name'] == 'hdx_test1_modified.shp.zip'
-    #     except ValidationError as e:
-    #         assert False
-    #     assert get_shape_info_as_json_mock.call_count == 3
-    #
-    # @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
-    # def test_revise_package(self, get_shape_info_as_json_mock):
-    #     get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
-    #     context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
-    #     resource_dict1, resource_dict2 = self._create_2_resources(context)
-    #     assert get_shape_info_as_json_mock.call_count == 2
-    #
-    #     try:
-    #         data_dict = {
-    #             'match__name': DATASET_NAME,
-    #             'update__resources__extend': [
-    #                 {
-    #                     'url': tk.config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
-    #                     'resource_type': 'file.upload',
-    #                     'format': 'SHP',
-    #                     'name': 'hdx_test3.shp.zip',
-    #                     'package_id': DATASET_NAME,
-    #                 }
-    #             ],
-    #         }
-    #         result = _get_action('package_revise')(context, data_dict)
-    #         assert len(result['package']['resources']) == 3
-    #     except ValidationError as e:
-    #         assert False
-    #
-    #     assert get_shape_info_as_json_mock.call_count == 3
-    #
-    # @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
-    # def test_reorder_resources(self, get_shape_info_as_json_mock):
-    #     get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
-    #     context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
-    #     resource_dict1, resource_dict2 = self._create_2_resources(context)
-    #     assert get_shape_info_as_json_mock.call_count == 2
-    #
-    #     r1_id = resource_dict1['id']
-    #     r2_id = resource_dict2['id']
-    #     try:
-    #         data_dict = {
-    #             'id': DATASET_NAME,
-    #             "order": [r2_id, r1_id],
-    #
-    #         }
-    #         _get_action('package_resource_reorder')(context, data_dict)
-    #         dataset_dict = _get_action('package_show')(context, {'id': DATASET_NAME})
-    #         assert dataset_dict['resources'][0]['id'] == r2_id
-    #         assert dataset_dict['resources'][1]['id'] == r1_id
-    #     except ValidationError as e:
-    #         assert False
-    #     assert get_shape_info_as_json_mock.call_count == 2
+
+@pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+class TestFSCheckResourceReset(object):
+    FILE1_NAME = 'data1.xlsx'
+
+    def _create_2_resources(self, context):
+        resource1 = {
+            'url': tk.config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+            'resource_type': 'file.upload',
+            'format': 'XLS',
+            'name': self.FILE1_NAME,
+            'package_id': DATASET_NAME,
+        }
+        resource2 = resource1.copy()
+        resource2['name'] = 'hdx_test2.xls'
+        try:
+            resource_dict1 = _get_action('resource_create')(context, resource1)
+            resource_dict2 = _get_action('resource_create')(context, resource2)
+        except ValidationError as e:
+            assert False
+        return resource_dict1, resource_dict2
+
+    @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
+    @mock.patch('ckanext.hdx_package.helpers.fs_check._is_upload_xls')
+    @mock.patch('ckanext.hdx_package.helpers.fs_check._file_structure_check')
+    def test_create_update_resources_reset(self, file_structure_check_mock, is_upload_xls_mock):
+        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+        is_upload_xls_mock.return_value = True
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        resource_dict1, resource_dict2 = self._create_2_resources(context)
+        assert file_structure_check_mock.call_count == 2
+        assert 'fs_check_info' in resource_dict1
+        assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
+            'fs_check_info')
+        assert 'fs_check_info' in resource_dict2
+        assert '"message": "The processing of the file structure check has started"' in resource_dict2.get(
+            'fs_check_info')
+
+        try:
+            response = _get_action('hdx_fs_check_resource_reset')(context,
+                                                                  {'id': resource_dict2.get('id'),
+                                                                   'package_id': resource_dict2.get(
+                                                                       'package_id')})
+            response = _get_action('hdx_fs_check_resource_reset')(context,
+                                                                  {'id': resource_dict1.get('id'),
+                                                                   'package_id': resource_dict1.get(
+                                                                       'package_id')})
+            pkg_dict = response.get('package')
+            for r in pkg_dict.get('resources'):
+                assert r.get('fs_check_info') == ''
+        except ValidationError as e:
+            assert False
+
+
+@pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+class TestFSCheckPackageReset(object):
+    FILE1_NAME = 'data1.xlsx'
+
+    def _create_2_resources(self, context):
+        resource1 = {
+            'url': tk.config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+            'resource_type': 'file.upload',
+            'format': 'XLS',
+            'name': self.FILE1_NAME,
+            'package_id': DATASET_NAME,
+        }
+        resource2 = resource1.copy()
+        resource2['name'] = 'hdx_test2.xls'
+        try:
+            resource_dict1 = _get_action('resource_create')(context, resource1)
+            resource_dict2 = _get_action('resource_create')(context, resource2)
+        except ValidationError as e:
+            assert False
+        return resource_dict1, resource_dict2
+
+    @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
+    @mock.patch('ckanext.hdx_package.helpers.fs_check._is_upload_xls')
+    @mock.patch('ckanext.hdx_package.helpers.fs_check._file_structure_check')
+    def test_create_update_package_reset(self, file_structure_check_mock, is_upload_xls_mock):
+        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+        is_upload_xls_mock.return_value = True
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        resource_dict1, resource_dict2 = self._create_2_resources(context)
+        assert file_structure_check_mock.call_count == 2
+        assert 'fs_check_info' in resource_dict1
+        assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
+            'fs_check_info')
+        assert 'fs_check_info' in resource_dict2
+        assert '"message": "The processing of the file structure check has started"' in resource_dict2.get(
+            'fs_check_info')
+
+        try:
+            response = _get_action('hdx_fs_check_package_reset')(context,
+                                                                 {'package_id': resource_dict1.get('package_id')})
+            pkg_dict = response.get('package')
+            for r in pkg_dict.get('resources'):
+                assert r.get('fs_check_info') == ''
+        except ValidationError as e:
+            assert False

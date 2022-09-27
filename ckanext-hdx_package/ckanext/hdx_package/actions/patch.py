@@ -14,7 +14,6 @@ from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_reso
 NotFound = logic.NotFound
 
 
-
 @fs_check.fs_check_4_resources
 def resource_patch(context, data_dict):
     '''
@@ -194,7 +193,24 @@ def hdx_fs_check_resource_reset(context, data_dict):
     key = data_dict.get('key', 'fs_check_info')
 
     data_revise_dict = {
-        "match": {"id": pkg_id}
+        "match": {"id": pkg_id},
+        'update__resources__' + res_id[:5]: {key: ''}
     }
-    data_revise_dict['update__resources__' + res_id[:5]] = {key: ''}
     return _get_action('package_revise')(context, data_revise_dict)
+
+
+@logic.side_effect_free
+def hdx_fs_check_package_reset(context, data_dict):
+    _check_access('hdx_fs_check_resource_revise', context, data_dict)
+    pkg_id = data_dict.get('package_id')
+    pkg_dict = _get_action('package_show')(context, {'id': pkg_id})
+    if pkg_dict.get('resources'):
+        key = data_dict.get('key', 'fs_check_info')
+
+        context['allow_fs_check_field'] = True
+        data_revise_dict = {"match": {"id": pkg_id}}
+        for res in pkg_dict.get('resources'):
+            data_revise_dict['update__resources__' + res.get('id')[:5]] = {key: ''}
+        return _get_action('package_revise')(context, data_revise_dict)
+
+    raise NotFound("package doesn't contain resources or not found")
