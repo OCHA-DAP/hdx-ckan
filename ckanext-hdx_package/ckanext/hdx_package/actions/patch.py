@@ -1,6 +1,5 @@
 import ckan.logic as logic
 import ckan.logic.action.update as _update
-import ckan.logic.action.patch as _patch
 from ckan.logic import (
     get_action as _get_action,
     check_access as _check_access,
@@ -9,8 +8,10 @@ from ckan.logic import (
 
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
+from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 
 NotFound = logic.NotFound
+
 
 def resource_patch(context, data_dict):
     '''
@@ -126,6 +127,17 @@ def hdx_qa_resource_patch(context, data_dict):
 
     context['allow_resource_qa_script_field'] = True
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+
+    if data_dict.get('in_quarantine') is not None:
+        tag_s3_version_by_resource_id(
+            {
+                'model': context['model'],
+                'user': context['user'],
+                'auth_user_obj': context['auth_user_obj'],
+            },
+            data_dict['id'],
+            data_dict['in_quarantine'] == 'true'
+        )
 
     return _get_action('resource_patch')(context, data_dict)
 

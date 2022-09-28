@@ -1,5 +1,5 @@
 function prepareCountryList(countDatasets) {
-  var columns = [['A', 'B', 'C'], ['D', 'E', 'F', 'G', 'H'], ['I', 'J', 'K', 'L'], ['M', 'N', 'O', 'P'], ['Q', 'R', 'S', 'T'], ['U', 'V', 'Y', 'Z']];
+  var columns = [['A', 'B', 'C'], ['D', 'E', 'F', 'G', 'H'], ['I', 'J', 'K', 'L'], ['M', 'N', 'O', 'P'], ['Q', 'R', 'S', 'T'], ['U', 'V', 'W', 'Y', 'Z']];
   $('#option_map').click(function() {
     $(this).addClass('selected');
     $('#option_az').removeClass('selected');

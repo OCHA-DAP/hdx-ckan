@@ -1119,8 +1119,9 @@ ul.dataset-resources li + li.label-icons {
   color: #007CE0;
 }
 #error-page {
-  min-height: 400px;
-  height: 70vh;
+  min-height: 300px;
+  height: 100vh;
+  width: 100%;
   background: url("/images/page404/pxel_bg.png");
   background-size: 10px 20px;
   background-repeat: repeat;
@@ -1131,7 +1132,6 @@ ul.dataset-resources li + li.label-icons {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 450px;
   text-align: center;
   color: #333333;
 }
@@ -2688,7 +2688,7 @@ textarea {
     display: none;
   }
 }
-@media (max-width: 375px) {
+@media (max-width: 425px) {
   .list-header .list-header-title .archived-mobile-hideable {
     display: none;
   }

@@ -1,5 +1,5 @@
 import pytest
-import six
+import mock
 
 import ckan.tests.factories as factories
 import ckan.model as model
@@ -66,7 +66,8 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         dataset_dict = cls._get_action('package_create')(context, package)
         cls.RESOURCE_ID = dataset_dict['resources'][0]['id']
 
-    def test_normal_user_cannot_modify_quarantine(self):
+    @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
+    def test_normal_user_cannot_modify_quarantine(self, tag_s3_mock):
         package_dict = self._change_resource_field_via_resource_patch(self.RESOURCE_ID, 'in_quarantine', True,
                                                                       self.SYSADMIN_USER)
         assert 'in_quarantine' not in package_dict['resources'][0]

@@ -919,6 +919,9 @@ alert-bar-scripts:
   output: ckanext-hdx_theme/%(version)s_alert-bar-scripts.js
   contents:
     - alert_bar/warning-bar.js
+  extra:
+    preload:
+      - hdx_theme/ckan
 
 alert-bar-styles:
   output: ckanext-hdx_theme/%(version)s_alert-bar-styles.css

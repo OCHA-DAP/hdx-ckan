@@ -59,3 +59,8 @@ for i, cod_value in enumerate(COD_VALUES_MAP.values()):
 COD_GROUP_EXPLANATION_LINK = 'https://storymaps.arcgis.com/stories/dcf6135fc0e943a9b77823bb069e2578'
 
 UPDATE_FREQ_LIVE = '0'
+
+S3_TAG_KEY_DATASET_NAME = 'DatasetName'
+S3_TAG_KEY_SENSITIVE = 'Sensitive'
+S3_TAG_VALUE_SENSITIVE_TRUE = 'yes'
+S3_TAG_VALUE_SENSITIVE_FALSE = 'no'

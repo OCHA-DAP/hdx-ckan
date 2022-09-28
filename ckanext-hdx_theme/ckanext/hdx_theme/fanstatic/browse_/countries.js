@@ -17,31 +17,6 @@ var countries = {
         ["AUT", "Austria"],
         ["AZE", "Azerbaijan"]
     ],
-    "C": [
-        ["KHM", "Cambodia"],
-        ["CMR", "Cameroon"],
-        ["CAN", "Canada"],
-        ["CPV", "Cape Verde"],
-        ["CYM", "Cayman Islands"],
-        ["CAF", "Central African Republic"],
-        ["TCD", "Chad"],
-        ["CHL", "Chile"],
-        ["CHN", "China"],
-        ["CXR", "Christmas Island"],
-        ["CCK", "Cocos (Keeling) Islands"],
-        ["COL", "Colombia"],
-        ["COM", "Comoros"],
-        ["COG", "Congo"],
-        ["COD", "Congo, the Democratic Republic of the"],
-        ["COK", "Cook Islands"],
-        ["CRI", "Costa Rica"],
-        ["CIV", "C\u00f4te d'Ivoire"],
-        ["HRV", "Croatia"],
-        ["CUB", "Cuba"],
-        ["CUW", "Cura\u00e7ao"],
-        ["CYP", "Cyprus"],
-        ["CZE", "Czech Republic"]
-    ],
     "B": [
         ["BHS", "Bahamas"],
         ["BHR", "Bahrain"],
@@ -53,17 +28,52 @@ var countries = {
         ["BEN", "Benin"],
         ["BMU", "Bermuda"],
         ["BTN", "Bhutan"],
-        ["BOL", "Bolivia, Plurinational State of"],
+        ["BOL", "Bolivia (Plurinational State of)"],
         ["BES", "Bonaire, Sint Eustatius and Saba"],
         ["BIH", "Bosnia and Herzegovina"],
         ["BWA", "Botswana"],
         ["BVT", "Bouvet Island"],
         ["BRA", "Brazil"],
         ["IOT", "British Indian Ocean Territory"],
+        ["VGB", "British Virgin Islands"],
         ["BRN", "Brunei Darussalam"],
         ["BGR", "Bulgaria"],
         ["BFA", "Burkina Faso"],
         ["BDI", "Burundi"]
+    ],
+    "C": [
+        ["KHM", "Cambodia"],
+        ["CMR", "Cameroon"],
+        ["CAN", "Canada"],
+        ["CPV", "Cape Verde"],
+        ["CYM", "Cayman Islands"],
+        ["CAF", "Central African Republic"],
+        ["TCD", "Chad"],
+        ["CHL", "Chile"],
+        ["CHN", "China"],
+        ["HKG", "China, Hong Kong Special Administrative Region"],
+        ["MAC", "China, Macao Special Administrative Region"],
+        ["CXR", "Christmas Island"],
+        ["CCK", "Cocos (Keeling) Islands"],
+        ["COL", "Colombia"],
+        ["COM", "Comoros"],
+        ["COG", "Congo"],
+        ["COK", "Cook Islands"],
+        ["CRI", "Costa Rica"],
+        ["CIV", "C\u00f4te d'Ivoire"],
+        ["HRV", "Croatia"],
+        ["CUB", "Cuba"],
+        ["CUW", "Cura\u00e7ao"],
+        ["CYP", "Cyprus"],
+        ["CZE", "Czech Republic"]
+    ],
+    "D": [
+        ["PRK", "Democratic People's Republic of Korea"],
+	["COD", "Democratic Republic of the Congo"],
+        ["DNK", "Denmark"],
+        ["DJI", "Djibouti"],
+        ["DMA", "Dominica"],
+        ["DOM", "Dominican Republic"]
     ],
     "E": [
         ["ECU", "Ecuador"],
@@ -72,13 +82,18 @@ var countries = {
         ["GNQ", "Equatorial Guinea"],
         ["ERI", "Eritrea"],
         ["EST", "Estonia"],
+        ["SWZ", "Eswatini"],
         ["ETH", "Ethiopia"]
     ],
-    "D": [
-        ["DNK", "Denmark"],
-        ["DJI", "Djibouti"],
-        ["DMA", "Dominica"],
-        ["DOM", "Dominican Republic"]
+    "F": [
+        ["FLK", "Falkland Islands (Malvinas)"],
+        ["FRO", "Faroe Islands"],
+        ["FJI", "Fiji"],
+        ["FIN", "Finland"],
+        ["FRA", "France"],
+        ["GUF", "French Guiana"],
+        ["PYF", "French Polynesia"],
+        ["ATF", "French Southern Territories"]
     ],
     "G": [
         ["GAB", "Gabon"],
@@ -98,43 +113,23 @@ var countries = {
         ["GNB", "Guinea-Bissau"],
         ["GUY", "Guyana"]
     ],
-    "F": [
-        ["FLK", "Falkland Islands (Malvinas)"],
-        ["FRO", "Faroe Islands"],
-        ["FJI", "Fiji"],
-        ["FIN", "Finland"],
-        ["FRA", "France"],
-        ["GUF", "French Guiana"],
-        ["PYF", "French Polynesia"],
-        ["ATF", "French Southern Territories"]
-    ],
-    "I": [
-        ["ISL", "Iceland"],
-        ["IND", "India"],
-        ["IDN", "Indonesia"],
-        ["IRN", "Iran, Islamic Republic of"],
-        ["IRQ", "Iraq"],
-        ["IRL", "Ireland"],
-        ["IMN", "Isle of Man"],
-        ["ISR", "Israel"],
-        ["ITA", "Italy"]
-    ],
     "H": [
         ["HTI", "Haiti"],
         ["HMD", "Heard Island and McDonald Islands"],
         ["VAT", "Holy See (Vatican City State)"],
         ["HND", "Honduras"],
-        ["HKG", "Hong Kong"],
         ["HUN", "Hungary"]
     ],
-    "K": [
-        ["KAZ", "Kazakhstan"],
-        ["KEN", "Kenya"],
-        ["KIR", "Kiribati"],
-        ["PRK", "Korea, Democratic People's Republic of"],
-        ["KOR", "Korea, Republic of"],
-        ["KWT", "Kuwait"],
-        ["KGZ", "Kyrgyzstan"]
+    "I": [
+        ["ISL", "Iceland"],
+        ["IND", "India"],
+        ["IDN", "Indonesia"],
+        ["IRN", "Iran (Islamic Republic of)"],
+        ["IRQ", "Iraq"],
+        ["IRL", "Ireland"],
+        ["IMN", "Isle of Man"],
+        ["ISR", "Israel"],
+        ["ITA", "Italy"]
     ],
     "J": [
         ["JAM", "Jamaica"],
@@ -142,30 +137,12 @@ var countries = {
         ["JEY", "Jersey"],
         ["JOR", "Jordan"]
     ],
-    "M": [
-        ["MAC", "Macao"],
-        ["MKD", "Macedonia, the former Yugoslav Republic of"],
-        ["MDG", "Madagascar"],
-        ["MWI", "Malawi"],
-        ["MYS", "Malaysia"],
-        ["MDV", "Maldives"],
-        ["MLI", "Mali"],
-        ["MLT", "Malta"],
-        ["MHL", "Marshall Islands"],
-        ["MTQ", "Martinique"],
-        ["MRT", "Mauritania"],
-        ["MUS", "Mauritius"],
-        ["MYT", "Mayotte"],
-        ["MEX", "Mexico"],
-        ["FSM", "Micronesia, Federated States of"],
-        ["MDA", "Moldova, Republic of"],
-        ["MCO", "Monaco"],
-        ["MNG", "Mongolia"],
-        ["MNE", "Montenegro"],
-        ["MSR", "Montserrat"],
-        ["MAR", "Morocco"],
-        ["MOZ", "Mozambique"],
-        ["MMR", "Myanmar"]
+    "K": [
+        ["KAZ", "Kazakhstan"],
+        ["KEN", "Kenya"],
+        ["KIR", "Kiribati"],
+        ["KWT", "Kuwait"],
+        ["KGZ", "Kyrgyzstan"]
     ],
     "L": [
         ["LAO", "Lao People's Democratic Republic"],
@@ -178,8 +155,28 @@ var countries = {
         ["LTU", "Lithuania"],
         ["LUX", "Luxembourg"]
     ],
-    "O": [
-        ["OMN", "Oman"]
+    "M": [
+        ["MKD", "North Macedonia"],
+        ["MDG", "Madagascar"],
+        ["MWI", "Malawi"],
+        ["MYS", "Malaysia"],
+        ["MDV", "Maldives"],
+        ["MLI", "Mali"],
+        ["MLT", "Malta"],
+        ["MHL", "Marshall Islands"],
+        ["MTQ", "Martinique"],
+        ["MRT", "Mauritania"],
+        ["MUS", "Mauritius"],
+        ["MYT", "Mayotte"],
+        ["MEX", "Mexico"],
+        ["FSM", "Micronesia (Federated States of)"],
+        ["MCO", "Monaco"],
+        ["MNG", "Mongolia"],
+        ["MNE", "Montenegro"],
+        ["MSR", "Montserrat"],
+        ["MAR", "Morocco"],
+        ["MOZ", "Mozambique"],
+        ["MMR", "Myanmar"]
     ],
     "N": [
         ["NAM", "Namibia"],
@@ -196,13 +193,12 @@ var countries = {
         ["MNP", "Northern Mariana Islands"],
         ["NOR", "Norway"]
     ],
-    "Q": [
-        ["QAT", "Qatar"]
+    "O": [
+        ["OMN", "Oman"]
     ],
     "P": [
         ["PAK", "Pakistan"],
         ["PLW", "Palau"],
-        ["PSE", "Palestine, State of"],
         ["PAN", "Panama"],
         ["PNG", "Papua New Guinea"],
         ["PRY", "Paraguay"],
@@ -212,6 +208,17 @@ var countries = {
         ["POL", "Poland"],
         ["PRT", "Portugal"],
         ["PRI", "Puerto Rico"]
+    ],
+    "Q": [
+        ["QAT", "Qatar"]
+    ],
+    "R": [
+        ["KOR", "Republic of Korea"],
+        ["MDA", "Republic of Moldova"],
+        ["REU", "R\u00e9union"],
+        ["ROU", "Romania"],
+        ["RUS", "Russian Federation"],
+        ["RWA", "Rwanda"]
     ],
     "S": [
         ["BLM", "Saint Barth\u00e9lemy"],
@@ -240,34 +247,17 @@ var countries = {
         ["SSD", "South Sudan"],
         ["ESP", "Spain"],
         ["LKA", "Sri Lanka"],
+        ["PSE", "State of Palestine"],
         ["SDN", "Sudan"],
         ["SUR", "Suriname"],
         ["SJM", "Svalbard and Jan Mayen"],
-        ["SWZ", "Swaziland"],
         ["SWE", "Sweden"],
         ["CHE", "Switzerland"],
         ["SYR", "Syrian Arab Republic"]
     ],
-    "R": [
-        ["REU", "R\u00e9union"],
-        ["ROU", "Romania"],
-        ["RUS", "Russian Federation"],
-        ["RWA", "Rwanda"]
-    ],
-    "U": [
-        ["UGA", "Uganda"],
-        ["UKR", "Ukraine"],
-        ["ARE", "United Arab Emirates"],
-        ["GBR", "United Kingdom"],
-        ["USA", "United States"],
-        ["UMI", "United States Minor Outlying Islands"],
-        ["URY", "Uruguay"],
-        ["UZB", "Uzbekistan"]
-    ],
     "T": [
         ["TWN", "Taiwan, Province of China"],
         ["TJK", "Tajikistan"],
-        ["TZA", "Tanzania, United Republic of"],
         ["THA", "Thailand"],
         ["TLS", "Timor-Leste"],
         ["TGO", "Togo"],
@@ -275,26 +265,36 @@ var countries = {
         ["TON", "Tonga"],
         ["TTO", "Trinidad and Tobago"],
         ["TUN", "Tunisia"],
-        ["TUR", "Turkey"],
+        ["TUR", "Türkiye"],
         ["TKM", "Turkmenistan"],
         ["TCA", "Turks and Caicos Islands"],
         ["TUV", "Tuvalu"]
+    ],
+    "U": [
+        ["UGA", "Uganda"],
+        ["UKR", "Ukraine"],
+        ["ARE", "United Arab Emirates"],
+        ["GBR", "United Kingdom"],
+        ["TZA", "United Republic of Tanzania"],
+        ["USA", "United States"],
+        ["UMI", "United States Minor Outlying Islands"],
+        ["VIR", "United States Virgin Islands"],
+        ["URY", "Uruguay"],
+        ["UZB", "Uzbekistan"]
+    ],
+    "V": [
+        ["VUT", "Vanuatu"],
+        ["VEN", "Venezuela (Bolivarian Republic of)"],
+        ["VNM", "Viet Nam"],
     ],
     "W": [
         ["WLF", "Wallis and Futuna"],
         ["ESH", "Western Sahara"]
     ],
-    "V": [
-        ["VUT", "Vanuatu"],
-        ["VEN", "Venezuela, Bolivarian Republic of"],
-        ["VNM", "Viet Nam"],
-        ["VGB", "Virgin Islands, British"],
-        ["VIR", "Virgin Islands, U.S."]
-    ],
+    "X": [],
     "Y": [
         ["YEM", "Yemen"]
     ],
-    "X": [],
     "Z": [
         ["ZMB", "Zambia"],
         ["ZWE", "Zimbabwe"]

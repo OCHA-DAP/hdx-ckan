@@ -53,6 +53,7 @@ def member_list(context, data_dict=None):
     obj_type = data_dict.get('object_type', None)
     capacity = data_dict.get('capacity', None)
     show_user_info = data_dict.get('user_info', False)
+    show_sysadmin_info = data_dict.get('sysadmin_info', False)
     q_term = data_dict.get('q', None)
 
     # User must be able to update the group to remove a member from it
@@ -84,13 +85,17 @@ def member_list(context, data_dict=None):
             return capacity
 
     if show_user_info:
-        return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity,
-                 u.fullname if u.fullname else u.name)
-                for m, u in q.all()]
+        if show_sysadmin_info:
+            return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity,
+                     u.fullname if u.fullname else u.name, u.sysadmin)
+                    for m, u in q.all()]
+        else:
+            return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity,
+                     u.fullname if u.fullname else u.name)
+                    for m, u in q.all()]
     else:
         return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity)
                 for m, u in q.all()]
-
 
 @logic.side_effect_free
 def cached_group_list(context, data_dict):
@@ -117,6 +122,7 @@ def _refresh_pkg_count_on_org_list(orgs):
     query_params = {
         'start': 0,
         'rows': 1,
+        'fq': 'private: false',
         'fl': 'id name',
         'facet': 'true',
         'facet.pivot': ['organization,archived'],
