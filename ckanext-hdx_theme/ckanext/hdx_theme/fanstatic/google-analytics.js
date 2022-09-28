@@ -200,18 +200,23 @@ $(
         function setupShareTracking() {
             var sendSharingEvent = function () {
                 var sharedItem = $(this).attr('data-shared-item');
+                var shareType = $(this).attr('data-share-type');
 
                 /* This is a hack to identify the "Nepal Earthquake" page as a crises page */
-                if (sharedItem == 'location' && analyticsInfo.pageTitle.toLowerCase() == 'nepal earthquake') {
+                if (sharedItem === 'location' && analyticsInfo.pageTitle.toLowerCase() === 'nepal earthquake') {
                     sharedItem = 'crises';
                 }
 
-                // var dTitle = $(".itemTitle").text().trim();
-                ga('send', 'event', sharedItem, 'share', analyticsInfo.pageTitle);
+                hdxUtil.analytics.pushToGTMDataLayer({
+                  'event': 'share hdx',
+                  'label': sharedItem,
+                  'type': shareType
+
+                });
                 var mixpanelMeta = {
                     'page title': analyticsInfo.pageTitle,
                     'shared item': sharedItem,
-                    'share type': $(this).attr('data-share-type')
+                    'share type': shareType
                 };
 
                 mixpanel.track("share", mixpanelMeta);
@@ -241,14 +246,18 @@ $(
             var rId = $(this).find(".ga-download-resource-id").text().trim();
             // var dTitle = $(this).find(".ga-download-dataset-title").text().trim();
             var dTitle = analyticsInfo.datasetName;
-            ga('send', 'event', 'resource', 'download', rTitle + " (" + dTitle + ")");
-            ga('send', 'event', 'dataset', 'resource-download', dTitle);
+            hdxUtil.analytics.pushToGTMDataLayer({
+                'event': 'resource download hdx',
+                'label': rTitle,
+                'dataset_name': dTitle,
+                'type': analyticsInfo.isCod ? 'cod' : 'standard',
+              });
 
             mixpanel.track("resource download", {
                 "event source": "web",
                 "resource name": rTitle,
                 "resource id": rId,
-                "dataset name": analyticsInfo.datasetName,
+                "dataset name": dTitle,
                 "dataset id": analyticsInfo.datasetId,
                 "page title": analyticsInfo.pageTitle,
                 "org name": analyticsInfo.organizationName,
@@ -275,8 +284,14 @@ $(
             console.log("sending event");
             var rTitle = $(this).parents(".resource-item").find(".heading").attr("title");
             var dTitle = $(".itemTitle").text().trim();
-            ga('send', 'event', 'resource', 'preview', rTitle + " (" + dTitle + ")");
-            ga('send', 'event', 'dataset', 'resource-preview', dTitle);
+            // ga('send', 'event', 'resource', 'preview', rTitle + " (" + dTitle + ")");
+            // ga('send', 'event', 'dataset', 'resource-preview', dTitle);
+            hdxUtil.analytics.pushToGTMDataLayer({
+                'event': 'preview hdx',
+                'label': rTitle,
+                'dataset_name': dTitle,
+                'type': analyticsInfo.isCod ? 'cod' : 'standard',
+            });
         });
     }
 
@@ -316,6 +331,7 @@ $(
 
         var group_names = getValuesFromFormData('locations');
         var org_names = getValuesFromFormData('owner_org');
+        var org_name = org_names.length > 0 ? org_names[0] : null;
         var privateVal = getValuesFromFormData('private');
         var reqdataTypeVal = getValuesFromFormData('is_requestdata_type');
 
@@ -327,6 +343,7 @@ $(
         /* tag_string looks something like "3 word address,cod,health" */
         var codVal = getValuesFromFormData('tag_string');
         codVal = codVal.length > 0 ? codVal[0].split(',') : [];
+        var isCod = codVal.indexOf('cod') >= 0;
 
         var mixpanelData = {
             "eventName": "dataset create",
@@ -334,18 +351,23 @@ $(
                 "page title": pageTitle,
                 "event source": "web",
                 "group names": group_names,
-                "org_name": org_names.length > 0 ? org_names[0] : null,
-                "is cod": codVal.indexOf('cod') >= 0,
+                "org_name": org_name,
+                "is cod": isCod,
                 "is indicator": false,
                 "is private": isPrivate,
                 "dataset availability": dataset_availability
             }
         };
 
+        var locationNames = null;
+        if (group_names) {
+          locationNames = group_names.length < 15 ? group_names.join('~') : 'many';
+        }
         var gaData = {
-            "eventCategory": "dataset",
-            "eventAction": "create",
-            "eventLabel": pageTitle || ""
+            'event': 'dataset create hdx',
+            'type': isCod ? 'cod' : 'standard',
+            'location_names': locationNames,
+            'org_name': org_name,
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -379,9 +401,9 @@ $(
         };
 
         var gaData = {
-            "eventCategory": (metadata["link type"] || "") + "faq click",
-            "eventAction": metadata["destination url"],
-            "eventLabel": metadata["destination label"] || ""
+            'event': 'faq click hdx',
+            'label': data.destinationLabel,
+            'url': data.destinationUrl,
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -426,9 +448,10 @@ $(
         };
 
         var gaData = {
-            "eventCategory": (metadata["type"] || "") + " " + eventName,
-            "eventAction": metadata["destination url"] || metadata["count"],
-            "eventLabel": metadata["page title"] || ""
+            'event': 'notification interaction hdx',
+            'url': data.destinationUrl,
+            'label': data.type,
+            'type': data.personal ? 'personal' : 'general',
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -465,9 +488,9 @@ $(
         };
 
         var gaData = {
-            "eventCategory": (metadata["link type"] || "") + " link",
-            "eventAction": metadata["destination url"],
-            "eventLabel": metadata["page title"] || ""
+            'event': 'link click hdx',
+            'url': data.destinationUrl,
+            'type': data.linkType,
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -523,18 +546,18 @@ $(
             "eventMeta": metadata
         };
 
-        var label = "on '" + analyticsInfo.pageTitle + "'";
-        if (metadata['message subject']) {
-            label = "subject '" + metadata['message subject'] + "' " + label;
-        }
-        if (metadata['message target']) {
-            label = label + " target '" + metadata['message target'] + "'";
-        }
+        // var label = "on '" + analyticsInfo.pageTitle + "'";
+        // if (metadata['message subject']) {
+        //     label = "subject '" + metadata['message subject'] + "' " + label;
+        // }
+        // if (metadata['message target']) {
+        //     label = label + " target '" + metadata['message target'] + "'";
+        // }
 
          var gaData = {
-            "eventCategory": messageSource,
-            "eventAction": "message sent",
-            "eventLabel": label
+            'event': 'message sent hdx',
+            'type': messageType,
+            'dataset_name': isDatasetPage ? localAnalyticsInfo.datasetName : undefined,
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -562,9 +585,8 @@ $(
         };
 
         var gaData = {
-            "eventCategory": "organization",
-            "eventAction": eventName,
-            "eventLabel": analyticsInfo.organizationName
+            'event': eventName + ' hdx',
+            'type': addMethod,
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -588,8 +610,7 @@ $(
         };
 
         var gaData = {
-            "eventCategory": "user",
-            "eventAction": eventName
+            'event': eventName + ' hdx'
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -599,7 +620,7 @@ $(
 
 
     /**
-     * Sends events related to new user registration: user register, start user register, submit email register
+     * Sends events related to QA sensitivity
      * @param resourceId {string}
      * @param isSensitive {boolean}
      * @param piiPredictScore {number}
@@ -621,9 +642,8 @@ $(
         };
 
         var gaData = {
-            "eventCategory": "qa",
-            "eventAction": eventName,
-            "eventLabel": isSensitive
+            'event': eventName + ' hdx',
+            'label': isSensitive ? 'sensitive' : 'not sensitive',
         };
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
@@ -675,9 +695,14 @@ $(
      * @param {string} mixpanelData.eventName
      * @param {object.<string, string|number>} mixpanelData.eventMeta
      * @param {object} gaData
-     * @param {string} gaData.eventCategory
-     * @param {string} gaData.eventAction
-     * @param {string} gaData.eventLabel
+     * @param {string} gaData.event
+     * @param {string} [gaData.label]
+     * @param {string} [gaData.type]
+     * @param {string} [gaData.url]
+     * @param {string} [gaData.format]
+     * @param {string} [gaData.dataset_name]
+     * @param {string} [gaData.org_name]
+     * @param {string} [gaData.location_names]
      * @param {number} [timeout=500] How long to wait until marking the promise as fulfilled. Optional, default 500ms
      * @returns {promise} aggregate promise of the promises for mixpanel and GA.
      */
@@ -690,7 +715,7 @@ $(
 
         if (mixpanel && mixpanelData) {
             mixpanel.track(mixpanelData.eventName, mixpanelData.eventMeta, function () {
-                if (mixpanelDeferred.state() == "pending") {
+                if (mixpanelDeferred.state() === "pending") {
                     console.log("Finishing sending click event to mixpanel");
                     mixpanelDeferred.resolve(true);
                 }
@@ -703,18 +728,28 @@ $(
             mixpanelDeferred.resolve(true);
         }
 
-        if (ga && gaData) {
-            ga('send', 'event', gaData.eventCategory, gaData.eventAction, gaData.eventLabel, {
-                hitCallback: function () {
-                    if (gaDeferred.state() == "pending") {
-                        console.log("Finishing sending click event to GA");
-                        gaDeferred.resolve(true);
-                    }
-                    else {
-                        console.log("GA promise was already solved");
-                    }
-                }
-            });
+        if (gaData) {
+            gaData.eventCallback = function() {
+              if (gaDeferred.state() === "pending") {
+                  console.log("Finishing sending click event to GA");
+                  gaDeferred.resolve(true);
+              }
+              else {
+                  console.log("GA promise was already solved");
+              }
+            };
+            hdxUtil.analytics.pushToGTMDataLayer(gaData);
+            // ga('send', 'event', gaData.eventCategory, gaData.eventAction, gaData.eventLabel, {
+            //     hitCallback: function () {
+            //         if (gaDeferred.state() === "pending") {
+            //             console.log("Finishing sending click event to GA");
+            //             gaDeferred.resolve(true);
+            //         }
+            //         else {
+            //             console.log("GA promise was already solved");
+            //         }
+            //     }
+            // });
         }
         else {
             gaDeferred.resolve(true);
@@ -722,11 +757,11 @@ $(
 
         setTimeout(function () {
             console.log("Resolving mixpanel and ga promises after timeout");
-            if (mixpanelDeferred.state() == "pending") {
+            if (mixpanelDeferred.state() === "pending") {
                 console.log("Resolving mixpanel promise after timeout");
                 mixpanelDeferred.resolve(true);
             }
-            if (gaDeferred.state() == "pending") {
+            if (gaDeferred.state() === "pending") {
                 console.log("Resolving GA promise after timeout");
                 gaDeferred.resolve(true);
             }
@@ -736,13 +771,30 @@ $(
 
     }
 
+  /**
+   * Pushes event to datalayer but first resets the properties/dimensions
+   *
+   * @param {object} gaData
+   * @param {string} gaData.event
+   * @param {string} [gaData.label]
+   * @param {string} [gaData.type]
+   * @param {string} [gaData.url]
+   * @param {string} [gaData.format]
+   * @param {string} [gaData.dataset_name]
+   * @param {string} [gaData.org_name]
+   * @param {string} [gaData.location_names]
+   */
+  function pushToDatalayer(gaData) {
+    dataLayer.push({
+      'label': undefined,
+      'dataset_name': undefined,
+      'url': undefined,
+      'type': undefined,
+      'format': undefined,
+    });
+    dataLayer.push(gaData);
+  }
+  hdxUtil.analytics.pushToGTMDataLayer = pushToDatalayer;
+
 
 }());
-
-function setUpGalleryTracking() {
-  $("li.related-item.media-item a.media-view").on('click', function (){
-    var rTitle = $(this).parent().find(".media-heading").text().trim();
-    var dTitle = $(".itemTitle").text().trim();
-    ga('send', 'event', 'gallery', 'click', rTitle + " (" + dTitle +")");
-  });
-}
