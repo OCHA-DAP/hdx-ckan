@@ -418,10 +418,15 @@ def hdx_update_data_frequency_by_archived(key, data, errors, context):
 
 def hdx_add_update_fs_check_info(key, data, errors, context):
     try:
-        if data.get(key):
+        fs_check_value = data.get(key)
+
+        # if fs_check_value is dict, then is a new value coming and we need to process it.
+        if fs_check_value and isinstance(fs_check_value, dict):
             if context.get('allow_fs_check_field'):
                 pkg_id = data.get(('id',))
                 resource_id = data.get(key[:-1] + ('id',))
+
+                # resource update
                 if resource_id:
                     resource_dict = __get_previous_resource_dict(context, pkg_id, resource_id) or {}
                     specific_key = key[2]
@@ -433,19 +438,22 @@ def hdx_add_update_fs_check_info(key, data, errors, context):
                             old_value = json.loads(old_value.replace('\'', '"'))
                         if not isinstance(old_value, list):
                             old_value = [old_value]
-                        old_value.append(data[key])
+                        old_value.append(fs_check_value)
                     else:
-                        old_value = [data[key]]
+                        old_value = [fs_check_value]
                     data[key] = old_value[-10:]
+
+                # resource create
                 else:
-                    if not isinstance(data[key], list):
-                        data[key] = [data[key]]
-            else:
-                if isinstance(data.get(key), str):
-                    try:
-                        data[key] = json.loads(data[key].replace('\'', '"'))
-                    except:
-                        log.error("fs_check_info contains a strange string: " + str(data[key]))
+                    # if not isinstance(data[key], list):
+                    data[key] = [data[key]]
+            # else:
+            #     # loads current value as py object to allow the next validator to use the value
+            #     if isinstance(data.get(key), str):
+            #         try:
+            #             data[key] = json.loads(data[key].replace('\'', '"'))
+            #         except:
+            #             log.error("fs_check_info contains a strange string: " + str(data[key]))
 
             log.info("done with add update fs_check_info")
     except Exception as ex:
