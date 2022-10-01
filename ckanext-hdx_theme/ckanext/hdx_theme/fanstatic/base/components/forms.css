@@ -235,14 +235,14 @@
   height: 30px;
   line-height: 30px;
   margin: 0;
-  margin-top: 6px;
+  margin-top: 14px/2 - 1px;
   margin-left: 10px;
   padding: 0;
   padding-left: 10px;
   padding-right: 35px;
   outline: none;
   border: none;
-  xborder-radius: 0;
+  border-radius: 0;
 }
 .hdx-form .form-group .form-control.select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close {
   background-color: white;

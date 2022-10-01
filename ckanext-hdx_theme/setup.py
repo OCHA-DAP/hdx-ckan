@@ -27,7 +27,6 @@ setup(
         [ckan.plugins]
     hdx_theme=ckanext.hdx_theme.plugin:HDXThemePlugin
     [paste.paster_command]
-    custom-less-compile = ckanext.hdx_theme.cli.cli:CustomLessCompile
     analytics-changes-reindex = ckanext.hdx_theme.cli.cli:AnalyticsChangesReindex
     """,
 )

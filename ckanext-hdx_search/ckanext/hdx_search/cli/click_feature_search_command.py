@@ -13,7 +13,7 @@ config = tk.config
 log = logging.getLogger(__name__)
 
 
-@click.command(short_help='Compile all custom less themes')
+@click.command(short_help='Writes a json file to be used to run custom searches of all Featured pages')
 def hdx_feature_search():
     '''
     Usage:
