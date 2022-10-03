@@ -1,0 +1,41 @@
+.hdx-warning {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  min-width: 1260px;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #F2645A;
+  z-index: 1000;
+}
+.hdx-warning .hdx-warning-text {
+  width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+  text-decoration: underline;
+  font-family: "Gotham-Bold", sans-serif;
+}
+.hdx-warning .hdx-warning-text .hdx-warning-text-important {
+  font-size: 16px;
+  color: inherit;
+}
+.hdx-warning .hdx-warning-text .hdx-warning-text-arrow {
+  font-size: 14px;
+}
+.hdx-warning.hdx-announcement {
+  background-color: #fff;
+}
+.hdx-warning.hdx-announcement .hdx-warning-text {
+  color: #007CE0;
+}
+@media (max-width: 767px) {
+  .hdx-warning {
+    min-width: 0;
+  }
+  .hdx-warning .hdx-warning-text {
+    padding: 0 10px;
+    width: 100%;
+  }
+}
