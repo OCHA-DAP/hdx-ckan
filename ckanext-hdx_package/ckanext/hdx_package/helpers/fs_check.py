@@ -40,8 +40,6 @@ def _before_ckan_action(context, resource_dict):
     is_upload_xls = _is_upload_xls(resource_dict)
     if is_upload_xls:
         context['allow_fs_check_field'] = True
-        if resource_dict.get('fs_check_info'):
-            log.info('aaaaaaaaaaa')
         resource_dict['fs_check_info'] = {
             'state': PROCESSING,
             'message': 'The processing of the file structure check has started',
