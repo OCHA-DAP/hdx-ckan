@@ -338,6 +338,9 @@ h1 {
 .resource-item .hdx-btn-group.hdx-btn-group-fixed {
   width: 235px;
 }
+.resource-item .hdx-btn-group.hdx-btn-group-fixed .btn.hdx-btn {
+  margin-right: 0;
+}
 .btn.hdx-btn.resource-btn {
   background-color: #888888;
   color: white;

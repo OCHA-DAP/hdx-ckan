@@ -264,18 +264,20 @@ def _process_customizations(json_string):
     Process settings for datasets belonging to custom layouts
     """
     logo_config = {
-        'background_color': '#fafafa',
-        'border_color': '#cccccc'
+        'logo_bg_color': '',
+        'highlight_color': ''
     }
     if json_string:
         custom_dict = json.loads(json_string)
+        highlight_color = custom_dict.get('highlight_color', None)
+        if highlight_color:
+            logo_config['highlight_color'] = highlight_color
+        logo_bg_color = custom_dict.get('logo_bg_color', None)
+        if logo_bg_color:
+            logo_config['logo_bg_color'] = logo_bg_color
         image_name = custom_dict.get('image_rect', None)
         if image_name:
             logo_config['image_url'] = h.url_for('hdx_local_image_server.org_file', filename=image_name)
-
-        if 'true' == custom_dict.get('use_org_color', False):
-            logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
-            logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
     return logo_config
 

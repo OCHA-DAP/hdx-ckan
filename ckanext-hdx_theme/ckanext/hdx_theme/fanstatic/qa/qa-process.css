@@ -288,7 +288,7 @@
 }
 @media (min-width: 768px) {
   .qa-process .qa-doc-section .qa-doc-item {
-    margin: 0 32.5px 65px;
+    margin: 0 65px/2 65px;
   }
 }
 .qa-process .qa-doc-section .qa-doc-item img {

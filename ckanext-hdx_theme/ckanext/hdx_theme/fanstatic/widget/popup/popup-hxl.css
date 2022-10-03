@@ -25,7 +25,7 @@
 }
 @media (max-width: 375px) {
   .popup .content {
-    padding: 15px;
+    padding: 30px/2;
   }
 }
 .popup .content .title {

@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $('.create-org header ul').hide();
-	$('#field-highlight-color').spectrum({
+	$('#field-highlight-color, #field-logo-bg-color').spectrum({
 		preferredFormat: "hex",
 		showInput: true,
 });
@@ -32,7 +32,7 @@ $(document).ready(function(){
     $('#'+this_div).show();
   });
 
-	$('#field-highlight-color').change(function(){
+	$('#field-highlight-color, #field-logo-bg-color').change(function(){
 		color = this.value;
 		var rainbow = new Rainbow();
 		rainbow.setNumberRange(1, 9);
@@ -49,14 +49,11 @@ $(document).ready(function(){
 		//Set timestamp
 		$('#field-modified_at').val(new Date().getTime());
 		if($('#field-custom_org').is(':checked')){
-            var use_org_color = "false";
-            if($('#use_org_color').is(':checked'))
-                use_org_color = "true";
 			var customization = {
 				'highlight_color':$('#field-highlight-color').val(),
+        'logo_bg_color':$('#field-logo-bg-color').val(),
 				'topline_dataset':$('#field-topline-dataset').val(),
-				'topline_resource':$('#field-topline-resource').val(),
-                'use_org_color':use_org_color
+				'topline_resource':$('#field-topline-resource').val()
 			};
 			$('#customization-json').val(JSON.stringify(customization));
 

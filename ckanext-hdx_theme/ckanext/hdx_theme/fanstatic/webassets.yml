@@ -128,6 +128,11 @@ search-box-scripts:
   contents:
     - organization_/organizations.js
 
+custom-org-styles:
+  output: ckanext-hdx_theme/%(version)s_base-org-styles.css
+  contents:
+    - organization_/base/organization.css
+
 custom-org-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-org-scripts.js

@@ -60,11 +60,8 @@ RUN apt-get -qq -y update && \
     curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     # install Node and nginx unit
     apt-get -qq -y install \
-      nodejs \
       unit unit-python3.8 && \
     ln -sf /usr/lib/unit/modules/python3.8.unit.so /usr/lib/unit/modules/python.unit.so && \
-    # install lessc
-    npm install -g less@3.13.1 && \
     # prepare files and folders
     mkdir -p /var/log/ckan /srv/filestore /etc/services.d/unit /etc/ckan && \
     cd /srv/ckan && \

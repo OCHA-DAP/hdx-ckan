@@ -7,6 +7,5 @@
 
 {% block custom_styles %}
     {{ super() }}
-    <link rel="stylesheet" type="text/css"
-          href="{{ org_meta.custom_css_path }}" />
+    {% snippet "custom/custom_style.html" %}
 {% endblock %}

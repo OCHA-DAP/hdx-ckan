@@ -12,7 +12,11 @@
 @import "../../widget/modal";
 
 //override vars for the WFP Page
-@import "variables-wfp";
+
+@logoBackgroundColor: @whiteColor;
+@logoBorderColor: @whiteColor;
+
+@defaultLinkColor: @wfpBlueColor;
 
 .intro-section{
   padding-top: 40px;
@@ -32,6 +36,7 @@
     .gothamBookFont(36px);
     color: @wfpBlueColor;
     line-height: 1;
+    margin: 0;
   }
 
   .mainLinks.org-info-links{
