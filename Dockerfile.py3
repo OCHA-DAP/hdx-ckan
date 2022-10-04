@@ -56,9 +56,8 @@ RUN apt-get -qq -y update && \
     curl --output /usr/share/keyrings/nginx-keyring.gpg https://unit.nginx.org/keys/nginx-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ focal unit" > /etc/apt/sources.list.d/unit.list && \
     echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ focal unit" >> /etc/apt/sources.list.d/unit.list && \
-    # perpare Node 16 installation
-    curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    # install Node and nginx unit
+    # install nginx unit
+    apt-get -qq -y update && \
     apt-get -qq -y install \
       unit unit-python3.8 && \
     ln -sf /usr/lib/unit/modules/python3.8.unit.so /usr/lib/unit/modules/python.unit.so && \
