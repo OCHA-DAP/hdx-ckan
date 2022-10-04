@@ -57,6 +57,7 @@ RUN apt-get -qq -y update && \
     echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ focal unit" > /etc/apt/sources.list.d/unit.list && \
     echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ focal unit" >> /etc/apt/sources.list.d/unit.list && \
     # install nginx unit
+    apt-get -qq -y update && \
     apt-get -qq -y install \
       unit unit-python3.8 && \
     ln -sf /usr/lib/unit/modules/python3.8.unit.so /usr/lib/unit/modules/python.unit.so && \
