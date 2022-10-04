@@ -47,6 +47,8 @@ def _before_ckan_action(context, resource_dict):
             # 'error_class': 'None',
             'timestamp': datetime.datetime.now().isoformat()
         }
+    else:
+        context['allow_fs_check_field'] = False
     # log.info("in before fs_check")
     return is_upload_xls
 
