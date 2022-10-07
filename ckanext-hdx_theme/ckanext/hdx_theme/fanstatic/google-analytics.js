@@ -32,7 +32,7 @@ $(
                     'isList': false,
                     'mandatory': true
                 },
-                'tags': {
+                'vocab_Topics': {
                     'name': 'tag filters',
                     'isList': true,
                     'mandatory': true
