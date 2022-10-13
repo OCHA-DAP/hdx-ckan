@@ -2,6 +2,9 @@
 
 {% set pkg = pkg_dict %}
 
+{% block title_and_actions_container_class %}{% if logo_config.custom_org == True %} intro-section custom-dataset{% endif %}{% endblock %}
+{% block title_and_desc_container_class %}{% if logo_config.custom_org == True %} org-custom-styling{% endif %}{% endblock %}
+
 {% block pre_primary_content %}
   <div class="col-xs-12 paddingLeftHack paddingRightHack">
     <div class="row mTop20">
@@ -21,6 +24,7 @@
 
 {% block styles %}
   {{ super() }}
+  {% snippet "organization/custom/custom_style.html", customizations=logo_config %}
 {% endblock %}
 
 {% block scripts %}

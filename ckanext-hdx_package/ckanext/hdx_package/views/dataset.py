@@ -265,7 +265,8 @@ def _process_customizations(json_string):
     """
     logo_config = {
         'logo_bg_color': '',
-        'highlight_color': ''
+        'highlight_color': '',
+        'custom_org': True
     }
     if json_string:
         custom_dict = json.loads(json_string)
