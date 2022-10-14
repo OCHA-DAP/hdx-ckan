@@ -9,8 +9,11 @@
 }
 .org-logo-large {
   width: 185px;
-  height: 100%;
-  text-align: center;
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 .org-logo-large img {
   max-height: 65px;

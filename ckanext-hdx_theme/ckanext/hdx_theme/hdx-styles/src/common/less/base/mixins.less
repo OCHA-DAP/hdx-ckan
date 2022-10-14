@@ -67,7 +67,10 @@
 .org-logo(@wrapperWidth: 370px, @wrapperHeight: 200px, @imgMaxWidth: 300px, @imgMaxHeight: 125px ){
   width: @wrapperWidth;
   height: @wrapperHeight;
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   img {
     max-height: @imgMaxHeight;
     max-width: @imgMaxWidth;

@@ -78,6 +78,6 @@
 }
 @media (max-width: 320px) {
   .registered-widget .bottom-actions {
-    padding: 0 10px;
+    padding: 0 20px/2;
   }
 }

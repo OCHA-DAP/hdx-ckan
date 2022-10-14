@@ -22,7 +22,7 @@
   background: linear-gradient(to bottom, rgba(238, 238, 238, 0) 0%, #eeeeee 100%);
   position: absolute;
   bottom: 85px;
-  height: 32px;
+  height: 64px/2;
   max-width: 375px;
 }
 .two-column-follow .two-column-right .selectable-list {
@@ -41,7 +41,7 @@
 }
 .two-column-follow .two-column-right .selectable-list li input[type="checkbox"] {
   position: absolute;
-  top: 26px;
+  top: 52px/2;
   left: 10px;
 }
 .two-column-follow .two-column-right .selectable-list li input[type="checkbox"]:checked + div {
@@ -66,7 +66,7 @@
 .two-column-follow .two-column-right .selectable-list li span {
   position: absolute;
   right: 10px;
-  top: 22px;
+  top: 44px/2;
   line-height: 20px;
   text-transform: uppercase;
   font-family: 'Source Sans Pro', sans-serif;

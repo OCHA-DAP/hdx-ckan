@@ -218,6 +218,7 @@ function prepareMap(countDatasets, openNewWindow){
       noWrap: false
     }
   });
+  getHDXBaseLayer(map, 7);
 
   map.scrollWheelZoom.disable();
   //map.featureLayer.setFilter(function() {
@@ -247,16 +248,12 @@ function prepareMap(countDatasets, openNewWindow){
     map.fitBounds(specificCountryLayer.getBounds());
   }
 
-  topPane = map._createPane('leaflet-top-pane', map.getPanes().mapPane);
-
-  topLayer = getHDXBaseLayer(map, 7);
-  topPane.appendChild(topLayer.getContainer());
 
   // var topLayer2 = getHDXLabelsLayer(map, 6);
   // topLayer2.setZIndex(7);
 
   // topPane.appendChild(topLayer2.getContainer());
-  topLayer.setZIndex(1);
+
 }
 
 var parseQueryString = function(url) {

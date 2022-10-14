@@ -11,7 +11,6 @@ import six
 
 import ckanext.hdx_search.cli.click_feature_search_command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
-import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
@@ -211,47 +210,48 @@ def hdx_get_group_activity_list(context, data_dict):
     return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
 
 
-def compile_less(result, translate_func=None):
-    base_color = '#007CE0'  # default value
-    logo_use_org_color = "false"
+# def compile_less(result, translate_func=None):
+#     return True
+    # base_color = '#007CE0'  # default value
+    # logo_use_org_color = "false"
+    #
+    # def get_value_from_result(key):
+    #     value = result.get(key)
+    #     if not value:
+    #         extra = next((e for e in (result.get('extras') or []) if e['key'] == key), None)
+    #         if extra:
+    #             value = extra.get('value')
+    #     return value
+    #
+    # less_code_list = get_value_from_result('less')
+    # customization = get_value_from_result('customization')
+    #
+    # if customization:
+    #     try:
+    #         variables = json.loads(customization)
+    #         base_color = variables.get('highlight_color', '#007CE0') or '#007CE0'
+    #         logo_use_org_color = variables.get('use_org_color', 'false')
+    #     except:
+    #         base_color = '#007CE0'
+    #
+    # if less_code_list:
+    #     less_code = less_code_list.strip()
+    #     if less_code:
+    #         less_code = _add_custom_less_code(base_color, logo_use_org_color) + less_code
+    #         css_dest_dir = '/organization/' + result['name']
+    #         compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
+    #                                      h.hdx_get_extras_element(result, value_key="modified_at"),
+    #                                      translate_func=translate_func)
+    #         compilation_result = compiler.compile_less()
+    #         result['less_compilation'] = compilation_result
 
-    def get_value_from_result(key):
-        value = result.get(key)
-        if not value:
-            extra = next((e for e in (result.get('extras') or []) if e['key'] == key), None)
-            if extra:
-                value = extra.get('value')
-        return value
 
-    less_code_list = get_value_from_result('less')
-    customization = get_value_from_result('customization')
-
-    if customization:
-        try:
-            variables = json.loads(customization)
-            base_color = variables.get('highlight_color', '#007CE0') or '#007CE0'
-            logo_use_org_color = variables.get('use_org_color', 'false')
-        except:
-            base_color = '#007CE0'
-
-    if less_code_list:
-        less_code = less_code_list.strip()
-        if less_code:
-            less_code = _add_custom_less_code(base_color, logo_use_org_color) + less_code
-            css_dest_dir = '/organization/' + result['name']
-            compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
-                                         h.hdx_get_extras_element(result, value_key="modified_at"),
-                                         translate_func=translate_func)
-            compilation_result = compiler.compile_less()
-            result['less_compilation'] = compilation_result
-
-
-def _add_custom_less_code(base_color, logo_use_org_color):
-    # Add base color definition
-    less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r'
-    if not 'true' == logo_use_org_color:
-        less_code += '@logoBackgroundColor: #FAFAFA; @logoBorderColor: #CCCCCC;'
-    return less_code
+# def _add_custom_less_code(base_color, logo_use_org_color):
+#     # Add base color definition
+#     less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r'
+#     if not 'true' == logo_use_org_color:
+#         less_code += '@logoBackgroundColor: #FAFAFA; @logoBorderColor: #CCCCCC;'
+#     return less_code
 
 
 def hdx_organization_update(context, data_dict):
@@ -259,8 +259,6 @@ def hdx_organization_update(context, data_dict):
     result = hdx_group_or_org_update(context, data_dict, is_org=True)
     if not test:
         lunr.build_index()
-
-    compile_less(result)
 
     # hdx_generate_embedded_preview(result)
     return result
@@ -339,7 +337,6 @@ def hdx_organization_create(context, data_dict):
     result = hdx_group_or_org_create(context, data_dict, is_org=True)
     if not test:
         lunr.build_index()
-    compile_less(result)
 
     # hdx_generate_embedded_preview(result)
     return result
@@ -698,12 +695,12 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     return output
 
 
-def recompile_everything(context):
-    orgs = get_action('organization_list')(context, {'all_fields': False})
-    if orgs:
-        for org_name in orgs:
-            org = get_action('hdx_light_group_show')(context, {'id': org_name})
-            compile_less(org, translate_func=lambda str: str)
+# def recompile_everything(context):
+#     orgs = get_action('organization_list')(context, {'all_fields': False})
+#     if orgs:
+#         for org_name in orgs:
+#             org = get_action('hdx_light_group_show')(context, {'id': org_name})
+#             compile_less(org, translate_func=lambda str: str)
 
 
 # def hdx_capturejs(uri, output_file, selector, renderdelay=90000, waitcapturedelay=10000, viewportsize='1200x800'):

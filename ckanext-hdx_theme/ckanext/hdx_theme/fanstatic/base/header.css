@@ -554,6 +554,9 @@ body {
 .resource-item .hdx-btn-group.hdx-btn-group-fixed {
   width: 235px;
 }
+.resource-item .hdx-btn-group.hdx-btn-group-fixed .btn.hdx-btn {
+  margin-right: 0;
+}
 .btn.hdx-btn.resource-btn {
   background-color: #888888;
   color: white;
@@ -2806,7 +2809,7 @@ textarea {
   height: 30px;
   line-height: 30px;
   margin: 0;
-  margin-top: 14px/2 - 1px;
+  margin-top: 6px;
   margin-left: 10px;
   padding: 0;
   padding-left: 10px;

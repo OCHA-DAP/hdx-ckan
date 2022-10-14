@@ -6,7 +6,6 @@ import ckan.lib.helpers as ckan_helpers
 import ckan.plugins.toolkit as tk
 
 
-import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_org_group.helpers.organization_helper as org_helpers
 import ckanext.hdx_package.helpers.membership_data as membership_data
@@ -31,7 +30,6 @@ class OrgMetaDao(object):
         self.members_num = 0
         self.members = None
         self.is_custom = False
-        self.custom_css_path = None
         self.customization = None
         self.custom_rect_logo_url = None
         self.custom_sq_logo_url = None
@@ -167,10 +165,6 @@ class OrgMetaDao(object):
             # Transform the json string representing the customizations to dict
             self.customization = org_extras['customization'] = json.loads(org_extras.get('customization', '').strip())
 
-            css_dest_dir = '/organization/' + self.org_dict['name']
-
-            self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'],
-                                                                 self.org_dict.get('modified_at'), True)
             self.custom_sq_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file',
                                                            filename=self.customization.get('image_sq'))
             self.custom_rect_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file',

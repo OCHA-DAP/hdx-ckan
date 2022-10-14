@@ -30,7 +30,7 @@ body {
 }
 [role=main] .secondary {
   margin: 0;
-  padding-right: 15px;
+  padding-right: 30px/2;
   /* mimic the left 45 padding */
   width: 100%;
   color: #ffffff;
