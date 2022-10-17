@@ -83,11 +83,11 @@ def hdx_send_mail_members(context, data_dict):
     }
 
 
-def hdx_create_screenshot_for_cod(context, data_dict=None):
-    '''
-    Only sysadmins are allowed to call this action
-    '''
-    return {'success': False, 'msg': _('Only sysadmins can create a screenshot of a dataset\'s viz')}
+# def hdx_create_screenshot_for_cod(context, data_dict=None):
+#     '''
+#     Only sysadmins are allowed to call this action
+#     '''
+#     return {'success': False, 'msg': _('Only sysadmins can create a screenshot of a dataset\'s viz')}
 
 
 @auth_allow_anonymous_access
