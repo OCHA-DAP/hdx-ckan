@@ -1,6 +1,6 @@
 import random
 from socket import error as socket_error
-
+import ckan.logic as logic
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.navl.dictization_functions as core_df
 import ckan.logic.action.create as core_create
@@ -21,6 +21,7 @@ config = tk.config
 h = tk.h
 g = tk.g
 _ = tk._
+NotAuthorized = tk.NotAuthorized
 
 
 def hdx_user_invite(context, data_dict):
@@ -58,7 +59,7 @@ def hdx_user_invite(context, data_dict):
     while True:
         password = ''.join(random.SystemRandom().choice(
             string.ascii_lowercase + string.ascii_uppercase + string.digits)
-            for _ in range(12))
+                           for _ in range(12))
         # Occasionally it won't meet the constraints, so check
         errors = {}
         _get_validator('user_password_validator')('password', {'password': password}, errors, None)
@@ -86,7 +87,7 @@ def hdx_user_invite(context, data_dict):
                                                {'id': data['group_id']})
     try:
         expiration_in_hours = int(config.get('hdx.password.invitation_reset_key.expiration_in_hours', 48))
-        reset_password.create_reset_key(user, expiration_in_minutes=60*expiration_in_hours)
+        reset_password.create_reset_key(user, expiration_in_minutes=60 * expiration_in_hours)
         subject = u'HDX account creation'
         email_data = {
             'org_name': group_dict.get('display_name'),
@@ -134,3 +135,78 @@ def get_organization_admins(group_id, skip_email=''):
         if skip_email != admin.email:
             admin_list.append({'display_name': admin.display_name, 'email': admin.email})
     return admin_list
+
+
+def hdx_member_create(context, data_dict=None):
+    '''Make an object (e.g. a user, dataset or group) a member of a group.
+
+    If the object is already a member of the group then the capacity of the
+    membership will be updated.
+
+    You must be authorized to edit the group.
+
+    :param id: the id or name of the group to add the object to
+    :type id: string
+    :param object: the id or name of the object to add
+    :type object: string
+    :param object_type: the type of the object being added, e.g. ``'package'``
+        or ``'user'``
+    :type object_type: string
+    :param capacity: the capacity of the membership
+    :type capacity: string
+
+    :returns: the newly created (or updated) membership
+    :rtype: dictionary
+
+    '''
+    model = context['model']
+    user = context['user']
+
+    group_id, obj_id, obj_type, capacity = \
+        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity'])
+
+    group = model.Group.get(group_id)
+    if not group:
+        raise NotFound('Group was not found.')
+
+    obj_class = logic.model_name_to_class(model, obj_type)
+    obj = obj_class.get(obj_id)
+    if not obj:
+        raise NotFound('%s was not found.' % obj_type.title())
+
+    _check_access('member_create', context, data_dict)
+
+    # Look up existing, in case it exists. For members, we want all, not only active. It will not create other members,
+    # but reuse one previous member
+    if obj_type == 'user':
+        member = model.Session.query(model.Member). \
+            filter(model.Member.table_name == obj_type). \
+            filter(model.Member.table_id == obj.id). \
+            filter(model.Member.group_id == group.id).first()
+    else:
+        member = model.Session.query(model.Member). \
+            filter(model.Member.table_name == obj_type). \
+            filter(model.Member.table_id == obj.id). \
+            filter(model.Member.group_id == group.id). \
+            filter(model.Member.state == 'active').first()
+    if member:
+        user_obj = model.User.get(user)
+        if member.table_name == u'user' and \
+            member.table_id == user_obj.id and \
+            member.capacity == u'admin' and \
+            capacity != u'admin':
+            raise NotAuthorized("Administrators cannot revoke their "
+                                "own admin status")
+    else:
+        member = model.Member(table_name=obj_type,
+                              table_id=obj.id,
+                              group_id=group.id,
+                              state='active')
+        member.group = group
+    member.capacity = capacity
+    if obj_type == 'user':
+        member.state = 'active'
+    model.Session.add(member)
+    model.repo.commit()
+
+    return model_dictize.member_dictize(member, context)
