@@ -71,7 +71,8 @@ def read(id):
             org_dict = read_logic.org_meta.org_dict
             org_dict.update({
                 'search_template_data': read_logic.search_template_data,
-                'datasets_num': read_logic.org_meta.datasets_num,
+                'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
+                'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
                 'allow_req_membership': read_logic.org_meta.allow_req_membership,
                 # 'group_message_info': read_logic.org_meta.group_message_info,
             })
