@@ -79,7 +79,7 @@ future==0.18.2
     # via -r requirements-py2.in
 futures==3.3.0
     # via s3transfer
-git+https://github.com/geomet/geomet.git
+git+https://github.com/geomet/geomet.git@0.3.1
     # via -r requirements-py2.in
 html5lib==1.1
     # via rdflib
