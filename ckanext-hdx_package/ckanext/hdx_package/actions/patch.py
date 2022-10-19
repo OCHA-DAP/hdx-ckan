@@ -130,7 +130,11 @@ def hdx_qa_resource_patch(context, data_dict):
     context['allow_resource_qa_script_field'] = True
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
+    resource_dict = _get_action('resource_show')(context, {'id': data_dict.get('id')})
+    pkg_id = resource_dict.get('package_id')
+
     if data_dict.get('in_quarantine') is not None:
+        dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
         tag_s3_version_by_resource_id(
             {
                 'model': context['model'],
@@ -138,15 +142,21 @@ def hdx_qa_resource_patch(context, data_dict):
                 'auth_user_obj': context['auth_user_obj'],
             },
             data_dict['id'],
-            data_dict['in_quarantine'] == 'true'
+            data_dict['in_quarantine'] == 'true',
+            resource_dict.get('url'),
+            dataset_dict.get('name')
         )
+    data_revise_dict = {'match': {'id': pkg_id}}
+    for item in data_dict.keys():
+        if data_dict[item] != 'id':
+            data_revise_dict['update__resources__' + resource_dict.get('id')[:5]] = {item: data_dict[item]}
 
-    return _get_action('resource_patch')(context, data_dict)
+    if len(data_revise_dict.keys()) <= 1:
+        raise NotFound("resource id, key or value were not provided")
+    return _get_action('package_revise')(context, data_revise_dict)
 
 
 def hdx_fs_check_resource_revise(context, data_dict):
-    import ckan.plugins.toolkit as tk
-    request = tk.request
     _check_access('hdx_fs_check_resource_revise', context, data_dict)
 
     context['allow_fs_check_field'] = True
