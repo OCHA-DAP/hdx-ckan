@@ -367,27 +367,6 @@ def hdx_get_extras_element(data_dict, key='key', value_key='org_url', ret_key='v
     return res
 
 
-def hdx_less_default():
-    return """
-@bodyBackgroundColor: @greenColor;
-@navTabsActiveColor: @wfpBlueColor;
-@orderByDropdownColor: @wfpBlueColor;
-@defaultLinkColor: @wfpBlueColor;
-
-@paginationActiveBackground: @wfpBlueColor;
-
-@topLineItemNumberFontSize: 56px;
-@topLineItemUnitFontSize: 28px;
-
-
-@modalSubmitButtonBackgrColor: #FFFFFF;
-
-@modalSubmitButtonColor: #888888;
-
-@modalHeaderBackgroundColor: #EEEEEE;
-@modalFooterBackgroundColor: #EEEEEE;"""
-
-
 def load_json(obj, **kw):
     return json.loads(obj, **kw)
 
@@ -662,9 +641,20 @@ def hdx_methodology_list():
 
 
 def hdx_location_list():
+    top_values = ['world']
+
+    top_locations = []
+    bottom_locations = []
+
     locations = logic.get_action('cached_group_list')({}, {})
-    locations_dict_list = [{'value': loc.get('name'), 'text': loc.get('title')} for loc in locations]
-    return locations_dict_list
+    for loc in locations:
+        location_data = {'value': loc.get('name'), 'text': loc.get('title')}
+        if loc.get('name') in top_values:
+            top_locations.append(location_data)
+        else:
+            bottom_locations.append(location_data)
+
+    return top_locations + bottom_locations
 
 
 def hdx_organisation_list():

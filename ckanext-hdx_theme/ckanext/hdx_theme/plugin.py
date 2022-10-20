@@ -226,7 +226,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'load_json': hdx_helpers.load_json,
             'escaped_dump_json': hdx_helpers.escaped_dump_json,
             'json_dumps': json.dumps,
-            'hdx_less_default': hdx_helpers.hdx_less_default,
             'hdx_popular': hdx_helpers.hdx_popular,
             'get_dataset_date_format': hdx_helpers.get_dataset_date_format,
             'hdx_methodology_list': hdx_helpers.hdx_methodology_list,

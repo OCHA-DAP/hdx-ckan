@@ -1,10 +1,15 @@
 $(document).ready(function(){
-    $('.create-org header ul').hide();
-	$('#field-highlight-color').spectrum({
+  $('.create-org header ul').hide();
+	$('#field-highlight-color, #field-logo-bg-color').spectrum({
 		preferredFormat: "hex",
+    allowEmpty:true,
 		showInput: true,
-});
-	$('.visualization_colors').spectrum({preferredFormat: "hex",showInput: true});
+  });
+	$('.visualization_colors').spectrum({
+    preferredFormat: "hex",
+    allowEmpty:true,
+    showInput: true
+  });
 	//When checkbox is clicked toogle customization fields
 	$('#field-custom_org').change(function(e){
         if ( $('#field-custom_org').is(':checked') ){
@@ -32,14 +37,16 @@ $(document).ready(function(){
     $('#'+this_div).show();
   });
 
-	$('#field-highlight-color').change(function(){
-		color = this.value;
-		var rainbow = new Rainbow();
-		rainbow.setNumberRange(1, 9);
-		rainbow.setSpectrum(lighterColor(color, .5), darkerColor(color, .5));
-		for (var i = 1; i <= 9; i++) {
-    		$('#color-'+i).spectrum("set", rainbow.colourAt(i));
-		}
+	$('#field-highlight-color, #field-logo-bg-color').change(function(){
+		let color = this.value;
+    if (color){
+      var rainbow = new Rainbow();
+      rainbow.setNumberRange(1, 9);
+      rainbow.setSpectrum(lighterColor(color, .5), darkerColor(color, .5));
+      for (var i = 1; i <= 9; i++) {
+        $('#color-'+i).spectrum("set", rainbow.colourAt(i));
+      }
+    }
 	});
 
 	//On form submit
@@ -49,14 +56,11 @@ $(document).ready(function(){
 		//Set timestamp
 		$('#field-modified_at').val(new Date().getTime());
 		if($('#field-custom_org').is(':checked')){
-            var use_org_color = "false";
-            if($('#use_org_color').is(':checked'))
-                use_org_color = "true";
 			var customization = {
 				'highlight_color':$('#field-highlight-color').val(),
+        'logo_bg_color':$('#field-logo-bg-color').val(),
 				'topline_dataset':$('#field-topline-dataset').val(),
-				'topline_resource':$('#field-topline-resource').val(),
-                'use_org_color':use_org_color
+				'topline_resource':$('#field-topline-resource').val()
 			};
 			$('#customization-json').val(JSON.stringify(customization));
 

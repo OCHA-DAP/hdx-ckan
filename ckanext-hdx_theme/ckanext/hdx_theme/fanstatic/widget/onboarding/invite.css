@@ -64,7 +64,7 @@
 .popup-invite .notification-widget .notification-title {
   background-color: #1ebfb3;
   letter-spacing: 0.01em;
-  padding: 32.5px;
+  padding: 65px/2;
 }
 .popup-invite .notification-widget .notification-title .close {
   position: absolute;

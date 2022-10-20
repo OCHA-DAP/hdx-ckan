@@ -49,11 +49,11 @@ def run_on_startup():
         _generate_license_list()
         # caching.cached_get_group_package_stuff()
 
-    compile_less_on_startup = config.get('hdx.less_compile.onstartup', 'false')
-    if 'true' == compile_less_on_startup:
-        import ckanext.hdx_org_group.helpers.organization_helper as org_helper
-        org_helper.recompile_everything({'model': model, 'session': model.Session,
-                                         'user': 'hdx', 'ignore_auth': True})
+    # compile_less_on_startup = config.get('hdx.less_compile.onstartup', 'false')
+    # if 'true' == compile_less_on_startup:
+    #     import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+    #     org_helper.recompile_everything({'model': model, 'session': model.Session,
+    #                                      'user': 'hdx', 'ignore_auth': True})
 
     # replace original get_proxified_resource_url, check hdx_get_proxified_resource_url for more info
     resourceproxy_plugin.get_proxified_resource_url = hdx_helpers.hdx_get_proxified_resource_url
@@ -532,7 +532,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_member_list': hdx_get.hdx_member_list,
             'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
             'hdx_send_mail_members': hdx_get.hdx_send_mail_members,
-            'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
+            # 'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
             'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list,
             # 'hdx_test_recommend_tags': hdx_get.hdx_test_recommend_tags,
             'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
@@ -599,7 +599,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_resource_id_list': authorize.hdx_resource_id_list,
                 'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
                 'hdx_send_mail_members': authorize.hdx_send_mail_members,
-                'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
+                # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
                 'hdx_resource_download': authorize.hdx_resource_download,
                 'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
                 'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,

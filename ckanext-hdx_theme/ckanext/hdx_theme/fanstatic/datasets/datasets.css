@@ -8,13 +8,26 @@
   min-height: auto;
 }
 .org-logo-large {
-  width: 185px;
-  height: 100%;
-  text-align: center;
+  background-color: #fafafa;
+  width: 370px;
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 .org-logo-large img {
-  max-height: 65px;
-  max-width: 160px;
+  max-height: 125px;
+  max-width: 300px;
+}
+.org-logo-large .logo-placeholder-name {
+  line-height: 26px;
+  font-size: 22px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  width: 60%;
+  overflow: hidden;
 }
 @media (max-width: 768px) {
   .org-logo-large {

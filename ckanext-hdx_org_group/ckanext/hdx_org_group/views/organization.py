@@ -71,7 +71,8 @@ def read(id):
             org_dict = read_logic.org_meta.org_dict
             org_dict.update({
                 'search_template_data': read_logic.search_template_data,
-                'datasets_num': read_logic.org_meta.datasets_num,
+                'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
+                'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
                 'allow_req_membership': read_logic.org_meta.allow_req_membership,
                 # 'group_message_info': read_logic.org_meta.group_message_info,
             })
@@ -114,7 +115,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
                 # 'visualization_config': result.get('visualization_config', ''),
             },
             'search_template_data': org_read_logic.search_template_data,
-            'custom_css_path': org_read_logic.org_meta.custom_css_path,
+            #'custom_css_path': org_read_logic.org_meta.custom_css_path,
             # 'member_count': hdx_helpers.get_group_members(org_id),
             'follower_count': org_read_logic.follower_count,
             'top_line_items': org_read_logic.top_line_items,

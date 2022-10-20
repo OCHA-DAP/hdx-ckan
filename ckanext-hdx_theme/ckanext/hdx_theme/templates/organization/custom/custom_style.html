@@ -1,0 +1,18 @@
+{% asset 'hdx_theme/custom-org-styles' %}
+
+{% set color = customizations['highlight_color'] %}
+{% set logo_bg = customizations['logo_bg_color'] %}
+
+<style>
+  {% if color %}
+    body .container .org-custom-styling h1, body .container .org-custom-styling a:after, body .container .org-custom-styling a {
+      color: {{ color }} !important;
+    }
+  {% endif %}
+
+  {% if logo_bg %}
+    body .container .org-logo-large {
+      background-color: {{ logo_bg }};
+    }
+  {% endif %}
+</style>

@@ -281,14 +281,14 @@ def package_create(context, data_dict):
     )
 
 
-def hdx_create_screenshot_for_cod(context, data_dict):
-    _check_access('hdx_create_screenshot_for_cod', context, data_dict)
-
-    id = _get_or_bust(data_dict, 'id')
-    dataset_dict = _get_action('package_show')(context, {'id': id})
-
-    if is_cod(dataset_dict) == 'true':
-        screenshot.create_screenshot(dataset_dict)
+# def hdx_create_screenshot_for_cod(context, data_dict):
+#     _check_access('hdx_create_screenshot_for_cod', context, data_dict)
+#
+#     id = _get_or_bust(data_dict, 'id')
+#     dataset_dict = _get_action('package_show')(context, {'id': id})
+#
+#     if is_cod(dataset_dict) == 'true':
+#         screenshot.create_screenshot(dataset_dict)
 
 
 def resource_view_create(context, data_dict):

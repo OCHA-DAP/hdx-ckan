@@ -7,6 +7,6 @@
 
 {% block custom_styles %}
     {{ super() }}
-    <link rel="stylesheet" type="text/css"
-          href="{{ org_meta.custom_css_path }}" />
+    {% set customizations = h.load_json(h.hdx_get_extras_element(org_meta.org_dict, value_key="customization")) %}
+    {% snippet "organization/custom/custom_style.html", customizations=customizations %}
 {% endblock %}
