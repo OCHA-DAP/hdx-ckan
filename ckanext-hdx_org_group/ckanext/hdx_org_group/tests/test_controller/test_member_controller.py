@@ -211,3 +211,80 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         member_requests = self._get_action('member_request_list')(context, {'group': 'hdx-test-org'})
         assert len(member_requests) == 1, 'Exactly one member request should exist for this org'
         assert member_requests[0].get('user_name') == test_username
+
+
+class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
+
+    @classmethod
+    def _create_test_data(cls):
+        super(TestMembersDuplicateController, cls)._create_test_data(create_datasets=False, create_members=True)
+
+    def _populate_member_names(self, members, member_with_name_list):
+        ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
+        return ret
+
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_request_membership(self, _mail_recipient_html):
+        test_sysadmin = 'testsysadmin'
+        test_username = 'johndoe1'
+        test_client = self.get_backwards_compatible_test_client()
+        context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
+
+        # removing one member from organization
+        url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
+        test_client.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
+
+        member_list = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+
+        assert 'John Doe1' not in (m[4] for m in member_list)
+
+        # user update - email
+        self._get_action('user_update')(context, {'id': test_sysadmin, 'email': 'test@sys.admin'})
+        usr_dict = self._get_action('user_show')(context, {'id': test_sysadmin})
+        assert usr_dict['email'] == 'test@sys.admin'
+
+        # send a membership request
+        url = h.url_for('ytp_request.new')
+        ret_page = test_client.post(url, params={'organization': 'hdx-test-org', 'role': 'editor', 'save': 'save',
+                                                 'message': 'add me to your organization'},
+                                    extra_environ={"REMOTE_USER": test_username})
+        member_requests = self._get_action('member_request_list')(context, {'group': 'hdx-test-org'})
+        assert len(member_requests) == 1, 'Exactly one member request should exist for this org'
+        assert member_requests[0].get('user_name') == test_username
+
+        member_list = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+        assert 'John Doe1' not in (m[4] for m in member_list)
+
+        # bulk adding members
+        url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
+
+        self.app.post(url, params={'emails': 'johndoe1', 'role': 'editor'},
+                      extra_environ={"REMOTE_USER": test_sysadmin})
+        member_list = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+        assert 'John Doe1' in (m[4] for m in member_list)
+
+        # approve membership request with new capacity admin instead of editor
+        self._get_action("member_request_process")(context, {"member": member_requests[0].get('id'), "role": "admin",
+                                                        "approve": True})
+        member_list = self._get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+        member_list_john = [m for m in member_list if m[4] == 'John Doe1']
+
+        # there should be only 1 member
+        assert len(member_list_john) == 1
+        assert member_list_john[0][3] == 'admin'
