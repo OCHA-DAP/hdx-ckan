@@ -121,7 +121,16 @@ def hdx_mark_qa_completed(context, data_dict):
     context['allow_qa_completed_field'] = True
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
-    return _get_action('package_patch')(context, data_dict)
+    if 'id' in data_dict and 'qa_completed' in data_dict:
+        data_revise_dict = {
+            "match": {"id": data_dict.get('id')},
+            "update": {'qa_completed': data_dict.get('qa_completed')}
+        }
+    else:
+        raise NotFound("package id or key were not provided")
+    return _get_action('package_revise')(context, data_revise_dict)
+
+    # return _get_action('package_patch')(context, data_dict)
 
 
 def hdx_qa_resource_patch(context, data_dict):

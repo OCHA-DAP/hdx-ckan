@@ -96,10 +96,11 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         Tests that qa_completed cannot be set on dataset creation / package_create()
         '''
 
+        package_dict = self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
         # qa_completed field cannot be set via normal package_patch / package_update
-        package_dict = self._package_patch_qa_completed_flag(self.PACKAGE_ID, True, self.NORMAL_USER)
+        package_dict = self._package_patch_qa_completed_flag(package_dict.get('id'), True, self.NORMAL_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
-        package_dict = self._package_patch_qa_completed_flag(self.PACKAGE_ID, True, self.SYSADMIN_USER)
+        package_dict = self._package_patch_qa_completed_flag(package_dict.get('id'), True, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
     @mock.patch('ckanext.hdx_package.helpers.analytics.g')
@@ -110,24 +111,26 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         '''
         sysadmin_userobj = model.User.by_name(self.SYSADMIN_USER)
         normal_userobj = model.User.by_name(self.NORMAL_USER)
+        package_dict_2 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_2})
         try:
             analytics_g.userobj = normal_userobj
-            self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_2, True, self.NORMAL_USER)
+            self._hdx_mark_qa_completed_flag(package_dict_2.get('id'), True, self.NORMAL_USER)
             assert False
         except NotAuthorized as e:
             assert True
 
         analytics_g.userobj = sysadmin_userobj
-        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_2, True, self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+        package_dict = self._hdx_mark_qa_completed_flag(package_dict_2.get('id'), True, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is True
 
         analytics_g.userobj = normal_userobj
         package_dict = self._change_description_of_package(self.PACKAGE_ID_2, self.NORMAL_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
         analytics_g.userobj = sysadmin_userobj
-        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_3, True, self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+        package_dict_3 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_3})
+        package_dict = self._hdx_mark_qa_completed_flag(package_dict_3.get('id'), True, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is True
         package_dict = self._change_description_of_package(self.PACKAGE_ID_3, self.SYSADMIN_USER)
         assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
 
@@ -139,11 +142,12 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
 
         sysadmin_userobj = model.User.by_name(self.SYSADMIN_USER)
         analytics_g.userobj = sysadmin_userobj
-        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_4, True, self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is True
+        package_dict_4 = self._get_action('package_show')({}, {'id': self.PACKAGE_ID_4})
+        package_dict = self._hdx_mark_qa_completed_flag(package_dict_4.get('id'), True, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is True
 
-        package_dict = self._hdx_mark_qa_completed_flag(self.PACKAGE_ID_4, False, self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict and package_dict.get("qa_completed") is False
+        package_dict = self._hdx_mark_qa_completed_flag(package_dict_4.get('id'), False, self.SYSADMIN_USER)
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is False
 
     def _package_patch_qa_completed_flag(self, package_id, qa_completed, user):
         context = {
