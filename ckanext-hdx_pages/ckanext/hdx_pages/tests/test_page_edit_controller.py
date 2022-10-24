@@ -76,7 +76,7 @@ class TestHDXControllerPage(object):
             res = app.post(url, data=post_params, extra_environ={"REMOTE_USER": USER})
             assert '404 Not Found'.lower() in res.status.lower()
             assert 'Sorry, the page you are looking for could not be found.' in res.body
-            assert 'Please check the URL, try the search or go back to our homepage.' in res.body
+            assert 'Please check the URL or login to HDX if you know that you have a permission to see this page.' in res.body
         except AssertionError as ex:
             assert False
         except Exception as ex:

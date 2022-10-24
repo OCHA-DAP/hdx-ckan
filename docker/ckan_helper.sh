@@ -55,5 +55,4 @@ chown -R www-data $webassets_dir
 #hdxckantool less compile
 
 # build all webassets
-# TODO: move this to hdxckantool
-ckan -c /etc/ckan/prod.ini asset build
+hdxckantool webassets

@@ -601,5 +601,25 @@ def user_show(user):
     user_pretty_list(rows)
 
 
+@cli.command(name='webassets')
+@click.pass_context
+def webassets(ctx):
+    """Builds the webassts."""
+
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'asset', 'build']
+    print('Building the webassets...')
+    subprocess.call(cmd)
+    print('Fixing permissions on writeable folders...')
+    # assuming the webassets location is in /srv/webassets...
+    location = '/srv/webassets'
+    os.chown(location, 33, 0)
+    for root, dirs, files in os.walk(location):
+        for item in dirs:
+            os.chown(os.path.join(root, item), 33, 0)
+        for item in files:
+            os.chown(os.path.join(root, item), 33, 0)
+    print('Done.')
+
+
 if __name__ == '__main__':
     cli()
