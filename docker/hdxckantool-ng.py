@@ -4,6 +4,7 @@ import click
 import psycopg2
 import os
 import requests
+import shutil
 import subprocess
 import sys
 # import ckan.cli.sysadmin as ckan_sysadmin
@@ -69,6 +70,7 @@ SOLR =  dict(
     ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
     PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
     CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
+    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-current'))
 )
 
 
@@ -144,6 +146,10 @@ def solr():
     """SOLR related commands."""
     pass
 
+@solr.group()
+def configset():
+    """SOLR configsets related commands."""
+    pass
 
 @cli.command()
 def restart():
@@ -402,17 +408,116 @@ def reinstall_plugins(develop):
                         subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
 
 
+@configset.command(name='check')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to use.")
+def solr_configset_exists(host, port, config_set):
+    """Check the status of SOLR"""
+    try:
+        query = "http://{}:{}/api/cluster/configs?omitHeader=true" \
+            .format(host, port)
+        r = requests.get(query)
+        if r.status_code != 200:
+            raise
+        config_sets = r.json()["configSets"]
+        if config_set in config_sets:
+            return True
+    except:
+        print("Can't query SOLR...")
+        print(sys.exc_info())
+    return False
+
+
+@configset.command(name='upload')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-d', '--directory', default='/srv/ckan/docker/solr/hdx-current', show_default=True, help="Directory containing the configset to be uploaded.")
+@click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to use.")
+@click.pass_context
+def solr_configset_upload(ctx, host, port, directory, config_set):
+    """Uploads a configset to SOLR """
+    try:
+        zipbasename = '/tmp/solr_config_set'
+        zipfile = f"{zipbasename}.zip"
+        shutil.make_archive(zipbasename, 'zip', os.path.dirname(directory), os.path.basename(directory))
+        zipobj = open(zipfile, 'rb')
+        with open(zipfile, 'rb') as zipobj:
+            r = requests.put(
+                "http://{}:{}/api/cluster/configs/{}".format(host, port, config_set),
+                data=zipobj
+            )
+        if os.path.exists(zipfile):
+            os.remove(zipfile)
+        if r.status_code != 200:
+            print(r.json()["error"]["msg"])
+            raise
+        print("The configset {} has been uploaded successfully.".format(config_set))
+    except Exception as e:
+        print("Can't query SOLR or cant make the archive you want.")
+        print(str(e))
+
+
+@configset.command(name='remove')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to remove.")
+@click.pass_context
+def solr_configset_del(ctx, host, port, config_set):
+    """Uploads a configset to SOLR """
+    try:
+        if not ctx.invoke(solr_configset_exists, host=host, port=port, config_set=config_set):
+            print("Configset {} does not exists.".format(config_set))
+            return
+        r = requests.delete(
+            "http://{}:{}/api/cluster/configs/{}".format(host, port, config_set),
+        )
+        if r.status_code != 200:
+            print(r.json()["error"]["msg"])
+            raise
+        print("The configset {} has been successfully removed.".format(config_set))
+    except:
+        print("Can't query SOLR or cant make the archive you want.")
+
+
+@configset.command(name='create')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-t', '--template', default=SOLR['CONFIGSET'], show_default=True, help="Configset template to use.")
+@click.option('-n', '--name', default=SOLR['CONFIGSET'], show_default=True, help="Configset name.")
+@click.pass_context
+def solr_configset_create(ctx, host, port, template, name):
+    """Creates a configset on SOLR """
+    try:
+        r = requests.post(
+            "http://{}:{}/api/cluster/configs/{}".format(host, port, template),
+            json= {
+                "create": {
+                    "name": template,
+                    "baseConfigSet": template,
+                    "configSetProp.immutable": "false"
+                }
+            }
+        )
+        if r.status_code != 200:
+            print(r.json()["error"]["msg"])
+            raise
+        print("The configset {} has been created successfully.".format(template))
+    except Exception as e:
+        print("Can't query SOLR or cant create the configset you want.")
+        print(str(e))
+
 
 @solr.command(name='add')
 @click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
 @click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
 @click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
-@click.option('-s', '--config-set', default='hdx-solr-main', show_default=True, help="SOLR Configset to use.")
+@click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to use.")
 @click.pass_context
 def solr_add(ctx, host, port, collection, config_set):
     """Create a SOLR collection"""
     try:
-        if ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+        if ctx.invoke(solr_collection_exists, host=host, port=port, collection=collection):
             print("Collection {} already exists.".format(collection))
             return
         query = "http://{}:{}/solr/admin/collections?action=CREATE&name={}&collection.configName={}&numShards=1" \
@@ -422,15 +527,16 @@ def solr_add(ctx, host, port, collection, config_set):
             print(r.json()["error"]["msg"])
             raise
         print("The collection {} has been created successfully.".format(collection))
-    except:
+    except Exception as e:
         print("Can't query SOLR")
+        print(str(e))
 
 
 @solr.command(name='check')
 @click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
 @click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
 @click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Core (Collection actually).")
-def solr_exists(host, port, collection):
+def solr_collection_exists(host, port, collection):
     """Check the status of SOLR"""
     try:
         query = "http://{}:{}/solr/admin/collections?action=CLUSTERSTATUS" \
