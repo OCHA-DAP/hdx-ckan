@@ -764,7 +764,7 @@ admin-custom-pages-scripts:
     preload:
       - hdx_theme/admin-scripts
   contents:
-      - admin/custom_pages.js
+      - custom_pages/custom_pages.js
 
 base-dashboard-scripts:
   <<: *common-js
