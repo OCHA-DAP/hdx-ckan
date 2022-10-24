@@ -534,23 +534,35 @@ def hdx_resource_update_metadata(context, data_dict):
     if data_dict.get('shape_info'):
         data_dict['shape_info'] = geopreview.add_to_shape_info_list(data_dict.get('shape_info'), resource)
 
+    update_resource_key = 'update__resources__' + resource['id']
+    revise_data_dict = {
+        'match': {
+            'id': resource['package_id']
+        },
+        update_resource_key: {}
+    }
+
     for key, value in data_dict.items():
         if key in allowed_fields:
             resource_was_modified = True
-            resource[key] = value
+            revise_data_dict[update_resource_key][key] = value
 
     if resource_was_modified:
         # we don't want the resource update to generate another
         # geopreview transformation
         context['do_geo_preview'] = False
-        resource = _get_action('resource_update')(context, resource)
+        revise_response = _get_action('package_revise')(context, revise_data_dict)
+        resource_list = revise_response.get('package', {}).get('resources', [])
+        response = next(
+            (r for r in resource_list if r['id'] == resource['id']),
+            {'error': 'Resource not found in response from package_revise'}
+        )
 
-        # if a geopreview was just updated generate a screenshot
-        # not used anymore, requested in HDX-8441
-        # if 'shape_info' in data_dict.keys():
-        #     _get_action('hdx_create_screenshot_for_cod')(context, {'id': resource.get('package_id')})
 
-    return resource
+    else:
+        response = resource
+
+    return response
 
 
 def hdx_resource_delete_metadata(context, data_dict):
