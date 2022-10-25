@@ -5,24 +5,22 @@ Created on Jul 07, 2015
 '''
 
 import logging
-import six
 
-import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_package.helpers.geopreview as geopreview
-import ckanext.hdx_package.helpers.fs_check as fs_check
-import ckanext.hdx_package.helpers.helpers as helpers
-import ckanext.hdx_package.helpers.screenshot as screenshot
-from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
-from ckanext.hdx_package.helpers.analytics import is_cod
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
+import six
 from flask import request
 
 import ckan.lib.plugins as lib_plugins
 import ckan.logic as logic
 import ckan.logic.action.create as core_create
+import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
-from ckan.common import _
+import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.fs_check as fs_check
+import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.helpers as helpers
+from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
+from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
 
 _get_action = logic.get_action
 _check_access = logic.check_access
@@ -59,8 +57,28 @@ def resource_create(context, data_dict):
         except RuntimeError as re:
             log.debug('This usually happens for tests when there is no HTTP request: ' + six.text_type(re))
 
-    result_dict = run_action_without_geo_preview(core_create.resource_create, context, data_dict)
-    return result_dict
+    # result_dict = run_action_without_geo_preview(core_create.resource_create, context, data_dict)
+
+    pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
+    model = context['model']
+    pkg = model.Package.get(pkg_id_or_username)
+    pkg_id = pkg.id
+    data_revise_dict = {
+        "match": {"id": pkg_id},
+        "update__resources__extend": [data_dict]
+    }
+    revise_response = run_action_without_geo_preview(core_update.package_revise, context, data_revise_dict)
+    # _get_action('package_revise')(context, data_revise_dict)
+    package = revise_response.get('package', {})
+    if isinstance(package, str):
+        package = _get_action('package_show')(context, {'id': pkg_id})
+
+    res_list = package.get('resources', [])
+    return res_list[-1]
+    # resource_list = revise_response.get('package', {}).get('resources', [])
+    # res_index = int(data_dict.get('position', '-1'))
+    # return resource_list[-1]
+    # return result_dict
 
 
 @analytics.analytics_wrapper_4_package_create
