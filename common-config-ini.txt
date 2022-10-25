@@ -98,7 +98,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata s3filestore showcase stats resource_proxy text_view recline_view datastore
+ckan.plugins = security hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata s3filestore showcase stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -371,3 +371,13 @@ hdx.wordpress.category.licenses=581
 # HDX http headers
 hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
 hdx.http_headers.mimetypes = application/json,text/html,text/json
+
+# Security Extension Config
+ckanext.security.domain = data.humdata.local
+ckanext.security.redis.host = gisredis
+ckanext.security.redis.port = 6379
+ckanext.security.redis.db = 9
+# 15 minute timeout with 10 attempts
+ckanext.security.lock_timeout = 900
+ckanext.security.login_max_count = 10
+ckanext.security.brute_force_key = user_name
