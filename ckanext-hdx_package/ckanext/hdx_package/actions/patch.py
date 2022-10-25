@@ -108,10 +108,23 @@ def hdx_mark_broken_link_in_resource(context, data_dict):
     :rtype: dict
     '''
 
-    data_dict['broken_link'] = True
-    context['allow_broken_link_field'] = True
-    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
-    return _get_action('resource_patch')(context, data_dict)
+    resource_id = data_dict.get('id')
+    if resource_id:
+        resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        package_id = resource_dict.get('package_id')
+        if not package_id:
+            raise NotFound("dataset was not found")
+        data_revise_dict = {
+            "match": {"id": data_dict.get('id')},
+            'update__resources__' + resource_id: {'broken_link': True}
+        }
+        # data_dict['broken_link'] = True
+        context['allow_broken_link_field'] = True
+        context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+        # return _get_action('resource_patch')(context, data_dict)
+        return _get_action('package_revise')(context, data_revise_dict)
+    else:
+        raise NotFound("resource id was not provided")
 
 
 def hdx_mark_qa_completed(context, data_dict):
