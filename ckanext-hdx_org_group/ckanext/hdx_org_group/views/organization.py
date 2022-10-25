@@ -207,7 +207,7 @@ def request_new():
             log.error(str(e))
             h.flash_error(_('Request can not be sent. Contact an administrator'))
         if sent_successfully:
-            h.redirect_to('user_dashboard_organizations')
+            return h.redirect_to('dashboard.organizations')
 
     hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
                         [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
