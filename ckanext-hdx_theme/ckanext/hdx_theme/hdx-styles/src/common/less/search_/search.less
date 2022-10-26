@@ -293,10 +293,11 @@
 }
 
 @media(max-width: 767px) {
-  .header-search-form .search-ahead {
+  .navbar-header .search-ahead {
     width: 100vw;
-    left: -90px;
-    padding: 0 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 5px 5px @lightGrayColor; // remove right box-shadow
     //top: @headerNavHeight + @global-header-height - 2px;
 
     .ahead-type{

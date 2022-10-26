@@ -52,6 +52,11 @@ $('document').ready(function(){
         $('#search-recs').html(html);
     }
 
+    // Move search-ahead element in parent container to fix absolute positioning
+    if(window.matchMedia('(max-width:767px)').matches) { // 767 = @cut-point-tablet
+      $('.search-ahead').appendTo('.navbar-header');
+    }
+
     var onSearch = function(){
         let value = hdxUtil.text.sanitize($(this).val());
         var searchInfo = performSearchQuery(value);
@@ -63,7 +68,7 @@ $('document').ready(function(){
         // console.log('results are: ' + searchInfo.results);
         // console.log('________________________' );
         var search = searchInfo.results;
-        var $results = $(this).parents("form").find('.search-ahead');
+        var $results = $(this).parents(".navbar-header").find('.search-ahead');
         var html = "";
         html += "<ul>";
 
@@ -128,7 +133,7 @@ $('document').ready(function(){
     });
 
     $('#q, #q2, #qMobile').blur(function(){
-        var $results = $(this).parents("form").find('.search-ahead');
+        var $results = $(this).parents(".navbar-header").find('.search-ahead');
         // $results.html('');
         $results.hide();
     });
