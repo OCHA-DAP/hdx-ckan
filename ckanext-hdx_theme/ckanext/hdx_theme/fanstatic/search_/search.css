@@ -247,12 +247,13 @@
   }
 }
 @media (max-width: 767px) {
-  .header-search-form .search-ahead {
+  .navbar-header .search-ahead {
     width: 100vw;
-    left: -90px;
-    padding: 0 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 5px 5px #cccccc;
   }
-  .header-search-form .search-ahead .ahead-type {
+  .navbar-header .search-ahead .ahead-type {
     font-size: 14px;
   }
 }
