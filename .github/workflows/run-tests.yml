@@ -11,7 +11,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Building CKAN / PY2 docker image
         run: docker-compose build ckan
       - name: Building CKAN / PY3 docker image
