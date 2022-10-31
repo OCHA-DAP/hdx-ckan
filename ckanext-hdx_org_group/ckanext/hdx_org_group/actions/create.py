@@ -177,12 +177,14 @@ def hdx_member_create(context, data_dict=None):
     _check_access('member_create', context, data_dict)
 
     # Look up existing, in case it exists. For members, we want all, not only active. It will not create other members,
-    # but reuse one previous member
+    # but reuse one previous member. Result is ordered by state, which displays the 'active' members first
+    # in case they exist. This avoids duplicated members
     if obj_type == 'user':
         member = model.Session.query(model.Member). \
             filter(model.Member.table_name == obj_type). \
             filter(model.Member.table_id == obj.id). \
-            filter(model.Member.group_id == group.id).first()
+            filter(model.Member.group_id == group.id). \
+            order_by(model.Member.state).first()
     else:
         member = model.Session.query(model.Member). \
             filter(model.Member.table_name == obj_type). \
