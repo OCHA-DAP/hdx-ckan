@@ -1,5 +1,11 @@
 {% extends "package/snippets/resource_item.html" %}
-{% block in_review %}{% endblock %}
+{% block in_review %}{% if res.in_quarantine %}in-quarantine{% endif %}{% endblock %}
+
+{% block in_quarantine_label %}
+  {% if res.in_quarantine %}
+    <span class="label label-info label-small">{{ _('In quarantine') }}</span>
+  {% endif %}
+{% endblock %}
 
 {% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
 {% block resource_item_edit %}
