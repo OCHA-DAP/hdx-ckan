@@ -64,8 +64,8 @@ def resource_update(context, data_dict):
     # new_file_uploaded = bool(data_dict.get('upload'))
 
     if data_dict.get('resource_type', '') != 'file.upload':
-        #If this isn't an upload, it is a link so make sure we update
-        #the url_type otherwise solr will screw everything up
+        # If this isn't an upload, it is a link so make sure we update
+        # the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
 
         # we need to overwrite size field (not just setting it to None or pop) otherwise
@@ -85,12 +85,26 @@ def resource_update(context, data_dict):
         if data_dict.get('datastore_active', 'true') in ('true', 'True'):
             data_dict['datastore_active'] = True
 
-    result_dict = run_action_without_geo_preview(core_update.resource_update, context, data_dict)
+    # result_dict = run_action_without_geo_preview(core_update.resource_update, context, data_dict)
+    # return result_dict
+    ## if new_file_uploaded:
+    ##     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
 
-    # if new_file_uploaded:
-    #     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
+    pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
+    model = context['model']
+    pkg = model.Package.get(pkg_id_or_username)
+    pkg_id = pkg.id
+    data_revise_dict = {
+        "match": {"id": pkg_id},
+        "update__resources__" + id: data_dict
+    }
+    revise_response = run_action_without_geo_preview(core_update.package_revise, context, data_revise_dict)
+    package = revise_response.get('package', {})
+    if isinstance(package, str):
+        package = _get_action('package_show')(context, {'id': pkg_id})
 
-    return result_dict
+    res_list = [res for res in package.get('resources', []) if res.get('id') == id]
+    return res_list[-1]
 
 
 def run_action_without_geo_preview(action, context, data_dict):
@@ -191,7 +205,7 @@ def package_update(context, data_dict):
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
     if 'groups' in data_dict:
-       data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
+        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
 
     if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
         data_dict['review_date'] = datetime.datetime.utcnow()
@@ -244,7 +258,7 @@ def package_update(context, data_dict):
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
         if 'clear_upload' in resource or resource.get('upload'):
-            #this needs to be run while the upload field still exists
+            # this needs to be run while the upload field still exists
             flag_if_file_uploaded(context, resource)
 
             # file uploads/clearing
@@ -272,7 +286,7 @@ def package_update(context, data_dict):
         model.Session.rollback()
         raise ValidationError(errors)
 
-    #avoid revisioning by updating directly
+    # avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
@@ -293,7 +307,7 @@ def package_update(context, data_dict):
     # Needed to let extensions know the new resources ids
     model.Session.flush()
     for index, (resource, upload) in enumerate(
-            zip(data.get('resources', []), resource_uploads)):
+        zip(data.get('resources', []), resource_uploads)):
         resource['id'] = pkg.resources[index].id
 
         if upload:
@@ -495,19 +509,20 @@ def hdx_package_update_metadata(context, data_dict):
                       'data_update_frequency']
 
     package = _get_action('package_show')(context, data_dict)
-    requested_groups = [el.get('id', el.get('name','')) for el in data_dict.get('groups',[])]
+    requested_groups = [el.get('id', el.get('name', '')) for el in data_dict.get('groups', [])]
     for key, value in data_dict.items():
         if key in allowed_fields:
             package[key] = value
     if not package['notes']:
         package['notes'] = ' '
     package = _get_action('package_update')(context, package)
-    db_groups = [el.get('name','') for el in package.get('groups',[]) ]
+    db_groups = [el.get('name', '') for el in package.get('groups', [])]
 
     if len(requested_groups) != len(db_groups):
         not_saved_groups = set(requested_groups) - set(db_groups)
         log.warn('Indicator: {} - num of groups in request is {} but only {} are in the db. Difference: {}'.
-                 format(package.get('name','unknown'),len(requested_groups), len(db_groups), ", ".join(not_saved_groups)))
+                 format(package.get('name', 'unknown'), len(requested_groups), len(db_groups),
+                        ", ".join(not_saved_groups)))
 
     return package
 

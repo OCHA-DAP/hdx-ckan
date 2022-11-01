@@ -58,6 +58,7 @@ def resource_create(context, data_dict):
             log.debug('This usually happens for tests when there is no HTTP request: ' + six.text_type(re))
 
     # result_dict = run_action_without_geo_preview(core_create.resource_create, context, data_dict)
+    # return result_dict
 
     pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
     model = context['model']
@@ -68,17 +69,12 @@ def resource_create(context, data_dict):
         "update__resources__extend": [data_dict]
     }
     revise_response = run_action_without_geo_preview(core_update.package_revise, context, data_revise_dict)
-    # _get_action('package_revise')(context, data_revise_dict)
     package = revise_response.get('package', {})
     if isinstance(package, str):
         package = _get_action('package_show')(context, {'id': pkg_id})
 
     res_list = package.get('resources', [])
     return res_list[-1]
-    # resource_list = revise_response.get('package', {}).get('resources', [])
-    # res_index = int(data_dict.get('position', '-1'))
-    # return resource_list[-1]
-    # return result_dict
 
 
 @analytics.analytics_wrapper_4_package_create
@@ -360,5 +356,3 @@ def reindex_package_on_hdx_hxl_preview_view(view_type, context, data_dict):
             log.error("Error: package {} not found.".format(package_id))
         except Exception as e:
             log.error(str(e))
-
-
