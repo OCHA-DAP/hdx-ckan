@@ -52,10 +52,12 @@ $('document').ready(function(){
         $('#search-recs').html(html);
     }
 
-    // Move search-ahead element in parent container to fix absolute positioning
+    // move search-ahead element in parent container to fix absolute positioning
     if(window.matchMedia('(max-width:767px)').matches) { // 767 = @cut-point-tablet
-      $('.search-ahead').appendTo('.navbar-header');
+      $('.navbar-header .search-ahead').appendTo('.navbar-header');
     }
+    // calculate the top property value for search dropdown on responsive devices
+    calculate_search_top_positioning();
 
     var onSearch = function(){
         let value = hdxUtil.text.sanitize($(this).val());
@@ -71,6 +73,9 @@ $('document').ready(function(){
         var $results = $(this).parents(".navbar-header").find('.search-ahead');
         var html = "";
         html += "<ul>";
+
+        // (re)calculate the top property value because .header-message appears after a while on staging/dev
+        calculate_search_top_positioning();
 
         if (prevSearch != null && prevSearch.length > 0){
             $(prevSearch).each(function(idx, el){
@@ -146,4 +151,12 @@ function process_title(title, termList){
     title = title.replace(re, '<strong>$&</strong>');
   }
   return title;
+}
+
+// .header-message is overwritten by nginx on staging/dev
+function calculate_search_top_positioning() {
+  if(window.matchMedia('(max-width:767px)').matches) { // 767 = @cut-point-tablet
+    let top_value = $('.global-header').outerHeight() + $('.hdx-header').outerHeight();
+    $('.navbar-header .search-ahead').css('top',  top_value + 'px');
+  }
 }
