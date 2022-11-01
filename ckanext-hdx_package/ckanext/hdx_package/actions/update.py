@@ -52,6 +52,11 @@ def resource_update(context, data_dict):
     '''
 
     id = _get_or_bust(data_dict, "id")
+    model = context['model']
+    resource_obj = model.Resource.get(id)
+    if not resource_obj:
+        log.debug('Could not find resource %s', id)
+        raise NotFound(_('Resource was not found.'))
 
     process_batch_mode(context, data_dict)
     # flag_if_file_uploaded(context, data_dict)
@@ -90,12 +95,19 @@ def resource_update(context, data_dict):
     ## if new_file_uploaded:
     ##     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
 
-    pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
-    model = context['model']
-    pkg = model.Package.get(pkg_id_or_username)
-    pkg_id = pkg.id
+
+    # pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
+    # pkg = model.Package.get(pkg_id_or_username)
+
+
+    pkg_id = resource_obj.package.id
+
     data_revise_dict = {
         "match": {"id": pkg_id},
+        "filter": [
+            "+resources__" + id + "__id",
+            "-resources__" + id + "__*"
+        ],
         "update__resources__" + id: data_dict
     }
     revise_response = run_action_without_geo_preview(core_update.package_revise, context, data_revise_dict)
