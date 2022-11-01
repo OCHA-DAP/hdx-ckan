@@ -453,6 +453,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_show_edit': hdx_get.package_show_edit,
             'package_validate': hdx_get.package_validate,
             'shape_info_show': hdx_get.shape_info_show,
+            'fs_check_info_show': hdx_get.fs_check_info_show,
             'hdx_member_list': hdx_get.hdx_member_list,
             'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
             'hdx_send_mail_members': hdx_get.hdx_send_mail_members,

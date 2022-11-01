@@ -656,6 +656,16 @@ def shape_info_show(context, data_dict):
     return shape_infos
 
 
+@logic.side_effect_free
+def fs_check_info_show(context, data_dict):
+    dataset_dict = get_action('package_show')(context, data_dict)
+
+    fs_check_infos = [{r.get('name'): json.loads(r.get('fs_check_info'))} for r in dataset_dict.get('resources', []) if
+                      r.get('fs_check_info')]
+
+    return fs_check_infos
+
+
 # def _check_dataset_preview_selected_value(context, data_dict, property_name):
 #     use_cache = context.get('use_cache', True)
 #     current_value = data_dict.get(property_name) not in (True, False)
