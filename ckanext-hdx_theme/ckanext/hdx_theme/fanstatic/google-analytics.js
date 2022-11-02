@@ -130,6 +130,14 @@ $(
                     'valueMap': {
                         '1': 'on'
                     }
+                },
+                'ext_administrative_divisions': {
+                    'name': 'administrative divisions filter',
+                    'isList': false,
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 }
             };
 
