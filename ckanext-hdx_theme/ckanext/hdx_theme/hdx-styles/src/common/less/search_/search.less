@@ -296,8 +296,9 @@
   .navbar-header .search-ahead {
     width: 100vw;
     left: 50%;
+    top: 95px; // used as a fallback if the jQuery calculation doesn't work
     transform: translateX(-50%);
-    box-shadow: 0px 5px 5px @lightGrayColor; // remove right box-shadow
+    box-shadow: 0 5px 5px @lightGrayColor; // remove right box-shadow
     //top: @headerNavHeight + @global-header-height - 2px;
 
     .ahead-type{

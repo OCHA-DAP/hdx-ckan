@@ -250,8 +250,9 @@
   .navbar-header .search-ahead {
     width: 100vw;
     left: 50%;
+    top: 95px;
     transform: translateX(-50%);
-    box-shadow: 0px 5px 5px #cccccc;
+    box-shadow: 0 5px 5px #cccccc;
   }
   .navbar-header .search-ahead .ahead-type {
     font-size: 14px;
