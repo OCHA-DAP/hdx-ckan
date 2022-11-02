@@ -10,6 +10,8 @@ Notes
   Please note that this file starts with :code:`-c requirements.txt`
   This tells *pip-compile* to take into consideration the requirements from that file
   when compiling the dev dependencies
+* IMPORTANT ! The owner of the project folder needs to be the same as the user that runs the *pip-compile* and
+  *pip-sync* commands. Otherwise you can get *RemoteNotFoundError* errors when pip tries to use vcs (git).
 
 
 Compilation steps
@@ -19,7 +21,7 @@ Compilation steps
     *  FOR PYTHON 2::
 
         pip install pip-tools==5.5.0
-        
+
     *  FOR PYTHON 3::
 
         pip install pip-tools==6.6.0
