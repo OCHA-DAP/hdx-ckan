@@ -27,6 +27,7 @@
   </a>
   {% endblock %}
   <div class="update-date">
+    {% block in_quarantine_label %}{% endblock %}
     {{ _('Updated') }}:
     {{ h.hdx_render_resource_updated_date(res, pkg) }}
   </div>
