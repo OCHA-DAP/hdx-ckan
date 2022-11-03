@@ -3,6 +3,7 @@ import logging
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
+import ckanext.hdx_org_group.helpers.analytics as org_analytics
 
 log = logging.getLogger(__name__)
 _check_access = tk.check_access
@@ -54,3 +55,6 @@ def hdx_send_new_org_request(context, data_dict):
         hdx_mailer.mail_recipient([{'display_name': data_dict.get('your_name', ''), 'email': ckan_email}],
                                   subject, email_data, footer=ckan_email,
                                   snippet='email/content/new_org_request_confirmation_to_user.html')
+
+        org_analytics.OrganizationRequestAnalyticsSender(data_dict.get('name', ''), data_dict.get('org_type', '')) \
+            .send_to_queue()

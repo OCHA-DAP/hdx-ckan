@@ -187,6 +187,9 @@
 .qa-package-details .resource-item.in-review {
   opacity: 60%;
 }
+.qa-package-details .resource-item.in-quarantine > *:not(.more-options) {
+  opacity: 60%;
+}
 .qa-package-details .nav.nav-tabs {
   background-color: #fff;
 }
