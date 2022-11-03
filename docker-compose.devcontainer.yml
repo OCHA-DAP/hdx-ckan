@@ -134,7 +134,7 @@ services:
         soft: 65000
         hard: 65000
     volumes:
-      - "./docker/solr/configsets:/configsets"
+      - "./ckanext-hdx_search/ckanext/hdx_search/:/configsets"
       - "./docker/solr/init:/docker-entrypoint-initdb.d"
       - "solr-logs:/opt/solr/server/logs"
       - "solr-data:/var/solr/data"

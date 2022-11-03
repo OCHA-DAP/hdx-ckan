@@ -4,8 +4,6 @@ cd /opt/solr
 
 echo "waiting for zookeeper for a bit..."
 sleep 10
-echo "alright, uploading all configset..."
-for c in $(ls /configsets/); do
-    bin/solr zk upconfig -n $c -d /configsets/$c;
-done
+echo "alright, uploading hdx-search configset..."
+bin/solr zk upconfig -n hdx-current -d /configsets/hdx-solr;
 echo "done."
