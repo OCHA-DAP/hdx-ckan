@@ -53,3 +53,6 @@ chown -R www-data $webassets_dir
 #sv start pgb || exit 1
 
 #hdxckantool less compile
+
+# build all webassets
+hdxckantool webassets

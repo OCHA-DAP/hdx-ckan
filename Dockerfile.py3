@@ -62,7 +62,7 @@ RUN apt-get -qq -y update && \
       unit unit-python3.8 && \
     ln -sf /usr/lib/unit/modules/python3.8.unit.so /usr/lib/unit/modules/python.unit.so && \
     # prepare files and folders
-    mkdir -p /var/log/ckan /srv/filestore /etc/services.d/unit /etc/ckan && \
+    mkdir -p /var/log/ckan /srv/filestore /srv/webassets /etc/services.d/unit /etc/ckan && \
     cd /srv/ckan && \
     python -m pip install --upgrade pip && \
     pip install -r requirement-setuptools.txt && \

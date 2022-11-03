@@ -4248,8 +4248,7 @@ label.terms-of-service:after {
   margin-right: 20px;
 }
 .intro-section .org-logo-large {
-  background-color: #fff;
-  border: 1px solid #fff;
+  background-color: #fafafa;
   width: 370px;
   height: 200px;
   display: flex;
@@ -4266,7 +4265,7 @@ label.terms-of-service:after {
   font-display: block;
   font-weight: 400;
   font-size: 36px;
-  color: #0088FF;
+  color: #333333;
   line-height: 1;
   margin: 0;
 }
@@ -4386,7 +4385,7 @@ label.terms-of-service:after {
   background-color: #ffffff;
 }
 #floatingLogo .table-valign {
-  background-color: #fff;
+  background-color: #fafafa;
   width: 75px;
   height: 75px;
   display: flex;

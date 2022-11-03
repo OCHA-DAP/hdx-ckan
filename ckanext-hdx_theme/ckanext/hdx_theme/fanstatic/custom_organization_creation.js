@@ -1,10 +1,15 @@
 $(document).ready(function(){
-    $('.create-org header ul').hide();
+  $('.create-org header ul').hide();
 	$('#field-highlight-color, #field-logo-bg-color').spectrum({
 		preferredFormat: "hex",
+    allowEmpty:true,
 		showInput: true,
-});
-	$('.visualization_colors').spectrum({preferredFormat: "hex",showInput: true});
+  });
+	$('.visualization_colors').spectrum({
+    preferredFormat: "hex",
+    allowEmpty:true,
+    showInput: true
+  });
 	//When checkbox is clicked toogle customization fields
 	$('#field-custom_org').change(function(e){
         if ( $('#field-custom_org').is(':checked') ){
@@ -33,13 +38,15 @@ $(document).ready(function(){
   });
 
 	$('#field-highlight-color, #field-logo-bg-color').change(function(){
-		color = this.value;
-		var rainbow = new Rainbow();
-		rainbow.setNumberRange(1, 9);
-		rainbow.setSpectrum(lighterColor(color, .5), darkerColor(color, .5));
-		for (var i = 1; i <= 9; i++) {
-    		$('#color-'+i).spectrum("set", rainbow.colourAt(i));
-		}
+		let color = this.value;
+    if (color){
+      var rainbow = new Rainbow();
+      rainbow.setNumberRange(1, 9);
+      rainbow.setSpectrum(lighterColor(color, .5), darkerColor(color, .5));
+      for (var i = 1; i <= 9; i++) {
+        $('#color-'+i).spectrum("set", rainbow.colourAt(i));
+      }
+    }
 	});
 
 	//On form submit

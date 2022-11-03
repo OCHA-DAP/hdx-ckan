@@ -546,8 +546,9 @@ def hdx_resource_update_metadata(context, data_dict):
         resource = _get_action('resource_update')(context, resource)
 
         # if a geopreview was just updated generate a screenshot
-        if 'shape_info' in data_dict.keys():
-            _get_action('hdx_create_screenshot_for_cod')(context, {'id': resource.get('package_id')})
+        # not used anymore, requested in HDX-8441
+        # if 'shape_info' in data_dict.keys():
+        #     _get_action('hdx_create_screenshot_for_cod')(context, {'id': resource.get('package_id')})
 
     return resource
 

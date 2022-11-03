@@ -71,7 +71,8 @@ def read(id):
             org_dict = read_logic.org_meta.org_dict
             org_dict.update({
                 'search_template_data': read_logic.search_template_data,
-                'datasets_num': read_logic.org_meta.datasets_num,
+                'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
+                'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
                 'allow_req_membership': read_logic.org_meta.allow_req_membership,
                 # 'group_message_info': read_logic.org_meta.group_message_info,
             })
@@ -206,7 +207,7 @@ def request_new():
             log.error(str(e))
             h.flash_error(_('Request can not be sent. Contact an administrator'))
         if sent_successfully:
-            h.redirect_to('user_dashboard_organizations')
+            return h.redirect_to('dashboard.organizations')
 
     hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
                         [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]

@@ -66,3 +66,22 @@ class OrganizationCreateAnalyticsSender(AbstractAnalyticsSender):
             }
         }
 
+
+class OrganizationRequestAnalyticsSender(AbstractAnalyticsSender):
+
+    def __init__(self, org_name, org_type):
+        super(OrganizationRequestAnalyticsSender, self).__init__()
+        event_name = 'org request'
+        self.analytics_dict = {
+            'event_name': event_name,
+            'mixpanel_meta': {
+                'org name': org_name,
+                'org type': org_type
+            },
+            'ga_meta': {
+                'ec': 'organization',  # event category
+                'ea': event_name,  # event action
+                'el': org_name,  # event label
+                'cd2': org_type
+            }
+        }

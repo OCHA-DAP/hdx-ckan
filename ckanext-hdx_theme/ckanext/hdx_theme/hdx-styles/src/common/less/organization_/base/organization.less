@@ -13,7 +13,7 @@
 
 //override vars for the WFP Page
 
-@logoBackgroundColor: @whiteColor;
+
 @logoBorderColor: @whiteColor;
 
 @defaultLinkColor: @wfpBlueColor;
@@ -27,14 +27,12 @@
   }
 
   .org-logo-large{
-    background-color: @logoBackgroundColor;
-    border: 1px solid @logoBorderColor;
-    .org-logo(370px, 200px, 300px, 125px);
+    .org-logo-large();
   }
 
   .org-title{
     .gothamBookFont(36px);
-    color: @wfpBlueColor;
+    color: @darkGrayColor;
     line-height: 1;
     margin: 0;
   }
