@@ -57,7 +57,11 @@
     element = element instanceof jQuery ? element : jQuery(element);
     // Changed BY HDX to not call the alert() function because of incompatibility
     // with bootstrap 3
-    return element.append(jQuery('<a class="close" href="#">&times;</a>'));
+    // if it doesn't have the close button, append it
+    if(!element.find('a.close').length) {
+      return element.append(jQuery('<a class="close" href="#">&times;</a>'));
+    }
+    return element;
   };
 
   // Initialize any alerts already on the page.
