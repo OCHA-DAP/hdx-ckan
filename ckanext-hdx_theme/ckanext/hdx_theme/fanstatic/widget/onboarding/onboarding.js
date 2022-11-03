@@ -21,6 +21,24 @@ function notYou(){
     $('#field-login').focus();
 }
 
+function checkLockout(event) {
+  let username = $("#field-login").val();
+  let response = $.ajax({
+    type: "GET",
+    url: `/api/check_lockout?user=${username}`,
+    cache: false,
+    async: false
+  }).responseText;
+  if (response) {
+    let json = JSON.parse(response);
+    if (json.result === true){
+      _showLoginError(`Too many wrong attempts. Login locked for ${json.timeout} seconds. Please try again later!`);
+      event.preventDefault();
+    }
+  }
+
+}
+
 function showContributorPopup(popupId, pkgTitle, pkgOwnerOrg, pkgId, overwritePopupTitle){
   spawnRecaptcha(popupId);
   //populate popup with hidden fields content
@@ -109,7 +127,17 @@ function showOnboardingWidget(id, elid, val){
     return false;
 }
 
+function _showLoginError(loginError) {
+  var errMsg = $("#loginPopup").find(".error-message");
+  errMsg.text(loginError);
+  $("#field-login").addClass("error");
+  $("#field-password").addClass("error");
+  notYou();
+  errMsg.show();
+}
+
 $(document).ready(function(){
+    $("#hdx-login-form").submit(checkLockout);
     //check cookies
     var loginCookie = $.cookie("hdx_login");
     if (loginCookie){
@@ -141,13 +169,7 @@ $(document).ready(function(){
     //check for login error
     var loginError = $("#login-error").text();
     if (loginError && loginError != ""){
-        var errMsg = $("#loginPopup").find(".error-message");
-        errMsg.text(loginError);
-        $("#field-login").addClass("error");
-        $("#field-password").addClass("error");
-        notYou();
-        errMsg.show();
-
+      _showLoginError(loginError);
     }
 
     //check for login info message
