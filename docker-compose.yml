@@ -16,7 +16,7 @@ services:
     hostname: solr
     container_name: solr
     volumes:
-      - "./docker/solr/configsets:/configsets"
+      - "./ckanext-hdx_search/ckanext/hdx_search/:/configsets"
 
   zookeeper:
     image: zookeeper:3.6
