@@ -314,9 +314,6 @@
   max-width: 1170px;
   margin: 0 auto;
 }
-.navbar.new-header .navbar-header {
-  position: relative;
-}
 .pagination-wrapper {
   text-align: center;
 }
