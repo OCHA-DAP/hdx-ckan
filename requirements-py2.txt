@@ -10,6 +10,8 @@
     # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements-py2.in
+-e git+https://github.com/OCHA-DAP/ckanext-security.git#egg=ckanext-security
+    # via -r requirements-py2.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.305#egg=ckanext-showcase
     # via -r requirements-py2.in
 alembic==1.0.0
