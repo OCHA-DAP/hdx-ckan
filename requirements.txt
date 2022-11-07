@@ -124,6 +124,8 @@ psycopg2==2.8.2
     # via -r requirements.in
 pyjwt==1.7.1
     # via -r requirements.in
+pyotp==2.6.0
+    # via -r requirements.in
 pyparsing==3.0.7
     # via rdflib
 pysolr==3.6.0
