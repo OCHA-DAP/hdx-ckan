@@ -24,6 +24,3 @@ pytest-rerunfailures==8.0
 towncrier==19.2.0
 
 moto==2.1.0
-
-# ckanext-security
--e git+https://github.com/OCHA-DAP/ckanext-security.git#egg=ckanext-security

@@ -4,8 +4,6 @@
 #
 #    pip-compile --output-file=dev-requirements.txt dev-requirements.in
 #
--e git+https://github.com/OCHA-DAP/ckanext-security.git#egg=ckanext-security
-    # via -r requirements.in
 alabaster==0.7.12
     # via sphinx
 arrow==1.2.1
