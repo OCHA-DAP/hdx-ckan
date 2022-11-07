@@ -160,6 +160,8 @@ pyjwt==1.7.1
     # via -r requirements-py2.in
 pylons==0.9.7
     # via -r requirements-py2.in
+pyotp==2.3.0
+    # via -r requirements-py2.in
 pyparsing==2.4.7
     # via rdflib
 pysolr==3.6.0
