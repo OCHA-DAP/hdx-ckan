@@ -295,12 +295,11 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing values in the form
-        assert '<input id="field-username" type="text" name="name" value="sue"' in response.body
-        assert '<input id="field-firstname" type="text" name="firstname" value="Mr. Test User"' in response.body
-        assert '<input id="field-lastname" type="text" name="lastname" value=""' in response.body
+        assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
+        assert '<input id="field-fullname" type="text" name="fullname" value="Mr. Test User"' in response.body
         assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
         assert '<textarea id="field-about" name="about" cols="20" rows="5" placeholder="A little information about yourself"' in response.body
-        assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
+        # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
         assert '<input id="field-password" type="password" name="old_password" value=""' in response.body
         assert '<input id="field-password" type="password" name="password1" value=""' in response.body
         assert '<input id="field-password-confirm" type="password" name="password2" value=""' in response.body

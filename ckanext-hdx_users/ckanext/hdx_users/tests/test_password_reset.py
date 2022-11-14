@@ -68,7 +68,7 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
         }
 
         user_dict['reset_key'] = user.reset_key
-        user_dict['password'] = 'dummy_password'
+        user_dict['password'] = 'Dummy_Password34'
         _get_action('user_update')(context, user_dict)
         user = model.User.get(user_dict['id'])
         assert original_password != user.password, 'Password should have been changed'
@@ -96,7 +96,7 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
         }
 
         user_dict['reset_key'] = user.reset_key
-        user_dict['password'] = 'dummy_password'
+        user_dict['password'] = 'Dummy_Password34'
         try:
             _get_action('user_update')(context, user_dict)
             assert False
