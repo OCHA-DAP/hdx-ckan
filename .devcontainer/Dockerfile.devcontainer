@@ -1,0 +1,14 @@
+FROM public.ecr.aws/unocha/hdx-ckan:dev-py3 as baseimage
+
+# Install required system packages
+RUN apt-get -qq -y update && \
+    apt-get -q -y install \
+        git \
+        gpg \
+        gpg-agent && \
+    ln -sf /usr/bin/dash /bin/sh && \
+    ln -sf /usr/bin/bash /bin/bash
+
+ENTRYPOINT []
+
+CMD []

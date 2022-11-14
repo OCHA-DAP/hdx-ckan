@@ -1,0 +1,77 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/docker-existing-docker-compose
+// If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
+{
+	"name": "Existing Docker Compose (Extend)",
+
+	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
+	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
+	"dockerComposeFile": [
+		"../docker-compose.devcontainer.yml",
+		"docker-compose.yml"
+	],
+
+	// The 'service' property is the name of the service for the container that VS Code should
+	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+	"service": "ckan",
+
+	// The optional 'workspaceFolder' property is the path VS Code should open by default when
+	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
+	"workspaceFolder": "/srv/ckan",
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Uncomment the next line if you want start specific services in your Docker Compose config.
+	// "runServices": [],
+
+	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
+	// "shutdownAction": "none",
+
+	// "onCreateCommand": "ls -l ",
+  //chmod +x *.sh ./docker/*.sh",
+	// Uncomment the next line to run commands after the container is created - for example installing curl.
+	// "postCreateCommand": "apt-get update && apt-get install -y curl",
+	"postCreateCommand": "sh ./setup_py3_helper.sh && pip install -r requirement-setuptools.txt && pip install --upgrade -r requirements.txt && sh ./docker/ckan_helper.sh && pip install -r dev-requirements.txt && ln -sf /srv/ckan/docker/hdxckantool-ng.py /srv/hdxckantool-ng.py",
+
+	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode"
+
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"terminal.integrated.profiles.linux": {
+					"bash": {
+						"path": "/usr/bin/sh"
+					}
+				},
+				"python.defaultInterpreterPath": "/usr/bin/python3",
+				"python.languageServer": "Default",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.formatting.autopep8Path": "/usr/bin/autopep8",
+				"python.formatting.blackPath": "/usr/bin/black",
+				"python.linting.banditPath": "/usr/bin/bandit",
+				"python.linting.flake8Path": "/usr/bin/flake8",
+				"python.linting.mypyPath": "/usr/bin/mypy",
+				"python.linting.pycodestylePath": "/usr/bin/pycodestyle",
+				"python.linting.pydocstylePath": "/usr/bin/pydocstyle",
+				"python.linting.pylintPath": "/usr/bin/pylint",
+				"python.formatting.yapfPath": "/usr/bin/yapf"
+			},
+
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"eamodio.gitlens",
+				"GitHub.vscode-pull-request-github"
+			]
+		}
+	}
+
+}

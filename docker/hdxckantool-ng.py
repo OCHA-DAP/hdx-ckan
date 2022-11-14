@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
 import click
+import getpass
 import psycopg2
 import os
 import requests
 import subprocess
 import sys
+import tarfile
+from bs4 import BeautifulSoup
+
 # import ckan.cli.sysadmin as ckan_sysadmin
 # import ckan.cli.user as ckan_user
 
@@ -23,6 +27,7 @@ SQL = dict(
     DB_DATASTORE=str(os.getenv('HDX_CKANDB_DB_DATASTORE')),
 )
 
+SNAPSHOTS_TOKEN = None
 
 def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
     # try:
@@ -69,6 +74,7 @@ SOLR =  dict(
     ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
     PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
     CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
+    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-current'))
 )
 
 
@@ -121,6 +127,93 @@ def user_pretty_list(userlist):
         print('Got a total of ' + str(len(userlist)) + ' users.')
 
 
+def get_snapshot_token():
+    """Get the authorization token for the snapshots"""
+    global SNAPSHOTS_TOKEN
+    if SNAPSHOTS_TOKEN:
+        return SNAPSHOTS_TOKEN
+
+    args = {
+        'grant_type': 'password',
+        'client_id': 'token',
+        'username': os.getenv('SNAPSHOTS_USERNAME', input('Snapshots username: ')),
+        'password': os.getenv('SNAPSHOTS_PASSWORD', getpass.getpass('Snapshots password: '))
+    }
+    try:
+        r = requests.post('https://auth.ahconu.org/oauth2/token', args)
+        # print(r.json())
+        if 'access_token' in r.json().keys():
+            print('Token aquired...')
+            SNAPSHOTS_TOKEN = r.json()['access_token']
+            return r.json()['access_token']
+    except:
+        pass
+
+    print('can\'t get the token')
+    return False
+
+
+def download(url, headers, filename):
+    """Get the requested snapshot file"""
+    with open(filename, 'wb') as f:
+        response = requests.get(url, headers=headers, stream=True)
+        total = response.headers.get('content-length')
+
+        if total is None:
+            f.write(response.content)
+        else:
+            downloaded = 0
+            total = int(total)
+            for data in response.iter_content(chunk_size=max(int(total/1000), 1024*1024)):
+                downloaded += len(data)
+                f.write(data)
+                done = int(50*downloaded/total)
+                sys.stdout.write('\r[{}{}]'.format('=' * done, '.' * (50-done)))
+                sys.stdout.flush()
+    sys.stdout.write('\n')
+
+
+def get_latest_snapshot_name(url, headers, prefix='prod.min.ckan'):
+    """Get the most recent snapshot name"""
+    url = 'https://snapshots.aws.ahconu.org/api/hdx/ckan/'
+    r = requests.get(url, headers=headers)
+    if r.status_code != 200:
+        print("Failed to get the snapshots list from {}".format(url))
+        return False
+    html = r.text
+    parsed_html = BeautifulSoup(html, "html.parser")
+    a_list = [a.get('href') for a in parsed_html.body.pre.find_all('a') ]
+    relevant_list = list(filter(lambda item: item.startswith(prefix), a_list))
+    if len(relevant_list) < 1:
+        print("Can't find any item with this prefix ({})".format(prefix))
+        return False
+    relevant_list.reverse()
+    return relevant_list[0]
+
+
+def get_snapshot(prefix):
+    token = get_snapshot_token()
+    if not token:
+        print('something went wrong. can\'t get the token or something.')
+        return False
+    chunk_size = 4096
+    headers = {'Authorization': 'Bearer {}'.format(token)}
+    url = 'https://snapshots.aws.ahconu.org/api/hdx/ckan/'
+
+    filename = get_latest_snapshot_name(url, headers, prefix=prefix)
+
+    if filename.startswith('prod.min.ckan') or filename.startswith('prod.ckan'):
+        fname = 'ckan.pg_restore'
+    elif filename.startswith('prod.datastore'):
+        fname = 'datastore.pg_restore'
+    else:
+        fname = 'files.tar'
+
+    local_file = '/srv/backup/{}'.format(fname)
+    print('Getting {} as {}'.format(filename, local_file))
+    download('{}{}'.format(url, filename), headers, local_file)
+
+
 @click.group()
 # @click.option('--config', default=INI_FILE, show_default=True, help="Config file to use for ckan cli commands.")
 @click.option('-v', '--verbose', is_flag=True, default=False, show_default=True, help="Make ckan cli commands more verbose.")
@@ -138,6 +231,10 @@ def db():
     """Database related commands."""
     pass
 
+@cli.group()
+def files():
+    """File assets related commands."""
+    pass
 
 @cli.group()
 def solr():
@@ -174,10 +271,24 @@ def user():
     """Manage users."""
     pass
 
+
 @cli.group()
 def token():
     """Manage API tokens."""
     pass
+
+
+@db.command(name='pull')
+@click.option('-p', '--prefix', default='prod.datastore', show_default=True, help="File name prefix to pull")
+@click.option('-a', '--all', is_flag=True, show_default=True, default=False, help="Get _all_ we need (ckan and datastore).")
+@click.pass_context
+def db_pull(ctx, prefix, all):
+    if not all:
+        get_snapshot(prefix)
+        return
+    prefixes = [ 'prod.datastore', 'prod.min.ckan']
+    for p in prefixes:
+        get_snapshot(p)
 
 
 @db.command(name='restore')
@@ -297,6 +408,30 @@ def feature(ctx):
     print('Done.')
 
 
+@files.command(name='pull')
+@click.option('-p', '--prefix', default='prod.files', show_default=True, help="File name prefix to pull")
+@click.pass_context
+def db_pull(ctx, prefix):
+    """Download the files snapshot."""
+    get_snapshot(prefix)
+
+
+@files.command(name='restore')
+@click.option('-f', '--filename', default='/srv/backup/{}.tar'.format('files'), show_default=True, help="File name to restore from")
+@click.option('-t', '--targetdir', default='/srv/filestore', show_default=True, help="Target directory to restore in")
+@click.pass_context
+def db_restore(ctx, filename, targetdir):
+    """Unpack the files archive into the targetdir."""
+    try:
+        with tarfile.open(filename) as t:
+            print("Restoring {} content into {} ...".foramt(filename, targetdir))
+            t.extractall(targetdir)
+        print("Done.")
+    except:
+        print("Can't unpack {} into {}".format(filename, targetdir))
+        print(sys.exc_info())
+
+
 @cli.command(name='less')
 @click.argument('compile', required=False)
 @click.argument('verbose', required=False)
@@ -309,6 +444,8 @@ def less_compile(ctx, compile, verbose):
     VERBOSE     Deprecated option. Use -v on script level instead.
 
     """
+    click.echo("Deprecated. Don't have any less anymore. Exiting...")
+    return
     if compile:
         click.echo("Deprecated argument 'compile'. Just skip it.")
     if verbose:
@@ -407,7 +544,7 @@ def reinstall_plugins(develop):
 @click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
 @click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
 @click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
-@click.option('-s', '--config-set', default='hdx-solr-main', show_default=True, help="SOLR Configset to use.")
+@click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to use.")
 @click.pass_context
 def solr_add(ctx, host, port, collection, config_set):
     """Create a SOLR collection"""
@@ -424,6 +561,7 @@ def solr_add(ctx, host, port, collection, config_set):
         print("The collection {} has been created successfully.".format(collection))
     except:
         print("Can't query SOLR")
+        print(sys.exc_info())
 
 
 @solr.command(name='check')
@@ -498,6 +636,7 @@ def sysadmin_list():
     rows = db_query(query)
     user_pretty_list(rows)
 
+
 @token.command(name='add')
 @click.argument('user')
 @click.argument('name')
@@ -518,6 +657,7 @@ def token_add(ctx, user, name, expire):
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'add', user, name, 'expires_in='+str(expire), 'unit=86400']
     subprocess.call(cmd)
 
+
 @token.command(name='list')
 @click.argument('user')
 @click.pass_context
@@ -529,6 +669,7 @@ def token_list(ctx, user):
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'list', user]
     subprocess.call(cmd)
 
+
 @token.command(name='revoke')
 @click.argument('token_id')
 @click.pass_context
@@ -539,6 +680,7 @@ def token_revoke(ctx, token_id):
     """
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'revoke', token_id]
     subprocess.call(cmd)
+
 
 @user.command(name='add')
 @click.argument('user', type=str)
@@ -588,6 +730,7 @@ def user_search(string):
         print('No users were found searching for ' + string)
     else:
         user_pretty_list(rows)
+
 
 @user.command(name='show')
 @click.argument('user')
