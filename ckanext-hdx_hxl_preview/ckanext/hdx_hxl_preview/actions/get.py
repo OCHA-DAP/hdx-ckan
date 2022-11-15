@@ -39,8 +39,7 @@ def hxl_preview_iframe_url_show(context, data_dict):
     package_source = package_dict.get('dataset_source', '')
 
     package_url = h.url_for('dataset.read', id=package_id, qualified=True)
-    # resource_view_url = h.url_for('resource.read', id=package_id, resource_id=resource_dict['id'], qualified=True)
-    resource_view_url = 'https://data.humdata.org/dataset/afghanistan-humanitarian-needs-overview/resource/4cf80a8c-ea53-469a-a56b-68f958aef323'
+    resource_view_url = h.url_for('resource.read', id=package_id, resource_id=resource_dict['id'], qualified=True)
     resource_last_modified = h.render_datetime(resource_dict.get('last_modified') or resource_dict.get('created'))
     params = {
         'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),
