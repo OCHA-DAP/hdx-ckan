@@ -1,0 +1,52 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "Debug CKAN",
+      "type": "python",
+      "request": "launch",
+      "module": "ckandebug",
+      "cwd": "${workspaceFolder}/ckan",
+      "args": [
+        "-c",
+        "/etc/ckan/less.ini",
+        "run",
+        "-H",
+        "0.0.0.0",
+        "--disable-reloader"
+      ],
+      "jinja": true,
+      "justMyCode": true,
+      // "serverReadyAction": {
+      //   "pattern": "listening on port ([0-9]+)",
+      //   "uriFormat": "https://data.humdata.local",
+      //   "action": "openExternally"
+      // }
+    },
+    {
+      "name": "Debug CKAN - no reload",
+      "type": "python",
+      "request": "launch",
+      "module": "ckan.cli.cli",
+      "cwd": "${workspaceFolder}/ckan",
+      "args": [
+        "-c",
+        "/etc/ckan/less.ini",
+        "run",
+        "-H",
+        "0.0.0.0",
+        "--disable-reloader"
+      ],
+      "jinja": true,
+      "justMyCode": true
+    },
+    {
+      "name": "Unit Tests",
+      "type": "python",
+      "request": "launch",
+      "module": "unittest",
+      "justMyCode": true
+    },
+  ]
+}

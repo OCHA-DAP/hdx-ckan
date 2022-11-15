@@ -23,7 +23,7 @@ jobs:
         run: |
           docker-compose up -d
           sleep 10
-          docker-compose exec -T solr bin/solr create -c ckan -d /configsets/hdx-current
+          docker-compose exec -T solr bin/solr create -c ckan -d /configsets/hdx-solr
           docker-compose exec -T ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
           docker-compose exec -T ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
           docker-compose restart ckan
