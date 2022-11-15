@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 PYTEST='pytest --cov-config=.coveragerc '\
 '--cov=ckanext-hdx_search --cov=ckanext-hdx_pages --cov=ckanext-hdx_hxl_preview '\
 '--cov=ckanext-hdx_org_group --cov=ckanext-hdx_package --cov=ckanext-hdx_theme --cov=ckanext-hdx_users '\
