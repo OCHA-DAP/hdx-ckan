@@ -170,13 +170,21 @@ def hdx_qa_resource_patch(context, data_dict):
             dataset_dict.get('name')
         )
     data_revise_dict = {'match': {'id': pkg_id}}
+    if data_dict.get('in_quarantine') == 'true':
+        data_revise_dict['filter'] = [
+            "-resources__" + resource_dict['id'] + "__shape_info"
+        ]
     for item in data_dict.keys():
         if data_dict[item] != 'id':
             data_revise_dict['update__resources__' + resource_dict.get('id')[:5]] = {item: data_dict[item]}
 
     if len(data_revise_dict.keys()) <= 1:
         raise NotFound("resource id, key or value were not provided")
-    return _get_action('package_revise')(context, data_revise_dict)
+    revise_response = _get_action('package_revise')(context, data_revise_dict)
+    package = revise_response.get('package', {})
+    resource_dict = next((res for res in package.get('resources', []) if res.get('id') == resource_dict['id']), None)
+    return resource_dict
+
 
 
 def hdx_fs_check_resource_revise(context, data_dict):
