@@ -57,9 +57,6 @@ ckan.resource_formats = %(here)s/ckanext-hdx_package/ckanext/hdx_package/config/
 ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data pii_is_sensitive
 ckan.resource_formats.external_system = External System
 
-# we need legacy templates for many tests to pass
-ckan.legacy_templates = yes
-
 # Add additional test specific configuration options as necessary.
 auth.blacklist = 83.222.23.234
 

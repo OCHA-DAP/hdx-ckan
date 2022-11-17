@@ -68,11 +68,16 @@ class HDXEditView(EditView):
             }
             auth = authenticator.UsernamePasswordAuthenticator()
 
-            if auth.authenticate(request.environ, identity) != g.user:
+            auth_user_id = auth.authenticate(request.environ, identity)
+            if auth_user_id:
+                auth_user_id = auth_user_id.split(u',')[0]
+            if auth_user_id != g.userobj.id:
                 errors = {
                     u'oldpassword': [_(u'Password entered was incorrect')]
                 }
-                error_summary = {_(u'Old Password'): _(u'incorrect password')}
+                error_summary = {_(u'Old Password'): _(u'incorrect password')} \
+                    if not g.userobj.sysadmin \
+                    else {_(u'Sysadmin Password'): _(u'incorrect password')}
                 return self.get(id, data_dict, errors, error_summary)
 
         try:

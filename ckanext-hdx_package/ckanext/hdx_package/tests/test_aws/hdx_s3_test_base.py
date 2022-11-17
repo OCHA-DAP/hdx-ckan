@@ -63,6 +63,13 @@ class HDXS3TestBase(object):
 
         cls.dataset1_dict = cls._create_package_by_user(cls.dataset1_name, 'testsysadmin')
 
+    def setup(self):
+        self._change_config(config)
+
+    def teardown(self):
+        config.clear()
+        config.update(HDXS3TestBase.original_config)
+
     @classmethod
     def teardown_class(cls):
         cls.m_s3.stop()
