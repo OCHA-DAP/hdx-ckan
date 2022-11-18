@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
-import click
 import getpass
-import psycopg2
 import os
-import requests
 import subprocess
 import sys
 import tarfile
+
+import click
+import psycopg2
+import requests
 from bs4 import BeautifulSoup
 
 # import ckan.cli.sysadmin as ckan_sysadmin
@@ -20,6 +21,8 @@ VERBOSE_INI_FILE = os.getenv('VERBOSE_INI_FILE', "/etc/ckan/less.ini")
 SQL = dict(
     HOST=str(os.getenv('HDX_CKANDB_ADDR')),
     PORT='5432',
+    SUPERUSER='postgres',
+    SUPERPASS=str(os.getenv('POSTGRES_PASSWORD')),
     USER=str(os.getenv('HDX_CKANDB_USER')),
     PASSWORD=str(os.getenv('HDX_CKANDB_PASS')),
     DB=str(os.getenv('HDX_CKANDB_DB')),
@@ -27,30 +30,61 @@ SQL = dict(
     DB_DATASTORE=str(os.getenv('HDX_CKANDB_DB_DATASTORE')),
 )
 
+SOLR =  dict(
+    ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
+    PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
+    CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
+    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-current'))
+)
+
 SNAPSHOTS_TOKEN = None
 
 def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
-    # try:
-    con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
-    # except:
-    #     print("I am unable to connect to the database, exiting.")
-    #     exiting(2)
-    return con
+    """connects to postgres"""
+
+    try:
+        con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
+        return con
+    except:
+        raise click.ClickException("I am unable to connect to the database, exiting.")
+
+def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=False):
+    """assign a new owner to a schema."""
+
+    try:
+        if verbose:
+            print("Assigning {} as owner of {} schema of {} database...".format(owner, schema, dbname))
+        con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        query = "alter schema {} owner to {};".format(schema, owner)
+        cur.execute(query)
+        con.commit()
+        if verbose:
+            print("Done.")
+    except:
+        raise click.ClickException("I can't assign a new owner")
+    finally:
+        con.close()
 
 
-def db_empty(dbname):
+
+def db_empty(dbname, verbose=False):
     """Recreate the schema for a database."""
 
     try:
-        print("Flushing database {}...".format(dbname))
+        if verbose:
+            print("Flushing database {}...".format(dbname))
         con = db_connect_to_postgres(dbname=dbname)
         con.set_isolation_level(0)
         cur = con.cursor()
         query = "drop schema public cascade; create schema public;"
         cur.execute(query)
         con.commit()
+        if verbose:
+            print("Done.")
     except:
-        print("I can't flush database {}".format(dbname))
+        raise click.ClickException("I can't flush database {} as {}, try sudo :)".format(dbname, SQL['USER']))
     finally:
         con.close()
 
@@ -64,18 +98,10 @@ def db_query(query):
         con.commit()
         rows = cur.fetchall()
     except:
-        print("I can't query that")
-        sys.exit(2)
+        raise click.ClickException("I can't query that")
     finally:
         con.close()
     return rows
-
-SOLR =  dict(
-    ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
-    PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
-    CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
-    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-current'))
-)
 
 
 def sysadmin_exists(user):
@@ -94,18 +120,23 @@ def control(cmd):
         stop="-d",
         restart="-r"
     )
-    line = ["s6-svc", flag[cmd], '/var/run/s6/services/unit']
+    service_folder = '/var/run/s6/services/unit'
+    if not os.path.exists(service_folder):
+        print("Probably in local environment. Nothing to do.")
+        return
+
+    line = ["s6-svc", flag[cmd], service_folder]
     try:
         subprocess.call(line)
     except:
-        print("ckan {} failed.".format(cmd))
+        raise click.ClickException("ckan {} failed.".format(cmd))
         sys.exit(1)
 
 
 def user_exists(user):
     """Check if user exists."""
     query = "select name,fullname,email,state,sysadmin from public.user where name='{}';".format(user)
-    rows =  (query)
+    rows = db_query(query)
     if len(rows) == 1:
         return True
     else:
@@ -147,10 +178,7 @@ def get_snapshot_token():
             SNAPSHOTS_TOKEN = r.json()['access_token']
             return r.json()['access_token']
     except:
-        pass
-
-    print('can\'t get the token')
-    return False
+        raise click.ClickException('can\'t get the token')
 
 
 def download(url, headers, filename):
@@ -178,15 +206,13 @@ def get_latest_snapshot_name(url, headers, prefix='prod.min.ckan'):
     url = 'https://snapshots.aws.ahconu.org/api/hdx/ckan/'
     r = requests.get(url, headers=headers)
     if r.status_code != 200:
-        print("Failed to get the snapshots list from {}".format(url))
-        return False
+        raise click.ClickException("Failed to get the snapshots list from {}".format(url))
     html = r.text
     parsed_html = BeautifulSoup(html, "html.parser")
     a_list = [a.get('href') for a in parsed_html.body.pre.find_all('a') ]
     relevant_list = list(filter(lambda item: item.startswith(prefix), a_list))
     if len(relevant_list) < 1:
-        print("Can't find any item with this prefix ({})".format(prefix))
-        return False
+        raise click.ClickException("Can't find any item with this prefix ({})".format(prefix))
     relevant_list.reverse()
     return relevant_list[0]
 
@@ -194,8 +220,7 @@ def get_latest_snapshot_name(url, headers, prefix='prod.min.ckan'):
 def get_snapshot(prefix):
     token = get_snapshot_token()
     if not token:
-        print('something went wrong. can\'t get the token or something.')
-        return False
+        raise click.ClickException('something went wrong. can\'t get the token or something.')
     chunk_size = 4096
     headers = {'Authorization': 'Bearer {}'.format(token)}
     url = 'https://snapshots.aws.ahconu.org/api/hdx/ckan/'
@@ -234,6 +259,11 @@ def db():
 @cli.group()
 def files():
     """File assets related commands."""
+    pass
+
+@cli.group()
+def filestore():
+    """S3 filestore related commands."""
     pass
 
 @cli.group()
@@ -278,11 +308,37 @@ def token():
     pass
 
 
+@db.command(name='pgpass')
+@click.pass_context
+def refresh_pgpass_command(ctx):
+    """Make sure the pgpass file is up to date."""
+    verbose = ctx.obj['VERBOSE']
+    if verbose:
+        print("Refreshing .pgpass file...")
+    (host, port, user, password)=(SQL['HOST'], SQL['PORT'], SQL['USER'], SQL['PASSWORD'])
+    pgpass = '/root/.pgpass'
+    correct_line = ':'.join([host, port, '*', user, password])
+    super_line = ':'.join([host,port,'*', SQL['SUPERUSER'], SQL['SUPERPASS']])
+    newpgpass = [super_line, correct_line]
+    with open(pgpass, 'w') as f:
+        for line in newpgpass:
+            f.write("%s\n" % line)
+        if verbose:
+            print("File overwritten.")
+    if oct(os.stat(pgpass).st_mode)[-3:] != '600':
+        os.chmod(pgpass, 0o600)
+        if verbose:
+            print('Permissions were incorrect. Fixed.')
+    if verbose:
+        print('Done.')
+
+
 @db.command(name='pull')
 @click.option('-p', '--prefix', default='prod.datastore', show_default=True, help="File name prefix to pull")
 @click.option('-a', '--all', is_flag=True, show_default=True, default=False, help="Get _all_ we need (ckan and datastore).")
 @click.pass_context
 def db_pull(ctx, prefix, all):
+    """Pulls the latest database backups from the snapshots site"""
     if not all:
         get_snapshot(prefix)
         return
@@ -301,6 +357,7 @@ def db_pull(ctx, prefix, all):
 @click.option('-c', '--clear-database', is_flag=True, show_default=True, default=False, help="Recreate the schema.")
 @click.pass_context
 def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_running, clear_database):
+    """Restore a database from the backup"""
     # click.echo('{} {}'.format(database,file))
     if not keep_ckan_running:
         print('Stopping ckan ...')
@@ -363,8 +420,18 @@ def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_
         control('start')
 
 
+@db.command(name='schema')
+@click.pass_context
+def db_set_schema(ctx):
+    """Set the owner of the ckan and datastore databases schema"""
+    verbose = ctx.obj['VERBOSE']
+    db_schema_owner(dbname='datastore', schema='public', owner=SQL['USER'], verbose=verbose)
+    db_schema_owner(dbname='ckan', schema='public', owner=SQL['USER'], verbose=verbose)
+
+
 @db.command(name='perms')
 def db_set_perms():
+    """Set proper permissions on the ckan and datastore databases"""
     with open('{}/ckanext/datastore/set_permissions.sql'.format(BASEDIR), 'r') as fin:
         query = fin.read() \
             .replace('{mainuser}', SQL['USER']) \
@@ -381,9 +448,7 @@ def db_set_perms():
         cur.execute(query)
         con.commit()
     except:
-        print("Failed to set proper permissions. Exiting.")
-        print(sys.exc_info()[0])
-        sys.exit(2)
+        raise click.ClickException("Failed to set proper permissions. Exiting.")
     finally:
         con.close()
 
@@ -411,7 +476,7 @@ def feature(ctx):
 @files.command(name='pull')
 @click.option('-p', '--prefix', default='prod.files', show_default=True, help="File name prefix to pull")
 @click.pass_context
-def db_pull(ctx, prefix):
+def files_pull(ctx, prefix):
     """Download the files snapshot."""
     get_snapshot(prefix)
 
@@ -420,16 +485,41 @@ def db_pull(ctx, prefix):
 @click.option('-f', '--filename', default='/srv/backup/{}.tar'.format('files'), show_default=True, help="File name to restore from")
 @click.option('-t', '--targetdir', default='/srv/filestore', show_default=True, help="Target directory to restore in")
 @click.pass_context
-def db_restore(ctx, filename, targetdir):
+def files_restore(ctx, filename, targetdir):
     """Unpack the files archive into the targetdir."""
     try:
         with tarfile.open(filename) as t:
-            print("Restoring {} content into {} ...".foramt(filename, targetdir))
+            print("Restoring {} content into {} ...".format(filename, targetdir))
             t.extractall(targetdir)
         print("Done.")
     except:
-        print("Can't unpack {} into {}".format(filename, targetdir))
-        print(sys.exc_info())
+        raise click.ClickException("Can't unpack {} into {}".format(filename, targetdir))
+
+
+@filestore.command(name='sync')
+@click.option('-s', '--source', default='hdx-dev-filestore', show_default=True, help="Source bucket name")
+@click.option('-d', '--destination', default='hdx-ckan-inno-filestore', show_default=True, help="Destination bucket name")
+@click.option('-x', '--source-region', default='us-east-1', show_default=True, help="Source bucket region")
+@click.option('-r', '--region', default='eu-central-1', show_default=True, help="Destination bucket region")
+@click.option('-c', '--clear', is_flag=True, show_default=True, default=False, help="Remove differences from the destination bucket.")
+@click.pass_context
+def filestore_sync(ctx, source, destination, source_region, region, clear):
+    """Performs a simple S3 sync"""
+
+    command = ['aws', 's3', 'sync']
+    if clear:
+        command.append('--delete')
+    print("Syncing {} from {} region to {} from {} region...".format(source, source_region, destination, region))
+    sync_array = [
+        *command,
+        's3://{}/'.format(source), 's3://{}/'.format(destination),
+        '--source-region', source_region, '--region', region
+    ]
+    try:
+        print(' '.join(sync_array))
+        subprocess.check_call(sync_array)
+    except:
+        raise click.ClickException("S3 sync failed.")
 
 
 @cli.command(name='less')
@@ -478,45 +568,6 @@ def show_logs():
     subprocess.call(cmd)
 
 
-@cli.command(name='pgpass')
-@click.pass_context
-def refresh_pgpass(ctx):
-    """Make sure the pgpass file is up to date."""
-    (host, port, user, password)=(SQL['HOST'], SQL['PORT'], SQL['USER'], SQL['PASSWORD'])
-    verbose = ctx.obj['VERBOSE']
-    pgpass = '/root/.pgpass'
-    partial_line = ''.join([':*:', user, ':'])
-    correct_line = ':'.join([host, port, '*', user, password])
-
-    newpgpass = []
-    if os.path.isfile(pgpass):
-        with open(pgpass) as f:
-            content = f.readlines()
-        for line in content:
-            if len(line):   # just skip the empty lines
-                line = line.strip()
-                if correct_line == line:
-                    if verbose:
-                        print("The pgpass file has the right content.")
-                    # exiting(0)
-                    return True
-                if partial_line not in line:
-                    newpgpass.append(line)
-    newpgpass.append(correct_line)
-    # print(newpgpass)
-    with open(pgpass, 'w') as f:
-        for line in newpgpass:
-            f.write("%s\n" % line)
-        if verbose:
-            print("File overwritten.")
-    if oct(os.stat(pgpass).st_mode)[-3:] != '600':
-        os.chmod(pgpass, 0o600)
-        if verbose:
-            print('Permissions were incorrect. Fixed.')
-    if verbose:
-        print('Done.')
-
-
 @cli.command(name='plugins')
 @click.option('-d', '--develop', is_flag=True, default=False, show_default=True, help="Install plugins in develop mode.")
 def reinstall_plugins(develop):
@@ -545,24 +596,44 @@ def reinstall_plugins(develop):
 @click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
 @click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
 @click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to use.")
+@click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Overwrite collection if exists.")
 @click.pass_context
-def solr_add(ctx, host, port, collection, config_set):
+def solr_add(ctx, host, port, collection, config_set, force):
     """Create a SOLR collection"""
     try:
-        if ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+        ctx.invoke(solr_exists, host=host, port=port, collection=collection)
+        if not force:
             print("Collection {} already exists.".format(collection))
             return
+        else:
+            ctx.invoke(solr_del)
         query = "http://{}:{}/solr/admin/collections?action=CREATE&name={}&collection.configName={}&numShards=1" \
             .format(host, port, collection, config_set)
         r = requests.get(query)
         if r.status_code != 200:
-            print(r.json()["error"]["msg"])
-            raise
+            raise click.ClickException(r.json()["error"]["msg"])
         print("The collection {} has been created successfully.".format(collection))
-    except:
-        print("Can't query SOLR")
-        print(sys.exc_info())
+    except Exception as e:
+        raise click.ClickException("Can't query SOLR: {}".format(str(e)))
 
+
+@solr.command(name='del')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
+@click.pass_context
+def solr_del(ctx, host, port, collection):
+    """Create a SOLR collection"""
+    try:
+        ctx.invoke(solr_exists, host=host, port=port, collection=collection)
+        query = "http://{}:{}/solr/admin/collections?action=DELETE&name={}" \
+            .format(host, port, collection)
+        r = requests.get(query)
+        if r.status_code != 200:
+            raise click.ClickException(r.json()["error"]["msg"])
+        print("The collection {} has been removed successfully.".format(collection))
+    except Exception as e:
+        raise click.ClickException("Can't query SOLR: {}".format(str(e)))
 
 @solr.command(name='check')
 @click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
@@ -575,20 +646,18 @@ def solr_exists(host, port, collection):
             .format(host, port)
         r = requests.get(query)
         if r.status_code != 200:
-            raise
+            raise click.ClickException(r.json()["error"]["msg"])
         collections = r.json()["cluster"]["collections"].keys()
-        if collection in collections:
-            return True
-    except:
-        print("Can't query SOLR...")
-        print(sys.exc_info())
-    return False
+        if collection not in collections:
+            raise click.ClickException("Collection {} does not exists.".format(collection))
+    except Exception as e:
+        raise click.ClickException("Can't query SOLR: {}".format(str(e)))
 
 
 @solr.command(name='reindex')
-@click.option('--clear', is_flag=True, help="Clear solr index first.")
-@click.option('--fast', is_flag=True, help="Use multiple threaded processes.")
-@click.option('--refresh', is_flag=True, help="Will only refresh. Not usable with fast option.")
+@click.option('--clear', is_flag=True, default=False, show_default=True, help="Clear solr index first.")
+@click.option('--fast', is_flag=True, default=False, show_default=True, help="Use multiple threaded processes.")
+@click.option('--refresh', is_flag=True, default=False, show_default=True, help="Will only refresh. Not usable with fast option.")
 @click.pass_context
 def solr_reindex(ctx, fast, refresh, clear):
     """Reindex solr."""
@@ -706,7 +775,7 @@ def user_add(ctx, user, email, password):
             print('New user has been created:')
             ctx.invoke(user_show, user=user)
     except:
-        print('User %s has not been created' % user)
+        raise click.ClickException('User %s has not been created' % user)
 
 
 @user.command(name='list')
@@ -762,6 +831,62 @@ def webassets(ctx):
         for item in files:
             os.chown(os.path.join(root, item), 33, 0)
     print('Done.')
+
+@cli.command(name='magic')
+@click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Just go.")
+@click.option('-s', '--solr-config', default='hdx-current', show_default=True, help="SOLR configset name")
+@click.pass_context
+def do_magic(ctx, force, solr_config):
+    """Automagically sets things up for you"""
+
+    print('Will do all the initial setup for you. Or just refresh the dbs and files for you')
+    print('    - pulls the latest db backup')
+    print('    - restores the database')
+    print('    - pulls the latest files backup (other than the filestore)')
+    print('    - restores the files (other than filestore)')
+    print('    - syncronizes the filestore from the dev filestore')
+    print('    - creates a new solr collection')
+    print('    - reindex solr')
+    print('Please be warned this will take quite a while')
+    print('    (especially the filestore sync and the solr reindex)')
+
+    if not force:
+        whee = input('Do you want to proceed? [y/n]: ')
+        if whee not in ['y', 'Y']:
+            print('Maybe later then.')
+            return
+
+    print('You will be asked to enter your username and password used to get the database snapshots.')
+    # pull latest dbs
+    ctx.invoke(db_pull, all=True)
+    # pull latest files
+    ctx.invoke(files_pull)
+
+    # add pgpass
+    ctx.invoke(refresh_pgpass_command)
+    # fix schemas
+    ctx.invoke(db_set_schema)
+    # create solr collection
+    ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
+
+    # restore dbs and files
+    ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
+    ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=True)
+    # fix datastore permissions
+    ctx.invoke(db_set_perms)
+
+    # restore files
+    ctx.invoke(files_restore, targetdir='/srv/filestore', filename='/srv/backup/files.tar')
+    # sync filestore
+    ctx.invoke(filestore_sync,
+        source='hdx-dev-filestore',
+        destination=os.getenv('AWS_BUCKET_NAME'),
+        source_region='us-east-1',
+        region=os.getenv('REGION_NAME'),
+        clear=True)
+
+    # solr reindex time
+    ctx.invoke(solr_reindex, clear=True, fast=True)
 
 
 if __name__ == '__main__':

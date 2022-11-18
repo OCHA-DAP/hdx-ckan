@@ -35,5 +35,8 @@ else
     chmod 600 /var/lib/unit/conf.json
 fi
 
+# build all webassets
+hdxckantool webassets
+
 # do this when all is peachy: curl -X PUT --data-binary '{"application":"ckan"}' 'localhost:8080/config/listeners/*:5000'
 exec unitd --no-daemon --control 127.0.0.1:8080 --user www-data --group www-data --log /var/log/ckan/error.log
