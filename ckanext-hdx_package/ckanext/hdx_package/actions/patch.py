@@ -99,7 +99,7 @@ def package_patch(context, data_dict):
 
 def hdx_mark_broken_link_in_resource(context, data_dict):
     '''
-    Does a resource patch to change the 'broken_link' to True. Also sets a field in the context so that the value
+    Does a resource patch to change the 'broken_link' to True or False. Also sets a field in the context so that the value
     of the 'broken_link' field is kept. Otherwise it would be reset on validation.
 
     :param id: the id of the resource
@@ -109,6 +109,7 @@ def hdx_mark_broken_link_in_resource(context, data_dict):
     '''
 
     resource_id = data_dict.get('id')
+    broken_link = data_dict.get('broken_link', True)
     if resource_id:
         resource_dict = _get_action('resource_show')(context, {'id': resource_id})
         package_id = resource_dict.get('package_id')
@@ -116,7 +117,7 @@ def hdx_mark_broken_link_in_resource(context, data_dict):
             raise NotFound("dataset was not found")
         data_revise_dict = {
             "match": {"id": package_id},
-            'update__resources__' + resource_id: {'broken_link': True}
+            'update__resources__' + resource_id: {'broken_link': broken_link}
         }
         # data_dict['broken_link'] = True
         context['allow_broken_link_field'] = True
