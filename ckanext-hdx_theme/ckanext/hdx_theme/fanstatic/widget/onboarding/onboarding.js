@@ -19,6 +19,7 @@ function notYou(){
     $('#username-static, #login-photo-gravatar').hide();
     $('#username-form-field, #login-photo-default').show();
     $('#field-login').focus();
+    _displayMfaField();
 }
 
 function checkLockout(event) {
@@ -87,18 +88,18 @@ function showOnboardingWidget(id, elid, val){
             $this.addClass("input-content");
     }
 
-    $(id).find('input[type="password"], input[type="text"], textarea').each(
+    $(id).find('input[type="password"], input[type="number"], input[type="text"], textarea').each(
         function(idx, el){
             _triggerInputDataClass($(el));
         }
     );
-    $(id).find('input[type="password"], input[type="text"], textarea').change(
+    $(id).find('input[type="password"], input[type="number"], input[type="text"], textarea').change(
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
         }
     );
-    $(id).find('input[type="password"], input[type="text"], textarea').on("keyup",
+    $(id).find('input[type="password"], input[type="number"], input[type="text"], textarea').on("keyup",
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
@@ -136,8 +137,37 @@ function _showLoginError(loginError) {
   errMsg.show();
 }
 
+function _displayMfaField(show = false) {
+  if (show)
+    $("#mfa-form-field").show();
+  else
+    $("#mfa-form-field").hide();
+  $("#field-mfa").val("");
+}
+
+function checkMfa() {
+  console.log("test");
+  let username = $("#field-login").val();
+  let response = $.ajax({
+    type: "GET",
+    url: `/api/check_mfa?user=${username}`,
+    cache: false,
+    async: false
+  }).responseText;
+  if (response) {
+    let json = JSON.parse(response);
+    if (json.result === true){
+      _displayMfaField(true);
+      return;
+    }
+  }
+  _displayMfaField();
+}
+
+
 $(document).ready(function(){
     $("#hdx-login-form").submit(checkLockout);
+    $("#field-login").change(checkMfa);
     //check cookies
     var loginCookie = $.cookie("hdx_login");
     if (loginCookie){
@@ -151,6 +181,7 @@ $(document).ready(function(){
             $('#user-display-email').text(data.email);
         $('#login-photo-gravatar-img').attr("src", "//gravatar.com/avatar/"+ data.email_hash +"?s=95&d=identicon");
         $('#username-static, #login-photo-gravatar').show();
+        checkMfa();
     }
 
     //check for first login
