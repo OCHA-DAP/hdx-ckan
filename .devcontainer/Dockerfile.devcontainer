@@ -1,4 +1,4 @@
-FROM public.ecr.aws/unocha/hdx-ckan:dev-py3 as baseimage
+FROM public.ecr.aws/unocha/hdx-ckan:dev as baseimage
 
 # Install required system packages
 RUN apt-get -qq -y update && \

@@ -32,7 +32,7 @@
   //chmod +x *.sh ./docker/*.sh",
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
 	// "postCreateCommand": "apt-get update && apt-get install -y curl",
-	"postCreateCommand": "sh ./setup_py3_helper.sh && pip install -r requirement-setuptools.txt && pip install --upgrade -r requirements.txt && sh ./docker/ckan_helper.sh && pip install -r dev-requirements.txt && ln -sf /srv/ckan/docker/hdxckantool-ng.py /srv/hdxckantool-ng.py",
+	"postCreateCommand": "sh ./setup_helper.sh && pip install -r requirement-setuptools.txt && pip install --upgrade -r requirements.txt && sh ./docker/ckan_helper.sh && pip install -r dev-requirements.txt && ln -sf /srv/ckan/docker/hdxckantool-ng.py /srv/hdxckantool-ng.py",
 
 	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"

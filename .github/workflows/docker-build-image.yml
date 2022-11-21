@@ -1,4 +1,4 @@
-name: HDX/CKAN create Python3 image
+name: HDX/CKAN create image
 
 on:
   push:
@@ -53,5 +53,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          file: ./Dockerfile.py3
-          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}-py3
+          file: ./Dockerfile
+          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}
