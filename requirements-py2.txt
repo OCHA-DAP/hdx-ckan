@@ -148,7 +148,7 @@ pbr==5.2.0
     # via sqlalchemy-migrate
 polib==1.0.7
     # via -r requirements-py2.in
-psycopg2==2.8.2
+psycopg2==2.8.6
     # via -r requirements-py2.in
 pydns==2.3.6
     # via -r requirements-py2.in
@@ -241,7 +241,7 @@ sqlalchemy==1.3.5
     #   -r requirements-py2.in
     #   alembic
     #   sqlalchemy-migrate
-sqlparse==0.2.2
+sqlparse==0.3.0
     # via
     #   -r requirements-py2.in
     #   sqlalchemy-migrate
