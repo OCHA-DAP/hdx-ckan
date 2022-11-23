@@ -1,0 +1,2 @@
+beautifulsoup4==4.9.1
+awscli==1.19.112
