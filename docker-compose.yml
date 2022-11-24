@@ -40,11 +40,11 @@ services:
         aliases:
           - dbckan
 
-  ckan-py3:
+  ckan:
     build:
       context: ./
-      dockerfile: Dockerfile.py3
-    hostname: ckan-py3
+      dockerfile: Dockerfile
+    hostname: ckan
     depends_on:
       - db
       - solr
