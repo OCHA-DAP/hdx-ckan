@@ -312,3 +312,11 @@ def geopreview_4_packages(original_package_action):
         return result_dict
 
     return package_action
+
+
+def delete_geopreview_layer(resource_id):
+    layer_delete_url_template = config.get('hdx.gis.layer_delete_url')
+    layer_delete_url = layer_delete_url_template.format(resource_id=resource_id)
+    response = requests.post(layer_delete_url, allow_redirects=True)
+    response.raise_for_status()
+

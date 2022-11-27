@@ -76,6 +76,7 @@ hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
 #DEPRECATED hdx.less_compile.onstartup = False
 
 # GIS
+hdx.gis.layer_delete_url = http://${HDX_GEOPREVIEW_API}/api/delete-one-layer/{resource_id}
 hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
