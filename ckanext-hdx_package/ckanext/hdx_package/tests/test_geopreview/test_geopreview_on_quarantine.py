@@ -10,8 +10,9 @@ SYSADMIN_USER = 'testsysadmin'
 
 class TestGeopreviewOnQuarantine(HDXWithIndsAndOrgsTest):
 
+    @mock.patch('ckanext.hdx_package.actions.patch.delete_geopreview_layer')
     @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
-    def test_shape_info_removed_on_quarantine(self, tag_s3_mock):
+    def test_shape_info_removed_on_quarantine(self, tag_s3_mock, delete_geopreview_layer_mock):
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         resource = {
             'url': tk.config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
@@ -30,5 +31,9 @@ class TestGeopreviewOnQuarantine(HDXWithIndsAndOrgsTest):
         })
         assert quarantined_resource['in_quarantine'] is True
         assert 'shape_info' not in quarantined_resource
+
+        assert delete_geopreview_layer_mock.call_count == 1
+        assert delete_geopreview_layer_mock.call_args[0][0] == created_resource['id']
+
 
 
