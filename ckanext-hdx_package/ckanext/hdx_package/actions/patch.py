@@ -10,6 +10,7 @@ import ckanext.hdx_package.helpers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
+from ckanext.hdx_package.helpers.geopreview import delete_geopreview_layer
 
 NotFound = logic.NotFound
 
@@ -155,8 +156,10 @@ def hdx_qa_resource_patch(context, data_dict):
 
     resource_dict = _get_action('resource_show')(context, {'id': data_dict.get('id')})
     pkg_id = resource_dict.get('package_id')
+    new_quarantine_value = data_dict.get('in_quarantine')
 
-    if data_dict.get('in_quarantine') is not None:
+    # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
+    if new_quarantine_value is not None:
         dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
         tag_s3_version_by_resource_id(
             {
@@ -170,13 +173,26 @@ def hdx_qa_resource_patch(context, data_dict):
             dataset_dict.get('name')
         )
     data_revise_dict = {'match': {'id': pkg_id}}
+    _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict)
     for item in data_dict.keys():
         if data_dict[item] != 'id':
             data_revise_dict['update__resources__' + resource_dict.get('id')[:5]] = {item: data_dict[item]}
 
     if len(data_revise_dict.keys()) <= 1:
         raise NotFound("resource id, key or value were not provided")
-    return _get_action('package_revise')(context, data_revise_dict)
+    revise_response = _get_action('package_revise')(context, data_revise_dict)
+    package = revise_response.get('package', {})
+    resource_dict = next((res for res in package.get('resources', []) if res.get('id') == resource_dict['id']), None)
+    return resource_dict
+
+
+def _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict):
+    if new_quarantine_value == 'true' and resource_dict.get('shape_info'):
+        resource_id = resource_dict['id']
+        data_revise_dict['filter'] = [
+            "-resources__" + resource_id + "__shape_info"
+        ]
+        delete_geopreview_layer(resource_id)
 
 
 def hdx_fs_check_resource_revise(context, data_dict):
