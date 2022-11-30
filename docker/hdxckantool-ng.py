@@ -601,12 +601,12 @@ def reinstall_plugins(develop):
 def solr_add(ctx, host, port, collection, config_set, force):
     """Create a SOLR collection"""
     try:
-        ctx.invoke(solr_exists, host=host, port=port, collection=collection)
-        if not force:
-            print("Collection {} already exists.".format(collection))
-            return
-        else:
-            ctx.invoke(solr_del)
+        if ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+            if not force:
+                print("Collection {} already exists.".format(collection))
+                raise click.ClickException("Collection {} already exists. Use --force to forcibly recreate it.".format(collection))
+            else:
+                ctx.invoke(solr_del)
         query = "http://{}:{}/solr/admin/collections?action=CREATE&name={}&collection.configName={}&numShards=1" \
             .format(host, port, collection, config_set)
         r = requests.get(query)
@@ -625,7 +625,8 @@ def solr_add(ctx, host, port, collection, config_set, force):
 def solr_del(ctx, host, port, collection):
     """Create a SOLR collection"""
     try:
-        ctx.invoke(solr_exists, host=host, port=port, collection=collection)
+        if not ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+            raise click.ClickException("Collection {} does not exists.".format(collection))
         query = "http://{}:{}/solr/admin/collections?action=DELETE&name={}" \
             .format(host, port, collection)
         r = requests.get(query)
@@ -649,7 +650,8 @@ def solr_exists(host, port, collection):
             raise click.ClickException(r.json()["error"]["msg"])
         collections = r.json()["cluster"]["collections"].keys()
         if collection not in collections:
-            raise click.ClickException("Collection {} does not exists.".format(collection))
+            return False
+        return True
     except Exception as e:
         raise click.ClickException("Can't query SOLR: {}".format(str(e)))
 
