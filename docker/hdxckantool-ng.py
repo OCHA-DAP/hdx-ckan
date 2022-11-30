@@ -34,7 +34,7 @@ SOLR =  dict(
     ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
     PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
     CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
-    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-current'))
+    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-solr'))
 )
 
 SNAPSHOTS_TOKEN = None
@@ -834,7 +834,7 @@ def webassets(ctx):
 
 @cli.command(name='magic')
 @click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Just go.")
-@click.option('-s', '--solr-config', default='hdx-current', show_default=True, help="SOLR configset name")
+@click.option('-s', '--solr-config', default=SOLR['CONFIGSET'], show_default=True, help="SOLR configset name")
 @click.pass_context
 def do_magic(ctx, force, solr_config):
     """Automagically sets things up for you"""

@@ -51,7 +51,7 @@ Enjoy!
 
 ### Solr Setup
 1. [Re]create the solr collection:
-    `hdxckantool solr add -s hdx-current -c ckan -f`
+    `hdxckantool solr add -s hdx-solr -c ckan -f`
 1. Reindex solr (takes a while. like about 45 minnutes, go for a walk or coffee or both):
     `hdxckantool solr reindex --clear --fast`
 
