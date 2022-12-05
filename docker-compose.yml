@@ -16,7 +16,7 @@ services:
     hostname: solr
     container_name: solr
     volumes:
-      - "./docker/solr:/configsets"
+      - "./ckanext-hdx_search/ckanext/hdx_search/:/configsets"
 
   zookeeper:
     image: zookeeper:3.6
@@ -43,10 +43,8 @@ services:
   ckan:
     build:
       context: ./
-      dockerfile: Dockerfile.py2
+      dockerfile: Dockerfile
     hostname: ckan
-    container_name: ckan
-    privileged: true
     depends_on:
       - db
       - solr

@@ -28,7 +28,6 @@ fl_notes.txt
 .noseids
 *~
 .idea
-.vscode
 
 # custom style
 ckan/public/base/less/custom.less
@@ -57,3 +56,5 @@ cypress.env.json
 
 # travis env
 travis.env
+
+.env.secrets

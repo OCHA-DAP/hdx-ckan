@@ -54,5 +54,3 @@ chown -R www-data $webassets_dir
 
 #hdxckantool less compile
 
-# build all webassets
-hdxckantool webassets

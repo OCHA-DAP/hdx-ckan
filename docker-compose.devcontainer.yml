@@ -1,0 +1,174 @@
+version: '2.2'
+
+services:
+  ckan:
+    cpu_quota: 400000
+    environment:
+      HDX_ANALYTICS_API: ckanlayer:5000
+      HDX_ANALYTICS_TRACK_API: "false"
+      HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS: ''
+      HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER: ''
+      HDX_CKANDB_ADDR: db
+      HDX_CKANDB_DB: ckan
+      HDX_CKANDB_DB_DATASTORE: datastore
+      HDX_CKANDB_PASS: ckan
+      HDX_CKANDB_PASS_DATASTORE: datastore
+      HDX_CKANDB_PORT: '5432'
+      HDX_CKANDB_USER: ckan
+      HDX_CKANDB_USER_DATASTORE: datastore
+      HDX_CKAN_API_KEY:
+      HDX_CKAN_RECAPTCHA_KEY:
+      HDX_CKAN_WORKERS: '4'
+      HDX_COD_NEW_FILTERS_ENABLED: "false"
+      HDX_DATAGRID_PROD: "false"
+      HDX_DOMAIN: data.humdata.local
+      HDX_FILESTORE: /srv/filestore
+      HDX_GEOPREVIEW_API: gislayer:5000
+      HDX_GISDB_ADDR: gisdb
+      HDX_GISDB_DB: gis
+      HDX_GISDB_PASS: gis
+      HDX_GISDB_USER: gis
+      HDX_GOOGLE_DEV_KEY:
+      HDX_HOTJAR_SITEID: null
+      HDX_HOURS_MIXPANEL_CACHE: '1'
+      HDX_HXLPROXY: https://proxy.hxlstandard.org
+      HDX_MAILCHIMP_API_KEY: -us14
+      HDX_MAILCHIMP_LIST_NEWSLETTER:
+      HDX_MAILCHIMP_LIST_NEW_USER:
+      HDX_MIXPANEL_SECRET:
+      HDX_MIXPANEL_TOKEN:
+      HDX_QA_DASHBOARD: "true"
+      HDX_REDIS_ADDR: redis
+      HDX_REDIS_DB: '2'
+      HDX_REDIS_PORT: '6379'
+      HDX_SESSION_REDIS_ADDR: redis
+      HDX_SESSION_REDIS_DB: '3'
+      HDX_SESSION_REDIS_PORT: '6379'
+      HDX_SMTP_ADDR: mailhog
+      HDX_SMTP_DOMAIN: humdata.org
+      HDX_SMTP_PASS: ''
+      HDX_SMTP_PORT: '1025'
+      HDX_SMTP_TLS: "False"
+      HDX_SMTP_USER: ''
+      HDX_SOLR_ADDR: solr
+      HDX_SOLR_CORE: ckan
+      HDX_SOLR_PORT: '8983'
+      HDX_USER_AGENT:
+      HDX_WEBASSETS_PATH: /srv/webassets
+      NEW_RELIC_LICENSE_KEY: '3434343434343434343434343434343434343434'
+      POSTGRES_PASSWORD: rootpass
+      PS1: '\h \w ~> '
+      REGION_NAME: eu-central-1
+      S3_FILESTORE: enabled
+      SIGNATURE_VERSION: s3v4
+      TERM: xterm
+    hostname: hdx-local-ckan
+    image: public.ecr.aws/unocha/hdx-ckan:dev
+    # build:
+    #   context: ./
+    #   dockerfile: Dockerfile
+
+    mem_limit: 16g
+    restart: always
+    # volumes:
+    # - "./:/srv/ckan"
+    volumes:
+      - backups:/srv/backup
+      - ckanfiles:/srv/filestore
+    working_dir: /srv/ckan
+
+  db:
+    cpu_quota: 400000
+    environment:
+      HDX_CKANDB_ADDR: db
+      HDX_CKANDB_DB: ckan
+      HDX_CKANDB_DB_DATASTORE: datastore
+      HDX_CKANDB_PASS: ckan
+      HDX_CKANDB_PASS_DATASTORE: datastore
+      HDX_CKANDB_PORT: '5432'
+      HDX_CKANDB_USER: ckan
+      HDX_CKANDB_USER_DATASTORE: datastore
+      HDX_DOMAIN: data.humdata.local
+      HDX_GISDB_ADDR: gisdb
+      HDX_GISDB_DB: gis
+      HDX_GISDB_PASS: gis
+      HDX_GISDB_USER: gis
+      POSTGRES_PASSWORD: rootpass
+      PS1: '\h \w ~> '
+      TERM: xterm
+    hostname: hdx-local-dbckan
+    image: postgis/postgis:11-3.2-alpine
+    mem_limit: 16g
+    ports:
+      - "0.0.0.0:25432:5432"
+    restart: always
+    volumes:
+    - "./docker/postgres/init:/docker-entrypoint-initdb.d"
+    - database:/var/lib/postgresql/data:rw
+
+  redis:
+    cpu_quota: 400000
+    environment:
+      HDX_DOMAIN: data.humdata.local
+      PS1: '\h \w ~> '
+      TERM: xterm
+    hostname: hdx-local-redis
+    image: public.ecr.aws/unocha/redis:5
+    mem_limit: 16g
+    restart: always
+    volumes:
+    - "redis-data:/var/lib/redis"
+    - "redis-logs:/var/log/redis"
+
+  solr:
+    environment:
+      SOLR_HEAP: 512m
+      SOLR_OPTS: -Dsolr.jetty.request.header.size=65536 -Dsolr.dns.prevent.reverse.lookup
+      ZK_HOST: zookeeper:2181
+    hostname: solr
+    image: solr:8.11.2-slim
+    ports:
+      - "0.0.0.0:8983:8983"
+    ulimits:
+      nofile:
+        soft: 65000
+        hard: 65000
+    volumes:
+      - "./ckanext-hdx_search/ckanext/hdx_search/:/configsets"
+      - "./docker/solr/init:/docker-entrypoint-initdb.d"
+      - "solr-logs:/opt/solr/server/logs"
+      - "solr-data:/var/solr/data"
+    networks:
+      default:
+        aliases:
+        - solr-1
+
+  zookeeper:
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zookeeper:2888:3888;2181
+      ZOO_STANDALONE_ENABLED: 'true'
+      ZOO_LOG4J_PROP: 'INFO,ROLLINGFILE'
+    hostname: zookeeper
+    image: zookeeper:3.8
+    volumes:
+    - "zookeeper-data:/data"
+    - "zookeeper-datalog:/datalog"
+    - "zookeeper-logs:/logs"
+    networks:
+      default:
+        aliases:
+        - zookeeper-1
+
+volumes:
+  backups: {}
+  ckanfiles: {}
+  database: {}
+  redis-data: {}
+  redis-logs: {}
+  solr-data: {}
+  solr-logs: {}
+  zookeeper-data: {}
+  zookeeper-datalog: {}
+  zookeeper-logs: {}
+
