@@ -61,6 +61,7 @@ config = tk.config
 
 def get_default_facet_titles():
     return {
+        'dataseries_name': _('Dataseries'),
         'organization': _('Organizations'),
         'groups': _('Groups'),
         # 'tags': _('Tags'),

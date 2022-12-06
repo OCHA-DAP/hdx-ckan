@@ -8,6 +8,8 @@ import bisect
 import datetime
 import logging
 import json
+import re
+
 import six
 import ckan.model as model
 import ckan.authz as authz
@@ -544,7 +546,7 @@ def hdx_delete_unless_field_in_context(context_field):
     return hdx_delete_unless_forced
 
 
-def hdx_delete_unless_authorized_wrapper(auth_function):
+def hdx_keep_prev_val_unless_authorized_wrapper(auth_function):
     '''
     :param auth_function: the auth function to run through check_access()
     :type auth_function: str
@@ -552,13 +554,18 @@ def hdx_delete_unless_authorized_wrapper(auth_function):
     :rtype: function
     '''
 
-    def hdx_delete_unless_authorized(key, data, errors, context):
+    def hdx_keep_prev_val_unless_authorized(key, data, errors, context):
         try:
             check_access(auth_function, context, None)
         except NotAuthorized as e:
-            data.pop(key, None)
+            pkg_id = data.get(('id',))
+            if pkg_id:
+                prev_package_dict = __get_previous_package_dict(context, pkg_id)
+                old_value = prev_package_dict.get(key[0], None)
+                if old_value:
+                    data[key] = old_value
 
-    return hdx_delete_unless_authorized
+    return hdx_keep_prev_val_unless_authorized
 
 
 def hdx_value_in_list_wrapper(allowed_values, allow_missing):
@@ -663,3 +670,11 @@ def __get_previous_package_dict(context, id):
 def hdx_resources_not_allowed_if_requested_data(key, data, errors, context):
     if data[key] and ((u'resources', 0, 'url') in data or (u'resources', 0, 'name') in data):
         raise df.Invalid(_('By request - HDX Connect datasets can not store resources'))
+
+
+DATASERIES_TITLE_PATTERN = re.compile('^[0-9a-zA-Z -]+$')
+def hdx_dataseries_title_validator(value, context):
+    if value:
+        if not DATASERIES_TITLE_PATTERN.match(value):
+            raise Invalid(_('Dataseries title is not valid'))
+    return value
