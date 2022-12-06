@@ -56,6 +56,8 @@
                   {% endblock %}
                   {% block owner_update_icons %}
                     <div class="dataset-updated-icons">
+                      {% snippet 'search/snippets/package_icons_cod.html', package=package%}
+
                       {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
                       {% set has_quality_checked = package.indicator == '1' or package.quality %}
                       {% if h.hdx_dataset_is_hxl(package.tags) %}

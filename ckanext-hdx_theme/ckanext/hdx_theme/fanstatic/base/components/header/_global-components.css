@@ -364,6 +364,15 @@
   font-size: 12px;
   white-space: nowrap;
 }
+span.icn-txt-cods {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  background-color: #888888;
+  color: #fff;
+  padding: 3px 4px 3px 4px;
+  border-radius: 10px;
+}
 ul.dataset-resources li + li.label-icons {
   border-left: 1px solid #888888;
   margin-left: 10px;

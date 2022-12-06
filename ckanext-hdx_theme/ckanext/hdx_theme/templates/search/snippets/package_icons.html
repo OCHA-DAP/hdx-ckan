@@ -1,5 +1,9 @@
 {% extends "search/snippets/package_icons_base.html" %}
 
+{% block leading_icons %}
+  {% snippet 'search/snippets/package_icons_cod.html', package=package%}
+{% endblock %}
+
 {% block other_icons %}
   {% if h.hdx_dataset_is_hxl(package.tags) %}
     <a href="{% url_for 'search', ext_hxl=1 %}">
