@@ -276,14 +276,22 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
                              tk.get_converter('convert_to_extras')],
             'cod_level': [
-                tk.get_validator('hdx_delete_unless_authorized_to_update_cod'),
-                tk.get_validator('hdx_keep_prev_value_if_empty'),
+                tk.get_validator('hdx_keep_prev_val_unless_authorized_to_update_cod'),
+                tk.get_validator('ignore_missing'),
+                # tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_validator('hdx_in_cod_values'),
                 tk.get_converter('convert_to_extras')
             ],
             'resource_grouping': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('hdx_convert_to_json_string'),
+                tk.get_converter('convert_to_extras')
+            ],
+            'dataseries_name': [
+                tk.get_validator('hdx_keep_prev_val_unless_authorized_to_update_dataseries'),
+                tk.get_validator('ignore_missing'),
+                tk.get_validator('hdx_dataseries_title_validator'),
+                # tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_converter('convert_to_extras')
             ]
         })
@@ -457,6 +465,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'), tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'dataseries_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
             'last_modified': [tk.get_validator('ignore_missing')],
             # 'due_daterange': [tk.get_validator('ignore_missing')],
@@ -542,7 +551,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
             'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed,
             'hdx_qa_resource_patch': hdx_patch.hdx_qa_resource_patch,
-            'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource
+            'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
+            'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
+            'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
 
         }
 
@@ -575,8 +586,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_resource_qa_script_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_resource_qa_script_field',
                                                                                resource_level=True),
-            'hdx_delete_unless_authorized_to_update_cod':
-                vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_keep_prev_val_unless_authorized_to_update_dataseries':
+                vd.hdx_keep_prev_val_unless_authorized_wrapper('hdx_dataseries_update'),
+            'hdx_keep_prev_val_unless_authorized_to_update_cod':
+                vd.hdx_keep_prev_val_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_dataseries_title_validator': vd.hdx_dataseries_title_validator,
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
             'hdx_in_update_frequency_values':
@@ -594,18 +608,20 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         }
 
     def get_auth_functions(self):
-        return {'package_create': authorize.package_create,
-                'package_update': authorize.package_update,
-                'hdx_resource_id_list': authorize.hdx_resource_id_list,
-                'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
-                'hdx_send_mail_members': authorize.hdx_send_mail_members,
-                # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
-                'hdx_resource_download': authorize.hdx_resource_download,
-                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
-                'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
-                'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
-                'hdx_cod_update': authorize.hdx_cod_update
-                }
+        return {
+            'package_create': authorize.package_create,
+            'package_update': authorize.package_update,
+            'hdx_resource_id_list': authorize.hdx_resource_id_list,
+            'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
+            'hdx_send_mail_members': authorize.hdx_send_mail_members,
+            # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
+            'hdx_resource_download': authorize.hdx_resource_download,
+            'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
+            'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
+            'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
+            'hdx_cod_update': authorize.hdx_cod_update,
+            'hdx_dataseries_update': authorize.hdx_dataseries_update
+        }
 
     def make_middleware(self, app, config):
         if not HDXPackagePlugin.__startup_tasks_done:

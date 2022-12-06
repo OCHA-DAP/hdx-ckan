@@ -1,16 +1,17 @@
-import ckan.logic as logic
 import ckan.logic.action.update as _update
-from ckan.logic import (
-    get_action as _get_action,
-    check_access as _check_access,
-    get_or_bust as _get_or_bust,
-)
+
+import ckan.plugins.toolkit as tk
 
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
+
+_check_access = tk.check_access
+_get_action = tk.get_action
+_get_or_bust = tk.get_or_bust
 
 
 def resource_patch(context, data_dict):
@@ -163,3 +164,39 @@ def hdx_qa_package_revise_resource(context, data_dict):
         data_revise_dict['update__resources__' + str(res.get('position'))] = {key: value}
 
     return _get_action('package_revise')(context, data_revise_dict)
+
+
+def hdx_dataseries_link(context, data_dict):
+    _check_access('hdx_dataseries_update', context, data_dict)
+    name_or_id = _get_or_bust(data_dict, 'id')
+    dataseries_name = _get_or_bust(data_dict, 'dataseries_name')
+    return _manage_dataseries_link(context, name_or_id, dataseries_name)
+
+
+def hdx_dataseries_unlink(context, data_dict):
+    _check_access('hdx_dataseries_update', context, data_dict)
+    name_or_id = _get_or_bust(data_dict, 'id')
+    return _manage_dataseries_link(context, name_or_id, dataseries_name=None)
+
+
+def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
+    context['ignore_auth'] = True
+
+    model = context['model']
+    pkg = model.Package.get(dataset_name_or_id)
+
+    data_revise_dict = {
+        'match': {
+            'id': pkg.id
+        }
+    }
+    if dataseries_name:
+        data_revise_dict['update'] = {
+            'dataseries_name': dataseries_name
+        }
+    else:
+        data_revise_dict['filter'] = [
+            "-dataseries_name"
+        ]
+    result = _get_action('package_revise')(context, data_revise_dict)
+    return result['package']

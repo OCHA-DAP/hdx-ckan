@@ -119,6 +119,14 @@ def package_qa_checklist_update(context, data_dict=None):
 
 
 def hdx_cod_update(context, data_dict):
+    return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_COD)
+
+
+def hdx_dataseries_update(context, data_dict):
+    return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_DATASERIES)
+
+
+def _check_hdx_user_permission(context, permission):
     username_or_id = context.get('user')
-    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_COD)
+    result = Permissions(username_or_id).has_permission(permission)
     return {'success': result}
