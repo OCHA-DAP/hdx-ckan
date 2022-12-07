@@ -14,7 +14,7 @@
     "jquery": "^3.5.0",
     "less": "^3.11.2",
     "moment": "^2.24.0",
-    "qs": "^6.9.4"
+    "qs": "^6.9.7"
   },
   "devDependencies": {
     "cypress": "^4.8.0",
