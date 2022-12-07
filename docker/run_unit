@@ -23,14 +23,14 @@ cd /srv/ckan
 
 ln -sf /etc/ckan/prod.ini ckan.ini
 
-if [ "$NEW_RELIC_ENABLED" == "true" ]; then
+if [ "$NEW_RELIC_ENABLED" = "true" ]; then
     [ -z "$NEW_RELIC_APP_NAME"     ] && export NEW_RELIC_APP_NAME="HDX"
     [ -z "$NEW_RELIC_LICENSE_KEY"  ] && export NEW_RELIC_LICENSE_KEY="LICENSE"
     [ -z "$NEW_RELIC_LOG"          ] && export NEW_RELIC_LOG="false"
     echo "new relic is enabled."
     cp /srv/ckan/docker/unit-nr.json /var/lib/unit/conf.json
     chmod 600 /var/lib/unit/conf.json
-elif [ "$ELASTIC_APM_ENABLED" == "true" ]; then
+elif [ "$ELASTIC_APM_ENABLED" = "true" ]; then
     [ -z "$ELASTIC_APM_SERVICE_NAME" ] && export ELASTIC_APM_SERVICE_NAME=HDX
     [ -z "$ELASTIC_APM_ENVIRONMENT" ] && export ELASTIC_APM_ENVIRONMENT=blah
     [ -z "$ELASTIC_APM_SECRET_TOKEN" ] && export ELASTIC_APM_SECRET_TOKEN=
