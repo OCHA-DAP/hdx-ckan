@@ -666,6 +666,10 @@
 .request-data-module .requested-data-container__content-item--requested-by-info {
   margin-right: 30px !important;
 }
+.request-data-module .requested-data-container__content-item--requested-by-info .glyphicon-warning-sign {
+  color: orange;
+  margin-left: 3px;
+}
 .request-data-module .requested-data-container__content-item--actions-new {
   margin-right: 40px !important;
 }
@@ -689,4 +693,92 @@
     padding: 20px;
     padding-bottom: 60px;
   }
+}
+.full-width {
+  width: 100%;
+}
+.control {
+  position: relative;
+}
+.control input[type="text"],
+.control input[type="password"],
+.control textarea {
+  height: 44px;
+  border-radius: 6px;
+  border: 1px solid white;
+  padding-left: 20px;
+  font-size: 16px;
+  color: #333333;
+}
+.control input[type="text"]:focus,
+.control input[type="password"]:focus,
+.control textarea:focus {
+  outline: none;
+}
+.control input[type="text"] ~ label,
+.control input[type="password"] ~ label,
+.control textarea ~ label {
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  opacity: 1;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  left: 20px;
+  line-height: 44px;
+  cursor: text;
+  transition: 1s;
+}
+.control input[type="text"] ~ label:after,
+.control input[type="password"] ~ label:after,
+.control textarea ~ label:after {
+  content: "";
+}
+.control input[type="text"].input-content ~ label,
+.control input[type="password"].input-content ~ label,
+.control textarea.input-content ~ label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 10px;
+  color: #888888;
+  bottom: 1px;
+}
+.control input[type="text"].required.input-content ~ label:after,
+.control input[type="password"].required.input-content ~ label:after,
+.control textarea.required.input-content ~ label:after {
+  content: "";
+}
+.control input[type="text"].required.error,
+.control input[type="password"].required.error,
+.control textarea.required.error {
+  border-color: red;
+}
+.control input[type="text"].required ~ label:after,
+.control input[type="password"].required ~ label:after,
+.control textarea.required ~ label:after {
+  content: "*";
+  margin-left: 5px;
+  color: red;
+}
+.control .select2-container.error .select2-choice {
+  border-color: red;
+}
+.control label#field-checkbox-label {
+  font-weight: normal;
+}
+.control label.error {
+  color: red;
+}
+.control #field-comments {
+  height: 120px;
+  padding: 14px 20px;
+}
+.control #field-comments ~ label {
+  bottom: 76px;
+}
+.control #field-comments.input-content ~ label {
+  bottom: 6px;
 }

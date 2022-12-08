@@ -57,6 +57,8 @@ ckan.module('hdx-modal-form', function($) {
                 }
                 var payload = {
                     message_content: this.options.message_content,
+                    user_organization_id: this.options.post_data.user_organization_id,
+                    user_organization_type: this.options.post_data.user_organization_type,
                     package_name: this.options.post_data.package_name,
                     package_title: this.options.post_data.package_title,
                     maintainers: JSON.stringify(this.options.post_data.maintainers),
@@ -90,12 +92,30 @@ ckan.module('hdx-modal-form', function($) {
         createModal: function(html) {
             if (!this.modal) {
                 var element = this.modal = jQuery(html);
+                var form = this.modal.find('form');
+
+                // select "Other" values"
+                $(form[0]).find('select').on('change', this._selectOnChange);
+                // input-value class
+                $(form[0]).find('input[type="password"], input[type="text"], textarea').on('keyup', this._triggerInputDataClass);
+
                 element.on('click', '.btn-primary', this._onSubmit);
                 element.on('click', '.btn-cancel', this._onCancel);
                 element.modal({
                     show: false
                 });
                 this.modalFormError = this.modal.find('.alert-danger')
+
+                // init select2
+                var select2Inputs = ['#field-country', '#field-organization', '#field-organization-type', '#field-intend-message'];
+                $.each(select2Inputs, function(i, select2Input) {
+                  var $select2Input = $(form[0]).find(select2Input);
+                  var defaultValue = $select2Input.data('default-value');
+                  if(defaultValue) {
+                    $select2Input.find('option[value="' + defaultValue + '"]').attr('selected', 'selected');
+                  }
+                  $select2Input.select2();
+                });
             }
             return this.modal;
         },
@@ -119,8 +139,9 @@ ckan.module('hdx-modal-form', function($) {
             $.each(formElements, function(i, element) {
                 var value = element.value.trim();
 
-                if (element.required && value === '') {
-                    var hasError = element.parentElement.querySelector('.error-block')
+                var is_empty = ((element.type === 'checkbox') ? !element.checked : (value === '' || value === '-1'));
+                if (element.required && is_empty) {
+                    var hasError = element.querySelector('.error')
 
                     if (!hasError) {
                         this._showInputError(element, 'Missing value')
@@ -188,18 +209,37 @@ ckan.module('hdx-modal-form', function($) {
             this._clearFormErrors()
             this._resetModalForm();
         },
-        _showInputError: function(element, message) {
-            var div = document.createElement('div');
-            div.className = 'error-block';
-            div.textContent = message;
+        _selectOnChange: function(event) {
+          var $otherField = $('#' + this.getAttribute('id') + '-other');
+          var $otherFieldContainer = $otherField.parent();
 
-            element.parentElement.appendChild(div);
+          if(this.value === '__other__') {
+            $otherField.attr('required', this.getAttribute('required'));
+            $otherFieldContainer.removeClass('hidden');
+          }
+          else {
+            $otherField.removeAttr('required').parent().addClass('hidden');
+          }
+        },
+        _triggerInputDataClass: function(event) {
+            if(this.value === '') {
+              $(this).removeClass('input-content');
+            }
+            else {
+                $(this).addClass('input-content');
+            }
+        },
+        _showInputError: function(element, message) {
+            if(element.type === 'checkbox') {
+              $(element).parent().addClass('error');
+            }
+            $(element).addClass('error');
         },
         _clearFormErrors: function() {
-            var errors = this.modal.find('.error-block');
+            var errors = this.modal.find('.error');
 
             $.each(errors, function(i, error) {
-                error.parentElement.removeChild(error);
+                $(error).removeClass('error');
             })
 
             this.modalFormError.addClass('hide');
