@@ -185,6 +185,9 @@ def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
     model = context['model']
     pkg = model.Package.get(dataset_name_or_id)
 
+    if not pkg:
+        raise NotFound('Dataset {} was not found'.format(dataset_name_or_id))
+
     data_revise_dict = {
         'match': {
             'id': pkg.id
