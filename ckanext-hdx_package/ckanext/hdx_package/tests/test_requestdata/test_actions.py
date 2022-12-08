@@ -40,6 +40,10 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
             'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
 
         result = self._get_action('requestdata_request_create')(context, data_dict)
@@ -55,7 +59,11 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             assert ex.error_dict['sender_name'] == [u'Missing value']
             assert ex.error_dict['email_address'] == [u'Missing value']
             assert ex.error_dict['package_id'] == [u'Missing value']
-            assert len(ex.error_dict) == 4
+            assert ex.error_dict['sender_country'] == [u'Missing value']
+            assert ex.error_dict['sender_organization_id'] == [u'Missing value']
+            assert ex.error_dict['sender_organization_type'] == [u'Missing value']
+            assert ex.error_dict['sender_intend'] == [u'Missing value']
+            assert len(ex.error_dict) == 8
         assert True
 
     def test_create_requestdata_raises_auth_error(self):
@@ -115,6 +123,10 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
             'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
 
         result = self._get_action('requestdata_request_create')(context, data_dict)
@@ -191,6 +203,10 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
             'email_address': johndoe1.email,
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
 
         for i in range(10):
@@ -235,6 +251,10 @@ class TestRequestdataForOrgActions(hdx_test_with_requestdata_type_and_orgs.HDXWi
                 'message_content': 'I want to add additional data.',
                 'organization': 'Google',
                 'email_address': 'test@test.com',
+                'sender_country': 'Romania',
+                'sender_organization_id': 'NASA',
+                'sender_organization_type': 'Military',
+                'sender_intend': 'Research Purposes'
             }
             try:
                 result = self._get_action('requestdata_request_create')(context, data_dict)
