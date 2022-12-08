@@ -187,6 +187,7 @@ def send_request():
     package = _get_action('package_show', data_dict)
     sender_name = data.get('sender_name', '')
     sender_email = data.get('email_address', '')
+    extras = data.get('extras', None)
     user_obj = context['auth_user_obj']
     data_dict = {
         'id': user_obj.id,
@@ -265,6 +266,7 @@ def send_request():
             'user_fullname': sender_name,
             'user_email': email,
             'msg': message,
+            'extras': json.loads(extras) if extras else None,
             'org_name': package.get('organization').get('title'),
             'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
             'dataset_title': dataset_title,
