@@ -50,11 +50,43 @@ Fields for Grouping Resources
 Expected Update Frequency
 +++++++++++++++++++++++++
 
+The dataset field is called: *data_update_frequency*
 The value of the field is usually the number of days after which a dataset is expected to be updated.
 The exceptions to this are:
 
-* *As needed* (formerly *adhoc*) has value -2
-* *Never* has value -1 ( initially the value 0 was used for this but it was decided that 0 is more suitable for *live*)
-   The following patch was used for updating the database:
-    :code:`update package_extra set value='-1' where key='data_update_frequency' and value='0' and state='active';`
-* *Live* has value 0
+- *As needed* (formerly *adhoc*) has value -2
+- *Never* has value -1 ( initially the value 0 was used for this but it was decided that 0 is more suitable for *live* )
+
+  The following patch was used for updating the database:
+
+  :code:`update package_extra set value='-1' where key='data_update_frequency' and value='0' and state='active';`
+- *Live* has value 0
+
+
+Dataseries
+++++++++++
+
+There is a dataset field called: *dataset_name*.
+
+**Permissions**: You need to be either sysadmin or have the "Manage Dataseries" permission enabled.
+
+The following API actions exist in order to add (link) or remove (unlink) a dataseries to/from a dataset:
+
+- :code:`/api/action/hdx_dataseries_link`. It accepts 2 params:
+
+  - *id* - the id or name of the dataset
+  - *dataseries_name*
+
+  Example of a POST requerst with a JSON body::
+
+   {
+       "id": "sample-dataset-name",
+       "dataseries_name": "Sample dataseries"
+   }
+
+- :code:`/api/action/hdx_dataseries_unlink`. It only needs 1 param:
+
+  - *id* - the id or name of the dataset
+
+
+
