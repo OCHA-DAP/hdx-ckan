@@ -96,6 +96,8 @@ ckan.module('hdx-modal-form', function($) {
 
                 // select "Other" values"
                 $(form[0]).find('select').on('change', this._selectOnChange);
+                // change org type
+                $(form[0]).find('select#field-organization').on('change', this._organizationOnChange);
                 // input-value class
                 $(form[0]).find('input[type="password"], input[type="text"], textarea').on('keyup', this._triggerInputDataClass);
 
@@ -110,11 +112,15 @@ ckan.module('hdx-modal-form', function($) {
                 var select2Inputs = ['#field-country', '#field-organization', '#field-organization-type', '#field-intend-message'];
                 $.each(select2Inputs, function(i, select2Input) {
                   var $select2Input = $(form[0]).find(select2Input);
-                  var defaultValue = $select2Input.data('default-value');
-                  if(defaultValue) {
-                    $select2Input.find('option[value="' + defaultValue + '"]').attr('selected', 'selected');
-                  }
-                  $select2Input.select2();
+                  // var defaultValue = $select2Input.data('default-value');
+                  // if(defaultValue) {
+                  //   $select2Input.find('option[value="' + defaultValue + '"]').attr('selected', 'selected');
+                  // }
+                  $select2Input.select2({
+                    containerCssClass: function() {
+                      return $select2Input.attr('required') ? 'required' : '';
+                    }
+                  });
                 });
             }
             return this.modal;
@@ -199,7 +205,7 @@ ckan.module('hdx-modal-form', function($) {
 
                     }
                 }.bind(this))
-                .error(function(error) {
+                .fail(function(error) {
                     this._showFormError(error.statusText);
                 }.bind(this));
             }
@@ -213,13 +219,20 @@ ckan.module('hdx-modal-form', function($) {
           var $otherField = $('#' + this.getAttribute('id') + '-other');
           var $otherFieldContainer = $otherField.parent();
 
-          if(this.value === '__other__') {
+          if(this.value === 'other') {
             $otherField.attr('required', this.getAttribute('required'));
             $otherFieldContainer.removeClass('hidden');
           }
           else {
-            $otherField.removeAttr('required').parent().addClass('hidden');
+            $otherField.removeAttr('required').val('');
+            $otherFieldContainer.addClass('hidden');
           }
+        },
+        _organizationOnChange: function(event) {
+          var $org = $('#' + this.getAttribute('id'));
+          var $org_type = $('#field-organization-type');
+          var org_type = $org.select2().find(':selected').data('org-type');
+          $org_type.select2('val', ((org_type) ? org_type : '-1')).trigger('change');
         },
         _triggerInputDataClass: function(event) {
             if(this.value === '') {
@@ -248,6 +261,9 @@ ckan.module('hdx-modal-form', function($) {
         _showFormError: function(message) {
             this.modalFormError.removeClass('hide');
             this.modalFormError.text(message);
+            // Scroll to bottom of form
+            var form = this.modal.find('form');
+            form.scrollTop(form[0].scrollHeight);
         },
         _showSuccessMsg: function(msg) {
             var div = document.createElement('div');
@@ -265,9 +281,12 @@ ckan.module('hdx-modal-form', function($) {
             this._resetModalForm();
         },
         _resetModalForm: function(){
+            var form = this.modal.find('form');
             this.modal.modal('hide');
             // Clear form fields
-            this.modal.find('form')[0].reset();
+            form[0].reset();
+            // Clear select2 form fields
+            $(form[0]).find('.select2-container').select2('val', '-1');
         },
         _disableActionButtons: function() {
             this.el.attr('disabled', 'disabled');

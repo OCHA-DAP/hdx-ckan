@@ -697,12 +697,16 @@
 .full-width {
   width: 100%;
 }
-.control {
+.form-request-contact {
+  overflow-y: scroll;
+  height: 400px;
+}
+.form-request-contact .control {
   position: relative;
 }
-.control input[type="text"],
-.control input[type="password"],
-.control textarea {
+.form-request-contact .control input[type="text"],
+.form-request-contact .control input[type="password"],
+.form-request-contact .control textarea {
   height: 44px;
   border-radius: 6px;
   border: 1px solid white;
@@ -710,14 +714,14 @@
   font-size: 16px;
   color: #333333;
 }
-.control input[type="text"]:focus,
-.control input[type="password"]:focus,
-.control textarea:focus {
+.form-request-contact .control input[type="text"]:focus,
+.form-request-contact .control input[type="password"]:focus,
+.form-request-contact .control textarea:focus {
   outline: none;
 }
-.control input[type="text"] ~ label,
-.control input[type="password"] ~ label,
-.control textarea ~ label {
+.form-request-contact .control input[type="text"] ~ label,
+.form-request-contact .control input[type="password"] ~ label,
+.form-request-contact .control textarea ~ label {
   color: #cccccc;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -731,14 +735,14 @@
   cursor: text;
   transition: 1s;
 }
-.control input[type="text"] ~ label:after,
-.control input[type="password"] ~ label:after,
-.control textarea ~ label:after {
+.form-request-contact .control input[type="text"] ~ label:after,
+.form-request-contact .control input[type="password"] ~ label:after,
+.form-request-contact .control textarea ~ label:after {
   content: "";
 }
-.control input[type="text"].input-content ~ label,
-.control input[type="password"].input-content ~ label,
-.control textarea.input-content ~ label {
+.form-request-contact .control input[type="text"].input-content ~ label,
+.form-request-contact .control input[type="password"].input-content ~ label,
+.form-request-contact .control textarea.input-content ~ label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 10px;
@@ -746,39 +750,44 @@
   color: #888888;
   bottom: 1px;
 }
-.control input[type="text"].required.input-content ~ label:after,
-.control input[type="password"].required.input-content ~ label:after,
-.control textarea.required.input-content ~ label:after {
+.form-request-contact .control input[type="text"].required.input-content ~ label:after,
+.form-request-contact .control input[type="password"].required.input-content ~ label:after,
+.form-request-contact .control textarea.required.input-content ~ label:after {
   content: "";
 }
-.control input[type="text"].required.error,
-.control input[type="password"].required.error,
-.control textarea.required.error {
+.form-request-contact .control input[type="text"].required.error,
+.form-request-contact .control input[type="password"].required.error,
+.form-request-contact .control textarea.required.error {
   border-color: red;
 }
-.control input[type="text"].required ~ label:after,
-.control input[type="password"].required ~ label:after,
-.control textarea.required ~ label:after {
+.form-request-contact .control input[type="text"].required ~ label:after,
+.form-request-contact .control input[type="password"].required ~ label:after,
+.form-request-contact .control textarea.required ~ label:after {
   content: "*";
   margin-left: 5px;
   color: red;
 }
-.control .select2-container.error .select2-choice {
+.form-request-contact .control .select2-container.error .select2-choice {
   border-color: red;
 }
-.control label#field-checkbox-label {
-  font-weight: normal;
-}
-.control label.error {
+.form-request-contact .control .select2-container.required .select2-chosen:after {
+  content: "*";
+  margin-left: 5px;
   color: red;
 }
-.control #field-comments {
+.form-request-contact .control label#field-checkbox-label {
+  font-weight: normal;
+}
+.form-request-contact .control label.error {
+  color: red;
+}
+.form-request-contact .control #field-comments {
   height: 120px;
   padding: 14px 20px;
 }
-.control #field-comments ~ label {
+.form-request-contact .control #field-comments ~ label {
   bottom: 76px;
 }
-.control #field-comments.input-content ~ label {
+.form-request-contact .control #field-comments.input-content ~ label {
   bottom: 6px;
 }

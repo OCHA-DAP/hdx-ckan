@@ -236,6 +236,10 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
             'message_content': 'I want to add additional data.',
             'organization': cls.ORG_TITLE,
             'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
 
         return get_action('requestdata_request_create')({'user': cls.NORMAL_USER1}, data_dict)
