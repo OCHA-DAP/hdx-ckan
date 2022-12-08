@@ -122,6 +122,10 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
             'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
 
         req_result = self._get_action('requestdata_request_create')(context, data_dict)
