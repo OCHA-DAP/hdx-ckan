@@ -161,6 +161,8 @@
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons {
   margin-bottom: 8px;
   font-size: 13.25px;
+  display: flex;
+  align-items: flex-end;
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="icon-"],
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"],
