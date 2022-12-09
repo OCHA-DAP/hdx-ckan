@@ -571,7 +571,15 @@
 
                                           <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
                                             <div class="control-group form-group control-full">
-                                              <label class="control-label">Date of dataset</label>
+{#                                              <label class="control-label">{{_('Reference Period')}}</label>#}
+                                              <label class="control-label"
+                                               style="font-weight:inherit"
+                                               data-module='bs_tooltip'
+                                               data-module-placement='top'
+                                               data-original-title= 'The time period for which data are collected or calculated and to which, as a result, they refer. The reference period may be of any length: a year, a month, or even a day.'
+                                               data-toggle= 'tooltip'>
+                                                {{_('Reference Period')}} (?)
+                                              </label>
                                               <div class="controls">
                                                 <div style="display: flex">
                                                     <div>
