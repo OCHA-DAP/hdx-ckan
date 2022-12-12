@@ -365,8 +365,11 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
 
 class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
 
-    def __init__(self, package_id, resource_id, in_quarantine):
+    def __init__(self, package_id, resource_id, new_quarantine_value):
         super(QAQuarantineAnalyticsSender, self).__init__()
+
+        self.old_quarantine_value = False
+        self.new_quarantine_value = new_quarantine_value
 
         log.debug('The user IP address was {}'.format(self.user_addr))
 
@@ -382,27 +385,29 @@ class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
 
             time_difference = datetime.datetime.utcnow() - h.date_str_to_datetime(resource_dict.get('last_modified'))
 
+            self.old_quarantine_value = resource_dict.get('in_quarantine')
+
             self.analytics_dict = {
-                'event_name': 'qa set in quarantine' if in_quarantine else 'qa remove from quarantine',
+                'event_name': 'qa set in quarantine' if self.new_quarantine_value else 'qa remove from quarantine',
                 'mixpanel_meta': {
-                    "resource name": resource_dict.get('name'),
-                    "resource id": resource_dict.get('id'),
-                    "dataset name": dataset_dict.get('name'),
-                    "dataset id": dataset_dict.get('id'),
-                    "org name": dataset_dict.get('organization', {}).get('name'),
-                    "org id": dataset_dict.get('organization', {}).get('id'),
-                    "is archived": dataset_is_archived,
-                    "authenticated": authenticated,
+                    'resource name': resource_dict.get('name'),
+                    'resource id': resource_dict.get('id'),
+                    'dataset name': dataset_dict.get('name'),
+                    'dataset id': dataset_dict.get('id'),
+                    'org name': dataset_dict.get('organization', {}).get('name'),
+                    'org id': dataset_dict.get('organization', {}).get('id'),
+                    'is archived': dataset_is_archived,
+                    'authenticated': authenticated,
                     'event source': 'api',
                 },
                 'ga_meta': {
                     'ec': 'resource',  # event category
-                    'ea': 'added to quarantine' if in_quarantine else 'removed from quarantine',  # event action
+                    'ea': 'added to quarantine' if self.new_quarantine_value else 'removed from quarantine',  # event action
                     'el': u'{} ({})'.format(resource_dict.get('name'), dataset_title),  # event label
                 }
             }
 
-            if in_quarantine:
+            if self.new_quarantine_value:
                 self.analytics_dict['mixpanel_meta']['minutes since modified'] = int(
                     time_difference.total_seconds()) / 60
 
@@ -412,3 +417,6 @@ class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
             abort(403, _('Unauthorized to read resource %s') % id)
         except Exception as e:
             log.error('Unexpected error {}'.format(e))
+
+    def should_send_analytics_event(self):
+        return self.old_quarantine_value != self.new_quarantine_value

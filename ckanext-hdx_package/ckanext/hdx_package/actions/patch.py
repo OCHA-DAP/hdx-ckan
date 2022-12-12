@@ -159,7 +159,9 @@ def hdx_qa_resource_patch(context, data_dict):
     pkg_id = resource_dict.get('package_id')
     new_quarantine_value = data_dict.get('in_quarantine')
 
-    QAQuarantineAnalyticsSender(pkg_id, resource_dict.get('id'), new_quarantine_value == 'true').send_to_queue()
+    analytics_sender = QAQuarantineAnalyticsSender(pkg_id, resource_dict.get('id'), new_quarantine_value == 'true')
+    if analytics_sender.should_send_analytics_event():
+        analytics_sender.send_to_queue()
 
     # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
     if new_quarantine_value is not None:
