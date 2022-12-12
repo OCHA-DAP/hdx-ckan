@@ -371,8 +371,6 @@ class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
         self.old_quarantine_value = False
         self.new_quarantine_value = new_quarantine_value
 
-        log.debug('The user IP address was {}'.format(self.user_addr))
-
         try:
             context = {'model': model, 'session': model.Session,
                        'user': g.user or g.author, 'auth_user_obj': g.userobj}
