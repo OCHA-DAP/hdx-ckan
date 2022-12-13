@@ -84,6 +84,10 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
             'email_address': 'non@existing@ro.ro',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
         try:
             result = self._get_action('requestdata_request_create')(context, data_dict)
@@ -103,6 +107,10 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
             'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'NASA',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
         try:
             result = self._get_action('requestdata_request_create')(context, data_dict)
