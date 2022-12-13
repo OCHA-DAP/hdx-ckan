@@ -66,7 +66,7 @@ The exceptions to this are:
 Dataseries
 ++++++++++
 
-There is a dataset field called: *dataset_name*.
+There is a dataset field called: *dataseries_name*.
 
 **Permissions**: You need to be either sysadmin or have the "Manage Dataseries" permission enabled.
 
