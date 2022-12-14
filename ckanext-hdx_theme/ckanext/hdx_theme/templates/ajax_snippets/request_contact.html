@@ -43,7 +43,7 @@
               <div class="control mTop20">
                 <select class="mTop20" id="field-organization" name="sender_organization_id" data-default-value="{{ user_organization_id }}" required>
                   <option value="-1">{{_('Select organization...')}}</option>
-                  {% for organization in h.list_organizations() %}
+                  {% for organization in h.hdx_cached_org_list() %}
                     <option value="{{ organization.id }}">{{ organization.display_name }}</option>
                   {% endfor %}
                   <option value="__other__">{{ _('Other...') }}</option>

@@ -792,3 +792,12 @@ def org_add_last_updated_field(displayed_orgs):
     org_to_last_update = _find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
     for o in displayed_orgs:
         o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+
+
+def hdx_cached_org_list():
+    context = {
+        'model': model,
+        'session': model.Session
+    }
+    org_list = get_action('cached_organization_list')(context, {})
+    return org_list
