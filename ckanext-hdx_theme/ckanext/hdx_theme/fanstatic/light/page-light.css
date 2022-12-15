@@ -447,6 +447,16 @@ h1 {
   font-size: 12px;
   white-space: nowrap;
 }
+span.icn-txt-cods {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  background-color: #888888;
+  color: #fff;
+  padding: 4px 4px 4px 4px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
 ul.dataset-resources li + li.label-icons {
   border-left: 1px solid #888888;
   margin-left: 10px;
@@ -1784,7 +1794,7 @@ body {
 }
 [role=main] .secondary {
   margin: 0;
-  padding-right: 15px;
+  padding-right: 30px/2;
   /* mimic the left 45 padding */
   width: 100%;
   color: #ffffff;
@@ -2916,7 +2926,7 @@ textarea {
 .hdx-form .form-horizontal .control-label {
   float: left;
   text-align: left;
-  padding-top: 15px;
+  padding-top: 30px/2;
   width: 160px;
 }
 .hdx-form .form-horizontal .checkbox {
@@ -3514,7 +3524,7 @@ ul.list-horizontal li:first-child:before {
 .new-header .global-header .global-header-content .ocha-services-menu:before {
   content: " ";
   position: absolute;
-  top: -5px;
+  top: -10px/2;
   left: 110px;
   height: 10px;
   width: 10px;

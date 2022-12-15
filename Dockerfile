@@ -67,10 +67,13 @@ RUN apt-get -qq -y update && \
     python -m pip install --upgrade pip && \
     pip install -r requirement-setuptools.txt && \
     pip install --upgrade -r requirements.txt && \
-    pip install newrelic && \
+    pip install --upgrade -r requirements-hdxckantool.txt && \
+    pip install \
+      elastic-apm[flask] \
+      newrelic && \
     chmod +x run_pytest_with_coverage.sh && \
-    chmod +x setup_py3_helper.sh && \
-    ./setup_py3_helper.sh && \
+    chmod +x setup_py_helper.sh && \
+    ./setup_py_helper.sh && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
     chown -R www-data ckan/public/base/i18n && \
     cp -a docker/run_unit /etc/services.d/unit/run && \
