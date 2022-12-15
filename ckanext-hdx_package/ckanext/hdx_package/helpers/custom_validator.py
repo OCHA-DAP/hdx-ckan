@@ -21,7 +21,7 @@ from ckan.common import _, c
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
-from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, NO_DATA
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 
 missing = df.missing
@@ -483,7 +483,7 @@ def hdx_delete_unless_field_in_context(context_field):
     return hdx_delete_unless_forced
 
 
-def hdx_keep_prev_val_unless_authorized_wrapper(auth_function):
+def hdx_delete_unless_authorized_wrapper(auth_function):
     '''
     :param auth_function: the auth function to run through check_access()
     :type auth_function: str
@@ -491,18 +491,18 @@ def hdx_keep_prev_val_unless_authorized_wrapper(auth_function):
     :rtype: function
     '''
 
-    def hdx_keep_prev_val_unless_authorized(key, data, errors, context):
+    def hdx_delete_unless_authorized(key, data, errors, context):
         try:
             check_access(auth_function, context, None)
         except NotAuthorized as e:
-            pkg_id = data.get(('id',))
-            if pkg_id:
-                prev_package_dict = __get_previous_package_dict(context, pkg_id)
-                old_value = prev_package_dict.get(key[0], None)
-                if old_value:
-                    data[key] = old_value
+            data.pop(key, None)
 
-    return hdx_keep_prev_val_unless_authorized
+    return hdx_delete_unless_authorized
+
+
+def hdx_delete_if_marked_with_no_data(key, data, errors, context):
+    if data.get(key) == NO_DATA:
+        data.pop(key, None)
 
 
 def hdx_value_in_list_wrapper(allowed_values, allow_missing):
