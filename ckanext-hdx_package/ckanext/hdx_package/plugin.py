@@ -186,9 +186,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
                                   tk.get_converter('convert_to_extras')],
             'cod_level': [
-                tk.get_validator('hdx_keep_prev_val_unless_authorized_to_update_cod'),
-                tk.get_validator('ignore_missing'),
-                # tk.get_validator('hdx_keep_prev_value_if_empty'),
+                tk.get_validator('hdx_delete_unless_authorized_to_update_cod'),
+                tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_validator('hdx_in_cod_values'),
                 tk.get_converter('convert_to_extras')
             ],
@@ -198,10 +197,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('convert_to_extras')
             ],
             'dataseries_name': [
-                tk.get_validator('hdx_keep_prev_val_unless_authorized_to_update_dataseries'),
+                tk.get_validator('hdx_delete_unless_authorized_to_update_dataseries'),
+                tk.get_validator('hdx_keep_prev_value_if_empty'),
+                tk.get_validator('hdx_delete_if_marked_with_no_data'),
                 tk.get_validator('ignore_missing'),
                 tk.get_validator('hdx_dataseries_title_validator'),
-                # tk.get_validator('hdx_keep_prev_value_if_empty'),
                 tk.get_converter('convert_to_extras')
             ]
         })
@@ -520,8 +520,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                                                                resource_level=True),
             'hdx_keep_prev_val_unless_authorized_to_update_dataseries':
                 vd.hdx_keep_prev_val_unless_authorized_wrapper('hdx_dataseries_update'),
-            'hdx_keep_prev_val_unless_authorized_to_update_cod':
-                vd.hdx_keep_prev_val_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_delete_unless_authorized_to_update_dataseries':
+                vd.hdx_delete_unless_authorized_wrapper('hdx_dataseries_update'),
+            'hdx_delete_unless_authorized_to_update_cod':
+                vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_delete_if_marked_with_no_data': vd.hdx_delete_if_marked_with_no_data,
             'hdx_dataseries_title_validator': vd.hdx_dataseries_title_validator,
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),

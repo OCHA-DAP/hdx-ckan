@@ -6,7 +6,7 @@ import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender, \
     QAPiiAnalyticsSender, QASdcAnalyticsSender
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD, NO_DATA
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import delete_geopreview_layer
 
@@ -330,15 +330,10 @@ def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
     data_revise_dict = {
         'match': {
             'id': pkg.id
+        },
+        'update': {
+            'dataseries_name': dataseries_name if dataseries_name else NO_DATA
         }
     }
-    if dataseries_name:
-        data_revise_dict['update'] = {
-            'dataseries_name': dataseries_name
-        }
-    else:
-        data_revise_dict['filter'] = [
-            "-dataseries_name"
-        ]
     result = _get_action('package_revise')(context, data_revise_dict)
     return result['package']
