@@ -3,9 +3,10 @@ import logging
 import six.moves.urllib.parse as urlparse
 import datetime
 
+from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
-import ckan.lib.base as base
+import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -18,6 +19,7 @@ config = tk.config
 request = tk.request
 g = tk.g
 _ = tk._
+abort = tk.abort
 
 
 def is_indicator(pkg_dict):
@@ -27,8 +29,8 @@ def is_indicator(pkg_dict):
 
 
 def is_cod(pkg_dict):
-    tags = [tag.get('name', '') for tag in pkg_dict.get('tags', [])]
-    if 'common operational dataset - cod' in tags:
+    cod_level = pkg_dict.get('cod_level')
+    if cod_level == COD_ENHANCED or cod_level == COD_STANDARD:
         return 'true'
     return 'false'
 
@@ -246,9 +248,9 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             }
 
         except NotFound:
-            base.abort(404, _('Resource not found'))
+            abort(404, _('Resource not found'))
         except NotAuthorized:
-            base.abort(403, _('Unauthorized to read resource %s') % id)
+            abort(403, _('Unauthorized to read resource %s') % id)
         except Exception as e:
             log.error('Unexpected error {}'.format(e))
 
@@ -359,3 +361,60 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
 
             time_difference = datetime.datetime.utcnow() - metadata_modified
             self.analytics_dict['mixpanel_meta']['minutes since modified'] = int(time_difference.total_seconds()) / 60
+
+
+class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
+
+    def __init__(self, package_id, resource_id, new_quarantine_value):
+        super(QAQuarantineAnalyticsSender, self).__init__()
+
+        self.old_quarantine_value = False
+        self.new_quarantine_value = new_quarantine_value
+
+        try:
+            context = {'model': model, 'session': model.Session,
+                       'user': g.user or g.author, 'auth_user_obj': g.userobj}
+            dataset_dict = get_action('package_show')(context, {'id': package_id})
+            resource_dict = next(r for r in dataset_dict.get('resources', {}) if r.get('id') == resource_id)
+
+            dataset_title = dataset_dict.get('title', dataset_dict.get('name'))
+            dataset_is_archived = is_archived(dataset_dict) == 'true'
+            authenticated = True if g.userobj else False
+
+            time_difference = datetime.datetime.utcnow() - h.date_str_to_datetime(resource_dict.get('last_modified'))
+
+            self.old_quarantine_value = resource_dict.get('in_quarantine')
+
+            self.analytics_dict = {
+                'event_name': 'qa set in quarantine' if self.new_quarantine_value else 'qa remove from quarantine',
+                'mixpanel_meta': {
+                    'resource name': resource_dict.get('name'),
+                    'resource id': resource_dict.get('id'),
+                    'dataset name': dataset_dict.get('name'),
+                    'dataset id': dataset_dict.get('id'),
+                    'org name': dataset_dict.get('organization', {}).get('name'),
+                    'org id': dataset_dict.get('organization', {}).get('id'),
+                    'is archived': dataset_is_archived,
+                    'authenticated': authenticated,
+                    'event source': 'api',
+                },
+                'ga_meta': {
+                    'ec': 'resource',  # event category
+                    'ea': 'added to quarantine' if self.new_quarantine_value else 'removed from quarantine',  # event action
+                    'el': u'{} ({})'.format(resource_dict.get('name'), dataset_title),  # event label
+                }
+            }
+
+            if self.new_quarantine_value:
+                self.analytics_dict['mixpanel_meta']['minutes since modified'] = int(
+                    time_difference.total_seconds()) / 60
+
+        except NotFound:
+            abort(404, _('Resource not found'))
+        except NotAuthorized:
+            abort(403, _('Unauthorized to read resource %s') % id)
+        except Exception as e:
+            log.error('Unexpected error {}'.format(e))
+
+    def should_send_analytics_event(self):
+        return self.old_quarantine_value != self.new_quarantine_value

@@ -8,6 +8,7 @@ from ckan.logic import (
 
 import ckanext.hdx_package.helpers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
+from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 from ckanext.hdx_package.helpers.geopreview import delete_geopreview_layer
@@ -157,6 +158,10 @@ def hdx_qa_resource_patch(context, data_dict):
     resource_dict = _get_action('resource_show')(context, {'id': data_dict.get('id')})
     pkg_id = resource_dict.get('package_id')
     new_quarantine_value = data_dict.get('in_quarantine')
+
+    analytics_sender = QAQuarantineAnalyticsSender(pkg_id, resource_dict.get('id'), new_quarantine_value == 'true')
+    if analytics_sender.should_send_analytics_event():
+        analytics_sender.send_to_queue()
 
     # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
     if new_quarantine_value is not None:
