@@ -11,7 +11,6 @@ _get_action = tk.get_action
 g = tk.g
 config = tk.config
 
-
 SYSADMIN_USER = 'some_sysadmin_user'
 DATASET_NAME = 'dataset_name_for_general_stats'
 LOCATION_NAME = 'some_location_for_general_stats'
@@ -103,8 +102,10 @@ class TestGeneralStats(object):
         assert mixpanel_meta['datasets in qa'] == 1
         assert mixpanel_meta['datasets qa completed'] == 0
 
+        pkg_dict = _get_action('package_show')(context, {'id': DATASET_NAME + '1'})
+
         _get_action('hdx_mark_qa_completed')(context, {
-            'id': DATASET_NAME + '1',
+            'id': pkg_dict.get('id'),
             'qa_completed': True,
         })
         result = _get_action('hdx_push_general_stats')(context, {})
@@ -141,6 +142,3 @@ class TestGeneralStats(object):
         assert mixpanel_meta2['orgs total'] == 2
         assert mixpanel_meta2['orgs with datasets'] == 1
         assert mixpanel_meta2['orgs updating data in past year'] == 1
-
-
-

@@ -1,5 +1,5 @@
 {% set is_metadata_only = package.is_requestdata_type %}
-{% set current_package_url = current_package_url if current_package_url else h.url_for('dataset_read', id=package.name) %}
+{% set current_package_url = current_package_url if current_package_url else h.url_for('dataset.read', id=package.name) %}
 
 <li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length and package.batch_length > 0 %} stacked-item {% endif %}">
   {% block package_item_content %}
@@ -61,7 +61,7 @@
                       {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
                       {% set has_quality_checked = package.indicator == '1' or package.quality %}
                       {% if h.hdx_dataset_is_hxl(package.tags) %}
-                        <a href="{% url_for 'search', ext_hxl=1 %}">
+                        <a href="{% url_for 'hdx_dataset.search', ext_hxl=1 %}">
                           <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
                                 data-module-placement="top" data-toggle="tooltip">
                           </span>
@@ -75,7 +75,7 @@
                       #}
 
                       {% if package.has_quickcharts %}
-                          <a href="{% url_for 'search', ext_quickcharts=1 %}">
+                          <a href="{% url_for 'hdx_dataset.search', ext_quickcharts=1 %}">
                               <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
                                     data-module-placement="top" data-toggle="tooltip"></span>
                           </a>

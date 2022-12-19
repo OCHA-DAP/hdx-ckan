@@ -5,23 +5,22 @@ Created on Jul 07, 2015
 '''
 
 import logging
-import six
 
-import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_package.helpers.geopreview as geopreview
-import ckanext.hdx_package.helpers.helpers as helpers
-import ckanext.hdx_package.helpers.screenshot as screenshot
-from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
-from ckanext.hdx_package.helpers.analytics import is_cod
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
+import six
 from flask import request
 
 import ckan.lib.plugins as lib_plugins
 import ckan.logic as logic
 import ckan.logic.action.create as core_create
+import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
-from ckan.common import _
+import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.fs_check as fs_check
+import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.helpers as helpers
+from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
+from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
 
 _get_action = logic.get_action
 _check_access = logic.check_access
@@ -32,6 +31,7 @@ NotFound = logic.NotFound
 log = logging.getLogger(__name__)
 
 
+@fs_check.fs_check_4_resources
 @geopreview.geopreview_4_resources
 def resource_create(context, data_dict):
     '''
@@ -43,8 +43,8 @@ def resource_create(context, data_dict):
     flag_if_file_uploaded(context, data_dict)
 
     if data_dict.get('resource_type', '') != 'file.upload':
-        #If this isn't an upload, it is a link so make sure we update
-        #the url_type otherwise solr will screw everything up
+        # If this isn't an upload, it is a link so make sure we update
+        # the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
 
         # we need to overwrite size field (not just setting it to None or pop) otherwise
@@ -57,8 +57,24 @@ def resource_create(context, data_dict):
         except RuntimeError as re:
             log.debug('This usually happens for tests when there is no HTTP request: ' + six.text_type(re))
 
-    result_dict = run_action_without_geo_preview(core_create.resource_create,context, data_dict)
-    return result_dict
+    # result_dict = run_action_without_geo_preview(core_create.resource_create, context, data_dict)
+    # return result_dict
+
+    pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
+    model = context['model']
+    pkg = model.Package.get(pkg_id_or_username)
+    pkg_id = pkg.id
+    data_revise_dict = {
+        "match": {"id": pkg_id},
+        "update__resources__extend": [data_dict]
+    }
+    revise_response = run_action_without_geo_preview(core_update.package_revise, context, data_revise_dict)
+    package = revise_response.get('package', {})
+    if isinstance(package, str):
+        package = _get_action('package_show')(context, {'id': pkg_id})
+
+    res_list = package.get('resources', [])
+    return res_list[-1]
 
 
 @analytics.analytics_wrapper_4_package_create
@@ -195,13 +211,12 @@ def package_create(context, data_dict):
         if context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
             data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
-
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_create')
     if 'tags' in data:
         data['tags'] = helpers.get_tag_vocabulary(data['tags'])
     if 'groups' in data:
-        additions = {'key':'solr_additions','value':helpers.build_additions(data['groups'])}
+        additions = {'key': 'solr_additions', 'value': helpers.build_additions(data['groups'])}
         if not 'extras' in data:
             data['extras'] = []
         data['extras'].append(additions)
@@ -225,7 +240,7 @@ def package_create(context, data_dict):
     from ckanext.hdx_package.actions.update import modified_save
     pkg = modified_save(context, data)
 
-    #pkg = model_save.package_dict_save(data, context)
+    # pkg = model_save.package_dict_save(data, context)
 
     # Needed to let extensions know the package and resources ids
     model.Session.flush()
@@ -318,7 +333,6 @@ def resource_view_create(context, data_dict):
 
 
 def reindex_package_on_hdx_hxl_preview_view(view_type, context, data_dict):
-
     from ckan.lib.search import rebuild
 
     if view_type == 'hdx_hxl_preview':
@@ -342,4 +356,3 @@ def reindex_package_on_hdx_hxl_preview_view(view_type, context, data_dict):
             log.error("Error: package {} not found.".format(package_id))
         except Exception as e:
             log.error(str(e))
-

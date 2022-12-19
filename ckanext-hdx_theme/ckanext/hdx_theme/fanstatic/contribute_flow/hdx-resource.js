@@ -157,6 +157,9 @@ $(function(){
                 //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
                 //    model.set('upload', '');
                 //}
+                if("fs_check_info" in model.attributes){
+                  delete model.attributes['fs_check_info'];
+                }
                 var promise;
                 if ( model.get('originalHash') != model.hashResource() ){
                     promise = model.save();

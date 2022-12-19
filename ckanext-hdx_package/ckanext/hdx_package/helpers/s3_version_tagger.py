@@ -17,7 +17,7 @@ _get_action = tk.get_action
 log = logging.getLogger(__name__)
 
 
-def tag_s3_version_by_resource_id(context, resource_id, in_quarantine):
+def tag_s3_version_by_resource_id(context, resource_id, in_quarantine, resource_url=None, package_name=None):
     '''
     :param context:
     :type context: dict
@@ -26,9 +26,13 @@ def tag_s3_version_by_resource_id(context, resource_id, in_quarantine):
     :param in_quarantine:
     :type in_quarantine: bool
     '''
-    resource_dict = _get_action('resource_show')(context, {'id': resource_id})
-    dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
-    return tag_s3_version(resource_dict['id'], resource_dict['url'], in_quarantine, dataset_dict['name'])
+    if resource_url is None or package_name is None:
+        resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
+        package_name = dataset_dict['name']
+        resource_id = resource_dict.get('id')
+        resource_url = resource_dict.get('url')
+    return tag_s3_version(resource_id, resource_url, in_quarantine, package_name)
 
 
 def tag_s3_version(resource_id, resource_url, in_quarantine, dataset_name=None):
