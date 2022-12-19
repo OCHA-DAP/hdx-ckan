@@ -471,7 +471,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_resource_reset': hdx_patch.hdx_fs_check_resource_reset,
             'hdx_fs_check_package_reset': hdx_patch.hdx_fs_check_package_reset,
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
-
+            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags
         }
 
     # IValidators
@@ -539,7 +539,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
                 'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
                 'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
-                'hdx_cod_update': authorize.hdx_cod_update
+                'hdx_cod_update': authorize.hdx_cod_update,
+                'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags
                 }
 
     def make_middleware(self, app, config):
@@ -660,6 +661,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         import ckanext.hdx_package.views.contribute_flow as contribute_flow
         import ckanext.hdx_package.views.dataset_old_links as dataset_old_links
         import ckanext.hdx_package.views.contact as contact
+        import ckanext.hdx_package.views.request_tags as request_tags
         return [
             light_dataset.hdx_light_dataset,
             light_dataset.hdx_light_search,
@@ -669,6 +671,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             contribute_flow.hdx_contribute,
             dataset_old_links.hdx_dataset_old_links,
             contact.hdx_contact,
+            request_tags.hdx_request_tags,
         ]
 
 

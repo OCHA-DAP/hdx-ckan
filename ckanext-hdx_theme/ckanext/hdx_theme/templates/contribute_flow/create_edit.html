@@ -44,6 +44,7 @@
 
 {{ h.snippet('widget/contribute/private-dataset-info.html', id="privateDatasetInfoPopup") }}
 {{ h.snippet('widget/contribute/contribute-dataset-review.html', id="contributeDatasetReviewPopup") }}
+{{ h.snippet('widget/tags/request-tags.html', id="requestTagsPopup") }}
 
 <div class="contribute-main" data-module="contribute_flow_main" {% if data.id  %} data-module-dataset_id="{{ data.id }}" {% endif %}>
     <div id="create-dataset-app">
@@ -694,6 +695,9 @@
                                               <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">
                                                 Suggested tags: <span />
                                               </div>
+                                            </div>
+                                            <div class="request-tags-wrapper">
+                                              Don't see a tag you are looking for? <a onclick="closeCurrentWidget(this); spawnRecaptcha('#requestTagsPopup'); showTagRequestWidget('#requestTagsPopup');" href="#">Suggest one</a> or <a href="https://data.humdata.org/rdr/spreadsheets/approved-tags" target="_blank">see the full list of approved tags</a>
                                             </div>
                                           </div>
 

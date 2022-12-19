@@ -1060,3 +1060,24 @@ def hdx_guess_format_from_extension(context, data_dict):
         return None
 
     return guess_format_from_extension(q)
+
+
+def hdx_send_mail_request_tags(context, data_dict):
+    _check_access('hdx_send_mail_request_tags', context, data_dict)
+
+    hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+
+    subject = u'New tag(s) request'
+    email_data = {
+        'user_display_name': data_dict.get('fullname'),
+        'user_email': data_dict.get('email'),
+        'tags': data_dict.get('suggested_tags'),
+        'datatype': data_dict.get('datatype'),
+        'comment': data_dict.get('comment'),
+    }
+
+    hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                              subject, email_data, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'), snippet='email/content/tag_request.html')
+
+    return None
