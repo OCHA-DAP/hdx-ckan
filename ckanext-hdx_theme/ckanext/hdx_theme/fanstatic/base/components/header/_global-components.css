@@ -353,6 +353,15 @@
 .dataset-resources [class*=" icon-"]:before {
   color: #888888;
 }
+/* Style dataseries label */
+.dataseries-info {
+  clear: both;
+  margin-left: 10px;
+  font-size: 12px;
+}
+.dataseries-info a {
+  color: #f2645a;
+}
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;

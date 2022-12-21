@@ -121,6 +121,9 @@
                     {% snippet 'search/snippets/package_icons.html', package=pkg%}
                 </ul>
                 {% snippet "package/snippets/package_actions_menu.html", pkg = pkg, membership=membership, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right' %}
+                {% if pkg.dataseries_name %}
+                  <div class="dataseries-info">{{_('This dataset is part of the data series')}}: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}">{{ pkg.dataseries_name }}</a></div>
+                {% endif %}
             </div>
         </div>
     </div>
