@@ -1257,3 +1257,20 @@ qa-dashboard-styles:
       - requestdata/main-styles
   contents:
     - dataviz/dataviz.css
+
+request-tags-styles:
+  output: ckanext-hdx_theme/%(version)s_request-tags-styles.css
+  extra:
+    preload:
+      - hdx_theme/popup-styles
+  contents:
+    - widget/tags/request-tags.css
+
+request-tags-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_request-tags-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+  contents:
+    - widget/tags/request-tags.js

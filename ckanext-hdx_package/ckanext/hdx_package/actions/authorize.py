@@ -129,3 +129,20 @@ def hdx_cod_update(context, data_dict):
     username_or_id = context.get('user')
     result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_COD)
     return {'success': result}
+
+
+def hdx_send_mail_request_tags(context, data_dict):
+    '''
+    Only a logged in user has access.
+    '''
+
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    if user_obj:
+        return {
+            'success': True
+        }
+
+    return {
+        'success': False,
+        'msg': _('Not authorized to perform this request')
+    }
