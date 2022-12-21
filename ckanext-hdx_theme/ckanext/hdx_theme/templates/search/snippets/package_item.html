@@ -99,7 +99,7 @@
                       {% if package.dataset_date %}
                         {% set dataset_date = h.render_date_from_concat_str(package.dataset_date) %}
                         {% if dataset_date %}
-                            | Dataset date: {{dataset_date}}
+                            | {{_('Reference Period')}}: {{dataset_date}}
                         {% endif %}
                       {% endif %}
                     </div>
