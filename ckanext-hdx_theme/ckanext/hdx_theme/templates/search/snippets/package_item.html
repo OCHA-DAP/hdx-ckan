@@ -115,6 +115,13 @@
                       {% endif %}
                     </div>
                   {% endblock %}
+                  {% block owner_dataseries %}
+                    {% if package.dataseries_name %}
+                      <div class="dataset-dataseries">
+                        <span>{{_('This dataset is part of the data series')}}: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}">{{ package.dataseries_name }}</a></span>
+                      </div>
+                    {% endif %}
+                  {% endblock %}
                 {% endblock %}
               {% endblock %}
             </div>
