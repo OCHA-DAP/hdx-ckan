@@ -36,7 +36,7 @@ class HDXUserAuthView:
 
     def logged_in(self):
         # redirect if needed
-        came_from = request.form.get('came_from', '')
+        came_from = request.args.get('came_from', '')
         if h.url_is_local(came_from):
             return h.redirect_to(str(came_from))
 
@@ -90,7 +90,7 @@ class HDXUserAuthView:
                     h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                res = h.redirect_to('dashboard.index', locale=None)
+                res = h.redirect_to('hdx_dataset.search', locale=None)
                 res.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age, secure=True)
                 return res
         else:
