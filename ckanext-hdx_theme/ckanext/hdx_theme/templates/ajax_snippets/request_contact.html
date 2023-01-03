@@ -2,6 +2,8 @@
 
 {% import 'macros/form.html' as form %}
 
+{% set user_orgs = h.requestdata_get_orgs_for_user(c.userobj.id) %}
+
 <div class="modal request-data-modal two-cols request-data-two-cols posfix">
   <div class="modal-content request-data-modal-content">
     <div class="modal-body request-data-modal-body">
@@ -41,20 +43,22 @@
                 </select>
               </div>
               <div class="control mTop20">
-                <select class="mTop20" id="field-organization" name="sender_organization_id" data-default-value="{{ user_organization_id }}" required>
+                <select class="mTop20" id="field-organization" name="sender_organization_id" required>
                   <option value="-1">{{_('Select organization...')}}</option>
-                  {% for organization in h.hdx_cached_org_list() %}
-                    <option value="{{ organization.id }}">{{ organization.display_name }}</option>
-                  {% endfor %}
-                  <option value="__other__">{{ _('Other...') }}</option>
+                  {% if user_orgs %}
+                    {% for organization in user_orgs %}
+                      <option value="{{ organization.id }}" {% if loop.first %}selected="selected"{% endif %}>{{ organization.display_name }}</option>
+                    {% endfor %}
+                  {% endif %}
+                  <option value="__other__" {% if not user_orgs %}selected="selected"{% endif %}>{{ _('Other...') }}</option>
                 </select>
               </div>
-              <div class="control mTop20 hidden">
+              <div class="control mTop20 {% if user_orgs %}hidden{% endif %}">
                 <input id="field-organization-other" name="sender_organization_id_other" class="full-width required" type="text" value="">
                 <label for="field-organization-other">Organization</label>
               </div>
               <div class="control mTop20">
-                <select class="mTop20" id="field-organization-type" name="sender_organization_type" data-default-value="{{ user_organization_type }}" required>
+                <select class="mTop20" id="field-organization-type" name="sender_organization_type" required>
                   <option value="-1">{{_('Select organization type...')}}</option>
                   {% for t in h.hdx_organization_type_list() %}
                     <option value="{{t.text}}">{{ t.text }}</option>
@@ -94,7 +98,7 @@
         </div>
     </div>
     <div class="modal-footer request-data-modal-footer bottom-actions" style="bottom: 30px !important;">
-      <button class="btn btn-empty btn-empty-black btn-large btn-cancel">Cancel</button>
+      <button class="btn btn-empty btn-empty-black btn-large btn-cancel mR45">Cancel</button>
       <button type="submit" class="btn btn-primary btn-submit">Send request</button>
     </div>
   </div>

@@ -2,6 +2,10 @@
 
 <p>{{ data.user_fullname }} ({{ data.user_email }}){% if data.extras %}, from {{ data.extras.country }}, on behalf of {{ data.extras.organization_name }} ({{ data.extras.organization_type }}){% endif %} has requested access to one of your organisation’s metadata-only datasets on HDX.</p>
 
+{% if not data.extras.organization_member %}
+  <p><em>This user is not a member of the {{ data.extras.organization_name }} organization on HDX.</em></p>
+{% endif %}
+
 <p>
   <strong>Dataset name</strong>: <a href="{{ data.dataset_link }}">{{ data.dataset_title }}</a><br/>
   {% if data.extras and data.extras.intend %}<strong>Intended use</strong>: {{ data.extras.intend }}<br/>{% endif %}

@@ -107,15 +107,7 @@ ckan.module('hdx-modal-form', function($) {
                 this.modalFormError = this.modal.find('.alert-danger')
 
                 // init select2
-                var select2Inputs = ['#field-country', '#field-organization', '#field-organization-type', '#field-intend-message'];
-                $.each(select2Inputs, function(i, select2Input) {
-                  var $select2Input = $(form[0]).find(select2Input);
-                  var defaultValue = $select2Input.data('default-value');
-                  if(defaultValue) {
-                    $select2Input.find('option[value="' + defaultValue + '"]').attr('selected', 'selected');
-                  }
-                  $select2Input.select2();
-                });
+                $(form[0]).find('#field-country, #field-organization, #field-organization-type, #field-intend-message').select2();
             }
             return this.modal;
         },

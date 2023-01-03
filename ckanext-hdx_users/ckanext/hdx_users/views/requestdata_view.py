@@ -189,7 +189,7 @@ def send_request():
     sender_email = data.get('email_address', '')
 
     sender_organization_id = data.get('sender_organization_id') if not data.get(
-        'sender_organization_id') == '__other__' else data['__extras'].get('sender_organization_id_other')
+        'sender_organization_id') == '__other__' else data.get('sender_organization_id_other')
     try:
         org_dict = _get_action('organization_show', {'id': sender_organization_id})
         sender_organization_name = org_dict.get('display_name')

@@ -181,16 +181,8 @@
                     {% endif %}
                     {# {% set is_hdx = h.requestdata_is_hdx_portal() %}  #}
                     {% set redirect_url = h.url_for(controller='user', action='login') %}
-                    {% set orgs = h.requestdata_get_orgs_for_user(c.userobj.id) %}
-                    {% if orgs[0] %}
-                      {% set user_organization_id = orgs[0].id %}
-                      {% set user_organization_type = orgs[0].type %}
-                    {% else %}
-                      {% set user_organization_id = None %}
-                      {% set user_organization_type = None %}
-                    {% endif %}
                     {% set requestdata_action = h.url_for('requestdata_send_request.send_request') %}
-                    {% set request_post_data = h.dump_json({'user_organization_id': user_organization_id, 'user_organization_type': user_organization_type, 'package_id': package.id, 'package_name': package.name}) %}
+                    {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
                     {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
                     <a href="#" class="btn btn-primary" style="margin-top: 10px;"
                        data-module="hdx-modal-form"
