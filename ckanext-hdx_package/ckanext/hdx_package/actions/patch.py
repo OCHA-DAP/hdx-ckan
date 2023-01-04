@@ -3,7 +3,8 @@ import ckan.logic.action.update as _update
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
-from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
+from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
+    SKIP_VALIDATION
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender, \
     QAPiiAnalyticsSender, QASdcAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD, NO_DATA
@@ -320,6 +321,7 @@ def hdx_dataseries_unlink(context, data_dict):
 
 def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
     context['ignore_auth'] = True
+    context[SKIP_VALIDATION] = True
 
     model = context['model']
     pkg = model.Package.get(dataset_name_or_id)

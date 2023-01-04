@@ -32,6 +32,7 @@ from ckan.lib import uploader
 from ckan.common import c
 from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
 
@@ -586,7 +587,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
             fields_to_skip = config.get('hdx.validation.allow_skip_for_sysadmin', '').split(',')
             if len(fields_to_skip) > 0 and fields_to_skip[0] and \
-                authz.is_sysadmin(c.user) and context.get(hdx_update.SKIP_VALIDATION):
+                    self._user_allowed_to_skip_validation(c.user) and context.get(hdx_update.SKIP_VALIDATION):
                 self._update_with_skip_validation(schema, fields_to_skip)
 
         if action == 'package_show':
@@ -594,6 +595,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 self._update_with_requestdata_show_package_schema(schema)
 
         return navl_validate(data_dict, schema, context)
+
+    def _user_allowed_to_skip_validation(self, username):
+        return authz.is_sysadmin(username) or \
+               Permissions(username).has_permission(Permissions.PERMISSION_MANAGE_DATASERIES)
 
     def _is_requestdata_type(self, data_dict):
         is_requestdata_type_show = False
