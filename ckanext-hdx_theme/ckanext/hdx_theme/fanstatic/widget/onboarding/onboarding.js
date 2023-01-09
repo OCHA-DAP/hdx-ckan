@@ -26,7 +26,7 @@ function checkLockout(event) {
   let username = $("#field-login").val();
   let response = $.ajax({
     type: "GET",
-    url: `/api/check_lockout?user=${username}`,
+    url: `/util/user/check_lockout?user=${username}`,
     cache: false,
     async: false
   }).responseText;
@@ -150,7 +150,7 @@ function checkMfa() {
   let username = $("#field-login").val();
   let response = $.ajax({
     type: "GET",
-    url: `/api/check_mfa?user=${username}`,
+    url: `/util/user/check_mfa?user=${username}`,
     cache: false,
     async: false
   }).responseText;
@@ -169,8 +169,9 @@ $(document).ready(function(){
     $("#hdx-login-form").submit(checkLockout);
     $("#field-login").change(checkMfa);
     //check cookies
-    var loginCookie = $.cookie("hdx_login");
-    if (loginCookie){
+    const loginCookie = $.cookie("hdx_login");
+    const loginPopup = $("#loginPopup").length > 0;
+    if (loginCookie && loginPopup){
         var data = JSON.parse(loginCookie);
         //console.log(data);
 

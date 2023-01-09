@@ -20,3 +20,20 @@
   border-left-style: solid;
   border-left-width: 1px;
 }
+.admin-two-col .dataset-form .control-group {
+  margin-bottom: 10px;
+  display: flex;
+}
+.admin-two-col .dataset-form .control-group .control-label {
+  padding-top: 0;
+  width: 150px;
+}
+.admin-two-col .dataset-form .control-group .controls {
+  margin-left: 10px;
+}
+.admin-two-col .dataset-form .form-actions {
+  width: 370px;
+  margin-left: 135px;
+  display: flex;
+  justify-content: space-between;
+}
