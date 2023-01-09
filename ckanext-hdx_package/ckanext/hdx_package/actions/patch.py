@@ -6,13 +6,17 @@ from ckan.logic import (
     get_or_bust as _get_or_bust,
 )
 
+import ckanext.hdx_package.helpers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
+from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
+from ckanext.hdx_package.helpers.geopreview import delete_geopreview_layer
 
 NotFound = logic.NotFound
 
 
+@fs_check.fs_check_4_resources
 def resource_patch(context, data_dict):
     '''
     Cloned from core. It adds a 'no_compute_extra_hdx_show_properties' in contexts to
@@ -97,7 +101,7 @@ def package_patch(context, data_dict):
 
 def hdx_mark_broken_link_in_resource(context, data_dict):
     '''
-    Does a resource patch to change the 'broken_link' to True. Also sets a field in the context so that the value
+    Does a resource patch to change the 'broken_link' to True or False. Also sets a field in the context so that the value
     of the 'broken_link' field is kept. Otherwise it would be reset on validation.
 
     :param id: the id of the resource
@@ -106,10 +110,24 @@ def hdx_mark_broken_link_in_resource(context, data_dict):
     :rtype: dict
     '''
 
-    data_dict['broken_link'] = True
-    context['allow_broken_link_field'] = True
-    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
-    return _get_action('resource_patch')(context, data_dict)
+    resource_id = data_dict.get('id')
+    broken_link = data_dict.get('broken_link', True)
+    if resource_id:
+        resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        package_id = resource_dict.get('package_id')
+        if not package_id:
+            raise NotFound("dataset was not found")
+        data_revise_dict = {
+            "match": {"id": package_id},
+            'update__resources__' + resource_id: {'broken_link': broken_link}
+        }
+        # data_dict['broken_link'] = True
+        context['allow_broken_link_field'] = True
+        context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
+        # return _get_action('resource_patch')(context, data_dict)
+        return _get_action('package_revise')(context, data_revise_dict)
+    else:
+        raise NotFound("resource id was not provided")
 
 
 def hdx_mark_qa_completed(context, data_dict):
@@ -119,7 +137,16 @@ def hdx_mark_qa_completed(context, data_dict):
     context['allow_qa_completed_field'] = True
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
-    return _get_action('package_patch')(context, data_dict)
+    if 'id' in data_dict and 'qa_completed' in data_dict:
+        data_revise_dict = {
+            "match": {"id": data_dict.get('id')},
+            "update": {'qa_completed': data_dict.get('qa_completed')}
+        }
+    else:
+        raise NotFound("package id or key were not provided")
+    return _get_action('package_revise')(context, data_revise_dict)
+
+    # return _get_action('package_patch')(context, data_dict)
 
 
 def hdx_qa_resource_patch(context, data_dict):
@@ -128,7 +155,17 @@ def hdx_qa_resource_patch(context, data_dict):
     context['allow_resource_qa_script_field'] = True
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
-    if data_dict.get('in_quarantine') is not None:
+    resource_dict = _get_action('resource_show')(context, {'id': data_dict.get('id')})
+    pkg_id = resource_dict.get('package_id')
+    new_quarantine_value = data_dict.get('in_quarantine')
+
+    analytics_sender = QAQuarantineAnalyticsSender(pkg_id, resource_dict.get('id'), new_quarantine_value == 'true')
+    if analytics_sender.should_send_analytics_event():
+        analytics_sender.send_to_queue()
+
+    # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
+    if new_quarantine_value is not None:
+        dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
         tag_s3_version_by_resource_id(
             {
                 'model': context['model'],
@@ -136,10 +173,47 @@ def hdx_qa_resource_patch(context, data_dict):
                 'auth_user_obj': context['auth_user_obj'],
             },
             data_dict['id'],
-            data_dict['in_quarantine'] == 'true'
+            data_dict['in_quarantine'] == 'true',
+            resource_dict.get('url'),
+            dataset_dict.get('name')
         )
+    data_revise_dict = {'match': {'id': pkg_id}}
+    _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict)
+    for item in data_dict.keys():
+        if data_dict[item] != 'id':
+            data_revise_dict['update__resources__' + resource_dict.get('id')[:5]] = {item: data_dict[item]}
 
-    return _get_action('resource_patch')(context, data_dict)
+    if len(data_revise_dict.keys()) <= 1:
+        raise NotFound("resource id, key or value were not provided")
+    revise_response = _get_action('package_revise')(context, data_revise_dict)
+    package = revise_response.get('package', {})
+    resource_dict = next((res for res in package.get('resources', []) if res.get('id') == resource_dict['id']), None)
+    return resource_dict
+
+
+def _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict):
+    if new_quarantine_value == 'true' and resource_dict.get('shape_info'):
+        resource_id = resource_dict['id']
+        data_revise_dict['filter'] = [
+            "-resources__" + resource_id + "__shape_info"
+        ]
+        delete_geopreview_layer(resource_id)
+
+
+def hdx_fs_check_resource_revise(context, data_dict):
+    _check_access('hdx_fs_check_resource_revise', context, data_dict)
+
+    context['allow_fs_check_field'] = True
+    pkg_id = data_dict.get('package_id')
+    res_id = data_dict.get('id')
+    key = data_dict.get('key')
+    value = data_dict.get('value')
+
+    data_revise_dict = {
+        "match": {"id": pkg_id},
+        'update__resources__' + res_id[:5]: {key: value}
+    }
+    return _get_action('package_revise')(context, data_revise_dict)
 
 
 def hdx_qa_package_revise_resource(context, data_dict):
@@ -163,3 +237,36 @@ def hdx_qa_package_revise_resource(context, data_dict):
         data_revise_dict['update__resources__' + str(res.get('position'))] = {key: value}
 
     return _get_action('package_revise')(context, data_revise_dict)
+
+
+@logic.side_effect_free
+def hdx_fs_check_resource_reset(context, data_dict):
+    _check_access('hdx_fs_check_resource_revise', context, data_dict)
+
+    context['allow_fs_check_field'] = True
+    pkg_id = data_dict.get('package_id')
+    res_id = data_dict.get('id')
+    key = data_dict.get('key', 'fs_check_info')
+
+    data_revise_dict = {
+        "match": {"id": pkg_id},
+        'update__resources__' + res_id[:5]: {key: ''}
+    }
+    return _get_action('package_revise')(context, data_revise_dict)
+
+
+@logic.side_effect_free
+def hdx_fs_check_package_reset(context, data_dict):
+    _check_access('hdx_fs_check_resource_revise', context, data_dict)
+    pkg_id = data_dict.get('package_id')
+    pkg_dict = _get_action('package_show')(context, {'id': pkg_id})
+    if pkg_dict.get('resources'):
+        key = data_dict.get('key', 'fs_check_info')
+
+        context['allow_fs_check_field'] = True
+        data_revise_dict = {"match": {"id": pkg_id}}
+        for res in pkg_dict.get('resources'):
+            data_revise_dict['update__resources__' + res.get('id')[:5]] = {key: ''}
+        return _get_action('package_revise')(context, data_revise_dict)
+
+    raise NotFound("package doesn't contain resources or not found")

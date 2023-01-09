@@ -5,6 +5,9 @@
 {% if package.has_quickcharts or visualization or popular or has_showcase_items or (package.subnational and package.subnational != '0')
         or package.private or has_quality_checked %}
   <li class="label-icons">
+    {% block leading_icons %}
+    {% endblock %}
+
     {% if visualization %}
       <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
     {% endif %}

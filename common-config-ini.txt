@@ -273,9 +273,13 @@ hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%%
 hdx.explorer.iframe.height = 750px
 
+#file structure check
+hdx.file_structure.check_url = http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
+
 # Hxl Proxy
 # This should be overriden in your own prod.ini
 hdx.hxlproxy.url = https://proxy.hxlstandard.org
+hdx.hxlproxy.source_info_url = https://proxy.hxlstandard.org/api/source-info?url={url}
 
 # HXL Preview
 hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview

@@ -7,6 +7,12 @@
   {% endif %}
 {% endblock %}
 
+{% block broken_link_label %}
+  {% if res.broken_link %}
+    <span class="label label-info label-small">{{ _('Broken Link') }}</span>
+  {% endif %}
+{% endblock %}
+
 {% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
 {% block resource_item_edit %}
   <div class="more-options">
@@ -30,6 +36,9 @@
       {% endif %}
       <li>
         <a onclick="updateQuarantine('{{ res.id }}', {% if res.in_quarantine %}false{% else %}true{% endif %});">{% if res.in_quarantine %}Remove from{% else %}Add to{% endif %} Quarantine</a>
+      </li>
+      <li>
+        <a onclick="updateBrokenLink('{{ res.id }}', {% if res.broken_link %}false{% else %}true{% endif %});">{% if res.broken_link %}Unmark{% else %}Mark{% endif %} as Broken Link</a>
       </li>
     </ul>
   </div>

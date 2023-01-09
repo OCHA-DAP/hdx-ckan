@@ -1,0 +1,70 @@
+{#
+Request new tags widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/tags/request-tags.html', id="requestTagsPopup") }}
+#}
+
+{% asset 'hdx_theme/request-tags-styles' %}
+{% asset 'hdx_theme/request-tags-scripts' %}
+
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-select-organisation" %}
+
+{% extends "widget/onboarding/two-column.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{% block left_content %}
+  <div>
+    <div class="large-title">Didn't see a tag?</div>
+    <div class="mTop20 large-text">We are here to help!</div>
+    <div class="mTop20 regular-text">
+      Please send us your suggestions or <a href="https://data.humdata.org/rdr/spreadsheets/approved-tags"
+                                            target="_blank">see the full list of approved tags</a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block right_content %}
+  <div id="request-tags">
+    <form id="request-tags-form">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="mTop15 control">
+            <input id="fullname" name="fullname" class="full-width required" type="text"
+                   value="{% if c.userobj.fullname %}{{ c.userobj.fullname }}{% endif %}">
+            <label for="fullname">Your name</label>
+          </div>
+          <div class="mTop15 control">
+            <input id="email" name="email" class="full-width required" type="text"
+                   value="{% if c.userobj.email %}{{ c.userobj.email }}{% endif %}">
+            <label for="email">Your email address</label>
+          </div>
+          <div class="mTop15 control">
+            {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': ''} %}
+            {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('eg. economy, mental health, government'), classes=['control-full'], attrs=tag_attrs) }}
+          </div>
+          <div class="mTop15 control">
+            <input id="datatype" name="datatype" class="full-width required" type="text" value="">
+            <label for="datatype">Type of data you are trying to share</label>
+          </div>
+          <div class="mTop15 control">
+            <textarea id="request-tags-comment" name="comment" class="full-width required"></textarea>
+            <label for="comment">Your comment</label>
+          </div>
+        </div>
+      </div>
+      <div class="right-side-actions">
+        <input class="btn btn-primary btn-large pull-right mL45 hdx-recaptcha" type="submit" value="Submit"
+               data-sitekey="{{ g.recaptcha_publickey }}" data-callback="requestTagsOnSubmit" data-size="invisible"
+               data-badge="inline">
+        <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);"
+               value="Cancel">
+      </div>
+    </form>
+  </div>
+{% endblock %}

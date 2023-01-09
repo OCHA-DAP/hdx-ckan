@@ -76,6 +76,7 @@ hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
 #DEPRECATED hdx.less_compile.onstartup = False
 
 # GIS
+hdx.gis.layer_delete_url = http://${HDX_GEOPREVIEW_API}/api/delete-one-layer/{resource_id}
 hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 #hdx.gis.layer_import_url = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # this is only needed for the clients to get the pbf
@@ -93,9 +94,13 @@ hdx.analytics.track_api = ${HDX_ANALYTICS_TRACK_API}
 hdx.analytics.track_api.exclude_browsers = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS}
 hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
+#file structure check
+hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
+
 # HXL Proxy
 # This should be overriden in your own prod.ini
 hdx.hxlproxy.url = ${HDX_HXLPROXY}
+hdx.hxlproxy.source_info_url = ${HDX_HXLPROXY}/api/source-info?url={url}
 
 # Quickcharts!
 hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts

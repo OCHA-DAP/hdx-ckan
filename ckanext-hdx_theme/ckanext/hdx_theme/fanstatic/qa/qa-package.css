@@ -167,6 +167,9 @@
   top: 20px;
   right: 0;
 }
+.resource-item .more-options ul.dropdown-menu li a {
+  cursor: pointer;
+}
 .resource-item .dataset-pii {
   margin-top: 0;
 }

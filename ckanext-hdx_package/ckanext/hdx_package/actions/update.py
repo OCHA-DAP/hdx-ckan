@@ -20,6 +20,7 @@ import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.fs_check as fs_check
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
@@ -42,6 +43,7 @@ log = logging.getLogger(__name__)
 SKIP_VALIDATION = 'skip_validation'
 
 
+@fs_check.fs_check_4_resources
 @geopreview.geopreview_4_resources
 def resource_update(context, data_dict):
     '''
@@ -50,6 +52,11 @@ def resource_update(context, data_dict):
     '''
 
     id = _get_or_bust(data_dict, "id")
+    model = context['model']
+    resource_obj = model.Resource.get(id)
+    if not resource_obj:
+        log.debug('Could not find resource %s', id)
+        raise NotFound(_('Resource was not found.'))
 
     process_batch_mode(context, data_dict)
     # flag_if_file_uploaded(context, data_dict)
@@ -62,8 +69,8 @@ def resource_update(context, data_dict):
     # new_file_uploaded = bool(data_dict.get('upload'))
 
     if data_dict.get('resource_type', '') != 'file.upload':
-        #If this isn't an upload, it is a link so make sure we update
-        #the url_type otherwise solr will screw everything up
+        # If this isn't an upload, it is a link so make sure we update
+        # the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
 
         # we need to overwrite size field (not just setting it to None or pop) otherwise
@@ -83,12 +90,33 @@ def resource_update(context, data_dict):
         if data_dict.get('datastore_active', 'true') in ('true', 'True'):
             data_dict['datastore_active'] = True
 
-    result_dict = run_action_without_geo_preview(core_update.resource_update, context, data_dict)
+    # result_dict = run_action_without_geo_preview(core_update.resource_update, context, data_dict)
+    # return result_dict
+    ## if new_file_uploaded:
+    ##     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
 
-    # if new_file_uploaded:
-    #     _delete_old_file_if_necessary(prev_resource_dict, result_dict)
 
-    return result_dict
+    # pkg_id_or_username = _get_or_bust(data_dict, 'package_id')
+    # pkg = model.Package.get(pkg_id_or_username)
+
+
+    pkg_id = resource_obj.package.id
+
+    data_revise_dict = {
+        "match": {"id": pkg_id},
+        "filter": [
+            "+resources__" + id + "__id",
+            "-resources__" + id + "__*"
+        ],
+        "update__resources__" + id: data_dict
+    }
+    revise_response = run_action_without_geo_preview(core_update.package_revise, context, data_revise_dict)
+    package = revise_response.get('package', {})
+    if isinstance(package, str):
+        package = _get_action('package_show')(context, {'id': pkg_id})
+
+    res_list = [res for res in package.get('resources', []) if res.get('id') == id]
+    return res_list[-1]
 
 
 def run_action_without_geo_preview(action, context, data_dict):
@@ -189,7 +217,7 @@ def package_update(context, data_dict):
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
     if 'groups' in data_dict:
-       data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
+        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
 
     if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
         data_dict['review_date'] = datetime.datetime.utcnow()
@@ -242,7 +270,7 @@ def package_update(context, data_dict):
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
         if 'clear_upload' in resource or resource.get('upload'):
-            #this needs to be run while the upload field still exists
+            # this needs to be run while the upload field still exists
             flag_if_file_uploaded(context, resource)
 
             # file uploads/clearing
@@ -270,7 +298,7 @@ def package_update(context, data_dict):
         model.Session.rollback()
         raise ValidationError(errors)
 
-    #avoid revisioning by updating directly
+    # avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
@@ -291,7 +319,7 @@ def package_update(context, data_dict):
     # Needed to let extensions know the new resources ids
     model.Session.flush()
     for index, (resource, upload) in enumerate(
-            zip(data.get('resources', []), resource_uploads)):
+        zip(data.get('resources', []), resource_uploads)):
         resource['id'] = pkg.resources[index].id
 
         if upload:
@@ -493,19 +521,20 @@ def hdx_package_update_metadata(context, data_dict):
                       'data_update_frequency']
 
     package = _get_action('package_show')(context, data_dict)
-    requested_groups = [el.get('id', el.get('name','')) for el in data_dict.get('groups',[])]
+    requested_groups = [el.get('id', el.get('name', '')) for el in data_dict.get('groups', [])]
     for key, value in data_dict.items():
         if key in allowed_fields:
             package[key] = value
     if not package['notes']:
         package['notes'] = ' '
     package = _get_action('package_update')(context, package)
-    db_groups = [el.get('name','') for el in package.get('groups',[]) ]
+    db_groups = [el.get('name', '') for el in package.get('groups', [])]
 
     if len(requested_groups) != len(db_groups):
         not_saved_groups = set(requested_groups) - set(db_groups)
         log.warn('Indicator: {} - num of groups in request is {} but only {} are in the db. Difference: {}'.
-                 format(package.get('name','unknown'),len(requested_groups), len(db_groups), ", ".join(not_saved_groups)))
+                 format(package.get('name', 'unknown'), len(requested_groups), len(db_groups),
+                        ", ".join(not_saved_groups)))
 
     return package
 
@@ -534,23 +563,35 @@ def hdx_resource_update_metadata(context, data_dict):
     if data_dict.get('shape_info'):
         data_dict['shape_info'] = geopreview.add_to_shape_info_list(data_dict.get('shape_info'), resource)
 
+    update_resource_key = 'update__resources__' + resource['id']
+    revise_data_dict = {
+        'match': {
+            'id': resource['package_id']
+        },
+        update_resource_key: {}
+    }
+
     for key, value in data_dict.items():
         if key in allowed_fields:
             resource_was_modified = True
-            resource[key] = value
+            revise_data_dict[update_resource_key][key] = value
 
     if resource_was_modified:
         # we don't want the resource update to generate another
         # geopreview transformation
         context['do_geo_preview'] = False
-        resource = _get_action('resource_update')(context, resource)
+        revise_response = _get_action('package_revise')(context, revise_data_dict)
+        resource_list = revise_response.get('package', {}).get('resources', [])
+        response = next(
+            (r for r in resource_list if r['id'] == resource['id']),
+            {'error': 'Resource not found in response from package_revise'}
+        )
 
-        # if a geopreview was just updated generate a screenshot
-        # not used anymore, requested in HDX-8441
-        # if 'shape_info' in data_dict.keys():
-        #     _get_action('hdx_create_screenshot_for_cod')(context, {'id': resource.get('package_id')})
 
-    return resource
+    else:
+        response = resource
+
+    return response
 
 
 def hdx_resource_delete_metadata(context, data_dict):

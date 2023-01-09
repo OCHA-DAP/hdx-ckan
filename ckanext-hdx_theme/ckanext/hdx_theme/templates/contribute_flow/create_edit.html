@@ -44,6 +44,7 @@
 
 {{ h.snippet('widget/contribute/private-dataset-info.html', id="privateDatasetInfoPopup") }}
 {{ h.snippet('widget/contribute/contribute-dataset-review.html', id="contributeDatasetReviewPopup") }}
+{{ h.snippet('widget/tags/request-tags.html', id="requestTagsPopup") }}
 
 <div class="contribute-main" data-module="contribute_flow_main" {% if data.id  %} data-module-dataset_id="{{ data.id }}" {% endif %}>
     <div id="create-dataset-app">
@@ -571,7 +572,15 @@
 
                                           <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
                                             <div class="control-group form-group control-full">
-                                              <label class="control-label">Date of dataset</label>
+{#                                              <label class="control-label">{{_('Reference Period')}}</label>#}
+                                              <label class="control-label"
+                                               style="font-weight:inherit"
+                                               data-module='bs_tooltip'
+                                               data-module-placement='top'
+                                               data-original-title= 'The time period for which data are collected or calculated and to which, as a result, they refer. The reference period may be of any length: a year, a month, or even a day.'
+                                               data-toggle= 'tooltip'>
+                                                {{_('Reference Period')}} (?)
+                                              </label>
                                               <div class="controls">
                                                 <div style="display: flex">
                                                     <div>
@@ -694,6 +703,9 @@
                                               <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">
                                                 Suggested tags: <span />
                                               </div>
+                                            </div>
+                                            <div class="request-tags-wrapper">
+                                              Don't see a tag you are looking for? <a onclick="closeCurrentWidget(this); spawnRecaptcha('#requestTagsPopup'); showTagRequestWidget('#requestTagsPopup');" href="#">Suggest one</a> or <a href="https://data.humdata.org/rdr/spreadsheets/approved-tags" target="_blank">see the full list of approved tags</a>
                                             </div>
                                           </div>
 

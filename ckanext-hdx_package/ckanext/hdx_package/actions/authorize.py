@@ -15,7 +15,7 @@ def package_create(context, data_dict=None):
     if data_dict and 'groups' in data_dict:
         temp_groups = data_dict['groups']
         del data_dict['groups']
-        #check original package_create auth
+        # check original package_create auth
         log.debug('Removed groups from data_dict: ' + str(data_dict))
         retvalue = create.package_create(context, data_dict)
         data_dict['groups'] = temp_groups
@@ -30,7 +30,7 @@ def package_update(context, data_dict=None):
     if data_dict and 'groups' in data_dict:
         temp_groups = data_dict['groups']
         del data_dict['groups']
-        #check original package_create auth
+        # check original package_create auth
         log.debug('Removed groups from data_dict: ' + str(data_dict))
         retvalue = update.package_update(context, data_dict)
         data_dict['groups'] = temp_groups
@@ -111,6 +111,13 @@ def hdx_qa_resource_patch(context, data_dict=None):
     return {'success': False, 'msg': _('Only sysadmins can change the qa script related flags')}
 
 
+def hdx_fs_check_resource_revise(context, data_dict=None):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return {'success': False, 'msg': _('Only sysadmins can change the file structure check info')}
+
+
 def package_qa_checklist_update(context, data_dict=None):
     '''
     Only sysadmins are allowed to call this action
@@ -122,3 +129,20 @@ def hdx_cod_update(context, data_dict):
     username_or_id = context.get('user')
     result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_COD)
     return {'success': result}
+
+
+def hdx_send_mail_request_tags(context, data_dict):
+    '''
+    Only a logged in user has access.
+    '''
+
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    if user_obj:
+        return {
+            'success': True
+        }
+
+    return {
+        'success': False,
+        'msg': _('Not authorized to perform this request')
+    }

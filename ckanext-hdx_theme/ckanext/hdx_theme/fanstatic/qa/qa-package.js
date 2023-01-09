@@ -28,6 +28,27 @@ function _updateQuarantine(resource, flag) {
   return promise;
 }
 
+function _updateBrokenLink(resource, flag) {
+  let body = {
+    "id": `${resource}`,
+    "broken_link": `${flag}`,
+  };
+  let promise = new Promise((resolve, reject) => {
+    $.post('/api/action/hdx_mark_broken_link_in_resource', body)
+      .done((result) => {
+        if (result.success){
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      })
+      .fail((result) => {
+        reject(result);
+      });
+  });
+  return promise;
+}
+
 function _updateQAComplete(package, flag) {
   let body = {
     "id": `${package}`,
@@ -192,6 +213,23 @@ function updateQuarantine(resource, flag) {
       },
       (error) => {
         alert("Error, quarantine status not updated! " + extraMsg);
+        $("#loadingScreen").hide();
+      }
+    )
+    .finally(() => {
+      location.reload();
+    });
+}
+
+function updateBrokenLink(resource, flag) {
+  _showLoading();
+  _updateBrokenLink(resource, flag)
+    .then(
+      (resolve) => {
+        _updateLoadingMessage("Broken link status successfully updated! Reloading page...");
+      },
+      (error) => {
+        alert("Error, broken link status not updated! " + extraMsg);
         $("#loadingScreen").hide();
       }
     )

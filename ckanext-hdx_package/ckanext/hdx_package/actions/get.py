@@ -656,6 +656,16 @@ def shape_info_show(context, data_dict):
     return shape_infos
 
 
+@logic.side_effect_free
+def fs_check_info_show(context, data_dict):
+    dataset_dict = get_action('package_show')(context, data_dict)
+
+    fs_check_infos = [{r.get('name'): json.loads(r.get('fs_check_info'))} for r in dataset_dict.get('resources', []) if
+                      r.get('fs_check_info')]
+
+    return fs_check_infos
+
+
 # def _check_dataset_preview_selected_value(context, data_dict, property_name):
 #     use_cache = context.get('use_cache', True)
 #     current_value = data_dict.get(property_name) not in (True, False)
@@ -1050,3 +1060,24 @@ def hdx_guess_format_from_extension(context, data_dict):
         return None
 
     return guess_format_from_extension(q)
+
+
+def hdx_send_mail_request_tags(context, data_dict):
+    _check_access('hdx_send_mail_request_tags', context, data_dict)
+
+    hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+
+    subject = u'New tag(s) request'
+    email_data = {
+        'user_display_name': data_dict.get('fullname'),
+        'user_email': data_dict.get('email'),
+        'tags': data_dict.get('suggested_tags'),
+        'datatype': data_dict.get('datatype'),
+        'comment': data_dict.get('comment'),
+    }
+
+    hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                              subject, email_data, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'), snippet='email/content/tag_request.html')
+
+    return None
