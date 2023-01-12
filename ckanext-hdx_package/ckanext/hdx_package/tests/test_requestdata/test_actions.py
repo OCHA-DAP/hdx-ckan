@@ -6,6 +6,8 @@ import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_with_requestdata_type_and_orgs as hdx_test_with_requestdata_type_and_orgs
 
+import json
+
 log = logging.getLogger(__name__)
 
 ValidationError = tk.ValidationError
@@ -44,6 +46,28 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'sender_organization_id': 'NASA',
             'sender_organization_type': 'Military',
             'sender_intend': 'Research Purposes'
+        }
+
+        result = self._get_action('requestdata_request_create')(context, data_dict)
+        assert 'requestdata_id' in result
+
+    def test_create_requestdata_valid_other_values(self):
+
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_2"})
+        data_dict = {
+            'package_id': pkg.get('id'),
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': '__other__',
+            'sender_organization_id_other': 'NASA',
+            'sender_organization_type': '__other__',
+            'sender_organization_type_other': 'Research',
+            'sender_intend': '__other__',
+            'sender_intend_other': 'Testing Purposes'
         }
 
         result = self._get_action('requestdata_request_create')(context, data_dict)
@@ -98,6 +122,31 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             assert True
         assert True
 
+    def test_create_requestdata_pending_request(self):
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_3"})
+        data_dict = {
+            'package_id': pkg.get('id'),
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'hdx-test-org',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
+        }
+
+        result = self._get_action('requestdata_request_create')(context, data_dict)
+
+        try:
+            result = self._get_action('requestdata_request_create')(context, data_dict)
+            assert False
+        except ValidationError as ex:
+            assert ex.error_dict.get('package_id') == [
+                u'You already have a pending request. Please wait for the reply.']
+        assert True
+
     def test_create_requestdata_invalid_package(self):
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_1"})
@@ -124,7 +173,7 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
     def test_show_requestdata_valid(self):
         testsysadmin_obj = model.User.by_name('testsysadmin')
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_new"})
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_4"})
         data_dict = {
             'package_id': pkg.get('id'),
             'sender_name': 'John Doe',
@@ -163,6 +212,114 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             assert False
         except NotAuthorized as ex:
             assert True
+
+    def test_show_requestdata_valid_extras(self):
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_5"})
+        data_dict = {
+            'package_id': pkg.get('id'),
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'hdx-test-org',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
+        }
+
+        result = self._get_action('requestdata_request_create')(context, data_dict)
+
+        assert 'requestdata_id' in result
+
+        requestdata_id = result.get('requestdata_id')
+
+        data_dict_show = {
+            'id': requestdata_id,
+            'package_id': data_dict['package_id']
+        }
+
+        result = self._get_action('requestdata_request_show')(context, data_dict_show)
+
+        assert 'extras' in result
+
+        extras = json.loads(result['extras'])
+
+        assert 'country' in extras
+        assert 'organization_id' in extras
+        assert 'organization_name' in extras
+        assert 'organization_member' in extras
+        assert 'organization_type' in extras
+        assert 'intend' in extras
+
+    def test_show_requestdata_valid_warning_sign_user_not_part_of_organization(self):
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'johndoe1'}
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_6"})
+        data_dict = {
+            'package_id': pkg.get('id'),
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': '__other__',
+            'sender_organization_id_other': 'non existing organization',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
+        }
+
+        result = self._get_action('requestdata_request_create')(context, data_dict)
+
+        assert 'requestdata_id' in result
+
+        requestdata_id = result.get('requestdata_id')
+
+        data_dict_show = {
+            'id': requestdata_id,
+            'package_id': data_dict['package_id']
+        }
+
+        result = self._get_action('requestdata_request_show')(context, data_dict_show)
+
+        assert 'extras' in result
+
+        extras = json.loads(result['extras'])
+
+        assert 'organization_member' in extras and extras.get('organization_member') is False
+
+    def test_show_requestdata_valid_no_warning_sign_user_is_part_of_organization(self):
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'johndoe1'}
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_7"})
+        data_dict = {
+            'package_id': pkg.get('id'),
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'hdx-test-org',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
+        }
+
+        result = self._get_action('requestdata_request_create')(context, data_dict)
+
+        assert 'requestdata_id' in result
+
+        requestdata_id = result.get('requestdata_id')
+
+        data_dict_show = {
+            'id': requestdata_id,
+            'package_id': data_dict['package_id']
+        }
+
+        result = self._get_action('requestdata_request_show')(context, data_dict_show)
+
+        assert 'extras' in result
+
+        extras = json.loads(result['extras'])
+
+        assert 'organization_member' in extras and extras.get('organization_member') is True
 
     def test_show_requestdata_missing_values(self):
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -215,8 +372,8 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'sender_intend': 'Research Purposes'
         }
 
-        for i in range(2, 6):  # test_activity_request_data_1 fails
-            pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_%s" % i})
+        for package_id in ['test_activity_request_data_8', 'test_activity_request_data_9']:
+            pkg = self._get_action('package_show')(context, {"id": package_id})
             data_dict['package_id'] = pkg.get('id')
             result = self._get_action('requestdata_request_create')(context, data_dict)
 
@@ -228,7 +385,7 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
         except Exception as ex:
             assert False
 
-        assert len(result) >= 3
+        assert len(result) >= 2
 
 
 class TestRequestdataForOrgActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequestdataTypeAndOrgsTest):
@@ -251,8 +408,8 @@ class TestRequestdataForOrgActions(hdx_test_with_requestdata_type_and_orgs.HDXWi
     def test_requestdata_request_list_for_organization(self):
 
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'johndoe1'}
-        for i in range(1, 4):
-            pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_" + str(i)})
+        for package_id in ['test_activity_request_data_10', 'test_activity_request_data_11']:
+            pkg = self._get_action('package_show')(context, {"id": package_id})
             data_dict = {
                 'package_id': pkg.get('id'),
                 'sender_name': 'John Doe',
@@ -270,7 +427,7 @@ class TestRequestdataForOrgActions(hdx_test_with_requestdata_type_and_orgs.HDXWi
                 assert False
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         result = self._get_action('requestdata_request_list_for_organization')(context, {"org_id": "hdx-test-org"})
-        assert len(result) == 3
+        assert len(result) == 2
 
     def test_requestdata_request_list_for_organization_missing_org_id(self):
 
