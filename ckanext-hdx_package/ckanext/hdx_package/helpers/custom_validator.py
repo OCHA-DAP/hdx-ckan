@@ -672,7 +672,7 @@ def hdx_resources_not_allowed_if_requested_data(key, data, errors, context):
         raise df.Invalid(_('By request - HDX Connect datasets can not store resources'))
 
 
-DATASERIES_TITLE_PATTERN = re.compile('^[0-9a-zA-Z ,-]+$')
+DATASERIES_TITLE_PATTERN = re.compile('^[\w ,-]+$', re.UNICODE)
 def hdx_dataseries_title_validator(value, context):
     if value:
         if not DATASERIES_TITLE_PATTERN.match(value):
