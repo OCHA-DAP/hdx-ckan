@@ -69,4 +69,8 @@ $(document).ready(function() {
   $('#test-two-step-btn').on('click', onTestTwoStep);
   $('#two-step-turn-off').on('click', () => toggleTwoStep(false));
   $('#two-step-turn-on, #two-step-regenerate').on('click', () => toggleTwoStep(true));
+
+  if (window.location.href.indexOf("show_totp") !== -1) {
+    showOnboardingWidget('#tsvPopup');
+  }
 });

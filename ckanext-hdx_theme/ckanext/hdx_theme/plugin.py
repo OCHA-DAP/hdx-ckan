@@ -26,9 +26,14 @@ from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_loc
 from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
 from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.splash_page import hdx_splash
-
+import ckan.plugins.toolkit as tk
+from ckanext.security.model import SecurityTOTP
 config = toolkit.config
-
+log = logging.getLogger(__name__)
+request = tk.request
+g = tk.g
+redirect = tk.redirect_to
+h = tk.h
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
@@ -308,6 +313,31 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'user_generate_apikey': auth.hdx_user_generate_apikey,
         }
 
+    def _before_request(self):
+        protected_urls = [
+            '/',
+            '/dashboard/',
+            '/dataset',
+            '/group',
+            '/organization',
+            '/faq',
+            '/user/',
+            '/ckan-admin/'
+        ]
+        if g.userobj and g.userobj.sysadmin and \
+            request.url_rule.rule in protected_urls:
+            log.info('Sysadmin, checking for 2FA...')
+            if not hasattr(g.userobj, 'totp_enabled'):
+                totp_challenger = SecurityTOTP.get_for_user(g.userobj.name)
+                if totp_challenger:
+                    g.userobj.totp_enabled = True
+                else:
+                    g.userobj.totp_enabled = False
+
+            if not g.userobj.totp_enabled:
+                log.info('Redirect to setup 2FA')
+                return redirect(h.url_for('user.edit', show_totp=True))
+
     # IMiddleware
     def make_middleware(self, app, config):
         cookie_app = CookieMiddleware(app, config)
@@ -319,6 +349,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     handler.setLevel(logging.ERROR)
             app.logger.addFilter(FlaskEmailFilter())
             app.after_request(http_headers.set_http_headers)
+            app.before_request(self._before_request)
         return redirection_app
 
     # IValidators
