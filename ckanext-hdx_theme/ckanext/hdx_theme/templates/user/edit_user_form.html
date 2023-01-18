@@ -60,8 +60,9 @@
           <a class="btn btn-warning" href="{% url_for controller='user', action='generate_apikey', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block generate_button_text %}{{ _('Regenerate API Key') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
-
       <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
+    </div>
+    <div class="form-actions">
       {{ form.required_message() }}
     </div>
   </fieldset>
