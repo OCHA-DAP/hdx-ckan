@@ -2,6 +2,7 @@ import ckanext.hdx_users.actions.create as create
 import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
+import ckanext.hdx_users.actions.delete as delete
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
 import ckanext.hdx_users.helpers.helpers as hdx_h
 import ckanext.hdx_users.actions.auth as auth
@@ -47,7 +48,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'onboarding_followee_list': get.onboarding_followee_list,
             'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
-            'hdx_first_login': create.hdx_first_login
+            'hdx_first_login': create.hdx_first_login,
+            'user_delete': delete.hdx_user_delete
         }
 
     def get_auth_functions(self):
