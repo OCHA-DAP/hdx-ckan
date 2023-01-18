@@ -48,14 +48,14 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         assert True
 
     def test_resulting_page(self):
-        testsysadmin = model.User.by_name('testsysadmin')
+        tester = model.User.by_name('tester')
 
         # /faqs/licenses
         _old_faq_for_category = fw.faq_for_category
         fw.faq_for_category = mh.mock_faqs_license_page_content
         page = self._get_faqs_page('licenses')
         assert 'Data Licenses' in page.body, 'the url /faqs/license should redirect to the Data Licenses page when no user is logged in'
-        page = self._get_faqs_page('licenses', testsysadmin.apikey)
+        page = self._get_faqs_page('licenses', tester.apikey)
         assert 'Data Licenses' in page.body, 'the url /faqs/license should redirect to the Data Licenses page, even when the user is logged in'
         fw.faq_for_category = _old_faq_for_category
 
@@ -65,24 +65,24 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         page = self._get_faqs_page('terms')
         assert 'HDX Terms of Service' in page.body, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
         assert 'HDX is an open platform and anyone can use it without creating a user account.' in page.body, 'the url /faqs/terms should redirect to the Terms of Service page when no user is logged in'
-        page = self._get_faqs_page('terms', testsysadmin.apikey)
+        page = self._get_faqs_page('terms', tester.apikey)
         assert 'HDX Terms of Service' in page.body, 'the url /faqs/terms should redirect to the Terms of Service page, even when the user is logged in'
         fw.faq_for_category = _old_faq_for_category
 
         # /about/hdx-qa-process
         page = self._get_about_page('hdx-qa-process')
         assert 'Responsible Data Sharing on HDX' in page.body, 'the url /about/hdx-qa-proces should redirect to the QA process page when no user is logged in'
-        page = self._get_about_page('hdx-qa-process', testsysadmin.apikey)
+        page = self._get_about_page('hdx-qa-process', tester.apikey)
         assert 'Responsible Data Sharing on HDX' in page.body, 'the url /about/hdx-qa-proces should redirect to the QA process page, even when the user is logged in'
 
         page = self._get_about_page('fake')
         assert page.status_code == 404
 
-        page = self._get_about_page('fake', testsysadmin.apikey)
+        page = self._get_about_page('fake', tester.apikey)
         assert page.status_code == 404
 
     def test_faq_page(self):
-        testsysadmin = model.User.by_name('testsysadmin')
+        tester = model.User.by_name('tester')
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_faq_page_content
@@ -90,7 +90,7 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         page = self._get_url_page(url)
         assert 'Frequently Asked Questions' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'FAQ' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        page = self._get_url_page(url, testsysadmin.apikey)
+        page = self._get_url_page(url, tester.apikey)
         assert 'Frequently Asked Questions' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
@@ -119,19 +119,19 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
 
     # Resources for developers
     def test_documentation_page(self):
-        testsysadmin = model.User.by_name('testsysadmin')
+        tester = model.User.by_name('tester')
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_documentation_page_content
         page = self._get_faqs_page('devs')
         assert 'Resources for Developers' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'Accessing HDX by API' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        page = self._get_faqs_page('devs', testsysadmin.apikey)
+        page = self._get_faqs_page('devs', tester.apikey)
         assert 'Resources for Developers' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
     def test_data_responsability_page(self):
-        testsysadmin = model.User.by_name('testsysadmin')
+        tester = model.User.by_name('tester')
 
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_data_responsability_page_content
@@ -139,7 +139,7 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         page = self._get_faqs_page('covid')
         assert 'Data Responsibility in the COVID-19 Response' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'About Data Responsibility for COVID-19' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
-        page = self._get_faqs_page('covid', testsysadmin.apikey)
+        page = self._get_faqs_page('covid', tester.apikey)
         assert 'Data Responsibility in the COVID-19 Response' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
