@@ -1,6 +1,6 @@
 $(document).ready(function() {
   function onTestTwoStep() {
-    let userId = $("#hidden-user-id").val();
+    let userName = $("#hidden-user-name").val();
     let body = {
       mfa: $("#field-mfa").val()
     };
@@ -9,7 +9,7 @@ $(document).ready(function() {
     msgContainer.removeClass('alert-success');
     msgContainer.removeClass('alert-danger');
 
-    $.post(`/user/configure_mfa/${userId}`, body)
+    $.post(`/user/configure_mfa/${userName}`, body)
       .done((response) => {
         const result = JSON.parse(response);
         if (result.success == true){
@@ -30,8 +30,8 @@ $(document).ready(function() {
 
   function toggleTwoStep(on = false) {
     if (on) {
-      let userId = $("#hidden-user-id").val();
-      $.get(`/user/configure_mfa/${userId}/new`)
+      let userName = $("#hidden-user-name").val();
+      $.get(`/user/configure_mfa/${userName}/new`)
         .done((response) => {
           const result = JSON.parse(response);
           if (result.success == true){
