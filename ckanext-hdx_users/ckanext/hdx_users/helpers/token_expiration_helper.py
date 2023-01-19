@@ -9,6 +9,7 @@ import ckanext.hdx_user_extra.model as ue_model
 _mail_recipient = tk.mail_recipient
 _render = tk.render
 _url_for = tk.url_for
+config = tk.config
 
 
 MAIL_TEXT_TEMPLATE = '''
@@ -96,7 +97,15 @@ def get_expiration(token):
 def send_emails_for_expiring_tokens(token_info_list):
     for token_info in token_info_list:
         rendered_text = MAIL_TEXT_TEMPLATE.format(**token_info)
-        rendered_html = _render('email/content/api_tokens/api_token_expiration.html', {'data': token_info})
+        html_data_dict = {
+            'data': {
+                'data': token_info,
+                'footer': True,
+                '_snippet': 'email/content/api_tokens/api_token_expiration.html',
+                'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx-email.png',
+            }
+        }
+        rendered_html = _render('email/email.html', html_data_dict)
         _mail_recipient(
             token_info.get('full_name'),
             token_info.get('email'),
