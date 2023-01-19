@@ -1,0 +1,12 @@
+<p>Dear {{ data.full_name }},</p>
+
+<p>We would like to remind you that you have an API token that is about to expire.</p>
+
+<p>
+Token: <a href="{{ data.api_tokens_url }}">{{ data.token_name }}</a> .<br/>
+Expires: {{ data.expires }}<br/>
+Last access: {{ data.last_access }}<br/>
+</p>
+<p>The times shown above are in UTC.</p>
+<p>To manage your tokens go to <a href="{{ data.api_tokens_url }}">{{data.api_tokens_url}} .</a></p>
+

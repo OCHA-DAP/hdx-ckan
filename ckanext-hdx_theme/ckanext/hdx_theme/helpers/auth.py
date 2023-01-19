@@ -76,7 +76,7 @@ def hdx_user_statistics(context, data_dict):
 
 
 def hdx_push_general_stats(context, data_dict):
-    return {'success': False, 'msg': _('Only sysadmins can push analytics stats')}
+    return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS)
 
 
 def hdx_carousel_update(context, data_dict):
@@ -104,3 +104,9 @@ def hdx_user_generate_apikey(context, data_dict):
         return {'success': False, 'msg': _('API keys are disabled for sysadmins')}
     else:
         return user_generate_apikey(context, data_dict)
+
+
+def _check_hdx_user_permission(context, permission):
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(permission)
+    return {'success': result}
