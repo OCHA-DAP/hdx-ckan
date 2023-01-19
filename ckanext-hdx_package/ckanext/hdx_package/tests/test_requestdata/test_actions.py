@@ -62,11 +62,11 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'organization': 'Google',
             'email_address': 'test@test.com',
             'sender_country': 'Romania',
-            'sender_organization_id': '__other__',
+            'sender_organization_id': 'other',
             'sender_organization_id_other': 'NASA',
-            'sender_organization_type': '__other__',
+            'sender_organization_type': 'other',
             'sender_organization_type_other': 'Research',
-            'sender_intend': '__other__',
+            'sender_intend': 'other',
             'sender_intend_other': 'Testing Purposes'
         }
 
@@ -88,6 +88,34 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             assert ex.error_dict['sender_organization_type'] == [u'Missing value']
             assert ex.error_dict['sender_intend'] == [u'Missing value']
             assert len(ex.error_dict) == 8
+        assert True
+
+    def test_create_requestdata_missing_other_values_raises_error(self):
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        pkg = self._get_action('package_show')(context, {"id": "test_activity_request_data_12"})
+        data_dict = {
+            'package_id': pkg.get('id'),
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'other',
+            'sender_organization_id_other': '',
+            'sender_organization_type': 'other',
+            'sender_organization_type_other': '',
+            'sender_intend': 'other',
+            'sender_intend_other': ''
+        }
+
+        try:
+            result = self._get_action('requestdata_request_create')(context, data_dict)
+            assert False
+        except ValidationError as ex:
+            assert ex.error_dict['sender_organization_id_other'] == [u'Missing value']
+            assert ex.error_dict['sender_organization_type_other'] == [u'Missing value']
+            assert ex.error_dict['sender_intend_other'] == [u'Missing value']
+            assert len(ex.error_dict) == 3
         assert True
 
     def test_create_requestdata_raises_auth_error(self):
@@ -262,7 +290,7 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             'organization': 'Google',
             'email_address': 'test@test.com',
             'sender_country': 'Romania',
-            'sender_organization_id': '__other__',
+            'sender_organization_id': 'other',
             'sender_organization_id_other': 'non existing organization',
             'sender_organization_type': 'Military',
             'sender_intend': 'Research Purposes'

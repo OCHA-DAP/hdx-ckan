@@ -223,6 +223,25 @@ def get_packages():
             "is_requestdata_type": True,
             "file_types": ["csv"],
             "field_names": ["field1", "field2"]
+        },
+        {
+            "package_creator": "test function",
+            "private": False,
+            "dataset_date": "01/01/1960-12/31/2012",
+            "indicator": "1",
+            "caveats": "These are the caveats",
+            "license_other": "TEST OTHER LICENSE",
+            "methodology": "This is a test methodology",
+            "dataset_source": "World Bank",
+            "license_id": "hdx-other",
+            "name": "test_activity_request_data_12",
+            "notes": "This is a test activity 12",
+            "title": "Test Activity 12 request data",
+            "owner_org": "hdx-test-org",
+            "groups": [{"name": "roger"}],
+            "is_requestdata_type": True,
+            "file_types": ["csv"],
+            "field_names": ["field1", "field2"]
         }
     ]
     return packages
