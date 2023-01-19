@@ -23,7 +23,6 @@
               Dataset {{ package_name }}
             </div>
             <form class="form-horizontal" id="request-data-form">
-              <div class="alert alert-danger hide"></div>
               <div class="control mTop20">
                 <input id="field-name" name="sender_name" class="full-width required {% if c.userobj.fullname %}input-content{% endif %}" type="text" value="{% if c.userobj.fullname %}{{ c.userobj.fullname }}{% endif %}" required="required">
                 <label for="field-name">Your name</label>
@@ -46,7 +45,7 @@
                   {% for organization in h.hdx_cached_org_list() %}
                     <option value="{{ organization.id }}">{{ organization.display_name }}</option>
                   {% endfor %}
-                  <option value="__other__">{{ _('Other...') }}</option>
+                  <option value="other">{{ _('Other...') }}</option>
                 </select>
               </div>
               <div class="control mTop20 hidden">
@@ -59,7 +58,7 @@
                   {% for t in h.hdx_organization_type_list() %}
                     <option value="{{t.text}}">{{ t.text }}</option>
                   {% endfor %}
-                  <option value="__other__">{{ _('Other...') }}</option>
+                  <option value="other">{{ _('Other...') }}</option>
                 </select>
               </div>
               <div class="control mTop20 hidden">
@@ -72,7 +71,7 @@
                   <option value="Humanitarian Assistance">Humanitarian Assistance</option>
                   <option value="Academic">Academic</option>
                   <option value="Advocacy">Advocacy</option>
-                  <option value="__other__">Other...</option>
+                  <option value="other">Other...</option>
                 </select>
               </div>
               <div class="control mTop20 hidden">
@@ -89,6 +88,7 @@
                   I understand that my request for this dataset may be denied by the contributor at their discretion. If the contributor decides to share this dataset I will manage the data in accordance with the applicable license and any other instructions the contributor may provide. <span class="red">*</span>
                 </label>
               </div>
+              <div class="alert alert-danger mBottom5 mTop10 hide"></div>
             </form>
           </div>
         </div>

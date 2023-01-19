@@ -189,7 +189,7 @@ def send_request():
     sender_email = data.get('email_address', '')
 
     sender_organization_id = data.get('sender_organization_id') if not data.get(
-        'sender_organization_id') == '__other__' else data.get('sender_organization_id_other')
+        'sender_organization_id') == 'other' else data.get('sender_organization_id_other')
     try:
         org_dict = _get_action('organization_show', {'id': sender_organization_id})
         sender_organization_name = org_dict.get('display_name')
@@ -199,9 +199,9 @@ def send_request():
     extras = {'country': data.get('sender_country'),
               'organization_name': sender_organization_name,
               'organization_type': data.get('sender_organization_type') if not data.get(
-                  'sender_organization_type') == '__other__' else data.get(
+                  'sender_organization_type') == 'other' else data.get(
                   'sender_organization_type_other'),
-              'intend': data.get('sender_intend') if not data.get('sender_intend') == '__other__' else data.get(
+              'intend': data.get('sender_intend') if not data.get('sender_intend') == 'other' else data.get(
                   'sender_intend_other')}
 
     user_obj = context['auth_user_obj']

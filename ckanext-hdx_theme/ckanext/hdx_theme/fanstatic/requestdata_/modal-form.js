@@ -213,7 +213,7 @@ ckan.module('hdx-modal-form', function($) {
           var $otherField = $('#' + this.getAttribute('id') + '-other');
           var $otherFieldContainer = $otherField.parent();
 
-          if(this.value === '__other__') {
+          if(this.value === 'other') {
             $otherField.attr('required', this.getAttribute('required'));
             $otherFieldContainer.removeClass('hidden');
           }
