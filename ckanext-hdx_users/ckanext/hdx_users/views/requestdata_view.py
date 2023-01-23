@@ -168,7 +168,7 @@ def send_request():
     try:
         if request.method == 'POST':
             data = request.form.to_dict()
-            _get_action('requestdata_request_create', data)
+            result = _get_action('requestdata_request_create', data)
         else:
             abort(403, _('Unauthorized to access this page'))
     except NotAuthorized:
@@ -183,26 +183,15 @@ def send_request():
 
         return json.dumps(error)
 
+    request_dict = {'id': result.get('requestdata_id'), 'package_id': data['package_id']}
+    data = _get_action('requestdata_request_show', request_dict)
+
     data_dict = {'id': data['package_id']}
     package = _get_action('package_show', data_dict)
+
     sender_name = data.get('sender_name', '')
     sender_email = data.get('email_address', '')
-
-    sender_organization_id = data.get('sender_organization_id') if not data.get(
-        'sender_organization_id') == 'other' else data.get('sender_organization_id_other')
-    try:
-        org_dict = _get_action('organization_show', {'id': sender_organization_id})
-        sender_organization_name = org_dict.get('display_name')
-    except NotFound:
-        sender_organization_name = sender_organization_id
-
-    extras = {'country': data.get('sender_country'),
-              'organization_name': sender_organization_name,
-              'organization_type': data.get('sender_organization_type') if not data.get(
-                  'sender_organization_type') == 'other' else data.get(
-                  'sender_organization_type_other'),
-              'intend': data.get('sender_intend') if not data.get('sender_intend') == 'other' else data.get(
-                  'sender_intend_other')}
+    extras = json.loads(data.get('extras'))
 
     user_obj = context['auth_user_obj']
     data_dict = {
