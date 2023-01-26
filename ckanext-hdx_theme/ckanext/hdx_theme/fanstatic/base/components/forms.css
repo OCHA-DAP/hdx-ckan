@@ -313,6 +313,7 @@
   text-align: left;
   padding-top: 30px/2;
   width: 160px;
+  letter-spacing: -0.05rem;
 }
 .hdx-form .form-horizontal .checkbox {
   padding-top: 0;
