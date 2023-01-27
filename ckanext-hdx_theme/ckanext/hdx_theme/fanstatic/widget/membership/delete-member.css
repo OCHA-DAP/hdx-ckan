@@ -1,0 +1,19 @@
+.confirmation-modal .modal-content {
+  background-color: #fff;
+  text-align: left;
+}
+.confirmation-modal .modal-content .modal-body {
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+  line-height: 20px;
+}
+.confirmation-modal .modal-content .modal-body .scrollable-container {
+  height: 300px;
+  overflow: auto;
+}
+.confirmation-modal .modal-content .modal-body p {
+  font-weight: normal;
+}
+.confirmation-modal .modal-content .modal-body li {
+  list-style-type: disc;
+}
