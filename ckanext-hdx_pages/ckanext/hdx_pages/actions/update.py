@@ -5,6 +5,7 @@ import ckan.logic as logic
 import ckanext.hdx_pages.model as pages_model
 import ckanext.hdx_pages.helpers.dictize as dictize
 import ckanext.hdx_pages.actions.validation as validation
+import ckanext.hdx_package.helpers.helpers as pkg_h
 
 NotFound = logic.NotFound
 
@@ -64,10 +65,12 @@ def process_tags(context, page, tags):
 
     # add new ids
     if tags:
-        for tag in tags:
-            tag_dict = logic.get_action('tag_show')(context, {'id': tag.get('name'),
-                                                              'vocabulary_id': tag.get('vocabulary_id')})
-            pages_model.PageTagAssociation.create(page=page, tag_id=tag_dict.get('id'), defer_commit=True)
+        try:
+            tags_vocabulary = pkg_h.get_tag_vocabulary(tags)
+            for tag in tags_vocabulary:
+                pages_model.PageTagAssociation.create(page=page, tag_id=tag.get('id'), defer_commit=True)
+        except NotFound:
+            pass
 
 
 def populate_page(page, data_dict):
