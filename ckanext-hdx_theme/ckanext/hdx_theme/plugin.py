@@ -324,7 +324,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             '/user/',
             '/ckan-admin/'
         ]
-        if g.userobj and g.userobj.sysadmin and \
+        redirect_enabled = config.get('hdx.security.2fa.redirect', 'false') == 'true'
+        if redirect_enabled and g.userobj and g.userobj.sysadmin and \
             request.url_rule.rule in protected_urls:
             log.info('Sysadmin, checking for 2FA...')
             if not hasattr(g.userobj, 'totp_enabled'):

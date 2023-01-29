@@ -385,3 +385,6 @@ ckanext.security.redis.db = 9
 ckanext.security.lock_timeout = 900
 ckanext.security.login_max_count = 10
 ckanext.security.brute_force_key = user_name
+
+# Redirect admins to setup 2FA
+hdx.security.2fa.redirect = true
