@@ -28,6 +28,8 @@ from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.splash_page import hdx_splash
 import ckan.plugins.toolkit as tk
 from ckanext.security.model import SecurityTOTP
+from ckan.common import session
+
 config = toolkit.config
 log = logging.getLogger(__name__)
 request = tk.request
@@ -328,14 +330,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         if redirect_enabled and g.userobj and g.userobj.sysadmin and \
             request.url_rule.rule in protected_urls:
             log.info('Sysadmin, checking for 2FA...')
-            if not hasattr(g.userobj, 'totp_enabled'):
+            if session.get('totp_enabled', None) is None:
                 totp_challenger = SecurityTOTP.get_for_user(g.userobj.name)
                 if totp_challenger:
-                    g.userobj.totp_enabled = True
+                    session['totp_enabled'] = True
                 else:
-                    g.userobj.totp_enabled = False
+                    session['totp_enabled'] = False
 
-            if not g.userobj.totp_enabled:
+            if not session['totp_enabled']:
                 log.info('Redirect to setup 2FA')
                 return redirect(h.url_for('user.edit', show_totp=True))
 
