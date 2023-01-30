@@ -314,8 +314,8 @@ def get_tag_vocabulary(tags):
         topic = model.Tag.by_name(name=tag_name, vocab=vocabulary)
         if topic:
             item['id'] = topic.as_dict().get('id')
-        else:
-            raise NotFound
+        # else:
+        #     raise NotFound
         item['name'] = tag_name
     return tags
 

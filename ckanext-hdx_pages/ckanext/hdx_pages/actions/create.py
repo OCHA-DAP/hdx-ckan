@@ -39,19 +39,18 @@ def page_create(context, data_dict):
             pages_model.PageGroupAssociation.create(page=page, group_id=group_dict.get('id'), defer_commit=True)
 
         tags = data_dict.get('tags', [])
-        try:
-            tags_vocabulary = pkg_h.get_tag_vocabulary(tags)
-            for tag in tags_vocabulary:
+        tags_vocabulary = pkg_h.get_tag_vocabulary(tags)
+        for tag in tags_vocabulary:
+            tag_id = tag.get('id')
 
+            if tag_id:
                 # We validate for id duplication, so this shouldn't be true during create.
-                if pages_model.PageTagAssociation.exists(page_id=page.id, tag_id=tag.get('id')):
+                if pages_model.PageTagAssociation.exists(page_id=page.id, tag_id=tag_id):
                     raise toolkit.ValidationError("Tag already associated with page.",
                                                   error_summary=u"The tag, {0}, is already in the page".format(
-                                                      tag.get('id')))
+                                                      tag_id))
                 # create the association
-                pages_model.PageTagAssociation.create(page=page, tag_id=tag.get('id'), defer_commit=True)
-        except NotFound:
-            pass
+                pages_model.PageTagAssociation.create(page=page, tag_id=tag_id, defer_commit=True)
 
         model.Session.commit()
         page_dict = dictize.page_dictize(page)

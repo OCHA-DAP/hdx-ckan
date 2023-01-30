@@ -65,12 +65,12 @@ def process_tags(context, page, tags):
 
     # add new ids
     if tags:
-        try:
-            tags_vocabulary = pkg_h.get_tag_vocabulary(tags)
-            for tag in tags_vocabulary:
+        tags_vocabulary = pkg_h.get_tag_vocabulary(tags)
+        for tag in tags_vocabulary:
+            tag_id = tag.get('id')
+
+            if tag_id:
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag.get('id'), defer_commit=True)
-        except NotFound:
-            pass
 
 
 def populate_page(page, data_dict):
