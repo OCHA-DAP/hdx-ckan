@@ -307,11 +307,14 @@ def get_tag_vocabulary(tags):
     Get vocabulary for a given list of tags
     """
     for item in tags:
+        topic = None
         tag_name = item['name'].lower()
         vocabulary = model.Vocabulary.get('Topics')
         if vocabulary:
             item['vocabulary_id'] = vocabulary.id
-        topic = model.Tag.by_name(name=tag_name, vocab=vocabulary)
+            topic = model.Tag.by_name(name=tag_name, vocab=vocabulary)
+        if not topic:
+            topic = model.Tag.by_name(name=tag_name)
         if topic:
             item['id'] = topic.as_dict().get('id')
         # else:
