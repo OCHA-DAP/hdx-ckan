@@ -55,8 +55,8 @@ def generate_dataset_results(page_id, type, saved_filters):
         if key == 'q':
             fq = '(text:({})) {}'.format(values_list[0], fq)
         elif key in _get_default_facet_titles().keys():
-            for value in values_list:
-                fq += '%s:"%s" ' % (key, value)
+            or_filter = ' OR '.join('"{}"'.format(value) for value in values_list)
+            fq += '+{}:({})'.format(key, or_filter)
         elif key == 'fq':
             fq += '%s ' % (values_list[0],)
         elif key == 'sort':
@@ -86,6 +86,7 @@ def _get_default_facet_titles():
         'vocab_Topics': _('Tags'),
         'res_format': _('Formats'),
         'license_id': _('Licenses'),
+        'cod_level': _('Cod level'),
     }
 
 

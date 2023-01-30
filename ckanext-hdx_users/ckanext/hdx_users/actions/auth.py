@@ -3,6 +3,8 @@ import logging
 import ckan.authz as new_authz
 import ckan.logic.auth.update as core_auth_update
 import ckan.plugins.toolkit as tk
+from ckanext.hdx_theme.helpers.auth import _check_hdx_user_permission
+from ckanext.hdx_users.helpers.permissions import Permissions
 from ckanext.hdx_users.helpers.reset_password import ResetKeyHelper
 
 log = logging.getLogger(__name__)
@@ -39,3 +41,7 @@ def user_update(context, data_dict):
             return {'success': False, 'msg': _("Reset key no longer valid")}
 
     return core_auth_update.user_update(context, data_dict)
+
+
+def notify_users_about_api_token_expiration(context, data_dict):
+    return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS)
