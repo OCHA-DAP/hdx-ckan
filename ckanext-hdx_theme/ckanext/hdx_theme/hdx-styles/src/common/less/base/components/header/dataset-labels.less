@@ -78,13 +78,33 @@
   }
 }
 
-span.icn-txt-cods{
+span.icn-txt-cods, ul.dataset-resources li.label-icons span.icn-txt-cods{
   .gothamBoldFont(10px);
   background-color: @grayColor;
   color: @whiteColor;
-  padding: 4px 4px 4px 4px;
+  padding: 4px;
   border-radius: 10px;
+  line-height: 1;
+}
+.dataset-content .icn-txt-cods {
   margin-right: 5px;
+}
+
+ul.dataset-resources {
+  display: flex;
+  li.label-icons {
+    display: flex;
+    align-items: center;
+    a {
+      line-height: 1;
+      &[class*="humanitarianicons-"] {
+        margin-left: 10px;
+      }
+    }
+    span {
+      padding: 0;
+    }
+  }
 }
 
 ul.dataset-resources li + li.label-icons {
