@@ -32,7 +32,7 @@ Example:
             </div>
         </div>
         <div class="row">
-            <form action="/login_generic" method="post">
+            <form action="/login_generic?came_from={{ (g.login_came_from or request.environ.get('REQUEST_URI', '')) | urlencode }}" method="post">
                 <div class="login-content">
                     <div class="col-xs-12">
                         <div id="login-info-message" class="error-explanation alert alert-danger mBottom5 pTopBottom5" style="display: none;">

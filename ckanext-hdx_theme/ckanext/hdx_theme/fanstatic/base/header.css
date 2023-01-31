@@ -663,15 +663,35 @@ body {
   font-size: 12px;
   white-space: nowrap;
 }
-span.icn-txt-cods {
+span.icn-txt-cods,
+ul.dataset-resources li.label-icons span.icn-txt-cods {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 10px;
   background-color: #888888;
   color: #fff;
-  padding: 4px 4px 4px 4px;
+  padding: 4px;
   border-radius: 10px;
+  line-height: 1;
+}
+.dataset-content .icn-txt-cods {
   margin-right: 5px;
+}
+ul.dataset-resources {
+  display: flex;
+}
+ul.dataset-resources li.label-icons {
+  display: flex;
+  align-items: center;
+}
+ul.dataset-resources li.label-icons a {
+  line-height: 1;
+}
+ul.dataset-resources li.label-icons a[class*="humanitarianicons-"] {
+  margin-left: 10px;
+}
+ul.dataset-resources li.label-icons span {
+  padding: 0;
 }
 ul.dataset-resources li + li.label-icons {
   border-left: 1px solid #888888;
@@ -2897,6 +2917,7 @@ textarea {
   text-align: left;
   padding-top: 30px/2;
   width: 160px;
+  letter-spacing: -0.05rem;
 }
 .hdx-form .form-horizontal .checkbox {
   padding-top: 0;

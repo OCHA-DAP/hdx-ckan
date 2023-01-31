@@ -23,7 +23,7 @@
 		</td>
     </tr>
 	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="ui_date_range1" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Date of Dataset') }}</th>
+		<th scope="row" class="dataset-label">{{ _('Reference Period') }}</th>
 		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
   </tr>
 
@@ -149,9 +149,9 @@
 			{% for tag in pkg_dict.tags %}
 	    		<div class="tag-wrapper">
 	    			{% if tag.vocabulary_id %}
-              <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'search', vocab_Topics=tag.name %}">{{ tag.display_name }}</a>
+              <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'hdx_dataset.search', vocab_Topics=tag.name %}">{{ tag.display_name }}</a>
             {% else %}
-              <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'search', tags=tag.name %}">{{ tag.display_name }}</a>
+              <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'hdx_dataset.search', tags=tag.name %}">{{ tag.display_name }}</a>
             {% endif %}
 	    		</div>
 	  		{% endfor %}

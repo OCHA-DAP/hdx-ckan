@@ -35,10 +35,12 @@ class HDXUserAuthView:
         return render('home/index.html', extra_vars=template_data)
 
     def logged_in(self):
-        # redirect if needed
-        came_from = request.form.get('came_from', '')
+
+        came_from = request.args.get('came_from', '')
         if h.url_is_local(came_from):
-            return h.redirect_to(str(came_from))
+            g.login_came_from = came_from
+        else:
+            came_from = None
 
         if g.user:
             context = None
@@ -83,14 +85,16 @@ class HDXUserAuthView:
                 # user_ref = c.userobj.get_reference_preferred_for_uri()
 
                 _ckan_site_url = config.get('ckan.site_url', '#')
-                _came_from = str(request.referrer or _ckan_site_url)
+                _came_from = str(came_from or _ckan_site_url)
 
                 excluded_paths = ['/user/validate/', 'user/logged_in?__logins', 'user/logged_out_redirect']
-                if _ckan_site_url != _came_from and not any(path in _came_from for path in excluded_paths):
-                    h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                res = h.redirect_to('dashboard.index', locale=None)
+                g.pop('login_came_from', '')
+                if _ckan_site_url != _came_from and not any(path in _came_from for path in excluded_paths):
+                    res = h.redirect_to(_came_from)
+                else:
+                    res = h.redirect_to('hdx_dataset.search', locale=None)
                 res.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age, secure=True)
                 return res
         else:
@@ -102,16 +106,12 @@ class HDXUserAuthView:
             except:
                 pass
 
-            if asbool(config.get('ckan.legacy_templates', 'false')):
-                h.flash_error(err)
-                h.redirect_to(controller='user',
-                              action='login', came_from=came_from)
+            template_data = ue_helpers.get_login(False, err)
+            log.error("Status code 401 : username or password incorrect")
 
-            else:
-                template_data = ue_helpers.get_login(False, err)
-                log.error("Status code 401 : username or password incorrect")
-                return render('home/index.html', extra_vars=template_data)
-                # return self.login(error=err)
+            result = render('home/index.html', extra_vars=template_data)
+            g.pop('login_came_from', '')
+            return result
 
     def new_login(self, error=None, info_message=None, page_subtitle=None):
         template_data = {}

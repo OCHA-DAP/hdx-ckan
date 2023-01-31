@@ -31,6 +31,7 @@ import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
+from ckan.lib.munge import munge_filename
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.resource_format import resource_format_autocomplete, guess_format_from_extension
@@ -656,6 +657,16 @@ def shape_info_show(context, data_dict):
     return shape_infos
 
 
+@logic.side_effect_free
+def fs_check_info_show(context, data_dict):
+    dataset_dict = get_action('package_show')(context, data_dict)
+
+    fs_check_infos = [{r.get('name'): json.loads(r.get('fs_check_info'))} for r in dataset_dict.get('resources', []) if
+                      r.get('fs_check_info')]
+
+    return fs_check_infos
+
+
 # def _check_dataset_preview_selected_value(context, data_dict, property_name):
 #     use_cache = context.get('use_cache', True)
 #     current_value = data_dict.get(property_name) not in (True, False)
@@ -748,8 +759,13 @@ def _get_resource_revison_timestamp(resource_dict):
 
 
 def _get_resource_hdx_relative_url(resource_dict):
-    if helpers.is_ckan_domain(resource_dict.get('url', '')):
-        return helpers.make_url_relative(resource_dict.get('url', ''))
+    res_url = resource_dict.get('url', '')
+    if helpers.is_ckan_domain(res_url) and resource_dict.get('id'):
+        filename = munge_filename(res_url)
+        relative_url = h.url_for('resource.download', id=resource_dict.get('package_id'),
+                                 resource_id=resource_dict.get('id'), filename=filename)
+        return relative_url
+        # return helpers.make_url_relative(resource_dict.get('url', ''))
 
     return resource_dict.get('url', '')
 
@@ -1050,3 +1066,24 @@ def hdx_guess_format_from_extension(context, data_dict):
         return None
 
     return guess_format_from_extension(q)
+
+
+def hdx_send_mail_request_tags(context, data_dict):
+    _check_access('hdx_send_mail_request_tags', context, data_dict)
+
+    hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+
+    subject = u'New tag(s) request'
+    email_data = {
+        'user_display_name': data_dict.get('fullname'),
+        'user_email': data_dict.get('email'),
+        'tags': data_dict.get('suggested_tags'),
+        'datatype': data_dict.get('datatype'),
+        'comment': data_dict.get('comment'),
+    }
+
+    hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
+                              subject, email_data, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'), snippet='email/content/tag_request.html')
+
+    return None
