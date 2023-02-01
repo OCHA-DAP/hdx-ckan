@@ -43,6 +43,8 @@ DATASET_DICT = {
     "maintainer": SYSADMIN_USER
 }
 
+RESOURCE_LINKED_URL = 'http://test.ckan.net/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Ftest.test%2Ftest%2Ftest.csv'
+
 
 @pytest.fixture()
 def setup_data():
@@ -64,7 +66,7 @@ def setup_data():
 
 @pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
 class TestHdxRelUrl(object):
-    def _create_resource(self, context):
+    def _create_uploaded_resource(self, context):
         resource = {
             'url': 'hdx_test.csv',
             'url_type': 'upload',
@@ -72,6 +74,21 @@ class TestHdxRelUrl(object):
             'format': 'CSV',
             'name': 'hdx_test1.csv',
             'package_id': DATASET_NAME,
+        }
+        try:
+            resource_dict = _get_action('resource_create')(context, resource)
+        except ValidationError as e:
+            assert False
+        return resource_dict
+
+    def _create_linked_resource(self, context):
+        resource = {
+            'package_id': DATASET_NAME,
+            'url': RESOURCE_LINKED_URL,
+            'resource_type': 'api',
+            'url_type': 'api',
+            'format': 'CSV',
+            'name': 'test.csv'
         }
         try:
             resource_dict = _get_action('resource_create')(context, resource)
@@ -87,7 +104,7 @@ class TestHdxRelUrl(object):
         absolute or relative URLs.
         '''
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
-        resource_dict1 = self._create_resource(context)
+        resource_dict1 = self._create_uploaded_resource(context)
         assert not self._simple_filename_in_url_list()
 
         resource_dict1_modified = _get_action('resource_patch')(context, {
@@ -111,6 +128,12 @@ class TestHdxRelUrl(object):
 
         _get_action('package_show')({'use_cache': False, 'for_edit': True}, {'id': DATASET_NAME})
         assert not self._simple_filename_in_url_list()
+
+    def test_hdx_rel_url_not_changing_for_linked_resources(self):
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        resource_dict1 = self._create_linked_resource(context)
+        assert resource_dict1.get('hdx_rel_url') == RESOURCE_LINKED_URL, \
+            'hdx_rel_url shouldn\'t change for linked resources'
 
     def _simple_filename_in_url_list(self):
         '''
