@@ -480,7 +480,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_resource_revise': hdx_patch.hdx_fs_check_resource_revise,
             'hdx_fs_check_resource_reset': hdx_patch.hdx_fs_check_resource_reset,
             'hdx_fs_check_package_reset': hdx_patch.hdx_fs_check_package_reset,
-            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags
+            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags,
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
             'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
             'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
@@ -519,8 +519,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_fs_check_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_fs_check_field',
                                                                                resource_level=True),
-            'hdx_keep_prev_val_unless_authorized_to_update_dataseries':
-                vd.hdx_keep_prev_val_unless_authorized_wrapper('hdx_dataseries_update'),
             'hdx_delete_unless_authorized_to_update_dataseries':
                 vd.hdx_delete_unless_authorized_wrapper('hdx_dataseries_update'),
             'hdx_delete_unless_authorized_to_update_cod':
@@ -560,7 +558,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
             'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
             'hdx_cod_update': authorize.hdx_cod_update,
-            'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags
+            'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags,
             'hdx_dataseries_update': authorize.hdx_dataseries_update
         }
 

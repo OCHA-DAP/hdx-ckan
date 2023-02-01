@@ -273,7 +273,7 @@ def hdx_qa_package_revise_resource(context, data_dict):
     return _get_action('package_revise')(context, data_revise_dict)
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def hdx_fs_check_resource_reset(context, data_dict):
     _check_access('hdx_fs_check_resource_revise', context, data_dict)
 
@@ -289,7 +289,7 @@ def hdx_fs_check_resource_reset(context, data_dict):
     return _get_action('package_revise')(context, data_revise_dict)
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def hdx_fs_check_package_reset(context, data_dict):
     _check_access('hdx_fs_check_resource_revise', context, data_dict)
     pkg_id = data_dict.get('package_id')
