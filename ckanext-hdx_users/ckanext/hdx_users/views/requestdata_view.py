@@ -168,7 +168,7 @@ def send_request():
     try:
         if request.method == 'POST':
             data = request.form.to_dict()
-            _get_action('requestdata_request_create', data)
+            result = _get_action('requestdata_request_create', data)
         else:
             abort(403, _('Unauthorized to access this page'))
     except NotAuthorized:
@@ -183,10 +183,16 @@ def send_request():
 
         return json.dumps(error)
 
+    request_dict = {'id': result.get('requestdata_id'), 'package_id': data['package_id']}
+    data = _get_action('requestdata_request_show', request_dict)
+
     data_dict = {'id': data['package_id']}
     package = _get_action('package_show', data_dict)
+
     sender_name = data.get('sender_name', '')
     sender_email = data.get('email_address', '')
+    extras = json.loads(data.get('extras'))
+
     user_obj = context['auth_user_obj']
     data_dict = {
         'id': user_obj.id,
@@ -265,6 +271,7 @@ def send_request():
             'user_fullname': sender_name,
             'user_email': email,
             'msg': message,
+            'extras': extras,
             'org_name': package.get('organization').get('title'),
             'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
             'dataset_title': dataset_title,

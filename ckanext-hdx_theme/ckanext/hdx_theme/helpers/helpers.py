@@ -644,8 +644,10 @@ def hdx_methodology_list():
     return result
 
 
-def hdx_location_list():
-    top_values = ['world']
+def hdx_location_list(include_world=True):
+    top_values = []
+    if include_world:
+        top_values.append('world')
 
     top_locations = []
     bottom_locations = []
