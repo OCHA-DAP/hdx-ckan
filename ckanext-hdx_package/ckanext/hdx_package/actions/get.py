@@ -760,7 +760,7 @@ def _get_resource_revison_timestamp(resource_dict):
 
 def _get_resource_hdx_relative_url(resource_dict):
     res_url = resource_dict.get('url', '')
-    if helpers.is_ckan_domain(res_url) and resource_dict.get('id'):
+    if helpers.is_ckan_domain(res_url) and resource_dict.get('id') and resource_dict.get('url_type') == 'upload':
         filename = munge_filename(res_url)
         relative_url = h.url_for('resource.download', id=resource_dict.get('package_id'),
                                  resource_id=resource_dict.get('id'), filename=filename)
