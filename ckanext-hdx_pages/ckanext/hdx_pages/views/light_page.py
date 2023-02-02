@@ -245,6 +245,7 @@ def _populate_sections():
                  "sections": json.dumps(sections),
                  "groups": _process_groups(data_dict_temp.get("groups", [])),
                  "tags": _process_tags(data_dict_temp.get("tag_string", "")),
+                 "tag_string": data_dict_temp.get("tag_string", ""),
                  request.form.get("type") or 'event': checked,
                  request.form.get("status") or 'ongoing': checked,
                  "hdx_counter": len(sections),
@@ -305,6 +306,8 @@ class CreateView(MethodView):
             check_access('page_create', context, {})
         except NotAuthorized:
             abort(404, _('Page not found'))
+        except Exception as ex:
+            log.error(ex)
 
         # checking pressed button
         active_page = request.form.get('save_custom_page')
@@ -326,7 +329,7 @@ class CreateView(MethodView):
 
             return h.redirect_to(_blueprint, id=created_page.get("name"))
 
-        return render('pages/edit_page.html', extra_vars)
+        return render('pages/edit_page.html', extra_vars=extra_vars)
 
     def get(self, data=None, errors=None, error_summary=None):
         context, extra_vars = _init_data(data, error_summary, errors)
@@ -357,9 +360,10 @@ class EditView(MethodView):
         state = active_page or draft_page
 
         # saving a new page
-        if (state or _delete_page) and not data:
+        if (state or _delete_page) and not errors:
             if state:
                 page_dict = _populate_sections()
+                page_dict['id'] = id
                 try:
                     updated_page = get_action('page_update')(context, page_dict)
                     _update_lunr()
@@ -380,6 +384,8 @@ class EditView(MethodView):
                     abort(404, _('There was an error. Please contact the admin'))
                 return h.redirect_to(u'home.index')
 
+        return render('pages/edit_page.html', extra_vars=extra_vars)
+
     def get(self, id, data=None, errors=None, error_summary=None):
         context, extra_vars = _init_data(data, error_summary, errors)
 
@@ -388,12 +394,14 @@ class EditView(MethodView):
         except NotAuthorized:
             abort(404, _('Page not found'))
 
-        extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
-        extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
-        _init_extra_vars_edit(extra_vars)
+        try:
+            extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
+            extra_vars['data']['tag_string'] = ', '.join(h.dict_list_reduce(extra_vars['data'].get('tags', {}), 'name'))
+            _init_extra_vars_edit(extra_vars)
 
-        return render('pages/edit_page.html', extra_vars=extra_vars)
-
+            return render('pages/edit_page.html', extra_vars=extra_vars)
+        except NotFound:
+            abort(404, _('Page not found'))
 
 class DeleteView(MethodView):
     def post(self, id, data=None, errors=None, error_summary=None):
