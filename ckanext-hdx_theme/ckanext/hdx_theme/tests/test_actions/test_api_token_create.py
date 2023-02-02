@@ -1,4 +1,5 @@
 import pytest
+import mock
 
 from builtins import str
 
@@ -12,7 +13,8 @@ import ckan.tests.helpers as helpers
 class TestApiToken(object):
     LIMIT = 180  # days
 
-    def test_token_expiry_with_integer_params(self):
+    @mock.patch('ckanext.hdx_theme.plugin.send_email_on_token_creation')
+    def test_token_expiry_with_integer_params(self, send_email_helper_mock):
         user = factories.User(name='testuser1')
         context = {
             u"model": model,
@@ -29,7 +31,8 @@ class TestApiToken(object):
         helpers.call_action(u"api_token_create", context=context, user=user[u"name"], name=u"token-name",
                             expires_in=self.LIMIT, unit=24 * 60 * 60)
 
-    def test_token_expiry_with_str_params(self):
+    @mock.patch('ckanext.hdx_theme.plugin.send_email_on_token_creation')
+    def test_token_expiry_with_str_params(self, send_email_helper_mock):
         user = factories.User(name='testuser2')
         context = {
             u"model": model,
