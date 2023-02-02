@@ -66,6 +66,7 @@ def _get_user_full_name_and_email(username):
     context = {
         'model': model,
         'session': model.Session,
+        'user': username,
         'ignore_auth': True
     }
     user_dict = _get_action('user_show')(context, {'id': username})
