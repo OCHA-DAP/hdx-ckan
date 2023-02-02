@@ -786,6 +786,9 @@ body {
   margin-left: 10px;
   font-size: 12px;
 }
+.dataseries-info span[data-toggle="tooltip"] {
+  cursor: help;
+}
 .dataseries-info a {
   color: #f2645a;
 }
@@ -2553,6 +2556,9 @@ textarea {
   line-height: 1em;
   letter-spacing: 0.03em;
   cursor: pointer;
+}
+.filter-category .categ-title span[data-toggle="tooltip"] {
+  cursor: help;
 }
 .filter-category .categ-list .categ-search {
   margin: 15px;

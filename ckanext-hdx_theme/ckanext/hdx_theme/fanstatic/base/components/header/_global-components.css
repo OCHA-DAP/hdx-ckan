@@ -362,6 +362,9 @@
   margin-left: 10px;
   font-size: 12px;
 }
+.dataseries-info span[data-toggle="tooltip"] {
+  cursor: help;
+}
 .dataseries-info a {
   color: #f2645a;
 }

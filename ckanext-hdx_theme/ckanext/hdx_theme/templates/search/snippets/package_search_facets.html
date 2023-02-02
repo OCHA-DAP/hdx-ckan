@@ -38,7 +38,8 @@ Example:
     {% set facet = facet_list.get(id) %}
     <div class="filter-category">
         <div class="categ-title" data-value="{{ facet.get('display_name') | lower }}">
-            {{ facet.get('display_name') }}: <i class="pull-right glyphicon glyphicon-minus"></i>
+            {% set tooltip = facet.get('tooltip') %}
+            {{ facet.get('display_name') }}{% if tooltip %} <span title="{{ tooltip }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>{% endif %}: <i class="pull-right glyphicon glyphicon-minus"></i>
         </div>
         <div class="categ-content">
             <div class="categ-list {% if facet.show_everything %}show-always{% endif %}">

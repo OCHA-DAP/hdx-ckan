@@ -198,6 +198,9 @@
 .search-list .dataset-item .dataset-content2 .dataset-dataseries {
   margin-top: 8px;
 }
+.search-list .dataset-item .dataset-content2 .dataset-dataseries span[data-toggle="tooltip"] {
+  cursor: help;
+}
 .search-list .dataset-item .dataset-content2 .dataset-dataseries a {
   color: #f2645a;
 }

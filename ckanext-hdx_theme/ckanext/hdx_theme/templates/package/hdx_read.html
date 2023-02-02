@@ -122,7 +122,7 @@
                 </ul>
                 {% snippet "package/snippets/package_actions_menu.html", pkg = pkg, membership=membership, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right' %}
                 {% if pkg.dataseries_name %}
-                  <div class="dataseries-info">{{_('This dataset is part of the data series')}}: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}">{{ pkg.dataseries_name }}</a></div>
+                  <div class="dataseries-info">{{_('This dataset is part of the data series')}} <span title="{{ _('Data series is a collection of datasets that has a shared topic usually provided by a single organisation') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}">{{ pkg.dataseries_name }}</a></div>
                 {% endif %}
             </div>
         </div>

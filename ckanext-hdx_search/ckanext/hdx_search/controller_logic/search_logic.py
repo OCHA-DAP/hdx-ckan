@@ -527,7 +527,7 @@ class SearchLogic(object):
         for solr_category_key, category_title in title_translations.items():
             regex = r'\{[\s\S]*\}'
             category_key = re.sub(regex, '', solr_category_key)
-
+            category_tooltip = None
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
             # We're only interested in the number of items of the "indicator" facet
@@ -558,17 +558,13 @@ class SearchLogic(object):
                 num_of_unarchived = sum(
                     (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
-                # if category_key == 'vocab_Topics':
-                    # num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
-                    # num_of_sadd = self._get_facet_item_count_from_list(item_list, 'sex and age disaggregated data - sadd')
-                    # num_of_administrative_divisions = \
-                    #     self._get_facet_item_count_from_list(item_list, 'administrative divisions')
-
-                    # if not new_cod_filters_enabled:
-                    #     num_of_cods = self._get_facet_item_count_from_list(item_list, 'common operational dataset - cod')
+                if category_key == 'dataseries_name':
+                    category_tooltip = 'Data series is a collection of datasets that has a shared topic usually ' \
+                                       'provided by a single organisation '
 
                 standard_facet_category, anything_selected = \
-                    self._create_standard_facet_category(category_key, category_title, item_list, selected_facets)
+                    self._create_standard_facet_category(category_key, category_title, category_tooltip, item_list,
+                                                         selected_facets)
 
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
@@ -646,7 +642,8 @@ class SearchLogic(object):
                 count = item.get('count', 0)
         return count
 
-    def _create_standard_facet_category(self, category_key, category_title, item_list, selected_facets):
+    def _create_standard_facet_category(self, category_key, category_title, category_tooltip, item_list,
+                                        selected_facets):
         sorted_item_list = []
         anything_selected = False
         for item in item_list:
@@ -668,6 +665,7 @@ class SearchLogic(object):
             'name': category_key,
             'display_name': category_title,
             'items': sorted_item_list,
+            'tooltip': category_tooltip,
             'show_everything': len(sorted_item_list) < 5
         }
         return standard_facet_category, anything_selected
