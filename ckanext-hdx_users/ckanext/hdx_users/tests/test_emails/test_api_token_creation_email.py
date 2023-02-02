@@ -1,6 +1,5 @@
 import pytest
 import mock
-import datetime
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk

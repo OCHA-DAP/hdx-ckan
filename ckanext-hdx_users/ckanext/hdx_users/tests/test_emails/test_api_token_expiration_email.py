@@ -21,8 +21,9 @@ class TestApiTokenExpirationEmail(object):
     USER1_EMAIL = 'token_testuser1@test.org'
     USER2_EMAIL = 'token_testuser2@test.org'
 
+    @mock.patch('ckanext.hdx_theme.plugin.send_email_on_token_creation')
     @mock.patch('ckanext.hdx_users.helpers.token_expiration_helper._mail_recipient')
-    def test_notify_users_about_api_token_expiration(self, mail_recipient_mock):
+    def test_notify_users_about_api_token_expiration(self, mail_recipient_mock, send_email_helper_mock):
         '''
         :param mail_recipient_mock:
         :type mail_recipient_mock: mock.MagicMock
@@ -90,8 +91,9 @@ class TestApiTokenExpirationEmail(object):
         token_in_email_count = len([email for email in email_bodies if 'token-u2-1' in email])
         assert token_in_email_count == 1, 'token-u2-1 need to appear in one email'
 
+    @mock.patch('ckanext.hdx_theme.plugin.send_email_on_token_creation')
     @mock.patch('ckanext.hdx_users.helpers.token_expiration_helper._mail_recipient')
-    def test_notify_users_about_api_token_expiration_permission(self, mail_recipient_mock):
+    def test_notify_users_about_api_token_expiration_permission(self, mail_recipient_mock, send_email_helper_mock):
         normal_user = factories.User(name='testuser1', email=self.USER1_EMAIL)
         context_owner1 = {
             'model': model,
