@@ -167,7 +167,6 @@ ckanext.security.redis.host = ${HDX_SECURITY_REDIS_ADDR}
 ckanext.security.redis.port = ${HDX_SECURITY_REDIS_PORT}
 ckanext.security.redis.db = ${HDX_SECURITY_REDIS_DB}
 
-
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer
