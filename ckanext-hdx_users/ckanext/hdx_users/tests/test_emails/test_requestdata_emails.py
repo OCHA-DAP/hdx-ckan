@@ -49,7 +49,7 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'organization': self.ORG_TITLE,
             'email_address': 'test@test.com',
             'sender_country': 'Romania',
-            'sender_organization_id': 'NASA',
+            'sender_organization_id': 'hdx-test-org',
             'sender_organization_type': 'Military',
             'sender_intend': 'Research Purposes'
         }

@@ -697,16 +697,16 @@
 .full-width {
   width: 100%;
 }
-#request-data-form {
+.form-request-contact {
   overflow-y: scroll;
   height: 400px;
 }
-#request-data-form .control {
+.form-request-contact .control {
   position: relative;
 }
-#request-data-form .control input[type="text"],
-#request-data-form .control input[type="password"],
-#request-data-form .control textarea {
+.form-request-contact .control input[type="text"],
+.form-request-contact .control input[type="password"],
+.form-request-contact .control textarea {
   height: 44px;
   border-radius: 6px;
   border: 1px solid white;
@@ -714,14 +714,14 @@
   font-size: 16px;
   color: #333333;
 }
-#request-data-form .control input[type="text"]:focus,
-#request-data-form .control input[type="password"]:focus,
-#request-data-form .control textarea:focus {
+.form-request-contact .control input[type="text"]:focus,
+.form-request-contact .control input[type="password"]:focus,
+.form-request-contact .control textarea:focus {
   outline: none;
 }
-#request-data-form .control input[type="text"] ~ label,
-#request-data-form .control input[type="password"] ~ label,
-#request-data-form .control textarea ~ label {
+.form-request-contact .control input[type="text"] ~ label,
+.form-request-contact .control input[type="password"] ~ label,
+.form-request-contact .control textarea ~ label {
   color: #cccccc;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -735,14 +735,14 @@
   cursor: text;
   transition: 1s;
 }
-#request-data-form .control input[type="text"] ~ label:after,
-#request-data-form .control input[type="password"] ~ label:after,
-#request-data-form .control textarea ~ label:after {
+.form-request-contact .control input[type="text"] ~ label:after,
+.form-request-contact .control input[type="password"] ~ label:after,
+.form-request-contact .control textarea ~ label:after {
   content: "";
 }
-#request-data-form .control input[type="text"].input-content ~ label,
-#request-data-form .control input[type="password"].input-content ~ label,
-#request-data-form .control textarea.input-content ~ label {
+.form-request-contact .control input[type="text"].input-content ~ label,
+.form-request-contact .control input[type="password"].input-content ~ label,
+.form-request-contact .control textarea.input-content ~ label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 10px;
@@ -750,39 +750,44 @@
   color: #888888;
   bottom: 1px;
 }
-#request-data-form .control input[type="text"].required.input-content ~ label:after,
-#request-data-form .control input[type="password"].required.input-content ~ label:after,
-#request-data-form .control textarea.required.input-content ~ label:after {
+.form-request-contact .control input[type="text"].required.input-content ~ label:after,
+.form-request-contact .control input[type="password"].required.input-content ~ label:after,
+.form-request-contact .control textarea.required.input-content ~ label:after {
   content: "";
 }
-#request-data-form .control input[type="text"].required.error,
-#request-data-form .control input[type="password"].required.error,
-#request-data-form .control textarea.required.error {
+.form-request-contact .control input[type="text"].required.error,
+.form-request-contact .control input[type="password"].required.error,
+.form-request-contact .control textarea.required.error {
   border-color: red;
 }
-#request-data-form .control input[type="text"].required ~ label:after,
-#request-data-form .control input[type="password"].required ~ label:after,
-#request-data-form .control textarea.required ~ label:after {
+.form-request-contact .control input[type="text"].required ~ label:after,
+.form-request-contact .control input[type="password"].required ~ label:after,
+.form-request-contact .control textarea.required ~ label:after {
   content: "*";
   margin-left: 5px;
   color: red;
 }
-#request-data-form .control .select2-container.error .select2-choice {
+.form-request-contact .control .select2-container.error .select2-choice {
   border-color: red;
 }
-#request-data-form .control label#field-checkbox-label {
-  font-weight: normal;
-}
-#request-data-form .control label.error {
+.form-request-contact .control .select2-container.required .select2-chosen:after {
+  content: "*";
+  margin-left: 5px;
   color: red;
 }
-#request-data-form .control #field-comments {
+.form-request-contact .control label#field-checkbox-label {
+  font-weight: normal;
+}
+.form-request-contact .control label.error {
+  color: red;
+}
+.form-request-contact .control #field-comments {
   height: 120px;
   padding: 14px 20px;
 }
-#request-data-form .control #field-comments ~ label {
+.form-request-contact .control #field-comments ~ label {
   bottom: 76px;
 }
-#request-data-form .control #field-comments.input-content ~ label {
+.form-request-contact .control #field-comments.input-content ~ label {
   bottom: 6px;
 }

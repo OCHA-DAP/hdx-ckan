@@ -738,7 +738,7 @@
   width: 100%;
 }
 
-#request-data-form {
+.form-request-contact {
   overflow-y: scroll;
   height: 400px;
 
@@ -804,6 +804,15 @@
       &.error {
         .select2-choice {
           border-color: red;
+        }
+      }
+      &.required {
+        .select2-chosen {
+          &:after {
+            content: "*";
+            margin-left: 5px;
+            color: red;
+          }
         }
       }
     }

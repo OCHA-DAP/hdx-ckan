@@ -44,7 +44,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_h
         return {
             'hdx_organization_type_list': hdx_org_h.hdx_organization_type_list,
-            'hdx_cached_org_list': hdx_org_h.hdx_cached_org_list,
+            'hdx_organization_type_get_value': hdx_org_h.hdx_organization_type_get_value
         }
 
     def get_actions(self):

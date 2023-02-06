@@ -1,6 +1,6 @@
 <p>Dear {{ data.maintainer_fullname }},</p>
 
-<p>{{ data.user_fullname }} ({{ data.user_email }}){% if data.extras %}, from {{ data.extras.country }}, on behalf of {{ data.extras.organization_name }} ({{ data.extras.organization_type }}){% endif %} has requested access to one of your organisation’s metadata-only datasets on HDX.</p>
+<p>{{ data.user_fullname }} ({{ data.user_email }}){% if data.extras %}, from {{ data.extras.country }}, on behalf of {{ data.extras.organization_name }} ({{ h.hdx_organization_type_get_value(data.extras.organization_type) }}){% endif %} has requested access to one of your organisation’s metadata-only datasets on HDX.</p>
 
 <p>
   <strong>Dataset name</strong>: <a href="{{ data.dataset_link }}">{{ data.dataset_title }}</a><br/>
