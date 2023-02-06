@@ -624,6 +624,11 @@ requestdata-styles:
   contents:
     - requestdata/request-data.css
 
+delete-member-styles:
+  output: ckanext-hdx_theme/%(version)s_delete-member-styles.css
+  contents:
+    - widget/membership/delete-member.css
+
 resource-list-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_resource-list-scripts.js

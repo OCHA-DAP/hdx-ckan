@@ -31,7 +31,6 @@ Example:
 			<div class="pull-right">
 					{% if authorized %}
 						{% if not disable_change %}
-							{% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
 							  <div class="">
 								<a class="" href="#edit-member-div-{{member.name}}" data-toggle="modal"
 									title="{{ _('Change role') }}">
@@ -44,12 +43,7 @@ Example:
 									{% block delete_button_text %}{{ _('Remove from this organization') }}{% endblock %}
 								</a>
 
-                {% if member.maint_pkgs | length > 0 %}
-
-                  {% set pkgs_list = [] %}
-                  {% for pkg in member.maint_pkgs %}
-                    {% do pkgs_list.append(pkg.title) %}
-                  {% endfor %}
+                {% if member.maint_orgs_pkgs | length > 0 %}
                   {% if current_user.name == member.name %}
                     {% set confirm_delete_message = 'You can\'t leave this organisation. Please change maintainer for the following datasets: ' %}
                   {% else %}
@@ -65,7 +59,7 @@ Example:
 							    id=group_id),
 							    user=id,
 									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id,
-                  packages=member.maint_pkgs, disabled=disabled %}
+                  packages=member.maint_orgs_pkgs, disabled=disabled %}
 							  </div>
 						{% else %}
 							<div><small>Please add another admin to be able to change this user</small></div>

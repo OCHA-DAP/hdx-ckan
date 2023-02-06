@@ -81,7 +81,9 @@ class HDXRedisInvalidationStrategy(RegionInvalidationStrategy):
         mangler, redis = self._find_backend_info()
         key = self._create_key(mangler)
 
-        value = redis.get(key) # type: str
+        value = redis.get(key)
+        if isinstance(value, bytes):
+            value = value.decode('utf-8')
 
         if value:
             parts = value.split('__')

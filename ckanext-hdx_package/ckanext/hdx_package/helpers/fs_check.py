@@ -84,12 +84,14 @@ def fs_check_4_resources(original_resource_action):
 
 
 def _file_structure_check(data_dict):
-    layer_import_url = config.get('hdx.file_structure.check_url')
+    file_structure_check_url = config.get('hdx.file_structure.check_url')
     encoded_download_url = urlparse.quote_plus(data_dict['url'])
     hxl_proxy_source_info_url = config.get('hdx.hxlproxy.source_info_url').format(url=data_dict['url'])
-    fs_check_url = layer_import_url.format(dataset_id=data_dict.get('package_id'), resource_id=data_dict.get('id'),
-                                           url_type=data_dict.get('url_type'), url=encoded_download_url,
-                                           hxl_proxy_source_info_url=hxl_proxy_source_info_url)
+    fs_check_url = file_structure_check_url.format(dataset_id=data_dict.get('package_id'),
+                                                   resource_id=data_dict.get('id'),
+                                                   url_type=data_dict.get('url_type'),
+                                                   url=encoded_download_url,
+                                                   hxl_proxy_source_info_url=hxl_proxy_source_info_url)
     return _make_file_structure_check_request(fs_check_url)
 
 

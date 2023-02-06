@@ -8,7 +8,9 @@ Example:
 
 {% import 'macros/form.html' as form %}
 
-  <div id="{{ modal_div_id }}" class="modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+{% asset 'hdx_theme/delete-member-styles' %}
+
+  <div id="{{ modal_div_id }}" class="modal confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
 	<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
 		<div class="modal-dialog">
 		<div class="modal-content hdx-modal">

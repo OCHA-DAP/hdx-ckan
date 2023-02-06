@@ -2,6 +2,7 @@ import ckanext.hdx_users.actions.create as create
 import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
+import ckanext.hdx_users.actions.delete as delete
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
 import ckanext.hdx_users.helpers.helpers as hdx_h
 import ckanext.hdx_users.actions.auth as auth
@@ -47,17 +48,15 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'onboarding_followee_list': get.onboarding_followee_list,
             'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
-            'hdx_first_login': create.hdx_first_login
+            'hdx_first_login': create.hdx_first_login,
+            'user_delete': delete.hdx_user_delete
         }
 
     def get_auth_functions(self):
         return {
             'user_can_register': authorize.user_can_register,
             'user_can_validate': authorize.user_can_validate,
-            'hdx_send_new_org_request': auth.hdx_send_new_org_request,
-            'manage_permissions': auth.manage_permissions,
             'hdx_first_login': auth.hdx_first_login,
-            'user_update': auth.user_update
         }
 
     # IConfigurable
@@ -75,6 +74,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
 class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IBlueprint)
@@ -98,6 +98,15 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
             'hdx_user_fullname_show': get.hdx_user_fullname_show,
             'user_show': get.user_show,
+            'notify_users_about_api_token_expiration': update.notify_users_about_api_token_expiration,
+        }
+
+    def get_auth_functions(self):
+        return {
+            'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+            'manage_permissions': auth.manage_permissions,
+            'user_update': auth.user_update,
+            'notify_users_about_api_token_expiration': auth.notify_users_about_api_token_expiration,
         }
 
     def get_validators(self):

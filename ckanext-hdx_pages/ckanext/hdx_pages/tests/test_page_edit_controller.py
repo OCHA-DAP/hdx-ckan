@@ -25,6 +25,7 @@ page_elnino = {
     'type': 'event',
     'status': 'ongoing',
     'groups': [LOCATION],
+    'tag_string': 'some_tag',
     'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
@@ -46,6 +47,7 @@ class TestHDXControllerPage(object):
             'save_custom_page': 'active',
             'hdx_counter': '2',
             'groups': [LOCATION],
+            'tag_string': 'some_new_tag',
             'field_section_0_data_url': 'https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21',
             'field_section_0_max_height': '350px',
             'field_section_0_section_title': 'El Nino Affected Countries',

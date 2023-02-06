@@ -31,6 +31,7 @@ import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
+from ckan.lib.munge import munge_filename
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.resource_format import resource_format_autocomplete, guess_format_from_extension
@@ -758,8 +759,13 @@ def _get_resource_revison_timestamp(resource_dict):
 
 
 def _get_resource_hdx_relative_url(resource_dict):
-    if helpers.is_ckan_domain(resource_dict.get('url', '')):
-        return helpers.make_url_relative(resource_dict.get('url', ''))
+    res_url = resource_dict.get('url', '')
+    if helpers.is_ckan_domain(res_url) and resource_dict.get('id') and resource_dict.get('url_type') == 'upload':
+        filename = munge_filename(res_url)
+        relative_url = h.url_for('resource.download', id=resource_dict.get('package_id'),
+                                 resource_id=resource_dict.get('id'), filename=filename)
+        return relative_url
+        # return helpers.make_url_relative(resource_dict.get('url', ''))
 
     return resource_dict.get('url', '')
 
