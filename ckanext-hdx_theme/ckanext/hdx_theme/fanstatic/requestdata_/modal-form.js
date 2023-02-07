@@ -57,8 +57,7 @@ ckan.module('hdx-modal-form', function($) {
                 }
                 var payload = {
                     message_content: this.options.message_content,
-                    user_organization_id: this.options.post_data.user_organization_id,
-                    user_organization_type: this.options.post_data.user_organization_type,
+                    package_id: this.options.post_data.package_id,
                     package_name: this.options.post_data.package_name,
                     package_title: this.options.post_data.package_title,
                     maintainers: JSON.stringify(this.options.post_data.maintainers),
@@ -261,9 +260,9 @@ ckan.module('hdx-modal-form', function($) {
         _showFormError: function(message) {
             this.modalFormError.removeClass('hide');
             this.modalFormError.text(message);
-            // Scroll to bottom of form
+            // Scroll to top of form
             var form = this.modal.find('form');
-            form.scrollTop(form[0].scrollHeight);
+            form.scrollTop(0);
         },
         _showSuccessMsg: function(msg) {
             var div = document.createElement('div');

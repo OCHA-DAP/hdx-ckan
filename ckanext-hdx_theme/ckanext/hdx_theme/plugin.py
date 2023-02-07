@@ -251,6 +251,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_url_for': hdx_helpers.hdx_url_for,
             'hdx_check_http_response': hdx_helpers.hdx_check_http_response,
             'hdx_get_request_param': hdx_helpers.hdx_get_request_param,
+            'hdx_pending_request_data': hdx_helpers.hdx_pending_request_data,
             'HDX_CONST': const
         }
 

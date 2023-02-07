@@ -12,6 +12,7 @@ import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.requestdata.model as requestdata_model
 import ckanext.hdx_theme.version as version
 
 from six import text_type
@@ -863,3 +864,7 @@ def hdx_url_for(*args, **kw):
 
 
 url_for = hdx_url_for
+
+
+def hdx_pending_request_data(user_id, package_id):
+    return requestdata_model.ckanextRequestdata.get_pending_request(package_id, user_id, ['new', 'open'])
