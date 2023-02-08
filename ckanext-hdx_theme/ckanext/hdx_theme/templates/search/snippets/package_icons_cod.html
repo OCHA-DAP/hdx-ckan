@@ -1,4 +1,4 @@
 {% if package.cod_level %}
-    <span class="icn-txt-cods" title="{{ _('Common Operational Datasets (CODs) are authoritative reference datasets needed to support operations and decision-making for all actors in a humanitarian response.') }}" data-module="bs_tooltip"
-          data-module-placement="top" data-toggle="tooltip">COD{% if package.cod_level == "cod-enhanced" %}+{% endif %}</span>
+    <a href="{% url_for 'search', cod_level=package.cod_level %}"><span class="icn-txt-cods" title="{{ _('Common Operational Datasets (CODs) are authoritative reference datasets needed to support operations and decision-making for all actors in a humanitarian response.') }}" data-module="bs_tooltip"
+          data-module-placement="top" data-toggle="tooltip">COD{% if package.cod_level == "cod-enhanced" %}+{% endif %}</span></a>
 {% endif %}
