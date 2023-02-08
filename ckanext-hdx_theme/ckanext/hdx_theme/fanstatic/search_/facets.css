@@ -101,9 +101,6 @@
   letter-spacing: 0.03em;
   cursor: pointer;
 }
-.filter-category .categ-title span[data-toggle="tooltip"] {
-  cursor: help;
-}
 .filter-category .categ-list .categ-search {
   margin: 15px;
   padding: 0;
@@ -141,6 +138,10 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
+}
+.filter-category .categ-list .categ-items li label.facet .facet-option-explanation {
+  color: #333333;
+  cursor: default;
 }
 .filter-category .categ-list .categ-items li label.facet:after {
   content: none;

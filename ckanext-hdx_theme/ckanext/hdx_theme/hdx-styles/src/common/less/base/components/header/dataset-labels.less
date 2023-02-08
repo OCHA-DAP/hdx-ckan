@@ -74,8 +74,8 @@
   margin-left: 10px;
   font-size: 12px;
 
-  span[data-toggle="tooltip"] {
-    cursor: help;
+  .dataseries-explanation {
+    cursor: default;
   }
   a {
     color: @orangeColor;
@@ -121,6 +121,12 @@ ul.dataset-resources {
       line-height: 1;
       &[class*="humanitarianicons-"] {
         margin-left: 10px;
+      }
+      .humanitarianicons-Chart:hover::before {
+          color: @blueColor;
+      }
+      .icon-hxl-tags:hover::before {
+          color: @orangeColor;
       }
     }
     span {

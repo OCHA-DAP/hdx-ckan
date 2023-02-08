@@ -18,7 +18,7 @@ Example:
           {% if option.category_key == 'ext_archived' %}<label class="label label-small label-new-feature">NEW</label>{% endif %}
           {{ option.display_name }}
           {% if option.explanation %}
-            <a href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"
+            <a class="facet-option-explanation" href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"
                data-toggle="tooltip">[?]</a>
           {% endif %}
           {% if option.explanation_link %}

@@ -118,7 +118,7 @@
                   {% block owner_dataseries %}
                     {% if package.dataseries_name %}
                       <div class="dataset-dataseries">
-                        <span>{{_('This dataset is part of the data series')}} <span title="{{ _('Data series is a collection of datasets that has a shared topic usually provided by a single organisation') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}">{{ package.dataseries_name }}</a></span>
+                        <span>{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('Data series is a collection of datasets that has a shared topic usually provided by a single organisation') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}">{{ package.dataseries_name }}</a></span>
                       </div>
                     {% endif %}
                   {% endblock %}

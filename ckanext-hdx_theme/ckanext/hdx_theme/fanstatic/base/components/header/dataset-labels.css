@@ -35,8 +35,8 @@
   margin-left: 10px;
   font-size: 12px;
 }
-.dataseries-info span[data-toggle="tooltip"] {
-  cursor: help;
+.dataseries-info .dataseries-explanation {
+  cursor: default;
 }
 .dataseries-info a {
   color: #f2645a;
@@ -84,6 +84,12 @@ ul.dataset-resources li.label-icons a {
 }
 ul.dataset-resources li.label-icons a[class*="humanitarianicons-"] {
   margin-left: 10px;
+}
+ul.dataset-resources li.label-icons a .humanitarianicons-Chart:hover::before {
+  color: #007CE0;
+}
+ul.dataset-resources li.label-icons a .icon-hxl-tags:hover::before {
+  color: #f2645a;
 }
 ul.dataset-resources li.label-icons span {
   padding: 0;

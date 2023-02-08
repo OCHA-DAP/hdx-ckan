@@ -32,9 +32,6 @@
         .letter-spacing-3();
         cursor: pointer;
 
-      span[data-toggle="tooltip"] {
-        cursor: help;
-      }
     }
 
     .categ-list {
@@ -78,6 +75,11 @@
                     margin-bottom: 0;
                     .sourceSansProFont(400, 14px);
                     line-height: @filterCategItemLineHeight;
+
+                    .facet-option-explanation {
+                      color: @darkGrayColor;
+                      cursor: default;
+                    }
 
                     &:after {
                         content: none;
