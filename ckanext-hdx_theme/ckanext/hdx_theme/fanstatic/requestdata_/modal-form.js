@@ -93,28 +93,22 @@ ckan.module('hdx-modal-form', function($) {
                 var element = this.modal = jQuery(html);
                 var form = this.modal.find('form');
 
-                // select "Other" values"
-                $(form[0]).find('select').on('change', this._selectOnChange);
-                // change org type
-                $(form[0]).find('select#field-organization').on('change', this._organizationOnChange);
-                // input-value class
-                $(form[0]).find('input[type="password"], input[type="text"], textarea').on('keyup', this._triggerInputDataClass);
+                form.on('change', 'select', this._selectOnChange) // select "Other" values"
+                form.on('change', '#field-organization', this._organizationOnChange) // change org type
+                form.on('keyup', 'input[type="password"], input[type="text"], textarea', this._triggerInputDataClass) // input-value class
 
                 element.on('click', '.btn-primary', this._onSubmit);
                 element.on('click', '.btn-cancel', this._onCancel);
                 element.modal({
-                    show: false
+                    show: false,
+                    keyboard: false
                 });
                 this.modalFormError = this.modal.find('.alert-danger')
 
                 // init select2
                 var select2Inputs = ['#field-country', '#field-organization', '#field-organization-type', '#field-intend-message'];
                 $.each(select2Inputs, function(i, select2Input) {
-                  var $select2Input = $(form[0]).find(select2Input);
-                  // var defaultValue = $select2Input.data('default-value');
-                  // if(defaultValue) {
-                  //   $select2Input.find('option[value="' + defaultValue + '"]').attr('selected', 'selected');
-                  // }
+                  var $select2Input = form.find(select2Input);
                   $select2Input.select2({
                     containerCssClass: function() {
                       return $select2Input.attr('required') ? 'required' : '';
@@ -215,7 +209,7 @@ ckan.module('hdx-modal-form', function($) {
             this._resetModalForm();
         },
         _selectOnChange: function(event) {
-          var $otherField = $('#' + this.getAttribute('id') + '-other');
+          var $otherField = $(this.form).find('#' + this.getAttribute('id') + '-other');
           var $otherFieldContainer = $otherField.parent();
 
           if(this.value === 'other') {
@@ -228,10 +222,8 @@ ckan.module('hdx-modal-form', function($) {
           }
         },
         _organizationOnChange: function(event) {
-          var $org = $('#' + this.getAttribute('id'));
-          var $org_type = $('#field-organization-type');
-          var org_type = $org.select2().find(':selected').data('org-type');
-          $org_type.select2('val', ((org_type) ? org_type : '-1')).trigger('change');
+          var org_type = $(this).select2().find(':selected').data('org-type');
+          $(this.form).find('#field-organization-type').select2('val', ((org_type) ? org_type : '-1')).trigger('change');
         },
         _triggerInputDataClass: function(event) {
             if(this.value === '') {
@@ -280,12 +272,9 @@ ckan.module('hdx-modal-form', function($) {
             this._resetModalForm();
         },
         _resetModalForm: function(){
-            var form = this.modal.find('form');
             this.modal.modal('hide');
-            // Clear form fields
-            form[0].reset();
-            // Clear select2 form fields
-            $(form[0]).find('.select2-container').select2('val', '-1');
+            this.modal.remove();
+            this.modal = null;
         },
         _disableActionButtons: function() {
             this.el.attr('disabled', 'disabled');
