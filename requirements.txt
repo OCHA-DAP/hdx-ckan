@@ -6,12 +6,12 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.202#egg=ckanext-dcat
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.16#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.17#egg=ckanext-requestdata
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.305#egg=ckanext-showcase
-    # via -r requirements.in
+    # via -r requirements.ins
 alembic==1.0.0
     # via -r requirements.in
 babel==2.7.0

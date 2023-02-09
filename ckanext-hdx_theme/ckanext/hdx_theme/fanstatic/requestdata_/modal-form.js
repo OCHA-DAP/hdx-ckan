@@ -204,8 +204,7 @@ ckan.module('hdx-modal-form', function($) {
             }
         },
         _onCancel: function(event) {
-            this._snippetReceived = false;
-            this._clearFormErrors()
+            this._clearFormErrors();
             this._resetModalForm();
         },
         _selectOnChange: function(event) {
@@ -271,7 +270,8 @@ ckan.module('hdx-modal-form', function($) {
             currentDiv.append(div)
             this._resetModalForm();
         },
-        _resetModalForm: function(){
+        _resetModalForm: function() {
+            this._snippetReceived = false;
             this.modal.modal('hide');
             this.modal.remove();
             this.modal = null;

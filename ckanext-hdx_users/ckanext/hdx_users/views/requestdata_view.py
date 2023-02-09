@@ -6,6 +6,7 @@ import ckan.model as model
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from ckan import logic
 from ckan.plugins import toolkit as tk
+from ckanext.requestdata import helpers
 
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
@@ -168,7 +169,7 @@ def send_request():
     try:
         if request.method == 'POST':
             data = request.form.to_dict()
-            result = _get_action('requestdata_request_create', data)
+            _get_action('requestdata_request_create', data)
         else:
             abort(403, _('Unauthorized to access this page'))
     except NotAuthorized:
@@ -183,15 +184,14 @@ def send_request():
 
         return json.dumps(error)
 
-    request_dict = {'id': result.get('requestdata_id'), 'package_id': data['package_id']}
-    data = _get_action('requestdata_request_show', request_dict)
-
     data_dict = {'id': data['package_id']}
     package = _get_action('package_show', data_dict)
 
+    sender_user_id = model.User.get(context['user']).id
+
     sender_name = data.get('sender_name', '')
     sender_email = data.get('email_address', '')
-    extras = json.loads(data.get('extras'))
+    extras = json.loads(helpers.process_extras_fields(data, sender_user_id))
 
     user_obj = context['auth_user_obj']
     data_dict = {
