@@ -11,7 +11,7 @@
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.305#egg=ckanext-showcase
-    # via -r requirements.ins
+    # via -r requirements.in
 alembic==1.0.0
     # via -r requirements.in
 babel==2.7.0
