@@ -6,17 +6,17 @@ from ckan.logic import (
     get_or_bust as _get_or_bust,
 )
 
-import ckanext.hdx_package.helpers.fs_check as fs_check
+import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
-from ckanext.hdx_package.helpers.geopreview import delete_geopreview_layer
+from ckanext.hdx_package.helpers.resource_triggers.geopreview import delete_geopreview_layer
 
 NotFound = logic.NotFound
 
 
-@fs_check.fs_check_4_resources
+# @fs_check.fs_check_4_resources
 def resource_patch(context, data_dict):
     '''
     Cloned from core. It adds a 'no_compute_extra_hdx_show_properties' in contexts to

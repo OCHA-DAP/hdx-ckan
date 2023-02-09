@@ -19,8 +19,9 @@ import ckan.lib.uploader as uploader
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_package.helpers.geopreview as geopreview
-import ckanext.hdx_package.helpers.fs_check as fs_check
+import ckanext.hdx_package.helpers.resource_triggers.common
+import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
+import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
@@ -28,6 +29,7 @@ from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
     BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.file_removal import file_remove, find_filename_in_url
+
 
 _check_access = tk.check_access
 _get_action = tk.get_action
@@ -43,7 +45,7 @@ log = logging.getLogger(__name__)
 SKIP_VALIDATION = 'skip_validation'
 
 
-@fs_check.fs_check_4_resources
+# @fs_check.fs_check_4_resources
 @geopreview.geopreview_4_resources
 def resource_update(context, data_dict):
     '''
@@ -170,7 +172,7 @@ def _fetch_prev_resources_info(model, resource_ids):
     return id_to_resource_map
 
 
-@geopreview.geopreview_4_packages
+@ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes([geopreview._before_ckan_action, fs_check._before_ckan_action],[geopreview._after_ckan_action, fs_check._after_ckan_action])
 def package_update(context, data_dict):
     '''Update a dataset (package).
 
