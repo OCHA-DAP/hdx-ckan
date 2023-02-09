@@ -392,9 +392,15 @@ def hdx_update_microdata(key, data, errors, context):
     if not data.get(key):
         pkg_id = data.get(('id',))
         if pkg_id:
-            pkg_dict = __get_previous_package_dict(context, pkg_id)
-            if pkg_dict.get('resources', [])[key[1]].get('in_quarantine') and not data.get(key):
-                data[key[:2] + ('microdata',)] = False
+            # pkg_dict = __get_previous_package_dict(context, pkg_id)
+            # if pkg_dict.get('resources', [])[key[1]].get('in_quarantine') and not data.get(key):
+            #     data[key[:2] + ('microdata',)] = False
+            res_id = data.get(key[:-1] + ('id',))
+            if res_id:
+                # resource exists
+                res_dict = __get_previous_resource_dict(context, pkg_id, res_id)
+                if res_dict and res_dict.get('in_quarantine'):
+                    data[key[:2] + ('microdata',)] = False
 
 
 def hdx_update_in_quarantine_by_microdata(key, data, errors, context):
