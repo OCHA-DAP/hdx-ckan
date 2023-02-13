@@ -668,7 +668,8 @@
 }
 .request-data-module .requested-data-container__content-item--requested-by-info .glyphicon-warning-sign {
   color: orange;
-  margin-left: 3px;
+  margin-left: 5px;
+  margin-right: 3px;
 }
 .request-data-module .requested-data-container__content-item--actions-new {
   margin-right: 40px !important;
