@@ -19,6 +19,7 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
     SYSADMIN_USER = 'testsysadmin'
     PACKAGE_ID = 'test_dataset_4_quarantine'
     RESOURCE_ID = None
+    DATASET_ID = None
 
     @classmethod
     def _get_action(cls, action_name):
@@ -53,7 +54,6 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
             "groups": [{"name": "roger"}],
             "resources": [
                 {
-                    'package_id': 'test_private_dataset_1',
                     'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
                     'resource_type': 'file.upload',
                     'format': 'CSV',
@@ -65,6 +65,7 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         context = {'model': model, 'session': model.Session, 'user': cls.NORMAL_USER}
         dataset_dict = cls._get_action('package_create')(context, package)
         cls.RESOURCE_ID = dataset_dict['resources'][0]['id']
+        cls.DATASET_ID = dataset_dict['id']
 
     @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
     def test_normal_user_cannot_modify_quarantine(self, tag_s3_mock):
@@ -91,6 +92,30 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         package_dict = self._hdx_qa_resource_patch(self.RESOURCE_ID, 'in_quarantine', False,
                                                                       self.SYSADMIN_USER)
         assert package_dict['resources'][0]['in_quarantine'] is False
+
+    def test_multiple_pii_fields_can_be_set(self):
+        context = {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER}
+        resource2 = {
+            'package_id': self.PACKAGE_ID,
+            'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+            'resource_type': 'file.upload',
+            'format': 'CSV',
+            'name': 'hdx_test2.csv'
+        }
+        res2_dict = self._get_action('resource_create')(context, resource2)
+
+        changes_dict = {
+            'id': res2_dict['id'],
+            'pii_report_flag': 'OK',
+            'pii_timestamp': '2023-02-08T23:21:01.345000',
+            'pii_report_id': '/some_path/some.log'
+        }
+        modified_res2_dict = self._get_action('hdx_qa_resource_patch')(context, changes_dict)
+
+        for key, value in changes_dict.items():
+            assert modified_res2_dict.get(key) == value
+
+
 
     def test_normal_user_cannot_modify_pii_timestamp(self):
         date_str = '2019-09-01T17:30:50.883601'
