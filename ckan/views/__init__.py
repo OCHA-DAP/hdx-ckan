@@ -278,6 +278,11 @@ def _get_user_for_apikey():
     query = model.Session.query(model.User)
     user = query.filter_by(apikey=apikey).first()
 
+    # ADDED BY HDX
+    if user:
+        log.warning('##{}## is still using apikey for path: {}'.format(user.name, request.base_url))
+    # END - ADDED BY HDX
+
     if not user:
         user = api_token.get_user_from_token(apikey)
     return user

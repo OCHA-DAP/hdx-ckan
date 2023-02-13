@@ -792,3 +792,8 @@ def org_add_last_updated_field(displayed_orgs):
     org_to_last_update = _find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
     for o in displayed_orgs:
         o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+
+
+def hdx_organization_type_get_value(org_type_key):
+    return next((org_type[0] for org_type in static_lists.ORGANIZATION_TYPE_LIST if org_type[1] == org_type_key),
+                org_type_key)

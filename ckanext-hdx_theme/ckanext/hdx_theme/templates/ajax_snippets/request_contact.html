@@ -2,6 +2,9 @@
 
 {% import 'macros/form.html' as form %}
 
+{% set user_orgs = h.requestdata_get_orgs_for_user(c.userobj.id, include_org_type=True) %}
+{% set pending_request = h.hdx_pending_request_data(c.userobj.id, package_id) %}
+
 <div class="modal request-data-modal two-cols request-data-two-cols posfix">
   <div class="modal-content request-data-modal-content">
     <div class="modal-body request-data-modal-body">
@@ -22,36 +25,85 @@
             <div class="ds-title">
               Dataset {{ package_name }}
             </div>
-            <form class="form-horizontal" id="request-data-form">
-              <div class="alert alert-danger hide"></div>
-              <div class="mTop20">
-                <div class="request-data-form-control">
-                  <input id="field-name" name="sender_name" class="request-data-form-input" type="text" value="{{ c.userobj.fullname }}" required="required">
-                  <label for="field-name" class="request-data-form-label">your name</label>
-                </div>
-                <div class="request-data-form-control">
-                  <input id="field-email" name="email_address" class="request-data-form-input" type="text" value="{{ c.userobj.email }}" required="required">
-                  <label for="field-email" class="request-data-form-label">your e-mail</label>
-                </div>
+            <form class="form-horizontal form-request-contact" id="request-data-form">
+              {% if pending_request %}
+                <div class="alert alert-danger mTop20">{{ _('You already have a pending request. Please wait for the reply.') }}</div>
+              {% else %}
+                <div class="alert alert-danger mTop20 hide"></div>
+              {% endif %}
+              <div class="control mTop20">
+                <input id="field-name" name="sender_name" class="full-width required {% if c.userobj.fullname %}input-content{% endif %}" type="text" value="{% if c.userobj.fullname %}{{ c.userobj.fullname }}{% endif %}" required="required">
+                <label for="field-name">Your name</label>
               </div>
-              <div class="mTop20 mbottom15">
-                <div class="redasterisk">
-                  Message for contributor:
-                </div>
-                <div class="mbottom10">
-                  Why are you requesting access to this data?  Please be as specific as possible about your role and your intended use of the data.
-                </div>
+              <div class="control mTop20">
+                <input id="field-email" name="email_address" class="full-width required {% if c.userobj.email %}input-content{% endif %}" type="text" value="{{ c.userobj.email }}" required="required">
+                <label for="field-email">Your email</label>
               </div>
-              <div class="request-data-form-control">
-                <textarea id="field-comments" name="message_content" class="request-data-form-input" type="text" value="" required="required" style="height: 100px; padding: 12px;"></textarea>
+              <div class="control mTop20">
+                <select class="mTop20" id="field-organization" name="sender_organization_id" required>
+                  <option value="-1" {% if user_orgs %}selected="selected"{% endif %}>{{_('Select organization...')}}</option>
+                  {% if user_orgs %}
+                    {% for organization in user_orgs %}
+                      <option value="{{ organization.id }}" data-org-type="{{ organization.org_type }}">{{ organization.display_name }}</option>
+                    {% endfor %}
+                  {% endif %}
+                  <option value="other" {% if not user_orgs %}selected="selected"{% endif %}>{{ _('Other...') }}</option>
+                </select>
+              </div>
+              <div class="control mTop20 {% if user_orgs %}hidden{% endif %}">
+                <input id="field-organization-other" name="sender_organization_id_other" class="full-width required" type="text" value="">
+                <label for="field-organization-other">Organization</label>
+              </div>
+              <div class="control mTop20">
+                <select class="mTop20" id="field-organization-type" name="sender_organization_type" required>
+                  <option value="-1" selected="selected">{{_('Select organization type...')}}</option>
+                  {% for t in h.hdx_organization_type_list() %}
+                    <option value="{{t.value}}">{{ t.text }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="control mTop20 hidden">
+                <input id="field-organization-type-other" name="sender_organization_type_other" class="full-width required" type="text" value="">
+                <label for="field-organization-type-other">Organization type</label>
+              </div>
+              <div class="control mTop20">
+                <select class="mTop20" id="field-country" name="sender_country" required>
+                  <option value="-1">{{_('Where are you located?')}}</option>
+                  {% for location in h.hdx_location_list(False)  %}
+                    <option value="{{ location.text }}">{{ location.text }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="control mTop20">
+                <select class="mTop20" id="field-intend-message" name="sender_intend" required>
+                  <option value="-1">{{_('Intended use of this data')}}</option>
+                  <option value="Humanitarian Assistance">Humanitarian Assistance</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Advocacy">Advocacy</option>
+                  <option value="other">Other...</option>
+                </select>
+              </div>
+              <div class="control mTop20 hidden">
+                <input id="field-intend-message-other" name="sender_intend_other" class="full-width required" type="text" value="">
+                <label for="field-intend-message-other">Intended use of this data</label>
+              </div>
+              <div class="control mTop20">
+                <textarea id="field-comments" name="message_content" class="full-width required" required="required"></textarea>
+                <label for="field-comments">{{ _('Why you need to access this data') }}</label>
+              </div>
+              <div class="control">
+                <label class="mTop10 vertically-center" id="field-checkbox-label">
+                  <input type="checkbox" required>
+                  I understand that my request for this dataset may be denied by the contributor at their discretion. If the contributor decides to share this dataset I will manage the data in accordance with the applicable license and any other instructions the contributor may provide. <span class="red">*</span>
+                </label>
               </div>
             </form>
           </div>
         </div>
     </div>
     <div class="modal-footer request-data-modal-footer bottom-actions" style="bottom: 30px !important;">
-      <button class="btn btn-empty btn-empty-black btn-large btn-cancel">Cancel</button>
-      <button type="submit" class="btn btn-primary btn-submit">Send request</button>
+      <button class="btn btn-empty btn-empty-black btn-large btn-cancel mR45">Cancel</button>
+      <button type="submit" class="btn btn-primary btn-submit"{% if pending_request %} disabled{% endif %}>Send request</button>
     </div>
   </div>
   </div>

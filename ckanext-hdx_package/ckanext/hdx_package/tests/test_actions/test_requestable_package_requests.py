@@ -120,8 +120,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             'package_id': p['id'],
             'sender_name': 'John Doe',
             'message_content': 'I want to add additional data.',
-            'organization': 'Google',
+            'organization': 'hdx-test-org',
             'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'hdx-test-org',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
         }
 
         req_result = self._get_action('requestdata_request_create')(context, data_dict)
