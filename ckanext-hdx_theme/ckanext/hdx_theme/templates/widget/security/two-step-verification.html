@@ -54,6 +54,11 @@ Depends on:
           <b>If your one-time password does not work:</b><br/>
           Click on the "{{ generate_new_title }}" and repeat from step 3 above.
         </p>
+        <div id="new-two-step-actions" style="display: none; justify-content: space-between">
+          <button id="cancel-two-step-btn" class="btn btn-danger" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-original-title="Turn off the two-step verification.">{{_('Cancel')}}</button>
+          <button id="submit-two-step-btn" style="display: none;" class="btn btn-primary" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{_('Save')}}</button>
+          <button id="disabled-submit-two-step-btn" class="btn btn-primary disabled" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-original-title="Please test the two step code before saving.">{{_('Save')}}</button>
+        </div>
       </div>
       <div id="two-step-turn-on-container" style="display: {% if c.totp_challenger_uri %}none{% else %}inline{% endif %};">
         <a id="two-step-turn-on" class="btn">Turn on two-step verification</a>

@@ -154,7 +154,7 @@ class HDXEditView(EditView):
             log.error(ex)
 
         h.flash_success(_(u'Profile updated'))
-        resp = h.redirect_to(u'user.read', id=user[u'name'])
+        resp = h.redirect_to(u'hdx_user.edit', id=user[u'name'])
         if current_user and data_dict[u'name'] != old_username:
             # Changing currently logged in user's name.
             # Update repoze.who cookie to match

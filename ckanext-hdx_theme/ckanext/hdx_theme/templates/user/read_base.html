@@ -39,7 +39,7 @@
     {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=user.name) }}
   {% endif %}
   {% if h.check_access('user_update', user) %}
-    {{ h.build_nav_icon('user.edit', _('Profile and Password'), id=user.name) }}
+    {{ h.build_nav_icon('hdx_user.edit', _('Profile and Password'), id=user.name) }}
   {% endif %}
 {% endblock %}
 

@@ -388,3 +388,5 @@ ckanext.security.brute_force_key = user_name
 
 # Redirect admins to setup 2FA
 hdx.security.2fa.redirect = true
+# Used for issuer name in the QR code for 2FA
+hdx.security.site_name = HDX
