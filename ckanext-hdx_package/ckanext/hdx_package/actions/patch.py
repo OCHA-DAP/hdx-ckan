@@ -179,9 +179,10 @@ def hdx_qa_resource_patch(context, data_dict):
         )
     data_revise_dict = {'match': {'id': pkg_id}}
     _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict)
-    for item in data_dict.keys():
-        if data_dict[item] != 'id':
-            data_revise_dict['update__resources__' + resource_dict.get('id')[:5]] = {item: data_dict[item]}
+
+    update_resource_dict = {key: value for key, value in data_dict.items() if key != 'id'}
+    if update_resource_dict:
+        data_revise_dict['update__resources__' + resource_dict.get('id')] = update_resource_dict
 
     if len(data_revise_dict.keys()) <= 1:
         raise NotFound("resource id, key or value were not provided")
