@@ -832,14 +832,18 @@
 
     #field-comments {
       height: @textAreaHeight;
-      padding: 14px @paddingSmall;
+      padding: 14px @paddingSmall 39px;
 
       & ~ label {
         bottom: @textAreaHeight - @inputHeight;
+        line-height: initial;
+        top: 10px;
       }
 
       &.input-content ~ label {
         bottom: 6px;
+        top: unset;
+        background: rgba(255,255,255,.85);
       }
     }
   }
