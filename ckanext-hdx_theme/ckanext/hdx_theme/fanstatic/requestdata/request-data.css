@@ -666,6 +666,11 @@
 .request-data-module .requested-data-container__content-item--requested-by-info {
   margin-right: 30px !important;
 }
+.request-data-module .requested-data-container__content-item--requested-by-info .glyphicon-warning-sign {
+  color: orange;
+  margin-left: 2px;
+  margin-right: 2px;
+}
 .request-data-module .requested-data-container__content-item--actions-new {
   margin-right: 40px !important;
 }
@@ -689,4 +694,105 @@
     padding: 20px;
     padding-bottom: 60px;
   }
+}
+.full-width {
+  width: 100%;
+}
+.form-request-contact {
+  overflow-y: scroll;
+  height: 400px;
+}
+.form-request-contact .control {
+  position: relative;
+}
+.form-request-contact .control input[type="text"],
+.form-request-contact .control input[type="password"],
+.form-request-contact .control textarea {
+  height: 44px;
+  border-radius: 6px;
+  border: 1px solid white;
+  padding-left: 20px;
+  font-size: 16px;
+  color: #333333;
+}
+.form-request-contact .control input[type="text"]:focus,
+.form-request-contact .control input[type="password"]:focus,
+.form-request-contact .control textarea:focus {
+  outline: none;
+}
+.form-request-contact .control input[type="text"] ~ label,
+.form-request-contact .control input[type="password"] ~ label,
+.form-request-contact .control textarea ~ label {
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  opacity: 1;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  left: 20px;
+  line-height: 44px;
+  cursor: text;
+  transition: 1s;
+}
+.form-request-contact .control input[type="text"] ~ label:after,
+.form-request-contact .control input[type="password"] ~ label:after,
+.form-request-contact .control textarea ~ label:after {
+  content: "";
+}
+.form-request-contact .control input[type="text"].input-content ~ label,
+.form-request-contact .control input[type="password"].input-content ~ label,
+.form-request-contact .control textarea.input-content ~ label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 10px;
+  color: #888888;
+  bottom: 1px;
+}
+.form-request-contact .control input[type="text"].required.input-content ~ label:after,
+.form-request-contact .control input[type="password"].required.input-content ~ label:after,
+.form-request-contact .control textarea.required.input-content ~ label:after {
+  content: "";
+}
+.form-request-contact .control input[type="text"].required.error,
+.form-request-contact .control input[type="password"].required.error,
+.form-request-contact .control textarea.required.error {
+  border-color: red;
+}
+.form-request-contact .control input[type="text"].required ~ label:after,
+.form-request-contact .control input[type="password"].required ~ label:after,
+.form-request-contact .control textarea.required ~ label:after {
+  content: "*";
+  margin-left: 5px;
+  color: red;
+}
+.form-request-contact .control .select2-container.error .select2-choice {
+  border-color: red;
+}
+.form-request-contact .control .select2-container.required .select2-chosen:after {
+  content: "*";
+  margin-left: 5px;
+  color: red;
+}
+.form-request-contact .control label#field-checkbox-label {
+  font-weight: normal;
+}
+.form-request-contact .control label.error {
+  color: red;
+}
+.form-request-contact .control #field-comments {
+  height: 120px;
+  padding: 14px 20px 39px;
+}
+.form-request-contact .control #field-comments ~ label {
+  bottom: 76px;
+  line-height: initial;
+  top: 10px;
+}
+.form-request-contact .control #field-comments.input-content ~ label {
+  bottom: 6px;
+  top: unset;
+  background: rgba(255, 255, 255, 0.85);
 }

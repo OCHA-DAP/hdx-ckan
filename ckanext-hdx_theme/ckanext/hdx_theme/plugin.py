@@ -26,6 +26,7 @@ from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_loc
 from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
 from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.splash_page import hdx_splash
+from ckanext.hdx_users.helpers.token_creation_notification_helper import send_email_on_token_creation
 
 config = toolkit.config
 
@@ -250,6 +251,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_url_for': hdx_helpers.hdx_url_for,
             'hdx_check_http_response': hdx_helpers.hdx_check_http_response,
             'hdx_get_request_param': hdx_helpers.hdx_get_request_param,
+            'hdx_pending_request_data': hdx_helpers.hdx_pending_request_data,
             'HDX_CONST': const
         }
 
@@ -336,6 +338,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         # add to the schema from expire_api_token plugin
         schema['expires_in'].append(toolkit.get_validator('doesnt_exceed_max_validity_period'))
         return schema
+
+    # IApiToken
+    def postprocess_api_token(self, data, jti, data_dict):
+        send_email_on_token_creation(data_dict.get('user'), data_dict.get('name'), data.get('exp'))
+        return data
 
     # IBlueprint
     def get_blueprint(self):

@@ -57,6 +57,7 @@ ckan.module('hdx-modal-form', function($) {
                 }
                 var payload = {
                     message_content: this.options.message_content,
+                    package_id: this.options.post_data.package_id,
                     package_name: this.options.post_data.package_name,
                     package_title: this.options.post_data.package_title,
                     maintainers: JSON.stringify(this.options.post_data.maintainers),
@@ -90,12 +91,30 @@ ckan.module('hdx-modal-form', function($) {
         createModal: function(html) {
             if (!this.modal) {
                 var element = this.modal = jQuery(html);
+                var form = this.modal.find('form');
+
+                form.on('change', 'select', this._selectOnChange) // select "Other" values"
+                form.on('change', '#field-organization', this._organizationOnChange) // change org type
+                form.on('keyup', 'input[type="password"], input[type="text"], textarea', this._triggerInputDataClass) // input-value class
+
                 element.on('click', '.btn-primary', this._onSubmit);
                 element.on('click', '.btn-cancel', this._onCancel);
                 element.modal({
-                    show: false
+                    show: false,
+                    keyboard: false
                 });
                 this.modalFormError = this.modal.find('.alert-danger')
+
+                // init select2
+                var select2Inputs = ['#field-country', '#field-organization', '#field-organization-type', '#field-intend-message'];
+                $.each(select2Inputs, function(i, select2Input) {
+                  var $select2Input = form.find(select2Input);
+                  $select2Input.select2({
+                    containerCssClass: function() {
+                      return $select2Input.attr('required') ? 'required' : '';
+                    }
+                  });
+                });
             }
             return this.modal;
         },
@@ -119,8 +138,9 @@ ckan.module('hdx-modal-form', function($) {
             $.each(formElements, function(i, element) {
                 var value = element.value.trim();
 
-                if (element.required && value === '') {
-                    var hasError = element.parentElement.querySelector('.error-block')
+                var is_empty = ((element.type === 'checkbox') ? !element.checked : (value === '' || value === '-1'));
+                if (element.required && is_empty) {
+                    var hasError = element.querySelector('.error')
 
                     if (!hasError) {
                         this._showInputError(element, 'Missing value')
@@ -178,28 +198,51 @@ ckan.module('hdx-modal-form', function($) {
 
                     }
                 }.bind(this))
-                .error(function(error) {
+                .fail(function(error) {
                     this._showFormError(error.statusText);
                 }.bind(this));
             }
         },
         _onCancel: function(event) {
-            this._snippetReceived = false;
-            this._clearFormErrors()
+            this._clearFormErrors();
             this._resetModalForm();
         },
-        _showInputError: function(element, message) {
-            var div = document.createElement('div');
-            div.className = 'error-block';
-            div.textContent = message;
+        _selectOnChange: function(event) {
+          var $otherField = $(this.form).find('#' + this.getAttribute('id') + '-other');
+          var $otherFieldContainer = $otherField.parent();
 
-            element.parentElement.appendChild(div);
+          if(this.value === 'other') {
+            $otherField.attr('required', this.getAttribute('required'));
+            $otherFieldContainer.removeClass('hidden');
+          }
+          else {
+            $otherField.removeAttr('required').val('');
+            $otherFieldContainer.addClass('hidden');
+          }
+        },
+        _organizationOnChange: function(event) {
+          var org_type = $(this).select2().find(':selected').data('org-type');
+          $(this.form).find('#field-organization-type').select2('val', ((org_type) ? org_type : '-1')).trigger('change');
+        },
+        _triggerInputDataClass: function(event) {
+            if(this.value === '') {
+              $(this).removeClass('input-content');
+            }
+            else {
+                $(this).addClass('input-content');
+            }
+        },
+        _showInputError: function(element, message) {
+            if(element.type === 'checkbox') {
+              $(element).parent().addClass('error');
+            }
+            $(element).addClass('error');
         },
         _clearFormErrors: function() {
-            var errors = this.modal.find('.error-block');
+            var errors = this.modal.find('.error');
 
             $.each(errors, function(i, error) {
-                error.parentElement.removeChild(error);
+                $(error).removeClass('error');
             })
 
             this.modalFormError.addClass('hide');
@@ -208,6 +251,9 @@ ckan.module('hdx-modal-form', function($) {
         _showFormError: function(message) {
             this.modalFormError.removeClass('hide');
             this.modalFormError.text(message);
+            // Scroll to top of form
+            var form = this.modal.find('form');
+            form.scrollTop(0);
         },
         _showSuccessMsg: function(msg) {
             var div = document.createElement('div');
@@ -224,10 +270,11 @@ ckan.module('hdx-modal-form', function($) {
             currentDiv.append(div)
             this._resetModalForm();
         },
-        _resetModalForm: function(){
+        _resetModalForm: function() {
+            this._snippetReceived = false;
             this.modal.modal('hide');
-            // Clear form fields
-            this.modal.find('form')[0].reset();
+            this.modal.remove();
+            this.modal = null;
         },
         _disableActionButtons: function() {
             this.el.attr('disabled', 'disabled');

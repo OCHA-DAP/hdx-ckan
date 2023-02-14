@@ -1,5 +1,6 @@
 import re
 
+import ckan.authz as authz
 import ckan.lib.navl.dictization_functions as df
 import ckan.plugins.toolkit as tk
 
@@ -28,14 +29,16 @@ def general_value_in_list(value_list, allow_not_selected, not_selected_value='-1
 def doesnt_exceed_max_validity_period(key, data, errors, context):
     expires_in = data.get(key, 0)
     unit = data.get(('unit',), 0)
+    user = data.get(('user',))
+    max_days = 180 if authz.is_sysadmin(user) else 365
     try:
         unit = int(unit) # make sure the unit is an integer
     except ValueError as ve:
         raise df.Invalid(_('Unit needs to be an integer value'))
     seconds = expires_in * unit
-    max_seconds = 180 * 24 * 60 * 60
+    max_seconds = max_days * 24 * 60 * 60
     if seconds > max_seconds:
-        raise df.Invalid(_('Token needs to expire in maximum 180 days'))
+        raise df.Invalid(_('Token needs to expire in maximum {} days'.format(max_days)))
 
 
 # Regular expression for validating urls based on

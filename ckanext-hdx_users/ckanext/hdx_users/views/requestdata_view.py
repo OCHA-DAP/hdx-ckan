@@ -6,6 +6,7 @@ import ckan.model as model
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from ckan import logic
 from ckan.plugins import toolkit as tk
+from ckanext.requestdata.view_helper import process_extras_fields
 
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
@@ -185,15 +186,23 @@ def send_request():
 
     data_dict = {'id': data['package_id']}
     package = _get_action('package_show', data_dict)
+
     sender_name = data.get('sender_name', '')
     sender_email = data.get('email_address', '')
+
     user_obj = context['auth_user_obj']
     data_dict = {
         'id': user_obj.id,
         'permission': 'read'
     }
 
-    organizations = _get_action('hdx_organization_list_for_user', data_dict)
+    organizations = _get_action('organization_list_for_user', data_dict)
+    try:
+        sender_org = _get_action('organization_show', {'id': data.get('sender_organization_id')})
+    except NotFound:
+        sender_org = None
+
+    extras = json.loads(process_extras_fields(data, organizations, sender_org))
 
     orgs = []
     for i in organizations:
@@ -265,6 +274,7 @@ def send_request():
             'user_fullname': sender_name,
             'user_email': email,
             'msg': message,
+            'extras': extras,
             'org_name': package.get('organization').get('title'),
             'dataset_link': h.url_for('dataset_read', id=dataset_name, qualified=True),
             'dataset_title': dataset_title,

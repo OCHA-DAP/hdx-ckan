@@ -12,6 +12,7 @@ import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.requestdata.model as requestdata_model
 import ckanext.hdx_theme.version as version
 
 from six import text_type
@@ -185,15 +186,28 @@ def hdx_get_user_info(user_id):
     return user
 
 
-def hdx_get_org_member_info(user_id, org_name):
+def hdx_get_org_member_info(user_id, org_name=None):
     context = {'model': model, 'session': model.Session,
                'user': c.user or c.author}
-    try:
-        user = tk.get_action('hdx_basic_user_info')(context, {'id': user_id})
-        maint_pkgs = _get_packages_for_maintainer(context, user_id, org_name)
-        user['maint_pkgs'] = maint_pkgs
-    except logic.NotAuthorized:
-        base.abort(403, _('Unauthorized to see organization member list'))
+
+    if org_name:
+        org_list = [{'name': org_name}]
+    else:
+        org_list = tk.get_action('hdx_organization_list_for_user')(context, {'id': user_id})
+
+    user = tk.get_action('hdx_basic_user_info')(context, {'id': user_id})
+    orgs_data = []
+
+    for org in org_list:
+        try:
+            maint_pkgs = _get_packages_for_maintainer(context, user_id, org['name'])
+
+            if maint_pkgs:
+                org['pkgs'] = maint_pkgs
+                orgs_data.append(org)
+                user['maint_orgs_pkgs'] = orgs_data
+        except logic.NotAuthorized:
+            base.abort(403, _('Unauthorized to see organization member list'))
     return user
 
 
@@ -644,8 +658,10 @@ def hdx_methodology_list():
     return result
 
 
-def hdx_location_list():
-    top_values = ['world']
+def hdx_location_list(include_world=True):
+    top_values = []
+    if include_world:
+        top_values.append('world')
 
     top_locations = []
     bottom_locations = []
@@ -848,3 +864,7 @@ def hdx_url_for(*args, **kw):
 
 
 url_for = hdx_url_for
+
+
+def hdx_pending_request_data(user_id, package_id):
+    return requestdata_model.ckanextRequestdata.get_pending_request(package_id, user_id, ['new', 'open'])

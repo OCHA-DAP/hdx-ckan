@@ -1,6 +1,19 @@
 @import "../base/mixins";
 @import "../base/variables";
 
+@popupContentWidth: 100%;
+@popupWidth: 370px;
+@paddingNormal: 35px;
+@paddingSmall: 20px;
+@paddingLarge: 60px;
+@checkBoxSize: 12px;
+@bigColumnWidth: 445px;
+@baseHeight: 560px;
+@baseLineHeight: 20px;
+
+@inputHeight: 44px;
+@inputPadding: @paddingSmall;
+
 .modal.request-data-modal, .modal.in.request-data-modal{
   display: block;
   //position: relative;
@@ -684,6 +697,11 @@
 
   .requested-data-container__content-item--requested-by-info {
     margin-right: 30px !important;
+    .glyphicon-warning-sign {
+      color: orange;
+      margin-left: 2px;
+      margin-right: 2px;
+    }
   }
 
   .requested-data-container__content-item--actions-new {
@@ -717,3 +735,116 @@
 }
 
 
+.full-width {
+  width: 100%;
+}
+
+.form-request-contact {
+  overflow-y: scroll;
+  height: 400px;
+
+  .control {
+    position: relative;
+
+    input[type="text"], input[type="password"], textarea {
+      height: @inputHeight;
+      border-radius: 6px;
+      border: 1px solid white;
+      padding-left: @inputPadding;
+      font-size: 16px;
+      color: @darkGrayColor;
+
+      &:focus {
+        outline: none;
+      }
+
+      & ~ label {
+        color: #cccccc;
+        .sourceSansProFont(700, 16px);
+        opacity: 1;
+        position: absolute;
+        bottom: 0;
+        margin: 0;
+        left: @inputPadding;
+        line-height: @inputHeight;
+        cursor: text;
+
+        transition: 1s;
+
+        &:after {
+          content: "";
+        }
+      }
+
+      &.input-content ~ label {
+        .sourceSansProFont(400, 10px);
+        line-height: 10px;
+        color: @grayColor;
+        bottom: 1px;
+      }
+
+      &.required.input-content ~ label:after {
+        content: "";
+      }
+
+      &.required.error {
+        border-color: red;
+      }
+
+      &.required ~ label {
+        &:after {
+          content: "*";
+          margin-left: 5px;
+          color: red;
+        }
+      }
+
+    }
+
+    .select2-container {
+      &.error {
+        .select2-choice {
+          border-color: red;
+        }
+      }
+      &.required {
+        .select2-chosen {
+          &:after {
+            content: "*";
+            margin-left: 5px;
+            color: red;
+          }
+        }
+      }
+    }
+
+    label {
+      &#field-checkbox-label {
+        font-weight: normal;
+      }
+
+      &.error {
+        color: red;
+      }
+    }
+
+    @textAreaHeight: 120px;
+
+    #field-comments {
+      height: @textAreaHeight;
+      padding: 14px @paddingSmall 39px;
+
+      & ~ label {
+        bottom: @textAreaHeight - @inputHeight;
+        line-height: initial;
+        top: 10px;
+      }
+
+      &.input-content ~ label {
+        bottom: 6px;
+        top: unset;
+        background: rgba(255,255,255,.85);
+      }
+    }
+  }
+}

@@ -13,6 +13,7 @@ config = tk.config
 NotAuthorized = tk.NotAuthorized
 
 
+
 class TestMicrodataInQuarantineMetafields(hdx_test_base.HdxBaseTest):
     NORMAL_USER = 'quarantine_user'
     SYSADMIN_USER = 'testsysadmin'
@@ -311,3 +312,87 @@ class TestMicrodataInQuarantineMetafieldsCreateNewDataset(hdx_test_base.HdxBaseT
         assert package_dict.get('resources')[0].get('in_quarantine') is True
         assert package_dict.get('resources')[0].get('microdata') is True
 
+
+class TestMicrodataInQuarantineMetafieldsCreateUpdateDataset(hdx_test_base.HdxBaseTest):
+    NORMAL_USER = 'quarantine_user'
+    SYSADMIN_USER = 'testsysadmin'
+    PACKAGE_ID = 'test_dataset_2'
+
+    # PACKAGE_ID = 'test_dataset_1_microdata'
+
+    PACKAGE = {
+        "package_creator": "test function",
+        "private": False,
+        "dataset_date": "01/01/1960-12/31/2012",
+        "caveats": "These are the caveats",
+        "license_other": "TEST OTHER LICENSE",
+        "methodology": "This is a test methodology",
+        "dataset_source": "Test data",
+        "license_id": "hdx-other",
+        "name": PACKAGE_ID,
+        "notes": "This is a test dataset",
+        "title": "Test Dataset for Quarantine 2",
+        "owner_org": "org_name_4_quarantine",
+        "groups": [{"name": "roger"}],
+        "resources": [
+            {
+                'package_id': 'test_dataset_2',
+                'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+                'resource_type': 'file.upload',
+                'format': 'CSV',
+                'name': 'hdx_test.csv',
+                'microdata': True
+            }
+        ]
+    }
+
+    @classmethod
+    def _get_action(cls, action_name):
+        return tk.get_action(action_name)
+
+    @classmethod
+    def setup_class(cls):
+        super(TestMicrodataInQuarantineMetafieldsCreateUpdateDataset, cls).setup_class()
+        factories.User(name=cls.NORMAL_USER, email='quarantine_user@hdx.hdxtest.org')
+        factories.Organization(
+            name='org_name_4_quarantine',
+            title='ORG NAME FOR QUARANTINE',
+            users=[
+                {'name': cls.NORMAL_USER, 'capacity': 'admin'},
+            ],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+
+        context = {'model': model, 'session': model.Session, 'user': cls.NORMAL_USER}
+        dataset_dict = cls._get_action('package_create')(context, cls.PACKAGE)
+        cls.RESOURCE_ID = dataset_dict['resources'][0]['id']
+
+    def test_normal_user_change_microdata(self):
+        context = {'model': model, 'session': model.Session, 'user': self.NORMAL_USER}
+        package_dict = self._get_action('package_show')(context, {'id': self.PACKAGE_ID})
+        assert package_dict.get('resources')[0].get('in_quarantine') is True
+        assert package_dict.get('resources')[0].get('microdata') is True
+
+        resource = {
+            'package_id': package_dict.get('id'),
+            'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/test_file.geojson',
+            'resource_type': 'file.upload',
+            'format': 'JSON',
+            'name': 'resource_create_test1.geojson'
+        }
+
+        res_list = [resource]
+        res_list.append(package_dict.get('resources')[0])
+
+        self.PACKAGE['resources'] = res_list
+        self.PACKAGE['id'] = package_dict.get('id')
+        try:
+            package_dict = self._get_action('package_update')(context, self.PACKAGE)
+        except Exception as ex:
+            assert False
+
+        package_dict = self._get_action('package_show')(context, {'id': self.PACKAGE_ID})
+        assert 'in_quarantine' not in package_dict.get('resources')[0]
+        assert package_dict.get('resources')[1].get('in_quarantine') is True
+        assert True

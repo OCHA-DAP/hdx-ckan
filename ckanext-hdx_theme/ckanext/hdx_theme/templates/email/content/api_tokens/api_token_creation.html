@@ -1,0 +1,23 @@
+<p>Dear {{ data.full_name }},</p>
+
+<p>A new API token has been created for your HDX account. If you created the token yourself, then you can disregard this email.</p>
+
+<div>
+  <p>Otherwise, it's possible that someone else has access to your HDX account. In this case you should:</p>
+  <ol>
+    <li>change the password of your HDX account</li>
+    <li>revoke all your API tokens and then create new ones. <a href="{{ data.api_tokens_url }}">Manage tokens here.</a></li>
+    <li>let us know about this issue at <a href="mailto:hdx@humdata.org" target="_blank">hdx@humdata.org</a></li>
+  </ol>
+</div>
+
+<div>
+  <p>Token details:</p>
+  <ul>
+    <li>Token name: <a href="{{ data.api_tokens_url }}">{{ data.token_name }}</a> </li>
+    <li>Expires: {{ data.expires }} (UTC time) </li>
+  </ul>
+</div>
+
+<p>To manage your tokens go to <a href="{{ data.api_tokens_url }}">{{data.api_tokens_url}} .</a></p>
+
