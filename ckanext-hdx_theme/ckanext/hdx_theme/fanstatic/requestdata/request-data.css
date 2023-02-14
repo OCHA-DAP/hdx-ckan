@@ -784,11 +784,15 @@
 }
 .form-request-contact .control #field-comments {
   height: 120px;
-  padding: 14px 20px;
+  padding: 14px 20px 39px;
 }
 .form-request-contact .control #field-comments ~ label {
   bottom: 76px;
+  line-height: initial;
+  top: 10px;
 }
 .form-request-contact .control #field-comments.input-content ~ label {
   bottom: 6px;
+  top: unset;
+  background: rgba(255, 255, 255, 0.85);
 }
