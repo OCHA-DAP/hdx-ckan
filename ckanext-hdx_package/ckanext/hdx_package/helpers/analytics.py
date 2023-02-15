@@ -441,6 +441,8 @@ class AbstractResourceAnalyticsSender(AbstractAnalyticsSender):
                     'dataset id': dataset_dict.get('id'),
                     'org name': dataset_dict.get('organization', {}).get('name'),
                     'org id': dataset_dict.get('organization', {}).get('id'),
+                    "group names": location_names,
+                    "group ids": location_ids,
                     'is archived': dataset_is_archived,
                     'event source': 'api',
                 },
@@ -472,9 +474,10 @@ class QAPiiAnalyticsSender(AbstractResourceAnalyticsSender):
         self.new_pii_value = new_pii_value
         self.old_pii_value = resource_dict.get('pii_report_flag')
 
-        self.analytics_dict['event_name'] = 'qa set pii'
-        self.analytics_dict['mixpanel_meta']['flag value'] = new_pii_value
-        self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_pii_value),  # event action
+        if self.analytics_dict: # might not be initialized in case of tests
+            self.analytics_dict['event_name'] = 'qa set pii'
+            self.analytics_dict['mixpanel_meta']['flag value'] = new_pii_value
+            self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_pii_value),  # event action
 
     def should_send_analytics_event(self):
         return self.new_pii_value != self.old_pii_value
@@ -487,9 +490,10 @@ class QASdcAnalyticsSender(AbstractResourceAnalyticsSender):
         self.new_sdc_value = new_sdc_value
         self.old_sdc_value = resource_dict.get('sdc_report_flag')
 
-        self.analytics_dict['event_name'] = 'qa set sdc'
-        self.analytics_dict['mixpanel_meta']['flag value'] = new_sdc_value
-        self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_sdc_value),  # event action
+        if self.analytics_dict:  # might not be initialized in case of tests
+            self.analytics_dict['event_name'] = 'qa set sdc'
+            self.analytics_dict['mixpanel_meta']['flag value'] = new_sdc_value
+            self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_sdc_value),  # event action
 
     def should_send_analytics_event(self):
         return self.new_sdc_value != self.old_sdc_value
