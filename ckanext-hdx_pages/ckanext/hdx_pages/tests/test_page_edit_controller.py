@@ -25,7 +25,6 @@ page_elnino = {
     'type': 'event',
     'status': 'ongoing',
     'groups': [LOCATION],
-    'tag_string': 'some_tag',
     'state': 'active',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
@@ -47,7 +46,6 @@ class TestHDXControllerPage(object):
             'save_custom_page': 'active',
             'hdx_counter': '2',
             'groups': [LOCATION],
-            'tag_string': 'some_new_tag',
             'field_section_0_data_url': 'https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21',
             'field_section_0_max_height': '350px',
             'field_section_0_section_title': 'El Nino Affected Countries',
@@ -87,12 +85,23 @@ class TestHDXControllerPage(object):
         user = model.User.by_name(SYSADMIN)
 
         try:
-            res = app.post(url_for(u'hdx_custom_page.edit', id=page_elnino.get('name')), data=post_params,
+            res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
                                 environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert True
         except Exception as ex:
             assert False
         assert '302 FOUND' in res.status
+
+        post_params['tag_string'] = 'some_new_tag'
+        try:
+            res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
+                           environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            assert True
+            assert 'Tag some_new_tag not found.' in res.body
+        except Exception as ex:
+            assert True
+        assert '200 OK' in res.status
+        del post_params['tag_string']
 
         elnino = _get_action('page_show')(context, {'id': page_dict.get('id')})
         assert elnino
