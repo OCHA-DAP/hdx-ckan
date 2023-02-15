@@ -15,8 +15,9 @@ import ckan.logic.action.create as core_create
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_package.helpers.fs_check as fs_check
-import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.resource_triggers.common
+import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
+import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
@@ -31,7 +32,7 @@ NotFound = logic.NotFound
 log = logging.getLogger(__name__)
 
 
-@fs_check.fs_check_4_resources
+# @fs_check.fs_check_4_resources
 @geopreview.geopreview_4_resources
 def resource_create(context, data_dict):
     '''
@@ -78,7 +79,9 @@ def resource_create(context, data_dict):
 
 
 @analytics.analytics_wrapper_4_package_create
-@geopreview.geopreview_4_packages
+@ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
+    [geopreview._before_ckan_action, fs_check._before_ckan_action],
+    [geopreview._after_ckan_action, fs_check._after_ckan_action])
 def package_create(context, data_dict):
     '''Create a new dataset (package).
 

@@ -33,7 +33,7 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from ckan.lib import uploader
 from ckan.lib.munge import munge_filename
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.resource_format import resource_format_autocomplete, guess_format_from_extension
 from ckanext.hdx_package.helpers.resource_grouping import ResourceGrouping
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
