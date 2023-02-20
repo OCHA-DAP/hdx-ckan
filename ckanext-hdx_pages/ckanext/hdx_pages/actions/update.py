@@ -13,29 +13,23 @@ NotFound = logic.NotFound
 def page_update(context, data_dict):
     logic.check_access('page_update', context, data_dict)
 
+    page = pages_model.Page.get_by_id(id=data_dict['id'])
+    validation.page_id_validator(page, context)
+    validation.page_title_validator(data_dict, context)
     validation.page_name_validator(data_dict, context)
 
-    try:
-        session = context['session']
-        page = pages_model.Page.get_by_id(id=data_dict['id'])
-        if page is None:
-            raise NotFound
+    populate_page(page, data_dict)
 
-        populate_page(page, data_dict)
+    groups = data_dict.get('groups')
+    process_groups(context, page, groups)
 
-        groups = data_dict.get('groups')
-        process_groups(context, page, groups)
+    tags = data_dict.get('tags')
+    process_tags(context, page, tags)
 
-        tags = data_dict.get('tags')
-        process_tags(context, page, tags)
-
-        session.add(page)
-        session.commit()
-        return dictize.page_dictize(page)
-    except Exception as e:
-        ex_msg = e.message if hasattr(e, 'message') else str(e)
-        message = 'Something went wrong while processing the request: {}'.format(ex_msg)
-        raise logic.ValidationError({'message': message}, error_summary=message)
+    session = context['session']
+    session.add(page)
+    session.commit()
+    return dictize.page_dictize(page)
 
 
 def process_groups(context, page, groups):
@@ -71,6 +65,8 @@ def process_tags(context, page, tags):
 
             if tag_id:
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag.get('id'), defer_commit=True)
+            else:
+                raise logic.ValidationError({'tag_string': ["Tag %s not found" % tag.get('name')]})
 
 
 def populate_page(page, data_dict):

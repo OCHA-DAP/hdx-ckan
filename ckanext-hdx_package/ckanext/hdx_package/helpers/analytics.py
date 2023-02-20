@@ -272,6 +272,7 @@ def analytics_wrapper_4_package_create(original_package_action):
 
     return package_action
 
+
 class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
 
     def __init__(self, dataset_dict):
@@ -365,16 +366,13 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
 
 class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
 
-    def __init__(self, package_id, resource_id, new_quarantine_value):
+    def __init__(self, dataset_dict, resource_id, new_quarantine_value):
         super(QAQuarantineAnalyticsSender, self).__init__()
 
         self.old_quarantine_value = False
         self.new_quarantine_value = new_quarantine_value
 
         try:
-            context = {'model': model, 'session': model.Session,
-                       'user': g.user or g.author, 'auth_user_obj': g.userobj}
-            dataset_dict = get_action('package_show')(context, {'id': package_id})
             resource_dict = next(r for r in dataset_dict.get('resources', {}) if r.get('id') == resource_id)
 
             dataset_title = dataset_dict.get('title', dataset_dict.get('name'))
@@ -418,3 +416,84 @@ class QAQuarantineAnalyticsSender(AbstractAnalyticsSender):
 
     def should_send_analytics_event(self):
         return self.old_quarantine_value != self.new_quarantine_value
+
+
+class AbstractResourceAnalyticsSender(AbstractAnalyticsSender):
+
+    def __init__(self, dataset_dict, resource_dict):
+        super(AbstractResourceAnalyticsSender, self).__init__()
+
+        try:
+            context = {'model': model, 'session': model.Session,
+                       'user': g.user or g.author, 'auth_user_obj': g.userobj}
+            location_names, location_ids = extract_locations(dataset_dict)
+            dataset_title = dataset_dict.get('title', dataset_dict.get('name'))
+            dataset_is_cod = is_cod(dataset_dict) == 'true'
+            dataset_is_indicator = is_indicator(dataset_dict) == 'true'
+            dataset_is_archived = is_archived(dataset_dict) == 'true'
+
+            self.analytics_dict = {
+                # 'event_name': 'EVENT NAME', # Needs to be set in subclass
+                'mixpanel_meta': {
+                    'resource name': resource_dict.get('name'),
+                    'resource id': resource_dict.get('id'),
+                    'dataset name': dataset_dict.get('name'),
+                    'dataset id': dataset_dict.get('id'),
+                    'org name': dataset_dict.get('organization', {}).get('name'),
+                    'org id': dataset_dict.get('organization', {}).get('id'),
+                    "group names": location_names,
+                    "group ids": location_ids,
+                    'is archived': dataset_is_archived,
+                    'event source': 'api',
+                },
+                'ga_meta': {
+                    'ec': 'resource',  # event category
+                    'el': u'{} ({})'.format(resource_dict.get('name'), dataset_title),  # event label
+                    'cd1': dataset_dict.get('organization', {}).get('name'),
+                    'cd2': _ga_dataset_type(dataset_is_indicator, dataset_is_cod),  # type
+                    'cd3': _ga_location(location_names),  # locations
+
+                }
+            }
+
+        except NotFound as e:
+            abort(404, _('Resource not found'))
+        except NotAuthorized as e:
+            abort(403, _('Unauthorized to read resource %s') % id)
+        except Exception as e:
+            log.error('Unexpected error {}'.format(e))
+
+    def should_send_analytics_event(self):
+        raise NotImplemented('should_send_analytics_event is not implemented in {}'.format(self.__class__.__name__))
+
+
+class QAPiiAnalyticsSender(AbstractResourceAnalyticsSender):
+
+    def __init__(self, dataset_dict, resource_dict, new_pii_value):
+        super(QAPiiAnalyticsSender, self).__init__(dataset_dict, resource_dict)
+        self.new_pii_value = new_pii_value
+        self.old_pii_value = resource_dict.get('pii_report_flag')
+
+        if self.analytics_dict: # might not be initialized in case of tests
+            self.analytics_dict['event_name'] = 'qa set pii'
+            self.analytics_dict['mixpanel_meta']['flag value'] = new_pii_value
+            self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_pii_value),  # event action
+
+    def should_send_analytics_event(self):
+        return self.new_pii_value != self.old_pii_value
+
+
+class QASdcAnalyticsSender(AbstractResourceAnalyticsSender):
+
+    def __init__(self, dataset_dict, resource_dict, new_sdc_value):
+        super(QASdcAnalyticsSender, self).__init__(dataset_dict, resource_dict)
+        self.new_sdc_value = new_sdc_value
+        self.old_sdc_value = resource_dict.get('sdc_report_flag')
+
+        if self.analytics_dict:  # might not be initialized in case of tests
+            self.analytics_dict['event_name'] = 'qa set sdc'
+            self.analytics_dict['mixpanel_meta']['flag value'] = new_sdc_value
+            self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_sdc_value),  # event action
+
+    def should_send_analytics_event(self):
+        return self.new_sdc_value != self.old_sdc_value

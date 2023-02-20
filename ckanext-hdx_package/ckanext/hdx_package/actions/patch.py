@@ -8,7 +8,8 @@ from ckan.logic import (
 
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
-from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
+from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender, \
+    QAPiiAnalyticsSender, QASdcAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import delete_geopreview_layer
@@ -156,16 +157,37 @@ def hdx_qa_resource_patch(context, data_dict):
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
     resource_dict = _get_action('resource_show')(context, {'id': data_dict.get('id')})
+    dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
+
     pkg_id = resource_dict.get('package_id')
+    data_revise_dict = {'match': {'id': pkg_id}}
+
+    _send_analytics_for_pii_if_needed(data_dict, dataset_dict, resource_dict)
+    _send_analytics_for_sdc_if_needed(data_dict, dataset_dict, resource_dict)
+    _do_quarantine_related_processing_if_needed(context, data_dict, data_revise_dict, dataset_dict, resource_dict)
+
+    update_resource_dict = {key: value for key, value in data_dict.items() if key != 'id'}
+    if update_resource_dict:
+        data_revise_dict['update__resources__' + resource_dict.get('id')] = update_resource_dict
+
+    if len(data_revise_dict.keys()) <= 1:
+        raise NotFound("resource id, key or value were not provided")
+    revise_response = _get_action('package_revise')(context, data_revise_dict)
+    package = revise_response.get('package', {})
+    resource_dict = next((res for res in package.get('resources', []) if res.get('id') == resource_dict['id']), None)
+    return resource_dict
+
+
+def _do_quarantine_related_processing_if_needed(context, data_dict, data_revise_dict, dataset_dict, resource_dict):
     new_quarantine_value = data_dict.get('in_quarantine')
-
-    analytics_sender = QAQuarantineAnalyticsSender(pkg_id, resource_dict.get('id'), new_quarantine_value == 'true')
-    if analytics_sender.should_send_analytics_event():
-        analytics_sender.send_to_queue()
-
-    # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
     if new_quarantine_value is not None:
-        dataset_dict = _get_action('package_show')(context, {'id': resource_dict['package_id']})
+        # if new quarantine value is either true or false send analytics if value changed
+        analytics_sender = QAQuarantineAnalyticsSender(dataset_dict,
+                                                       resource_dict.get('id'), new_quarantine_value == 'true')
+        if analytics_sender.should_send_analytics_event():
+            analytics_sender.send_to_queue()
+
+        # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
         tag_s3_version_by_resource_id(
             {
                 'model': context['model'],
@@ -177,18 +199,27 @@ def hdx_qa_resource_patch(context, data_dict):
             resource_dict.get('url'),
             dataset_dict.get('name')
         )
-    data_revise_dict = {'match': {'id': pkg_id}}
     _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict)
-    for item in data_dict.keys():
-        if data_dict[item] != 'id':
-            data_revise_dict['update__resources__' + resource_dict.get('id')[:5]] = {item: data_dict[item]}
 
-    if len(data_revise_dict.keys()) <= 1:
-        raise NotFound("resource id, key or value were not provided")
-    revise_response = _get_action('package_revise')(context, data_revise_dict)
-    package = revise_response.get('package', {})
-    resource_dict = next((res for res in package.get('resources', []) if res.get('id') == resource_dict['id']), None)
-    return resource_dict
+
+def _send_analytics_for_pii_if_needed(data_dict, dataset_dict, resource_dict):
+    new_pii_report_flag = data_dict.get('pii_report_flag')
+    pii_analytics_sender = None
+    if new_pii_report_flag is not None:
+        pii_analytics_sender = QAPiiAnalyticsSender(dataset_dict, resource_dict, new_pii_report_flag)
+        if pii_analytics_sender.should_send_analytics_event():
+            pii_analytics_sender.send_to_queue()
+    return pii_analytics_sender
+
+
+def _send_analytics_for_sdc_if_needed(data_dict, dataset_dict, resource_dict):
+    new_sdc_report_flag = data_dict.get('sdc_report_flag')
+    sdc_analytics_sender = None
+    if new_sdc_report_flag is not None:
+        sdc_analytics_sender = QASdcAnalyticsSender(dataset_dict, resource_dict, new_sdc_report_flag)
+        if sdc_analytics_sender.should_send_analytics_event():
+            sdc_analytics_sender.send_to_queue()
+    return sdc_analytics_sender
 
 
 def _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict):

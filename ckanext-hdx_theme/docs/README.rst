@@ -25,6 +25,8 @@ SPECIAL FIELDS
 --------------
 Information about the fields and the dataset creation form can be found here `Special Dataset Fields <special_fields/index.rst>`_
 
+Information about the PII fields can be found here `PII Fields <special_fields/pii.rst>`_
+
 
 HOW TO ADD A NEW FIELD
 ----------------------

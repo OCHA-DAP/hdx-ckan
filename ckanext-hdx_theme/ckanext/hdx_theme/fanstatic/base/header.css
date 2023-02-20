@@ -673,9 +673,15 @@ ul.dataset-resources li.label-icons span.icn-txt-cods {
   padding: 4px;
   border-radius: 10px;
   line-height: 1;
+  display: inline-block;
+}
+span.icn-txt-cods:hover,
+ul.dataset-resources li.label-icons span.icn-txt-cods:hover {
+  background-color: #1ebfb3;
 }
 .dataset-content .icn-txt-cods {
   margin-right: 5px;
+  display: inline-block;
 }
 ul.dataset-resources {
   display: flex;
@@ -2904,6 +2910,12 @@ textarea {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 300;
   font-size: 15px;
+}
+.hdx-form .control-group.error .controls input {
+  border: 1px solid #f2645a;
+}
+.hdx-form .control-group.error .controls .error-block {
+  color: #f2645a;
 }
 .hdx-form .form-horizontal .form-group {
   margin-left: 0;
