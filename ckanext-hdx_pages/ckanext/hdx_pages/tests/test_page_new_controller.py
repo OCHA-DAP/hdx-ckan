@@ -44,6 +44,7 @@ class TestHDXPageController(object):
             'type': 'event',
             'status': 'ongoing',
             'state': 'active',
+            'show_title': 'off',
             'save_custom_page': 'active',
             'hdx_counter': '2',
             'groups': [LOCATION],
@@ -64,6 +65,7 @@ class TestHDXPageController(object):
         auth = {'Authorization': str(user.apikey)}
         url = url_for(u'hdx_custom_page.new')
         post_params = self._get_page_post_param()
+        initial_post_params = self._get_page_post_param()
 
         try:
             res = app.post(url, data=post_params, extra_environ={"REMOTE_USER": USER})
@@ -84,7 +86,16 @@ class TestHDXPageController(object):
         assert elnino
         assert 'El Nino Lorem Ipsum' in elnino.get('title')
         assert 'elnino' in elnino.get('name')
+        assert 'show_title' in elnino.get('extras') and elnino.get('extras').get('show_title') == 'off'
 
+        del post_params['title']
+        try:
+            res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            assert 'Page title cannot be empty' in res.body
+        except Exception as ex:
+            assert False
+
+        post_params['title'] = initial_post_params['title']
         del post_params['name']
         try:
             res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)

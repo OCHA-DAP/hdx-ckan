@@ -50,7 +50,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="show_title" {% if not data.extras or not data.extras.show_title or data.extras.show_title == 'on' %}checked{% endif %}/>
+                                    <input type="checkbox" name="show_title" {% if (data.extras is not defined or data.extras.show_title is not defined) or data.extras.show_title == 'on' %}checked{% endif %}/>
                                     Display page title
                                 </label>
                             </div>

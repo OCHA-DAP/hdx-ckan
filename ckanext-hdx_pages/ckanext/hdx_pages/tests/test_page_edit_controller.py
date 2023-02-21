@@ -26,6 +26,7 @@ page_elnino = {
     'status': 'ongoing',
     'groups': [LOCATION],
     'state': 'active',
+    'extras': '{"show_title": "on"}',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
@@ -64,6 +65,7 @@ class TestHDXControllerPage(object):
         assert page_dict
         assert 'El Pico' not in page_dict.get('title')
         assert 'Lorem Ipsum is simply dummy text' in page_dict.get('description')
+        assert 'show_title' in page_dict.get('extras') and page_dict.get('extras').get('show_title') == 'on'
 
         user = model.User.by_name(USER)
 
