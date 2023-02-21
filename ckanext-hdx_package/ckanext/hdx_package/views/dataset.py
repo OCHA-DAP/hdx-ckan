@@ -102,7 +102,8 @@ def read(id):
     log.debug('Reading dataset {}: checking which resources can be previewed'.format(pkg_dict.get('name')))
     # can the resources be previewed?
     for resource in pkg_dict['resources']:
-        resource_views = get_action('resource_view_list')(context, {'id': resource['id']})
+        resource_views = [] if resource.get('in_quarantine') is True else get_action('resource_view_list')(context, {
+            'id': resource['id']})
         resource['has_views'] = bool(_find_default_view(resource, resource_views))
         resource['resource_views'] = resource_views
 
@@ -195,7 +196,8 @@ def read(id):
     }
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
-        view_enabled_resources = [r for r in pkg_dict['resources'] if r.get('no_preview') != 'true']
+        view_enabled_resources = [r for r in pkg_dict['resources'] if
+                                  r.get('no_preview') != 'true' and r.get('in_quarantine') is not True]
         dataset_preview_enabled_list = []
         dataset_preview_disabled_list = []
         if _dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID:
