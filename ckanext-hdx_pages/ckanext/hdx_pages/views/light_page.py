@@ -242,6 +242,7 @@ def _populate_sections():
                  "type": request.form.get("type"),
                  "status": request.form.get("status"),
                  "description": request.form.get("description"),
+                 "extras": json.dumps({"show_title": request.form.get("show_title", "off")}),
                  "sections": json.dumps(sections),
                  "groups": _process_groups(data_dict_temp.get("groups", [])),
                  "tags": _process_tags(data_dict_temp.get("tag_string", "")),
@@ -249,7 +250,7 @@ def _populate_sections():
                  request.form.get("type") or 'event': checked,
                  request.form.get("status") or 'ongoing': checked,
                  "hdx_counter": len(sections),
-                 "id": request.form.get("hdx_page_id"),
+                 "id": request.form.get("id"),
                  'state': request.form.get("save_custom_page") or request.form.get("save_as_draft_custom_page")}
     return page_dict
 
@@ -291,9 +292,8 @@ def _init_extra_vars_edit(extra_vars):
     _status = _data['status'] or 'ongoing'
     _data[_status] = checked
     _data['hdx_counter'] = len(_data['sections'])
-    _data['hdx_page_id'] = _data.get('id')
-    _data['mode'] = 'edit'
     _data['description'] = _data.get('description')
+    _data['extras'] = _data.get('extras') or json.loads('{"show_title": "on"}')
 
 
 # Class definitions
@@ -338,7 +338,7 @@ class CreateView(MethodView):
         except NotAuthorized:
             abort(404, _('Page not found'))
 
-        return render('pages/edit_page.html', extra_vars)
+        return render('pages/edit_page.html', extra_vars=extra_vars)
 
 
 class EditView(MethodView):
@@ -356,33 +356,23 @@ class EditView(MethodView):
         # checking pressed button
         active_page = request.form.get('save_custom_page')
         draft_page = request.form.get('save_as_draft_custom_page')
-        _delete_page = request.form.get('delete_custom_page')
         state = active_page or draft_page
 
         # saving a new page
-        if (state or _delete_page) and not errors:
-            if state:
-                page_dict = _populate_sections()
-                page_dict['id'] = id
-                try:
-                    updated_page = get_action('page_update')(context, page_dict)
-                    _update_lunr()
-                except logic.ValidationError as e:
-                    errors = e.error_dict
-                    error_summary = e.error_summary
-                    return self.post(id, page_dict, errors, error_summary)
+        if state and not errors:
+            page_dict = _populate_sections()
+            page_dict['id'] = id
+            try:
+                updated_page = get_action('page_update')(context, page_dict)
+                _update_lunr()
+            except logic.ValidationError as e:
+                errors = e.error_dict
+                error_summary = e.error_summary
+                return self.post(id, page_dict, errors, error_summary)
 
-                _blueprint = _generate_action_name(updated_page.get("type"))
+            _blueprint = _generate_action_name(updated_page.get("type"))
 
-                return h.redirect_to(_blueprint, id=updated_page.get("id"))
-
-            elif _delete_page:
-                try:
-                    get_action('page_delete')(context, {'id': id})
-                    _update_lunr()
-                except Exception as ex:
-                    abort(404, _('There was an error. Please contact the admin'))
-                return h.redirect_to(u'home.index')
+            return h.redirect_to(_blueprint, id=updated_page.get("id"))
 
         return render('pages/edit_page.html', extra_vars=extra_vars)
 
@@ -402,6 +392,7 @@ class EditView(MethodView):
             return render('pages/edit_page.html', extra_vars=extra_vars)
         except NotFound:
             abort(404, _('Page not found'))
+
 
 class DeleteView(MethodView):
     def post(self, id, data=None, errors=None, error_summary=None):
@@ -444,6 +435,7 @@ class DeleteView(MethodView):
     #     _init_extra_vars_edit(extra_vars)
     #
     #     return render('pages/edit_page.html', extra_vars=extra_vars)
+
 
 # Rules definitions
 hdx_light_event.add_url_rule(u'/<id>', view_func=read_light_event)
