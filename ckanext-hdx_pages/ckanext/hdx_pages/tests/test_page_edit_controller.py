@@ -52,8 +52,7 @@ class TestHDXControllerPage(object):
             'field_section_0_type': 'map',
             'field_section_1_data_url': 'https://data.humdata.local/search?q=el%20nino',
             'field_section_1_section_title': 'Data',
-            'field_section_1_type': 'data_list',
-            'hdx_page_id': ''
+            'field_section_1_type': 'data_list'
         }
 
     # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
@@ -69,7 +68,6 @@ class TestHDXControllerPage(object):
         user = model.User.by_name(USER)
 
         post_params = self._get_page_post_param()
-        post_params['hdx_page_id'] = page_dict.get('id')
 
         url = url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         try:
@@ -96,10 +94,9 @@ class TestHDXControllerPage(object):
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
                            environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
-            assert True
-            assert 'Tag some_new_tag not found.' in res.body
+            assert 'Tag some_new_tag not found' in res.body
         except Exception as ex:
-            assert True
+            assert False
         assert '200 OK' in res.status
         del post_params['tag_string']
 
@@ -115,4 +112,3 @@ class TestHDXControllerPage(object):
                                 environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
         except Exception as ex:
             assert True
-

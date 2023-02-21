@@ -28,6 +28,17 @@
                         <p> When you finish, you have options to <strong>see a preview</strong> (then publish or further edit) or <strong>save as draft</strong> (can be accessed by you and by sysadmins) which lets you come back for further editing</p>
                     </div>
                     <div class="col-xs-9">
+                        {% if errors %}
+                          <div class="alert alert-danger error-explanation">
+                            <p>{{ _('The form contains invalid entries:') }}</p>
+                            <ul>
+                              {% for key, field_errors in errors.items() %}
+                                <li>{{ key }}: {% for field_error in field_errors %}{{ field_error }}{% if not loop.last %}, {% endif %}{% endfor %}</li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+
                         {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required', 'control-full', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
                         {% set prefix = h.url_for('hdx_event.read_event',id='', qualified=true) %}
                         {% set full_domain_event = h.url_for('hdx_event.read_event',id='', qualified=true) %}
@@ -35,6 +46,15 @@
                         {% set domain = prefix|replace("http://", "")|replace("https://", "") %}
                         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<my-page>'} %}
                         {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, attrs=attrs) }}
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="show_title" {% if not data.extras or not data.extras.show_title or data.extras.show_title == 'on' %}checked{% endif %}/>
+                                    Display page title
+                                </label>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label">This page is located under</label>
@@ -158,18 +178,30 @@
             <div class="paddingLeftHack paddingRightHack">
                 <div class="row">
                     <div class="col-xs-offset-3 col-xs-9">
-                        {% if data.mode and data.mode=='edit' %}
-                            <button class="btn btn btn-danger pull-left" id="delete_custom_page" name="delete_custom_page" value="delete">Delete This Page</button>
+                        {% if data.id %}
+                          <a class="btn btn btn-danger pull-left"
+                             href="#confirmation-div-{{ data.id }}"
+                             data-toggle="modal" title="{{ _('Delete This Page') }}">{{ _('Delete This Page') }}
+                          </a>
                         {% endif %}
                         <button class="btn btn-primary pull-right" id="save_custom_page" type="submit" name="save_custom_page" value="active">Save This Page</button>
                         <button class="btn btn-primary pull-right mR30" id="save_as_draft_custom_page" type="submit" name="save_as_draft_custom_page" value="draft">Save As Draft</button>
                         <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{data.hdx_counter}}"/>
-                        <input type="hidden" id="hdx_page_id" name="hdx_page_id" value="{{data.hdx_page_id}}"/>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
+    {% if data.id %}
+        {% snippet 'snippets/confirmation_post.html',
+          form_url=h.url_for('hdx_custom_page.delete_page', id=data.id),
+          modal_div_id='confirmation-div-' + data.id,
+          header='Confirm',
+          body='Are you sure you want to delete this page?',
+          confirm_btn_label='Confirm' %}
+    {% endif %}
+
     <div class="col-xs-12 hdx-invisible-element pTopBottom15" id="section_template">
         <div class="row">
             <div class="col-xs-9">

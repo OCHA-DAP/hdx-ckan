@@ -53,8 +53,7 @@ class TestHDXPageController(object):
             'field_section_0_type': 'map',
             'field_section_1_data_url': 'https://data.humdata.local/search?q=el%20nino',
             'field_section_1_section_title': 'Data',
-            'field_section_1_type': 'data_list',
-            'hdx_page_id': ''
+            'field_section_1_type': 'data_list'
         }
 
     # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")

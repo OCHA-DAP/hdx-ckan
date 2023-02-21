@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 import ckan.logic as logic
 
@@ -8,6 +9,7 @@ import ckanext.hdx_pages.actions.validation as validation
 import ckanext.hdx_package.helpers.helpers as pkg_h
 
 NotFound = logic.NotFound
+log = logging.getLogger(__name__)
 
 
 def page_update(context, data_dict):
@@ -18,18 +20,25 @@ def page_update(context, data_dict):
     validation.page_title_validator(data_dict, context)
     validation.page_name_validator(data_dict, context)
 
-    populate_page(page, data_dict)
+    try:
+        populate_page(page, data_dict)
 
-    groups = data_dict.get('groups')
-    process_groups(context, page, groups)
+        groups = data_dict.get('groups')
+        process_groups(context, page, groups)
 
-    tags = data_dict.get('tags')
-    process_tags(context, page, tags)
+        tags = data_dict.get('tags')
+        process_tags(context, page, tags)
 
-    session = context['session']
-    session.add(page)
-    session.commit()
-    return dictize.page_dictize(page)
+        session = context['session']
+        session.add(page)
+        session.commit()
+        return dictize.page_dictize(page)
+    except logic.ValidationError as e:
+        raise logic.ValidationError(e.error_dict)
+    except Exception as e:
+        msg = str(e)
+        log.error(msg)
+        raise logic.ValidationError({'message': ['Something went wrong while processing the request: %s' % msg]})
 
 
 def process_groups(context, page, groups):
@@ -66,7 +75,7 @@ def process_tags(context, page, tags):
             if tag_id:
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag.get('id'), defer_commit=True)
             else:
-                raise logic.ValidationError({'tag_string': ["Tag %s not found" % tag.get('name')]})
+                raise logic.ValidationError({'tag_string': ['Tag %s not found' % tag.get('name')]})
 
 
 def populate_page(page, data_dict):
@@ -77,4 +86,5 @@ def populate_page(page, data_dict):
     page.state = data_dict.get('state')
     page.sections = data_dict.get('sections')
     page.status = data_dict.get('status')
+    page.extras = data_dict.get('extras')
     page.modified = datetime.datetime.now()
