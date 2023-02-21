@@ -52,7 +52,10 @@
     margin-top: 8px;
     padding: 0;
     li {
-        display: inline;
+      display: inline;
+      & ~ li {
+        margin-left: 3px;
+      }
     }
 
     [class^="icon-"], [class*=" icon-"] {
