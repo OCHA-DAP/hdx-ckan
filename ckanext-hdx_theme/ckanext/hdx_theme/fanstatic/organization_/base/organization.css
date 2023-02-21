@@ -768,6 +768,9 @@ body {
 .dataset-resources li {
   display: inline;
 }
+.dataset-resources li ~ li {
+  margin-left: 3px;
+}
 .dataset-resources [class^="icon-"],
 .dataset-resources [class*=" icon-"] {
   display: inline-block;
