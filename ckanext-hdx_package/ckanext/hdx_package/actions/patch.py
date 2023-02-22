@@ -188,17 +188,18 @@ def _do_quarantine_related_processing_if_needed(context, data_dict, data_revise_
             analytics_sender.send_to_queue()
 
         # if new quarantine value is either true or false tag it in S3 as sensitive and with dataset name
-        tag_s3_version_by_resource_id(
-            {
-                'model': context['model'],
-                'user': context['user'],
-                'auth_user_obj': context['auth_user_obj'],
-            },
-            data_dict['id'],
-            data_dict['in_quarantine'] == 'true',
-            resource_dict.get('url'),
-            dataset_dict.get('name')
-        )
+        if resource_dict.get('url_type', None) == 'upload':
+            tag_s3_version_by_resource_id(
+                {
+                    'model': context['model'],
+                    'user': context['user'],
+                    'auth_user_obj': context['auth_user_obj'],
+                },
+                data_dict['id'],
+                data_dict['in_quarantine'] == 'true',
+                resource_dict.get('url'),
+                dataset_dict.get('name')
+            )
     _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict)
 
 
