@@ -524,10 +524,33 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
         if 'apihighways_url' in resource_dict:
             del resource_dict['apihighways_url']
     if resource_dict.get('url'):
+        _process_url(context, resource_dict)
+
+
+# process urls for resource in case of in quarantine
+def _process_url(context, resource_dict):
+    # for users with package_update access the urls will be displayed
+    try:
+        can_edit = _check_access('package_update', context, {'id': resource_dict.get('package_id')})
+    except Exception as ex:
+        can_edit = False
+    can_have_url = True
+    # for users with no package_update access and if resource is in quarantine, we don't display urls
+    if not can_edit and resource_dict.get('in_quarantine'):
+        can_have_url = False
+    if can_have_url:
         resource_dict['download_url'] = resource_dict.get('url')
         if resource_dict.get('url_type') == "upload" and resource_dict.get('resource_type') == "file.upload" and \
             config.get('ckan.site_url') in resource_dict.get('url'):
             resource_dict['alt_url'] = resource_dict.get('url').split('/download/')[0] + '/download/'
+    else:
+        del resource_dict['url']
+        if 'alt_url' in resource_dict:
+            del resource_dict['alt_url']
+        if 'download_url' in resource_dict:
+            del resource_dict['download_url']
+        if 'hdx_rel_url' in resource_dict:
+            del resource_dict['hdx_rel_url']
 
 
 @logic.side_effect_free
