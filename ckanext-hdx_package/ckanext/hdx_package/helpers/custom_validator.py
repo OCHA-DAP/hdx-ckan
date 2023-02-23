@@ -16,7 +16,7 @@ import ckan.lib.navl.dictization_functions as df
 from ckan.common import _, c
 
 import ckanext.hdx_package.helpers.caching as caching
-import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser

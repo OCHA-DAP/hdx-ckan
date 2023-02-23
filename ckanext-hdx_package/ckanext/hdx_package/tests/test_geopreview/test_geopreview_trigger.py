@@ -75,7 +75,7 @@ class TestGeopreviewTrigger(object):
             assert False
         return resource_dict1, resource_dict2
 
-    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.geopreview._get_shape_info_as_json')
     def test_create_update_resources(self, get_shape_info_as_json_mock):
         get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
@@ -90,7 +90,7 @@ class TestGeopreviewTrigger(object):
             assert False
         assert get_shape_info_as_json_mock.call_count == 3
 
-    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.geopreview._get_shape_info_as_json')
     def test_delete_resource(self, get_shape_info_as_json_mock):
         get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
@@ -105,7 +105,7 @@ class TestGeopreviewTrigger(object):
             assert False
         assert get_shape_info_as_json_mock.call_count == 2
 
-    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.geopreview._get_shape_info_as_json')
     def test_update_package(self, get_shape_info_as_json_mock):
         get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
@@ -132,7 +132,7 @@ class TestGeopreviewTrigger(object):
             assert False
         assert get_shape_info_as_json_mock.call_count == 3
 
-    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.geopreview._get_shape_info_as_json')
     def test_revise_package(self, get_shape_info_as_json_mock):
         get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
@@ -159,7 +159,7 @@ class TestGeopreviewTrigger(object):
 
         assert get_shape_info_as_json_mock.call_count == 3
 
-    @mock.patch('ckanext.hdx_package.helpers.geopreview._get_shape_info_as_json')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.geopreview._get_shape_info_as_json')
     def test_reorder_resources(self, get_shape_info_as_json_mock):
         get_shape_info_as_json_mock.return_value = GEOPREVIEW_RESPONSE
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}

@@ -1,3 +1,4 @@
+import logging
 import ckan.logic as logic
 from ckan.plugins import toolkit
 import ckanext.hdx_pages.model as pages_model
@@ -6,13 +7,13 @@ import ckanext.hdx_pages.actions.validation as validation
 import ckanext.hdx_package.helpers.helpers as pkg_h
 
 NotFound = logic.NotFound
+log = logging.getLogger(__name__)
 
 
 def page_create(context, data_dict):
-    model = context['model']
-
     logic.check_access('page_create', context, data_dict)
 
+    validation.page_title_validator(data_dict, context)
     validation.page_name_validator(data_dict, context)
 
     try:
@@ -22,7 +23,9 @@ def page_create(context, data_dict):
                                 type=data_dict.get('type'),
                                 state=data_dict.get('state'),
                                 sections=data_dict.get('sections'),
+                                extras=data_dict.get('extras'),
                                 status=data_dict.get('status'))
+        model = context['model']
         model.Session.add(page)
 
         for grp_id in data_dict.get('groups', []):
@@ -51,12 +54,15 @@ def page_create(context, data_dict):
                                                       tag_id))
                 # create the association
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag_id, defer_commit=True)
+            else:
+                raise logic.ValidationError({'tag_string': ['Tag % not found' % tag.get('name')]})
 
         model.Session.commit()
         page_dict = dictize.page_dictize(page)
         return page_dict
-
+    except logic.ValidationError as e:
+        raise logic.ValidationError(e.error_dict)
     except Exception as e:
-        ex_msg = e.message if hasattr(e, 'message') else str(e)
-        message = 'Something went wrong while processing the request: {}'.format(ex_msg)
-        raise logic.ValidationError({'message': message}, error_summary=message)
+        msg = str(e)
+        log.error(msg)
+        raise logic.ValidationError({'message': ['Something went wrong while processing the request: %' % msg]})

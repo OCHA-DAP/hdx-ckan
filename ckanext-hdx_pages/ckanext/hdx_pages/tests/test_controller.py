@@ -43,6 +43,18 @@ page_elpico = {
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
+page_elescondite = {
+    'name': 'elescondite',
+    'title': 'El Escondite',
+    'description': 'El Escondite Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+    'type': 'event',
+    'status': 'ongoing',
+    'groups': [LOCATION],
+    'state': 'active',
+    'extras': '{"show_title": "off"}',
+    'sections': '[{"type": "description", "data_url": "", "section_title": "section title", "max_height": "100px", "m_max_height": "50px", "description": "", "long_description": "long description"}]',
+}
+
 page_elgroupo = {
     'name': 'elgroupo',
     'title': 'El Groupo',
@@ -192,6 +204,21 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
             assert '404 Not Found'.lower() in eldashbo_result.status.lower()
         except Exception as ex:
             assert False
+
+    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
+    def test_page_read_hidden_title(self, app):
+
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        user = model.User.by_name(SYSADMIN)
+
+        elescondite = _get_action('page_create')(context_sysadmin, page_elescondite)
+        assert elescondite
+        assert 'El Escondite' in elescondite.get('description')
+        assert 'show_title' in elescondite.get('extras') and elescondite.get('extras').get('show_title') == 'off'
+
+        url = h.url_for(u'hdx_event.read_event', id=elescondite.get('id'))
+        elescondite_page = self._get_url(app, url, user.apikey)
+        assert '<h1 class="itemTitle">El Escondite</h1>' not in elescondite_page.body
 
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')

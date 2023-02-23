@@ -50,18 +50,19 @@ def _before_ckan_action(context, resource_dict):
     else:
         context['allow_fs_check_field'] = False
     # log.info("in before fs_check")
-    return is_upload_xls
+    context['fs_check_is_upload_xls'] = is_upload_xls
 
 
-def _after_ckan_action(context, resource_dict, is_upload_xls):
+def _after_ckan_action(context, resource_dict):
     '''
     :param context: context
     :type context: dict
     :param resource_dict:
     :type resource_dict dict
     '''
-    if is_upload_xls:
+    if context.get('fs_check_is_upload_xls'):
         _file_structure_check(resource_dict)
+    context.pop('fs_check_is_upload_xls', None)
     log.info("in after ckan action in fs_check")
 
 

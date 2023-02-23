@@ -336,6 +336,20 @@
 
   }
 
+  .control-group {
+    &.error {
+      .controls {
+        input {
+          border: 1px solid @orangeColor;
+        }
+
+        .error-block {
+          color: @orangeColor;
+        }
+      }
+    }
+  }
+
   .form-horizontal {
     .form-group {
       margin-left: 0;

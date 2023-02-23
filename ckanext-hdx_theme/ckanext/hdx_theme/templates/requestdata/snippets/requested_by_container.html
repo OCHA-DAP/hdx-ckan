@@ -17,10 +17,7 @@
       <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a>
       {% if extras %}
         {% set org_type = h.hdx_organization_type_get_value(extras.organization_type) %}
-        <span>from {{ extras.country }}, on behalf of {% if extras.organization_id != extras.organization_name %}<a href="{{ h.url_for(controller='organization', action='read', id=extras.organization_id) }}">{{ extras.organization_name }}</a>{% else %}{{ extras.organization_name }}{% endif %} ({{ org_type }})</span>
-        {% if not extras.organization_member %}
-          <i class="glyphicon glyphicon-warning-sign" title="This user is not a member of the {{ extras.organization_name }} organization on HDX" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"></i>
-        {% endif %}
+        <span>located in {{ extras.country }}, from {% if extras.organization_id != extras.organization_name %}<a href="{{ h.url_for(controller='organization', action='read', id=extras.organization_id) }}">{{ extras.organization_name }}</a>{% else %}{{ extras.organization_name }}{% endif %} - {{ org_type }}{% if not extras.organization_member %} (Unverified <i class="glyphicon glyphicon-warning-sign"></i> - this user is not a member of this organization on HDX){% endif %}</span>
       {% endif %}
     </div>
 {#    {% if is_user_sysadmin %}#}

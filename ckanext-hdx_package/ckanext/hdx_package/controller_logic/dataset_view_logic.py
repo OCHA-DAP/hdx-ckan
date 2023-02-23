@@ -1,6 +1,6 @@
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
+from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS, get_latest_shape_info
 
 config = tk.config
 
