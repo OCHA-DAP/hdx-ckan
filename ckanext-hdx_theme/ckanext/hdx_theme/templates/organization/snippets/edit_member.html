@@ -9,7 +9,7 @@ Example:
 {% asset 'hdx_theme/hdx-autocomplete' %}
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
-  <div id="{{ modal_div_id }}" class="modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  <div id="{{ modal_div_id }}" class="modal confirmation-modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
 	  <div class="modal-dialog">
 	  <div class="modal-content hdx-modal">
 		<div class="modal-header">
@@ -31,19 +31,24 @@ Example:
 			</div>
       <select id="role" name="role" data-module="hdx_autocomplete" style="width: 100%">
         {% for option in roles %}
-          <option {% if (member.pkgs | length > 0) and (option.value == 'member') %} disabled {% endif %} value="{{ option.value }}"{% if option.value == role %} selected{% endif %}>{{ option.text or option.value }} {% if (member.maint_pkgs | length > 0) and (option.value == 'member') %}*{% endif %}</option>
+          <option {% if (member.maint_orgs_pkgs | length > 0) and (option.value == 'member') %} disabled {% endif %} value="{{ option.value }}"{% if option.value == role %} selected{% endif %}>{{ option.text or option.value }} {% if (member.maint_orgs_pkgs | length > 0) and (option.value == 'member') %}*{% endif %}</option>
         {% endfor %}
       </select>
-      {% if (member.pkgs | length > 0)%}
+      {% if (member.maint_orgs_pkgs | length > 0)%}
         <div>
           <p class="mTop8">
             <span class="red">*</span> Can't change role to "member" because the user is maintainer of these datasets:
           </p>
-          <ul>
-            {% for p in member.pkgs %}
-              <li><a href="{{ h.url_for('dataset_read', id=p.name) }}" target="_blank">{{ p.title }}</a></li>
+          <div class="scrollable-container">
+            {% for org in member.maint_orgs_pkgs %}
+              <p><strong>{% if org.title %}{{ org.title }}{% else %}{{ org.name }}{% endif %}:</strong></p>
+              <ul>
+                {% for p in org.pkgs %}
+                  <li><a href="{{ h.url_for('dataset_read', id=p.name) }}" target="_blank">{{ p.title }}</a></li>
+                {% endfor %}
+              </ul>
             {% endfor %}
-          </ul>
+          </div>
         </div>
       {% endif %}
 		</div>
