@@ -7,8 +7,11 @@
   font-family: 'Source Sans Pro', sans-serif;
   line-height: 20px;
 }
+.confirmation-modal .modal-content .modal-body .select2-container .select2-choice {
+  border-color: #888888;
+}
 .confirmation-modal .modal-content .modal-body .scrollable-container {
-  height: 300px;
+  max-height: 300px;
   overflow: auto;
 }
 .confirmation-modal .modal-content .modal-body p {
