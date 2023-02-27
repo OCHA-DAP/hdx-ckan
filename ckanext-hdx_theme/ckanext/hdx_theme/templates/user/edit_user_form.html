@@ -63,7 +63,7 @@
       {{ form.required_message() }}
     </div>
   </fieldset>
-
+{% if is_sysadmin %}
   <fieldset class="mTop35">
     <legend>{{_('Two-step verification')}}</legend>
     {#
@@ -75,6 +75,7 @@
     #}
     <a href="#" class="btn" onclick="showOnboardingWidget('#tsvPopup')"> {{ _('Manage two-step verification') }}</a>
   </fieldset>
+{% endif %}
 {% if h.check_access('user_delete', {'id': data.id})  %}
   <fieldset class="mTop35">
     <legend>{{_('Delete account')}}</legend>
@@ -106,9 +107,12 @@
 </form>
 </div>
 </div>
-<div >
-  {{ h.snippet('widget/security/two-step-verification.html', id="tsvPopup", title="How to turn on two-step verification", userId=data.id, userName=data.name) }}
-</div>
+
+{% if is_sysadmin %}
+  <div>
+    {{ h.snippet('widget/security/two-step-verification.html', id="tsvPopup", title="How to turn on two-step verification", userId=data.id, userName=data.name) }}
+  </div>
+{% endif %}
 {% endblock %}
 
 {% block styles %}
