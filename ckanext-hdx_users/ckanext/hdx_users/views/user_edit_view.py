@@ -18,7 +18,7 @@ from ckanext.hdx_users.views.user_view_helper import *
 from ckanext.security import utils
 from ckanext.security.cache.login import LoginThrottle
 from ckanext.security.model import SecurityTOTP
-
+from ckan.lib import helpers
 log = logging.getLogger(__name__)
 
 render = tk.render
@@ -41,12 +41,19 @@ class HDXTwoStep:
     @staticmethod
     def configure_mfa(id=None):
         tc = utils.configure_mfa(id)
+        if helpers.are_there_flash_messages():
+            helpers._flash.pop_messages()
+        helpers.flash_success("Successfully configured and enabled the two-step verification.")
         return json.dumps({'success': (tc.mfa_test_valid == True)})
 
     @staticmethod
     def new(id=None):
         utils.new(id)
         tc = utils.configure_mfa(id)
+        if helpers.are_there_flash_messages():
+            helpers._flash.pop_messages()
+        helpers.flash_error("Two-step verification enabled. "
+                            "Please add the new secret to your authenticator app and verify the code to ensure it is working ok.")
         return json.dumps({
             'success': True,
             'totp_challenger_uri': tc.totp_challenger_uri,
@@ -56,6 +63,9 @@ class HDXTwoStep:
     @staticmethod
     def delete(id=None):
         totp_challenger = SecurityTOTP.get_for_user(id)
+        if helpers.are_there_flash_messages():
+            helpers._flash.pop_messages()
+        helpers.flash_success("Successfully disabled the two-step verification.")
         if totp_challenger:
             totp_challenger.delete()
             totp_challenger.commit()
