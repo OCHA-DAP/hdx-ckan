@@ -7,10 +7,23 @@ import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
+from ckanext.hdx_package.actions.patch import _send_analytics_for_pii_if_needed, _send_analytics_for_sdc_if_needed
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 config = tk.config
 NotAuthorized = tk.NotAuthorized
+
+analytics_sender = None
+
+
+def _send_analytics_for_pii_if_needed_mocked(*args, **kwargs):
+    global analytics_sender
+    analytics_sender = _send_analytics_for_pii_if_needed(*args, **kwargs)
+
+
+def _send_analytics_for_sdc_if_needed_mocked(*args, **kwargs):
+    global analytics_sender
+    analytics_sender = _send_analytics_for_sdc_if_needed(*args, **kwargs)
 
 
 class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
@@ -115,7 +128,81 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         for key, value in changes_dict.items():
             assert modified_res2_dict.get(key) == value
 
+        self._get_action('resource_delete')(context, {'id': res2_dict['id']})
 
+    @mock.patch('ckanext.hdx_package.helpers.analytics.g')
+    @mock.patch('ckanext.hdx_package.actions.patch._send_analytics_for_pii_if_needed',
+                wraps=_send_analytics_for_pii_if_needed_mocked)
+    @mock.patch('ckanext.hdx_theme.util.analytics.AbstractAnalyticsSender.send_to_queue')
+    def test_pii_tracking(self, send_to_queue_mock, send_analytics_mock, g_mock):
+        global analytics_sender
+        g_mock.user = self.SYSADMIN_USER
+        context = {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER}
+        resource2 = {
+            'package_id': self.PACKAGE_ID,
+            'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+            'resource_type': 'file.upload',
+            'format': 'CSV',
+            'name': 'hdx_test2.csv'
+        }
+        res2_dict = self._get_action('resource_create')(context, resource2)
+
+        changes_dict = {
+            'id': res2_dict['id'],
+            'pii_report_flag': 'OK',
+            'pii_timestamp': '2023-02-08T23:21:01.345000',
+            'pii_report_id': '/some_path/some.log'
+        }
+        self._get_action('hdx_qa_resource_patch')(context, changes_dict)
+        call_count = send_to_queue_mock.call_count
+        analytics_dict = analytics_sender.analytics_dict
+        assert analytics_dict['event_name'] == 'qa set pii'
+        assert analytics_dict['mixpanel_meta']['dataset name'] == 'test_dataset_4_quarantine'
+        assert analytics_dict['mixpanel_meta']['org name'] == 'org_name_4_quarantine'
+        assert analytics_dict['mixpanel_meta']['group names'][0] == 'roger'
+
+        self._get_action('hdx_qa_resource_patch')(context, changes_dict)
+        assert call_count == send_to_queue_mock.call_count, 'send_to_queue() shouldn\'t have been called ' \
+                                                            'again because the pii_report_flag was the same'
+
+        self._get_action('resource_delete')(context, {'id': res2_dict['id']})
+
+    @mock.patch('ckanext.hdx_package.helpers.analytics.g')
+    @mock.patch('ckanext.hdx_package.actions.patch._send_analytics_for_sdc_if_needed',
+                wraps=_send_analytics_for_sdc_if_needed_mocked)
+    @mock.patch('ckanext.hdx_theme.util.analytics.AbstractAnalyticsSender.send_to_queue')
+    def test_sdc_tracking(self, send_to_queue_mock, send_analytics_mock, g_mock):
+        global analytics_sender
+        g_mock.user = self.SYSADMIN_USER
+        context = {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER}
+        resource2 = {
+            'package_id': self.PACKAGE_ID,
+            'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+            'resource_type': 'file.upload',
+            'format': 'CSV',
+            'name': 'hdx_test2.csv'
+        }
+        res2_dict = self._get_action('resource_create')(context, resource2)
+
+        changes_dict = {
+            'id': res2_dict['id'],
+            'sdc_report_flag': 'OK',
+            'sdc_timestamp': '2023-02-08T23:21:01.345000',
+            'sdc_report_id': '/some_path/some.log'
+        }
+        self._get_action('hdx_qa_resource_patch')(context, changes_dict)
+        call_count = send_to_queue_mock.call_count
+        analytics_dict = analytics_sender.analytics_dict
+        assert analytics_dict['event_name'] == 'qa set sdc'
+        assert analytics_dict['mixpanel_meta']['dataset name'] == 'test_dataset_4_quarantine'
+        assert analytics_dict['mixpanel_meta']['org name'] == 'org_name_4_quarantine'
+        assert analytics_dict['mixpanel_meta']['group names'][0] == 'roger'
+
+        self._get_action('hdx_qa_resource_patch')(context, changes_dict)
+        assert call_count == send_to_queue_mock.call_count, 'send_to_queue() shouldn\'t have been called ' \
+                                                            'again because the sdc_report_flag was the same'
+
+        self._get_action('resource_delete')(context, {'id': res2_dict['id']})
 
     def test_normal_user_cannot_modify_pii_timestamp(self):
         date_str = '2019-09-01T17:30:50.883601'

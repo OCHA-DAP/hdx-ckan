@@ -1,4 +1,5 @@
 import ckanext.hdx_pages.model as pages_model
+import json
 
 
 def page_dictize(page):
@@ -20,5 +21,6 @@ def page_dictize(page):
         'state': page.state,
         'status': page.status,
         'sections': page.sections,
+        'extras': json.loads(page.extras) if page.extras else None,
         'modified': page.modified.isoformat()
     }

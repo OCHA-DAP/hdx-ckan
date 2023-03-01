@@ -26,6 +26,7 @@ page_elnino = {
     'type': 'event',
     'status': 'ongoing',
     'state': 'active',
+    'extras': '{"show_title": "on"}',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
@@ -36,6 +37,7 @@ page_elpico = {
     'type': 'event',
     'status': 'ongoing',
     'state': 'active',
+    'extras': '{"show_title": "off"}',
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
@@ -83,6 +85,7 @@ class TestHDXApiPage(object):
         assert 'Lorem Ipsum is simply dummy text' in elnino.get('description')
         assert 'event' == elnino.get('type')
         assert 'ongoing' == elnino.get('status')
+        assert 'show_title' in elnino.get('extras') and elnino.get('extras').get('show_title') == 'on'
         assert 'https://data.humdata.org/dataset/wfp-and-fao-overview' in elnino.get('sections')
 
         try:
@@ -95,12 +98,14 @@ class TestHDXApiPage(object):
         new_page_dict = _get_action('page_update')(context_sysadmin, {'name': page_elpico.get('name'),
                                                                       'id': page_dict.get('id'),
                                                                       'title': page_elpico.get('title'),
+                                                                      'extras': page_elpico.get('extras'),
                                                                       'description': 'El Pico Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
                                                                       'groups': [grp_dict.get('id')]
                                                                       }
                                                    )
         assert new_page_dict
         assert 'El Pico' in new_page_dict.get('title')
+        assert 'show_title' in new_page_dict.get('extras') and new_page_dict.get('extras').get('show_title') == 'off'
 
         try:
             _get_action('page_create')(context, page_elpico)

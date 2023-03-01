@@ -10,6 +10,7 @@ from ckan.model import meta, extension
 import ckan.model.types as _types
 
 from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
+from sqlalchemy.engine.reflection import Inspector
 
 mapper = orm.mapper
 log = logging.getLogger(__name__)
@@ -70,7 +71,7 @@ class Page(PageBaseModel):
     Page table
     '''
 
-    def __init__(self, name, title, description, type, state, sections, status, modified=None):
+    def __init__(self, name, title, description, type, state, sections, status, extras, modified=None):
         self.name = name
         self.title = title
         self.description = description
@@ -78,6 +79,7 @@ class Page(PageBaseModel):
         self.state = state
         self.sections = sections
         self.status = status
+        self.extras = extras
         self.modified = modified
 
     @classmethod
@@ -110,6 +112,7 @@ def define_page_table():
                        Column('type', types.UnicodeText),
                        Column('state', types.UnicodeText),
                        Column('sections', types.UnicodeText),
+                       Column('extras', types.UnicodeText),
                        Column('modified', types.DateTime, default=datetime.datetime.now, nullable=False),
                        Column('status', types.UnicodeText),
                        )
@@ -197,6 +200,9 @@ def create_table():
         if not page_table.exists():
             page_table.create()
             print('Page table created')
+        else:
+            patch_table_add_column('extras')
+
         if not page_group_association_table.exists():
             page_group_association_table.create()
             print('page group association table created')
@@ -232,3 +238,23 @@ def create_table():
 #     if page_table.exists():
 #         page_table.drop()
 #         log.debug('Page table dropped')
+
+
+def patch_table_add_column(column_name):
+    table_name = 'page'
+    try:
+        print('Starting to patch table %s' % table_name)
+        engine = model.meta.engine
+        inspector = Inspector.from_engine(engine)
+        columns = inspector.get_columns(table_name)
+
+        if not any(column['name'] == column_name for column in columns):
+            column = Column(column_name, types.UnicodeText, default='')
+            column_name = column.compile(dialect=engine.dialect)
+            column_type = column.type.compile(engine.dialect)
+            engine.execute(
+                'ALTER TABLE %s ADD COLUMN %s %s' % (table_name, column_name, column_type))
+
+        print('Finish to patch table %s' % table_name)
+    except Exception as e:
+        print('There was an error during patching %s table. Column: %s' % (table_name, column_name))

@@ -52,7 +52,10 @@
     margin-top: 8px;
     padding: 0;
     li {
-        display: inline;
+      display: inline;
+      & ~ li {
+        margin-left: 3px;
+      }
     }
 
     [class^="icon-"], [class*=" icon-"] {
@@ -85,9 +88,14 @@ span.icn-txt-cods, ul.dataset-resources li.label-icons span.icn-txt-cods{
   padding: 4px;
   border-radius: 10px;
   line-height: 1;
+  display: inline-block;
+  &:hover {
+    background-color: @blueColor;
+  }
 }
 .dataset-content .icn-txt-cods {
   margin-right: 5px;
+  display: inline-block;
 }
 
 ul.dataset-resources {

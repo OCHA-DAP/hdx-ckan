@@ -21,7 +21,6 @@ import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.views.download_wrapper as download_wrapper
 
 import ckan.logic as logic
-import ckan.model as model
 import ckan.model.license as license
 import ckan.model.package as package
 import ckan.authz as authz
@@ -802,7 +801,7 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
         }
 
     def can_view(self, data_dict):
-        from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+        from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS
 
         resource = data_dict.get('resource', {})
         format = resource.get('format')
