@@ -551,6 +551,8 @@ def _process_url(context, resource_dict):
             del resource_dict['download_url']
         if 'hdx_rel_url' in resource_dict:
             del resource_dict['hdx_rel_url']
+        if 'fs_check_info' in resource_dict:
+            del resource_dict['fs_check_info']
 
 
 @logic.side_effect_free
