@@ -33,12 +33,16 @@ function showTagRequestWidget(id) {
 
 $(document).ready(function () {
   requestTagsOnSubmit = function () {
-    $this = $('#request-tags-form');
-    $fields = $this.find('input', 'select', 'textarea');
-    $iframe = $($('.g-recaptcha').find('iframe:first'));
+    var $this = $('#request-tags-form');
+    var $fields = $this.find('.row').find('input, select, textarea');
+    var $iframe = $($('.g-recaptcha').find('iframe:first'));
+    var $error_blocks = $this.find('.error-block');
+    var $choices = $this.find('.suggested-tags .select2-search-choice');
 
     $fields.removeClass('error');
     $iframe.css('border', '');
+    $error_blocks.text('');
+    $choices.removeClass('existing-choice');
 
     var grecaptchaID = 0;
     var grecaptchaElementID = $('#faq-send-message-form').find('.g-recaptcha-response').prop('id');
@@ -64,15 +68,24 @@ $(document).ready(function () {
           $this[0].reset();
           closeCurrentWidget($this);
         } else {
-          if (result.error.message == 'Captcha is not valid') {
+          if (result.error.message === 'Captcha is not valid') {
             $iframe.css('border', '1px solid red');
           } else {
             if (result.error.fields) {
               $.each(result.error.fields, function (field, message) {
-                $this.find('[name="' + field + '"]').addClass('error');
+                var $input = $this.find('[name="' + field + '"]');
+                $input.addClass('error');
+                $input.parent().parent().find('.error-block').text(message);
               });
             } else {
               alert("Can't send your request: " + result.error.message);
+            }
+            if (result.error.existing_tags) {
+              $.each(result.error.existing_tags, function(i, existing_tag) {
+                $choices.find('div').filter(function() {
+                  return $(this).text() === existing_tag;
+                }).parent().addClass('existing-choice');
+              });
             }
           }
         }
