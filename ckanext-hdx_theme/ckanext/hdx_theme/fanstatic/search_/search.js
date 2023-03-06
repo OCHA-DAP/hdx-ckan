@@ -19,7 +19,7 @@ $('document').ready(function(){
     });
 
     var performSearchQuery = function(query) {
-      const termList = query.split(' ').filter(item => item.length);
+      const termList = toNormalForm(query.split(' ').filter(item => item.length));
       const modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
       let results = [];
       if (modifiedQ.length > 0) {
@@ -60,7 +60,7 @@ $('document').ready(function(){
     calculate_search_top_positioning();
 
     var onSearch = function(){
-        let value = hdxUtil.text.sanitize($(this).val());
+        let value = toNormalForm(hdxUtil.text.sanitize($(this).val()));
         var searchInfo = performSearchQuery(value);
 
         var prevSearch = JSON.parse($("#previous-searches").text());
