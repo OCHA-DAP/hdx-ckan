@@ -76,12 +76,6 @@
         }
       }
 
-      &-multi.choices-orange .select2-choices {
-        .select2-search-choice {
-          background-color: @orangeColor;
-        }
-      }
-
       &-multi .select2-choices {
         border-color: @whiteColor;
         border-radius: 6px;
@@ -113,6 +107,10 @@
           outline: none;
           border: none;
           border-radius: 0;
+
+          &.existing-choice {
+            background-color: @orangeColor;
+          }
 
           .select2-search-choice-close {
             background-color: white;
@@ -150,6 +148,10 @@
         border-bottom-right-radius: 0;
         border-bottom: none;
       }
+    }
+
+    .error-block {
+      color: @orangeColor;
     }
   }
 }

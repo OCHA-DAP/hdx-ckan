@@ -48,9 +48,6 @@
   font-size: 14px;
   color: #333333;
 }
-#request-tags #request-tags-form .select2-container-multi.choices-orange .select2-choices .select2-search-choice {
-  background-color: #f2645a;
-}
 #request-tags #request-tags-form .select2-container-multi .select2-choices {
   border-color: #fff;
   border-radius: 6px;
@@ -81,6 +78,9 @@
   border: none;
   border-radius: 0;
 }
+#request-tags #request-tags-form .select2-container-multi .select2-choices .select2-search-choice.existing-choice {
+  background-color: #f2645a;
+}
 #request-tags #request-tags-form .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close {
   background-color: white;
   left: auto;
@@ -107,6 +107,9 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: none;
+}
+#request-tags #request-tags-form .error-block {
+  color: #f2645a;
 }
 #requestTagsPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;

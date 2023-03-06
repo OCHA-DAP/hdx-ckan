@@ -1,5 +1,6 @@
 import json
 import logging
+import requests
 import ckan.lib.captcha as captcha
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -7,6 +8,7 @@ import ckanext.hdx_users.helpers.helpers as usr_h
 
 from flask import Blueprint, make_response
 from six import text_type
+from ckan.common import config
 from ckan.views.api import CONTENT_TYPES
 from ckan.lib.mailer import MailerException
 from ckanext.hdx_theme.util.mail import hdx_validate_email
@@ -22,6 +24,16 @@ _ = tk._
 g = tk.g
 NotAuthorized = tk.NotAuthorized
 ValidationError = tk.ValidationError
+
+
+def _get_approved_tags():
+    proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.json'
+    params = {
+        'url': 'https://docs.google.com/spreadsheets/d/1fTO8T8ZVXU9eoh3EIrw490Z2pX7E59MhHmCvT_cXmNs/edit#gid=1261258630',
+    }
+    response = requests.get(proxy_data_preview_url, params=params)
+
+    return [item[0] for item in json.loads(response.content)[1:]]
 
 
 def _build_json_response(data_dict, status=200):
@@ -44,11 +56,41 @@ def _process_tags_request():
     return data
 
 
-def _validate_tags_request_field(data):
+def _validate_tags_request_fields(data):
     errors = {}
     for field in ['fullname', 'email', 'suggested_tags', 'datatype', 'comment']:
         if not data[field] or data[field].strip() in ['', '-1']:
             errors[field] = u'Should not be empty'
+
+    if len(errors) > 0:
+        raise ValidationError(errors)
+
+
+def _validate_tags_request_email_field(email):
+    errors = {}
+    try:
+        hdx_validate_email(email)
+    except Exception:
+        errors['email'] = u'Please provide a valid email address'
+        raise ValidationError(errors)
+
+
+def _validate_tags_request_tags_field(tags):
+    errors = {}
+
+    approved_tags = _get_approved_tags()
+    existing_tags = []
+    for tag in tags.split(','):
+        if tag in approved_tags:
+            existing_tags.append(tag)
+
+    no_existing_tags = len(existing_tags)
+    if no_existing_tags > 1:
+        errors['suggested_tags'] = u'%s already exist' % ', '.join(existing_tags)
+        errors['existing_tags'] = existing_tags
+    elif no_existing_tags == 1:
+        errors['suggested_tags'] = u'%s already exists' % existing_tags[0]
+        errors['existing_tags'] = existing_tags
 
     if len(errors) > 0:
         raise ValidationError(errors)
@@ -75,16 +117,20 @@ def request_tags():
         check_access('hdx_send_mail_request_tags', context, data_dict)
 
         data_dict = _process_tags_request()
-        _validate_tags_request_field(data_dict)
 
-        hdx_validate_email(data_dict['email'])
+        _validate_tags_request_fields(data_dict)
+        _validate_tags_request_email_field(data_dict['email'])
+        _validate_tags_request_tags_field(data_dict['suggested_tags'])
 
     except NotAuthorized:
         return _build_json_response(
             {'success': False, 'error': {'message': u'You have to log in before sending a contact request.'}})
     except ValidationError as e:
-        return _build_json_response(
-            {'success': False, 'error': {'message': u'Validation error. Please try again.', 'fields': e.error_dict}})
+        resp = {'success': False, 'error': {'message': u'Validation error. Please try again.', 'fields': e.error_dict}}
+        if e.error_dict and e.error_dict.get('existing_tags'):
+            resp['error']['existing_tags'] = e.error_dict['existing_tags']
+            del e.error_dict['existing_tags']
+        return _build_json_response(resp)
     except captcha.CaptchaError:
         return _build_json_response(
             {'success': False, 'error': {'message': u'Bad Captcha. Please try again.'}})

@@ -34,27 +34,42 @@ Example:
     <form id="request-tags-form">
       <div class="row">
         <div class="col-xs-12">
-          <div class="mTop15 control">
-            <input id="fullname" name="fullname" class="full-width required" type="text"
-                   value="{% if c.userobj.fullname %}{{ c.userobj.fullname }}{% endif %}">
-            <label for="fullname">Your name</label>
+          <div class="mTop15">
+            <div class="control">
+              <input id="fullname" name="fullname" class="full-width required" type="text"
+                     value="{% if c.userobj.fullname %}{{ c.userobj.fullname }}{% endif %}">
+              <label for="fullname">Your name</label>
+            </div>
+            <span class="error-block"></span>
           </div>
-          <div class="mTop15 control">
-            <input id="email" name="email" class="full-width required" type="text"
-                   value="{% if c.userobj.email %}{{ c.userobj.email }}{% endif %}">
-            <label for="email">Your email address</label>
+          <div class="mTop15">
+            <div class="control">
+              <input id="email" name="email" class="full-width required" type="text"
+                     value="{% if c.userobj.email %}{{ c.userobj.email }}{% endif %}">
+              <label for="email">Your email address</label>
+            </div>
+            <span class="error-block"></span>
           </div>
-          <div class="mTop15 control">
-            {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': ''} %}
-            {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('eg. economy, mental health, government'), classes=['control-full'], attrs=tag_attrs) }}
+          <div class="mTop15">
+            <div>
+              {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': ''} %}
+              {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('eg. economy, mental health, government'), classes=['control-full suggested-tags'], attrs=tag_attrs) }}
+            </div>
+            <span class="error-block"></span>
           </div>
-          <div class="mTop15 control">
-            <input id="datatype" name="datatype" class="full-width required" type="text" value="">
-            <label for="datatype">Type of data you are trying to share</label>
+          <div class="mTop15">
+            <div class="control">
+              <input id="datatype" name="datatype" class="full-width required" type="text" value="">
+              <label for="datatype">Type of data you are trying to share</label>
+            </div>
+            <span class="error-block"></span>
           </div>
-          <div class="mTop15 control">
-            <textarea id="request-tags-comment" name="comment" class="full-width required"></textarea>
-            <label for="comment">Your comment</label>
+          <div class="mTop15">
+            <div class="control">
+              <textarea id="request-tags-comment" name="comment" class="full-width required"></textarea>
+              <label for="comment">Your comment</label>
+            </div>
+            <span class="error-block"></span>
           </div>
         </div>
       </div>
