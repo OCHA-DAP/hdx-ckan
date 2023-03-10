@@ -26,16 +26,6 @@ NotAuthorized = tk.NotAuthorized
 ValidationError = tk.ValidationError
 
 
-def _get_approved_tags():
-    proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.json'
-    params = {
-        'url': 'https://docs.google.com/spreadsheets/d/1fTO8T8ZVXU9eoh3EIrw490Z2pX7E59MhHmCvT_cXmNs/edit#gid=1261258630',
-    }
-    response = requests.get(proxy_data_preview_url, params=params)
-
-    return [item[0] for item in json.loads(response.content)[1:]]
-
-
 def _build_json_response(data_dict, status=200):
     headers = {
         'Content-Type': CONTENT_TYPES['json'],
@@ -75,13 +65,12 @@ def _validate_tags_request_email_field(email):
         raise ValidationError(errors)
 
 
-def _validate_tags_request_tags_field(tags):
+def _validate_tags_request_tags_field(tags, approved_tags):
     errors = {}
 
-    approved_tags = _get_approved_tags()
     existing_tags = []
     for tag in tags.split(','):
-        if tag in approved_tags:
+        if tag.lower() in approved_tags:
             existing_tags.append(tag)
 
     no_existing_tags = len(existing_tags)
@@ -117,10 +106,11 @@ def request_tags():
         check_access('hdx_send_mail_request_tags', context, data_dict)
 
         data_dict = _process_tags_request()
+        approved_tags = get_action('hdx_tag_approved_list')(context, {})
 
         _validate_tags_request_fields(data_dict)
         _validate_tags_request_email_field(data_dict['email'])
-        _validate_tags_request_tags_field(data_dict['suggested_tags'])
+        _validate_tags_request_tags_field(data_dict['suggested_tags'], approved_tags)
 
     except NotAuthorized:
         return _build_json_response(

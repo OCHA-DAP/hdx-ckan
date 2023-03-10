@@ -1,5 +1,6 @@
 import json
 import logging
+import requests
 import re
 import six.moves.urllib.parse as urlparse
 
@@ -231,6 +232,19 @@ def hdx_tag_autocomplete_list(context, data_dict):
         return []
 
 # code copied from get.py line 1748
+
+
+def hdx_tag_approved_list(context, data_dict):
+    """
+    Get approved tag names from Google Spreadsheet and return a list.
+    """
+    proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.json'
+    params = {
+        'url': 'https://docs.google.com/spreadsheets/d/1fTO8T8ZVXU9eoh3EIrw490Z2pX7E59MhHmCvT_cXmNs/edit#gid=1261258630'
+    }
+    response = requests.get(proxy_data_preview_url, params=params)
+
+    return [item[0].lower() for item in json.loads(response.content)[1:]]
 
 
 def _tag_search(context, data_dict):

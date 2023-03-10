@@ -1,0 +1,26 @@
+{#
+Request new tags confirmation widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/tags/request-tags-confirmation.html', id="requestTagsConfirmationPopup") }}
+#}
+
+{% asset 'hdx_theme/onboarding-password-styles' %}
+
+{% set class = "popup-onboarding" %}
+{% set title = "We've received your request!" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+    <div class="verify-widget">
+        <div class="center">
+            <img class="gif mTop45 lazyload" data-src="/images/onboarding/incomingmail.gif">
+            <div class="notification-message mTop20">---</div>
+            <div class="verify-email mTop10">Thank you</div>
+        </div>
+    </div>
+{% endblock %}

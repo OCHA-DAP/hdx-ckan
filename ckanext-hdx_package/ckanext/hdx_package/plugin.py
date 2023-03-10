@@ -439,6 +439,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_view_delete': hdx_delete.resource_view_delete,
             'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
+            'hdx_tag_approved_list': hdx_actions.hdx_tag_approved_list,
             'format_autocomplete': hdx_get.hdx_format_autocomplete,
             'hdx_guess_format_from_extension': hdx_get.hdx_guess_format_from_extension,
             'package_create': hdx_create.package_create,
