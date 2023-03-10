@@ -359,6 +359,16 @@ def hdx_num_of_new_related_items():
     return count
 
 
+def hdx_num_of_members(sysadmin=None):
+    site_id = config.get('ckan.site_id')
+    q = model.Session.query(model.User).filter(model.User.state != 'deleted')
+    if sysadmin is not None:
+        q = q.filter(model.User.sysadmin == sysadmin)
+    else:
+        q = q.filter(model.User.name != site_id)
+    return q.count()
+
+
 def hdx_member_roles_list():
     context = {'model': model, 'session': model.Session,
                'user': c.user or c.author}
