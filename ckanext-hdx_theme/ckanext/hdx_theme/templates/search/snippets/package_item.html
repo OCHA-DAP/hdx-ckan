@@ -9,7 +9,6 @@
           <div class="{{column_class or 'col-xs-6'}}">
             {% block pre_icon %}
             {% endblock %}
-            <span class="pull-left">
             <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
               {% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
               {% if popular %}
@@ -155,7 +154,6 @@
               </ul>
               {% endblock %}
             </div>
-          </span>
           </div>
           {% block second_column_div %}
           <div class="{{column_class or 'col-xs-6'}}">

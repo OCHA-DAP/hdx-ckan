@@ -134,6 +134,7 @@
 }
 .search-list .dataset-item .dataset-content2 .dataset-heading {
   line-height: 1;
+  word-wrap: break-word;
 }
 .search-list .dataset-item .dataset-content2 .dataset-heading .restricted {
   color: #f2645a;
