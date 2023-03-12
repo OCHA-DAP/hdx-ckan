@@ -108,9 +108,9 @@ def request_tags():
         data_dict = _process_tags_request()
         approved_tags = get_action('hdx_tag_approved_list')(context, {})
 
+        _validate_tags_request_tags_field(data_dict['suggested_tags'], approved_tags)
         _validate_tags_request_fields(data_dict)
         _validate_tags_request_email_field(data_dict['email'])
-        _validate_tags_request_tags_field(data_dict['suggested_tags'], approved_tags)
 
     except NotAuthorized:
         return _build_json_response(

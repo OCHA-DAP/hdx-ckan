@@ -52,8 +52,8 @@ Example:
           </div>
           <div class="mTop15">
             <div>
-              {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': ''} %}
-              {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('eg. economy, mental health, government'), classes=['control-full suggested-tags'], attrs=tag_attrs) }}
+              {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '', 'class': 'required'} %}
+              {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('Tag(s) you’d like to request'), classes=['control-full required suggested-tags'], attrs=tag_attrs) }}
             </div>
             <span class="error-block"></span>
           </div>

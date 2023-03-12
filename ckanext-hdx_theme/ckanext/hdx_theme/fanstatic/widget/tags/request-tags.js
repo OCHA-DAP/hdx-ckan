@@ -1,10 +1,4 @@
-function _checkApprovedTag(input, approved) {
-  if(approved.includes(input.toLowerCase())) {
-    _markAlreadyApprovedTag([input]);
-  }
-}
-
-function _markAlreadyApprovedTag(existing_tags) {
+function _markAlreadyApprovedTags(existing_tags) {
   var $choices = $('#request-tags-form').find('.suggested-tags .select2-search-choice');
 
   $.each(existing_tags, function(i, existing_tag) {
@@ -12,6 +6,28 @@ function _markAlreadyApprovedTag(existing_tags) {
       return $(this).text() === existing_tag;
     }).parent().addClass('existing-choice');
   });
+
+  _showAlreadyApprovedTagsError(existing_tags);
+}
+
+function _showAlreadyApprovedTagsError(existing_tags) {
+  var $form = $('#request-tags-form');
+  var $input = $form.find('[name="suggested_tags"]');
+
+  var message = '';
+  var noTags = existing_tags.length;
+
+  if (noTags) {
+    if (noTags > 1) {
+      message = existing_tags.join(', ') + ' already exist';
+    } else {
+      message = existing_tags[0] + ' already exists';
+    }
+    $input.addClass('error');
+  } else {
+    $input.removeClass('error');
+  }
+  $input.parent().parent().find('.error-block').text(message);
 }
 
 function showTagRequestWidget(id) {
@@ -36,9 +52,20 @@ function showTagRequestWidget(id) {
   $.post('/api/action/hdx_tag_approved_list')
     .done((data) => {
       if (data.success) {
+        var existingTags = [];
         $(id).find('#suggested_tags').on('change', function (e) {
           if(e.added) {
-            _checkApprovedTag(e.added.text, data.result);
+            if(data.result.includes(e.added.text.toLowerCase())) {
+              existingTags.push(e.added.text);
+              _markAlreadyApprovedTags(existingTags);
+            }
+          }
+          else if(e.removed) {
+            var index = existingTags.indexOf(e.removed.text);
+            if (index !== -1) {
+              existingTags.splice(index, 1);
+              _showAlreadyApprovedTagsError(existingTags);
+            }
           }
         });
       } else {
@@ -89,7 +116,9 @@ $(document).ready(function () {
           if (result.error.message === 'Captcha is not valid') {
             $iframe.css('border', '1px solid red');
           } else {
-            _markAlreadyApprovedTag(result.error.existing_tags);
+            if (result.error.existing_tags) {
+              _markAlreadyApprovedTags(result.error.existing_tags);
+            }
             if (result.error.fields) {
               $.each(result.error.fields, function (field, message) {
                 var $input = $this.find('[name="' + field + '"]');
