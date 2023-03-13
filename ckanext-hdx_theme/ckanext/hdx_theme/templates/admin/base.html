@@ -36,10 +36,10 @@
 
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
   {% if user_is_sysadmin %}
-    {{ h.build_nav_icon('admin.index', 'All Sysadmins [%s]' % h.hdx_num_of_members(sysadmin=True)) }}
+    {{ h.build_nav_icon('admin.index', 'All Sysadmins [%s]' % h.hdx_user_count(only_sysadmin=True, include_site_user=True)) }}
   {% endif %}
   {% if user_is_sysadmin %}
-    <li><a href="/user/">{{ _('All users') }} [{{ h.hdx_num_of_members() }}]</a></li>
+    <li><a href="/user/">{{ _('All users') }} [{{ h.hdx_user_count() }}]</a></li>
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
     {{ h.build_nav_icon('hdx_carousel.show', _('Carousel')) }}
