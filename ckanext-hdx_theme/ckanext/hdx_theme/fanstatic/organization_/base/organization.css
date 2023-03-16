@@ -811,6 +811,28 @@ ul.dataset-resources li.label-icons span.icn-txt-cods:hover {
   margin-right: 5px;
   display: inline-block;
 }
+span.icn-txt-p-code,
+ul.dataset-resources li.label-icons span.icn-txt-p-code {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  background-color: #888888;
+  color: #fff;
+  padding: 4px;
+  width: 18px;
+  text-align: center;
+  border-radius: 10px;
+  line-height: 1;
+  display: inline-block;
+}
+span.icn-txt-p-code:hover,
+ul.dataset-resources li.label-icons span.icn-txt-p-code:hover {
+  background-color: #007CE0;
+}
+.dataset-content .icn-txt-p-code {
+  margin-right: 5px;
+  display: inline-block;
+}
 ul.dataset-resources {
   display: flex;
 }

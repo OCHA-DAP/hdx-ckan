@@ -29,6 +29,7 @@
   <div class="update-date">
     {% block broken_link_label %}{% endblock %}
     {% block in_quarantine_label %}{% endblock %}
+    {% snippet 'search/snippets/package_icons_p-code.html', tooltip_placement='bottom' %}
     {{ _('Updated') }}:
     {{ h.hdx_render_resource_updated_date(res, pkg) }}
   </div>
