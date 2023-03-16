@@ -22,9 +22,6 @@
 #request-tags #request-tags-form .select2-container {
   border: none;
 }
-#request-tags #request-tags-form .select2-container.error .select2-choices {
-  border-color: red;
-}
 #request-tags #request-tags-form .select2-container .select2-choice {
   box-shadow: none;
   border-color: #cccccc;
@@ -48,9 +45,6 @@
   font-size: 14px;
   color: #333333;
 }
-#request-tags #request-tags-form .select2-container-multi.choices-orange .select2-choices .select2-search-choice {
-  background-color: #f2645a;
-}
 #request-tags #request-tags-form .select2-container-multi .select2-choices {
   border-color: #fff;
   border-radius: 6px;
@@ -60,6 +54,9 @@
   height: 42px;
   margin: 0;
   border: none;
+  color: #cccccc !important;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
 }
 #request-tags #request-tags-form .select2-container-multi .select2-choices .select2-search-choice {
   background-color: #888888;
@@ -81,6 +78,9 @@
   border: none;
   border-radius: 0;
 }
+#request-tags #request-tags-form .select2-container-multi .select2-choices .select2-search-choice.existing-choice {
+  background-color: #f2645a;
+}
 #request-tags #request-tags-form .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close {
   background-color: white;
   left: auto;
@@ -98,15 +98,35 @@
   color: #fff;
   font-size: 15px;
 }
-#request-tags #request-tags-form .select2-dropdown-open .select2-choice {
-  border-color: #007CE0;
-}
-#request-tags #request-tags-form .select2-dropdown-open .select2-choices {
+#request-tags #request-tags-form .select2-container-multi.select2-dropdown-open .select2-choices {
   padding: 0;
   border-color: #007CE0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: none;
+}
+#request-tags #request-tags-form .select2-container-multi.select2-dropdown-open .select2-choices .select2-choice {
+  border-color: #007CE0;
+}
+#request-tags #request-tags-form .select2-container-multi.select2-dropdown-open .select2-choices .select2-search-field input {
+  color: #333333 !important;
+  font-weight: 400;
+}
+#request-tags #request-tags-form .select2-container-multi.error .select2-choices {
+  border-color: red;
+}
+#request-tags #request-tags-form .select2-container-multi.required:not(.select2-dropdown-open) .select2-choices li:first-child.select2-search-field:after {
+  content: "*";
+  color: red;
+  margin-left: -20px;
+  font-weight: 700;
+}
+#request-tags #request-tags-form .select2-container-multi.required:not(.select2-dropdown-open) .select2-choices li:first-child.select2-search-field input:not(.select2-focused) {
+  width: auto !important;
+  padding-right: 0;
+}
+#request-tags #request-tags-form .error-block {
+  color: #f2645a;
 }
 #requestTagsPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;
