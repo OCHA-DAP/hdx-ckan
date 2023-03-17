@@ -504,7 +504,7 @@ class SearchLogic(object):
         num_of_subnational = 0
         num_of_quickcharts = 0
         num_of_geodata = 0
-        # num_of_hxl = 0
+        num_of_p_coded = 0
         # num_of_sadd = 0
         num_of_requestdata = 0
         num_of_showcases = 0
