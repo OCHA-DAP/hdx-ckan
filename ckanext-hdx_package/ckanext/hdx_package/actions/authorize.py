@@ -131,6 +131,12 @@ def hdx_cod_update(context, data_dict):
     return {'success': result}
 
 
+def hdx_p_coded_resource_update(context, data_dict):
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_P_CODES)
+    return {'success': result}
+
+
 def hdx_send_mail_request_tags(context, data_dict):
     '''
     Only a logged in user has access.

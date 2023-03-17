@@ -22,7 +22,8 @@ from ckanext.hdx_search.helpers.constants import \
     ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
-    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME
+    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
+    P_CODED_DATASET_FACET_NAME
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
@@ -34,7 +35,7 @@ FEATURED_FACETS = [
     COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME,
     GEODATA_DATASETS_FACET_NAME, REQUESTDATA_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_NAME,
     SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
-    SADD_DATASETS_FACET_NAME
+    SADD_DATASETS_FACET_NAME, P_CODED_DATASET_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
 
@@ -542,6 +543,9 @@ class SearchLogic(object):
             elif category_key == 'has_geodata':
                 # has_geodata is a solr boolean that is transformed to the string 'true'
                 num_of_geodata = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'res_extras_p_coded':
+                # res_extras_p_coded is a solr boolean that is transformed to the string 'true'
+                num_of_p_coded = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             elif category_key == 'extras_is_requestdata_type':
                 # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
                 num_of_requestdata = next(
@@ -587,6 +591,8 @@ class SearchLogic(object):
                                      num_of_subnational, search_extras)
         self._add_facet_item_to_list(featured_facet_items, GEODATA_DATASETS_FACET_NAME, 'Geodata',
                                      num_of_geodata, search_extras)
+        self._add_facet_item_to_list(featured_facet_items, P_CODED_DATASET_FACET_NAME, 'Datasets with P-Codes',
+                                     num_of_p_coded, search_extras)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
         #                                   num_of_administrative_divisions, search_extras)
         self._add_facet_query_item_to_list(featured_facet_items, ADMIN_DIVISIONS_DATASETS_FACET_NAME,

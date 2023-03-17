@@ -7,7 +7,8 @@ from ckan.logic import (
 )
 
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
-from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
+from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
+    SKIP_VALIDATION
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender, \
     QAPiiAnalyticsSender, QASdcAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
@@ -302,3 +303,30 @@ def hdx_fs_check_package_reset(context, data_dict):
         return _get_action('package_revise')(context, data_revise_dict)
 
     raise NotFound("package doesn't contain resources or not found")
+
+
+def hdx_p_coded_resource_update(context, data_dict):
+    _check_access('hdx_p_coded_resource_update', context, data_dict)
+    resource_id = _get_or_bust(data_dict, 'id')
+    p_coded = data_dict['p_coded']
+    show_context = {
+        'model': context['model'],
+        'session': context['session'],
+        'user': context['user'],
+        'no_compute_extra_hdx_show_properties': context.get('no_compute_extra_hdx_show_properties')
+    }
+    resource_dict = _get_action('resource_show')(show_context, {'id': resource_id})
+    data_revise_dict = {
+        'match': {
+            'id': resource_dict['package_id']
+        },
+        'update__resources__' + resource_id: {
+            'p_coded': p_coded
+        }
+    }
+    context['ignore_auth'] = True
+    context[SKIP_VALIDATION] = True
+    result = _get_action('package_revise')(context, data_revise_dict)
+    return next((r for r in result['package']['resources'] if r['id'] == resource_id), None)
+
+
