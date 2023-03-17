@@ -139,6 +139,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                       ' -{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY))
 
         adapt_solr_fq('qa_completed', ' +extras_qa_completed:true', ' -extras_qa_completed:true')
+        adapt_solr_fq('p_coded', ' +res_extras_p_coded:true', ' -res_extras_p_coded:true')
         adapt_solr_fq('broken_link', ' +res_extras_broken_link:true', ' -res_extras_broken_link:true')
         adapt_solr_fq('in_quarantine', ' +res_extras_in_quarantine:true', ' -res_extras_in_quarantine:true')
         adapt_solr_fq(NEW_DATASETS_FACET_NAME,
@@ -296,6 +297,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
         facets_dict['{!ex=batch,archived}extras_archived'] = _('Archived datasets')
+        facets_dict['{!ex=batch,archived}res_extras_p_coded'] = _('Datasets with P-Codes')
 
         if are_new_cod_filters_enabled():
             facets_dict['{!ex=cod_level,batch}cod_level'] = _('CODs')

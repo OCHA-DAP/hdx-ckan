@@ -20,6 +20,7 @@ ADMIN_DIVISIONS_DATASETS_FACET_QUERY = \
 COD_DATASETS_FACET_NAME = 'cod'
 COD_DATASETS_FACET_QUERY = 'vocab_Topics:("common operational dataset - cod" OR "common operational dataset-cod")'
 
+P_CODED_DATASET_FACET_NAME = 'p_coded'
 SUBNATIONAL_DATASETS_FACET_NAME = 'subnational'
 QUICKCHARTS_DATASETS_FACET_NAME = 'quickcharts'
 GEODATA_DATASETS_FACET_NAME = 'geodata'

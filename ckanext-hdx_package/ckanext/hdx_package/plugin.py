@@ -289,6 +289,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_keep_unless_allow_fs_check_field'),
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_convert_to_json_string_if_not_string')
+                ],
+                'p_coded': [
+                    tk.get_validator('hdx_delete_unless_authorized_to_update_p_coded'),
+                    tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
+                    tk.get_validator('boolean_validator'),
                 ]
             }
         )
@@ -341,7 +346,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'fs_check_info': [
                     tk.get_validator('ignore_missing'),
                     # tk.get_converter('hdx_convert_from_json_string')
-                ]
+                ],
+                'p_coded': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
             }
         )
         schema.update({
@@ -471,7 +480,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_resource_reset': hdx_patch.hdx_fs_check_resource_reset,
             'hdx_fs_check_package_reset': hdx_patch.hdx_fs_check_package_reset,
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
-            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags
+            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags,
+            'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
         }
 
     # IValidators
@@ -508,6 +518,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                                                                resource_level=True),
             'hdx_delete_unless_authorized_to_update_cod':
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_delete_unless_authorized_to_update_p_coded':
+                vd.hdx_delete_unless_authorized_wrapper('hdx_p_coded_resource_update'),
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
             'hdx_in_update_frequency_values':
@@ -528,20 +540,22 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         }
 
     def get_auth_functions(self):
-        return {'package_create': authorize.package_create,
-                'package_update': authorize.package_update,
-                'hdx_resource_id_list': authorize.hdx_resource_id_list,
-                'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
-                'hdx_send_mail_members': authorize.hdx_send_mail_members,
-                # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
-                'hdx_resource_download': authorize.hdx_resource_download,
-                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
-                'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
-                'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
-                'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
-                'hdx_cod_update': authorize.hdx_cod_update,
-                'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags
-                }
+        return {
+            'package_create': authorize.package_create,
+            'package_update': authorize.package_update,
+            'hdx_resource_id_list': authorize.hdx_resource_id_list,
+            'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
+            'hdx_send_mail_members': authorize.hdx_send_mail_members,
+            # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
+            'hdx_resource_download': authorize.hdx_resource_download,
+            'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
+            'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
+            'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
+            'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
+            'hdx_cod_update': authorize.hdx_cod_update,
+            'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags,
+            'hdx_p_coded_resource_update': authorize.hdx_p_coded_resource_update,
+        }
 
     def make_middleware(self, app, config):
         if not HDXPackagePlugin.__startup_tasks_done:

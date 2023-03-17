@@ -54,7 +54,7 @@ ckan.site_url = http://test.ckan.net
 package_new_return_url = http://localhost/dataset/<NAME>?test=new
 package_edit_return_url = http://localhost/dataset/<NAME>?test=edit
 ckan.resource_formats = %(here)s/ckanext-hdx_package/ckanext/hdx_package/config/resource_formats.json
-ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data pii_is_sensitive
+ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data pii_is_sensitive p_coded
 ckan.resource_formats.external_system = External System
 
 # Add additional test specific configuration options as necessary.
