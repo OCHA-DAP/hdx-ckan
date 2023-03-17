@@ -514,6 +514,10 @@ class SearchLogic(object):
 
         new_cod_filters_enabled = are_new_cod_filters_enabled()
 
+        p_coded_explanation = _('A P-code, short for place code, is a kind of geocode used mostly by emergency '
+                                'response teams. It provides unique identifiers to thousands of locations and '
+                                'administrative units in a humanitarian operation.')
+
         featured_facet_items = []
         result['facets']['featured'] = {
             'name': 'featured',
@@ -592,7 +596,7 @@ class SearchLogic(object):
         self._add_facet_item_to_list(featured_facet_items, GEODATA_DATASETS_FACET_NAME, 'Geodata',
                                      num_of_geodata, search_extras)
         self._add_facet_item_to_list(featured_facet_items, P_CODED_DATASET_FACET_NAME, 'Datasets with P-Codes',
-                                     num_of_p_coded, search_extras)
+                                     num_of_p_coded, search_extras, p_coded_explanation)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
         #                                   num_of_administrative_divisions, search_extras)
         self._add_facet_query_item_to_list(featured_facet_items, ADMIN_DIVISIONS_DATASETS_FACET_NAME,

@@ -647,12 +647,15 @@ body {
   margin-left: 3px;
 }
 .dataset-resources [class^="icon-"],
-.dataset-resources [class*=" icon-"] {
+.dataset-resources [class*=" icon-"],
+.dataset-resources [class^="humanitarianicons-"] {
   display: inline-block;
-  font-size: 16px;
+  vertical-align: middle;
+  font-size: 18px;
 }
 .dataset-resources [class^="icon-"]:before,
-.dataset-resources [class*=" icon-"]:before {
+.dataset-resources [class*=" icon-"]:before,
+.dataset-resources [class^="humanitarianicons-"]:before {
   color: #888888;
 }
 /* Style dataset icons */

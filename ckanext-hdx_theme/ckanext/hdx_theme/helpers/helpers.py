@@ -878,3 +878,10 @@ url_for = hdx_url_for
 
 def hdx_pending_request_data(user_id, package_id):
     return requestdata_model.ckanextRequestdata.get_pending_request(package_id, user_id, ['new', 'open'])
+
+
+def hdx_dataset_is_p_coded(resource_list):
+    for resource in resource_list:
+        if resource.get('p_coded'):
+            return True
+    return False

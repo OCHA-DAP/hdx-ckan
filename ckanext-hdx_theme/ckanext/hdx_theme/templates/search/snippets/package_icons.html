@@ -2,7 +2,7 @@
 
 {% block leading_icons %}
   {% snippet 'search/snippets/package_icons_cod.html', package=package%}
-  {% snippet 'search/snippets/package_icons_p-code.html' %}
+  {% snippet 'search/snippets/package_icons_p-code.html', resources=package.resources %}
 {% endblock %}
 
 {% block other_icons %}

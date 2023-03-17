@@ -170,9 +170,10 @@
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="humanitarianicons-"],
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" humanitarianicons-"] {
   display: inline-block;
+  vertical-align: middle;
   margin-right: 5px;
   color: #888888;
-  font-size: 16px;
+  font-size: 18px;
 }
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class^="icon-"]::before,
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons [class*=" icon-"]::before,
