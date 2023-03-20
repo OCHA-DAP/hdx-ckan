@@ -514,9 +514,9 @@ class SearchLogic(object):
 
         new_cod_filters_enabled = are_new_cod_filters_enabled()
 
-        p_coded_explanation = _('A P-code, short for place code, is a kind of geocode used mostly by emergency '
-                                'response teams. It provides unique identifiers to thousands of locations and '
-                                'administrative units in a humanitarian operation.')
+        p_coded_explanation = _('A P-Code, short for place code, is a unique identifier for locations in humanitarian '
+                                'datasets. It is most commonly used to uniquely identify subnational administrative '
+                                'divisions.')
 
         featured_facet_items = []
         result['facets']['featured'] = {

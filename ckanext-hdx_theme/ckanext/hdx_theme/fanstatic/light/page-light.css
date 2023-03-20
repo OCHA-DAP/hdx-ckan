@@ -485,6 +485,7 @@ ul.dataset-resources li.label-icons span.icn-txt-p-code {
   text-align: center;
   border-radius: 10px;
   line-height: 1;
+  letter-spacing: 0;
   display: inline-block;
 }
 span.icn-txt-p-code:hover,

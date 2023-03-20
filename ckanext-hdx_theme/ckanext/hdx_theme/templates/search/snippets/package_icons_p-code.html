@@ -1,7 +1,7 @@
 {% if h.hdx_dataset_is_p_coded(resources) %}
   <a href="{% url_for 'hdx_dataset.search', ext_p_coded=1 %}">
     <span class="icn-txt-p-code"
-          title="{{ _('A P-code, short for place code, is a kind of geocode used mostly by emergency response teams. It provides unique identifiers to thousands of locations and administrative units in a humanitarian operation.') }}"
+          title="{{ _('A P-Code, short for place code, is a unique identifier for locations in humanitarian datasets. It is most commonly used to uniquely identify subnational administrative divisions.') }}"
           data-module="bs_tooltip"
           data-module-placement="{% if tooltip_placement %}{{ tooltip_placement }}{% else %}top{% endif %}"
           data-toggle="tooltip">P</span>
