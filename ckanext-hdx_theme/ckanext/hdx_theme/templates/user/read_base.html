@@ -1,7 +1,6 @@
 {% extends "page.html" %}
 
 {% set user = user_dict %}
-
 {% block subtitle %}{{ user.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -38,6 +37,9 @@
   {% endif %}
   {% if h.check_access('api_token_list', {'user': user['name']}) %}
     {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=user.name) }}
+  {% endif %}
+  {% if h.check_access('user_update', user) %}
+    {{ h.build_nav_icon('hdx_user.edit', _('Profile and Password'), id=user.name) }}
   {% endif %}
 {% endblock %}
 
@@ -111,9 +113,6 @@
           <dd class="value"><code>{{ user.apikey }}</code></dd>
         </dl>
         {% endif %}
-        {% if h.check_access('user_update', user) %}
-          {% link_for _('Edit'), controller='user', action='edit', id=user.name, class_='btn', icon='wrench' %}
-        {% endif %}
       </div>
     {% endblock %}
   </section>
@@ -122,8 +121,6 @@
 
 {% block styles %}
   {{ super() }}
-{#  {% resource 'hdx_theme/admin/admin-base.css' %}#}
-{#  {% resource 'hdx_theme/dashboard.css' %}#}
 
   {% asset 'hdx_theme/admin-styles' %}
 {% endblock %}

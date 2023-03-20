@@ -1,15 +1,24 @@
 # encoding: utf-8
 import logging
+import json
 
 from flask import Blueprint
 import ckan.logic as logic
+import ckan.lib.base as base
+import ckan.model as model
+from ckan.common import asbool, config
 import ckan.lib.authenticator as authenticator
 import ckanext.hdx_users.model as user_model
 from ckan.views.user import EditView as EditView
+from ckan.views.user import _extra_template_variables
 from ckan.views.user import set_repoze_user as set_repoze_user
-from ckanext.hdx_users.views.user_view_helper import *
-import ckan.plugins.toolkit as tk
 
+import ckan.plugins.toolkit as tk
+from ckanext.hdx_users.views.user_view_helper import *
+from ckanext.security import utils
+from ckanext.security.cache.login import LoginThrottle
+from ckanext.security.model import SecurityTOTP
+from ckan.lib import helpers
 log = logging.getLogger(__name__)
 
 render = tk.render
@@ -20,6 +29,7 @@ request = tk.request
 h = tk.h
 _ = tk._
 g = tk.g
+User = model.User
 
 redirect = tk.redirect_to
 
@@ -27,7 +37,60 @@ NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
-user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
+class HDXTwoStep:
+    @staticmethod
+    def configure_mfa(id=None):
+        tc = utils.configure_mfa(id)
+        if helpers.are_there_flash_messages():
+            helpers._flash.pop_messages()
+        helpers.flash_success("Successfully configured and enabled the two-step verification.")
+        return json.dumps({'success': (tc.mfa_test_valid == True)})
+
+    @staticmethod
+    def new(id=None):
+        utils.new(id)
+        tc = utils.configure_mfa(id)
+        if helpers.are_there_flash_messages():
+            helpers._flash.pop_messages()
+        helpers.flash_error("Two-step verification enabled. "
+                            "Please add the new secret to your authenticator app and verify the code to ensure it is working ok.")
+        return json.dumps({
+            'success': True,
+            'totp_challenger_uri': tc.totp_challenger_uri,
+            'totp_secret': tc.totp_secret
+        })
+
+    @staticmethod
+    def delete(id=None):
+        totp_challenger = SecurityTOTP.get_for_user(id)
+        if helpers.are_there_flash_messages():
+            helpers._flash.pop_messages()
+        helpers.flash_success("Successfully disabled the two-step verification.")
+        if totp_challenger:
+            totp_challenger.delete()
+            totp_challenger.commit()
+        return json.dumps({'success': True})
+
+    @staticmethod
+    def check_lockout():
+        user_name = request.args['user']
+        locked = False
+        lockout = {}
+        throttle = LoginThrottle(User.by_name(user_name), user_name)
+        if throttle:
+            locked = throttle.is_locked()
+            if locked:
+                lockout['timeout'] = throttle.login_lock_timeout
+
+        lockout['result'] = locked
+        return json.dumps(lockout)
+
+    @staticmethod
+    def check_mfa():
+        user_name = request.args['user']
+        totp_challenger = SecurityTOTP.get_for_user(user_name)
+        return json.dumps({'result': totp_challenger is not None})
+
 
 class HDXEditView(EditView):
 
@@ -101,7 +164,7 @@ class HDXEditView(EditView):
             log.error(ex)
 
         h.flash_success(_(u'Profile updated'))
-        resp = h.redirect_to(u'user.read', id=user[u'name'])
+        resp = h.redirect_to(u'hdx_user.edit', id=user[u'name'])
         if current_user and data_dict[u'name'] != old_username:
             # Changing currently logged in user's name.
             # Update repoze.who cookie to match
@@ -111,15 +174,50 @@ class HDXEditView(EditView):
     def get(self, id=None, data=None, errors=None, error_summary=None):
         if data is None:
             context, id = self._prepare(id)
-            data_dict = {u'id': id}
+            data_dict = {u'id': id, u'include_num_followers': True}
             try:
                 data = get_action(u'user_show')(context, data_dict)
-                # if data.get('firstname') is None or data.get('lastname') is None
-                # names_dict = get_action(u'hdx_user_fullname_show')(context, {'user_id': data.get('id')})
-                # data['firstname'] = names_dict.get('firstname')
-                # data['lastname'] = names_dict.get('lastname')
             except NotAuthorized:
                 abort(403, _(u'Unauthorized to edit user %s') % u'')
             except NotFound:
                 abort(404, _(u'User not found'))
-        return super(HDXEditView, self).get(id, data, errors, error_summary)
+        data['user_dict'] = data
+
+        context, id = self._prepare(id)
+        data_dict = {u'id': id, u'include_num_followers': True}
+        try:
+            old_data = logic.get_action(u'user_show')(context, data_dict)
+
+            g.display_name = old_data.get(u'display_name')
+            g.user_name = old_data.get(u'name')
+
+            data = data or old_data
+
+        except logic.NotAuthorized:
+            base.abort(403, _(u'Unauthorized to edit user %s') % u'')
+        except logic.NotFound:
+            base.abort(404, _(u'User not found'))
+        user_obj = context.get(u'user_obj')
+
+        errors = errors or {}
+        vars = {
+            u'data': data,
+            u'errors': errors,
+            u'error_summary': error_summary
+        }
+
+        extra_vars = _extra_template_variables({
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user
+        }, data_dict)
+
+        extra_vars[u'show_email_notifications'] = asbool(
+            config.get(u'ckan.activity_streams_email_notifications'))
+        vars.update(extra_vars)
+        tc = utils._setup_totp_template_variables(context, data_dict)
+        if hasattr(tc, 'totp_challenger_uri'):
+            g.totp_challenger_uri = tc.totp_challenger_uri
+        if hasattr(tc, 'totp_secret'):
+            g.totp_secret = tc.totp_secret
+        return base.render(u'user/edit_user_form.html', extra_vars=vars)

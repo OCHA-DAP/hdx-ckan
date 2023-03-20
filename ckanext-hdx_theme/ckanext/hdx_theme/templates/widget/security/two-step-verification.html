@@ -1,0 +1,70 @@
+{#
+Two step verification widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+#}
+{% import 'macros/form.html' as form %}
+{% set class = "popup-onboarding popup-security" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+  <div class="two-step-content">
+    <div>
+      Two-step verification (also known as two factor authentication or 2FA) is required for an extra layer of protection to your HDX account.<br/><br/>
+      Enabling two-step verification means that HDX will require a six-digit one time password (in addition to your existing password) every time you sign in to your account.<br/><br/>
+      In order for two-step verification to work correctly, you'll need a mobile device running a compatible mobile app such as Google Authenticator (Android/iPhone) or other apps that support time-based One Time Password (TOTP) protocol.<br/><br/>
+      <ol>
+        <li>Download app that supports time-based One Time Password(TOTP) protocol such as <a href="https://support.google.com/accounts/answer/1066447?hl=en&ref_topic=2954345" target="_blank">Google Authenticator (Android/iPhone)</a></li>
+        <li>Click on "Turn on two-step verification" below which will generate a QR code. <b>Once the code is generated, you will be required to enter One Time Password every time you login to HDX.</b></li>
+        <li>Scan a QR code displayed on the screen below with your mobile app or manually enter a secret key.</li>
+        <li>Using the One Time Password test, enter six-digit one time pass displayed on your app to make sure your two-step verification is working.</li>
+      </ol>
+      <br/>
+      {% set generate_new_title = "Generate new two-step verification code" %}
+      <div id="two-step-turn-off-container" style="display: {% if c.totp_challenger_uri %}inline{% else %}none{% endif %};">
+        <a id="two-step-turn-off" class="btn">Turn off two-step verification</a>
+        <a href="#" id="two-step-regenerate">{{ generate_new_title }}</a>
+
+        <input id="hidden-user-id" type="hidden" value="{{userId}}" />
+        <input id="hidden-user-name" type="hidden" value="{{userName}}" />
+        <input id="totp-uri" type="hidden" disabled value="{{c.totp_challenger_uri}}"/>
+        <div>
+          <canvas class="radius-lg padding-sm margin-b-sm border-solid" id="qr-code-container"></canvas>
+        </div>
+        <p>
+          {% trans %}If you are not able to scan the QR code, you can manually enter this secret into your authenticator app:{% endtrans %} <code id="totp-secret">{{c.totp_secret}}</code>
+        </p>
+
+        <div class="test-two-step">
+          {{ form.input('mfa',
+          label=_("Enter the code from your app to test"),
+          id='field-mfa',
+          type="text",
+          value="",
+          error=c.mfa_test_invalid,
+          classes=["control-medium"],
+          attrs={"autocomplete": "off"})
+          }}
+          <button id="test-two-step-btn" class="btn btn-primary">{{_('Test')}}</button>
+          <div id="test-two-step-result" style="display: none;" class="alert"></div>
+        </div>
+        <p>
+          <b>If your one-time password does not work:</b><br/>
+          Click on the "{{ generate_new_title }}" and repeat from step 3 above.
+        </p>
+        <div id="new-two-step-actions" style="display: none; justify-content: space-between">
+          <button id="cancel-two-step-btn" class="btn btn-danger" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-original-title="Turn off the two-step verification.">{{_('Cancel')}}</button>
+          <button id="submit-two-step-btn" style="display: none;" class="btn btn-primary" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{_('Save')}}</button>
+          <button id="disabled-submit-two-step-btn" class="btn btn-primary disabled" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" data-original-title="Please test the two step code before saving.">{{_('Save')}}</button>
+        </div>
+      </div>
+      <div id="two-step-turn-on-container" style="display: {% if c.totp_challenger_uri %}none{% else %}inline{% endif %};">
+        <a id="two-step-turn-on" class="btn">Turn on two-step verification</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+

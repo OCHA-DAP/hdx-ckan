@@ -19,6 +19,25 @@ function notYou(){
     $('#username-static, #login-photo-gravatar').hide();
     $('#username-form-field, #login-photo-default').show();
     $('#field-login').focus();
+    _displayMfaField();
+}
+
+function checkLockout(event) {
+  let username = $("#field-login").val();
+  let response = $.ajax({
+    type: "GET",
+    url: `/util/user/check_lockout?user=${username}`,
+    cache: false,
+    async: false
+  }).responseText;
+  if (response) {
+    let json = JSON.parse(response);
+    if (json.result === true){
+      _showLoginError(`Too many wrong attempts. Login locked for ${json.timeout} seconds. Please try again later!`);
+      event.preventDefault();
+    }
+  }
+
 }
 
 function showContributorPopup(popupId, pkgTitle, pkgOwnerOrg, pkgId, overwritePopupTitle){
@@ -69,18 +88,18 @@ function showOnboardingWidget(id, elid, val){
             $this.addClass("input-content");
     }
 
-    $(id).find('input[type="password"], input[type="text"], textarea').each(
+    $(id).find('input[type="password"], input[type="number"], input[type="text"], textarea').each(
         function(idx, el){
             _triggerInputDataClass($(el));
         }
     );
-    $(id).find('input[type="password"], input[type="text"], textarea').change(
+    $(id).find('input[type="password"], input[type="number"], input[type="text"], textarea').change(
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
         }
     );
-    $(id).find('input[type="password"], input[type="text"], textarea').on("keyup",
+    $(id).find('input[type="password"], input[type="number"], input[type="text"], textarea').on("keyup",
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
@@ -109,10 +128,50 @@ function showOnboardingWidget(id, elid, val){
     return false;
 }
 
+function _showLoginError(loginError) {
+  var errMsg = $("#loginPopup").find(".error-message");
+  errMsg.text(loginError);
+  $("#field-login").addClass("error");
+  $("#field-password").addClass("error");
+  notYou();
+  errMsg.show();
+}
+
+function _displayMfaField(show = false) {
+  if (show)
+    $("#mfa-form-field").show();
+  else
+    $("#mfa-form-field").hide();
+  $("#field-mfa").val("");
+}
+
+function checkMfa() {
+  console.log("test");
+  let username = $("#field-login").val();
+  let response = $.ajax({
+    type: "GET",
+    url: `/util/user/check_mfa?user=${username}`,
+    cache: false,
+    async: false
+  }).responseText;
+  if (response) {
+    let json = JSON.parse(response);
+    if (json.result === true){
+      _displayMfaField(true);
+      return;
+    }
+  }
+  _displayMfaField();
+}
+
+
 $(document).ready(function(){
+    $("#hdx-login-form").submit(checkLockout);
+    $("#field-login").change(checkMfa);
     //check cookies
-    var loginCookie = $.cookie("hdx_login");
-    if (loginCookie){
+    const loginCookie = $.cookie("hdx_login");
+    const loginPopup = $("#loginPopup").length > 0;
+    if (loginCookie && loginPopup){
         var data = JSON.parse(loginCookie);
         //console.log(data);
 
@@ -123,6 +182,7 @@ $(document).ready(function(){
             $('#user-display-email').text(data.email);
         $('#login-photo-gravatar-img').attr("src", "//gravatar.com/avatar/"+ data.email_hash +"?s=95&d=identicon");
         $('#username-static, #login-photo-gravatar').show();
+        checkMfa();
     }
 
     //check for first login
@@ -141,13 +201,7 @@ $(document).ready(function(){
     //check for login error
     var loginError = $("#login-error").text();
     if (loginError && loginError != ""){
-        var errMsg = $("#loginPopup").find(".error-message");
-        errMsg.text(loginError);
-        $("#field-login").addClass("error");
-        $("#field-password").addClass("error");
-        notYou();
-        errMsg.show();
-
+      _showLoginError(loginError);
     }
 
     //check for login info message

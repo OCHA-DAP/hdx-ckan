@@ -24,6 +24,7 @@
 }
 .popup.popup-onboarding input[type="text"],
 .popup.popup-onboarding input[type="password"],
+.popup.popup-onboarding input[type="number"],
 .popup.popup-onboarding textarea {
   height: 44px;
   border-radius: 6px;
@@ -34,11 +35,13 @@
 }
 .popup.popup-onboarding input[type="text"]:focus,
 .popup.popup-onboarding input[type="password"]:focus,
+.popup.popup-onboarding input[type="number"]:focus,
 .popup.popup-onboarding textarea:focus {
   outline: none;
 }
 .popup.popup-onboarding input[type="text"] ~ label,
 .popup.popup-onboarding input[type="password"] ~ label,
+.popup.popup-onboarding input[type="number"] ~ label,
 .popup.popup-onboarding textarea ~ label {
   color: #cccccc;
   font-family: 'Source Sans Pro', sans-serif;
@@ -55,11 +58,13 @@
 }
 .popup.popup-onboarding input[type="text"] ~ label:after,
 .popup.popup-onboarding input[type="password"] ~ label:after,
+.popup.popup-onboarding input[type="number"] ~ label:after,
 .popup.popup-onboarding textarea ~ label:after {
   content: "";
 }
 .popup.popup-onboarding input[type="text"].input-content ~ label,
 .popup.popup-onboarding input[type="password"].input-content ~ label,
+.popup.popup-onboarding input[type="number"].input-content ~ label,
 .popup.popup-onboarding textarea.input-content ~ label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
@@ -70,16 +75,19 @@
 }
 .popup.popup-onboarding input[type="text"].required.input-content ~ label:after,
 .popup.popup-onboarding input[type="password"].required.input-content ~ label:after,
+.popup.popup-onboarding input[type="number"].required.input-content ~ label:after,
 .popup.popup-onboarding textarea.required.input-content ~ label:after {
   content: "";
 }
 .popup.popup-onboarding input[type="text"].required.error,
 .popup.popup-onboarding input[type="password"].required.error,
+.popup.popup-onboarding input[type="number"].required.error,
 .popup.popup-onboarding textarea.required.error {
   border-color: red;
 }
 .popup.popup-onboarding input[type="text"].required ~ label:after,
 .popup.popup-onboarding input[type="password"].required ~ label:after,
+.popup.popup-onboarding input[type="number"].required ~ label:after,
 .popup.popup-onboarding textarea.required ~ label:after {
   content: "*";
   margin-left: 5px;

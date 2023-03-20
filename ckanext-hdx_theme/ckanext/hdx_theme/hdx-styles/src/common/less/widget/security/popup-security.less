@@ -1,0 +1,32 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+
+.popup-security {
+  .notification-widget {
+    background-color: @whiteColor;
+  }
+  .two-step-content {
+    padding: 30px;
+
+    #field-mfa {
+      border-color: @lightGrayColor;
+      height:32px;
+    }
+    #two-step-turn-off {
+      margin-right: 15px;
+    }
+    canvas {
+      margin-top:10px;
+      height: 140px;
+    }
+    .test-two-step {
+      .control-group {
+        display: inline-block;
+      }
+      .btn {
+        border: none;
+        margin-bottom: 2px;
+      }
+    }
+  }
+}

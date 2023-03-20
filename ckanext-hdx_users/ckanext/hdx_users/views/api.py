@@ -3,6 +3,8 @@ from flask import Blueprint, jsonify
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckan.common import request
+from ckanext.hdx_users.views.user_edit_view import HDXTwoStep
+
 
 # shortcuts
 get_action = tk.get_action
@@ -29,3 +31,5 @@ def user_autocomplete():
 
 
 hdx_user_autocomplete.add_url_rule(u'/util/user/hdx_autocomplete', view_func=user_autocomplete)
+hdx_user_autocomplete.add_url_rule('/util/user/check_lockout', view_func=HDXTwoStep.check_lockout, methods=['GET'])
+hdx_user_autocomplete.add_url_rule('/util/user/check_mfa', view_func=HDXTwoStep.check_mfa, methods=['GET'])
