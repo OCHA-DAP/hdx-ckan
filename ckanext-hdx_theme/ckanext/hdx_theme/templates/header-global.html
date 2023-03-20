@@ -241,6 +241,7 @@
                                 {% if h.check_access('api_token_list', {'user': c.userobj['name']}) %}
                                   {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=c.userobj.name) }}
                                 {% endif %}
+                                {{ h.build_nav_icon('user.edit', _('Profile and Password'), id=c.userobj.name) }}
                               </ul>
                             </li>
 

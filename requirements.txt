@@ -10,6 +10,8 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.5.2#egg=ckanext-s3filestore
     # via -r requirements.in
+-e git+https://github.com/OCHA-DAP/ckanext-security.git#egg=ckanext-security
+    # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.4.305#egg=ckanext-showcase
     # via -r requirements.in
 alembic==1.0.0
@@ -123,6 +125,8 @@ polib==1.0.7
 psycopg2==2.9.3
     # via -r requirements.in
 pyjwt==1.7.1
+    # via -r requirements.in
+pyotp==2.6.0
     # via -r requirements.in
 pyparsing==3.0.7
     # via rdflib

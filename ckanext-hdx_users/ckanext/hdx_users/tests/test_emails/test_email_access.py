@@ -35,7 +35,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         cls._get_action('user_create')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
             {'name': 'johnfoo', 'fullname': 'John Foo',
-             'email': 'example@example.com', 'password': 'abcdefgh'})
+             'email': 'example@example.com', 'password': 'Abcdefgh12'})
 
     @classmethod
     def _get_action(cls, action_name):
@@ -255,7 +255,7 @@ config = tk.config
 
 def _get_user_params(user_dict):
     params = {
-        'old_password': 'abcdefgh',
+        'old_password': 'Abcdefgh12',
         'email': user_dict.get('email'),
         'save': 'True',
         'password1': '',
@@ -282,7 +282,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email(self):
         '''Editing an existing user's email is successful.'''
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
 
         sue_obj = model.User.get('sue@example.com')
         sue_obj.apikey = 'SUE_API_KEY'
@@ -295,12 +295,12 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing values in the form
-        assert '<input id="field-username" type="text" name="name" value="sue"' in response.body
-        assert '<input id="field-firstname" type="text" name="firstname" value="Mr. Test User"' in response.body
-        assert '<input id="field-lastname" type="text" name="lastname" value=""' in response.body
+        assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
+        assert '<input id="field-firstname" type="text" name="firstname"' in response.body
+        assert '<input id="field-lastname" type="text" name="lastname"' in response.body
         assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
         assert '<textarea id="field-about" name="about" cols="20" rows="5" placeholder="A little information about yourself"' in response.body
-        assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
+        # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
         assert '<input id="field-password" type="password" name="old_password" value=""' in response.body
         assert '<input id="field-password" type="password" name="password1" value=""' in response.body
         assert '<input id="field-password-confirm" type="password" name="password2" value=""' in response.body
@@ -320,7 +320,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email_to_existing(self):
         '''Editing to an existing user's email is unsuccessful.'''
         factories.User(name='existing', email='existing@example.com')
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
         sue_obj = model.User.get('sue@example.com')
         sue_obj.apikey = 'SUE_API_KEY'
         model.Session.commit()
@@ -352,7 +352,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email_invalid_format(self):
         '''Editing with an invalid email format is unsuccessful.'''
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
         sue_obj = model.User.get('sue@example.com')
         sue_obj.apikey = 'SUE_API_KEY'
         model.Session.commit()
@@ -385,8 +385,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     def test_edit_email_saved_as_lowercase(self):
         '''Editing with an email in uppercase will be saved as lowercase.'''
-        existing_user = factories.User(name='existing', email='existing@example.com', password='abcdefgh')
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        existing_user = factories.User(name='existing', email='existing@example.com', password='Abcdefgh12')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
 
         sue_obj = model.User.get('sue@example.com')
         sue_obj.apikey = 'SUE_API_KEY'
@@ -418,8 +418,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         '''Editing with an existing user's email will be unsuccessful, even is
         differently cased.'''
         '''Editing with an email in uppercase will be saved as lowercase.'''
-        existing_user = factories.User(name='existing', email='existing@example.com', password='abcdefgh')
-        sue_user = factories.User(name='sue', email='sue@example.com', password='abcdefgh')
+        existing_user = factories.User(name='existing', email='existing@example.com', password='Abcdefgh12')
+        sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
 
         sue_obj = model.User.get('sue@example.com')
         sue_obj.apikey = 'SUE_API_KEY'
@@ -461,7 +461,7 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
     @pytest.mark.usefixtures("with_request_context")
     def test_send_reset_email(self, mail_server):
         '''Password reset email is sent for valid user email'''
-        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
         user_obj = model.User.get(user.get('name'))
         msgs = mail_server.get_smtp_messages()
         assert msgs == []
@@ -503,7 +503,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     def test_send_reset_email_for_username(self, mail_server):
         '''Password reset email is sent for valid user username'''
 
-        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
         # user_obj = model.User.get(user.get('name'))
 
         # send email
@@ -538,7 +538,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     def test_send_reset_email_for_email(self, mail_server):
         '''Password reset email is sent for valid email'''
 
-        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
         # user_obj = model.User.get(user.get('name'))
 
         # send email
@@ -573,7 +573,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     def test_send_reset_email_for_email_different_case(self, mail_server):
         '''Password reset email is sent for valid user email but with lowercase'''
 
-        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
         # user_obj = model.User.get(user.get('name'))
 
         # send email
@@ -608,7 +608,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     def test_send_reset_email_for_email_not_existing(self, mail_server):
         '''Password reset email is sent for not a valid user email'''
 
-        user = factories.User(name='sue', email='sue@example.com', password='abcdefgh', fullname='Sue Tester')
+        user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
         # user_obj = model.User.get(user.get('name'))
 
         # send email

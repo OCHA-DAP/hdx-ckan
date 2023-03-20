@@ -275,21 +275,21 @@ def get_users():
             'name': 'johndoe1',
             'fullname': 'John Doe1',
             'email': 'johndoe1@test.test',
-            'password': 'password',
+            'password': 'Password123',
             'about': 'John Doe1, 1st user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
         },
         {
             'name': 'annaanderson2',
             'fullname': 'Anna Anderson2',
             'email': 'annaanderson2@test.test',
-            'password': 'password',
+            'password': 'Password123',
             'about': 'Anna Anderson2, 2nd user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
         },
         {
             'name': 'janedoe3',
             'fullname': 'Jane Doe3',
             'email': 'janedoe3@test.test',
-            'password': 'password',
+            'password': 'Password123',
             'about': 'Jane Doe3, 3rd user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
         }
 

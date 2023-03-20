@@ -706,6 +706,20 @@ shape-view-scripts:
 #  contents:
 #    - vendor/leaflet-0.7.3/leaflet.css
 
+two-step-styles:
+  output: ckanext-hdx_theme/%(version)s_two-step-styles.css
+  contents:
+    - widget/security/popup-security.css
+
+two-step-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_two-step-scripts.js
+  extra:
+    preload:
+      - hdx_theme/two-step-styles
+  contents:
+    - widget/security/popup-security.js
+
 admin-styles:
   output: ckanext-hdx_theme/%(version)s_admin-styles.css
   extra:

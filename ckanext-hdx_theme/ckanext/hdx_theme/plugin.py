@@ -26,10 +26,17 @@ from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_loc
 from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
 from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.splash_page import hdx_splash
+import ckan.plugins.toolkit as tk
+from ckanext.security.model import SecurityTOTP
+from ckan.common import session
 from ckanext.hdx_users.helpers.token_creation_notification_helper import send_email_on_token_creation
 
 config = toolkit.config
-
+log = logging.getLogger(__name__)
+request = tk.request
+g = tk.g
+redirect = tk.redirect_to
+h = tk.h
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
@@ -311,6 +318,32 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'user_generate_apikey': auth.hdx_user_generate_apikey,
         }
 
+    def _before_request(self):
+        protected_urls = [
+            '/',
+            '/dashboard/',
+            '/dataset',
+            '/group',
+            '/organization',
+            '/faq',
+            '/user/',
+            '/ckan-admin/'
+        ]
+        redirect_enabled = config.get('hdx.security.2fa.redirect', 'false') == 'true'
+        if redirect_enabled and g.userobj and g.userobj.sysadmin and \
+            request.url_rule.rule in protected_urls:
+            log.info('Sysadmin, checking for 2FA...')
+            if session.get('totp_enabled', None) is None:
+                totp_challenger = SecurityTOTP.get_for_user(g.userobj.name)
+                if totp_challenger:
+                    session['totp_enabled'] = True
+                else:
+                    session['totp_enabled'] = False
+
+            if not session['totp_enabled']:
+                log.info('Redirect to setup 2FA')
+                return redirect(h.url_for('user.edit', show_totp=True))
+
     # IMiddleware
     def make_middleware(self, app, config):
         cookie_app = CookieMiddleware(app, config)
@@ -322,6 +355,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     handler.setLevel(logging.ERROR)
             app.logger.addFilter(FlaskEmailFilter())
             app.after_request(http_headers.set_http_headers)
+            app.before_request(self._before_request)
         return redirection_app
 
     # IValidators

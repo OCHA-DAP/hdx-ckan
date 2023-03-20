@@ -19,7 +19,7 @@ from ckan.views.user import login as _login
 from ckan.views.user import logout as _logout
 from ckan.views.user import unfollow as _unfollow
 from ckanext.hdx_users.views.user_auth_view import HDXUserAuthView
-from ckanext.hdx_users.views.user_edit_view import HDXEditView
+from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
 from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
 from ckanext.hdx_users.views.user_view_helper import *
 
@@ -225,3 +225,7 @@ user.add_url_rule(u'/generate_key', view_func=_generate_apikey, methods=(u'POST'
 user.add_url_rule(u'/<id>', view_func=read)
 
 hdx_login_link.add_url_rule(u'/login', view_func=hdx_auth_view.new_login)
+
+user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])
+user.add_url_rule('/configure_mfa/<id>/new', view_func=HDXTwoStep.new, methods=['GET', 'POST'])
+user.add_url_rule('/configure_mfa/<id>/delete', view_func=HDXTwoStep.delete, methods=['GET'])
