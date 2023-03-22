@@ -92,7 +92,10 @@ $(document).ready(function() {
     showOnboardingWidget('#tsvPopup');
   }
 
-  $('#submit-two-step-btn').on('click', () => { location.reload(); })
+  $('#submit-two-step-btn').on('click', () => {
+    let url = window.location.href.split('?')[0]
+    location.assign(url);
+  })
   $('#cancel-two-step-btn').on('click', () => { toggleTwoStep(false); location.reload(); })
 
 });
