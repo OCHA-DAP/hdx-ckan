@@ -6,7 +6,7 @@ from flask import Blueprint
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.model as model
-from ckan.common import asbool, config
+from ckan.common import asbool, config, session
 import ckan.lib.authenticator as authenticator
 import ckanext.hdx_users.model as user_model
 from ckan.views.user import EditView as EditView
@@ -44,6 +44,7 @@ class HDXTwoStep:
         if helpers.are_there_flash_messages():
             helpers._flash.pop_messages()
         helpers.flash_success("Successfully configured and enabled the two-step verification.")
+        session['totp_enabled'] = True
         return json.dumps({'success': (tc.mfa_test_valid == True)})
 
     @staticmethod
@@ -69,6 +70,7 @@ class HDXTwoStep:
         if totp_challenger:
             totp_challenger.delete()
             totp_challenger.commit()
+        session['totp_enabled'] = False
         return json.dumps({'success': True})
 
     @staticmethod
