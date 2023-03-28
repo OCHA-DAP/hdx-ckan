@@ -168,6 +168,9 @@ ckanext.security.redis.port = ${HDX_SECURITY_REDIS_PORT}
 ckanext.security.redis.db = ${HDX_SECURITY_REDIS_DB}
 hdx.security.site_name = ${HDX_SECURITY_SITENAME}
 
+# Change detection settings
+hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-events
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer

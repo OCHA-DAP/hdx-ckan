@@ -374,7 +374,7 @@ hdx.wordpress.category.licenses=581
 
 # HDX http headers
 hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
-hdx.http_headers.mimetypes = application/json,text/html,text/json
+hdx.http_headers.mimetypes = application/json,text/html,text/json\
 
 # Security Extension Config
 ckanext.security.domain = data.humdata.local
@@ -390,3 +390,6 @@ ckanext.security.brute_force_key = user_name
 hdx.security.2fa.redirect = true
 # Used for issuer name in the QR code for 2FA
 hdx.security.site_name = HDX
+
+# Change detection settings
+hdx.change_detection.layer_url = http://layer:5000/api/create-change-events
