@@ -12,7 +12,7 @@ HDX_GISAPI_URL=https://gallery.ecr.aws/r/unocha/hdx-postile/
 HDX_GISAPI_TAG=1.0.5
 
 HDX_GISLAYER_URL=https://gallery.ecr.aws/r/unocha/hdx-gislayer/
-HDX_GISLAYER_TAG=0.7.0-a2
+HDX_GISLAYER_TAG=0.7.0-a5
 
 HDX_GISWORKER_URL=https://gallery.ecr.aws/r/unocha/hdx-gisworker/
-HDX_GISWORKER_TAG=0.7.0-a2
+HDX_GISWORKER_TAG=0.7.0-a5
