@@ -297,9 +297,9 @@ function qaPackageDetailsSelect(target) {
   $('.qa-package-details').hide();
   $('.qa-package-item.open').removeClass('open');
   $(target).addClass('open');
-  let index = $(target).attr('data-index');
-  window.location.hash = `qa-pkg-idx-${index}`;
-  $(`#qa-package-details-${index}`).show();
+  let package_id = $(target).attr('data-package-id');
+  window.location.hash = `qa-pkg-id-${package_id}`;
+  $(`#qa-package-details-${package_id}`).show();
 }
 
 function _updateResourceConfirmState(resource, flag, score, piiReportId) {
@@ -388,11 +388,11 @@ function confirmPIIState(el, resourceId, score, piiReportId, dlpRun) {
 
 $(document).ready(() => {
   $(".qa-package-item").on("click", (ev) => qaPackageDetailsSelect(ev.currentTarget));
-  let hash = window.location.hash ? window.location.hash.substr(1):null;
-  let pkgIdx = (hash && hash.startsWith('qa-pkg-idx-')) ? hash.substr(11) : 1;
-  const target = `.qa-package-item[data-index=${pkgIdx}]`;
-  qaPackageDetailsSelect(target);
-  if (pkgIdx > 1) {
-    $(target)[0].scrollIntoView();
+  let hash = window.location.hash ? window.location.hash.substr(1) : null;
+  let pkgId = (hash && hash.startsWith('qa-pkg-id-')) ? hash.substr(10) : null;
+  const $target = (pkgId && $('.qa-package-item[data-package-id="' + pkgId + '"]').length) ? $('.qa-package-item[data-package-id="' + pkgId + '"]')[0] : $('.qa-package-item')[0];
+  qaPackageDetailsSelect($target);
+  if ($target.length) {
+    $target.scrollIntoView();
   }
 });
