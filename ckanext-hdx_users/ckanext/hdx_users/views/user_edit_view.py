@@ -89,7 +89,7 @@ class HDXTwoStep:
 
     @staticmethod
     def check_mfa():
-            user_name = SecurityTOTP.get_user_name(request.args['user'])
+        user_name = SecurityTOTP.get_user_name(request.args['user'])
         totp_challenger = SecurityTOTP.get_for_user(user_name)
         return json.dumps({'result': totp_challenger is not None})
 
