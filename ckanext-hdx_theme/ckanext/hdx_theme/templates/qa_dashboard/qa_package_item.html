@@ -5,7 +5,7 @@
 {% block package_item_content %}
   {% asset 'hdx_theme/qa-package-scripts' %}
 
-    <div class="dataset-content2 qa-package-item" data-index="{{loop.index}}">
+    <div class="dataset-content2 qa-package-item" data-package-id="{{ package.id }}">
       <div class="dataset-top">
         <div class="dataset-heading">
           <input type="checkbox" />

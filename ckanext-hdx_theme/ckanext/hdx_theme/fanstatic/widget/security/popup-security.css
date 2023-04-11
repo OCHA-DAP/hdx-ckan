@@ -1,0 +1,26 @@
+.popup-security .notification-widget {
+  background-color: #fff;
+}
+.popup-security .two-step-content {
+  padding: 30px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.popup-security .two-step-content #field-mfa {
+  border-color: #cccccc;
+  height: 32px;
+}
+.popup-security .two-step-content #two-step-turn-off {
+  margin-right: 15px;
+}
+.popup-security .two-step-content canvas {
+  margin-top: 10px;
+  height: 140px;
+}
+.popup-security .two-step-content .test-two-step .control-group {
+  display: inline-block;
+}
+.popup-security .two-step-content .test-two-step .btn {
+  border: none;
+  margin-bottom: 2px;
+}

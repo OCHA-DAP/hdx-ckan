@@ -1,13 +1,18 @@
+{% extends "user/read.html" %}
 {% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _('Profile and Password') }}{% endblock %}
+
+{% block primary_content_inner %}
 <div class="paddingLeftHack">
   <div class="mTop35">
 <form class="dataset-form form-horizontal" method="post" action="{{ action }}" id="user-edit-form">
   {{ form.errors(error_summary) }}
 
   <fieldset>
-    <legend>{{ _('Change details') }}</legend>
+    <legend>{{ _('Profile') }}</legend>
 
-    {{ form.input('name', label=_('Username'), id='field-username', value=data.name, error=errors.name, classes=['control-medium'], is_required=true) }}
+    <input id="field-username" type="hidden" name="name" value="{{ data.name }}"/>
 
 {#    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, error=errors.fullname, placeholder=_('eg. Joe Bloggs'), classes=['control-medium']) }}#}
     {{ form.input('firstname', label=_('First name'), id='field-firstname', value=data.firstname or data.fullname,
@@ -21,7 +26,7 @@
           error=errors.email, placeholder=_('eg. joe@example.com'), classes=['control-medium'], is_required=true,
           attrs={'autocomplete':'off'}) }}
 
-	{% set format_attrs = {'style':'width: 333px;'} %}
+	{% set format_attrs = {'style':'width: 320px;'} %}
     {{ form.textarea('about', label=_('About'), id='field-about', value=data.about, error=errors.about, placeholder=_('A little information about yourself'), classes=['control-medium'],attrs=format_attrs) }}
 
     {% if show_email_notifications %}
@@ -32,8 +37,8 @@
 
   </fieldset>
 
-  <fieldset>
-    <legend>{{ _('Change password') }}</legend>
+  <fieldset class="mTop35">
+    <legend>{{ _('Password') }}</legend>
     {{ form.input('old_password',
                   type='password',
                   label=_('Sysadmin Password') if is_sysadmin else _('Old Password'),
@@ -44,12 +49,36 @@
                   attrs={'autocomplete': 'off'}
                   ) }}
 
-    {{ form.input('password1', type='password', label=_('Password'), id='field-password', value=data.password1, error=errors.password1, classes=['control-medium'], attrs={'autocomplete': 'off'} ) }}
+    {{ form.input('password1', type='password', label=_('New Password'), id='field-password', value=data.password1, error=errors.password1, classes=['control-medium'], attrs={'autocomplete': 'off'} ) }}
 
-    {{ form.input('password2', type='password', label=_('Confirm Password'), id='field-password-confirm', value=data.password2, error=errors.password2, classes=['control-medium'], attrs={'autocomplete': 'off'}) }}
+    {{ form.input('password2', type='password', label=_('Confirm New Password'), id='field-password-confirm', value=data.password2, error=errors.password2, classes=['control-medium'], attrs={'autocomplete': 'off'}) }}
+     <div class="form-actions">
+
+      {% block generate_button %}
+        {#eliminated the regenerate api key button#}
+      {% endblock %}
+      <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
+    </div>
+    <div class="form-actions">
+      {{ form.required_message() }}
+    </div>
   </fieldset>
-
-  <div class="form-actions">
+{% if is_sysadmin %}
+  <fieldset class="mTop35">
+    <legend>{{_('Two-step verification')}}</legend>
+    {#
+    {% if h.check_ckan_version('2.9') %}
+      {% link_for _('Manage two-step verification'), controller='mfa_user', action='configure_mfa', id=data.id, class_='btn btn-default pull-left', icon='cog' %}
+    {% else %}
+      {% link_for _('Manage two-step verification'), controller='ckanext.security.controllers:MFAUserController', action='configure_mfa', id=data.id, class_='btn btn-default pull-left', icon='cog' %}
+    {% endif %}
+    #}
+    <a href="#" class="btn" onclick="showOnboardingWidget('#tsvPopup')"> {{ _('Manage two-step verification') }}</a>
+  </fieldset>
+{% endif %}
+{% if h.check_access('user_delete', {'id': data.id})  %}
+  <fieldset class="mTop35">
+    <legend>{{_('Delete account')}}</legend>
     {% block delete_button %}
       {% if h.check_access('user_delete', {'id': data.id})  %}
         {% set member = h.hdx_get_org_member_info(data.id) %}
@@ -72,15 +101,27 @@
         {% endif %}
       {% endif %}
     {% endblock %}
-    {% block generate_button %}
-      {% if h.check_access('user_generate_apikey', {'id': data.id})  %}
-        {% set locale = h.dump_json({'content': _('Are you sure you want to regenerate the API key?')}) %}
-        <a class="btn btn-warning" href="{% url_for controller='user', action='generate_apikey', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block generate_button_text %}{{ _('Regenerate API Key') }}{% endblock %}</a>
-      {% endif %}
-    {% endblock %}
-    {{ form.required_message() }}
-    <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
-  </div>
+  </fieldset>
+{% endif %}
+
 </form>
 </div>
 </div>
+
+{% if is_sysadmin %}
+  <div>
+    {{ h.snippet('widget/security/two-step-verification.html', id="tsvPopup", title="How to turn on two-step verification", userId=data.id, userName=data.name) }}
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/two-step-styles' %}
+  {% asset 'security/mfa_configure' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/two-step-scripts' %}
+{% endblock %}

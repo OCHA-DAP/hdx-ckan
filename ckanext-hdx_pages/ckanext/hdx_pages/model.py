@@ -243,7 +243,7 @@ def create_table():
 def patch_table_add_column(column_name):
     table_name = 'page'
     try:
-        print('Starting to patch table %s' % table_name)
+        # print('Starting to patch table %s' % table_name)
         engine = model.meta.engine
         inspector = Inspector.from_engine(engine)
         columns = inspector.get_columns(table_name)
@@ -255,6 +255,6 @@ def patch_table_add_column(column_name):
             engine.execute(
                 'ALTER TABLE %s ADD COLUMN %s %s' % (table_name, column_name, column_type))
 
-        print('Finish to patch table %s' % table_name)
+        # print('Finish to patch table %s' % table_name)
     except Exception as e:
         print('There was an error during patching %s table. Column: %s' % (table_name, column_name))

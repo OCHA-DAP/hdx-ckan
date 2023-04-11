@@ -1,0 +1,5 @@
+
+# ckanext-security
+-e git+https://github.com/OCHA-DAP/ckanext-security.git#egg=ckanext-security
+pyotp<2.4.0
+# END ckanext-security

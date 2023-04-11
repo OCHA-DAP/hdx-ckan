@@ -242,9 +242,12 @@ def hdx_tag_approved_list(context, data_dict):
     params = {
         'url': 'https://docs.google.com/spreadsheets/d/1fTO8T8ZVXU9eoh3EIrw490Z2pX7E59MhHmCvT_cXmNs/edit#gid=1261258630'
     }
-    response = requests.get(proxy_data_preview_url, params=params)
 
-    return [item[0].lower() for item in json.loads(response.content)[1:]]
+    try:
+        response = requests.get(proxy_data_preview_url, params=params)
+        return [item[0].lower() for item in json.loads(response.content)[1:]]
+    except Exception as e:
+        return []
 
 
 def _tag_search(context, data_dict):

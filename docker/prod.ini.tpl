@@ -161,6 +161,13 @@ ckan.storage_path = ${HDX_FILESTORE}
 api_token.jwt.decode.secret = string\:${HDX_JWT_SECRET}
 api_token.jwt.encode.secret = string\:${HDX_JWT_SECRET}
 
+# Security Extension Config
+ckanext.security.domain = ${HDX_DOMAIN}
+ckanext.security.redis.host = ${HDX_SECURITY_REDIS_ADDR}
+ckanext.security.redis.port = ${HDX_SECURITY_REDIS_PORT}
+ckanext.security.redis.db = ${HDX_SECURITY_REDIS_DB}
+hdx.security.site_name = ${HDX_SECURITY_SITENAME}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer

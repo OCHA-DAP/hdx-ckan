@@ -165,7 +165,7 @@ def handle_new_request_action(username, request_action):
                 'user_email': data.get('send_to'),
                 'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
                 'dataset_title': data.get('package_name'),
-                'user_admin_fullname': g.userobj.fullname,
+                'user_admin_fullname': g.userobj.fullname or g.userobj.name,
             }
             hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
                                       subject, email_data, footer=maintainer_obj.email,
@@ -191,7 +191,7 @@ def handle_new_request_action(username, request_action):
             'org_name': org_dict.get('title'),
             'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
             'dataset_title': data.get('package_name'),
-            'user_admin_fullname': g.userobj.fullname,
+            'user_admin_fullname': g.userobj.fullname or g.userobj.name,
             'user_admin_email': g.userobj.email,
             'msg': data.get('message_content'),
             'is_attach': data.get('file_upload') is not None
@@ -208,7 +208,7 @@ def handle_new_request_action(username, request_action):
             'user_email': data.get('send_to'),
             'dataset_link': h.url_for('dataset_read', id=data.get('package_id'), qualified=True),
             'dataset_title': data.get('package_name'),
-            'user_admin_fullname': g.userobj.fullname,
+            'user_admin_fullname': g.userobj.fullname or g.userobj.name,
         }
         hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
                                   subject, email_data, footer=maintainer_obj.email,
