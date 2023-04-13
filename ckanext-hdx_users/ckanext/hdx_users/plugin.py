@@ -48,6 +48,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'onboarding_followee_list': get.onboarding_followee_list,
             'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
+            'hdx_send_request_data_auto_approval': misc.hdx_send_request_data_auto_approval,
             'hdx_first_login': create.hdx_first_login,
             'user_delete': delete.hdx_user_delete
         }
@@ -107,6 +108,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'manage_permissions': auth.manage_permissions,
             'user_update': auth.user_update,
             'notify_users_about_api_token_expiration': auth.notify_users_about_api_token_expiration,
+            'hdx_send_request_data_auto_approval': auth.hdx_send_request_data_auto_approval,
         }
 
     def get_validators(self):

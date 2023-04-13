@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_org_group.helpers.analytics as org_analytics
@@ -9,6 +10,7 @@ log = logging.getLogger(__name__)
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
 NotFound = tk.ObjectNotFound
+get_action = tk.get_action
 config = tk.config
 g = tk.g
 _ = tk._
@@ -58,3 +60,40 @@ def hdx_send_new_org_request(context, data_dict):
 
         org_analytics.OrganizationRequestAnalyticsSender(data_dict.get('name', ''), data_dict.get('org_type', '')) \
             .send_to_queue()
+
+
+def hdx_send_request_data_auto_approval(context, data_dict):
+    _check_access('hdx_send_request_data_auto_approval', context, {'package_id': data_dict.get('package_id')})
+
+    model = context['model']
+
+    req_dict = get_action('requestdata_request_show')(context, {'id': data_dict.get('id'),
+                                                                'package_id': data_dict.get('package_id')})
+    pkg_dict = get_action('package_show')(context, {'id': data_dict.get('package_id')})
+    org_dict = get_action('organization_show')(context, {'id': pkg_dict.get('owner_org')})
+    maintainer_obj = model.User.get(pkg_dict.get('maintainer'))
+
+    subject = u'Request for access to HDX "metadata-only" dataset'
+
+    email_data = {
+        'user_fullname': req_dict.get('sender_name'),
+        'org_name': org_dict.get('title'),
+        'dataset_link': h.url_for('dataset_read', id=data_dict.get('package_id'), qualified=True),
+        'dataset_title': pkg_dict.get('name'),
+        'user_admin_fullname': g.userobj.fullname or g.userobj.name,
+        'user_admin_email': g.userobj.email
+    }
+    hdx_mailer.mail_recipient([{'display_name': data_dict.get('requested_by'), 'email': req_dict.get('email_address')}],
+                              subject, email_data, footer=data_dict.get('send_to'),
+                              snippet='email/content/request_data_auto_approval_to_user.html')
+
+    email_data = {
+        'user_fullname': req_dict.get('sender_name'),
+        'user_email': req_dict.get('email_address'),
+        'dataset_link': h.url_for('dataset_read', id=data_dict.get('package_id'), qualified=True),
+        'dataset_title': pkg_dict.get('name'),
+        'user_admin_fullname': g.userobj.fullname or g.userobj.name,
+    }
+    hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
+                              subject, email_data, footer=maintainer_obj.email,
+                              snippet='email/content/request_data_auto_approval_to_admins.html')

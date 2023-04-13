@@ -877,4 +877,4 @@ url_for = hdx_url_for
 
 
 def hdx_pending_request_data(user_id, package_id):
-    return requestdata_model.ckanextRequestdata.get_pending_request(package_id, user_id, ['new', 'open'])
+    return requestdata_model.ckanextRequestdata.get_pending_requests(package_id, user_id)
