@@ -284,7 +284,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing')
                 ],
                 'fs_check_info': [
-                    tk.get_validator('hdx_keep_if_excel_format'),
+                    tk.get_validator('hdx_keep_if_fs_check_format'),
                     tk.get_validator('hdx_add_update_fs_check_info'),
                     tk.get_validator('hdx_keep_unless_allow_fs_check_field'),
                     tk.get_validator('ignore_missing'),
@@ -523,7 +523,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_resources_not_allowed_if_requested_data': vd.hdx_resources_not_allowed_if_requested_data,
             'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange,
             'hdx_float_number': vd.hdx_float_number,
-            'hdx_keep_if_excel_format': vd.hdx_keep_if_excel_format,
+            'hdx_keep_if_fs_check_format': vd.hdx_keep_if_fs_check_format,
             'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info
         }
 
