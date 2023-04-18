@@ -182,6 +182,20 @@
         </tr>
       {% endfor #}
 
+    {% set metadata_url = h.url_for('hdx_dataset.download_metadata', package_id=pkg_dict.id) %}
+    {% set csv = '?format=csv'%}
+    {% set json = '?format=json'%}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _('Download Metadata') }}</th>
+      <td class="dataset-details">
+        <ul class="list-items dataset-resources unstyled">
+          <li>
+            <a class="label" data-format="json" href="{{ metadata_url }}{{ json }}">JSON</a>
+            <a class="label" data-format="csv" href="{{ metadata_url }}{{ csv }}">CSV</a>
+          </li>
+        </ul>
+      </td>
+    </tr>
 
 {% endblock %}
 

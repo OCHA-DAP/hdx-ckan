@@ -1,7 +1,9 @@
+import csv
+import io
 import json
 import logging
 
-from flask import Blueprint
+from flask import Blueprint, make_response
 
 import ckan.authz as authz
 import ckan.model as model
@@ -348,9 +350,75 @@ def delete(id):
     return render('package/confirm_delete.html', {'pkg_dict': pkg_dict})
 
 
+def download_metadata(package_id):
+    '''
+        Handles downloading .CSV and .JSON package metadata files
+
+        :returns: json or csv file
+    '''
+
+    context = {
+        'model': model,
+        'session': model.Session,
+        'user': g.user or g.author,
+        'auth_user_obj': g.userobj
+    }
+
+    # check if package exists
+    try:
+        pkg_dict = get_action('package_show')(context, {'id': package_id})
+
+        metadata_fields = {'title': 'Title of Dataset',
+                           'name': 'Dataset URL',
+                           'notes': 'Description', 'dataset_source': 'Source', 'organization': 'Contributor',
+                           'dataset_date': 'Reference Period', 'last_modified': 'Updated',
+                           'data_update_frequency': 'Expected Update Frequency', 'groups': 'Location',
+                           'license_title': 'License',
+                           'methodology': 'Methodology', 'methodology_other': 'Define Methodology',
+                           'caveats': 'Caveats/Comments',
+                           'tags': 'Tags'}
+
+        # limit fields
+        metadata = {field: pkg_dict[field] if field in pkg_dict else None for field in metadata_fields}
+        # process fields
+        metadata['organization'] = metadata.get('organization').get('title')
+        metadata['data_update_frequency'] = h.hdx_get_frequency_by_value(metadata.get('data_update_frequency'))
+        metadata['groups'] = ', '.join([group['display_name'] for group in metadata.get('groups')])
+        metadata['tags'] = ', '.join([tag['display_name'] for tag in metadata.get('tags')])
+
+        buf = io.StringIO()
+
+        file_format = request.params.get('format', '')
+        if 'json' in file_format:
+            json.dump(metadata, buf, indent=4)
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'application/json'
+            output.headers['Content-Disposition'] = 'attachment; filename="metadata.json"'
+
+            return output
+        elif 'csv' in file_format:
+            writer = csv.writer(buf)
+
+            # header
+            writer.writerow(['Field', 'Label', 'Value'])
+            for k, v in metadata.items():
+                writer.writerow([k, metadata_fields[k], v])
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'text/csv'
+            output.headers['Content-Disposition'] = 'attachment; filename="metadata.csv"'
+
+            return output
+    except NotFound:
+        return abort(404, _('Dataset not found'))
+    return abort(404, _('Invalid file format'))
+
+
 hdx_search.add_url_rule(u'', view_func=search)
 hdx_dataset.add_url_rule(u'', view_func=search)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
+hdx_dataset.add_url_rule(u'/download_metadata/<package_id>', view_func=download_metadata)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_sdcmicro_log', view_func=qa_sdcmicro_log)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_pii_log/<file_name>', view_func=qa_pii_log)
