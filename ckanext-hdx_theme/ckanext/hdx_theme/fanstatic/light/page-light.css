@@ -4069,6 +4069,10 @@ ul.list-horizontal li:first-child:before {
 .crises-menu li.crises-group ul li a:hover {
   text-decoration: none;
 }
+.crises-menu li.crises-group ul li span {
+  color: #333333;
+  font-size: 14px;
+}
 .crises-menu li.crises-group ul li .crises-datasets {
   line-height: 1;
 }

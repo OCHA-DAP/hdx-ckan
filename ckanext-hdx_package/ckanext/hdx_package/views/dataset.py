@@ -19,6 +19,7 @@ import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_l
 from ckan.views.dataset import _setup_template_variables
 
 from ckanext.hdx_package.helpers import resource_grouping
+from ckanext.hdx_package.helpers.constants import PACKAGE_METADATA_FIELDS_MAP, RESOURCE_METADATA_FIELDS_MAP
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_search.controller_logic.qa_logs_logic import QALogsLogic
@@ -350,7 +351,7 @@ def delete(id):
     return render('package/confirm_delete.html', {'pkg_dict': pkg_dict})
 
 
-def download_metadata(package_id):
+def package_metadata(id):
     '''
         Handles downloading .CSV and .JSON package metadata files
 
@@ -366,35 +367,31 @@ def download_metadata(package_id):
 
     # check if package exists
     try:
-        pkg_dict = get_action('package_show')(context, {'id': package_id})
+        pkg_dict = get_action('package_show')(context, {'id': id})
 
-        metadata_fields = {'title': 'Title of Dataset',
-                           'name': 'Dataset URL',
-                           'notes': 'Description', 'dataset_source': 'Source', 'organization': 'Contributor',
-                           'dataset_date': 'Reference Period', 'last_modified': 'Updated',
-                           'data_update_frequency': 'Expected Update Frequency', 'groups': 'Location',
-                           'license_title': 'License',
-                           'methodology': 'Methodology', 'methodology_other': 'Define Methodology',
-                           'caveats': 'Caveats/Comments',
-                           'tags': 'Tags'}
+        metadata_fields = PACKAGE_METADATA_FIELDS_MAP
 
         # limit fields
         metadata = {field: pkg_dict[field] if field in pkg_dict else None for field in metadata_fields}
+
         # process fields
+        data_update_frequency_value = h.hdx_get_frequency_by_value(metadata.get('data_update_frequency'))
+
         metadata['organization'] = metadata.get('organization').get('title')
-        metadata['data_update_frequency'] = h.hdx_get_frequency_by_value(metadata.get('data_update_frequency'))
+        metadata['data_update_frequency'] = data_update_frequency_value or metadata.get('data_update_frequency')
         metadata['groups'] = ', '.join([group['display_name'] for group in metadata.get('groups')])
         metadata['tags'] = ', '.join([tag['display_name'] for tag in metadata.get('tags')])
 
-        buf = io.StringIO()
-
         file_format = request.params.get('format', '')
+        filename = 'metadata-%s' % metadata.get('name')
+
+        buf = io.StringIO()
         if 'json' in file_format:
             json.dump(metadata, buf, indent=4)
 
             output = make_response(buf.getvalue())
             output.headers['Content-Type'] = 'application/json'
-            output.headers['Content-Disposition'] = 'attachment; filename="metadata.json"'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.json"' % filename
 
             return output
         elif 'csv' in file_format:
@@ -407,7 +404,7 @@ def download_metadata(package_id):
 
             output = make_response(buf.getvalue())
             output.headers['Content-Type'] = 'text/csv'
-            output.headers['Content-Disposition'] = 'attachment; filename="metadata.csv"'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
 
             return output
     except NotFound:
@@ -415,10 +412,64 @@ def download_metadata(package_id):
     return abort(404, _('Invalid file format'))
 
 
+def resource_metadata(id, resource_id):
+    '''
+        Handles downloading .CSV and .JSON resource metadata files
+
+        :returns: json or csv file
+    '''
+
+    context = {
+        'model': model,
+        'session': model.Session,
+        'user': g.user or g.author,
+        'auth_user_obj': g.userobj
+    }
+
+    # check if resource exists
+    try:
+        resource_dict = get_action('resource_show')(context, {'id': resource_id})
+
+        metadata_fields = RESOURCE_METADATA_FIELDS_MAP
+
+        # limit fields
+        metadata = {field: resource_dict[field] if field in resource_dict else None for field in metadata_fields}
+
+        file_format = request.params.get('format', '')
+        filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
+
+        buf = io.StringIO()
+        if 'json' in file_format:
+            json.dump(metadata, buf, indent=4)
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'application/json'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.json"' % filename
+
+            return output
+        elif 'csv' in file_format:
+            writer = csv.writer(buf)
+
+            # header
+            writer.writerow(['Field', 'Value'])
+            for k, v in metadata.items():
+                writer.writerow([k, v])
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'text/csv'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+            return output
+    except NotFound:
+        return abort(404, _('Resource not found'))
+    return abort(404, _('Invalid file format'))
+
+
 hdx_search.add_url_rule(u'', view_func=search)
 hdx_dataset.add_url_rule(u'', view_func=search)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
-hdx_dataset.add_url_rule(u'/download_metadata/<package_id>', view_func=download_metadata)
+hdx_dataset.add_url_rule(u'<id>/download_metadata', view_func=package_metadata)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_sdcmicro_log', view_func=qa_sdcmicro_log)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_pii_log/<file_name>', view_func=qa_pii_log)
+hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/download_metadata', view_func=resource_metadata)

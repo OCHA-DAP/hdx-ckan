@@ -75,16 +75,22 @@
               </a>
 
             {% if btn_dict.type == 'download' %}
-              {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) or res.apihighways_id %}
+                {% set metadata_url = h.url_for('hdx_dataset.resource_metadata', id=pkg.id, resource_id=res.id) %}
+
                 <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
                   {{ _('More') }}
                 </a>
 
                   <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">
-                  {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) %}
                     <li class="crises-group">
                       On HDX and HDX Tools
                       <ul>
+                        <li>
+                          <span>{{ _('Export Metadata') }}</span>
+                          <a href="{{ metadata_url }}?format=csv">{{ _('CSV') }}</a>
+                          <span> / </span>
+                          <a href="{{ metadata_url }}?format=json">{{ _('JSON') }}</a>
+                        </li>
                         {% if res.has_views and is_not_zipped %}
 
                           <li>
@@ -102,7 +108,6 @@
                         {% endif %}
                       </ul>
                     </li>
-                  {% endif %}
                   {% if res.apihighways_id %}
                     <li class="crises-group">
                       On Our Partner Sites
@@ -118,8 +123,6 @@
                     </li>
                   {% endif %}
                   </ul>
-
-              {% endif %}
             {% endif %}
           {% endif %}
 
