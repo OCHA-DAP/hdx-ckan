@@ -21,18 +21,18 @@ class MigrateCommand(p.toolkit.CkanCommand):
 
     def command(self):
         if not self.args or self.args[0] in ['-h', '--help', 'help'] or not len(self.args) in [1, 2]:
-            print self.usage
+            print(self.usage)
             return
 
         cmd = self.args[0]
         self._load_config(load_site_user=False)
         if cmd == 'filestore':
-            print 'Initializing Migration...'
+            print('Initializing Migration...')
             self.migrate()
-            print 'DONE Migrating Filestore...'
+            print('DONE Migrating Filestore...')
         else:
-            print 'Error: command "{0}" not recognized'.format(cmd)
-            print self.usage
+            print('Error: command "{0}" not recognized'.format(cmd))
+            print(self.usage)
 
     def migrate(self):
         '''
@@ -47,11 +47,11 @@ class MigrateCommand(p.toolkit.CkanCommand):
             time.sleep(0.7)
             url_parts = urlparse(url)
             url_parts = url_parts.path.split("/")
-            filename = url_parts[len(url_parts)-1]
+            filename = url_parts[len(url_parts) - 1]
             response = requests.get(url, stream=True)
             if response.status_code != 200:
-                print "failed to fetch %s (code %s)" % (url,
-                                                        response.status_code)
+                print("failed to fetch %s (code %s)" % (url,
+                                                        response.status_code))
                 continue
             resource_upload = ResourceUpload({'id': id})
             assert resource_upload.storage_path, "no storage configured aborting"
@@ -60,7 +60,7 @@ class MigrateCommand(p.toolkit.CkanCommand):
             filepath = resource_upload.get_path(id)
             try:
                 os.makedirs(directory)
-            except OSError, e:
+            except OSError as e:
                 ## errno 17 is file already exists
                 if e.errno != 17:
                     raise
@@ -76,4 +76,4 @@ class MigrateCommand(p.toolkit.CkanCommand):
                             "url = '%s' where id = '%s' and "
                             "revision_id = '%s'" % (filename, id, revision_id))
             Session.commit()
-            print "Saved url %s" % url
+            print("Saved url %s" % url)

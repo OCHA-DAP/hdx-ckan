@@ -114,7 +114,6 @@ class TestFileRemovalS3(HDXS3TestBase):
                                                              'match__name': self.revise_dataset_name,
                                                              'update__resources__1__name': 'Test resource2.csv',
                                                              'update__resources__1__upload': file_upload,
-
                                                          })
             assert not self.__file_exists(resource_id, self.file1_name)
             assert self.__file_exists(resource_id, self.file2_name)
