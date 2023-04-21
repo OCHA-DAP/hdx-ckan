@@ -2,8 +2,8 @@
   {% set metadata_url = h.url_for('hdx_dataset.package_metadata', id=pkg_dict.id) %}
 
   <div class="text-right">
-    <p>Export metadata for this dataset: <a href="{{ metadata_url }}?format=csv">CSV</a> / <a
-            href="{{ metadata_url }}?format=json">JSON</a></p>
+    <p>Export metadata for this dataset: <a href="{{ metadata_url }}?format=json">JSON</a> | <a
+            href="{{ metadata_url }}?format=csv">CSV</a></p>
   </div>
 
   <table class="table-condensed mTop10">
