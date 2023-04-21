@@ -25,6 +25,15 @@ def _render_sitemap(page):
     """
     Build the XML
     """
+
+    try:
+        t = int(page)
+    except:
+        response_text = "Invalid page number"
+        response = make_response(response_text)
+        response.headers['Content-type'] = 'text/plain'
+        return response
+
     datasets = _search_for_datasets(int(page))
 
     root = etree.Element("urlset", nsmap={None: SITEMAP_NS})
