@@ -29,10 +29,7 @@ def _render_sitemap(page):
     try:
         t = int(page)
     except:
-        response_text = "Invalid page number"
-        response = make_response(response_text)
-        response.headers['Content-type'] = 'text/plain'
-        return response
+        abort(404, _('Page not found'))
 
     datasets = _search_for_datasets(int(page))
 
