@@ -60,8 +60,19 @@ $(document).ready(function() {
         let index = categoryIndex[category];
 
 
-        let searchVal = toNormalForm($(this).val()) + "*"; //added wildcard in
-        let results = index.search(searchVal);
+        let value = toNormalForm($(this).val());
+        let searchStr = "";
+        if (value !== "") {
+          //we search for original string and boost 10x the result
+          searchStr += `${value}^10`
+          //original string + ending wildcard (boost 4x)
+          searchStr += ` ${value}*^4`;
+          //beginning wildcard (boost 2x)
+          searchStr += ` *${value}^2`
+          //wildcards at both ends
+          searchStr += ` *${value}*`
+        }
+        let results = index.search(searchStr);
         let resultsIdx = results.map((el) => parseInt(el.ref));
         $(this).parents(".filter-category").find(".categ-items li").each((idx, el) => (resultsIdx.includes(idx) ? $(el).show() :$(el).hide()));
     });
