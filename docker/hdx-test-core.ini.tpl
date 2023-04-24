@@ -79,7 +79,9 @@ hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%%
 hdx.explorer.iframe.height = 750px
 
+hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
 hdx.hxlproxy.url = https://proxy.hxlstandard.org
+hdx.hxlproxy.source_info_url = ${HDX_HXLPROXY}/api/source-info?url={url}
 
 hdx.onboarding.send_confirmation_email = true
 

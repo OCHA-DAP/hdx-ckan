@@ -20,6 +20,7 @@ import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
+from ckanext.hdx_package.helpers.resource_triggers.fs_check import FS_CHECK_FORMATS
 
 missing = df.missing
 StopOnError = df.StopOnError
@@ -134,9 +135,9 @@ def detect_format(key, data, errors, context):
     return current_format
 
 
-def hdx_keep_if_excel_format(key, data, errors, context):
+def hdx_keep_if_fs_check_format(key, data, errors, context):
     _format = data.get((key[0], key[1], 'format'))
-    if _format and 'xls' in _format.lower():
+    if _format and _format.lower() in FS_CHECK_FORMATS:
         return data.get(key)
     else:
         data.pop(key, None)

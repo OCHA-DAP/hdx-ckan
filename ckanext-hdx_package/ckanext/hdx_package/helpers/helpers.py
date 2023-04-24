@@ -507,3 +507,32 @@ def hdx_compute_analytics(package_dict):
         'analytics_group_names': analytics_group_names, 'analytics_group_ids': analytics_group_ids
     }
     return ret_dict
+
+
+def fetch_previous_resource_dict_with_context(context, package_id, resource_id):
+    dataset_dict = fetch_previous_package_dict_with_context(context, package_id)
+    return next((r for r in dataset_dict.get('resources', []) if r['id'] == resource_id), None)
+
+
+def _create_prev_package_context_key(id):
+    context_key = 'hdx_prev_package_dict_' + id
+    return context_key
+
+
+def fetch_previous_package_dict_with_context(context, id):
+    if id:
+        context_key = _create_prev_package_context_key(id)
+        pkg_dict = context.get(context_key)
+        if not pkg_dict:
+            pkg_dict = get_action('package_show')(context, {'id': id})
+            context[context_key] = pkg_dict
+
+        return pkg_dict or {}
+    else:
+        return {}
+
+
+def remove_previous_package_dict_from_context(context, id):
+    if id:
+        context_key = _create_prev_package_context_key(id)
+        context.pop(context_key, None)
