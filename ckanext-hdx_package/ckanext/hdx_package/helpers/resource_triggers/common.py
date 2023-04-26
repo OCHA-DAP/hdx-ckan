@@ -1,10 +1,17 @@
 import six
-from ckanext.hdx_package.helpers.resource_triggers.geopreview import get_action, log, _before_ckan_action, \
-    _after_ckan_action
+import logging
+
+import ckan.plugins.toolkit as tk
+from ckanext.hdx_package.helpers.helpers import fetch_previous_package_dict_with_context, \
+    remove_previous_package_dict_from_context
 from ckanext.hdx_theme.helpers.hash_generator import generate_hash_dict, HashCodeGenerator
 
+log = logging.getLogger(__name__)
+config = tk.config
+get_action = tk.get_action
 
-def trigger_4_resource_changes(before_resource_change_actions, after_resource_change_actions):
+
+def trigger_4_resource_changes(before_resource_change_actions, after_resource_change_actions, version_changes_actions):
 
     def package_action_wrapper(original_package_action):
 
@@ -14,10 +21,11 @@ def trigger_4_resource_changes(before_resource_change_actions, after_resource_ch
             # the resource list from the dataset_dict. In this case geopreview should be skipped.
             new_resources = package_dict.get('resources', [])
 
+            old_package_dict = fetch_previous_package_dict_with_context(context, package_dict.get('id')) \
+                if 'id' in package_dict else {}
+
             resource_id_to_modified_map = {}
             if new_resources:
-                old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
-                    if 'id' in package_dict else {}
 
                 old_resources_list = old_package_dict.get('resources')
                 fields = ['name', 'description', 'url', 'format']
@@ -58,8 +66,15 @@ def trigger_4_resource_changes(before_resource_change_actions, after_resource_ch
                         if resource_id_to_modified_map.get(resource_dict['id'], True):
                             for after_action in after_resource_change_actions:
                                 after_action(context, resource_dict)
+
+                # Triggers for changes between versions
+                for version_change_action in version_changes_actions:
+                    version_change_action(context.get('user'), old_package_dict, result_dict)
             else:
                 log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
+
+            # cleanup the context
+            remove_previous_package_dict_from_context(context, package_dict.get('id'))
 
             return result_dict
 

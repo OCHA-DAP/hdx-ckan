@@ -88,7 +88,7 @@ class TestFSCheckTestUser(object):
         return resource_dict1, resource_dict2
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_xls')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
     def test_create_update_resources_test_user(self, file_structure_check_mock, is_upload_xls_mock):
         file_structure_check_mock.return_value = FS_CHECK_RESPONSE
@@ -417,7 +417,7 @@ class TestFSCheckResourceRevise(object):
                     'key': 'fs_check_info',
                     'value': {
                         "state": "success",
-                        "message": "File structure check completed.",
+                        "message": "Hxl Proxy data received successfully",
                         "timestamp": datetime.datetime.now().isoformat(),
                         "hxl_proxy_response": self.HXL_PROXY_RESPONSE_DICT
                     }
@@ -430,7 +430,7 @@ class TestFSCheckResourceRevise(object):
             assert 'message' in fs_check_info_res_1[0]
             assert 'The processing of the file structure check has started' in fs_check_info_res_1[0].get('message')
             assert 'message' in fs_check_info_res_1[1]
-            assert 'File structure check completed.' in fs_check_info_res_1[1].get('message')
+            assert 'Hxl Proxy data received successfully' in fs_check_info_res_1[1].get('message')
 
             fs_check_info_res_2 = json.loads(pkg_dict.get('resources')[1].get('fs_check_info'))
             assert len(fs_check_info_res_2) == 1
