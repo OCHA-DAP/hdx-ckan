@@ -73,26 +73,25 @@ def hdx_send_request_data_auto_approval(context, data_dict):
     org_dict = get_action('organization_show')(context, {'id': pkg_dict.get('owner_org')})
     maintainer_obj = model.User.get(pkg_dict.get('maintainer'))
 
-    subject = u'Request for access to HDX "metadata-only" dataset'
+    subject = u'The metadata-only dataset you requested to access is now public: %s' % pkg_dict.get('name')
 
     email_data = {
         'user_fullname': req_dict.get('sender_name'),
         'org_name': org_dict.get('title'),
         'dataset_link': h.url_for('dataset_read', id=data_dict.get('package_id'), qualified=True),
-        'dataset_title': pkg_dict.get('name'),
-        'user_admin_fullname': g.userobj.fullname or g.userobj.name,
-        'user_admin_email': g.userobj.email
+        'dataset_title': pkg_dict.get('name')
     }
     hdx_mailer.mail_recipient([{'display_name': data_dict.get('requested_by'), 'email': req_dict.get('email_address')}],
                               subject, email_data, footer=data_dict.get('send_to'),
                               snippet='email/content/request_data_auto_approval_to_user.html')
 
+    subject = u'%s’s request for access to one of your datasets: %s is archived' % (req_dict.get('sender_name'), pkg_dict.get('name'))
+
     email_data = {
         'user_fullname': req_dict.get('sender_name'),
         'user_email': req_dict.get('email_address'),
         'dataset_link': h.url_for('dataset_read', id=data_dict.get('package_id'), qualified=True),
-        'dataset_title': pkg_dict.get('name'),
-        'user_admin_fullname': g.userobj.fullname or g.userobj.name,
+        'dataset_title': pkg_dict.get('name')
     }
     hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
                               subject, email_data, footer=maintainer_obj.email,
