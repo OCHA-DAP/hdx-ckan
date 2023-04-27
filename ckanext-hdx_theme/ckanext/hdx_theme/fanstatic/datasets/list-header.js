@@ -64,13 +64,13 @@ $(document).ready(function() {
         let searchStr = "";
         if (value !== "") {
           //we search for original string and boost 10x the result
-          searchStr += `${value}^10`
+          searchStr += `${value}^10`;
           //original string + ending wildcard (boost 4x)
           searchStr += ` ${value}*^4`;
           //beginning wildcard (boost 2x)
-          searchStr += ` *${value}^2`
+          searchStr += ` *${value}^2`;
           //wildcards at both ends
-          searchStr += ` *${value}*`
+          searchStr += ` *${value}*`;
         }
         let results = index.search(searchStr);
         let resultsIdx = results.map((el) => parseInt(el.ref));
