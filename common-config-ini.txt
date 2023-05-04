@@ -326,7 +326,7 @@ hdx.search_history.hours_from_actual_search = 1
 hdx.batch.period_in_mins_unesco = 90
 hdx.batch.period_in_mins_hot = 1500
 
-#LUNR
+#Search Index Location (ex-LUNR)
 hdx.lunr.index_location = ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_
 
 #Enable HDX-specific reindexing

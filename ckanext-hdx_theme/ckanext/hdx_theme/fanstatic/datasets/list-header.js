@@ -34,47 +34,42 @@ $(document).ready(function() {
         $(this).parents(".filter-category").find(".categ-list").toggleClass("show-all");
     });
 
-    //prepare Lunr Index
+    //prepare MubuSearch Index
     let categoryIndex = {};
     $(".filter-category").each((idx, el) => {
       if ($(el).find('.categ-search').length === 0) //only categs with search
         return;
       let category = $(el).find(".categ-title").attr('data-value');
-      categoryIndex[category] = lunr(function () {
-        this.field('title');
-        this.ref('idx');
-
-        let results = [];
-        $(el).find(".categ-list .categ-items li input").each((idx, input) => {
-          results.push({
-            "idx": idx,
-            "title": toNormalForm($(input).parent().text())
-          });
-        })
-        results.forEach((v) => this.add(v));
+      categoryIndex[category] = new MiniSearch({
+        fields: ['title'],
+        storeFields: ['title']
       });
-    })
+      let results = [];
+      $(el).find(".categ-list .categ-items li input").each((idx, input) => {
+        results.push({
+          "id": idx,
+          "title": toNormalForm($(input).parent().text())
+        });
+      })
+      categoryIndex[category].addAll(results);
+    });
 
     $(".filter-category .categ-search input").on("keyup", function() {
-        let category = $(this).parents('.filter-category').find('.categ-title').attr('data-value');
-        let index = categoryIndex[category];
+      let category = $(this).parents('.filter-category').find('.categ-title').attr('data-value');
+      let filterItems = $(this).parents(".filter-category").find(".categ-items li");
+      let index = categoryIndex[category];
 
+      let value = toNormalForm($(this).val());
+      let searchStr = `${value}`;
 
-        let value = toNormalForm($(this).val());
-        let searchStr = "";
-        if (value !== "") {
-          //we search for original string and boost 10x the result
-          searchStr += `${value}^10`;
-          //original string + ending wildcard (boost 4x)
-          searchStr += ` ${value}*^4`;
-          //beginning wildcard (boost 2x)
-          searchStr += ` *${value}^2`;
-          //wildcards at both ends
-          searchStr += ` *${value}*`;
-        }
-        let results = index.search(searchStr);
-        let resultsIdx = results.map((el) => parseInt(el.ref));
-        $(this).parents(".filter-category").find(".categ-items li").each((idx, el) => (resultsIdx.includes(idx) ? $(el).show() :$(el).hide()));
+      if (value === "") {
+        filterItems.each((idx, el) => $(el).show());
+        return;
+      }
+
+      let results = index.search(searchStr, { prefix: true, combineWith: 'AND' });
+      let resultsIdx = results.map((el) => parseInt(el.id));
+      filterItems.each((idx, el) => (resultsIdx.includes(idx) ? $(el).show() :$(el).hide()));
     });
 
     $(".filter-category .categ-items li input.parent-facet").on("change", function() {
