@@ -166,7 +166,7 @@ class TestFSCheckSysadmin(object):
         return resource_dict1, resource_dict2
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_xls')
+    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
     def test_create_update_resources_sysadmin_user(self, file_structure_check_mock, is_upload_xls_mock):
         file_structure_check_mock.return_value = FS_CHECK_RESPONSE

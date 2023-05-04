@@ -26,7 +26,6 @@ config = tk.config
 FS_CHECK_FORMATS = ['xls', 'xlsx', 'csv']
 
 
-# def _is_upload_xls(resource_dict):
 def _is_upload_and_fs_check_format(resource_dict: dict) -> bool:
     if resource_dict and 'upload' in resource_dict:
         return isinstance(resource_dict.get('upload'), FlaskFileStorage) and \
