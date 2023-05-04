@@ -40,7 +40,9 @@ def _before_ckan_action(context, resource_dict):
     :param resource_dict:
     :type resource_dict dict
     '''
-    is_upload_and_fs_check_format = _is_upload_and_fs_check_format(resource_dict)
+    context.get('fs_check_is_upload_xls', True)
+    is_upload_and_fs_check_format = context.get('fs_check_is_upload_xls', True) and _is_upload_and_fs_check_format(
+        resource_dict)
     if is_upload_and_fs_check_format:
         context['allow_fs_check_field'] = True
         resource_dict['fs_check_info'] = {
@@ -50,7 +52,6 @@ def _before_ckan_action(context, resource_dict):
         }
     else:
         context['allow_fs_check_field'] = False
-    context['fs_check_is_upload_xls'] = is_upload_and_fs_check_format
 
 
 def _after_ckan_action(context, resource_dict):
@@ -60,31 +61,44 @@ def _after_ckan_action(context, resource_dict):
     :param resource_dict:
     :type resource_dict dict
     '''
-    if context.get('fs_check_is_upload_xls'):
+
+    do_fs_check = context.get('fs_check_is_upload_xls', True) and get_fs_check_info_state(resource_dict) == PROCESSING
+
+    if do_fs_check:
         _file_structure_check(resource_dict)
-    context.pop('fs_check_is_upload_xls', None)
     log.info("in after ckan action in fs_check")
 
 
-def fs_check_4_resources(original_resource_action):
-    def resource_action(context, resource_dict):
-        '''
-        This runs the 'resource_create/resource_update' action from core ckan's create.py / update.py
-        It triggers the file structure check creation process.
-        '''
+def get_fs_check_info_state(resource_data):
+    '''
+    :param resource_data: a resource dict
+    :type resource_data: dict
+    :return: The current status of the transformation process. None if no "fs_check_info" property found
+    :rtype: str
+    '''
 
-        _before_ckan_action(context, resource_dict)
+    fs_check_info_obj = get_latest_fs_check_info(resource_data)
+    if fs_check_info_obj:
+        return fs_check_info_obj.get('state')
 
-        result_dict = original_resource_action(context, resource_dict)
-
-        _after_ckan_action(context, result_dict)
-
-        return result_dict
-
-    return resource_action
+    return None
 
 
-# def _file_structure_check(data_dict):
+def get_latest_fs_check_info(resource_dict):
+    if resource_dict:
+        fs_check_info = resource_dict.get('fs_check_info')
+        if fs_check_info:
+            try:
+                fs_check_info_obj = json.loads(fs_check_info)
+                if isinstance(fs_check_info_obj, list):
+                    return fs_check_info_obj[-1]
+                else:
+                    return fs_check_info_obj
+            except ValueError as e:
+                log.error("Couldn't load following string as json: {}".format(fs_check_info))
+    return None
+
+
 def _file_structure_check(data_dict: dict) -> str:
     file_structure_check_url = config.get('hdx.file_structure.check_url')
     encoded_download_url = urlparse.quote_plus(data_dict.get('url'))
@@ -101,7 +115,6 @@ def _file_structure_check(data_dict: dict) -> str:
     return _make_file_structure_check_request(fs_check_url, data_fs_check_url_dict)
 
 
-# def _make_file_structure_check_request(fs_check_url):
 def _make_file_structure_check_request(fs_check_url: str, data_fs_check_url_dict: dict) -> str:
     try:
         log.info(fs_check_url)
