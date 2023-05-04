@@ -370,6 +370,7 @@ def package_metadata(id):
         pkg_dict = get_action('package_show')(context, {'id': id})
 
         metadata_fields = PACKAGE_METADATA_FIELDS_MAP
+        metadata_resource_fields = RESOURCE_METADATA_FIELDS_MAP
 
         # limit fields
         metadata = {field: pkg_dict[field] if field in pkg_dict else None for field in metadata_fields}
@@ -381,6 +382,12 @@ def package_metadata(id):
         metadata['data_update_frequency'] = data_update_frequency_value or metadata.get('data_update_frequency')
         metadata['groups'] = ', '.join([group['display_name'] for group in metadata.get('groups')])
         metadata['tags'] = ', '.join([tag['display_name'] for tag in metadata.get('tags')])
+
+        # add resources
+        metadata['resources'] = []
+        for r in pkg_dict['resources']:
+            metadata['resources'].append(
+                {field: r[field] if field in r else None for field in metadata_resource_fields})
 
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % metadata.get('name')
@@ -399,8 +406,13 @@ def package_metadata(id):
 
             # header
             writer.writerow(['Field', 'Label', 'Value'])
+
+            # normalize lists (resources)
+            metadata = _normalize_metadata_lists(metadata)
+
+            # content
             for k, v in metadata.items():
-                writer.writerow([k, metadata_fields[k], v])
+                writer.writerow([k, metadata_fields[k] if k in metadata_fields else None, v])
 
             output = make_response(buf.getvalue())
             output.headers['Content-Type'] = 'text/csv'
@@ -463,6 +475,23 @@ def resource_metadata(id, resource_id):
     except NotFound:
         return abort(404, _('Resource not found'))
     return abort(404, _('Invalid file format'))
+
+
+def _normalize_metadata_lists(old_dict: dict) -> dict:
+    new_dict = {}
+
+    for dict_key, dict_value in old_dict.items():
+        if isinstance(dict_value, list):
+            for list_key, list_value in enumerate(dict_value, start=1):
+                if isinstance(list_value, dict):
+                    for k, v in list_value.items():
+                        new_dict['%s_%s_%s' % (dict_key, list_key, k)] = v
+                else:
+                    new_dict['%s_%s' % (dict_key, list_key)] = list_value
+        else:
+            new_dict[dict_key] = dict_value
+
+    return new_dict
 
 
 hdx_search.add_url_rule(u'', view_func=search)
