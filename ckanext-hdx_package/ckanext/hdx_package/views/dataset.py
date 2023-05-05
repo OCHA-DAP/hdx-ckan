@@ -479,15 +479,19 @@ def resource_metadata(id, resource_id):
 
 def _normalize_metadata_lists(old_dict: dict) -> dict:
     new_dict = {}
+    renamed_keys = {
+        'resources': 'resource'
+    }
 
     for dict_key, dict_value in old_dict.items():
         if isinstance(dict_value, list):
             for list_key, list_value in enumerate(dict_value, start=1):
+                dict_new_key = renamed_keys[dict_key] if dict_key in renamed_keys else dict_key
                 if isinstance(list_value, dict):
                     for k, v in list_value.items():
-                        new_dict['%s_%s_%s' % (dict_key, list_key, k)] = v
+                        new_dict['%s_%s_%s' % (dict_new_key, list_key, k)] = v
                 else:
-                    new_dict['%s_%s' % (dict_key, list_key)] = list_value
+                    new_dict['%s_%s' % (dict_new_key, list_key)] = list_value
         else:
             new_dict[dict_key] = dict_value
 
