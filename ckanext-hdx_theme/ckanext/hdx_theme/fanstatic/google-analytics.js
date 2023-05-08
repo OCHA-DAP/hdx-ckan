@@ -57,6 +57,11 @@ $(
                     'isList': true,
                     'mandatory': true
                 },
+                'dataseries_name': {
+                    'name': 'dataseries filters',
+                    'isList': true,
+                    'mandatory': true
+                },
                 /*'ext_page_size': {
                  'name': 'items per page',
                  'isList': false,
