@@ -11,10 +11,9 @@ import ckanext.hdx_search.actions.authorize as authorize
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_search.model as search_model
-from ckan.common import _
 from ckan.lib.helpers import DEFAULT_FACET_NAMES
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
-from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
+from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_instance, \
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
@@ -31,6 +30,7 @@ from ckanext.hdx_search.views.qa import hdx_qa
 from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
 
 NotFound = tk.ObjectNotFound
+_ = tk._
 
 log = logging.getLogger(__name__)
 
@@ -297,10 +297,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
         facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
         facets_dict['{!ex=batch,archived}extras_archived'] = _('Archived datasets')
-        facets_dict['{!ex=batch,archived}res_extras_p_coded'] = _('Datasets with P-Codes')
+        facets_dict['{!ex=cod_level,batch}cod_level'] = _('CODs')
 
-        if are_new_cod_filters_enabled():
-            facets_dict['{!ex=cod_level,batch}cod_level'] = _('CODs')
+        if are_new_p_code_filters_enabled():
+            facets_dict['{!ex=batch,archived}res_extras_p_coded'] = _('Datasets with P-Codes')
+
+
 
         return facets_dict
 

@@ -26,7 +26,7 @@ from ckanext.hdx_search.helpers.constants import \
     P_CODED_DATASET_FACET_NAME
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
-from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
+from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK
 
@@ -512,8 +512,6 @@ class SearchLogic(object):
         num_of_archived = 0
         num_of_unarchived = 0
 
-        new_cod_filters_enabled = are_new_cod_filters_enabled()
-
         p_coded_explanation = _('A P-Code, short for place code, is a unique identifier for locations in humanitarian '
                                 'datasets. It is most commonly used to uniquely identify subnational administrative '
                                 'divisions.')
@@ -580,23 +578,22 @@ class SearchLogic(object):
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
 
-        if new_cod_filters_enabled:
-            cod_category = result['facets'].pop('cod_level', None)
-            if cod_category:
-                modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
-                featured_facet_items.append(modified_cod_category)
+        cod_category = result['facets'].pop('cod_level', None)
+        if cod_category:
+            modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
+            featured_facet_items.append(modified_cod_category)
 
-        if not new_cod_filters_enabled:
-            # self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
-            self._add_facet_query_item_to_list(featured_facet_items, COD_DATASETS_FACET_NAME, _('CODs'),
-                                               existing_facets, search_extras)
+        # if not new_cod_filters_enabled:
+        #     self._add_facet_query_item_to_list(featured_facet_items, COD_DATASETS_FACET_NAME, _('CODs'),
+        #                                        existing_facets, search_extras)
 
         self._add_facet_item_to_list(featured_facet_items, SUBNATIONAL_DATASETS_FACET_NAME, 'Sub-national',
                                      num_of_subnational, search_extras)
         self._add_facet_item_to_list(featured_facet_items, GEODATA_DATASETS_FACET_NAME, 'Geodata',
                                      num_of_geodata, search_extras)
-        self._add_facet_item_to_list(featured_facet_items, P_CODED_DATASET_FACET_NAME, 'Datasets with P-Codes',
-                                     num_of_p_coded, search_extras, p_coded_explanation)
+        if are_new_p_code_filters_enabled():
+            self._add_facet_item_to_list(featured_facet_items, P_CODED_DATASET_FACET_NAME, 'Datasets with P-Codes',
+                                         num_of_p_coded, search_extras, p_coded_explanation)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
         #                                   num_of_administrative_divisions, search_extras)
         self._add_facet_query_item_to_list(featured_facet_items, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
