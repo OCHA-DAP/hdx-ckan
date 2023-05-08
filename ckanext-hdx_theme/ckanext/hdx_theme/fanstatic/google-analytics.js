@@ -138,6 +138,14 @@ $(
                     'valueMap': {
                         '1': 'on'
                     }
+                },
+                'ext_p_coded': {
+                    'name': 'p-codes filter',
+                    'isList': false,
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 }
             };
 
