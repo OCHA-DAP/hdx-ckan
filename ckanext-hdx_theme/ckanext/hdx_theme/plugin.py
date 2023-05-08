@@ -356,6 +356,20 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             app.logger.addFilter(FlaskEmailFilter())
             app.after_request(http_headers.set_http_headers)
             app.before_request(self._before_request)
+            # tweak the root handler
+            found_stream_handler = False
+            console_formatter = logging.Formatter(
+                '{"timestamp":"%(asctime)s", "level":"%(levelname)s", "logger":"%(module)s", "message":"%(message)s"}'
+            )
+            for handler in app.logger.root.handlers:
+                if isinstance(handler, logging.StreamHandler):
+                    found_stream_handler = True
+                    handler.setFormatter(console_formatter)
+            if not found_stream_handler:
+                console_handler = logging.StreamHandler()
+                console_handler.setFormatter(console_formatter)
+                app.logger.root.addHandler(console_handler)
+
         return redirection_app
 
     # IValidators
