@@ -497,3 +497,80 @@ class QASdcAnalyticsSender(AbstractResourceAnalyticsSender):
 
     def should_send_analytics_event(self):
         return self.new_sdc_value != self.old_sdc_value
+
+
+class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
+
+    def __init__(self, file_format, package_id=None, resource_id=None):
+        super(MetadataDownloadAnalyticsSender, self).__init__()
+
+        log.debug('The user IP address was {}'.format(self.user_addr))
+
+        event_name = 'metadata download'
+        authenticated = True if g.userobj else False
+        context = {'model': model, 'session': model.Session, 'user': g.user or g.author, 'auth_user_obj': g.userobj}
+
+        if package_id:
+            try:
+                dataset_dict = get_action('package_show')(context, {'id': package_id})
+
+                location_names, location_ids = extract_locations(dataset_dict)
+                dataset_is_cod = is_cod(dataset_dict) == 'true'
+                dataset_is_indicator = is_indicator(dataset_dict) == 'true'
+                dataset_is_archived = is_archived(dataset_dict) == 'true'
+
+                self.analytics_dict = {
+                    'event_name': event_name,
+                    'mixpanel_meta': {
+                        'file format': file_format,
+                        'dataset name': dataset_dict.get('name'),
+                        'dataset id': dataset_dict.get('id'),
+                        'org name': dataset_dict.get('organization', {}).get('name'),
+                        'org id': dataset_dict.get('organization', {}).get('id'),
+                        'group names': location_names,
+                        'group ids': location_ids,
+                        'is cod': dataset_is_cod,
+                        'is indicator': dataset_is_indicator,
+                        'is archived': dataset_is_archived,
+                        'authenticated': authenticated,
+                        'event source': 'direct'
+                    },
+                    'ga_meta': {
+                        'ec': 'metadata',  # event category
+                        'ea': 'download',  # event action
+                        'el': dataset_dict.get('title', dataset_dict.get('name'))  # event label
+                    }
+                }
+
+            except NotFound:
+                abort(404, _('Dataset not found'))
+            except NotAuthorized:
+                abort(403, _('Unauthorized to read dataset %s') % package_id)
+            except Exception as e:
+                log.error('Unexpected error {}'.format(e))
+
+        elif resource_id:
+            try:
+                resource_dict = get_action('resource_show')(context, {'id': resource_id})
+                self.analytics_dict = {
+                    'event_name': event_name,
+                    'mixpanel_meta': {
+                        'file format': file_format,
+                        'resource name': resource_dict.get('name'),
+                        'resource id': resource_dict.get('id'),
+                        'authenticated': authenticated,
+                        'event source': 'direct'
+                    },
+                    'ga_meta': {
+                        'ec': 'metadata',  # event category
+                        'ea': 'download',  # event action
+                        'el': resource_dict.get('name')  # event label
+                    }
+                }
+
+            except NotFound:
+                abort(404, _('Resource not found'))
+            except NotAuthorized:
+                abort(403, _('Unauthorized to read resource %s') % resource_id)
+            except Exception as e:
+                log.error('Unexpected error {}'.format(e))

@@ -392,6 +392,8 @@ def package_metadata(id):
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % metadata.get('name')
 
+        analytics.MetadataDownloadAnalyticsSender(file_format=file_format, package_id=id).send_to_queue()
+
         buf = io.StringIO()
         if 'json' in file_format:
             json.dump(metadata, buf, indent=4)
@@ -449,6 +451,8 @@ def resource_metadata(id, resource_id):
 
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
+
+        analytics.MetadataDownloadAnalyticsSender(file_format=file_format, resource_id=resource_id).send_to_queue()
 
         buf = io.StringIO()
         if 'json' in file_format:
