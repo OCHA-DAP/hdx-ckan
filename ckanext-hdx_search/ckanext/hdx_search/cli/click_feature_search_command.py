@@ -35,7 +35,7 @@ def build_index():
 def _buildIndex(path):
     '''
     Grab all Organizations, Groups, and Vocabulary Topics and write a
-    json file for lunr.js to search against
+    json file for MiniSearch to search against
     '''
     index = list()
     try:
