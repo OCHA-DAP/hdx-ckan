@@ -65,13 +65,18 @@ S3_TAG_KEY_SENSITIVE = 'Sensitive'
 S3_TAG_VALUE_SENSITIVE_TRUE = 'yes'
 S3_TAG_VALUE_SENSITIVE_FALSE = 'no'
 
-PACKAGE_METADATA_FIELDS_MAP = {'title': 'Title of Dataset', 'name': 'Dataset URL', 'notes': 'Description',
-                               'dataset_source': 'Source', 'organization': 'Contributor',
-                               'dataset_date': 'Reference Period', 'last_modified': 'Updated',
-                               'data_update_frequency': 'Expected Update Frequency', 'groups': 'Location',
-                               'license_title': 'License', 'methodology': 'Methodology',
-                               'methodology_other': 'Define Methodology', 'caveats': 'Caveats/Comments', 'tags': 'Tags'}
+PACKAGE_METADATA_FIELDS_MAP = {'id': {'title': 'Dataset ID'}, 'title': {'title': 'Title of Dataset'},
+                               'name': {'title': 'Dataset URL'}, 'notes': {'title': 'Description'},
+                               'dataset_source': {'title': 'Source'}, 'organization': {'title': 'Contributor'},
+                               'dataset_date': {'title': 'Reference Period'}, 'last_modified': {'title': 'Updated'},
+                               'data_update_frequency': {'title': 'Expected Update Frequency'},
+                               'groups': {'title': 'Location'}, 'license_title': {'title': 'License'},
+                               'methodology': {'title': 'Methodology'},
+                               'methodology_other': {'title': 'Define Methodology'},
+                               'caveats': {'title': 'Caveats/Comments'}, 'tags': {'title': 'Tags'},
+                               'resources': {'output_key': 'resource'}}
 
-RESOURCE_METADATA_FIELDS_MAP = {'created', 'description', 'format', 'download_url', 'id', 'last_modified',
-                                'metadata_modified', 'microdata', 'package_id', 'resource_type', 'resource_uploader',
-                                'name', 'mimetype', 'size'}
+RESOURCE_METADATA_FIELDS_MAP = {'created': {}, 'description': {}, 'format': {}, 'download_url': {}, 'id': {},
+                                'last_modified': {}, 'metadata_modified': {}, 'microdata': {},
+                                'package_id': {'output_key': 'dataset_id'}, 'resource_type': {}, 'name': {},
+                                'mimetype': {}, 'size': {}}

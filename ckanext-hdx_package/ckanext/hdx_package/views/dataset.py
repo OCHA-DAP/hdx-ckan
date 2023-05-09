@@ -20,9 +20,11 @@ from ckan.views.dataset import _setup_template_variables
 
 from ckanext.hdx_package.helpers import resource_grouping
 from ckanext.hdx_package.helpers.constants import PACKAGE_METADATA_FIELDS_MAP, RESOURCE_METADATA_FIELDS_MAP
+from ckanext.hdx_package.helpers.helpers import filesize_format
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_search.controller_logic.qa_logs_logic import QALogsLogic
+from ckanext.hdx_theme.helpers.helpers import markdown_extract_strip
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
@@ -373,21 +375,23 @@ def package_metadata(id):
         metadata_resource_fields = RESOURCE_METADATA_FIELDS_MAP
 
         # limit fields
-        metadata = {field: pkg_dict[field] if field in pkg_dict else None for field in metadata_fields}
+        metadata = {field_data.get('output_key', field): pkg_dict[
+            field] if field in pkg_dict else None for field, field_data in metadata_fields.items()}
 
         # process fields
-        data_update_frequency_value = h.hdx_get_frequency_by_value(metadata.get('data_update_frequency'))
-
-        metadata['organization'] = metadata.get('organization').get('title')
-        metadata['data_update_frequency'] = data_update_frequency_value or metadata.get('data_update_frequency')
-        metadata['groups'] = ', '.join([group['display_name'] for group in metadata.get('groups')])
-        metadata['tags'] = ', '.join([tag['display_name'] for tag in metadata.get('tags')])
+        _process_dataset_metadata(metadata, metadata_fields)
 
         # add resources
-        metadata['resources'] = []
-        for r in pkg_dict['resources']:
-            metadata['resources'].append(
-                {field: r[field] if field in r else None for field in metadata_resource_fields})
+        resources_pkg_key = 'resources'
+        if resources_pkg_key in metadata_fields:
+            resources_output_key = metadata_fields[resources_pkg_key].get('output_key', resources_pkg_key)
+            metadata[resources_output_key] = []
+            for r in pkg_dict[resources_pkg_key]:
+                output_resource_dict = {field_data.get('output_key', field): r[field] if field in r else None for
+                                        field, field_data in metadata_resource_fields.items()}
+                # extra processing
+                _process_resource_metadata(output_resource_dict, metadata_resource_fields)
+                metadata[resources_output_key].append(output_resource_dict)
 
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % metadata.get('name')
@@ -414,7 +418,7 @@ def package_metadata(id):
 
             # content
             for k, v in metadata.items():
-                writer.writerow([k, metadata_fields[k] if k in metadata_fields else None, v])
+                writer.writerow([k, metadata_fields[k].get('title') if k in metadata_fields else None, v])
 
             output = make_response(buf.getvalue())
             output.headers['Content-Type'] = 'text/csv'
@@ -447,7 +451,11 @@ def resource_metadata(id, resource_id):
         metadata_fields = RESOURCE_METADATA_FIELDS_MAP
 
         # limit fields
-        metadata = {field: resource_dict[field] if field in resource_dict else None for field in metadata_fields}
+        metadata = {field_data.get('output_key', field): resource_dict[
+            field] if field in resource_dict else None for field, field_data in metadata_fields.items()}
+
+        # process fields
+        _process_resource_metadata(metadata, metadata_fields)
 
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
@@ -483,23 +491,41 @@ def resource_metadata(id, resource_id):
 
 def _normalize_metadata_lists(old_dict: dict) -> dict:
     new_dict = {}
-    renamed_keys = {
-        'resources': 'resource'
-    }
 
     for dict_key, dict_value in old_dict.items():
         if isinstance(dict_value, list):
             for list_key, list_value in enumerate(dict_value, start=1):
-                dict_new_key = renamed_keys[dict_key] if dict_key in renamed_keys else dict_key
                 if isinstance(list_value, dict):
                     for k, v in list_value.items():
-                        new_dict['%s_%s_%s' % (dict_new_key, list_key, k)] = v
+                        new_dict['%s_%s_%s' % (dict_key, list_key, k)] = v
                 else:
-                    new_dict['%s_%s' % (dict_new_key, list_key)] = list_value
+                    new_dict['%s_%s' % (dict_key, list_key)] = list_value
         else:
             new_dict[dict_key] = dict_value
 
     return new_dict
+
+
+def _process_dataset_metadata(metadata_dict: dict, fields: dict) -> dict:
+    if 'notes' in fields:
+        metadata_dict['notes'] = markdown_extract_strip(metadata_dict.get('notes'), 0)
+    if 'organization' in fields:
+        metadata_dict['organization'] = metadata_dict.get('organization').get('title')
+    if 'data_update_frequency' in fields:
+        data_update_frequency_value = h.hdx_get_frequency_by_value(metadata_dict.get('data_update_frequency'))
+        metadata_dict['data_update_frequency'] = data_update_frequency_value or metadata_dict.get(
+            'data_update_frequency')
+    if 'groups' in fields:
+        metadata_dict['groups'] = ', '.join([group['display_name'] for group in metadata_dict.get('groups')])
+    if 'tags' in fields:
+        metadata_dict['tags'] = ', '.join([tag['display_name'] for tag in metadata_dict.get('tags')])
+    return metadata_dict
+
+
+def _process_resource_metadata(metadata_dict: dict, fields: dict) -> dict:
+    if 'size' in fields:
+        metadata_dict['size'] = filesize_format(metadata_dict.get('size'))
+    return metadata_dict
 
 
 hdx_search.add_url_rule(u'', view_func=search)
