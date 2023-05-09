@@ -655,6 +655,18 @@ body {
 .dataset-resources [class*=" icon-"]:before {
   color: #888888;
 }
+/* Style dataseries label */
+.dataseries-info {
+  clear: both;
+  margin-left: 10px;
+  font-size: 12px;
+}
+.dataseries-info .dataseries-explanation {
+  cursor: default;
+}
+.dataseries-info a {
+  color: #f2645a;
+}
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;
@@ -698,6 +710,12 @@ ul.dataset-resources li.label-icons a {
 }
 ul.dataset-resources li.label-icons a[class*="humanitarianicons-"] {
   margin-left: 10px;
+}
+ul.dataset-resources li.label-icons a .humanitarianicons-Chart:hover::before {
+  color: #007CE0;
+}
+ul.dataset-resources li.label-icons a .icon-hxl-tags:hover::before {
+  color: #f2645a;
 }
 ul.dataset-resources li.label-icons span {
   padding: 0;
@@ -2458,6 +2476,10 @@ textarea {
   font-size: 14px;
   line-height: 20px;
 }
+.filter-category .categ-list .categ-items li label.facet .facet-option-explanation {
+  color: #333333;
+  cursor: default;
+}
 .filter-category .categ-list .categ-items li label.facet:after {
   content: none;
 }
@@ -2536,6 +2558,9 @@ textarea {
   color: #007CE0;
   line-height: 1;
   text-decoration: none;
+}
+.list-header .list-header-title .archived-datasets-explanation {
+  cursor: default;
 }
 .list-header .header-search {
   line-height: 18px;

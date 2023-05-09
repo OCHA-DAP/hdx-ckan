@@ -139,6 +139,10 @@
   font-size: 14px;
   line-height: 20px;
 }
+.filter-category .categ-list .categ-items li label.facet .facet-option-explanation {
+  color: #333333;
+  cursor: default;
+}
 .filter-category .categ-list .categ-items li label.facet:after {
   content: none;
 }
@@ -217,6 +221,9 @@
   color: #007CE0;
   line-height: 1;
   text-decoration: none;
+}
+.list-header .list-header-title .archived-datasets-explanation {
+  cursor: default;
 }
 .list-header .header-search {
   line-height: 18px;

@@ -192,8 +192,20 @@
 .search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .icn-txt-cods:hover {
   background-color: #007CE0;
 }
+.search-list .dataset-item .dataset-content2 .dataset-updated .dataset-updated-icons .download-counts {
+  cursor: default;
+}
 .search-list .dataset-item .dataset-content2 .dataset-dates {
   margin-bottom: 8px;
+}
+.search-list .dataset-item .dataset-content2 .dataset-dataseries {
+  margin-top: 8px;
+}
+.search-list .dataset-item .dataset-content2 .dataset-dataseries .dataseries-explanation {
+  cursor: default;
+}
+.search-list .dataset-item .dataset-content2 .dataset-dataseries a {
+  color: #f2645a;
 }
 .search-list .dataset-item .dataset-content2 .updatedNameColor {
   font-family: 'Source Sans Pro', sans-serif;

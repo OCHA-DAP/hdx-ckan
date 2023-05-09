@@ -68,6 +68,20 @@
 
 }
 
+/* Style dataseries label */
+.dataseries-info {
+  clear: both;
+  margin-left: 10px;
+  font-size: 12px;
+
+  .dataseries-explanation {
+    cursor: default;
+  }
+  a {
+    color: @orangeColor;
+  }
+}
+
 /* Style dataset icons */
 .label-icons span{
   font-size: 15px;
@@ -107,6 +121,12 @@ ul.dataset-resources {
       line-height: 1;
       &[class*="humanitarianicons-"] {
         margin-left: 10px;
+      }
+      .humanitarianicons-Chart:hover::before {
+          color: @blueColor;
+      }
+      .icon-hxl-tags:hover::before {
+          color: @orangeColor;
       }
     }
     span {

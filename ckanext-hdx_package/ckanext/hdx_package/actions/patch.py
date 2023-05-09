@@ -1,20 +1,22 @@
-import ckan.logic as logic
 import ckan.logic.action.update as _update
-from ckan.logic import (
-    get_action as _get_action,
-    check_access as _check_access,
-    get_or_bust as _get_or_bust,
-)
+
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
-from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update
+from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
+    SKIP_VALIDATION
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender, \
     QAPiiAnalyticsSender, QASdcAnalyticsSender
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD, NO_DATA
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import delete_geopreview_layer
 
-NotFound = logic.NotFound
+NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
+
+_check_access = tk.check_access
+_get_action = tk.get_action
+_get_or_bust = tk.get_or_bust
 
 
 # @fs_check.fs_check_4_resources
@@ -272,7 +274,7 @@ def hdx_qa_package_revise_resource(context, data_dict):
     return _get_action('package_revise')(context, data_revise_dict)
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def hdx_fs_check_resource_reset(context, data_dict):
     _check_access('hdx_fs_check_resource_revise', context, data_dict)
 
@@ -288,7 +290,7 @@ def hdx_fs_check_resource_reset(context, data_dict):
     return _get_action('package_revise')(context, data_revise_dict)
 
 
-@logic.side_effect_free
+@tk.side_effect_free
 def hdx_fs_check_package_reset(context, data_dict):
     _check_access('hdx_fs_check_resource_revise', context, data_dict)
     pkg_id = data_dict.get('package_id')
@@ -303,3 +305,38 @@ def hdx_fs_check_package_reset(context, data_dict):
         return _get_action('package_revise')(context, data_revise_dict)
 
     raise NotFound("package doesn't contain resources or not found")
+
+
+def hdx_dataseries_link(context, data_dict):
+    _check_access('hdx_dataseries_update', context, data_dict)
+    name_or_id = _get_or_bust(data_dict, 'id')
+    dataseries_name = _get_or_bust(data_dict, 'dataseries_name')
+    return _manage_dataseries_link(context, name_or_id, dataseries_name)
+
+
+def hdx_dataseries_unlink(context, data_dict):
+    _check_access('hdx_dataseries_update', context, data_dict)
+    name_or_id = _get_or_bust(data_dict, 'id')
+    return _manage_dataseries_link(context, name_or_id, dataseries_name=None)
+
+
+def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
+    context['ignore_auth'] = True
+    context[SKIP_VALIDATION] = True
+
+    model = context['model']
+    pkg = model.Package.get(dataset_name_or_id)
+
+    if not pkg:
+        raise NotFound('Dataset {} was not found'.format(dataset_name_or_id))
+
+    data_revise_dict = {
+        'match': {
+            'id': pkg.id
+        },
+        'update': {
+            'dataseries_name': dataseries_name if dataseries_name else NO_DATA
+        }
+    }
+    result = _get_action('package_revise')(context, data_revise_dict)
+    return result['package']

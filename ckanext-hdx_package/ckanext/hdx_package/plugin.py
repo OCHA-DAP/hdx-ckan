@@ -32,6 +32,7 @@ from ckan.lib import uploader
 from ckan.common import c
 from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
 
@@ -194,6 +195,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_grouping': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('hdx_convert_to_json_string'),
+                tk.get_converter('convert_to_extras')
+            ],
+            'dataseries_name': [
+                tk.get_validator('hdx_delete_unless_authorized_to_update_dataseries'),
+                tk.get_validator('hdx_keep_prev_value_if_empty'),
+                tk.get_validator('hdx_delete_if_marked_with_no_data'),
+                tk.get_validator('ignore_missing'),
+                tk.get_validator('hdx_dataseries_title_validator'),
                 tk.get_converter('convert_to_extras')
             ]
         })
@@ -380,6 +389,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'dataseries_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
             'last_modified': [tk.get_validator('ignore_missing')],
             # 'due_daterange': [tk.get_validator('ignore_missing')],
@@ -470,8 +480,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_resource_revise': hdx_patch.hdx_fs_check_resource_revise,
             'hdx_fs_check_resource_reset': hdx_patch.hdx_fs_check_resource_reset,
             'hdx_fs_check_package_reset': hdx_patch.hdx_fs_check_package_reset,
+            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags,
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
-            'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags
+            'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
+            'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
+
         }
 
     # IValidators
@@ -506,8 +519,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_fs_check_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_fs_check_field',
                                                                                resource_level=True),
+            'hdx_delete_unless_authorized_to_update_dataseries':
+                vd.hdx_delete_unless_authorized_wrapper('hdx_dataseries_update'),
             'hdx_delete_unless_authorized_to_update_cod':
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
+            'hdx_delete_if_marked_with_no_data': vd.hdx_delete_if_marked_with_no_data,
+            'hdx_dataseries_title_validator': vd.hdx_dataseries_title_validator,
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
             'hdx_in_update_frequency_values':
@@ -528,20 +545,22 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         }
 
     def get_auth_functions(self):
-        return {'package_create': authorize.package_create,
-                'package_update': authorize.package_update,
-                'hdx_resource_id_list': authorize.hdx_resource_id_list,
-                'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
-                'hdx_send_mail_members': authorize.hdx_send_mail_members,
-                # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
-                'hdx_resource_download': authorize.hdx_resource_download,
-                'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
-                'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
-                'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
-                'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
-                'hdx_cod_update': authorize.hdx_cod_update,
-                'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags
-                }
+        return {
+            'package_create': authorize.package_create,
+            'package_update': authorize.package_update,
+            'hdx_resource_id_list': authorize.hdx_resource_id_list,
+            'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
+            'hdx_send_mail_members': authorize.hdx_send_mail_members,
+            # 'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
+            'hdx_resource_download': authorize.hdx_resource_download,
+            'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
+            'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
+            'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
+            'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
+            'hdx_cod_update': authorize.hdx_cod_update,
+            'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags,
+            'hdx_dataseries_update': authorize.hdx_dataseries_update
+        }
 
     def make_middleware(self, app, config):
         if not HDXPackagePlugin.__startup_tasks_done:
@@ -566,7 +585,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
             fields_to_skip = config.get('hdx.validation.allow_skip_for_sysadmin', '').split(',')
             if len(fields_to_skip) > 0 and fields_to_skip[0] and \
-                authz.is_sysadmin(c.user) and context.get(hdx_update.SKIP_VALIDATION):
+                    self._user_allowed_to_skip_validation(c.user) and context.get(hdx_update.SKIP_VALIDATION):
                 self._update_with_skip_validation(schema, fields_to_skip)
 
         if action == 'package_show':
@@ -574,6 +593,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 self._update_with_requestdata_show_package_schema(schema)
 
         return navl_validate(data_dict, schema, context)
+
+    def _user_allowed_to_skip_validation(self, username):
+        return authz.is_sysadmin(username) or \
+               Permissions(username).has_permission(Permissions.PERMISSION_MANAGE_DATASERIES)
 
     def _is_requestdata_type(self, data_dict):
         is_requestdata_type_show = False

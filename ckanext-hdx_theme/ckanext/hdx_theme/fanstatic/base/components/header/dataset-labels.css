@@ -29,6 +29,18 @@
 .dataset-resources [class*=" icon-"]:before {
   color: #888888;
 }
+/* Style dataseries label */
+.dataseries-info {
+  clear: both;
+  margin-left: 10px;
+  font-size: 12px;
+}
+.dataseries-info .dataseries-explanation {
+  cursor: default;
+}
+.dataseries-info a {
+  color: #f2645a;
+}
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;
@@ -72,6 +84,12 @@ ul.dataset-resources li.label-icons a {
 }
 ul.dataset-resources li.label-icons a[class*="humanitarianicons-"] {
   margin-left: 10px;
+}
+ul.dataset-resources li.label-icons a .humanitarianicons-Chart:hover::before {
+  color: #007CE0;
+}
+ul.dataset-resources li.label-icons a .icon-hxl-tags:hover::before {
+  color: #f2645a;
 }
 ul.dataset-resources li.label-icons span {
   padding: 0;

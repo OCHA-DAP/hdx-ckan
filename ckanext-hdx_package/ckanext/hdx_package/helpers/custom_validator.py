@@ -8,6 +8,8 @@ import bisect
 import datetime
 import logging
 import json
+import re
+
 import six
 import ckan.model as model
 import ckan.authz as authz
@@ -18,7 +20,7 @@ from ckan.common import _, c
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 
-from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, NO_DATA
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 from ckanext.hdx_package.helpers.resource_triggers.fs_check import FS_CHECK_FORMATS
 
@@ -562,6 +564,11 @@ def hdx_delete_unless_authorized_wrapper(auth_function):
     return hdx_delete_unless_authorized
 
 
+def hdx_delete_if_marked_with_no_data(key, data, errors, context):
+    if data.get(key) == NO_DATA:
+        data.pop(key, None)
+
+
 def hdx_value_in_list_wrapper(allowed_values, allow_missing):
     def hdx_value_in_list(key, data, errors, context):
         value = data[key]
@@ -664,3 +671,11 @@ def __get_previous_package_dict(context, id):
 def hdx_resources_not_allowed_if_requested_data(key, data, errors, context):
     if data[key] and ((u'resources', 0, 'url') in data or (u'resources', 0, 'name') in data):
         raise df.Invalid(_('By request - HDX Connect datasets can not store resources'))
+
+
+DATASERIES_TITLE_PATTERN = re.compile('^[\w ,-]+$', re.UNICODE)
+def hdx_dataseries_title_validator(value, context):
+    if value:
+        if not DATASERIES_TITLE_PATTERN.match(value):
+            raise Invalid(_('Dataseries title is not valid'))
+    return value
