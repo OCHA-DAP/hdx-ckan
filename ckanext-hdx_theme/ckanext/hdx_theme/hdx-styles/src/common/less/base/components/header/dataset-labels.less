@@ -58,12 +58,13 @@
       }
     }
 
-    [class^="icon-"], [class*=" icon-"] {
+    [class^="icon-"], [class*=" icon-"], [class^="humanitarianicons-"] {
         display: inline-block;
+        vertical-align: middle;
         &:before {
             color: @grayColor;
         }
-        font-size: 16px;
+        font-size: 18px;
     }
 
 }
@@ -108,6 +109,27 @@ span.icn-txt-cods, ul.dataset-resources li.label-icons span.icn-txt-cods{
   }
 }
 .dataset-content .icn-txt-cods {
+  margin-right: 5px;
+  display: inline-block;
+}
+
+
+span.icn-txt-p-code, ul.dataset-resources li.label-icons span.icn-txt-p-code {
+  .gothamBoldFont(10px);
+  background-color: @grayColor;
+  color: @whiteColor;
+  padding: 4px;
+  width: 18px;
+  text-align: center;
+  border-radius: 10px;
+  line-height: 1;
+  letter-spacing: 0;
+  display: inline-block;
+  &:hover {
+    background-color: @blueColor;
+  }
+}
+.dataset-content .icn-txt-p-code {
   margin-right: 5px;
   display: inline-block;
 }

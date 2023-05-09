@@ -298,6 +298,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_keep_unless_allow_fs_check_field'),
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_convert_to_json_string_if_not_string')
+                ],
+                'p_coded': [
+                    tk.get_validator('hdx_delete_unless_authorized_to_update_p_coded'),
+                    tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
+                    tk.get_validator('boolean_validator'),
                 ]
             }
         )
@@ -350,7 +355,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'fs_check_info': [
                     tk.get_validator('ignore_missing'),
                     # tk.get_converter('hdx_convert_from_json_string')
-                ]
+                ],
+                'p_coded': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator')
+                ],
             }
         )
         schema.update({
@@ -484,7 +493,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
             'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
             'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
-
+            'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
         }
 
     # IValidators
@@ -525,6 +534,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_delete_if_marked_with_no_data': vd.hdx_delete_if_marked_with_no_data,
             'hdx_dataseries_title_validator': vd.hdx_dataseries_title_validator,
+            'hdx_delete_unless_authorized_to_update_p_coded':
+                vd.hdx_delete_unless_authorized_wrapper('hdx_p_coded_resource_update'),
             'hdx_in_cod_values':
                 vd.hdx_value_in_list_wrapper(COD_VALUES_MAP.keys(), False),
             'hdx_in_update_frequency_values':
@@ -559,7 +570,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
             'hdx_cod_update': authorize.hdx_cod_update,
             'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags,
-            'hdx_dataseries_update': authorize.hdx_dataseries_update
+            'hdx_dataseries_update': authorize.hdx_dataseries_update,
+            'hdx_p_coded_resource_update': authorize.hdx_p_coded_resource_update,
         }
 
     def make_middleware(self, app, config):
