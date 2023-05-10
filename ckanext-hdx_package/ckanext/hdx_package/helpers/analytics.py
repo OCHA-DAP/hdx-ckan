@@ -171,6 +171,19 @@ def resource_download_with_analytics(id, resource_id, filename=None):
         ResourceDownloadAnalyticsSender(id, resource_id).send_to_queue()
 
 
+def is_external_referer():
+    referer_url = request.referrer
+
+    if referer_url:
+        ckan_url = config.get('ckan.site_url', '')
+        ckan_parsed_url = urlparse.urlparse(ckan_url)
+        referer_parsed_url = urlparse.urlparse(referer_url)
+
+        if ckan_parsed_url.hostname == referer_parsed_url.hostname:
+            return False
+
+    return True
+
 # def wrap_resource_download_function():
 #     '''
 #     Changes the original resource_download function from the package controller with a version that
@@ -507,6 +520,8 @@ class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
         log.debug('The user IP address was {}'.format(self.user_addr))
 
         event_name = 'metadata download'
+        event_source = 'direct' if is_external_referer() else 'web'
+
         authenticated = True if g.userobj else False
         context = {'model': model, 'session': model.Session, 'user': g.user or g.author, 'auth_user_obj': g.userobj}
 
@@ -533,7 +548,7 @@ class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
                         'is indicator': dataset_is_indicator,
                         'is archived': dataset_is_archived,
                         'authenticated': authenticated,
-                        'event source': 'direct'
+                        'event source': event_source
                     },
                     'ga_meta': {
                         'ec': 'metadata',  # event category
@@ -559,7 +574,7 @@ class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
                         'resource name': resource_dict.get('name'),
                         'resource id': resource_dict.get('id'),
                         'authenticated': authenticated,
-                        'event source': 'direct'
+                        'event source': event_source
                     },
                     'ga_meta': {
                         'ec': 'metadata',  # event category
