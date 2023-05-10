@@ -22,10 +22,11 @@ from ckanext.hdx_search.helpers.constants import \
     ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
-    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME
+    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
+    P_CODED_DATASET_FACET_NAME
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
-from ckanext.hdx_package.helpers.cod_filters_helper import are_new_cod_filters_enabled
+from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK
 
@@ -34,7 +35,7 @@ FEATURED_FACETS = [
     COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME,
     GEODATA_DATASETS_FACET_NAME, REQUESTDATA_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_NAME,
     SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
-    SADD_DATASETS_FACET_NAME
+    SADD_DATASETS_FACET_NAME, P_CODED_DATASET_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
 
@@ -61,6 +62,7 @@ config = tk.config
 
 def get_default_facet_titles():
     return {
+        'dataseries_name': _('Data series'),
         'organization': _('Organizations'),
         'groups': _('Groups'),
         # 'tags': _('Tags'),
@@ -503,7 +505,7 @@ class SearchLogic(object):
         num_of_subnational = 0
         num_of_quickcharts = 0
         num_of_geodata = 0
-        # num_of_hxl = 0
+        num_of_p_coded = 0
         # num_of_sadd = 0
         num_of_requestdata = 0
         num_of_showcases = 0
@@ -511,7 +513,9 @@ class SearchLogic(object):
         num_of_archived = 0
         num_of_unarchived = 0
 
-        new_cod_filters_enabled = are_new_cod_filters_enabled()
+        p_coded_explanation = _('A P-Code, short for place code, is a unique identifier for locations in humanitarian '
+                                'datasets. It is most commonly used to uniquely identify subnational administrative '
+                                'divisions.')
 
         featured_facet_items = []
         result['facets']['featured'] = {
@@ -526,7 +530,7 @@ class SearchLogic(object):
         for solr_category_key, category_title in title_translations.items():
             regex = r'\{[\s\S]*\}'
             category_key = re.sub(regex, '', solr_category_key)
-
+            category_tooltip = None
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
             # We're only interested in the number of items of the "indicator" facet
@@ -542,6 +546,9 @@ class SearchLogic(object):
             elif category_key == 'has_geodata':
                 # has_geodata is a solr boolean that is transformed to the string 'true'
                 num_of_geodata = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'res_extras_p_coded':
+                # res_extras_p_coded is a solr boolean that is transformed to the string 'true'
+                num_of_p_coded = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             elif category_key == 'extras_is_requestdata_type':
                 # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
                 num_of_requestdata = next(
@@ -557,36 +564,33 @@ class SearchLogic(object):
                 num_of_unarchived = sum(
                     (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
-                # if category_key == 'vocab_Topics':
-                    # num_of_hxl = self._get_facet_item_count_from_list(item_list, 'hxl')
-                    # num_of_sadd = self._get_facet_item_count_from_list(item_list, 'sex and age disaggregated data - sadd')
-                    # num_of_administrative_divisions = \
-                    #     self._get_facet_item_count_from_list(item_list, 'administrative divisions')
-
-                    # if not new_cod_filters_enabled:
-                    #     num_of_cods = self._get_facet_item_count_from_list(item_list, 'common operational dataset - cod')
+                if category_key == 'dataseries_name':
+                    category_tooltip = 'Data series is a collection of datasets that has a shared topic usually ' \
+                                       'provided by a single organisation '
 
                 standard_facet_category, anything_selected = \
-                    self._create_standard_facet_category(category_key, category_title, item_list, selected_facets)
+                    self._create_standard_facet_category(category_key, category_title, category_tooltip, item_list,
+                                                         selected_facets)
 
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
 
-        if new_cod_filters_enabled:
-            cod_category = result['facets'].pop('cod_level', None)
-            if cod_category:
-                modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
-                featured_facet_items.append(modified_cod_category)
+        cod_category = result['facets'].pop('cod_level', None)
+        if cod_category:
+            modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
+            featured_facet_items.append(modified_cod_category)
 
-        if not new_cod_filters_enabled:
-            # self._add_item_to_featured_facets(featured_facet_items, 'ext_cod', 'CODs', num_of_cods, search_extras)
-            self._add_facet_query_item_to_list(featured_facet_items, COD_DATASETS_FACET_NAME, _('CODs'),
-                                               existing_facets, search_extras)
+        # if not new_cod_filters_enabled:
+        #     self._add_facet_query_item_to_list(featured_facet_items, COD_DATASETS_FACET_NAME, _('CODs'),
+        #                                        existing_facets, search_extras)
 
         self._add_facet_item_to_list(featured_facet_items, SUBNATIONAL_DATASETS_FACET_NAME, 'Sub-national',
                                      num_of_subnational, search_extras)
         self._add_facet_item_to_list(featured_facet_items, GEODATA_DATASETS_FACET_NAME, 'Geodata',
                                      num_of_geodata, search_extras)
+        if are_new_p_code_filters_enabled():
+            self._add_facet_item_to_list(featured_facet_items, P_CODED_DATASET_FACET_NAME, 'Datasets with P-Codes',
+                                         num_of_p_coded, search_extras, p_coded_explanation)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
         #                                   num_of_administrative_divisions, search_extras)
         self._add_facet_query_item_to_list(featured_facet_items, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
@@ -645,7 +649,8 @@ class SearchLogic(object):
                 count = item.get('count', 0)
         return count
 
-    def _create_standard_facet_category(self, category_key, category_title, item_list, selected_facets):
+    def _create_standard_facet_category(self, category_key, category_title, category_tooltip, item_list,
+                                        selected_facets):
         sorted_item_list = []
         anything_selected = False
         for item in item_list:
@@ -667,6 +672,7 @@ class SearchLogic(object):
             'name': category_key,
             'display_name': category_title,
             'items': sorted_item_list,
+            'tooltip': category_tooltip,
             'show_everything': len(sorted_item_list) < 5
         }
         return standard_facet_category, anything_selected

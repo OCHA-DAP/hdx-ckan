@@ -45,3 +45,7 @@ def user_update(context, data_dict):
 
 def notify_users_about_api_token_expiration(context, data_dict):
     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS)
+
+
+def hdx_send_request_data_auto_approval(context, data_dict):
+    return new_authz.is_authorized('package_update', context, {'id': data_dict['package_id']})

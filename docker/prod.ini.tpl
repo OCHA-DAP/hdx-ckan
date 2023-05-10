@@ -95,7 +95,7 @@ hdx.analytics.track_api.exclude_browsers = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_BRO
 hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 #file structure check
-hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}?hxl_proxy_source_info_url={hxl_proxy_source_info_url}
+hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
@@ -136,8 +136,8 @@ hdx.echo_log_bucket = ${HDX_ECHO_LOG_BUCKET_NAME}
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
-# COD
-hdx.cod.new_filters.enabled = ${HDX_COD_NEW_FILTERS_ENABLED}
+# P-CODE
+hdx.p_code.new_filters.enabled = ${HDX_P_CODE_NEW_FILTERS_ENABLED}
 
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}
@@ -167,6 +167,9 @@ ckanext.security.redis.host = ${HDX_SECURITY_REDIS_ADDR}
 ckanext.security.redis.port = ${HDX_SECURITY_REDIS_PORT}
 ckanext.security.redis.db = ${HDX_SECURITY_REDIS_DB}
 hdx.security.site_name = ${HDX_SECURITY_SITENAME}
+
+# Change detection settings
+hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-events
 
 ## Logging configuration
 [loggers]
