@@ -136,8 +136,8 @@ hdx.echo_log_bucket = ${HDX_ECHO_LOG_BUCKET_NAME}
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
-# COD
-hdx.cod.new_filters.enabled = ${HDX_COD_NEW_FILTERS_ENABLED}
+# P-CODE
+hdx.p_code.new_filters.enabled = ${HDX_P_CODE_NEW_FILTERS_ENABLED}
 
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}

@@ -1,41 +1,42 @@
 /*jshint esversion: 6 */
 $('document').ready(function(){
-    var index = lunr(function () {
-        this.field('title', {boost: 10});
-        this.field('extra_terms');
-        this.field('event', {boost: 1000}); //Little hack to boost the scores of event pages
-        this.field('url');
-        this.ref('id');
+  var index = new MiniSearch({
+    fields: ['title', 'title_nf', 'extra_terms', 'event', 'url'],
+    storeFields: ['title', 'extra_terms', 'event', 'url']
+  });
 
-        for(let i=0; i<feature_index.length; i++){//This is the part where Lunr is actually not too bright
-            feature_index[i]['id'] = i;
-            if(feature_index[i]['type'] === 'event'){
-                feature_index[i]['event'] = feature_index[i]['extra_terms'];
-            }else{
-                feature_index[i]['event'] = '';
-            }
-            this.add(feature_index[i]);
-        }
-    });
+  for(let i=0; i<feature_index.length; i++){
+    let fi = feature_index[i];
+    fi['id'] = i;
+    fi['title_nf'] = toNormalForm(fi['title']); //adding the normal form in the index as well
+    if(fi['type'] === 'event'){
+      fi['event'] = fi['extra_terms'];
+    }else{
+      fi['event'] = '';
+    }
+  }
+  index.addAll(feature_index);
 
-    var performSearchQuery = function(query) {
-      const termList = toNormalForm(query.split(' ').filter(item => item.length));
-      const modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
-      let results = [];
-      if (modifiedQ.length > 0) {
-        var modifiedQWithWildcard = modifiedQ + '*';
-        results = index.search(modifiedQ);
-        if (results.length === 0) {
-          results = index.search(modifiedQWithWildcard);
+  var performSearchQuery = function(query) {
+    const termList = toNormalForm(query.split(' ').filter(item => item.length));
+    const modifiedQ = termList.map(term => term.length > 0 ? '' + term : term).join(' ');
+    let results = [];
+    if (modifiedQ.length > 0) {
+      results = index.search(modifiedQ, {
+        prefix: true,
+        boost: {
+          title: 10,
+          event: 1000 //Little hack to boost the scores of event pages
         }
-      }
-      return {
-        'q': query,
-        'termList': termList,
-        'modifiedQ': modifiedQ,
-        'results': results
-      };
+      });
+    }
+    return {
+      'q': query,
+      'termList': termList,
+      'modifiedQ': modifiedQ,
+      'results': results
     };
+  };
 
 
     var searchInfo = performSearchQuery($('#headerSearch').attr('value') || '');
@@ -44,7 +45,7 @@ $('document').ready(function(){
         var html = "You might also like:";
         var limit = results.length > 5 ? 5 : results.length;
         for(let i=0; i<limit; i++){
-            html += ' <a href="'+feature_index[results[i]['ref']]['url']+'">'+feature_index[results[i]['ref']]['title']+'</a> '+feature_index[results[i]['ref']]['type']+' page';
+            html += ' <a href="'+feature_index[results[i]['id']]['url']+'">'+feature_index[results[i]['id']]['title']+'</a> '+feature_index[results[i]['id']]['type']+' page';
             if(i<limit-1){
                 html +=',';
             }
@@ -87,11 +88,11 @@ $('document').ready(function(){
         if(search.length >0){
             var limit = search.length > 5 ? 5 : search.length;
             for(let i=0; i<limit; i++){
-                const featureTitle = hdxUtil.text.sanitize(feature_index[search[i].ref].title);
-                html += '<li data-search-term="'+searchInfo.q+'" data-search-type="'+feature_index[search[i]['ref']]['type']+
-                    '" data-href="'+feature_index[search[i]['ref']]['url']+'" ' +
+                const featureTitle = hdxUtil.text.sanitize(feature_index[search[i].id].title);
+                html += '<li data-search-term="'+searchInfo.q+'" data-search-type="'+feature_index[search[i]['id']]['type']+
+                    '" data-href="'+feature_index[search[i]['id']]['url']+'" ' +
                     'data-toggle="tooltip" title="'+ featureTitle +'"><div class="ahead-link"><i class="empty"></i>'+
-                    process_title(featureTitle, searchInfo.termList)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
+                    process_title(featureTitle, searchInfo.termList)+'</div><div class="ahead-type">'+feature_index[search[i]['id']]['type']+' page</div></li>';
 
             }
         }
