@@ -2,6 +2,7 @@ import csv
 import io
 import json
 import logging
+import re
 
 from flask import Blueprint, make_response
 
@@ -375,26 +376,24 @@ def package_metadata(id):
         metadata_resource_fields = RESOURCE_METADATA_FIELDS_MAP
 
         # limit fields
-        metadata = {field_data.get('output_key', field): pkg_dict[
-            field] if field in pkg_dict else None for field, field_data in metadata_fields.items()}
-
-        # process fields
-        _process_dataset_metadata(metadata, metadata_fields)
-
-        # add resources
-        resources_pkg_key = 'resources'
-        if resources_pkg_key in metadata_fields:
-            resources_output_key = metadata_fields[resources_pkg_key].get('output_key', resources_pkg_key)
-            metadata[resources_output_key] = []
-            for r in pkg_dict[resources_pkg_key]:
-                output_resource_dict = {field_data.get('output_key', field): r[field] if field in r else None for
-                                        field, field_data in metadata_resource_fields.items()}
-                # extra processing
-                _process_resource_metadata(output_resource_dict, metadata_resource_fields)
-                metadata[resources_output_key].append(output_resource_dict)
+        metadata = {field: pkg_dict[field] if field in pkg_dict else None for field, field_data in
+                    metadata_fields.items()}
 
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % metadata.get('name')
+
+        # add resources
+        metadata['resources'] = []
+        for r in pkg_dict['resources']:
+            output_resource_dict = {field: r[field] if field in r else None for field, field_data in
+                                    metadata_resource_fields.items()}
+            # extra processing
+            output_resource_dict = _process_resource_metadata(output_resource_dict, metadata_resource_fields,
+                                                              file_format)
+            metadata['resources'].append(output_resource_dict)
+
+        # process fields
+        metadata = _process_dataset_metadata(metadata, metadata_fields, file_format)
 
         analytics.MetadataDownloadAnalyticsSender(file_format=file_format, package_id=id).send_to_queue()
 
@@ -413,12 +412,11 @@ def package_metadata(id):
             # header
             writer.writerow(['Field', 'Label', 'Value'])
 
-            # normalize lists (resources)
-            metadata = _normalize_metadata_lists(metadata)
-
             # content
             for k, v in metadata.items():
-                writer.writerow([k, metadata_fields[k].get('title') if k in metadata_fields else None, v])
+                label_value = metadata_fields[k] if k in metadata_fields else metadata_resource_fields[
+                    re.sub('^resource_([0-9]+)_', '', k)] if k.startswith('resource_') else None
+                writer.writerow([k, label_value, v])
 
             output = make_response(buf.getvalue())
             output.headers['Content-Type'] = 'text/csv'
@@ -451,14 +449,14 @@ def resource_metadata(id, resource_id):
         metadata_fields = RESOURCE_METADATA_FIELDS_MAP
 
         # limit fields
-        metadata = {field_data.get('output_key', field): resource_dict[
-            field] if field in resource_dict else None for field, field_data in metadata_fields.items()}
-
-        # process fields
-        _process_resource_metadata(metadata, metadata_fields)
+        metadata = {field: resource_dict[field] if field in resource_dict else None for field, field_data in
+                    metadata_fields.items()}
 
         file_format = request.params.get('format', '')
         filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
+
+        # process fields
+        metadata = _process_resource_metadata(metadata, metadata_fields, file_format)
 
         analytics.MetadataDownloadAnalyticsSender(file_format=file_format, resource_id=resource_id).send_to_queue()
 
@@ -475,9 +473,11 @@ def resource_metadata(id, resource_id):
             writer = csv.writer(buf)
 
             # header
-            writer.writerow(['Field', 'Value'])
+            writer.writerow(['Field', 'Label', 'Value'])
+
+            # content
             for k, v in metadata.items():
-                writer.writerow([k, v])
+                writer.writerow([k, metadata_fields[k] if k in metadata_fields else None, v])
 
             output = make_response(buf.getvalue())
             output.headers['Content-Type'] = 'text/csv'
@@ -499,14 +499,14 @@ def _normalize_metadata_lists(old_dict: dict) -> dict:
                     for k, v in list_value.items():
                         new_dict['%s_%s_%s' % (dict_key, list_key, k)] = v
                 else:
-                    new_dict['%s_%s' % (dict_key, list_key)] = list_value
+                    new_dict[dict_key] = ', '.join(dict_value)
         else:
             new_dict[dict_key] = dict_value
 
     return new_dict
 
 
-def _process_dataset_metadata(metadata_dict: dict, fields: dict) -> dict:
+def _process_dataset_metadata(metadata_dict: dict, fields: dict, file_format: str) -> dict:
     if 'notes' in fields:
         metadata_dict['notes'] = markdown_extract_strip(metadata_dict.get('notes'), 0)
     if 'organization' in fields:
@@ -516,15 +516,32 @@ def _process_dataset_metadata(metadata_dict: dict, fields: dict) -> dict:
         metadata_dict['data_update_frequency'] = data_update_frequency_value or metadata_dict.get(
             'data_update_frequency')
     if 'groups' in fields:
-        metadata_dict['groups'] = ', '.join([group['display_name'] for group in metadata_dict.get('groups')])
+        metadata_dict['groups'] = [group['display_name'] for group in metadata_dict.get('groups')]
     if 'tags' in fields:
-        metadata_dict['tags'] = ', '.join([tag['display_name'] for tag in metadata_dict.get('tags')])
+        metadata_dict['tags'] = [tag['display_name'] for tag in metadata_dict.get('tags')]
+
+    if 'csv' in file_format:
+        # rename keys
+        if 'resources' in metadata_dict:
+            metadata_dict['resource'] = metadata_dict['resources']
+            del metadata_dict['resources']
+
+        metadata_dict = _normalize_metadata_lists(metadata_dict)
+
     return metadata_dict
 
 
-def _process_resource_metadata(metadata_dict: dict, fields: dict) -> dict:
+def _process_resource_metadata(metadata_dict: dict, fields: dict, file_format: str) -> dict:
     if 'size' in fields:
         metadata_dict['size'] = filesize_format(metadata_dict.get('size'))
+    if 'description' in fields:
+        metadata_dict['description'] = markdown_extract_strip(metadata_dict.get('description'), 0)
+
+    # rename keys
+    if 'package_id' in fields:
+        metadata_dict['dataset_id'] = metadata_dict['package_id']
+        del metadata_dict['package_id']
+
     return metadata_dict
 
 
