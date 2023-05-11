@@ -1,7 +1,10 @@
+import csv
+import io
 import json
 import logging
+import re
 
-from flask import Blueprint
+from flask import Blueprint, make_response
 
 import ckan.authz as authz
 import ckan.model as model
@@ -17,9 +20,12 @@ import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_l
 from ckan.views.dataset import _setup_template_variables
 
 from ckanext.hdx_package.helpers import resource_grouping
+from ckanext.hdx_package.helpers.constants import PACKAGE_METADATA_FIELDS_MAP, RESOURCE_METADATA_FIELDS_MAP
+from ckanext.hdx_package.helpers.helpers import filesize_format
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_search.controller_logic.qa_logs_logic import QALogsLogic
+from ckanext.hdx_theme.helpers.helpers import markdown_extract_strip
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
@@ -348,9 +354,202 @@ def delete(id):
     return render('package/confirm_delete.html', {'pkg_dict': pkg_dict})
 
 
+def package_metadata(id):
+    '''
+        Handles downloading .CSV and .JSON package metadata files
+
+        :returns: json or csv file
+    '''
+
+    context = {
+        'model': model,
+        'session': model.Session,
+        'user': g.user or g.author,
+        'auth_user_obj': g.userobj
+    }
+
+    # check if package exists
+    try:
+        pkg_dict = get_action('package_show')(context, {'id': id})
+
+        metadata_fields = PACKAGE_METADATA_FIELDS_MAP
+        metadata_resource_fields = RESOURCE_METADATA_FIELDS_MAP
+
+        # limit fields
+        metadata = {field: pkg_dict[field] if field in pkg_dict else None for field, field_data in
+                    metadata_fields.items()}
+
+        file_format = request.params.get('format', '')
+        filename = 'metadata-%s' % metadata.get('name')
+
+        # add resources
+        metadata['resources'] = []
+        for r in pkg_dict['resources']:
+            output_resource_dict = {field: r[field] if field in r else None for field, field_data in
+                                    metadata_resource_fields.items()}
+            # extra processing
+            output_resource_dict = _process_resource_metadata(output_resource_dict, metadata_resource_fields,
+                                                              file_format)
+            metadata['resources'].append(output_resource_dict)
+
+        # process fields
+        metadata = _process_dataset_metadata(metadata, metadata_fields, file_format)
+
+        analytics.MetadataDownloadAnalyticsSender(file_format=file_format, package_id=id).send_to_queue()
+
+        buf = io.StringIO()
+        if 'json' in file_format:
+            json.dump(metadata, buf, indent=4)
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'application/json'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.json"' % filename
+
+            return output
+        elif 'csv' in file_format:
+            writer = csv.writer(buf)
+
+            # header
+            writer.writerow(['Field', 'Label', 'Value'])
+
+            # content
+            for k, v in metadata.items():
+                label_value = metadata_fields[k] if k in metadata_fields else metadata_resource_fields[
+                    re.sub('^resource_([0-9]+)_', '', k)] if k.startswith('resource_') else None
+                writer.writerow([k, label_value, v])
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'text/csv'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+            return output
+    except NotFound:
+        return abort(404, _('Dataset not found'))
+    return abort(404, _('Invalid file format'))
+
+
+def resource_metadata(id, resource_id):
+    '''
+        Handles downloading .CSV and .JSON resource metadata files
+
+        :returns: json or csv file
+    '''
+
+    context = {
+        'model': model,
+        'session': model.Session,
+        'user': g.user or g.author,
+        'auth_user_obj': g.userobj
+    }
+
+    # check if resource exists
+    try:
+        resource_dict = get_action('resource_show')(context, {'id': resource_id})
+
+        metadata_fields = RESOURCE_METADATA_FIELDS_MAP
+
+        # limit fields
+        metadata = {field: resource_dict[field] if field in resource_dict else None for field, field_data in
+                    metadata_fields.items()}
+
+        file_format = request.params.get('format', '')
+        filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
+
+        # process fields
+        metadata = _process_resource_metadata(metadata, metadata_fields, file_format)
+
+        analytics.MetadataDownloadAnalyticsSender(file_format=file_format, resource_id=resource_id).send_to_queue()
+
+        buf = io.StringIO()
+        if 'json' in file_format:
+            json.dump(metadata, buf, indent=4)
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'application/json'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.json"' % filename
+
+            return output
+        elif 'csv' in file_format:
+            writer = csv.writer(buf)
+
+            # header
+            writer.writerow(['Field', 'Label', 'Value'])
+
+            # content
+            for k, v in metadata.items():
+                writer.writerow([k, metadata_fields[k] if k in metadata_fields else None, v])
+
+            output = make_response(buf.getvalue())
+            output.headers['Content-Type'] = 'text/csv'
+            output.headers['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+            return output
+    except NotFound:
+        return abort(404, _('Resource not found'))
+    return abort(404, _('Invalid file format'))
+
+
+def _normalize_metadata_lists(old_dict: dict) -> dict:
+    new_dict = {}
+
+    for dict_key, dict_value in old_dict.items():
+        if isinstance(dict_value, list):
+            for list_key, list_value in enumerate(dict_value, start=1):
+                if isinstance(list_value, dict):
+                    for k, v in list_value.items():
+                        new_dict['%s_%s_%s' % (dict_key, list_key, k)] = v
+                else:
+                    new_dict[dict_key] = ', '.join(dict_value)
+        else:
+            new_dict[dict_key] = dict_value
+
+    return new_dict
+
+
+def _process_dataset_metadata(metadata_dict: dict, fields: dict, file_format: str) -> dict:
+    if 'notes' in fields:
+        metadata_dict['notes'] = markdown_extract_strip(metadata_dict.get('notes'), 0)
+    if 'organization' in fields:
+        metadata_dict['organization'] = metadata_dict.get('organization').get('title')
+    if 'data_update_frequency' in fields:
+        data_update_frequency_value = h.hdx_get_frequency_by_value(metadata_dict.get('data_update_frequency'))
+        metadata_dict['data_update_frequency'] = data_update_frequency_value or metadata_dict.get(
+            'data_update_frequency')
+    if 'groups' in fields:
+        metadata_dict['groups'] = [group['display_name'] for group in metadata_dict.get('groups')]
+    if 'tags' in fields:
+        metadata_dict['tags'] = [tag['display_name'] for tag in metadata_dict.get('tags')]
+
+    if 'csv' in file_format:
+        # rename keys
+        if 'resources' in metadata_dict:
+            metadata_dict['resource'] = metadata_dict['resources']
+            del metadata_dict['resources']
+
+        metadata_dict = _normalize_metadata_lists(metadata_dict)
+
+    return metadata_dict
+
+
+def _process_resource_metadata(metadata_dict: dict, fields: dict, file_format: str) -> dict:
+    if 'size' in fields:
+        metadata_dict['size'] = filesize_format(metadata_dict.get('size'))
+    if 'description' in fields:
+        metadata_dict['description'] = markdown_extract_strip(metadata_dict.get('description'), 0)
+
+    # rename keys
+    if 'package_id' in fields:
+        metadata_dict['dataset_id'] = metadata_dict['package_id']
+        del metadata_dict['package_id']
+
+    return metadata_dict
+
+
 hdx_search.add_url_rule(u'', view_func=search)
 hdx_dataset.add_url_rule(u'', view_func=search)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
+hdx_dataset.add_url_rule(u'<id>/download_metadata', view_func=package_metadata)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_sdcmicro_log', view_func=qa_sdcmicro_log)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_pii_log/<file_name>', view_func=qa_pii_log)
+hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/download_metadata', view_func=resource_metadata)
