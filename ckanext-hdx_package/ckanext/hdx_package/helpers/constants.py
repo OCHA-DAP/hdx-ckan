@@ -65,6 +65,8 @@ S3_TAG_KEY_SENSITIVE = 'Sensitive'
 S3_TAG_VALUE_SENSITIVE_TRUE = 'yes'
 S3_TAG_VALUE_SENSITIVE_FALSE = 'no'
 
+NO_DATA = 'no-data'
+
 PACKAGE_METADATA_FIELDS_MAP = {'id': 'Dataset ID', 'title': 'Title of Dataset', 'name': 'Dataset URL',
                                'notes': 'Description', 'dataset_source': 'Source', 'organization': 'Contributor',
                                'dataset_date': 'Reference Period', 'last_modified': 'Updated',

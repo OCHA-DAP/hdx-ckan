@@ -21,13 +21,14 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.resource_triggers.common
 import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
-import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.common import _
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
     BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
+from ckanext.hdx_package.helpers.resource_triggers import \
+    BEFORE_PACKAGE_UPDATE_LISTENERS, AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 from ckanext.hdx_package.helpers.file_removal import file_remove, find_filename_in_url
 
 
@@ -172,7 +173,9 @@ def _fetch_prev_resources_info(model, resource_ids):
     return id_to_resource_map
 
 
-@ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes([geopreview._before_ckan_action, fs_check._before_ckan_action],[geopreview._after_ckan_action, fs_check._after_ckan_action])
+@ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
+    BEFORE_PACKAGE_UPDATE_LISTENERS, AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
+)
 def package_update(context, data_dict):
     '''Update a dataset (package).
 

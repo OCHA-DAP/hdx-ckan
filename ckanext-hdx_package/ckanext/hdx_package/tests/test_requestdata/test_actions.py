@@ -7,6 +7,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_with_requestdata_type_and_orgs as hdx_test_with_requestdata_type_and_orgs
 
 import json
+import mock
 
 log = logging.getLogger(__name__)
 
@@ -414,6 +415,79 @@ class TestRequestdataActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequ
             assert False
 
         assert len(result) >= 2
+
+    def test_requestdata_archive_after_package_update(self):
+        context_sysadmin = {'ignore_auth': False, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        pkg = self._get_action('package_show')(context_sysadmin, {'id': 'test_activity_request_data_13'})
+        pkg_id = pkg.get('id')
+
+        request = self._get_action('requestdata_request_create')(context_sysadmin, {
+            'package_id': pkg_id,
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'hdx-test-org',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'hdx-test-org',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
+        })
+        request_id = request.get('requestdata_id')
+
+        pkg['license_other'] = 'TEST OTHER LICENSE'
+        pkg['license_id'] = 'hdx-other'
+        pkg['is_requestdata_type'] = False
+
+        try:
+            self._get_action('package_update')({'ignore_auth': False}, pkg)
+            assert False
+        except NotAuthorized as ex:
+            assert True
+
+        pkg_updated = self._get_action('package_update')(context_sysadmin, pkg)
+
+        request_show = self._get_action('requestdata_request_show')(context_sysadmin, {
+            'id': request_id,
+            'package_id': pkg_id
+        })
+
+        assert request_show.get('state') == 'archive'
+        assert request_show.get('data_shared') is True
+
+    @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
+    def test_requestdata_archive_by_package_id(self, mocked_mail_recipient):
+        testsysadmin_obj = model.User.by_name('testsysadmin')
+        context = {'ignore_auth': False, 'model': model, 'session': model.Session, 'user': 'testsysadmin',
+                   'auth_user_obj': testsysadmin_obj}
+
+        pkg = self._get_action('package_show')(context, {'id': 'test_activity_request_data_14'})
+        pkg_id = pkg.get('id')
+
+        request = self._get_action('requestdata_request_create')(context, {
+            'package_id': pkg_id,
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'hdx-test-org',
+            'email_address': 'test@test.com',
+            'sender_country': 'Romania',
+            'sender_organization_id': 'hdx-test-org',
+            'sender_organization_type': 'Military',
+            'sender_intend': 'Research Purposes'
+        })
+        request_id = request.get('requestdata_id')
+
+        archive = self._get_action('requestdata_request_archive_by_package_id')(context, {
+            'package_id': pkg_id
+        })
+
+        request_show = self._get_action('requestdata_request_show')(context, {
+            'id': request_id,
+            'package_id': pkg_id
+        })
+
+        assert request_show.get('state') == 'archive'
+        assert request_show.get('data_shared') is True
 
 
 class TestRequestdataForOrgActions(hdx_test_with_requestdata_type_and_orgs.HDXWithRequestdataTypeAndOrgsTest):

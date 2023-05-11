@@ -269,7 +269,7 @@ def send_request():
                 data_maintainers_ids.append(admin.get('name') or admin.get('id'))
             only_org_admins = True
 
-        subject = sender_name + u' has requested access to one of your datasets'
+        subject = sender_name + u' has requested access to one of your datasets: ' + dataset_title
         email_data = {
             'user_fullname': sender_name,
             'user_email': email,

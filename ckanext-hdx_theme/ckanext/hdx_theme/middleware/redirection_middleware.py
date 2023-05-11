@@ -1,6 +1,6 @@
 import logging
 
-from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import unquote, quote_plus
 
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class RedirectionMiddleware(object):
         path = environ.get('CKAN_CURRENT_URL')
         new_path = self.__check_redirect(path)
         if new_path:
-            new_path = unquote(new_path)
+            # new_path = unquote(new_path)
             new_path = self.config['ckan.site_url'] + new_path
             start_response('302 Found', [('Location', new_path)])
             return [b'']
