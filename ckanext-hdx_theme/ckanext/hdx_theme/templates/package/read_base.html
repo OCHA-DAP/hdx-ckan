@@ -3,6 +3,7 @@
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/dataset-read-styles' %}
+  {% asset 'hdx_theme/dataset-styles' %}
 {% endblock %}
 
 {% block title %}{{ pkg.title or pkg.name }} - HDX{% endblock %}
@@ -19,11 +20,11 @@
   <meta property="og:description" content="{{ description|forceescape }}">
 {% endblock -%}
 
-{% block content_action %}
-  {% if h.check_access('package_update', {'id':pkg.id }) %}
-    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
-  {% endif %}
-{% endblock %}
+{#{% block content_action %}#}
+{#  {% if h.check_access('package_update', {'id':pkg.id }) %}#}
+{#    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}#}
+{#  {% endif %}#}
+{#{% endblock %}#}
 
 {% block content_primary_nav %}
   {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name, class_='hdx-tab-button') }}
@@ -56,7 +57,7 @@
   	<div class="info-wrapper mTop35">
   		<div class="creation-info-author">
   			{% if pkg.organization %}
-  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=pkg.organization.name) }}">
+  				<a class="itemTitle" href="{{ h.url_for(controller='organization', action='read', id=pkg.organization.name) }}">
   					{{ pkg.organization.title or pkg.organization.name }}
   				</a>
   			{% else %}
@@ -70,31 +71,31 @@
       <hr class="mTop35 dotted"/>
   	</div>
   {% endblock %}
-  {% block package_groups %}
-    {% if pkg.groups %}
-      <div class="info-wrapper mTop20">
-        <div class="uppercase"> {{ _('Countries:') }}</div>
-        <div>
-	        <ul class="info-wrapper-link-list">
-	          {% for group in pkg.groups %}
-	            <li class='mx-country'>
-	              <a class="info-item-name" href="{{ h.url_for(controller='group', action='read', id=group.name) }}">
-	                {{ group.title or group.name }}
-	              </a>
-	            </li>
-	          {% endfor %}
-	        </ul>
-        </div>
-      </div>
-    {% endif %}
-  {% endblock %}
+{#  {% block package_groups %}#}
+{#    {% if pkg.groups %}#}
+{#      <div class="info-wrapper mTop20">#}
+{#        <div class="uppercase"> {{ _('Countries:') }}</div>#}
+{#        <div>#}
+{#	        <ul class="info-wrapper-link-list">#}
+{#	          {% for group in pkg.groups %}#}
+{#	            <li class='mx-country'>#}
+{#	              <a class="info-item-name" href="{{ h.url_for(controller='group', action='read', id=group.name) }}">#}
+{#	                {{ group.title or group.name }}#}
+{#	              </a>#}
+{#	            </li>#}
+{#	          {% endfor %}#}
+{#	        </ul>#}
+{#        </div>#}
+{#      </div>#}
+{#    {% endif %}#}
+{#  {% endblock %}#}
 
-  {% block package_info %}
-      <div class="info-wrapper mTop35">
-        <div class="uppercase">{{ _('Followers:') }}</div>
-        <div class="followers-count followersNumber">{{ h.SI_number_span(h.hdx_dataset_follower_count(pkg.id)) }}</div>
-      </div>
-  {% endblock %}
+{#  {% block package_info %}#}
+{#      <div class="info-wrapper mTop35">#}
+{#        <div class="uppercase">{{ _('Followers:') }}</div>#}
+{#        <div class="followers-count followersNumber">{{ h.SI_number_span(h.hdx_dataset_follower_count(pkg.id)) }}</div>#}
+{#      </div>#}
+{#  {% endblock %}#}
 
  {# removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/300
   {% block package_organization %}
@@ -104,10 +105,10 @@
   {% endblock %}
  #}
 
-  {% block package_social %}
-    {% snippet "snippets/hdx_social.html", title=pkg.title or pkg.name  %}
-    <hr class="mTop20 dotted"/>
-  {% endblock %}
+{#  {% block package_social %}#}
+{#    {% snippet "snippets/hdx_social.html", title=pkg.title or pkg.name  %}#}
+{#    <hr class="mTop20 dotted"/>#}
+{#  {% endblock %}#}
 
   {% block package_tags %}
     {% snippet "package/snippets/hdx_tags.html", tags=pkg.tags %}
