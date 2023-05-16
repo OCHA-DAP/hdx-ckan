@@ -138,9 +138,9 @@ class OrgMetaDao(object):
                 {'model': model, 'session': model.Session},
                 {'id': self.id, 'object_type': 'user'}
             )
+            self.members_num = len(self.members)
         except NotAuthorized:
-            self.members = {}
-        self.members_num = len(self.members)
+            pass
 
     def fetch_group_message_topics(self):
         group_message_topics = membership_data.get_message_groups(self._username, self.id)
