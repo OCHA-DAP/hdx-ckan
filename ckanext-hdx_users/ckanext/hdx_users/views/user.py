@@ -124,6 +124,13 @@ class HDXPerformResetView(PerformResetView):
             u'keep_email': True
         }
 
+        context_user_show = {
+            u'model': model,
+            u'session': model.Session,
+            u'keep_email': True,
+            u'ignore_auth': True
+        }
+
         g.reset_key = request.args.get(u'key')
         try:
             check_access(u'user_update', context, {
@@ -138,7 +145,7 @@ class HDXPerformResetView(PerformResetView):
             return h.redirect_to(u'hdx_user.request_reset')
 
         try:
-            user_dict = get_action(u'user_show')(context, {u'id': id})
+            user_dict = get_action(u'user_show')(context_user_show, {u'id': id})
         except NotFound:
             abort(404, _(u'User not found'))
 
