@@ -133,10 +133,13 @@ class OrgMetaDao(object):
 
     def fetch_members(self):
         self._fetched_members = True
-        self.members = _get_action('member_list')(
-            {'model': model, 'session': model.Session},
-            {'id': self.id, 'object_type': 'user'}
-        )
+        try:
+            self.members = _get_action('member_list')(
+                {'model': model, 'session': model.Session},
+                {'id': self.id, 'object_type': 'user'}
+            )
+        except NotAuthorized:
+            self.members = {}
         self.members_num = len(self.members)
 
     def fetch_group_message_topics(self):

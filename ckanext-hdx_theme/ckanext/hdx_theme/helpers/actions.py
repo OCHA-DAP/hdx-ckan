@@ -57,7 +57,6 @@ def member_list(context, data_dict=None):
     q_term = data_dict.get('q', None)
 
     # User must be able to update the group to remove a member from it
-    context['ignore_auth'] = True
     _check_access('group_show', context, data_dict)
 
     q = model.Session.query(model.Member, model.User). \
