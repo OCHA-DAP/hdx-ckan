@@ -35,6 +35,9 @@
   width: 100%;
   padding: 57.5px 15px 35px;
 }
+.login-widget .login-content.login-content--size-big {
+  height: 399px;
+}
 .login-widget .login-content .username-text {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
