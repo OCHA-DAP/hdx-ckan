@@ -76,10 +76,16 @@ class HDXRequestResetView(RequestResetView):
             context = {'model': model,
                        'user': g.user}
 
+            context_user_show = {
+                'model': model,
+                'user': g.user,
+                'ignore_auth': True
+            }
+
             user_obj = None
             try:
-                data_dict = get_action('user_show')(context, {'id': user_id})
-                user_obj = context['user_obj']
+                data_dict = get_action('user_show')(context_user_show, {'id': user_id})
+                user_obj = context_user_show['user_obj']
             except NotFound:
                 # return OnbUserNotFound
                 return OnbSuccess
