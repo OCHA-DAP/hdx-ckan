@@ -45,7 +45,7 @@ Example:
         {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name, 'package_title':pkg.title}) %}
         {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
         {% trans %}
-          <p class="empty">The contributor has only shared the metadata for this dataset. To access the data, please use the request button.</p>
+          <p class="empty">The contributor has only shared the <a href="#" id="switch-to-metadata-tab">metadata</a> for this dataset. To access the data, please use the request button.</p>
           <span data-module="bs_tooltip"
                data-module-placement="left"
                data-toggle="tooltip"
