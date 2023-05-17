@@ -357,19 +357,22 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             app.logger.addFilter(FlaskEmailFilter())
             app.after_request(http_headers.set_http_headers)
             app.before_request(self._before_request)
-            # tweak the root handler
-            found_stream_handler = False
-            console_formatter = logging.Formatter(
-                '{"timestamp":"%(asctime)s", "level":"%(levelname)s", "logger":"%(module)s", "message":"%(message)s"}'
-            )
-            for handler in app.logger.root.handlers:
-                if isinstance(handler, logging.StreamHandler):
-                    found_stream_handler = True
-                    handler.setFormatter(console_formatter)
-            if not found_stream_handler:
-                console_handler = logging.StreamHandler()
-                console_handler.setFormatter(console_formatter)
-                app.logger.root.addHandler(console_handler)
+
+            # Add root json log handler
+            json_log_enabled = config.get('hdx.ckan_json_log.enable')
+            if json_log_enabled == "true":
+                json_formatter = logging.Formatter(
+                    '{"timestamp":"%(asctime)s", "level":"%(levelname)s", "logger":"%(module)s", "message":"%(message)s"}'
+                )
+                json_file_path = config.get('hdx.ckan_json_log.file')
+                json_handler = logging.handlers.TimedRotatingFileHandler(
+                    filename=json_file_path,
+                    interval=12,
+                    when="H",
+                    backupCount=1,
+                )
+                json_handler.setFormatter(json_formatter)
+                app.logger.root.addHandler(json_handler)
 
         return redirection_app
 

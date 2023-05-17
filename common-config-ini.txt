@@ -393,3 +393,7 @@ hdx.security.site_name = HDX
 
 # Change detection settings
 hdx.change_detection.layer_url = http://layer:5000/api/create-change-events
+
+# JSON Log File
+hdx.ckan_json_log.enable = false
+hdx.ckan_json_log.file = /var/log/ckan/ckan.json.log
