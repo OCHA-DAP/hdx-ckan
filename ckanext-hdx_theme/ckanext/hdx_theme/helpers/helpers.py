@@ -333,6 +333,33 @@ def hdx_linked_user(user, maxlength=0):
     return h.literal(changed_response)
 
 
+def hdx_linked_username(user, maxlength=0, avatar=20):
+    if not isinstance(user, model.User):
+        user_name = text_type(user)
+        user = model.User.get(user_name)
+        if not user:
+            return user_name
+    if user:
+        name = user.name if model.User.VALID_NAME.match(user.name) else user.id
+        username = user.name
+
+        if maxlength and len(user.display_name) > maxlength:
+            username = username[:maxlength] + '...'
+
+        if c.userobj:
+            link = h.link_to(username, url_for('user.read', id=name))
+        else:
+            link = '''<a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">%s</a>''' % username
+
+        return h.literal(u'{icon} {link}'.format(
+            icon=h.user_image(
+                user.id,
+                size=avatar
+            ),
+            link=link
+        ))
+
+
 def hdx_show_singular_plural(num, singular_word, plural_word, show_number=True):
     response = None
     if num == 1:

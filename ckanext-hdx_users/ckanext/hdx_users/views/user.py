@@ -146,12 +146,17 @@ def read(id=None):
     and direct them to the correct _setup_template_variables method
     """
     context = {u'model': model, u'session': model.Session,
-               u'user': g.user or g.author, u'auth_user_obj': g.userobj,
+               u'user': g.user, u'auth_user_obj': g.userobj,
                u'for_view': True}
     data_dict = {u'id': id,
                  u'user_obj': g.userobj,
                  u'include_datasets': True,
                  u'include_num_followers': True}
+
+    try:
+        check_access(u'user_show', context, data_dict)
+    except NotAuthorized:
+        abort(403, _(u'Not authorized to see this page'))
 
     context[u'with_related'] = True
 
