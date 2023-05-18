@@ -341,15 +341,15 @@ def hdx_linked_username(user, maxlength=0, avatar=20):
             return user_name
     if user:
         name = user.name if model.User.VALID_NAME.match(user.name) else user.id
-        username = user.name
+        display_name = user.display_name if c.userobj else user.name
 
-        if maxlength and len(user.display_name) > maxlength:
-            username = username[:maxlength] + '...'
+        if maxlength and len(display_name) > maxlength:
+            display_name = display_name[:maxlength] + '...'
 
         if c.userobj:
-            link = h.link_to(username, url_for('user.read', id=name))
+            link = h.link_to(display_name, url_for('user.read', id=name))
         else:
-            link = '''<a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">%s</a>''' % username
+            link = '''<a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">%s</a>''' % display_name
 
         return h.literal(u'{icon} {link}'.format(
             icon=h.user_image(
