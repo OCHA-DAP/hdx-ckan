@@ -169,11 +169,15 @@ def hdx_dataset_follower_count(pkg_id):
 
 
 def get_group_members(grp_id):
-    member_list = logic.get_action('member_list')(
-        {'model': model, 'session': model.Session},
-        {'id': grp_id, 'object_type': 'user'})
-    result = len(member_list)
-    return result
+    try:
+        member_list = logic.get_action('member_list')(
+            {'model': model, 'session': model.Session},
+            {'id': grp_id, 'object_type': 'user'})
+    except logic.NotAuthorized:
+        member_list = logic.get_action('member_list')(
+            {'model': model, 'session': model.Session},
+            {'id': grp_id, 'include_users': False})
+    return len(member_list)
 
 
 def hdx_get_user_info(user_id):
