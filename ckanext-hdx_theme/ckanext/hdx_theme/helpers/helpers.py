@@ -337,7 +337,7 @@ def hdx_linked_user(user, maxlength=0):
     return h.literal(changed_response)
 
 
-def hdx_linked_username(user, maxlength=0, avatar=20):
+def hdx_linked_username(user, userobj, maxlength=0, avatar=20):
     if not isinstance(user, model.User):
         user_name = text_type(user)
         user = model.User.get(user_name)
@@ -345,12 +345,12 @@ def hdx_linked_username(user, maxlength=0, avatar=20):
             return user_name
     if user:
         name = user.name if model.User.VALID_NAME.match(user.name) else user.id
-        display_name = user.display_name if c.userobj else user.name
+        display_name = user.display_name if userobj else user.name
 
         if maxlength and len(display_name) > maxlength:
             display_name = display_name[:maxlength] + '...'
 
-        if c.userobj:
+        if userobj:
             link = h.link_to(display_name, url_for('user.read', id=name))
         else:
             link = '''<a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">%s</a>''' % display_name
