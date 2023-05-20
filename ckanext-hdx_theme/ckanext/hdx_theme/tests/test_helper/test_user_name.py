@@ -23,6 +23,16 @@ class TestUserNames(hdx_test_base.HdxBaseTest):
             assert u['fullname'] in response,  \
                 u['fullname'] + ' should be in the response'
 
+    def test_hdx_linked_username(self):
+        admin = model.User.by_name('testsysadmin')
+        users = self._new_users_create(admin.apikey)
+        for u in users:
+            response_guest = hdx_helpers.hdx_linked_username(u['name'], None)
+            response_user = hdx_helpers.hdx_linked_username(u['name'], admin)
+            assert not u['fullname'] in response_guest, u['fullname'] + ' shouldn\'t be in the response'
+            assert '#loginPopup' in response_guest, '#loginPopup should be in the response'
+            assert u['fullname'] in response_user, u['fullname'] + ' should be in the response'
+
     def _users_create(self, apikey):
         u1 = tests.call_action_api(self.app, 'user_create', name='johnfoo', fullname='Simple user',
                                    email='example@example.com', password='Abcdefgh12',
@@ -39,3 +49,13 @@ class TestUserNames(hdx_test_base.HdxBaseTest):
                                    apikey=apikey, status=200)
 
         return [u1, u2, u3, u4]
+
+    def _new_users_create(self, apikey):
+        u1 = tests.call_action_api(self.app, 'user_create', name='johndoe', fullname='John Doe',
+                                   email='johndoe@example.com', password='Abcdefgh12',
+                                   apikey=apikey, status=200)
+        u2 = tests.call_action_api(self.app, 'user_create', name='janedoe', fullname='Jane Doe',
+                                   email='janedoe@example.com', password='Abcdefgh12',
+                                   apikey=apikey, status=200)
+
+        return [u1, u2]
