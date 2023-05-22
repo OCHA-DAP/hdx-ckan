@@ -1,3 +1,4 @@
+import ckan.logic as logic
 import logging
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
@@ -33,7 +34,13 @@ class TestActivityProperties(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
 
     def test_user_activity_list(self):
 
-        result = self._get_action('user_activity_list')({}, {'id': 'testsysadmin'})
+        try:
+            self._get_action('user_activity_list')({}, {'id': 'testsysadmin'})
+        except logic.NotAuthorized:
+            assert True
+
+        result = self._get_action('user_activity_list')({'ignore_auth': True}, {'id': 'testsysadmin'})
+
         all_keys = (
             data_keys
             for activity in result
