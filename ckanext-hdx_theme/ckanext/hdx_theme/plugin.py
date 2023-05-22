@@ -215,6 +215,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_user_info': hdx_helpers.hdx_get_user_info,
             'hdx_get_org_member_info': hdx_helpers.hdx_get_org_member_info,
             'hdx_linked_user': hdx_helpers.hdx_linked_user,
+            'hdx_linked_username': hdx_helpers.hdx_linked_username,
             'hdx_show_singular_plural': hdx_helpers.hdx_show_singular_plural,
             'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,
             'hdx_organizations_available_with_roles': hdx_helpers.hdx_organizations_available_with_roles,

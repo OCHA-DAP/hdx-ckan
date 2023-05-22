@@ -25,6 +25,35 @@ class TestUserAuth(hdx_test_base.HdxBaseTest):
         assert users[0].get('email', None), "testsysadmin shoud be able to see user's email"
 
         users = tests.call_action_api(self.app, 'user_list', q='tester',
-                                      apikey=user2.apikey, status=200)
-        assert len(users) == 1
-        assert not users[0].get('email', None), "user2 shoudn't be able to see user's email"
+                                      apikey=user2.apikey, status=403)
+        assert True, "user2 shoudn't be able to see user's email"
+
+    def test_access_to_user_list(self):
+        testsysadmin = model.User.by_name('testsysadmin')
+        user = model.User.by_name('tester')
+        user2 = model.User.by_name('annafan')
+
+        users = tests.call_action_api(self.app, 'user_list', q='annafan', apikey=testsysadmin.apikey, status=200)
+
+        assert len(users) == 1, 'testsysadmin should be able to see user list'
+
+        users = tests.call_action_api(self.app, 'user_list', q='annafan', apikey=user.apikey, status=200)
+
+        assert len(users) == 1, 'tester should be able to see user list'
+
+        users = tests.call_action_api(self.app, 'user_list', status=403)
+
+        assert True, 'visitor shouldn\'t be able to see user list'
+
+    def test_access_to_user_show(self):
+        testsysadmin = model.User.by_name('testsysadmin')
+        user = model.User.by_name('tester')
+        user.fullname = 'Test Sysadmin'
+
+        user_show = tests.call_action_api(self.app, 'user_show', id=user.id, apikey=testsysadmin.apikey, status=200)
+
+        assert user_show.get('fullname', None), 'testsysadmin should be able to see user fullname'
+
+        user_show = tests.call_action_api(self.app, 'user_show', id=user.id, status=403)
+
+        assert True, 'visitor shouldn\'t be able to see user fullname'

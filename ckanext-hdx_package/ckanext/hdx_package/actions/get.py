@@ -640,7 +640,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
 
         if not just_for_reindexing:
             member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
-            if member_list and not member_list.get('is_member'):
+            if (member_list and not member_list.get('is_member')) or not member_list:
                 del package_dict['maintainer_email']
 
             # Freshness should be computed after the last_modified field
@@ -901,6 +901,7 @@ def hdx_send_mail_contributor(context, data_dict):
     pkg_dict = get_action("package_show")(context, {'id': data_dict.get('pkg_id')})
     maintainer = pkg_dict.get("maintainer")
     if maintainer:
+        context['keep_email'] = True
         m_user = get_action("user_show")(context, {'id': maintainer})
         if not any(r['email'] == m_user.get('email') for r in recipients_list):
             recipients_list.append({'email': m_user.get('email'), 'display_name': m_user.get('display_name')})
