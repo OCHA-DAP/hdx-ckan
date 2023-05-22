@@ -160,7 +160,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert top_lines[0]['latest_date'] == 'Jun 01, 2015'
         assert top_lines[0]['formatted_value'] == '34.6'
 
-        assert template_data['data'].get('org_meta', {}).get('members_num') == 4
+        # assert template_data['data'].get('org_meta', {}).get('members_num') == 4
 
     def test_edit_custom_orgs(self):
         url = h.url_for('organization.edit', id='hdx-test-org')

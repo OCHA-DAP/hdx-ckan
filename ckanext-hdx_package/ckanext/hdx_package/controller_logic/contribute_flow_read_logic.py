@@ -66,6 +66,6 @@ class ContributeFlowReadLogic(object):
             self.dataset_dict['resource_grouping'] = u', '.join(self.dataset_dict.get('resource_grouping'))
 
     def process_maintainer(self):
-        maintainer_dict = _get_action('user_show')({}, {'id': self.dataset_dict.get('maintainer', None)})
+        maintainer_dict = _get_action('user_show')({'ignore_auth': True}, {'id': self.dataset_dict.get('maintainer', None)})
         if maintainer_dict:
             self.dataset_dict['maintainer'] = maintainer_dict.get('name', None)

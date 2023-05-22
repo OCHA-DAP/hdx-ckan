@@ -169,11 +169,15 @@ def hdx_dataset_follower_count(pkg_id):
 
 
 def get_group_members(grp_id):
-    member_list = logic.get_action('member_list')(
-        {'model': model, 'session': model.Session},
-        {'id': grp_id, 'object_type': 'user'})
-    result = len(member_list)
-    return result
+    try:
+        member_list = logic.get_action('member_list')(
+            {'model': model, 'session': model.Session},
+            {'id': grp_id, 'object_type': 'user'})
+    except logic.NotAuthorized:
+        member_list = logic.get_action('member_list')(
+            {'model': model, 'session': model.Session},
+            {'id': grp_id, 'include_users': False})
+    return len(member_list)
 
 
 def hdx_get_user_info(user_id):
@@ -331,6 +335,33 @@ def hdx_linked_user(user, maxlength=0):
     response = h.linked_user(user, maxlength)
     changed_response = re.sub(r"<img[^>]+/>", "", response)
     return h.literal(changed_response)
+
+
+def hdx_linked_username(user, userobj, maxlength=0, avatar=20):
+    if not isinstance(user, model.User):
+        user_name = text_type(user)
+        user = model.User.get(user_name)
+        if not user:
+            return user_name
+    if user:
+        name = user.name if model.User.VALID_NAME.match(user.name) else user.id
+        display_name = user.display_name if userobj else user.name
+
+        if maxlength and len(display_name) > maxlength:
+            display_name = display_name[:maxlength] + '...'
+
+        if userobj:
+            link = h.link_to(display_name, url_for('user.read', id=name))
+        else:
+            link = '''<a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">%s</a>''' % display_name
+
+        return h.literal(u'{icon} {link}'.format(
+            icon=h.user_image(
+                user.id,
+                size=avatar
+            ),
+            link=link
+        ))
 
 
 def hdx_show_singular_plural(num, singular_word, plural_word, show_number=True):
