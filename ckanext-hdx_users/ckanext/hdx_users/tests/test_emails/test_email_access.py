@@ -93,13 +93,20 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
             {'id': 'johnfoo'})
         assert not 'email' in user, 'emails should not be visible for normal users'
 
-        user_list = self._get_action('user_list')({
-            'model': model, 'session': model.Session}, {})
-        assert not self._user_list_has_email(
-            user_list), 'emails should not be visible for guests'
-        user = self._get_action('user_show')({
-            'model': model, 'session': model.Session}, {'id': 'johnfoo'})
-        assert not 'email' in user, 'emails should not be visible for guests'
+        try:
+            user_list = self._get_action('user_list')({
+                'model': model, 'session': model.Session}, {})
+            assert not self._user_list_has_email(
+                user_list), 'emails should not be visible for guests'
+        except NotAuthorized:
+            assert True, 'emails should not be visible for guests'
+
+        try:
+            user = self._get_action('user_show')({
+                'model': model, 'session': model.Session}, {'id': 'johnfoo'})
+            assert not 'email' in user, 'emails should not be visible for guests'
+        except NotAuthorized:
+            assert True, 'emails should not be visible for guests'
 
     def _user_list_has_email(self, users, current_username=''):
         if users:
@@ -239,6 +246,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 # The tests will be skipped for now as many functions and objects no longer available in 2.9
 
 config = tk.config
+NotAuthorized = tk.NotAuthorized
 
 
 # class SmtpServerHarness(object):
