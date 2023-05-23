@@ -65,7 +65,7 @@ def filter_and_sort_results_case_insensitive(results, sort_by, q=None, has_datas
                             if q in org.get('title', '').lower() or q in org.get('name', '')
                             or q in org.get('description', '').lower()]
     if has_datasets:
-        filtered_results = [org for org in filtered_results if 'package_count' in org and org['package_count']]
+        filtered_results = [org for org in filtered_results if 'regular_package_count' in org and org['regular_package_count']]
 
     if filtered_results:
         if sort_by == 'title asc':
