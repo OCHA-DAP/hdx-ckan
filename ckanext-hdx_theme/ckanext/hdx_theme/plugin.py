@@ -374,6 +374,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                 )
                 json_handler.setFormatter(json_formatter)
                 app.logger.root.addHandler(json_handler)
+                log.info('Enabled JSON Logs: ' + json_file_path)
 
         return redirection_app
 
