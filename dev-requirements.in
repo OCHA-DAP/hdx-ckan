@@ -11,6 +11,7 @@ responses==0.10.14
 mock==2.0.0
 pycodestyle==2.5.0
 # pip-tools==5.1.2 # This needs to be already installed to process the .in files
+Pillow==9.2.0
 pyfakefs==3.2
 Sphinx==1.8.5
 sphinx-rtd-theme==0.4.3
