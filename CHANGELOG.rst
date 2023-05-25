@@ -9,6 +9,77 @@ Changelog
 
 .. towncrier release notes start
 
+v.2.9.9 2023-05-24
+==================
+
+Bugfixes
+--------
+
+- `CVE-2023-32321 <https://github.com/ckan/ckan/security/advisories/GHSA-446m-hmmm-hm8m>`_: fix 
+  potential path traversal, remote code execution, information disclosure and
+  DOS vulnerabilities via crafted resource ids.
+- Names are now quoted in From and To addresses in emails, meaning that site titles with
+  commas no longer break email clients. (`#7508 <https://github.com/ckan/ckan/pull/7508>`_)
+
+Migration notes
+---------------
+- The default storage backend for the session data used by the Beaker library
+  uses the Python ``pickle`` module, which is considered unsafe. While there is
+  no direct known vulnerability using this vector, a safer alternative is to
+  store the session data in the `client-side cookie <https://beaker.readthedocs.io/en/latest/sessions.html#cookie-based>`_.
+  This will probably be the default behaviour in future CKAN versions::
+
+	# ckan.ini
+	beaker.session.type = cookie
+    beaker.session.data_serializer = json
+	beaker.session.validate_key = CHANGE_ME
+
+	beaker.session.httponly = True
+	beaker.session.secure = True
+	beaker.session.samesite = Lax
+    # or Strict, depending on your setup
+
+
+v.2.9.8 2023-02-15
+==================
+
+Major changes
+-------------
+
+- Disable public registration of users by default (`#7210
+  <https://github.com/ckan/ckan/pull/7210>`_)
+- Restrict user and group/org image upload formats by default (`#7210
+  <https://github.com/ckan/ckan/pull/7210>`_)
+
+
+Minor changes
+-------------
+
+- Add dev containers / GitHub Codespaces config for CKAN 2.9 (See the `documentation <https://github.com/ckan/ckan/wiki/CKAN-in-GitHub-Codespaces>`_
+- Add new group command: ``clean``.
+  Add ``clean users`` command to delete users containing images with formats
+  not supported in ``ckan.upload.user.mimetypes`` config option (`#7241
+  <https://github.com/ckan/ckan/pull/7241>`_)
+- Set the ``resource`` blueprint to not auto register. (`#7374
+  <https://github.com/ckan/ckan/pull/7374>`_)
+- ``prepare_dataset_blueprint``: support dataset type (`#7031
+  <https://github.com/ckan/ckan/pull/7031>`_)
+- Add ``--quiet`` option to ``ckan user token add`` command to mak easier to
+  integrate with automated scripts (`#7217
+  <https://github.com/ckan/ckan/pull/7217>`_)
+
+Bugfixes
+--------
+- Fix ``package_update`` performance (`#7219 <https://github.com/ckan/ckan/pull/7219>`_)
+- Fix ``_()`` function override (`#7232 <https://github.com/ckan/ckan/pull/7232>`_)
+- Fix 404 when selecting the same date in the changes view (`#7192 <https://github.com/ckan/ckan/pull/7192>`_)
+- Enable DateTime to be returned through Actions, allowing ``datapusher_status`` to
+  be accessed through the API. (`#7110
+  <https://github.com/ckan/ckan/pull/7110>`_)
+- Fixed broken organization delete form (`#7150
+  <https://github.com/ckan/ckan/pull/7150>`_)
+
+
 v.2.9.7 2022-10-26
 ==================
 
