@@ -182,7 +182,7 @@ keys = console, file
 keys = generic
 
 [logger_root]
-level = WARNING
+level = ${HDX_LOG_LEVEL}
 handlers = console, file
 
 [logger_ckan]
