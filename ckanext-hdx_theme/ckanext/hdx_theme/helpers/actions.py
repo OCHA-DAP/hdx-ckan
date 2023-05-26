@@ -140,15 +140,15 @@ def _refresh_pkg_count_on_org_list(orgs):
     try:
         for org in orgs:
             _org = org_name_to_pkg_count_dict.get(org['name'])
+            org['regular_package_count'] = 0
+            org['archived_package_count'] = 0
             if _org and 'pivot' in _org:
                 for item in _org.get('pivot'):
                     if item.get('field') == u'archived' and item.get('value') == 'false':
-                        org['package_count'] = item.get('count', 0)
+                        org['regular_package_count'] = item.get('count', 0)
                     elif item.get('field') == u'archived' and item.get('value') == 'true':
                         org['archived_package_count'] = item.get('count', 0)
-            else:
-                org['package_count'] = 0
-                org['archived_package_count'] = 0
+
     except Exception as ex:
         log.info(ex)
 
