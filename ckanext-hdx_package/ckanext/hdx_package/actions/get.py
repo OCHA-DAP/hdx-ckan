@@ -882,8 +882,9 @@ def hdx_member_list(context, data_dict):
 def hdx_send_mail_contributor(context, data_dict):
     _check_access('hdx_send_mail_contributor', context, data_dict)
 
+    pkg_title = data_dict.get('pkg_title')
     subject = u'[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
-        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
+        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=pkg_title)
     requester_body_html = __create_body_for_contributor(data_dict, False)
 
     admins_body_html = __create_body_for_contributor(data_dict, True)
@@ -907,13 +908,13 @@ def hdx_send_mail_contributor(context, data_dict):
             recipients_list.append({'email': m_user.get('email'), 'display_name': m_user.get('display_name')})
 
     org_dict = get_action('hdx_light_group_show')(context, {'id': data_dict.get('pkg_owner_org')})
-    subject = u'HDX dataset inquiry'
+    subject = u'HDX dataset inquiry: ' + pkg_title
     email_data = {
         'org_name': org_dict.get('title'),
         'user_fullname': data_dict.get('fullname'),
         'user_email': data_dict.get('email'),
         'pkg_url': data_dict.get('pkg_url'),
-        'pkg_title': data_dict.get('pkg_title'),
+        'pkg_title': pkg_title,
         'topic': data_dict.get('topic'),
         'msg': data_dict.get('msg'),
     }
@@ -923,11 +924,10 @@ def hdx_send_mail_contributor(context, data_dict):
                               footer='hdx@un.org',
                               snippet='email/content/contact_contributor_request.html')
 
-    subject = u'HDX dataset inquiry'
     email_data = {
         'user_fullname': data_dict.get('fullname'),
         'pkg_url': data_dict.get('pkg_url'),
-        'pkg_title': data_dict.get('pkg_title'),
+        'pkg_title': pkg_title,
         'topic': data_dict.get('topic'),
         'msg': data_dict.get('msg'),
     }
