@@ -916,3 +916,9 @@ def hdx_dataset_is_p_coded(resource_list):
         if resource.get('p_coded'):
             return True
     return False
+
+
+def hdx_get_approved_tags_list():
+    approved_tags = logic.get_action('hdx_tag_approved_list')({}, {})
+    approved_tags_dict_list = [{'value': tag, 'text': tag} for tag in approved_tags]
+    return approved_tags_dict_list
