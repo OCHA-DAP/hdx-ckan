@@ -3,7 +3,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_search.controller_logic.search_logic as sl
 
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
-    DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, STATUS_PRIORITIES
+    DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, PRIVATE_DATASETS_FACET_NAME, STATUS_PRIORITIES
 from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
@@ -17,12 +17,13 @@ _ = tk._
 
 class QASearchLogic(sl.SearchLogic):
 
-    def __init__(self, package_type='dataset'):
+    def __init__(self, package_type='dataset', ignore_capacity_check=True):
         super(QASearchLogic, self).__init__(package_type)
         self.flask_route_name = 'hdx_qa.dashboard'
+        self.ignore_capacity_check = ignore_capacity_check
 
     def search(self):
-        self._search()
+        self._search(ignore_capacity_check=self.ignore_capacity_check)
         return self
 
     def _search_url(self, params, package_type=None):
@@ -39,6 +40,7 @@ class QASearchLogic(sl.SearchLogic):
         updated_datasets_query = generate_datetime_period_query('metadata_modified', last_x_days=7)
         delinquent_datasets_query = generate_datetime_period_query('delinquent_date')
         updated_by_script_query = 'extras_updated_by_script:[* TO *]'
+        private_datasets_query = 'capacity:private'
 
         facet_queries = search_data_dict.get('facet.query') or []
         facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, new_datasets_query))
@@ -46,6 +48,7 @@ class QASearchLogic(sl.SearchLogic):
         facet_queries.append('{{!key={} ex=batch}} {}'.format(DELINQUENT_DATASETS_FACET_NAME,
                                                               delinquent_datasets_query))
         facet_queries.append('{{!key={} ex=batch}} {}'.format(BULK_DATASETS_FACET_NAME, updated_by_script_query))
+        facet_queries.append('{{!key={} ex=batch}} {}'.format(PRIVATE_DATASETS_FACET_NAME, private_datasets_query))
         search_data_dict['facet.query'] = facet_queries
 
         search_data_dict['facet.field'].append('{!ex=methodology,batch}methodology')
@@ -133,6 +136,8 @@ class QASearchLogic(sl.SearchLogic):
                                                existing_facets, search_extras)
             self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
+            self.__process_private_dataset_facet(existing_facets, item_list, search_extras)
+
             self.__process_qa_completed_facet(existing_facets, title_translations, search_extras, item_list)
 
             self.__process_broken_link_facet(existing_facets, title_translations, search_extras, item_list)
@@ -206,6 +211,16 @@ class QASearchLogic(sl.SearchLogic):
         )
         self._add_facet_item_to_list(qa_only_item_list, 'in_quarantine', 'Under review',
                                      item.get('count', 0), search_extras=search_extras)
+
+    def __process_private_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
+        private_facet_item = self._add_facet_query_item_to_list(qa_only_item_list, PRIVATE_DATASETS_FACET_NAME,
+                                                                _('Private datasets'), existing_facets, search_extras)
+
+        non_private_facet_item_count = self.template_data.batch_total_items - private_facet_item.get('count', 0)
+        non_private_facet_item_selected = search_extras.get('ext_' + PRIVATE_DATASETS_FACET_NAME) == '0'
+        qa_only_item_list.append(
+            self._create_facet_item(PRIVATE_DATASETS_FACET_NAME, _('Public datasets'), non_private_facet_item_count,
+                                    force_selected=non_private_facet_item_selected, value='0'))
 
     def __process_methodology(self, title_translations):
         '''
