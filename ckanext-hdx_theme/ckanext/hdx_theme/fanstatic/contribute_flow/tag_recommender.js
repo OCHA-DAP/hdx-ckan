@@ -20,10 +20,10 @@ ckan.module('hdx_tag_recommender', function ($, _) {
     },
     _onRecommendedTagClicked: function(e) {
       var tag = $(e.target).text();
-      var currentTagsString = this.tagInputEl.val();
-      if (!currentTagsString || currentTagsString.indexOf(tag) < 0) {
-        var newTagsString = currentTagsString ? currentTagsString + ',' + tag : tag;
-        this.tagInputEl.val(newTagsString);
+      var currentTags = this.tagInputEl.val();
+      if (!currentTags || currentTags.indexOf(tag) < 0) {
+        var newTagsString = currentTags ? currentTags + ',' + tag : tag;
+        this.tagInputEl.val((typeof currentTags === 'object') ? newTagsString.split(',') : newTagsString);
         this.tagInputEl.trigger('change');
         hdxUtil.analytics.sendLinkClickEvent({
           destinationUrl: '#',
@@ -45,7 +45,8 @@ ckan.module('hdx_tag_recommender', function ($, _) {
         this.datasetOrgName = message.newValue;
         this.debouncedFetchRecommendedTags();
       } else if (message.srcElement === 'tag_string') {
-        var tags = message.newValue.split(',');
+        var currentTags = this.tagInputEl.val();
+        var tags = (typeof currentTags === 'object') ? currentTags : message.newValue.split(',');
         this.currentTags = tags.map(function(tag){return tag.trim()});
         this.renderRecommendedTags();
       }
