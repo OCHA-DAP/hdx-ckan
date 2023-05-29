@@ -32,24 +32,31 @@
             <div class="ds-title">
               Decline the request
             </div>
-            <div class="ds-contrib mtop5">
-              <p>Explain why you can't share the requested data</p>
-              <p>*Please note that HDX tracks whether data requests are accepted or denied but does not track the content of the message.</p>
-            </div>
-            <form class="form-horizontal" id="request-data-form" enctype="multipart/form-data">
-              <div class="alert alert-danger hide"></div>
+            <form class="form-horizontal form-request-contact" id="request-data-form" enctype="multipart/form-data">
+
+              <div class="alert alert-danger mTop20 hide"></div>
+
+              <div class="ds-contrib mTop10">
+                <p>Explain why you can't share the requested data</p>
+                <p>*Please note that HDX tracks whether data requests are accepted or denied but does not track the content of the message.</p>
+              </div>
+
               {% block message_content %}
-                <div class="request-data-form-control reply-request-form-control">
-                  <textarea id="field-comments" name="message_content" class="request-data-form-input reply-request-form-message-content" type="text" value="" required="required" style="height: 100px; padding: 12px;"></textarea>
+
+                <div class="control mTop10">
+                  <textarea id="field-comments" name="message_content" class="full-width double-size required" required="required"></textarea>
+                  <label for="field-comments">{{ _('Your message') }}</label>
                 </div>
+
               {% endblock %}
+
             </form>
-            <div class="modal-footer request-data-modal-footer">
-              <button class="btn btn-empty btn-empty-black btn-large btn-cancel" style="border-color: transparent;">Cancel</button>
-              <button type="submit" class="btn btn-primary btn-submit" style="width: 120px; margin-left: 25px;">Send</button>
-            </div>
             </div>
         </div>
+      </div>
+      <div class="modal-footer request-data-modal-footer">
+        <button class="btn btn-empty btn-empty-black btn-large btn-cancel mR45">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-submit">Send</button>
       </div>
     </div>
   </div>
