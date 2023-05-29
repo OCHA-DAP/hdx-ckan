@@ -722,7 +722,7 @@ def token_add(ctx, user, name, expire):
 
     EXPIRE      Expires after this many days (max 180).
     """
-    if expire > 180:
+    if int(expire) > 180:
         print('Maximum token validity is 180 days.')
         sys.exit(0)
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'add', user, name, 'expires_in='+str(expire), 'unit=86400']
