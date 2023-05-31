@@ -219,6 +219,12 @@
 .dataset-light .details .dataset-resources .label-icons:first-child {
   margin-left: -10px;
 }
+.dataset-light .details .dataseries-info {
+  color: #888888;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  margin-left: 0;
+}
 @media (max-width: 375px) {
   .dataset-light .nav-tabs .hdx-tab-button {
     padding-left: 15px;
