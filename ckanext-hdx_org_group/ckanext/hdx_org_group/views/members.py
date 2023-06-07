@@ -62,10 +62,16 @@ def members(id):
         org_meta = org_meta_dao.OrgMetaDao(id, g.user, g.userobj)
         org_meta.fetch_all()
 
-        member_list = get_action('member_list')(
-            context, {'id': id, 'object_type': 'user',
-                      'q': q, 'user_info': True, 'sysadmin_info': True}
-        )
+        try:
+            member_list = get_action('member_list')(
+                context, {'id': id, 'object_type': 'user',
+                          'q': q, 'user_info': True, 'sysadmin_info': True}
+            )
+        except NotAuthorized:
+            member_list = get_action('member_list')(
+                context, {'id': id, 'include_users': False,
+                          'q': q, 'user_info': True, 'sysadmin_info': True}
+            )
         member_list.sort(key=lambda y: y[4].lower(), reverse=reverse)
 
         non_sysadmin_admins = 0
