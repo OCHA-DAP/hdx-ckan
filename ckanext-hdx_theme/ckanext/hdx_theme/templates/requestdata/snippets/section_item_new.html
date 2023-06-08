@@ -1,8 +1,94 @@
-{% ckan_extends %}
 
-{% block reject_buttton_class %}
-  class="btn btn-empty btn-large btn-cancel"
-{% endblock %}
-{% block reply_button_class %}
-  class="btn btn-primary btn-submit"
-{% endblock %}
+{#
+
+Creates single item in a section.
+
+item - The request that needs to be shown.
+
+Example usage:
+  {% snippet 'requestdata/snippets/section_item_new.html', item=item %}
+
+#}
+
+{#{% resource 'requestdata/modal-form.js' %}#}
+{% asset 'requestdata/modal-form-scripts' %}
+{% asset 'hdx_theme/requestdata-scripts' %}
+
+{% set is_hdx_portal = h.requestdata_is_hdx_portal() %}
+
+{% if not is_hdx_portal %}
+{#  {% resource 'requestdata/css/new-requests.css' %}#}
+  {% asset 'requestdata/new-requests-styles' %}
+{% endif %}
+
+{% set package_url = h.url_for('dataset.read', id=item.package_id) %}
+
+<div class="requested-data-container__content-item" style="background-color: #FEFBED; {% if index == 1 %} border-top: 1px solid #CCCCCC {% endif %}">
+  <div class="requested-data-container__content-item--sections" style="padding-top: 15px;">
+    <h4>
+      <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
+
+      {% if template_type != 'user' %}
+        <p style="font-weight: initial;">
+          <span>Maintained by </span>
+          {% if item.maintainers %}
+            {% for m in item.maintainers %}
+              {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
+              <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            <span>Not found</span>
+          {% endif %}
+        </p>
+      {% endif %}
+    </h4>
+
+    {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
+
+    <div class="requested-data-container__content-item--actions requested-data-container__content-item--actions-new">
+      {% set reply_action = h.url_for('hdx_requestdata_user.handle_new_request_action_reply', username=c.userobj.name) %}
+
+      {% set maintainers = item.maintainers or [] %}
+
+      {% set reply_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'open', 'send_to': item.email_address, 'package_name': item.title, 'maintainers': maintainers, 'requested_by': item.sender_name, 'sender_id': item.sender_user_id}) %}
+
+      {% set reject_action = h.url_for('hdx_requestdata_user.handle_new_request_action_reject', username=c.userobj.name) %}
+      {% set reject_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'send_to': item.email_address, 'rejected': True, 'package_name': item.title, 'maintainers': maintainers, 'requested_by': item.sender_name, 'sender_id': item.sender_user_id}) %}
+
+      {% if c.userobj %}
+        {% set is_logged_in = 'true' %}
+      {% else %}
+        {% set is_logged_in = 'false' %}
+      {% endif %}
+
+      {% set redirect_url = h.url_for(controller='user', action='login') %}
+      <div class="requested-data-container-inline">
+         <a {% block reply_button_class %} class="btn btn-primary btn-submit" {% endblock %}
+            style="margin-right: 8px;"
+            data-module="hdx-modal-form"
+            data-module-template_file="reply_request_form.html"
+            data-module-submit_action="{{ reply_action }}"
+            data-module-post_data="{{ reply_post_data }}"
+            data-module-is_logged_in="{{ is_logged_in }}"
+            data-module-redirect_url="{{ redirect_url }}"
+            data-module-refresh_on_success="1"
+            data-module-disable_action_buttons="1"
+            data-module-message_content="{{ item.message_content }}">Reply</a>
+      </div>|&nbsp;
+      <div class="requested-data-container-inline">
+
+         <a {% block reject_buttton_class %} class="btn btn-empty btn-large btn-cancel" {% endblock %}
+              style="font-weight: bold; cursor: pointer;"
+              data-module="hdx-modal-form"
+              data-module-template_file="reject_request_form.html"
+              data-module-submit_action="{{ reject_action }}"
+              data-module-post_data="{{ reject_post_data }}"
+              data-module-is_logged_in="{{ is_logged_in }}"
+              data-module-redirect_url="{{ redirect_url }}"
+              data-module-refresh_on_success="1"
+              data-module-disable_action_buttons="1"
+              data-module-message_content="{{ item.message_content }}" style="border-color: transparent;">Decline</a>
+      </div>
+    </div>
+  </div>
+</div>

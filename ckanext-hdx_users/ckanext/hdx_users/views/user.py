@@ -76,10 +76,16 @@ class HDXRequestResetView(RequestResetView):
             context = {'model': model,
                        'user': g.user}
 
+            context_user_show = {
+                'model': model,
+                'user': g.user,
+                'ignore_auth': True
+            }
+
             user_obj = None
             try:
-                data_dict = get_action('user_show')(context, {'id': user_id})
-                user_obj = context['user_obj']
+                data_dict = get_action('user_show')(context_user_show, {'id': user_id})
+                user_obj = context_user_show['user_obj']
             except NotFound:
                 # return OnbUserNotFound
                 return OnbSuccess
@@ -131,14 +137,7 @@ class HDXPerformResetView(PerformResetView):
             h.flash(msg, category='alert-error', allow_html=True)
             return h.redirect_to(u'hdx_user.request_reset')
 
-        try:
-            user_dict = get_action(u'user_show')(context, {u'id': id})
-        except NotFound:
-            abort(404, _(u'User not found'))
-
-        return render(u'user/perform_reset.html', {
-            u'user_dict': user_dict
-        })
+        return render(u'user/perform_reset.html')
 
 
 def read(id=None):
@@ -147,12 +146,17 @@ def read(id=None):
     and direct them to the correct _setup_template_variables method
     """
     context = {u'model': model, u'session': model.Session,
-               u'user': g.user or g.author, u'auth_user_obj': g.userobj,
+               u'user': g.user, u'auth_user_obj': g.userobj,
                u'for_view': True}
     data_dict = {u'id': id,
                  u'user_obj': g.userobj,
                  u'include_datasets': True,
                  u'include_num_followers': True}
+
+    try:
+        check_access(u'user_show', context, data_dict)
+    except NotAuthorized:
+        abort(403, _(u'Not authorized to see this page'))
 
     context[u'with_related'] = True
 

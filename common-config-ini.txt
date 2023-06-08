@@ -73,6 +73,7 @@ ckan.auth.user_delete_organizations = false
 ckan.auth.create_user_via_api = false
 ckan.auth.create_user_via_web = true
 ckan.auth.roles_that_cascade_to_sub_groups = admin
+ckan.auth.public_user_details = false
 
 ckan.group_and_organization_list_all_fields_max = 400
 
@@ -393,3 +394,7 @@ hdx.security.site_name = HDX
 
 # Change detection settings
 hdx.change_detection.layer_url = http://layer:5000/api/create-change-events
+
+# JSON Log File
+hdx.ckan_json_log.enable = true
+hdx.ckan_json_log.file = /var/log/ckan/ckan.json.log

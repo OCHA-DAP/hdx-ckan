@@ -138,15 +138,19 @@ function _showLoginError(loginError) {
 }
 
 function _displayMfaField(show = false) {
-  if (show)
+  let $loginContent = $('.login-content');
+  if (show) {
     $("#mfa-form-field").show();
-  else
+    $loginContent.addClass('login-content--size-big');
+  }
+  else {
     $("#mfa-form-field").hide();
+    $loginContent.removeClass('login-content--size-big');
+  }
   $("#field-mfa").val("");
 }
 
 function checkMfa() {
-  console.log("test");
   let username = $("#field-login").val();
   let response = $.ajax({
     type: "GET",

@@ -35,6 +35,7 @@ ckan.auth.anon_create_dataset = false
 ckan.auth.user_delete_groups=false
 ckan.auth.user_delete_organizations=false
 ckan.auth.create_unowned_dataset=true
+ckan.auth.public_user_details=false
 
 ckan.cache_validation_enabled = True
 ckan.cache_enabled = False

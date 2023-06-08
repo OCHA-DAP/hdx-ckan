@@ -53,7 +53,7 @@ class HashCodeGenerator(object):
         hash_builder = hashlib.md5()
         hash_builder.update(self.__inner_string.encode())
         hash_code = hash_builder.hexdigest()
-        log.info('Generated code for {} is {}'.format(self.__inner_string, hash_code))
+        log.debug('Generated code for {} is {}'.format(self.__inner_string, hash_code))
         return hash_code
 
 

@@ -619,6 +619,7 @@ requestdata-scripts:
       - hdx_theme/requestdata-styles
   contents:
     - requestdata_/modal-form.js
+    - requestdata_/switch-tab.js
 
 requestdata-styles:
   output: ckanext-hdx_theme/%(version)s_requestdata-styles.css

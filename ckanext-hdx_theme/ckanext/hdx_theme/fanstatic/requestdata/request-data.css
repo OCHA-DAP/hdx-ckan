@@ -79,6 +79,7 @@
   border-top: unset;
   position: absolute;
   right: 50px;
+  bottom: 30px;
 }
 .modal.request-data-modal .mtop5,
 .modal.in.request-data-modal .mtop5,
@@ -699,8 +700,8 @@
   width: 100%;
 }
 .form-request-contact {
-  overflow-y: scroll;
-  height: 400px;
+  overflow-y: auto;
+  max-height: 400px;
 }
 .form-request-contact .control {
   position: relative;
@@ -785,6 +786,10 @@
 .form-request-contact .control #field-comments {
   height: 120px;
   padding: 14px 20px 39px;
+}
+.form-request-contact .control #field-comments.double-size {
+  height: 240px;
+  font-size: 14px;
 }
 .form-request-contact .control #field-comments ~ label {
   bottom: 76px;

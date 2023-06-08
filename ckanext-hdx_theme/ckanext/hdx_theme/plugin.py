@@ -215,6 +215,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_user_info': hdx_helpers.hdx_get_user_info,
             'hdx_get_org_member_info': hdx_helpers.hdx_get_org_member_info,
             'hdx_linked_user': hdx_helpers.hdx_linked_user,
+            'hdx_linked_username': hdx_helpers.hdx_linked_username,
             'hdx_show_singular_plural': hdx_helpers.hdx_show_singular_plural,
             'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,
             'hdx_organizations_available_with_roles': hdx_helpers.hdx_organizations_available_with_roles,
@@ -261,6 +262,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_request_param': hdx_helpers.hdx_get_request_param,
             'hdx_pending_request_data': hdx_helpers.hdx_pending_request_data,
             'hdx_dataset_is_p_coded': hdx_helpers.hdx_dataset_is_p_coded,
+            'hdx_get_approved_tags_list': hdx_helpers.hdx_get_approved_tags_list,
             'HDX_CONST': const
         }
 
@@ -357,6 +359,24 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             app.logger.addFilter(FlaskEmailFilter())
             app.after_request(http_headers.set_http_headers)
             app.before_request(self._before_request)
+
+            # Add root json log handler
+            json_log_enabled = config.get('hdx.ckan_json_log.enable')
+            if json_log_enabled == "true":
+                json_formatter = logging.Formatter(
+                    '{"timestamp":"%(asctime)s", "level":"%(levelname)s", "logger":"%(module)s", "message":"%(message)s"}'
+                )
+                json_file_path = config.get('hdx.ckan_json_log.file')
+                json_handler = logging.handlers.TimedRotatingFileHandler(
+                    filename=json_file_path,
+                    interval=12,
+                    when="H",
+                    backupCount=1,
+                )
+                json_handler.setFormatter(json_formatter)
+                app.logger.root.addHandler(json_handler)
+                log.info('Enabled JSON Logs: ' + json_file_path)
+
         return redirection_app
 
     # IValidators

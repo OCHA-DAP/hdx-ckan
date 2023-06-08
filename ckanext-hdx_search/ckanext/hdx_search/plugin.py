@@ -19,7 +19,7 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_package.helpers.reindex_helper import before_indexing_clean_resource_formats
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
-    DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
+    DELINQUENT_DATASETS_FACET_NAME, PRIVATE_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
     HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY, \
     ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
@@ -151,6 +151,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
                       generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
                                                      include=True))
+        adapt_solr_fq(PRIVATE_DATASETS_FACET_NAME, ' +capacity:private', ' -capacity:private')
         adapt_solr_fq(BULK_DATASETS_FACET_NAME, ' +extras_updated_by_script:[* TO *]',
                       ' -extras_updated_by_script:[* TO *]')
         adapt_solr_fq(SADD_DATASETS_FACET_NAME,
