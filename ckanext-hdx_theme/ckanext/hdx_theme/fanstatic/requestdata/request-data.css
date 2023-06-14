@@ -700,7 +700,7 @@
   width: 100%;
 }
 .form-request-contact {
-  overflow-y: auto;
+  overflow-y: scroll;
   max-height: 400px;
 }
 .form-request-contact .control {
