@@ -54,8 +54,10 @@ function showFaqWidget(id) {
 $(document).ready(function(){
     $('#topics-selector').select2();
 
+    const $faqSendMessageForm = $('#faq-send-message-form');
+
     faqSendMessageOnSubmit = function(){
-        $this = $("#faq-send-message-form");
+        $this = $faqSendMessageForm;
         $iframe = $($(".g-recaptcha").find("iframe:first"));
         $iframe.css("border", "");
         //$sel = $($("#faq-send-message-form .select2-container.mTop20.required").find("a:first"));
@@ -103,4 +105,5 @@ $(document).ready(function(){
     };
     // $('#faq-send-message-form').on('submit', faqSendMessageOnSubmit);
 
+    $faqSendMessageForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
 });

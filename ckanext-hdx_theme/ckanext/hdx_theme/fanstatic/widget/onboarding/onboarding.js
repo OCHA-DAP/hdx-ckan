@@ -8,7 +8,11 @@ function spawnRecaptcha(id){
     if (!init){
       container.attr("hdx-recaptcha", true);
       container.find(".hdx-recaptcha").each(function (idx, el) {
+        var disabled = el.hasAttribute('disabled');
         grecaptcha.render(el);
+        if(disabled) {
+          el.setAttribute('disabled', true);
+        }
       });
     }
 }
@@ -231,3 +235,20 @@ $(document).ready(function(){
 
 
 });
+
+requiredFieldsFormValidator = function () {
+  var error = false;
+  var $form = $(this).closest('form');
+  var $submitButton = $form.find('[type="submit"]');
+  $form.find('input, select, textarea').filter('[required]').each(function (idx, el) {
+    if ((el.type === 'checkbox') ? !el.checked : (el.value === null || el.value === '' || el.value === '-1')) {
+      error = true;
+      return true;
+    }
+  });
+  if (error) {
+    $submitButton.attr('disabled', true);
+  } else {
+    $submitButton.removeAttr('disabled');
+  }
+};

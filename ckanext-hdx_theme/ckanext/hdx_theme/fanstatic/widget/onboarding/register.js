@@ -1,7 +1,9 @@
 $(document).ready(function(){
     showOnboardingWidget('#registerPopup');
 
-    $("#register-form").on("submit", function () {
+    const $registerForm = $('#register-form');
+
+    $registerForm.on("submit", function () {
         $this = $(this);
         $iframe = $($(".g-recaptcha").find("iframe:first"));
         $iframe.css("border", "");
@@ -25,4 +27,6 @@ $(document).ready(function(){
 
         return false;
     });
+
+    $registerForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
 });
