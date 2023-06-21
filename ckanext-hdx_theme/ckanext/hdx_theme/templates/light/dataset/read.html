@@ -63,7 +63,7 @@
               {% snippet 'search/snippets/package_icons.html', package=pkg%}
             </ul>
             {% if pkg.dataseries_name %}
-              <div class="dataseries-info">{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('Data series is a collection of datasets that has a shared topic usually provided by a single organisation') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset page">{{ pkg.dataseries_name }}</a></div>
+              <div class="dataseries-info">{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization.') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset page">{{ pkg.dataseries_name }}</a></div>
             {% endif %}
 
           </div>

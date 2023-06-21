@@ -119,7 +119,7 @@
                   {% block owner_dataseries %}
                     {% if package.dataseries_name %}
                       <div class="dataset-dataseries">
-                        <span>{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('Data series is a collection of datasets that has a shared topic usually provided by a single organisation') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset list page">{{ package.dataseries_name }}</a></span>
+                        <span>{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization.') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset list page">{{ package.dataseries_name }}</a></span>
                       </div>
                     {% endif %}
                   {% endblock %}
@@ -230,7 +230,7 @@
           {% if package.batch_length and package.batch_length > 0 %}
             <div class="col-xs-12 stacked-info">
               <a href="{{package.batch_url}}" target="_blank">
-                Show {{  h.hdx_show_singular_plural(package.batch_length, _('other update'), _('other updates')) }} from
+                Show {{ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) }} from
                 {{ package.organization.title or package.organization.name }} <i class="icon humanitarianicons-Out-of-platform"></i>
               </a>
             </div>
