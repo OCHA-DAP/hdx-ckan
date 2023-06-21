@@ -32,7 +32,7 @@ class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         url = h.url_for('hdx_dataset.search')
         result = self.app.get(url)
-        assert 'Show 2 other updates from' in result.body
+        assert 'Show 2 other recently updated datasets from' in result.body
 
         url_mobile = h.url_for('hdx_light_search.search')
 
@@ -42,4 +42,4 @@ class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'
         }
         result_mobile = test_client.get(url_mobile, headers=headers)
-        assert 'Show 2 other updates from' in result_mobile.body
+        assert 'Show 2 other recently updated datasets from' in result_mobile.body
