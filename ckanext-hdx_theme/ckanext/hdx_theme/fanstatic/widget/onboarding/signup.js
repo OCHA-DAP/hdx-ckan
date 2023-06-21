@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    const $signupForm = $('#signup-form');
+
     signupFormOnSubmit = function(){
         var $this = $(this);
         var email = $("#field-email").val();
@@ -43,7 +45,7 @@ $(document).ready(function(){
                         showOnboardingWidget('#verifyPopup');
                     });
                 } else {
-                    var errMsg = $("#signup-form").find(".error-message");
+                    var errMsg = $signupForm.find(".error-message");
                     errMsg.text(result.error.message);
                     $("#field-email").addClass("error");
                     errMsg.show();
@@ -54,4 +56,6 @@ $(document).ready(function(){
         return false;
     };
     // $("#signup-form").on("submit", signupFormOnSubmit)
+
+    $signupForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
 });

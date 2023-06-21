@@ -310,6 +310,12 @@ onboarding-password-scripts:
     - widget/onboarding/forgot-password.js
     - widget/onboarding/recover.js
 
+onboarding-perform-reset-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_onboarding-perform-reset-scripts.js
+  contents:
+    - widget/onboarding/perform-reset.js
+
 
 onboarding-password-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-password-styles.css

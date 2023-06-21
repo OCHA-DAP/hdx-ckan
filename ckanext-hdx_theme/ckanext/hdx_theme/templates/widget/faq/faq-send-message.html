@@ -33,28 +33,28 @@ Example:
             <div class="row" style="overflow: hidden; height: 400px;">
                 <div class="col-xs-12">
                     <!--<div class="bold-regular-text">Please fill out the following: </div>-->
-                    <select class="required" id="topics-selector" name="topic">
+                    <select class="required" id="topics-selector" name="topic" required="required">
                         <option id="" value="">Your question is regarding ...</option>
                         {% for key, value in topics.items() %}
                             <option id="{{key}}" value="{{value}}">{{value}}</option>
                         {% endfor %}
                     </select>
                     <div class="mTop15 control">
-                        <input id="fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
+                        <input id="fullname" name="fullname" class="full-width required" required="required" type="text" value="{{fullname}}">
                         <label for="fullname">Your name</label>
                     </div>
                     <div class="mTop15 control">
-                        <input id="email" name="email" class="full-width required" type="text" value="{{email}}">
+                        <input id="email" name="email" class="full-width required" required="required" type="text" value="{{email}}">
                         <label for="email">Your email address</label>
                     </div>
                     <div class="mTop15 control">
-                        <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
+                        <textarea id="faq-msg" name="faq-msg" class="full-width required" required="required"></textarea>
                         <label for="faq-msg">Your question</label>
                     </div>
                 </div>
             </div>
             <div class="right-side-actions">
-                <input class="btn btn-primary btn-large mL45 pull-right hdx-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="faqSendMessageOnSubmit" data-size="invisible" data-badge="inline">
+                <input class="btn btn-primary btn-large mL45 pull-right hdx-recaptcha" disabled type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="faqSendMessageOnSubmit" data-size="invisible" data-badge="inline">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
             </div>
         </form>

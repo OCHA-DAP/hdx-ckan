@@ -96,7 +96,7 @@ ckan.module('hdx-modal-form', function($) {
                 form.on('change', 'select', this._selectOnChange); // select "Other" values"
                 form.on('change', '#field-organization', this._organizationOnChange); // change org type
                 form.on('keyup', 'input[type="password"], input[type="text"], textarea', this._triggerInputDataClass); // input-value class
-                form.on('change', '#field-checkbox', this._disableSubmitButton); // checkbox
+                form.find('input, select, textarea').filter('[required]').on('input change', this._disableSubmitButton);
 
                 element.on('click', '.btn-primary', this._onSubmit);
                 element.on('click', '.btn-cancel', this._onCancel);
@@ -226,12 +226,19 @@ ckan.module('hdx-modal-form', function($) {
           $(this.form).find('#field-organization-type').select2('val', ((org_type) ? org_type : '-1')).trigger('change');
         },
         _disableSubmitButton: function(event) {
-          var $submitButton = $(this.form).closest('.modal-body').find('.btn-submit');
-          if($(this).is(':checked')) {
-            $submitButton.removeAttr('disabled');
-          }
-          else {
+          var error = false;
+          var $form = $(this.form);
+          var $submitButton = $form.closest('.modal-body').find('[type="submit"]');
+          $form.find('input, select, textarea').filter('[required]').each(function (idx, el) {
+            if ((el.type === 'checkbox') ? !el.checked : (el.value === null || el.value === '' || el.value === '-1')) {
+              error = true;
+              return true;
+            }
+          });
+          if (error) {
             $submitButton.attr('disabled', true);
+          } else {
+            $submitButton.removeAttr('disabled');
           }
         },
         _triggerInputDataClass: function(event) {
