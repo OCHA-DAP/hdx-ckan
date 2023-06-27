@@ -18,11 +18,12 @@ function spawnRecaptcha(id){
 }
 
 function notYou(){
-    $('#field-login').val('');
-    $('#field-login').removeClass('input-content');
+    let $fieldLogin = $('#field-login');
+    $fieldLogin.val('').trigger('change');
+    $fieldLogin.removeClass('input-content');
     $('#username-static, #login-photo-gravatar').hide();
     $('#username-form-field, #login-photo-default').show();
-    $('#field-login').focus();
+    $fieldLogin.focus();
     _displayMfaField();
 }
 
@@ -143,15 +144,18 @@ function _showLoginError(loginError) {
 
 function _displayMfaField(show = false) {
   let $loginContent = $('.login-content');
+  let $fieldMfa = $('#field-mfa');
   if (show) {
     $("#mfa-form-field").show();
+    $fieldMfa.attr('required', true);
     $loginContent.addClass('login-content--size-big');
   }
   else {
     $("#mfa-form-field").hide();
+    $fieldMfa.removeAttr('required');
     $loginContent.removeClass('login-content--size-big');
   }
-  $("#field-mfa").val("");
+  $fieldMfa.val('').trigger('change');
 }
 
 function checkMfa() {
@@ -174,7 +178,9 @@ function checkMfa() {
 
 
 $(document).ready(function(){
-    $("#hdx-login-form").submit(checkLockout);
+    const $loginForm = $('#hdx-login-form');
+    $loginForm.submit(checkLockout);
+    $loginForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
     $("#field-login").change(checkMfa);
     //check cookies
     const loginCookie = $.cookie("hdx_login");
