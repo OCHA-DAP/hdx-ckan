@@ -543,6 +543,8 @@ def _process_url(context, resource_dict):
         if resource_dict.get('url_type') == "upload" and resource_dict.get('resource_type') == "file.upload" and \
             config.get('ckan.site_url') in resource_dict.get('url'):
             resource_dict['alt_url'] = resource_dict.get('url').split('/download/')[0] + '/download/'
+        elif resource_dict.get('url_type') == "api" and resource_dict.get('resource_type') == "api":
+            resource_dict['last_modified'] = resource_dict['metadata_modified']
     else:
         del resource_dict['url']
         if 'alt_url' in resource_dict:
