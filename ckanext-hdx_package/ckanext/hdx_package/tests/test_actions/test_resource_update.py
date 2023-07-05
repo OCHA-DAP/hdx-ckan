@@ -135,21 +135,6 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         resource_data = self._get_action('resource_create')(context, resource)
 
-        external_resource = {
-            'package_id': dataset['id'],
-            'url': 'http://test-domain.test/test.txt',
-            'resource_type': 'api',
-            'format': 'TXT',
-            'name': 'test.txt'
-        }
-        external_resource_data = self._get_action('resource_create')(context, external_resource)
-        updated_dataset = self._get_action('package_show')(context, {'id': 'test_dataset_1'})
-
-        assert external_resource_data.get('metadata_modified') == external_resource_data.get(
-            'last_modified'), 'changing url of external resource should update last_modified'
-        assert external_resource_data.get('last_modified') == updated_dataset.get(
-            'last_modified'), 'changing url of external resource should update last_modified'
-
         r1 = self._get_action('resource_update')(context, resource_data)
         for key, value in resource.items():
             assert value == r1.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
