@@ -1,18 +1,9 @@
 $(document).ready(function(){
-    var $contact = $('#contact-contributor-form');
-    $contact.find("select").select2();
-    _contactContributorFormValidator = function(){
-      var contactContributorMessageMsg = $("#contact-contributor-msg");
-      var contactContributorSelector = $("#contact-contributor-topics-selector");
-      if(contactContributorSelector.val() !== "" && contactContributorMessageMsg.val()!==""){
-        $("#submitContactContributorMessage").removeClass("disabled");
-      }
-      else {
-        $("#submitContactContributorMessage").addClass("disabled");
-      }
-    };
+    var $contactForm = $('#contact-contributor-form');
+    $contactForm.find("select").select2();
+
     contactContributorOnSubmit = function(){
-        $this = $('#contact-contributor-form');
+        $this = $contactForm;
         var toMessage = $("#membershipDonePopup").find(".to-message ");
         toMessage.hide();
 
@@ -41,4 +32,6 @@ $(document).ready(function(){
 
         return false;
     }
+
+    $contactForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
 });

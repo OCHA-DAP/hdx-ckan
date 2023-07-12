@@ -43,29 +43,29 @@ Example:
                         <input type="hidden" name="pkg_owner_org" value="">
                         <input type="hidden" name="pkg_id" value="">
                     </div>
-                    <select class="required mTop15" id="contact-contributor-topics-selector" name="topic" required="required" onchange="_contactContributorFormValidator();">
+                    <select class="required mTop15" id="contact-contributor-topics-selector" name="topic" required="required">
                         <option id="" value="">{{ _("Your inquiry is regarding ...") }}</option>
                         {% for key, value in topics.items() %}
                             <option id="contact-contributor-{{key}}" value="{{key}}">{{value}}</option>
                         {% endfor %}
                     </select>
                     <div class="mTop15 control">
-                        <input id="contact-contributor-fullname" name="fullname" class="full-width required {% if membership_data.fullname %}input-content{% endif %}" type="text" value="{{membership_data.fullname}}">
+                        <input id="contact-contributor-fullname" name="fullname" required="required" class="full-width required {% if membership_data.fullname %}input-content{% endif %}" type="text" value="{{membership_data.fullname}}">
                         <label for="contact-contributor-fullname">Your name</label>
                     </div>
                     <div class="mTop15 control">
-                        <input id="contact-contributor-email" name="email" class="full-width required {% if membership_data.email %}input-content{% endif %}" type="text" value="{{membership_data.email}}">
+                        <input id="contact-contributor-email" name="email" required="required" class="full-width required {% if membership_data.email %}input-content{% endif %}" type="text" value="{{membership_data.email}}">
                         <label for="contact-contributor-email">Your email address</label>
                     </div>
                     <div class="mTop15 control">
-                        <textarea id="contact-contributor-msg" name="msg" class="full-width required" required="required" oninput="_contactContributorFormValidator();"></textarea>
+                        <textarea id="contact-contributor-msg" name="msg" class="full-width required" required="required"></textarea>
                         <label for="contact-contributor-msg">Comments</label>
                     </div>
                 </div>
             </div>
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input id="submitContactContributorMessage" class="btn btn-primary btn-large mL45 hdx-recaptcha disabled" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="contactContributorOnSubmit" data-size="invisible" data-badge="inline">
+                <input id="submitContactContributorMessage" class="btn btn-primary btn-large mL45 hdx-recaptcha" disabled type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="contactContributorOnSubmit" data-size="invisible" data-badge="inline">
             </div>
         </form>
     </div>

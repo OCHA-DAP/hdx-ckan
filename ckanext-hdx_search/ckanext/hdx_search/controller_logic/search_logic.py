@@ -565,8 +565,8 @@ class SearchLogic(object):
                     (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
                 if category_key == 'dataseries_name':
-                    category_tooltip = 'Data series is a collection of datasets that has a shared topic usually ' \
-                                       'provided by a single organisation '
+                    category_tooltip = 'A data series is a collection of datasets that has a shared topic usually ' \
+                                       'provided by a single organization'
 
                 standard_facet_category, anything_selected = \
                     self._create_standard_facet_category(category_key, category_title, category_tooltip, item_list,

@@ -1,5 +1,7 @@
 $(document).ready(function(){
-    $("#recover-form").on("submit", function () {
+    const $recoverForm = $('#recover-form');
+
+    $recoverForm.on("submit", function () {
         $this = $(this);
         $.post("/user/reset", $this.serialize(), function (result_data) {
             var result = JSON.parse(result_data);
@@ -15,4 +17,6 @@ $(document).ready(function(){
 
         return false;
     });
+
+    $recoverForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
 });

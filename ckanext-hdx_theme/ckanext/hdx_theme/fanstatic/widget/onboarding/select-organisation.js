@@ -2,6 +2,9 @@ $(document).ready(function(){
     // var url = "/api/action/organization_list?package_count=true&include_extras=false&all_fields=true&sort=name asc";
     var url = "/api/action/cached_organization_list";
 
+    const $selectOrgForm = $('#select-organisation-form');
+    const $createOrgForm = $('#create-organisation-form');
+
     $.getJSON(url, {}, function(result){
         if (result.success){
             $.each(result.result, function(idx, el){
@@ -15,7 +18,7 @@ $(document).ready(function(){
     $('#org-type-selector').select2();
 
 
-    $('#select-organisation-form').on('submit', function(){
+    $selectOrgForm.on('submit', function(){
         $this = $(this);
         $.post('/user/request_membership', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
@@ -29,7 +32,7 @@ $(document).ready(function(){
                   skipNext = true;
                 }
                 if (!skipNext) {
-                  $('#select-organisation-form')[0].reset();
+                  $selectOrgForm[0].reset();
                   showOnboardingWidget('#invitePopup');
                 }
             } else {
@@ -40,7 +43,7 @@ $(document).ready(function(){
         return false;
     });
 
-    $('#create-organisation-form').on('submit', function(){
+    $createOrgForm.on('submit', function(){
         $this = $(this);
         $.post('/user/request_new_organization', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
@@ -50,7 +53,7 @@ $(document).ready(function(){
                 $this.removeAttr('skipNext');
                 skipNext = true;
               }
-              $('#create-organisation-form')[0].reset();
+              $createOrgForm[0].reset();
               closeCurrentWidget($this);
               if(!skipNext && $('#user_extra').val() === 'True'){
                 showOnboardingWidget('#invitePopup');
@@ -61,5 +64,8 @@ $(document).ready(function(){
         });
         return false;
     });
+
+    $selectOrgForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
+    $createOrgForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
 
 });

@@ -35,16 +35,16 @@ Example:
         <div class="regular-text">See if your organisation exists by scrolling through the list below:</div>
 
         <form id="select-organisation-form">
-            <select class="mTop20" id="existing-org-selector" name="org_id">
-                <option id="">{{_('Select an organisation...')}}</option>
+            <select class="mTop20" id="existing-org-selector" name="org_id" required="required">
+                <option value="-1" id="">{{_('Select an organisation...')}}</option>
             </select>
             <div class="control">
-              <textarea id="msg_id" name="message" class="full-width required mTop10" style="height: 90px;"></textarea>
+              <textarea id="msg_id" name="message" class="full-width required mTop10" required="required" style="height: 90px;"></textarea>
               <label for="msg_id">Message for organization admin</label>
             </div>
             <div class="control">
                 <label class="mTop10 vertically-center" data-module="hdx_terms_checkbox" data-module-button="join-org-action">
-                    <input type="checkbox">
+                    <input type="checkbox" required="required">
                     <span class="red">*</span>I confirm that I work for this organization.
                 </label>
             </div>
@@ -57,7 +57,7 @@ Example:
 
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input id="join-org-action" class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+                <input id="join-org-action" class="btn btn-primary btn-large mL45" disabled type="submit" value="Submit">
             </div>
         </form>
     </div>
@@ -72,20 +72,20 @@ Example:
         </div>
         <form id="create-organisation-form">
             <div class="mTop20 control">
-                <input id="org-name" name="name" class="full-width required" type="text">
+                <input id="org-name" name="name" class="full-width required" required="required" type="text">
                 <input id="user_extra" name="user_extra" class="full-width required" type="hidden" value="True">
                 <label for="org-name">Name of Organisation</label>
             </div>
             <div class="mTop20 control">
-                <textarea id="org-description" name="description" class="full-width required"></textarea>
+                <textarea id="org-description" name="description" class="full-width required" required="required"></textarea>
                 <label for="org-description">Description of Organisation</label>
             </div>
             <div class="mTop20 control">
-                <textarea id="org-description-data" name="description_data" class="full-width required"></textarea>
+                <textarea id="org-description-data" name="description_data" class="full-width required" required="required"></textarea>
                 <label for="org-description-data">Description of data you plan to share</label>
             </div>
             <div class="mTop20 control">
-                <input id="org-work-email" name="work_email" class="full-width required" type="text">
+                <input id="org-work-email" name="work_email" class="full-width required" required="required" type="text">
                 <label for="org-work-email">Your Work Email</label>
             </div>
             <div class="mTop20 control">
@@ -115,14 +115,14 @@ Example:
 -->
 
             <div class="mTop20 control">
-                <label class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="new-org-req-submit">
-                    <input type="checkbox">
+                <label class="terms-of-service vertically-center">
+                    <input type="checkbox" required="required">
                     I have read and accept the <a target="_blank" href="{{ h.url_for('hdx_faqs.read', category='terms') }}">HDX Terms of Service</a>
                 </label>
             </div>
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input id="new-org-req-submit" class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+                <input id="new-org-req-submit" class="btn btn-primary btn-large mL45" disabled type="submit" value="Submit">
             </div>
         </form>
     </div>

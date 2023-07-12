@@ -22,7 +22,7 @@ Example:
         <div class="mTop20">
             <div class="control-group form-group">
               <div class="control">
-                  <input id="field-recover-id" name="user" class="full-width required" type="text">
+                  <input id="field-recover-id" name="user" class="full-width required" type="text" required="required">
                   <label for="field-recover-id">Username or Email</label>
               </div>
             </div>
@@ -37,7 +37,7 @@ Example:
             {% endblock %}
         </div>
         <div class="mTop20">
-          <input class="btn btn-primary btn-large hdx-recaptcha mTop20" type="submit" value="Reset" data-sitekey="{{ g.recaptcha_publickey }}" data-callback='onSubmit' data-size="invisible" data-badge="inline">
+          <input class="btn btn-primary btn-large hdx-recaptcha mTop20" disabled type="submit" value="Reset" data-sitekey="{{ g.recaptcha_publickey }}" data-callback='onSubmit' data-size="invisible" data-badge="inline">
         </div>
         {#<div class="mTop20 center not-member">
           Not a member? <a href="">Register</a>

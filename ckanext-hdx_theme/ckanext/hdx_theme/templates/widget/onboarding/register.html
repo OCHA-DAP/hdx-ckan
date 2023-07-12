@@ -32,34 +32,34 @@ Example:
     <div class="register-form">
         <form id="register-form">
             <div class="small-form-title">Please fill out the following:</div>
+            <input style="display: none;" name="id" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
+            <input style="display: none;" name="email" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+            <input style="display: none;" name="login" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+            <input style="display: none;" name="ajax" class="full-width disabled required" type="text" value="true" readonly>
             <div class="mTop20 control">
-                <input style="display: none;" name="id" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
-                <input style="display: none;" name="email" class="full-width disabled required" type="text" value="{{ email }}" readonly>
-                <input style="display: none;" name="login" class="full-width disabled required" type="text" value="{{ email }}" readonly>
-                <input style="display: none;" name="ajax" class="full-width disabled required" type="text" value="true" readonly>
-                <input id="register-username" class="full-width required" type="text" name="name">
+                <input id="register-username" class="full-width required" type="text" name="name" required="required">
                 <label for="register-username">Username</label>
             </div>
             <div class="mTop10 control">
-                <input id="register-password" name="password" class="full-width required" type="password">
+                <input id="register-password" name="password" class="full-width required" type="password" required="required">
                 <label for="register-password">Password (min 8 characters)</label>
             </div>
             <div class="row">
                 <div class="col-md-6 col-xs-12 mTop10">
                     <div class="control">
-                        <input id="register-first-name" name="first-name" class="full-width required" type="text" autocomplete="off">
+                        <input id="register-first-name" name="first-name" class="full-width required" type="text" autocomplete="off" required="required">
                         <label for="register-first-name">First Name</label>
                     </div>
                 </div>
                 <div class="col-md-6 col-xs-12 mTop10">
                     <div class="control">
-                        <input id="register-last-name" name="last-name" class="full-width required" type="text" autocomplete="off">
+                        <input id="register-last-name" name="last-name" class="full-width required" type="text" autocomplete="off" required="required">
                         <label for="register-last-name">Last Name</label>
                     </div>
                 </div>
             </div>
             <div class="right-side-actions">
-                <input class="btn btn-primary btn-large" type="submit" value="Register">
+                <input class="btn btn-primary btn-large" type="submit" disabled value="Register">
             </div>
         </form>
     </div>

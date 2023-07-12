@@ -93,7 +93,7 @@
               </div>
               <div class="control">
                 <label class="mTop10 vertically-center" id="field-checkbox-label">
-                  <input type="checkbox" required>
+                  <input type="checkbox" id="field-checkbox" required>
                   I understand that my request for this dataset may be denied by the contributor at their discretion. If the contributor decides to share this dataset I will manage the data in accordance with the applicable license and any other instructions the contributor may provide. <span class="red">*</span>
                 </label>
               </div>
@@ -103,7 +103,7 @@
     </div>
     <div class="modal-footer request-data-modal-footer bottom-actions">
       <button class="btn btn-empty btn-empty-black btn-large btn-cancel mR45">Cancel</button>
-      <button type="submit" class="btn btn-primary btn-submit"{% if pending_request %} disabled{% endif %}>Send request</button>
+      <button type="submit" class="btn btn-primary btn-submit" disabled>Send request</button>
     </div>
   </div>
   </div>

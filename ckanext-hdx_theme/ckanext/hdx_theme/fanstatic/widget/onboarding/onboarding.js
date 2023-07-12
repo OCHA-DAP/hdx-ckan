@@ -8,17 +8,22 @@ function spawnRecaptcha(id){
     if (!init){
       container.attr("hdx-recaptcha", true);
       container.find(".hdx-recaptcha").each(function (idx, el) {
+        var disabled = el.hasAttribute('disabled');
         grecaptcha.render(el);
+        if(disabled) {
+          el.setAttribute('disabled', true);
+        }
       });
     }
 }
 
 function notYou(){
-    $('#field-login').val('');
-    $('#field-login').removeClass('input-content');
+    let $fieldLogin = $('#field-login');
+    $fieldLogin.val('').trigger('change');
+    $fieldLogin.removeClass('input-content');
     $('#username-static, #login-photo-gravatar').hide();
     $('#username-form-field, #login-photo-default').show();
-    $('#field-login').focus();
+    $fieldLogin.focus();
     _displayMfaField();
 }
 
@@ -139,15 +144,18 @@ function _showLoginError(loginError) {
 
 function _displayMfaField(show = false) {
   let $loginContent = $('.login-content');
+  let $fieldMfa = $('#field-mfa');
   if (show) {
     $("#mfa-form-field").show();
+    $fieldMfa.attr('required', true);
     $loginContent.addClass('login-content--size-big');
   }
   else {
     $("#mfa-form-field").hide();
+    $fieldMfa.removeAttr('required');
     $loginContent.removeClass('login-content--size-big');
   }
-  $("#field-mfa").val("");
+  $fieldMfa.val('').trigger('change');
 }
 
 function checkMfa() {
@@ -170,7 +178,9 @@ function checkMfa() {
 
 
 $(document).ready(function(){
-    $("#hdx-login-form").submit(checkLockout);
+    const $loginForm = $('#hdx-login-form');
+    $loginForm.submit(checkLockout);
+    $loginForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
     $("#field-login").change(checkMfa);
     //check cookies
     const loginCookie = $.cookie("hdx_login");
@@ -231,3 +241,20 @@ $(document).ready(function(){
 
 
 });
+
+requiredFieldsFormValidator = function () {
+  var error = false;
+  var $form = $(this).closest('form');
+  var $submitButton = $form.find('[type="submit"]');
+  $form.find('input, select, textarea').filter('[required]').each(function (idx, el) {
+    if ((el.type === 'checkbox') ? !el.checked : (el.value === null || el.value === '' || el.value === '-1')) {
+      error = true;
+      return true;
+    }
+  });
+  if (error) {
+    $submitButton.attr('disabled', true);
+  } else {
+    $submitButton.removeAttr('disabled');
+  }
+};
