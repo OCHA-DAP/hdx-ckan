@@ -12,7 +12,6 @@ get_action = tk.get_action
 
 
 def trigger_4_resource_changes(before_resource_change_actions, after_resource_change_actions, version_changes_actions):
-
     def package_action_wrapper(original_package_action):
 
         def package_action(context, package_dict):
@@ -75,6 +74,27 @@ def trigger_4_resource_changes(before_resource_change_actions, after_resource_ch
 
             # cleanup the context
             remove_previous_package_dict_from_context(context, package_dict.get('id'))
+
+            return result_dict
+
+        return package_action
+
+    return package_action_wrapper
+
+
+def trigger_4_dataset_delete(version_changes_actions):
+    def package_action_wrapper(original_package_action):
+        def package_action(context, package_dict):
+
+            old_package_dict = fetch_previous_package_dict_with_context(context, package_dict.get('id')) \
+                if 'id' in package_dict else {}
+
+            result_dict = original_package_action(context, package_dict)
+
+            new_package_dict = old_package_dict.copy()
+            new_package_dict['state'] = 'deleted'
+            for version_change_action in version_changes_actions:
+                version_change_action(context.get('user'), old_package_dict, new_package_dict)
 
             return result_dict
 
