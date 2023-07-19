@@ -2,11 +2,12 @@ import logging
 
 import ckan.logic as logic
 import ckan.logic.action.delete as core_delete
-
+import ckanext.hdx_package.helpers.resource_triggers.common
 from ckanext.hdx_package.actions.update import process_batch_mode
 from ckanext.hdx_package.actions.create import reindex_package_on_hdx_hxl_preview_view
 from ckanext.hdx_package.helpers.file_removal import file_remove
 
+from ckanext.hdx_package.helpers.resource_triggers import VERSION_CHANGE_ACTIONS
 
 _check_access = logic.check_access
 NotFound = logic.NotFound
@@ -15,6 +16,7 @@ log = logging.getLogger(__name__)
 _get_action = logic.get_action
 
 
+@ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_dataset_delete(VERSION_CHANGE_ACTIONS)
 def hdx_dataset_purge(context, data_dict):
     _check_access('package_delete', context, data_dict)
 
@@ -60,8 +62,8 @@ def dataset_purge(context, data_dict):
             m.purge()
 
     for r in model.Session.query(model.PackageRelationship).filter(
-            or_(model.PackageRelationship.subject_package_id == pkg.id,
-                model.PackageRelationship.object_package_id == pkg.id)).all():
+        or_(model.PackageRelationship.subject_package_id == pkg.id,
+            model.PackageRelationship.object_package_id == pkg.id)).all():
         r.purge()
 
     pkg = model.Package.get(id)
@@ -128,4 +130,3 @@ def resource_view_delete(context, data_dict):
     resource_view = context.get('resource_view')
     if resource_view:
         reindex_package_on_hdx_hxl_preview_view(resource_view.view_type, context, data_dict)
-
