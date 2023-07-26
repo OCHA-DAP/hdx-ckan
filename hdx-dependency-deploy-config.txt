@@ -16,9 +16,3 @@ HDX_GISLAYER_TAG=0.8.4
 
 HDX_GISWORKER_URL=https://gallery.ecr.aws/r/unocha/hdx-gisworker/
 HDX_GISWORKER_TAG=0.8.4
-
-HDX_QAINGEST_URL=https://gallery.ecr.aws/r/unocha/hdx-jp-sw-qa-ingest/
-HDX_QAINGEST_TAG=dev
-
-HDX_PCODE_URL=https://gallery.ecr.aws/r/unocha/hdx-jp-sw-pcode/
-HDX_PCODE_TAG=dev
