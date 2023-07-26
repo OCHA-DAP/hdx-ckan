@@ -1118,9 +1118,10 @@ $(function(){
 
               // These are already created fields in the DOM, but they are
               // initially hidden, and are only shown for metadata-only datasets
-              selectFieldNames.show();
-              selectFileTypes.show();
-              selectNumOfRows.show();
+              // Make sure Firefox is showing the fields by setting the display attribute
+              selectFieldNames.show().css('display', 'block');
+              selectFileTypes.show().css('display', 'block');
+              selectNumOfRows.show().css('display', 'block');
               req_type_notification.removeClass('hdx-invisible-element');
             }
             else{
