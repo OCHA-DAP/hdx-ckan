@@ -9,6 +9,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 config = tk.config
 NotAuthorized = tk.NotAuthorized
@@ -30,7 +31,7 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
     @classmethod
     def setup_class(cls):
         super(TestQACompleted, cls).setup_class()
-        factories.User(name=cls.NORMAL_USER, email='qa_completed_user@hdx.hdxtest.org')
+        factories.User(name=cls.NORMAL_USER, email=cls.NORMAL_USER + '@hdx.hdxtest.org')
         factories.Organization(
             name='org_name_4_qa_completed',
             title='ORG NAME FOR QA COMPLETED',
@@ -147,7 +148,34 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is True
 
         package_dict = self._hdx_mark_qa_completed_flag(package_dict_4.get('id'), False, self.SYSADMIN_USER)
-        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is False
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get(
+            "qa_completed") is False
+
+    @mock.patch('ckanext.hdx_package.helpers.analytics.g')
+    def test_qa_completed_with_permission_via_hdx_mark_qa_completed(self, analytics_g):
+        PERMISSIONS_USER = 'permissions_qa_completed_user'
+        factories.User(name=PERMISSIONS_USER, email=PERMISSIONS_USER + '@hdx.hdxtest.org')
+        package_dict = self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
+        package_id = package_dict['id']
+
+        try:
+            # This user doesn't yet have access to change the qa_completed flag
+            self._hdx_mark_qa_completed_flag(package_id, True, PERMISSIONS_USER)
+        except NotAuthorized as e:
+            assert True
+
+        Permissions(PERMISSIONS_USER).set_permissions(
+            {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER},
+            [Permissions.PERMISSION_MANAGE_QA]
+        )
+
+        # This user now has permission and should be allowed to change the flag
+        package_dict = self._hdx_mark_qa_completed_flag(package_id, True, PERMISSIONS_USER)
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get("qa_completed") is True
+
+        package_dict = self._hdx_mark_qa_completed_flag(package_id, False, PERMISSIONS_USER)
+        assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get(
+            "qa_completed") is False
 
     def _package_patch_qa_completed_flag(self, package_id, qa_completed, user):
         context = {

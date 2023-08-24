@@ -9,6 +9,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 from ckanext.hdx_package.actions.patch import _send_analytics_for_pii_if_needed, _send_analytics_for_sdc_if_needed
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+from ckanext.hdx_users.helpers.permissions import Permissions
 
 config = tk.config
 NotAuthorized = tk.NotAuthorized
@@ -84,7 +85,8 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
     def test_normal_user_cannot_modify_quarantine(self, tag_s3_mock):
         package_dict = self._change_resource_field_via_resource_patch(self.RESOURCE_ID, 'in_quarantine', True,
                                                                       self.SYSADMIN_USER)
-        assert 'in_quarantine' not in package_dict['resources'][0]
+        assert ('in_quarantine' not in package_dict['resources'][0] or
+                package_dict['resources'][0]['in_quarantine'] is False)
 
         package_dict = self._hdx_qa_resource_patch(self.RESOURCE_ID, 'in_quarantine', True,
                                                                       self.SYSADMIN_USER)
@@ -105,6 +107,26 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         package_dict = self._hdx_qa_resource_patch(self.RESOURCE_ID, 'in_quarantine', False,
                                                                       self.SYSADMIN_USER)
         assert package_dict['resources'][0]['in_quarantine'] is False
+
+    @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')
+    def test_permissions_user_can_modify_quarantine(self, tag_s3_mock):
+        PERMISSIONS_USER = 'permissions_qa_completed_user'
+        factories.User(name=PERMISSIONS_USER, email=PERMISSIONS_USER + '@hdx.hdxtest.org')
+
+        package_dict = self._hdx_mark_resource_in_quarantine(self.RESOURCE_ID, True, PERMISSIONS_USER)
+        assert ('in_quarantine' not in package_dict['resources'][0] or
+                package_dict['resources'][0]['in_quarantine'] is False)
+
+        Permissions(PERMISSIONS_USER).set_permissions(
+            {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER},
+            [Permissions.PERMISSION_MANAGE_QA]
+        )
+
+        package_dict = self._hdx_mark_resource_in_quarantine(self.RESOURCE_ID, True, PERMISSIONS_USER)
+        assert package_dict['resources'][0]['in_quarantine'] is True
+        package_dict = self._hdx_mark_resource_in_quarantine(self.RESOURCE_ID, False, PERMISSIONS_USER)
+        assert package_dict['resources'][0]['in_quarantine'] is False
+
 
     def test_multiple_pii_fields_can_be_set(self):
         context = {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER}
@@ -249,6 +271,19 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
                     'user': username,
                 },
                 {'id': resource_id, key: new_value}
+            )
+        except NotAuthorized as e:
+            pass
+        return self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
+
+    def _hdx_mark_resource_in_quarantine(self, resource_id, new_value, username):
+        try:
+            self._get_action('hdx_mark_resource_in_quarantine')(
+                {
+                    'model': model, 'session': model.Session,
+                    'user': username,
+                },
+                {'id': resource_id, 'in_quarantine': new_value}
             )
         except NotAuthorized as e:
             pass

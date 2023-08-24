@@ -26,6 +26,8 @@ class Permissions(object):
     LABEL_PERMISSION_VIEW_REQUEST_DATA = 'View Request Data Dashboard'
     PERMISSION_MANAGE_QUICK_LINKS = 'permission_manage_quick_links'
     LABEL_PERMISSION_MANAGE_QUICK_LINKS = 'Manage Quick Links'
+    PERMISSION_MANAGE_QA = 'permission_manage_qa'  # QA Complete and quarantine
+    LABEL_PERMISSION_MANAGE_QA = 'Manage QA'
 
     # These are tasks that a bot needs to trigger: HDX daily stats, api token expiry emails.
     # Note that this permission shouldn't allow for any change to be done to HDX
@@ -37,6 +39,7 @@ class Permissions(object):
         PERMISSION_MANAGE_COD,
         PERMISSION_MANAGE_DATASERIES,
         PERMISSION_MANAGE_P_CODES,
+        PERMISSION_MANAGE_QA,
         PERMISSION_MANAGE_CRISIS,
         PERMISSION_VIEW_REQUEST_DATA,
         PERMISSION_MANAGE_QUICK_LINKS,
@@ -52,6 +55,7 @@ class Permissions(object):
         PERMISSION_VIEW_REQUEST_DATA: LABEL_PERMISSION_VIEW_REQUEST_DATA,
         PERMISSION_MANAGE_QUICK_LINKS: LABEL_PERMISSION_MANAGE_QUICK_LINKS,
         PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS: LABEL_PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS,
+        PERMISSION_MANAGE_QA: LABEL_PERMISSION_MANAGE_QA,
     }
 
     USER_EXTRA_FIELD = 'hdx_permissions'
