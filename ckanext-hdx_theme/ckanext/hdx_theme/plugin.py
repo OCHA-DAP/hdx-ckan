@@ -263,6 +263,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_pending_request_data': hdx_helpers.hdx_pending_request_data,
             'hdx_dataset_is_p_coded': hdx_helpers.hdx_dataset_is_p_coded,
             'hdx_get_approved_tags_list': hdx_helpers.hdx_get_approved_tags_list,
+            'are_new_p_code_filters_enabled': hdx_helpers.are_new_p_code_filters_enabled,
             'HDX_CONST': const
         }
 
