@@ -20,6 +20,7 @@ from six import text_type
 from ckan.lib import munge
 from ckan.plugins import toolkit
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
+from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 
 _ = toolkit._
