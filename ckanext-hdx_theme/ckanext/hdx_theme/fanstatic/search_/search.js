@@ -30,11 +30,14 @@ $('document').ready(function(){
         }
       });
     }
+
+    // filter out "closed" items
+    const not_closed_results = results.filter(obj => {return obj.title.includes("(closed)")===false; });
     return {
       'q': query,
       'termList': termList,
       'modifiedQ': modifiedQ,
-      'results': results
+      'results': not_closed_results
     };
   };
 
