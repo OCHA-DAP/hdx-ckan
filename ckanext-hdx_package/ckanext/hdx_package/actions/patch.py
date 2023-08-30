@@ -134,9 +134,13 @@ def hdx_mark_broken_link_in_resource(context, data_dict):
 
 
 def hdx_mark_qa_completed(context, data_dict):
+    '''
+    This action uses PERMISSIONS! Please be careful if changing the scope of its changes !
+    '''
     _check_access('hdx_mark_qa_completed', context, data_dict)
     _get_or_bust(data_dict, 'qa_completed')
 
+    context['ignore_auth'] = True
     context['allow_qa_completed_field'] = True
     context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
 
@@ -150,6 +154,21 @@ def hdx_mark_qa_completed(context, data_dict):
     return _get_action('package_revise')(context, data_revise_dict)
 
     # return _get_action('package_patch')(context, data_dict)
+
+
+def hdx_mark_resource_in_quarantine(context, data_dict):
+    '''
+    This action uses PERMISSIONS! Please be careful if changing the scope of its changes !
+    '''
+    _check_access('hdx_mark_resource_in_quarantine', context, data_dict)
+    new_data_dict = {
+        'id': _get_or_bust(data_dict, 'id'),
+        'in_quarantine': _get_or_bust(data_dict, 'in_quarantine')
+
+    }
+    context['ignore_auth'] = True
+    result = _get_action('hdx_qa_resource_patch')(context, new_data_dict)
+    return result
 
 
 def hdx_qa_resource_patch(context, data_dict):
