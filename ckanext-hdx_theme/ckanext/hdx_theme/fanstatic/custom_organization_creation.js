@@ -31,6 +31,16 @@ $(document).ready(function(){
     }
   });
 
+  $('#field-closed_organization').change(function(e){
+    const $closed_organization = $('#field-closed_organization');
+    const $hidden_closed_organization = $("#hidden-field-closed_organization");
+    if ($closed_organization.is(':checked')){
+      $hidden_closed_organization.val('true');
+    } else {
+      $hidden_closed_organization.val('false');
+    }
+  });
+
   $('#visualization-select').change(function(){
     var this_div = $(this).val();
     $('.visualization-div').hide();
