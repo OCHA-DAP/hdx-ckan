@@ -49,7 +49,13 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
             'user_info': True
         })
 
-        assert len(member_list2) == deleted_length + 2, 'Number of members should have increased by 2'
+        # debug information
+        _org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
+        _org_members_list = [u.get('name') for u in _org.get('users')]
+        assert len(member_list2) == len(_org.get('users'))
+        member_list2_len = len(member_list2)
+        assert member_list2_len == deleted_length + 2, _org_members_list
+
         new_member = next((m for m in member_list2 if 'John Doe1' == m[4]), None)
         assert new_member, 'Invited user needs to be a member of the org'
         assert new_member[3] == 'editor', 'Invited user needs to be an editor'
