@@ -8,7 +8,7 @@ import logging
 import mock
 import ckan.model as model
 import ckan.lib.helpers as h
-
+import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_org_group.tests as org_group_base
 
 log = logging.getLogger(__name__)
@@ -16,6 +16,9 @@ log = logging.getLogger(__name__)
 
 class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin('hdx_request_data requestdata hdx_pages hdx_search hdx_org_group hdx_package hdx_user_extra hdx_users hdx_theme')
     @classmethod
     def _create_test_data(cls):
         super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=False, create_members=True)
@@ -25,6 +28,8 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
         test_username = 'testsysadmin'
 
         context = {'model': model, 'session': model.Session, 'user': test_username}
+        _org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
+        _org_members_list = [u.get('name') for u in _org.get('users')]
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
