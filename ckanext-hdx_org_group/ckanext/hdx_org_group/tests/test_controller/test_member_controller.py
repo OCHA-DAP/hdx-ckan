@@ -21,7 +21,7 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
         hdx_test_base.load_plugin('hdx_search hdx_org_group hdx_package hdx_user_extra hdx_users hdx_theme')
     @classmethod
     def _create_test_data(cls):
-        super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=False, create_members=True)
+        super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=True, create_members=True)
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_bulk_members_invite(self, _mail_recipient_html):
