@@ -18,7 +18,7 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_request_data requestdata hdx_pages hdx_search hdx_org_group hdx_package hdx_user_extra hdx_users hdx_theme')
+        hdx_test_base.load_plugin('hdx_search hdx_org_group hdx_package hdx_user_extra hdx_users hdx_theme')
     @classmethod
     def _create_test_data(cls):
         super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=False, create_members=True)
