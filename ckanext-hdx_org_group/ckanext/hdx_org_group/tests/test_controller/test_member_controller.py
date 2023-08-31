@@ -3,7 +3,7 @@ Created on Jun 23, 2015
 
 @author: alexandru-m-g
 '''
-
+import pytest
 import logging
 import mock
 import ckan.model as model
@@ -13,7 +13,6 @@ import ckanext.hdx_org_group.tests as org_group_base
 
 log = logging.getLogger(__name__)
 
-
 class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     @classmethod
@@ -21,14 +20,15 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
         hdx_test_base.load_plugin('hdx_search hdx_org_group hdx_package hdx_user_extra hdx_users hdx_theme')
     @classmethod
     def _create_test_data(cls):
-        super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=True, create_members=True)
+        super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=False, create_members=True)
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_bulk_members_invite(self, _mail_recipient_html):
         test_username = 'testsysadmin'
 
-        context = {'model': model, 'session': model.Session, 'user': test_username}
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': test_username}
         _org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
+        log.warning("asdasd")
         _org_members_list = [u.get('name') for u in _org.get('users')]
 
         # removing one member from organization
@@ -48,11 +48,18 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
 
         self.app.post(url, params={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'},
                       extra_environ={"REMOTE_USER": test_username})
-        member_list2 = self._get_action('member_list')(context, {
-            'id': 'hdx-test-org',
+
+        member_list2_response = self.app.post('/api/action/member_list', params={'id': 'hdx-test-org',
             'object_type': 'user',
-            'user_info': True
-        })
+            'user_info': True}, extra_environ={"REMOTE_USER": test_username})
+
+        member_list2 = member_list2_response.json['result']
+
+        # member_list2 = self._get_action('member_list')(context, {
+        #     'id': 'hdx-test-org',
+        #     'object_type': 'user',
+        #     'user_info': True
+        # })
 
         # debug information
         _org = self._get_action('organization_show')(context, {'id': 'hdx-test-org'})
