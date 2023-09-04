@@ -1,36 +1,63 @@
 '''
-Created on Jun 23, 2015
+reCreated on 4 Sep, 2023
 
-@author: alexandru-m-g
+@author: dan
 '''
 
-import logging
 import mock
-import ckan.model as model
+import pytest
+import logging as logging
+import unicodedata
 import ckan.lib.helpers as h
-
+import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.tests as org_group_base
 
+_get_action = tk.get_action
+NotAuthorized = tk.NotAuthorized
 log = logging.getLogger(__name__)
 
 
-class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
+class TestMemberControllerBase(object):
 
-    @classmethod
-    def _create_test_data(cls):
-        super(TestBulkInviteMembersController, cls)._create_test_data(create_datasets=False, create_members=True)
+    def _get_url(self, app, url, apikey=None):
 
+        if apikey:
+            page = app.get(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')},
+                           follow_redirects=True)
+        else:
+            page = app.get(url)
+        return page
+
+    def _post_url(self, app, url, apikey=None):
+
+        if apikey:
+            page = app.post(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')},
+                            follow_redirects=True)
+        else:
+            page = app.post(url)
+        return page
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+                         'with_request_context')
+class TestBulkInviteMembersController(TestMemberControllerBase):
+
+    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
-    def test_bulk_members_invite(self, _mail_recipient_html):
-        test_username = 'testsysadmin'
-
-        context = {'model': model, 'session': model.Session, 'user': test_username}
+    def test_bulk_members_invite(self, _mail_recipient_html, app):
+        orgadmin = 'orgadmin'
+        context = {'model': model, 'session': model.Session, 'user': orgadmin}
+        orgadmin_obj = model.User.by_name(orgadmin)
+        auth = {'Authorization': str(orgadmin_obj.apikey)}
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        self.app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_username})
+        result = app.post(url, params={'user': 'johndoe1'}, extra_environ=auth)
 
-        member_list = self._get_action('member_list')(context, {
+        member_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -41,9 +68,8 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
         # bulk adding members
         url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
 
-        self.app.post(url, params={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'},
-                      extra_environ={"REMOTE_USER": test_username})
-        member_list2 = self._get_action('member_list')(context, {
+        result = app.post(url, params={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'}, extra_environ=auth)
+        member_list2 = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -55,9 +81,8 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
         assert new_member[3] == 'editor', 'Invited user needs to be an editor'
 
         # making john doe1 a member back
-        self.app.post(url, params={'emails': 'johndoe1', 'role': 'member'},
-                      extra_environ={"REMOTE_USER": test_username})
-        member_list3 = self._get_action('member_list')(context, {
+        result = app.post(url, params={'emails': 'johndoe1', 'role': 'member'}, extra_environ=auth)
+        member_list3 = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -67,23 +92,24 @@ class TestBulkInviteMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgs
         assert new_member[3] == 'member', 'Invited user needs to be a member'
 
 
-class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
-
-    @classmethod
-    def _create_test_data(cls):
-        super(TestMembersController, cls)._create_test_data(create_datasets=False, create_members=True)
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+                         'with_request_context')
+class TestMembersController(TestMemberControllerBase):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
+    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_org_group.views.members.render')
-    def test_members(self, render):
-        test_sysadmin = 'testsysadmin'
-        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-        test_client = self.get_backwards_compatible_test_client()
+    def test_members(self, render, app):
+        orgadmin = 'orgadmin'
+        context = {'model': model, 'session': model.Session, 'user': orgadmin}
+        orgadmin_obj = model.User.by_name(orgadmin)
+        auth = {'Authorization': str(orgadmin_obj.apikey)}
+        # test_client = self.get_backwards_compatible_test_client()
 
-        member_with_name_list = self._get_action('member_list')(context, {
+        member_with_name_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -91,7 +117,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
         # By default the users should be sorted alphabetically asc
         url = h.url_for('hdx_members.members', id='hdx-test-org')
-        test_client.get(url, extra_environ={"REMOTE_USER": test_sysadmin})
+        app.get(url, extra_environ=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
@@ -103,7 +129,7 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         # Sorting alphabetically desc
         sort = 'title desc'
         url = h.url_for('hdx_members.members', id='hdx-test-org', sort=sort)
-        test_client.get(url, extra_environ={"REMOTE_USER": test_sysadmin})
+        app.get(url, extra_environ=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
@@ -113,51 +139,50 @@ class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
                     format(user_list[idx], user_list[idx + 1])
 
         # Querying
-        q = 'anna'
+        q = 'john'
         url = h.url_for('hdx_members.members', id='hdx-test-org', q=q)
-        test_client.get(url, extra_environ={"REMOTE_USER": test_sysadmin})
+        result = app.get(url, extra_environ=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
         assert len(user_list) == 1, "Only one user should be found for query"
-        assert user_list[0] == 'Anna Anderson2'
+        assert user_list[0] == 'John Doe1'
 
-
-class TestMembersDeleteController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
-
-    @classmethod
-    def _create_test_data(cls):
-        super(TestMembersDeleteController, cls)._create_test_data(create_datasets=False, create_members=True)
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+                         'with_request_context')
+class TestMembersDeleteController(TestMemberControllerBase):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
-    def test_members_delete_add(self, _mail_recipient_html):
-        test_client = self.get_backwards_compatible_test_client()
+    def test_members_delete_add(self, _mail_recipient_html, app):
+
+        orgadmin = 'orgadmin'
+        context = {'model': model, 'session': model.Session, 'user': orgadmin}
+        orgadmin_obj = model.User.by_name(orgadmin)
+        auth = {'Authorization': str(orgadmin_obj.apikey)}
 
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
         try:
-            test_client.post(url, params={'user': 'annaanderson2'}, extra_environ={"REMOTE_USER": "testsysadmin"})
+            app.post(url, params={'user': 'johndoe1'}, extra_environ=auth)
         except Exception as ex:
             assert False
 
-        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-        member_list = self._get_action('member_list')(context, {
+        member_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
         })
 
         deleted_length = len(member_list)
-        assert 'Anna Anderson2' not in (m[4] for m in member_list)
+        assert 'John Doe1' not in (m[4] for m in member_list)
 
         url = h.url_for('hdx_members.member_new', id='hdx-test-org')
-        test_client.post(url, params={'username': 'annaanderson2', 'role': 'editor'},
-                         extra_environ={"REMOTE_USER": "testsysadmin"})
+        app.post(url, params={'username': 'johndoe1', 'role': 'editor'}, extra_environ=auth)
 
-        member_list2 = self._get_action('member_list')(context, {
+        member_list2 = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -165,10 +190,9 @@ class TestMembersDeleteController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest
 
         assert len(member_list2) == deleted_length + 1, 'Number of members should have increased by 1'
 
-        member_anna = next((m for m in member_list2 if m[4] == 'Anna Anderson2'), None)
-        assert member_anna, 'User annaanderson2 needs to be a member of the org'
-        assert member_anna[3] == 'editor', 'User annaanderson2 needs to be an editor'
-
+        member_johndoe1 = next((m for m in member_list2 if m[4] == 'John Doe1'), None)
+        assert member_johndoe1, 'User johndoe1 needs to be a member of the org'
+        assert member_johndoe1[3] == 'editor', 'User johndoe1 needs to be an editor'
 
 class TestRequestMembershipMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
