@@ -361,23 +361,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             app.after_request(http_headers.set_http_headers)
             app.before_request(self._before_request)
 
-            # Add root json log handler
-            json_log_enabled = config.get('hdx.ckan_json_log.enable')
-            if json_log_enabled == "true":
-                json_formatter = logging.Formatter(
-                    '{"timestamp":"%(asctime)s", "level":"%(levelname)s", "logger":"%(module)s", "message":"%(message)s"}'
-                )
-                json_file_path = config.get('hdx.ckan_json_log.file')
-                json_handler = logging.handlers.TimedRotatingFileHandler(
-                    filename=json_file_path,
-                    interval=12,
-                    when="H",
-                    backupCount=1,
-                )
-                json_handler.setFormatter(json_formatter)
-                app.logger.root.addHandler(json_handler)
-                log.info('Enabled JSON Logs: ' + json_file_path)
-
         return redirection_app
 
     # IValidators
