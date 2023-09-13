@@ -72,7 +72,7 @@ flask-multistatic==1.0
     # via -r requirements.in
 future==0.18.2
     # via -r requirements.in
-geomet @ git+https://github.com/geomet/geomet.git
+geomet==1.0.0
     # via -r requirements.in
 idna==2.8
     # via
@@ -140,6 +140,8 @@ python-dateutil==2.8.2
     #   feedgen
 python-editor==1.0.4
     # via alembic
+python-json-logger==2.0.7
+    # via -r requirements.in
 python-magic==0.4.15
     # via -r requirements.in
 pytz==2016.7

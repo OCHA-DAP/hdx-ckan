@@ -176,30 +176,30 @@ hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer
 
 [handlers]
-keys = console, file
+keys = console, file, jsonFile
 
 [formatters]
-keys = generic
+keys = generic, jsonFormatter
 
 [logger_root]
 level = ${HDX_LOG_LEVEL}
-handlers = console, file
+handlers = console, file, jsonFile
 
 [logger_ckan]
 level = WARNING
-handlers = console, file
+handlers = console, file, jsonFile
 qualname = ckan
 propagate = 0
 
 [logger_ckanext]
 level = ${HDX_LOG_LEVEL}
-handlers = console, file
+handlers = console, file, jsonFile
 qualname = ckanext
 propagate = 0
 
 [logger_ckanext.hdx_theme.util.timer]
 level = INFO
-handlers = console, file
+handlers = console, file, jsonFile
 qualname = ckanext.hdx_theme.util.timer
 propagate = 0
 
@@ -215,5 +215,15 @@ args = ('/var/log/ckan/ckan.log','a')
 level = NOTSET
 formatter = generic
 
+[handler_jsonFile]
+class = FileHandler
+args = ('/var/log/ckan/ckan.json.log','a')
+level = NOTSET
+formatter = jsonFormatter
+
 [formatter_generic]
 format = %(asctime)s %(levelname)-5.5s [%(name)s] %(message)s
+
+[formatter_jsonFormatter]
+format = %(asctime)s %(levelname) %(threadName)s %(name)s %(lineno)d %(message)s %(funcName)s
+class = pythonjsonlogger.jsonlogger.JsonFormatter
