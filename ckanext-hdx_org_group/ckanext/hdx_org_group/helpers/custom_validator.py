@@ -47,3 +47,21 @@ def active_if_missing(key, data, errors, context):
     if value is missing or value is None:
         data[key] = 'active'
 
+def set_inactive_if_closed_organization(key, data, errors, context):
+    value = data.get(key)
+    title = data.get(('title',))
+    if title:
+        if value=='true' or value=='True':
+            title= title.replace('(closed)','')
+            if not 'inactive' in title:
+                if title.endswith(' '):
+                    title = title + '(inactive)'
+                else:
+                    title = title + ' (inactive)'
+        else:
+            title = title.replace('(closed)', '')
+            title = title.replace('(inactive)', '')
+            if title.endswith(' '):
+                title = title[:-1]
+        data[('title',)]= title
+
