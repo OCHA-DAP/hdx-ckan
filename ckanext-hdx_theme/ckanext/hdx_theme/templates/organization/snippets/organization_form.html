@@ -93,8 +93,8 @@
   </div>
 </div>
 
-{% set closed_organization = h.hdx_get_extras_element(data, value_key="closed_organization") or "false" %}
-{% set closed_organization_checked = 'checked="checked"' if closed_organization=='true' else '' %}
+{% set closed_organization = h.hdx_get_extras_element(data, value_key="closed_organization") or False %}
+{% set closed_organization_checked = 'checked="checked"' if closed_organization==True else '' %}
 <div id="closed_organization-trigger" class="org-control-container">
   <div class="control-group control-full org-control field-with-info" style="min-height:30px">
     <label class="control-label" for="field-closed_organization" style="display: inline-block;">{{ _('This organization is closed/inactive') }}</label>

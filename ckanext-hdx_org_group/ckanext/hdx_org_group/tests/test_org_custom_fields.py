@@ -482,7 +482,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
         new_org_dict = {
             'name': 'test_org_d',
             'title': 'Test Org D',
-            'closed_organization': 'true',
+            'closed_organization': True,
             'org_url': 'www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
@@ -491,6 +491,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
             org_dict = self._get_action('organization_create')(context_sysadmin, new_org_dict)
             assert 'closed_organization' in org_dict
             assert org_dict.get('closed_organization') == True
+            assert '(inactive)' in org_dict.get('title')
         except Exception as ex:
             assert False
 
@@ -499,7 +500,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
                 'id': org_dict.get('id'),
                 'name': org_dict.get('name'),
                 'title': org_dict.get('title'),
-                'closed_organization': 'false',
+                'closed_organization': False,
                 'org_url': org_dict.get('org_url'),
                 'description': org_dict.get('description'),
                 'hdx_org_type': org_dict.get('hdx_org_type'),
@@ -508,6 +509,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
             org_updated_dict = self._get_action('organization_show')(context_sysadmin, {'id': org_dict.get('id')})
             assert 'closed_organization' in org_updated_dict
             assert org_updated_dict.get('closed_organization') == False
+            assert '(inactive)' not in org_updated_dict.get('title')
         except Exception as ex:
             assert False
 
@@ -532,6 +534,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
             org_updated_dict = self._get_action('organization_show')(context_sysadmin, {'id': _org_update_dict.get('id')})
             assert 'closed_organization' in org_updated_dict
             assert org_updated_dict.get('closed_organization') == False
+            assert '(inactive)' not in org_updated_dict.get('title')
         except Exception as ex:
             assert False
 
@@ -549,6 +552,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
             org_updated_dict = self._get_action('organization_show')(context_sysadmin, {'id': org_dict.get('id')})
             assert 'closed_organization' in org_updated_dict
             assert org_updated_dict.get('closed_organization') == True
+            assert '(inactive)' in org_updated_dict.get('title')
         except Exception as ex:
             assert False
 
