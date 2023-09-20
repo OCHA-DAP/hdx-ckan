@@ -67,7 +67,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location,
             'hdx_organization_follower_list': get_actions.hdx_organization_follower_list,
             'hdx_user_invite': create_actions.hdx_user_invite,
-            'member_create':  create_actions.hdx_member_create
+            'member_create': create_actions.hdx_member_create
 
         }
 
@@ -106,8 +106,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return {
             'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
             'hdx_org_keep_prev_value_if_empty_unless_sysadmin': org_custom_validator.hdx_org_keep_prev_value_if_empty_unless_sysadmin,
-            'active_if_missing': org_custom_validator.active_if_missing
-
+            'active_if_missing': org_custom_validator.active_if_missing,
+            'set_inactive_if_closed_organization': org_custom_validator.set_inactive_if_closed_organization
         }
 
     def _modify_group_schema(self, schema):
@@ -122,7 +122,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                                 tk.get_converter('convert_to_extras')],
             'custom_org': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'request_membership': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-            'closed_organization': [tk.get_validator('hdx_boolean_string_converter'), tk.get_converter('convert_to_extras')],
+            'closed_organization': [tk.get_validator('hdx_boolean_string_converter'),
+                                    tk.get_validator('set_inactive_if_closed_organization'),
+                                    tk.get_converter('convert_to_extras')],
             'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             # 'less': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'visualization_config': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
@@ -191,118 +193,118 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return None
 
     # def after_map(self, map):
-        # map.connect('organization_read', '/organization/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='read')
-        # map.connect('organization_members', '/organization/members/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-        #             action='members')
-        # map.connect('organization_activity', '/organization/activity/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='activity_stream')
-        # map.connect('organization_activity', '/organization/activity/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='activity_stream')
-        # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='activity_stream')
-        # return map
+    # map.connect('organization_read', '/organization/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='read')
+    # map.connect('organization_members', '/organization/members/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+    #             action='members')
+    # map.connect('organization_activity', '/organization/activity/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='activity_stream')
+    # map.connect('organization_activity', '/organization/activity/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='activity_stream')
+    # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='activity_stream')
+    # return map
 
     # def before_map(self, map):
-        # map.connect('organization_bulk_process',
-        #             '/organization/bulk_process/{org_id}',
-        #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
-        #             action='redirect_to_org_list')
-        # map.connect('organization_bulk_process_no_id', '/organization/bulk_process',
-        #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
-        #             action='redirect_to_org_list')
-        # map.connect('organizations_index', '/organization',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='index')
-        # map.connect('organization_new', '/organization/new',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='new')
-        # map.connect('organization_edit', '/organization/edit/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='edit', ckan_icon='edit')
-        # map.connect('request_membership', '/organization/{org_id}/request_membership',
-        #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
-        # map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
-        #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
-        #             action='request_editor_for_org')
-        # map.connect('/organization/request_new',
-        #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
-        #             action='request_new_organization')
-        # map.connect('organization_members',
-        #             '/organization/members/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-        #             action='members')
-        # map.connect(
-        #     '/organization/member_new/{id}',
-        #     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-        #     action='member_new')
-        # map.connect(
-        #     '/organization/member_delete/{id}',
-        #     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-        #     action='member_delete')
+    # map.connect('organization_bulk_process',
+    #             '/organization/bulk_process/{org_id}',
+    #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
+    #             action='redirect_to_org_list')
+    # map.connect('organization_bulk_process_no_id', '/organization/bulk_process',
+    #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
+    #             action='redirect_to_org_list')
+    # map.connect('organizations_index', '/organization',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='index')
+    # map.connect('organization_new', '/organization/new',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='new')
+    # map.connect('organization_edit', '/organization/edit/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='edit', ckan_icon='edit')
+    # map.connect('request_membership', '/organization/{org_id}/request_membership',
+    #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
+    # map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
+    #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+    #             action='request_editor_for_org')
+    # map.connect('/organization/request_new',
+    #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+    #             action='request_new_organization')
+    # map.connect('organization_members',
+    #             '/organization/members/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+    #             action='members')
+    # map.connect(
+    #     '/organization/member_new/{id}',
+    #     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+    #     action='member_new')
+    # map.connect(
+    #     '/organization/member_delete/{id}',
+    #     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+    #     action='member_delete')
 
-        # map.connect('/organization/bulk_member_new/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-        #             action='bulk_member_new')
+    # map.connect('/organization/bulk_member_new/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+    #             action='bulk_member_new')
 
-        # map.connect('organization_activity', '/organization/activity/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='activity_stream'
-        #             # conditions={'function': organization_controller.is_not_custom}
-        #             )
-        # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset:([0-9]+)}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='activity_stream')
-        # map.connect('custom_org_activity', '/organization/activity/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController',
-        #             action='activity_stream')
+    # map.connect('organization_activity', '/organization/activity/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='activity_stream'
+    #             # conditions={'function': organization_controller.is_not_custom}
+    #             )
+    # map.connect('organization_activity_offset', '/organization/activity/{id}/{offset:([0-9]+)}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='activity_stream')
+    # map.connect('custom_org_activity', '/organization/activity/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController',
+    #             action='activity_stream')
 
-        # since the pattern of organization_read is so general it needs to be the last
-        # otherwise it will override other /organization routes
-        # map.connect('organization_read', '/organization/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='read')
+    # since the pattern of organization_read is so general it needs to be the last
+    # otherwise it will override other /organization routes
+    # map.connect('organization_read', '/organization/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='read')
 
-        # map.connect('hdx_organization_stats', '/organization/stats/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #             action='stats')
+    # map.connect('hdx_organization_stats', '/organization/stats/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #             action='stats')
 
-        # map.connect('browse_list', '/browse',
-        #            controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
+    # map.connect('browse_list', '/browse',
+    #            controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
 
-        # map.connect('browse_list', '/browse',
-        #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
-        #             action='redirect_to_group_list')
+    # map.connect('browse_list', '/browse',
+    #             controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
+    #             action='redirect_to_group_list')
 
-        # map.connect('group_index', '/group',
-        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
-        #             highlight_actions='index search')
-        # map.connect('group_worldmap', '/worldmap',
-        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
-        #
-        # map.connect('group_eaa_worldmap', '/eaa-worldmap',
-        #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
+    # map.connect('group_index', '/group',
+    #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
+    #             highlight_actions='index search')
+    # map.connect('group_worldmap', '/worldmap',
+    #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
+    #
+    # map.connect('group_eaa_worldmap', '/eaa-worldmap',
+    #             controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_eaa_worldmap')
 
-        # map.connect('group_new', '/group/new', controller='group', action='new')
+    # map.connect('group_new', '/group/new', controller='group', action='new')
 
-        # map.connect('country_read', '/group/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
-        #
-        # map.connect('country_topline', '/country/topline/{id}',
-        #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
+    # map.connect('country_read', '/group/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+    #
+    # map.connect('country_topline', '/country/topline/{id}',
+    #             controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
 
-        # map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-        #     action='feed_organization')
+    # map.connect('feed_org_atom', '/feeds/organization/{id}.atom', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+    #     action='feed_organization')
 
-        # map.connect(
-        #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
+    # map.connect(
+    #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
 
-        # return map
+    # return map
 
     # IOrganizationController
     def create(self, org):
@@ -387,7 +389,6 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
     # IGroupForm
     def db_to_form_schema(self):
-
         schema = super(HDXGroupPlugin, self).form_to_db_schema()
         schema.update({
             'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
@@ -446,4 +447,3 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         import ckanext.hdx_org_group.views.group as group
         import ckanext.hdx_org_group.views.light_group as light_group
         return [group.hdx_group, group.hdx_country_topline, light_group.hdx_light_group, light_group.hdx_group_eaa_maps]
-
