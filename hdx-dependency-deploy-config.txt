@@ -21,7 +21,7 @@ HDX_QAINGEST_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-qa-ingest/
 HDX_QAINGEST_TAG=dev
 
 HDX_PCODE_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-pcode/
-HDX_PCODE_TAG=dev
+HDX_PCODE_TAG=0.1.10
 
 HDX_N8N_IMAGE_URL=https://gallery.ecr.aws/unocha/hdx-n8n/
 HDX_N8N_IMAGE_TAG=hdx-8849
