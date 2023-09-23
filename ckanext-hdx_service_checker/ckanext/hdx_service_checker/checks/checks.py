@@ -72,10 +72,11 @@ class HttpResponseTextCheck(checks.Check):
 
     def _basic_auth(self):
         basic_auth = self.config.get('basic_auth')
+        headers = {'referer': self.config.get('url')}
         if basic_auth and basic_auth != "None":
-            headers = {'Authorization': 'Basic {0}'.format(basic_auth)}
+            headers['Authorization'] = 'Basic {0}'.format(basic_auth)
             return headers
-        return None
+        return headers
 
     def run_check(self):
         url = self.config.get('url')
