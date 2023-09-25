@@ -258,6 +258,7 @@ def hdx_fs_check_resource_revise(context, data_dict):
 
     context['allow_fs_check_field'] = True
     context['fs_check_is_upload_xls'] = False
+    context[BATCH_MODE] = BATCH_MODE_KEEP_OLD
     pkg_id = data_dict.get('package_id')
     res_id = data_dict.get('id')
     key = data_dict.get('key')
