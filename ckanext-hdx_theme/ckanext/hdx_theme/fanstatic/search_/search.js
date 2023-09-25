@@ -30,6 +30,7 @@ $('document').ready(function(){
         }
       });
     }
+
     return {
       'q': query,
       'termList': termList,

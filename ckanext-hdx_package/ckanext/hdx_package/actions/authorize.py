@@ -98,10 +98,15 @@ def hdx_resource_download(context, resource_dict):
 
 
 def hdx_mark_qa_completed(context, data_dict=None):
-    '''
-    Only sysadmins are allowed to call this action
-    '''
-    return {'success': False, 'msg': _('Only sysadmins can change the qa_completed flag')}
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_QA)
+    return {'success': result}
+
+
+def hdx_mark_resource_in_quarantine(context, data_dict=None):
+    username_or_id = context.get('user')
+    result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_QA)
+    return {'success': result}
 
 
 def hdx_qa_resource_patch(context, data_dict=None):

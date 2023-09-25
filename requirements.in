@@ -70,7 +70,7 @@ timeago==1.0.7
 # reqs for ckanext-dcat
 rdflib==4.2.1
 rdflib-jsonld==0.4.0
-git+https://github.com/geomet/geomet.git
+geomet>=0.2.0
 #ckantoolkit==0.0.3 already installed for ckanext-powerview
 # ckanext-dcat
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.203#egg=ckanext-dcat
@@ -84,3 +84,5 @@ dogpile.cache==0.7.1
 -e git+https://github.com/OCHA-DAP/ckanext-security.git#egg=ckanext-security
 pyotp~=2.6.0
 # END ckanext-security
+
+python-json-logger~=2.0.7

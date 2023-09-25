@@ -43,9 +43,11 @@ def _buildIndex(path):
     except:
         crises = ['ebola', 'nepal-earthquake']
     query = '''
-    select g.name, g.title, g.is_organization, upper(coalesce(ge.value, g.name)) as code
-    from "group" g LEFT OUTER JOIN group_extra ge ON g.id = ge.group_id and ge.key='org_acronym' and ge.state='active'
-    where g.state='active'
+    select g.name, g.title, g.is_organization, upper(coalesce(ge_acronym.value, g.name)) as code
+    from "group" g
+	LEFT OUTER JOIN group_extra as ge_acronym ON g.id = ge_acronym.group_id and ge_acronym.key='org_acronym' and ge_acronym.state='active'
+	LEFT OUTER JOIN group_extra as ge_closed ON g.id = ge_closed.group_id and ge_closed.key='closed_organization' and ge_closed.state='active'
+    where g.state='active' and (ge_closed.value is null or ge_closed.value!='true')
     '''
     groups = Session.execute(query)
     for name, title, is_org, code in groups:

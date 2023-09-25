@@ -89,10 +89,26 @@
 <div id="customization-trigger" class="org-control-container">
   <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom organisation page") }}</label>
   <div class="controls" style="display:inline-block">
-    <input type="checkbox" {{ custom_org_checked }} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+    <input type="checkbox" {{ custom_org_checked }} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:0px;"/>
   </div>
 </div>
 
+{% set closed_organization = h.hdx_get_extras_element(data, value_key="closed_organization") or False %}
+{% set closed_organization_checked = 'checked="checked"' if closed_organization==True else '' %}
+<div id="closed_organization-trigger" class="org-control-container">
+  <div class="control-group control-full org-control field-with-info" style="min-height:30px">
+    <label class="control-label" for="field-closed_organization" style="display: inline-block;">{{ _('This organization is closed/inactive') }}</label>
+    <div class="controls" style="display:inline-block">
+      <input type="hidden" name="closed_organization" id="hidden-field-closed_organization" value="{{ closed_organization }}" />
+      <input type="checkbox" {{ closed_organization_checked }} id="field-closed_organization" style="margin-left:10px; margin-bottom:5px; margin-top:0px;"/>
+    </div>
+  </div>
+  <div class="org-control-info info-field"   style="margin-top:0px;">
+    <div class="org-info-label">
+        {{_('Check the checkbox if the organization is no longer in use/active in HDX ')}}
+    </div>
+  </div>
+</div>
 
 {% set request_membership = h.hdx_get_extras_element(data, value_key="request_membership") or "true" %}
 {% set request_membership_checked = 'checked="checked"' if request_membership=='true' else '' %}
@@ -101,7 +117,7 @@
     <label class="control-label" for="field-request_membership" style="display: inline-block;">{{ _('Allow Membership Requests') }}</label>
     <div class="controls" style="display:inline-block">
       <input type="hidden" name="request_membership" id="hidden-field-request_membership" value="{{ request_membership }}" />
-      <input type="checkbox" {{ request_membership_checked }} id="field-request_membership" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+      <input type="checkbox" {{ request_membership_checked }} id="field-request_membership" style="margin-left:10px; margin-bottom:5px; margin-top:0px;"/>
     </div>
   </div>
   <div class="org-control-info info-field"   style="margin-top:0px;">
@@ -118,7 +134,6 @@
     </div>
   </div>
 </div>
-
 
 <div id="customization-fields" class="{% if not custom_org %}element-invisible{% endif %}">
 <div class="org-control-container">
