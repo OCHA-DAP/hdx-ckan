@@ -24,7 +24,7 @@ HDX_PCODE_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-pcode/
 HDX_PCODE_TAG=0.1.10
 
 HDX_N8N_IMAGE_URL=https://gallery.ecr.aws/unocha/hdx-n8n/
-HDX_N8N_IMAGE_TAG=hdx-8849
+HDX_N8N_IMAGE_TAG=0.2.0
 
 HDX_N8N_WORKFLOW_URL=https://github.com/OCHA-DAP/hdx-n8n-qa-workflow
 HDX_N8N_WORKFLOW_TAG=0.1.1
