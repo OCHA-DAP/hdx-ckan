@@ -427,18 +427,16 @@
                     var selectOptions = $('#field_dataset_preview_value').prop('options');
                     selectOptions[0] = new Option('Default (first resource with preview)', 'first_resource');
                     var i = 'first_resource';
-                    $.each(newOptions, function(index, value) {
-                        var resName = value.get('name') ? value.get('name') : 'Resource '+(index+1);
-                        if (value.get('dataset_preview_enabled') === true){
-                            selectOptions[selectOptions.length] = new Option(resName, index+'', true, true);
-                            i = index+'';
-                        }
-                        else {
-                            selectOptions[selectOptions.length] = new Option(resName, index+'');
-                        }
-                    });
+                  $.each(newOptions, function (index, value) {
+                    var resName = value.get('name') ? value.get('name') : 'Resource ' + (index + 1);
+                    if (value.get('dataset_preview_enabled') === true || value.get('dataset_preview_enabled') === 'True' || value.get('dataset_preview_enabled') === 'true') {
+                      selectOptions[selectOptions.length] = new Option(resName, index + '', true, true);
+                      i = index + '';
+                    } else {
+                      selectOptions[selectOptions.length] = new Option(resName, index + '');
+                    }
+                  });
                     $("#field_dataset_preview_value").val(i).trigger('change');
-
 
                 },
                 'generateResourcePostData': function() {
