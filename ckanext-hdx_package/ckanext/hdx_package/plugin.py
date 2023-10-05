@@ -323,7 +323,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(HDXPackagePlugin, self).show_package_schema()
 
         self._remove_package_fields_from_schema(schema)
-
         schema['resources'].update(
             {
                 'format': [
@@ -360,8 +359,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator')
                 ],
+                'dataset_preview_enabled': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator'),
+                ],
             }
         )
+
         schema.update({
             # Notes == description. Makes description required
             'notes': [vd.not_empty_ignore_ws],
