@@ -244,11 +244,24 @@ def hdx_convert_values_to_boolean_for_dataset_preview(key, data, errors, context
     convert values to boolean and also sets the dataset_preview to false for the other resources
     '''
 
-    value = data.get(key)
-    if value in (True, False, 'True', 'False'):
+    new_value = value = data.get(key)
+
+    if value in (True, False):
         pass
+    elif value in ('True','true'):
+            new_value = True
+    elif value in ('False', 'false'):
+            new_value = False
     elif value in ('1', 1):
         # set others on False
+        new_value = True
+    elif value in ('0', 0):
+        new_value = False
+    else:
+        # value not in ('1',1,'0',0, True, False, 'True', 'False'):
+        new_value = None
+
+    if new_value:
         i = 0
         while True:
             temp_key_name = ('resources', i, 'name')
@@ -257,13 +270,7 @@ def hdx_convert_values_to_boolean_for_dataset_preview(key, data, errors, context
                 break
             data[temp_key_preview] = False
             i += 1
-        data[key] = True
-
-    elif value in ('0', 0):
-        data[key] = False
-    else:
-        # value not in ('1',1,'0',0, True, False, 'True', 'False'):
-        data[key] = None
+    data[key] = new_value
     return data[key]
 
 
