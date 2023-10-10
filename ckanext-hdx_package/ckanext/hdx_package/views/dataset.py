@@ -208,7 +208,7 @@ def read(id):
         dataset_preview_disabled_list = []
         if _dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID:
             for r in view_enabled_resources:
-                if r.get('dataset_preview_enabled') in ['True', 'true', True]:
+                if r.get('dataset_preview_enabled') is True:
                     dataset_preview_enabled_list.append(r)
                 else:
                     dataset_preview_disabled_list.append(r)

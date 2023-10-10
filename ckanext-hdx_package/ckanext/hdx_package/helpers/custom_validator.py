@@ -245,8 +245,12 @@ def hdx_convert_values_to_boolean_for_dataset_preview(key, data, errors, context
     '''
 
     value = data.get(key)
-    if value in (True, False, 'True', 'False'):
+    if value in (True, False):
         pass
+    elif value in ('True','true'):
+            data[key] = True
+    elif value in ('False', 'false'):
+            data[key] = False
     elif value in ('1', 1):
         # set others on False
         i = 0
