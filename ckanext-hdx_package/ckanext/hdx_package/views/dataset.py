@@ -208,7 +208,7 @@ def read(id):
         dataset_preview_disabled_list = []
         if _dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID:
             for r in view_enabled_resources:
-                if r.get('dataset_preview_enabled'):
+                if r.get('dataset_preview_enabled') is True:
                     dataset_preview_enabled_list.append(r)
                 else:
                     dataset_preview_disabled_list.append(r)
@@ -395,7 +395,7 @@ def package_metadata(id):
         # process fields
         metadata = _process_dataset_metadata(metadata, metadata_fields, file_format)
 
-        analytics.MetadataDownloadAnalyticsSender(file_format=file_format, package_id=id).send_to_queue()
+        # analytics.MetadataDownloadAnalyticsSender(file_format=file_format, package_id=id).send_to_queue()
 
         buf = io.StringIO()
         if 'json' in file_format:
@@ -458,7 +458,7 @@ def resource_metadata(id, resource_id):
         # process fields
         metadata = _process_resource_metadata(metadata, metadata_fields, file_format)
 
-        analytics.MetadataDownloadAnalyticsSender(file_format=file_format, resource_id=resource_id).send_to_queue()
+        # analytics.MetadataDownloadAnalyticsSender(file_format=file_format, resource_id=resource_id).send_to_queue()
 
         buf = io.StringIO()
         if 'json' in file_format:
