@@ -1,6 +1,7 @@
 import pytest
 import six
 import mock
+from datetime import datetime, timedelta
 
 import ckan.tests.factories as factories
 import ckan.model as model
@@ -10,6 +11,8 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 from ckanext.hdx_users.helpers.permissions import Permissions
+
+from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 
 config = tk.config
 NotAuthorized = tk.NotAuthorized
@@ -176,6 +179,27 @@ class TestQACompleted(hdx_test_base.HdxBaseTest):
         package_dict = self._hdx_mark_qa_completed_flag(package_id, False, PERMISSIONS_USER)
         assert "qa_completed" in package_dict.get('package') and package_dict.get('package').get(
             "qa_completed") is False
+
+    @mock.patch('ckanext.hdx_package.helpers.analytics.g')
+    def test_qa_completed_tracking_analytics_dict(self, g_mock):
+        package_dict = self._get_action('package_show')({}, {'id': self.PACKAGE_ID})
+        yesterday = datetime.today() - timedelta(days=1)
+
+        g_mock.userobj.sysadmin = False
+        user_analytics_sender = QACompletedAnalyticsSender(package_dict, yesterday, mark_as_set=True)
+
+        user_mixpanel_meta = user_analytics_sender.analytics_dict.get('mixpanel_meta', {})
+
+        assert 'minutes since modified' in user_mixpanel_meta, "minutes since modified should be present"
+        assert 'user id' not in user_mixpanel_meta, "user id should not be present for non-sysadmin"
+
+        g_mock.userobj.sysadmin = True
+        sysadmin_analytics_sender = QACompletedAnalyticsSender(package_dict, yesterday, mark_as_set=True)
+
+        sysadmin_mixpanel_meta = sysadmin_analytics_sender.analytics_dict.get('mixpanel_meta', {})
+
+        assert 'minutes since modified' in sysadmin_mixpanel_meta, "minutes since modified should be present"
+        assert 'user id' in sysadmin_mixpanel_meta, "user id should be present for sysadmin"
 
     def _package_patch_qa_completed_flag(self, package_id, qa_completed, user):
         context = {
