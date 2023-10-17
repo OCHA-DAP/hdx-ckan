@@ -425,6 +425,9 @@ def package_metadata(id):
             return output
     except NotFound:
         return abort(404, _('Dataset not found'))
+    except NotAuthorized:
+        return abort(404, _('Dataset not found'))
+
     return abort(404, _('Invalid file format'))
 
 
@@ -485,6 +488,8 @@ def resource_metadata(id, resource_id):
 
             return output
     except NotFound:
+        return abort(404, _('Resource not found'))
+    except NotAuthorized:
         return abort(404, _('Resource not found'))
     return abort(404, _('Invalid file format'))
 
