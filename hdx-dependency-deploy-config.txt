@@ -12,10 +12,10 @@ HDX_GISAPI_URL=https://gallery.ecr.aws/unocha/hdx-postile/
 HDX_GISAPI_TAG=1.0.5
 
 HDX_GISLAYER_URL=https://gallery.ecr.aws/unocha/hdx-gislayer/
-HDX_GISLAYER_TAG=0.8.8
+HDX_GISLAYER_TAG=0.8.9
 
 HDX_GISWORKER_URL=https://gallery.ecr.aws/unocha/hdx-gisworker/
-HDX_GISWORKER_TAG=0.8.8
+HDX_GISWORKER_TAG=0.8.9
 
 HDX_QAINGEST_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-qa-ingest/
 HDX_QAINGEST_TAG=0.1.2
@@ -27,4 +27,4 @@ HDX_N8N_IMAGE_URL=https://gallery.ecr.aws/unocha/hdx-n8n/
 HDX_N8N_IMAGE_TAG=0.2.0
 
 HDX_N8N_WORKFLOW_URL=https://github.com/OCHA-DAP/hdx-n8n-qa-workflow
-HDX_N8N_WORKFLOW_TAG=0.2.1
+HDX_N8N_WORKFLOW_TAG=0.2.2

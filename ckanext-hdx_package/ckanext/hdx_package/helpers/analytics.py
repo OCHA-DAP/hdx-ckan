@@ -370,8 +370,9 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
             }
         }
 
-        if g.userobj.sysadmin and mark_as_set:
-            self.analytics_dict['mixpanel_meta']['user id'] = g.userobj.id
+        if mark_as_set:
+            if g.userobj.sysadmin:
+                self.analytics_dict['mixpanel_meta']['user id'] = g.userobj.id
 
             time_difference = datetime.datetime.utcnow() - metadata_modified
             self.analytics_dict['mixpanel_meta']['minutes since modified'] = int(time_difference.total_seconds()) / 60
