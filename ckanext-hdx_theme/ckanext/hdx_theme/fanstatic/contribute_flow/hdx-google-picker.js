@@ -1,58 +1,75 @@
-(function() {
+(function () {
   /**
    * Initialise a Google Picker
    */
-  var FilePicker = window.FilePicker = function(options) {
+  var FilePicker = window.FilePicker = function (options) {
     // Config
     this.apiKey = options.apiKey;
     this.clientId = options.clientId;
     this.scope = options.scope;
+    this.appId = options.appId;
     this.multiselect = options.multiselect || false;
-
+    this.tokenClient = null;
+    this.accessToken = null;
     // Events
     this.onSelect = options.onSelect;
 
-    // Load the APIs
-    gapi.load('auth', {'callback': this._authApiLoaded.bind(this)});
-    gapi.load('picker', {'callback': this._pickerApiLoaded.bind(this)});
+    // Load the Google API Loader script
+    this._loadApi();
   };
 
   FilePicker.prototype = {
-    open: function() {
+    open: function () {
       // Public method to open the picker.
+      // Request an access token
+      this.tokenClient.callback = async (response) => {
+        if (response.error !== undefined) {
+          throw (response);
+        }
+        this.accessToken = response.access_token;
+        await this._showPicker();
+      };
 
-      // Check if the user has already authenticated
-      var token = gapi.auth.getToken();
-      if (token) {
-        this._showPicker();
+      if (this.accessToken === null) {
+        // Prompt the user to select a Google Account and ask for consent to share their data
+        // when establishing a new session.
+        this.tokenClient.requestAccessToken({prompt: 'consent'});
       } else {
-        // The user has not yet authenticated with Google. We need to do the
-        // authentication before displaying the picker.
-        this._doAuth(false, function() { this._showPicker(); }.bind(this));
+        // Skip the display of the account chooser and consent dialog for an existing session.
+        this.tokenClient.requestAccessToken({prompt: ''});
       }
     },
 
-    _showPicker: function() {
-     // Show the file picker once authentication has been done.
-      var accessToken = gapi.auth.getToken().access_token;
-      this.picker = new google.picker.PickerBuilder()
-        .addView(google.picker.ViewId.DOCS)
+    /**
+     *  Create and render a Picker object.
+     */
+    _showPicker: function () {
+      // Show the file picker once authentication has been done.
+      const view = new google.picker.View(google.picker.ViewId.DOCS);
+      const picker = new google.picker.PickerBuilder()
+        .addView(view)
         .setDeveloperKey(this.apiKey)
-        .setOAuthToken(accessToken)
+        .setOAuthToken(this.accessToken)
+        .setAppId(this.appId)
+        .addView(new google.picker.DocsUploadView())
         .setCallback(this._pickerCallback.bind(this));
-      if (this.multiselect){
-        this.picker.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
+      if (this.multiselect) {
+        picker.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
       }
-      this.picker
+      picker
         .build()
         .setVisible(true);
 
     },
 
-    _pickerCallback: function(data) {
-      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-        if (this.multiselect){
-          for (var i = 0; i < data[google.picker.Response.DOCUMENTS].length; i++){
+    /**
+     * File details of the user's selection.
+     * @param {object} data - Containers the user selection from the picker
+     */
+    _pickerCallback: async function (data) {
+      if (data.action === google.picker.Action.PICKED) {
+        if (this.multiselect) {
+          for (var i = 0; i < data[google.picker.Response.DOCUMENTS].length; i++) {
             var doc = data[google.picker.Response.DOCUMENTS][i];
             var url = doc[google.picker.Document.URL];
             var filename = doc[google.picker.Document.NAME];
@@ -67,31 +84,42 @@
       }
     },
 
-    _pickerApiLoaded: function() {
-      // Called when the Google Drive file picker API has finished loading.
-      // console.log('picker api loaded');
+    _loadApi: function () {
+      const apiScript = document.createElement('script');
+      apiScript.src = 'https://apis.google.com/js/api.js';
+      apiScript.async = true;
+      apiScript.defer = true;
+      apiScript.onload = this._onApiLoad.bind(this);
+
+      document.head.appendChild(apiScript);
     },
 
-    _authApiLoaded: function() {
-      // Called when the Google Drive API has finished loading.
-      this._doAuth(true, function(response) {
-          if (response.error) {
-            //when the user didn't authorize HDX to use the Google Drive API the auth will fail with an error
-            //popup to login to Google and authorize will be shown when the user will try to use the uploader, but error is converted to warning
-            console.warn("Problem while trying to auth to Google Drive API: " + JSON.stringify(response));
-            return;
-          }
-        }
-      );
+    /**
+     * Callback after api.js is loaded.
+     */
+    _onApiLoad: function () {
+      gapi.load('client:picker', this._initializePicker.bind(this));
     },
 
-    _doAuth: function(immediate, callback) {
-      // Authenticate with Google Drive via the Google JavaScript API.
-      gapi.auth.authorize({
+    /**
+     * Callback after the API client is loaded. Loads the
+     * discovery doc to initialize the API.
+     */
+    _initializePicker: async function () {
+      await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+      this._initGoogleSignIn();
+    },
+
+    /**
+     * Callback after Google Identity Services are loaded.
+     */
+    _initGoogleSignIn: function () {
+      // Initialize Google Sign-In.
+      this.tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: this.clientId,
         scope: this.scope,
-        immediate: immediate
-      }, callback);
+        callback: '',
+      });
     }
   };
 }());

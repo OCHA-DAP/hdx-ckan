@@ -354,9 +354,13 @@ $(function(){
 
     function defaultGoogleDriveOptions() {
         return {
-            apiKey: 'AIzaSyDI2YqaXNwndxy6UEisT-5fUeJ2FMtz0VY',
-            clientId: '378410536565-mvin02sm8rbr0f8rq9q9injarh93ego4.apps.googleusercontent.com',
-            scope: 'https://www.googleapis.com/auth/drive.readonly',
+            // apiKey: 'AIzaSyDI2YqaXNwndxy6UEisT-5fUeJ2FMtz0VY',
+            // clientId: '378410536565-mvin02sm8rbr0f8rq9q9injarh93ego4.apps.googleusercontent.com',
+            // scope: 'https://www.googleapis.com/auth/drive.readonly',
+            apiKey: 'AIzaSyBZQzUOdODsKeohAXGmQph1ibFkB1R0hZA',
+            clientId: '753365812596-gn8o9b5sle97co4sac9htbcm1vkgupl5.apps.googleusercontent.com',
+            scope: 'https://www.googleapis.com/auth/drive.file',
+            appId: '753365812596',
         };
     }
 
