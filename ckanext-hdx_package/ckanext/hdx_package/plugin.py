@@ -7,7 +7,7 @@ import io
 import json
 import logging
 import ijson
-import six
+# import six
 
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.actions.create as hdx_create
@@ -40,7 +40,8 @@ config = tk.config
 get_action = tk.get_action
 navl_validate = tk.navl_validate
 ignore_empty = tk.get_validator('ignore_empty')
-text_type = six.text_type
+unicode_safe = tk.get_validator('unicode_safe')
+# text_type = six.text_type
 
 
 def run_on_startup():
@@ -143,7 +144,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'methodology_other': [tk.get_validator('not_empty_if_methodology_other'),
                                   tk.get_converter('convert_to_extras')],
-            'license_id': [tk.get_validator('not_empty'), text_type],
+            'license_id': [tk.get_validator('not_empty'), unicode_safe],
             'license_other': [tk.get_validator('not_empty_if_license_other'), tk.get_converter('convert_to_extras')],
             'solr_additions': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'subnational': [tk.get_validator('hdx_show_subnational'), tk.get_validator('ignore_missing'),
@@ -160,7 +161,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
                                 tk.get_converter('convert_to_extras')],
-            'author_email': [tk.get_validator('ignore_missing'), text_type],
+            'author_email': [tk.get_validator('ignore_missing'), unicode_safe],
             'customviz': {
                 'url': [tk.get_validator('hdx_is_url'), tk.get_validator('hdx_convert_list_item_to_extras')],
             },
@@ -209,15 +210,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema['resources'].update(
             {
-                'name': [tk.get_validator('not_empty'), text_type, tk.get_validator('remove_whitespace')],
+                'name': [tk.get_validator('not_empty'), unicode_safe, tk.get_validator('remove_whitespace')],
                 'format': [
                     tk.get_validator('hdx_detect_format'),
                     tk.get_validator('not_empty'),
                     tk.get_validator('hdx_to_lower'),
                     tk.get_validator('clean_format'),
-                    text_type
+                    unicode_safe
                 ],
-                'url': [tk.get_validator('not_empty'), text_type, tk.get_validator('remove_whitespace')],
+                'url': [tk.get_validator('not_empty'), unicode_safe, tk.get_validator('remove_whitespace')],
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),

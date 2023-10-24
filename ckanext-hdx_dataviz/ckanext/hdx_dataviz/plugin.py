@@ -1,14 +1,10 @@
-import six
-
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 import ckanext.showcase.logic.schema as showcase_schema
 
-# if not six.PY3:
 import ckanext.hdx_dataviz.views.dataviz as dataviz
-# else:
-#     dataviz = None
+
 import ckanext.hdx_dataviz.helpers.helpers as h
 import ckanext.hdx_dataviz.actions.auth as auth
 import ckanext.hdx_dataviz.actions.update as update
