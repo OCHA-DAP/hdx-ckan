@@ -354,10 +354,10 @@ $(function(){
 
     function defaultGoogleDriveOptions() {
         return {
-            apiKey: 'AIzaSyDI2YqaXNwndxy6UEisT-5fUeJ2FMtz0VY',
-            clientId: '378410536565-mvin02sm8rbr0f8rq9q9injarh93ego4.apps.googleusercontent.com',
+            apiKey: 'AIzaSyD_jaQn1BkqeA5Bua4GlC61DB-8p-Gwa7E',
+            clientId: '732730459122-896ieod4v4i9qdj8hq0vqj5mmlb13h0l.apps.googleusercontent.com',
             scope: 'https://www.googleapis.com/auth/drive.file',
-            appId: '378410536565',
+            appId: '732730459122',
         };
     }
 
