@@ -33,7 +33,7 @@
       if (this.accessToken === null) {
         // Prompt the user to select a Google Account and ask for consent to share their data
         // when establishing a new session.
-        this.tokenClient.requestAccessToken({prompt: 'consent'});
+        this.tokenClient.requestAccessToken({prompt: 'select_account'});
       } else {
         // Skip the display of the account chooser and consent dialog for an existing session.
         this.tokenClient.requestAccessToken({prompt: ''});

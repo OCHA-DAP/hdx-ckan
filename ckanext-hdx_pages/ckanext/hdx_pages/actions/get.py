@@ -90,6 +90,8 @@ def page_list(context, data_dict):
         query = query.offset(offset)
 
     query = query.filter_by(state='active')
+    if 'status' in data_dict:
+        query = query.filter_by(status=data_dict.get('status'))
     pages = query.all()
 
     page_dicts = []
@@ -160,6 +162,9 @@ def page_list_by_tag_id(context, data_dict):
     if 'id' in data_dict:
         page_id_list = PageTagAssociation.get_page_ids_for_tag(data_dict.get('id'))
         if page_id_list:
-            result = page_list(context, {'id_list': page_id_list})
+            if 'status' in data_dict:
+                result = page_list(context, {'id_list': page_id_list, 'status': data_dict.get('status')})
+            else:
+                result = page_list(context, {'id_list': page_id_list})
 
     return result
