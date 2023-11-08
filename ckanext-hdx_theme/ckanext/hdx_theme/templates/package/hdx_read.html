@@ -38,7 +38,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
 	{% endblock %}
-  <li class="active">{{ h.nav_link( pkg.title|truncate(120), named_route='hdx_dataset.read', id=pkg.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( pkg.title|truncate(120), named_route='hdx_dataset.read', id=pkg.name, highlight_actions = 'new index') }}</li>
 
 {% endblock %}
 
@@ -47,11 +47,11 @@
 
 
     {% block title_and_actions %}
-    <div class="col-xs-12 paddingLeftHack paddingRightHack {% block title_and_actions_container_class %}{% endblock %}">
+    <div class="col-12 paddingLeftHack paddingRightHack {% block title_and_actions_container_class %}{% endblock %}">
         <div class="row">
-            <div class="col-xs-8 {% block title_and_desc_container_class %}{% endblock %}">
+            <div class="col-8 {% block title_and_desc_container_class %}{% endblock %}">
                 <div class="row">
-                    <div class="col-xs-12 mTop35 mBottom30" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{pkg.id}}"{% endif %}>
+                    <div class="col-12 mTop35 mBottom30" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{pkg.id}}"{% endif %}>
                         <h1 class="itemTitle dataset-title">
                             {{ pkg.title or pkg.name }}
                             {% snippet 'package/snippets/package_status_labels.html', pkg=pkg %}
@@ -60,7 +60,7 @@
                 </div>
             {%  if pkg.page_list %}
                 <div class="row">
-                    <div class="col-xs-12 mTop_25 mBottom30">
+                    <div class="col-12 mTop_25 mBottom30">
                         <div class="itemSubTitle">
                             This dataset is part of
                             {% for page in pkg.page_list %}
@@ -73,7 +73,7 @@
             {%  if pkg.links_list %}
               {% for link in pkg.links_list %}
                 <div class="row">
-                    <div class="col-xs-12 mTop_25 mBottom30">
+                    <div class="col-12 mTop_25 mBottom30">
                         <div class="itemSubTitle">
                           {%  if link.label %}
                             {{ link.label }}
@@ -89,7 +89,7 @@
               {% endfor %}
             {% endif %}
                 <div class="row mBottom15">
-                    <div class="col-xs-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>
+                    <div class="col-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>
                         {% if pkg.notes %}
                         <div data-module="hdx_show_more" style="visibility:hidden" class="notes embedded-content">
                             {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
@@ -98,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-4 mTop35">
+            <div class="col-4 mTop35">
               {% block title_and_actions_right_side %}
                 {% set org_id = pkg.organization.name or pkg.owner_org %}
                 {% set org_title = pkg.organization.title %}
@@ -116,19 +116,19 @@
                 </div>
               {% endblock %}
             </div>
-            <div class="col-xs-12 align-bottom-right mTop20 mBottom15">
-                <ul class="pull-left dataset-resources ">
+            <div class="col-12 align-bottom-right mTop20 mBottom15">
+                <ul class="float-start dataset-resources ">
                     {% snippet 'search/snippets/package_icons.html', package=pkg%}
                 </ul>
-                {% snippet "package/snippets/package_actions_menu.html", pkg = pkg, membership=membership, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right' %}
+                {% snippet "package/snippets/package_actions_menu.html", pkg = pkg, membership=membership, is_indicator=False, classes='base-actions-menu followButtonContainer float-end' %}
                 {% if pkg.dataseries_name %}
-                  <div class="dataseries-info">{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset page">{{ pkg.dataseries_name }}</a></div>
+                  <div class="dataseries-info">{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization') }}" data-module="bs_tooltip" data-bs-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset page">{{ pkg.dataseries_name }}</a></div>
                 {% endif %}
             </div>
         </div>
     </div>
     {% endblock %}
-    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+    <div class="col-12 paddingLeftHack paddingRightHack">
       <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
       </div>
     </div>
@@ -137,7 +137,7 @@
 
     {% block pre_primary_content2 %}
       {% if pkg.customviz %}
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-12 paddingLeftHack paddingRightHack">
           <div class="row">
             {% snippet "package/snippets/custom_viz.html", customviz = pkg.customviz %}
           </div>
@@ -161,19 +161,20 @@
         </div>
     </div>
     {% endif %}
-    <div>
+    <div class="row">
+      <div class="col-12">
         <h2 class="uppercase">{{_('Related Showcases')}}</h2>
         {% snippet "package/snippets/related_list.html", pkg=pkg, user=c.userobj, showcases=showcase_list %}
-
+      </div>
+      <div class="col-12">
+            <h2 class="uppercase">{{_('Activity')}}</h2>
+         {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
+         <br>
+        {% if h.follow_status('dataset', pkg.name) %}
+          <span class="more">See more in <a href="{{ h.url_for('dashboard.index') }}">your dashboard</a></span>
+        {% endif %}
+      </div>
     </div>
-  <div>
-        <h2 class="uppercase">{{_('Activity')}}</h2>
-     {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
-     <br>
-    {% if h.follow_status('dataset', pkg.name) %}
-      <span class="more">See more in <a href="{{ h.url_for('dashboard.index') }}">your dashboard</a></span>
-    {% endif %}
-  </div>
 {% endblock %}
 
 {% block primary %}

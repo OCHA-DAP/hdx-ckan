@@ -17,8 +17,8 @@ function initMobileCarousel(){
     var carousel = $(".mobile-carousel")[0];
     if(carousel) {
       var hammer = new Hammer(carousel);
-      mobileCarouselItemWidth = $(carousel).find('.item').outerWidth(true);
-      var numItems = $(carousel).find('.item').length;
+      mobileCarouselItemWidth = $(carousel).find('.carousel-item').outerWidth(true);
+      var numItems = $(carousel).find('.carousel-item').length;
 
       hammer.on('swipeleft swiperight', function (ev) {
           if (ev.type=="swipeleft" && mobileCarouselCurrentItem < numItems){
@@ -55,17 +55,17 @@ function onCarouselPagination(el) {
 function initMobileCarouselPagination(){
     var carousel = $(".mobile-carousel")[0];
     $(carousel).find('.carousel-indicators').html('');
-    for (let i = 0; i < $(carousel).find('.item').length; i++){
-        $(carousel).find('.carousel-indicators').append(`<li data-idx="${i + 1}" onclick="onCarouselPagination(this);"></li>`);
+    for (let i = 0; i < $(carousel).find('.carousel-item').length; i++){
+        $(carousel).find('.carousel-indicators').append(`<button type="button" data-idx="${i + 1}" data-bs-target onclick="onCarouselPagination(this);"></button>`);
     }
-    $(carousel).find('.carousel-indicators li:first-child').addClass('active');
+    $(carousel).find('.carousel-indicators button:first-child').addClass('active');
     $(carousel).find('.carousel-indicators').show();
 }
 
 function setMobileCarouselPagination(id){
     var carousel = $(".mobile-carousel")[0];
-    $(carousel).find('.carousel-indicators li').removeClass('active');
-    $(carousel).find('.carousel-indicators li:nth-child('+id+')').addClass('active');
+    $(carousel).find('.carousel-indicators button').removeClass('active');
+    $(carousel).find('.carousel-indicators button:nth-child('+id+')').addClass('active');
 
 }
 

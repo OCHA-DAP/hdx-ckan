@@ -89,6 +89,11 @@ html {
           transform: translateX(-50%) translateY(-50%);
         }
       }
+      .create-step2 {
+        &.container {
+          max-width: none;
+        }
+      }
       > div {
         height: 100%;
         min-height: 760px;
@@ -258,15 +263,13 @@ html {
     }
   }
 }
-.form-group {
-  .format-label {
-    position: absolute;
-    margin-left: -10px;
-    margin-top: -12px;
-  }
-  .format-label + input {
-    padding-left: 45px;
-  }
+.format-label {
+  position: absolute;
+  margin-left: -10px;
+  margin-top: -12px;
+}
+.format-label + input {
+  padding-left: 45px;
 }
 
 .special-license {

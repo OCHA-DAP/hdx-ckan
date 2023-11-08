@@ -1,14 +1,14 @@
 {% macro followee_icon(type) -%}
   {% if type == 'dataset' %}
-    <i class="glyphicon glyphicon-sitemap"></i>
+    <i class="fa fa-sitemap"></i>
   {% elif type == 'user' %}
-    <i class="glyphicon glyphicon-user"></i>
+    <i class="fa fa-user"></i>
   {% elif type == 'group' %}
-    <i class="glyphicon glyphicon-group"></i>
+    <i class="fa fa-users"></i>
   {% endif %}
 {%- endmacro %}
 
-<div id="followee-filter" class="pull-right">
+<div id="followee-filter" class="float-end">
   <a href="#followee-popover" class="btn" title="{{ _('Activity from:') }} {{ context.context }}">
     <span class="lblnormal uppercase gothamBook12 grey mR35">{{ _('Activity from') }}</span>
     <span class="dpbold sspBold16 blue no-transform">{{ context.context }}</span>
@@ -23,14 +23,14 @@
     </div>
     {% if followees %}
       <ul class="nav nav-pills nav-stacked">
-        <li class="everything {% if context.selected_id == False %} active{% endif %}">
-          <a href="{{ h.url_for('dashboard.index') }}">
+        <li class="nav-item everything {% if context.selected_id == False %} active{% endif %}">
+          <a class="nav-link" href="{{ h.url_for('dashboard.index') }}">
             <span>Everything</span>
           </a>
         </li>
         {% for followee in followees %}
-          <li{% if context.selected_id == followee.dict.id %} class="active"{% endif %} data-search="{{followee.display_name|lower}}">
-            <a href="{{ h.url_for('dashboard.index', type=followee.type, name=followee.dict.name) }}" title="{{followee.display_name}}">
+          <li class="nav-item {% if context.selected_id == followee.dict.id %}active{% endif %}" data-search="{{followee.display_name|lower}}">
+            <a class="nav-link"  href="{{ h.url_for('dashboard.index', type=followee.type, name=followee.dict.name) }}" title="{{followee.display_name}}">
               {#{{followee_icon(followee.type)}}#}
               <span>{{followee.display_name}}</span>
             </a>

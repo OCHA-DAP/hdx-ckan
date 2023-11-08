@@ -1,11 +1,11 @@
 
-    <div class="panel-group hdx-panel-group" id="accordion-general" role="tablist" aria-multiselectable="false">
+    <div class="hdx-card-group" id="accordion-general" role="tablist" aria-multiselectable="false">
         {% for page in data %}
             {% set q_id = 'auto-%s-%s-q' | format(page.id, page.id) %}
             {% set a_id = 'auto-%s-%s-a' | format(page.id, page.id) %}
-            <div class="panel">
-                <div class="panel-heading" role="tab" id="{{ q_id }}">
-                    <h4 class="panel-title">
+            <div class="card">
+                <div class="card-header" role="tab" id="{{ q_id }}">
+                    <h4 class="card-title">
                         <a role="button" href="/{{page.type}}/{{page.name}}" class="faq-question-link">
                             {{ page.title | safe }} <i class="icon humanitarianicons-Out-of-platform"></i>
                         </a>

@@ -14,7 +14,7 @@
 @inputHeight: 44px;
 @inputPadding: @paddingSmall;
 
-.modal.request-data-modal, .modal.in.request-data-modal{
+.modal.request-data-modal, .modal.show.request-data-modal{
   display: block;
   //position: relative;
   height: 610px;
@@ -99,7 +99,7 @@
   }
 }
 
-.modal.request-data-modal, .modal.in.request-data-modal, .request-data-module {
+.modal.request-data-modal, .modal.show.request-data-modal, .request-data-module {
 
       .mtop5 {
         margin-top: 5px;
@@ -697,7 +697,7 @@
 
   .requested-data-container__content-item--requested-by-info {
     margin-right: 30px !important;
-    .glyphicon-warning-sign {
+    .fa-exclamation-triangle {
       color: orange;
       margin-left: 2px;
       margin-right: 2px;
@@ -717,7 +717,7 @@
 }
 
 @media (max-width: @cut-point-tablet) {
-  .modal.in.request-data-modal {
+  .modal.show.request-data-modal {
     height: max-content;
     max-height: 100vh;
     .request-data-modal-content .request-data-modal-body .request-data-two-cols {

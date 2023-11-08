@@ -214,11 +214,11 @@ ckan.module('hdx-modal-form', function($) {
 
           if(this.value === 'other') {
             $otherField.attr('required', this.getAttribute('required'));
-            $otherFieldContainer.removeClass('hidden');
+            $otherFieldContainer.removeClass('d-none');
           }
           else {
             $otherField.removeAttr('required').val('');
-            $otherFieldContainer.addClass('hidden');
+            $otherFieldContainer.addClass('d-none');
           }
         },
         _organizationOnChange: function(event) {
@@ -274,7 +274,7 @@ ckan.module('hdx-modal-form', function($) {
         },
         _showSuccessMsg: function(msg) {
             var div = document.createElement('div');
-            div.className = "alert alert-success alert-dismissable fade in";
+            div.className = "alert alert-success alert-dismissable fade show";
             div.id = 'request-success-container';
             div.textContent = msg;
             div.style.marginTop = '25px';

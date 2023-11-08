@@ -16,28 +16,28 @@
 {% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
 {% block resource_item_edit %}
   <div class="more-options">
-    <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+    <a data-bs-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
       <i class="humanitarianicons-More-options"></i>
     </a>
-    <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
-      <li>
+    <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+      <li class="dropdown-item">
         <a onclick="runPIICheck('{{ res.id }}')">Run PII Check</a>
       </li>
-      <li>
+      <li class="dropdown-item">
         <a onclick="openSDCMicro('{{ pkg.name }}', '{{ res.id }}', '{{ res.url }}')">Run SDC Micro</a>
       </li>
-      <li>
+      <li class="dropdown-item">
         <a href="{{ h.url_for('resource.read', id=pkg.name, resource_id=res.id) }}" target="_blank">Preview</a>
       </li>
       {% if h.check_access('hdx_resource_download', res) %}
-        <li>
+        <li class="dropdown-item">
           <a href="{{ res.hdx_rel_url }}">Download</a>
         </li>
       {% endif %}
-      <li>
+      <li class="dropdown-item">
         <a onclick="updateQuarantine('{{ res.id }}', {% if res.in_quarantine %}false{% else %}true{% endif %});">{% if res.in_quarantine %}Remove from{% else %}Add to{% endif %} Quarantine</a>
       </li>
-      <li>
+      <li class="dropdown-item">
         <a onclick="updateBrokenLink('{{ res.id }}', {% if res.broken_link %}false{% else %}true{% endif %});">{% if res.broken_link %}Unmark{% else %}Mark{% endif %} as Broken Link</a>
       </li>
     </ul>

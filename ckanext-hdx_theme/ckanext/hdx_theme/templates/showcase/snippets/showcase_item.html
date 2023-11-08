@@ -17,7 +17,7 @@ truncate_title - The length to truncate the title to (default: 80).
 
 {% block package_item %}
 {% set img_url = package.image_display_url or package.img_url %}
-<div class="{% if dataset %} col-xs-12 {% else %} col-xs-3 {% endif %}">
+<div class="{% if dataset %} col-12 {% else %} col-3 {% endif %}">
 
     <div class="showcase-item">
       <a href="{{url}}" {% if has_url %} target="_blank" {% endif %}>

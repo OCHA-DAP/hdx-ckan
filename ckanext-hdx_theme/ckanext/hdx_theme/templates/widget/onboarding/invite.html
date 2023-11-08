@@ -26,7 +26,7 @@ Example:
 {% block notification_content %}
     <div class="invite-widget">
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-6">
                 <div class="large-title">Invite friends & colleagues</div>
                 <div class="mTop30">HDX is used in over 200 countries and territories. Help us connect more data and people by introducing HDX to your network.</div>
                 <div class="mTop20">
@@ -46,13 +46,13 @@ Example:
                     </form>
                 </div>
             </div>
-            <div class="col-xs-6">
+            <div class="col-6">
                 <img class="gif lazyload" style="width: 330px;" data-src="/images/onboarding/invitefriends.gif">
             </div>
         </div>
     </div>
     <div class="bottom-actions">
-        <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-        <input class="mL35 btn btn-primary btn-large pull-right" type="button" onclick="$('#invite-form').submit();" value="Next">
+        <input class="btn btn-empty btn-empty-black btn-large float-start" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
+        <input class="mL35 btn btn-primary btn-large float-end" type="button" onclick="$('#invite-form').submit();" value="Next">
     </div>
 {% endblock %}

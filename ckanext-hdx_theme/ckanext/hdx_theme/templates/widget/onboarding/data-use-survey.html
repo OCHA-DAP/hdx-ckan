@@ -28,8 +28,8 @@ Example:
         <div id="dataUseSurveyPkgId" style="visibility:hidden;position:absolute;">{{ pkg.id }}</div>
         <div id="dataUseSurveyPkgUrl" style="visibility:hidden;position:absolute;">{{ h.url_for('dataset.read', id=pkg.name, qualified='true') }}</div>
         <div id="dataUseSurveyOrgName" style="visibility:hidden;position:absolute;">{{ pkg.organization.name }}</div>
-        <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Not now">
-        <a href="#"  class="mL35 btn btn-primary btn-primary-small btn-large pull-right" type="button" value="Take survey">Take the survey</a>
+        <input class="btn btn-empty btn-empty-black btn-large float-start" type="button" onclick="closeCurrentWidget(this);" value="Not now">
+        <a href="#"  class="mL35 btn btn-primary btn-primary-small btn-large float-end" type="button" value="Take survey">Take the survey</a>
       </div>
     </div>
     <iframe style="display: none;"></iframe>

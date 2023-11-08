@@ -10,17 +10,17 @@
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
 {#    {% snippet "snippets/other_breadcrumb_item.html", title=page.type, 'hdx_' + page.type + '.read_' + page.type, id=page.name, position=2 %}#}
-    <li property="itemListElement" typeof="ListItem">{{ _('Event') }}
+    <li class="breadcrumb-item" property="itemListElement" typeof="ListItem">{{ _('Event') }}
     </li>
 	{% endblock %}
-  <li class="active">{{ h.nav_link( page.title|truncate(120), 'hdx_' + page.type + '.read_' + page.type, id=page.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( page.title|truncate(120), 'hdx_' + page.type + '.read_' + page.type, id=page.name, highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block content %}
 <div class="custom-page-light">
   <div class="container">
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
         <h1>{{ page.title }}</h1>
         {% for section in page.sections %}
           {% if section.type == 'data_list' %}
@@ -30,7 +30,7 @@
           {% elif section.type == 'description' %}
             {% if section.long_description %}
                 <div class="row mTop8">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <span>{{ h.render_markdown(section.long_description) }}</span>
                     </div>
                 </div>
@@ -47,14 +47,14 @@
             {% if section.description %}
               <div class="section-description">
                 <div class="row">
-                  <div class="col-xs-12">
+                  <div class="col-12">
                       <span>{{ section.description }}</span>
                   </div>
                 </div>
               </div>
             {% endif %}
             <div class="row">
-              <div class="col-xs-12 section-body">
+              <div class="col-12 section-body">
                 <div class="data-viewer-error">
                 </div>
                 <iframe class="fold {% if (section.type != 'key_figures') and (page.sections|length > 1) %}closed{% endif %}" data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""

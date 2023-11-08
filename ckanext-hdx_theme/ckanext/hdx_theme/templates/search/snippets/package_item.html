@@ -6,19 +6,19 @@
     <div class="dataset-pre-content">
       <div class="list-items dataset-content dataset-content2">
         <div class="row">
-          <div class="{{column_class or 'col-xs-6'}}">
+          <div class="{{column_class or 'col-6'}}">
             {% block pre_icon %}
             {% endblock %}
             <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
               {% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
               {% if popular %}
-                <span class="popular humanitarianicons-Trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                <span class="popular humanitarianicons-Trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
               {% endif %}
               {% if is_metadata_only %}
                 {% block metadata_only_icon %}
                   <i class="restricted humanitarianicons-Physical-closure"
                      title="{{ _('This data is by request only') }}" data-module="bs_tooltip"
-                     data-module-placement="top" data-toggle="tooltip"
+                     data-module-placement="top" data-bs-toggle="tooltip"
                   ></i>
                 {% endblock %}
               {% endif %}
@@ -31,11 +31,11 @@
                 {% endif %}
                 {{ h.link_to(h.truncate(title, truncate_title), current_package_url) }}
                 {% if package.private %}
-                   <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                   <span class="hdx-ds-title-icon fa fa-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
                 {% endif %}
               {% endblock %}
               {% if package.archived %}
-                <i class="hdx-ds-title-icon icon humanitarianicons-Folder" title="{{ _('A dataset is archived when it is no longer being actively updated, but remains available primarily for historical purposes') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"></i>
+                <i class="hdx-ds-title-icon icon humanitarianicons-Folder" title="{{ _('A dataset is archived when it is no longer being actively updated, but remains available primarily for historical purposes') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></i>
               {% endif %}
             </div>
             {% block updated_placeholder %}
@@ -63,7 +63,7 @@
                       {% if h.hdx_dataset_is_hxl(package.tags) %}
                         <a href="{% url_for 'hdx_dataset.search', ext_hxl=1 %}">
                           <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
-                                data-module-placement="top" data-toggle="tooltip">
+                                data-module-placement="top" data-bs-toggle="tooltip">
                           </span>
                         </a>
                       {% endif %}
@@ -77,12 +77,12 @@
                       {% if package.has_quickcharts %}
                           <a href="{% url_for 'hdx_dataset.search', ext_quickcharts=1 %}">
                               <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
-                                    data-module-placement="top" data-toggle="tooltip"></span>
+                                    data-module-placement="top" data-bs-toggle="tooltip"></span>
                           </a>
                       {% endif %}
 
                       {% if package.approx_total_downloads  %}
-                        <span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span>
+                        <span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span>
                       {% endif %}
 
                     </div>
@@ -111,7 +111,7 @@
                       {% elif package.type == 'dataset' and package.data_update_frequency %}
                           <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
                           {%  if package.is_fresh %}
-                            <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></a>
+                            <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></a>
                           {% endif %}
                       {% endif %}
                     </div>
@@ -119,7 +119,7 @@
                   {% block owner_dataseries %}
                     {% if package.dataseries_name %}
                       <div class="dataset-dataseries">
-                        <span>{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization') }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset list page">{{ package.dataseries_name }}</a></span>
+                        <span>{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization') }}" data-module="bs_tooltip" data-bs-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=package.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset list page">{{ package.dataseries_name }}</a></span>
                       </div>
                     {% endif %}
                   {% endblock %}
@@ -164,7 +164,7 @@
             </div>
           </div>
           {% block second_column_div %}
-          <div class="{{column_class or 'col-xs-6'}}">
+          <div class="{{column_class or 'col-6'}}">
             {% block dataset_right_side %}
               <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
                 {% block description %}
@@ -228,7 +228,7 @@
           </div>
           {% endblock %}
           {% if package.batch_length and package.batch_length > 0 %}
-            <div class="col-xs-12 stacked-info">
+            <div class="col-12 stacked-info">
               <a href="{{package.batch_url}}" target="_blank">
                 Show {{ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) }} from
                 {{ package.organization.title or package.organization.name }} <i class="icon humanitarianicons-Out-of-platform"></i>

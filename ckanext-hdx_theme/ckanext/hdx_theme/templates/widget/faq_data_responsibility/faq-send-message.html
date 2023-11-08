@@ -35,7 +35,7 @@ Example:
     <div id="faq-send-message">
         <form id="faq-send-message-form">
             <div class="row" style="overflow: hidden; height: 400px;">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <!--<div class="bold-regular-text">Please fill out the following: </div>-->
 {#                    <select class="required" id="topics-selector" name="topic">#}
 {#                        <option id="" value="">Your question is regarding ...</option>#}
@@ -58,7 +58,7 @@ Example:
                 </div>
             </div>
             <div class="right-side-actions">
-                <input class="btn btn-primary btn-large mL45 pull-right hdx-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="faqSendMessageOnSubmit" data-size="invisible" data-badge="inline">
+                <input class="btn btn-primary btn-large mL45 float-end hdx-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="faqSendMessageOnSubmit" data-size="invisible" data-badge="inline">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
             </div>
         </form>

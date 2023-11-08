@@ -31,10 +31,10 @@
 {#        {% set sort_param = request.params.get('sort') %}#}
 {#        {% set sorting_selected = sorting_selected or (sort_param if sort_param else 'title asc') %}#}
         {% set sorting_selected = sorting_selected or h.hdx_get_request_param('sort', 'title asc') %}
-        <div class="form-select control-group control-order-by pull-right">
+        <div class="control-order-by float-end">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
             <div class="dropdown orderDropdown" data-module-additional="#{{sectionAnchor}}">
-                <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+                <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown" style="background-color: transparent;">
                     <span class="dropdown-toggle-text">
                     {% for label, value in sorting %}
                     {% if sorting_selected == value %} {{ label }} {% endif %}
@@ -42,17 +42,17 @@
                     </span>
                     <i class="humanitarianicons-Down"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+                <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">
                     {% for label, value in sorting %}
                         {% if label and value %}
-                            <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                            <li class="dropdown-item"><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
             </div>
         </div>
         {% if is_display_limit %}
-          <span class="mL15 list-header-showall pull-right mR45">
+          <span class="mL15 list-header-showall float-end mR45">
               {% set limits = [25, 50, 100] %}
 {#              {% set limit_param = request.params.get('limit') %}#}
 {#              {% set limit_selected = limit_param if limit_param else 25 %}#}

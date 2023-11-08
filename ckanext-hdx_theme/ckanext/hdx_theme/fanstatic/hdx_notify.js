@@ -40,7 +40,7 @@
    * Returns the element.
    */
   notify.create = function (title, message, type) {
-    var alert = jQuery('<div class="alert fade in"><strong></strong> <span></span></div>');
+    var alert = jQuery('<div class="alert fade alert-dismissible show"><strong></strong> <span></span></div>');
     alert.addClass('alert-' + (type || 'error'));
     alert.find('strong').text(title);
     alert.find('span').text(message);
@@ -58,8 +58,8 @@
     // Changed BY HDX to not call the alert() function because of incompatibility
     // with bootstrap 3
     // if it doesn't have the close button, append it
-    if(!element.find('a.close').length) {
-      return element.append(jQuery('<a class="close" href="#">&times;</a>'));
+    if(!element.find('.btn-close').length) {
+      return element.append(jQuery('<a class="btn-close float-end" data-bs-dismiss="alert" href="#"></a>'));
     }
     return element;
   };
@@ -71,7 +71,7 @@
 
   // Watch for close clicks and remove the alert.
   notify.el.on('click', '.close', function () {
-    jQuery(this).parent().alert('close');
+    // jQuery(this).parent().alert('close');
   });
 
   // Export the objects.

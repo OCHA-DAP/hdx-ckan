@@ -19,9 +19,6 @@
   margin-bottom: -3px;
 }
 /* END Alter page-header style */
-.nav-tabs {
-  border-bottom: 3px solid #eeeeee;
-}
 .nav-tabs.inverted {
   border-bottom: none;
   border-top: 3px solid #eeeeee;
@@ -29,9 +26,9 @@
 .nav-tabs.inverted > li {
   margin-bottom: 0;
 }
-.nav-tabs.inverted > li.active > a,
-.nav-tabs.inverted > li.active > a:hover,
-.nav-tabs.inverted > li.active > a:focus {
+.nav-tabs.inverted > li > .nav-link.active,
+.nav-tabs.inverted > li > .nav-link.active:hover,
+.nav-tabs.inverted > li > .nav-link.active:focus {
   margin-top: -3px;
   border: none;
   border-top: 3px solid #eeeeee;
@@ -46,10 +43,7 @@
 .nav-tabs.nav-tabs-gray > li.active > a {
   background-color: inherit;
 }
-.nav-tabs > li {
-  margin-bottom: -3px;
-}
-.nav-tabs > li > a {
+.nav-tabs > li > .nav-link {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -58,18 +52,16 @@
   letter-spacing: 0.03em;
   color: #888888;
   border: none;
+  border-bottom: 3px solid #eeeeee;
   border-radius: 0;
 }
-.nav-tabs > li > a:hover {
+.nav-tabs > li > .nav-link.active,
+.nav-tabs > li > .nav-link.active:hover,
+.nav-tabs > li > .nav-link.active:focus {
+  border-bottom-color: #f2645a;
   color: #f2645a;
 }
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-  border: none;
-  background-color: inherit;
-  border-bottom: 3px solid #eeeeee;
-  border-bottom-color: #f2645a;
+.nav-tabs > li > .nav-link:hover {
   color: #f2645a;
 }
 .nav-tabs .hdx-tab-button i {

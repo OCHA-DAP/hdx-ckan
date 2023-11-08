@@ -9,25 +9,25 @@
   {% if h.hdx_dataset_is_hxl(package.tags) %}
     <a href="{% url_for 'hdx_dataset.search', ext_hxl=1 %}">
       <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
-            data-module-placement="top" data-toggle="tooltip">
+            data-module-placement="top" data-bs-toggle="tooltip">
       </span>
     </a>
   {% endif %}
   {% if package.has_quickcharts %}
     <a href="{% url_for 'hdx_dataset.search', ext_quickcharts=1 %}">
         <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
-              data-module-placement="top" data-toggle="tooltip"></span>
+              data-module-placement="top" data-bs-toggle="tooltip"></span>
     </a>
   {% endif %}
   {% if popular %}
-    <span class="popular humanitarianicons-Trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+    <span class="popular humanitarianicons-Trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
   {% endif %}
 {% endblock %}
 
 
 {% block other_info %}
   {% if package.approx_total_downloads  %}
-    <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
+    <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
   {% endif %}
 
   {% if package.is_requestdata_type %}
@@ -36,7 +36,7 @@
     <li class="label-icons">
       <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
       {%  if package.is_fresh %}
-        <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></a>
+        <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></a>
       {% endif %}
     </li>
   {% endif %}

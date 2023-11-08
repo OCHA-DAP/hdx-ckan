@@ -1,5 +1,5 @@
 function file_upload_selected(){
-  $('#field-url').closest('.control-group').hide();
+  $('#field-url').closest('.mb-3').hide();
   $('#field-resource-type-upload').click();
 }
 
@@ -20,7 +20,7 @@ $(document).ready(function(){
 
 
  		$('#field-link-upload').click(function(){
-        	$('#field-url').closest('.control-group').show();
+        	$('#field-url').closest('.mb-3').show();
     	});
 
 		$('#mx-file').change(function (e) {

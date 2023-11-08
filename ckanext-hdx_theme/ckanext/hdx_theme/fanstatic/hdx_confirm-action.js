@@ -16,7 +16,7 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
         '<div class="modal-dialog">',
 		'<div class="modal-content">',
         '<div class="modal-header">',
-        '<button type="button" class="close" data-dismiss="modal">×</button>',
+        '<button type="button" class="btn-close float-end" data-bs-dismiss="modal"></button>',
         '<h3 class="modal-title"></h3>',
         '</div>',
         '<div class="modal-body"></div>',

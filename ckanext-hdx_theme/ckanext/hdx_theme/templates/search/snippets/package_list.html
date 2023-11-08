@@ -63,7 +63,7 @@ Example:
           <div class="list-header-showall filter-pagination control-order-by control-items-per-page">
             <label for="field-order-by" class="uppercase">{{ _('Show') }}</label>
             <div class="dropdown orderDropdown">
-               <a class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+               <a class="sspBold16" data-bs-toggle="dropdown" style="background-color: transparent;">
                 <span class="dropdown-toggle-text">
                   {% for value in limits %}
                     {% if limit_selected|int == value %} {{ value }} {% endif %}
@@ -71,9 +71,9 @@ Example:
                 </span>
                 <i class="humanitarianicons-Down"></i>
                </a>
-              <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+              <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">
                 {% for value in limits %}
-                  <li>
+                  <li class="dropdown-item">
                     <input id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}><label for="ext_page_size_{{value}}">{{value}}</label>
                   </li>
                 {% endfor %}
@@ -85,25 +85,25 @@ Example:
 </form>
 
 <div class="row">
-    <form id="search-page-filters-form" autocomplete="off">
-    <div id="search-page-filters" class="col-xs-3">
-        <div class="filter-title">
-            Refine your search: <a href="{{current_page_url}}" class="filter-clear pull-right">Clear all</a>
-        </div>
+    <div id="search-page-filters" class="col-3">
+      <form id="search-page-filters-form" autocomplete="off">
+          <div class="filter-title">
+              Refine your search: <a href="{{current_page_url}}" class="filter-clear float-end">Clear all</a>
+          </div>
 
-        {% set facet_list = full_facet_info.get('facets') %}
-        {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
+          {% set facet_list = full_facet_info.get('facets') %}
+          {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
+          {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
+          {%  if ext_after_metadata_modified %}
+              <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+          {% endif %}
+          {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
+          {% if ext_batch %}
+              <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
+          {% endif %}
+      </form>
     </div>
-        {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
-        {%  if ext_after_metadata_modified %}
-            <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
-        {% endif %}
-        {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
-        {% if ext_batch %}
-            <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
-        {% endif %}
-    </form>
-    <div id="search-page-results" class="col-xs-9">
+    <div id="search-page-results" class="col-9">
         {% if packages %}
             <div class="search-list">
                 {% block search_list %}
@@ -114,12 +114,12 @@ Example:
                         <div class="dataset-pre-content">
                           <div class="list-items dataset-content">
                             <div class="row">
-                              <div class="col-xs-6">
+                              <div class="col-6">
                               </div>
-                              <div class="col-xs-6">
+                              <div class="col-6">
                                 <div class="row">
-                                  <div class="col-xs-6">Expected dataset update:</div>
-                                  <div class="col-xs-6">Actions:</div>
+                                  <div class="col-6">Expected dataset update:</div>
+                                  <div class="col-6">Actions:</div>
                                 </div>
                               </div>
                             </div>

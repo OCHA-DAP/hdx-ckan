@@ -11,7 +11,7 @@
 {% block subtitle %}{{ _('Organisations') }}{% endblock %}
 
 {% block breadcrumb_content %}
-<li class="active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
+<li class="breadcrumb-item active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
 {% endblock %}
 
 
@@ -35,10 +35,10 @@
           </div>
 
           {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
-          <div class="form-select control-group control-order-by">
+          <div class="form-select control-order-by">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
             <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
-              <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+              <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown" style="background-color: transparent;">
                 <span class="dropdown-toggle-text">
                 {% for label, value in sorting %}
                   {% if sorting_selected == value %} {{ label }} {% endif %}
@@ -49,7 +49,7 @@
               <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
                 {% for label, value in sorting %}
                 {% if label and value %}
-                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                <li class="dropdown-item"><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
                 {% endif %}
                 {% endfor %}
               </ul>
@@ -71,10 +71,10 @@
         </div>
       </div>
 
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="list-header crisis-list-header">
           <span class="mL15 list-header-title">{{ _("Organisations") }} [{{page.item_count}}]</span>
-          <div class="show-filters pull-right">
+          <div class="show-filters float-end">
             Show filters:
             <a href="#" onclick="$('.mobile-facets').show();">
               <span class="checkbox-slider" style="display: inline-block; top: 6px;">

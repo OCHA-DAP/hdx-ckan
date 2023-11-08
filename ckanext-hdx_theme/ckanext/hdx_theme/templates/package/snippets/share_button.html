@@ -12,7 +12,7 @@
 {% set analytics_shared_item = analytics_shared_item or 'dataset' %}
 
 {% if direct %}
-	<span class="{% if not disable_pull_left %}pull-left {% endif %} direct-share-links" style="font-size: {{icon_font_size}}; min-width: 130px;" id="{{ dataset_social }}" target-url="{{url}}">
+	<span class="{% if not disable_pull_left %}float-start {% endif %} direct-share-links" style="font-size: {{icon_font_size}}; min-width: 130px;" id="{{ dataset_social }}" target-url="{{url}}">
 		<a style="font-size:{{icon_font_size}};" href="https://X.com/share?url={{url}}" target="_blank" title="X"
            class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="twitter">
       <i class="icon-x-social"></i>
@@ -40,7 +40,7 @@
 	  {% endif %}
 	</a>
 	<span id="{{ dataset_social_wrapper }}" class="popover-wrapper change-link-wrapper mx-analytics-wrapper"></span>
-	<span style="display: none;" class="pull-left resource-social change-link-wrapper" id="{{ dataset_social }}">
+	<span style="display: none;" class="float-start resource-social change-link-wrapper" id="{{ dataset_social }}">
 		<div style="min-width: 130px;">
 			<a style="font-size: 28px;" href="https://twitter.com/share?url={{url}}" target="_blank" title="Twitter"
                class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="twitter">

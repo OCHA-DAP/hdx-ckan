@@ -15,6 +15,12 @@
       display: none;
     }
     @media (max-width: @cut-point-tablet) {
+      .navbar-toggler {
+        position: absolute;
+        right: 0;
+        border: 0;
+        box-shadow: none;
+      }
       .navbar-toggle {
         margin: 6px 0 0;
         padding: 16px;
@@ -47,6 +53,7 @@
     }
 
     .navbar-collapse {
+      z-index: 9999;
       background-color: rgba(0, 0, 3, 0.8);
       display: none !important;
       left: 0;
@@ -56,10 +63,10 @@
       width: 100%;
       height: 100vh;
 
-      &.in, &.collapsing {
+      &.show, &.collapsing {
         display: block !important;
       }
-      &.in {
+      &.show {
         min-height: 100vh !important;
       }
 

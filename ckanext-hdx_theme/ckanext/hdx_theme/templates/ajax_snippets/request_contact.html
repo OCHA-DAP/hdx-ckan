@@ -9,7 +9,7 @@
   <div class="modal-content request-data-modal-content">
     <div class="modal-body request-data-modal-body">
       <div class="row two-cols request-data-two-cols">
-        <div class="col-sm-6 col-xs-12 left-col">
+        <div class="col-sm-6 col-12 left-col">
           <div class="large-title">
             Request access
           </div>
@@ -20,7 +20,7 @@
             Tell them about your work and why you would like to use their data.
           </div>
         </div>
-        <div class="col-sm-6 col-xs-12 right-col">
+        <div class="col-sm-6 col-12 right-col">
           <div class="paddingfix">
             <div class="ds-title">
               Dataset {{ package_name }}
@@ -50,7 +50,7 @@
                   <option value="other" {% if not user_orgs %}selected="selected"{% endif %}>{{ _('Other...') }}</option>
                 </select>
               </div>
-              <div class="control mTop20 {% if user_orgs %}hidden{% endif %}">
+              <div class="control mTop20 {% if user_orgs %}d-none{% endif %}">
                 <input id="field-organization-other" name="sender_organization_id_other" class="full-width required" type="text" value="">
                 <label for="field-organization-other">Organization</label>
               </div>
@@ -62,7 +62,7 @@
                   {% endfor %}
                 </select>
               </div>
-              <div class="control mTop20 hidden">
+              <div class="control mTop20 d-none">
                 <input id="field-organization-type-other" name="sender_organization_type_other" class="full-width required" type="text" value="">
                 <label for="field-organization-type-other">Organization type</label>
               </div>
@@ -83,7 +83,7 @@
                   <option value="other">Other...</option>
                 </select>
               </div>
-              <div class="control mTop20 hidden">
+              <div class="control mTop20 d-none">
                 <input id="field-intend-message-other" name="sender_intend_other" class="full-width required" type="text" value="">
                 <label for="field-intend-message-other">Intended use of this data</label>
               </div>

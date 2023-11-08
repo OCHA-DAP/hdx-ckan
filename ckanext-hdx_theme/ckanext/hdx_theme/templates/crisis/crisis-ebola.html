@@ -4,7 +4,7 @@
 {% block subtitle %}{{ _("Ebola crisis page") }}{% endblock %}
 {% block crisis_title %} {{ _("West Africa Ebola Outbreak 2014") }} {% endblock %}
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Ebola'), named_route='hdx_ebola.read') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Ebola'), named_route='hdx_ebola.read') }}</li>
 {% endblock %}
 
 
@@ -23,10 +23,10 @@
 
   <div id="cases-datastore-id" style="display: none">{{ data.cases_datastore_id }}</div>
   <div class="row mTop25">
-    <div class="col-xs-12 item-info-title">
+    <div class="col-12 item-info-title">
       Week by Week Spread of Ebola in West Africa
     </div>
-    <div class="col-xs-12">
+    <div class="col-12">
       <div id="ebola_graph"></div>
     </div>
   </div>

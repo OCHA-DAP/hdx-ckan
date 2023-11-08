@@ -2,7 +2,7 @@
 
 {% block header_content %}
 <!-- MOBILE NAV START -->
-<nav class="navbar navbar-static-top new-header" role="navigation">
+<nav class="navbar navbar-static-top new-header d-block" role="navigation">
     {% include "header-global.html" %}
     <div class="hdx-header">
     <div class="container">
@@ -10,7 +10,7 @@
           <div class="hdxLogo">
               <a class="logo" href="/" aria-label="Humanitarian Data Exchange Logo"><div class="logo-img"></div><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
           </div>
-          <div class="header-nav-search table-valign pull-left">
+          <div class="header-nav-search table-valign float-start">
             <div id="previous-searches" style="display: none;">
                 {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) }}
             </div>
@@ -25,19 +25,16 @@
               </div>
             </form>
           </div>
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+            <button class="navbar-toggler d-block d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-controls="bs-example-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
             </button>
-
             <ul class="mainLinks">
             {% block header_site_navigation_tabs %}
             <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Data') }}</a></li>
             <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Locations') }}</a></li>
             <li><a href="{{ orgLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Organisations') }}</a></li>
             <li style="position: relative">
-              <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+              <a href="#" data-bs-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
                 <span id="crises-label" >{{ _('Dataviz') }} <i class="humanitarianicons-Down"></i></span>
               </a>
               <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">

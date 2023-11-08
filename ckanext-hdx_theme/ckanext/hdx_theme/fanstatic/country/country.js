@@ -94,7 +94,7 @@ function drawMap() {
 }
 
 function c3ActiveSparklineRedraw() {
-  $('.carousel-inner .item.active .sparkline').each(function() {
+  $('.carousel-inner .carousel-item.active .sparkline').each(function() {
     var th = $(this);
     var chart = th.data("chart");
     th.css("overflow", "hidden");
@@ -155,7 +155,7 @@ function c3Sparklines(){
       }
     });
     th.data("chart", chart);
-    if (th.parents(".item.active").length === 0) {
+    if (th.parents(".carousel-item.active").length === 0) {
       th.css("visibility", "hidden");
     }
   });

@@ -23,7 +23,7 @@
   {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
   {% set organizations = h.hdx_organizations_available_with_roles() %}
     {% if organizations %}
-      <div class="pull-right">
+      <div class="float-end">
         <div>
         <a class="btn btn-primary" href="#" onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');$('#create-organisation, #onboard-org-request-new-text').hide();$('#select-organisation, #onboard-org-join-text').show();" >{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
         </div>

@@ -4,8 +4,8 @@
   {{ super() }}
 {% endblock %}
 
-{% block ckanext_showcase_edit_span %} col-xs-9 create-org{% endblock %}
-{% block ckanext_showcase_edit_module_content_class %}col-xs-6 mTB30{% endblock %}
+{% block ckanext_showcase_edit_span %} col-9 create-org{% endblock %}
+{% block ckanext_showcase_edit_module_content_class %}col-6 mTB30{% endblock %}
 
 {% block content_action %}{% endblock %}
 
@@ -13,10 +13,10 @@
   <header class="page-header">
     <ul class="nav nav-tabs">
         {% block content_primary_nav %}
-            {{ h.build_nav_icon('showcase_blueprint.edit', _('Edit showcase'), id=pkg.name, class_='hdx-tab-button') }}
-            {{ h.build_nav_icon('showcase_blueprint.manage_datasets', _('Manage datasets'), id=pkg.name, class_='hdx-tab-button') }}
-            <li class="pull-right">
-                {% link_for _('View showcase'), named_route='showcase_blueprint.read', id=pkg.name, class_='hdx-tab-button', icon='eye-open' %}
+            {{ h.bs5_build_nav_icon('showcase_blueprint.edit', _('Edit showcase'), id=pkg.name, class_='nav-link hdx-tab-button') }}
+            {{ h.bs5_build_nav_icon('showcase_blueprint.manage_datasets', _('Manage datasets'), id=pkg.name, class_='nav-link hdx-tab-button') }}
+            <li class="nav-item float-end">
+                {% link_for _('View showcase'), named_route='showcase_blueprint.read', id=pkg.name, class_='nav-link hdx-tab-button', icon='eye-open' %}
             </li>
         {% endblock %}
     </ul>

@@ -135,7 +135,8 @@
     }
   }
 
-  .form-group {
+  // old form-group
+  .mb-3 {
 
     &.required {
       .control-label:after {
@@ -328,12 +329,7 @@
         .sourceSansProFont(300, 15px);
       }
 
-    }
-
-
-
-
-
+      }
   }
 
   .control-group {
@@ -351,10 +347,6 @@
   }
 
   .form-horizontal {
-    .form-group {
-      margin-left: 0;
-      margin-right: 0;
-    }
     .controls {
       margin-left: @labelMaxWidth + 10px;
     }
@@ -395,7 +387,7 @@
 
   &.margin-fix {
     margin-bottom: 15px;
-    .form-group {
+    .mb-3 {
       margin-bottom: 0;
     }
   }

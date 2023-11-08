@@ -6,24 +6,24 @@
 {% block subtitle %}{{ data.title or data.name }}{% endblock %}
 
 {% block breadcrumb_content %}
-    <li><a>{{ data.type }}</a></li>
+    <li class="breadcrumb-item"><a>{{ data.type }}</a></li>
     {% if data.type == 'event' %}
-        <li class="active">{{ h.nav_link(data.title or data.name, 'hdx_event.read_event', id=data.name) }}</li>
+        <li class="breadcrumb-item active">{{ h.nav_link(data.title or data.name, 'hdx_event.read_event', id=data.name) }}</li>
     {% elif data.type == 'dashboards' %}
-        <li class="active">{{ h.nav_link(data.title or data.name,  'hdx_dashboard.read_dashboard', id=data.name) }}</li>
+        <li class="breadcrumb-item active">{{ h.nav_link(data.title or data.name,  'hdx_dashboard.read_dashboard', id=data.name) }}</li>
     {% endif %}
 {% endblock %}
 {% block secondary %}{% endblock %}
 
 {% block primary %}
     <div class="row paddingRowHack intro-section">
-        <div class="{% if not data.title_section %} col-xs-12  paddingLeftHack paddingRightHack {% endif %}">
+        <div class="{% if not data.title_section %} col-12  paddingLeftHack paddingRightHack {% endif %}">
             {% if not data.title_section %}
                 <header class="mx-header">
                 <div class="row">
-                    <div class="col-xs-8">
+                    <div class="col-8">
                         <div class="row">
-                            <div class="col-xs-12 mTop35 ">
+                            <div class="col-12 mTop35 ">
                                 {% if (data.extras is not defined or data.extras.show_title is not defined) or data.extras.show_title == 'on' %}
                                     <h1 class="itemTitle">{{ data.title }}</h1>
                                 {% endif %}
@@ -40,7 +40,7 @@
                 {% snippet 'pages/snippets/visualization_title.html', section=data.title_section, data=data, errors=errors, error_summary=error_summary %}
             {% endif %}
         </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-12 paddingLeftHack paddingRightHack">
             {% for section in data.sections %}
                   {% snippet 'pages/snippets/section_item.html', section=section, data=data, errors=errors, error_summary=error_summary %}
             {% endfor %}

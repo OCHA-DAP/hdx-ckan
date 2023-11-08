@@ -22,6 +22,7 @@ body {
   min-width: 1260px;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
 }
 /* END Body Background */
 h1 {
@@ -57,6 +58,9 @@ h4 small {
 .dropup .caret {
   border-bottom: 9px solid #007CE0;
 }
+.dropdown .dropdown-menu {
+  font-size: 14px;
+}
 /* END Style Caret */
 /* Change the default style for ul items */
 ul.hdx-bs3 {
@@ -81,6 +85,27 @@ ul.hdx-bs3 {
   display: inline-block;
 }
 /* END - Actions button list */
+@media (min-width: 992px) {
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: none;
+  }
+}
+@media (min-width: 768px) {
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: none;
+  }
+}
+@media (min-width: 576px) {
+  .container-sm,
+  .container {
+    max-width: none;
+  }
+}
 body {
   margin: 1px 0 0;
   color: #888888;

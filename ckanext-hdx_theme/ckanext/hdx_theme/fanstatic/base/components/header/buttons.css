@@ -130,7 +130,7 @@
   vertical-align: middle;
 }
 .resource-item .hdx-btn-group.hdx-btn-group-fixed {
-  width: 235px;
+  width: 250px;
 }
 .resource-item .hdx-btn-group.hdx-btn-group-fixed .btn.hdx-btn {
   margin-right: 0;
@@ -161,4 +161,8 @@
 .btn-download img {
   height: 11px;
   margin-right: 5px;
+}
+.btn-disabled {
+  background-color: inherit;
+  border-color: inherit;
 }

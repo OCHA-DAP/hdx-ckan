@@ -78,13 +78,13 @@
             {% if btn_dict.type == 'download' %}
                 {% set metadata_url = h.url_for('hdx_dataset.resource_metadata', id=pkg.id, resource_id=res.id) %}
 
-                <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-toggle="dropdown">
+                <a href="#" class="dropdown-toggle btn btn-empty btn-empty-blue hdx-btn" data-bs-toggle="dropdown">
                   {{ _('More') }}
                 </a>
 
                 <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">
                 {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) %}
-                  <li class="crises-group">
+                  <li class="dropdown-item crises-group">
                     On HDX and HDX Tools
                     <ul>
                       {% if res.has_views and is_not_zipped %}

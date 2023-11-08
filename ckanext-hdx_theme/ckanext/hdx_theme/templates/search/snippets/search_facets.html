@@ -8,7 +8,7 @@ Example:
 #}
 <section class="facet-section">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div class="facet-section-title">
                 <span>{{ _('Filter Data By') }} :</span>
             </div>
@@ -19,19 +19,19 @@ Example:
     {% for title, facet_values in facets.iteritems() %}
         {% set expanded_class = 'in' if facet_values.is_used else '' %}
         <div class="row">
-            <div class="col-xs-12 facet-wrapper">
+            <div class="col-12 facet-wrapper">
                 <div class="row">
-                    <div class="col-xs-9">
+                    <div class="col-9">
                         <div class="facet-name uppercase">
-                            <a data-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
+                            <a data-bs-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
                                 <span>{{ title }} </span>
                             </a>
                         </div>
 
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <div class="facet-count">
-                            <a data-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
+                            <a data-bs-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
                                 <span>{{ facet_values.count }}</span>
                             </a>
                         </div>
@@ -40,7 +40,7 @@ Example:
                 <div class="collapse {{ expanded_class }}" id="collapse-{{ facet_values.code }}">
                     {% if facet_values.is_used %}
                         <div class="row">
-                            <div class="col-xs-12">
+                            <div class="col-12">
                                 <div class="facet-clear">
                                     <a href="{{ facet_values.clear_link }}">
                                         <span>{{ _('Clear all') }}</span>
@@ -52,14 +52,14 @@ Example:
                     {% for item in facet_values.value_items %}
                         {% if item.is_used %}
                             <div class="row facet-item-wrapper selected">
-                                <div class="col-xs-9">
+                                <div class="col-9">
                                     <div class="facet-item-name">
                                         <a title="{{ item.display_name }}" href="{{ item.filter_link }}">
                                             <span> {{ item.display_name | truncate(20, True) }} </span>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-3">
                                     <div class="facet-item-remove">
                                         <a href="{{ item.remove_link }}">
                                             <span class="humanitarianicons-Exit-Cancel"></span>
@@ -69,14 +69,14 @@ Example:
                             </div>
                         {% else %}
                             <div class="row facet-item-wrapper">
-                                <div class="col-xs-9">
+                                <div class="col-9">
                                     <div class="facet-item-name">
                                         <a title="{{ item.display_name }}" href="{{ item.filter_link }}">
                                             <span> {{ item.display_name | truncate(20, True) }} </span>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-3">
                                     <div class="facet-item-count">
                                         <a href="{{ item.filter_link }}">
                                             <span>{{ item.count }}</span>
