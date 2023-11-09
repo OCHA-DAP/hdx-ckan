@@ -370,8 +370,11 @@ def hdx_quick_links_settings_show(context, data_dict):
     if setting_value_json:
         try:
             quick_links_settings = json.loads(setting_value_json)
+            for item in quick_links_settings:
+                if 'archived' not in item:
+                    item['archived']='false'
         except TypeError as e:
-            log.warn('The "hdx.quick_links.config" setting is not a proper json string')
+            log.warning('The "hdx.quick_links.config" setting is not a proper json string')
 
     return quick_links_settings
 

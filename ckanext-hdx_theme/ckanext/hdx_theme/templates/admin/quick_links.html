@@ -62,7 +62,7 @@
                               </div>
                             </div>
                             <div class="control-group form-group control-full control-large hdx-section-field">
-                              <label class="control-label" for="new_window">OPEN IN A NEW TAB</label>
+                              <label class="control-label" for="new_window">OPEN IN A NEW TAB </label>
                               <div class="controls ">
                                 <select name="newTab" id="new_window" class="form-control">
                                   <option value="true"
@@ -73,6 +73,29 @@
                                 <span class="error-block"></span>
                               </div>
                             </div>
+                            <div class="control-group form-group control-full control-large hdx-section-field">
+                              <label class="control-label" for="archived_field">ARCHIVED </label>
+                              <div class="controls ">
+                                <select name="archived" id="archived_field" class="form-control">
+                                  <option value="false"
+                                  <%= (archived.toString()==="true"?'':'selected="selected"') %>>No</option>
+                                  <option value="true"
+                                  <%= (archived.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                </select>
+                                <span class="error-block"></span>
+                              </div>
+                            </div>
+{#                            {% set is_archived = archived =="true" %}#}
+{#                            <div class="control-group form-group control-full control-large hdx-section-field">#}
+{#                              <label class="control-label" for="archived_field">ARCHIVED</label>#}
+{#                              <div class="controls ">#}
+{#                                <select name="archived" id="archived_field" class="form-control">#}
+{#                                  <option value="false" {% if is_archived == False %}selected="selected"{% endif %}>No</option>#}
+{#                                  <option value="true" {% if is_archived == True %}selected="selected"{% endif %}>Yes</option>#}
+{#                                </select>#}
+{#                                <span class="error-block"></span>#}
+{#                              </div>#}
+{#                            </div>#}
                           </div>
                         </div>
                       </div>
