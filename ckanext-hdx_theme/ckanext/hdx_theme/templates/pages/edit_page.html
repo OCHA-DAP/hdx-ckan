@@ -40,7 +40,7 @@
                             </div>
                           {% endif %}
 
-                          {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['mb-3', 'required', '', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
+                          {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['mb-3', 'required', '', 'control-large'], attrs={'data-module': 'slug-preview-target', }) }}
                           {% set prefix = h.url_for('hdx_event.read_event',id='', qualified=true) %}
                           {% set full_domain_event = h.url_for('hdx_event.read_event',id='', qualified=true) %}
                           {% set full_domain_dashboards = h.url_for('hdx_dashboard.read_dashboard',id='', qualified=true) %}
@@ -92,13 +92,13 @@
                               <label class="control-label">Location</label>
                               {% set group_list = h.hdx_location_list() %}
                               <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" >
-                                  {{ form.select('groups', id='field_groups', options=group_list, selected=data.groups, error=errors.groups, classes=['mb-3'], attrs={'class':'form-control', 'multiple':'true'}) }}
+                                  {{ form.select('groups', id='field_groups', options=group_list, selected=data.groups, error=errors.groups, classes=['mb-3'], attrs={'multiple':'true'}) }}
                               </div>
                           </div>
                           <div class="mb-3">
                               <label class="control-label">Keywords</label>
                               <div data-module="hdx_form_element_manager" data-module-element_name="description" >
-                                  {{ form.input('description', id='field_description', type='text',placeholder='Keywords with comma separated. e.g covid19, coronavirus', value=data.description, error=errors.description, classes=['mb-3'], attrs={'class':'form-control'}) }}
+                                  {{ form.input('description', id='field_description', type='text',placeholder='Keywords with comma separated. e.g covid19, coronavirus', value=data.description, error=errors.description, classes=['mb-3'], attrs={}) }}
                               </div>
                           </div>
                           <div class="mb-3">
@@ -107,7 +107,7 @@
                                                 'data-module-multiple': 'multiple',
                                                 'data-module-width': '500px',
                                                 'data-module-placeholder': 'eg. economy, mental health, government',
-                                                'class':'form-control choices-orange', 'multiple':'true',
+                                                'class':'choices-orange', 'multiple':'true',
                                                 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
                               <label class="control-label">Tags</label>
                               <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" >
@@ -146,14 +146,14 @@
                                   <div class="col-12 hdx-visible-element pTopBottom15" id="{{s_id}}" >
                                       <div class="row">
                                           <div class="col-9">
-                                              {{ form.select(s_type, id=s_type, label=_('Section'), options=data_dict['content_type'], selected=section.type, error=errors.type, classes=['mb-3'], attrs={'class':'form-control'})}}
-                                              {{ form.input(s_data_url, id=s_data_url, label=_('Data URL'), placeholder=_('Enter URL'), value=section.data_url, error=errors.data_url, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                                              {{ form.input(s_title, id=s_title, label=_('Title of Section'), placeholder=_('If missing will have the default value'), value=section.section_title, error=errors.section_title, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                                              {{ form.input(s_description, id=s_description, label=_('Description (optional)'), placeholder=_('eg. Description of the section'), value=section.description, error=errors.description, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-  {#                                            {{ form.input(s_long_description, id=s_long_description, label=_('Long Description (optional)'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}#}
-                                              {{ form.markdown(s_long_description, id=s_long_description, label=_('Long Description'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                                              {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=max_height, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                                              {{ form.input(s_m_max_height, id=s_m_max_height, label=_('Mobile Max Height'), placeholder=_('400px recommended'), value=section.m_max_height, error=m_max_height, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
+                                              {{ form.select(s_type, id=s_type, label=_('Section'), options=data_dict['content_type'], selected=section.type, error=errors.type, classes=['mb-3'], attrs={})}}
+                                              {{ form.input(s_data_url, id=s_data_url, label=_('Data URL'), placeholder=_('Enter URL'), value=section.data_url, error=errors.data_url, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                                              {{ form.input(s_title, id=s_title, label=_('Title of Section'), placeholder=_('If missing will have the default value'), value=section.section_title, error=errors.section_title, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                                              {{ form.input(s_description, id=s_description, label=_('Description (optional)'), placeholder=_('eg. Description of the section'), value=section.description, error=errors.description, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+  {#                                            {{ form.input(s_long_description, id=s_long_description, label=_('Long Description (optional)'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={}) }}#}
+                                              {{ form.markdown(s_long_description, id=s_long_description, label=_('Long Description'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                                              {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=max_height, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                                              {{ form.input(s_m_max_height, id=s_m_max_height, label=_('Mobile Max Height'), placeholder=_('400px recommended'), value=section.m_max_height, error=m_max_height, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
                                           </div>
                                           <div class="col-3">
                                               <a href="#" id="{{s_del}}" name="{{s_del}}">Delete this section</a>
@@ -209,14 +209,14 @@
     <div class="col-12 hdx-invisible-element pTopBottom15" id="section_template">
         <div class="row">
             <div class="col-9">
-                {{ form.select('field_section_template_type', id='field_section_template_type', label=_('Section'), options=data_dict['content_type'], selected="empty", error=errors.type, classes=['mb-3'], attrs={'class':'form-control'})}}
-                {{ form.input('field_section_template_data_url', id='field_section_template_data_url', label=_('Data URL'), placeholder=_('Enter URL'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                {{ form.input('field_section_template_section_title', id='field_section_template_section_title', label=_('Title of Section'), placeholder=_('Title of Section (optional)'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                {{ form.input('field_section_template_section_description', id='field_section_template_section_description', label=_('Description (optional)'), placeholder=_('eg. Description of the section'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-{#                {{ form.input('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long description (optional)'), placeholder=_('eg. Long description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}#}
-                {{ form.markdown('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long Description'), placeholder=_('eg. Long Description of the section'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                {{ form.input('field_section_template_max_height', id='field_section_template_max_height', label=_('Max Height'), placeholder=_('400px recommended'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
-                {{ form.input('field_section_template_m_max_height', id='field_section_template_m_max_height', label=_('Mobile Max Height'), placeholder=_('400px recommended'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control custom-page-field'}) }}
+                {{ form.select('field_section_template_type', id='field_section_template_type', label=_('Section'), options=data_dict['content_type'], selected="empty", error=errors.type, classes=['mb-3'], attrs={})}}
+                {{ form.input('field_section_template_data_url', id='field_section_template_data_url', label=_('Data URL'), placeholder=_('Enter URL'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                {{ form.input('field_section_template_section_title', id='field_section_template_section_title', label=_('Title of Section'), placeholder=_('Title of Section (optional)'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                {{ form.input('field_section_template_section_description', id='field_section_template_section_description', label=_('Description (optional)'), placeholder=_('eg. Description of the section'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+{#                {{ form.input('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long description (optional)'), placeholder=_('eg. Long description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={}) }}#}
+                {{ form.markdown('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long Description'), placeholder=_('eg. Long Description of the section'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                {{ form.input('field_section_template_max_height', id='field_section_template_max_height', label=_('Max Height'), placeholder=_('400px recommended'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
+                {{ form.input('field_section_template_m_max_height', id='field_section_template_m_max_height', label=_('Mobile Max Height'), placeholder=_('400px recommended'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
             </div>
             <div class="col-3">
                 <a href="#" id="del_section" type="button" name="del_section">Delete this section</a>

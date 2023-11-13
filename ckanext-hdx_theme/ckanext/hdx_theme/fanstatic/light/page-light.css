@@ -2957,10 +2957,10 @@ textarea {
   height: 1px;
 }
 .hdx-form .mb-3 .form-control.select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:before {
-  font-family: 'Glyphicons Halflings';
+  font-family: 'FontAwesome';
   font-style: normal;
   font-weight: 400;
-  content: "\e014";
+  content: "\f00d";
   color: #fff;
   font-size: 15px;
 }

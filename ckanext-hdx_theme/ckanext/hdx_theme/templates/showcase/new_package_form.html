@@ -12,7 +12,7 @@
   {% block basic_fields %}
     <div class="mb-3">
       {% block package_basic_fields_title %}
-        {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['', 'mb-3', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
+        {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['', 'mb-3', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
       {% endblock %}
 
       {% block package_basic_fields_url %}
@@ -25,7 +25,7 @@
       {% endblock %}
 
       {% block package_basic_fields_description %}
-        {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['mb-3'], attrs={'class': 'form-control'}) }}
+        {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['mb-3'], attrs={}) }}
       {% endblock %}
 
       {% block package_basic_fields_tags %}
@@ -34,8 +34,7 @@
                 'data-module-tags': 'false',
                 'data-module-multiple': 'multiple',
                 'data-module-include-tokenizer': 'true',
-                'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?',
-                'class': 'form-control'
+                'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
             }
         %}
         {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['', 'mb-3'], attrs=tag_attrs) }}
@@ -46,10 +45,10 @@
 
       {% if is_upload %}
         {% set url_label=_('Image name') %}
-        {% set attrs={'class': 'form-control'} %}
+        {% set attrs={} %}
       {% else %}
         {% set url_label=_('Image URL (https only)') %}
-        {% set attrs={'class': 'form-control', 'pattern': 'https://.*'} %}
+        {% set attrs={'pattern': 'https://.*'} %}
       {% endif %}
       {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, placeholder=_('https://example.com/my-image.jpg'), url_label=url_label, attrs=attrs) }}
     </div>
@@ -58,13 +57,13 @@
   {% block metadata_fields %}
     <div class="mb-3">
       {% block package_metadata_fields_url %}
-        {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('https://www.example.com'), value=data.url, error=errors.url, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+        {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('https://www.example.com'), value=data.url, error=errors.url, classes=['', 'mb-3'], attrs={}) }}
       {% endblock %}
 
       {% block package_metadata_author %}
-        {{ form.input('author', label=_('Submitted By'), id='field-author', placeholder=_('Joe Bloggs'), value=data.author, error=errors.author, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+        {{ form.input('author', label=_('Submitted By'), id='field-author', placeholder=_('Joe Bloggs'), value=data.author, error=errors.author, classes=['', 'mb-3'], attrs={}) }}
 
-        {{ form.input('author_email', label=_('Submitter Email'), id='field-author-email', placeholder=_('joe@example.com'), value=data.author_email, error=errors.author_email, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+        {{ form.input('author_email', label=_('Submitter Email'), id='field-author-email', placeholder=_('joe@example.com'), value=data.author_email, error=errors.author_email, classes=['', 'mb-3'], attrs={}) }}
       {% endblock %}
     </div>
   {% endblock %}
@@ -74,20 +73,20 @@
       {% set in_dataviz_gallery = 'true' if h.asbool(data.in_dataviz_gallery) else 'false' %}
       {{ form.select('in_dataviz_gallery', label=_('Show in Dataviz Gallery'),  id='field-in-dataviz-gallery',
             options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_dataviz_gallery,
-            error=errors.in_dataviz_gallery, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+            error=errors.in_dataviz_gallery, classes=['', 'mb-3'], attrs={}) }}
       <div id="dataviz-gallery-section">
         {% set image_frame_mode = 'true' if h.asbool(data.image_frame_mode) else 'false' %}
         {{ form.select('image_frame_mode', label=_('The Showcase Image contains a Frame'),  id='field-image-frame-mode',
               options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=image_frame_mode,
-              error=errors.image_frame_mode, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+              error=errors.image_frame_mode, classes=['', 'mb-3'], attrs={}) }}
 
-        {{ form.input('dataviz_label', label=_('Label'), id='field-dataviz-label', placeholder=_('Label to be shown over the gallery icon'), value=data.dataviz_label, is_required=True, error=errors.dataviz_label, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
-        {{ form.input('data_url', label=_('Data URL (Defaults to showcase URL)'), id='field-data-url', placeholder=_('URL for visualisation data'), value=data.data_url, type='url', error=errors.data_url, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+        {{ form.input('dataviz_label', label=_('Label'), id='field-dataviz-label', placeholder=_('Label to be shown over the gallery icon'), value=data.dataviz_label, is_required=True, error=errors.dataviz_label, classes=['', 'mb-3'], attrs={}) }}
+        {{ form.input('data_url', label=_('Data URL (Defaults to showcase URL)'), id='field-data-url', placeholder=_('URL for visualisation data'), value=data.data_url, type='url', error=errors.data_url, classes=['', 'mb-3'], attrs={}) }}
         {% set in_carousel_section = 'true' if h.asbool(data.in_carousel_section) else 'false' %}
         {{ form.select('in_carousel_section', label=_('Show in the Carousel Section of the Dataviz Gallery'),  id='field-in-carousel-section',
               options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_carousel_section,
-              error=errors.in_carousel_section, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
-        {{ form.input('priority', label=_('Priority (Decides the order in the carousel)'), id='field-priority', placeholder=_('Enter a number, higher ones appear first'), value=data.priority, error=errors.priority, classes=['', 'mb-3'], attrs={'class': 'form-control'}) }}
+              error=errors.in_carousel_section, classes=['', 'mb-3'], attrs={}) }}
+        {{ form.input('priority', label=_('Priority (Decides the order in the carousel)'), id='field-priority', placeholder=_('Enter a number, higher ones appear first'), value=data.priority, error=errors.priority, classes=['', 'mb-3'], attrs={}) }}
       </div>
     {% endif %}
   {% endblock %}
