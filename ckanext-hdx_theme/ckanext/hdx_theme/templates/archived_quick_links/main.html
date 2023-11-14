@@ -1,6 +1,6 @@
 {% extends "page.html" %}
 
-{% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
+{% block subtitle %}{{ _("Archived Dataviz") }}{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="active">{{ h.nav_link(_('Archived Dataviz'), 'hdx_archived_quick_links.show') }}</li>
@@ -24,7 +24,7 @@
 {#            <div id="body-about-hdx" class="section-flag" style="">Archived Dataviz</div>#}
         </div>
     </div>
-    {% snippet 'archived_quick_links/questions_sections.html', data=data.pages %}
+    {% snippet 'archived_quick_links/questions_sections.html', data=data %}
 {% endblock %}
 
 {% block secondary %}
