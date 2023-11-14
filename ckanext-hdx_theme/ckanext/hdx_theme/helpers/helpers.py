@@ -767,8 +767,11 @@ def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({}, {})
 
 
-def hdx_get_quick_links_list():
-    return logic.get_action('hdx_quick_links_settings_show')({}, {})
+def hdx_get_quick_links_list(archived=None):
+    result = logic.get_action('hdx_quick_links_settings_show')({}, {})
+    if archived in (True, False):
+        result = [item for item in result if item.get('archived',False) == archived]
+    return result
 
 
 def _get_context():

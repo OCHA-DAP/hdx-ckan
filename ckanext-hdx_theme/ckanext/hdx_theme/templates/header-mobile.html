@@ -42,7 +42,7 @@
               </a>
               <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
                 <li class="crises-group">
-                  {% set ongoing_links = h.hdx_get_quick_links_list() %}
+                  {% set ongoing_links = h.hdx_get_quick_links_list(archived=False) %}
                   <ul>
                     {% for on_link in ongoing_links %}
                     <li>
@@ -125,7 +125,7 @@
                 <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Locations</a></li>
                 <li><a href="{{ orgLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">Organisations</a></li>
                 <li class="crisis"><a class="crisis-title"><span>Dataviz</span></a></li>
-                {% set ongoing_links = h.hdx_get_quick_links_list() %}
+                {% set ongoing_links = h.hdx_get_quick_links_list(archived=False) %}
                 {% for on_link in ongoing_links %}
                   <li class="crisis"><a href="{{on_link.url}}" data-module="hdx_click_stopper" data-module-link_type="main nav" target="{% if on_link.newTab == True %}_blank{% else %}_self{% endif %}">{{ on_link.title }}</a></li>
                 {% endfor %}
