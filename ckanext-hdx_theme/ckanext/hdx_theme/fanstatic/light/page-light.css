@@ -3875,6 +3875,10 @@ ul.list-horizontal li:first-child:before {
     border: 0;
     box-shadow: none;
   }
+  .new-header .hdx-header .navbar-toggler:not(.collapsed) .navbar-toggler-icon {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3.15 -3.15 27.3 27.3"><path fill="rgba%280, 0, 0, 0.55%29" fill-rule="evenodd" d="M12.018 10 21 18.554 19.481 20 10.5 11.446 1.518 20 0 18.554 8.981 10 0 1.446 1.518 0 10.5 8.554 19.481 0 21 1.446z"/></svg>');
+    transition: background-image 0.3s ease;
+  }
   .new-header .hdx-header .navbar-toggle {
     margin: 6px 0 0;
     padding: 16px;
