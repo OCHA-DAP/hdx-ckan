@@ -1,4 +1,4 @@
 $(document).ready(function(){
-    var div = document.getElementsByClassName('col-xs-12 paddingLeftHack paddingRightHack');
-    div[2].classList.remove('col-xs-12', 'paddingLeftHack', 'paddingRightHack');
+    var div = document.getElementsByClassName('col-12 paddingLeftHack paddingRightHack');
+    div[2].classList.remove('col-12', 'paddingLeftHack', 'paddingRightHack');
 });

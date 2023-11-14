@@ -19,6 +19,13 @@
   left: 50%;
   transform: translate(-50%, 0);
 }
+.login-widget .login-top .login-photo #login-photo-default {
+  top: 16px;
+}
+.login-widget .login-top .login-photo #login-photo-default .fa-user {
+  color: white;
+  font-size: 60px;
+}
 .login-widget .login-top .login-photo img {
   height: 100%;
   width: 100%;
@@ -29,16 +36,18 @@
   margin-top: 20px;
   margin-right: 20px;
 }
-.login-widget .login-content {
+.login-widget #hdx-login-form {
   background-color: #eeeeee;
+}
+.login-widget #hdx-login-form .login-content {
   height: 355px;
   width: 100%;
   padding: 57.5px 15px 35px;
 }
-.login-widget .login-content.login-content--size-big {
+.login-widget #hdx-login-form .login-content.login-content--size-big {
   height: 399px;
 }
-.login-widget .login-content .username-text {
+.login-widget #hdx-login-form .login-content .username-text {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
@@ -46,7 +55,7 @@
   line-height: 23px;
   letter-spacing: 0.01em;
 }
-.login-widget .login-content .email-text {
+.login-widget #hdx-login-form .login-content .email-text {
   font-family: 'Gotham-Book', sans-serif;
   font-display: block;
   font-weight: 400;

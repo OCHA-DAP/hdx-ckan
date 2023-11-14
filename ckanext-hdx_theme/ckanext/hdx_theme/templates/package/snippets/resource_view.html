@@ -19,7 +19,7 @@
         <p class="text-error">
           <i class="icon-info-sign"></i>
           {{ _('This resource view is not available at the moment.') }}
-          <a href="#" data-toggle="collapse" data-target="#data-view-error">
+          <a href="#" data-bs-toggle="collapse" data-bs-target="#data-view-error">
             {{ _('Click here for more information.') }}
           </a>
         </p>
@@ -55,17 +55,17 @@
       <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+              <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
               <h3 class="modal-title">{{ _("Embed resource view") }}</h3>
             </div>
             <div class="modal-body">
               <p class="embed-content">{{ _("You can copy and paste the embed code into a CMS or blog software that supports raw HTML") }}</p>
               <div class="row-fluid">
                 <div class="span6">
-                  {{ form.input("width", label=_("Width"), value=700, classes=["control-full"]) }}
+                  {{ form.input("width", label=_("Width"), value=700, classes=[""]) }}
                 </div>
                 <div class="span6">
-                  {{ form.input("height", label=_("Height"), value=400, classes=["control-full"]) }}
+                  {{ form.input("height", label=_("Height"), value=400, classes=[""]) }}
                 </div>
               </div>
               {{ form.textarea("code", label=_("Code"), value="", classes=["pre"], rows=3) }}

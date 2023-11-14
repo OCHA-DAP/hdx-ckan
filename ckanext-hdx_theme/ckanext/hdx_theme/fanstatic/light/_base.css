@@ -18,6 +18,7 @@ a.test:focus {
 /* Body Background */
 body {
   font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
 }
 /* END Body Background */
 h1 {

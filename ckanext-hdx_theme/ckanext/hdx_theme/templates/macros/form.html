@@ -22,7 +22,7 @@ Examples:
   {%- set extra_html = caller() if caller -%}
 
   {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <input id="{{ id or name }}" type="{{ type }}" name="{{ name }}" value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }} />
+    <input id="{{ id or name }}" type="{{ type }}" class="form-control" name="{{ name }}" value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }} />
   {% endcall %}
 {% endmacro %}
 
@@ -46,10 +46,10 @@ Example:
 #}
 {% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false, label_attrs={}) %}
   {%- set extra_html = caller() if caller -%}
-  <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
-    <div class="controls checkbox">
-      <label class="" for="{{ id or name }}" {{ attributes(label_attrs) }}>
-        <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
+  <div class="{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
+    <div class="form-check">
+      <input id="{{ id or name }}" class="form-check-input" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
+      <label class="form-check-label" for="{{ id or name }}" {{ attributes(label_attrs) }}>
         {{ label }}
         {% if is_required %}{{ input_required() }}{% endif %}
         {% if error and error is iterable %}<strong class="error-inline">{{ error|join(', ') }}</strong>{% endif %}
@@ -87,7 +87,7 @@ Examples:
   {% do classes.append('control-select') %}
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required, label_attrs=label_attrs) %}
-    <select id="{{ id or name }}" name="{{ name }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>
+    <select id="{{ id or name }}" name="{{ name }}" class="form-control form-select" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>
       {% for option in options %}
           {% if attrs['multiple'] == 'true' %}
             <option value="{{ option.value }}" {% if option.value in selected %} selected="selected"{% endif %}>{{ option.text or option.value }}</option>
@@ -120,11 +120,11 @@ Examples:
 #}
 {% macro markdown(name, id='', label='', value='', placeholder='', error="", classes=[], attrs={}, rows=5, cols=20, is_required=false) %}
   {% set classes = (classes|list) %}
-  {% do classes.append('control-full') %}
+  {% do classes.append('') %}
 
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, control_classes=["editor"], extra_html=extra_html, is_required=is_required) %}
-    <textarea id="{{ id or name }}" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
+    <textarea id="{{ id or name }}" name="{{ name }}" class="form-control" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
     <span class="editor-info-block">{% trans %}You can use <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here{% endtrans %}</span>
   {% endcall %}
 {% endmacro %}
@@ -150,11 +150,11 @@ Examples:
 #}
 {% macro textarea(name, id='', label='', value='', placeholder='', error="", classes=[], cols=20, rows=5, attrs={}, is_required=false) %}
   {% set classes = (classes|list) %}
-  {% do classes.append('control-full') %}
+  {% do classes.append('') %}
 
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <textarea id="{{ id or name }}" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
+    <textarea id="{{ id or name }}" class="form-control" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
   {% endcall %}
 {% endmacro %}
 
@@ -263,7 +263,7 @@ Example:
 
 #}
 {% macro input_block(for, label="", error="", classes=[], control_classes=[], extra_html="", is_required=false, label_attrs={}) %}
-  <div class="control-group{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
+  <div class="{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
     {% if label %}
       <label class="control-label" for="{{ for }}" {{ attributes(label_attrs) }}>{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
     {% endif %}
@@ -420,12 +420,12 @@ Example
        data-module-field_url="{{ field_url }}" data-module-field_upload="{{ field_upload }}" data-module-field_clear="{{ field_clear }}" data-module-upload_label="{{ upload_label }}">
   {% endif %}
 
-  {{ input(field_url, label=url_label, id='field-image-url', placeholder=placeholder, value=data.get(field_url), error=errors.get(field_url), classes=['control-full'], attrs=attrs) }}
+  {{ input(field_url, label=url_label, id='field-image-url', placeholder=placeholder, value=data.get(field_url), error=errors.get(field_url), classes=[''], attrs=attrs) }}
 
   {% if is_upload_enabled %}
-    {{ input(field_upload, label=upload_label, id='field-'+field_upload, type='file', placeholder='', value='', error='', classes=['control-full'], attrs=attrs) }}
+    {{ input(field_upload, label=upload_label, id='field-'+field_upload, type='file', placeholder='', value='', error='', classes=[''], attrs=attrs) }}
     {% if is_upload %}
-      {{ checkbox(field_clear, label=_('Clear Upload'), id='field-clear-upload', value='true', error='', classes=['control-full']) }}
+      {{ checkbox(field_clear, label=_('Clear Upload'), id='field-clear-upload', value='true', error='', classes=['']) }}
     {% endif %}
   {% endif %}
 

@@ -21,8 +21,8 @@
 		</ul>
 	</div>
 	<div class="row mTop20">
-		<div class="col-xs-12">
-			{% snippet "organization/snippets/org_actions_menu.html", request_membership=allow_req_membership, organization=org_dict, can_create_dataset=can_create_dataset, can_edit=can_edit, classes='base-actions-menu followButtonContainer pull-right' %}
+		<div class="col-12">
+			{% snippet "organization/snippets/org_actions_menu.html", request_membership=allow_req_membership, organization=org_dict, can_create_dataset=can_create_dataset, can_edit=can_edit, classes='base-actions-menu followButtonContainer float-end' %}
 		</div>
 	</div>
 {% endblock %}
@@ -32,15 +32,15 @@
 	<header class="module-content page-header paddingRowHack mTop20 mBottom10">
 		<ul class="nav nav-tabs paddingLeftHack paddingRightHack">
 		   {% block content_primary_nav %}
-			   	{{ h.build_nav_icon('hdx_org.read', _('Datasets'), id=org_dict.name, class_='hdx-tab-button') }}
-			   	{{ h.build_nav_icon('hdx_org.activity', _('Activity Stream'), id=org_dict.name, class_='hdx-tab-button') }}
+			   	{{ h.bs5_build_nav_icon('hdx_org.read', _('Datasets'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
+			   	{{ h.bs5_build_nav_icon('hdx_org.activity', _('Activity Stream'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
 				{% if c.user %}
-					{{ h.build_nav_icon('hdx_members.members', _('Members'), id=org_dict.name, class_='hdx-tab-button') }}
+					{{ h.bs5_build_nav_icon('hdx_members.members', _('Members'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
 				{% endif %}
 				{% if h.check_access('organization_update', {'id': org_dict.id}) %}
-				  {{ h.build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=org_dict.name) }}
+				  {{ h.bs5_build_nav_icon('requestdata_organization_requests.requested_data', _('nav-link Requested Data'), id=org_dict.name) }}
 				{% endif %}
-			   	{{ h.build_nav_icon('hdx_org.stats', _('Stats'), id=org_dict.name, class_='hdx-tab-button') }}
+			   	{{ h.bs5_build_nav_icon('hdx_org.stats', _('Stats'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
 		   {% endblock %}
 		</ul>
 	</header>

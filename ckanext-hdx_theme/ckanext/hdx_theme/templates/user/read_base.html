@@ -4,8 +4,8 @@
 {% block subtitle %}{{ user.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
-  {{ h.build_nav('user.index', _('Users')) }}
-  {{ h.build_nav('user.read', user.display_name|truncate(35), id=user.name) }}
+  <li class="breadcrumb-item"><a href="{{ h.url_for('user.index') }}">{{ _('Users') }}</a></li>
+  <li class="breadcrumb-item"><a href="{{ h.url_for('user.read', id=user.name) }}">{{ user.display_name|truncate(35) }}</a></li>
 {% endblock %}
 
 {% block item_title_contrib %}
@@ -19,10 +19,10 @@
 {% block secondary %}{% endblock %}
 {% block primary_content_inner_wrapper %}
   <div class="row admin-two-col">
-    <div class="col-xs-3">
+    <div class="col-3">
       {{ self.secondary_content() }}
     </div>
-    <div class="col-xs-9">
+    <div class="col-9">
       {% block primary_content_inner %}
       {% endblock %}
     </div>
@@ -30,16 +30,16 @@
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('hdx_user.read', _('Datasets'), id=user.name) }}
-  {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=user.name) }}
+  {{ h.bs5_build_nav_icon('hdx_user.read', _('Datasets'), class_='nav-link', id=user.name) }}
+  {{ h.bs5_build_nav_icon('user.activity', _('Activity Stream'), class_='nav-link', id=user.name) }}
   {% if h.check_access('sysadmin') %}
-    {{ h.build_nav_icon('hdx_user_permission.read', _('User Permission'), id=user.name) }}
+    {{ h.bs5_build_nav_icon('hdx_user_permission.read', _('User Permission'), class_='nav-link', id=user.name) }}
   {% endif %}
   {% if h.check_access('api_token_list', {'user': user['name']}) %}
-    {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=user.name) }}
+    {{ h.bs5_build_nav_icon('user.api_tokens', _('API Tokens'), class_='nav-link', id=user.name) }}
   {% endif %}
   {% if h.check_access('user_update', user) %}
-    {{ h.build_nav_icon('hdx_user.edit', _('Profile and Password'), id=user.name) }}
+    {{ h.bs5_build_nav_icon('hdx_user.edit', _('Profile and Password'), class_='nav-link', id=user.name) }}
   {% endif %}
 {% endblock %}
 

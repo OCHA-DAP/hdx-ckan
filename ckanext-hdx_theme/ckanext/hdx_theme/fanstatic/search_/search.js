@@ -51,7 +51,7 @@ $('document').ready(function(){
                 html +=',';
             }
         }
-        $('#search-recs').html(html);
+        $('#search-recs').html(html).removeClass('d-none');
     }
 
     // move search-ahead element in parent container to fix absolute positioning

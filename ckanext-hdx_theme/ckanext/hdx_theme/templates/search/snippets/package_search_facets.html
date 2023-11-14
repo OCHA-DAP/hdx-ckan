@@ -19,7 +19,7 @@ Example:
           {{ option.display_name }}
           {% if option.explanation %}
             <a class="facet-option-explanation" href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"
-               data-toggle="tooltip">[?]</a>
+               data-bs-toggle="tooltip">[?]</a>
           {% endif %}
           {% if option.explanation_link %}
             <a href="{{ option.explanation_link }}" target="_blank">[{{ _('Learn more') }}]</a>
@@ -40,7 +40,7 @@ Example:
       <div class="filter-category">
           <div class="categ-title" data-value="{{ facet.get('display_name') | lower }}">
               {% set tooltip = facet.get('tooltip') %}
-              {{ facet.get('display_name') }}{% if tooltip %} <span title="{{ tooltip }}" data-module="bs_tooltip" data-toggle="tooltip">[?]</span>{% endif %}: <i class="pull-right glyphicon glyphicon-minus"></i>
+              {{ facet.get('display_name') }}{% if tooltip %} <span title="{{ tooltip }}" data-module="bs_tooltip" data-bs-toggle="tooltip">[?]</span>{% endif %}: <i class="float-end fa fa-minus"></i>
           </div>
           <div class="categ-content">
               <div class="categ-list {% if facet.show_everything %}show-always{% endif %}">

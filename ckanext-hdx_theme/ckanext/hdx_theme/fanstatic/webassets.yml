@@ -19,7 +19,7 @@ ckan:
     - vendor/ckan/api-info.js
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
-#    - vendor/bootstrap/js/bootstrap.js
+    - vendor/bootstrap5/js/bootstrap.bundle.js
     - base/hdx-util-lib.js
     - modules/data-viewer.js
     - modules/resource-view-embed.js
@@ -38,7 +38,8 @@ page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
   <<: *common-css
   contents:
-    - vendor/bootstrap/css/bootstrap.css
+    - vendor/bootstrap5/css/bootstrap.css
+    - vendor/font-awesome/css/font-awesome.css
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
     - widget/contribute/details.css
@@ -91,11 +92,6 @@ page-light-styles:
     - page-common-styles
     - light/page-light.css
     - search-styles
-
-bootstrap-styles:
-  output: ckanext-hdx_theme/%(version)s_bootstrap-styles.css
-  contents:
-    - vendor/bootstrap/css/bootstrap.css
 
 search-scripts:
   <<: *common-js

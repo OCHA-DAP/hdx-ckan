@@ -10,7 +10,7 @@
 <form class="list-items search-form" method="get" data-module="select-switch">
     {% if is_display_search_input %}
       {% block search_input %}
-        <div class="search-input control-group {{ search_class }}">
+        <div class="search-input {{ search_class }}">
         {% if show_empty and search_in_results %}
             {% set p_list = h.get_filtered_params_list(show_empty) %}
             {% for key,value in p_list %}
@@ -39,7 +39,7 @@
                   {{ title_text }}
               {% else %}
                   {% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}
-                  <div id="search-recs"></div>
+                  <div id="search-recs" class="d-none"></div>
               {% endif %}
           </h2>
       {% endif  %}
@@ -69,10 +69,10 @@
 
   {% block search_sortby %}
     {% if sorting %}
-      <div class="form-select control-group control-order-by">
+      <div class="form-select control-order-by">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown">
-          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+          <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
             <span class="dropdown-toggle-text">
               {% for label, value in sorting %}
                   {% if sorting_selected == value %} {{ label }} {% endif %}
@@ -80,10 +80,10 @@
             </span>
             <i class="humanitarianicons-Down"></i>
           </button>
-          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+          <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}
-                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                <li><a tabindex="-1" class="dropdown-item" val="{{ value }}">{{ label }}</a></li>
               {% endif %}
             {% endfor %}
           </ul>
@@ -103,12 +103,12 @@
         	{# <li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
         		<a href="{{ other_links.all }}">{{_('All')}} [{{indicator_counts + dataset_counts}}]</a>
         	</li>#}
-        	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
-            <a href="{{ other_links.datasets }}">{{_('Datasets')}} [{{dataset_counts}}]</a>
+        	<li class="nav-item mx-tab-item-datasets">
+            <a href="{{ other_links.datasets }}" class="nav-link {{ 'active' if not tab or tab == 'datasets' }}">{{_('Datasets')}} [{{dataset_counts}}]</a>
           </li>
 
-          <li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
-        		<a href="{{ other_links.indicators }}">{{_('Indicators')}} [{{indicator_counts}}]</a>
+          <li class="nav-item mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
+        		<a href="{{ other_links.indicators }}" class="nav-link {{ 'active' if not tab or tab == 'datasets' }}">{{_('Indicators')}} [{{indicator_counts}}]</a>
         	</li>
 
         	{# <li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'features' }}">

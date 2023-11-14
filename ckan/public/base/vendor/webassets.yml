@@ -35,16 +35,6 @@ vendor:
     - select2/select2.js
     - qs.js
 
-bootstrap:
-  filters: rjsmin
-  output: vendor/%(version)s_bootstrap.js
-  extra:
-    preload:
-#      - vendor/font-awesome
-      - vendor/jquery
-  contents:
-    - bootstrap/js/bootstrap.js
-
 fileupload:
   filters: rjsmin
   output: vendor/%(version)s_fileupload.js

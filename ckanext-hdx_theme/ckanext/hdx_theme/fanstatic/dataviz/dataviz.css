@@ -160,7 +160,7 @@
     width: 30px;
   }
 }
-.dataviz-light .carousel .carousel-control .glyphicon {
+.dataviz-light .carousel .carousel-control .fa {
   width: 40px;
   height: 40px;
   background-color: #eeeeee;
@@ -169,12 +169,12 @@
   align-items: center;
 }
 @media (max-width: 768px) {
-  .dataviz-light .carousel .carousel-control .glyphicon {
+  .dataviz-light .carousel .carousel-control .fa {
     width: 30px;
     height: 30px;
   }
 }
-.dataviz-light .carousel .carousel-control .glyphicon span {
+.dataviz-light .carousel .carousel-control .fa span {
   color: #333333;
   font-size: 16px;
 }

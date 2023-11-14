@@ -7,7 +7,7 @@
 {% block subtitle %}{{ data.country_title }}{% endblock %}
 {% block crisis_title %} {{ data.country_title }} {% endblock %}
 {% block crisis_actions %}
-<span class="mR45 pull-right" style="line-height: 50px;">
+<span class="mR45 float-end" style="line-height: 50px;">
         <span class="followButtonContainer">
             {{ h.follow_button('group', data.country_name) }}
         </span>
@@ -19,7 +19,7 @@
 {% endblock %}
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
-  <li class="active">{{ h.nav_link(data.country_title,
+  <li class="breadcrumb-item active">{{ h.nav_link(data.country_title,
     controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
     action='read', id=data.country_name, highlight_actions = 'new index') }}</li>
 {% endblock %}
@@ -35,18 +35,18 @@
 {% if data.is_crisis %}
     <div id="floatingLogoAnchor" class="row paddingRowHack whitebg">
     {% if data.topline_chart_sections %}
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-12 paddingLeftHack paddingRightHack">
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">
                     {{ _("Key Figures") }}
                 </span>
             </div>
         </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 {% for section in data.topline_chart_sections  %}
                     {% for top_line_item in section.top_line_items %}
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
                             unit=top_line_item.units,
                             notes=top_line_item.notes, source=top_line_item.source,
@@ -63,11 +63,11 @@
 
     <div class="row mTop25">
         {% for section in data.topline_chart_sections  %}
-            {% set toplines_col_class = "col-xs-5" if section.chart else "col-xs-12" %}
+            {% set toplines_col_class = "col-5" if section.chart else "col-12" %}
             <div class="{{ toplines_col_class }}">
                 <div class="row">
                     {% for item in section.top_line_items %}
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
                         notes=item.notes, source=item.source,
                         source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
@@ -78,24 +78,24 @@
                 </div>
             </div>
 
-            <div class="col-xs-7">
+            <div class="col-7">
                 <div class="row">
                     {% set ci = section.chart %}
                     {% if ci %}
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <div class="row auto-graph graph-item-wrapper">
-                            <div class="col-xs-12">
+                            <div class="col-12">
                                 {% set data_link_url = ci.data_link_url or "#" %}
-                                <div class="graph-title pull-left">{{ ci.title }}</div>
+                                <div class="graph-title float-start">{{ ci.title }}</div>
                                 <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
-                                <div class="graph-info-label pull-left">
+                                <div class="graph-info-label float-start">
                                     <a>
                                         {{ _("Info") }}
                                         <div class="map-info legend source-list" style="display: none;"></div>
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-12">
                                 <div class="graph-data" style="display: none;">
                                     {{ h.json_dumps(ci) }}
                                 </div>

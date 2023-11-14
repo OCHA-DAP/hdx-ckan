@@ -10,144 +10,150 @@
     <div id="carousel-config-form" class="cp-form hdx-form">
         <div class="paddingRowHack">
             <div class="paddingLeftHack paddingRightHack">
-                <div class="row form-section">
-                    <div class="col-xs-12">
-                        <h3>Configure the homepage carousel items</h3>
-                        <p> On the desktop view the carousel items are split into pages of 4 items, on mobile they are shown one by one.</p>
-                        <div class="sample-text">Sample carousel section - reference only</div>
-                        <img style="width: 100%;" src="/images/homepage-carousel-sample.png" />
-                    </div>
+                <div class="form-section">
+                  <div class="row">
+                      <div class="col-12">
+                          <h3>Configure the homepage carousel items</h3>
+                          <p> On the desktop view the carousel items are split into pages of 4 items, on mobile they are shown one by one.</p>
+                          <div class="sample-text">Sample carousel section - reference only</div>
+                          <img style="width: 100%;" src="/images/homepage-carousel-sample.png" />
+                      </div>
+                  </div>
                 </div>
-                <div class="row form-section">
-                    <div class="col-xs-12">
-                        <div id="carousel-config-saved-data" style="display: none;">
-                            {{ data['hdx.carousel.config'] }}
-                        </div>
+                <div class="form-section">
+                  <div class="row">
+                      <div class="col-12">
+                          <div id="carousel-config-saved-data" style="display: none;">
+                              {{ data['hdx.carousel.config'] }}
+                          </div>
 
-                        <script type="text/template" id="carousel-item-tpl">
-                            <div class="<%= (tab_open?'col-xs-12':'col-xs-4') %>">
-                                <div class="row carousel-item">
-                                    <div class="col-xs-12">
-                                        <div class="carousel-item-header">
-                                        <div class="row">
-                                            <div class="drag-handle pull-left">
-                                                <!--<i class="glyphicon glyphicon-option-vertical"/><i class="glyphicon glyphicon-option-vertical"/> -->
-                                                Carousel Item <%= order %>
-                                                <input type="hidden" name="id" value="<%= id %>">
-                                                <input type="hidden" name="graphic" value="<%= graphic %>">
+                          <script type="text/template" id="carousel-item-tpl">
+                              <div class="<%= (tab_open?'col-12':'col-4') %>">
+                                  <div class="row carousel-item">
+                                      <div class="col-12">
+                                          <div class="carousel-item-header">
+                                            <div class="row">
+                                              <div class="col-9">
+                                                <div class="drag-handle">
+                                                    <!--<i class="glyphicon glyphicon-option-vertical"/><i class="glyphicon glyphicon-option-vertical"/> -->
+                                                    Carousel Item <%= order %>
+                                                    <input type="hidden" name="id" value="<%= id %>">
+                                                    <input type="hidden" name="graphic" value="<%= graphic %>">
+                                                </div>
+                                              </div>
+                                              <div class="col-3 text-end">
+                                                  <a href="#" class="delete-item"><i class="fa fa-trash"></i></a>
+                                                  <a href="#" class="toggle-tab-state"><i class="fa <%= (tab_open?'fa-chevron-up':'fa-chevron-down') %> "></i></a>
+                                              </div>
                                             </div>
-                                            <div class="pull-right">
-                                                <a href="#" class="delete-item"><i class="glyphicon glyphicon-trash"></i></a>
-                                                <a href="#" class="toggle-tab-state"><i class="glyphicon <%= (tab_open?'glyphicon-chevron-up':'glyphicon-chevron-down') %> "></i></a>
-                                            </div>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 <%= (tab_open?'':'mini-carousel-item') %>">
-                                        <div class="carousel-item-content">
-                                        <div class="row">
-                                            <div class="<%= (tab_open?'col-xs-4':'col-xs-12') %>">
-                                                <div class="thumbnail-preview">
-                                                    <div class="sample-text">Preview Item</div>
-                                                    <div class="thumbnail-container">
-                                                        <div class="sub-item">
-                                                            <div class="sub-item-image">
-                                                                <%
-                                                                    var preview = graphic_upload_preview || graphic;
-                                                                    if (preview){
-                                                                %>
-                                                                    <img class="graphic" src="<%= preview %>">
-                                                                <%  } %>
-                                                                <div class="sub-item-action">
-                                                                    <a href="<%= url %>" class="btn"><%= (buttonText?buttonText:"Explore") %></a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="title"><%= title %></div>
-                                                            <a href="<%= url %>" >
-                                                                <div class="sub-item-caption">
-                                                                    <p class="description"><%= description %></p>
-                                                                </div>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                          </div>
+                                      </div>
+                                      <div class="col-12 <%= (tab_open?'':'mini-carousel-item') %>">
+                                          <div class="carousel-item-content">
+                                          <div class="row">
+                                              <div class="<%= (tab_open?'col-4':'col-12') %>">
+                                                  <div class="thumbnail-preview">
+                                                      <div class="sample-text">Preview Item</div>
+                                                      <div class="thumbnail-container">
+                                                          <div class="sub-item">
+                                                              <div class="sub-item-image">
+                                                                  <%
+                                                                      var preview = graphic_upload_preview || graphic;
+                                                                      if (preview){
+                                                                  %>
+                                                                      <img class="graphic" src="<%= preview %>">
+                                                                  <%  } %>
+                                                                  <div class="sub-item-action">
+                                                                      <a href="<%= url %>" class="btn"><%= (buttonText?buttonText:"Explore") %></a>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="title"><%= title %></div>
+                                                              <a href="<%= url %>" >
+                                                                  <div class="sub-item-caption">
+                                                                      <p class="description"><%= description %></p>
+                                                                  </div>
+                                                              </a>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
 
-                                            <div class="col-xs-8 <%= (tab_open?'':'hidden') %>">
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="title">Title</label>
-                                                    <div class="controls ">
-                                                        <input id="title" type="text" name="title" value="<%= title %>" placeholder="Title" class="form-control">
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="description">Description (optional)</label>
-                                                    <div class="controls ">
-                                                        <input id="description" type="text" name="description" value="<%= description %>" placeholder="eg. Description of the section" class="form-control">
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="thumbnail">Upload new thumbnail</label>
-                                                    <div class="controls ">
-                                                        <input id="thumbnail" type="file" name="graphic_upload" class="resource_file_field form-control">
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="url_field">URL</label>
-                                                    <div class="controls ">
-                                                        <input id="url_field" type="text" name="url" value="<%= url %>" placeholder="eg. https://... " class="form-control">
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="embed_field">Embed</small></label>
-                                                    <div class="controls ">
-                                                        <select name="embed" id="embed_field" class="form-control">
-                                                            <option value="true" <%= (embed.toString()==="true"?'selected="selected"':'') %> >Yes</option>
-                                                            <option value="false" <%= (embed.toString()==="true"?'':'selected="selected"') %>>No</option>
-                                                        </select>
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="button_text_field">Button text</label>
-                                                    <div class="controls ">
-                                                        <input id="button_text_field" type="text" name="buttonText" value="<%= buttonText %>" placeholder="eg. https://... " class="form-control">
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="new_window">New Window</label>
-                                                    <div class="controls ">
-                                                        <select name="newTab" id="new_window" class="form-control">
-                                                            <option value="true" <%= (newTab.toString()==="true"?'selected="selected"':'') %> >Yes</option>
-                                                            <option value="false" <%= (newTab.toString()==="true"?'':'selected="selected"') %>>No</option>
-                                                        </select>
-                                                        <span class="error-block"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </div>
-                                    </div>
+                                              <div class="col-8 <%= (tab_open?'':'d-none') %>">
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="title">Title</label>
+                                                      <div class="controls ">
+                                                          <input id="title" type="text" name="title" value="<%= title %>" placeholder="Title" class="form-control">
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="description">Description (optional)</label>
+                                                      <div class="controls ">
+                                                          <input id="description" type="text" name="description" value="<%= description %>" placeholder="eg. Description of the section" class="form-control">
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="thumbnail">Upload new thumbnail</label>
+                                                      <div class="controls ">
+                                                          <input id="thumbnail" type="file" name="graphic_upload" class="resource_file_field form-control">
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="url_field">URL</label>
+                                                      <div class="controls ">
+                                                          <input id="url_field" type="text" name="url" value="<%= url %>" placeholder="eg. https://... " class="form-control">
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="embed_field">Embed</small></label>
+                                                      <div class="controls ">
+                                                          <select name="embed" id="embed_field" class="form-control">
+                                                              <option value="true" <%= (embed.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                                              <option value="false" <%= (embed.toString()==="true"?'':'selected="selected"') %>>No</option>
+                                                          </select>
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="button_text_field">Button text</label>
+                                                      <div class="controls ">
+                                                          <input id="button_text_field" type="text" name="buttonText" value="<%= buttonText %>" placeholder="eg. https://... " class="form-control">
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                                  <div class="mb-3 control-large hdx-section-field">
+                                                      <label class="control-label" for="new_window">New Window</label>
+                                                      <div class="controls ">
+                                                          <select name="newTab" id="new_window" class="form-control">
+                                                              <option value="true" <%= (newTab.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                                              <option value="false" <%= (newTab.toString()==="true"?'':'selected="selected"') %>>No</option>
+                                                          </select>
+                                                          <span class="error-block"></span>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          </div>
+                                      </div>
 
-                                </div>
-                            </div>
+                                  </div>
+                              </div>
 
-                        </script>
+                          </script>
 
-                        <div id="carousel-item-collection" class="row">
+                          <div id="carousel-item-collection" class="row">
 
-                        </div>
-                    </div>
+                          </div>
+                      </div>
+                  </div>
                 </div>
                 <div class="row" style="margin-bottom: 30px;">
-                    <div class="col-xs-12">
-                        <button id="add-carousel-item" class="btn pull-left"> + New Item </button>
-                        <a href="#" class="btn btn-primary pull-right" id="save-carousel">Save</a>
+                    <div class="col-12">
+                        <button id="add-carousel-item" class="btn float-start"> + New Item </button>
+                        <a href="#" class="btn btn-primary float-end" id="save-carousel">Save</a>
                     </div>
                 </div>
             </div>

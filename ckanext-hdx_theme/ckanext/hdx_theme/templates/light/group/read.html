@@ -26,7 +26,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Locations'), controller='group', action='index', position=2 %}
 	{% endblock %}
-  <li class="active">{{ h.nav_link( grp.title|truncate(120), named_route='hdx_light_group.light_read', id=grp.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( grp.title|truncate(120), named_route='hdx_light_group.light_read', id=grp.name, highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 
@@ -34,12 +34,12 @@
 <div class="dataset-light group-light">
   <div class="container">
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
         <h1>{{ grp.title }}</h1>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
         <div style="display: flex; justify-content: space-between;">
           <span class="base-actions-menu" style="flex-shrink: 1; flex-grow: 1; min-width: 100px;">
             <ul>
@@ -75,20 +75,20 @@
           </span>
         </div>
       </div>
-      <div class="col-xs-4">
+      <div class="col-4">
 
       </div>
     </div>
   {% if (not data.country_dict.key_figures or data.country_dict.key_figures == 'active') and data.widgets.top_line_data_list %}
   <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
           <div class="list-header crisis-list-header">
               <span class="mL15 list-header-title">
                   {{ _("Key Figures") }}
               </span>
           </div>
       </div>
-      <div class="col-xs-12">
+      <div class="col-12">
         {% snippet 'country/key-figures.html', country_active=country_active, data=data, embedded=false %}
       </div>
   </div>
@@ -97,12 +97,12 @@
   <!--  DATA COMPLETENESS -->
   {% if data.data_completness %}
     <div class="row data-completeness">
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="list-header crisis-list-header">
           <span class="mL15 mR30 list-header-title">
             {{ _("Data Grid Completeness") }}
           </span>
-          <span class="pull-right">
+          <span class="float-end">
               <span>Expand</span>
               <span>
                 <span class="checkbox-slider" style="display: inline-block; top: 5px; margin-left: 3px;">
@@ -131,7 +131,7 @@
       </div>
       {% snippet 'country/completeness_list.html', data=data, hide_details=true %}
 
-      <div class="col-xs-12">
+      <div class="col-12">
         {% snippet 'country/completeness_legend.html' %}
       </div>
 

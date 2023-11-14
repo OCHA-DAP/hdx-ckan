@@ -9,42 +9,42 @@ overriding the form blocks depending on the current context
 {% endblock %}
 
 {% block custom_fields %}
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-language_code">{{ _("Language Code")}}</label>
   	<div class="controls">
   		<input type="text" id="field-language_code" name="language_code" {% if data.get('language_code', False)%} value="{{data.get('language_code', False)}}"{% endif %}>
   	</div>
   </div>
 
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-relief_web_url">{{ _("Relief Web URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-relief_web_url" name="relief_web_url" value="{{data.get('relief_web_url', '')}}">
   	</div>
   </div>
 
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-hr_info_url">{{ _("HR.info URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-hr_info_url" name="hr_info_url" value="{{data.get('hr_info_url', '')}}">
   	</div>
   </div>
 
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-alert_bar_title">{{ _("Alert Bar Title")}}</label>
   	<div class="controls">
   		<input type="text" id="field-alert_bar_title" name="alert_bar_title" {% if data.get('alert_bar_title', False)%} value="{{data.get('alert_bar_title', False)}}"{% endif %}>
   	</div>
   </div>
 
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-alert_bar_url">{{ _("Alert Bar URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-alert_bar_url" name="alert_bar_url" value="{{data.get('alert_bar_url', '')}}">
   	</div>
   </div>
 
-  <div class="control-group control-full">
+  <div class="">
     <label class="control-label" for="field-geojson">{{ _("Geojson")}}</label>
     <div class="controls">
       <textarea id="field-geojson" name="geojson" class="taller-textarea">{{data.get('geojson', '')}}</textarea>
@@ -52,7 +52,7 @@ overriding the form blocks depending on the current context
   </div>
 
   {% set activity_level = data.get('activity_level', '') %}
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-activity-level">{{ _("Activity Level")}}</label>
   	<div class="controls">
         <select id="field-activity-level" name="activity_level">
@@ -68,7 +68,7 @@ overriding the form blocks depending on the current context
   </div>
 
 {#  {% set featured_section = data.get('featured_section', '') %}#}
-{#  <div class="control-group control-full">#}
+{#  <div class="control-full">#}
 {#  	<label class="control-label" for="field-featured-section">{{ _("Featured Section")}}</label>#}
 {#  	<div class="controls">#}
 {#        <select id="field-featured-section" name="featured_section">#}
@@ -84,7 +84,7 @@ overriding the form blocks depending on the current context
 {#  </div>#}
 
   {% set key_figures = data.get('key_figures', '') %}
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-key-figures">{{ _("Key Figures")}}</label>
   	<div class="controls">
         <select id="field-key-figures" name="key_figures">
@@ -100,7 +100,7 @@ overriding the form blocks depending on the current context
   </div>
 
   {% set data_completeness = data.get('data_completeness', '') %}
-  <div class="control-group control-full">
+  <div class="">
   	<label class="control-label" for="field-data-completeness">{{ _("Data Grid Completeness")}}</label>
   	<div class="controls">
         <select id="field-data-completeness" name="data_completeness">

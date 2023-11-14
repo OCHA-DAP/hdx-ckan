@@ -8,7 +8,7 @@
 {% block subtitle %}{{ _("Locations") }}{% endblock %}
 
 {% block breadcrumb_content %}
-    <li class="active">{% link_for _('Locations'), controller='group', action='index' %}</li>
+    <li class="breadcrumb-item active">{% link_for _('Locations'), controller='group', action='index' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,7 @@
     </div>
 
     <div id="locationSection" class="row">
-        <div id="optionsGroup" class="col-xs-12">
+        <div id="optionsGroup" class="col-12">
             <div class="list-header crisis-list-header">
               <span class="mL15 list-header-title">
                 Locations
@@ -34,18 +34,18 @@
 
 
         </div>
-        <div class="col-xs-12">
+        <div class="col-12">
             <div id="map" style="height: 580px; position: relative;">
             </div>
         </div>
-        <div class="col-xs-12">
+        <div class="col-12">
             <div class="very-active-country-description">
                 <p class="very-active-country">A red dot beside the location name denotes a country for which there is a <a href="https://www.humanitarianresponse.info/en/programme-cycle/space/page/strategic-response-planning" target="_blank">humanitarian response plan</a></p>
             </div>
 
         </div>
 
-        <div class="col-xs-12">
+        <div class="col-12">
             <div id="country_list" class="row" style="">
             </div>
         </div>

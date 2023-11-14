@@ -6,15 +6,15 @@
     <input type="checkbox" onclick="updateQASelection(this)"> Select all
 
     <div class="more-options">
-      <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+      <a data-bs-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
         <i class="humanitarianicons-More-options"></i>
       </a>
       <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
         <li>
-          <a onclick="bulkUpdateQAComplete(true)">Mark as QA Completed</a>
+          <a class="dropdown-item" onclick="bulkUpdateQAComplete(true)">Mark as QA Completed</a>
         </li>
         <li>
-          <a onclick="bulkUpdateQAComplete(false)">Remove QA Completed</a>
+          <a class="dropdown-item" onclick="bulkUpdateQAComplete(false)">Remove QA Completed</a>
         </li>
       </ul>
     </div>

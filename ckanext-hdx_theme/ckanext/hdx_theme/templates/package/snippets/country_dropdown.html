@@ -5,7 +5,7 @@
 {% set group_name = 'groups__%s__id' % data.groups|length %}
 
     {% set available_groups = h.list_of_all_groups() %}
-  <div id="select_country" class="control-group dataset-required">
+  <div id="select_country" class="dataset-required">
       {% set error = errors.groups_list %}
       {% if inheritied_form_style != 'edit' %}
       <label for="country-drop" class="sspBold20">{{ _("Are you submitting data for the location below") }}?</label>
@@ -24,7 +24,7 @@
       </div>
   </div>
 
-<div class="control-group">
+<div class="">
   <div id="selected_groups" class="controls">
     {% if data.groups %}
       {% for group in data.groups %}

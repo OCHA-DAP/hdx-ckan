@@ -30,7 +30,7 @@
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
   {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), named_route='hdx_dataset.read', id=pkg.name, position=3 %}
-  <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
+  <li class="breadcrumb-item active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -40,7 +40,7 @@
         <div class="module-content">
         <div class="actions">
           {% block resource_actions %}
-          <ul class="mTop10 pull-right">
+          <ul class="mTop10 float-end">
             {% block resource_actions_inner %}
             {# No longer needed because of the new contribute flow
               {% if h.check_access('package_update', {'id':pkg.id }) %}
@@ -147,7 +147,7 @@
                         <p class="muted">
                           <i class="icon-info-sign"></i>
                           {{ _("Not seeing the views you were expecting?")}}
-                          <a href="javascript:void(0);" data-toggle="collapse" data-target="#data-view-info">
+                          <a href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#data-view-info">
                             {{ _('Click here for more information.') }}</a>
                         </p>
                         <div id="data-view-info" class="collapse">

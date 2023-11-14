@@ -243,8 +243,8 @@
 
 }
 
-.hdx-wrapper .hdx-panel-group {
-  .panel {
+.hdx-wrapper .hdx-card-group {
+  .card {
     border: none;
     border-bottom: 1px solid @lightGrayColor;
     box-shadow: none;
@@ -252,7 +252,7 @@
     &:hover {
       background-color: #EDF6FD;
     }
-    & + .panel {
+    & + .card {
       margin: 0;
     }
     .collapsing {
@@ -260,7 +260,7 @@
       -o-transition: height .1s ease;
       transition: height .1s ease;
     }
-    .panel-heading {
+    .card-header {
       min-height: 74px;
       border: none;
       box-shadow: none;
@@ -269,7 +269,7 @@
       padding-bottom: 20px;
       cursor: pointer;
 
-      .panel-title{
+      .card-title{
         line-height: 20px;
         .faq-question-link {
           font-family: @sourceSansProFont;
@@ -282,7 +282,7 @@
       }
     }
 
-    .panel-heading + .panel-collapse > .panel-body {
+    .card-header + .panel-collapse > .card-body {
       border: none;
       box-shadow: none;
 
@@ -301,7 +301,7 @@
   }
 }
 
-.presentation-modal.in {
+.presentation-modal.show {
     .modal-dialog {
         .close {
             position: absolute;

@@ -6,7 +6,7 @@ ckan.module('hdx_form_element_manager', function ($, _) {
       var moduleEl = this.el;
       var errorEl = this.el.find('.error-block');
       var errorWrapperEl = this.el.find('.controls');
-      var controlGroupEl = this.el.find('.control-group');
+      var controlGroupEl = this.el.find('.mb-3');
       var elementName = this.options.element_name;
       var required = [];
       if(this.options.required)

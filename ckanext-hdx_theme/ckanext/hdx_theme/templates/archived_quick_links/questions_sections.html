@@ -1,11 +1,11 @@
 
-    <div class="panel-group hdx-panel-group" id="accordion-general" role="tablist" aria-multiselectable="false">
+    <div class="hdx-card-group" id="accordion-general" role="tablist" aria-multiselectable="false">
         {% for viz in data.get('viz_list',[]) %}
             {% set q_id = 'auto-%s-%s-q' | format(viz.id, viz.id) %}
             {% set a_id = 'auto-%s-%s-a' | format(viz.id, viz.id) %}
-            <div class="panel">
-                <div class="panel-heading" role="tab" id="{{ q_id }}">
-                    <h4 class="panel-title">
+            <div class="card">
+                <div class="card-header" role="tab" id="{{ q_id }}">
+                    <h4 class="card-title">
                         <a role="button" href="{{viz.url}}" class="faq-question-link">
                             {{ viz.title | safe }} <i class="icon humanitarianicons-Out-of-platform"></i>
                         </a>

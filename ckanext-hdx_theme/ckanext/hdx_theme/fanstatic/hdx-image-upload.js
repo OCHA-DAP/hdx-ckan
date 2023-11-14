@@ -1,6 +1,6 @@
 /* Image Upload
- * 
- */  
+ *
+ */
 this.ckan.module('hdx-image-upload', function($, _) {
   return {
     /* options object can be extended using data-module-* attributes */
@@ -45,14 +45,14 @@ this.ckan.module('hdx-image-upload', function($, _) {
       var field_clear = 'input[name="' + options.field_clear + '"]';
 
       this.input = $(field_upload, this.el);
-      this.field_url = $(field_url, this.el).parents('.control-group');
-      this.field_image = this.input.parents('.control-group');
+      this.field_url = $(field_url, this.el).parents('.mb-3');
+      this.field_image = this.input.parents('.mb-3');
 
       // Is there a clear checkbox on the form already?
       var checkbox = $(field_clear, this.el);
       if (checkbox.length > 0) {
         options.is_upload = true;
-        checkbox.parents('.control-group').remove();
+        checkbox.parents('.mb-3').remove();
       }
 
       // Adds the hidden clear input to the form

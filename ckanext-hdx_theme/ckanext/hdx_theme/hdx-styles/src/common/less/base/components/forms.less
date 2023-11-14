@@ -135,7 +135,8 @@
     }
   }
 
-  .form-group {
+  // old form-group
+  .mb-3 {
 
     &.required {
       .control-label:after {
@@ -276,11 +277,11 @@
               height: 1px;
 
               &:before{
-                font-family: 'Glyphicons Halflings';
+                font-family: 'FontAwesome';
                 font-style: normal;
                 font-weight: 400;
 
-            	content: "\e014";
+                content: "\f00d";
                 color: @whiteColor;
                 font-size: 15px;
               }
@@ -328,12 +329,7 @@
         .sourceSansProFont(300, 15px);
       }
 
-    }
-
-
-
-
-
+      }
   }
 
   .control-group {
@@ -351,10 +347,6 @@
   }
 
   .form-horizontal {
-    .form-group {
-      margin-left: 0;
-      margin-right: 0;
-    }
     .controls {
       margin-left: @labelMaxWidth + 10px;
     }
@@ -395,7 +387,7 @@
 
   &.margin-fix {
     margin-bottom: 15px;
-    .form-group {
+    .mb-3 {
       margin-bottom: 0;
     }
   }

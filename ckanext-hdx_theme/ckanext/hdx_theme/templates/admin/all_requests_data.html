@@ -14,7 +14,7 @@
 
 {% block primary_content_inner_wrapper %}
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-12">
       {% block primary_content_inner %}
         <div class="request-data-module">
           {% set service_url = h.url_for('requestdata_ckanadmin.download_requests_data') %}
@@ -22,11 +22,10 @@
           {% set json = '?format=json'%}
           {% if organizations %}
             <div class="dropdown requested-data-download-btn">
-              <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">Download
-              <span class="caret" style="border-top-color: white;"></span></button>
+              <button class="btn dropdown-toggle " type="button" data-bs-toggle="dropdown">Download</button>
               <ul class="dropdown-menu dropdown-menu-left">
-                <li><a href="{{ service_url }}{{ csv }}">CSV</a></li>
-                <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
+                <li><a class="dropdown-item" href="{{ service_url }}{{ csv }}">CSV</a></li>
+                <li><a class="dropdown-item" href="{{ service_url }}{{ json }}">JSON</a></li>
               </ul>
             </div>
           {% endif %}

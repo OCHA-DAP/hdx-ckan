@@ -160,10 +160,10 @@
   text-align: center;
   padding: 0 20px 20px;
 }
-.homepage-main .hero-section .hero-boxes .action-box .count-items .col-xs-4 {
+.homepage-main .hero-section .hero-boxes .action-box .count-items .col-4 {
   border-right: 1px solid #cccccc;
 }
-.homepage-main .hero-section .hero-boxes .action-box .count-items .col-xs-4:last-child {
+.homepage-main .hero-section .hero-boxes .action-box .count-items .col-4:last-child {
   border-right: none;
 }
 .homepage-main .hero-section .hero-boxes .action-box .count-items .item-count a {
@@ -257,20 +257,20 @@
 .homepage-main .carousel-section .carousel .carousel-indicators li.active {
   background-color: #fff;
 }
-.homepage-main .carousel-section .carousel .item .item-center {
+.homepage-main .carousel-section .carousel .carousel-item .item-center {
   margin: auto;
   width: 980px;
 }
-.homepage-main .carousel-section .carousel .item .sub-item {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item {
   width: 215px;
   margin-right: 40px;
   float: left;
   position: relative;
 }
-.homepage-main .carousel-section .carousel .item .sub-item:last-child {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item:last-child {
   margin-right: 0;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .title {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 8px;
@@ -285,18 +285,18 @@
   transform: translateX(-50%);
   white-space: nowrap;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-image {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-image {
   position: relative;
   height: 215px;
   margin-bottom: 5px;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-image:hover.disabled .sub-item-action {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-image:hover.disabled .sub-item-action {
   display: none;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-image:hover .sub-item-action {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-image:hover .sub-item-action {
   display: block;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-image .sub-item-action {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-image .sub-item-action {
   display: none;
   position: absolute;
   height: 100%;
@@ -305,23 +305,23 @@
   left: 0;
   background: rgba(0, 0, 0, 0.3);
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-image .sub-item-action a {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-image .sub-item-action a {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: #f2645a;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-image .graphic {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-image .graphic {
   height: 215px;
   width: 215px;
   object-fit: cover;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-caption {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-caption {
   text-align: left;
   color: #fff;
 }
-.homepage-main .carousel-section .carousel .item .sub-item .sub-item-caption .description {
+.homepage-main .carousel-section .carousel .carousel-item .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;
   font-display: block;
   font-weight: 400;
@@ -352,7 +352,7 @@
 .homepage-main .learn-section .learn-photo .btn-learn .humanitarianicons-Out-of-platform {
   margin-left: 5px;
 }
-.homepage-main .presentation-modal.in .modal-dialog .close {
+.homepage-main .presentation-modal.show .modal-dialog .close {
   position: absolute;
   right: -30px;
   top: -40px;
@@ -360,7 +360,7 @@
   opacity: 1;
   color: white;
 }
-.homepage-main .presentation-modal.in .modal-dialog .modal-content {
+.homepage-main .presentation-modal.show .modal-dialog .modal-content {
   box-shadow: none;
   border: none;
   border-radius: 0;

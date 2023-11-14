@@ -15,24 +15,24 @@ Example:
 (_('Most Downloads'), 'total_res_downloads desc', _('Most Downloads'))]
 %}
 {% if admin_view %} {% set nothing=sorting.insert(0, (_('Due for Update'), 'due_date asc', _('Due for Update'))) %}{% endif %}
-{% set extra_class = class if class else 'pull-right' %}
+{% set extra_class = class if class else 'float-end' %}
 
 {% set sorting_selected = sort_param if sort_param else h.HDX_CONST('DEFAULT_SORTING') %}
-<div class="form-select control-group control-order-by {{extra_class}}">
+<div class="control-order-by {{extra_class}}">
   <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
   <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">
-    <a id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+    <a id="field-order-by" class="sspBold16" data-bs-toggle="dropdown" style="background-color: transparent;">
       {% for label, value, short_label in sorting %}
       {% if sorting_selected == value %}
       <input id="header-search-sort_initial_values" type="hidden" style="display: none" value="{{value}}" label="{{label}}" />
       {% if not used_default_sort_by %}<input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>{% endif %}
       <label class="dropdown-toggle-text">
           {% if label == _('Trending') %}
-              <span title="{{ _('Trending is determined by page views last 14 days') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
+              <span title="{{ _('Trending is determined by page views last 14 days') }}"  data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" >
                  {{ short_label }}
               </span>
           {% elif label == _('Due for Update') %}
-              <span title="{{ _('Show datasets that need to be updated at the top of the list') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
+              <span title="{{ _('Show datasets that need to be updated at the top of the list') }}"  data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" >
                  {{ short_label }}
               </span>
           {% else %}
@@ -43,10 +43,10 @@ Example:
       {% endfor %}
       <i class="humanitarianicons-Down"></i>
     </a>
-    <ul class="dropdown-menu dropdown-inverse dropdown-menu-right" role="menu" style="max-height: 241px; overflow-y: auto;">
+    <ul class="dropdown-menu dropdown-menu-right" role="menu" style="max-height: 241px; overflow-y: auto;">
       {% for label, value, short_label in sorting %}
       {% if label and value %}
-      <li><a href="#" tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+      <li><a href="#"  class="dropdown-item"tabindex="-1" val="{{ value }}">{{ label }}</a></li>
       {% endif %}
       {% endfor %}
     </ul>

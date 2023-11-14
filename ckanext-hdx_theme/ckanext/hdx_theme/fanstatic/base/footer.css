@@ -175,8 +175,8 @@
   font-size: 12px;
   color: #eeeeee;
 }
-.hdx-footer .links-list ul li .glyphicon-new-window,
-.hdx-footer .links-list ul a .glyphicon-new-window,
+.hdx-footer .links-list ul li .fa-window-restore,
+.hdx-footer .links-list ul a .fa-window-restore,
 .hdx-footer .links-list ul li .humanitarianicons-Out-of-platform,
 .hdx-footer .links-list ul a .humanitarianicons-Out-of-platform {
   color: #888888;

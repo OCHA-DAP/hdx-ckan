@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active"><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('Dashboard') }}</a></li>
+  <li class="breadcrumb-item active"><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('Dashboard') }}</a></li>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -25,27 +25,27 @@
     {% block page_header %}
       <header class="page-header paddingRowHack" style="position: relative;">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
-          {{ h.build_nav_icon('dashboard.index', _('Newsfeed'), class_='hdx-tab-button') }}
-          {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
-          {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
-          {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
+          {{ h.bs5_build_nav_icon('dashboard.index', _('Newsfeed'), class_='nav-link hdx-tab-button') }}
+          {{ h.bs5_build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='nav-link hdx-tab-button') }}
+          {{ h.bs5_build_nav_icon('dashboard.organizations', _('My Organisations'), class_='nav-link hdx-tab-button') }}
+          {{ h.bs5_build_nav_icon('dashboard.groups', _('My Locations'), class_='nav-link hdx-tab-button') }}
 
-          {{ h.build_nav_icon('requestdata.my_requested_data', _('HDX Connect Requests'), id=c.userobj.name) }}
+          {{ h.bs5_build_nav_icon('requestdata.my_requested_data', _('HDX Connect Requests'), class_='nav-link', id=c.userobj.name) }}
           {% if c.userobj.sysadmin %}
-            <li class="nav-tabs-more">
-              <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+            <li class="nav-item nav-tabs-more">
+              <a href="#" data-bs-toggle="dropdown" class="nav-link" aria-haspopup="true" role="button" aria-expanded="false">
                 <span id="crises-label">More <i class="humanitarianicons-Down"></i></span>
               </a>
               <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-                <li class="crises-group">
-                  <ul>
-                    <li>
-                      <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">Carousel</a>
+                <li class="nav-item crises-group">
+                  <ul >
+                    <li class="nav-item">
+                      <a href="#" data-module="hdx_click_stopper" class="nav-link" data-module-link_type="main nav">Carousel</a>
                     </li>
-                    {{ h.build_nav_icon('requestdata_ckanadmin.requests_data', _('HDX Connect Dashboard')) }}
-                    {{ h.build_nav_icon('hdx_custom_pages.index', _('Custom/Event Page')) }}
-                    <li>
-                      <a href="#" data-module="hdx_click_stopper" data-module-link_type="main nav">COD</a>
+                    {{ h.bs5_build_nav_icon('requestdata_ckanadmin.requests_data', _('HDX Connect Dashboard'), class_='nav-link') }}
+                    {{ h.bs5_build_nav_icon('hdx_custom_pages.index', _('Custom/Event Page'), class_='nav-link') }}
+                    <li class="nav-item">
+                      <a href="#" data-module="hdx_click_stopper" class="nav-link" data-module-link_type="main nav">COD</a>
                     </li>
                   </ul>
                 </li>

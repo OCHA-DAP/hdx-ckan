@@ -42,16 +42,20 @@ function prepareCountryList(countDatasets) {
 
           var item = $("<div class='country-item " + veryActive + "'></div>").appendTo(one_char_box);
           var countryIdLower = country_id.toLowerCase();
-          var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
+          var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-bs-html='true' data-bs-placement='top'>" + country.title + "</a>").attr('data-bs-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
         }
       }
     }
   }
-  $('.country-item:not(inactive) a').tooltip().on('click', function(e) {
-    code = $(this).data('code');
+  $('.country-item:not(inactive) a').on('click', function(e) {
+    var code = $(this).data('code');
     if (code) {
       window.open("group/" + code, "_self");
     }
+  });
+  var countryItems = document.querySelectorAll('.country-item:not(.inactive) a');
+  countryItems.forEach(function(item) {
+      new bootstrap.Tooltip(item);
   });
 }
 

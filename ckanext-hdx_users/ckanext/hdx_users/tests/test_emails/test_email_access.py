@@ -304,14 +304,14 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         )
         # existing values in the form
         assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
-        assert '<input id="field-firstname" type="text" name="firstname"' in response.body
-        assert '<input id="field-lastname" type="text" name="lastname"' in response.body
-        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
-        assert '<textarea id="field-about" name="about" cols="20" rows="5" placeholder="A little information about yourself"' in response.body
+        assert '<input id="field-firstname" type="text" class="form-control" name="firstname"' in response.body
+        assert '<input id="field-lastname" type="text" class="form-control" name="lastname"' in response.body
+        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
+        assert '<textarea id="field-about" class="form-control" name="about" cols="20" rows="5" placeholder="A little information about yourself"' in response.body
         # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
-        assert '<input id="field-password" type="password" name="old_password" value=""' in response.body
-        assert '<input id="field-password" type="password" name="password1" value=""' in response.body
-        assert '<input id="field-password-confirm" type="password" name="password2" value=""' in response.body
+        assert '<input id="field-password" type="password" class="form-control" name="old_password" value=""' in response.body
+        assert '<input id="field-password" type="password" class="form-control" name="password1" value=""' in response.body
+        assert '<input id="field-password-confirm" type="password" class="form-control" name="password2" value=""' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -340,7 +340,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing email in the form
-        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
+        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -372,7 +372,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing email in the form
-        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
+        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -407,7 +407,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing values in the form
-        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
+        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -440,7 +440,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             extra_environ=env,
         )
         # existing values in the form
-        assert '<input id="field-email" type="email" name="email" value="sue@example.com"' in response.body
+        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},

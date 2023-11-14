@@ -15,7 +15,7 @@ Example:
           {% block modal_content %}
               <div class="modal-header">
                   {% block header %}
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                      <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-hidden="true"></button>
                       <h3 id="{{ modal_div_id }}-label">
                           {% block header_content %}{%  endblock %}
                       </h3>
@@ -26,7 +26,7 @@ Example:
               </div>
               <div class="modal-footer">
                   {% block footer %}
-                      <button class="btn modal-cancel" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+                      <button class="btn modal-cancel" data-bs-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
                       <button {% if modal_submit_id %} id="{{ modal_submit_id }}"{% endif %}
                               class="btn btn-primary modal-submit" type="submit"
                               onclick="$(this).closest('form').submit(); $(this).attr('disabled', true);">{{ _('Submit') }}</button>

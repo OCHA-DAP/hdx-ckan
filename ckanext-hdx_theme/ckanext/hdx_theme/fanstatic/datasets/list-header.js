@@ -20,12 +20,12 @@ $(document).ready(function() {
 
     $(".filter-category .categ-title").on("click", function() {
         $(this).siblings(".categ-content").toggle();
-        var glyph = $(this).find("i.glyphicon");
-        glyph.toggleClass("glyphicon-minus");
-        glyph.toggleClass("glyphicon-plus");
+        var glyph = $(this).find("i.fa");
+        glyph.toggleClass("fa-minus");
+        glyph.toggleClass("fa-plus");
 
         var facetName = $(this).attr("data-value");
-        filterConfig.facets[facetName] = glyph.hasClass("glyphicon-minus");
+        filterConfig.facets[facetName] = glyph.hasClass("fa-minus");
         window.localStorage.setItem(LS_FILTER_CONFIG, JSON.stringify(filterConfig));
     });
 
@@ -118,8 +118,8 @@ $(document).ready(function() {
 
         $("#search-page-filters").toggle();
         var searchResults = $("#search-page-results");
-        searchResults.toggleClass("col-xs-12");
-        searchResults.toggleClass("col-xs-9");
+        searchResults.toggleClass("col-12");
+        searchResults.toggleClass("col-9");
     });
 
     if (!filterConfig.showFilter) {

@@ -101,10 +101,10 @@ dt.uppercase {
 }
 /* END - Order dropdown on org member pages */
 /* Override for members table on 8 columns*/
-.col-xs-8 > .list-items > .list-header {
+.col-8 > .list-items > .list-header {
   margin-top: 0;
 }
-.col-xs-8 > .list-items > .list-header .header-search {
+.col-8 > .list-items > .list-header .header-search {
   width: 320px;
 }
 /* end override*/

@@ -244,3 +244,6 @@ section.search-list .filter-category {
 .pii-confirm-modal .modal-body .icon-check:before {
   color: #1ebfb3;
 }
+.dropdown-menu {
+  font-size: 14px;
+}

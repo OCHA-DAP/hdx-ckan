@@ -23,13 +23,13 @@
 
 
     {% block title_and_actions %}
-    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+    <div class="col-12 paddingLeftHack paddingRightHack">
         <div class="row">
-            <div class="col-xs-12 mTop35 mBottom15">
+            <div class="col-12 mTop35 mBottom15">
                 <div class="row">
-                    <div class="col-xs-8">
+                    <div class="col-8">
                         <div class="row">
-                            <div class="col-xs-12 mBottom15">
+                            <div class="col-12 mBottom15">
                                 <h1 class="itemTitle">
                                     {{ pkg.title or pkg.name }}
                                 </h1>
@@ -54,14 +54,14 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-xs-12">
+                            <div class="col-12">
                                 <div class="notes">
                                     {{ pkg.showcase_notes_formatted }}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-offset-1 col-xs-3">
+                    <div class="offset-1 col-3">
                       <div class="showcase-image">
                           <a href="{% if pkg.url %} {{ pkg.url }} {% else %}#{% endif %}" target="{% if pkg.url %}_blank{% else %} _self {% endif %}">
                               {% if pkg.image_display_url %}
@@ -76,8 +76,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 align-bottom-right">
-                {% snippet "showcase/showcase_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right',
+            <div class="col-12 align-bottom-right">
+                {% snippet "showcase/showcase_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer float-end',
                 panel_title="Share Showcase", title=pkg.title, base_type='showcase', base_title='showcase', hide_membership=true, hide_contact_contributor=true,
                 hide_follow=true %}
             </div>
@@ -93,8 +93,8 @@
     <header class="module-content page-header paddingRowHack mTop20 mBottom10">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
             {% block content_primary_nav %}
-            <li class="active">
-                <a class="hdx-tab-button" href="#">{{ _('Datasets') }}</a>
+            <li class="nav-item">
+                <a class="nav-link hdx-tab-button active" href="#">{{ _('Datasets') }}</a>
             </li>
             {% endblock %}
         </ul>

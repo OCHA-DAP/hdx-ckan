@@ -49,12 +49,12 @@ within_tertiary
         {% if items %}
           {% set no_total_items= total_no_items %}
         {% endif %}
-<div id="{{name}}_filter" class="col-xs-6">
+<div id="{{name}}_filter" class="col-6">
   <div class="row">
-    <div class="col-xs-4" >
+    <div class="col-4" >
       <label>{{ title }}</label>
     </div>
-    <div class="col-xs-8">
+    <div class="col-8">
       {% if items or not hide_empty %}
         {% set one_active = h.one_active_item(items) %}
         <select name="{{name}}" class="{% if one_active %}value-selected{% endif %}" data-module="autocomplete" style="width: 230px;">
