@@ -36,56 +36,58 @@
             <div class="col-12">
                 <h1 class="country-title">{{ data.country_dict.display_name }}</h1>
             </div>
-            <div class="col-6 mTop8">
-                <div class="base-actions-menu">
-                    <ul>
-                        <li>
-                            {% set num_of_pack = data.stats_section.num_of_datasets %}
-                            {% if num_of_pack%}
-                                <span class="sspBold14">
-                                    <a class="sspBold14" href="?#dataset-filter-start">
-                                        {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
-                                    </a>
-                                    {% if data.stats_section.num_of_cods > 0 %}
-                                        (<a href="?ext_cod=1#dataset-filter-start">{{ data.stats_section.num_of_cods }} CODs</a>)
-                                    {% endif %}
+            <div class="row">
+              <div class="col-6 mTop8">
+                  <div class="base-actions-menu">
+                      <ul>
+                          <li>
+                              {% set num_of_pack = data.stats_section.num_of_datasets %}
+                              {% if num_of_pack%}
+                                  <span class="sspBold14">
+                                      <a class="sspBold14" href="?#dataset-filter-start">
+                                          {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
+                                      </a>
+                                      {% if data.stats_section.num_of_cods > 0 %}
+                                          (<a href="?ext_cod=1#dataset-filter-start">{{ data.stats_section.num_of_cods }} CODs</a>)
+                                      {% endif %}
 
-                                </span>
-                            {% else %}
-                                <span class="sspBold14">{{ _('0 Datasets') }}</span>
-                            {% endif %}
-                        </li>
-                        <li>
+                                  </span>
+                              {% else %}
+                                  <span class="sspBold14">{{ _('0 Datasets') }}</span>
+                              {% endif %}
+                          </li>
+                          <li>
 
-                            {% set num_of_followers = data.stats_section.num_of_followers %}
-                                        <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+                              {% set num_of_followers = data.stats_section.num_of_followers %}
+                                          <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
 
-                        </li>
-                        <li>
-                            <span class="dropdown dropdown-on-hover">
-                                <a href="#" data-bs-toggle="dropdown" data-module-trigger="hover focus click" data-module-placement="bottom">
-                                    {% set num_of_orgs = data.stats_section.num_of_organizations %}
-                                    <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
-                                </a>
-                                <div class="followers-list-popup dropdown-menu bottom">
-                                  <div class="hdx-arrow-wrapper">
-                                  <ul class="followers-list">
-                                    {% for org in data.stats_section.organization_list %}
-                                        <li class="dropdown-item follower-item">
-                                            <a href="{{ org.url }}">{{ org.display_name }}</a>
-                                        </li>
-                                    {% endfor %}
-                                  </ul>
+                          </li>
+                          <li>
+                              <span class="dropdown dropdown-on-hover">
+                                  <a href="#" data-bs-toggle="dropdown" data-bs-display="static">
+                                      {% set num_of_orgs = data.stats_section.num_of_organizations %}
+                                      <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
+                                  </a>
+                                  <div class="followers-list-popup dropdown-menu bottom">
+                                    <div class="hdx-arrow-wrapper">
+                                      <ul class="followers-list">
+                                        {% for org in data.stats_section.organization_list %}
+                                            <li class="follower-item">
+                                                <a href="{{ org.url }}" class="dropdown-item">{{ org.display_name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                      </ul>
+                                    </div>
                                   </div>
-                                </div>
-                            </span>
-                        </li>
-                    </ul>
+                              </span>
+                          </li>
+                      </ul>
 
-                </div>
-            </div>
-            <div class="col-6">
-                {% snippet "country/country_actions_menu.html", country=data.country_dict, can_edit=h.check_access('group_update', {'id': data.country_dict.id}), classes='base-actions-menu followButtonContainer float-end' %}
+                  </div>
+              </div>
+              <div class="col-6">
+                  {% snippet "country/country_actions_menu.html", country=data.country_dict, can_edit=h.check_access('group_update', {'id': data.country_dict.id}), classes='base-actions-menu followButtonContainer float-end' %}
+              </div>
             </div>
         </div>
     </div>

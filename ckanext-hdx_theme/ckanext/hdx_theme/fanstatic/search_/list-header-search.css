@@ -242,6 +242,10 @@
 .list-header .dropdown.orderDropdown .dropdown-toggle {
   cursor: pointer;
 }
+.list-header .dropdown.orderDropdown .dropdown-menu {
+  line-height: normal;
+  font-size: 14px;
+}
 .list-header .list-header-showall {
   color: #333333;
 }

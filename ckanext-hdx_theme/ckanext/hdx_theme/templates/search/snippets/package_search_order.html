@@ -46,7 +46,7 @@ Example:
     <ul class="dropdown-menu dropdown-menu-right" role="menu" style="max-height: 241px; overflow-y: auto;">
       {% for label, value, short_label in sorting %}
       {% if label and value %}
-      <li class="dropdown-item"><a href="#" tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+      <li><a href="#"  class="dropdown-item"tabindex="-1" val="{{ value }}">{{ label }}</a></li>
       {% endif %}
       {% endfor %}
     </ul>

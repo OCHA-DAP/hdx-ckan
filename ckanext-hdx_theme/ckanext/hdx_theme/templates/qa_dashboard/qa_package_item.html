@@ -18,8 +18,8 @@
             <i class="humanitarianicons-More-options"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
-            <li class="dropdown-item">
-              <a onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
+            <li>
+              <a class="dropdown-item" onclick="contributeAddDetails('{{ package.id }}', 'dataset')">Edit dataset</a>
             </li>
 {#            <li>#}
 {#              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', true);">Quarantine all resources</a>#}
@@ -27,23 +27,23 @@
 {#            <li>#}
 {#              <a onclick="updateQuarantineList('#package-resources-{{loop.index}}', false);">Remove from quarantine all resources</a>#}
 {#            </li>#}
-            <li class="dropdown-item">
-              <a onclick="updateAllResourcesQuarantine('{{ package.id }}','True');">Quarantine all resources</a>
+            <li>
+              <a class="dropdown-item" onclick="updateAllResourcesQuarantine('{{ package.id }}','True');">Quarantine all resources</a>
             </li>
-            <li class="dropdown-item">
-              <a onclick="updateAllResourcesQuarantine('{{ package.id }}','False');">Remove from quarantine all resources</a>
+            <li>
+              <a class="dropdown-item" onclick="updateAllResourcesQuarantine('{{ package.id }}','False');">Remove from quarantine all resources</a>
             </li>
-            <li class="dropdown-item">
-              <a onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
+            <li>
+              <a class="dropdown-item" onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
             </li>
-            <li class="dropdown-item">
-              <a onclick="updateAllResourcesPIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
+            <li>
+              <a class="dropdown-item" onclick="updateAllResourcesPIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
             </li>
-            <li class="dropdown-item">
-              <a onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
+            <li>
+              <a class="dropdown-item" onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
             </li>
-            <li class="dropdown-item">
-              <a onclick="{{macro.contributor_action(package, h, 'true')}}"
+            <li>
+              <a class="dropdown-item" onclick="{{macro.contributor_action(package, h, 'true')}}"
                  id="contact-the-contributor">
                 <span>Contact the contributor</span>
               </a>

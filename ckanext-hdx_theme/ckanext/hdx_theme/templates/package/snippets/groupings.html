@@ -7,11 +7,11 @@
       <span class="caret"></span>
     </a>
     <ul class="dropdown-menu crises-menu" role="menu" data-module="hdx_resource_grouping">
-      <li class="dropdown-item crises-group">LATEST
+      <li class="crises-group">LATEST
       {% for grouping in pkg.x_resource_grouping[:1] %}
         <ul>
           <li data-grouping-id="{{ h.hdx_munge_title(grouping) }}">
-            <a href="javascript:void(0);">
+            <a class="dropdown-item" href="javascript:void(0);">
               {{ grouping }}
             </a>
           </li>

@@ -175,8 +175,8 @@
                                                         <button class="btn hdx-btn btn-secondary action-decline"  data-member-id="{{request.id}}">{{_("Decline")}}</button>
                                                         <ul class="dropdown-menu action-approve" role="menu">
                                                             {% for role_categ in roles %}
-                                                                <li class="dropdown-item">
-                                                                    <a data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
+                                                                <li>
+                                                                    <a class="dropdown-item" data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
                                                                 </li>
                                                             {% endfor %}
                                                         </ul>

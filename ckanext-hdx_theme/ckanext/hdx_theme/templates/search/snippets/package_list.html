@@ -73,8 +73,8 @@ Example:
                </a>
               <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">
                 {% for value in limits %}
-                  <li class="dropdown-item">
-                    <input id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}><label for="ext_page_size_{{value}}">{{value}}</label>
+                  <li>
+                    <input class="dropdown-item" id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}><label for="ext_page_size_{{value}}">{{value}}</label>
                   </li>
                 {% endfor %}
               </ul>

@@ -142,26 +142,26 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
             {% if 'pii_is_sensitive' in resource %}
-              <li class="dropdown-item">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#pii-confirm-modal-{{ res.id }}">Update Risk Classification</a>
+              <li>
+                <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pii-confirm-modal-{{ res.id }}">Update Risk Classification</a>
               </li>
             {% endif %}
             {% if dlp_run and link_to_dlp %}
-              <li class="dropdown-item">
-                <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
+              <li>
+                <a href class="dropdown-item" onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
               </li>
 {#            {% endif %}#}
-            <li class="dropdown-item">
-              <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Main JSON</a>
+            <li>
+              <a href="{{ link_to_log }}" class="dropdown-item" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Main JSON</a>
             </li>
 {#            {% if link_to_dlp %}#}
-              <li class="dropdown-item">
-                <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">DLP JSON</a>
+              <li>
+                <a href="{{ link_to_dlp }}" class="dropdown-item" target="_blank" title="{{ h.render_datetime(isodate_string) }}">DLP JSON</a>
               </li>
             {% endif %}
             {% if dlp_run and link_to_debug %}
-              <li class="dropdown-item">
-                <a href="{{ link_to_debug }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Debug Log</a>
+              <li>
+                <a href="{{ link_to_debug }}" class="dropdown-item" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Debug Log</a>
               </li>
             {% endif %}
           </ul>

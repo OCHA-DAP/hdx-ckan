@@ -58,9 +58,6 @@ h4 small {
 .dropup .caret {
   border-bottom: 9px solid #007CE0;
 }
-.dropdown .dropdown-menu {
-  font-size: 14px;
-}
 /* END Style Caret */
 /* Change the default style for ul items */
 ul.hdx-bs3 {
