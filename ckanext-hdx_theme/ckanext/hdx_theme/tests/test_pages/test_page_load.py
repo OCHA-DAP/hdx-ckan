@@ -33,6 +33,8 @@ pages = [
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all', 'url_params': {'id': 'tester'}},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
     {'url_name': 'hdx_splash.index', 'usertype': 'all'},
+    {'url_name': 'hdx_archived_quick_links.show', 'usertype': 'all'},
+
 ]
 
 # @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
