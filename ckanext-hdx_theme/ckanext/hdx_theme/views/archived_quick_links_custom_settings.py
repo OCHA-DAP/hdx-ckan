@@ -47,8 +47,8 @@ def show():
 
     archived_items_list = []
 
-    context = {u'user': g.user}
-    check_access('hdx_quick_links_update', context, {})
+    # context = {u'user': g.user}
+    # check_access('hdx_quick_links_update', context, {})
     viz_list = get_action('hdx_quick_links_settings_show')({}, {})
     archived_viz_list = _prepare_archived_viz_list(viz_list)
     archived_items_list.extend(archived_viz_list)
