@@ -38,7 +38,7 @@
           <div class="form-select control-order-by">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
             <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
-              <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown" style="background-color: transparent;">
+              <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
                 <span class="dropdown-toggle-text">
                 {% for label, value in sorting %}
                   {% if sorting_selected == value %} {{ label }} {% endif %}

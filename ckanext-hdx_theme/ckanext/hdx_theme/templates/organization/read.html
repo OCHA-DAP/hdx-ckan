@@ -38,7 +38,7 @@
 					{{ h.bs5_build_nav_icon('hdx_members.members', _('Members'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
 				{% endif %}
 				{% if h.check_access('organization_update', {'id': org_dict.id}) %}
-				  {{ h.bs5_build_nav_icon('requestdata_organization_requests.requested_data', _('nav-link Requested Data'), id=org_dict.name) }}
+				  {{ h.bs5_build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=org_dict.name, class_='nav-link') }}
 				{% endif %}
 			   	{{ h.bs5_build_nav_icon('hdx_org.stats', _('Stats'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
 		   {% endblock %}

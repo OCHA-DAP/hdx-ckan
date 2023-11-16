@@ -1,8 +1,8 @@
-.form-search .input-append {
+.form-search .input-group {
   width: 100%;
   display: flex;
 }
-.form-search .input-append .searchInput {
+.form-search .input-group .searchInput {
   flex-grow: 1;
   height: 45px;
   border-radius: 6px 0 0 6px;
@@ -10,13 +10,12 @@
   border: 0;
   padding: 0 0 0 20px;
 }
-.form-search .input-append .searchInput::-webkit-input-placeholder {
+.form-search .input-group .searchInput::-webkit-input-placeholder {
   color: #cccccc;
 }
-.form-search .input-append .button {
-  width: 50px;
+.form-search .input-group .button {
   height: 45px;
-  padding: 0;
+  padding: 0 17px;
   background-color: #007CE0;
   border: 0;
   border-bottom-right-radius: 6px;

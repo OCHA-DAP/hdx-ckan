@@ -170,6 +170,13 @@
   width: 90%;
 }
 /* END - Items per page  style */
+#field-order-by {
+  border: 0;
+  background-color: transparent;
+}
+#field-order-by::after {
+  display: none;
+}
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
 .container,
 .navbar-static-top .container,
@@ -312,6 +319,9 @@ body {
   top: 0;
   left: 40px;
   border-radius: 100px;
+}
+.activity .item i.fa.icon {
+  display: none;
 }
 /* END Style Dashboard - Newsfeed list */
 .alert-danger,
@@ -2319,12 +2329,12 @@ textarea {
   text-decoration: none;
 }
 @media (max-width: 768px) {
-  [data-module="custom-fields"] .input-prepend .add-on {
+  [data-module="custom-fields"] .input-group .input-group-text {
     display: block;
   }
 }
 @media (max-width: 480px) {
-  [data-module="custom-fields"] .input-prepend {
+  [data-module="custom-fields"] .input-group {
     width: 100%;
   }
   [data-module="custom-fields"] .control-custom input {
@@ -2341,7 +2351,7 @@ textarea {
 .control-full .error-block {
   width: auto;
 }
-.control-group.error .input-prepend .error-block,
+.control-group.error .input-group .error-block,
 .control-custom.error .error-block {
   width: auto;
 }
@@ -4012,19 +4022,24 @@ ul.list-horizontal li:first-child:before {
     width: 100%;
   }
 }
-.new-header .header-nav-search .header-search-form .input-prepend {
+.new-header .header-nav-search .header-search-form .input-group {
   display: flex;
 }
-.new-header .header-nav-search .header-search-form .humanitarianicons-Search {
+.new-header .header-nav-search .header-search-form .input-group .input-group-text {
   margin: 0 20px;
-  color: #888888;
-  font-size: 20px;
   line-height: 28px;
+  background: #fff;
+  padding: 0;
+  border: 0;
 }
 @media (max-width: 425px) {
-  .new-header .header-nav-search .header-search-form .humanitarianicons-Search {
+  .new-header .header-nav-search .header-search-form .input-group .input-group-text {
     margin: 0 10px;
   }
+}
+.new-header .header-nav-search .header-search-form .input-group .input-group-text .humanitarianicons-Search {
+  color: #888888;
+  font-size: 20px;
 }
 .new-header .header-nav-search .header-search-form .filter-icon {
   visibility: hidden;
@@ -4042,7 +4057,6 @@ ul.list-horizontal li:first-child:before {
   padding: 0;
   height: 28px;
   background: transparent;
-  width: 100%;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
