@@ -153,7 +153,7 @@
                     <div class="item-center">
                       <div class="sub-item">
                         <div class="sub-item-image">
-                          <img class="graphic" src="https://data.humdata.org/global/0261_0ae3767c-f537-459a-b722-91c2cb0c8432.png" alt="Highlight item">
+                          <img class="graphic lazyload" data-src="{{ item.graphic }}" alt="Highlight item">
                           <div class="sub-item-action">
                             {% if item.embed %}
                             <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
@@ -283,9 +283,9 @@
 
 {% block home_search %}
   <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
-    <div class="input-append">
-      <input type="text" class="searchInput" id="q2" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}" aria-label="Search Datasets">
-      <button type="submit" class="button" aria-label="search">
+    <div class="input-group">
+      <input type="text" class="searchInput form-control" id="q2" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}" aria-label="Search Datasets">
+      <button type="submit" class="button input-group-text" aria-label="search">
         <i class="humanitarianicons-Search"></i>
       </button>
     </div>

@@ -69,3 +69,10 @@
   width: 90%;
 }
 /* END - Items per page  style */
+#field-order-by {
+  border: 0;
+  background-color: transparent;
+}
+#field-order-by::after {
+  display: none;
+}

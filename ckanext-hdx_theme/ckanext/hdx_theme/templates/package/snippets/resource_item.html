@@ -90,14 +90,14 @@
                       {% if res.has_views and is_not_zipped %}
 
                         <li>
-                          <a href="{{ url }}" class="dropdown-item ga-preview">
+                          <a href="{{ url }}" class="ga-preview">
                             {{ _('Preview on HDX') }}
                           </a>
                         </li>
                       {% endif %}
                       {% if h.hdx_dataset_is_hxl(pkg.tags)  and is_not_zipped and not h.is_not_hxl_format(res.format) %}
                         <li>
-                          <a href="#" class="dropdown-item ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
+                          <a href="#" class="ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
                             {{ _('Validate with Data Check') }}
                           </a>
                         </li>

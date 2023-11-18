@@ -262,11 +262,11 @@ ckan.module('hdx-modal-form', function($) {
                 $(error).removeClass('error');
             })
 
-            this.modalFormError.addClass('hide');
+            this.modalFormError.addClass('d-none');
             this.modalFormError.text('');
         },
         _showFormError: function(message) {
-            this.modalFormError.removeClass('hide');
+            this.modalFormError.removeClass('d-none');
             this.modalFormError.text(message);
             // Scroll to top of form
             var form = this.modal.find('form');

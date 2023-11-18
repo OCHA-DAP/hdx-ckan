@@ -29,16 +29,22 @@
           width: 100%;
         }
       }
-      .input-prepend {
+      .input-group {
         display: flex;
-      }
-      .humanitarianicons-Search{
-        margin: 0 20px;
-        color: @grayColor;
-        font-size: 20px;
-        line-height: 28px;
-        @media (max-width: @cut-point-mobile-l) {
-          margin: 0 10px;
+
+        .input-group-text {
+          margin: 0 20px;
+          line-height: 28px;
+          background: #fff;
+          padding: 0;
+          border: 0;
+          @media (max-width: @cut-point-mobile-l) {
+            margin: 0 10px;
+          }
+          .humanitarianicons-Search {
+            color: @grayColor;
+            font-size: 20px;
+          }
         }
       }
 
@@ -62,7 +68,6 @@
         padding: 0;
         height: 28px;
         background: transparent;
-        width: 100%;
 
         .sourceSansProFont(400, 18px);
         line-height: 28px;

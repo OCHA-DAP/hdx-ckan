@@ -79,7 +79,7 @@
 .hdx-wrapper .top-banner .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
   min-width: 530px;
 }
@@ -91,7 +91,7 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner .top-banner-text-wrapper {
     min-width: 400px;
-    margin-top: 45px;
+    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -143,7 +143,7 @@
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
 }
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper .top-banner-title {
@@ -154,7 +154,7 @@
   text-align: center;
 }
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper .top-banner-title-archive {
-  margin-top: 130px;
+  margin-top: 40px;
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 36px;
   color: #FFFFFF;
@@ -183,7 +183,7 @@
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
   min-width: 530px;
 }
@@ -195,7 +195,7 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
     min-width: 400px;
-    margin-top: 45px;
+    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -250,13 +250,11 @@
   background-position: left bottom;
   background-size: 100% auto;
   height: 315px;
-  margin-left: -45px;
-  margin-right: -45px;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
   min-width: 530px;
 }
@@ -268,7 +266,7 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
     min-width: 400px;
-    margin-top: 45px;
+    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -310,7 +308,7 @@
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 70px;
+  padding-top: 70px;
   width: 50%;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title {
@@ -322,7 +320,7 @@
   line-height: 36px;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title-archive {
-  margin-top: 130px;
+  margin-top: 40px;
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 36px;
   color: #FFFFFF;

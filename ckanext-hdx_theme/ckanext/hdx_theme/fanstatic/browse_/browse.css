@@ -469,13 +469,6 @@
 .tooltip .tooltip-inner {
   padding: 0;
 }
-#field-order-by {
-  border: 0;
-  background-color: transparent;
-}
-#field-order-by::after {
-  display: none;
-}
 .caret {
   vertical-align: baseline;
 }

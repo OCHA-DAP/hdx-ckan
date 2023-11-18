@@ -25,7 +25,11 @@
 			<div class="org-info-label">{{_("Be as specific as possible (i.e. don\'t just say WFP, say WFP-Colombia)")}}</div>
 		</div>
 	</div>
-    {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
+
+    <div class="org-control-container">
+      {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs, classes=['org-control']) }}
+    </div>
+
 	<div class="org-control-container">
 
         {#
@@ -211,23 +215,23 @@
 
 
 
-<div class="org-control-container">
+<div class="org-control-container mBottom30">
   <h1 class="h1-title uppercase">
-          4. {{ _('Visualization Configuration') }}
-        </h1>
-</div>
-<div class="org-control-container" style="margin-bottom:30px;">
-<div class="controls">
-  <label class="control-label" for="visualization-select">Visualization Type</label>
-          <select id="visualization-select" name="visualization-select" style="width:95%;" class="visualization_config">
-              <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
-              {# <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option> #}
-              {# <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option> #}
-              {# <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>  #}
-              <option value="embedded" {% if visualization['visualization-select'] == 'embedded' %}selected{% endif %}>Embedded</option>
-              <option value="embedded-preview" {% if visualization['visualization-select'] == 'embedded-preview' %}selected{% endif %}>Embedded with Preview</option>
-          </select>
-</div>
+    4. {{ _('Visualization Configuration') }}
+  </h1>
+  <div class="org-control">
+    <label class="control-label" for="visualization-select">Visualization Type</label>
+    <div class="controls">
+      <select id="visualization-select" name="visualization-select" class="visualization_config form-select">
+        <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
+        {# <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option> #}
+        {# <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option> #}
+        {# <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>  #}
+        <option value="embedded" {% if visualization['visualization-select'] == 'embedded' %}selected{% endif %}>Embedded</option>
+        <option value="embedded-preview" {% if visualization['visualization-select'] == 'embedded-preview' %}selected{% endif %}>Embedded with Preview</option>
+      </select>
+  </div>
+  </div>
 </div>
 
 {#  <div class="visualization-div" id="3W-dashboard" {% if visualization['visualization-select'] != '3W-dashboard' %}style="display:none;"{% endif %}>
