@@ -29,7 +29,7 @@
               {% if pending_request %}
                 <div class="alert alert-danger mTop20">{{ _('You already have a pending request. Please wait for the reply.') }}</div>
               {% else %}
-                <div class="alert alert-danger mTop20 hide"></div>
+                <div class="alert alert-danger mTop20 d-none"></div>
               {% endif %}
               <div class="control mTop20">
                 <input id="field-name" name="sender_name" class="full-width required {% if c.userobj.fullname %}input-content{% endif %}" type="text" value="{% if c.userobj.fullname %}{{ c.userobj.fullname }}{% endif %}" required="required">

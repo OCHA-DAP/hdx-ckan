@@ -2351,12 +2351,12 @@ textarea {
   text-decoration: none;
 }
 @media (max-width: 768px) {
-  [data-module="custom-fields"] .input-prepend .add-on {
+  [data-module="custom-fields"] .input-group .input-group-text {
     display: block;
   }
 }
 @media (max-width: 480px) {
-  [data-module="custom-fields"] .input-prepend {
+  [data-module="custom-fields"] .input-group {
     width: 100%;
   }
   [data-module="custom-fields"] .control-custom input {
@@ -2373,7 +2373,7 @@ textarea {
 .control-full .error-block {
   width: auto;
 }
-.control-group.error .input-prepend .error-block,
+.control-group.error .input-group .error-block,
 .control-custom.error .error-block {
   width: auto;
 }
@@ -4008,7 +4008,7 @@ ul.list-horizontal li:first-child:before {
     width: 100%;
   }
 }
-.new-header .header-nav-search .header-search-form .input-prepend {
+.new-header .header-nav-search .header-search-form .input-group {
   display: flex;
 }
 .new-header .header-nav-search .header-search-form .humanitarianicons-Search {

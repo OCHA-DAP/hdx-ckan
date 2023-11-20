@@ -279,14 +279,14 @@
                                                                   </li>
                                                                   <li class="or-separator dropbox">
                                                                       <a data-module="bs_tooltip" data-module-placement="top"
-                                                                         data-original-title="{{ _('By adding files via dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
+                                                                         data-bs-original-title="{{ _('By adding files via dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
                                                                          data-bs-toggle="tooltip" href="#">
                                                                           <img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox
                                                                       </a>
                                                                   </li>
                                                                   <li class="or-separator googledrive">
                                                                       <a data-module="bs_tooltip" data-module-placement="top"
-                                                                         data-original-title="{{ _('In order to add files via google drive, sharing settings has to be on') }}"
+                                                                         data-bs-original-title="{{ _('In order to add files via google drive, sharing settings has to be on') }}"
                                                                          data-bs-toggle="tooltip" href="#">
                                                                           <img class="cloud-img" src="/images/icons/drive.png" /> Google Drive
                                                                       </a>
@@ -457,7 +457,7 @@
                                               {% if user_is_sysadmin %}
                                                   <div data-module="hdx_form_element_manager" data-module-element_name="quality">
                                                       {% set quality_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-                                                      'data-original-title': 'Has the quality of this dataset been evaluated by our data team?',
+                                                      'data-bs-original-title': 'Has the quality of this dataset been evaluated by our data team?',
                                                       'data-bs-toggle': 'tooltip'}
                                                       %}
                                                   {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['mb-3'], attrs={}, label_attrs=quality_attrs) }}
@@ -614,7 +614,7 @@
                                                         <label style="font-weight: inherit; min-width: 90px;"
                                                                data-module='bs_tooltip'
                                                                data-module-placement='top'
-                                                               data-original-title= 'The end date will always advance to be the current date'
+                                                               data-bs-original-title= 'The end date will always advance to be the current date'
                                                                data-bs-toggle= 'tooltip' >
                                                           <input style="margin-right: 5px; width: auto;"
                                                                  type="checkbox"
@@ -644,7 +644,7 @@
 
                                             {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
                                             {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
+                                                    'data-bs-original-title': 'Your best guess of how often this dataset will be updated',
                                                     'data-bs-toggle': 'tooltip'}
                                                     %}
                                             <div id="data_update_frequency" data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">

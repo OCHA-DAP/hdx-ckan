@@ -33,7 +33,7 @@
   {{ form.input("password2", id="field-confirm-password", label=_("Confirm Password"), type="password", placeholder="", value=data.password2, error=errors.password1, classes=["control-medium"]) }}
 
   		<div class="control-medium">
-            <label class="control-label hide" for="recaptcha_response_field">Captcha</label>
+            <label class="control-label d-none" for="recaptcha_response_field">Captcha</label>
             <div class="controls editor">
               <noscript>
                 <iframe src="//www.google.com/recaptcha/api/noscript?k={{ capcha_api_key }}"
