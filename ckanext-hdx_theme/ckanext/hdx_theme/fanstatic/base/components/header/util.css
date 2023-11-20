@@ -90,6 +90,9 @@
   background-color: #eeeeee;
   padding-bottom: 1px;
 }
+#homepage-alerts .flash-messages {
+  background-color: transparent;
+}
 /* END Style Bootstrap Flash messages*/
 /* Common Classes */
 .mTop60 {
