@@ -199,6 +199,10 @@
 .search-list .dataset-item .dataset-content2 .dataset-dates {
   margin-bottom: 8px;
 }
+.search-list .dataset-item .dataset-content2 .dataset-dates .more-dates {
+  margin-top: 5px;
+  margin-left: 15px;
+}
 .search-list .dataset-item .dataset-content2 .dataset-dataseries {
   margin-top: 8px;
 }

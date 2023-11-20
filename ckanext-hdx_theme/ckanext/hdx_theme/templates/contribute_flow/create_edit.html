@@ -588,9 +588,9 @@
                                                  style="font-weight:inherit"
                                                  data-module='bs_tooltip'
                                                  data-module-placement='top'
-                                                 data-original-title= 'The time period for which data are collected or calculated and to which, as a result, they refer. The reference period may be of any length: a year, a month, or even a day.'
+                                                 data-original-title='The earliest start date and latest end date across all resources included in the dataset.'
                                                  data-bs-toggle= 'tooltip'>
-                                                  {{_('Reference Period')}} (?)
+                                                  {{_('Time Period of the Dataset')}} [?]
                                                 </label>
                                                 <div class="controls">
                                                   <div style="display: flex">
@@ -628,7 +628,7 @@
                                                                  data-module-alt_field_id='date_ongoing'
                                                                  data-module-original_value="{{ data.ui_date_ongoing }}"
                                                                  {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
-                                                            Ongoing (?)
+                                                            Ongoing [?]
                                                         </label>
                                                       </div>
                                                   </div>
@@ -650,7 +650,7 @@
                                             <div id="data_update_frequency" data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
                                               <div class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-status overdue margin-fix {% endif %}">
                                                 {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} <div class="overdue-title">Please check if the following field is up to date:</div>{% endif %}
-                                                {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['mb-3 update-frequency-select'], attrs={}, label_attrs=frequency_attrs) }}
+                                                {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency [?]'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['mb-3 update-frequency-select'], attrs={}, label_attrs=frequency_attrs) }}
                                               </div>
                                             </div>
 
@@ -748,7 +748,7 @@
                                         <div class="col-7">
                                           {% set archive_values = [{'value': False, 'text': 'No'}, {'value': True, 'text': 'Yes'}] %}
                                           <div id="archived_dataset_flag">
-                                            {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources (?)'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['mb-3 update-frequency-select'], attrs={}) }}
+                                            {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources [?]'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['mb-3 update-frequency-select'], attrs={}) }}
                                           </div>
 
                                         </div>
