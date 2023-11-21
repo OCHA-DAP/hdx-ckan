@@ -64,15 +64,11 @@
                 <div class="section-unfold">
                   <div class="overlay">
                     <a class="fullscreen" href="{{ section.get('data_url') }}" target="_blank">Open fullscreen <i class="icon humanitarianicons-Out-of-platform"></i> </a>
-                    <div class="display-toggle">
-                      Display:
-                      <span class="checkbox-slider" style="display: inline-block; ">
-                        <input id="section-slider-toggle-{{loop.index}}" {% if page.sections|length == 1 %} checked="checked" {% endif %} onclick="customPageToggleSectionFold(this);" type="checkbox" class="checkbox-slider-checkbox">
-                        <label class="checkbox-slider-label" for="section-slider-toggle-{{loop.index}}">
-                          <span class="checkbox-slider-inner"></span>
-                          <span class="checkbox-slider-switch"></span>
-                        </label>
-                      </span>
+                    <div class="d-inline-block show-filter-switch">
+                      <div class="form-check form-switch ps-0">
+                        <input class="form-check-input form-check-input--always-closed float-end" type="checkbox" onclick="customPageToggleSectionFold(this);" id="section-slider-toggle-{{loop.index}}" {% if page.sections|length == 1 %}checked="checked"{% endif %}>
+                        <label class="form-check-label" for="section-slider-toggle-{{loop.index}}">Display:</label>
+                      </div>
                     </div>
                   </div>
                 </div>

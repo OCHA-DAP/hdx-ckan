@@ -35,12 +35,11 @@
   font-weight: 400;
   font-size: 12px;
 }
-.custom-page-light .section-body .section-unfold .overlay .display-toggle {
-  display: flex;
-  align-self: flex-end;
+.custom-page-light .section-body .section-unfold .overlay .show-filter-switch {
+  width: 85px;
 }
-.custom-page-light .section-body .section-unfold .overlay .display-toggle .checkbox-slider {
-  margin-left: 5px;
+.custom-page-light .section-body .section-unfold .overlay .show-filter-switch .form-check-input {
+  box-shadow: none;
 }
 .custom-page-light .show-filters {
   display: flex;
@@ -51,9 +50,6 @@
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   font-size: 14px;
-}
-.custom-page-light .show-filters .checkbox-slider {
-  margin-left: 10px;
 }
 .custom-page-light .custom-page-filter-start {
   display: flex;

@@ -80,18 +80,20 @@
   {%- block page_content %}
     <div role="main">
       {% block toolbar %}
-      <div class="col-12 toolbarRow">
-        <div class="toolbar">
-          {% block breadcrumb %}
-          {% if self.breadcrumb_content() | trim %}
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
-              {% snippet 'snippets/home_breadcrumb_item.html' %}
-              {% block breadcrumb_content %}{% endblock %}
-            </ol>
-          </nav>
-          {% endif %}
-          {% endblock %}
+      <div class="toolbarRow">
+        <div class="container">
+          <div class="toolbar">
+            {% block breadcrumb %}
+            {% if self.breadcrumb_content() | trim %}
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
+                {% snippet 'snippets/home_breadcrumb_item.html' %}
+                {% block breadcrumb_content %}{% endblock %}
+              </ol>
+            </nav>
+            {% endif %}
+            {% endblock %}
+          </div>
         </div>
       </div>
       {% endblock %}

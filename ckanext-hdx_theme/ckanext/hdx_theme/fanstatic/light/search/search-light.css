@@ -11,9 +11,6 @@
   font-weight: 600;
   font-size: 14px;
 }
-.search-light .show-filters .checkbox-slider {
-  margin-left: 10px;
-}
 .search-light .dataset-filter-start {
   display: flex;
   justify-content: space-between;
@@ -92,6 +89,9 @@
 }
 .list-header {
   border-bottom: none;
+}
+.dataset-light {
+  background-color: #eeeeee;
 }
 .mobile-facets {
   position: fixed;

@@ -41,20 +41,12 @@ Example:
 
               <input autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
           </span>
-          <span class="mL20 list-header-showall filter-hide-show uppercase">
-              Show filter:
-
-              <span>
-                <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
-                  <input id="show-filter-toggle" type="checkbox" class="checkbox-slider-checkbox" checked="checked"/>
-                  <label class="checkbox-slider-label" for="show-filter-toggle">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </span>
-
-              </span>
-          </span>
+          <div class="d-inline-block show-filter-switch show-filter-switch--lg">
+            <div class="mL20 form-check form-switch ps-0">
+              <input class="form-check-input float-end" type="checkbox" id="show-filter-toggle" checked>
+              <label class="form-check-label form-check-label--big text-uppercase" for="show-filter-toggle">Show filter:</label>
+            </div>
+          </div>
           {% snippet 'search/snippets/package_search_order.html', sort_param = sorting_selected, admin_view=admin_view, used_default_sort_by=c.used_default_sort_by %}
 
           {% set limits = [25, 50, 100] %}
