@@ -46,7 +46,7 @@
                           {% set full_domain_dashboards = h.url_for('hdx_dashboard.read_dashboard',id='', qualified=true) %}
                           {% set domain = prefix|replace("http://", "")|replace("https://", "") %}
                           {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<my-page>'} %}
-                          {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, attrs=attrs) }}
+                          {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
 
                           <div class="mb-3">
                               <div class="checkbox">

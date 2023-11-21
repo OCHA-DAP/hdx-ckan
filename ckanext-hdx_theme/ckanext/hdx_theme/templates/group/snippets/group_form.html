@@ -15,7 +15,7 @@
     {% set domain = domain|replace("http://", "")|replace("https://", "") %}
     {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<group>'} %}
 
-    {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-group'), value=data.name, error=errors.name, attrs=attrs) }}
+    {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-group'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
 
     {{ form.markdown('description', label=_('Description'), id='field-description', placeholder=_('A little information about my group...'), value=data.description, error=errors.description) }}
 

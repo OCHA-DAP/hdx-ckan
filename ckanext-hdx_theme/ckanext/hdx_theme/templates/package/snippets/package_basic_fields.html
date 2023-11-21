@@ -58,7 +58,7 @@
             {% set domain = h.url_for('dataset_read', id='', qualified=true) %}
             {% set domain = domain|replace("http://", "")|replace("https://", "") %}
             {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
-            {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
+            {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
         </div>
     </div>
 {% endblock %}
