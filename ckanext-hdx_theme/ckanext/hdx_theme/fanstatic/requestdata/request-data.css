@@ -1,34 +1,36 @@
 .modal.request-data-modal,
 .modal.show.request-data-modal {
   display: block;
-  height: 610px;
-  max-width: 890px;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
 }
-.modal.request-data-modal .request-data-modal-content,
-.modal.show.request-data-modal .request-data-modal-content {
+.modal.request-data-modal .request-data-modal-dialog,
+.modal.show.request-data-modal .request-data-modal-dialog {
+  max-width: 890px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content {
   border: unset;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body {
   padding: 0px 0px 0px;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols {
   height: 610px;
   overflow: hidden;
-  margin-left: 0px;
+  margin-left: 0;
+  margin-right: 0;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .right-col,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .right-col {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols .right-col,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols .right-col {
   background-color: #ededed;
   padding: 60px;
   height: inherit;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .left-col,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .left-col {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols .left-col,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols .left-col {
   background-color: #1ebdaf;
   padding: 80px;
   height: inherit;
@@ -37,8 +39,8 @@
   background-position: left bottom;
   background-size: 200%;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .large-title,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .large-title {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .large-title,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .large-title {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 36px;
@@ -46,8 +48,8 @@
   letter-spacing: 0.01em;
   color: #fff;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .large-text,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .large-text {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .large-text,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .large-text {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -55,27 +57,27 @@
   letter-spacing: 0.01em;
   color: #fff;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .regular-text,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .regular-text {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .regular-text,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .regular-text {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
   color: #464a4a;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .bottom-actions,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .bottom-actions {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .bottom-actions,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .bottom-actions {
   position: absolute;
   right: 35px;
   bottom: 35px;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .ds-title,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .ds-title {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .ds-title,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .ds-title {
   font-weight: bold;
   font-size: 16px;
 }
-.modal.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-modal-footer,
-.modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-modal-footer {
+.modal.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-modal-footer,
+.modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-modal-footer {
   border-top: unset;
   position: absolute;
   right: 50px;
@@ -701,7 +703,7 @@
 }
 .form-request-contact {
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 500px;
 }
 .form-request-contact .control {
   position: relative;

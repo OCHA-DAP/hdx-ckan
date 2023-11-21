@@ -14,92 +14,95 @@
 @inputHeight: 44px;
 @inputPadding: @paddingSmall;
 
-.modal.request-data-modal, .modal.show.request-data-modal{
+.modal.request-data-modal,
+.modal.show.request-data-modal {
   display: block;
-  //position: relative;
-  height: 610px;
-  max-width: 890px;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  .request-data-modal-dialog {
+    max-width: 890px;
+    margin-top: 0;
+    margin-bottom: 0;
 
-  .request-data-modal-content {
-    border: unset;
+    .request-data-modal-content {
+      border: unset;
 
-    .request-data-modal-body {
-      padding: 0px 0px 0px;
+      .request-data-modal-body {
+        padding: 0px 0px 0px;
 
-      .request-data-two-cols {
-        height: 610px;
-        overflow: hidden;
-        margin-left: 0px;
+        .request-data-two-cols {
+          height: 610px;
+          overflow: hidden;
+          margin-left: 0;
+          margin-right: 0;
 
-        .right-col {
-          background-color: #ededed;
-          padding: 60px;
-          height: inherit;
+          .right-col {
+            background-color: #ededed;
+            padding: 60px;
+            height: inherit;
+          }
+
+          .left-col {
+            background-color: #1ebdaf;
+            padding: 80px;
+            height: inherit;
+            background-image: url('/images/backgrounds/pixels_white.png');
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            background-size: 200%;
+          }
         }
 
-        .left-col {
-          background-color: #1ebdaf;
-          padding: 80px;
-          height: inherit;
-          background-image: url('/images/backgrounds/pixels_white.png');
-          background-repeat: no-repeat;
-          background-position: left bottom;
-          background-size: 200%;
+        .large-title {
+          font-family: 'Gotham-Book', sans-serif;
+          font-weight: 400;
+          font-size: 36px;
+          line-height: 40px;
+          letter-spacing: 0.01em;
+          color: #fff;
         }
-      }
 
-      .large-title {
-        font-family: 'Gotham-Book', sans-serif;
-        font-weight: 400;
-        font-size: 36px;
-        line-height: 40px;
-        letter-spacing: 0.01em;
-        color: #fff;
-      }
+        .large-text {
+          font-family: 'Gotham-Book', sans-serif;
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 24px;
+          letter-spacing: 0.01em;
+          color: #fff;
+        }
 
-      .large-text {
-        font-family: 'Gotham-Book', sans-serif;
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 24px;
-        letter-spacing: 0.01em;
-        color: #fff;
-      }
+        .regular-text {
+          font-family: 'Source Sans Pro', sans-serif;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          color: #464a4a;
+        }
 
-      .regular-text {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 20px;
-        color: #464a4a;
-      }
+        .bottom-actions {
+          position: absolute;
+          right: 35px;
+          bottom: 35px;
+        }
 
-      .bottom-actions {
-        position: absolute;
-        right: 35px;
-        bottom: 35px;
-      }
+        .ds-title {
+          font-weight: bold;
+          font-size: 16px;
+        }
 
-      .ds-title {
-        font-weight: bold;
-        font-size: 16px;
-      }
-
-      .request-data-modal-footer {
-        border-top: unset;
-        position: absolute;
-        right: 50px;
-        bottom: 30px;
-        //padding: initial;
+        .request-data-modal-footer {
+          border-top: unset;
+          position: absolute;
+          right: 50px;
+          bottom: 30px;
+          //padding: initial;
+        }
       }
     }
   }
 }
 
-.modal.request-data-modal, .modal.show.request-data-modal, .request-data-module {
+.modal.request-data-modal,
+.modal.show.request-data-modal,
+.request-data-module {
 
       .mtop5 {
         margin-top: 5px;
@@ -314,6 +317,7 @@
       }
 
 }
+
 .request-data-module {
   .dropdown-menu.sysadmin-requests-container__dropdown .sysadmin-requests-container__dropdown-buttons {
     display: flex;
@@ -741,7 +745,7 @@
 
 .form-request-contact {
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 500px;
 
   .control {
     position: relative;

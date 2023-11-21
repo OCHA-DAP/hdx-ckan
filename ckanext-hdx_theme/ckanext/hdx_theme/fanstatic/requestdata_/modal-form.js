@@ -68,7 +68,7 @@ ckan.module('hdx-modal-form', function($) {
                     this.sandbox.client.getTemplate(this.options.template_file, payload, this._onReceiveSnippet);
                     this._snippetReceived = true;
                 } else if (this.modal) {
-                    this.modal.modal('show');
+                    this.modal.show();
                 }
 
                 var success_msg = document.querySelector('#request-success-container');
@@ -80,7 +80,7 @@ ckan.module('hdx-modal-form', function($) {
         },
         _onReceiveSnippet: function(html) {
             this.sandbox.body.append(this.createModal(html));
-            this.modal.modal('show');
+            this.modal.show();
 
             var backdrop = $('.modal-backdrop');
 
@@ -90,22 +90,15 @@ ckan.module('hdx-modal-form', function($) {
         },
         createModal: function(html) {
             if (!this.modal) {
-                var element = this.modal = jQuery(html);
-                var form = this.modal.find('form');
+                var $element = jQuery(html);
+                var form = $element.find('form');
 
                 form.on('change', 'select', this._selectOnChange); // select "Other" values"
                 form.on('change', '#field-organization', this._organizationOnChange); // change org type
                 form.on('keyup', 'input[type="password"], input[type="text"], textarea', this._triggerInputDataClass); // input-value class
                 form.find('input, select, textarea').filter('[required]').on('input change', this._disableSubmitButton);
-
-                element.on('click', '.btn-primary', this._onSubmit);
-                element.on('click', '.btn-cancel', this._onCancel);
-                element.modal({
-                    show: false,
-                    keyboard: false
-                });
-                this.modalFormError = this.modal.find('.alert-danger')
-
+                $element.on('click', '.btn-primary', this._onSubmit);
+                $element.on('click', '.btn-cancel', this._onCancel);
                 // init select2
                 var select2Inputs = ['#field-country', '#field-organization', '#field-organization-type', '#field-intend-message'];
                 $.each(select2Inputs, function(i, select2Input) {
@@ -116,6 +109,9 @@ ckan.module('hdx-modal-form', function($) {
                     }
                   });
                 });
+                this.modal = new bootstrap.Modal($element.get(0), {keyboard: false});
+                this.modalFormError = $element.find('.alert-danger');
+                this.element = $element;
             }
             return this.modal;
         },
@@ -123,7 +119,7 @@ ckan.module('hdx-modal-form', function($) {
             var base_url = ckan.sandbox().client.endpoint;
             var url = base_url + this.options.submit_action || '';
             var data = this.options.post_data || '';
-            var form = this.modal.find('form');
+            var form = this.element.find('form');
             var formElements = $(form[0].elements);
             var submit = true;
             var formData = new FormData();
@@ -228,7 +224,7 @@ ckan.module('hdx-modal-form', function($) {
         _disableSubmitButton: function(event) {
           var error = false;
           var $form = $(this.form);
-          var $submitButton = $form.closest('.modal-body').find('[type="submit"]');
+          var $submitButton = $form.closest('.modal-dialog').find('[type="submit"]');
           $form.find('input, select, textarea').filter('[required]').each(function (idx, el) {
             if ((el.type === 'checkbox') ? !el.checked : (el.value === null || el.value === '' || el.value === '-1')) {
               error = true;
@@ -256,7 +252,7 @@ ckan.module('hdx-modal-form', function($) {
             $(element).addClass('error');
         },
         _clearFormErrors: function() {
-            var errors = this.modal.find('.error');
+            var errors = this.element.find('.error');
 
             $.each(errors, function(i, error) {
                 $(error).removeClass('error');
@@ -269,7 +265,7 @@ ckan.module('hdx-modal-form', function($) {
             this.modalFormError.removeClass('d-none');
             this.modalFormError.text(message);
             // Scroll to top of form
-            var form = this.modal.find('form');
+            var form = this.element.find('form');
             form.scrollTop(0);
         },
         _showSuccessMsg: function(msg) {
@@ -284,13 +280,13 @@ ckan.module('hdx-modal-form', function($) {
                 currentDiv = this.el.next('.requested-data-message');
             }
             currentDiv.css('display', 'block');
-            currentDiv.append(div)
+            currentDiv.append(div);
             this._resetModalForm();
         },
         _resetModalForm: function() {
             this._snippetReceived = false;
-            this.modal.modal('hide');
-            this.modal.remove();
+            this.modal.hide();
+            this.modal.dispose();
             this.modal = null;
         },
         _disableActionButtons: function() {

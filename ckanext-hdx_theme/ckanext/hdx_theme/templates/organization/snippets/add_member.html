@@ -10,11 +10,11 @@ Example:
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
   <div id="{{ modal_div_id }}" class="modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content hdx-modal hdx-has-tabs">
         <div class="modal-header">
-            <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-hidden="true"></button>
             <h3 class="modal-title" id="{{ modal_div_id }}-label">{{ _('Add Member') }}</h3>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <!-- Nav tabs -->
@@ -66,7 +66,7 @@ Example:
             </select>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-empty btn-large" data-bs-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+            <button type="button" class="btn btn-empty btn-large" data-bs-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
             <button class="btn btn-primary btn-large">{{ _('Confirm') }}</button>
         </div>
       </div>
