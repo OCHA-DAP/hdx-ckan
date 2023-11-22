@@ -3729,8 +3729,9 @@ ul.list-horizontal li:first-child:before {
   position: absolute;
   top: -6px;
   left: 8px;
-  padding: 3px 6px;
+  padding: 2px 5px;
   background-color: red;
+  border-radius: 10px;
 }
 @media (max-width: 1024px) {
   .new-header .global-header .global-header-content .header-user-box .separated-list a.action-red .full-text {
