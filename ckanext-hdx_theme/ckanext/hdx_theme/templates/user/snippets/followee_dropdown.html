@@ -9,36 +9,36 @@
 {%- endmacro %}
 
 <div id="followee-filter" class="float-end">
-  <a href="#followee-popover" class="btn" title="{{ _('Activity from:') }} {{ context.context }}">
-    <span class="lblnormal uppercase gothamBook12 grey mR35">{{ _('Activity from') }}</span>
-    <span class="dpbold sspBold16 blue no-transform">{{ context.context }}</span>
-    <i class="humanitarianicons-Down"></i>
-  </a>
-  <form id="followee-popover" action="/dashboard" class="dropdown js-hide">
-    <div class="popover-header">
-      <div class="input-group">
-        <span class="input-group-text"><i class="humanitarianicons-Search"></i></span>
-        <input type="text" name="q" placeholder="{{ _('Search list...') }}" value="{{context.q}}" autocomplete="off">
-      </div>
-    </div>
+  <div class="dropdown">
+    <a class="btn" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Activity from:') }} {{ context.context }}">
+      <span class="followee-filter-label">{{ _('Activity from') }}</span>
+      <strong class="followee-filter-choice">{{ context.context }}</strong>
+      <i class="humanitarianicons-Down"></i>
+    </a>
+    <ul class="dropdown-menu">
+    <form action="/dashboard" class="mb-2 mx-2">
+        <div class="input-group input-group-sm">
+          <input type="text" name="q" class="form-control" placeholder="{{ _('Search list...') }}" value="{{context.q}}" autocomplete="off">
+          <button type="submit" class="input-group-text"><i class="humanitarianicons-Search"></i></button>
+        </div>
+    </form>
+    <div class="dropdown-divider"></div>
     {% if followees %}
-      <ul class="nav nav-pills nav-stacked">
-        <li class="nav-item everything {% if context.selected_id == False %} active{% endif %}">
-          <a class="nav-link" href="{{ h.url_for('dashboard.index') }}">
-            <span>Everything</span>
+        <li>
+          <a class="dropdown-item everything {% if context.selected_id == False %}active{% endif %}" href="{{ h.url_for('dashboard.index') }}">
+            Everything
           </a>
         </li>
         {% for followee in followees %}
-          <li class="nav-item {% if context.selected_id == followee.dict.id %}active{% endif %}" data-search="{{followee.display_name|lower}}">
-            <a class="nav-link"  href="{{ h.url_for('dashboard.index', type=followee.type, name=followee.dict.name) }}" title="{{followee.display_name}}">
-              {#{{followee_icon(followee.type)}}#}
-              <span>{{followee.display_name}}</span>
+          <li>
+            <a class="dropdown-item {% if context.selected_id == followee.dict.id %}active{% endif %}" href="{{ h.url_for('dashboard.index', type=followee.type, name=followee.dict.name) }}" title="{{ followee.display_name }}">
+              {{ followee.display_name }}
             </a>
           </li>
         {% endfor %}
-      </ul>
     {% else %}
-      <p class="empty">{{ _('You are not following anything') }}</p>
+      <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">{{ _('You are not following anything') }}</a></li>
     {% endif %}
-  </form>
+    </ul>
+  </div>
 </div>

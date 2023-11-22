@@ -789,16 +789,6 @@ admin-custom-pages-scripts:
   contents:
       - custom_pages/custom_pages.js
 
-base-dashboard-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_base-dashboard-scripts.js
-  extra:
-    preload:
-      - hdx_theme/ckan
-      - hdx_theme/base-dashboard-styles
-  contents:
-    - hdx_dashboard.js
-
 base-dashboard-styles:
   output: ckanext-hdx_theme/%(version)s_base-dashboard-styles.css
   contents:
