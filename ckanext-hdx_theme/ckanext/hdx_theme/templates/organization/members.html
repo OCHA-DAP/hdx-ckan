@@ -213,7 +213,7 @@
                                            'data-module-source': '/api/2/util/user/autocomplete?q=?'} %}
                                         {{ form.input('emails', id='field-tags',
                                         placeholder=_("Enter email(s) or names or usernames"),
-                                        classes=[''], attrs=tag_attrs) }}
+                                        classes=[], attrs=tag_attrs) }}
                                         <!--<textarea name="emails" placeholder="Enter email(s) of whom you'd like to add to this organisation. Multiple email addresses can be entered if separated by comma ',' "></textarea>-->
                                         <p>
                                             <strong>If you add user who is already registered on HDX</strong>, they will be automatically added to your organisation. If you invite someone who is not registered on HDX, a temporary account will be created for them and they will receive an invitation to sign up.
@@ -263,5 +263,5 @@
 	{{ super() }}
 {#	{% resource 'hdx_theme/dashboard.css' %}#}
 {#	{% resource 'hdx_theme/hdx_dashboard.js' %}#}
-  {% asset 'hdx_theme/base-dashboard-scripts' %}
+  {% asset 'hdx_theme/base-dashboard-styles' %}
 {% endblock %}

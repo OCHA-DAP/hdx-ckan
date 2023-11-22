@@ -9,19 +9,19 @@ Example:
 
 <form class="dataset-form form-horizontal" method='get' action="{{ form_url }}">
   <div id="{{ modal_div_id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-centered">
 	<div class="modal-content hdx-modal">
 		<div class="modal-header">
-			<button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-hidden="true"></button>
 			<h3 class="modal-title" id="{{ modal_div_id }}-label">{{ _('Request Membership') }}</h3>
-		</div>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
 		<div class="modal-body">
 			{% set format_attrs = {'style':'width: 350px;'} %}
 			{{ form.textarea('message', label=_('Message'), placeholder=_('Please add me to this organisation'), value=user, classes=['control-medium'], attrs=format_attrs) }}
 		</div>
 		<div class="modal-footer">
 			<button class="btn hdx-btn hdx-submit-btn">{{ _('Submit') }}</button>
-			<button class="btn hdx-btn" data-bs-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+			<button type="button" class="btn hdx-btn" data-bs-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
 		</div>
 	</div>
 	</div>

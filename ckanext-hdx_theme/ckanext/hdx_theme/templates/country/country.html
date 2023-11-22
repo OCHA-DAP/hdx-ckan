@@ -217,16 +217,12 @@
               <a class="show-completeness-legend">Show legend</a>
               {% snippet 'country/completeness_legend.html' %}
 
-              <span>Expand</span>
-              <span>
-                <span class="checkbox-slider" style="display: inline-block; top: 5px; margin-left: 3px;">
-                  <input id="expand-data-completeness" type="checkbox" checked="checked" class="checkbox-slider-checkbox" autocomplete="off" />
-                  <label id="expand-data-completeness-label" class="checkbox-slider-label" for="expand-data-completeness">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </span>
-              </span>
+              <div class="d-inline-block show-filter-switch show-filter-switch--sm">
+                <div class="form-check form-switch ps-0">
+                  <input class="form-check-input float-end" type="checkbox" id="expand-data-completeness" checked>
+                  <label class="form-check-label" for="expand-data-completeness">Expand</label>
+                </div>
+              </div>
           </span>
 
         </div>

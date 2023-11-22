@@ -17,7 +17,11 @@
 
 {% block content %}
 
-  {% snippet "light/snippets/package_list.html", data=data %}
+  <div class="dataset-light">
+    <div class="container">
+      {% snippet "light/snippets/package_list.html", data=data %}
+    </div>
+  </div>
   {% snippet "widget/banner/hdx-light-banner.html", pkg=pkg %}
 {% endblock %}
 

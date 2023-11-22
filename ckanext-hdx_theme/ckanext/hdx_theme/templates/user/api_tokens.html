@@ -1,0 +1,40 @@
+{% extends "user/read_base.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{% block primary_content_inner %}
+  <div class="paddingLeftHack">
+    <div class="row mTop35 mBottom35">
+      <div class="col-8">
+        {% if h.check_access('api_token_create', {'user': user['name']}) %}
+          <form method="POST" class="form">
+            <legend>{{ _('API Tokens') }}</legend>
+            {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
+
+            {% block base_fields %}
+              <div class="form-group ">
+                  {{ form.input('name', label='Name', is_required=True, value=data.name, error=errors.name) }}
+              </div>
+            {% endblock base_fields %}
+            {% block additional_fields %}
+            {% endblock additional_fields %}
+            {% block form_actions %}
+              <button class="btn btn-primary my-3" type="submit" value="create">
+                {{ _('Create API Token') }}
+              </button>
+            {% endblock form_actions %}
+          </form>
+        {% endif %}
+        {% block token_list %}
+          {% if tokens %}
+            {% snippet 'user/snippets/api_token_list.html', tokens=tokens, user=user %}
+          {% else %}
+            <p class="empty">
+              {{ _('You haven\'t created any API Tokens.') }}
+            </p>
+          {% endif %}
+        {% endblock token_list %}
+      </div>
+    </div>
+  </div>
+{% endblock primary_content_inner %}

@@ -16,8 +16,8 @@
     }
     @media (max-width: @cut-point-tablet) {
       .navbar-toggler {
-        position: absolute;
-        right: 0;
+        flex: 1;
+        text-align: right;
         border: 0;
         box-shadow: none;
         &:not(.collapsed) {
@@ -93,6 +93,7 @@
             line-height: 18px;
             padding: 3px 30px;
             text-transform: uppercase;
+            display: block;
           }
           &.crisis{
             //margin-top: 0px;

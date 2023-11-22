@@ -28,11 +28,11 @@
                     <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
                     <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
                         <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
-                            <span class="dropdown-toggle-text">
+                            <label class="dropdown-toggle-text">
                             {% for label, value in sorting %}
                             {% if sorting_selected == value %} {{ label }} {% endif %}
                             {% endfor %}
-                            </span>
+                            </label>
                             <i class="humanitarianicons-Down"></i>
                         </button>
                         <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">

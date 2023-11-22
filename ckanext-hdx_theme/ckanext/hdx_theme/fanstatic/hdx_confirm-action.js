@@ -13,15 +13,15 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
       },
       template: [
         '<div class="modal">',
-        '<div class="modal-dialog">',
-		'<div class="modal-content">',
+        '<div class="modal-dialog modal-dialog-centered">',
+    		'<div class="modal-content">',
         '<div class="modal-header">',
-        '<button type="button" class="btn-close float-end" data-bs-dismiss="modal"></button>',
         '<h3 class="modal-title"></h3>',
+        '<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>',
         '</div>',
         '<div class="modal-body"></div>',
         '<div class="modal-footer">',
-        '<button class="btn btn-empty btn-large btn-cancel"></button>',
+        '<button type="button" class="btn btn-empty btn-large btn-cancel" data-bs-dismiss="modal"></button>',
         '<button class="btn btn-primary btn-large"></button>',
         '</div>',
         '</div>',
@@ -65,13 +65,7 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
      */
     confirm: function () {
       this.sandbox.body.append(this.createModal());
-      this.modal.modal('show');
-
-      // Center the modal in the middle of the screen.
-      this.modal.css({
-        'margin-top': this.modal.height() * -0.5,
-        'top': '50%'
-      });
+      this.modal.show();
     },
 
     /* Performs the action for the current item.
@@ -142,24 +136,20 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
      */
     createModal: function () {
       if (!this.modal) {
-        var element = this.modal = jQuery(this.options.template);
-        element.on('click', '.btn-primary', this._onConfirmSuccess);
-        element.on('click', '.btn-cancel', this._onConfirmCancel);
-        element.modal({show: false});
-
-        element.find('h3').text(this.i18n('heading'));
-        element.find('.modal-body').text(this.i18n('content'));
-        var mainButton = element.find('.btn-primary');
+        var $element = jQuery(this.options.template);
+        $element.on('click', '.btn-primary', this._onConfirmSuccess);
+        $element.on('click', '.btn-cancel', this._onConfirmCancel);
+        $element.find('h3').text(this.i18n('heading'));
+        $element.find('.modal-body').text(this.i18n('content'));
+        var mainButton = $element.find('.btn-primary');
         if (this.i18n('delete')){
           mainButton.text(this.i18n('delete'));
           mainButton.addClass('btn-danger');
         } else {
           mainButton.text(this.i18n('confirm'));
         }
-
-
-
-        element.find('.btn-cancel').text(this.i18n('cancel'));
+        $element.find('.btn-cancel').text(this.i18n('cancel'));
+        this.modal = new bootstrap.Modal($element.get(0));
       }
       return this.modal;
     },
@@ -177,7 +167,7 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
 
     /* Event handler for the cancel event */
     _onConfirmCancel: function (event) {
-      this.modal.modal('hide');
+      this.modal.hide();
     }
   };
 });

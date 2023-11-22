@@ -130,7 +130,7 @@
   margin-left: 5px;
 }
 .search-list .dataset-item .dataset-content2 {
-  padding: 32px 15px;
+  padding: 32px 12px;
 }
 .search-list .dataset-item .dataset-content2 .dataset-heading {
   line-height: 1;
@@ -249,7 +249,7 @@
 /* END - Show full text on hover over select2 options */
 /* Styling search recommendations */
 #search-recs {
-  margin-top: 25px;
+  padding-top: 25px;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 16px;

@@ -10,7 +10,7 @@
   {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
 
   {% block basic_fields %}
-    <div class="mb-3">
+    <div>
       {% block package_basic_fields_title %}
         {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['', 'mb-3', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
       {% endblock %}
@@ -21,7 +21,7 @@
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<showcase>'} %}
 
-        {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-showcase'), value=data.name, error=errors.name, attrs=attrs, is_required=true) }}
+        {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-showcase'), value=data.name, error=errors.name, attrs=attrs, classes=['mb-3'], is_required=true) }}
       {% endblock %}
 
       {% block package_basic_fields_description %}
@@ -55,7 +55,7 @@
   {% endblock %}
 
   {% block metadata_fields %}
-    <div class="mb-3">
+    <div class="my-3">
       {% block package_metadata_fields_url %}
         {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('https://www.example.com'), value=data.url, error=errors.url, classes=['', 'mb-3'], attrs={}) }}
       {% endblock %}
