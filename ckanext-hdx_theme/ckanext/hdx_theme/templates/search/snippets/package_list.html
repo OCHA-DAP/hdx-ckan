@@ -55,12 +55,12 @@ Example:
           <div class="list-header-showall filter-pagination control-order-by control-items-per-page">
             <label for="field-order-by" class="uppercase">{{ _('Show') }}</label>
             <div class="dropdown orderDropdown">
-               <a class="sspBold16" data-bs-toggle="dropdown" style="background-color: transparent;">
-                <span class="dropdown-toggle-text">
+               <a id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
+                <label class="dropdown-toggle-text">
                   {% for value in limits %}
                     {% if limit_selected|int == value %} {{ value }} {% endif %}
                   {% endfor %}
-                </span>
+                </label>
                 <i class="humanitarianicons-Down"></i>
                </a>
               <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">

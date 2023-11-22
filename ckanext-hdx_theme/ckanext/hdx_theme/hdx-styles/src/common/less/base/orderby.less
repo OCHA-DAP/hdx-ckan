@@ -7,24 +7,27 @@
 .control-order-by {
   float: right;
   height: inherit;
+  vertical-align: middle;
   label {
     .gothamBoldFont(12px);
     color: @grayColor;
     .letter-spacing-3;
     line-height: 20px;
+    margin-right: 5px;
   }
 
   .orderDropdown {
     display: inline;
 
-    .dropdown-toggle {
-      background-color: @whiteColor;
-      border: none;
+    #field-order-by {
+      background-color: transparent;
+      border: 0;
       color: @orderByDropdownColor;
       text-align: left;
       margin-top: -4px;
       padding: 0;
-      font-size: 14px;
+      font-size: 12px;
+      line-height: 20px;
 
       &:hover, &:focus {
         color: darken(@orderByDropdownColor, 20%);
@@ -32,13 +35,18 @@
     }
 
     .dropdown-toggle-text {
-      .gothamBoldFont(14px);
+      .gothamBoldFont(12px);
       color: @orderByDropdownColor;
       .letter-spacing-3;
 
       &:hover, &:focus {
         color: darken(@orderByDropdownColor, 20%);
       }
+    }
+
+    .humanitarianicons-Down {
+      vertical-align: middle;
+      cursor: pointer;
     }
   }
 }
@@ -74,11 +82,3 @@
   }
 }
 /* END - Items per page  style */
-
-#field-order-by{
-  border: 0;
-  background-color: transparent;
-  &::after {
-    display: none;
-  }
-}
