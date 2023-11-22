@@ -215,6 +215,9 @@ h1 {
   content: "";
   padding: 0;
 }
+.toolbarRow .toolbar .breadcrumb .breadcrumb-item + .breadcrumb-item {
+  padding-left: 2px;
+}
 /* END Style breadcrumbs */
 /* Button style */
 .btn {
