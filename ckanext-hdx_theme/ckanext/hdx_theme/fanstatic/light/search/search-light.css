@@ -29,7 +29,7 @@
   margin-bottom: 0;
   align-items: flex-end;
 }
-.search-light .dataset-filter-start .orderDropdown .dropdown-toggle {
+.search-light .dataset-filter-start .orderDropdown #field-order-by {
   display: flex;
   align-items: center;
 }
@@ -43,11 +43,10 @@
   margin-bottom: 0;
 }
 #search-recs {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  margin-top: 20px;
-  color: #333333;
+  font-family: 'Source Sans Pro', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  padding-top: 15px !important;
 }
 .search-list .dataset-item .dataset-content2 {
   padding: 15px;
