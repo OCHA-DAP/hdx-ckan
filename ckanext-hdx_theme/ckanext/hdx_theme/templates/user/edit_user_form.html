@@ -5,8 +5,8 @@
 
 {% block primary_content_inner %}
 <div class="paddingLeftHack">
-  <div class="mTop35">
-<form class="dataset-form form-horizontal" method="post" action="{{ action }}" id="user-edit-form">
+  <div class="row mTop35 mBottom35">
+<form class="col-8" method="post" action="{{ action }}" id="user-edit-form">
   {{ form.errors(error_summary) }}
 
   <fieldset>
@@ -14,20 +14,20 @@
 
     <input id="field-username" type="hidden" name="name" value="{{ data.name }}"/>
 
-{#    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, error=errors.fullname, placeholder=_('eg. Joe Bloggs'), classes=['control-medium']) }}#}
+{#    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, error=errors.fullname, placeholder=_('eg. Joe Bloggs'), classes=['row', 'align-items-center', 'mb-3']) }}#}
     {{ form.input('firstname', label=_('First name'), id='field-firstname', value=data.firstname or data.fullname,
-          error=errors.firstname, placeholder=_('eg. Joe'), classes=['control-medium'],
-          attrs={'autocomplete':'off'}) }}
+          error=errors.firstname, placeholder=_('eg. Joe'), classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
+          label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
     {{ form.input('lastname', label=_('Last name'), id='field-lastname', value=data.lastname,
-          error=errors.lastname, placeholder=_('eg. Bloggs'), classes=['control-medium'],
-          attrs={'autocomplete':'off'}) }}
+          error=errors.lastname, placeholder=_('eg. Bloggs'), classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
+          label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
 
     {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email,
-          error=errors.email, placeholder=_('eg. joe@example.com'), classes=['control-medium'], is_required=true,
-          attrs={'autocomplete':'off'}) }}
+          error=errors.email, placeholder=_('eg. joe@example.com'), classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
+          is_required=true,
+          label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
 
-	{% set format_attrs = {'style':'width: 320px;'} %}
-    {{ form.textarea('about', label=_('About'), id='field-about', value=data.about, error=errors.about, placeholder=_('A little information about yourself'), classes=['control-medium'],attrs=format_attrs) }}
+    {{ form.textarea('about', label=_('About'), id='field-about', value=data.about, error=errors.about, placeholder=_('A little information about yourself'), classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4']) }}
 
     {% if show_email_notifications %}
       {% call form.checkbox('activity_streams_email_notifications', label=_('Subscribe to notification emails'), id='field-activity-streams-email-notifications', value=True, checked=g.userobj.activity_streams_email_notifications) %}
@@ -45,22 +45,22 @@
                   id='field-password',
                   value=data.oldpassword,
                   error=errors.oldpassword,
-                  classes=['control-medium'],
+                  classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4'],
                   attrs={'autocomplete': 'off'}
                   ) }}
 
-    {{ form.input('password1', type='password', label=_('New Password'), id='field-password', value=data.password1, error=errors.password1, classes=['control-medium'], attrs={'autocomplete': 'off'} ) }}
+    {{ form.input('password1', type='password', label=_('New Password'), id='field-password', value=data.password1, error=errors.password1, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4'], attrs={'autocomplete': 'off'} ) }}
 
-    {{ form.input('password2', type='password', label=_('Confirm New Password'), id='field-password-confirm', value=data.password2, error=errors.password2, classes=['control-medium'], attrs={'autocomplete': 'off'}) }}
-     <div class="form-actions">
+    {{ form.input('password2', type='password', label=_('Confirm New Password'), id='field-password-confirm', value=data.password2, error=errors.password2, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4'], attrs={'autocomplete': 'off'}) }}
 
-      {% block generate_button %}
-        {#eliminated the regenerate api key button#}
-      {% endblock %}
-      <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
-    </div>
-    <div class="form-actions">
-      {{ form.required_message() }}
+    <div class="row">
+      <div class="col-4">
+        {{ form.required_message() }}
+      </div>
+      <div class="col-8">
+        {% block generate_button %}{% endblock %}
+        <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
+      </div>
     </div>
   </fieldset>
 {% if is_sysadmin %}
@@ -73,7 +73,7 @@
       {% link_for _('Manage two-step verification'), controller='ckanext.security.controllers:MFAUserController', action='configure_mfa', id=data.id, class_='btn btn-default pull-left', icon='cog' %}
     {% endif %}
     #}
-    <a href="#" class="btn" onclick="showOnboardingWidget('#tsvPopup')"> {{ _('Manage two-step verification') }}</a>
+    <a href="#" class="btn btn-sm" onclick="showOnboardingWidget('#tsvPopup')"> {{ _('Manage two-step verification') }}</a>
   </fieldset>
 {% endif %}
 {% if h.check_access('user_delete', {'id': data.id})  %}
@@ -92,12 +92,12 @@
             confirm_btn_label='Confirm',
             body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id,
             packages=member.maint_orgs_pkgs, disabled=disabled %}
-          <a class="btn btn-danger float-start" href="#confirm-del-member-div-{{ member.id }}" data-bs-toggle="modal" title="{{ _('Delete') }}">
+          <a class="btn btn-sm btn-danger" href="#confirm-del-member-div-{{ member.id }}" data-bs-toggle="modal" title="{{ _('Delete') }}">
             {{ _('Delete') }}
           </a>
         {% else %}
           {% set locale = h.dump_json({'content': _('Are you sure you want to delete this user?'), 'heading': _('You are deleting user'), 'delete': _('Delete')}) %}
-          <a class="btn btn-danger float-start" href="{% url_for 'user.delete', id=data.id %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+          <a class="btn btn-sm btn-danger" href="{% url_for 'user.delete', id=data.id %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endif %}
     {% endblock %}

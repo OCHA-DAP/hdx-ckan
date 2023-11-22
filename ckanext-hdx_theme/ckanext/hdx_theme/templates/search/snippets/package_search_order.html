@@ -21,7 +21,7 @@ Example:
 <div class="control-order-by {{extra_class}}">
   <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
   <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">
-    <a id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
+    <a id="field-order-by" class="d-inline-block sspBold16" data-bs-toggle="dropdown">
       {% for label, value, short_label in sorting %}
       {% if sorting_selected == value %}
       <input id="header-search-sort_initial_values" type="hidden" style="display: none" value="{{value}}" label="{{label}}" />
