@@ -19,4 +19,10 @@ $(document).ready(function() {
       icon.removeClass("fa-minus");
     }
   });
+
+  $('#show-more-dates, #hide-more-dates').on('click', function(e) {
+      e.preventDefault();
+      $('#show-more-dates, #hide-more-dates').toggleClass('d-none');
+      $('.more-dates').toggleClass('d-none');
+  });
 });
