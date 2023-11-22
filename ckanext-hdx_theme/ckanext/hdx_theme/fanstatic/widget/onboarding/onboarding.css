@@ -14,6 +14,7 @@
   color: #fff;
   font-weight: 400;
   text-shadow: none;
+  font-size: 21px;
 }
 .popup.popup-onboarding .close:hover,
 .popup.popup-onboarding .close:focus {
