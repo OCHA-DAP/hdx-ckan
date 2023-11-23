@@ -123,19 +123,18 @@ class PackageSearchIndex(SearchIndex):
             for r in pkg_dict.get('resources', []):
                 r.pop('tracking_summary', None)
 
+            # Index validated data-dict
+            package_plugin = lib_plugins.lookup_package_plugin(
+                pkg_dict.get('type'))
+            schema = package_plugin.show_package_schema()
+            validated_pkg_dict, _errors = lib_plugins.plugin_validate(
+                package_plugin,
+                cast(Context, {'model': model, 'session': model.Session}),
+                pkg_dict, schema, 'package_show')
+            pkg_dict['validated_data_dict'] = json.dumps(validated_pkg_dict,
+                                                         cls=ckan.lib.navl.dictization_functions.MissingNullEncoder)
+
             data_dict_json = json.dumps(pkg_dict)
-
-            if config.get('ckan.cache_validated_datasets', True):
-                package_plugin = lib_plugins.lookup_package_plugin(
-                    pkg_dict.get('type'))
-
-                schema = package_plugin.show_package_schema()
-                validated_pkg_dict, errors = lib_plugins.plugin_validate(
-                    package_plugin, {'model': model, 'session': model.Session},
-                    pkg_dict, schema, 'package_show')
-                pkg_dict['validated_data_dict'] = json.dumps(validated_pkg_dict,
-                    cls=ckan.lib.navl.dictization_functions.MissingNullEncoder)
-
             pkg_dict['data_dict'] = data_dict_json
 
             # add to string field for sorting
@@ -143,9 +142,10 @@ class PackageSearchIndex(SearchIndex):
             if title:
                 pkg_dict['title_string'] = title
 
-            # delete the package if there is no state, or the state is `deleted`
-            if (not pkg_dict.get('state') or 'deleted' in pkg_dict.get('state')):
-                return self.delete_package(pkg_dict)
+            if config.get('ckan.search.remove_deleted_packages'):
+                # delete the package if there is no state, or the state is `deleted`
+                if pkg_dict.get('state') in [None, 'deleted']:
+                    return self.delete_package(pkg_dict)
 
             index_fields = RESERVED_FIELDS + list(pkg_dict.keys())
 
@@ -154,7 +154,7 @@ class PackageSearchIndex(SearchIndex):
             for extra in extras:
                 key, value = extra['key'], extra['value']
                 if isinstance(value, (tuple, list)):
-                    value = " ".join(map(text_type, value))
+                    value = " ".join(map(str, value))
                 key = ''.join([c for c in key if c in KEY_CHARS])
                 pkg_dict['extras_' + key] = value
                 if key not in index_fields:
@@ -165,7 +165,7 @@ class PackageSearchIndex(SearchIndex):
             # vocab_<tag name> so that they can be used in facets
             non_vocab_tag_names = []
             tags = pkg_dict.pop('tags', [])
-            context = {'model': model}
+            context = cast(Context, {'model': model})
 
             for tag in tags:
                 if tag.get('vocabulary_id'):
@@ -195,9 +195,9 @@ class PackageSearchIndex(SearchIndex):
             # if there is an owner_org we want to add this to groups for index
             # purposes
             if pkg_dict.get('organization'):
-               pkg_dict['organization'] = pkg_dict['organization']['name']
+                pkg_dict['organization'] = pkg_dict['organization']['name']
             else:
-               pkg_dict['organization'] = None
+                pkg_dict['organization'] = None
 
             # tracking
             if not tracking_summary:
@@ -212,23 +212,27 @@ class PackageSearchIndex(SearchIndex):
                                ('url', 'res_url'),
                                ('resource_type', 'res_type')]
             resource_extras = [(e, 'res_extras_' + e) for e
-                                in model.Resource.get_extra_columns()]
+                               in model.Resource.get_extra_columns()]
             # flatten the structure for indexing:
             for resource in pkg_dict.get('resources', []):
                 for (okey, nkey) in resource_fields + resource_extras:
                     pkg_dict[nkey] = pkg_dict.get(nkey, []) + [resource.get(okey, u'')]
             pkg_dict.pop('resources', None)
 
-            rel_dict = collections.defaultdict(list)
+            rel_dict: dict[str, list[Any]] = collections.defaultdict(list)
             subjects = pkg_dict.pop("relationships_as_subject", [])
             objects = pkg_dict.pop("relationships_as_object", [])
             for rel in objects:
                 type = model.PackageRelationship.forward_to_reverse_type(rel['type'])
-                rel_dict[type].append(model.Package.get(rel['subject_package_id']).name)
+                pkg = model.Package.get(rel['subject_package_id'])
+                assert pkg
+                rel_dict[type].append(pkg.name)
             for rel in subjects:
                 type = rel['type']
-                rel_dict[type].append(model.Package.get(rel['object_package_id']).name)
-            for key, value in six.iteritems(rel_dict):
+                pkg = model.Package.get(rel['object_package_id'])
+                assert pkg
+                rel_dict[type].append(pkg.name)
+            for key, value in rel_dict.items():
                 if key not in pkg_dict:
                     pkg_dict[key] = value
 
@@ -255,7 +259,8 @@ class PackageSearchIndex(SearchIndex):
                             # The date field was empty, so dateutil filled it with
                             # the default bogus date
                             value = None
-                    except (ValueError, IndexError):
+                    except (IndexError, TypeError, ValueError):
+                        log.error('%r: %r value of %r is not a valid date', pkg_dict['id'], key, value)
                         continue
                 new_dict[key] = value
             pkg_dict = new_dict
@@ -288,27 +293,28 @@ class PackageSearchIndex(SearchIndex):
 
             # add a unique index_id to avoid conflicts
             import hashlib
-            pkg_dict['index_id'] = hashlib.md5(six.b('%s%s' % (pkg_dict['id'],config.get('ckan.site_id')))).hexdigest()
+            pkg_dict['index_id'] = hashlib.md5(six.b('%s%s' % (pkg_dict['id'], config.get('ckan.site_id')))).hexdigest()
 
             for item in PluginImplementations(IPackageController):
-                pkg_dict = item.before_index(pkg_dict)
+                pkg_dict = item.before_dataset_index(pkg_dict)
 
             assert pkg_dict, 'Plugin must return non empty package dict on index'
 
             # permission labels determine visibility in search, can't be set
-            # in original dataset or before_index plugins
+            # in original dataset or before_dataset_index plugins
             labels = lib_plugins.get_permission_labels()
             dataset = model.Package.get(pkg_dict['id'])
             pkg_dict['permission_labels'] = labels.get_dataset_labels(
-                dataset) if dataset else [] # TestPackageSearchIndex-workaround
+                dataset) if dataset else []  # TestPackageSearchIndex-workaround
 
             final_dicts.append(pkg_dict)
 
         # send to solr:
+        conn = None
         try:
             conn = make_connection()
             commit = not defer_commit
-            if not asbool(config.get('ckan.search.solr_commit', 'true')):
+            if not config.get('ckan.search.solr_commit'):
                 commit = False
             conn.add(docs=final_dicts, commit=commit)
         except pysolr.SolrError as e:
@@ -317,12 +323,14 @@ class PackageSearchIndex(SearchIndex):
             )
             raise SearchIndexError(msg)
         except socket.error as e:
+            assert conn
             err = 'Could not connect to Solr using {0}: {1}'.format(conn.url, str(e))
             log.error(err)
             raise SearchIndexError(err)
 
         commit_debug_msg = 'Not committed yet' if defer_commit else 'Committed'
-        log.debug('Updated index for %s [%s]' % (pkg_dict.get('name'), commit_debug_msg))
+        # log.debug('Updated index for %s [%s]' % (pkg_dict.get('name'), commit_debug_msg))
+        log.info('Updated index for {} datasets. [{}]'.format(len(final_dicts), commit_debug_msg))
 
     def index_package(self,
                       pkg_dict: Optional[dict[str, Any]],
