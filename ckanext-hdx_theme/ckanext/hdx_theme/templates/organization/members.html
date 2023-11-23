@@ -171,12 +171,12 @@
                                             </div>
                                             <div class="approval-actions">
                                                     <span class="dropdown">
-                                                        <button class="btn hdx-btn btn-primary dropdown-toggle " type="button" data-bs-toggle="dropdown">{{_("Approve")}} <span class="caret"></span></button>
+                                                        <button class="btn hdx-btn btn-primary" type="button" data-bs-toggle="dropdown">{{_("Approve")}} <span class="caret d-inline-block"></span></button>
                                                         <button class="btn hdx-btn btn-secondary action-decline"  data-member-id="{{request.id}}">{{_("Decline")}}</button>
                                                         <ul class="dropdown-menu action-approve" role="menu">
                                                             {% for role_categ in roles %}
                                                                 <li>
-                                                                    <a class="dropdown-item" data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
+                                                                    <a href="#" class="dropdown-item" data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
                                                                 </li>
                                                             {% endfor %}
                                                         </ul>

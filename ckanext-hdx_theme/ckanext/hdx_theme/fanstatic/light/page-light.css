@@ -3110,7 +3110,7 @@ ul.list-horizontal li:first-child:before {
   height: 21px;
   margin-right: 3px;
 }
-.form-check-input {
+.form-switch .form-check-input {
   width: 30px;
   height: 20px;
 }
