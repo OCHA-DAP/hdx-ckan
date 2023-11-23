@@ -4,11 +4,10 @@ import six
 import pytest
 
 import ckan.tests.helpers as helpers
-import ckan.plugins as plugins
 
 
 @pytest.mark.ckan_config("ckan.plugins", u"example_iconfigurer")
-@pytest.mark.usefixtures("clean_db", "with_plugins")
+@pytest.mark.usefixtures("with_plugins")
 class TestExampleIConfigurer(object):
     def test_template_renders(self, app):
         """Our controller renders the extension's config template."""
@@ -32,7 +31,7 @@ class TestExampleIConfigurer(object):
 
 
 @pytest.mark.ckan_config("ckan.plugins", u"example_iconfigurer")
-@pytest.mark.usefixtures("clean_db", "with_plugins")
+@pytest.mark.usefixtures("with_plugins")
 class TestExampleIConfigurerBuildExtraAdminTabsHelper(object):
     """Tests for helpers.build_extra_admin_nav method."""
 
@@ -82,7 +81,7 @@ class TestExampleIConfigurerBuildExtraAdminTabsHelper(object):
             {
                 "example_iconfigurer.config_one": {
                     "label": "My Label",
-                    "icon": "picture-o",
+                    "icon": "image",
                 },
                 "example_iconfigurer.config_two": {
                     "label": "My Other Label",
@@ -90,6 +89,6 @@ class TestExampleIConfigurerBuildExtraAdminTabsHelper(object):
                 },
             },
         )
-        expected = """<li><a href="/ckan-admin/myext_config_one"><i class="fa fa-picture-o"></i> My Label</a></li><li><a href="/ckan-admin/myext_config_two">My Other Label</a></li>"""
+        expected = """<li><a href="/ckan-admin/myext_config_one"><i class="fa fa-image"></i> My Label</a></li><li><a href="/ckan-admin/myext_config_two">My Other Label</a></li>"""
         response = app.get("/build_extra_admin_nav")
         assert six.ensure_text(response.data) == expected

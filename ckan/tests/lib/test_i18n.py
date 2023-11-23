@@ -22,7 +22,7 @@ I18N_DIR = os.path.join(HERE, u"_i18n_build_js_translations")
 I18N_DUMMY_DIR = os.path.join(HERE, u"_i18n_dummy_es")
 
 
-class TestJSTranslationsPlugin(plugins.SingletonPlugin, DefaultTranslation):
+class JSTranslationsTestPlugin(plugins.SingletonPlugin, DefaultTranslation):
     u"""
     CKAN plugin for testing JavaScript translations from extensions.
 
@@ -95,7 +95,7 @@ class TestBuildJSTranslations(object):
 
         # Remove an output file and back-date another one
         removed_filename, outdated_filename = sorted(mtimes.keys())[:2]
-        removed_mtime = mtimes.pop(removed_filename)
+        mtimes.pop(removed_filename)
         outdated_mtime = mtimes.pop(outdated_filename)
         os.remove(os.path.join(self.temp_dir, removed_filename))
         os.utime(os.path.join(self.temp_dir, outdated_filename), (0, 0))
@@ -138,34 +138,20 @@ class TestBuildJSTranslations(object):
         assert u"Test JS Translations 2" not in de
 
 
-@pytest.mark.ckan_config(u"ckan.plugins", u"test_routing_plugin")
+@pytest.mark.ckan_config(u"ckan.plugins", u"test_blueprint_plugin")
 @pytest.mark.usefixtures(u"with_plugins")
-class TestI18nFlaskAndPylons(object):
+class TestI18nFlask(object):
     def test_translation_works_on_flask_and_pylons(self, app):
-        resp = app.get(u"/flask_translated")
-        assert six.ensure_text(resp.data) == six.text_type(u"Dataset")
+        resp = app.get(u"/view_translated")
+        assert six.ensure_text(resp.data) == str(u"Dataset")
 
-        resp = app.get(u"/es/flask_translated")
-        assert six.ensure_text(resp.data) == six.text_type(u"Conjunto de datos")
-
-        if six.PY2:
-            resp = app.get(u"/pylons_translated")
-            assert six.ensure_text(resp.data) == six.text_type(u"Groups")
-
-            resp = app.get(u"/es/pylons_translated")
-            assert six.ensure_text(resp.data) == six.text_type(u"Grupos")
+        resp = app.get(u"/es/view_translated")
+        assert six.ensure_text(resp.data) == str(u"Conjunto de datos")
 
     @pytest.mark.ckan_config(u"ckan.i18n_directory", I18N_DUMMY_DIR)
     def test_config_i18n_directory(self, app):
-        resp = app.get(u"/flask_translated")
-        assert six.ensure_text(resp.data) == six.text_type(u"Dataset")
+        resp = app.get(u"/view_translated")
+        assert six.ensure_text(resp.data) == str(u"Dataset")
 
-        resp = app.get(u"/es/flask_translated")
-        assert six.ensure_text(resp.data) == six.text_type(u"Foo baz 123")
-
-        if six.PY2:
-            resp = app.get(u"/pylons_translated")
-            assert six.ensure_text(resp.data) == six.text_type(u"Groups")
-
-            resp = app.get(u"/es/pylons_translated")
-            assert six.ensure_text(resp.data) == six.text_type(u"Bar Buz 321")
+        resp = app.get(u"/es/view_translated")
+        assert six.ensure_text(resp.data) == str(u"Foo baz 123")

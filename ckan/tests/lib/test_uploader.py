@@ -1,11 +1,10 @@
 # encoding: utf-8
 import pytest
 import six
-
+from io import BytesIO
 from werkzeug.datastructures import FileStorage
 
 from ckan.logic import ValidationError
-import ckan.lib.uploader
 from ckan.lib.uploader import ResourceUpload, Upload
 
 
@@ -13,7 +12,6 @@ class TestInitResourceUpload(object):
     def test_resource_without_upload_with_old_werkzeug(
             self, ckan_config, monkeypatch, tmpdir):
         monkeypatch.setitem(ckan_config, u'ckan.storage_path', str(tmpdir))
-        monkeypatch.setattr(ckan.lib.uploader, u'_storage_path', str(tmpdir))
 
         # this test data is based on real observation using a browser
         # and werkzeug 0.14.1
@@ -32,7 +30,6 @@ class TestInitResourceUpload(object):
     def test_resource_without_upload(
             self, ckan_config, monkeypatch, tmpdir):
         monkeypatch.setitem(ckan_config, u'ckan.storage_path', str(tmpdir))
-        monkeypatch.setattr(ckan.lib.uploader, u'_storage_path', str(tmpdir))
         # this test data is based on real observation using a browser
         res = {u'clear_upload': u'true',
                u'format': u'PNG',
@@ -49,7 +46,6 @@ class TestInitResourceUpload(object):
     def test_resource_with_upload(
             self, ckan_config, monkeypatch, tmpdir):
         monkeypatch.setitem(ckan_config, u'ckan.storage_path', str(tmpdir))
-        monkeypatch.setattr(ckan.lib.uploader, u'_storage_path', str(tmpdir))
         # this test data is based on real observation using a browser
         res = {u'clear_upload': u'',
                u'format': u'PNG',
@@ -67,7 +63,6 @@ class TestInitResourceUpload(object):
     def test_resource_with_dodgy_id(
             self, ckan_config, monkeypatch, tmpdir):
         monkeypatch.setitem(ckan_config, u'ckan.storage_path', str(tmpdir))
-        monkeypatch.setattr(ckan.lib.uploader, u'_storage_path', str(tmpdir))
 
         resource_id = u'aaabbb/../../../../nope.txt'
         res = {u'clear_upload': u'',
@@ -91,19 +86,9 @@ class TestUpload(object):
 
         """
         monkeypatch.setitem(ckan_config, u'ckan.storage_path', str(tmpdir))
-        monkeypatch.setattr(ckan.lib.uploader, u'_storage_path', str(tmpdir))
-        some_png = """
-        89 50 4E 47 0D 0A 1A 0A 00 00 00 0D 49 48 44 52
-        00 00 00 01 00 00 00 01 08 02 00 00 00 90 77 53
-        DE 00 00 00 0C 49 44 41 54 08 D7 63 F8 CF C0 00
-        00 03 01 01 00 18 DD 8D B0 00 00 00 00 49 45 4E
-        44 AE 42 60 82"""
-        some_png = some_png.replace(u' ', u'').replace(u'\n', u'')
-        some_png_bytes = bytes(bytearray.fromhex(some_png))
-
         group = {u'clear_upload': u'',
                  u'upload': FileStorage(
-                     six.BytesIO(some_png_bytes),
+                     BytesIO(six.ensure_binary(u'hello')),
                      filename=u'logo.png',
                      content_type=u'PNG'
                  ),
@@ -117,8 +102,4 @@ class TestUpload(object):
         app = make_app()
         resp = app.get(u'/uploads/group/' + group[u'url'])
         assert resp.status_code == 200
-        # PNG signature
-        if six.PY3:
-            assert resp.data.hex()[:16].upper() == u'89504E470D0A1A0A'
-        else:
-            assert resp.data.encode(u"hex")[:16].upper() == u'89504E470D0A1A0A'
+        assert resp.body == u'hello'

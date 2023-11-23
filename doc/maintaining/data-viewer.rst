@@ -2,11 +2,6 @@
 Data preview and visualization
 ==============================
 
-.. versionchanged:: 2.3
-
-    The whole way resource previews are handled was changed on CKAN 2.3.
-    Please refer to previous versions of the documentation if you are using
-    an older CKAN version.
 
 .. contents::
 
@@ -59,7 +54,7 @@ The *New view* dropdown will show the available view types for this particular
 resource. If the list is empty, you may need to add the relevant view plugins
 to the :ref:`ckan.plugins` setting on your configuration file, eg::
 
-    ckan.plugins = ... image_view recline_view pdf_view
+    ckan.plugins = ... image_view datatables_view pdf_view
 
 Defining views to appear by default
 -----------------------------------
@@ -75,7 +70,7 @@ a suitable one, a view will be created.
 This is configured with the :ref:`ckan.views.default_views` setting. In it you
 define the view plugins that you want to be created as default::
 
-    ckan.views.default_views = recline_view pdf_view geojson_view
+    ckan.views.default_views = datatables_view pdf_view geojson_view
 
 This configuration does not mean that each new resource will get all of these
 views by default, but that for instance if the uploaded file is a PDF file,
@@ -89,10 +84,162 @@ Some view plugins for common formats are included in the main CKAN repository.
 These don't require further setup and can be directly added to the
 :ref:`ckan.plugins` setting.
 
+DataTables view
++++++++++++++++
+
+.. image:: /images/datatables_view.png
+
+View plugin: ``datatables_view``
+
+Displays a filterable, sortable, table view of structured data using the 
+DataTables_ jQuery plugin, with the following features.
+
+ * Search highlighting
+ * Column Filters
+ * Multi-column sorting
+ * Two view modes (table/list). Table shows the data in a typical grid with
+   horizontal scrolling. List displays the data in a responsive mode, with
+   a Record Details view.
+ * Filtered Downloads
+ * Column Visibility control
+ * Copy to clipboard and Printing of filtered results and row selection/s
+ * Drag-and-drop column reordering
+ * State Saving - saves search keywords, column order/visibility, row
+   selections and page settings between session, with the ability to share
+   saved searches.
+ * Data Dictionary Integration
+ * Automatic "linkification" of URLs
+ * Automatic creation of zoomable thumbnails when a cell only contains a URL 
+   to an image.
+ * Available automatic, locale-aware date formatting to convert raw ISO-8601
+   timestamps to a user-friendly date format 
+
+It is designed not only as a data viewer, but also as a simple ad-hoc report
+generator - allowing users to quickly find an actionable subset of
+the data they need from inside the resource view, without having to first
+download the dataset.
+
+It's also optimized for embedding datasets and saved searches on external
+sites - with a backlink to the portal and automatic resizing.
+
+This plugin requires data to be in the DataStore.
+
+
+
+Text view
++++++++++
+
+.. image:: /images/text_view.png
+
+View plugin: ``text_view``
+
+Displays files in XML, JSON or plain text based formats with the syntax
+highlighted. The formats detected can be configured using the
+:ref:`ckan.preview.xml_formats`, :ref:`ckan.preview.json_formats`
+and :ref:`ckan.preview.text_formats` configuration options respectively.
+
+If you want to display files that are hosted in a different server from your
+CKAN instance (eg that haven't been uploaded to CKAN) you will need to enable
+the `Resource Proxy`_ plugin.
+
+Image view
+++++++++++
+
+.. image:: /images/image_view.png
+
+View plugin: ``image_view``
+
+If the resource format is a common image format like PNG, JPEG or GIF, it adds
+an ``<img>`` tag pointing to the resource URL. You can provide an alternative
+URL on the edit view form. The available formats can be configured using the
+:ref:`ckan.preview.image_formats` configuration option.
+
+Video view
+++++++++++
+
+.. image:: /images/video_view.png
+
+View plugin: ``video_view``
+
+This plugin uses the HTML5 <video> tag to embed video content into a page,
+such as movie clip or other video streams.
+
+There are three supported video formats: MP4, WebM, and OGG.
+
+.. image:: /images/video_view_edit.png
+
+You can provide an alternative URL on the edit view form. Otherwise, the resource link will be used.
+
+Also, you can provide a poster image URL. The poster image will be shown while the
+video is downloading, or until the user hits the play button.
+If this is not provided, the first frame of the video will be used instead.
+
+Audio view
+++++++++++
+
+.. image:: /images/audio_view.png
+
+View plugin: ``audio_view``
+
+This plugin uses the HTML5 audio tag to embed an audio player on the page.
+
+Since we rely on HTML5 <audio> tag, there are three supported audio formats: MP3, WAV, and OGG.
+Notice. Browsers don't all support the same `file types`_ and `audio codecs`_.
+
+.. image:: /images/audio_view_edit.png
+
+You can provide an alternative URL on the edit view form. Otherwise, the resource link will be used.
+
+.. _file types: https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Containers
+.. _audio codecs: https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs
+
+Web page view
++++++++++++++
+
+.. image:: /images/webpage_view.png
+
+View plugin: ``webpage_view``
+
+Adds an ``<iframe>`` tag to embed the resource URL. You can provide an
+alternative URL on the edit view form.
+
+    .. warning:: Do not activate this plugin unless you trust the URL sources.
+        It is not recommended to enable this view type on instances where all users
+        can create datasets.
+        
+Other view plugins
+------------------
+
+There are many more view plugins developed by the CKAN community, which
+are hosted on separate repositories. Some examples include:
+
+* `React Data explorer`_: A modern replacement for Recline, maintained by Datopian.
+* `Ckanext Visualize`_: An extension to easily create user visualization from data in the DataStore, maintained by Keitaro.
+* `Dashboard`_: Allows to combine multiple views into a single dashboard.
+* `PDF viewer`_: Allows to render PDF files on the resource page.
+* `Geo viewer`_: Renders various spatial formats like GeoJSON_, WMS or shapefiles in an interactive map.
+* `Choropleth map`_: Displays data on the DataStore on a choropleth map.
+* `Basic charts`_: Provides alternative graph types and renderings.
+
+If you want to add another view type to this list, edit this file by sending
+a pull request on GitHub.
+
+New plugins to render custom view types can be implemented using
+the :py:class:`~ckan.plugins.interfaces.IResourceView` interface.
+
+.. todo:: Link to a proper tutorial for writing custom views
+
+Deprecated view plugins
+-----------------------
+
 .. _data-explorer:
 
 Data Explorer
 +++++++++++++
+
+.. warning:: This Recline-based view plugin is deprecated and will be removed in future
+    versions
+
 
 .. image:: /images/recline_view.png
 
@@ -119,6 +266,8 @@ The three main panes of the Data Explorer are also available as separate views.
 DataStore Grid
 ++++++++++++++
 
+.. warning:: This Recline-based view plugin is deprecated and will be removed in future
+    versions
 
 .. image:: /images/recline_grid_view.png
 
@@ -130,6 +279,9 @@ This plugin requires data to be in the DataStore.
 
 DataStore Graph
 +++++++++++++++
+
+.. warning:: This Recline-based view plugin is deprecated and will be removed in future
+    versions
 
 .. image:: /images/recline_graph_view.png
 
@@ -144,6 +296,9 @@ This plugin requires data to be in the DataStore.
 
 DataStore Map
 +++++++++++++
+
+.. warning:: This Recline-based view plugin is deprecated and will be removed in future
+    versions
 
 .. image:: /images/recline_map_view.png
 
@@ -175,77 +330,18 @@ as Mapbox. Look below for an example to add to your configuration file::
     ckanext.spatial.common_map.subdomains = <subdomains>
 
 
-Text view
-+++++++++
 
-.. image:: /images/text_view.png
-
-View plugin: ``text_view``
-
-Displays files in XML, JSON or plain text based formats with the syntax
-highlighted. The formats detected can be configured using the
-:ref:`ckan.preview.xml_formats`, :ref:`ckan.preview.json_formats`
-and :ref:`ckan.preview.text_formats` configuration options respectively.
-
-If you want to display files that are hosted in a different server from your
-CKAN instance (eg that haven't been uploaded to CKAN) you will need to enable
-the `Resource Proxy`_ plugin.
-
-Image view
-++++++++++
-
-.. image:: /images/image_view.png
-
-View plugin: ``image_view``
-
-If the resource format is a common image format like PNG, JPEG or GIF, it adds
-an ``<img>`` tag pointing to the resource URL. You can provide an alternative
-URL on the edit view form. The available formats can be configured using the
-:ref:`ckan.preview.image_formats` configuration option.
-
-Web page view
-+++++++++++++
-
-.. image:: /images/webpage_view.png
-
-View plugin: ``webpage_view``
-
-Adds an ``<iframe>`` tag to embed the resource URL. You can provide an
-alternative URL on the edit view form.
-
-    .. warning:: Do not activate this plugin unless you trust the URL sources.
-        It is not recommended to enable this view type on instances where all users
-        can create datasets.
-
-Other view plugins
-++++++++++++++++++
-
-There are many more view plugins developed by the CKAN team and others which
-are hosted on separate repositories. Some examples include:
-
-* `Dashboard`_: Allows to combine multiple views into a single dashboard.
-* `PDF viewer`_: Allows to render PDF files on the resource page.
-* `GeoJSON map`_: Renders GeoJSON_ files on an interactive map.
-* `Choropleth map`_: Displays data on the DataStore on a choropleth map.
-* `Basic charts`_: Provides alternative graph types and renderings.
-
-If you want to add another view type to this list, edit this file by sending
-a pull request on GitHub.
-
-New plugins to render custom view types can be implemented using
-the :py:class:`~ckan.plugins.interfaces.IResourceView` interface.
-
-.. todo:: Link to a proper tutorial for writing custom views
-
-
+.. _React Data explorer: https://github.com/datopian/data-explorer
+.. _Ckanext visualize: https://github.com/keitaroinc/ckanext-visualize
 .. _Recline: https://github.com/okfn/recline/
+.. _DataTables: https://datatables.net/
 .. _DataProxy: https://github.com/okfn/dataproxy
 .. _GeoJSON: http://geojson.org
 .. _Dashboard: https://github.com/ckan/ckanext-dashboard
 .. _Basic charts: https://github.com/ckan/ckanext-basiccharts
 .. _Choropleth map: https://github.com/ckan/ckanext-mapviews
 .. _PDF viewer: https://github.com/ckan/ckanext-pdfview
-.. _GeoJSON map: https://github.com/ckan/ckanext-spatial
+.. _Geo viewer: https://github.com/ckan/ckanext-geoview
 
 
 .. _resource-proxy:
@@ -300,7 +396,7 @@ resources fields.
 Before each run, you will be prompted with the number of datasets affected and
 asked if you want to continue (unless you pass the ``-y`` option)::
 
-    You are about to check 3336 datasets for the following view plugins: ['image_view', 'recline_view', 'text_view']
+    You are about to check 3336 datasets for the following view plugins: ['image_view', 'datatables_view', 'text_view']
      Do you want to continue? [Y/n]
 
 .. note:: On large CKAN instances the migration process can take a significant
@@ -316,7 +412,7 @@ If no view types are provided, the default ones are used
 
 Specific view types can be also provided::
 
-    ckan -c |ckan.ini| views create image_view recline_view pdf_view
+    ckan -c |ckan.ini| views create image_view datatables_view pdf_view
 
 For certain view types (the ones with plugins included in the main CKAN core),
 default filters are applied to the search to only get relevant resources. For

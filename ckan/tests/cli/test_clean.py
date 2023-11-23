@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import pytest
-import six
 
 from ckan.cli.cli import ckan
 from ckan.tests.helpers import call_action
 
 
-@pytest.mark.skipif(six.PY2, reason="Faker image tests don't work on PY2")
 @pytest.mark.usefixtures("clean_db")
 class TestUserClean:
     @pytest.mark.ckan_config("ckan.upload.user.mimetypes", "image/png")
@@ -46,11 +44,12 @@ class TestUserClean:
         result = cli.invoke(ckan, ["clean", "users"])
 
         assert (
-            "User {} has an invalid image: {}".format(fake_user['name'], fake_user['image_url'])
+            f"User {fake_user['name']} has an invalid image:"
+            f" {fake_user['image_url']}"
             in result.output
         )
         assert (
-            "User {} has an invalid image: {}".format(user['name'], user['image_url'])
+            f"User {user['name']} has an invalid image: {user['image_url']}"
             not in result.output
         )
         assert "Permanently delete users and their images?" in result.output
@@ -87,6 +86,6 @@ class TestUserClean:
         )
         result = cli.invoke(ckan, ["clean", "users", "--force"])
         users = call_action("user_list")
-        assert "Deleted user: {}".format(fake_user['name']) in result.output
+        assert f"Deleted user: {fake_user['name']}" in result.output
         assert len(users) == 1
         assert users[0]["name"] == "valid-user"

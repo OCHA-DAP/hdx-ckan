@@ -4,10 +4,13 @@ import click
 import magic
 import os
 
+from typing import List
+
 from ckan import model
 from ckan import logic
 from ckan.common import config
 from ckan.lib.uploader import get_uploader
+from ckan.types import Context
 
 
 @click.group(short_help="Provide commands to clean entities from the database")
@@ -16,7 +19,7 @@ def clean():
     pass
 
 
-def _get_users_with_invalid_image(mimetypes):
+def _get_users_with_invalid_image(mimetypes: List[str]) -> List[model.User]:
     """Returns a list of users containing images with mimetypes not supported.
     """
     users = model.User.all()
@@ -24,7 +27,7 @@ def _get_users_with_invalid_image(mimetypes):
     invalid = []
     for user in users_with_img:
         upload = get_uploader("user", old_filename=user.image_url)
-        filepath = upload.old_filepath
+        filepath = upload.old_filepath  # type: ignore
         if os.path.exists(filepath):
             mimetype = magic.from_file(filepath, mime=True)
             if mimetype not in mimetypes:
@@ -36,7 +39,7 @@ def _get_users_with_invalid_image(mimetypes):
 @click.option(
     "-f", "--force", is_flag=True, help="Do not ask for comfirmation."
 )
-def users(force):
+def users(force: bool):
     """Removes users with invalid images from the database.
 
     Invalid images are the ones with mimetypes not defined in
@@ -74,7 +77,7 @@ def users(force):
         click.confirm("Permanently delete users and their images?", abort=True)
 
     site_user = logic.get_action("get_site_user")({"ignore_auth": True}, {})
-    context = {"user": site_user["name"]}
+    context: Context = {"user": site_user["name"]}
 
     for user in invalid:
         upload = get_uploader("user", old_filename=user.image_url)
