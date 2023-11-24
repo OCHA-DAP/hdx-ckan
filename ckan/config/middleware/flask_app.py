@@ -230,7 +230,6 @@ def make_flask_stack(conf: Union[Config, CKANConfig]) -> CKANApp:
     # Template context processors
     app.context_processor(helper_functions)
     app.context_processor(c_object)
-    app.context_processor(request_object)
 
     app.context_processor(_ungettext_alias)
 
