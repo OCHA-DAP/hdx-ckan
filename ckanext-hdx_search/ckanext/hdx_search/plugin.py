@@ -11,7 +11,7 @@ import ckanext.hdx_search.actions.authorize as authorize
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_search.model as search_model
-from ckan.lib.helpers import DEFAULT_FACET_NAMES
+# from ckan.lib.helpers import DEFAULT_FACET_NAMES
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
@@ -44,7 +44,7 @@ def convert_country(q):
 
 class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IActions)
@@ -68,7 +68,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             'num_of_results_for_prev_searches': search_history.num_of_results_for_prev_searches
         }
 
-    def before_map(self, map):
+    # def before_map(self, map):
         # map.connect('simple_search',
         #     '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         # map.connect('search', '/search',
@@ -79,7 +79,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_pii_log')
         # map.connect('qa_sdcmicro_log', '/dataset/{id}/resource/{resource_id}/qa_sdcmicro_log',
         #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_sdcmicro_log')
-        return map
+        # return map
 
     # def after_map(self, map):
     #     # map.connect('simple_search',
@@ -282,7 +282,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     # IFacets
     def dataset_facets(self, facets_dict, package_type):
 
-        tagged_facets = tk.config.get(u'search.facets', DEFAULT_FACET_NAMES).split()
+        # tagged_facets = tk.config.get(u'search.facets', DEFAULT_FACET_NAMES).split()
+        tagged_facets = tk.config.get(u'search.facets').split()
 
         # adding exclusion directive for tagged facets
         for f in tagged_facets:

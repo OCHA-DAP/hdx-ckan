@@ -3,7 +3,7 @@ import ckan.logic.auth.create as create
 
 import ckan.plugins.toolkit as tk
 
-from ckan.logic.auth.update import user_generate_apikey
+# from ckan.logic.auth.update import user_generate_apikey
 from ckan.logic.auth import get_user_object
 from ckanext.hdx_users.helpers.permissions import Permissions
 
@@ -13,7 +13,7 @@ NotFound = tk.ObjectNotFound
 
 ## ORGS
 def _simple_logged_in_auth(fail_message):
-    logged_in = new_authz.auth_is_loggedin_user()
+    logged_in = not new_authz.auth_is_anon_user()
     if logged_in:
         return {'success': True}
     else:
@@ -97,13 +97,13 @@ def hdx_request_data_admin_list(context, data_dict):
     return {'success': result}
 
 
-@auth_sysadmins_check
-def hdx_user_generate_apikey(context, data_dict):
-    user_obj = get_user_object(context, data_dict)
-    if user_obj.sysadmin:
-        return {'success': False, 'msg': _('API keys are disabled for sysadmins')}
-    else:
-        return user_generate_apikey(context, data_dict)
+# @auth_sysadmins_check
+# def hdx_user_generate_apikey(context, data_dict):
+#     user_obj = get_user_object(context, data_dict)
+#     if user_obj.sysadmin:
+#         return {'success': False, 'msg': _('API keys are disabled for sysadmins')}
+#     else:
+#         return user_generate_apikey(context, data_dict)
 
 
 def _check_hdx_user_permission(context, permission):

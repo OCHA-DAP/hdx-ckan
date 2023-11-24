@@ -9,9 +9,9 @@ import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
-import ckanext.hdx_users.views.user as hdx_user
+# import ckanext.hdx_users.views.user as hdx_user
 import ckanext.hdx_users.views.dashboard as dashboard
-import ckanext.hdx_users.views.api as api
+# import ckanext.hdx_users.views.api as api
 import ckanext.hdx_users.views.user_checks_login as ucl
 import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
@@ -67,8 +67,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     # IBlueprint
     def get_blueprint(self):
         return [
-            hdx_user.user,
-            hdx_user.hdx_login_link
+    #         hdx_user.user,
+    #         hdx_user.hdx_login_link
         ]
 
 
@@ -121,7 +121,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [
             dashboard.hdx_user_dashboard,
-            api.hdx_user_autocomplete,
+            # api.hdx_user_autocomplete,
             ucl.hdx_contribute,
             ucl.hdx_contact_hdx,
             permission.hdx_user_permission,

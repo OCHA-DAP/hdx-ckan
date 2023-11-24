@@ -5,7 +5,6 @@ from flask import Blueprint
 
 import ckan.authz as new_authz
 import ckan.model as model
-import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
@@ -13,8 +12,8 @@ from ckan.views.user import PerformResetView
 from ckan.views.user import RequestResetView
 from ckan.views.user import follow as _follow
 from ckan.views.user import followers as _followers
-from ckan.views.user import generate_apikey as _generate_apikey
-from ckan.views.user import logged_out as _logged_out
+# from ckan.views.user import generate_apikey as _generate_apikey
+# from ckan.views.user import logged_out as _logged_out
 from ckan.views.user import login as _login
 from ckan.views.user import logout as _logout
 from ckan.views.user import unfollow as _unfollow
@@ -218,13 +217,13 @@ user.add_url_rule(u'/logged_out_page', view_func=hdx_auth_view.logged_out_page)
 user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in, methods=(u'GET', u'POST',))
 user.add_url_rule(u'/login', view_func=_login)
 user.add_url_rule(u'/_logout', view_func=_logout)
-user.add_url_rule(u'/logged_out', view_func=_logged_out)
+# user.add_url_rule(u'/logged_out', view_func=_logged_out)
 
 user.add_url_rule(u'/follow/<id>', view_func=_follow, methods=(u'POST',))
 user.add_url_rule(u'/unfollow/<id>', view_func=_unfollow, methods=(u'POST',))
 user.add_url_rule(u'/followers/<id>', view_func=_followers)
 
-user.add_url_rule(u'/generate_key', view_func=_generate_apikey, methods=(u'POST',))
+# user.add_url_rule(u'/generate_key', view_func=_generate_apikey, methods=(u'POST',))
 
 user.add_url_rule(u'/<id>', view_func=read)
 

@@ -33,10 +33,16 @@ def setup():
                                    Column('key', types.UnicodeText),
                                    Column('value', types.UnicodeText))
 
-        meta.mapper(MemberExtra, member_extra_table,
-                    properties={'member': orm.relation(group.Member, backref=orm.backref('extras',
-                                                                                         cascade='all, delete, delete-orphan'))},
-                    order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
+        meta.mapper(
+            MemberExtra, member_extra_table,
+            properties={
+                'member': orm.relation(
+                    group.Member,
+                    backref=orm.backref('extras', cascade='all, delete, delete-orphan', order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
+                )
+            },
+        )
+                    # order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
 
         # meta.mapper(group.Member, group.member_table, properties={
         #     'extras': orm.relationship(MemberExtra, order_by=member_extra_table.c.id)
@@ -48,5 +54,5 @@ def setup():
 
 
 def _create_extra(key, value):
-    return MemberExtra(key=unicode(key), value=value)
+    return MemberExtra(key=str(key), value=value)
 

@@ -19,7 +19,7 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IConfigurable)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IRoutes, inherit=True)
 
     # IBlueprint
     def get_blueprint(self):
@@ -70,9 +70,9 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
         toolkit.add_resource('fanstatic', 'hdx_pages')
 
     # IRoutes
-    def before_map(self, map):
-
-        return map
+    # def before_map(self, map):
+    #
+    #     return map
 
     # IConfigurable
     def configure(self, config):

@@ -6,7 +6,7 @@ import logging
 import datetime
 import ckan.model as model
 from ckan.model.domain_object import DomainObject
-from ckan.model import meta, extension
+from ckan.model import meta
 import ckan.model.types as _types
 
 from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
@@ -117,7 +117,7 @@ def define_page_table():
                        Column('status', types.UnicodeText),
                        )
 
-    mapper(Page, page_table, extension=[extension.PluginMapperExtension(), ])
+    mapper(Page, page_table)
 
 
 class PageGroupAssociation(PageBaseModel):
