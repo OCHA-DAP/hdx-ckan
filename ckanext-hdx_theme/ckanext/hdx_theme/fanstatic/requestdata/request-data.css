@@ -683,19 +683,28 @@
   text-overflow: ellipsis;
 }
 @media (max-width: 768px) {
-  .modal.show.request-data-modal {
-    height: max-content;
-    max-height: 100vh;
+  .modal.show.request-data-modal .request-data-modal-dialog {
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
-  .modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols {
+  .modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols {
     height: auto;
   }
-  .modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .left-col {
-    padding: 20px 40px;
+  .modal.show.request-data-modal .request-data-modal-dialog .request-data-modal-content .request-data-modal-body .request-data-two-cols .form-request-contact {
+    max-height: none;
+    overflow-y: hidden;
   }
-  .modal.show.request-data-modal .request-data-modal-content .request-data-modal-body .request-data-two-cols .right-col {
-    padding: 20px;
-    padding-bottom: 60px;
+}
+@media (max-width: 1280px) {
+  body.modal-open {
+    padding-right: 0 !important;
+  }
+  body.modal-open .modal-backdrop.show {
+    width: 100%;
+    height: 100%;
+  }
+  body.modal-open .request-data-modal {
+    padding-right: 0;
   }
 }
 .full-width {
