@@ -31,7 +31,7 @@
             </span>
             <div class="show-filters">
               <a href="#" onclick="$('.mobile-facets').show();">
-                <div class="d-inline-block show-filter-switch show-filter-switch--sm">
+                <div class="d-inline-block show-filter-switch {% if data.full_facet_info.num_of_selected_filters > 0 %}show-filter-switch--md{% else %}show-filter-switch--sm{% endif %}">
                   <div class="form-check form-switch ps-0">
                     <input class="form-check-input form-check-input--always-closed float-end" type="checkbox" id="show-filter-toggle" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}>
                     <label class="form-check-label" for="show-filter-toggle">Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}</label>
