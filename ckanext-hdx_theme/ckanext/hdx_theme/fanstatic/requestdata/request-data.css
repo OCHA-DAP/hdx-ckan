@@ -271,6 +271,12 @@
 .request-data-module .reply-request-form-control .error-block {
   top: 122px;
 }
+.modal.request-data-modal .sysadmin-requests-container__dropdown .sysadmin-requests-container__scrollable-content,
+.modal.show.request-data-modal .sysadmin-requests-container__dropdown .sysadmin-requests-container__scrollable-content,
+.request-data-module .sysadmin-requests-container__dropdown .sysadmin-requests-container__scrollable-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
 .modal.request-data-modal .sysadmin-requests-container__dropdown > div > label,
 .modal.show.request-data-modal .sysadmin-requests-container__dropdown > div > label,
 .request-data-module .sysadmin-requests-container__dropdown > div > label {
@@ -506,6 +512,12 @@
 }
 .request-data-module .filter-requests {
   font-weight: bold;
+}
+.request-data-module .filter-requests .humanitarianicons-Down {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+  margin-left: 5px;
 }
 .request-data-module .caret {
   vertical-align: middle !important;
