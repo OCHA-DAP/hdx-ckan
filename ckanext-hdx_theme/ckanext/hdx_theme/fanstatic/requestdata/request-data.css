@@ -656,6 +656,12 @@
 .request-data-module .requested-data-order-btn {
   font-weight: bold;
 }
+.request-data-module .requested-data-order-btn .humanitarianicons-Down {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+  margin-left: 5px;
+}
 .request-data-module .requested-data-order-btn--current-order,
 .request-data-module .filter-requests-text {
   font-size: 16px;
