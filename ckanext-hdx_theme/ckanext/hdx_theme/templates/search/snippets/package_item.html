@@ -92,7 +92,7 @@
                       {% if package.dataset_date %}
                         {% set dataset_date = h.render_date_from_concat_str(package.dataset_date) %}
                         {% if dataset_date %}
-                            <span title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Time Period of the Dataset')}} [?]:</span> {{dataset_date}} <a href="#" class="show-more-dates">{{ _('More') }}...</a>
+                            <span title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Time Period of the Dataset')}} [?]:</span> {{dataset_date}} <a href="#" class="show-more-dates">... {{ _('More') }}</a>
                         {% endif %}
                       {% endif %}
                       {% set modified_time = package.last_modified %}
@@ -107,7 +107,10 @@
                       </div>
                       {% endif %}
                       <div class="d-none more-dates">
-                        <span title="{{ _('The date when the dataset was first added to HDX.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Dataset Added on HDX')}} [?]:</span> {{ h.render_datetime(hdx_added_time) }} <a href="#" class="hide-more-dates d-none">{{ _('Less') }}...</a>
+                        <span title="{{ _('The date when the dataset was first added to HDX.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Dataset Added on HDX')}} [?]:</span> {{ h.render_datetime(hdx_added_time) }}
+                      </div>
+                      <div class="d-none more-dates">
+                        <a href="#" class="hide-more-dates d-none">{{ _('Less') }}</a>
                       </div>
                     </div>
                   {% endblock %}
