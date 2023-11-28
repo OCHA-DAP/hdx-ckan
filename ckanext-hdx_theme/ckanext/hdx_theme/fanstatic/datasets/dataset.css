@@ -87,9 +87,6 @@
   font-weight: 400;
   font-size: 14px;
 }
-.additional-info table tr.more-dates th {
-  padding-left: 15px;
-}
 .additional-info td {
   text-align: justify;
   word-break: break-word;
