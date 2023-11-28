@@ -55,7 +55,7 @@
               {% set not_applicable_hover_title = '<div class="tooltip-content">' + subcateg.stats.state_comment + '</div>' if subcateg.stats.state_comment else '' %}
               <div class="flag" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"
                 data-bs-original-title="{{ not_applicable_hover_title }}" data-bs-html="true" data-module-inner_class="tooltip-column">
-                <span>Not applicable</span>
+                <span>{{ h.hdx_datagrid_org_get_display_text(subcateg) }}</span>
               </div>
             {% elif subcateg.datasets | length > 0 %}
               {% for dataset in subcateg.datasets %}

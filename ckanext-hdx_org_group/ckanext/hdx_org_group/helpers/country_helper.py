@@ -281,3 +281,12 @@ def get_not_filtered_facet_info(country_dict):
     non_filtered_facet_info['results'] = query_result.get('results', [])
 
     return non_filtered_facet_info
+
+def hdx_datagrid_org_get_display_text(dataseries_dict):
+    if 'stats' in dataseries_dict:
+        if 'state' in dataseries_dict.get('stats'):
+            if dataseries_dict.get('stats').get('state') == 'not_applicable':
+                for flag in dataseries_dict.get('flags'):
+                    if flag.get('key', '') == 'not_applicable' and flag.get('display_text'):
+                        return flag.get('display_text')
+    return 'Not applicable'
