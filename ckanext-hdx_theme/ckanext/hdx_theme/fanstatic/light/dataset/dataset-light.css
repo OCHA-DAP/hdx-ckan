@@ -87,9 +87,6 @@
   font-weight: 400;
   font-size: 14px;
 }
-.additional-info table tr.more-dates th {
-  padding-left: 15px;
-}
 .additional-info td {
   text-align: justify;
   word-break: break-word;
@@ -230,9 +227,6 @@
   margin-top: -10px;
   margin-bottom: 10px;
   margin-left: 0;
-}
-.dataset-light .additional-info table tr.more-dates td.dataset-details {
-  padding-left: 15px;
 }
 @media (max-width: 375px) {
   .dataset-light .nav-tabs .hdx-tab-button {
