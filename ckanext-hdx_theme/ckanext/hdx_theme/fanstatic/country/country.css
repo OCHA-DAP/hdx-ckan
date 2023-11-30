@@ -170,6 +170,10 @@ h1.country-title {
   background-color: #fff;
   transform: translate(-50%, 0) rotateZ(45deg);
 }
+.followers-list-popup.dropdown-menu .followers-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
 .followers-list-popup.dropdown-menu .followers-list .follower-item {
   font-size: 14px;
   white-space: nowrap;
