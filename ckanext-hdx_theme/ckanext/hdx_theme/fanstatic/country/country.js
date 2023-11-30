@@ -230,18 +230,13 @@ function onDataCompletenessExpand() {
 
 function handleWindowWidth() {
   const CUT_POINT = 1024;
-  if (!window.hdxMobileTopline) {
-    if (window.innerWidth < CUT_POINT) {
-      window.hdxMobileTopline = true;
-      $(".carousel").hide();
-      $(".mobile-carousel").show();
-    }
-  } else {
-    if (window.innerWidth >= CUT_POINT) {
-      window.hdxMobileTopline = false;
-      $(".carousel").show();
-      $(".mobile-carousel").hide();
-    }
+  if (window.innerWidth < CUT_POINT) {
+    $(".carousel").hide();
+    $(".mobile-carousel").show();
+  }
+  else if (window.innerWidth >= CUT_POINT) {
+    $(".carousel").show();
+    $(".mobile-carousel").hide();
   }
 }
 
@@ -257,7 +252,6 @@ $(document).ready(function() {
     c3ActiveSparklineRedraw(); //reset visibility / overflow
     $("#expand-data-completeness").change(onDataCompletenessExpand);
     $('#key-figures-carousel').bind('slid.bs.carousel', function (e) {
-      console.log('after');
       c3ActiveSparklineRedraw();
     });
     mobileTopline();
