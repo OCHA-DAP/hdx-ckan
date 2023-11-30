@@ -6,7 +6,7 @@
   {% set chevronSufix = '' %}
 {% endif %}
 <div id="key-figures-carousel" class="col-12 carousel slide" data-bs-ride="carousel"  data-bs-interval="false">
-    <div class="carousel-inner" role="listbox">
+    <div class="carousel-inner px-2" role="listbox">
     {% if country_active %}
         {% set loop_items = 3 %}
         {% set loop_class = cutpoint + '-4' %}
@@ -49,18 +49,20 @@
     {% endif %}
 </div>
 
-<div id="key-figures-mobile-carousel" class="mobile-carousel carousel slide" data-bs-ride="carousel" data-bs-interval="false">
-  <div class="mobile-carousel-inner carousel-inner" role="listbox">
-    {% for value in data.widgets.top_line_data_list %}
-      <div class="carousel-item {{ loop_class }}">
-        {{ h.snippet('crisis/snippets/topline-rw.html',
-          title=value.indicatorTypeName, value=value.formatted_value,
-          unit=value.units, notes=value.unitName, source=value.sourceName,
-          sparkline_json=value.sparklines_json, relief_web_link = value.reliefWebLink,
-          source_link=value.datasetLink, latest_date=value.datasetUpdateDate) }}
-      </div>
-    {% endfor %}
+<div class="col-12">
+  <div id="key-figures-mobile-carousel" class="mobile-carousel carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+    <div class="mobile-carousel-inner carousel-inner px-2" role="listbox">
+      {% for value in data.widgets.top_line_data_list %}
+        <div class="carousel-item {{ loop_class }}">
+          {{ h.snippet('crisis/snippets/topline-rw.html',
+            title=value.indicatorTypeName, value=value.formatted_value,
+            unit=value.units, notes=value.unitName, source=value.sourceName,
+            sparkline_json=value.sparklines_json, relief_web_link = value.reliefWebLink,
+            source_link=value.datasetLink, latest_date=value.datasetUpdateDate) }}
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Indicators -->
+    <ol class="carousel-indicators text-center"></ol>
   </div>
-  <!-- Indicators -->
-  <ol class="carousel-indicators text-center"></ol>
 </div>
