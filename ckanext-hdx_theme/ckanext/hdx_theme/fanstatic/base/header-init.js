@@ -4,10 +4,25 @@ $(document).ready(function(){
         allowClear: true
     });
 
-    $(".dropdown.dropdown-on-hover").hover(
-        function(){ $(this).addClass('open') },
-        function(){ $(this).removeClass('open') }
-    );
+    var hoverDropdowns = document.querySelectorAll('.dropdown.dropdown-on-hover');
+    hoverDropdowns.forEach(function(dropdown) {
+        var dropdownMenu = dropdown.querySelector('.dropdown-menu');
+        var timeoutId;
+        dropdown.addEventListener('mouseenter', function() {
+            if (dropdownMenu) {
+                clearTimeout(timeoutId); // Clear any existing timeout
+                dropdownMenu.classList.add('show');
+            }
+        });
+        dropdown.addEventListener('mouseleave', function() {
+            // Set a short delay before removing the 'show' class
+            timeoutId = setTimeout(function() {
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('show');
+                }
+            }, 200);
+        });
+    });
 
     $(".dropdown .collapsible-submenu-item").click((ev) => {
       let container = $(ev.currentTarget).siblings(".dropdown-submenu");

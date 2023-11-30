@@ -21,6 +21,7 @@
       min-width: 1260px;
       color: @grayColor;
       font-family: @sourceSansProFont;
+      font-size: 14px;
     }
 /* END Body Background */
 
@@ -93,3 +94,20 @@ h4 small {
   display: inline-block;
 }
 /* END - Actions button list */
+
+// reset BS5 containers max-width prop
+@media (min-width: 992px) {
+  .container-lg, .container-md, .container-sm, .container {
+    max-width: none;
+  }
+}
+@media (min-width: 768px) {
+  .container-md, .container-sm, .container {
+    max-width: none;
+  }
+}
+@media (min-width: 576px) {
+  .container-sm, .container {
+    max-width: none;
+  }
+}

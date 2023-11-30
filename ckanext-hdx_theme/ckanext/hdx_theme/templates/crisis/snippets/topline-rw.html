@@ -17,7 +17,7 @@ Example:
 {% block topline_class %} {{ super() }} topline-rw {% endblock %}
 
 {% block value_with_sparkline %}
-    <div class="col-xs-12 indicator-value">
+    <div class="col-12 indicator-value">
         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
             <div style="display: none;" class="sparkline">{{ sparkline_json }}</div>
     </div>
@@ -28,7 +28,7 @@ Example:
 {%  block topline_source %}
     {% if source %}
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <span class="source-title">{{ source }}</span>
                 {% if relief_web_link %}
                     via <a href="{{ relief_web_link }}" {% if embedded %} target="_blank" {% endif %}>ReliefWeb</a>

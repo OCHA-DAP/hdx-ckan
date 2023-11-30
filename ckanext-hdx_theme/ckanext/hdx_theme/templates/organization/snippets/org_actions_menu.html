@@ -28,7 +28,7 @@
     {% endif %}
     {% if request_membership and request_membership_flag == 'true' %}
         <li>
-            <a href="#" class="" data-toggle="modal" data-target="#req-membership-div">
+            <a href="#" class="" data-bs-toggle="modal" data-bs-target="#req-membership-div">
                 {{ _("Request Membership") }}
             </a>
             {% snippet 'organization/snippets/req_membership_new.html',

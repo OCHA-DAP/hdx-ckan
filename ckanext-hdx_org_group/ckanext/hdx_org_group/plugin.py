@@ -42,9 +42,11 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     def get_helpers(self):
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_h
+        from ckanext.hdx_org_group.helpers import country_helper as hdx_country_h
         return {
             'hdx_organization_type_list': hdx_org_h.hdx_organization_type_list,
-            'hdx_organization_type_get_value': hdx_org_h.hdx_organization_type_get_value
+            'hdx_organization_type_get_value': hdx_org_h.hdx_organization_type_get_value,
+            'hdx_datagrid_org_get_display_text': hdx_country_h.hdx_datagrid_org_get_display_text
         }
 
     def get_actions(self):

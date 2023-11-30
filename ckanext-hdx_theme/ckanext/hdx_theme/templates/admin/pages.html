@@ -26,7 +26,7 @@
           <td>{{ p.status }}</td>
           <td>{{ p.state }}</td>
           <td>
-            <a href="/page/edit/{{p.id}}" >Edit</a> | <a href="#confirmation-div-{{ p.id }}" data-toggle="modal" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
+            <a href="/page/edit/{{p.id}}" >Edit</a> | <a href="#confirmation-div-{{ p.id }}" data-bs-toggle="modal" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
             {% snippet 'snippets/confirmation_post.html',
               form_url=h.url_for('hdx_custom_page.delete_page', id=p.id),
               modal_div_id='confirmation-div-' + p.id,

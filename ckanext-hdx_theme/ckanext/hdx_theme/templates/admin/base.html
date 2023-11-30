@@ -10,7 +10,7 @@
 {% block breadcrumb_content %}{% endblock %}
 {% block secondary %}{% endblock %}
 {% block item_title_contrib %}
-  <h2 class="sspBold28 black">
+  <h2 class="sspBold28 black mTop20">
     {% block page_heading %}
       {{ _('Sysadmin Dashboard') }}
     {% endblock %}
@@ -19,12 +19,12 @@
 
 {% block primary_content_inner_wrapper %}
   <div class="row admin-two-col">
-    <div class="col-xs-3">
+    <div class="col-3">
       {% block secondary_content %}
       {% endblock %}
 
     </div>
-    <div class="col-xs-9">
+    <div class="col-9">
       {% block primary_content_inner %}
       {% endblock %}
     </div>
@@ -36,34 +36,34 @@
 
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
   {% if user_is_sysadmin %}
-    {{ h.build_nav_icon('admin.index', 'All Sysadmins [%s]' % h.hdx_user_count(only_sysadmin=True, include_site_user=True)) }}
+    {{ h.bs5_build_nav_icon('admin.index', 'All Sysadmins [%s]' % h.hdx_user_count(only_sysadmin=True, include_site_user=True), class_='nav-link') }}
   {% endif %}
   {% if user_is_sysadmin %}
-    {{ h.build_nav_icon('user.index', 'All users [%s]' % h.hdx_user_count()) }}
+    {{ h.bs5_build_nav_icon('user.index', 'All users [%s]' % h.hdx_user_count(), class_='nav-link') }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_carousel_update') %}
-    {{ h.build_nav_icon('hdx_carousel.show', _('Carousel')) }}
+    {{ h.bs5_build_nav_icon('hdx_carousel.show', _('Carousel'), class_='nav-link') }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('hdx_request_data_admin_list') %}
-    {{ h.build_nav_icon('requestdata_ckanadmin.requests_data', _('HDX Connect Dashboard')) }}
+    {{ h.bs5_build_nav_icon('requestdata_ckanadmin.requests_data', _('HDX Connect Dashboard'), class_='nav-link') }}
   {% endif %}
   {% if user_is_sysadmin or h.check_access('admin_page_list') %}
-    {{ h.build_nav_icon('hdx_custom_pages.index', _('Custom/Event Pages')) }}
+    {{ h.bs5_build_nav_icon('hdx_custom_pages.index', _('Custom/Event Pages'), class_='nav-link') }}
   {% endif %}
   {% if c.userobj.sysadmin %}
-    <li class="nav-tabs-more">
-      <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+    <li class="nav-item nav-tabs-more">
+      <a href="#" data-bs-toggle="dropdown" aria-haspopup="true" class="nav-link" role="button" aria-expanded="false">
         <span id="crises-label">More <i class="humanitarianicons-Down"></i></span>
       </a>
       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-        <li class="crises-group">
+        <li class="nav-item crises-group">
           <ul>
             {% if user_is_sysadmin or h.check_access('hdx_quick_links_update') %}
-              {{ h.build_nav_icon('hdx_quick_links.show', _('Quick Links')) }}
-              {{ h.build_nav_icon('hdx_package_links.show', _('Package Links')) }}
+              {{ h.bs5_build_nav_icon('hdx_quick_links.show', _('Quick Links'), class_='nav-link') }}
+              {{ h.bs5_build_nav_icon('hdx_package_links.show', _('Package Links'), class_='nav-link') }}
             {% endif %}
-            {{ h.build_nav_icon('requestdata_ckanadmin.email', _('Email')) }}
-            {{ h.build_nav_icon('admin.config', _('Config')) }}
+            {{ h.bs5_build_nav_icon('requestdata_ckanadmin.email', _('Email'), class_='nav-link') }}
+            {{ h.bs5_build_nav_icon('admin.config', _('Config'), class_='nav-link') }}
 
           </ul>
         </li>

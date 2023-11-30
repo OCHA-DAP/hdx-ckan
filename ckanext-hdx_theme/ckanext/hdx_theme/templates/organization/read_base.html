@@ -13,7 +13,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organisations'), controller='organization', action='index', position=2 %}
-  <li>{% link_for org_dict.display_name|truncate(35), controller='organization', action='read', id=org_dict.name %}</li>
+  <li class="breadcrumb-item">{% link_for org_dict.display_name|truncate(35), controller='organization', action='read', id=org_dict.name %}</li>
 {% endblock %}
 
 

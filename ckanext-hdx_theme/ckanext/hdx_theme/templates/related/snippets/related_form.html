@@ -15,9 +15,9 @@
   {% endblock %}
 
   {% block fields %}
-    {{ form.input('title', label=_('Title'), id='field-title', placeholder=_('My Related Item'), value=data.title, error=errors.title, classes=['control-full']) }}
-    {{ form.input('url', label=_('URL'), id='field-url', placeholder=_('https://example.com/'), value=data.url, error=errors.url, classes=['control-full']) }}
-    {{ form.input('image_url', label=_('Image URL'), id='field-image-url', placeholder=_('https://example.com/image.png'), value=data.image_url, error=errors.image_url, classes=['control-full']) }}
+    {{ form.input('title', label=_('Title'), id='field-title', placeholder=_('My Related Item'), value=data.title, error=errors.title, classes=[]) }}
+    {{ form.input('url', label=_('URL'), id='field-url', placeholder=_('https://example.com/'), value=data.url, error=errors.url, classes=[]) }}
+    {{ form.input('image_url', label=_('Image URL'), id='field-image-url', placeholder=_('https://example.com/image.png'), value=data.image_url, error=errors.image_url, classes=[]) }}
     {{ form.markdown('description', label=_('Description'), id='field-description', placeholder=_('A little information about the item...'), value=data.description, error=errors.description) }}
     {{ form.select('type', label=_('Type'), id='field-types', selected=data.type, options=c.types, error=errors.type) }}
   {% endblock %}
@@ -26,7 +26,7 @@
     {% block delete_button %}
       {% if h.check_access('related_delete', {'id': data.id})  %}
         {% set locale = h.dump_json({'content': _('Are you sure you want to delete this related item?')}) %}
-        <a class="btn btn-danger pull-left" href="{% url_for controller='related', action='delete', related_id=data.id, id=c.pkg_id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+        <a class="btn btn-danger float-start" href="{% url_for controller='related', action='delete', related_id=data.id, id=c.pkg_id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
       {% endif %}
     {% endblock %}
     {{ h.nav_link(_('Cancel'), 'dataset_read', id=c.id, class_='btn') }}

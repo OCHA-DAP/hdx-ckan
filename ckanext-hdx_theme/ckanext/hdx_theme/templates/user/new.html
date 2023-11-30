@@ -3,14 +3,14 @@
 {% block subtitle %}{{ _('Register') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Registration'), controller='user', action='register') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Registration'), controller='user', action='register') }}</li>
 {% endblock %}
 
 {% block primary_content %}
 
   <article class="module userRegisterContent">
     <div class="module-content">
-      <div class="pull-right">
+      <div class="float-end">
 {#      {% snippet "snippets/help_box.html", links=[{'url':'https://centre.humdata.org/screencasts#register-for-an-account','text':'How to Register'},{'url':'https://centre.humdata.org/get-involved/','text':'Contact Us'}] %}#}
       </div>
       <h1 class="page-heading">

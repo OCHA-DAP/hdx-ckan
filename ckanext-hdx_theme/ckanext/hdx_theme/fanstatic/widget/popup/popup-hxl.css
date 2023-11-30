@@ -25,7 +25,7 @@
 }
 @media (max-width: 375px) {
   .popup .content {
-    padding: 30px/2;
+    padding: 15px;
   }
 }
 .popup .content .title {
@@ -48,7 +48,7 @@
 #hxl-preview-popup.popup .content .header-row .title {
   color: #fff;
 }
-#hxl-preview-popup.popup .content .header-row .pull-right {
+#hxl-preview-popup.popup .content .header-row .float-end {
   padding-top: 13px;
 }
 #hxl-preview-popup.popup .content .header-row .close {

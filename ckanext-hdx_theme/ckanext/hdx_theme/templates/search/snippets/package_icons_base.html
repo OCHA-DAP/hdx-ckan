@@ -10,19 +10,19 @@
     {% endblock %}
 
     {% if visualization %}
-      <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+      <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
     {% endif %}
     {% if has_quality_checked %}
-      <span class="humanitarianicons-Not-affected" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+      <span class="humanitarianicons-Not-affected" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
     {% endif %}
     {% if has_showcase_items %}
-      <span class="humanitarianicons-Copy" title="{{ _('Showcase Item') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+      <span class="humanitarianicons-Copy" title="{{ _('Showcase Item') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"  ></span>
     {% endif %}
     {% if package.subnational and package.subnational != '0' %}
-      <span class="humanitarianicons-Staff-management" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+      <span class="humanitarianicons-Staff-management" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"  ></span>
     {% endif %}
     {% if h.hdx_dataset_has_sadd(package.tags) %}
-      <span class="humanitarianicons-People-targeted" title="{{ _('Sex and Age Disaggregated Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+      <span class="humanitarianicons-People-targeted" title="{{ _('Sex and Age Disaggregated Data') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"  ></span>
     {% endif %}
 
     {% block other_icons %}

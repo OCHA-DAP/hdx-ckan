@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <div class="row">
             {% for top_line_item in key_figures %}
-                <div class="col-xs-3">
+                <div class="col-3">
                     {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
                     unit=top_line_item.units,
                     notes=top_line_item.notes, source=top_line_item.source,

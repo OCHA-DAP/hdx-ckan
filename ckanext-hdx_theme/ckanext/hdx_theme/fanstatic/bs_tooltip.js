@@ -14,7 +14,7 @@ ckan.module('bs_tooltip', function ($, _) {
             <div class="tooltip-inner ${this.options.inner_class}"></div>
            </div>`;
       }
-      this.el.tooltip(options);
+      new bootstrap.Tooltip(this.el, options);
     },
     options: {
     	placement: 'top',

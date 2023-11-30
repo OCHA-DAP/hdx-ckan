@@ -25,63 +25,37 @@
 }
 #followee-filter .btn {
   background-color: #ffffff;
-  background-image: none;
   border: none;
-  text-shadow: none;
   box-shadow: none;
 }
-#followee-filter .btn strong {
+#followee-filter .btn .dropdown-menu {
+  max-height: 400px;
+  overflow-y: auto;
+}
+#followee-filter .btn .followee-filter-label {
+  display: inline-block;
+  vertical-align: middle;
+  color: #888888;
+  text-transform: uppercase;
+  font-family: 'Gotham-Book', sans-serif;
+  font-display: block;
+  font-weight: 400;
+  font-size: 12px;
+}
+#followee-filter .btn .followee-filter-choice {
+  color: #007CE0;
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: bold;
   margin: 0 5px;
   max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#followee-filter .btn span {
-  font-weight: bold;
-}
-#followee-filter .btn .caret {
-  margin-left: 5px;
-  position: relative;
-  top: 8px;
-}
-#followee-filter .popover .inited {
-  border-radius: 0;
-}
-.nav-pills > .active > a,
-.nav-pills > .active > a:hover,
-.nav-pills > .active > a:focus {
-  color: #007CE0;
-  background-color: #007CE0;
-  color: #ffffff;
-}
-#followee-filter .btn span.dpbold {
-  font-weight: bold;
-}
-#followee-filter .btn span.lblnormal {
-  line-height: 25px;
-  font-weight: normal;
-}
-.popover .popover-content {
-  color: #007CE0;
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
-  word-break: break-all;
-}
-.popover-followee .nav li a {
-  color: #007CE0;
-  border-radius: 0;
-  display: block;
-  margin: 0;
-  overflow: hidden;
-  padding: 7px 10px 7px 15px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.popover-followee .nav-pills > .active > a {
-  color: #ffffff;
+#followee-filter .btn .humanitarianicons-Down {
+  vertical-align: middle;
+  color: #888888;
 }
 a,
 a:hover,

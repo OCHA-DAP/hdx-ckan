@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block footer %}
-  <button class="btn btn-empty btn-large" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+  <button type="button" class="btn btn-empty btn-large" data-bs-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
 
   {% if disabled %}
     <span class="btn btn-danger btn-large disabled">

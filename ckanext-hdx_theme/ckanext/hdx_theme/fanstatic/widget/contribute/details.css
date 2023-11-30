@@ -9,6 +9,8 @@
   position: static;
   left: auto;
   top: auto;
+  margin-left: auto;
+  margin-right: auto;
   transform: none;
   -ms-transform: none;
   -webkit-transform: none;

@@ -63,7 +63,7 @@ this.ckan.module('api-info', function (jQuery) {
 
       this.loadTemplate().done(function (html) {
         module.modal = jQuery(html);
-        module.modal.find('.modal-header :header').append('<button class="close" data-dismiss="modal">×</button>');
+        module.modal.find('.modal-header :header').append('<button class="btn-close float-end" data-bs-dismiss="modal"></button>');
         module.modal.modal().appendTo(sandbox.body);
       });
     },

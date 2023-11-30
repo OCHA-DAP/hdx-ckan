@@ -8,7 +8,7 @@
   <div class="paddingLeftHack">
     <form method="POST" data-module="basic-form">
       {% for p in permissions %}
-        {{ form.checkbox(p.key, id='field_'+ p.key , label=p.label, value=p.key, checked=p.checked, classes=["control-full"]) }}
+        {{ form.checkbox(p.key, id='field_'+ p.key , label=p.label, value=p.key, checked=p.checked, classes=[""]) }}
       {% endfor %}
       <button class="btn btn-primary" type="submit" name="update_permissions" value="update">{{ _("Update Permissions") }}</button>
     </form>

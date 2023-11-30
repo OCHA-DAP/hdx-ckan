@@ -17,13 +17,13 @@
 {% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Datasets'),
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Datasets'),
   	'hdx_dataset.search', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block primary_content %}
     {% block search_results_wrapper %}
-        <div id="search-recs"></div>
+        <div id="search-recs" class="d-none"></div>
         {% snippet 'search/snippets/search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true %}
 

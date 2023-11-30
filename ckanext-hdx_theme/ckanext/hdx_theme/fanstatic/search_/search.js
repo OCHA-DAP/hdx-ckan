@@ -51,7 +51,7 @@ $('document').ready(function(){
                 html +=',';
             }
         }
-        $('#search-recs').html(html);
+        $('#search-recs').html(html).removeClass('d-none');
     }
 
     // move search-ahead element in parent container to fix absolute positioning
@@ -144,6 +144,13 @@ $('document').ready(function(){
         // $results.html('');
         $results.hide();
     });
+
+  $('.show-more-dates, .hide-more-dates').on('click', function(e) {
+    e.preventDefault();
+    var parent = $(this).closest('.dataset-dates');
+    $('.show-more-dates, .hide-more-dates', parent).toggleClass('d-none');
+    $('.more-dates', parent).toggleClass('d-none');
+  });
 });
 
 function process_title(title, termList){

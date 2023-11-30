@@ -20,20 +20,30 @@
         </td>
         </tr>
       <tr>
-        <th scope="row" class="dataset-label">{{ _('Reference Period') }}</th>
-        <td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
+        <th scope="row" class="dataset-label"><span title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Time Period of the Dataset')}} [?]</span></th>
+        <td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }} <a href="#" id="show-more-dates">... {{ _('More') }}</a></td>
       </tr>
-      <tr>
-        {% set updated_time = h.hdx_get_last_modification_date(pkg_dict) %}
-        <th scope="row" class="dataset-label">{{ _('Updated') }}</th>
+      {% set modified_time = pkg_dict.last_modified %}
+      {% set confirmed_time = pkg_dict.review_date %}
+      {% set hdx_added_time = pkg_dict.metadata_created %}
+      <tr class="d-none more-dates">
+        <th scope="row" class="dataset-label"><span title="{{ _('The date of the most recent change to any data in the dataset’s resources.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Modified')}} [?]</span></th>
         <td class="dataset-details">
-          <span data-module="hdx_show_more" style="visibility:hidden">
-          {% if h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) == "Live"  %}
-            {{ _('Live') }}
-          {% else %}
-            {{ h.render_datetime(updated_time) }}
-          {% endif %}
-          </span>
+          {{ h.render_datetime(modified_time) }}
+        </td>
+      </tr>
+      {% if confirmed_time and confirmed_time > modified_time %}
+      <tr class="d-none more-dates">
+        <th scope="row" class="dataset-label"><span title="{{ _('The date when the contributor last confirmed that all resources in the dataset are up-to-date.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Confirmed')}} [?]</span></th>
+        <td class="dataset-details">
+          {{ h.render_datetime(confirmed_time) }}
+        </td>
+      </tr>
+      {% endif %}
+      <tr class="d-none more-dates">
+        <th scope="row" class="dataset-label"><span title="{{ _('The date when the dataset was first added to HDX.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Dataset Added on HDX')}} [?]</span></th>
+        <td class="dataset-details">
+          {{ h.render_datetime(hdx_added_time) }} <a href="#" class="d-none" id="hide-more-dates">{{ _('Less') }}</a>
         </td>
       </tr>
 
@@ -135,7 +145,7 @@
         <th scope="row" class="dataset-label">{{ _('Tags') }}</th>
         <td class="dataset-details">
           <div class="row mTop8">
-            <div class="col-xs-12">
+            <div class="col-12">
               {% for tag in pkg_dict.tags %}
                 <div class="tag-wrapper">
                   {% if tag.vocabulary_id %}
@@ -154,7 +164,7 @@
           <th scope="row" class="dataset-label">{{ _('File Format') }}</th>
           <td class="dataset-details">
             <div class="row mTop8">
-              <div class="col-xs-12">
+              <div class="col-12">
                 <ul class="list-items dataset-resources unstyled">
                   {% for resource in h.dict_list_reduce(pkg_dict.resources, 'format') %}
                     <li>

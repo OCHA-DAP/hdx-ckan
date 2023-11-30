@@ -113,13 +113,14 @@
 
     <span class="pii-status">
       {% if 'pii_is_sensitive' not in resource %}
-        <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{resource.id}}">Confirm</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#pii-confirm-modal-{{resource.id}}">Confirm</a>
       {% endif %}
       <div class="modal pii-confirm-modal" id="pii-confirm-modal-{{resource.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Confirm Risk Classification</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <label><input name="pii-confirm" type="radio" value="true" {% if resource.pii_is_sensitive==True %} checked="checked"{% endif %}> <span class="icon-bell"></span> I have checked this resource and I believe it may contain sensitive content</label> <br><br>
@@ -127,7 +128,7 @@
             </div>
             <div class="modal-footer">
               {% set score_for_mixpanel = resource.pii_predict_score|float  if resource.pii_predict_score else 0 %}
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button"data-bs-dismiss="modal" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="button" class="btn btn-primary" onclick="confirmPIIState(this, '{{ res.id }}', {{ score_for_mixpanel }}, '{{ link_to_log }}', '{{ dlp_run }}')">Confirm</button>
             </div>
           </div>
@@ -137,31 +138,31 @@
 {#      {% if link_to_log and (status == 'OK' or status == 'FINDINGS' or status == 'EXCEPTION') %}#}
       {% if 'pii_is_sensitive' in resource or dlp_run %}
         <div class="more-options center-y">
-          <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false" class="dropdown-toggle">
+          <a data-bs-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
             <i class="humanitarianicons-More-options"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-right crises-menu" role="menu" aria-labelledby="crises-label">
             {% if 'pii_is_sensitive' in resource %}
               <li>
-                <a href="#" data-toggle="modal" data-target="#pii-confirm-modal-{{ res.id }}">Update Risk Classification</a>
+                <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pii-confirm-modal-{{ res.id }}">Update Risk Classification</a>
               </li>
             {% endif %}
             {% if dlp_run and link_to_dlp %}
               <li>
-                <a href onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
+                <a href class="dropdown-item" onclick="viewPIIResults('{{link_to_dlp}}'); return false;" title="{{ h.render_datetime(isodate_string) }}">Visualize results</a>
               </li>
 {#            {% endif %}#}
             <li>
-              <a href="{{ link_to_log }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Main JSON</a>
+              <a href="{{ link_to_log }}" class="dropdown-item" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Main JSON</a>
             </li>
 {#            {% if link_to_dlp %}#}
               <li>
-                <a href="{{ link_to_dlp }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">DLP JSON</a>
+                <a href="{{ link_to_dlp }}" class="dropdown-item" target="_blank" title="{{ h.render_datetime(isodate_string) }}">DLP JSON</a>
               </li>
             {% endif %}
             {% if dlp_run and link_to_debug %}
               <li>
-                <a href="{{ link_to_debug }}" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Debug Log</a>
+                <a href="{{ link_to_debug }}" class="dropdown-item" target="_blank" title="{{ h.render_datetime(isodate_string) }}">Debug Log</a>
               </li>
             {% endif %}
           </ul>

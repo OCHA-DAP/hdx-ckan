@@ -22,11 +22,11 @@
 
 {% set user_is_sysadmin = h.check_access('sysadmin') %}
 {% if new_dataset %}
-  {% set form_field_wrapper_classes = 'col-xs-8 dataset-form-field-wrapper field-with-info' %}
-  {% set special_form_field_wrapper_classes = 'col-xs-4' %}
+  {% set form_field_wrapper_classes = 'col-8 dataset-form-field-wrapper field-with-info' %}
+  {% set special_form_field_wrapper_classes = 'col-4' %}
 {% else %}
-  {% set form_field_wrapper_classes = 'col-xs-10' %}
-  {% set special_form_field_wrapper_classes = 'col-xs-5' %}
+  {% set form_field_wrapper_classes = 'col-10' %}
+  {% set special_form_field_wrapper_classes = 'col-5' %}
 {% endif %}
 
 {% import 'macros/form.html' as form %}
@@ -35,12 +35,12 @@
     <div class="row">
         <div class="{{ form_field_wrapper_classes }}">
             <div class="row">
-                {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required', 'col-xs-6'], attrs={'data-module': 'slug-preview-target'}) }}
-                {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full', 'control-large','dataset-required', 'col-xs-6']) }}
+                {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['', 'control-large', 'dataset-required', 'col-6'], attrs={'data-module': 'slug-preview-target'}) }}
+                {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['', 'control-large','dataset-required', 'col-6']) }}
             </div>
         </div>
         {% if new_dataset %}
-            <div class="col-xs-4 info-field">
+            <div class="col-4 info-field">
                 <div class="dataset-form-info-field ">
                     {% trans %}
                         Who actually collected the data ?
@@ -53,12 +53,12 @@
 
 {% block package_basic_fields_url %}
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             {% set prefix = h.url_for('dataset_read', id='') %}
             {% set domain = h.url_for('dataset_read', id='', qualified=true) %}
             {% set domain = domain|replace("http://", "")|replace("https://", "") %}
             {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
-            {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
+            {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
         </div>
     </div>
 {% endblock %}
@@ -70,7 +70,7 @@
             {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['dataset-required']) }}
         </div>
         {% if new_dataset %}
-            <div class="col-xs-4 info-field">
+            <div class="col-4 info-field">
                 <div class="dataset-form-info-field">
                     {% trans %}
                     What type of data is included in this dataset ? For example, "This data is about an assessment in x region"
@@ -84,7 +84,7 @@
 {% block basic_fields_subnational %}
     <div class="row">
         <div class="{{ form_field_wrapper_classes }}">
-            <div class="control-group">
+            <div class="">
                 <label class="control-label" for="field-subnational" style="display: inline-block;">{{ _("Dataset contains sub-national data:") }}</label>
                 <div class="controls" style="display:inline-block">
                     {% if new_dataset %}
@@ -96,7 +96,7 @@
             </div>
         </div>
         {% if new_dataset %}
-            <div class="col-xs-4 info-field">
+            <div class="col-4 info-field">
                 <div class="dataset-form-info-field no-top-margin ">
                     {% trans %}
                         Leave this box checked if the values in your dataset apply to one or more locations (e.g. district, province, city) within a country.
@@ -111,7 +111,7 @@
     {% if user_is_sysadmin %}
         <div class="row">
             <div class="{{ form_field_wrapper_classes }}">
-                <div class="control-group">
+                <div class="">
                     <label class="control-label" for="field-quality" style="display: inline-block;">{{ _("Dataset's quality
                         has been confirmed:") }}</label>
 
@@ -126,7 +126,7 @@
                 </div>
             </div>
             {% if new_dataset %}
-                <div class="col-xs-4 info-field">
+                <div class="col-4 info-field">
                     <div class="dataset-form-info-field no-top-margin">
                         {% trans %}
                         Has the quality of this dataset been evaluated by our data team?
@@ -173,7 +173,7 @@
 {% block package_basic_fields_license %}
     <div class="row">
         <div class="{{ form_field_wrapper_classes }}">
-            <div class="control-group dataset-required ">
+            <div class="dataset-required ">
                 {% set error = errors.license_id %}
                 <label class="control-label" for="field-license">{{ _("License") }}</label>
                 <div class="controls" id="mx-dataset-license">
@@ -193,7 +193,7 @@
             </div>
         </div>
         {% if new_dataset %}
-            <div class="col-xs-4 info-field">
+            <div class="col-4 info-field">
                 <div class="dataset-form-info-field">
                     {% trans %}
                         What are the Terms of Use for this dataset ? How can others re-use it?
@@ -234,7 +234,7 @@
         {% set existing_org = data.owner_org or data.organization_id %}
         <div class="row">
             <div class="{{ form_field_wrapper_classes }}">
-                <div class="control-group dataset-required">
+                <div class="dataset-required">
                     <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
                     <div class="controls" id="mx-dataset-organisation">
                         <select id="field-organizations" name="owner_org" data-module="autocomplete">
@@ -249,7 +249,7 @@
                 </div>
             </div>
             {% if new_dataset %}
-                <div class="col-xs-4 info-field">
+                <div class="col-4 info-field">
                     <div class="dataset-form-info-field">
                         {% trans %}
                             Which organisation is contributing the data ? If the organisation is not listed, you need to
@@ -267,7 +267,7 @@
         {% block package_metadata_fields_visibility %}
             <div class="row">
                 <div class="{{ form_field_wrapper_classes }}">
-                    <div class="control-group dataset-required">
+                    <div class="dataset-required">
                         <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
                         <div class="controls" id="mx-dataset-visibility">
                             <select id="field-private" name="private" class="simple-dataset-control" data-module="autocomplete">

@@ -7,8 +7,8 @@
     <div class="global-header-bg">
       <div class="container">
         <div class="row">
-          <div class="col-xs-12 global-header-content">
-            <a href="#" data-toggle="dropdown" class="ocha-services" aria-label="OCHA services">
+          <div class="col-12 global-header-content">
+            <a href="#" data-bs-toggle="dropdown" class="ocha-services" aria-label="OCHA services">
               <span class="ocha-logo"></span>
               <span class="ocha-services-text">OCHA Services</span>
 
@@ -18,7 +18,7 @@
             <div class="dropdown-menu ocha-services-menu" role="menu">
               <div class="container">
                 <div class="row">
-                  <div class="col-md-3 col-xs-12 section-spacing">
+                  <div class="col-md-3 col-12 section-spacing">
                     <p class="list-title">
                       Related Platforms
                     </p>
@@ -31,7 +31,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="col-md-3 col-xs-12">
+                  <div class="col-md-3 col-12">
                     <p class="list-title">
                       Other OCHA Services
                     </p>
@@ -53,7 +53,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="col-md-3 col-xs-12 section-spacing">
+                  <div class="col-md-3 col-12 section-spacing">
                     <p class="list-title list-title-empty">
                       &nbsp;
                     </p>
@@ -72,7 +72,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="col-md-3 col-xs-12">
+                  <div class="col-md-3 col-12">
                     <a href="https://www.unocha.org/ocha-digital-services" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header" class="btn ocha-see-all">
                       See all
                     </a>
@@ -85,28 +85,28 @@
             <div class="onboarding-step">
               {% if step == "hdx_onboarding_first_login" %}
               <div id="first-login" style="display: none;">first login</div>
-              <div id="incomplete-profile" class="pull-left">
+              <div id="incomplete-profile" class="float-start">
                 » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
               </div>
               {% endif %}
               {% if step == "hdx_onboarding_follows" %}
-              <div id="incomplete-profile" class="pull-left">
+              <div id="incomplete-profile" class="float-start">
                 » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
               </div>
               {% endif %}
               {% if step == "hdx_onboarding_org" %}
-              <div id="incomplete-profile" class="pull-left">
+              <div id="incomplete-profile" class="float-start">
                 » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup', '#user_extra', 'True');" href="#">Complete setting up your account</a>
               </div>
               {% endif %}
               {% if step == "hdx_onboarding_friends" %}
-              <div id="incomplete-profile" class="pull-left">
+              <div id="incomplete-profile" class="float-start">
                 » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
               </div>
               {% endif %}
             </div>
             {% endif %}
-            <div class="header-user-box pull-right">
+            <div class="header-user-box float-end">
 
               <ul class="separated-list">
                 {% block header_top_right_side_menu %}
@@ -129,8 +129,8 @@
                   {% if c.userobj %}
                     {% snippet 'light/notifications/notification_snippet.html' %}
                     <li>
-                      <div class="dropdown">
-                        <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
+                      <div class="dropdown dropstart">
+                        <a href="#" class="header-user-name" data-bs-toggle="dropdown">
                           <svg class="icon-o-user" viewBox="0 0 48 48">
                             <path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/>
                             <rect x="15" y="4" width="18" height="18" rx="9" ry="9"/>
@@ -138,16 +138,16 @@
                           <div
                             class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</div>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <ul class="dropdown-menu" role="menu">
                           {% block header_account_logged %}
                             {% set user_is_sysadmin = h.check_access('sysadmin') %}
                             {% set def_url = h.find_first_global_settings_url() %}
                             {% if def_url %}
                               <li>
-                                <a href="#" class="collapsible-submenu-item" title="{{ _('Sysadmin Dashboard') }}">
+                                <a href="#" class="dropdown-item collapsible-submenu-item" title="{{ _('Sysadmin Dashboard') }}">
                                   {{ _('Sysadmin Dashboard') }} <i class="humanitarianicons-Down"></i>
                                 </a>
-                                <ul id="user-menu-sysadmin-submenu" class="dropdown-submenu collapse in">
+                                <ul id="user-menu-sysadmin-submenu" class="dropdown-submenu collapse show">
                                   {% if user_is_sysadmin %}
                                     <li>
                                       <a href="{{ def_url }}" title="{{ _('All Sysadmins') }}">
@@ -204,6 +204,7 @@
                             {% if def_url and h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
                               <li>
                                 <a href="/qa_dashboard?ext_bulk_datasets=0&ext_qa_completed=0&ext_private_datasets=0"
+                                   class="dropdown-item"
                                    title="{{ _('QA Dashboard') }}">
                                   <i class="icon-legal"></i>
                                   <span>{{ _('QA Dashboard') }}</span>
@@ -211,10 +212,10 @@
                               </li>
                             {% endif %}
                             <li class="notifications">
-                              <a href="#" class="collapsible-submenu-item" title="{{ _('User Dashboard') }}">
+                              <a href="#" class="dropdown-item collapsible-submenu-item" title="{{ _('User Dashboard') }}">
                                 {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
                               </a>
-                              <ul class="dropdown-submenu collapse {% if not def_url %}in{% endif %}">
+                              <ul class="dropdown-submenu collapse {% if not def_url %}show{% endif %}">
                                 {{ h.build_nav_icon('dashboard.index', _('Newsfeed'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
@@ -229,26 +230,26 @@
                               </ul>
                             </li>
                             <li class="notifications">
-                              <a href="#" class="collapsible-submenu-item" title="{{ _('User Settings') }}">
+                              <a href="#" class="dropdown-item collapsible-submenu-item" title="{{ _('User Settings') }}">
                                 {{ _('User Settings') }} <i class="humanitarianicons-Up"></i>
                               </a>
                               <ul class="dropdown-submenu collapse">
-                                {{ h.build_nav_icon('user.read', _('Datasets'), id=c.userobj.name) }}
-                                {{ h.build_nav_icon('user.activity', _('Activity Stream'), id=c.userobj.name) }}
+                                {{ h.bs5_build_nav_icon('user.read', _('Datasets'), class_='nav-link', id=c.userobj.name) }}
+                                {{ h.bs5_build_nav_icon('user.activity', _('Activity Stream'), class_='nav-link', id=c.userobj.name) }}
                                 {% if h.check_access('sysadmin') %}
-                                  {{ h.build_nav_icon('hdx_user_permission.read', _('User Permission'), id=c.userobj.name) }}
+                                  {{ h.bs5_build_nav_icon('hdx_user_permission.read', _('User Permission'), class_='nav-link', id=c.userobj.name) }}
                                 {% endif %}
                                 {% if h.check_access('api_token_list', {'user': c.userobj['name']}) %}
-                                  {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=c.userobj.name) }}
+                                  {{ h.bs5_build_nav_icon('user.api_tokens', _('API Tokens'), class_='nav-link', id=c.userobj.name) }}
                                 {% endif %}
-                                {{ h.build_nav_icon('user.edit', _('Profile and Password'), id=c.userobj.name) }}
+                                {{ h.bs5_build_nav_icon('user.edit', _('Profile and Password'), class_='nav-link', id=c.userobj.name) }}
                               </ul>
                             </li>
 
 
                             {% block header_account_log_out_link %}
                               <li>
-                                <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                                <a href="{{ h.url_for('/user/_logout') }}" class="dropdown-item" title="{{ _('Log out') }}">
                                   <i class="icon-signout"></i>
                                   <span>{{ _('Log out') }}</span>
                                 </a>

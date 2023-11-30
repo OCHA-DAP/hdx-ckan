@@ -79,7 +79,7 @@
 .hdx-wrapper .top-banner .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
   min-width: 530px;
 }
@@ -91,7 +91,7 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner .top-banner-text-wrapper {
     min-width: 400px;
-    margin-top: 45px;
+    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -143,7 +143,7 @@
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
 }
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper .top-banner-title {
@@ -154,7 +154,7 @@
   text-align: center;
 }
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper .top-banner-title-archive {
-  margin-top: 130px;
+  margin-top: 40px;
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 36px;
   color: #FFFFFF;
@@ -183,7 +183,7 @@
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
   min-width: 530px;
 }
@@ -195,7 +195,7 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
     min-width: 400px;
-    margin-top: 45px;
+    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -250,13 +250,11 @@
   background-position: left bottom;
   background-size: 100% auto;
   height: 315px;
-  margin-left: -45px;
-  margin-right: -45px;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 90px;
+  padding-top: 90px;
   width: 50%;
   min-width: 530px;
 }
@@ -268,7 +266,7 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
     min-width: 400px;
-    margin-top: 45px;
+    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -310,7 +308,7 @@
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 70px;
+  padding-top: 70px;
   width: 50%;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title {
@@ -322,7 +320,7 @@
   line-height: 36px;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title-archive {
-  margin-top: 130px;
+  margin-top: 40px;
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 36px;
   color: #FFFFFF;
@@ -339,24 +337,24 @@
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-more-button-wrapper {
   text-align: center;
 }
-.hdx-wrapper .hdx-panel-group .panel {
+.hdx-wrapper .hdx-card-group .card {
   border: none;
   border-bottom: 1px solid #cccccc;
   box-shadow: none;
   margin: 0;
 }
-.hdx-wrapper .hdx-panel-group .panel:hover {
+.hdx-wrapper .hdx-card-group .card:hover {
   background-color: #EDF6FD;
 }
-.hdx-wrapper .hdx-panel-group .panel + .panel {
+.hdx-wrapper .hdx-card-group .card + .card {
   margin: 0;
 }
-.hdx-wrapper .hdx-panel-group .panel .collapsing {
+.hdx-wrapper .hdx-card-group .card .collapsing {
   -webkit-transition: height 0.1s ease;
   -o-transition: height 0.1s ease;
   transition: height 0.1s ease;
 }
-.hdx-wrapper .hdx-panel-group .panel .panel-heading {
+.hdx-wrapper .hdx-card-group .card .card-header {
   min-height: 74px;
   border: none;
   box-shadow: none;
@@ -365,10 +363,10 @@
   padding-bottom: 20px;
   cursor: pointer;
 }
-.hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title {
+.hdx-wrapper .hdx-card-group .card .card-header .card-title {
   line-height: 20px;
 }
-.hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title .faq-question-link {
+.hdx-wrapper .hdx-card-group .card .card-header .card-title .faq-question-link {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -376,7 +374,7 @@
   line-height: 24px;
   letter-spacing: 0.01em;
 }
-.hdx-wrapper .hdx-panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+.hdx-wrapper .hdx-card-group .card .card-header + .panel-collapse > .card-body {
   border: none;
   box-shadow: none;
   font-family: 'Source Sans Pro', sans-serif;
@@ -385,11 +383,11 @@
   line-height: 22px;
   letter-spacing: 0.01em;
 }
-.hdx-wrapper .hdx-panel-group .panel .panel-heading + .panel-collapse > .panel-body a {
+.hdx-wrapper .hdx-card-group .card .card-header + .panel-collapse > .card-body a {
   color: #007CE0;
   font-weight: 700;
 }
-.presentation-modal.in .modal-dialog .close {
+.presentation-modal.show .modal-dialog .close {
   position: absolute;
   right: -30px;
   top: -40px;
@@ -397,7 +395,7 @@
   opacity: 1;
   color: white;
 }
-.presentation-modal.in .modal-dialog .modal-content {
+.presentation-modal.show .modal-dialog .modal-content {
   box-shadow: none;
   border: none;
   border-radius: 0;

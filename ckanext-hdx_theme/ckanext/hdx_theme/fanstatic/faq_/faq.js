@@ -95,7 +95,7 @@
     $(window).scroll(scroll_to_menu);
     $(window).scroll(sticky_menu);
 
-    $('.hdx-panel-group .panel-heading').click(
+    $('.hdx-card-group .card-header').click(
         function (e) {
             if ( e.target.tagName.toLowerCase() != 'a') {
                 //var collapsible = $(this).siblings()[0];

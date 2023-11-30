@@ -2,6 +2,7 @@
 .control-order-by {
   float: right;
   height: inherit;
+  vertical-align: middle;
 }
 .control-order-by label {
   font-family: 'Gotham-Bold', sans-serif;
@@ -10,33 +11,39 @@
   color: #888888;
   letter-spacing: 0.03em;
   line-height: 20px;
+  margin-right: 5px;
 }
 .control-order-by .orderDropdown {
   display: inline;
 }
-.control-order-by .orderDropdown .dropdown-toggle {
-  background-color: #fff;
-  border: none;
+.control-order-by .orderDropdown #field-order-by {
+  background-color: transparent;
+  border: 0;
   color: #007CE0;
   text-align: left;
   margin-top: -4px;
   padding: 0;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 20px;
 }
-.control-order-by .orderDropdown .dropdown-toggle:hover,
-.control-order-by .orderDropdown .dropdown-toggle:focus {
+.control-order-by .orderDropdown #field-order-by:hover,
+.control-order-by .orderDropdown #field-order-by:focus {
   color: #00447a;
 }
 .control-order-by .orderDropdown .dropdown-toggle-text {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   color: #007CE0;
   letter-spacing: 0.03em;
 }
 .control-order-by .orderDropdown .dropdown-toggle-text:hover,
 .control-order-by .orderDropdown .dropdown-toggle-text:focus {
   color: #00447a;
+}
+.control-order-by .orderDropdown .humanitarianicons-Down {
+  vertical-align: middle;
+  cursor: pointer;
 }
 /* END DropDown style */
 /* Items per page style - based on orderDropdown */

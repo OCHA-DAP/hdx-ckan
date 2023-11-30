@@ -11,9 +11,6 @@
   font-weight: 600;
   font-size: 14px;
 }
-.search-light .show-filters .checkbox-slider {
-  margin-left: 10px;
-}
 .search-light .dataset-filter-start {
   display: flex;
   justify-content: space-between;
@@ -28,12 +25,11 @@
   margin-bottom: 0;
 }
 .search-light .dataset-filter-start .orderDropdown {
-  display: flex;
   height: 20px;
   margin-bottom: 0;
   align-items: flex-end;
 }
-.search-light .dataset-filter-start .orderDropdown .dropdown-toggle {
+.search-light .dataset-filter-start .orderDropdown #field-order-by {
   display: flex;
   align-items: center;
 }
@@ -47,14 +43,10 @@
   margin-bottom: 0;
 }
 #search-recs {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  margin-top: 20px;
-  color: #333333;
-}
-.search-list .dataset-item .dataset-content2 {
-  padding: 15px;
+  font-family: 'Source Sans Pro', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  padding-top: 15px !important;
 }
 .search-list .search-empty {
   background-color: #fff;
@@ -93,6 +85,9 @@
 }
 .list-header {
   border-bottom: none;
+}
+.dataset-light {
+  background-color: #eeeeee;
 }
 .mobile-facets {
   position: fixed;

@@ -4,13 +4,13 @@
 
 <div class="topline topline-colombia">
     <div class="row">
-        <div class="col-xs-6 topline-information table-valign">
+        <div class="col-6 topline-information table-valign">
             <div class="row table-valign-content">
                 <div class="margin-hack">
-                    <div class="col-xs-12 indicator-title">
+                    <div class="col-12 indicator-title">
                         {{ title }}
                     </div>
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <span class="source-title">{{ source }}</span>
                         {% if source_link %}
                         - <span><a class="source-link" href="{{ source_link }}" target="_blank">Data</a></span>
@@ -27,18 +27,18 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-6 topline-information table-valign">
+        <div class="col-6 topline-information table-valign">
             <div class="row table-valign-content">
                 <div class="margin-hack">
                 {% if sparkline_json %}
-                    <div class="col-xs-8 indicator-value">
+                    <div class="col-8 indicator-value">
                         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <div style="display: none;" class="sparkline">{{ sparkline_json }}</div>
                     </div>
                 {% else %}
-                    <div class="col-xs-12 indicator-value text-right">
+                    <div class="col-12 indicator-value text-end">
                         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
                     </div>
                 {% endif %}

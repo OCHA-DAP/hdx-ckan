@@ -74,8 +74,8 @@ function showOnboardingWidget(id, elid, val){
         var el = $(element);
         var src = el.attr("src");
         var clone = el.clone();
-        $(el).addClass("hide");
-        clone.removeClass("hide");
+        $(el).addClass("d-none");
+        clone.removeClass("d-none");
         clone.attr("src", "");
         clone.addClass("gif-auto-play");
         el.after(clone);

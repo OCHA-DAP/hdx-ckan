@@ -19,10 +19,10 @@ Example:
             $
     	</span>
     {% endif %}
-    <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="{{ notes }}">
+    <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="right" title="{{ notes }}">
 		{{ value }}
 	</span>
-	
+
 	{% if unit in ('million', 'dollars_million') %}
 		<span class="small"> {{ _('million') }} </span>
     {% elif unit in ('billion', 'dollars_billion') %}

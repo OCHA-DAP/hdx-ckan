@@ -69,6 +69,9 @@ html > .contribute-body > .contribute-main .create-step1 .contribute-splash {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
+html > .contribute-body > .contribute-main .create-step2.container {
+  max-width: none;
+}
 html > .contribute-body > .contribute-main > div {
   height: 100%;
   min-height: 760px;
@@ -220,12 +223,12 @@ html > .contribute-body > .contribute-main .btn.disabled {
 .contribute-splash-box .drop-here.drop-incoming .drop-details a {
   color: #fff;
 }
-.form-group .format-label {
+.format-label {
   position: absolute;
   margin-left: -10px;
   margin-top: -12px;
 }
-.form-group .format-label + input {
+.format-label + input {
   padding-left: 45px;
 }
 .special-license {

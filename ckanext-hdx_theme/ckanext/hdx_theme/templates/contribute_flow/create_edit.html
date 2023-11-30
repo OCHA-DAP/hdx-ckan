@@ -144,7 +144,7 @@
             <div class="paddingRowHack">
                 <div class="hdx-form-breadcrumb">
                     <ol class="breadcrumb paddingLeftHack paddingRightHack">
-                        <li class="active">
+                        <li class="breadcrumb-item active">
                             {{ form_title }} - <span class="small">{{ _('Please fill out all required fields') }}</span>
                         </li>
                     </ol>
@@ -154,7 +154,7 @@
                       <div class="alert alert-danger">
                         This dataset has passed its update date on
                         <span class="info-label">
-                          <i class="glyphicon glyphicon-time"></i>
+                          <i class="fa fa-clock-o"></i>
                           {% set due_date = h.hdx_get_due_overdue_date(data)  %}
                           {{ due_date | default("N/A", True) }}
                         </span>
@@ -176,240 +176,244 @@
                                       <!--<li data-field-label="type of error">type of error: error</li>-->
                                     <!--</ul>-->
                                 </div>
-                                <div class="row form-section form-privacy-section contribute-form-container-items">
-                                  <div class="col-xs-3">
-                                    <h3>Privacy Settings</h3>
-                                    <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
-                                  </div>
-                                  <div class="col-xs-9">
-                                    <div class="form-group required">
-                                      <label class="control-label">This dataset is</label>
-                                      <div class="radio">
-                                        <label>
-                                          <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
-                                          <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
-                                        </label>
-                                      </div>
-                                      <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
-                                        <p>{{ _('You are switching your dataset\'s privacy setting to "By request - ')}}<a href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.</p>
-                                      </div>
-                                      <div class="radio">
-                                        <label>
-                                          <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
-                                          <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                        </label>
-                                      </div>
-                                      <div class="radio">
-                                        <label>
-                                          <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
-                                          <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
-                                        </label>
-                                      </div>
+                                <div class="form-section form-privacy-section contribute-form-container-items">
+                                  <div class="row">
+                                    <div class="col-3">
+                                      <h3>Privacy Settings</h3>
+                                      <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
+                                    </div>
+                                    <div class="col-9">
+                                      <div class="mb-3 required">
+                                        <label class="control-label">This dataset is</label>
+                                        <div class="radio">
+                                          <label>
+                                            <input type="radio" name="private" value="requestdata" {% if data.private == 'requestdata' or data.is_requestdata_type == True %}checked="checked"{% endif %}/>
+                                            <strong>By request - HDX Connect</strong> (Anyone can <strong>search</strong> and <strong>view the metadata</strong> of this dataset. Registered users can submit a request to obtain the data directly from you, by email, file transfer, etc.)
+                                          </label>
+                                        </div>
+                                        <div id="requestdata_type_notification" class="error-explanation alert alert-danger hdx-invisible-element">
+                                          <p>{{ _('You are switching your dataset\'s privacy setting to "By request - ')}}<a href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.</p>
+                                        </div>
+                                        <div class="radio">
+                                          <label>
+                                            <input type="radio" name="private" value="private" {% if data.private == '' or data.private == True %}checked="checked"{% endif %} />
+                                            <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                          </label>
+                                        </div>
+                                        <div class="radio">
+                                          <label>
+                                            <input type="radio" name="private" value="public" {% if data.private == False and data.is_requestdata_type == False %}checked="checked"{% endif %}/>
+                                            <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                          </label>
+                                        </div>
 
-                                      <div id="dataset-is-public-description" style="padding-left: 20px; {% if not (data.private == False and data.is_requestdata_type == False) %}display: none;{% endif %}" >
-                                        The HDX team manually reviews every dataset uploaded to the platform as part of a standard
-                                        quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
-                                        every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                                        <div id="dataset-is-public-description" style="padding-left: 20px; {% if not (data.private == False and data.is_requestdata_type == False) %}display: none;{% endif %}" >
+                                          The HDX team manually reviews every dataset uploaded to the platform as part of a standard
+                                          quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
+                                          every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="row">
-                                  <div class="col-xs-12">
+                                  <div class="col-12">
                                     <hr class="form-hr"/>
                                   </div>
                                 </div>
 
-                                <div class="row form-section form-resources-section">
-                                    <div class="col-xs-3 form-explanation">
-                                        <h3>{{ _('Your Files') }}</h3>
-                                        <p>{{ _('You can add more resources as needed by clicking on "Add more resources".') }}</p>
+                                <div class="form-section form-resources-section">
+                                  <div class="row">
+                                      <div class="col-3 form-explanation">
+                                          <h3>{{ _('Your Files') }}</h3>
+                                          <p>{{ _('You can add more resources as needed by clicking on "Add more resources".') }}</p>
 
-                                        <p>
-                                            <img class="cloud-img" src="/images/icons/dropbox.png" />
-                                            <strong>{{ _('Dropbox') }}</strong> <br />
-                                            {% trans %}
-                                                Please be advised that by adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link.
-                                            {% endtrans %}
-                                        </p>
+                                          <p>
+                                              <img class="cloud-img" src="/images/icons/dropbox.png" />
+                                              <strong>{{ _('Dropbox') }}</strong> <br />
+                                              {% trans %}
+                                                  Please be advised that by adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link.
+                                              {% endtrans %}
+                                          </p>
 
-                                        <p>
-                                            <img class="cloud-img" src="/images/icons/drive.png" />
-                                            <strong>{{ _('Google Drive') }}</strong> <br />
-                                            {% trans %}
-                                                In order to add your file(s) from Google Drive, sharing settings of file(s) has to be on so your file(s) becomes viewable on HDX.
-                                            {% endtrans %}
-                                            <br />
-                                            {% trans %} For instructions on how to change, please visit our <a href="/faq" target="_blank">FAQ</a>. {% endtrans %}
-                                        </p>
-                                    </div>
+                                          <p>
+                                              <img class="cloud-img" src="/images/icons/drive.png" />
+                                              <strong>{{ _('Google Drive') }}</strong> <br />
+                                              {% trans %}
+                                                  In order to add your file(s) from Google Drive, sharing settings of file(s) has to be on so your file(s) becomes viewable on HDX.
+                                              {% endtrans %}
+                                              <br />
+                                              {% trans %} For instructions on how to change, please visit our <a href="/faq" target="_blank">FAQ</a>. {% endtrans %}
+                                          </p>
+                                      </div>
 
-                                    <div class="col-xs-9" id="resource-widget">
+                                      <div class="col-9" id="resource-widget">
 
 
 
-                                        <script type="text/template" id="resource-item-tmpl">
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <div class="row">
-                                                        <div class="col-xs-12">
-                                                            <span style="cursor: move; cursor: grab; cursor: -webkit-grab; cursor: -moz-grab;" class="drag-handle">
-                                                            <i class="glyphicon glyphicon-resize-vertical grey"></i>
-                                                            <i class="glyphicon glyphicon glyphicon-align-justify grey" style="margin-left: -5px; margin-right: 5px; font-size: 15px;"></i>
-                                                            </span>
+                                          <script type="text/template" id="resource-item-tmpl">
+                                              <div class="row">
+                                                  <div class="col-12">
+                                                      <div class="row">
+                                                          <div class="col-12">
+                                                              <span style="cursor: move; cursor: grab; cursor: -webkit-grab; cursor: -moz-grab;" class="drag-handle">
+                                                              <i class="fa fa-arrows-v grey"></i>
+                                                              <i class="fa fa fa-align-justify grey" style="margin-left: -5px; margin-right: 5px; font-size: 15px;"></i>
+                                                              </span>
 
-                                                            <% if (position === 'new') {
-                                                                print('New Resource');
-                                                            }else{
-                                                                print('Resource '); print(template_position + 1);
-                                                            } %>
-                                                            <ul class="list-horizontal">
-                                                                <li>
-                                                                    <label class="control-label">
-                                                                        <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="file" checked="checked"> Upload file
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label class="control-label">
-                                                                        <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="url"> Import from URL
-                                                                    </label>
-                                                                </li>
-                                                                <li class="or-separator dropbox">
-                                                                    <a data-module="bs_tooltip" data-module-placement="top"
-                                                                       data-original-title="{{ _('By adding files via dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
-                                                                       data-toggle="tooltip" href="#">
-                                                                        <img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox
-                                                                    </a>
-                                                                </li>
-                                                                <li class="or-separator googledrive">
-                                                                    <a data-module="bs_tooltip" data-module-placement="top"
-                                                                       data-original-title="{{ _('In order to add files via google drive, sharing settings has to be on') }}"
-                                                                       data-toggle="tooltip" href="#">
-                                                                        <img class="cloud-img" src="/images/icons/drive.png" /> Google Drive
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                            <span class="pull-right">
-                                                                <a href="#" class="delete_resource"><i class="glyphicon glyphicon-trash grey"></i></a>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-xs-9 source-file-fields">
-                                                            <div class="row url-field">
-                                                                <div class="col-xs-12">
-                                                                    <div class="control-group form-group required">
-                                                                        <div class="controls ">
-                                                                            <input type="text" name="url" value="<%= url %>" placeholder="eg. https://example.com/population-jan-2011.json *" class="resource_url_field form-control">
-                                                                            <span class="error-block"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-xs-8">
-                                                                  <div class="control-group form-group required">
-                                                                    <div class="controls ">
-                                                                        <div data-format="<%= lower_case_format %>" class="format-label" property="dc:format"></div>
-                                                                        <input type="text" name="name" value="<%= name %>" placeholder="{{ _('File name') }} *" class="form-control resource_name_field">
-                                                                        <span class="error-block"></span>
-                                                                    </div>
-                                                                  </div>
-                                                                </div>
-                                                                <div class="col-xs-4">
-                                                                    <div class="form-group">
-                                                                        <div class="controls">
-                                                                        <input class="form-control resource_format_field" type="text" name="format" value="<%= format %>" placeholder="{{ _('File type') }} *"
-                                                                               data-module="hdx_autocomplete"
-                                                                               data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?"/>
-                                                                        <span class="error-block"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-xs-12">
-                                                                  <div class="control-group form-group control-full">
-                                                                    <div class="controls ">
-                                                                    <textarea name="description" cols="20" rows="5" placeholder="Add a note about this resource" style="height: 68px;" class="form-control resource_description_field"><%= description %></textarea>
-                                                                    <span class="error-block"></span>
-                                                                    </div>
-                                                                  </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-xs-12">
-                                                                  <div class="control-group form-group">
-                                                                    <label class="control-label">This file could contain:</label>
-                                                                    <div class="controls checkbox">
-                                                                      <label class="" for="resource<%= position %>-pii">
-                                                                        <input id="resource<%= position %>-pii" type="checkbox" name="pii" <% if (pii === 'true') { print('checked="checked"'); } %>>
-                                                                        <b>Personally Identifiable Information (PII)</b> e.g. name, biometric data, phone number, ID numbers, etc.
+                                                              <% if (position === 'new') {
+                                                                  print('New Resource');
+                                                              }else{
+                                                                  print('Resource '); print(template_position + 1);
+                                                              } %>
+                                                              <ul class="list-horizontal">
+                                                                  <li>
+                                                                      <label class="control-label">
+                                                                          <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="file" checked="checked"> Upload file
                                                                       </label>
-                                                                      <div class="item-description orange" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
-                                                                        HDX does not allow data that includes personally identifiable information (PII) to be shared
-                                                                        publicly through the site. Please delete the resource(s) containing PII. If you wish to share this resource,
-                                                                        take steps to ensure that it is properly anonymised (with all the direct identifiers removed) and upload it again.<br>
-                                                                        You can learn more in the <a href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank">HDX Terms of Service</a>.
+                                                                  </li>
+                                                                  <li>
+                                                                      <label class="control-label">
+                                                                          <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="url"> Import from URL
+                                                                      </label>
+                                                                  </li>
+                                                                  <li class="or-separator dropbox">
+                                                                      <a data-module="bs_tooltip" data-module-placement="top"
+                                                                         data-bs-original-title="{{ _('By adding files via dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
+                                                                         data-bs-toggle="tooltip" href="#">
+                                                                          <img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox
+                                                                      </a>
+                                                                  </li>
+                                                                  <li class="or-separator googledrive">
+                                                                      <a data-module="bs_tooltip" data-module-placement="top"
+                                                                         data-bs-original-title="{{ _('In order to add files via google drive, sharing settings has to be on') }}"
+                                                                         data-bs-toggle="tooltip" href="#">
+                                                                          <img class="cloud-img" src="/images/icons/drive.png" /> Google Drive
+                                                                      </a>
+                                                                  </li>
+                                                              </ul>
+                                                              <span class="float-end">
+                                                                  <a href="#" class="delete_resource"><i class="fa fa-trash grey"></i></a>
+                                                              </span>
+                                                          </div>
+                                                      </div>
+                                                      <div class="row">
+                                                          <div class="col-9 source-file-fields">
+                                                              <div class="row url-field">
+                                                                  <div class="col-12">
+                                                                      <div class="mb-3 required">
+                                                                          <div class="controls ">
+                                                                              <input type="text" name="url" value="<%= url %>" placeholder="eg. https://example.com/population-jan-2011.json *" class="resource_url_field form-control">
+                                                                              <span class="error-block"></span>
+                                                                          </div>
                                                                       </div>
-                                                                    </div>
-                                                                    <div class="controls checkbox">
-                                                                      <label class="" for="resource<%= position %>-microdata">
-                                                                        <input id="resource<%= position %>-microdata" type="checkbox" name="microdata" <% if (microdata) { print('checked="checked"'); } %>>
-                                                                        <b>Microdata</b> e.g. household survey results, disaggregated needs assessment data, etc.
-                                                                      </label>
-                                                                      <div class="item-description" <% if (!microdata) { print('style="display:none;"'); } %>>
-                                                                        HDX allows microdata to be shared publicly through the site. However, to protect individuals and vulnerable groups, our team runs a disclosure risk assessment on any resource  containing microdata. We do this because it may still be possible to re-identify individuals or expose confidential information even after direct identifiers have been removed from microdata.<br><br>
-                                                                        We will notify you within 24 hours if our team detects any disclosure risk. During this time, the resource will appear on your dataset page but be marked as <b>under review</b>.<br><br>
-                                                                        Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                                                                  </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                  <div class="col-8">
+                                                                    <div class="mb-3 required position-relative">
+                                                                      <div class="controls ">
+                                                                          <div data-format="<%= lower_case_format %>" class="format-label" property="dc:format"></div>
+                                                                          <input type="text" name="name" value="<%= name %>" placeholder="{{ _('File name') }} *" class="form-control resource_name_field">
+                                                                          <span class="error-block"></span>
                                                                       </div>
                                                                     </div>
                                                                   </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-3 source-file-upload">
-                                                            <div class="drag-drop-area">
-                                                                <div class="drop-here-mask" style="display: none;"></div>
-                                                                <div class="drag-drop-content">
-                                                                    <span class="drag-text1">Drop file <span class="overwrite-text">to overwrite</span> or</span>
-                                                                    <span class="drag-text2">Incoming file</span>
-                                                                    <label class="browse-button">
-                                                                        <span>
-                                                                            Browse
-                                                                        </span>
-                                                                        <input type="file" name="upload" style="" value="" class="resource_file_field form-control" />
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                                  <div class="col-4">
+                                                                      <div class="mb-3">
+                                                                          <div class="controls">
+                                                                          <input class="form-control resource_format_field" type="text" name="format" value="<%= format %>" placeholder="{{ _('File type') }} *"
+                                                                                 data-module="hdx_autocomplete"
+                                                                                 data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?"/>
+                                                                          <span class="error-block"></span>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                  <div class="col-12">
+                                                                    <div class="mb-3 ">
+                                                                      <div class="controls ">
+                                                                      <textarea name="description" cols="20" rows="5" placeholder="Add a note about this resource" style="height: 68px;" class="form-control resource_description_field"><%= description %></textarea>
+                                                                      <span class="error-block"></span>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                  <div class="col-12">
+                                                                    <div class="mb-3">
+                                                                      <label class="control-label">This file could contain:</label>
+                                                                      <div class="controls checkbox">
+                                                                        <label class="" for="resource<%= position %>-pii">
+                                                                          <input id="resource<%= position %>-pii" type="checkbox" name="pii" <% if (pii === 'true') { print('checked="checked"'); } %>>
+                                                                          <b>Personally Identifiable Information (PII)</b> e.g. name, biometric data, phone number, ID numbers, etc.
+                                                                        </label>
+                                                                        <div class="item-description orange" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
+                                                                          HDX does not allow data that includes personally identifiable information (PII) to be shared
+                                                                          publicly through the site. Please delete the resource(s) containing PII. If you wish to share this resource,
+                                                                          take steps to ensure that it is properly anonymised (with all the direct identifiers removed) and upload it again.<br>
+                                                                          You can learn more in the <a href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank">HDX Terms of Service</a>.
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="controls checkbox">
+                                                                        <label class="" for="resource<%= position %>-microdata">
+                                                                          <input id="resource<%= position %>-microdata" type="checkbox" name="microdata" <% if (microdata) { print('checked="checked"'); } %>>
+                                                                          <b>Microdata</b> e.g. household survey results, disaggregated needs assessment data, etc.
+                                                                        </label>
+                                                                        <div class="item-description" <% if (!microdata) { print('style="display:none;"'); } %>>
+                                                                          HDX allows microdata to be shared publicly through the site. However, to protect individuals and vulnerable groups, our team runs a disclosure risk assessment on any resource  containing microdata. We do this because it may still be possible to re-identify individuals or expose confidential information even after direct identifiers have been removed from microdata.<br><br>
+                                                                          We will notify you within 24 hours if our team detects any disclosure risk. During this time, the resource will appear on your dataset page but be marked as <b>under review</b>.<br><br>
+                                                                          Learn more about the <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                          <div class="col-3 source-file-upload">
+                                                              <div class="drag-drop-area">
+                                                                  <div class="drop-here-mask" style="display: none;"></div>
+                                                                  <div class="drag-drop-content">
+                                                                      <span class="drag-text1">Drop file <span class="overwrite-text">to overwrite</span> or</span>
+                                                                      <span class="drag-text2">Incoming file</span>
+                                                                      <label class="browse-button">
+                                                                          <span>
+                                                                              Browse
+                                                                          </span>
+                                                                          <input type="file" name="upload" style="" value="" class="resource_file_field form-control" />
+                                                                      </label>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </script>
+
+                                          <div id="resource-list" data-module="hdx_form_element_manager" data-module-element_name="resource-list">
+                                              <div class="label-title-style mBottom10"><span class="resources_total">0 Resources</span> <small>(drag and drop to sort)</small></div>
+                                              <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
+                                                {% if data.id and not data.get('update_status') == 'unknown' %}
+                                                <div id="confirm-resource-freshness">
+                                                  <input type="hidden" name='review_date' value='{{ data.review_date }}' />
+                                                  <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. {% if data.get('update_status') == 'needs_update' %} You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u>{% endif %}</label>
                                                 </div>
-                                            </div>
-                                        </script>
+                                                {% endif %}
+                                                <div>
+                                                    <input class="add_new_resource btn btn-primary btn-lg" type="button" value="Add more resources"/>
+                                                </div>
+                                                <div id="resource-create"></div>
+                                                <div class="resources">
+                                                </div>
+                                              </div>
+                                          </div>
 
-                                        <div id="resource-list" data-module="hdx_form_element_manager" data-module-element_name="resource-list">
-                                            <div class="label-title-style mBottom10"><span class="resources_total">0 Resources</span> <small>(drag and drop to sort)</small></div>
-                                            <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
-                                              {% if data.id and not data.get('update_status') == 'unknown' %}
-                                              <div id="confirm-resource-freshness">
-                                                <input type="hidden" name='review_date' value='{{ data.review_date }}' />
-                                                <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. {% if data.get('update_status') == 'needs_update' %} You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u>{% endif %}</label>
-                                              </div>
-                                              {% endif %}
-                                              <div>
-                                                  <input class="add_new_resource btn btn-primary btn-lg" type="button" value="Add more resources"/>
-                                              </div>
-                                              <div id="resource-create"></div>
-                                              <div class="resources">
-                                              </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                      </div>
+                                  </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <hr class="form-hr"/>
                                     </div>
                                 </div>
@@ -417,328 +421,337 @@
                                     {% if data.resource_grouping %}
                                         <input id="field_resource_grouping" type="hidden" name="resource_grouping" value="{{ data.resource_grouping }}" />
                                     {% endif %}
-                                    <div class="row form-section">
-                                        <div class="col-xs-3">
-                                            <h3>Dataset Title &amp; Description</h3>
-                                            <p>
-                                                <strong>Title of dataset</strong><br/>
-                                                When users search for data on HDX, their search terms will be matched to terms in your title. Avoid using abbreviations in the title which may not be familiar to all users. Also, avoid using words such as current, latest or previous when referring to the time period (e.g. Latest 3W) as these terms become misleading as the dataset ages.
-                                                <br/><br/>
-                                                Example dataset title: <strong>Who is Doing What Where in Afghanistan, Jan-Dec 2015</strong>
-                                            </p>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private,public,requestdata" data-module-broadcast_change="true">
-                                            {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
-                                            </div>
+                                    <div class="form-section">
+                                      <div class="row">
+                                          <div class="col-3">
+                                              <h3>Dataset Title &amp; Description</h3>
+                                              <p>
+                                                  <strong>Title of dataset</strong><br/>
+                                                  When users search for data on HDX, their search terms will be matched to terms in your title. Avoid using abbreviations in the title which may not be familiar to all users. Also, avoid using words such as current, latest or previous when referring to the time period (e.g. Latest 3W) as these terms become misleading as the dataset ages.
+                                                  <br/><br/>
+                                                  Example dataset title: <strong>Who is Doing What Where in Afghanistan, Jan-Dec 2015</strong>
+                                              </p>
+                                          </div>
+                                          <div class="col-9">
+                                              <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private,public,requestdata" data-module-broadcast_change="true">
+                                              {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['mb-3', 'required'], attrs={'data-module': 'slug-preview-target'}) }}
+                                              </div>
 
-                                            {% set prefix = h.url_for('dataset.read', id='') %}
-                                            {% set domain = h.url_for('dataset.read', id='', qualified=true) %}
-                                            {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-                                            {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
+                                              {% set prefix = h.url_for('dataset.read', id='') %}
+                                              {% set domain = h.url_for('dataset.read', id='', qualified=true) %}
+                                              {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+                                              {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
 
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="name" data-module-required="private,public,requestdata">
-                                            {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs, classes=['form-group', 'required']) }}
-                                            </div>
+                                              <div data-module="hdx_form_element_manager" data-module-element_name="name" data-module-required="private,public,requestdata">
+                                              {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs, classes=['mb-3', 'required']) }}
+                                              </div>
 
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="notes" data-module-required="public,requestdata">
-                                            {{ form.markdown('notes', id='field_notes', label=_('Description'), placeholder=_('What type of data is included in this dataset ? For example, "This data is about an assessment in x region"'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                                            </div>
+                                              <div data-module="hdx_form_element_manager" data-module-element_name="notes" data-module-required="public,requestdata">
+                                              {{ form.markdown('notes', id='field_notes', label=_('Description'), placeholder=_('What type of data is included in this dataset ? For example, "This data is about an assessment in x region"'), value=data.notes, error=errors.notes, classes=['mb-3'], attrs={'style': 'height: 80px;'}) }}
+                                              </div>
 
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="subnational" data-module-required="public">
-                                            {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational and data.subnational != '0', error=errors.subnational, classes=['form-group'], attrs={}) }}
-                                            </div>
+                                              <div data-module="hdx_form_element_manager" data-module-element_name="subnational" data-module-required="public">
+                                              {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational and data.subnational != '0', error=errors.subnational, classes=['mb-3'], attrs={}) }}
+                                              </div>
 
-                                            {% if user_is_sysadmin %}
-                                                <div data-module="hdx_form_element_manager" data-module-element_name="quality">
-                                                    {% set quality_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-                                                    'data-original-title': 'Has the quality of this dataset been evaluated by our data team?',
-                                                    'data-toggle': 'tooltip'}
-                                                    %}
-                                                {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}, label_attrs=quality_attrs) }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
+                                              {% if user_is_sysadmin %}
+                                                  <div data-module="hdx_form_element_manager" data-module-element_name="quality">
+                                                      {% set quality_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
+                                                      'data-bs-original-title': 'Has the quality of this dataset been evaluated by our data team?',
+                                                      'data-bs-toggle': 'tooltip'}
+                                                      %}
+                                                  {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['mb-3'], attrs={}, label_attrs=quality_attrs) }}
+                                                  </div>
+                                              {% endif %}
+                                          </div>
+                                      </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-12">
                                             <hr class="form-hr"/>
                                         </div>
                                     </div>
                                     <span id="_dataset_preview">
-                                        <div class="row form-section">
-                                            <div class="col-xs-3">
-                                                <h3>Data Preview</h3>
-                                                <p>
-                                                    You have a choice of turning on/off dataset previews. Available previews include geo preview (if your data includes geo data) or Quick Charts (embeddable, live data charts, graphs and key figures generated from your HXL-tagged spreadsheet).
-                                                </p>
-                                            </div>
-                                            <div class="col-xs-7">
-                                                <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check" data-module-broadcast_change="true">
-                                                    {{ form.checkbox('dataset_preview_check', id='field_dataset_preview_check', label=_('Display Preview'), value='1', checked=data.dataset_preview_check, error=errors.dataset_preview_check, classes=['form-group'], attrs={}) }}
-                                                </div>
-                                                <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check_other" id="dataset-preview-check-other-define"  {% if data.dataset_preview_check != '1' %} style="display:none;" {% endif %}>
-                                                    <p>If you have added multiple resources above, select a resource to generate a preview</p>
-                                                    {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
-                                                    {{ form.select('dataset_preview_value', id='field_dataset_preview_value', label=_('Data preview value'), placeholder=_("Data preview value"), options=dataset_preview_values_list, selected=data.dataset_preview_value, error=errors.dataset_preview_value, classes=['form-group'], attrs={'class':'form-control'}) }}
-                                                </div>
-                                            </div>
+                                        <div class="form-section">
+                                          <div class="row">
+                                              <div class="col-3">
+                                                  <h3>Data Preview</h3>
+                                                  <p>
+                                                      You have a choice of turning on/off dataset previews. Available previews include geo preview (if your data includes geo data) or Quick Charts (embeddable, live data charts, graphs and key figures generated from your HXL-tagged spreadsheet).
+                                                  </p>
+                                              </div>
+                                              <div class="col-7">
+                                                  <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check" data-module-broadcast_change="true">
+                                                      {{ form.checkbox('dataset_preview_check', id='field_dataset_preview_check', label=_('Display Preview'), value='1', checked=data.dataset_preview_check, error=errors.dataset_preview_check, classes=['mb-3'], attrs={}) }}
+                                                  </div>
+                                                  <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check_other" id="dataset-preview-check-other-define"  {% if data.dataset_preview_check != '1' %} style="display:none;" {% endif %}>
+                                                      <p>If you have added multiple resources above, select a resource to generate a preview</p>
+                                                      {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
+                                                      {{ form.select('dataset_preview_value', id='field_dataset_preview_value', label=_('Data preview value'), placeholder=_("Data preview value"), options=dataset_preview_values_list, selected=data.dataset_preview_value, error=errors.dataset_preview_value, classes=['mb-3'], attrs={}) }}
+                                                  </div>
+                                              </div>
+                                          </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-xs-12">
+                                            <div class="col-12">
                                                 <hr class="form-hr"/>
                                             </div>
                                         </div>
                                     </span>
-                                  <div class="row form-section">
-                                    <div class="col-xs-3">
-                                      <h3>Custom Dataviz for This Dataset</h3>
-                                      <p>
-                                        You can add up to 5 dataviz using the URL.
-                                      </p>
-                                    </div>
-                                    <div class="col-xs-9">
-                                      <div class="custom-viz-list" data-module="hdx_custom_dataviz_manager" data-module-custom_viz_urls="{{ data.customviz_list }}">
-                                        <div class="custom-viz-item">
-                                          <label class="label-title-style mBottom10">${index} DATA VIZ</label>
-                                          <div class="drag-drop-component">
-                                            <div class="row">
-                                              <div class="col-xs-12">
-                                                <span style="cursor: move; cursor: grab; cursor: -webkit-grab; cursor: -moz-grab;" class="drag-handle">
-                                                              <i class="glyphicon glyphicon-resize-vertical grey"></i>
-                                                              <i class="glyphicon glyphicon-align-justify grey"
-                                                                 style="margin-left: -5px; margin-right: 5px; font-size: 15px;"></i>
-                                                </span>
-                                                <label class="control-label">Data Viz ${index}</label>
-                                                <span class="pull-right">
-                                                  <a href="javascript:void(0)" class="delete_custom_viz">
-                                                    <i class="glyphicon glyphicon-trash grey"></i>
-                                                  </a>
-                                                </span>
+                                  <div class="form-section">
+                                    <div class="row">
+                                      <div class="col-3">
+                                        <h3>Custom Dataviz for This Dataset</h3>
+                                        <p>
+                                          You can add up to 5 dataviz using the URL.
+                                        </p>
+                                      </div>
+                                      <div class="col-9">
+                                        <div class="custom-viz-list" data-module="hdx_custom_dataviz_manager" data-module-custom_viz_urls="{{ data.customviz_list }}">
+                                          <div class="custom-viz-item">
+                                            <label class="label-title-style mBottom10">${index} DATA VIZ</label>
+                                            <div class="drag-drop-component">
+                                              <div class="row">
+                                                <div class="col-12">
+                                                  <span style="cursor: move; cursor: grab; cursor: -webkit-grab; cursor: -moz-grab;" class="drag-handle">
+                                                                <i class="fa fa-arrows-v grey"></i>
+                                                                <i class="fa fa-align-justify grey"
+                                                                   style="margin-left: -5px; margin-right: 5px; font-size: 15px;"></i>
+                                                  </span>
+                                                  <label class="control-label">Data Viz ${index}</label>
+                                                  <span class="float-end">
+                                                    <a href="javascript:void(0)" class="delete_custom_viz">
+                                                      <i class="fa fa-trash grey"></i>
+                                                    </a>
+                                                  </span>
+                                                </div>
                                               </div>
-                                            </div>
-                                            <div class="row">
-                                              <div class="col-xs-12">
-                                                <div class="control-group form-group">
-                                                  <div class="controls ">
-                                                    <input name="custom_viz_url" value="${url}"
-                                                           placeholder="eg. https://example.com/dataviz *"
-                                                           class="form-control custom-viz-url" type="text">
-                                                    <span class="error-block"></span>
+                                              <div class="row">
+                                                <div class="col-12">
+                                                  <div class="mb-3">
+                                                    <div class="controls ">
+                                                      <input name="custom_viz_url" value="${url}"
+                                                             placeholder="eg. https://example.com/dataviz *"
+                                                             class="form-control custom-viz-url" type="text">
+                                                      <span class="error-block"></span>
+                                                    </div>
                                                   </div>
                                                 </div>
                                               </div>
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                      <div>
-                                        <input class="add_custom_viz btn btn-primary btn-lg"
-                                               value="Add more data viz" type="button">
+                                        <div>
+                                          <input class="add_custom_viz btn btn-primary btn-lg"
+                                                 value="Add more data viz" type="button">
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                       <hr class="form-hr"/>
                                     </div>
                                   </div>
-                                  <div class="row form-horizontal form-section">
-                                      <div class="col-xs-3">
-                                          <h3>Metadata</h3>
-                                          <p> Metadata is additional information about your dataset that will make it easier for others to understand and put your data into context. Datasets on HDX must include a set of metadata fields. </p>
-                                      </div>
-                                      <div class="col-xs-7">
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source" data-module-required="private,public,requestdata">
-                                          {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['form-group'], attrs={'class':'form-control'}) }}
-                                          </div>
+                                  <div class="form-horizontal form-section">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <h3>Metadata</h3>
+                                            <p> Metadata is additional information about your dataset that will make it easier for others to understand and put your data into context. Datasets on HDX must include a set of metadata fields. </p>
+                                        </div>
+                                        <div class="col-7">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source" data-module-required="private,public,requestdata">
+                                            {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['mb-3'], attrs={}) }}
+                                            </div>
 
-                                          {% set organisations = h.hdx_organisation_list() %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private,public,requestdata"  data-module-broadcast_change="true">
-                                          {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
-                                          </div>
+                                            {% set organisations = h.hdx_organisation_list() %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private,public,requestdata"  data-module-broadcast_change="true">
+                                            {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['mb-3'], attrs={'data-placeholder':_('Which organisation is contributing data?')}) }}
+                                            </div>
 
-                                          {% set first_org = organisations[0].value if organisations[0] else None %}
-                                          {% set selected_org_name = data.owner_org_name or first_org %}
+                                            {% set first_org = organisations[0].value if organisations[0] else None %}
+                                            {% set selected_org_name = data.owner_org_name or first_org %}
 
-                                          {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
-                                          'data-module-source': '/util/user/hdx_autocomplete?q=?',
-                                          'data-module-label': 'fullname',
-                                          'data-module-key': 'id',
-                                          'data-module-extra-params': 'org=' + selected_org_name,
-                                          'class':'form-control' } %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="maintainer" data-module-required="private,public,requestdata">
-                                          {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group', 'required'], attrs=maintainer_attrs) }}
-                                          </div>
+                                            {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
+                                            'data-module-source': '/util/user/hdx_autocomplete?q=?',
+                                            'data-module-label': 'fullname',
+                                            'data-module-key': 'id',
+                                            'data-module-extra-params': 'org=' + selected_org_name } %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="maintainer" data-module-required="private,public,requestdata">
+                                            {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['mb-3', 'required'], attrs=maintainer_attrs) }}
+                                            </div>
 
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
-                                            <div class="control-group form-group control-full">
-{#                                              <label class="control-label">{{_('Reference Period')}}</label>#}
-                                              <label class="control-label"
-                                               style="font-weight:inherit"
-                                               data-module='bs_tooltip'
-                                               data-module-placement='top'
-                                               data-original-title= 'The time period for which data are collected or calculated and to which, as a result, they refer. The reference period may be of any length: a year, a month, or even a day.'
-                                               data-toggle= 'tooltip'>
-                                                {{_('Reference Period')}} (?)
-                                              </label>
-                                              <div class="controls">
-                                                <div style="display: flex">
-                                                    <div>
-                                                      <input type="text" name='ui_date_range1' id='ui_date_range1' autocomplete="off" onkeydown="return false;"
-                                                             data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
-                                                             data-module-alt_field_id='date_range1' data-module-original_value="{{ data.dataset_date }}"
-                                                             label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-control' style="width: 100%;" />
-                                                      <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public,requestdata">
+                                              <div class="mb-3 ">
+  {#                                              <label class="control-label">{{_('Reference Period')}}</label>#}
+                                                <label class="control-label"
+                                                 style="font-weight:inherit"
+                                                 data-module='bs_tooltip'
+                                                 data-module-placement='top'
+                                                 data-original-title='The earliest start date and latest end date across all resources included in the dataset.'
+                                                 data-bs-toggle= 'tooltip'>
+                                                  {{_('Time Period of the Dataset')}} [?]
+                                                </label>
+                                                <div class="controls">
+                                                  <div style="display: flex">
+                                                      <div>
+                                                        <input type="text" name='ui_date_range1' id='ui_date_range1' autocomplete="off" onkeydown="return false;"
+                                                               data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
+                                                               data-module-alt_field_id='date_range1' data-module-original_value="{{ data.dataset_date }}"
+                                                               label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-control' style="width: 100%;" />
+                                                        <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
 
-                                                    </div>
-                                                    <span style="width: 15px; text-align: center; padding-top: 10px;">-</span>
-                                                    <div>
-                                                      <input type="text" name='ui_date_range2' id='ui_date_range2' autocomplete="off" onkeydown="return false;"
-                                                             data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
-                                                             data-module-alt_field_id='date_range2' data-module-original_value="{{ data.dataset_date }}"
-                                                             label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='form-control' style="width: 100%;" />
-                                                      <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
-                                                    </div>
-                                                    <div style="padding-top: 10px; margin-left: 10px;">
-                                                      <label style="font-weight: inherit; min-width: 90px;"
-                                                             data-module='bs_tooltip'
-                                                             data-module-placement='top'
-                                                             data-original-title= 'The end date will always advance to be the current date'
-                                                             data-toggle= 'tooltip' >
-                                                        <input style="margin-right: 5px; width: auto;"
-                                                               type="checkbox"
-                                                               name="ui_date_ongoing"
-                                                               value="1"
-                                                               id="ui_date_ongoing"
-                                                               data-module='hdx_datepicker'
-                                                               data-module-group='2'
-                                                               data-module-type="date_ongoing"
-                                                               data-module-topic='date-field-clicked'
-                                                               data-module-alt_field_id='date_ongoing'
-                                                               data-module-original_value="{{ data.ui_date_ongoing }}"
-                                                               {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
-                                                          Ongoing (?)
-                                                      </label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                  <div class="col-xs-12">
-                                                    <span class="error-block"></span>
+                                                      </div>
+                                                      <span style="width: 15px; text-align: center; padding-top: 10px;">-</span>
+                                                      <div>
+                                                        <input type="text" name='ui_date_range2' id='ui_date_range2' autocomplete="off" onkeydown="return false;"
+                                                               data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
+                                                               data-module-alt_field_id='date_range2' data-module-original_value="{{ data.dataset_date }}"
+                                                               label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='form-control' style="width: 100%;" />
+                                                        <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+                                                      </div>
+                                                      <div style="padding-top: 10px; margin-left: 10px;">
+                                                        <label style="font-weight: inherit; min-width: 90px;"
+                                                               data-module='bs_tooltip'
+                                                               data-module-placement='top'
+                                                               data-bs-original-title= 'The end date will always advance to be the current date'
+                                                               data-bs-toggle= 'tooltip' >
+                                                          <input style="margin-right: 5px; width: auto;"
+                                                                 type="checkbox"
+                                                                 name="ui_date_ongoing"
+                                                                 value="1"
+                                                                 id="ui_date_ongoing"
+                                                                 data-module='hdx_datepicker'
+                                                                 data-module-group='2'
+                                                                 data-module-type="date_ongoing"
+                                                                 data-module-topic='date-field-clicked'
+                                                                 data-module-alt_field_id='date_ongoing'
+                                                                 data-module-original_value="{{ data.ui_date_ongoing }}"
+                                                                 {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
+                                                            Ongoing [?]
+                                                        </label>
+                                                      </div>
                                                   </div>
+                                                  <div class="row">
+                                                    <div class="col-12">
+                                                      <span class="error-block"></span>
+                                                    </div>
+                                                  </div>
+
                                                 </div>
-
-                                              </div>
-                                              </div>
-                                          </div>
-
-                                          {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
-                                          {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-                                                  'data-original-title': 'Your best guess of how often this dataset will be updated',
-                                                  'data-toggle': 'tooltip'}
-                                                  %}
-                                          <div id="data_update_frequency" data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                            <div class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-status overdue margin-fix {% endif %}">
-                                              {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} <div class="overdue-title">Please check if the following field is up to date:</div>{% endif %}
-                                              {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
+                                                </div>
                                             </div>
-                                          </div>
 
-                                          {% set location_list = h.hdx_location_list() %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" data-module-required="public,requestdata">
-                                          {{ form.select('locations', id='field_locations', label=_('Location'), options=location_list, selected=data.locations, error=errors.locations, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
-                                          </div>
-
-
-                                          {% set licenses = h.hdx_license_list() %}
-                                          <div class="special-license" data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private,public" data-module-broadcast_change="true">
-                                              {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
-                                              <a href="{{ h.url_for('hdx_faqs.read', category='licenses') }}" target="_blank" class="license-help">Read more about licenses</a>
-                                          </div>
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="license_other" id="license-other-define" {% if data.license_id != 'Other' %}style="display:none;"{% endif %}>
-                                              {{ form.markdown('license_other', id='field_license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                                          </div>
-
-                                          {% set field_names_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What are the most important fields in the dataset?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="field_names" data-module-required="requestdata">
-                                          {{ form.input('field_names', id='field_names', label=_('Field names'), value=data.field_names, error=errors.field_names, classes=['control-full', 'form-group', 'field-names-select'], attrs=field_names_attrs) }}
-                                          </div>
-
-                                          {% set file_types_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What file types does your dataset contain?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="file_types" data-module-required="requestdata">
-                                          {{ form.input('file_types', id='file_types', label=_('File types'), value=data.file_types, error=errors.file_types, classes=['control-full', 'form-group', 'file-types-select'], attrs=file_types_attrs) }}
-                                          </div>
-
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="num_of_rows">
-                                          {{ form.input('num_of_rows', id='num_of_rows', label=_('Number of rows'), value=data.num_of_rows, error=errors.num_of_rows, classes=['control-full', 'form-group', 'num-of-rows-select'], attrs={'class': 'form-control'}) }}
-                                          </div>
-
-                                          {% set methodologies = h.hdx_methodology_list() %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public" data-module-broadcast_change="true">
-                                              {{ form.select('methodology', id='field_methodology', label=_('Methodology'), placeholder=_("Select methodology"), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group methodology-select'], attrs={'class':'form-control'}) }}
-                                          </div>
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
-                                              {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                                          </div>
-
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="caveats">
-                                          {{ form.markdown('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                                          </div>
-
-                                          {# replaced with ajax one below
-                                              {% set tags = h.hdx_tag_list() %}
-                                              {{ form.select('tag_string', id='field_tags', label=_('Tags'), options=tags, selected=data.tag_string, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
-                                          #}
-
-                                          {% set tag_input_attrs = {'data-module': 'hdx_autocomplete',
-                                            'data-module-tags': 'false',
-                                            'data-module-multiple': 'multiple',
-                                            'data-module-width': '500px',
-                                            'class':'form-control choices-orange', 'multiple':'true',
-                                            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-                                          {% set approved_tags = h.hdx_get_approved_tags_list() %}
-                                          {% set selected_tags = data.tag_string.split(', ') if data.tag_string else '' %}
-                                          <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" data-module-required="requestdata">
-                                            {% if approved_tags %}
-                                              {{ form.select('tag_string', id='field_tag_string', label=_('Tags'), options=approved_tags, selected=selected_tags, error=errors.tag_string, classes=['form-group', 'tags-select'], attrs={'class':'form-control choices-orange', 'multiple':'true' }) }}
-                                            {% else %}
-                                              {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group', 'tags-select'], attrs=tag_input_attrs) }}
-                                            {% endif %}
-                                            <div data-module="hdx_tag_recommender" data-module-tag_input_selector="#field_tag_string"
-                                                 data-module-recommended_tag_wrapper_selector="#recommended-tags-wrapper" class="form-group">
-                                              <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">
-                                                Suggested tags: <span />
+                                            {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
+                                            {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
+                                                    'data-bs-original-title': 'Your best guess of how often this dataset will be updated',
+                                                    'data-bs-toggle': 'tooltip'}
+                                                    %}
+                                            <div id="data_update_frequency" data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
+                                              <div class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-status overdue margin-fix {% endif %}">
+                                                {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} <div class="overdue-title">Please check if the following field is up to date:</div>{% endif %}
+                                                {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency [?]'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['mb-3 update-frequency-select'], attrs={}, label_attrs=frequency_attrs) }}
                                               </div>
                                             </div>
-                                            <div class="request-tags-wrapper">
-                                              Don't see a tag you are looking for? <a onclick="closeCurrentWidget(this); spawnRecaptcha('#requestTagsPopup'); showTagRequestWidget('#requestTagsPopup');" href="#">Suggest one</a> or <a href="https://data.humdata.org/rdr/spreadsheets/approved-tags" target="_blank">see the full list of approved tags</a>
-                                            </div>
-                                          </div>
 
-                                      </div>
+                                            {% set location_list = h.hdx_location_list() %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" data-module-required="public,requestdata">
+                                            {{ form.select('locations', id='field_locations', label=_('Location'), options=location_list, selected=data.locations, error=errors.locations, classes=['mb-3'], attrs={'multiple':'true'}) }}
+                                            </div>
+
+
+                                            {% set licenses = h.hdx_license_list() %}
+                                            <div class="special-license" data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private,public" data-module-broadcast_change="true">
+                                                {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['mb-3'], attrs={}) }}
+                                                <a href="{{ h.url_for('hdx_faqs.read', category='licenses') }}" target="_blank" class="license-help">Read more about licenses</a>
+                                            </div>
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="license_other" id="license-other-define" {% if data.license_id != 'Other' %}style="display:none;"{% endif %}>
+                                                {{ form.markdown('license_other', id='field_license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other, classes=['mb-3'], attrs={'style': 'height: 80px;'}) }}
+                                            </div>
+
+                                            {% set field_names_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What are the most important fields in the dataset?', 'multiple':'true', 'data-module-width': '500px',} %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="field_names" data-module-required="requestdata">
+                                            {{ form.input('field_names', id='field_names', label=_('Field names'), value=data.field_names, error=errors.field_names, classes=['', 'mb-3', 'field-names-select'], attrs=field_names_attrs) }}
+                                            </div>
+
+                                            {% set file_types_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What file types does your dataset contain?', 'multiple':'true', 'data-module-width': '500px',} %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="file_types" data-module-required="requestdata">
+                                            {{ form.input('file_types', id='file_types', label=_('File types'), value=data.file_types, error=errors.file_types, classes=['', 'mb-3', 'file-types-select'], attrs=file_types_attrs) }}
+                                            </div>
+
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="num_of_rows">
+                                            {{ form.input('num_of_rows', id='num_of_rows', label=_('Number of rows'), value=data.num_of_rows, error=errors.num_of_rows, classes=['', 'mb-3', 'num-of-rows-select'], attrs={}) }}
+                                            </div>
+
+                                            {% set methodologies = h.hdx_methodology_list() %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public" data-module-broadcast_change="true">
+                                                {{ form.select('methodology', id='field_methodology', label=_('Methodology'), placeholder=_("Select methodology"), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['mb-3 methodology-select'], attrs={}) }}
+                                            </div>
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
+                                                {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['mb-3'], attrs={'style': 'height: 80px;'}) }}
+                                            </div>
+
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="caveats">
+                                            {{ form.markdown('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['mb-3'], attrs={'style': 'height: 80px;'}) }}
+                                            </div>
+
+                                            {# replaced with ajax one below
+                                                {% set tags = h.hdx_tag_list() %}
+                                                {{ form.select('tag_string', id='field_tags', label=_('Tags'), options=tags, selected=data.tag_string, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
+                                            #}
+
+                                            {% set tag_input_attrs = {'data-module': 'hdx_autocomplete',
+                                              'data-module-tags': 'false',
+                                              'data-module-multiple': 'multiple',
+                                              'data-module-width': '500px',
+                                              'class':'choices-orange', 'multiple':'true',
+                                              'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+                                            {% set approved_tags = h.hdx_get_approved_tags_list() %}
+                                            {% set selected_tags = data.tag_string.split(', ') if data.tag_string else '' %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" data-module-required="requestdata">
+                                              {% if approved_tags %}
+                                                {{ form.select('tag_string', id='field_tag_string', label=_('Tags'), options=approved_tags, selected=selected_tags, error=errors.tag_string, classes=['mb-3', 'tags-select'], attrs={'class':'choices-orange', 'multiple':'true' }) }}
+                                              {% else %}
+                                                {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['', 'mb-3', 'tags-select'], attrs=tag_input_attrs) }}
+                                              {% endif %}
+                                              <div data-module="hdx_tag_recommender" data-module-tag_input_selector="#field_tag_string"
+                                                   data-module-recommended_tag_wrapper_selector="#recommended-tags-wrapper" class="mb-3">
+                                                <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">
+                                                  Suggested tags: <span />
+                                                </div>
+                                              </div>
+                                              <div class="request-tags-wrapper">
+                                                Don't see a tag you are looking for? <a onclick="closeCurrentWidget(this); spawnRecaptcha('#requestTagsPopup'); showTagRequestWidget('#requestTagsPopup');" href="#">Suggest one</a> or <a href="https://data.humdata.org/rdr/spreadsheets/approved-tags" target="_blank">see the full list of approved tags</a>
+                                              </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                   </div>
                                   {% if data.id %}
                                     <div class="row">
-                                      <div class="col-xs-12">
+                                      <div class="col-12">
                                         <hr class="form-hr"/>
                                       </div>
                                     </div>
-                                    <div class="row form-horizontal form-section">
-                                      <div class="col-xs-3">
-                                          <h3>Archive dataset</h3>
-                                          <p>
-                                            A dataset should be archived when it is no longer of operational relevance
-                                            and will not be updated, but remains available primarily for historical
-                                            purposes. Archived datasets are still visible in search results when the
-                                            "Archived Datasets" filter is applied.
-                                          </p>
-                                      </div>
-                                      <div class="col-xs-7">
-                                        {% set archive_values = [{'value': False, 'text': 'No'}, {'value': True, 'text': 'Yes'}] %}
-                                        <div id="archived_dataset_flag">
-                                          {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources (?)'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}) }}
+                                    <div class="form-horizontal form-section">
+                                      <div class="row">
+                                        <div class="col-3">
+                                            <h3>Archive dataset</h3>
+                                            <p>
+                                              A dataset should be archived when it is no longer of operational relevance
+                                              and will not be updated, but remains available primarily for historical
+                                              purposes. Archived datasets are still visible in search results when the
+                                              "Archived Datasets" filter is applied.
+                                            </p>
                                         </div>
+                                        <div class="col-7">
+                                          {% set archive_values = [{'value': False, 'text': 'No'}, {'value': True, 'text': 'Yes'}] %}
+                                          <div id="archived_dataset_flag">
+                                            {{ form.select('archived', id='field_archived', label=_('Archive this dataset and its resources [?]'), placeholder=_("How often does this data update?"), options=archive_values, selected=data.archived, error=errors.archived, classes=['mb-3 update-frequency-select'], attrs={}) }}
+                                          </div>
 
+                                        </div>
                                       </div>
                                     </div>
                                   {% endif %}
@@ -754,12 +767,12 @@
                                         I confirm that this dataset does not contain Personally Identifiable Information (PII) or otherwise violate the  <a target="_blank" href="{{ h.url_for('hdx_faqs.read', category='terms') }}">HDX Terms of Service</a>
                                     </label>
 
-                                    <div class="pull-right">
+                                    <div class="float-end">
                                         <!-- removed as per #4012 <input type="button" class="btn btn-inverse btn-lg" value="See preview"/> -->
                                         <input id="create-form-submit" type="submit" class="btn btn-primary btn-lg" value="Submit"/>
                                     </div>
                                     {% if data.id %}
-                                        <div class="pull-right mLR10">
+                                        <div class="float-end mLR10">
                                             {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
                                             <a class="btn btn-danger btn-lg"
                                                href="/api/action/hdx_dataset_purge?"

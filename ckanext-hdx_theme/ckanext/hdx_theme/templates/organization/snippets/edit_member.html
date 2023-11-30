@@ -9,54 +9,59 @@ Example:
 {% asset 'hdx_theme/hdx-autocomplete' %}
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
-  <div id="{{ modal_div_id }}" class="modal confirmation-modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
-	  <div class="modal-dialog">
-	  <div class="modal-content hdx-modal">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-			<h3 class="modal-title" id="{{ modal_div_id }}-label">{{ _('Edit Member') }}</h3>
-		</div>
-		<div class="modal-body">
-			<div class="mBottom20">
-				{% if user %}
-					<input type="hidden" name="username" value="{{ user }}" />
-					{% set format_attrs = {'disabled': true, 'style':'width: 286px;'} %}
-					<input id="username" name="username" type="text" value="{{ user }}" disabled="True" style="width: 100%;">
-				{% else %}
-					<input id="username" type="text" name="username" placeholder="Username"
-					   value="" class="control-medium" data-module="hdx_autocomplete"
-					   style="width: 100%" data-module-interval="200"
-					   data-module-source="/api/2/util/user/autocomplete?q=?">
-				{% endif %}
-			</div>
-      <select id="role" name="role" data-module="hdx_autocomplete" style="width: 100%">
-        {% for option in roles %}
-          <option {% if (member.maint_orgs_pkgs | length > 0) and (option.value == 'member') %} disabled {% endif %} value="{{ option.value }}"{% if option.value == role %} selected{% endif %}>{{ option.text or option.value }} {% if (member.maint_orgs_pkgs | length > 0) and (option.value == 'member') %}*{% endif %}</option>
-        {% endfor %}
-      </select>
-      {% if (member.maint_orgs_pkgs | length > 0)%}
-        <div>
-          <p class="mTop8">
-            <span class="red">*</span> Can't change role to "member" because the user is maintainer of these datasets:
-          </p>
-          <div class="scrollable-container">
-            {% for org in member.maint_orgs_pkgs %}
-              <p><strong>{% if org.title %}{{ org.title }}{% else %}{{ org.name }}{% endif %}:</strong></p>
-              <ul>
-                {% for p in org.pkgs %}
-                  <li><a href="{{ h.url_for('dataset_read', id=p.name) }}" target="_blank">{{ p.title }}</a></li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
-          </div>
+  <div id="{{ modal_div_id }}" class="modal confirmation-modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content hdx-modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="{{ modal_div_id }}-label">{{ _('Edit Member') }}</h3>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      {% endif %}
-		</div>
-		<div class="modal-footer">
-			<button class="btn btn-empty btn-large" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
-			<button class="btn btn-primary btn-large">{{ _('Submit') }}</button>
-		</div>
-	  </div>
-	  </div>
+        <div class="modal-body">
+          <div class="mBottom20">
+            {% if user %}
+              <input type="hidden" name="username" value="{{ user }}"/>
+              {% set format_attrs = {'disabled': true, 'style':'width: 286px;'} %}
+              <input id="username" name="username" type="text" value="{{ user }}" disabled="True" style="width: 100%;">
+            {% else %}
+              <input id="username" type="text" name="username" placeholder="Username"
+                     value="" class="control-medium" data-module="hdx_autocomplete"
+                     style="width: 100%" data-module-interval="200"
+                     data-module-source="/api/2/util/user/autocomplete?q=?">
+            {% endif %}
+          </div>
+          <select id="role" name="role" data-module="hdx_autocomplete" style="width: 100%">
+            {% for option in roles %}
+              <option {% if (member.maint_orgs_pkgs | length > 0) and (option.value == 'member') %} disabled {% endif %}
+                                                                                                    value="{{ option.value }}"
+                      {% if option.value == role %} selected{% endif %}>{{ option.text or option.value }}
+                {% if (member.maint_orgs_pkgs | length > 0) and (option.value == 'member') %}*{% endif %}</option>
+            {% endfor %}
+          </select>
+          {% if (member.maint_orgs_pkgs | length > 0) %}
+            <div>
+              <p class="mTop8">
+                <span class="red">*</span> Can't change role to "member" because the user is maintainer of these
+                datasets:
+              </p>
+              <div class="scrollable-container">
+                {% for org in member.maint_orgs_pkgs %}
+                  <p><strong>{% if org.title %}{{ org.title }}{% else %}{{ org.name }}{% endif %}:</strong></p>
+                  <ul>
+                    {% for p in org.pkgs %}
+                      <li><a href="{{ h.url_for('dataset_read', id=p.name) }}" target="_blank">{{ p.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-empty btn-large" aria-hidden="true">{{ _('Cancel') }}</button>
+          <button class="btn btn-primary btn-large">{{ _('Submit') }}</button>
+        </div>
+      </div>
+    </div>
   </div>
 </form>

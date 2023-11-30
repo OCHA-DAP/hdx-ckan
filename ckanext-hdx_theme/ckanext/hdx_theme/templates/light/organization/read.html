@@ -18,7 +18,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
 	{% endblock %}
-  <li class="active">{{ h.nav_link( org.title|truncate(120), named_route='hdx_light_org.light_read', id=org.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( org.title|truncate(120), named_route='hdx_light_org.light_read', id=org.name, highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 
@@ -28,8 +28,8 @@
 <div class="dataset-light org-light">
   <div class="container">
     <div class="row org-details">
-      <div class="col-xs-9 col-lg-8 ">
-        <h1>{{ org.title }}</h1>
+      <div class="col-9 col-lg-8 ">
+        <h1 class="mTop20">{{ org.title }}</h1>
         <div class="list-items mTop20 mBottom20">
           {% if org.package_count or org.datasets_num %}
               {% if org.package_count is number %}
@@ -60,7 +60,7 @@
               {{ h.render_markdown(h.get_translated(org, 'description')) }}
         </div>
       </div>
-      <div class="col-xs-3 col-lg-4">
+      <div class="col-3 col-lg-4">
         <div class="row">
             <div class="org-logo-large ">
                 {% if org.custom_sq_logo_url %}

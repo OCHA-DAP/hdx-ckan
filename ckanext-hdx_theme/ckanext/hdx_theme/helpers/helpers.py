@@ -926,3 +926,52 @@ def hdx_get_approved_tags_list():
     approved_tags = logic.get_action('hdx_tag_approved_list')({}, {})
     approved_tags_dict_list = [{'value': tag, 'text': tag} for tag in approved_tags]
     return approved_tags_dict_list
+
+
+def bs5_build_nav_icon(menu_item, title, **kw):
+    '''Build a navigation item used for example in ``user/read_base.html``.
+
+    Outputs ``<li class="nav-item"><a href="..." class=""nav-link"><i class="icon.."></i> title</a></li>``.
+
+    :param menu_item: the name of the defined menu item defined in
+      config/routing as the named route of the same name
+    :type menu_item: string
+    :param title: text used for the link
+    :type title: string
+    :param kw: additional keywords needed for creating url eg ``id=...``
+
+    :rtype: HTML literal
+
+    '''
+    return _bs5_make_menu_item(menu_item, title, **kw)
+
+
+def _bs5_make_menu_item(menu_item, title, **kw):
+    ''' build a navigation item used for example breadcrumbs
+
+    outputs <li class="nav-item"><a href="..." class="nav-link"></i> title</a></li>
+
+    :param menu_item: the name of the defined menu item defined in
+    config/routing as the named route of the same name
+    :type menu_item: string
+    :param title: text used for the link
+    :type title: string
+    :param **kw: additional keywords needed for creating url eg id=...
+
+    :rtype: HTML literal
+
+    This function is called by wrapper functions.
+    '''
+    menu_item = h.map_pylons_to_flask_route_name(menu_item)
+    _menu_items = config['routes.named_routes']
+    if menu_item not in _menu_items:
+        raise Exception('menu item `%s` cannot be found' % menu_item)
+    item = h.copy.copy(_menu_items[menu_item])
+    item.update(kw)
+    needed = item.pop('needed')
+    for need in needed:
+        if need not in kw:
+            raise Exception('menu item `%s` need parameter `%s`'
+                            % (menu_item, need))
+    link = h._link_to(title, menu_item, suppress_active_class=False, **item)
+    return h.literal('<li class="nav-item">') + link + h.literal('</li>')

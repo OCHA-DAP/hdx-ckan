@@ -1,10 +1,10 @@
 {% extends "organization/read.html" %}
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), named_route='organization.index' %}</li>
+  <li class="breadcrumb-item">{% link_for _('Organizations'), named_route='organization.index' %}</li>
   {% block breadcrumb_content_inner %}
-    <li>{% link_for org_meta.org_dict.display_name|truncate(35), controller='organization', action='read', id=org_name %}</li>
-    <li class="active">
+    <li class="breadcrumb-item">{% link_for org_meta.org_dict.display_name|truncate(35), controller='organization', action='read', id=org_name %}</li>
+    <li class="breadcrumb-item active">
       {% set requested_data_url = h.url_for('requestdata_organization_requests.requested_data', id=org_name) %}
       <a href="{{ requested_data_url }}">Dataset Requests</a>
     </li>
@@ -37,7 +37,7 @@
 
     {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
 
-    <div class="alert alert-dismissible request-message-alert hide" role="alert">
+    <div class="alert alert-dismissible request-message-alert d-none" role="alert">
       <div class="alert-text"></div>
     </div>
   </div>

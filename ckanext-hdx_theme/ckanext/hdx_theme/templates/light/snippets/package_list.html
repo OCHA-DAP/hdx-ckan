@@ -13,7 +13,7 @@
 
       {%  set current_page_url = data.other_links.get('current_page_url') if 'current_page_url' in data.other_links else '' %}
       <div class="filter-title">
-        Refine your search: <a href="{{current_page_url}}" class="filter-clear pull-right">Clear all</a>
+        Refine your search: <a href="{{current_page_url}}" class="filter-clear float-end">Clear all</a>
       </div>
 
       {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
@@ -22,26 +22,21 @@
   </div>
 
   <div class="search-light">
-    <div class="container">
-      <div id="search-recs"></div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
+    <div id="search-recs" class="d-none"></div>
+    <div class="row">
+        <div class="col-12">
           <div class="dataset-filter-start list-header">
             <span class="list-header-title">
               {% snippet 'search/snippets/archived_tabs.html', archived_url_helper=data.full_facet_info.archived_url_helper %}
             </span>
             <div class="show-filters">
               <a href="#" onclick="$('.mobile-facets').show();">
-                Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}
-                <span class="checkbox-slider" style="display: inline-block; top: 5px; margin-left: 5px;">
-                <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}/>
-                <label class="checkbox-slider-label" for="show-filter-toggle">
-                  <span class="checkbox-slider-inner"></span>
-                  <span class="checkbox-slider-switch"></span>
-                </label>
-              </span>
+                <div class="d-inline-block show-filter-switch {% if data.full_facet_info.num_of_selected_filters > 0 %}show-filter-switch--md{% else %}show-filter-switch--sm{% endif %}">
+                  <div class="form-check form-switch ps-0">
+                    <input class="form-check-input form-check-input--always-closed float-end" type="checkbox" id="show-filter-toggle" {% if data.full_facet_info.filters_selected %} checked="checked" {% endif %}>
+                    <label class="form-check-label" for="show-filter-toggle">Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}</label>
+                  </div>
+                </div>
               </a>
             </div>
           </div>
@@ -61,11 +56,7 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="container">
-      {% block page_pagination %}
-        {{ data.page.pager(q=data.q) }}
-      {% endblock %}
-    </div>
+    {% block page_pagination %}
+      {{ data.page.pager(q=data.q) }}
+    {% endblock %}
   </div>

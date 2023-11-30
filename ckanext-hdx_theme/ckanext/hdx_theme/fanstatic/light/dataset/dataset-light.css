@@ -93,7 +93,7 @@
 }
 .additional-info th {
   max-width: 200px;
-  width: 175px;
+  width: 185px;
 }
 /* END Style Additional Info */
 /* Resource grouping */
@@ -113,6 +113,9 @@
 .dataset-title .humanitarianicons-Folder {
   font-size: 24px;
   margin-left: 5px;
+}
+.wrapper-secondary .form-check .form-check-input {
+  box-shadow: none;
 }
 .dataset-light .nav-tabs {
   margin: 0 -15px;
@@ -171,7 +174,7 @@
 .dataset-light .resource-list .resource-item .toggle-show {
   justify-self: flex-end;
 }
-.dataset-light .resource-list .resource-item .toggle-show .glyphicon {
+.dataset-light .resource-list .resource-item .toggle-show .fa {
   color: #007CE0;
 }
 .dataset-light .resource-list .resource-item .heading {

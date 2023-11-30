@@ -9,7 +9,7 @@ Example:
 
 <section>
     <div class="row">
-        <div class="col-xs-12 section-body">
+        <div class="col-12 section-body">
             <div class="data-viewer-error">
             </div>
             <iframe data-module="data-viewer" frameborder="0" style="{{ section.style }}" data-hj-allow-iframe=""
@@ -18,7 +18,7 @@ Example:
             <div class="title-over-wrapper">
                 <div class="title-over-map">
                     <span class="mL45 title-label">{{ data.title }}</span>
-                    <span class="mR45 pull-right followButtonContainer">
+                    <span class="mR45 float-end followButtonContainer">
                         {% snippet 'package/snippets/share_button.html', title=data.title, placement="left",
                             button_class="social_share_trigger", analytics_shared_item="crisis" %}
                     </span>
