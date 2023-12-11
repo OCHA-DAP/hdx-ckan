@@ -1,9 +1,10 @@
+#carousel-config-main .col-12 > .carousel-item .carousel-item-content {
+  padding: 15px;
+}
 #carousel-config-main .carousel-item {
   margin-bottom: 20px;
   border-radius: 6px;
-}
-#carousel-config-main .carousel-item .mini-carousel-item .carousel-item-content > .row {
-  margin: 0 -15px;
+  display: block;
 }
 #carousel-config-main .carousel-item .mini-carousel-item .thumbnail-preview {
   margin: 0;
@@ -37,14 +38,8 @@
   margin-left: 5px;
   color: #333333;
 }
-#carousel-config-main .carousel-item .carousel-item-header > .row {
-  margin: 0;
-}
 #carousel-config-main .carousel-item .carousel-item-content {
   background-color: #eeeeee;
-}
-#carousel-config-main .carousel-item .carousel-item-content > .row {
-  margin: 0;
 }
 #carousel-config-main .carousel-item .thumbnail-preview {
   margin: 15px 0;

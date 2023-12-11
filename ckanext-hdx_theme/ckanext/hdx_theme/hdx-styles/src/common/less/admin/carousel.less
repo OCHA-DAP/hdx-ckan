@@ -4,17 +4,19 @@
 
 #carousel-config-main{
   @carouselItemRadius: 6px;
+  .col-12 {
+    > .carousel-item {
+      .carousel-item-content {
+        padding: 15px;
+      }
+    }
+  }
   .carousel-item {
     margin-bottom: 20px;
     border-radius: @carouselItemRadius;
+    display: block;
 
     .mini-carousel-item {
-      .carousel-item-content{
-         > .row {
-          margin: 0 -15px;
-        }
-      }
-
       .thumbnail-preview {
         margin: 0;
         .sample-text {
@@ -53,18 +55,10 @@
           color: @darkGrayColor;
         }
       }
-
-      > .row {
-        margin: 0;
-      }
     }
 
     .carousel-item-content {
       background-color: @extraLightGrayColor;
-
-      > .row {
-        margin: 0;
-      }
     }
 
     .thumbnail-preview {
