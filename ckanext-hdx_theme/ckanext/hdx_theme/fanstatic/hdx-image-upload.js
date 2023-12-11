@@ -52,7 +52,7 @@ this.ckan.module('hdx-image-upload', function($, _) {
       var checkbox = $(field_clear, this.el);
       if (checkbox.length > 0) {
         options.is_upload = true;
-        checkbox.parents('.mb-3').remove();
+        checkbox.parent().remove();
       }
 
       // Adds the hidden clear input to the form
@@ -60,26 +60,27 @@ this.ckan.module('hdx-image-upload', function($, _) {
         .appendTo(this.el);
 
       // Button to set the field to be a URL
-      this.button_url = $('<a href="javascript:;" class="btn"><i class="icon-globe"></i> '+this.i18n('url')+'</a>')
+      this.button_url = $('<a href="javascript:;" class="btn btn-sm"><i class="fa fa-globe"></i> '+this.i18n('url')+'</a>')
         .prop('title', this.i18n('url_tooltip'))
         .on('click', this._onFromWeb)
         .insertAfter(this.input);
 
       // Button to attach local file to the form
-      this.button_upload = $('<a href="javascript:;" class="btn"><i class="icon-cloud-upload"></i>'+this.i18n('upload')+'</a>')
+      this.button_upload = $('<a href="javascript:;" class="btn btn-sm"><i class="fa fa-cloud"></i> '+this.i18n('upload')+'</a>')
         .insertAfter(this.input);
 
       // Button to reset the form back to the first from when there is a image uploaded
-      this.button_remove = $('<a href="javascript:;" class="btn btn-danger" />')
+      this.button_remove = $('<a href="javascript:;" class="btn btn-sm btn-danger ms-0" />')
         .text(this.i18n('remove'))
         .on('click', this._onRemove)
         .insertAfter(this.button_upload);
 
       // Button for resetting the form when there is a URL set
-      $('<a href="javascript:;" class="btn btn-danger btn-remove-url"><i class="icon-remove"></i></a>')
+      $('<a href="javascript:;" class="input-group-text btn-remove-url"><i class="fa fa-close"></i></a>')
         .prop('title', this.i18n('remove_tooltip'))
         .on('click', this._onRemove)
         .insertBefore($('input', this.field_url));
+      $('input', this.field_url).parent().addClass('input-group');
 
       // Update the main label
       $('label[for="field-'+options.field_upload+'"]').text(options.upload_label || this.i18n('upload_label'));
