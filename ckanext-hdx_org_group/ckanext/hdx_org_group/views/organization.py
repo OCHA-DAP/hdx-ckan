@@ -138,10 +138,10 @@ def _generate_template_data_for_custom_org(org_read_logic):
                 'request_membership': org_read_logic.allow_req_membership
             },
             'show_admin_menu': org_read_logic.allow_add_dataset or org_read_logic.allow_edit,
-            'show_visualization': 'Choose Visualization Type' != org_read_logic.viz_config['type'],
+            'show_visualization': 'Choose Visualization Type' != org_read_logic.viz_config.get('type'),
             'visualization': {
                 'config': org_read_logic.viz_config,
-                'config_type': org_read_logic.viz_config['type'],
+                'config_type': org_read_logic.viz_config.get('type'),
                 'config_url': urlencode(org_read_logic.viz_config, True),
                 # 'embed_url': org_read_logic.links.embed_url,
 
