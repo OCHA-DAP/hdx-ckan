@@ -90,7 +90,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     #                 controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
     #     return map
 
-    def before_search(self, search_params):
+    def before_dataset_search(self, search_params):
         #Do not allow a sort without a sort directions
         if 'sort' in search_params:
             parts = search_params['sort'].split(' ')
@@ -212,18 +212,15 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 search_params['fq_list'].append(filter_rule)
 
     # IPackageController
-    def after_search(self, search_results, search_params):
+    def after_dataset_search(self, search_results, search_params):
         ext_compute_freshness = search_params.get('extras', {}).get('ext_compute_freshness')
         if ext_compute_freshness in {'true', 'for-data-completeness'}:
             for dataset in search_results.get('results', []):
                 get_calculator_instance(dataset, ext_compute_freshness).populate_with_freshness()
         return search_results
 
-    def before_view(self, pkg_dict):
-        return pkg_dict
-
     # IPackageController
-    def before_index(self, pkg_dict):
+    def before_dataset_index(self, pkg_dict):
 
         before_indexing_clean_resource_formats(pkg_dict)
 
@@ -283,7 +280,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def dataset_facets(self, facets_dict, package_type):
 
         # tagged_facets = tk.config.get(u'search.facets', DEFAULT_FACET_NAMES).split()
-        tagged_facets = tk.config.get(u'search.facets').split()
+        tagged_facets = tk.config.get(u'search.facets')
 
         # adding exclusion directive for tagged facets
         for f in tagged_facets:
