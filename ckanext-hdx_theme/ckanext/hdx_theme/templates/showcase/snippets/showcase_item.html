@@ -31,7 +31,7 @@ truncate_title - The length to truncate the title to (default: 80).
         {% endif %}
         </div>
         <div class="title">
-          {{ h.truncate(title, truncate_title) }}
+          {{ title | truncate(truncate_title) }}
         </div>
       </a>
       <div class="description">
