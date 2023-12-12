@@ -962,16 +962,13 @@ def _bs5_make_menu_item(menu_item, title, **kw):
 
     This function is called by wrapper functions.
     '''
-    menu_item = h.map_pylons_to_flask_route_name(menu_item)
-    _menu_items = config['routes.named_routes']
-    if menu_item not in _menu_items:
-        raise Exception('menu item `%s` cannot be found' % menu_item)
-    item = h.copy.copy(_menu_items[menu_item])
+    controller, action = menu_item.split('.')
+    item = {
+        'action': action,
+        'controller': controller
+    }
     item.update(kw)
-    needed = item.pop('needed')
-    for need in needed:
-        if need not in kw:
-            raise Exception('menu item `%s` need parameter `%s`'
-                            % (menu_item, need))
+    # Remove highlight controllers so that they won't appear in generated urls.
+    item.pop('highlight_controllers', False)
     link = h._link_to(title, menu_item, suppress_active_class=False, **item)
     return h.literal('<li class="nav-item">') + link + h.literal('</li>')
