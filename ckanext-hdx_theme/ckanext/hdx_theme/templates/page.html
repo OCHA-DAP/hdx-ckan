@@ -98,7 +98,7 @@
               </div>
             {% endblock %}
             {% block flash %}
-              {% set flash_messages = h.flash.pop_messages() | list %}
+              {% set flash_messages = h.get_flashed_messages() | list %}
               <div class="paddingRowHack">
                 {% if flash_messages|length > 0 %}
                 <div class="flash-messages paddingLeftHack paddingRightHack">

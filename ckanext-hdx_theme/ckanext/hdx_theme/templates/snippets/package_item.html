@@ -31,7 +31,7 @@ Example:
           </span>
         {% endif %}
 
-        {{ h.link_to(h.truncate(title, truncate_title), h.url_for('dataset_read', id=package.name)) }}
+        {{ h.link_to(title|truncate(truncate_title), h.url_for('dataset_read', id=package.name)) }}
         {% if package.get('state', '').startswith('draft') %}
           <span class="label label-info">{{ _('Draft') }}</span>
         {% elif package.get('state', '').startswith('deleted') %}

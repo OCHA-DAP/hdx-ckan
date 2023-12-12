@@ -177,7 +177,7 @@
   </head>
 
   {# Allows custom attributes to be added to the <body> tag #}
-  <body{% block bodytag %} data-site-root="{{ h.url('/', locale='default', qualified=false) }}" data-locale-root="{{ h.url('/', qualified=false) }}" data-api-root="{{ g.api_url }}"{% endblock %}>
+  <body{% block bodytag %} data-site-root="{{ h.url_for('/', locale='default', qualified=false) }}" data-locale-root="{{ h.url_for('/', qualified=false) }}" data-api-root="{{ g.api_url }}"{% endblock %}>
     <!-- Google Tag Manager (noscript) -->
     <noscript>
       <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFNPQ7K" height="0" width="0" style="display:none;visibility:hidden"></iframe>
