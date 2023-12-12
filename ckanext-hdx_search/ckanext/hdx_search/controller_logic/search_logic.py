@@ -231,10 +231,7 @@ class SearchLogic(object):
                 # Only show datasets of this particular type
                 fq += ' +dataset_type:{type}'.format(type=package_type)
             else:
-                # Unless changed via config options, don't show non standard
-                # dataset types on the default search page
-                if not asbool(config.get('ckan.search.show_all_types', 'False')):
-                    fq += ' +dataset_type:dataset'
+                fq += ' +dataset_type:dataset'
 
             facets = self._generate_facet_name_to_title_map(package_type)
             #adding site_id to facets to facilitate totals counts in case of batch/collapse

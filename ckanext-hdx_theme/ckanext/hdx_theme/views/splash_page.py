@@ -65,7 +65,7 @@ structured_data = google_searchbox_data()
 
 
 def index():
-    if g.userobj is not None:
+    if g.userobj:
         site_title = config.get('ckan.site_title', 'CKAN')
         msg = None
         url = h.url_for(controller='user', action='edit')
