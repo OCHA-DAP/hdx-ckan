@@ -248,8 +248,11 @@ class PackageSearchIndex(SearchIndex):
             # problem.
             new_dict = {}
             bogus_date = datetime.datetime(1, 1, 1)
+            non_simple_date_field = ['dataset_date', 'extras_dataset_date']
             for key, value in pkg_dict.items():
                 key = six.ensure_str(key)
+                if key in non_simple_date_field:
+                    continue
                 if key.endswith('_date'):
                     try:
                         date = parse(value, default=bogus_date)
