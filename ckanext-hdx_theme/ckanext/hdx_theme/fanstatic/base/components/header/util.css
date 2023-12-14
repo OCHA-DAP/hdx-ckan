@@ -90,6 +90,9 @@
   background-color: #eeeeee;
   padding-bottom: 1px;
 }
+.flash-messages .alert .btn-close {
+  float: right;
+}
 #homepage-alerts .flash-messages {
   background-color: transparent;
 }
