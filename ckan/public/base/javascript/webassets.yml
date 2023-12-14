@@ -21,7 +21,7 @@ main:
     - module.js
     - pubsub.js
     - client.js
-    # - notify.js (part of BS5 upgrade)
+    - notify.js
     - i18n.js
     - main.js
 
