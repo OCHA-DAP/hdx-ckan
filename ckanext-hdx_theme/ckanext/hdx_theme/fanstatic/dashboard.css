@@ -95,37 +95,12 @@ a.my-link-disabled {
   font-weight: bold;
   text-decoration: none;
 }
-.activity {
-  margin: 10px 0;
-  padding: 0;
-  list-style-type: none;
-}
-.activity .item p {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  color: #000000;
-  line-height: 35px;
-  margin: 5px 0 0 35px;
-}
 .dsb-activity-item {
   background-color: #ffffff;
   margin-left: 90px;
   height: 38px;
   line-height: 38px;
   margin-top: -8px;
-}
-.activity .item {
-  margin: 0 0 5px;
-  padding: 0;
-  position: relative;
-}
-.activity .item .date {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 300;
-  color: #888888;
-  font-size: 12px;
-  white-space: nowrap;
 }
 li:nth-child(odd) > div.dsb-activity-item {
   background-color: #eeeeee;

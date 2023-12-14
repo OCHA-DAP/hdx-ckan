@@ -1,25 +1,100 @@
-/* Style Dashboard - Newsfeed list */
+/* activity stream */
+@import "../../variables.less";
+
+.wrapper-primary {
+  border-left: 1px solid @extraLightGrayAccent;
+  margin-left: -1px;
+  padding-bottom: 45px;
+}
+
+.wrapper-secondary {
+  border-right: 1px solid @extraLightGrayAccent;
+  padding-bottom: 45px;
+
+  h2 {
+    font-family: @gothamBookFont;
+    font-size: 12px;
+  }
+}
 
 .activity {
   margin: 10px 0;
   padding: 0;
   list-style-type: none;
-  background: transparent url('../../../../base/images/dotted.png') 14px 0 repeat-y;
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="2" height="4"><image width="2" height="4" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAAEBAAAAABEdFzkAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QADzoyPqMAAAAHdElN RQfnDA4RNhkSKetaAAAAEElEQVQI12O4y3CX4T/DfwAOYAO5lEuo5wAAACV0RVh0ZGF0ZTpjcmVh dGUAMjAyMy0xMi0xNFQxNjo1NDoyNSswMTowMJpXDO0AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMt MTItMTRUMTY6NTQ6MjUrMDE6MDDrCrRRAAAAAElFTkSuQmCC"/></svg>') 14px 0 repeat-y;
 
-  .load-less{
-    margin-bottom: 15px;
-  }
-
-  .item .actor .gravatar {
-    position: absolute;
-    top: 0;
-    left: 40px;
-    border-radius: 100px;
-  }
   .item {
-    i.fa.icon {
+    position: relative;
+    font-family: @sourceSansProFont;
+    font-weight: 400;
+    font-size: 14px;
+    color: @darkGrayColor;
+    margin: 0 0 25px 40px;
+    letter-spacing: 0.01em;
+    opacity: 1;
+    word-wrap: break-word;
+
+    .date {
+      color: @grayColor;
+    }
+
+    .fa-stack {
       display: none;
+    }
+
+    span.actor {
+      a {
+        color: @blueColor;
+
+        &:hover {
+          color: @blueColor;
+        }
+
+        &:focus {
+          color: @blueColor;
+        }
+      }
+    }
+
+    a {
+      font-weight: 700;
+      color: @darkGrayColor;
+
+      &:hover {
+        font-weight: 700;
+        color: @darkGrayColor;
+      }
+
+      &:focus {
+        font-weight: 700;
+        color: @darkGrayColor;
+      }
+    }
+
+    .actor {
+      .gravatar {
+        left: -40px;
+        position: absolute;
+        top: 5px;
+        border-radius: 100px;
+      }
+
+      .user-image {
+        left: -40px;
+        position: absolute;
+        top: 5px;
+        border-radius: 100px;
+      }
     }
   }
 }
-/* END Style Dashboard - Newsfeed list */
+
+.more {
+  float: right;
+  margin-top: -30px;
+}
+
+.load-less {
+  margin-bottom: 15px;
+}
+/* END activity stream */

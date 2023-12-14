@@ -27,8 +27,8 @@
 {#{% endblock %}#}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name, class_='hdx-tab-button') }}
-  {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name, class_='hdx-tab-button') }}
+  {{ h.bs5_build_nav_icon('dataset.read', _('Dataset'), id=pkg.name, class_='nav-link') }}
+  {{ h.bs5_build_nav_icon('activity.package_activity', _('Activity Stream'), id=pkg.name, class_='nav-link') }}
 
 {% endblock %}
 
