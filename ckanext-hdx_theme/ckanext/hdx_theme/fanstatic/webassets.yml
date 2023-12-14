@@ -19,7 +19,6 @@ ckan:
     - vendor/ckan/api-info.js
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
-    - vendor/bootstrap5/js/bootstrap.bundle.js
     - base/hdx-util-lib.js
     - modules/data-viewer.js
     - modules/resource-view-embed.js
@@ -38,7 +37,6 @@ page-common-styles:
   <<: *common-css
   contents:
     - vendor/bootstrap5/css/bootstrap.css
-    - vendor/font-awesome/css/font-awesome.css
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
     - widget/contribute/details.css
