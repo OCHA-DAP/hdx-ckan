@@ -1,11 +1,5 @@
 {% extends "organization/read.html" %}
 
-
-{% block styles %}
-	{{ super() }}
-  {% asset 'hdx_theme/activity-stream-styles' %}
-{% endblock %}
-
 {% block subtitle %}{{ _('Activity Stream') }} - {{ org_dict.title or org_dict.name }}{% endblock %}
 
 {% block primary_content_inner %}

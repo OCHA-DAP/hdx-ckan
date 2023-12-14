@@ -568,7 +568,6 @@ dataset-read-styles:
       - hdx_theme/group-message-styles
       - requestdata/main-styles
       - hdx_theme/resource-list-styles
-      - hdx_theme/activity-stream-styles
 
 dataset-light-scripts:
   <<: *common-js
@@ -644,11 +643,6 @@ resource-list-styles:
   output: ckanext-hdx_theme/%(version)s_resource-list-styles.css
   contents:
     - resource-list.css
-
-activity-stream-styles:
-  output: ckanext-hdx_theme/%(version)s_activity-stream-styles.css
-  contents:
-    - css/activity-stream.css
 
 hdx-autocomplete:
   <<: *common-js
