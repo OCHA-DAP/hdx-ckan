@@ -1,4 +1,8 @@
-FROM ubuntu:focal
+#for local env
+FROM ubuntu:jammy
+
+#for local MACOS env
+#FROM --platform=linux/arm64/v8 ubuntu:jammy
 # FROM public.ecr.aws/unocha/debian-base-s6:11-slim
 
 ARG S6_VERSION=v2.2.0.3
