@@ -24,8 +24,10 @@ Compilation steps
 
     *  FOR PYTHON 3::
 
-        pip install pip-tools==6.6.0
         pip install pip-tools==6.10.0
+
+        #for python 3.10
+        pip install pip-tools==7.3.0
 
 #. Compile the main dependencies:
 

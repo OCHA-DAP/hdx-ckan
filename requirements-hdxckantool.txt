@@ -1,2 +1,2 @@
-beautifulsoup4==4.9.1
-awscli==1.19.112
+beautifulsoup4==4.12.2
+awscli==1.32.0
