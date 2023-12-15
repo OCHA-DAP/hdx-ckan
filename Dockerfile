@@ -87,6 +87,9 @@ RUN apt-get -qq -y update && \
     cp -a docker/hdxckantool-ng.py /srv/hdxckantool-ng.py && \
     chmod +x /srv/hdxckantool-ng.py && \
     ln -s /srv/hdxckantool-ng.py /usr/sbin/hdxckantool && \
+    cp -a docker/ckancli /srv/ckancli && \
+    chmod +x /srv/ckancli && \
+    ln -s /srv/ckancli /usr/sbin/ckan && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
     apt-get -qq -y remove \
         build-essential \
