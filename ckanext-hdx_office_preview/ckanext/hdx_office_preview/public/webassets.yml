@@ -1,0 +1,7 @@
+main:
+  output: ckanext-hdx_office_preview/%(version)s_office_preview.js
+  extra:
+    preload:
+      - base/main
+  contents:
+    - hdx_csv_preview.js

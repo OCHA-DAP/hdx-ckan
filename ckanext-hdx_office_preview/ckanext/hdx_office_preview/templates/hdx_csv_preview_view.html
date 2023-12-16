@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block page %}
+  <div style="min-height: 500px;" class="hdx-preview-office-container">
+    <div id="resource-url" style="display: none;">{{ h.url_for('resource.download', id=res.package_id, resource_id=res.id, qualified=True) }}</div>
+    <table id="myTable" class="cell-border" style="width:100%"></table>
+{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+{% endblock %}
+{% block custom_styles %}{% endblock %}
+
+{%- block scripts %}
+  {% asset 'hdx_office_preview/main' %}
+  <script defer src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+{% endblock -%}
+
+{%- block scripts2 %}
+{% endblock -%}
+

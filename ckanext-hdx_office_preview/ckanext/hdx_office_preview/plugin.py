@@ -40,11 +40,11 @@ class Hdx_Office_PreviewPlugin(plugins.SingletonPlugin):
         resource = data_dict['resource']
         format_lower = resource['format'].lower()
         if (format_lower == 'csv'):
-            return 'hdx_google_preview_view.html'
+            return 'hdx_csv_preview_view.html'
         return 'hdx_office_preview_view.html'
     # IConfigurer
 
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'hdx_office_preview')
+        toolkit.add_resource('public', 'hdx_office_preview')
