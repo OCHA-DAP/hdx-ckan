@@ -31,7 +31,7 @@
 
 {% block content_primary_nav %}
   {{ h.bs5_build_nav_icon('hdx_user.read', _('Datasets'), class_='nav-link', id=user.name) }}
-  {{ h.bs5_build_nav_icon('user.activity', _('Activity Stream'), class_='nav-link', id=user.name) }}
+  {{ h.bs5_build_nav_icon('activity.user_activity', _('Activity Stream'), class_='nav-link', id=user.name) }}
   {% if h.check_access('sysadmin') %}
     {{ h.bs5_build_nav_icon('hdx_user_permission.read', _('User Permission'), class_='nav-link', id=user.name) }}
   {% endif %}

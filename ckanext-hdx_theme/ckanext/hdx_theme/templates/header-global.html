@@ -216,7 +216,7 @@
                                 {{ _('User Dashboard') }} <i class="humanitarianicons-Up"></i>
                               </a>
                               <ul class="dropdown-submenu collapse {% if not def_url %}show{% endif %}">
-                                {{ h.build_nav_icon('dashboard.index', _('Newsfeed'), class_='hdx-tab-button') }}
+                                {{ h.build_nav_icon('activity.dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('dashboard.organizations', _('My Organisations'), class_='hdx-tab-button') }}
                                 {{ h.build_nav_icon('dashboard.groups', _('My Locations'), class_='hdx-tab-button') }}
@@ -235,7 +235,7 @@
                               </a>
                               <ul class="dropdown-submenu collapse">
                                 {{ h.bs5_build_nav_icon('user.read', _('Datasets'), class_='nav-link', id=c.userobj.name) }}
-                                {{ h.bs5_build_nav_icon('user.activity', _('Activity Stream'), class_='nav-link', id=c.userobj.name) }}
+                                {{ h.bs5_build_nav_icon('activity.user_activity', _('Activity Stream'), class_='nav-link', id=c.userobj.name) }}
                                 {% if h.check_access('sysadmin') %}
                                   {{ h.bs5_build_nav_icon('hdx_user_permission.read', _('User Permission'), class_='nav-link', id=c.userobj.name) }}
                                 {% endif %}
