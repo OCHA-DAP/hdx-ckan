@@ -39,8 +39,18 @@ def ckan_authenticator(identity: 'Mapping[str, Any]') -> Optional["User"]:
     Falls to `default_authenticate()` if no plugins are
     defined.
     """
+
+    plugins_exist = False # Added by HDX
+
     for item in plugins.PluginImplementations(plugins.IAuthenticator):
+        plugins_exist = True # Added by HDX
         user_obj = item.authenticate(identity)
         if user_obj:
             return user_obj
+
+    # Added by HDX
+    if plugins_exist:
+        return None
+    # END - Added by HDX
+
     return default_authenticate(identity)
