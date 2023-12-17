@@ -42,20 +42,20 @@ class CookieMiddleware(object):
             self.app.after_request(update_login_cookie)
 
     def __call__(self, environ, start_response):
-        flask_route = environ.get('HDXflask_route')
-        pylons_route = environ.get('HDXpylons_route')
-        ckan_app = environ.get('ckan.app', 'flask_app')
+        # flask_route = environ.get('HDXflask_route')
+        # pylons_route = environ.get('HDXpylons_route')
+        # ckan_app = environ.get('ckan.app', 'flask_app')
 
-        if not flask_route and not pylons_route:
-            # If running HDX on PY3 then HDXflask_route and HDXpylons_route won't be set because
-            # AskAppDispatcherMiddleware is no longer used. CKANFlask is used directly.
-            rule, args = self.app.url_map.bind_to_environ(environ).match(return_rule=True)
-            flask_route = rule.rule
-        if (ckan_app == 'flask_app' and flask_route in NOT_ALLOWED_FLASK_ROUTES) or \
-            (ckan_app == 'pylons_app' and not pylons_route):
-            environ.get('beaker.session')._headers['cookie_out'] = None
-        else:
-            log.info('Allowing set cookie for: ' + environ.get('CKAN_CURRENT_URL'))
+        # if not flask_route and not pylons_route:
+        #     # If running HDX on PY3 then HDXflask_route and HDXpylons_route won't be set because
+        #     # AskAppDispatcherMiddleware is no longer used. CKANFlask is used directly.
+        #     rule, args = self.app.url_map.bind_to_environ(environ).match(return_rule=True)
+        #     flask_route = rule.rule
+        # if (ckan_app == 'flask_app' and flask_route in NOT_ALLOWED_FLASK_ROUTES) or \
+        #     (ckan_app == 'pylons_app' and not pylons_route):
+        #     pass # environ.get('beaker.session')._headers['cookie_out'] = None
+        # else:
+        #     log.info('Allowing set cookie for: ' + environ.get('CKAN_CURRENT_URL'))
         app = self.app(environ, start_response)
         return app
 
