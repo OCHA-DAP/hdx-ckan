@@ -1,7 +1,14 @@
+main-css:
+  output: hdx_office_preview/%(version)s_office_preview.css
+
+  contents:
+    - css/hdx_csv_preview.css
+
 main:
-  output: ckanext-hdx_office_preview/%(version)s_office_preview.js
+  output: hdx_office_preview/%(version)s_office_preview.js
   extra:
     preload:
       - base/main
+      - hdx_office_preview/main-css
   contents:
     - hdx_csv_preview.js
