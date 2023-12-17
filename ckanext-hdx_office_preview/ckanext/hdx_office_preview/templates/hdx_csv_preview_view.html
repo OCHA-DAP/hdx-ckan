@@ -3,6 +3,7 @@
 {% block page %}
   <div style="min-height: 500px; margin: -8px;" class="hdx-preview-office-container">
     <div id="resource-url" style="display: none;">{{ h.url_for('resource.download', id=res.package_id, resource_id=res.id, qualified=True) }}</div>
+    <div id="hxl-proxy-url" style="display: none;">{{ h.hdx_get_ckan_config('hdx.hxlproxy.url') }}</div>
     <table id="myTable" class="cell-border" style="width:100%"></table>
 {% endblock %}
 
