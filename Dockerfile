@@ -87,9 +87,9 @@ RUN apt-get -qq -y update && \
     cp -a docker/hdxckantool-ng.py /srv/hdxckantool-ng.py && \
     chmod +x /srv/hdxckantool-ng.py && \
     ln -s /srv/hdxckantool-ng.py /usr/sbin/hdxckantool && \
-    cp -a docker/ckancli /srv/ckancli && \
-    chmod +x /srv/ckancli && \
-    ln -s /srv/ckancli /usr/sbin/ckan && \
+#    cp -a docker/ckancli /srv/ckancli && \
+#    chmod +x /srv/ckancli && \
+#    ln -s /srv/ckancli /usr/sbin/ckan && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
     apt-get -qq -y remove \
         build-essential \
@@ -118,7 +118,8 @@ RUN apt-get -qq -y update && \
     curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
     tar xzf /tmp/s6-overlay.tar.gz -C / && \
     rm -f /tmp/s6-overlay.tar.gz && \
-    ln -sf /usr/bin/sh /bin/sh
+    ln -sf /usr/bin/sh /bin/sh && \
+    ln -sf /usr/bin/bash /bin/bash
 
 
 VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
