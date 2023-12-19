@@ -180,7 +180,7 @@ ckanext.spatial.common_map.custom.url = /crisis-tiles/{z}/{x}/{y}.png
 
 ## Email settings
 
-# email_to = you@yourdomain.com
+email_to = you@yourdomain.com
 error_email_from = paste@localhost
 smtp.server = localhost
 smtp.starttls = False
