@@ -7,6 +7,7 @@ Created on Jul 07, 2015
 import logging
 
 import six
+
 from flask import request
 
 import ckan.lib.plugins as lib_plugins
@@ -18,6 +19,8 @@ import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.resource_triggers.common
 import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
+from ckan.types import Context, DataDict, Schema
+from ckan.types.logic import ActionResult
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
@@ -37,6 +40,7 @@ log = logging.getLogger(__name__)
 @geopreview.geopreview_4_resources
 def resource_create(context, data_dict):
     '''
+
     This runs the 'resource_create' action from core ckan's create.py
     It allows us to do some minor changes and wrap it.
     '''
@@ -83,7 +87,8 @@ def resource_create(context, data_dict):
 @ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
     BEFORE_PACKAGE_UPDATE_LISTENERS, AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 )
-def package_create(context, data_dict):
+def package_create(
+        context: Context, data_dict: DataDict) -> ActionResult.PackageCreate:
     '''Create a new dataset (package).
 
     You must be authorized to create new datasets. If you specify any groups
@@ -144,6 +149,19 @@ def package_create(context, data_dict):
         dictionary should have keys ``'key'`` (a string), ``'value'`` (a
         string)
     :type extras: list of dataset extra dictionaries
+    :param plugin_data: private package data belonging to plugins.
+        Only sysadmin users may set this value. It should be a dict that can
+        be dumped into JSON, and plugins should namespace their data with the
+        plugin name to avoid collisions with other plugins, eg::
+
+            {
+                "name": "test-dataset",
+                "plugin_data": {
+                    "plugin1": {"key1": "value1"},
+                    "plugin2": {"key2": "value2"}
+                }
+            }
+    :type plugin_data: dict
     :param relationships_as_object: see :py:func:`package_relationship_create`
         for the format of relationship dictionaries (optional)
     :type relationships_as_object: list of relationship dictionaries
@@ -190,10 +208,8 @@ def package_create(context, data_dict):
     else:
         package_plugin = lib_plugins.lookup_package_plugin(data_dict['type'])
 
-    if 'schema' in context:
-        schema = context['schema']
-    else:
-        schema = package_plugin.create_package_schema()
+    schema: Schema = context.get(
+        'schema') or package_plugin.create_package_schema()
 
     _check_access('package_create', context, data_dict)
 
@@ -233,16 +249,19 @@ def package_create(context, data_dict):
         model.Session.rollback()
         raise logic.ValidationError(errors)
 
+    plugin_data = data.get('plugin_data', False)
+    include_plugin_data = False
     if user:
 
         user_obj = model.User.by_name(six.ensure_text(user))
         if user_obj:
             data['creator_user_id'] = user_obj.id
+            include_plugin_data = user_obj.sysadmin and plugin_data
 
     # Replace model_save.package_dict_save() call with our wrapped version to be able to save groups
     # pkg = model_save.package_dict_save(data, context)
     from ckanext.hdx_package.actions.update import modified_save
-    pkg = modified_save(context, data)
+    pkg = modified_save(context, data,include_plugin_data)
 
     # pkg = model_save.package_dict_save(data, context)
 
@@ -263,7 +282,7 @@ def package_create(context, data_dict):
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.create(pkg)
 
-        item.after_create(context, data)
+        item.after_dataset_create(context, data)
 
     # Make sure that a user provided schema is not used in create_views
     # and on package_show
@@ -277,15 +296,15 @@ def package_create(context, data_dict):
             {'package': data})
 
     # Create activity
-    if pkg.type == 'dataset':
-        user_obj = model.User.by_name(user)
-        if user_obj:
-            user_id = user_obj.id
-        else:
-            user_id = 'not logged in'
-
-        activity = pkg.activity_stream_item('new', user_id)
-        session.add(activity)
+    # if pkg.type == 'dataset':
+    #     user_obj = model.User.by_name(user)
+    #     if user_obj:
+    #         user_id = user_obj.id
+    #     else:
+    #         user_id = 'not logged in'
+    #
+    #     activity = pkg.activity_stream_item('new', user_id)
+    #     session.add(activity)
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -296,7 +315,8 @@ def package_create(context, data_dict):
         return pkg.id
 
     return _get_action('package_show')(
-        context.copy(), {'id': pkg.id}
+        context.copy(),
+        {'id': pkg.id, 'include_plugin_data': include_plugin_data}
     )
 
 
