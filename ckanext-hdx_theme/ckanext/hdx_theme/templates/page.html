@@ -53,8 +53,8 @@
       {% endif %}
       {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
     {% else %}
-      {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
-      {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+      {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup")}}
+      {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=data.login_came_from if data else None) }}
       {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
       {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
     {% endif %}

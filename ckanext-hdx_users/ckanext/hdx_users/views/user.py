@@ -279,6 +279,7 @@ def login() -> Union[Response, str]:
         else:
             err = _(u"Login failed. Bad username or password.")
             extra_vars = ue_helpers.get_login(False, err)
+            extra_vars['data']['login_came_from'] = request.args.get('came_from')
             # h.flash_error(err)
             return render("home/index.html", extra_vars)
 

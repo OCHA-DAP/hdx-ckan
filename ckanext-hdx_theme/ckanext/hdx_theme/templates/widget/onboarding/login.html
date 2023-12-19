@@ -5,7 +5,7 @@ Depends on:
     Fanstatic resource bundle "popup"
 
 Example:
-    {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=None) }}
 #}
 
 {% set class = "popup-onboarding" %}
@@ -29,7 +29,7 @@ Example:
             </div>
         </div>
         <div class="row">
-            <form id="hdx-login-form" action="/user/login?came_from={{ (g.login_came_from or request.environ.get('REQUEST_URI', '')) | urlencode }}" method="post" onsubmit="checkLockout">
+            <form id="hdx-login-form" action="/user/login?came_from={{ (login_came_from or request.environ.get('REQUEST_URI', '')) | urlencode }}" method="post" onsubmit="checkLockout">
                 <div class="login-content">
                     <div class="col-12">
                         <div id="login-info-message" class="error-explanation alert alert-danger mBottom5 pTopBottom5" style="display: none;">
