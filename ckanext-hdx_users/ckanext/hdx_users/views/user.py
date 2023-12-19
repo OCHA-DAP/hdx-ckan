@@ -1,26 +1,29 @@
 # encoding: utf-8
 import logging
+from typing import Union, Any, Optional, Mapping
 
 from flask import Blueprint
 
 import ckan.authz as new_authz
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 import ckan.model as model
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
-from ckan.views.user import PerformResetView
-from ckan.views.user import RequestResetView
-from ckan.views.user import follow as _follow
-from ckan.views.user import followers as _followers
+import ckanext.hdx_users.helpers.user_extra as ue_helpers
+
+from ckan.types import Response
+from ckan.views.user import PerformResetView, RequestResetView, rotate_token, next_page_or_default
+from ckan.views.user import (
+    follow as _follow, followers as _followers, unfollow as _unfollow, login as _login, logout as _logout
+)
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
-from ckan.views.user import login as _login
-from ckan.views.user import logout as _logout
-from ckan.views.user import unfollow as _unfollow
-from ckanext.hdx_users.views.user_auth_view import HDXUserAuthView
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
 from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
 from ckanext.hdx_users.views.user_view_helper import *
+
 
 log = logging.getLogger(__name__)
 
@@ -34,16 +37,17 @@ _ = tk._
 g = tk.g
 config = tk.config
 redirect = tk.redirect_to
+current_user = tk.current_user
+login_user = tk.login_user
 
 NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
-hdx_auth_view = HDXUserAuthView()
+User = model.User
+
 user_onboarding_view = HDXUserOnboardingView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
-
-hdx_login_link = Blueprint(u'hdx_login_link', __name__)
 
 
 class HDXRequestResetView(RequestResetView):
@@ -199,6 +203,91 @@ def _extra_template_variables(context, data_dict):
     return extra
 
 
+def _authenticate(identity: 'Mapping[str, Any]') -> Optional["User"]:
+    '''
+    This is based on ckan.lib.authenticator.ckan_authenticator() but with the following changes:
+    - we don't fall back to ckan.lib.authenticator.default_authenticator() if the user is not authenticated by
+      ckanext.security
+
+    Please note that ckanext.security does use ckan.lib.authenticator.default_authenticator() as part of its internal
+    logic.
+    '''
+    for item in plugins.PluginImplementations(plugins.IAuthenticator):
+        user_obj = item.authenticate(identity)
+        if user_obj:
+            return user_obj
+    return None
+
+def _check_email_validation(user_obj: "User") -> bool:
+    user_id = user_obj.id
+    try:
+        token = tokens.token_show({}, {'id': user_id})
+    except NotFound as e:
+        token = {'valid': True}  # Until we figure out what to do with existing users
+    except:
+        abort(500, _('Something wrong'))
+    if not token['valid']:
+        return False
+    return True
+
+def login() -> Union[Response, str]:
+    '''
+    This is based on ckan.views.user.login() but with the following changes:
+    - we skip the GET method, as we don't have a dedicated login page
+    - we skip ckan.lib.authenticator.ckan_authenticator() as we want to fail if the user is not authenticated by
+      ckanext.security
+    - after a successful login, we check that the user validated their email
+    '''
+
+    extra_vars: dict[str, Any] = {}
+
+    if current_user.is_authenticated:
+        h.flash_notice(_('You are already logged in.'))
+        return render("home/index.html", extra_vars)
+
+    if request.method == "POST":
+        username_or_email = request.form.get("login")
+        password = request.form.get("password")
+        _remember = request.form.get("remember")
+
+        identity = {
+            u"login": username_or_email,
+            u"password": password
+        }
+
+        user_obj = _authenticate(identity)
+
+        if user_obj:
+            validated_email = _check_email_validation(user_obj)
+            if not validated_email:
+                _logout()
+                h.flash_error(_('You have not yet validated your email.'))
+                return h.redirect_to('hdx_splash.index')
+
+        if user_obj:
+            next = request.args.get('next', request.args.get('came_from'))
+            if _remember:
+                from datetime import timedelta
+                duration_time = timedelta(milliseconds=int(_remember))
+                login_user(user_obj, remember=True, duration=duration_time)
+                rotate_token()
+                return next_page_or_default(next)
+            else:
+                login_user(user_obj)
+                rotate_token()
+                return next_page_or_default(next)
+        else:
+            err = _(u"Login failed. Bad username or password.")
+            extra_vars = ue_helpers.get_login(False, err)
+            # h.flash_error(err)
+            return render("home/index.html", extra_vars)
+
+    return render("home/index.html", extra_vars)
+
+def logged_out_page():
+    template_data = ue_helpers.get_logout(True, _('User logged out with success'))
+    return render('home/index.html', extra_vars=template_data)
+
 user.add_url_rule(u'/reset', view_func=HDXRequestResetView.as_view(str(u'request_reset')))
 user.add_url_rule(u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'perform_reset')))
 
@@ -212,10 +301,10 @@ user.add_url_rule(u'/request_new_organization', view_func=user_onboarding_view.r
                   methods=(u'POST',))
 user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_friends, methods=(u'POST',))
 
-user.add_url_rule(u'/logged_out_redirect', view_func=hdx_auth_view.logged_out_page)
-user.add_url_rule(u'/logged_out_page', view_func=hdx_auth_view.logged_out_page)
-user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in, methods=(u'GET', u'POST',))
-user.add_url_rule(u'/login', view_func=_login)
+user.add_url_rule(u'/logged_out_redirect', view_func=logged_out_page)
+user.add_url_rule(u'/logged_out_page', view_func=logged_out_page)
+# user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in, methods=(u'GET', u'POST',))
+user.add_url_rule(u'/login', view_func=login, methods=(u'POST', u'GET'))
 user.add_url_rule(u'/_logout', view_func=_logout)
 # user.add_url_rule(u'/logged_out', view_func=_logged_out)
 
@@ -226,8 +315,6 @@ user.add_url_rule(u'/followers/<id>', view_func=_followers)
 # user.add_url_rule(u'/generate_key', view_func=_generate_apikey, methods=(u'POST',))
 
 user.add_url_rule(u'/<id>', view_func=read)
-
-hdx_login_link.add_url_rule(u'/login', view_func=hdx_auth_view.new_login)
 
 user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])
 user.add_url_rule('/configure_mfa/<id>/new', view_func=HDXTwoStep.new, methods=['GET', 'POST'])

@@ -10,6 +10,7 @@ import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
 import ckanext.hdx_users.views.user as hdx_user
+import ckanext.hdx_users.views.user_auth_view as user_auth_view
 import ckanext.hdx_users.views.dashboard as dashboard
 import ckanext.hdx_users.views.api as api
 import ckanext.hdx_users.views.user_checks_login as ucl
@@ -68,7 +69,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [
             hdx_user.user,
-            hdx_user.hdx_login_link
+            user_auth_view.hdx_user_auth
         ]
 
 

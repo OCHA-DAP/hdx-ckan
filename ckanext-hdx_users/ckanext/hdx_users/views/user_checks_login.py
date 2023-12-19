@@ -4,7 +4,7 @@ import logging
 from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
-from ckanext.hdx_users.views.user_auth_view import HDXUserAuthView
+from ckanext.hdx_users.views.user_auth_view import new_login
 
 log = logging.getLogger(__name__)
 _ = tk._
@@ -14,7 +14,7 @@ hdx_contact_hdx = Blueprint(u'hdx_contact_hdx_check', __name__, url_prefix=u'/co
 
 
 def _new_login(message, page_subtitle, error=None):
-    return HDXUserAuthView().new_login(info_message=message, page_subtitle=page_subtitle)
+    return new_login(info_message=message, page_subtitle=page_subtitle)
 
 
 def contribute(error=None):
