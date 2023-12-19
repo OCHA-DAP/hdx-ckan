@@ -25,7 +25,7 @@
     {% block page_header %}
       <header class="page-header paddingRowHack" style="position: relative;">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
-          {{ h.bs5_build_nav_icon('dashboard.index', _('Newsfeed'), class_='nav-link hdx-tab-button') }}
+          {{ h.bs5_build_nav_icon('activity.dashboard', _('Newsfeed'), class_='nav-link hdx-tab-button') }}
           {{ h.bs5_build_nav_icon('hdx_user_dashboard.datasets', _('My Datasets'), class_='nav-link hdx-tab-button') }}
           {{ h.bs5_build_nav_icon('dashboard.organizations', _('My Organisations'), class_='nav-link hdx-tab-button') }}
           {{ h.bs5_build_nav_icon('dashboard.groups', _('My Locations'), class_='nav-link hdx-tab-button') }}
@@ -64,7 +64,7 @@
       {% block primary_content_inner %}
         <div>
           {% block activity_stream %}
-         	{% snippet 'snippets/activity_stream.html', activity_stream=dashboard_activity_stream %}
+          {% snippet 'snippets/stream.html', activity_stream=dashboard_activity_stream %}
           {% endblock %}
         </div>
       {% endblock %}
