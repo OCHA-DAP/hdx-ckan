@@ -687,7 +687,7 @@ def hdx_popular(type_, number, min=1, title=None):
 
 
 def hdx_license_list():
-    license_touple_list = base.model.Package.get_license_options()
+    license_touple_list = model.Package.get_license_options()
     license_dict_list = [{'value': _id, 'text': _title} for _title, _id in license_touple_list]
     return license_dict_list
 
