@@ -115,7 +115,8 @@ RUN apt-get -qq -y update && \
     curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
     tar xzf /tmp/s6-overlay.tar.gz -C / && \
     rm -f /tmp/s6-overlay.tar.gz && \
-    ln -sf /usr/bin/sh /bin/sh
+    ln -sf /usr/bin/sh /bin/sh && \
+    ln -sf /usr/bin/bash /bin/bash
 
 
 VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
