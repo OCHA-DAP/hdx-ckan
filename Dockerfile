@@ -1,8 +1,8 @@
 #for local env
-FROM ubuntu:jammy
+#FROM ubuntu:jammy
 
 #for local MACOS env
-#FROM --platform=linux/arm64/v8 ubuntu:jammy
+FROM --platform=linux/arm64/v8 ubuntu:jammy
 # FROM public.ecr.aws/unocha/debian-base-s6:11-slim
 
 ARG S6_VERSION=v2.2.0.3
@@ -72,8 +72,8 @@ RUN apt-get -qq -y update && \
     pip install -r requirement-setuptools.txt && \
     #pip install --upgrade -r requirements.txt && \
     pip install pip-tools==7.3.0 && \
-    pip-sync requirements.txt && \
     pip install --upgrade -r requirements-hdxckantool.txt && \
+    pip-sync requirements.txt && \
     pip install \
       elastic-apm[flask] \
       newrelic && \
@@ -100,8 +100,7 @@ RUN apt-get -qq -y update && \
         libxml2-dev \
         libxslt1-dev \
         libyaml-dev \
-        zlib1g-dev \
-        python-dev && \
+        zlib1g-dev && \
     apt-get -y autoremove && \
     apt-get clean && \
     rm -rf \

@@ -8,6 +8,7 @@
       <div class="col-8">
         {% if h.check_access('api_token_create', {'user': user['name']}) %}
           <form method="POST" class="form">
+            {{ h.csrf_input() }}
             <legend>{{ _('API Tokens') }}</legend>
             {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
 

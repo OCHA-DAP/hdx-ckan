@@ -11,6 +11,7 @@ import logging
 from six import text_type
 from flask import request
 from sqlalchemy import or_
+from typing import Any
 
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.munge as munge
@@ -19,9 +20,12 @@ import ckan.lib.uploader as uploader
 import ckan.logic.action.update as core_update
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+import ckan.model as model
 import ckanext.hdx_package.helpers.resource_triggers.common
 import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 import ckanext.hdx_package.helpers.helpers as helpers
+from ckan.types.logic import ActionResult
+from ckan.types import Context, DataDict
 from ckan.common import _
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
@@ -176,11 +180,16 @@ def _fetch_prev_resources_info(model, resource_ids):
 @ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
     BEFORE_PACKAGE_UPDATE_LISTENERS, AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 )
-def package_update(context, data_dict):
+def package_update(
+        context: Context, data_dict: DataDict) -> ActionResult.PackageUpdate:
     '''Update a dataset (package).
 
     You must be authorized to edit the dataset and the groups that it belongs
     to.
+
+    .. note:: Update methods may delete parameters not explicitly provided in the
+        data_dict. If you want to edit only a specific attribute use `package_patch`
+        instead.
 
     It is recommended to call
     :py:func:`ckan.logic.action.get.package_show`, make the desired changes to
@@ -231,12 +240,9 @@ def package_update(context, data_dict):
 
     user = context['user']
     # get the schema
-    package_plugin = lib_plugins.lookup_package_plugin(pkg.type)
-    if 'schema' in context:
-        schema = context['schema']
-    else:
-        schema = package_plugin.update_package_schema()
 
+    package_plugin = lib_plugins.lookup_package_plugin(pkg.type)
+    schema = context.get('schema') or package_plugin.update_package_schema()
     if 'api_version' not in context:
         # check_data_dict() is deprecated. If the package_plugin has a
         # check_data_dict() we'll call it, if it doesn't have the method we'll
@@ -303,15 +309,21 @@ def package_update(context, data_dict):
         model.Session.rollback()
         raise ValidationError(errors)
 
-    # avoid revisioning by updating directly
+    #avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
 
+    include_plugin_data = False
+    user_obj = context.get('auth_user_obj')
+    if user_obj:
+        plugin_data = data.get('plugin_data', False)
+        include_plugin_data = user_obj.sysadmin and plugin_data
+
     if 'tags' in data:
         data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
-    pkg = modified_save(context, data)
+    pkg = modified_save(context, data, include_plugin_data)
     # pkg = model_save.package_dict_save(data, context)
 
     context_org_update = context.copy()
@@ -324,7 +336,7 @@ def package_update(context, data_dict):
     # Needed to let extensions know the new resources ids
     model.Session.flush()
     for index, (resource, upload) in enumerate(
-        zip(data.get('resources', []), resource_uploads)):
+            zip(data.get('resources', []), resource_uploads)):
         resource['id'] = pkg.resources[index].id
 
         if upload:
@@ -335,18 +347,18 @@ def package_update(context, data_dict):
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
 
-        item.after_update(context, data)
+        item.after_dataset_update(context, data)
 
     # Create activity
-    if pkg.type == 'dataset':
-        user_obj = model.User.by_name(user)
-        if user_obj:
-            user_id = user_obj.id
-        else:
-            user_id = 'not logged in'
-
-        activity = pkg.activity_stream_item('changed', user_id)
-        session.add(activity)
+    # if pkg.type == 'dataset':
+    #     user_obj = model.User.by_name(user)
+    #     if user_obj:
+    #         user_id = user_obj.id
+    #     else:
+    #         user_id = 'not logged in'
+    #
+    #     activity = pkg.activity_stream_item('changed', user_id)
+    #     session.add(activity)
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -360,7 +372,7 @@ def package_update(context, data_dict):
 
     # we could update the dataset so we should still be able to read it.
     context['ignore_auth'] = True
-    new_data_dict = _get_action('package_show')(context, {'id': data_dict['id']})
+    new_data_dict = _get_action('package_show')(context, {'id': data_dict['id'], "include_plugin_data": include_plugin_data})
 
     # HDX - delete previous files if needed
     for resource_dict in new_data_dict.get('resources'):
@@ -410,7 +422,9 @@ def process_skip_validation(context, data_dict):
         del data_dict[SKIP_VALIDATION]
 
 
-def modified_save(context, data):
+def modified_save(
+        context: Context, data: dict[str, Any],
+        include_plugin_data: bool = False) -> 'model.Package':
     """
     Wrapper around lib.dictization.model_save.package_dict_save
     """
@@ -418,10 +432,10 @@ def modified_save(context, data):
     if groups_key in data:
         temp_groups = data[groups_key]
         data[groups_key] = None
-        pkg = model_save.package_dict_save(data, context)
+        pkg = model_save.package_dict_save(data, context, include_plugin_data)
         data[groups_key] = temp_groups
     else:
-        pkg = model_save.package_dict_save(data, context)
+        pkg = model_save.package_dict_save(data, context, include_plugin_data)
     package_membership_list_save(data.get("groups"), pkg, context)
     return pkg
 
