@@ -27,7 +27,7 @@ pages = [
     {'url_name': 'hdx_group.index', 'usertype': 'all'},
     {'url_name': 'hdx_org.index', 'usertype': 'all'},
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
-    {'url_name': 'dashboard.index', 'usertype': 'all'},
+    {'url_name': 'activity.dashboard', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all', 'url_params': {'id': 'tester'}},

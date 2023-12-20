@@ -25,13 +25,13 @@
     <div class="dropdown-divider"></div>
     {% if followees %}
         <li>
-          <a class="dropdown-item everything {% if context.selected_id == False %}active{% endif %}" href="{{ h.url_for('dashboard.index') }}">
+          <a class="dropdown-item everything {% if context.selected_id == False %}active{% endif %}" href="{{ h.url_for('activity.dashboard') }}">
             Everything
           </a>
         </li>
         {% for followee in followees %}
           <li>
-            <a class="dropdown-item {% if context.selected_id == followee.dict.id %}active{% endif %}" href="{{ h.url_for('dashboard.index', type=followee.type, name=followee.dict.name) }}" title="{{ followee.display_name }}">
+            <a class="dropdown-item {% if context.selected_id == followee.dict.id %}active{% endif %}" href="{{ h.url_for('activity.dashboard', type=followee.type, name=followee.dict.name) }}" title="{{ followee.display_name }}">
               {{ followee.display_name }}
             </a>
           </li>
