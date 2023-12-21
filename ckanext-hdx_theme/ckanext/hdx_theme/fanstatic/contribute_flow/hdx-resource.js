@@ -38,6 +38,8 @@ $(function(){
             options = options || {};
             options.emulateHTTP = true;
 
+            options.headers = hdxUtil.net.getCsrfTokenAsObject();
+
             options.url = model.methodToURL[method.toLowerCase()];
 
             if (_.contains(['read', 'update', 'patch'], method)) {
@@ -235,6 +237,7 @@ $(function(){
                         order: resource_ids,
                         batch_mode: 'DONT_GROUP'
                     }),
+                    headers: hdxUtil.net.getCsrfTokenAsObject(),
                     success: function(model, response, options) {
                         this.orderChanged = false;  // reset flag
                     }.bind(this),
