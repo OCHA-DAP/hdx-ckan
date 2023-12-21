@@ -72,7 +72,7 @@ rdflib-jsonld==0.4.0
 geomet>=0.2.0
 ckantoolkit==0.0.3
 # ckanext-dcat
--e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.203#egg=ckanext-dcat
+-e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.204#egg=ckanext-dcat
 
 dogpile.cache==1.3.0
 
