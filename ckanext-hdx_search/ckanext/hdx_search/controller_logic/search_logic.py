@@ -6,8 +6,6 @@ from six import string_types, text_type
 from six.moves.urllib.parse import urlencode
 from collections import OrderedDict
 
-from paste.deploy.converters import asbool
-
 import ckan.logic as logic
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h

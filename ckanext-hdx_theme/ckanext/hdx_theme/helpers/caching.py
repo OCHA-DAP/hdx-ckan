@@ -74,7 +74,7 @@ class HDXRedisInvalidationStrategy(RegionInvalidationStrategy):
         :rtype: ((str) -> str, StrictRedis)
         '''
         mangler = self.dogpile_region.key_mangler  # type: str
-        redis = self.dogpile_region.backend.client  # type: StrictRedis
+        redis = self.dogpile_region.backend.writer_client  # type: StrictRedis
         return mangler, redis
 
     def _get_invalidation_info(self):
