@@ -6,10 +6,14 @@
   {% asset 'hdx_theme/dataset-styles' %}
   {% asset 'hdx_theme/dataset-read-styles' %}
   {% asset 'hdx_theme/dataset-quick-edit-styles' %}
-  <link rel="alternate" type="application/ld+json" href="{{ h.url_for('dcat.read_dataset_jsonld', _id=pkg.id, profiles='schemaorg', qualified=True) }}"/>
-  <link rel="alternate" type="text/n3" href="{{ h.url_for('dcat.read_dataset_n3', _id=pkg.id, qualified=True) }}"/>
-  <link rel="alternate" type="text/ttl" href="{{ h.url_for('dcat.read_dataset_ttl', _id=pkg.id, qualified=True) }}"/>
-  <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for('dcat.read_dataset_xml', _id=pkg.id, qualified=True) }}"/>
+  {% if h.dcat_endpoints_enabled() %}
+      {% with endpoint=h.dcat_get_endpoint('dataset')  %}
+          <link rel="alternate" type="application/ld+json" href="{{ h.url_for('dcat.read_dataset_jsonld', _id=pkg.id, profiles='schemaorg', qualified=True) }}"/>
+          <link rel="alternate" type="text/n3" href="{{ h.url_for('dcat.read_dataset_n3', _id=pkg.id, qualified=True) }}"/>
+          <link rel="alternate" type="text/turtle" href="{{ h.url_for('dcat.read_dataset_ttl', _id=pkg.id, qualified=True) }}"/>
+          <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for('dcat.read_dataset_xml', _id=pkg.id, qualified=True) }}"/>
+      {% endwith %}
+  {% endif %}
 {% endblock %}
 
 {% set pkg = pkg_dict %}
