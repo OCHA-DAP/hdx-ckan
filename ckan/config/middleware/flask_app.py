@@ -272,6 +272,8 @@ def make_flask_stack(conf: Union[Config, CKANConfig]) -> CKANApp:
     _register_plugins_blueprints(app)
 
     if config.get("ckan.csrf_protection.ignore_extensions"):
+        # HDX fix: prevent triggering an email that leads to a 'RuntimeError: Working outside of request context'
+        # https://github.com/ckan/ckan/issues/7802
         # log.warn(csrf_warn_extensions)
         _exempt_plugins_blueprints_from_csrf(csrf)
 
