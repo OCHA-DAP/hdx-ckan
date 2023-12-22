@@ -8,8 +8,6 @@ alabaster==0.7.12
     # via sphinx
 arrow==1.2.1
     # via jinja2-time
-atomicwrites==1.4.0
-    # via pytest
 attrs==21.2.0
     # via pytest
 babel==2.10.3
@@ -18,7 +16,7 @@ babel==2.10.3
     #   sphinx
 backcall==0.2.0
     # via ipython
-beautifulsoup4==4.9.1
+beautifulsoup4==4.11.1
     # via -r dev-requirements.in
 binaryornot==0.4.4
     # via cookiecutter
@@ -51,13 +49,17 @@ charset-normalizer==2.1.1
 click==8.1.3
     # via
     #   -c requirements.txt
+    #   click-default-group
     #   cookiecutter
     #   flask
     #   towncrier
+click-default-group==1.2.4
+    # via towncrier
 cookiecutter==1.7.0
     # via -r dev-requirements.in
-coverage==6.2
+coverage[toml]==6.2
     # via
+    #   coverage
     #   coveralls
     #   pytest-cov
 coveralls==3.3.1
@@ -67,14 +69,16 @@ cryptography==36.0.1
 decorator==5.1.1
     # via
     #   -c requirements.txt
+    #   ipdb
     #   ipython
 docopt==0.6.2
     # via coveralls
-docutils==0.12
+docutils==0.17
     # via
     #   -r dev-requirements.in
     #   sphinx
-factory-boy==2.12.0
+    #   sphinx-rtd-theme
+factory-boy==3.2.1
     # via -r dev-requirements.in
 faker==10.0.0
     # via factory-boy
@@ -82,9 +86,9 @@ flask==2.0.3
     # via
     #   -c requirements.txt
     #   flask-debugtoolbar
-flask-debugtoolbar==0.11.0
+flask-debugtoolbar==0.13.1
     # via -r dev-requirements.in
-freezegun==0.3.15
+freezegun==1.2.2
     # via
     #   -r dev-requirements.in
     #   pytest-freezegun
@@ -96,11 +100,11 @@ idna==2.8
     #   requests
 imagesize==1.3.0
     # via sphinx
-importlib-metadata==5.0.0
-    # via pytest
 incremental==21.3.0
     # via towncrier
-ipdb==0.13.2
+iniconfig==2.0.0
+    # via pytest
+ipdb==0.13.9
     # via -r dev-requirements.in
 ipython==7.30.1
     # via ipdb
@@ -136,8 +140,6 @@ matplotlib-inline==0.1.3
     # via ipython
 mock==2.0.0
     # via -r dev-requirements.in
-more-itertools==8.12.0
-    # via pytest
 moto==2.3.2
     # via -r dev-requirements.in
 packaging==21.3
@@ -180,20 +182,20 @@ pyparsing==3.0.7
     # via
     #   -c requirements.txt
     #   packaging
-pytest==4.6.5
+pytest==7.1.3
     # via
     #   -r dev-requirements.in
     #   pytest-cov
     #   pytest-freezegun
     #   pytest-rerunfailures
-    #   pytest-split-tests
-pytest-cov==2.7.1
+    #   pytest-split
+pytest-cov==3.0.0
     # via -r dev-requirements.in
-pytest-freezegun==0.4.1
+pytest-freezegun==0.4.2
     # via -r dev-requirements.in
-pytest-rerunfailures==8.0
+pytest-rerunfailures==10.2
     # via -r dev-requirements.in
-pytest-split-tests==1.0.9
+pytest-split==0.8.0
     # via -r dev-requirements.in
 python-dateutil==2.8.2
     # via
@@ -216,7 +218,7 @@ requests==2.28.1
     #   moto
     #   responses
     #   sphinx
-responses==0.10.14
+responses==0.21.0
     # via
     #   -r dev-requirements.in
     #   moto
@@ -227,31 +229,45 @@ s3transfer==0.9.0
 six==1.16.0
     # via
     #   -c requirements.txt
-    #   freezegun
     #   mock
-    #   pytest
     #   python-dateutil
-    #   responses
-    #   sphinx
 snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.3.1
     # via beautifulsoup4
-sphinx==1.8.5
+sphinx==5.1.1
     # via
     #   -r dev-requirements.in
     #   sphinx-rtd-theme
-sphinx-rtd-theme==0.4.3
+    #   sphinxcontrib-applehelp
+    #   sphinxcontrib-devhelp
+    #   sphinxcontrib-htmlhelp
+    #   sphinxcontrib-qthelp
+sphinx-rtd-theme==1.0.0
     # via -r dev-requirements.in
+sphinxcontrib-applehelp==1.0.7
+    # via sphinx
+sphinxcontrib-devhelp==1.0.5
+    # via sphinx
+sphinxcontrib-htmlhelp==2.0.4
+    # via sphinx
+sphinxcontrib-jsmath==1.0.1
+    # via sphinx
+sphinxcontrib-qthelp==1.0.6
+    # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
-    # via sphinxcontrib-websupport
-sphinxcontrib-websupport==1.2.4
     # via sphinx
 text-unidecode==1.3
     # via faker
 toml==0.10.2
-    # via towncrier
-towncrier==19.2.0
+    # via ipdb
+tomli==2.0.1
+    # via
+    #   -c requirements.txt
+    #   coverage
+    #   pytest
+    #   towncrier
+towncrier==22.8.0
     # via -r dev-requirements.in
 traitlets==5.1.1
     # via
@@ -262,10 +278,9 @@ urllib3==1.26.6
     #   -c requirements.txt
     #   botocore
     #   requests
+    #   responses
 wcwidth==0.2.5
-    # via
-    #   prompt-toolkit
-    #   pytest
+    # via prompt-toolkit
 werkzeug==2.0.3
     # via
     #   -c requirements.txt
@@ -276,8 +291,6 @@ whichcraft==0.6.1
     # via cookiecutter
 xmltodict==0.12.0
     # via moto
-zipp==3.10.0
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
