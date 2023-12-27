@@ -1,21 +1,21 @@
-
 {% for section in data %}
     <p class="mTop30 mBottom15">
         <div class="section-flag" id='body-{{ section.id }}' > {{ section.title }} </div>
     </p>
     <div class="hdx-card-group" id="accordion-{{ section.id }}" role="tablist" aria-multiselectable="false">
         {% for question in section.questions %}
-            {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
-            {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
+            {% set q_id = 'auto-%s-%s-q' | format(section.id, loop.index) %}
+            {% set a_id = 'auto-%s-%s-a' | format(section.id, loop.index) %}
             <div class="card">
-                <div class="card-header" id="{{ q_id }}">
+                <div class="card-header" role="tab" id="{{ q_id }}">
                     <h4 class="card-title">
-                        <span class="faq-question-link">
+                        <a role="button" data-bs-toggle="collapse" data-bs-parent=".hdx-card-group" href="#{{ a_id }}"
+                           aria-expanded="false" aria-controls="{{ a_id }}" class="faq-question-link">
                             {{ question.q | safe }}
-                        </span>
+                        </a>
                     </h4>
                 </div>
-                <div id="{{ a_id }}" >
+                <div id="{{ a_id }}" class="panel-collapse collapse faq-panel-collapse" role="tabpanel" aria-labelledby="{{ q_id }}">
                     <div class="card-body">
                         {{ question.a | safe }}
                     </div>
