@@ -123,10 +123,12 @@ def resource_view_delete(context, data_dict):
     :type id: string
 
     '''
-    from ckan.lib.search import rebuild
+    model = context['model']
+    resource_view_id = _get_or_bust(data_dict, 'id')
+    resource_view = model.ResourceView.get(resource_view_id)
 
     core_delete.resource_view_delete(context, data_dict)
 
-    resource_view = context.get('resource_view')
     if resource_view:
+        data_dict['resource_id'] = resource_view.resource_id
         reindex_package_on_hdx_hxl_preview_view(resource_view.view_type, context, data_dict)
