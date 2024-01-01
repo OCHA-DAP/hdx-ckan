@@ -32,7 +32,7 @@ class TestS3Metadata(HDXS3TestBase):
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/resource_create',
                                    extra_environ={
-                                       'Authorization': str(self.sysadmin_user['apikey']),
+                                       'Authorization': str(self.sysadmin_user['api_token']),
 
                                    },
                                    headers={
@@ -59,7 +59,7 @@ class TestS3Metadata(HDXS3TestBase):
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/resource_update',
                                    extra_environ={
-                                       'Authorization': str(self.sysadmin_user['apikey']),
+                                       'Authorization': str(self.sysadmin_user['api_token']),
 
                                    },
                                    headers={
@@ -85,7 +85,7 @@ class TestS3Metadata(HDXS3TestBase):
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/package_revise',
                                    extra_environ={
-                                       'Authorization': str(self.sysadmin_user['apikey']),
+                                       'Authorization': str(self.sysadmin_user['api_token']),
 
                                    },
                                    headers={

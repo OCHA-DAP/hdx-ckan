@@ -12,6 +12,7 @@ import ckan.logic as logic
 
 import ckan.plugins.toolkit as tk
 import ckan.tests.helpers as helpers
+import ckan.tests.factories as factories
 
 import ckanext.hdx_package.actions.create as hdx_actions
 import ckanext.hdx_package.helpers.caching as caching
@@ -43,7 +44,7 @@ class HdxBaseTest(object):
     '''
     NOTE: Since more fields have been made mandatory for a dataset the process of creating test
     data at the beginning of a test suit was failing.
-    Therefore the package_create action is now wrapped while running the tests to automatically
+    Therefore, the package_create action is now wrapped while running the tests to automatically
     populate some missing fields.
     See replace_package_create ()
     '''
@@ -51,6 +52,7 @@ class HdxBaseTest(object):
     app = None
     original_config = None
     USERS_USED_IN_TEST = ['tester', 'testsysadmin']
+    testsysadmin_token = None
 
     @classmethod
     def _set_user_api_keys(cls):
@@ -98,6 +100,7 @@ class HdxBaseTest(object):
         cls._create_test_data()
 
         cls._set_user_api_keys()
+        cls.testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
     @classmethod
     def teardown_class(cls):

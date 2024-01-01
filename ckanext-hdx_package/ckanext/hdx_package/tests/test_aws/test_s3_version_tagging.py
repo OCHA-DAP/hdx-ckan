@@ -15,7 +15,7 @@ class TestS3VersionTagging(HDXS3TestBase):
             file_upload = FileStorage(f)
             result_create = self.app.post('/api/action/resource_create',
                                           extra_environ={
-                                              'Authorization': str(self.sysadmin_user['apikey']),
+                                              'Authorization': str(self.sysadmin_user['api_token']),
 
                                           },
                                           data={
@@ -50,7 +50,7 @@ class TestS3VersionTagging(HDXS3TestBase):
     def _set_quarantine_flag_on_resource(self, resource_dict, flag_value):
         result_quarantine = self.app.post('/api/action/hdx_qa_resource_patch',
                                           extra_environ={
-                                              'Authorization': str(self.sysadmin_user['apikey']),
+                                              'Authorization': str(self.sysadmin_user['api_token']),
 
                                           },
                                           data={
