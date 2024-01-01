@@ -12,6 +12,7 @@ get_converter = toolkit.get_converter
 get_validator = toolkit.get_validator
 Invalid = toolkit.Invalid
 StopOnError = toolkit.StopOnError
+unicode_safe = toolkit.get_validator('unicode_safe')
 _ = toolkit._
 
 
@@ -25,7 +26,7 @@ def showcase_update_schema_wrapper(original_schema):
                                    get_converter('convert_to_extras')],
             'in_carousel_section': [_has_dataviz_gallery_permission, default('false'), boolean_validator,
                                     get_converter('convert_to_extras')],
-            'dataviz_label': [_has_dataviz_gallery_permission, not_empty_if_in_dataviz_gallery, six.text_type,
+            'dataviz_label': [_has_dataviz_gallery_permission, not_empty_if_in_dataviz_gallery, unicode_safe,
                               get_validator('hdx_check_string_length_wrapper')(12), get_converter('convert_to_extras')],
             'data_url': [_has_dataviz_gallery_permission, ignore_empty, _is_https_url, url_validator,
                          get_converter('convert_to_extras')],
