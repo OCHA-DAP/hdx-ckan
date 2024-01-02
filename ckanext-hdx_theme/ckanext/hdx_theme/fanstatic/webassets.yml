@@ -22,6 +22,7 @@ ckan:
     - base/hdx-util-lib.js
     - modules/data-viewer.js
     - modules/resource-view-embed.js
+    - modules/copy-into-buffer.js
     - hdx_confirm-action.js
     - hdx_click_stopper.js
     - hdx_terms_checkbox.js
