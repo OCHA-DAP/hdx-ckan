@@ -1,15 +1,15 @@
-import pytest
-
 import logging as logging
-import ckanext.hdx_theme.helpers.helpers as h
-import ckan.model as model
-import ckan.logic as logic
 import unicodedata
-from ckan.common import config
-import ckan.plugins.toolkit as tk
 
+import ckan.logic as logic
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
+
+import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
+from ckan.common import config
 
 log = logging.getLogger(__name__)
 ValidationError = logic.ValidationError
@@ -54,17 +54,17 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert result.status_code == 403
 
 
-        user = model.User.by_name('testsysadmin')
+        token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
         url = h.url_for('hdx_qa.dashboard', page=2)
-        qa_dashboard_result = self._get_url(url, user.apikey)
+        qa_dashboard_result = self._get_url(url, token)
         assert qa_dashboard_result.status_code == 200
 
         config['hdx.qadashboard.enabled'] = 'false'
-        result = self._get_url(url, user.apikey)
+        result = self._get_url(url, token)
         assert result.status_code == 404
 
         config['hdx.qadashboard.enabled'] = 'true'
-        result = self._get_url(url, user.apikey)
+        result = self._get_url(url, token)
         assert result.status_code == 200
 
     def test_qa_questions_list(self):
