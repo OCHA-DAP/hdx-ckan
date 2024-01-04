@@ -35,7 +35,11 @@ ckan.auth.anon_create_dataset = false
 ckan.auth.user_delete_groups=false
 ckan.auth.user_delete_organizations=false
 ckan.auth.create_unowned_dataset=true
-ckan.auth.public_user_details=false
+
+# It's difficult to work with the user_show() action in tests if this is set to false
+# so we only set it on tests where we need to test that this works with
+# @pytest.mark.ckan_config(u"ckan.auth.public_user_details", False)
+# ckan.auth.public_user_details=false
 
 ckan.cache_validation_enabled = True
 ckan.cache_enabled = False

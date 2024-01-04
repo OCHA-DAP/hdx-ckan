@@ -6,10 +6,11 @@ Created on Aug 28, 2014
 import pytest
 import unicodedata
 import logging as logging
-import six
 
 import ckan.model as model
 import ckan.lib.helpers as h
+import ckan.tests.factories as factories
+
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -39,6 +40,9 @@ pages = [
 
 # @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
 class TestPageLoad(hdx_test_base.HdxBaseTest):
+
+    tester_token = None
+    testsysadmin_token = None
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
@@ -55,6 +59,8 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         umodel.setup()
         ue_model.create_table()
         p_model.create_table()
+        cls.tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        cls.testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
     @pytest.mark.parametrize("page", pages)
     def test_page_load(self, page):
@@ -66,14 +72,14 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         url_name = page.get('url_name')
         url_params = page.get('url_params')
         if not page['usertype']:
-            self._try_page_load(test_client, url_name, None, url_params)
+            self._try_page_load(test_client, url_name, None, None, url_params)
         else:
             if page['usertype'] == 'user' or page['usertype'] == 'all':
-                self._try_page_load(test_client, url_name, 'tester', url_params)
+                self._try_page_load(test_client, url_name, 'tester', self.tester_token, url_params)
             if page['usertype'] == 'sysadmin' or page['usertype'] == 'all':
-                self._try_page_load(test_client, url_name, 'testsysadmin', url_params)
+                self._try_page_load(test_client, url_name, 'testsysadmin', self.testsysadmin_token, url_params)
 
-    def _try_page_load(self, test_client, url_name, username, url_params=None):
+    def _try_page_load(self, test_client, url_name, username, token, url_params=None):
         result = None
         args = []
         kw = {}
@@ -85,9 +91,8 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         url = url_for(*args, **kw)
         log.info('Testing url: ' + url)
         if username:
-            user = model.User.by_name(username)
             result = test_client.get(url, headers={'Authorization': unicodedata.normalize(
-                'NFKD', user.apikey).encode('ascii', 'ignore')})
+                'NFKD', token).encode('ascii', 'ignore')})
         else:
             result = test_client.get(url)
         assert ('200' in result.status or '302' in result.status), 'HTTP OK'

@@ -67,6 +67,7 @@ class HdxBaseTest(object):
     @classmethod
     def _create_test_data(cls):
         ctd.CreateTestData.create()
+        cls.testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
     @classmethod
     def _load_plugins(cls):
@@ -100,7 +101,6 @@ class HdxBaseTest(object):
         cls._create_test_data()
 
         cls._set_user_api_keys()
-        cls.testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
     @classmethod
     def teardown_class(cls):

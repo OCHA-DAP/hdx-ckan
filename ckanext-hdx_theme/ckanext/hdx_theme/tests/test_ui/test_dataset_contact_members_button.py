@@ -82,8 +82,10 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         global package
 
-        user = model.User.by_name('annafan')
-        testsysadmin = model.User.by_name('testsysadmin')
+        # user = model.User.by_name('annafan')
+        # testsysadmin = model.User.by_name('testsysadmin')
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        user_token = factories.APIToken(user='annafan', expires_in=2, unit=60 * 60)['token']
 
         dataset_name = package['name']
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
@@ -97,40 +99,39 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         assert not 'contact-members' in page.body, 'Anonymous users should not see the contact members button'
 
         # test sysadmin can see the button
-        page = self._getPackagePage(dataset_name, testsysadmin.apikey)
+        page = self._getPackagePage(dataset_name, testsysadmin_token)
         assert 'contact-members' in page.body, 'Sysadmin users should see the contact members button'
 
         # test member/owner can see the button
-        page = self._getPackagePage(dataset_name, user.apikey)
+        page = self._getPackagePage(dataset_name, user_token)
         assert 'contact-members' in page.body, 'Member/owner should see the edit button'
 
         # test editor can see the button
         context['user'] = 'tester'
-        user = model.User.by_name('tester')
-        page = self._getPackagePage(dataset_name, user.apikey)
+        editor_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        page = self._getPackagePage(dataset_name, editor_token)
         assert 'contact-members' in page.body, 'Editor should see the edit button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
-        user = model.User.by_name('joeadmin')
-        page = self._getPackagePage(dataset_name, user.apikey)
+        admin_token = factories.APIToken(user='joeadmin', expires_in=2, unit=60 * 60)['token']
+        page = self._getPackagePage(dataset_name, admin_token)
         assert 'contact-members' in page.body, 'Admin should see the edit button'
 
         # any logged in user and not member of organization can NOT see the button
         factories.User(name='bob')
-        user_bob = model.User.by_name('bob')
-        user_bob.apikey = u'api_key'
-        model.Session.commit()
+        user_bob_token = factories.APIToken(user='bob', expires_in=2, unit=60 * 60)['token']
+
         context['user'] = 'bob'
-        page = self._getPackagePage(dataset_name, user_bob.apikey)
+        page = self._getPackagePage(dataset_name, user_bob_token)
         assert 'contact-members' not in page.body, 'Any loggedin user & not member should NOT see the edit button'
 
-    def _getPackagePage(self, package_id, apikey=None):
+    def _getPackagePage(self, package_id, apitoken=None):
         page = None
         url = h.url_for('dataset_read', id=package_id)
-        if apikey:
+        if apitoken:
             page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')})
         else:
             page = self.app.get(url)
         return page

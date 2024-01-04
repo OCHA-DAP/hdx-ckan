@@ -131,9 +131,9 @@ class TestGroupsCaching(hdx_test_base.HdxBaseTest):
         # resetting counter
         num_invalidate_group_caches = 0
 
-        testsysadmin = model.User.by_name('testsysadmin')
-        result = tests.call_action_api(self.app, 'group_create', name='group_test',
-                                       apikey=testsysadmin.apikey, status=200)
-
+        result = tk.get_action('group_create')(
+            {'user': 'testsysadmin', 'model': model, 'session': model.Session},
+            {'name': 'group_test'}
+        )
         assert num_invalidate_group_caches == 1, \
             'on group_create cache invalidation should have been called'

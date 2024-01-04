@@ -4,13 +4,12 @@ Created on September 25, 2015
 @author: aartimon
 
 '''
-import pytest
-import six
+import unicodedata
 
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
-import unicodedata
+import ckan.tests.factories as factories
 
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
@@ -67,8 +66,8 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
     def test_edit_button_appears(self):
         global package
-        user = model.User.by_name('tester')
-        testsysadmin = model.User.by_name('testsysadmin')
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
 
         dataset_name = package['name']
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
@@ -81,30 +80,30 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         page = self._getPackagePage(dataset_name)
         assert not 'Edit Dataset' in page.body, 'Anonymous users should not see the edit button'
         # test sysadmin can see edit
-        page = self._getPackagePage(dataset_name, testsysadmin.apikey)
+        page = self._getPackagePage(dataset_name, testsysadmin_token)
         assert 'Edit Dataset' in page.body, 'Sysadmin''s should see the edit button'
         # test owner can see edit
-        page = self._getPackagePage(dataset_name, user.apikey)
+        page = self._getPackagePage(dataset_name, user_token)
         assert 'Edit Dataset' in page.body, 'Owner should see the edit button'
 
         # test member can NOT see the button
         context['user'] = 'joeadmin'
-        user = model.User.by_name('joeadmin')
-        page = self._getPackagePage(dataset_name, user.apikey)
+        member_token = factories.APIToken(user='joeadmin', expires_in=2, unit=60 * 60)['token']
+        page = self._getPackagePage(dataset_name, member_token)
         assert 'Edit Dataset' not in page.body, 'Member should NOT see the edit button'
 
         self._get_action('organization_member_create')(context_sysadmin,
                                                        {'id': org_obj.get('id'), 'username': 'joeadmin',
                                                         'role': 'editor'})
-        page = self._getPackagePage(dataset_name, user.apikey)
+        page = self._getPackagePage(dataset_name, user_token)
         assert 'Edit Dataset' in page.body, 'Editor should see the edit button'
 
-    def _getPackagePage(self, package_id, apikey=None):
+    def _getPackagePage(self, package_id, apitoken=None):
         page = None
         url = h.url_for('dataset_read', id=package_id)
-        if apikey:
+        if apitoken:
             page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')})
         else:
             page = self.app.get(url)
         return page

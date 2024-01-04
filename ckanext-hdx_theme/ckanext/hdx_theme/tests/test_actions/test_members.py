@@ -4,14 +4,15 @@ Created on Jun 17, 2014
 @author: alexandru-m-g
 '''
 import pytest
-import six
 import mock
 
-import ckan.tests.legacy as tests
+import ckan.tests.factories as factories
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 contact_form = {
     'display_name': 'Jane Doe3',
@@ -46,11 +47,11 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
     def test_member_search(self):
         admin = self._admin_create()
         assert admin
-        usernames = self._users_create(admin['apikey'])
+        usernames = self._users_create()
         assert usernames
         assert len(usernames) == 3
 
-        org = self._org_create(admin['apikey'], usernames)
+        org = self._org_create(usernames)
         assert org
 
         result_members1 = self._query_members_in_org(org, admin, 'bar', True)
@@ -85,42 +86,55 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
                 {'name': 'test123admin', 'email': 'example-admin@example.com', 'password': 'Abcdefgh12'})
         user = model.Session.query(model.User).filter(model.User.id == u['id']).first()
         user.sysadmin = True
-        user.apikey = 'TEST_API_KEY'
+        # user.apikey = 'TEST_API_KEY'
         model.Session.commit()
         context['user'] = u['name']
         ret_user =  self._get_action("user_show")(context, {'id': u['id']})
         return ret_user
 
-    def _users_create(self, apikey):
-        u1 = tests.call_action_api(self.app, 'user_create', name='johnfoo', fullname='John Foo',
-                email='example@example.com', password='Abcdefgh12',
-                apikey=apikey, status=200)
-        u2 = tests.call_action_api(self.app, 'user_create', name='adambar',
-                email='example2@example.com', password='Abcdefgh12',
-                apikey=apikey, status=200)
-        u3 = tests.call_action_api(self.app, 'user_create', name='username1', fullname='George Foobar',
-                email='example3@example.com', password='Abcdefgh12',
-                apikey=apikey, status=200)
+    def _users_create(self):
+        u1 = factories.User(name='johnfoo', fullname='John Foo', email='example@example.com')
+        u2 = factories.User(name='adambar', email='example2@example.com', fullname=None)
+        u3 = factories.User(name='username1', fullname='George Foobar', email='example3@example.com')
+        # u1 = tests.call_action_api(self.app, 'user_create', name='johnfoo', fullname='John Foo',
+        #         email='example@example.com', password='Abcdefgh12',
+        #         apikey=apikey, status=200)
+        # u2 = tests.call_action_api(self.app, 'user_create', name='adambar',
+        #         email='example2@example.com', password='Abcdefgh12',
+        #         apikey=apikey, status=200)
+        # u3 = tests.call_action_api(self.app, 'user_create', name='username1', fullname='George Foobar',
+        #         email='example3@example.com', password='Abcdefgh12',
+        #         apikey=apikey, status=200)
 
         return [u1['name'], u2['name'], u3['name']]
 
-    def _org_create(self, apikey, usernames):
+    def _org_create(self, usernames):
         users = [{'name': name} for name in usernames]
-        org = tests.call_action_api(self.app, 'organization_create', name='test-org-123',
-                users=users,
-                apikey=apikey, status=200)
+        # org = tests.call_action_api(self.app, 'organization_create', name='test-org-123',
+        #         users=users,
+        #         apikey=apikey, status=200)
+        org = factories.Organization(name='test-org-123', users=users, hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/')
         return org
 
     def _query_members_in_org(self, org, user, query, show_user_name):
 
-        members = tests.call_action_api(self.app, 'member_list',
-                              id=org['id'], object_type='user', q=query, user_info=show_user_name,
-                              apikey=user['apikey'], status=200)
+        # members = tests.call_action_api(self.app, 'member_list',
+        #                       id=org['id'], object_type='user', q=query, user_info=show_user_name,
+        #                       apikey=user['apikey'], status=200)
+        members = self._get_action('member_list')(
+            {'user': user['name'], 'model': model, 'session': model.Session},
+            {'id': org['id'], 'object_type': 'user', 'q': query, 'user_info': show_user_name}
+        )
         return members
 
     def _query_basic_user_info(self, user):
-        basic_info = tests.call_action_api(self.app, 'hdx_basic_user_info', id=user.get('id'), status=200,
-                                           apikey=user.get('apikey'))
+        # basic_info = tests.call_action_api(self.app, 'hdx_basic_user_info', id=user.get('id'), status=200,
+        #                                    apikey=user.get('apikey'))
+        basic_info = self._get_action('hdx_basic_user_info')(
+            {'user': user.get('name'), 'model': model, 'session': model.Session},
+            {'id': user.get('id')}
+        )
         return basic_info
 
     # @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")

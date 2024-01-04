@@ -133,7 +133,6 @@ def about(page):
 
 
 def about_hrinfo():
-    from ckan.lib.base import render_jinja2
     title = {'hr_info': _('Legacy HR Info')}
     html = {'hr_info': 'home/snippets/hdx_hr_info.html'}
 
@@ -143,7 +142,6 @@ def about_hrinfo():
     if title_item is None:
         message = _("The requested about page doesn't exist")
         raise ValidationError({'message': message}, error_summary=message)
-    # html_item = render_jinja2(html_item, {})
     html_item = render(html_item, {})
     extra_vars = {'title': title_item, 'html': html_item, 'page': 'hr_info'}
     return render('home/about2.html', extra_vars)

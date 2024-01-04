@@ -9,7 +9,6 @@ import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 import ckan.authz as new_authz
 import ckan.model as model
-import ckan.logic.action.get as ckan_get
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
@@ -17,6 +16,7 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.hxl.transformers.transformers as transformers
 import ckan.authz as authz
 
+from ckanext.activity.model.activity import Activity
 from ckanext.hdx_theme.helpers.hdx_stats import HDXStatsHelper
 from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
 
@@ -643,12 +643,12 @@ def hdx_user_statistics(context, data_dict):
 def get_activities_by_user_by_date(user_id, start_date=None, end_date=None):
     result = None
     if user_id:
-        q = model.Session.query(model.Activity)
-        q = q.filter(model.Activity.user_id == user_id)
+        q = model.Session.query(Activity)
+        q = q.filter(Activity.user_id == user_id)
         if start_date:
-            q = q.filter(model.Activity.timestamp >= start_date)
+            q = q.filter(Activity.timestamp >= start_date)
         if end_date:
-            q = q.filter(model.Activity.timestamp <= end_date)
+            q = q.filter(Activity.timestamp <= end_date)
         result = q.count()
     return result
 
@@ -674,16 +674,16 @@ def hdx_organization_statistics(context, data_dict):
     }
 
 
-@logic.side_effect_free
-def hdx_activity_detail_list(context, data_dict):
-    result = ckan_get.activity_detail_list(context, data_dict)
-    detail_data_list = (
-        detail_data
-        for detail in result or []
-        for detail_data in detail.get('data', {}).values()
-    )
-    for detail_data_dict in detail_data_list:
-        detail_data_dict.pop('maintainer_email', None)
-        detail_data_dict.pop('author_email', None)
-
-    return result
+# @logic.side_effect_free
+# def hdx_activity_detail_list(context, data_dict):
+#     result = ckan_get.activity_detail_list(context, data_dict)
+#     detail_data_list = (
+#         detail_data
+#         for detail in result or []
+#         for detail_data in detail.get('data', {}).values()
+#     )
+#     for detail_data_dict in detail_data_list:
+#         detail_data_dict.pop('maintainer_email', None)
+#         detail_data_dict.pop('author_email', None)
+#
+#     return result

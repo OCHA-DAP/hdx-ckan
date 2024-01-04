@@ -4,14 +4,13 @@ Created on September 25, 2015
 @author: aartimon
 
 '''
-import pytest
-import six
+import unicodedata
 
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
-import ckan.model as model
 import ckan.lib.create_test_data as ctd
-import unicodedata
+import ckan.model as model
+import ckan.tests.factories as factories
 
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
@@ -81,10 +80,11 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         global package
 
-        user_bob = ctd.CreateTestData.create_user('bob')
+        factories.User(name='bob')
 
-        user = model.User.by_name('annafan')
-        testsysadmin = model.User.by_name('testsysadmin')
+        user_bob_token = factories.APIToken(user='bob', expires_in=2, unit=60 * 60)['token']
+        user_token = factories.APIToken(user='annafan', expires_in=2, unit=60 * 60)['token']
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
         dataset_name = package['name']
         context = {'model': model, 'session': model.Session, 'user': 'tester'}
@@ -98,29 +98,29 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         assert '/contact_hdx' in page.body, 'Anonymous users should see the contact_hdx link'
 
         # test sysadmin can see the button
-        page = self._getPackagePage(dataset_name, testsysadmin.apikey)
+        page = self._getPackagePage(dataset_name, testsysadmin_token)
         assert 'contact-the-contributor' in page.body, 'Sysadmin users should see contact contributor button'
 
         # test member/owner can see the button
-        page = self._getPackagePage(dataset_name, user.apikey)
+        page = self._getPackagePage(dataset_name, user_token)
         assert 'contact-the-contributor' in page.body, 'Member/owner should see the  contact contributor button'
 
         # test editor can see the button
         context['user'] = 'tester'
-        user = model.User.by_name('tester')
-        page = self._getPackagePage(dataset_name, user.apikey)
+        test_editor_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        page = self._getPackagePage(dataset_name, test_editor_token)
         assert 'contact-the-contributor' in page.body, 'Editor should see the  contact contributor button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
-        user = model.User.by_name('joeadmin')
-        page = self._getPackagePage(dataset_name, user.apikey)
+        admin_token = factories.APIToken(user='joeadmin', expires_in=2, unit=60 * 60)['token']
+        page = self._getPackagePage(dataset_name, admin_token)
         assert 'contact-the-contributor' in page.body, 'Admin should see the  contact contributor button'
 
         # any logged in user and not member of organization can NOT see the button
         context['user'] = 'bob'
-        page = self._getPackagePage(dataset_name, user_bob.apikey)
-        assert 'contact-the-contributor' in page.body, 'Any loggedin user & not member should NOT see the edit button'
+        page = self._getPackagePage(dataset_name, user_bob_token)
+        assert 'icon-edit' not in page.body, 'Any loggedin user & not member should NOT see the edit button'
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None
