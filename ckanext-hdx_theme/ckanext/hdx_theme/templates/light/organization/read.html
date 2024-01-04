@@ -18,7 +18,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
 	{% endblock %}
-  <li class="breadcrumb-item active">{{ h.nav_link( org.title|truncate(120), named_route='hdx_light_org.light_read', id=org.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( org.title|truncate(120), named_route='hdx_light_org.light_read', id=org.name) }}</li>
 {% endblock %}
 
 

@@ -13,7 +13,7 @@
     <li class="breadcrumb-item" property="itemListElement" typeof="ListItem">{{ _('Event') }}
     </li>
 	{% endblock %}
-  <li class="breadcrumb-item active">{{ h.nav_link( page.title|truncate(120), 'hdx_' + page.type + '.read_' + page.type, id=page.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( page.title|truncate(120), 'hdx_' + page.type + '.read_' + page.type, id=page.name) }}</li>
 {% endblock %}
 
 {% block content %}

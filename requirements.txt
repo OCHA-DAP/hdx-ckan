@@ -12,7 +12,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.0-b1#egg=ckanext-security
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.2161#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.3161#egg=ckanext-showcase
     # via -r requirements.in
 alembic==1.8.1
     # via -r requirements.in

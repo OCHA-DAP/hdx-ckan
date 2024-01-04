@@ -38,7 +38,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
 	{% endblock %}
-  <li class="breadcrumb-item active">{{ h.nav_link( pkg.title|truncate(120), named_route='hdx_dataset.read', id=pkg.name, highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link( pkg.title|truncate(120), named_route='hdx_dataset.read', id=pkg.name) }}</li>
 
 {% endblock %}
 

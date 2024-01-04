@@ -14,7 +14,7 @@
                 {% block org_title %}
                     <h3 class="list-items organization-heading">
                     {% if light=='True' %}
-                      {{ h.nav_link( organization.title, named_route='hdx_light_org.light_read', id=organization.name, highlight_actions = 'new index') }}
+                      {{ h.nav_link( organization.title, named_route='hdx_light_org.light_read', id=organization.name) }}
                     {% else %}
                       {{ h.link_to(organization.title, h.url_for('hdx_org.read', id=organization.name)) }}
                     {% endif %}
