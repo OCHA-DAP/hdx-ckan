@@ -7,7 +7,6 @@ Created on Jun 20, 2018
 import logging as logging
 
 import ckan.model as model
-import ckan.tests.legacy as tests
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs

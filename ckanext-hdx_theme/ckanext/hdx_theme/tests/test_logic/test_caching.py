@@ -8,7 +8,6 @@ import pytest
 import six
 
 import ckan.plugins.toolkit as tk
-import ckan.tests.legacy as tests
 import ckan.model as model
 
 import ckanext.hdx_package.helpers.caching as caching
