@@ -179,9 +179,11 @@ function checkMfa() {
 
 $(document).ready(function(){
     const $loginForm = $('#hdx-login-form');
+    const $loginFormRequiredFields = $loginForm.find('input, select, textarea').filter('[required]');
     $loginForm.submit(checkLockout);
-    $loginForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
+    $loginFormRequiredFields.on('input change focus', requiredFieldsFormValidator);
     $("#field-login").change(checkMfa);
+    $loginFormRequiredFields.filter(() => this.value !== '').first().trigger('change');
     //check cookies
     const loginCookie = $.cookie("hdx_login");
     const loginPopup = $("#loginPopup").length > 0;
