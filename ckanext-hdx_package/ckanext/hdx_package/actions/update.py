@@ -65,6 +65,8 @@ def resource_update(context, data_dict):
         log.debug('Could not find resource %s', id)
         raise NotFound(_('Resource was not found.'))
 
+    old_resource_format = resource_obj.format
+
     process_batch_mode(context, data_dict)
     # flag_if_file_uploaded(context, data_dict)
     process_skip_validation(context, data_dict)
@@ -123,7 +125,16 @@ def resource_update(context, data_dict):
         package = _get_action('package_show')(context, {'id': pkg_id})
 
     res_list = [res for res in package.get('resources', []) if res.get('id') == id]
-    return res_list[-1]
+    resource = res_list[-1]
+
+    if old_resource_format != resource['format']:
+        _get_action('resource_create_default_resource_views')(
+            {'model': context['model'], 'user': context['user'],
+             'ignore_auth': True},
+            {'package': package,
+             'resource': resource})
+
+    return resource
 
 
 def run_action_without_geo_preview(action, context, data_dict):

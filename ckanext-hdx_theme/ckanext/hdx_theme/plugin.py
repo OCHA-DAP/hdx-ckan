@@ -232,7 +232,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_add_url_param': hdx_helpers.hdx_add_url_param,
             'methodology_bk_compat': hdx_helpers.methodology_bk_compat,
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
-            'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
             'load_json': hdx_helpers.load_json,
             'escaped_dump_json': hdx_helpers.escaped_dump_json,
             'json_dumps': json.dumps,

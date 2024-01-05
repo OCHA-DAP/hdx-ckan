@@ -80,7 +80,19 @@ def resource_create(context, data_dict):
         package = _get_action('package_show')(context, {'id': pkg_id})
 
     res_list = package.get('resources', [])
-    return res_list[-1]
+    resource = res_list[-1]
+
+    #  Add the default views to the new resource
+    logic.get_action('resource_create_default_resource_views')(
+        {'model': context['model'],
+         'user': context['user'],
+         'ignore_auth': True
+         },
+        {'resource': resource,
+         'package': package
+         })
+
+    return resource
 
 
 @analytics.analytics_wrapper_4_package_create

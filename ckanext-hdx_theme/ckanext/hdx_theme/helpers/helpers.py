@@ -617,35 +617,6 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
                                      action=action, extras=extras)
 
 
-def hdx_resource_preview(resource, package):
-    ## COPY OF THE DEFAULT HELPER BY THE SAME NAME BUT FORCES URLS OVER HTTPS
-    '''
-    Returns a rendered snippet for a embedded resource preview.
-
-    Depending on the type, different previews are loadeSd.
-    This could be an img tag where the image is loaded directly or an iframe
-    that embeds a web page, recline or a pdf preview.
-    '''
-
-    if not resource['url']:
-        return False
-
-    format_lower = datapreview.res_format(resource)
-    directly = False
-    data_dict = {'resource': resource, 'package': package}
-
-    if datapreview.get_preview_plugin(data_dict, return_first=True):
-        url = tk.url_for(controller='package', action='resource_datapreview',
-                         resource_id=resource['id'], id=package['id'], qualified=True)
-    else:
-        return False
-
-    return h.snippet("dataviewer/snippets/data_preview.html",
-                     embed=directly,
-                     resource_url=url,
-                     raw_resource_url=https_load(resource.get('url')))
-
-
 def https_load(url):
     return re.sub(r'^http://', '//', url)
 
