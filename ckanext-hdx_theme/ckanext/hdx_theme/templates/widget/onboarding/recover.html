@@ -27,9 +27,10 @@ Example:
               </div>
             </div>
             {% block error_section %}
-              {% for message in h.flash.pop_messages() | list %}
-                  <div class="alert alert-warning fade show {{ message.category }}">
+                {% for category, message in h.get_flashed_messages(with_categories=true) %}
+                  <div class="alert alert-dismissible fade show {{ category }}" role="alert">
                     {{ h.literal(message) }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
                 {% endfor %}
                 <div class="error-message" style="display: none;">
