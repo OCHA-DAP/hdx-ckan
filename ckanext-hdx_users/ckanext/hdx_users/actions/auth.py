@@ -12,7 +12,7 @@ _ = tk._
 
 ## ORGS
 def hdx_send_new_org_request(context, data_dict):
-    logged_in = new_authz.auth_is_loggedin_user()
+    logged_in = not new_authz.auth_is_anon_user(context)
     if logged_in:
         return {'success': True}
     else:

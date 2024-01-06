@@ -136,8 +136,8 @@ class HDXPerformResetView(PerformResetView):
         except NotAuthorized:
             msg = _(u'The link you accessed is either invalid or has expired. Please request another reset link. '
                     u'If the problem persists please '
-                    u'<a href="/faq#auto-faq-Contact-How_do_I_contact_the_HDX_team_-a">contact us</a>.')
-            h.flash(msg, category='alert-error', allow_html=True)
+                    u'<a href="/faq#auto-faq-Contact--a">contact us</a>.')
+            h.flash(msg, category='alert-error')
             return h.redirect_to(u'hdx_user.request_reset')
 
         return render(u'user/perform_reset.html')

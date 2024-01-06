@@ -42,25 +42,25 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         return tk.get_action(action_name)
 
     def test_email_access_by_page(self):
-        admin = model.User.by_name('testsysadmin')
+        admin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
         url = h.url_for('user.index')[:-1]
         profile_url = h.url_for(u'hdx_user.read', id='johnfoo')
 
         result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', admin.apikey).encode('ascii', 'ignore')})
+            'NFKD', admin_token).encode('ascii', 'ignore')})
 
         profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', admin.apikey).encode('ascii', 'ignore')})
+            'NFKD', admin_token).encode('ascii', 'ignore')})
 
         assert 'example@example.com' in str(result.body)
         assert 'example@example.com' in str(profile_result.body)
 
-        user = model.User.by_name('tester')
+        user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
         result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', user.apikey).encode('ascii', 'ignore')})
+            'NFKD', user_token).encode('ascii', 'ignore')})
         profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', user.apikey).encode('ascii', 'ignore')})
+            'NFKD', user_token).encode('ascii', 'ignore')})
 
         assert 'example@example.com' not in str(
             result.body), 'emails should not be visible for normal users'
@@ -140,21 +140,19 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         user = model.User.get('valid@example.com')
         admin = model.User.by_name('testsysadmin')
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
         offset2 = str(h.url_for('user.delete', id=user.id))
         res2 = self.app.post(offset2, status=200, headers={'Authorization': unicodedata.normalize(
-            'NFKD', admin.apikey).encode('ascii', 'ignore')})
+            'NFKD', testsysadmin_token).encode('ascii', 'ignore')})
 
         profile_url = h.url_for(u'hdx_user.read', id='valid@example.com')
 
         profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', admin.apikey).encode('ascii', 'ignore')})
-        non_admin = model.User.by_name('tester')
-        try:
-            profile_result2 = self.app.get(profile_url, status=404, headers={'Authorization': unicodedata.normalize(
-                'NFKD', non_admin.apikey).encode('ascii', 'ignore')})
-            assert False
-        except Exception as ex:
-            assert True
+            'NFKD', testsysadmin_token).encode('ascii', 'ignore')})
+
+        non_admin_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        profile_result2 = self.app.get(profile_url, status=404, headers={'Authorization': unicodedata.normalize(
+            'NFKD', non_admin_token).encode('ascii', 'ignore')})
 
         assert '404' in profile_result2.status
 
@@ -291,10 +289,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email(self):
         '''Editing an existing user's email is successful.'''
         sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
-
-        sue_obj = model.User.get('sue@example.com')
-        sue_obj.apikey = 'SUE_API_KEY'
-        model.Session.commit()
+        sue_token =  factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
         env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
         url_for = h.url_for('user.edit')
@@ -319,7 +314,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         test_client = self.get_backwards_compatible_test_client()
         params = _get_user_params(user_dict)
         params['email'] = 'new@example.com'
-        auth = {'Authorization': str(sue_obj.apikey)}
+        auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -329,15 +324,13 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         '''Editing to an existing user's email is unsuccessful.'''
         factories.User(name='existing', email='existing@example.com')
         sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
-        sue_obj = model.User.get('sue@example.com')
-        sue_obj.apikey = 'SUE_API_KEY'
-        model.Session.commit()
+        sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
-        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-        url_for = h.url_for('user.edit')
+        auth = {'Authorization': sue_token}
+        url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=env,
+            extra_environ=auth,
         )
         # existing email in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -348,7 +341,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         test_client = self.get_backwards_compatible_test_client()
         params = _get_user_params(user_dict)
         params['email'] = 'existing@example.com'
-        auth = {'Authorization': str(sue_obj.apikey)}
+        auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         # error message in response
@@ -361,15 +354,13 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     def test_edit_email_invalid_format(self):
         '''Editing with an invalid email format is unsuccessful.'''
         sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
-        sue_obj = model.User.get('sue@example.com')
-        sue_obj.apikey = 'SUE_API_KEY'
-        model.Session.commit()
+        sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
-        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-        url_for = h.url_for('user.edit')
+        auth = {'Authorization': sue_token}
+        url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=env,
+            extra_environ=auth,
         )
         # existing email in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -380,7 +371,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         test_client = self.get_backwards_compatible_test_client()
         params = _get_user_params(user_dict)
         params['email'] = 'invalid.com'
-        auth = {'Authorization': str(sue_obj.apikey)}
+        auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         # error message in response
@@ -395,16 +386,13 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         '''Editing with an email in uppercase will be saved as lowercase.'''
         existing_user = factories.User(name='existing', email='existing@example.com', password='Abcdefgh12')
         sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
+        sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
-        sue_obj = model.User.get('sue@example.com')
-        sue_obj.apikey = 'SUE_API_KEY'
-        model.Session.commit()
-
-        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-        url_for = h.url_for('user.edit')
+        auth = {'Authorization': sue_token}
+        url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=env,
+            extra_environ=auth,
         )
         # existing values in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -415,7 +403,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         test_client = self.get_backwards_compatible_test_client()
         params = _get_user_params(user_dict)
         params['email'] = 'existing@example.com'
-        auth = {'Authorization': str(sue_obj.apikey)}
+        auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
 
@@ -428,16 +416,13 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         '''Editing with an email in uppercase will be saved as lowercase.'''
         existing_user = factories.User(name='existing', email='existing@example.com', password='Abcdefgh12')
         sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
+        sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
-        sue_obj = model.User.get('sue@example.com')
-        sue_obj.apikey = 'SUE_API_KEY'
-        model.Session.commit()
-
-        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
-        url_for = h.url_for('user.edit')
+        auth = {'Authorization': sue_token}
+        url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=env,
+            extra_environ=auth,
         )
         # existing values in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -448,7 +433,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         test_client = self.get_backwards_compatible_test_client()
         params = _get_user_params(user_dict)
         params['email'] = 'EXISTING@example.com'
-        auth = {'Authorization': str(sue_obj.apikey)}
+        auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
 
@@ -456,7 +441,6 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert_equal(user.email, sue_user.get('email'))
 
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):

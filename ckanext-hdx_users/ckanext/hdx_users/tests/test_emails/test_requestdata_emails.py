@@ -37,8 +37,9 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         sysadmin = model.User.by_name('testsysadmin')
         sysadmin.email = 'testsysadmin@test.com'
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
-        auth = {'Authorization': str(sysadmin.apikey)}
+        auth = {'Authorization': sysadmin_token}
 
         pkg_dict = self._create_request_data_dataset()
 
@@ -73,10 +74,11 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         sysadmin = model.User.by_name('testsysadmin')
         sysadmin.email = 'testsysadmin@test.com'
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
-        auth = {'Authorization': str(sysadmin.apikey)}
+        auth = {'Authorization': sysadmin_token}
 
         package = {
             "package_creator": "testsysadmin",
