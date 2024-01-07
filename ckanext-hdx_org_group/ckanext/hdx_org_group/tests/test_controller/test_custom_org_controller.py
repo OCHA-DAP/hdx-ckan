@@ -10,6 +10,7 @@ import mock
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.tests as org_group_base
@@ -164,8 +165,8 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     def test_edit_custom_orgs(self):
         url = h.url_for('organization.edit', id='hdx-test-org')
-        testsysadmin = model.User.by_name('testsysadmin')
-        result = self.app.get(url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        result = self.app.get(url, extra_environ={'Authorization': testsysadmin_token})
         assert 'id="customization-trigger"' in result.body
 
         testadmin = model.User.by_name('janedoe3')

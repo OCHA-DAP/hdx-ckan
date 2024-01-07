@@ -15,7 +15,6 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 import ckanext.hdx_org_group.helpers.analytics as analytics
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
 log = logging.getLogger(__name__)
 

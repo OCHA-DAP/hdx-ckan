@@ -11,6 +11,8 @@ import unicodedata
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
+
 import ckanext.hdx_org_group.tests as org_group_base
 
 _get_action = tk.get_action
@@ -20,21 +22,21 @@ log = logging.getLogger(__name__)
 
 class TestMemberControllerBase(object):
 
-    def _get_url(self, app, url, apikey=None):
+    def _get_url(self, app, url, apitoken=None):
 
-        if apikey:
+        if apitoken:
             page = app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')},
+                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')},
                            follow_redirects=True)
         else:
             page = app.get(url)
         return page
 
-    def _post_url(self, app, url, apikey=None):
+    def _post_url(self, app, url, apitoken=None):
 
-        if apikey:
+        if apitoken:
             page = app.post(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')},
+                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')},
                             follow_redirects=True)
         else:
             page = app.post(url)
@@ -50,12 +52,12 @@ class TestBulkInviteMembersController(TestMemberControllerBase):
     def test_bulk_members_invite(self, _mail_recipient_html, app):
         orgadmin = 'orgadmin'
         context = {'model': model, 'session': model.Session, 'user': orgadmin}
-        orgadmin_obj = model.User.by_name(orgadmin)
-        auth = {'Authorization': str(orgadmin_obj.apikey)}
+        orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': orgadmin_token}
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        result = app.post(url, params={'user': 'johndoe1'}, extra_environ=auth)
+        result = app.post(url, data={'user': 'johndoe1'}, extra_environ=auth)
 
         member_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -68,8 +70,9 @@ class TestBulkInviteMembersController(TestMemberControllerBase):
         # bulk adding members
         url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
 
-        result = app.post(url, params={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'}, extra_environ=auth)
-        member_list2 = _get_action('member_list')(context, {
+        result = app.post(url, data={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'}, extra_environ=auth)
+        context2 = {'model': model, 'session': model.Session, 'user': orgadmin}
+        member_list2 = _get_action('member_list')(context2, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -81,8 +84,9 @@ class TestBulkInviteMembersController(TestMemberControllerBase):
         assert new_member[3] == 'editor', 'Invited user needs to be an editor'
 
         # making john doe1 a member back
-        result = app.post(url, params={'emails': 'johndoe1', 'role': 'member'}, extra_environ=auth)
-        member_list3 = _get_action('member_list')(context, {
+        result = app.post(url, data={'emails': 'johndoe1', 'role': 'member'}, extra_environ=auth)
+        context3 = {'model': model, 'session': model.Session, 'user': orgadmin}
+        member_list3 = _get_action('member_list')(context3, {
             'id': 'hdx-test-org',
             'object_type': 'user',
             'user_info': True
@@ -103,10 +107,14 @@ class TestMembersController(TestMemberControllerBase):
     @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_org_group.views.members.render')
     def test_members(self, render, app):
+        '''
+        NOTE: This test might generate some exceptions in the console as the render() method is mocked
+        so the ckanext.hdx_org_group.views.members.members() returns a mock object that flask doesn't like.
+        '''
         orgadmin = 'orgadmin'
         context = {'model': model, 'session': model.Session, 'user': orgadmin}
-        orgadmin_obj = model.User.by_name(orgadmin)
-        auth = {'Authorization': str(orgadmin_obj.apikey)}
+        orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': orgadmin_token}
         # test_client = self.get_backwards_compatible_test_client()
 
         member_with_name_list = _get_action('member_list')(context, {
@@ -162,7 +170,8 @@ class TestMembersDeleteController(TestMemberControllerBase):
         orgadmin = 'orgadmin'
         context = {'model': model, 'session': model.Session, 'user': orgadmin}
         orgadmin_obj = model.User.by_name(orgadmin)
-        auth = {'Authorization': str(orgadmin_obj.apikey)}
+        orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': orgadmin_token}
 
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
         try:
