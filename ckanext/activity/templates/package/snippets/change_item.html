@@ -3,8 +3,13 @@
 {% set changes = h.compare_pkg_dicts(activity_diff.activities[0].data.package, activity_diff.activities[1].data.package, activity_diff.activities[0].id) %}
 <ul>
   {% for change in changes %}
+    {# MODIFIED BY HDX #}
+    {# send dataset_type to avoid server error for new resource #}
+    {# {% snippet "snippets/changes/{}.html".format( #}
+    {# change.type), change=change %} #}
     {% snippet "snippets/changes/{}.html".format(
-      change.type), change=change %}
+      change.type), change=change, dataset_type=activity_diff.activities[1].data.package.type %}
+    {# END MODIFIED BY HDX #}
     <br>
   {% endfor %}
 </ul>

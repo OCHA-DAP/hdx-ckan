@@ -699,7 +699,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_blueprint(self):
         import ckanext.hdx_package.views.light_dataset as light_dataset
         import ckanext.hdx_package.views.dataset as dataset
-        # import ckanext.hdx_package.views.dataset_changes as dataset_changes
+        import ckanext.hdx_package.views.dataset_changes as dataset_changes
         import ckanext.hdx_package.views.contribute_flow as contribute_flow
         import ckanext.hdx_package.views.dataset_old_links as dataset_old_links
         import ckanext.hdx_package.views.contact as contact
@@ -709,7 +709,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             light_dataset.hdx_light_search,
             dataset.hdx_dataset,
             dataset.hdx_search,
-            # dataset_changes.hdx_dataset_changes,
+            dataset_changes.hdx_dataset_changes,
             contribute_flow.hdx_contribute,
             dataset_old_links.hdx_dataset_old_links,
             contact.hdx_contact,
