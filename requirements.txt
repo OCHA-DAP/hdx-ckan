@@ -69,8 +69,10 @@ flask-wtf==1.0.1
     # via -r requirements.in
 geomet==1.0.0
     # via -r requirements.in
-greenlet==3.0.1
-    # via sqlalchemy
+greenlet==2.0.2
+    # via
+    #   -r requirements.in
+    #   sqlalchemy
 idna==2.8
     # via requests
 ijson==3.2.3
@@ -145,7 +147,7 @@ pytz-deprecation-shim==0.1.0.post0
     # via tzlocal
 pyutilib==6.0.0
     # via -r requirements.in
-pyyaml==6.0
+pyyaml==6.0.1
     # via -r requirements.in
 rdflib==4.2.1
     # via
