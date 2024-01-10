@@ -2,6 +2,12 @@
 
 {% import 'macros/form.html' as form %}
 
+{% set unit_options = [
+  {'value': 3600*24, 'text': _('Day')},
+  {'value': 3600, 'text': _('Hour')},
+  {'value': 60, 'text': _('Minute')},
+  ] %}
+
 {% block primary_content_inner %}
   <div class="paddingLeftHack">
     <div class="row mTop35 mBottom35">
@@ -17,8 +23,10 @@
                   {{ form.input('name', label='Name', is_required=True, value=data.name, error=errors.name) }}
               </div>
             {% endblock base_fields %}
-            {% block additional_fields %}
-            {% endblock additional_fields %}
+            <div class="form-group ">
+              {{ form.input('expires_in', label=_('Expires in'), is_required=true, type='number', value=data.expires_in or h.expire_api_token_default_token_lifetime(), error=errors.expires_in) }}
+              {{ form.select('unit', label=_('Units'), options=unit_options, selected=data.unit, error=errors.unit) }}
+            </div>
             {% block form_actions %}
               <button class="btn btn-primary my-3" type="submit" value="create">
                 {{ _('Create API Token') }}

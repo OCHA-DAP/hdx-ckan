@@ -156,9 +156,9 @@ class OrgReadLogic(LightOrgReadLogic):
             visualization = json.loads(vis_json_config)
         except Exception as e:
             log.warning(e)
-            return "{}"
+            return {}
 
-        config = {
+        config_result = {
             'title': visualization.get('viz-title', ''),
             'data_link_url': visualization.get('viz-data-link-url', '#'),
             'type': visualization.get('visualization-select', '')
@@ -175,7 +175,7 @@ class OrgReadLogic(LightOrgReadLogic):
         #     })
 
         if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded-preview':
-            config.update({
+            config_result.update({
                 'title': visualization.get('vis-title', ''),
                 'data_link_url': visualization.get('vis-data-link-url', ''),
                 'vis_url': visualization.get('vis-url', ''),
@@ -230,7 +230,7 @@ class OrgReadLogic(LightOrgReadLogic):
         #                        'colors': visualization.get('colors', '')
         #                        })
 
-        return config
+        return config_result
 
     # def _get_embed_url(self):
     #     ckan_url = config.get('ckan.site_url', '').strip()

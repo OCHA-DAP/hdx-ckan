@@ -87,16 +87,13 @@
   font-weight: 400;
   font-size: 14px;
 }
-.additional-info table tr.more-dates th {
-  padding-left: 15px;
-}
 .additional-info td {
   text-align: justify;
   word-break: break-word;
 }
 .additional-info th {
   max-width: 200px;
-  width: 185px;
+  width: 190px;
 }
 /* END Style Additional Info */
 /* Resource grouping */

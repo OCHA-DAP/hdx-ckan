@@ -171,9 +171,9 @@
         {% snippet "package/snippets/related_list.html", pkg=pkg, user=c.userobj, showcases=showcase_list %}
       </div>
       <div class="col-12">
-        <div class="form-check form-switch ps-0">
+        <div class="form-check form-switch ps-0 mTop20">
           <input class="form-check-input float-end" type="checkbox" role="switch" id="showDatasetActivity">
-          <label class="form-check-label" for="showDatasetActivity"><h2 class="uppercase">{{_('Activity')}}</h2></label>
+          <label class="form-check-label" for="showDatasetActivity"><h2 class="uppercase mt-0">{{_('Activity')}}</h2></label>
         </div>
         <div class="dataset-activity-wrapper d-none">
           {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}

@@ -179,6 +179,8 @@ ckanext.spatial.common_map.custom.url = /crisis-tiles/{z}/{x}/{y}.png
 #ckan.activity_streams_email_notifications = true
 #ckan.email_notifications_since = 2 days
 
+## Default token expiration value
+expire_api_token.default_lifetime = 30
 
 ## Email settings
 

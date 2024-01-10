@@ -433,13 +433,15 @@ def db_set_schema(ctx):
 def db_set_perms():
     """Set proper permissions on the ckan and datastore databases"""
     with open('{}/ckanext/datastore/set_permissions.sql'.format(BASEDIR), 'r') as fin:
-        query = fin.read() \
-            .replace('{mainuser}', SQL['USER']) \
-            .replace('{writeuser}', SQL['USER']) \
-            .replace('{readuser}', SQL['USER_DATASTORE']) \
-            .replace('{maindb}', SQL['DB']) \
-            .replace('{datastoredb}', SQL['DB_DATASTORE']) \
-            .split('\connect datastore\n')[1]
+        query = (
+            fin.read()
+            .split('\connect {datastoredb}\n')[1]
+            .replace('{mainuser}', SQL['USER'])
+            .replace('{writeuser}', SQL['USER'])
+            .replace('{readuser}', SQL['USER_DATASTORE'])
+            .replace('{maindb}', SQL['DB'])
+            .replace('{datastoredb}', SQL['DB_DATASTORE'])
+        )
 
     try:
         con = db_connect_to_postgres(dbname=SQL['DB_DATASTORE'])

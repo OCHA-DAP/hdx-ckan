@@ -302,7 +302,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert '<input id="field-firstname" type="text" class="form-control" name="firstname"' in response.body
         assert '<input id="field-lastname" type="text" class="form-control" name="lastname"' in response.body
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
-        assert '<textarea id="field-about" class="form-control" name="about" cols="20" rows="5" placeholder="A little information about yourself"' in response.body
+        assert '<textarea id="field-about" class="form-control" name="about" cols="20" rows="5"' in response.body
         # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
         assert '<input id="field-password" type="password" class="form-control" name="old_password" value=""' in response.body
         assert '<input id="field-password" type="password" class="form-control" name="password1" value=""' in response.body

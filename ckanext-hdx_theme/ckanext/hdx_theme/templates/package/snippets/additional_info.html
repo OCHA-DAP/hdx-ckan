@@ -31,7 +31,7 @@
     </tr>
 	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="ui_date_range1" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
 		<th scope="row" class="dataset-label"><span title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Time Period of the Dataset')}} [?]</span></th>
-		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }} <a href="#" id="show-more-dates">{{ _('More') }}...</a><a href="#" class="d-none" id="hide-more-dates">{{ _('Less') }}...</a></td>
+		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }} <a href="#" id="show-more-dates">... {{ _('More') }}</a></td>
   </tr>
   {% set modified_time = pkg_dict.last_modified %}
   {% set confirmed_time = pkg_dict.review_date %}
@@ -53,7 +53,7 @@
   <tr class="d-none more-dates">
     <th scope="row" class="dataset-label"><span title="{{ _('The date when the dataset was first added to HDX.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Dataset Added on HDX')}} [?]</span></th>
     <td class="dataset-details">
-      {{ h.render_datetime(hdx_added_time) }}
+      {{ h.render_datetime(hdx_added_time) }} <a href="#" class="d-none" id="hide-more-dates">{{ _('Less') }}</a>
     </td>
   </tr>
 	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_data_update_frequency" data-module-dataset="{{pkg_dict.id}}"{% endif %}>

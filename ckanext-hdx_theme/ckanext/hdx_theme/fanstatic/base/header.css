@@ -2607,7 +2607,7 @@ textarea {
   width: 85px;
 }
 .list-header .show-filter-switch .form-check-input {
-  margin-top: 18px;
+  margin-top: 14px;
   box-shadow: none;
 }
 .list-header .show-filter-switch .form-check-input.form-check-input--always-closed:checked {
@@ -3138,6 +3138,10 @@ ul.list-horizontal li:first-child:before {
 .form-explanation .cloud-img {
   height: 21px;
   margin-right: 3px;
+}
+.form-switch .form-check-input {
+  width: 30px;
+  height: 20px;
 }
 /**
  * HDX Footer
