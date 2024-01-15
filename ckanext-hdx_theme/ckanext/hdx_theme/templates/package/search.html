@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Datasets'), controller='package', action='search') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Datasets'), named_route='%s.search' % dataset_type) }}</li>
 {% endblock %}
 
 {% block primary_content %}
