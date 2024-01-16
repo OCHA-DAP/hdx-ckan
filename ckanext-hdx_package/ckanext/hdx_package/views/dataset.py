@@ -550,8 +550,8 @@ def _process_resource_metadata(metadata_dict: dict, fields: dict, file_format: s
     return metadata_dict
 
 
-hdx_search.add_url_rule(u'', view_func=search)
-hdx_dataset.add_url_rule(u'', view_func=search)
+hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
+hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'<id>/download_metadata', view_func=package_metadata)
