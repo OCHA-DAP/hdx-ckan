@@ -4,8 +4,8 @@
     </p>
     <div class="hdx-card-group" id="accordion-{{ section.id }}" role="tablist" aria-multiselectable="false">
         {% for question in section.questions %}
-            {% set q_id = 'auto-%s-%s-q' | format(section.id, loop.index) %}
-            {% set a_id = 'auto-%s-%s-a' | format(section.id, loop.index) %}
+            {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
+            {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
             <div class="card">
                 <div class="card-header" role="tab" id="{{ q_id }}">
                     <h4 class="card-title">
