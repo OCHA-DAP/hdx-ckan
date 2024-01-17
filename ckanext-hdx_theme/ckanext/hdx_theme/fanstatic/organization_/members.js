@@ -7,7 +7,6 @@ $(document).ready(function(){
   $(".approval-actions .action-approve a").click(function(){
     var role = $(this).attr('data-role');
     var memberId = $(this).attr('data-member-id');
-    var csrf_value = $('meta[name=_csrf_token]').attr('content');
     $.ajax({
       method: "POST",
       url: "/api/action/member_request_process",
@@ -17,9 +16,7 @@ $(document).ready(function(){
         "approve": true
       }),
       contentType: "application/json; charset=utf-8",
-      headers: {
-        'X-CSRFToken': csrf_value
-      },
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
       dataType: "json"
     })
       .done(function(){
@@ -34,7 +31,6 @@ $(document).ready(function(){
 
   $(".approval-actions .action-decline").click(function(){
     var memberId = $(this).attr('data-member-id');
-    var csrf_value = $('meta[name=_csrf_token]').attr('content');
     $.ajax({
       type: "post",
       url: "/api/action/member_request_process",
@@ -43,9 +39,7 @@ $(document).ready(function(){
         "reject": true
       }),
       contentType: "application/json; charset=utf-8",
-      headers: {
-        'X-CSRFToken': csrf_value
-      },
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
       dataType: "json"
     })
       .done(function(){

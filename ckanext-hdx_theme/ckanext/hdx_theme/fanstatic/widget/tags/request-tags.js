@@ -49,35 +49,35 @@ function showTagRequestWidget(id) {
     _tagRequestTriggerInputDataClass($(this));
   });
 
-  // Get the csrf value from the page meta tag
-  var csrf_value = $('meta[name=_csrf_token]').attr('content');
-
-  $.post('/api/action/hdx_tag_approved_list', {_csrf_token: csrf_value})
-    .done((data) => {
-      if (data.success) {
-        var existingTags = [];
-        $(id).find('#suggested_tags').on('change', function (e) {
-          if(e.added) {
-            if(data.result.includes(e.added.text.toLowerCase())) {
-              existingTags.push(e.added.text);
-              _markAlreadyApprovedTags(existingTags);
-            }
-          }
-          else if(e.removed) {
-            var index = existingTags.indexOf(e.removed.text);
-            if (index !== -1) {
-              existingTags.splice(index, 1);
-              _showAlreadyApprovedTagsError(existingTags);
-            }
-          }
-        });
-      } else {
+  $.ajax({
+    url: '/api/action/hdx_tag_approved_list',
+    type: 'POST',
+    headers: hdxUtil.net.getCsrfTokenAsObject(),
+    success: function(data) {
+        if (data.success) {
+            var existingTags = [];
+            $(id).find('#suggested_tags').on('change', function(e) {
+                if (e.added) {
+                    if (data.result.includes(e.added.text.toLowerCase())) {
+                        existingTags.push(e.added.text);
+                        _markAlreadyApprovedTags(existingTags);
+                    }
+                } else if (e.removed) {
+                    var index = existingTags.indexOf(e.removed.text);
+                    if (index !== -1) {
+                        existingTags.splice(index, 1);
+                        _showAlreadyApprovedTagsError(existingTags);
+                    }
+                }
+            });
+        } else {
+            console.log('Error, approved tags not loaded!');
+        }
+    },
+    error: function() {
         console.log('Error, approved tags not loaded!');
-      }
-    })
-    .fail((fail) => {
-      console.log('Error, approved tags not loaded!');
-    });
+    }
+  });
 }
 
 $(document).ready(function () {
