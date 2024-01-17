@@ -4,6 +4,7 @@ $(document).ready(function(){
             var followList = $("#follow-form-item-list");
             var onlyItem = $(followList.find("li")[0]);
             var items = data.result;
+            var csrf_value = $('meta[name=_csrf_token]').attr('content');
             $.each(items, function(idx, item){
                 var itemId = "follow-form-item-" + idx;
                 var objType = "group";
@@ -31,7 +32,7 @@ $(document).ready(function(){
                     var id = $this.attr("data-module-id");
 
                     var path = "/api/action/" + action + "_" + type;
-                    $.post(path, JSON.stringify({id: id}), function(result){
+                    $.post(path, JSON.stringify({id: id, _csrf_token: csrf_value}), function(result){
                         if (!result.success){
                             console.error(result.result);
                         }
