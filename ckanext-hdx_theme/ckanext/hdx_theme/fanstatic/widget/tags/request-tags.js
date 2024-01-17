@@ -49,7 +49,10 @@ function showTagRequestWidget(id) {
     _tagRequestTriggerInputDataClass($(this));
   });
 
-  $.post('/api/action/hdx_tag_approved_list')
+  // Get the csrf value from the page meta tag
+  var csrf_value = $('meta[name=_csrf_token]').attr('content');
+
+  $.post('/api/action/hdx_tag_approved_list', {_csrf_token: csrf_value})
     .done((data) => {
       if (data.success) {
         var existingTags = [];
