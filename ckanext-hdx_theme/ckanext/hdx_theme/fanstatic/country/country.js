@@ -94,7 +94,7 @@ function drawMap() {
 }
 
 function c3ActiveSparklineRedraw() {
-  $('.carousel-inner .item.active .sparkline').each(function() {
+  $('.carousel-inner .carousel-item.active .sparkline').each(function() {
     var th = $(this);
     var chart = th.data("chart");
     th.css("overflow", "hidden");
@@ -155,7 +155,7 @@ function c3Sparklines(){
       }
     });
     th.data("chart", chart);
-    if (th.parents(".item.active").length === 0) {
+    if (th.parents(".carousel-item.active").length === 0) {
       th.css("visibility", "hidden");
     }
   });
@@ -230,18 +230,13 @@ function onDataCompletenessExpand() {
 
 function handleWindowWidth() {
   const CUT_POINT = 1024;
-  if (!window.hdxMobileTopline) {
-    if (window.innerWidth < CUT_POINT) {
-      window.hdxMobileTopline = true;
-      $(".carousel").hide();
-      $(".mobile-carousel").show();
-    }
-  } else {
-    if (window.innerWidth >= CUT_POINT) {
-      window.hdxMobileTopline = false;
-      $(".carousel").show();
-      $(".mobile-carousel").hide();
-    }
+  if (window.innerWidth < CUT_POINT) {
+    $(".carousel").hide();
+    $(".mobile-carousel").show();
+  }
+  else if (window.innerWidth >= CUT_POINT) {
+    $(".carousel").show();
+    $(".mobile-carousel").hide();
   }
 }
 
@@ -257,7 +252,6 @@ $(document).ready(function() {
     c3ActiveSparklineRedraw(); //reset visibility / overflow
     $("#expand-data-completeness").change(onDataCompletenessExpand);
     $('#key-figures-carousel').bind('slid.bs.carousel', function (e) {
-      console.log('after');
       c3ActiveSparklineRedraw();
     });
     mobileTopline();

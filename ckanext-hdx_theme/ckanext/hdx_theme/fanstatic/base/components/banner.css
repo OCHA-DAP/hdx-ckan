@@ -17,8 +17,12 @@
   position: absolute;
   top: 0;
   right: 0;
+  font-size: 21px;
   color: #fff;
   opacity: 0.7;
+}
+.bottom-banner .content .close:hover {
+  cursor: pointer;
 }
 .bottom-banner a,
 .bottom-banner a:hover {

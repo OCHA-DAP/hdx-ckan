@@ -1559,7 +1559,7 @@ CKAN.DataPreview = function ($, my) {
       msg = msg || CKAN.Strings.errorLoadingPreview;
       return $('#ckanext-datapreview')
         .append('<div></div>')
-        .addClass('alert alert-danger fade in')
+        .addClass('alert alert-danger fade show')
         .html(msg);
     }
 

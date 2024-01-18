@@ -2,7 +2,7 @@
   {% asset 'hdx_theme/resource-groupings-scripts' %}
   <div class="dropdown">
     <a id="resource-grouping-link-title" href="javascript:void(0);"
-       class="dropdown-toggle btn btn-empty btn-empty-blue resource-grouping-btn" data-toggle="dropdown">
+       class="dropdown-toggle btn btn-empty btn-empty-blue resource-grouping-btn" data-bs-toggle="dropdown">
       <span class="selected-grouping-title">{{ pkg.x_resource_grouping[0] }}</span>
       <span class="caret"></span>
     </a>
@@ -11,7 +11,7 @@
       {% for grouping in pkg.x_resource_grouping[:1] %}
         <ul>
           <li data-grouping-id="{{ h.hdx_munge_title(grouping) }}">
-            <a href="javascript:void(0);">
+            <a class="dropdown-item" href="javascript:void(0);">
               {{ grouping }}
             </a>
           </li>

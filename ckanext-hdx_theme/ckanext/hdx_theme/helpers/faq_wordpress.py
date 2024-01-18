@@ -2,7 +2,7 @@ import logging
 from ckan.common import config
 import requests
 import re
-from html.parser import HTMLParser
+import html
 
 log = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ def faq_for_category(category):
         section['id'] = s_id
         for question in section['questions']:
             try:
-                q_id = ''.join(i if i.isalnum() else '_' for i in HTMLParser().unescape(question['q']))
+                q_id = ''.join(i if i.isalnum() else '_' for i in html.unescape(question['q']))
                 question['id'] = q_id
             except Exception as ex:
                 log.error(ex)

@@ -145,6 +145,9 @@ ul.dataset-resources li + li.label-icons {
   min-width: 0;
   vertical-align: middle;
 }
+.label:hover {
+  color: #fff;
+}
 .label.label-small {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;

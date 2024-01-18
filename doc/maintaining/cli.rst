@@ -126,7 +126,7 @@ this:
   tried to run)
 * **The program 'ckan' is currently not installed**
 * **Command not found: ckan**
-* **ImportError: No module named fanstatic** (or other ``ImportError``\ s)
+* **ImportError: No module named webassets** (or other ``ImportError``\ s)
 
 Running ckan commands provided by extensions
 ==============================================
@@ -160,16 +160,15 @@ The following ckan commands are supported by CKAN:
 
 ================= ============================================================
 asset             WebAssets commands.
+config            Search, validate, describe config options
 config-tool       Tool for editing options in a CKAN config file
 datapusher        Perform commands in the datapusher.
 dataset           Manage datasets.
 datastore         Perform commands to set up the datastore.
 db                Perform various tasks on the database.
-front-end-build   Creates and minifies css and JavaScript files
 generate          Generate empty extension files to expand CKAN
 jobs              Manage background jobs
-less              Compile all root less documents into their CSS counterparts
-minify            Create minified versions of the given Javascript and CSS files.
+sass              Compile all root sass documents into their CSS counterparts
 notify            Send out modification notifications.
 plugin-info       Provide info on installed plugins.
 profile           Code speed profiler.
@@ -194,6 +193,23 @@ Usage
  ckan asset build            - Builds bundles, regardless of whether they are changed or not
  ckan asset watch            - Start a daemon which monitors source files, and rebuilds bundles
  ckan asset clean            - Will clear out the cache, which after a while can grow quite large
+
+
+.. _cli.ckan.config:
+
+config: Search, validate, describe config options
+=================================================
+
+Usage
+
+.. parsed-literal::
+
+  ckan config declaration [PLUGIN...]  - Print declared config options for the given plugins.
+  ckan config describe [PLUGIN..]      - Print out config declaration for the given plugins.
+  ckan config search [PATTERN]         - Print all declared config options that match pattern.
+  ckan config undeclared               - Print config options that has no declaration.
+  ckan config validate                 - Validate global configuration object against declaration.
+
 
 
 config-tool: Tool for editing options in a CKAN config file
@@ -241,7 +257,7 @@ Usage
  ckan dataset purge [DATASET_NAME|ID]    - removes dataset from db entirely
 
 
-datastore: Perform commands to set up the datastore
+datastore: Perform commands in the datastore
 ===================================================
 
 Make sure that the datastore URLs are set properly before you run these commands.
@@ -252,6 +268,7 @@ Usage
 
  ckan datastore set-permissions  - generate SQL for permission configuration
  ckan datastore dump             - dump a datastore resource
+ ckan datastore purge            - purge orphaned datastore resources
 
 
 db: Manage databases
@@ -270,25 +287,17 @@ db: Manage databases
 See :doc:`database-management`.
 
 
-front-end-build: Creates and minifies css and JavaScript files
-==============================================================
+generate: Scaffolding for regular development tasks
+===================================================
 
 Usage
 
 .. parsed-literal::
 
- ckan front-end-build      - compile css and js
-
-
-generate: Generate empty extension files to expand CKANs
-========================================================
-
-Usage
-
-.. parsed-literal::
-
- ckan generate extension           - Create empty extension
- ckan generate --output-dir (-o)   - Location to put the generated template
+ ckan generate config        -  Create a ckan.ini file.
+ ckan generate extension     -  Create empty extension.
+ ckan generate fake-data     -  Generate random entities of the given category.
+ ckan generate migration     -  Create new alembic revision for DB migration.
 
 
 .. _cli jobs:
@@ -417,34 +426,16 @@ then the job is added to the default queue. If queue names are given then a
 separate test job is added to each of the queues.
 
 
-.. _less:
+.. _sass:
 
-less: Compile all root less documents into their CSS counterparts
+sass: Compile all root sass documents into their CSS counterparts
 =================================================================
 
 Usage
 
 .. parsed-literal::
 
- less
-
-
-minify: Create minified versions of the given Javascript and CSS files
-======================================================================
-
-Usage
-
-.. parsed-literal::
-
- ckan minify [--clean] PATH     - remove any minified files in the path
-
-.. parsed-literal::
-
- ckan -c |ckan.ini| minify ckan/public/base
- ckan -c |ckan.ini| minify ckan/public/base/css/\*.css
- ckan -c |ckan.ini| minify ckan/public/base/css/red.css
-
-If the --clean option is provided any minified files will be removed.
+ sass
 
 
 notify: Send out modification notifications
@@ -538,7 +529,7 @@ For example
 
  ckan -c |ckan.ini| search-index rebuild
 
-This default behaviour will clear the index and rebuild it with all datasets. If you want to rebuild it for only
+This default behaviour will refresh the index keeping the existing indexed datasets and rebuild it with all datasets. If you want to rebuild it for only
 one dataset, you can provide a dataset name
 
 .. parsed-literal::
@@ -552,19 +543,18 @@ already indexed
 
  ckan -c |ckan.ini| search-index rebuild -o
 
-If you don't want to rebuild the whole index, but just refresh it, use the `-r` or `--refresh` option. This
-won't clear the index before starting rebuilding it
-
-.. parsed-literal::
-
- ckan -c |ckan.ini| search-index rebuild -r
-
 There is also an option available which works like the refresh option but tries to use all processes on the
 computer to reindex faster
 
 .. parsed-literal::
 
  ckan -c |ckan.ini| search-index rebuild-fast
+
+There is also an option to clear the whole index first and then rebuild it with all datasets:
+
+.. parsed-literal::
+
+ ckan -c |ckan.ini| search-index rebuild --clear
 
 There are other search related commands, mostly useful for debugging purposes
 
@@ -573,29 +563,6 @@ There are other search related commands, mostly useful for debugging purposes
  ckan search-index check                  - checks for datasets not indexed
  ckan search-index show DATASET_NAME      - shows index of a dataset
  ckan search-index clear [DATASET_NAME]   - clears the search index for the provided dataset or for the whole ckan instance
-
-
-seed: Create test data in the database
-======================================
-
-Usage
-
-.. parsed-literal::
-
- basic           - annakarenina and warandpeace.
- family          - package relationships data.
- gov             - government style data.
- hierarchy       - hierarchy of groups.
- search          - realistic data to test search.
- translations    - test translations of terms.
- user            - create a user "tester" with api key "tester".
- vocabs          - some test vocabularies.
-
-Examples
-
-.. parsed-literal::
-
- ckan -c |ckan.ini| seed basic
 
 
 sysadmin: Give sysadmin rights

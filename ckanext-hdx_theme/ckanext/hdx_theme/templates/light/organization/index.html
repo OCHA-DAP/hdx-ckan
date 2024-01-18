@@ -11,7 +11,7 @@
 {% block subtitle %}{{ _('Organisations') }}{% endblock %}
 
 {% block breadcrumb_content %}
-<li class="active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
+<li class="breadcrumb-item active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
 {% endblock %}
 
 
@@ -35,21 +35,21 @@
           </div>
 
           {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
-          <div class="form-select control-group control-order-by">
+          <div class="float-none mt-3 control-order-by">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
             <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
-              <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
-                <span class="dropdown-toggle-text">
+              <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
+                <label class="dropdown-toggle-text">
                 {% for label, value in sorting %}
                   {% if sorting_selected == value %} {{ label }} {% endif %}
                 {% endfor %}
-                </span>
+                </label>
                 <i class="humanitarianicons-Down"></i>
               </button>
               <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
                 {% for label, value in sorting %}
                 {% if label and value %}
-                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                <li><a class="dropdown-item" tabindex="-1" val="{{ value }}">{{ label }}</a></li>
                 {% endif %}
                 {% endfor %}
               </ul>
@@ -71,19 +71,17 @@
         </div>
       </div>
 
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="list-header crisis-list-header">
           <span class="mL15 list-header-title">{{ _("Organisations") }} [{{page.item_count}}]</span>
-          <div class="show-filters pull-right">
-            Show filters:
+          <div class="show-filters float-end">
             <a href="#" onclick="$('.mobile-facets').show();">
-              <span class="checkbox-slider" style="display: inline-block; top: 6px;">
-                <input id="show-filter-toggle" onclick="return false;" type="checkbox" class="checkbox-slider-checkbox" />
-                <label class="checkbox-slider-label" for="show-filter-toggle">
-                  <span class="checkbox-slider-inner"></span>
-                  <span class="checkbox-slider-switch"></span>
-                </label>
-              </span>
+              <div class="d-inline-block show-filter-switch show-filter-switch--md">
+                <div class="form-check form-switch ps-0">
+                  <input class="form-check-input form-check-input--always-closed float-end" type="checkbox" id="show-filter-toggle">
+                  <label class="form-check-label" for="show-filter-toggle">Show filters:</label>
+                </div>
+              </div>
             </a>
           </div>
         </div>

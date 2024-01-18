@@ -1,6 +1,5 @@
 import mock
 import json
-import routes.util as routes_util
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -11,7 +10,6 @@ import ckanext.hdx_package.helpers.caching as caching
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
-original_request_config = routes_util.request_config
 
 
 class TestContributeFlowController(hdx_test_base.HdxBaseTest):
@@ -141,7 +139,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
         model.Session.commit()
-        auth = {'Authorization': str(user.apikey)}
+        auth = {'Authorization': self.testsysadmin_token}
 
         post_params = self._get_dataset_post_param('testing-dataset-validation')
         post_params['save'] = 'validate-json'
@@ -166,7 +164,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         type(self).use_package_create_wrapper = False
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
-        auth = {'Authorization': str(user.apikey)}
+        auth = {'Authorization': self.testsysadmin_token}
 
         post_params = self._get_dataset_post_param('testing-dataset-save')
         post_params['save'] = 'new-dataset-json'
@@ -197,7 +195,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         type(self).use_package_create_wrapper = False
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
-        auth = {'Authorization': str(user.apikey)}
+        auth = {'Authorization': self.testsysadmin_token}
 
         post_params = self._get_dataset_post_param('testing-dataset-edit')
         post_params['save'] = 'update-dataset-json'
@@ -240,7 +238,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         type(self).use_package_create_wrapper = False
         user = model.User.by_name('testsysadmin')
         user.email = 'test@test.com'
-        auth = {'Authorization': str(user.apikey)}
+        auth = {'Authorization': self.testsysadmin_token}
 
         post_params = self._get_dataset_post_param('testing-dataset-edit-lists')
         post_params['tag_string'] = 'list_test_tag'

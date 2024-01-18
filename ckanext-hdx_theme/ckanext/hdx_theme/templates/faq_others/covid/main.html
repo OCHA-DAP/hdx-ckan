@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("Data Responsibility for COVID-19") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Data Responsibility for COVID-19'), named_route='hdx_faqs.read', category='covid') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Data Responsibility for COVID-19'), named_route='hdx_faqs.read', category='covid') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -12,29 +12,30 @@
                         email=data.email, capcha_api_key=capcha_api_key) }}
         {{ h.snippet('widget/faq/done.html', id="faqDonePopup") }}
     {% endblock -%}
-    <div class="top-banner-faq-data-responsibility">
-        <div class="col-xs-12">
-            <div class="top-banner-text-wrapper">
-                <div class="top-banner-title">
-                   {{ _('Data Responsibility in the COVID-19 Response') }}
-                </div>
-                <div class="top-banner-more mTop60">
-                    {{ _("Don't see an answer you are looking for?") }}
-                </div>
-                <div class="top-banner-more-button-wrapper mTop30">
-                    <a class="btn hdx-btn btn-blue-on-white" onclick="closeCurrentWidget(this);spawnRecaptcha('#faqSendMsgPopup');showFaqWidget('#faqSendMsgPopup');" href="#">
-                        {{ _("Contact us") }}
-                    </a>
+    <div class="row">
+        <div class="col-12">
+            <div class="top-banner-faq-data-responsibility">
+                <div class="top-banner-text-wrapper">
+                    <div class="top-banner-title">
+                       {{ _('Data Responsibility in the COVID-19 Response') }}
+                    </div>
+                    <div class="top-banner-more mTop60">
+                        {{ _("Don't see an answer you are looking for?") }}
+                    </div>
+                    <div class="top-banner-more-button-wrapper mTop30">
+                        <a class="btn hdx-btn btn-blue-on-white" onclick="closeCurrentWidget(this);spawnRecaptcha('#faqSendMsgPopup');showFaqWidget('#faqSendMsgPopup');" href="#">
+                            {{ _("Contact us") }}
+                        </a>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 {% endblock %}
 
 {% block primary %}
     <div class="row mTop60">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div id="body-about-hdx" class="section-flag" style="">About Data Responsibility for COVID-19</div>
             <p class="mTop10">
               The members of the Inter-Agency Standing Committee (IASC) Sub-Group on Data Responsibility (co-led by

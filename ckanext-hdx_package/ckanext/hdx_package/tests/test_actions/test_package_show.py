@@ -7,12 +7,14 @@ Created on Jun 20, 2018
 import logging as logging
 
 import ckan.model as model
-import ckan.tests.legacy as tests
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
 
+
+_get_action = tk.get_action
 
 class TestHDXPackageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
@@ -27,24 +29,19 @@ class TestHDXPackageShow(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_hdx_access_to_private_resource(self):
 
-        testsysadmin = model.User.by_name('testsysadmin')
-        johndoe1 = model.User.by_name('johndoe1')
-        context = {'model': model,
-                   'session': model.Session,
-                   'user': 'testsysadmin'}
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        result = _get_action('package_show')(context, {'id': 'test_dataset_1'})
+        assert 'maintainer_email' in result
 
+        context = {'model': model, 'session': model.Session, 'user': 'johndoe1'}
+        result = _get_action('package_show')(context, {'id': 'test_dataset_1'})
+        assert 'maintainer_email' in result
 
-        # Testing access to the dataset API, to check if maintainer is displayed
-        # tests.call_action_api(self.app, 'package_show', id='test_private_dataset_1', status=403)
-        # tests.call_action_api(self.app, 'package_show', id='test_private_dataset_1', apikey=tester.apikey, status=403)
+        context = {'model': model, 'session': model.Session}
+        result = _get_action('package_show')(context, {'id': 'test_dataset_1'})
+        assert 'maintainer_email' not in result
 
-        result = tests.call_action_api(self.app, 'package_show', id='test_dataset_1', apikey=testsysadmin.apikey, status=200)
-        assert 'maintainer_email' in str(result)
-        result = tests.call_action_api(self.app, 'package_show', id='test_dataset_1', apikey=johndoe1.apikey, status=200)
-        assert 'maintainer_email' in str(result)
-        result = tests.call_action_api(self.app, 'package_show', id='test_dataset_1', status=200)
-        assert 'maintainer_email' not in str(result)
-
-        result = tests.call_action_api(self.app, 'package_search', apikey=testsysadmin.apikey, status=200,
-                                       q='*:*', fq='name:test_dataset_1')
-        assert 'maintainer_email' not in str(result)
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        result = _get_action('package_search')(context, {'q': '*:*', 'fq': 'name:test_dataset_1'})
+        for dataset in result['results']:
+            assert 'maintainer_email' not in dataset

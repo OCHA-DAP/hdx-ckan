@@ -8,7 +8,7 @@
 {% block breadcrumb_content %}
   {{ super() }}
   {% if pkg %}
-    <li class="active">{% link_for _('Edit'), controller='package', action='edit', id=pkg.name %}</li>
+    <li class="breadcrumb-item active">{% link_for _('Edit'), controller='package', action='edit', id=pkg.name %}</li>
   {% endif %}
 {% endblock %}
 
@@ -16,7 +16,7 @@
   {# link_for _('View dataset'), controller='package', action='read', id=pkg.name, class_='btn', icon='eye-open' #}
   <a href="{{ h.url_for('dataset_read', id=pkg.name) }}"
      class="btn">
-    <i class="glyphicon glyphicon-eye-open"></i> {{ _('View dataset') }}
+    <i class="fa fa-eye"></i> {{ _('View dataset') }}
   </a>
 {% endblock %}
 

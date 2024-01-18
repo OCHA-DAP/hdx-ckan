@@ -5,7 +5,7 @@ import pytest
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
-import ckan.tests.legacy as legacy_tests
+
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 _get_action = tk.get_action

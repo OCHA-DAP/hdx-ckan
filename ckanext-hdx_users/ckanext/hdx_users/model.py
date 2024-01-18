@@ -7,7 +7,7 @@ import sqlalchemy.types as types
 import ckan.model as model
 from ckan.model.domain_object import DomainObject
 
-from ckan.model import meta, extension
+from ckan.model import meta
 import ckan.model.types as _types
 
 mapper = orm.mapper
@@ -78,7 +78,7 @@ def define_validation_token_table():
                                Column('valid', types.Boolean)
                                )
 
-    mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
+    mapper(ValidationToken, validation_token_table)
 
 
 def setup():

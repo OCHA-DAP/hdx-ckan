@@ -36,7 +36,7 @@
    * Returns the element.
    */
   notify.create = function (title, message, type) {
-    var alert = jQuery('<div class="alert fade in"><strong></strong> <span></span></div>');
+    var alert = jQuery('<div class="alert alert-dismissible fade show"><strong></strong> <span></span></div>');
     alert.addClass('alert-' + (type || 'error'));
     alert.find('strong').text(title);
     alert.find('span').text(message);
@@ -51,7 +51,9 @@
    */
   notify.initialize = function (element) {
     element = element instanceof jQuery ? element : jQuery(element);
-    return element.append(jQuery('<a class="close" href="#">&times;</a>')).alert();
+    element.append(jQuery('<button type="button" class="btn-close close" data-bs-dismiss="alert" aria-label="Close"></button>'));
+    element.find('.btn-close').attr("aria-label", ckan.i18n._('Close'));
+    return element
   };
 
   // Initialize any alerts already on the page.

@@ -20,7 +20,7 @@ Example usage:
     <h4>
       <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
     </h4>
-  
+
     <div class="requested-data-container__content-item-counters">
       <span><span style="font-size: 20px;">{{ item.requests }}</span> Requests</span>
       <span>
@@ -40,11 +40,11 @@ Example usage:
     </div>
 
     <div data-module="requestdata-expand-dataset">
-      <i class="{% block collapse_icon %}glyphicon glyphicon-chevron-right archive-requests-arrow{% endblock %}" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+      <i class="{% block collapse_icon %}fa fa-chevron-right archive-requests-arrow{% endblock %}" data-bs-toggle="collapse" data-bs-target="#id-{{ item.package_id }}"></i>
     </div>
   </div>
 </div>
-<div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
+<div id="id-{{ item.package_id }}" class="collapse requested-data-container__collapse">
     {% for x in item.requests_archived %}
       <div class="requested-data-container__collapse--sections requested-data-container__collapse--sections-archive" style="{% if loop.last %}border-bottom: none;{% endif %}">
 
@@ -61,7 +61,7 @@ Example usage:
                   data-module-refresh_on_success="1"
                   style="cursor: pointer;">{{ _('Reopen this request') }}</a>
               </span>
-              <div class="alert alert-dismissible request-message-alert hide" role="alert">
+              <div class="alert alert-dismissible request-message-alert d-none" role="alert">
                 <div class="alert-text"></div>
               </div>
             </div>

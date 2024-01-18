@@ -6,15 +6,16 @@ Created on March 19, 2019
 
 '''
 import pytest
-import six
+import logging as logging
+import unicodedata
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import logging as logging
-import ckan.logic as logic
-
-from ckanext.hdx_dataviz.tests import USER, SYSADMIN, ORG, LOCATION
-import unicodedata
 import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.tests.factories as factories
+
+from ckanext.hdx_dataviz.tests import USER, SYSADMIN, LOCATION
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
@@ -90,14 +91,17 @@ page_eldeleted = {
 
 class TestHDXControllerPage(object):
 
-    def _get_url(self, app, url, apikey=None):
+    def _get_url(self, app, url, apitoken=None):
 
-        if apikey:
+        if apitoken:
             page = app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')}, follow_redirects=True)
+                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')}, follow_redirects=True)
         else:
             page = app.get(url)
         return page
+
+    def _get_token_for_user(self, username):
+        return factories.APIToken(user=username, expires_in=2, unit=60 * 60)['token']
 
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
@@ -120,9 +124,9 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
             assert False
 
         context['user'] = SYSADMIN
-        user = model.User.by_name(SYSADMIN)
+        # user = model.User.by_name(SYSADMIN)
         # url = h.url_for('hdx_custom_page.new')
-        page = self._get_url(app, url, user.apikey)
+        page = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
         assert '200' in page.status
         assert 'Save This Page' in page.body
         assert 'field_title' in page.body
@@ -155,9 +159,9 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
             assert False
 
         context['user'] = SYSADMIN
-        user = model.User.by_name(SYSADMIN)
+        # user = model.User.by_name(SYSADMIN)
         url = h.url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
-        page = self._get_url(app, url, user.apikey)
+        page = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
         assert '200' in page.status
         assert 'Save This Page' in page.body
         assert 'field_title' in page.body
@@ -187,19 +191,18 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
         assert 'Lorem Ipsum is simply dummy text' in eldashbo.get('description')
 
         context['user'] = SYSADMIN
-        user = model.User.by_name(SYSADMIN)
         url = h.url_for(u'hdx_event.read_event', id=elnino.get('id'))
 
-        elnino_result = self._get_url(app, url, user.apikey)
+        elnino_result = self._get_url(app, url)
         assert '200' in elnino_result.status
 
         url = h.url_for(u'hdx_dashboard.read_dashboard', id=eldashbo.get('id'))
-        eldashbo_result = self._get_url(app, url, user.apikey)
+        eldashbo_result = self._get_url(app, url)
         assert '200' in eldashbo_result.status
 
         try:
             url = h.url_for(u'hdx_event.read_event', id='nopageid')
-            eldashbo_result = self._get_url(app, url, user.apikey)
+            eldashbo_result = self._get_url(app, url)
             assert 'Page not found' in eldashbo_result.body, 'page doesn\'t exist'
             assert '404 Not Found'.lower() in eldashbo_result.status.lower()
         except Exception as ex:
@@ -209,7 +212,6 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
     def test_page_read_hidden_title(self, app):
 
         context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
-        user = model.User.by_name(SYSADMIN)
 
         elescondite = _get_action('page_create')(context_sysadmin, page_elescondite)
         assert elescondite
@@ -217,7 +219,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
         assert 'show_title' in elescondite.get('extras') and elescondite.get('extras').get('show_title') == 'off'
 
         url = h.url_for(u'hdx_event.read_event', id=elescondite.get('id'))
-        elescondite_page = self._get_url(app, url, user.apikey)
+        elescondite_page = self._get_url(app, url)
         assert '<h1 class="itemTitle">El Escondite</h1>' not in elescondite_page.body
 
 
@@ -240,7 +242,6 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             assert False
 
         eldeleted_page = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
-        user = model.User.by_name(USER)
         try:
             url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
             page_delete = app.post(url, extra_environ={"REMOTE_USER": USER})
@@ -253,11 +254,10 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             assert False
 
         context['user'] = SYSADMIN
-        sysadmin = model.User.by_name(SYSADMIN)
 
         try:
             url = h.url_for(u'hdx_custom_page.delete_page', id='nopageid')
-            page_delete = self._get_url(app, url, sysadmin.apikey)
+            page_delete = self._get_url(app, url)
             assert 'Page not found' in page_delete.body, 'page doesn\'t exist'
             assert '404 NOT FOUND'.lower() in page_delete.status.lower()
         except Exception as ex:

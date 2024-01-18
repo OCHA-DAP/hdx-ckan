@@ -6,9 +6,9 @@ Created on May 18, 2020
 
 import logging as logging
 import ckan.model as model
-import ckan.tests.legacy as tests
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_org_group.tests as org_group_base
@@ -151,10 +151,11 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
         context_usr = {'model': model, 'session': model.Session, 'user': 'tester', 'allow_partial_update': True}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin',
                             'allow_partial_update': True}
-        testsysadmin = model.User.by_name('testsysadmin')
-        sysadmin_auth = {'Authorization': str(testsysadmin.apikey)}
-        tester = model.User.by_name('tester')
-        tester_auth = {'Authorization': str(tester.apikey)}
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        sysadmin_auth = {'Authorization': testsysadmin_token
+                         }
+        tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        tester_auth = {'Authorization':tester_token}
         test_client = self.get_backwards_compatible_test_client()
 
         new_org_url = h.url_for('hdx_org.new')
@@ -355,13 +356,15 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
         return tk.get_action(action_name)
 
     def test_user_survey_url_controller(self):
-        context_usr = {'model': model, 'session': model.Session, 'user': 'tester', 'allow_partial_update': True}
+        # context_usr = {'model': model, 'session': model.Session, 'user': 'tester', 'allow_partial_update': True}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin',
                             'allow_partial_update': True}
-        testsysadmin = model.User.by_name('testsysadmin')
-        sysadmin_auth = {'Authorization': str(testsysadmin.apikey)}
-        tester = model.User.by_name('tester')
-        tester_auth = {'Authorization': str(tester.apikey)}
+
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        sysadmin_auth = {'Authorization': testsysadmin_token}
+
+        tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        tester_auth = {'Authorization': tester_token}
         test_client = self.get_backwards_compatible_test_client()
 
         new_org_url = h.url_for('hdx_org.new')

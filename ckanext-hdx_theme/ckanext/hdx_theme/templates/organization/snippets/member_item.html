@@ -28,18 +28,18 @@ Example:
 				|
 				<a href="{{ h.url_for(controller='user', action='read', id=member.name) }}">{{ member.name }}</a>
 			</span>
-			<div class="pull-right">
+			<div class="float-end">
 					{% if authorized %}
 						{% if not disable_change %}
 							  <div class="">
-								<a class="" href="#edit-member-div-{{member.name}}" data-toggle="modal"
+								<a class="" href="#edit-member-div-{{member.name}}" data-bs-toggle="modal"
 									title="{{ _('Change role') }}">
 								  {{ _('Change role') }}
 								</a>
 								<span class="mLR10">|</span>
 								<a class=""
 									href="#confirm-del-member-div-{{member.id}}"
-									data-toggle="modal" title="{{ _('Remove from this organization') }}">
+									data-bs-toggle="modal" title="{{ _('Remove from this organization') }}">
 									{% block delete_button_text %}{{ _('Remove from this organization') }}{% endblock %}
 								</a>
 

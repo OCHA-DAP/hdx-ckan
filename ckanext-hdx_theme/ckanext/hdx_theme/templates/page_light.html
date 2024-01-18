@@ -63,7 +63,7 @@
       {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
     {% else %}
       {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
-      {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+      {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=data.login_came_from if data else None) }}
       {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
       {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
     {% endif %}
@@ -74,22 +74,26 @@
       {% set page_has_mobile_version = page_has_mobile_version if page_has_mobile_version is defined else False  %}
       {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
     {% endblock %}
-  {% endblock -%}
+  {% endblock %}
 
   {# The content block allows you to replace the content of the page if needed #}
   {%- block page_content %}
     <div role="main">
       {% block toolbar %}
-      <div class="col-xs-12 toolbarRow">
-        <div class="toolbar">
-          {% block breadcrumb %}
-          {% if self.breadcrumb_content() | trim %}
-          <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
-            {% snippet 'snippets/home_breadcrumb_item.html' %}
-            {% block breadcrumb_content %}{% endblock %}
-          </ol>
-          {% endif %}
-          {% endblock %}
+      <div class="toolbarRow">
+        <div class="container">
+          <div class="toolbar">
+            {% block breadcrumb %}
+            {% if self.breadcrumb_content() | trim %}
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
+                {% snippet 'snippets/home_breadcrumb_item.html' %}
+                {% block breadcrumb_content %}{% endblock %}
+              </ol>
+            </nav>
+            {% endif %}
+            {% endblock %}
+          </div>
         </div>
       </div>
       {% endblock %}

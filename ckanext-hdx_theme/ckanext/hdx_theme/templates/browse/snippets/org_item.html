@@ -9,12 +9,12 @@
 
 <li class="list-items dataset-item">
     <div class="row list-items dataset-content">
-        <div class="col-xs-12 col-md-6">
-            <span class="{% block indent_item %}mL15{% endblock %} pull-left">
+        <div class="col-12 col-md-6">
+            <span class="{% block indent_item %}mL15{% endblock %} float-start">
                 {% block org_title %}
                     <h3 class="list-items organization-heading">
                     {% if light=='True' %}
-                      {{ h.nav_link( organization.title, named_route='hdx_light_org.light_read', id=organization.name, highlight_actions = 'new index') }}
+                      {{ h.nav_link( organization.title, named_route='hdx_light_org.light_read', id=organization.name) }}
                     {% else %}
                       {{ h.link_to(organization.title, h.url_for('hdx_org.read', id=organization.name)) }}
                     {% endif %}
@@ -23,7 +23,7 @@
                 <div class="list-items mTop20">
                     {% block links %}
                         <span class="sspBold14" data-module="bs_tooltip" data-module-placement="top"
-                              data-toggle="tooltip" data-original-title="{{ _('Total public datasets') }}">
+                              data-bs-toggle="tooltip" data-bs-original-title="{{ _('Total public datasets') }}">
                           {% if organization.package_count or organization.datasets_num %}
                             {% if organization.package_count is number %}
                                 {% set num_of_pack = organization.package_count %}
@@ -37,7 +37,7 @@
                         </span>
                         -
                         <span class="sspBold14" data-module="bs_tooltip" data-module-placement="top"
-                              data-toggle="tooltip" data-original-title="{{ _('Total archived public datasets') }}">
+                              data-bs-toggle="tooltip" data-bs-original-title="{{ _('Total archived public datasets') }}">
                         {% if organization.archived_package_count %}
                           {% set num_of_pack = organization.archived_package_count %}
                             <a class="sspBold14" href="{{ h.url_for('hdx_org.read', id=organization.name, sort='metadata_modified desc', ext_archived=1)}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Archived Datasets') }}{% else %}{{ _('Archived Dataset') }}{% endif %}</a>
@@ -64,7 +64,7 @@
                 </div>
             </span>
         </div>
-        <div class="col-xs-12 col-md-6">
+        <div class="col-12 col-md-6">
             <div class="dataset-description">
                 {% block description %}
                     {% if organization.description %}

@@ -11,7 +11,7 @@ ValidationError = tk.ValidationError
 @pytest.mark.usefixtures("with_request_context")
 class TestServiceCheckerController(object):
     username = 'test_sysadmin_colored_pages_user2'
-    apikey = username + '_apikey'
+    api_token = None
 
     title = 'test_title'
     color = 'AB00BA'
@@ -34,11 +34,8 @@ class TestServiceCheckerController(object):
     @pytest.mark.usefixtures("clean_db")
     def test_render_with_auth(self, app):
         factories.User(name=self.username, sysadmin=True)
-        user = model.User.by_name(self.username)
-        user.apikey = self.apikey
-        model.Session.commit()
-
-        auth = {"Authorization": str(self.apikey)}
+        api_token = factories.APIToken(user=self.username, expires_in=2, unit=60 * 60)['token']
+        auth = {"Authorization": api_token}
         url = h.url_for('hdx_colored_page.read', category='test_category', title=self.title, color=self.color)
         response = app.get(url, headers=auth)
         assert response.status_code == 200

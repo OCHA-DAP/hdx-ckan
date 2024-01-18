@@ -70,7 +70,7 @@ def package_list_show_for_reindex(context, dataset_ids):
                     'package_show')
 
         for item in plugins.PluginImplementations(plugins.IPackageController):
-            item.after_show(context, package_dict)
+            item.after_dataset_show(context, package_dict)
 
         additional_hdx_package_show_processing(context, package_dict, just_for_reindexing=True)
 

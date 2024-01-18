@@ -5,7 +5,7 @@ Depends on:
     Fanstatic resource bundle "popup"
 
 Example:
-    {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=None) }}
 #}
 
 {% set class = "popup-onboarding" %}
@@ -21,20 +21,17 @@ Example:
                     <div id="login-photo-gravatar" style="display: none;">
                         <img id="login-photo-gravatar-img" src="" class="gravatar" width="95" height="95">
                     </div>
-                    <i id="login-photo-default" class="glyphicon glyphicon-user" style="
-                        color: white;
-                        font-size: 60px;
-                        text-align: center;
-                        top: 16px;
-                    "></i>
+                    <div id="login-photo-default" class="text-center position-relative">
+                      <i class="fa fa-user"></i>
+                    </div>
                 </div>
                 <i class="close humanitarianicons-Exit-Cancel"></i>
             </div>
         </div>
         <div class="row">
-            <form id="hdx-login-form" action="/login_generic?came_from={{ (g.login_came_from or request.environ.get('REQUEST_URI', '')) | urlencode }}" method="post" onsubmit="checkLockout">
+            <form id="hdx-login-form" action="/user/login?came_from={{ (login_came_from or request.environ.get('REQUEST_URI', '')) | urlencode }}" method="post" onsubmit="checkLockout">
                 <div class="login-content">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <div id="login-info-message" class="error-explanation alert alert-danger mBottom5 pTopBottom5" style="display: none;">
 
                         </div>

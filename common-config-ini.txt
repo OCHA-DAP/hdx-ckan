@@ -99,7 +99,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata s3filestore showcase stats resource_proxy text_view datastore
+ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata s3filestore showcase stats resource_proxy text_view datastore activity
 ckan.views.default_views = image_view recline_view text_view
 
 ## Front-End Settings
@@ -176,6 +176,8 @@ ckanext.spatial.common_map.custom.url = /crisis-tiles/{z}/{x}/{y}.png
 #ckan.activity_streams_email_notifications = true
 #ckan.email_notifications_since = 2 days
 
+## Default token expiration value
+expire_api_token.default_lifetime = 30
 
 ## Email settings
 
@@ -354,7 +356,7 @@ hdx.qadashboard.enabled = true
 # HDX specific default solr query parameters
 hdx.solr.query.qf = name^4 title^4 vocab_text_Topics^2 notes groups^2 text
 hdx.solr.query.tie = 0.3
-hdx.solr.query.bf = scale(ord(pageviews_last_14_days),0,8)
+hdx.solr.query.bf = scale(log(pageviews_last_14_days),0,8)
 
 hdx.password.reset_key.expiration_in_minutes = 20
 hdx.password.invitation_reset_key.expiration_in_hours = 48

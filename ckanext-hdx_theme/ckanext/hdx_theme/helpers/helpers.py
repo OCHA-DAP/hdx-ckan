@@ -617,35 +617,6 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
                                      action=action, extras=extras)
 
 
-def hdx_resource_preview(resource, package):
-    ## COPY OF THE DEFAULT HELPER BY THE SAME NAME BUT FORCES URLS OVER HTTPS
-    '''
-    Returns a rendered snippet for a embedded resource preview.
-
-    Depending on the type, different previews are loadeSd.
-    This could be an img tag where the image is loaded directly or an iframe
-    that embeds a web page, recline or a pdf preview.
-    '''
-
-    if not resource['url']:
-        return False
-
-    format_lower = datapreview.res_format(resource)
-    directly = False
-    data_dict = {'resource': resource, 'package': package}
-
-    if datapreview.get_preview_plugin(data_dict, return_first=True):
-        url = tk.url_for(controller='package', action='resource_datapreview',
-                         resource_id=resource['id'], id=package['id'], qualified=True)
-    else:
-        return False
-
-    return h.snippet("dataviewer/snippets/data_preview.html",
-                     embed=directly,
-                     resource_url=url,
-                     raw_resource_url=https_load(resource.get('url')))
-
-
 def https_load(url):
     return re.sub(r'^http://', '//', url)
 
@@ -687,7 +658,7 @@ def hdx_popular(type_, number, min=1, title=None):
 
 
 def hdx_license_list():
-    license_touple_list = base.model.Package.get_license_options()
+    license_touple_list = model.Package.get_license_options()
     license_dict_list = [{'value': _id, 'text': _title} for _title, _id in license_touple_list]
     return license_dict_list
 
@@ -767,8 +738,11 @@ def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({}, {})
 
 
-def hdx_get_quick_links_list():
-    return logic.get_action('hdx_quick_links_settings_show')({}, {})
+def hdx_get_quick_links_list(archived=None):
+    result = logic.get_action('hdx_quick_links_settings_show')({}, {})
+    if archived in (True, False):
+        result = [item for item in result if item.get('archived',False) == archived]
+    return result
 
 
 def _get_context():
@@ -923,3 +897,49 @@ def hdx_get_approved_tags_list():
     approved_tags = logic.get_action('hdx_tag_approved_list')({}, {})
     approved_tags_dict_list = [{'value': tag, 'text': tag} for tag in approved_tags]
     return approved_tags_dict_list
+
+
+def bs5_build_nav_icon(menu_item, title, **kw):
+    '''Build a navigation item used for example in ``user/read_base.html``.
+
+    Outputs ``<li class="nav-item"><a href="..." class=""nav-link"><i class="icon.."></i> title</a></li>``.
+
+    :param menu_item: the name of the defined menu item defined in
+      config/routing as the named route of the same name
+    :type menu_item: string
+    :param title: text used for the link
+    :type title: string
+    :param kw: additional keywords needed for creating url eg ``id=...``
+
+    :rtype: HTML literal
+
+    '''
+    return _bs5_make_menu_item(menu_item, title, **kw)
+
+
+def _bs5_make_menu_item(menu_item, title, **kw):
+    ''' build a navigation item used for example breadcrumbs
+
+    outputs <li class="nav-item"><a href="..." class="nav-link"></i> title</a></li>
+
+    :param menu_item: the name of the defined menu item defined in
+    config/routing as the named route of the same name
+    :type menu_item: string
+    :param title: text used for the link
+    :type title: string
+    :param **kw: additional keywords needed for creating url eg id=...
+
+    :rtype: HTML literal
+
+    This function is called by wrapper functions.
+    '''
+    controller, action = menu_item.split('.')
+    item = {
+        'action': action,
+        'controller': controller
+    }
+    item.update(kw)
+    # Remove highlight controllers so that they won't appear in generated urls.
+    item.pop('highlight_controllers', False)
+    link = h._link_to(title, menu_item, suppress_active_class=False, **item)
+    return h.literal('<li class="nav-item">') + link + h.literal('</li>')

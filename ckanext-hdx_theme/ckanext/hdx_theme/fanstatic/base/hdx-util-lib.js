@@ -4,6 +4,7 @@
         'text': {},
         'compute': {},
         'eventUtil': {},
+        'net': {},
         'analytics': {} // This will be populated from analytics.js
     };
     window.hdxUtil = hdxUtil;
@@ -109,4 +110,20 @@
       };
     };
 
+    hdxUtil.net.getCsrfToken = function () {
+        var csrf_field = $('meta[name=csrf_field_name]').attr('content');
+        var csrf_token = $('meta[name='+ csrf_field +']').attr('content');
+        return csrf_token;
+    };
+
+    /**
+     * Returns the CSRF token as an object with the key 'X-CSRFToken'
+     * @returns {{X-CSRFToken: *}}
+     */
+    hdxUtil.net.getCsrfTokenAsObject = function (){
+        var resultObject = {
+            'X-CSRFToken': hdxUtil.net.getCsrfToken()
+        };
+        return resultObject;
+    };
 })();

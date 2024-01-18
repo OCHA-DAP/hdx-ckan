@@ -53,8 +53,8 @@
       {% endif %}
       {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
     {% else %}
-      {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
-      {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+      {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup")}}
+      {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=data.login_came_from if data else None) }}
       {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
       {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
     {% endif %}
@@ -68,7 +68,7 @@
         </div>
       </div>
     {%  endblock %}
-  {% endblock -%}
+  {% endblock %}
 
   {# The content block allows you to replace the content of the page if needed #}
     {%- block content %}
@@ -78,15 +78,17 @@
             {% block toolbar %}
               <div class="container">
                 <div class="row paddingRowHack toolbarRow">
-                  <div class="col-xs-12 paddingLeftHack paddingRightHack">
-                    <div class="pull-left">
+                  <div class="col-12 paddingLeftHack paddingRightHack">
+                    <div class="float-start">
                       <div class="toolbar">
                         {% block breadcrumb %}
                           {% if self.breadcrumb_content() | trim %}
-                            <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
-                              {% snippet 'snippets/home_breadcrumb_item.html' %}
-                              {% block breadcrumb_content %}{% endblock %}
-                            </ol>
+                            <nav aria-label="breadcrumb">
+                              <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
+                                {% snippet 'snippets/home_breadcrumb_item.html' %}
+                                {% block breadcrumb_content %}{% endblock %}
+                              </ol>
+                            </nav>
                           {% endif %}
                         {% endblock %}
                       </div>
@@ -96,19 +98,16 @@
               </div>
             {% endblock %}
             {% block flash %}
-              {% set flash_messages = h.flash.pop_messages() | list %}
               <div class="paddingRowHack">
-                {% if flash_messages|length > 0 %}
                 <div class="flash-messages paddingLeftHack paddingRightHack">
-                  {% for message in flash_messages %}
-                    <div class="alert fade in {{ message.category }}">
-                      {{ h.literal(message) }}
-                    </div>
-                  {% endfor %}
-                  <div style="clear: both"></div>
+                  {% block flash_inner %}
+                    {% for category, message in h.get_flashed_messages(with_categories=true) %}
+                      <div class="alert alert-dismissible fade show {{ category }}">
+                        {{ h.literal(message) }}
+                      </div>
+                    {% endfor %}
+                  {% endblock %}
                 </div>
-                <div style="clear: both"></div>
-                {% endif %}
               </div>
             {% endblock %}
 
@@ -121,7 +120,7 @@
                 #}
                 {% if self.pre_primary() | trim %}
                   <div class="row paddingRowHack contentBackground">
-                    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                    <div class="col-12 paddingLeftHack paddingRightHack">
                       {% block pre_primary %}
                       {% endblock %}
                     </div>
@@ -129,18 +128,18 @@
                 {% endif %}
 
                 <div class="row paddingRowHack contentBackground{% if secondary_block_output|trim != '' and not secondary_right_side %} twoColumnBackground{% endif %}">
-                  <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                  <div class="col-12 paddingLeftHack paddingRightHack">
                     <div class="row">
                       {% if secondary_block_output|trim != '' and not secondary_right_side %}
-                        <div class="col-xs-3 wrapper-secondary">
+                        <div class="col-3 wrapper-secondary">
                           {{ secondary_block_output }}
                         </div>
                       {% endif %}
-                      <div class="{% if secondary_block_output|trim != '' %} col-xs-9 wrapper-primary pL15{% else %} col-xs-12 {% endif %}">
+                      <div class="{% if secondary_block_output|trim != '' %} col-9 wrapper-primary pL15{% else %} col-12 {% endif %}">
                         {{ self.primary() }}
                       </div>
                       {% if secondary_block_output|trim != '' and secondary_right_side %}
-                        <div class="col-xs-3">
+                        <div class="col-3">
                           {{ secondary_block_output }}
                         </div>
                       {% endif %}

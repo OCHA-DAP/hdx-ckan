@@ -1,12 +1,19 @@
+import json
 import logging as logging
+
+import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
+import ckan.plugins.toolkit as tk
+
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as user_model
+
 from ckan import model
-from six import text_type
-from ckan.plugins import toolkit as tk
-from ckanext.hdx_users.views.user_view_helper import *
+from ckanext.hdx_users.views.user_view_helper import (
+    OnbNotAuth, OnbUserNotFound, OnbIntegrityErr, OnbSuccess, error_message
+)
+
 
 abort = tk.abort
 g = tk.g
@@ -18,9 +25,13 @@ _get_action = tk.get_action
 config = tk.config
 render = tk.render
 _get_validator = tk.get_validator
+unicode_safe = tk.get_validator('unicode_safe')
+
 log = logging.getLogger(__name__)
+
 unflatten = dictization_functions.unflatten
 _validate = dictization_functions.validate
+DataError = dictization_functions.DataError
 
 NotFound = tk.ObjectNotFound
 NotAuthorized = tk.NotAuthorized
@@ -205,7 +216,7 @@ class HDXUserOnboardingView:
             raise ValidationError(errors)
 
         user_email_validator = _get_validator('email_validator')
-        schema = {'work_email': [user_email_validator, text_type]}
+        schema = {'work_email': [user_email_validator, unicode_safe]}
         data_dict, _errors = _validate(data, schema, context)
 
         if _errors:

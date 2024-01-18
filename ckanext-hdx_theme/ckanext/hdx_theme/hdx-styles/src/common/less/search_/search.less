@@ -152,7 +152,7 @@
             //we're going to override the styles to create the new search results look
             @datasetTitleFontSize: 14px;
             @slightlySmallerFontSize: @datasetTitleFontSize - 0.75px;
-            padding: 32px 15px;
+            padding: 32px 12px;
 
             .dataset-heading {
                 line-height: 1;
@@ -221,6 +221,13 @@
 
             .dataset-dates {
                 margin-bottom: 8px;
+                span {
+                  display: inline-block;
+                  width: 155px;
+                }
+                .more-dates {
+                    margin-top: 5px;
+                }
             }
 
             .dataset-dataseries {
@@ -285,7 +292,7 @@
 
 /* Styling search recommendations */
 #search-recs {
-    margin-top: 25px;
+    padding-top: 25px;
     .sourceSansProFont(400, 16px);
     color: @grayColor;
     .letter-spacing-1();
@@ -367,7 +374,7 @@
     i.empty {
       margin-left: 30px;
     }
-    i.icon, i.glyphicon {
+    i.icon, i.fa {
       margin: 0;
       margin-right: 5px;
       color: @grayColor;

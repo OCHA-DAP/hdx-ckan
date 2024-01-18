@@ -18,5 +18,7 @@ $(document).ready(function(){
         return false;
     });
 
-    $recoverForm.find('input, select, textarea').filter('[required]').on('input change', requiredFieldsFormValidator);
+    const $recoverFormRequiredFields = $recoverForm.find('input, select, textarea').filter('[required]');
+    $recoverFormRequiredFields.on('input change', requiredFieldsFormValidator);
+    $recoverFormRequiredFields.filter(() => this.value !== '').first().trigger('change');
 });

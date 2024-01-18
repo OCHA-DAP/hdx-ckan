@@ -475,7 +475,8 @@
                         type: 'POST',
                         data: JSON.stringify({'id': this._datasetId}),
                         contentType: 'application/json',
-                        dataType: 'json'
+                        dataType: 'json',
+                        headers: hdxUtil.net.getCsrfTokenAsObject()
                     });
                 },
                 'finishContributeFlow': function() {

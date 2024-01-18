@@ -21,8 +21,10 @@ main:
     - module.js
     - pubsub.js
     - client.js
-    - notify.js
+    # HDX fix: swapped the order of i18n.js and notify.js to resolve the JS error with ckan.i18n being undefined in notify.js.
     - i18n.js
+    # END HDX fix
+    - notify.js
     - main.js
 
 ckan:
@@ -46,8 +48,6 @@ ckan:
     - modules/resource-reorder.js
     - modules/resource-view-reorder.js
     - modules/follow.js
-    - modules/activity-stream.js
-    - modules/dashboard.js
     - modules/resource-view-embed.js
     - modules/resource-view-filters-form.js
     - modules/resource-view-filters.js

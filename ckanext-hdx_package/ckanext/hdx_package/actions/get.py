@@ -13,6 +13,7 @@ import sqlalchemy
 
 from botocore.exceptions import ClientError
 from six import text_type
+from typing import Any, cast
 
 import ckan.authz as authz
 import ckan.lib.helpers as h
@@ -97,8 +98,9 @@ def package_search(context, data_dict):
 
     **Solr Parameters:**
 
-    For more in depth treatment of each paramter, please read the `Solr
-    Documentation <http://wiki.apache.org/solr/CommonQueryParameters>`_.
+    For more in depth treatment of each paramter, please read the
+    `Solr Documentation
+    <https://lucene.apache.org/solr/guide/6_6/common-query-parameters.html>`_.
 
     This action accepts a *subset* of solr's search query parameters:
 
@@ -108,13 +110,16 @@ def package_search(context, data_dict):
     :param fq: any filter queries to apply.  Note: ``+site_id:{ckan_site_id}``
         is added to this string prior to the query being executed.
     :type fq: string
+    :param fq_list: additional filter queries to apply.
+    :type fq_list: list of strings
     :param sort: sorting of the search results.  Optional.  Default:
-        ``'relevance asc, metadata_modified desc'``.  As per the solr
+        ``'score desc, metadata_modified desc'``.  As per the solr
         documentation, this is a comma-separated string of field names and
         sort-orderings.
     :type sort: string
-    :param rows: the number of matching rows to return. There is a hard limit
-        of 1000 datasets per query.
+    :param rows: the maximum number of matching rows (datasets) to return.
+        (optional, default: ``10``, upper limit: ``1000`` unless set in
+        site's configuration ``ckan.search.rows_max``)
     :type rows: int
     :param start: the offset in the complete result for where the set of
         returned datasets should begin.
@@ -135,13 +140,18 @@ def package_search(context, data_dict):
         results. A user will only be returned their own draft datasets, and a
         sysadmin will be returned all draft datasets. Optional, the default is
         ``False``.
-    :type include_drafts: boolean
+    :type include_drafts: bool
+    :param include_deleted: if ``True``, deleted datasets will be included in the
+        results (site configuration "ckan.search.remove_deleted_packages" must
+        be set to False). Optional, the default is ``False``.
+    :type include_deleted: bool
     :param include_private: if ``True``, private datasets will be included in
         the results. Only private datasets from the user's organizations will
         be returned and sysadmins will be returned all private datasets.
         Optional, the default is ``False``.
+    :type include_private: bool
     :param use_default_schema: use default package schema instead of
-        a custom schema defined with an IDatasetForm plugin (default: False)
+        a custom schema defined with an IDatasetForm plugin (default: ``False``)
     :type use_default_schema: bool
 
 
@@ -206,7 +216,8 @@ def package_search(context, data_dict):
     fl
         The parameter that controls which fields are returned in the solr
         query.
-        fl can be  None or a list of result fields, such as ['id', 'extras_custom_field'].
+        fl can be  None or a list of result fields, such as
+        ['id', 'extras_custom_field'].
         if fl = None, datasets are returned as a list of full dictionary.
     '''
     # sometimes context['schema'] is None
@@ -232,12 +243,12 @@ def package_search(context, data_dict):
     for key in [key for key in data_dict.keys() if key.startswith('ext_')]:
         data_dict['extras'][key] = data_dict.pop(key)
 
+    # set default search field
+    data_dict['df'] = 'text'
+
     # check if some extension needs to modify the search params
-    try:
-        for item in plugins.PluginImplementations(plugins.IPackageController):
-            data_dict = item.before_search(data_dict)
-    except NotFound as e:
-        base_abort(404, 'Wrong parameter value in url')
+    for item in plugins.PluginImplementations(plugins.IPackageController):
+        data_dict = item.before_dataset_search(data_dict)
 
     # the extension may have decided that it is not necessary to perform
     # the query
@@ -246,7 +257,10 @@ def package_search(context, data_dict):
     if data_dict.get('sort') in (None, 'rank'):
         data_dict['sort'] = 'score desc, ' + DEFAULT_SORTING
 
-    results = []
+    results: list[dict[str, Any]] = []
+    facets: dict[str, Any] = {}
+    count = 0
+
     if not abort:
         if asbool(data_dict.get('use_default_schema')):
             data_source = 'data_dict'
@@ -263,11 +277,18 @@ def package_search(context, data_dict):
         # Remove before these hit solr FIXME: whitelist instead
         include_private = asbool(data_dict.pop('include_private', False))
         include_drafts = asbool(data_dict.pop('include_drafts', False))
-        data_dict.setdefault('fq', '')
+        include_deleted = asbool(data_dict.pop('include_deleted', False))
+
         if not include_private:
             data_dict['fq'] = '+capacity:public ' + data_dict['fq']
-        if include_drafts:
-            data_dict['fq'] += ' +state:(active OR draft)'
+
+        if '+state' not in data_dict['fq']:
+            states = ['active']
+            if include_drafts:
+                states.append('draft')
+            if include_deleted:
+                states.append('deleted')
+            data_dict['fq'] += ' +state:({})'.format(' OR '.join(states))
 
         # Pop these ones as Solr does not need them
         extras = data_dict.pop('extras', None)
@@ -277,7 +298,7 @@ def package_search(context, data_dict):
             labels = None
         else:
             labels = lib_plugins.get_permission_labels(
-            ).get_user_dataset_labels(context['auth_user_obj'])
+                ).get_user_dataset_labels(context['auth_user_obj'])
 
         # ADDED BY HDX - setting default query params
         _set_default_value_if_needed('qf', data_dict)
@@ -293,9 +314,10 @@ def package_search(context, data_dict):
 
         if result_fl:
             for package in query.results:
-                if package.get('extras'):
-                    package.update(package['extras'])
-                    package.pop('extras')
+                if isinstance(package, str):
+                    package = {result_fl[0]: package}
+                extras = cast("dict[str, Any]", package.pop('extras', {}))
+                package.update(extras)
                 results.append(package)
         else:
             for package in query.results:
@@ -307,8 +329,9 @@ def package_search(context, data_dict):
                     package_dict = json.loads(package_dict)
                     if context.get('for_view'):
                         for item in plugins.PluginImplementations(
-                            plugins.IPackageController):
-                            package_dict = item.before_view(package_dict)
+                                plugins.IPackageController):
+                            package_dict = item.before_dataset_view(
+                                package_dict)
                     results.append(package_dict)
                 else:
                     log.error('No package_dict is coming from solr for package '
@@ -330,7 +353,7 @@ def package_search(context, data_dict):
         results = []
         expanded = {}
 
-    search_results = {
+    search_results: dict[str, Any]  = {
         'count': count,
         'facets': facets,
         'expanded': expanded,
@@ -345,13 +368,14 @@ def package_search(context, data_dict):
         group_names.extend(facets.get(field_name, {}).keys())
 
     groups = (session.query(model.Group.name, model.Group.title)
-              .filter(model.Group.name.in_(group_names))
-              .all()
+                    # type_ignore_reason: incomplete SQLAlchemy types
+                    .filter(model.Group.name.in_(group_names))  # type: ignore
+                    .all()
               if group_names else [])
     group_titles_by_name = dict(groups)
 
     # Transform facets into a more useful data structure.
-    restructured_facets = {}
+    restructured_facets: dict[str, Any] = {}
     for key, value in facets.items():
         restructured_facets[key] = {
             'title': key,
@@ -362,7 +386,8 @@ def package_search(context, data_dict):
             new_facet_dict['name'] = key_
             if key in ('groups', 'organization'):
                 display_name = group_titles_by_name.get(key_, key_)
-                display_name = display_name if display_name and display_name.strip() else key_
+                display_name = display_name \
+                    if display_name and display_name.strip() else key_
                 new_facet_dict['display_name'] = display_name
             elif key == 'license_id':
                 license = model.Package.get_license_register().get(key_)
@@ -374,12 +399,11 @@ def package_search(context, data_dict):
                 new_facet_dict['display_name'] = key_
             new_facet_dict['count'] = value_
             restructured_facets[key]['items'].append(new_facet_dict)
-
     search_results['search_facets'] = restructured_facets
 
     # check if some extension needs to modify the search results
     for item in plugins.PluginImplementations(plugins.IPackageController):
-        search_results = item.after_search(search_results, data_dict)
+        search_results = item.after_dataset_search(search_results, data_dict)
 
     # After extensions have had a chance to modify the facets, sort them by
     # display name.

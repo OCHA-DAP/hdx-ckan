@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 from werkzeug.datastructures import FileStorage
 
 import boto3 as boto3
@@ -36,7 +37,7 @@ class HDXS3TestBase(object):
         search.clear_all()
         helpers.reset_db()
 
-        cls.original_config = config.copy()
+        cls.original_config = deepcopy(config)
         cls._change_config(config)
 
         cls.m_s3 = mock_s3()
@@ -50,15 +51,16 @@ class HDXS3TestBase(object):
 
         sysadmin = 'testsysadmin'
         factories.Sysadmin(name=sysadmin)
+        sysadmin_token = factories.APIToken(user=sysadmin, expires_in=2, unit=60 * 60)
         sysadmin_user = model.User.by_name(sysadmin)
         if sysadmin_user:
             sysadmin_user.email = sysadmin + '@test-domain.com'
-            sysadmin_user.apikey = sysadmin + '_apikey'
+            # sysadmin_user.apikey = sysadmin + '_apikey'
 
         model.Session.commit()
         cls.sysadmin_user = {
             'name': sysadmin,
-            'apikey': sysadmin_user.apikey
+            'api_token': sysadmin_token['token'],
         }
 
         cls.dataset1_dict = cls._create_package_by_user(cls.dataset1_name, 'testsysadmin')
@@ -67,21 +69,28 @@ class HDXS3TestBase(object):
         self._change_config(config)
 
     def teardown(self):
+        plugins = config.get('ckan.plugins', [])
+        plugins.pop() if len(plugins) > 0 and plugins[-1] == 's3filestore' else None
         config.clear()
-        config.update(HDXS3TestBase.original_config)
+        config.update(deepcopy(self.original_config))
+        pass
 
     @classmethod
     def teardown_class(cls):
         cls.m_s3.stop()
         model.Session.remove()
 
+        plugins = config.get('ckan.plugins', [])
+        plugins.pop() if len(plugins) > 0 and plugins[-1] == 's3filestore' else None
         config.clear()
-        config.update(cls.original_config)
+        config.update(deepcopy(cls.original_config))
+        pass
 
 
     @classmethod
     def _change_config(cls, test_config):
-        test_config['ckan.plugins'] += ' s3filestore'
+        if 's3filestore' not in test_config['ckan.plugins']:
+            test_config['ckan.plugins'].append('s3filestore')
         ## AWS S3 settings
         test_config['ckanext.s3filestore.aws_access_key_id'] = 'aws_access_key_id'
         test_config['ckanext.s3filestore.aws_secret_access_key'] = 'aws_secret_access_key'

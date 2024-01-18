@@ -48,9 +48,9 @@ class TestMembersPageAuth(hdx_test_base.HdxBaseTest):
     def test_member_page_load(self):
         for member in MEMBERS:
             url = url_for('hdx_members.members', id=ORG)
-            user = model.User.by_name(member.name)
+            user_token = factories.APIToken(user=member.name, expires_in=2, unit=60 * 60)['token']
             result = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', user.apikey).encode('ascii', 'ignore')
+                'Authorization': user_token
             })
             assert 200 == result.status_code, 'HTTP OK for {}'.format(member.name)
             assert 'server error' not in str(result.body).lower()

@@ -1,5 +1,5 @@
 {% if pkg.archived %}
-  <i class="icon humanitarianicons-Folder" title="{{ _('Archived Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"></i>
+  <i class="icon humanitarianicons-Folder" title="{{ _('Archived Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></i>
 {% endif %}
 {% if pkg.state.startswith('draft') %}
   <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
@@ -7,5 +7,5 @@
   <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
 {% endif %}
 {% if pkg.private %}
-   <span style="font-size: 18px;" class="mLR10 glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+   <span style="font-size: 18px;" class="mLR10 fa fa-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
 {% endif %}

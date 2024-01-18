@@ -1,5 +1,5 @@
 .hdx-visible-element {
-  display: inherit;
+  display: block;
 }
 .hdx-invisible-element {
   display: none;

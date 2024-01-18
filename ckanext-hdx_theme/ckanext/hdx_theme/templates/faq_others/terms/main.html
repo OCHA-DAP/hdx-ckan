@@ -3,15 +3,17 @@
 {% block subtitle %}{{ _("Terms of Service") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('TERMS OF SERVICE'), named_route='hdx_faqs.read', category='terms') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link(_('TERMS OF SERVICE'), named_route='hdx_faqs.read', category='terms') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
-    <div class="top-banner top-banner-terms">
-        <div class="col-xs-12">
-            <div class="top-banner-text-wrapper" style="margin-top:140px">
-                <div class="top-banner-title">
-                   {{ _('HDX Terms of Service') }}
+    <div class="row">
+        <div class="col-12">
+            <div class="top-banner top-banner-terms">
+                <div class="top-banner-text-wrapper" style="padding-top: 140px;">
+                    <div class="top-banner-title">
+                       {{ _('HDX Terms of Service') }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -20,7 +22,7 @@
 
 {% block primary %}
     <div class="row mTop60">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div id="body-about-hdx" class="section-flag" style="">HDX Terms of Service</div>
             <p class="mTop10">
               The <a href="/">Humanitarian Data Exchange</a> (HDX) is an open data platform managed by the

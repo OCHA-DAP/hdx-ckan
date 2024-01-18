@@ -32,6 +32,13 @@
       left: 50%;
       transform: translate(-50%, 0);
 
+      #login-photo-default {
+        top: 16px;
+        .fa-user {
+          color: white;
+          font-size: 60px;
+        }
+      }
       img {
         height: 100%;
         width: 100%;
@@ -42,30 +49,33 @@
     .close {
       float: right;
       margin-top: @paddingSmall;
-      margin-right: @paddingSmall;
     }
   }
 
 
 
-  .login-content {
+  #hdx-login-form {
     background-color: @extraLightGrayColor;
-    height: 355px;
-    width: @loginTopWidth;
-    padding: @loginPhotoTotalSize/2 15px @paddingNormal;
-    &.login-content--size-big {
-      height: 399px;
-    }
 
-    .username-text {
-      .gothamBoldFont();
-      color: @blackColor;
-      line-height: 23px;
-      .letter-spacing-1();
-    }
+    .login-content {
+      height: 355px;
+      width: @loginTopWidth;
+      padding: @loginPhotoTotalSize/2 15px @paddingNormal;
 
-    .email-text {
-      .gothamBookFont(14px);
+      &.login-content--size-big {
+        height: 399px;
+      }
+
+      .username-text {
+        .gothamBoldFont();
+        color: @blackColor;
+        line-height: 23px;
+        .letter-spacing-1();
+      }
+
+      .email-text {
+        .gothamBookFont(14px);
+      }
     }
   }
 }

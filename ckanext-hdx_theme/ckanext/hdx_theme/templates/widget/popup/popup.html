@@ -9,20 +9,20 @@ Example:
 #}
 
 <div id="{{ id }}" class="popup {{ class }}" {% block popup_attributes %}style="display: none;" {% endblock %}>
-    <div class="content {{ content_class }} container-fluid">
+    <div class="content {{ content_class }}">
         {% block all_content %}
             <div class="row">
                 {% block titlebar %}
-                    <div class="col-xs-12">
-                        <div class="title pull-left">
+                    <div class="col-12">
+                        <div class="title float-start">
                             {{ title }}
                         </div>
-                        <div class="pull-right">
+                        <div class="float-end">
                             <i class="close humanitarianicons-Exit-Cancel"></i>
                         </div>
                     </div>
                 {% endblock %}
-                <div class="col-xs-12">
+                <div class="col-12">
                     {% block content %}
                     {% endblock %}
                 </div>

@@ -10,9 +10,9 @@
     <div class="{{ firstContainerClass }}">
       <div class="{{ secondContainerClass }}">
         <div class="{{ thirdContainerClass }}">
-            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="col-12 paddingLeftHack paddingRightHack">
               <div class="row" style="position: relative;">
-                <div class="col-sm-9 col-xs-12">
+                <div class="col-sm-9 col-12">
                   By using this site you consent to the use of cookies. Cookies can be managed in your browser or device settings.
                 </div>
 
@@ -29,16 +29,16 @@
     <div class="{{ firstContainerClass }}" style="background-color: #353535;">
       <div class="{{ secondContainerClass }}">
         <div class="{{ thirdContainerClass }}">
-            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="col-12 paddingLeftHack paddingRightHack">
               <div class="row footer-wrapper">
-                <div class="col-xs-12 col-md-5">
+                <div class="col-12 col-md-6">
                   <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                       <img class="logo-gray lazyload" data-src="/images/homepage/logo-hdx-gray.png" alt="HDX logo"/>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-xs-12 mBottom30">
+                    <div class="col-12 mBottom30">
                       <div class="titlePlusVersion">
                         {{ _("HUMANITARIAN DATA EXCHANGE") }} &nbsp; {{ h.hdx_version() }}
                       </div>
@@ -49,7 +49,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                       <div class="mailChimpForm">
                         <div class="subscribeText">Subscribe to our mailing list</div>
                         <!-- Begin MailChimp Signup Form -->
@@ -79,19 +79,19 @@
                   </div>
 
                 </div>
-                <div class="col-xs-12 col-md-offset-1 col-md-6">
+                <div class="col-12 col-md-6">
                   <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                       <div class="titlePlusVersion match-logo-margin mBottom20">
                         {{ _("OUR OTHER SERVICES") }}
                       </div>
                     </div>
-                    <div class="col-xs-12 col-md-4 other-services">
+                    <div class="col-12 col-md-4 other-services">
                       <a href="https://centre.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="the centre for humanitarian data">
                         <img class="lazyload logo-centre" data-src="/images/homepage/logo-centre-gray.png" alt="The Centre for Humanitarian Data logo">
                       </a>
                     </div>
-                    <div class="col-xs-12 col-md-4 other-services">
+                    <div class="col-12 col-md-4 other-services">
                       <a href="https://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer" aria-label="hxl">
                         <img class="lazyload logo-hxl" data-src="/images/homepage/logo-hxl.svg" alt="HXL logo">
                       </a>
@@ -115,7 +115,7 @@
     <div class="{{ firstContainerClass }}" style="background-color: #252525;">
       <div class="{{ secondContainerClass }}">
         <div class="{{ thirdContainerClass }}">
-          <div class="col-xs-12 paddingLeftHack paddingRightHack">
+          <div class="col-12 paddingLeftHack paddingRightHack">
             <div class="social-footer">
               <div class="terms">
                 <a href="{{ h.url_for('hdx_faqs.read', category='terms') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
@@ -142,10 +142,13 @@
                 <span class="separator"></span>
                 <span class="social-actions">
                   <a href="https://www.x.com/humdata" title="X" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                    <i class="icon-x-social"></i>
+                    <i class="fa-brands fa-x-twitter"></i>
                   </a>
                   <a href="https://github.com/OCHA-DAP" title="GitHub" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                    <i class="humanitarianicons-Social-gh" aria-hidden="true"></i>
+                    <i class="fa-brands fa-github"></i>
+                  </a>
+                  <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data" title="LinkedIn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                    <i class="fa-brands fa-linkedin-in"></i>
                   </a>
                 </span>
               </div>

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-import mock
+import unittest.mock as mock
 import pytest
 
 import ckan.plugins as p
@@ -70,7 +70,6 @@ class TestPluginLoadingOrder(object):
 @pytest.mark.ckan_config("ckan.plugins", "datastore")
 @pytest.mark.usefixtures("clean_index", "with_plugins", "with_request_context")
 class TestPluginDatastoreSearch(object):
-    @pytest.mark.ckan_config("ckan.datastore.default_fts_lang", None)
     def test_english_is_default_fts_language(self):
         expected_ts_query = ", plainto_tsquery('english', 'foo') \"query\""
         data_dict = {"q": "foo"}
@@ -120,7 +119,6 @@ class TestPluginDatastoreSearch(object):
 
         assert result["where"] == []
 
-    @pytest.mark.ckan_config("ckan.datastore.default_fts_lang", None)
     def test_fts_where_clause_lang_uses_english_by_default(self):
         expected_where = [
             (

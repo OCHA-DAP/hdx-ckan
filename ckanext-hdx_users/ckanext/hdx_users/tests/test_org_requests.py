@@ -2,11 +2,12 @@
 import logging as logging
 
 import mock
-import pytest
-import six
 from six import text_type
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
+
 import ckanext.hdx_org_group.tests as org_group_base
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.util.mail as hdx_mail
@@ -56,7 +57,8 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
 
         user = model.User.by_name('tester')
         user.email = 'test@test.com'
-        auth = {'Authorization': str(user.apikey)}
+        user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': user_token}
         postparams = {
             'save': '',
             'name': 'Test org',
@@ -96,8 +98,8 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         assert not mail_info, 'There should be no info yet in mail_info'
         assert original_send_mail, 'original_send_mail should be already set'
 
-        user = model.User.by_name('tester')
-        auth = {'Authorization': str(user.apikey)}
+        user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': user_token}
         postparams = {
             'save': '',
             'name': 'Org êßȘ',

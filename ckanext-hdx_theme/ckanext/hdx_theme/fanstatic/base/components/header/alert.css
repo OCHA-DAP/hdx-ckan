@@ -4,3 +4,11 @@
   border-color: #f2645a;
   background-color: #fde9e8;
 }
+.alert-danger .btn-close,
+.alert-error .btn-close {
+  float: right;
+}
+.alert-danger .btn-close:focus,
+.alert-error .btn-close:focus {
+  box-shadow: none;
+}

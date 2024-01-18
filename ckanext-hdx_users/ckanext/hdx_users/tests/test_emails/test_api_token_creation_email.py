@@ -9,7 +9,7 @@ import ckan.tests.helpers as helpers
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
 
-
+@pytest.mark.ckan_config('hdx.api_token.email_notifications.enabled', True)
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'with_request_context')
 class TestApiTokenCreationEmail(object):
 

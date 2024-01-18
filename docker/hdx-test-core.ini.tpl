@@ -35,7 +35,11 @@ ckan.auth.anon_create_dataset = false
 ckan.auth.user_delete_groups=false
 ckan.auth.user_delete_organizations=false
 ckan.auth.create_unowned_dataset=true
-ckan.auth.public_user_details=false
+
+# It's difficult to work with the user_show() action in tests if this is set to false
+# so we only set it on tests where we need to test that this works with
+# @pytest.mark.ckan_config(u"ckan.auth.public_user_details", False)
+# ckan.auth.public_user_details=false
 
 ckan.cache_validation_enabled = True
 ckan.cache_enabled = False
@@ -69,8 +73,9 @@ apikey_header_name = X-Non-Standard-CKAN-API-Key
 # only for 2.3
 #ckan.plugins = stats
 # only for 2.6
-# ckan.plugins = dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme requestdata showcase stats resource_proxy text_view recline_view datastore
-ckan.plugins = ${HDX_ENABLED_PLUGINS}
+ckan.plugins = dcat dcat_json_interface structured_data hdx_dataviz expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata showcase resource_proxy text_view recline_view datastore activity
+# ckan.plugins = ${HDX_ENABLED_PLUGINS}
+ckan.views.default_views = recline_view
 
 ckan.use_pylons_response_cleanup_middleware = False
 hdx_portal = True
@@ -112,6 +117,7 @@ ckan.activity_list_limit = 15
 ckan.tracking_enabled = true
 
 beaker.session.key = ckan
+beaker.session.validate_key = ckan
 beaker.session.secret = This_is_a_secret_or_is_it
 # repoze.who config
 who.config_file = %(here)s/ckan/config/who.ini
@@ -131,6 +137,10 @@ hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/dat
 # HDX http headers
 hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap
 hdx.http_headers.mimetypes = application/json,text/html,text/json
+
+# Disabling email sending in tests
+hdx.api_token.email_notifications.enabled = false
+
 
 # Logging configuration
 [loggers]

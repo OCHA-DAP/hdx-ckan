@@ -11,6 +11,7 @@
             embed: false,
             buttonText: null,
             newTab: false,
+            archived: false,
             //internal state
             graphic_upload_preview: null,
             tab_open: true

@@ -91,6 +91,14 @@ describe.skip('ckan.views.filters', function(){
       this.filters._initialize('?filters=time:11:00|time:');
       assert.deepEqual(expectedFilters, this.filters.get());
     });
+
+    it('should not execute javascript', function () {
+
+      const stub = cy.stub()
+      cy.on ('window:alert', stub)
+      this.filters._initialize('?{alert("This should not happen.")}');
+      expect(stub).not.to.be.called;
+    })
   });
 
   describe('#get', function(){

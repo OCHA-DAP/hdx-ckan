@@ -153,7 +153,7 @@
           }
         }
 
-        svg[class^='icon-o-'], .glyphicon {
+        svg[class^='icon-o-'], .fa {
           height: 14px;
           fill: @extraLightGrayColor;
           margin-right: 10px;
@@ -206,6 +206,7 @@
           }
         }
         .dropdown-menu, .dropdown-submenu {
+          font-size: 14px;
           margin: 0;
           li a {
             color: @darkGrayColor;
@@ -233,12 +234,12 @@
           .dropdown {
             margin-top: 3px;
           }
-          .panel {
+          .card {
 
             width: 400px;
             color: @darkGrayColor;
 
-            .panel-heading{
+            .card-header{
               background-color: @whiteColor;
               text-transform: uppercase;
               font-weight: bold;
@@ -252,12 +253,19 @@
               -webkit-overflow-scrolling: touch;
               .list-group-item {
                 background-color: @extraLightBlueColor;
+                border-radius: 0;
+                border-top-width: 0;
+                border-left-width: 0;
+                border-right-width: 0;
                 &.for-sysadmin {
                   background-color: lightyellow;
                 }
                 &.fake-item {
                   background-color: @whiteColor;
                   text-align: center;
+                }
+                &:last-child {
+                  border-bottom-width: 0;
                 }
                 .date {
                   color: @grayColor
@@ -285,8 +293,9 @@
             position: absolute;
             top: -6px;
             left: 8px;
-            padding: 3px 6px;
+            padding: 2px 5px;
             background-color: red;
+            border-radius: 10px;
           }
         }
         @media (max-width: @cut-point-laptop-s) {
@@ -311,7 +320,7 @@
                 display: none;
               }
             }
-            svg[class^='icon-o-'], .glyphicon {
+            svg[class^='icon-o-'], .fa {
               margin-right: 0;
             }
           }
@@ -325,7 +334,7 @@
           }
 
           .hdx-notification-wrapper {
-            .panel {
+            .card {
               position: fixed;
               top: 20px;
               left: 5px;

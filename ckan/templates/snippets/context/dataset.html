@@ -1,8 +1,8 @@
 <div class="popover-context profile-info">
   {% if notes != 'null' %}
     {% set notes = notes|striptags %}
-    <p class="about">
-      {{ h.truncate(notes, length=160, whole_word=True) }}
+    <p class="about" title="{{ notes }}">
+      {{ notes|truncate(160) }}
     </p>
   {% endif %}
   <div class="btn-group">

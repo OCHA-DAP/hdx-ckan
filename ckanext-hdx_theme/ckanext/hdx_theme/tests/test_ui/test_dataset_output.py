@@ -5,11 +5,9 @@ Created on May 16, 2014
 
 '''
 
-import pytest
-import six
 import unicodedata
 
-import ckan.tests.legacy as tests
+import ckan.tests.factories as factories
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -68,7 +66,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     def test_deleted_badge_appears(self):
         global package
         global organization
-        testsysadmin = model.User.by_name('testsysadmin')
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
         dataset_name = package['name']
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
@@ -79,19 +77,21 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         page = self._getPackagePage(dataset_name)
         assert not 'Deleted' in page.body, 'Page should not have deleted badge as it was not deleted'
 
-        deleted_result = tests.call_action_api(self.app, 'package_delete',
-                                               apikey=testsysadmin.apikey, id=dataset_name)
+        self._get_action('package_delete')(
+            {'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': dataset_name}
+        )
 
-        deleted_page = self._getPackagePage(dataset_name, testsysadmin.apikey)
+        deleted_page = self._getPackagePage(dataset_name, testsysadmin_token)
         # print deleted_page.response
         assert 'Deleted' in deleted_page.body, 'Page needs to have deleted badge'
 
-    def _getPackagePage(self, package_id, apikey=None):
+    def _getPackagePage(self, package_id, apitoken=None):
         page = None
         url = h.url_for('dataset_read', id=package_id)
-        if apikey:
+        if apitoken:
             page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')})
         else:
             page = self.app.get(url)
         return page

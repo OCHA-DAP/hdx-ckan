@@ -3,8 +3,8 @@ from ckan.common import _, c
 from ckanext.ytp.request.tools import get_user_member
 
 
-def _only_registered_user():
-    if not authz.auth_is_loggedin_user():
+def _only_registered_user(context):
+    if authz.auth_is_anon_user(context):
         return {'success': False, 'msg': _('User is not logged in')}
     return {'success': True}
 
@@ -12,7 +12,7 @@ def _only_registered_user():
 def member_request_create(context, data_dict):
     """ Create request access check """
 
-    if not authz.auth_is_loggedin_user():
+    if authz.auth_is_anon_user(context):
         return {'success': False, 'msg': _('User is not logged in')}
 
     organization_id = None if not data_dict else data_dict.get('organization_id', None)
@@ -27,12 +27,12 @@ def member_request_create(context, data_dict):
 
 def member_request_show(context, data_dict):
     """ Show request access check """
-    return _only_registered_user()
+    return _only_registered_user(context)
 
 
 def member_request_list(context, data_dict):
     """ List request access check """
-    return _only_registered_user()
+    return _only_registered_user(context)
 
 
 def member_request_membership_cancel(context, data_dict):

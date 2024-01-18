@@ -14,8 +14,8 @@ ckan.module('bs_popover', function($, _) {
 				if ( newContent && newContent.length > 0 )
 					content = newContent;
 			}
-			
-			var popoverWrapper 	= document.body; 
+
+			var popoverWrapper 	= document.body;
 			if (this.options.social_wrapper_div_id) {
 				var tempPopoverWrapper	= $('#'+this.options.social_wrapper_div_id);
 				if (tempPopoverWrapper) {
@@ -23,8 +23,8 @@ ckan.module('bs_popover', function($, _) {
 					this.popoverWrapper	= tempPopoverWrapper;
 				}
 			}
-			
-			this.el.popover({
+
+			new bootstrap.Popover(this.el, {
 				trigger : this.options.trigger,
 				placement : this.options.placement,
 				content : content,
@@ -32,7 +32,7 @@ ckan.module('bs_popover', function($, _) {
 				html: true,
 				container: popoverWrapper
 			});
-			
+
 			this.el.on('click.bs_popover', $.proxy(this._onClick, this));
 		},
 		_onClick: function(e){
@@ -43,20 +43,20 @@ ckan.module('bs_popover', function($, _) {
 		_onOtherClick:  function(e) {
 			this.el.popover("hide");
 			$('html').off('click.bs_popover');
-				
+
 		},
 //		_isVisible: function() {
 //			var popoverDivEls	= this.popoverWrapper.find('.popover');
 //			if (popoverDivEls && popoverDivEls.length > 0 )
 //				return true;
-//			
+//
 //			return false;
 //		},
 		options : {
 			placement : 'top',
 			trigger : 'manual',
-			content : 'Empty !',
-			title : 'No Title !',
+			content : '',
+			title : '',
 			social_div_id : null,
 			social_wrapper_div_id: null
 

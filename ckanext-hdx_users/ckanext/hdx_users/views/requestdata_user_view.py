@@ -1,13 +1,13 @@
 import json
 
 from flask import Blueprint
-from paste.deploy.converters import asbool
 
 import ckan.model as model
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from ckan.plugins import toolkit as tk
 from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
 
+asbool = tk.asbool
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
 NotAuthorized = tk.NotAuthorized

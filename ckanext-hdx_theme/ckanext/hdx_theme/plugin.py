@@ -13,7 +13,7 @@ import ckanext.hdx_theme.helpers.http_headers as http_headers
 from ckanext.hdx_theme.cli.click_analytics_changes_reindex import analytics_changes_reindex
 from ckanext.hdx_theme.cli.click_custom_less_compile import custom_less_compile
 from ckanext.hdx_theme.middleware.cookie_middleware import CookieMiddleware
-from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
+# from ckanext.hdx_theme.middleware.redirection_middleware import RedirectionMiddleware
 from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
@@ -232,7 +232,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_add_url_param': hdx_helpers.hdx_add_url_param,
             'methodology_bk_compat': hdx_helpers.methodology_bk_compat,
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
-            'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
             'load_json': hdx_helpers.load_json,
             'escaped_dump_json': hdx_helpers.escaped_dump_json,
             'json_dumps': json.dumps,
@@ -264,6 +263,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_dataset_is_p_coded': hdx_helpers.hdx_dataset_is_p_coded,
             'hdx_get_approved_tags_list': hdx_helpers.hdx_get_approved_tags_list,
             'are_new_p_code_filters_enabled': hdx_helpers.are_new_p_code_filters_enabled,
+            'bs5_build_nav_icon': hdx_helpers.bs5_build_nav_icon,
             'HDX_CONST': const
         }
 
@@ -301,7 +301,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_package_links_settings_show': hdx_actions.package_links_settings_show,
             'hdx_package_links_settings_update': hdx_actions.package_links_settings_update,
             'hdx_package_links_by_id_list': hdx_actions.package_links_by_id_list,
-            'activity_detail_list': hdx_actions.hdx_activity_detail_list,
+            # 'activity_detail_list': hdx_actions.hdx_activity_detail_list,
         }
 
     def get_auth_functions(self):
@@ -319,7 +319,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_carousel_update': auth.hdx_carousel_update,
             'hdx_request_data_admin_list': auth.hdx_request_data_admin_list,
             'hdx_quick_links_update': auth.hdx_quick_links_update,
-            'user_generate_apikey': auth.hdx_user_generate_apikey,
+            # 'user_generate_apikey': auth.hdx_user_generate_apikey,
         }
 
     def _before_request(self):
@@ -351,7 +351,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     # IMiddleware
     def make_middleware(self, app, config):
         cookie_app = CookieMiddleware(app, config)
-        redirection_app = RedirectionMiddleware(cookie_app, config)
+        # redirection_app = RedirectionMiddleware(cookie_app, config)
         if app.app_name == 'flask_app':
             from logging.handlers import SMTPHandler
             for handler in app.logger.handlers:
@@ -361,7 +361,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             app.after_request(http_headers.set_http_headers)
             app.before_request(self._before_request)
 
-        return redirection_app
+        return cookie_app
 
     # IValidators
     def get_validators(self):

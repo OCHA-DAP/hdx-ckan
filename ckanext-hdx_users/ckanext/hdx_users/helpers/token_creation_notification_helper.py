@@ -1,3 +1,5 @@
+import logging
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -9,6 +11,8 @@ _render = tk.render
 _mail_recipient = tk.mail_recipient
 config = tk.config
 NotFound = tk.ObjectNotFound
+
+log = logging.getLogger(__name__)
 
 
 MAIL_TEXT_TEMPLATE = '''
@@ -29,6 +33,10 @@ To manage your tokens go to {api_tokens_url} .\n
 
 
 def send_email_on_token_creation(username, token_name, expiration_in_millis):
+    if tk.asbool(config.get('hdx.api_token.email_notifications.enabled', 'true')) is False:
+        log.warning('API token email notifications are disabled')
+        return
+
     full_name, email = _get_user_full_name_and_email(username)
 
     isodate = datetime.fromtimestamp(expiration_in_millis).isoformat()

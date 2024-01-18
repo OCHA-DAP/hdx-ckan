@@ -93,7 +93,7 @@
 }
 .additional-info th {
   max-width: 200px;
-  width: 175px;
+  width: 190px;
 }
 /* END Style Additional Info */
 /* Resource grouping */
@@ -113,4 +113,7 @@
 .dataset-title .humanitarianicons-Folder {
   font-size: 24px;
   margin-left: 5px;
+}
+.wrapper-secondary .form-check .form-check-input {
+  box-shadow: none;
 }

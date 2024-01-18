@@ -17,9 +17,11 @@
     display: flex;
     left: @carousel-left-pos;
     position: absolute;
-    .item {
+    overflow: unset;
+    .carousel-item {
       margin-right: @carousel-left-pos;
       width: @carousel-item-width;
+      display: block;
       .graphic{
         //height: 150px;
         width: @carousel-item-width;
@@ -33,8 +35,8 @@
   }
   .carousel-indicators{
     display: none;
-    li{
-      margin-right: 5px;
+    [data-bs-target] {
+      width: 20px;
     }
   }
 }

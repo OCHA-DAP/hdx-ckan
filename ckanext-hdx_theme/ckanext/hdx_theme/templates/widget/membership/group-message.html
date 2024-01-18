@@ -37,10 +37,10 @@ Example:
 {% block right_content %}
     <div id="group-message">
         <form id="group-message-form">
-            <div class="alert alert-danger hide"></div>
+            <div class="alert alert-danger d-none"></div>
             <div class="row" style="overflow-y: auto; height: 400px;">
-                <div class="col-xs-12">
-                    <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">
+                <div class="col-12">
+                    <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-bs-toggle="tooltip">
                         [{{base_title | upper}}] {{ title | truncate(65) }}
                         <input type="hidden" name="source_type" value="{{base_type}}">
                         <input type="hidden" name="title" value="{{title}}">

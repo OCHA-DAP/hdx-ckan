@@ -1,12 +1,10 @@
-import pytest
-
 import logging as logging
-import ckanext.hdx_theme.helpers.helpers as h
-import ckan.model as model
-import ckan.tests.legacy as tests
-import ckanext.hdx_search.actions.actions as actions
 
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+
+import ckanext.hdx_search.actions.actions as actions
+import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
@@ -14,13 +12,6 @@ log = logging.getLogger(__name__)
 
 class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
-    @classmethod
-    def _load_plugins(cls):
-        try:
-            hdx_test_base.load_plugin('hdx_package hdx_search hdx_org_group hdx_theme')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
@@ -78,7 +69,10 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         user = model.User.by_name('testsysadmin')
         context = {'model': model, 'session': model.Session,
                    'user': user.name, 'auth_user_obj': user}
-        query = tests.call_action_api(self.app, 'package_search', q='test')
+        query = tk.get_action('package_search')(
+            {'model': model, 'session': model.Session, 'user': user.name},
+            {'q': 'test'}
+        )
         populate = actions.populate_related_items_count(context, {'pkg_dict_list': query['results']})
         assert populate[0]['related_count'] >= 0
 

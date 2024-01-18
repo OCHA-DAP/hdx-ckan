@@ -2,15 +2,17 @@
 Creates all the markup required for an input element. Handles matching labels to
 inputs, error messages and other useful elements.
 
-name        - The name of the form parameter.
-id          - The id to use on the input and label. Convention is to prefix with 'field-'.
-label       - The human readable label.
-value       - The value of the input.
-placeholder - Some placeholder text.
-type        - The type of input eg. email, url, date (default: text).
-error       - A list of error strings for the field or just true to highlight the field.
-classes     - An array of classes to apply to the control-group.
-is_required - Boolean of whether this input is requred for the form to validate
+name            - The name of the form parameter.
+id              - The id to use on the input and label. Convention is to prefix with 'field-'.
+label           - The human readable label.
+value           - The value of the input.
+placeholder     - Some placeholder text.
+type            - The type of input eg. email, url, date (default: text).
+error           - A list of error strings for the field or just true to highlight the field.
+classes         - An array of classes to apply to the control-group.
+is_required     - Boolean of whether this input is requred for the form to validate
+control_classes - An array of custom classes for the .control wrapper.
+label_wrapper_classes - An array of custom classes for the label wrapper.
 
 Examples:
 
@@ -18,11 +20,15 @@ Examples:
   {{ form.input('title', label=_('Title'), value=data.title, error=errors.title) }}
 
 #}
-{% macro input(name, id='', label='', value='', placeholder='', type='text', error="", classes=[], attrs={}, is_required=false) %}
+{% macro input(name, id='', label='', value='', placeholder='', type='text', error="", classes=[], attrs={}, is_required=false, control_classes=[], label_wrapper_classes=[]) %}
   {%- set extra_html = caller() if caller -%}
 
-  {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <input id="{{ id or name }}" type="{{ type }}" name="{{ name }}" value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }} />
+  {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required, control_classes=control_classes, label_wrapper_classes=label_wrapper_classes) %}
+    {%- set input_classes = ['form-control'] %}
+    {%- if 'class' in attrs -%}
+      {%- set input_classes = input_classes + attrs['class'].split() -%}
+    {%- endif -%}
+    <input id="{{ id or name }}" type="{{ type }}" class="{{ input_classes | join(' ') }}" name="{{ name }}" value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }} />
   {% endcall %}
 {% endmacro %}
 
@@ -46,10 +52,10 @@ Example:
 #}
 {% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false, label_attrs={}) %}
   {%- set extra_html = caller() if caller -%}
-  <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
-    <div class="controls checkbox">
-      <label class="" for="{{ id or name }}" {{ attributes(label_attrs) }}>
-        <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
+  <div class="{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
+    <div class="form-check">
+      <input id="{{ id or name }}" class="form-check-input" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
+      <label class="form-check-label" for="{{ id or name }}" {{ attributes(label_attrs) }}>
         {{ label }}
         {% if is_required %}{{ input_required() }}{% endif %}
         {% if error and error is iterable %}<strong class="error-inline">{{ error|join(', ') }}</strong>{% endif %}
@@ -87,7 +93,11 @@ Examples:
   {% do classes.append('control-select') %}
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required, label_attrs=label_attrs) %}
-    <select id="{{ id or name }}" name="{{ name }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>
+    {%- set select_classes = ['form-control', 'form-select'] %}
+    {%- if 'class' in attrs -%}
+      {%- set select_classes = select_classes + attrs['class'].split() -%}
+    {%- endif -%}
+    <select id="{{ id or name }}" name="{{ name }}" class="{{ select_classes | join(' ') }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>
       {% for option in options %}
           {% if attrs['multiple'] == 'true' %}
             <option value="{{ option.value }}" {% if option.value in selected %} selected="selected"{% endif %}>{{ option.text or option.value }}</option>
@@ -120,11 +130,15 @@ Examples:
 #}
 {% macro markdown(name, id='', label='', value='', placeholder='', error="", classes=[], attrs={}, rows=5, cols=20, is_required=false) %}
   {% set classes = (classes|list) %}
-  {% do classes.append('control-full') %}
+  {% do classes.append('') %}
 
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, control_classes=["editor"], extra_html=extra_html, is_required=is_required) %}
-    <textarea id="{{ id or name }}" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
+    {%- set textarea_classes = ['form-control'] %}
+    {%- if 'class' in attrs -%}
+      {%- set textarea_classes = textarea_classes + attrs['class'].split() -%}
+    {%- endif -%}
+    <textarea id="{{ id or name }}" name="{{ name }}" class="{{ textarea_classes | join(' ') }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
     <span class="editor-info-block">{% trans %}You can use <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here{% endtrans %}</span>
   {% endcall %}
 {% endmacro %}
@@ -133,14 +147,16 @@ Examples:
 Creates all the markup required for a plain textarea element. Handles
 matching labels to inputs, selected item and error messages.
 
-name        - The name of the form parameter.
-id          - The id to use on the input and label. Convention is to prefix with 'field-'.
-label       - The human readable label.
-value       - The value of the input.
-placeholder - Some placeholder text.
-error       - A list of error strings for the field or just true to highlight the field.
-classes     - An array of classes to apply to the control-group.
-is_required - Boolean of whether this input is requred for the form to validate
+name            - The name of the form parameter.
+id              - The id to use on the input and label. Convention is to prefix with 'field-'.
+label           - The human readable label.
+value           - The value of the input.
+placeholder     - Some placeholder text.
+error           - A list of error strings for the field or just true to highlight the field.
+classes         - An array of classes to apply to the control-group.
+is_required     - Boolean of whether this input is requred for the form to validate
+control_classes - An array of custom classes for the .control wrapper.
+label_wrapper_classes - An array of custom classes for the label wrapper.
 
 Examples:
 
@@ -148,13 +164,13 @@ Examples:
   {{ form.textarea('desc', id='field-description', label=_('Description'), value=data.desc, error=errors.desc) }}
 
 #}
-{% macro textarea(name, id='', label='', value='', placeholder='', error="", classes=[], cols=20, rows=5, attrs={}, is_required=false) %}
+{% macro textarea(name, id='', label='', value='', placeholder='', error="", classes=[], cols=20, rows=5, attrs={}, is_required=false, control_classes=[], label_wrapper_classes=[]) %}
   {% set classes = (classes|list) %}
-  {% do classes.append('control-full') %}
+  {% do classes.append('') %}
 
   {%- set extra_html = caller() if caller -%}
-  {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <textarea id="{{ id or name }}" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
+  {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required, control_classes=control_classes, label_wrapper_classes=label_wrapper_classes) %}
+    <textarea id="{{ id or name }}" class="form-control" name="{{ name }}" cols="{{ cols }}" rows="{{ rows }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>{{ value | empty_and_escape }}</textarea>
   {% endcall %}
 {% endmacro %}
 
@@ -181,14 +197,14 @@ Examples:
 
 #}
 {% macro prepend(name, id='', label='', prepend='', value='', placeholder='', type='text', error="", classes=[], attrs={}, is_required=false) %}
-  {# We manually append the error here as it needs to be inside the .input-prepend block #}
+  {# We manually append the error here as it needs to be inside the .input-group block #}
   {% set classes = (classes|list) %}
   {% do classes.append('error') if error %}
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error='', classes=classes, extra_html=extra_html, is_required=is_required) %}
-    <div class="input-prepend">
-      {% if prepend %}<span class="add-on">{{ prepend }}</span>{%- endif -%}
-      <input id="{{ id or name }}" type="{{ type }}" name="{{ name }}" value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }} />
+    <div class="input-group">
+      {% if prepend %}<span class="input-group-text">{{ prepend }}</span>{%- endif -%}
+      <input id="{{ id or name }}" class="form-control" type="{{ type }}" name="{{ name }}" value="{{ value | empty_and_escape }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }} />
       {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
     </div>
   {% endcall %}
@@ -229,9 +245,9 @@ Examples:
   {%- do classes.append('control-custom') -%}
 
   {% call input_block(label_id, label, error, classes, control_classes=["editor"], extra_html=extra_html, is_required=is_required) %}
-    <div class="input-prepend" {{ attributes(attrs) }}>
-      <label for="{{ label_id }}" class="add-on">Key</label><input id="{{ id or names[0] }}-key" type="text" name="{{ names[0] }}" value="{{ values[0] | empty_and_escape }}" placeholder="{{ placeholders[0] }}" />
-      <label for="{{ id or names[1] }}-value" class="add-on">Value</label><input id="{{ id or names[1] }}-value" type="text" name="{{ names[1] }}" value="{{ values[1] | empty_and_escape }}" placeholder="{{ placeholders[1] }}" />
+    <div class="input-group" {{ attributes(attrs) }}>
+      <label for="{{ label_id }}" class="input-group-text">Key</label><input id="{{ id or names[0] }}-key" type="text" name="{{ names[0] }}" value="{{ values[0] | empty_and_escape }}" placeholder="{{ placeholders[0] }}" />
+      <label for="{{ id or names[1] }}-value" class="input-group-text">Value</label><input id="{{ id or names[1] }}-value" type="text" name="{{ names[1] }}" value="{{ values[1] | empty_and_escape }}" placeholder="{{ placeholders[1] }}" />
       {% if values[0] or values[1] or error %}
         <label class="checkbox" for="{{ id or names[2] }}-remove">
           <input type="checkbox" id="{{ id or names[2] }}-remove" name="{{ names[2] }}"{% if values[2] %} checked{% endif %} /> <span>{{ _('Remove') }}</span>
@@ -262,10 +278,16 @@ Example:
   {% endcall %}
 
 #}
-{% macro input_block(for, label="", error="", classes=[], control_classes=[], extra_html="", is_required=false, label_attrs={}) %}
-  <div class="control-group{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
+{% macro input_block(for, label="", error="", classes=[], control_classes=[], extra_html="", is_required=false, label_attrs={}, label_wrapper_classes=[]) %}
+  <div class="{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
     {% if label %}
-      <label class="control-label" for="{{ for }}" {{ attributes(label_attrs) }}>{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
+      {% if label_wrapper_classes %}
+        <div class="{{ label_wrapper_classes | join(' ') }}">
+          <label class="control-label" for="{{ for }}" {{ attributes(label_attrs) }}>{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
+        </div>
+      {% else %}
+        <label class="control-label" for="{{ for }}" {{ attributes(label_attrs) }}>{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
+      {% endif %}
     {% endif %}
     <div class="controls{{ " " ~ control_classes | join(' ') }}{% if error and error is iterable %} error{% endif %}">
       {{ caller() }}
@@ -420,12 +442,12 @@ Example
        data-module-field_url="{{ field_url }}" data-module-field_upload="{{ field_upload }}" data-module-field_clear="{{ field_clear }}" data-module-upload_label="{{ upload_label }}">
   {% endif %}
 
-  {{ input(field_url, label=url_label, id='field-image-url', placeholder=placeholder, value=data.get(field_url), error=errors.get(field_url), classes=['control-full'], attrs=attrs) }}
+  {{ input(field_url, label=url_label, id='field-image-url', placeholder=placeholder, value=data.get(field_url), error=errors.get(field_url), classes=['mb-3'], attrs=attrs) }}
 
   {% if is_upload_enabled %}
-    {{ input(field_upload, label=upload_label, id='field-'+field_upload, type='file', placeholder='', value='', error='', classes=['control-full'], attrs=attrs) }}
+    {{ input(field_upload, label=upload_label, id='field-'+field_upload, type='file', placeholder='', value='', error='', classes=['mb-3'], attrs=attrs) }}
     {% if is_upload %}
-      {{ checkbox(field_clear, label=_('Clear Upload'), id='field-clear-upload', value='true', error='', classes=['control-full']) }}
+      {{ checkbox(field_clear, label=_('Clear Upload'), id='field-clear-upload', value='true', error='', classes=[]) }}
     {% endif %}
   {% endif %}
 

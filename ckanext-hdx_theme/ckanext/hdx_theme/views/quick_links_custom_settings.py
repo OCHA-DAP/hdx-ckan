@@ -135,6 +135,7 @@ def _process_request():
             'url': request.form.get('url'),
             'order': int(request.form.get('order', -1)),
             'newTab': True if request.form.get('newTab') == 'true' else False,
+            'archived': True if request.form.get('archived') == 'true' else False,
             # 'embed': True if request.form.get('embed') == 'true' else False,
             'new': False if request.form.get('id') else True,
             'id': request.form.get('id') if request.form.get('id') else text_type(uuid.uuid4())

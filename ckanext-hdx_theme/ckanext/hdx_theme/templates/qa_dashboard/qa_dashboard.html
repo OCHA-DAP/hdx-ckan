@@ -11,8 +11,8 @@
 {% block subtitle %}{{ _("QA Dashboard") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Datasets'),
-  	named_route='hdx_qa.dashboard', highlight_actions = 'new index') }}</li>
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Datasets'),
+  	named_route='hdx_qa.dashboard') }}</li>
 {% endblock %}
 
 {% block primary_content %}
@@ -25,7 +25,7 @@
         {% set membership_data = data.membership.data %}
         {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, membership_data=membership_data) }}
 
-        <div id="search-recs"></div>
+        <div id="search-recs" class="d-none"></div>
         {% snippet 'qa_dashboard/qa_search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=data.search_template_data, display_min=true %}
     {% endblock %}

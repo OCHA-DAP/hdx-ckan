@@ -33,7 +33,7 @@ Example:
   <div id="request-tags">
     <form id="request-tags-form">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
           <div class="mTop15">
             <div class="control">
               <input id="fullname" name="fullname" class="full-width required" type="text"
@@ -53,7 +53,7 @@ Example:
           <div class="mTop15">
             <div>
               {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '', 'class': 'required'} %}
-              {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('Tag(s) you’d like to request'), classes=['control-full required suggested-tags'], attrs=tag_attrs) }}
+              {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('Tag(s) you’d like to request'), classes=['required suggested-tags'], attrs=tag_attrs) }}
             </div>
             <span class="error-block"></span>
           </div>
@@ -74,7 +74,7 @@ Example:
         </div>
       </div>
       <div class="right-side-actions">
-        <input class="btn btn-primary btn-large pull-right mL45 hdx-recaptcha" type="submit" value="Submit"
+        <input class="btn btn-primary btn-large float-end mL45 hdx-recaptcha" type="submit" value="Submit"
                data-sitekey="{{ g.recaptcha_publickey }}" data-callback="requestTagsOnSubmit" data-size="invisible"
                data-badge="inline">
         <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);"

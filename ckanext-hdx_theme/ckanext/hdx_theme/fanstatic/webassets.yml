@@ -19,11 +19,10 @@ ckan:
     - vendor/ckan/api-info.js
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
-#    - vendor/bootstrap/js/bootstrap.js
     - base/hdx-util-lib.js
     - modules/data-viewer.js
     - modules/resource-view-embed.js
-    - hdx_notify.js
+    - modules/copy-into-buffer.js
     - hdx_confirm-action.js
     - hdx_click_stopper.js
     - hdx_terms_checkbox.js
@@ -38,7 +37,7 @@ page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
   <<: *common-css
   contents:
-    - vendor/bootstrap/css/bootstrap.css
+    - vendor/bootstrap5/css/bootstrap.css
     - css/hdx-icons.css
     - css/Humanitarian-Icons-v02.css
     - widget/contribute/details.css
@@ -91,11 +90,6 @@ page-light-styles:
     - page-common-styles
     - light/page-light.css
     - search-styles
-
-bootstrap-styles:
-  output: ckanext-hdx_theme/%(version)s_bootstrap-styles.css
-  contents:
-    - vendor/bootstrap/css/bootstrap.css
 
 search-scripts:
   <<: *common-js
@@ -575,7 +569,6 @@ dataset-read-styles:
       - hdx_theme/group-message-styles
       - requestdata/main-styles
       - hdx_theme/resource-list-styles
-      - hdx_theme/activity-stream-styles
 
 dataset-light-scripts:
   <<: *common-js
@@ -651,11 +644,6 @@ resource-list-styles:
   output: ckanext-hdx_theme/%(version)s_resource-list-styles.css
   contents:
     - resource-list.css
-
-activity-stream-styles:
-  output: ckanext-hdx_theme/%(version)s_activity-stream-styles.css
-  contents:
-    - css/activity-stream.css
 
 hdx-autocomplete:
   <<: *common-js
@@ -792,16 +780,6 @@ admin-custom-pages-scripts:
       - hdx_theme/admin-scripts
   contents:
       - custom_pages/custom_pages.js
-
-base-dashboard-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_base-dashboard-scripts.js
-  extra:
-    preload:
-      - hdx_theme/ckan
-      - hdx_theme/base-dashboard-styles
-  contents:
-    - hdx_dashboard.js
 
 base-dashboard-styles:
   output: ckanext-hdx_theme/%(version)s_base-dashboard-styles.css

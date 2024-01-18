@@ -3,7 +3,7 @@ import ckan.logic.auth.create as create
 
 import ckan.plugins.toolkit as tk
 
-from ckan.logic.auth.update import user_generate_apikey
+# from ckan.logic.auth.update import user_generate_apikey
 from ckan.logic.auth import get_user_object
 from ckanext.hdx_users.helpers.permissions import Permissions
 
@@ -12,8 +12,8 @@ auth_sysadmins_check = tk.auth_sysadmins_check
 NotFound = tk.ObjectNotFound
 
 ## ORGS
-def _simple_logged_in_auth(fail_message):
-    logged_in = new_authz.auth_is_loggedin_user()
+def _simple_logged_in_auth(context, fail_message):
+    logged_in = not new_authz.auth_is_anon_user(context)
     if logged_in:
         return {'success': True}
     else:
@@ -36,13 +36,13 @@ def group_member_create(context, data_dict):
 
 ## ORGS
 def hdx_basic_user_info(context, data_dict):
-    return _simple_logged_in_auth(_("You must be logged in to access basic \
+    return _simple_logged_in_auth(context, _("You must be logged in to access basic \
                             organization member info."))
 
 
 ## ORGS
 def hdx_send_editor_request_for_org(context, data_dict):
-    return _simple_logged_in_auth(_("You must be logged in to send a request \
+    return _simple_logged_in_auth(context, _("You must be logged in to send a request \
                             for being an editor."))
 
 
@@ -97,13 +97,13 @@ def hdx_request_data_admin_list(context, data_dict):
     return {'success': result}
 
 
-@auth_sysadmins_check
-def hdx_user_generate_apikey(context, data_dict):
-    user_obj = get_user_object(context, data_dict)
-    if user_obj.sysadmin:
-        return {'success': False, 'msg': _('API keys are disabled for sysadmins')}
-    else:
-        return user_generate_apikey(context, data_dict)
+# @auth_sysadmins_check
+# def hdx_user_generate_apikey(context, data_dict):
+#     user_obj = get_user_object(context, data_dict)
+#     if user_obj.sysadmin:
+#         return {'success': False, 'msg': _('API keys are disabled for sysadmins')}
+#     else:
+#         return user_generate_apikey(context, data_dict)
 
 
 def _check_hdx_user_permission(context, permission):

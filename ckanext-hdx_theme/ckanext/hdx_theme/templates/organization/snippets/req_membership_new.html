@@ -18,9 +18,9 @@ Example:
 {% block header_content %}{{ _('Request Membership') }}{%  endblock %}
 
 {% block body %}
-    <div class="form-group">
+    <div class="mb-3">
         <label for="req-membership-text" class="control-label">{{ _('Message') }}</label>
-        <textarea class="form-control" name="message"
+        <textarea class="form-control" name="message" rows="4"
                   id="req-membership-text" placeholder="{{ _('Please add me to this organisation') }}..."></textarea>
         <div class="control">
           <label class="mTop10 vertically-center" data-module="hdx_terms_checkbox" data-module-button="req-membership-popup-submit">

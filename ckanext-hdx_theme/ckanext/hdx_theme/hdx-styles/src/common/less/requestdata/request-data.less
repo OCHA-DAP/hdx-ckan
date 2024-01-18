@@ -14,92 +14,95 @@
 @inputHeight: 44px;
 @inputPadding: @paddingSmall;
 
-.modal.request-data-modal, .modal.in.request-data-modal{
+.modal.request-data-modal,
+.modal.show.request-data-modal {
   display: block;
-  //position: relative;
-  height: 610px;
-  max-width: 890px;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  .request-data-modal-dialog {
+    max-width: 890px;
+    margin-top: 0;
+    margin-bottom: 0;
 
-  .request-data-modal-content {
-    border: unset;
+    .request-data-modal-content {
+      border: unset;
 
-    .request-data-modal-body {
-      padding: 0px 0px 0px;
+      .request-data-modal-body {
+        padding: 0px 0px 0px;
 
-      .request-data-two-cols {
-        height: 610px;
-        overflow: hidden;
-        margin-left: 0px;
+        .request-data-two-cols {
+          height: 610px;
+          overflow: hidden;
+          margin-left: 0;
+          margin-right: 0;
 
-        .right-col {
-          background-color: #ededed;
-          padding: 60px;
-          height: inherit;
+          .right-col {
+            background-color: #ededed;
+            padding: 60px;
+            height: inherit;
+          }
+
+          .left-col {
+            background-color: #1ebdaf;
+            padding: 80px;
+            height: inherit;
+            background-image: url('/images/backgrounds/pixels_white.png');
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            background-size: 200%;
+          }
         }
 
-        .left-col {
-          background-color: #1ebdaf;
-          padding: 80px;
-          height: inherit;
-          background-image: url('/images/backgrounds/pixels_white.png');
-          background-repeat: no-repeat;
-          background-position: left bottom;
-          background-size: 200%;
+        .large-title {
+          font-family: 'Gotham-Book', sans-serif;
+          font-weight: 400;
+          font-size: 36px;
+          line-height: 40px;
+          letter-spacing: 0.01em;
+          color: #fff;
         }
-      }
 
-      .large-title {
-        font-family: 'Gotham-Book', sans-serif;
-        font-weight: 400;
-        font-size: 36px;
-        line-height: 40px;
-        letter-spacing: 0.01em;
-        color: #fff;
-      }
+        .large-text {
+          font-family: 'Gotham-Book', sans-serif;
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 24px;
+          letter-spacing: 0.01em;
+          color: #fff;
+        }
 
-      .large-text {
-        font-family: 'Gotham-Book', sans-serif;
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 24px;
-        letter-spacing: 0.01em;
-        color: #fff;
-      }
+        .regular-text {
+          font-family: 'Source Sans Pro', sans-serif;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          color: #464a4a;
+        }
 
-      .regular-text {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 20px;
-        color: #464a4a;
-      }
+        .bottom-actions {
+          position: absolute;
+          right: 35px;
+          bottom: 35px;
+        }
 
-      .bottom-actions {
-        position: absolute;
-        right: 35px;
-        bottom: 35px;
-      }
+        .ds-title {
+          font-weight: bold;
+          font-size: 16px;
+        }
 
-      .ds-title {
-        font-weight: bold;
-        font-size: 16px;
-      }
-
-      .request-data-modal-footer {
-        border-top: unset;
-        position: absolute;
-        right: 50px;
-        bottom: 30px;
-        //padding: initial;
+        .request-data-modal-footer {
+          border-top: unset;
+          position: absolute;
+          right: 50px;
+          bottom: 30px;
+          //padding: initial;
+        }
       }
     }
   }
 }
 
-.modal.request-data-modal, .modal.in.request-data-modal, .request-data-module {
+.modal.request-data-modal,
+.modal.show.request-data-modal,
+.request-data-module {
 
       .mtop5 {
         margin-top: 5px;
@@ -244,6 +247,11 @@
         top: 122px;
       }
 
+      .sysadmin-requests-container__dropdown .sysadmin-requests-container__scrollable-content {
+          max-height: 400px;
+          overflow-y: auto;
+      }
+
       .sysadmin-requests-container__dropdown > div > label {
         left: 30px;
         width: 90%;
@@ -314,6 +322,7 @@
       }
 
 }
+
 .request-data-module {
   .dropdown-menu.sysadmin-requests-container__dropdown .sysadmin-requests-container__dropdown-buttons {
     display: flex;
@@ -491,6 +500,12 @@
   }
   .filter-requests{
       font-weight:bold;
+      .humanitarianicons-Down {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 12px;
+        margin-left: 5px;
+      }
   }
   .paddingLeftHack,
   .paddingRightHack{
@@ -664,6 +679,12 @@
 
   .requested-data-order-btn {
     font-weight: bold;
+    .humanitarianicons-Down {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 12px;
+      margin-left: 5px;
+    }
   }
 
   .requested-data-order-btn--current-order,
@@ -697,7 +718,7 @@
 
   .requested-data-container__content-item--requested-by-info {
     margin-right: 30px !important;
-    .glyphicon-warning-sign {
+    .fa-exclamation-triangle {
       color: orange;
       margin-left: 2px;
       margin-right: 2px;
@@ -717,21 +738,33 @@
 }
 
 @media (max-width: @cut-point-tablet) {
-  .modal.in.request-data-modal {
-    height: max-content;
-    max-height: 100vh;
-    .request-data-modal-content .request-data-modal-body .request-data-two-cols {
-      height: auto;
-      .left-col {
-        padding: 20px 40px;
-      }
-      .right-col {
-        padding: 20px;
-        padding-bottom: 60px;
+  .modal.show.request-data-modal {
+    .request-data-modal-dialog {
+      margin-top: 8px;
+      margin-bottom: 8px;
+      .request-data-modal-content .request-data-modal-body .request-data-two-cols {
+        height: auto;
+        .form-request-contact {
+          max-height: none;
+          overflow-y: hidden;
+        }
       }
     }
   }
-
+}
+@media (max-width: 1280px) {
+  body.modal-open {
+    padding-right: 0 !important;
+    .modal-backdrop {
+      &.show {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .request-data-modal {
+      padding-right: 0;
+    }
+  }
 }
 
 
@@ -741,7 +774,7 @@
 
 .form-request-contact {
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 500px;
 
   .control {
     position: relative;

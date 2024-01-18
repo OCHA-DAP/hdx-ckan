@@ -18,7 +18,6 @@ import ckan.plugins.toolkit as tk
 log = logging.getLogger(__name__)
 
 from ckan.lib.mailer import MailerException
-from ckan.lib.base import render_jinja2
 
 config = tk.config
 render = tk.render
@@ -132,8 +131,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
         smtp_password = None
     else:
         smtp_server = config.get('smtp.server', 'localhost')
-        smtp_starttls = ckan.common.asbool(
-            config.get('smtp.starttls'))
+        smtp_starttls = config.get('smtp.starttls')
         smtp_user = config.get('smtp.user')
         smtp_password = config.get('smtp.password')
     # smtp_connection.connect(smtp_server)

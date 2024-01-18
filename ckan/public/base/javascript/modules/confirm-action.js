@@ -38,8 +38,8 @@ this.ckan.module('confirm-action', function (jQuery) {
         '<div class="modal-dialog">',
         '<div class="modal-content">',
         '<div class="modal-header">',
-        '<button type="button" class="close" data-dismiss="modal">×</button>',
         '<h3 class="modal-title"></h3>',
+        '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>',
         '</div>',
         '<div class="modal-body"></div>',
         '<div class="modal-footer">',
@@ -100,6 +100,14 @@ this.ckan.module('confirm-action', function (jQuery) {
         var form = this.el.closest('form');
       }
 
+      // get the csrf value
+      var csrf_field = $('meta[name=csrf_field_name]').attr('content');
+      var csrf_value = $('meta[name=' + csrf_field + ']').attr('content')
+      // set the hidden input
+      var hidden_csrf_input = $('<input name="'+csrf_field+'" type="hidden" value="'+csrf_value+'">')
+      // insert the hidden input at the beginning of the form
+      hidden_csrf_input.prependTo(form)
+
       form.appendTo('body').submit();
     },
 
@@ -122,6 +130,7 @@ this.ckan.module('confirm-action', function (jQuery) {
         element.find('.modal-body').text(content);
         element.find('.btn-primary').text(this._('Confirm'));
         element.find('.btn-cancel').text(this._('Cancel'));
+        element.find('.btn-close').attr("aria-label", this._('Close'));
       }
       return this.modal;
     },

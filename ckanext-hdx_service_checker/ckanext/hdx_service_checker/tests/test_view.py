@@ -14,18 +14,16 @@ h = tk.h
 @pytest.mark.ckan_config("hdx_test.url_for_passing_check", "https://google.com")
 class TestServiceCheckerController(object):
     username = 'test_sysadmin_service_checker_user2'
-    apikey = username + '_apikey'
+    token = None
 
     @classmethod
     @pytest.mark.usefixtures("clean_db")
     def setup_class(cls):
         factories.User(name=cls.username, sysadmin=True)
-        user = model.User.by_name(cls.username)
-        user.apikey = cls.apikey
-        model.Session.commit()
+        cls.token = factories.APIToken(user=cls.username, expires_in=2, unit=60 * 60)['token']
 
     def test_run_checks(self, app):
-        auth = {"Authorization": str(self.apikey)}
+        auth = {"Authorization": self.token}
         url = h.url_for('hdx_run_checks.run_checks')
         response = app.get(url)
         assert response.status_code == 403

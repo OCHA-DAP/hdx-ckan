@@ -3,27 +3,24 @@ Created on Sep 9, 2014
 
 @author: alexandru-m-g
 '''
-
-# -*- coding: utf-8 -*-
 import pytest
-import logging as logging
-import six
 import json
+# -*- coding: utf-8 -*-
+import logging as logging
 
-import ckan.plugins.toolkit as tk
-import ckan.tests.legacy as legacy_tests
-import ckan.model as model
 import ckan.lib.helpers as h
+import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
-import ckan.logic as logic
+import ckanext.hdx_users.model as umodel
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
-from nose import tools as nosetools
+import ckan.tests.factories as factories
 
 log = logging.getLogger(__name__)
 config = tk.config
+ValidationError = tk.ValidationError
 
 
 organization = {
@@ -51,6 +48,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         super(TestHDXPackageUpdate, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
+        context = {
+            'ignore_auth': True,
+            'model': model,
+            'user': 'testsysadmin'
+        }
+        cls._get_action('organization_create')(context, organization)
 
     def test_create_and_upload(self):
 
@@ -84,7 +87,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
-        self._get_action('organization_create')(context, organization)
+        # self._get_action('organization_create')(context, organization)
 
         self._get_action('package_create')(context, package)
 
@@ -113,7 +116,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                    'title': 'Test Activity 3'
                    }
 
-        testsysadmin = model.User.by_name('testsysadmin')
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -121,13 +124,16 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
         test_url = h.url_for('dataset.delete', id=package['name'])
         test_client = self.get_backwards_compatible_test_client()
-        result = test_client.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        result = test_client.post(test_url, extra_environ={'Authorization': testsysadmin_token.get('token')})
         assert result.status_code == 302
 
     def test_hdx_solr_additions(self):
         testsysadmin = model.User.by_name('testsysadmin')
-        legacy_tests.call_action_api(self.app, 'group_create', name="col", title="Colombia", apikey=testsysadmin.apikey,
-                                     status=200)
+        self._get_action('group_create')(
+            {'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'name': 'col', 'title': 'Colombia'}
+        )
+
         context = {'ignore_auth': True,
                                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         try:
@@ -208,8 +214,11 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         self._get_action('hdx_package_update_metadata')(context, modified_fields)
 
-        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_5',
-                                                        apikey=testsysadmin.apikey, status=200)
+        modified_package = self._get_action('package_show')(
+            {'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'test_activity_5'}
+        )
+
         modified_fields.pop('id')
 
         # Checking that all fields in the modified_package come either
@@ -348,19 +357,24 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('maintainer') == joeadmin.id
 
-        with nosetools.assert_raises(logic.ValidationError):
+        try:
             data_dict = self._modify_field(context, testsysadmin, package['name'], 'maintainer', 'joeadmin no user')
-            modified_package = data_dict.get('modified_package')
-            # modified_package_obj = data_dict.get('modified_package_obj')
-            assert modified_package.get('maintainer') == joeadmin.id
+            assert False, 'There should have been a validation error'
+        except ValidationError as e:
+            pass
+
+        modified_package = data_dict.get('modified_package')
+        assert modified_package.get('maintainer') == joeadmin.id
 
     def _modify_field(self, context, user, package_id, key, value):
         modified_fields = {'id': package_id,
                            key: value,
                            }
         self._get_action('package_patch')(context, modified_fields)
-        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id=package_id,
-                                                        apikey=user.apikey, status=200)
+        modified_package = self._get_action('package_show')(
+            {'model': model, 'session': model.Session, 'user': user.name},
+            {'id': package_id}
+        )
         modified_package_obj = model.Package.by_name(package_id)
         return {
             "modified_package": modified_package,

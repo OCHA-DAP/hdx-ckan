@@ -41,8 +41,7 @@ class HDXTwoStep:
     @staticmethod
     def configure_mfa(id=None):
         tc = utils.configure_mfa(id)
-        if helpers.are_there_flash_messages():
-            helpers._flash.pop_messages()
+        helpers.get_flashed_messages()
         helpers.flash_success("Successfully configured and enabled the two-step verification.")
         session['totp_enabled'] = True
         return json.dumps({'success': (tc.mfa_test_valid == True)})
@@ -51,8 +50,7 @@ class HDXTwoStep:
     def new(id=None):
         utils.new(id)
         tc = utils.configure_mfa(id)
-        if helpers.are_there_flash_messages():
-            helpers._flash.pop_messages()
+        helpers.get_flashed_messages()
         helpers.flash_error("Two-step verification enabled. "
                             "Please add the new secret to your authenticator app and verify the code to ensure it is working ok.")
         return json.dumps({
@@ -64,8 +62,7 @@ class HDXTwoStep:
     @staticmethod
     def delete(id=None):
         totp_challenger = SecurityTOTP.get_for_user(id)
-        if helpers.are_there_flash_messages():
-            helpers._flash.pop_messages()
+        helpers.get_flashed_messages()
         helpers.flash_success("Successfully disabled the two-step verification.")
         if totp_challenger:
             totp_challenger.delete()
@@ -131,11 +128,10 @@ class HDXEditView(EditView):
                 u'login': g.user,
                 u'password': data_dict[u'old_password']
             }
-            auth = authenticator.UsernamePasswordAuthenticator()
+            # auth = authenticator.UsernamePasswordAuthenticator()
 
-            auth_user_id = auth.authenticate(request.environ, identity)
-            if auth_user_id:
-                auth_user_id = auth_user_id.split(u',')[0]
+            auth_user = authenticator.ckan_authenticator(identity)
+            auth_user_id = auth_user.id if auth_user else None
             if auth_user_id != g.userobj.id:
                 errors = {
                     u'oldpassword': [_(u'Password entered was incorrect')]
@@ -145,6 +141,7 @@ class HDXEditView(EditView):
                     else {_(u'Sysadmin Password'): _(u'incorrect password')}
                 return self.get(id, data_dict, errors, error_summary)
 
+        user = None
         try:
             data_dict['fullname'] = data_dict.get('firstname', "") + u' ' + data_dict.get('lastname', "")
             user = get_action(u'user_update')(context, data_dict)
@@ -164,9 +161,12 @@ class HDXEditView(EditView):
             return self.get(id, data_dict, errors, error_summary)
         except Exception as ex:
             log.error(ex)
+            errors = {}
+            error_summary = {'unexpected error': 'An unexpected error occurred. Please try again or contact us.'}
+            return self.get(id, data_dict, errors, error_summary)
 
         h.flash_success(_(u'Profile updated'))
-        resp = h.redirect_to(u'hdx_user.edit', id=user[u'name'])
+        resp = h.redirect_to(u'hdx_user.edit', id=user[u'name'] if user else id)
         if current_user and data_dict[u'name'] != old_username:
             # Changing currently logged in user's name.
             # Update repoze.who cookie to match

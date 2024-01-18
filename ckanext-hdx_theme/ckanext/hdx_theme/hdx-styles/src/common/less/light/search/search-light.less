@@ -12,10 +12,6 @@
       z-index: 999;
       .sourceSansProFont(600, 14px);
     }
-
-    .checkbox-slider {
-      margin-left: 10px;
-    }
   }
 
   .dataset-filter-start {
@@ -33,11 +29,11 @@
       }
     }
     .orderDropdown {
-      display: flex;
+      //display: flex;
       height: 20px;
       margin-bottom: 0;
       align-items: flex-end;
-      .dropdown-toggle {
+      #field-order-by {
         display: flex;
         align-items: center;
       }
@@ -54,17 +50,10 @@
   }
 }
 #search-recs {
-  .sourceSansProFont(400, 14px);
-  margin-top: 20px;
-  color: @darkGrayColor;
+  .sourceSansProFont(400, 14px) !important;
+  padding-top: 15px !important;
 }
 .search-list {
-
-  .dataset-item {
-    .dataset-content2 {
-      padding: 15px;
-    }
-  }
 
   .search-empty {
     background-color: @whiteColor;
@@ -111,6 +100,10 @@
 
 .list-header {
   border-bottom: none;
+}
+
+.dataset-light {
+  background-color: @extraLightGrayColor;
 }
 
 @import "mobile-facets";

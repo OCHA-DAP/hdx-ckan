@@ -40,7 +40,7 @@ class TestS3Metadata(HDXS3TestBase):
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/resource_create',
                                    extra_environ={
-                                       'Authorization': str(self.sysadmin_user['apikey']),
+                                       'Authorization': str(self.sysadmin_user['api_token']),
 
                                    },
                                    data={
@@ -56,7 +56,7 @@ class TestS3Metadata(HDXS3TestBase):
 
         result = self.app.post('/api/action/resource_create',
                                extra_environ={
-                                   'Authorization': str(self.sysadmin_user['apikey']),
+                                   'Authorization': str(self.sysadmin_user['api_token']),
 
                                },
                                data={

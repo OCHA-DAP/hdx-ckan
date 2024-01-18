@@ -3,7 +3,6 @@
 
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/activity-stream-styles' %}
   {% asset 'hdx_theme/custom-org-search-facets-styles' %}
 
   {% set customizations = h.load_json(h.hdx_get_extras_element(data.org_meta.org_dict, value_key="customization")) %}
@@ -18,7 +17,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
-  <li class="active"><a>{{data.org_info.name}}</a></li>
+  <li class="breadcrumb-item active"><a>{{data.org_info.name}}</a></li>
 {% endblock %}
 
 {% block primary_content %}
@@ -28,15 +27,15 @@
         <header class="module-content page-header paddingRowHack mTop20 mBottom10">
             <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
                {% block content_primary_nav %}
-                    {{ h.build_nav_icon('hdx_org.read', _('Datasets'), id=data.org_info.name, class_='hdx-tab-button') }}
-                    {{ h.build_nav_icon('hdx_org.activity', _('Activity Stream'), id=data.org_info.name, class_='hdx-tab-button') }}
+                    {{ h.bs5_build_nav_icon('hdx_org.read', _('Datasets'), id=data.org_info.name, class_='nav-link hdx-tab-button') }}
+                    {{ h.bs5_build_nav_icon('hdx_org.activity', _('Activity Stream'), id=data.org_info.name, class_='nav-link hdx-tab-button') }}
                     {% if c.user %}
-                        {{ h.build_nav_icon('hdx_members.members', _('Members'), id=data.org_info.name, class_='hdx-tab-button') }}
+                        {{ h.bs5_build_nav_icon('hdx_members.members', _('Members'), id=data.org_info.name, class_='nav-link hdx-tab-button') }}
                     {% endif %}
                     {% if h.check_access('organization_update', {'id': data.org_info.id}) %}
-                        {{ h.build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=data.org_info.name) }}
+                        {{ h.bs5_build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=data.org_info.name, class_='nav-link') }}
                     {% endif %}
-                    {{ h.build_nav_icon('hdx_org.stats', _('Stats'), id=data.org_info.name, class_='hdx-tab-button') }}
+                    {{ h.bs5_build_nav_icon('hdx_org.stats', _('Stats'), id=data.org_info.name, class_='nav-link hdx-tab-button') }}
                {% endblock %}
             </ul>
         </header>
@@ -67,7 +66,7 @@
     </div>  #}
     {% if data.show_visualization %}
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-12 paddingLeftHack paddingRightHack">
             {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger",
                 title="Embed data",
                 embed_url=data.visualization.embed_url,
@@ -79,7 +78,7 @@
                        {"width": "1200","height": "500"}]) }}
         </div>
 
-        <div id="interactive-data" class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div id="interactive-data" class="col-12 paddingLeftHack paddingRightHack">
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">
                     {{ _("Interactive Data") }}
@@ -89,9 +88,9 @@
         </div>
             {% set viz_title = data.visualization.config.title or '' %}
             {% set data_link_url = data.visualization.config.data_link_url or '#' %}
-            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="col-12 paddingLeftHack paddingRightHack">
                 <div class="mTop20 mBottom20">
-                    <div class="pull-left visualization-title">
+                    <div class="float-start visualization-title">
                         {{viz_title}}
                         {% if data_link_url != '' and data_link_url !='#' %}
                             <span> <a target="_blank" href="{{data_link_url}}">Data</a></span>
@@ -100,7 +99,7 @@
 
                     {% if data.visualization.config.type != 'embedded' and data.visualization.config.type != 'embedded-preview' %}
 
-                        <div class="pull-right">
+                        <div class="float-end">
                             <ul class="mainLinks visualization-links">
                                 <li><a id="embedPopupTrigger" href="#">{{ _("Embed") }}</a></li>
                                 <!--<li><a href="#">{{ _("Save as image") }}</a></li>-->
@@ -115,12 +114,12 @@
         <div style="display: none" id="wfp-viz-embed-datastore">{{ data.visualization.config.datastore_id }}</div>
 
         {% if data.visualization.config.type == 'embedded' %}
-            <div class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
+            <div class="col-12 paddingLeftHack paddingRightHack mTop15">
                 <iframe id="embedded-viz-iframe" src="{{ data.visualization.config.vis_url }}" frameborder="0" width="{{ data.visualization.config.width }}" height="{{ data.visualization.config.height }}" data-hj-allow-iframe=""></iframe>
             </div>
         {% endif %}
         {% if data.visualization.config.type == 'embedded-preview' %}
-            <div class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
+            <div class="col-12 paddingLeftHack paddingRightHack mTop15">
                 <div style="width: {{ data.visualization.config.width }}; height: {{ data.visualization.config.height }};">
                     <a href="{{ data.visualization.config.vis_url }}"
                        target="_blank">
@@ -134,7 +133,7 @@
     {% endif %}
 
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-12 paddingLeftHack paddingRightHack">
             {% snippet 'search/snippets/search_results_wrapper.html',
                     tracking_enabled=g.tracking_enabled, my_c=data.search_template_data %}
         </div>

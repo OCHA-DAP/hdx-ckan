@@ -3,17 +3,15 @@
 import os
 
 import pytest
-import six
-from six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 
 import ckan.plugins as plugins
-import ckan.plugins.toolkit as tk
-from ckan.common import config
+from ckan.common import config, asbool
 from ckan.tests import factories
 
 
 def test_ckan_config_fixture(ckan_config):
-    assert tk.asbool(ckan_config[u"testing"])
+    assert asbool(ckan_config[u"testing"])
 
 
 def test_ckan_config_do_not_have_some_new_config(ckan_config):
@@ -41,10 +39,10 @@ def test_with_plugins_is_able_to_run_with_stats():
     assert plugins.plugin_loaded(u"stats")
 
 
-@pytest.mark.ckan_config(u"ckan.site_url", u"https://example.org")
-@pytest.mark.usefixtures(u"with_request_context")
+@pytest.mark.ckan_config("ckan.site_url", "https://example.org")
+@pytest.mark.usefixtures("with_request_context")
 def test_existing_ckan_config_mark_with_test_request(ckan_config):
-    assert ckan_config[u"ckan.site_url"] == u"https://example.org"
+    assert ckan_config["ckan.site_url"] == "https://example.org"
 
 
 class TestMethodLevelConfig(object):
@@ -81,17 +79,8 @@ class TestCreateWithUpload(object):
         context = {
             u"user": user["name"]
         }
-        some_png = """
-        89 50 4E 47 0D 0A 1A 0A 00 00 00 0D 49 48 44 52
-        00 00 00 01 00 00 00 01 08 02 00 00 00 90 77 53
-        DE 00 00 00 0C 49 44 41 54 08 D7 63 F8 CF C0 00
-        00 03 01 01 00 18 DD 8D B0 00 00 00 00 49 45 4E
-        44 AE 42 60 82"""
-        some_png = some_png.replace(u' ', u'').replace(u'\n', u'')
-        some_png_bytes = bytes(bytearray.fromhex(some_png))
-
         org = create_with_upload(
-            some_png_bytes, u"image.png",
+            b"\0\0\0", u"image.png",
             context=context,
             action=u"organization_create",
             upload_field_name=u"image_upload",
@@ -106,11 +95,7 @@ class TestCreateWithUpload(object):
         assert os.path.isfile(image_path)
         with open(image_path, u"rb") as image:
             content = image.read()
-            # PNG signature
-            if six.PY3:
-                assert content.hex()[:16].upper() == u'89504E470D0A1A0A'
-            else:
-                assert content.encode(u"hex")[:16].upper() == u'89504E470D0A1A0A'
+            assert content == b"\0\0\0"
 
     def test_create_resource(self, create_with_upload):
         dataset = factories.Dataset()
@@ -124,15 +109,20 @@ class TestCreateWithUpload(object):
 
 
 class TestMigrateDbFor(object):
-    @pytest.mark.ckan_config(u"ckan.plugins", u"example_database_migrations")
-    @pytest.mark.usefixtures(u"with_plugins", u"clean_db")
+    @pytest.mark.ckan_config("ckan.plugins", "example_database_migrations")
+    @pytest.mark.usefixtures("with_plugins", "clean_db")
     def test_migrations_applied(self, migrate_db_for):
         import ckan.model as model
         has_table = model.Session.bind.has_table
-        assert not has_table(u"example_database_migrations_x")
-        assert not has_table(u"example_database_migrations_y")
+        assert not has_table("example_database_migrations_x")
+        assert not has_table("example_database_migrations_y")
 
-        migrate_db_for(u"example_database_migrations")
+        migrate_db_for("example_database_migrations")
 
-        assert has_table(u"example_database_migrations_x")
-        assert has_table(u"example_database_migrations_y")
+        assert has_table("example_database_migrations_x")
+        assert has_table("example_database_migrations_y")
+
+
+@pytest.mark.usefixtures("non_clean_db")
+def test_non_clean_db_does_not_fail(package_factory):
+    assert package_factory()

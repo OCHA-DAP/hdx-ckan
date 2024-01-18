@@ -6,13 +6,13 @@ Created on June 11, 2019
 
 '''
 
-import pytest
 import logging as logging
 import unicodedata
-import six
-import ckan.logic as logic
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
+
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_users.helpers.permissions as ph
@@ -61,19 +61,17 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         except Exception as ex:
             assert True
 
-        user = model.User.by_name('tester')
+        user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
         try:
-            res = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-                'NFKD', user.apikey).encode('ascii', 'ignore')})
+            res = self.app.get(url, headers={'Authorization': user_token})
             assert False
         except Exception as ex:
             log.info(ex)
             assert True
 
-        sysadmin = model.User.by_name('testsysadmin')
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
         try:
-            res = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-                'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
+            res = self.app.get(url, headers={'Authorization': sysadmin_token})
             assert True
         except Exception as ex:
             log.info(ex)
@@ -95,7 +93,8 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         tester = model.User.by_name('tester')
         tester.email = 'test@test.com'
-        auth = {'Authorization': str(tester.apikey)}
+        tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': tester_token}
         try:
             res = test_client.post(url, params=permission, extra_environ=auth)
             assert False
@@ -103,8 +102,9 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
 
         sysadmin = model.User.by_name('testsysadmin')
-        sysadmin.email = 'test@test.com'
-        auth = {'Authorization': str(sysadmin.apikey)}
+        sysadmin.email = 'testsysadmin@test.com'
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': sysadmin_token}
         try:
             res = test_client.post(url, params=permission, extra_environ=auth)
         except Exception as ex:
@@ -113,8 +113,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert ('200' in res.status), 'HTTP OK'
 
         try:
-            res = test_client.get(url, headers={'Authorization': unicodedata.normalize(
-                'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
+            res = test_client.get(url, headers=auth)
             assert True
         except Exception as ex:
             log.info(ex)
@@ -133,8 +132,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert ('200' in res.status), 'HTTP OK'
 
         try:
-            res = test_client.get(url, headers={'Authorization': unicodedata.normalize(
-                'NFKD', sysadmin.apikey).encode('ascii', 'ignore')})
+            res = test_client.get(url, headers=auth)
             assert True
         except Exception as ex:
             log.info(ex)

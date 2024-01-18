@@ -1,10 +1,12 @@
 import mock
 
 import ckan.model as model
-from ckan.lib.helpers import url_for
+import ckan.tests.factories as factories
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
+url_for = tk.url_for
 
 class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
@@ -15,7 +17,8 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         sysadmin = model.User.by_name('testsysadmin')
         sysadmin.email = 'testsysadmin@test.com'
-        auth = {'Authorization': str(sysadmin.apikey)}
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)
+        auth = {'Authorization': sysadmin_token['token']}
 
         post_params = {
             'source_type': 'dataset',

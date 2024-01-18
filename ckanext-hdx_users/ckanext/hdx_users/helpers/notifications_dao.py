@@ -50,8 +50,9 @@ class MembershipRequestsDao(object):
 
             if admin_in_groups.count() <= 0:
                 return []
+            groups_to_filter_by = (group_id[0] for group_id in admin_in_groups.with_entities(model.Member.group_id))
 
-            query = query.filter(model.Member.group_id.in_(admin_in_groups.values(model.Member.group_id)))
+            query = query.filter(model.Member.group_id.in_(groups_to_filter_by))
 
         query = query.group_by(model.Group.name, model.Group.title)
 
