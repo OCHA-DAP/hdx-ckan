@@ -23,4 +23,4 @@ def read():
     return render('crisis/crisis-ebola.html', template_data)
 
 
-hdx_ebola.add_url_rule(u'', view_func=read)
+hdx_ebola.add_url_rule(u'/', view_func=read, strict_slashes=False)

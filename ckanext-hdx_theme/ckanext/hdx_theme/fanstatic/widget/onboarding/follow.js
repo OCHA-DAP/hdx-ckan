@@ -31,11 +31,19 @@ $(document).ready(function(){
                     var id = $this.attr("data-module-id");
 
                     var path = "/api/action/" + action + "_" + type;
-                    $.post(path, JSON.stringify({id: id}), function(result){
-                        if (!result.success){
-                            console.error(result.result);
+                    $.ajax({
+                        url: path,
+                        type: 'POST',
+                        data: JSON.stringify({ id: id }),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        headers: hdxUtil.net.getCsrfTokenAsObject(),
+                        success: function(result) {
+                            if (!result.success) {
+                                console.error(result.result);
+                            }
                         }
-                    }, "json");
+                    });
                 })
             });
             $('#follow-form-item-loading').hide();

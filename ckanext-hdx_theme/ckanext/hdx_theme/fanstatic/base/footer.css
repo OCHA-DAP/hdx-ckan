@@ -209,9 +209,15 @@
   .hdx-footer .social-footer .terms .social-actions i {
     font-size: 15px;
   }
-  .hdx-footer .social-footer .terms .social-actions a:first-child {
+  .hdx-footer .social-footer .terms .social-actions a {
     margin-right: 30px;
   }
+  .hdx-footer .social-footer .terms .social-actions a:last-child {
+    margin-right: 0;
+  }
+}
+.hdx-footer .social-footer .terms .social-actions a:hover {
+  text-decoration: none;
 }
 .hdx-footer .social-footer .terms .separator {
   margin-left: auto;

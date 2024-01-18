@@ -123,5 +123,5 @@ def is_valid_captcha(response):
     return 'success' in res and res['success']
 
 hdx_faqs.add_url_rule(u'/<category>', view_func=read)
-hdx_main_faq.add_url_rule(u'', view_func=main_faq)
+hdx_main_faq.add_url_rule(u'/', view_func=main_faq, strict_slashes=False)
 hdx_main_faq.add_url_rule(u'/contact_us', view_func=contact_us, methods=[u'POST'])

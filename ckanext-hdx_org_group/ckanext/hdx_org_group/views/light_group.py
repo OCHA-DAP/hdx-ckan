@@ -117,8 +117,8 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         return render(template_file, template_data)
 
 
-hdx_group_eaa_maps.add_url_rule(u'', view_func=group_eaa_worldmap)
-hdx_light_group.add_url_rule(u'', view_func=light_index)
+hdx_group_eaa_maps.add_url_rule(u'/', view_func=group_eaa_worldmap, strict_slashes=False)
+hdx_light_group.add_url_rule(u'/', view_func=light_index, strict_slashes=False)
 hdx_light_group.add_url_rule(u'/<id>', view_func=light_read)
 
 

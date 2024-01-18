@@ -115,6 +115,6 @@ def _compute_analytics(dataset_dict):
     return result
 
 
-hdx_light_search.add_url_rule(u'', view_func=search)
-hdx_light_dataset.add_url_rule(u'', view_func=search)
+hdx_light_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
+hdx_light_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_light_dataset.add_url_rule(u'/<id>', view_func=read)

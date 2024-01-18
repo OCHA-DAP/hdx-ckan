@@ -68,4 +68,4 @@ def _populate_with_data_link(showcases):
             if not showcase.get('data_url'):
                 showcase['data_url'] = h.url_for('showcase_blueprint.read', id=showcase['name'])
 
-hdx_dataviz_gallery.add_url_rule(u'', view_func=index)
+hdx_dataviz_gallery.add_url_rule(u'/', view_func=index, strict_slashes=False)

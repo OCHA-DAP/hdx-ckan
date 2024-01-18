@@ -16,6 +16,7 @@ $(document).ready(function(){
         "approve": true
       }),
       contentType: "application/json; charset=utf-8",
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
       dataType: "json"
     })
       .done(function(){
@@ -38,6 +39,7 @@ $(document).ready(function(){
         "reject": true
       }),
       contentType: "application/json; charset=utf-8",
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
       dataType: "json"
     })
       .done(function(){

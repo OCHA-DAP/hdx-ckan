@@ -18,7 +18,7 @@ def redirect_to_org_list2():
     return h.redirect_to('organization.index')
 
 
-hdx_org_group_redirect.add_url_rule(u'', view_func=redirect_to_org_list2,
+hdx_org_group_redirect.add_url_rule(u'/', view_func=redirect_to_org_list2, strict_slashes=False,
                                     defaults={
                                         'id': ''
                                     })

@@ -153,7 +153,7 @@ def light_fake(id):
     return redirect('hdx_light_org.light_read', id=id)
 
 
-hdx_light_org.add_url_rule(u'', view_func=light_index)
+hdx_light_org.add_url_rule(u'/', view_func=light_index, strict_slashes=False)
 hdx_light_org.add_url_rule(u'/<id>', view_func=light_read)
 hdx_light_org.add_url_rule(u'/activity/<id>', view_func=light_fake)
 hdx_light_org.add_url_rule(u'/stats/<id>', view_func=light_fake)

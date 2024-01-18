@@ -384,7 +384,7 @@ def _get_user_obj(mail_or_username):
         if mailutil.hdx_validate_email(mail_or_username):
             users = model.User.by_email(mail_or_username)
             if users:
-                userobj = users[0]
+                userobj = users
     except Invalid as e:
         userobj = model.User.get(mail_or_username)
         if not userobj:

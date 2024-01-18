@@ -85,7 +85,7 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         return render(template_file, template_data)
 
 
-hdx_group.add_url_rule(u'', view_func=index)
+hdx_group.add_url_rule(u'/', view_func=index, strict_slashes=False)
 hdx_group.add_url_rule(
         u'/new',
         methods=[u'GET', u'POST'],
