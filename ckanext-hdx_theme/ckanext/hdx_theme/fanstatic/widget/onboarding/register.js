@@ -11,7 +11,7 @@ $(document).ready(function(){
             var result = JSON.parse(result_data);
             if (result.success) {
                 $this.unbind("submit");
-                $this.attr("action", "/login_generic");
+                $this.attr("action", "/user/login?came_from=/dataset");
                 hdxUtil.analytics.sendUserRegisteredEvent("user register").then(function(){
                     $this.submit();
                 });
