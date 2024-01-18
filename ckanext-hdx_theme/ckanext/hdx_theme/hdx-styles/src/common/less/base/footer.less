@@ -161,8 +161,20 @@
           i {
             font-size: 15px;
           }
-          a:first-child {
+          a {
             margin-right: 30px;
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+
+      .social-actions {
+
+        a {
+          &:hover {
+            text-decoration: none;
           }
         }
       }
