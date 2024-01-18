@@ -371,7 +371,7 @@ def activity_offset(id, offset=0):
     return render(template, extra_vars)
 
 
-hdx_org.add_url_rule(u'', view_func=index)
+hdx_org.add_url_rule(u'/', view_func=index, strict_slashes=False)
 hdx_org.add_url_rule(
         u'/new',
         methods=[u'GET', u'POST'],

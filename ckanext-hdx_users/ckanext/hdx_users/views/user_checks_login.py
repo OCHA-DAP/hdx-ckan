@@ -36,5 +36,5 @@ def contact_hdx(error=None):
                            _('Login to contact HDX'), error=error)
 
 
-hdx_contribute.add_url_rule(u'', view_func=contribute)
-hdx_contact_hdx.add_url_rule(u'', view_func=contact_hdx)
+hdx_contribute.add_url_rule(u'/', view_func=contribute, strict_slashes=False)
+hdx_contact_hdx.add_url_rule(u'/', view_func=contact_hdx, strict_slashes=False)

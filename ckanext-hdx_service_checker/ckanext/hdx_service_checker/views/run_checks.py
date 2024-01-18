@@ -40,4 +40,4 @@ def _compute_render_color(checks):
             _compute_render_color(check.get('subchecks'))
 
 
-hdx_run_checks.add_url_rule(u'', view_func=run_checks)
+hdx_run_checks.add_url_rule(u'/', view_func=run_checks, strict_slashes=False)

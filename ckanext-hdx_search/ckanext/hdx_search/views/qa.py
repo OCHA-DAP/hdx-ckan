@@ -55,4 +55,4 @@ def dashboard():
     return render('qa_dashboard/qa_dashboard.html', template_data)
 
 
-hdx_qa.add_url_rule(u'', view_func=dashboard)
+hdx_qa.add_url_rule(u'/', view_func=dashboard, strict_slashes=False)
