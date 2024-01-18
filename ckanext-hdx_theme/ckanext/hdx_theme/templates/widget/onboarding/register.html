@@ -30,7 +30,7 @@ Example:
 
 {% block right_content %}
     <div class="register-form">
-        <form id="register-form">
+        <form id="register-form" method="post">
             <div class="small-form-title">Please fill out the following:</div>
             <input style="display: none;" name="id" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
             <input style="display: none;" name="email" class="full-width disabled required" type="text" value="{{ email }}" readonly>
