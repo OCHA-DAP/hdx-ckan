@@ -2867,6 +2867,9 @@ textarea {
   font-size: 14px;
   color: #333333;
 }
+.hdx-form .mb-3 .form-control[type="file"] {
+  min-height: auto;
+}
 .hdx-form .mb-3 .form-control.select2-container {
   border: none;
 }
@@ -3708,6 +3711,9 @@ ul.list-horizontal li:first-child:before {
   position: absolute;
   right: 20px;
   top: 6px;
+}
+.new-header .global-header .global-header-content .header-user-box #user-dropdown-menu {
+  min-width: 205px;
 }
 .new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
   list-style: none;
