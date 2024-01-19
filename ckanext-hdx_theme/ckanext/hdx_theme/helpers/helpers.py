@@ -7,11 +7,11 @@ import six.moves.urllib.parse as urlparse
 
 import ckan.authz as new_authz
 import ckan.lib.base as base
-import ckan.lib.datapreview as datapreview
 import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.activity.model.activity as activity_model
 import ckanext.requestdata.model as requestdata_model
 import ckanext.hdx_theme.version as version
 
@@ -50,8 +50,8 @@ def is_not_zipped(res):
     return True
 
 
-NOT_HXL_FORMAT_LIST = ['zipped shapefile', 'zip', 'geojson', 'json', 'kml', 'kmz', 'rar', 'pdf', 'excel',
-                       'zipped', 'docx', 'doc', '7z']
+NOT_HXL_FORMAT_LIST = frozenset({'zipped shapefile', 'zip', 'geojson', 'json', 'kml', 'kmz', 'rar', 'pdf', 'excel',
+                       'zipped', 'docx', 'doc', '7z'})
 
 
 def _any(item, ext_list=NOT_HXL_FORMAT_LIST):
@@ -85,10 +85,11 @@ def get_facet_items_dict(facet, limit=1000, exclude_active=False):
 
 
 def get_last_modifier_user(dataset_id=None, group_id=None):
+    activity_objects = None
     if group_id is not None:
-        activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
+        activity_objects = activity_model.group_activity_list(group_id, limit=1, offset=0)
     if dataset_id:
-        activity_objects = model.activity.package_activity_list(dataset_id, limit=1, offset=0)
+        activity_objects = activity_model.package_activity_list(dataset_id, limit=1, offset=0)
     if activity_objects:
         user = activity_objects[0].user_id
         t_stamp = activity_objects[0].timestamp
