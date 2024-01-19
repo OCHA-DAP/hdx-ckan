@@ -2899,6 +2899,9 @@ textarea {
   font-size: 14px;
   color: #333333;
 }
+.hdx-form .mb-3 .form-control[type="file"] {
+  min-height: auto;
+}
 .hdx-form .mb-3 .form-control.select2-container {
   border: none;
 }
