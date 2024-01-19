@@ -138,7 +138,7 @@
                           <div
                             class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</div>
                         </a>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul class="dropdown-menu" id="user-dropdown-menu" role="menu">
                           {% block header_account_logged %}
                             {% set user_is_sysadmin = h.check_access('sysadmin') %}
                             {% set def_url = h.find_first_global_settings_url() %}

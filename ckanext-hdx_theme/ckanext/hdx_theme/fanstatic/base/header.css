@@ -3712,6 +3712,9 @@ ul.list-horizontal li:first-child:before {
   right: 20px;
   top: 6px;
 }
+.new-header .global-header .global-header-content .header-user-box #user-dropdown-menu {
+  min-width: 205px;
+}
 .new-header .global-header .global-header-content .header-user-box .dropdown-submenu {
   list-style: none;
   padding: 0;
