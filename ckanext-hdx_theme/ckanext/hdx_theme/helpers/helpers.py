@@ -133,7 +133,7 @@ def get_filtered_params_list(params):
 
 
 def get_last_revision_timestamp_group(group_id):
-    activity_objects = model.activity.group_activity_list(
+    activity_objects = activity_model.group_activity_list(
         group_id, limit=1, offset=0)
     if len(activity_objects) > 0:
         activity = activity_objects[0]
