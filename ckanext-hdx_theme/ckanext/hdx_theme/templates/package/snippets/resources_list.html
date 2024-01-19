@@ -89,12 +89,14 @@ Example:
 
 <div class="modal data-check-modal" id="preview-data-check" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="modal" aria-label="Close"></button>
     <div class="modal-content">
       <div class="modal-header">
-        <span class="large">Data Check</span> - Use data with HXL hashtags to automatically detect errors and validate against common vocabularies.
+        <h3 class="modal-title">{{ _('Data Check') }} <small>- {{ _('Use data with HXL hashtags to automatically detect errors and validate against common vocabularies.') }}</small></h3>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <iframe style="min-height: 70vh; height: 100%; max-height: 90vh;" frameborder="0" width="1260" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+      <div class="modal-body">
+        <iframe frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+      </div>
     </div>
   </div>
 </div>
