@@ -100,21 +100,12 @@ def resource_delete(context, data_dict):
             "filter": [filter_key]
         }
         _get_action('package_revise')(context, data_revise_dict)
-        _resource_purge(context, data_dict)
+        # _resource_purge(context, data_dict)
+        file_remove(resource.id, resource.url, resource.url_type)
+        model.repo.commit()
     except Exception as ex:
         log.error('Exception while trying to delete resource:' + str(ex))
         model.Session.rollback()
-
-    model.repo.commit()
-
-
-    # return result_dict
-
-
-def _resource_purge(context, data_dict):
-    model = context['model']
-    r = model.Resource.get(data_dict.get('id'))
-    file_remove(r.id, r.url, r.url_type)
 
 
 def _is_requested_data_type(entity):
