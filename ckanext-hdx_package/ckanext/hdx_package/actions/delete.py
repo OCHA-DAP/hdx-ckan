@@ -86,20 +86,28 @@ def resource_delete(context, data_dict):
     It allows us to do some minor changes and wrap it.
     '''
     process_batch_mode(context, data_dict)
+    id = _get_or_bust(data_dict, 'id')
 
     context['do_geo_preview'] = False
+    context['defer_commit'] = True
     # result_dict = core_delete.resource_delete(context, data_dict)
-    id = _get_or_bust(data_dict, 'id')
     model = context['model']
-    resource = model.Resource.get(id)
-    filter_key = "-resources__" + id
-    data_revise_dict = {
-        "match": {"id": resource.package_id},
-        "filter": [filter_key]
-    }
-    _get_action('package_revise')(context, data_revise_dict)
+    try:
+        resource = model.Resource.get(id)
+        filter_key = "-resources__" + id
+        data_revise_dict = {
+            "match": {"id": resource.package_id},
+            "filter": [filter_key]
+        }
+        _get_action('package_revise')(context, data_revise_dict)
+        _resource_purge(context, data_dict)
+    except Exception as ex:
+        log.error('Exception while trying to delete resource:' + str(ex))
+        model.Session.rollback()
 
-    _resource_purge(context, data_dict)
+    model.repo.commit()
+
+
     # return result_dict
 
 
