@@ -109,7 +109,7 @@ ckan.module('hdx-modal-form', function($) {
                     }
                   });
                 });
-                this.modal = new bootstrap.Modal($element.get(0), {keyboard: false});
+                this.modal = new bootstrap.Modal($element.get(0), {keyboard: false, focus: false});
                 this.modalFormError = $element.find('.alert-danger');
                 this.element = $element;
             }
