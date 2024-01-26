@@ -18,6 +18,7 @@ import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
 import ckanext.hdx_users.views.user_register_view as urv
+import ckanext.hdx_users.views.onboarding as onboarding
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -128,5 +129,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             permission.hdx_user_permission,
             rduv.hdx_requestdata_user,
             rdv.requestdata_send_request,
-            urv.user_register
+            urv.user_register,
+            onboarding.hdx_user_onboarding
         ]
