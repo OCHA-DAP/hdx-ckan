@@ -94,8 +94,10 @@ def package_changed(sender: str, **kwargs: Any):
     pkg = context["model"].Package.get(id_)
     assert pkg
 
-    if pkg.private:
-        return
+    # Modified by HDX: HDX-9544, HDX-8835
+    # if pkg.private:
+    #     return
+    # END - Modified by HDX
 
     user_obj = context["model"].User.get(context["user"])
     if user_obj:
