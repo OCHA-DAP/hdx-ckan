@@ -91,6 +91,25 @@ page-light-styles:
     - light/page-light.css
     - search-styles
 
+page-extra-light-styles:
+  output: ckanext-hdx_theme/%(version)s_page-extra-light-styles.css
+  <<: *common-css
+  contents:
+    - page-common-styles
+    - light/page-extra-light.css
+
+bem-blocks-styles:
+  output: ckanext-hdx_theme/%(version)s_bem-blocks-styles.css
+  <<: *common-css
+  contents:
+    - bem.blocks/bem_fonts.css
+    - bem.blocks/stepper.css
+    - bem.blocks/heading.css
+    - bem.blocks/input_field.css
+    - bem.blocks/checkbox_field.css
+    - bem.blocks/form_info.css
+    - bem.blocks/form_button.css
+
 search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
