@@ -1,7 +1,7 @@
 <div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
   <label class="input-field__label" for="input-{{ name }}">
     {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
-  <input type="{{ text }}" name="name" class="form-control input-field__input" id="input-{{ name }}"
+  <input type="{{ type }}" name="{{ name }}" class="form-control input-field__input" id="input-{{ name }}"
          {% if required %}required {% endif %}placeholder="{{ _(placeholder) }}">
   {% if help_text %}
     <span class="form-text input-field__help">{{ _(help_text) }}</span>

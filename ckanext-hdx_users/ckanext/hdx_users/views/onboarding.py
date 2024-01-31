@@ -1,15 +1,25 @@
 import logging
 
 from flask import Blueprint
-
+from flask.views import MethodView
+from typing import Any, Optional, Union, cast
+from ckan.types import Context, Schema, Response
 import ckan.authz as new_authz
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+from ckan.common import (
+    config, g, current_user, login_user, logout_user, session
+)
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckanext.hdx_users.logic.schema as schema
+import ckanext.hdx_users.helpers.helpers as usr_h
+from ckanext.hdx_users.views.user_view_helper import *
 import ckanext.hdx_users.helpers.permissions as ph
 from ckan.views.home import CACHE_PARAMETERS
 from ckanext.hdx_users.helpers.permissions import Permissions
+
 
 log = logging.getLogger(__name__)
 
@@ -30,30 +40,95 @@ g = tk.g
 _ = tk._
 request = tk.request
 
+
 hdx_user_onboarding = Blueprint(u'hdx_user_onboarding', __name__, url_prefix=u'/signup')
 
+def _new_form_to_db_schema() -> Schema:
+    return schema.onboarding_create_user_schema()
 
-def _extra_template_variables(context, data_dict):
-    """
-    This is no longer inspired from ckan's UserController -> _setup_template_variables()
-    but from the new flask controller views/users -> _extra_template_variables()
-    """
+class UserOnboardingView(MethodView):
 
-    extra = {
-    }
-    return extra
+    def _prepare(self) -> Context:
+        context = cast(Context, {
+            u'model': model,
+            u'session': model.Session,
+            u'user': current_user.name,
+            u'auth_user_obj': current_user,
+            u'schema': _new_form_to_db_schema(),
+            u'save': u'save' in request.form
+        })
+        try:
+            logic.check_access(u'user_create', context)
+            logic.check_access(u'onboarding_user_can_register', context)
+        except logic.NotAuthorized:
+            abort(403, _(u'Unauthorized to register as a user.'))
+        return context
+
+    def post(self) -> Union[Response, str]:
+        context = self._prepare()
+        try:
+            data_dict = logic.clean_dict(
+                dictization_functions.unflatten(
+                    logic.tuplize_dict(logic.parse_params(request.form))))
+
+        except dictization_functions.DataError:
+            abort(400, _(u'Integrity Error'))
+
+        # captcha check
+        try:
+            is_captcha_enabled: object = config.get('hdx.captcha', 'false')
+            if is_captcha_enabled == 'true':
+                captcha_response = data_dict.get('g-recaptcha-response', None)
+                if not usr_h.is_valid_captcha(captcha_response=captcha_response):
+                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+        except ValidationError as e:
+            error_summary = e.error_summary
+            if error_summary == CaptchaNotValid:
+                return OnbCaptchaErr
+            return error_message(error_summary)
+        except Exception as e:
+            log.error(e)
+            return error_message('Something went wrong. Please contact support.')
+
+        # user create
+        try:
+            data_dict['state'] = model.State.PENDING
+            user_dict = logic.get_action(u'user_create')(context, data_dict)
+            log.info("user created, id: {0}, username: {1}, email: {2} ".format(user_dict.get('id'),user_dict.get('name'),user_dict.get('email')))
+        except logic.NotAuthorized:
+            abort(403, _(u'Unauthorized to create user %s') % u'')
+        except logic.NotFound:
+            abort(404, _(u'User not found'))
+        except logic.ValidationError as e:
+            errors = e.error_dict
+            error_summary = e.error_summary
+            return self.get(data_dict, errors, error_summary)
+
+        # TODO send user validation token
+
+        # TODO render the verify your email address page
+
+        extra_vars = {
+            # TODO add relevant data
+        }
+
+        # TODO render the verify your email address page
+        return self.get(data_dict, {}, {})
+
+    def get(self,
+            data: Optional[dict[str, Any]] = None,
+            errors: Optional[dict[str, Any]] = None,
+            error_summary: Optional[dict[str, Any]] = None) -> str:
+
+        context = self._prepare()
+
+        extra_vars = {
+            u'data': data or {},
+            u'errors': errors or {},
+            u'error_summary': error_summary or {}
+        }
+        aux = render('onboarding/signup/user-info.html', extra_vars=extra_vars)
+        return aux
 
 
-def read():
-    context = {u'model': model, u'session': model.Session,
-               u'user': g.user, u'auth_user_obj': g.userobj,
-               u'for_view': True, u'with_related': True}
-
-    data_dict = {
-                 }
-    extra_vars = _extra_template_variables(context, data_dict)
-
-    return render('onboarding/signup/user-info.html', extra_vars=extra_vars)
-
-
-hdx_user_onboarding.add_url_rule(u'user-info', methods=[u'GET', u'POST'], view_func=read)
+hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),  methods=[u'GET', u'POST'])
