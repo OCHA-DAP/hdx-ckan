@@ -1,0 +1,7 @@
+<div class="checkbox-field form-check{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <input class="checkbox-field__input form-check-input" type="checkbox" value="" id="checkbox-{{ name }}"
+         {% if checked %}checked{% endif %}>
+  <label class="checkbox-field__label form-check-label ms-2" for="checkbox-{{ name }}">
+    {{ _(label)|safe }}
+  </label>
+</div>
