@@ -59,6 +59,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return {
             'user_can_register': authorize.user_can_register,
             'user_can_validate': authorize.user_can_validate,
+            'onboarding_user_can_register': authorize.onboarding_user_can_register,
             'hdx_first_login': auth.hdx_first_login,
         }
 
