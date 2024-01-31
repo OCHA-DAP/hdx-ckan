@@ -1,0 +1,104 @@
+.fa-icon::before {
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.stepper {
+  display: flex;
+  justify-content: center;
+}
+.stepper__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 192px;
+}
+@media (max-width: 768px) {
+  .stepper__item {
+    flex: 1;
+  }
+}
+.stepper__item::before,
+.stepper__item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #CCCCCC;
+  width: 100%;
+  top: 16px;
+  z-index: 1;
+}
+.stepper__item::before {
+  left: -50%;
+}
+.stepper__item::after {
+  left: 50%;
+}
+.stepper__item:first-child::before,
+.stepper__item:last-child::after {
+  content: none;
+}
+.stepper__item--active .stepper__counter {
+  color: #0162DD;
+  border-color: #0162DD;
+  background-color: #FFF;
+}
+.stepper__item--active .stepper__name {
+  color: #0162DD;
+}
+.stepper__item--active::after {
+  border-bottom: 2px solid #CCCCCC;
+  z-index: 2;
+}
+.stepper__item--completed .stepper__counter {
+  border-color: #0162DD;
+  background-color: #0162DD;
+  text-indent: -999px;
+}
+.stepper__item--completed .stepper__counter::after {
+  font: var(--fa-font-solid);
+  content: '\f00c';
+  text-indent: 0;
+}
+.stepper__item--completed .stepper__counter::after::before {
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.stepper__item--completed .stepper__name {
+  color: #0162DD;
+}
+.stepper__item--completed::after {
+  border-bottom: 2px solid #0162DD;
+  z-index: 2;
+}
+.stepper__counter {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 600;
+  border-width: 2px;
+  border-style: solid;
+  color: #FFF;
+  background: #CCCCCC;
+  border-color: #CCCCCC;
+}
+.stepper__name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #CCCCCC;
+  margin-top: 8px;
+}
+@media (max-width: 768px) {
+  .stepper__name {
+    display: none;
+  }
+}
