@@ -1,0 +1,15 @@
+.navbar.new-header {
+  margin: 0;
+  display: block;
+}
+.navbar.new-header.navbar-static-top {
+  width: 100%;
+}
+.navbar.new-header.navbar-static-top .global-header {
+  background-color: #333333;
+}
+.navbar.new-header.navbar-static-top .global-header > .header-message,
+.navbar.new-header.navbar-static-top .global-header > .container {
+  max-width: 1170px;
+  margin: 0 auto;
+}
