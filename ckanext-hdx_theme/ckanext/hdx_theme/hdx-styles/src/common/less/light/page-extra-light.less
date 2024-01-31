@@ -1,0 +1,50 @@
+@import "../base/variables";
+@import "../base/fonts";
+@import "_base";
+@import "../base/mixins";
+@import "../base/layout";
+@import "../base/components/header/main-links";
+@import "../base/footer";
+@import "../base/mixins/_global-header";
+@import "../base/mixins/_hdx-header";
+@import "../base/mixins/_header-nav-search";
+
+@headerNavBorderHeight: @navBorderHeight;
+@headerNavBackgroundColor: @whiteColor;
+@headerNavBorderColor: @lightGrayColor;
+@headerNavSearchBorderColor: @grayColor;
+
+@searchPlaceholderColor: #dadada;
+@searchTextColor: @blackColor;
+
+.new-header {
+  margin-bottom: 0;
+
+  &.navbar {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    &.navbar-static-top {
+      border-bottom: 3px solid #c3cbcb;
+    }
+  }
+
+  .global-header();
+  .hdx-header();
+  .header-nav-search();
+}
+
+@import "../base/components/crises-menu";
+@import "../base/components/header-message";
+@import "../base/components/hdx-logo";
+
+.searchPlaceholderStyle() {
+  color: @searchPlaceholderColor;
+  .sourceSansProFont(400, 18px);
+  line-height: 28px;
+}
+
+@import "../base/components/header/breadcrumbs";
+@import "../base/components/header/navbar";
+
+@import "../homepage/homepage-responsive";
