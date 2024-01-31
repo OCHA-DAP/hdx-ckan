@@ -52,7 +52,7 @@ class DataCompletness(object):
         response = requests.get(self.config_url)
         response.raise_for_status()
         yaml_text = response.text
-        return yaml.load(yaml_text)
+        return yaml.safe_load(yaml_text)
 
     def __populate_dataseries(self):
         all_dataset_map = {}
