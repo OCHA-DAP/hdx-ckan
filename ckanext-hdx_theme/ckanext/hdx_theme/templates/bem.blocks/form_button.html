@@ -1,0 +1,9 @@
+<div class="form-button{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  {% if not type == 'href' %}
+    <button class="form-button__btn btn{% if button_classes %} {{ button_classes|join(' ') }}{% endif %}"
+            type="{{ type }}">{{ _(title) }}</button>
+  {% else %}
+    <a href="{{ url }}" class="form-button__btn btn{% if button_classes %} {{ button_classes|join(' ') }}{% endif %}"
+       title="{{ _(title) }}">{{ _(title) }}</a>
+  {% endif %}
+</div>

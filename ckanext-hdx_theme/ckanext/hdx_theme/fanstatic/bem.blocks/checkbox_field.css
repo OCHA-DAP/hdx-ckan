@@ -1,0 +1,17 @@
+.checkbox-field__label.form-check-label {
+  vertical-align: middle;
+  color: #000;
+  font-size: 16px;
+}
+.checkbox-field__input.form-check-input {
+  height: 20px;
+  width: 20px;
+  border-color: #D1D5DB;
+}
+.checkbox-field__input.form-check-input:checked {
+  background-color: #888;
+  border-color: #888;
+}
+.checkbox-field__input.form-check-input:focus {
+  box-shadow: none;
+}
