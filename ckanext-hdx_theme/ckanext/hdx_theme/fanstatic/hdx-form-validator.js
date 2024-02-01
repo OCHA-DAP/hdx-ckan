@@ -1,3 +1,26 @@
+/**
+ * HDX Form Validator
+ *
+ * This CKAN module provides basic client-side form validation for common use cases
+ * such as username, email, password, field matching and checkbox validation.
+ *
+ * Initialization:
+ * To use this module, add the 'hdx-form-validator' module to the data-module attribute
+ * of your form element. Example: <form method="post" data-module="hdx-form-validator">
+ *
+ * Data Attributes:
+ * - Use the 'data-validation' attribute on form fields to specify the types of validation
+ *   to be applied. Multiple types can be separated by commas.
+ *   Example: <input type="text" name="username" data-validation="username" />
+ *
+ * - For field matching validation, use the 'data-validation-match' attribute on the field
+ *   that should match another field.
+ *   Example: <input type="password" name="confirmPassword" data-validation="match" data-validation-match="password" />
+ *
+ * - For checkbox validation, use the 'data-validation' attribute with the value 'checkbox'.
+ *   Example: <input type="checkbox" name="terms" data-validation="checkbox" />
+ */
+
 this.ckan.module('hdx-form-validator', function ($) {
   return {
     initialize: function () {
