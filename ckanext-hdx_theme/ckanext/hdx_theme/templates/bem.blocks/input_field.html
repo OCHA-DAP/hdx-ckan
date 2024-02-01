@@ -1,8 +1,20 @@
 <div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
   <label class="input-field__label" for="input-{{ name }}">
     {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
-  <input type="{{ type }}" name="{{ name }}" class="form-control input-field__input" id="input-{{ name }}"
-         {% if required %}required {% endif %}placeholder="{{ _(placeholder) }}">
+  <input
+          type="{{ type }}"
+          name="{{ name }}"
+          class="form-control input-field__input"
+          id="input-{{ name }}"
+          placeholder="{{ _(placeholder) }}"
+          {% if required %}required{% endif %}
+          {% if type == 'password' %}autocomplete="on"{% endif %}
+          {% if data_attributes %}{% for key, value in data_attributes.items() %}{% if key != 'validation-error' %}data-{{ key }}="{{ value }}"
+          {% endif %}{% endfor %}{% endif %}
+  >
+  {% if data_attributes and data_attributes['validation-error'] %}
+    <div class="input-field__feedback-message input-field__feedback-message_state_invalid invalid-feedback">{{ data_attributes['validation-error'] }}</div>
+  {% endif %}
   {% if help_text %}
     <span class="form-text input-field__help">{{ _(help_text) }}</span>
   {% endif %}
