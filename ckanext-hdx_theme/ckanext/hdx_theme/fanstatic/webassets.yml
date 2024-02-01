@@ -110,6 +110,12 @@ bem-blocks-styles:
     - bem.blocks/form_info.css
     - bem.blocks/form_button.css
 
+hdx-form-validator:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-form-validator.js
+  contents:
+    - hdx-form-validator.js
+
 search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
