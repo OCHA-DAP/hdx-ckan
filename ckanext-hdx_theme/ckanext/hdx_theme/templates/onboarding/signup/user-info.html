@@ -1,5 +1,7 @@
 {% extends "onboarding/base.html" %}
 
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['USER_INFO'] %}
+
 {% block subtitle %}{{ _('User info') }}{% endblock %}
 
 {% block breadcrumb_content %}
@@ -12,26 +14,26 @@
 
     <div class="row">
       <div class="col-12 col-md-7 mx-auto">
-        {{ h.snippet('bem.blocks/stepper.html', steps=["Personal details", "Verify email", "Account created"], spacing_class="my-5", current_step=1) }}
+        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=1) }}
         <div class="text-center">
-          {{ h.snippet('bem.blocks/heading.html', title="Please provide the following information", spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-4") }}
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-12 col-md-6 mx-auto">
-        {{ h.snippet('bem.blocks/form_info.html', message="* indicates mandatory fields", spacing_class="mb-4") }}
+        {{ h.snippet('bem.blocks/form_info.html', message=CONST.MANDATORY_HELP, spacing_class="mb-4") }}
         <form method="post" action="{{ h.url_for('hdx_user_onboarding.user-info') }}" id="user-info">
           {{ h.csrf_input() }}
-          {{ h.snippet('bem.blocks/input_field.html', type="text", required=True, label="What is your name?", name="fullname", placeholder="Your name", spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/input_field.html', type="email", required=True, label="What is your email address?", name="email", placeholder="Your email address", spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/input_field.html', type="email", required=True, label="Re-enter your email address", name="email2", placeholder="Re-enter your email address", spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/input_field.html', type="text", required=True, label="Choose a username", name="name", placeholder="Your username", spacing_class="mb-3", help_text="Username should be 2 and 100 characters in length, containing only lowercase alphanumeric characters, - and _") }}
-          {{ h.snippet('bem.blocks/input_field.html', type="password", required=True, label="Choose a password", name="password1", placeholder="Your password", help_text="The password must be a minimum of 10 characters in length and should consist of characters from a minimum of three out of the following four character sets: uppercase letters, lowercase letters, numbers, and punctuation.", spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/input_field.html', type="password", required=True, label="Re-enter a password", name="password2", placeholder="Re-enter your password", spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/checkbox_field.html', label="I have read and accepted the <a href=\"{0}\" title=\"HDX Terms of Service\">HDX Terms of Service</a>".format(h.url_for('hdx_faqs.read', category='terms')), name="user_info_accept_terms", checked=False, spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/checkbox_field.html', label="Do you want to receive email updates from the Centre for Humanitarian Data about HDX features and events?", name="user_info_accept_emails", checked=False, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/input_field.html', type="text", required=True, label=CONST.INPUT_FULLNAME_LABEL, name="fullname", placeholder=CONST.INPUT_FULLNAME_PLACEHOLDER, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/input_field.html', type="email", required=True, label=CONST.INPUT_EMAIL_LABEL, name="email", placeholder=CONST.INPUT_EMAIL_PLACEHOLDER, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/input_field.html', type="email", required=True, label=CONST.INPUT_EMAIL2_LABEL, name="email2", placeholder=CONST.INPUT_EMAIL2_PLACEHOLDER, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/input_field.html', type="text", required=True, label=CONST.INPUT_USERNAME_LABEL, name="name", placeholder=CONST.INPUT_USERNAME_PLACEHOLDER, spacing_class="mb-3", help_text=CONST.INPUT_USERNAME_HELP) }}
+          {{ h.snippet('bem.blocks/input_field.html', type="password", required=True, label=CONST.INPUT_PASSWORD_LABEL, name="password1", placeholder=CONST.INPUT_PASSWORD_PLACEHOLDER, help_text=CONST.INPUT_PASSWORD_HELP, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/input_field.html', type="password", required=True, label=CONST.INPUT_PASSWORD2_LABEL, name="password2", placeholder=CONST.INPUT_PASSWORD2_PLACEHOLDER, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/checkbox_field.html', label=CONST.CHECKBOX_TERMS_OF_SERVICE.format(h.url_for('hdx_faqs.read', category='terms')), name="user_info_accept_terms", checked=False, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/checkbox_field.html', label=CONST.CHECKBOX_NEWSLETTER, name="user_info_accept_emails", checked=False, spacing_class="mb-3") }}
           {% if g.recaptcha_publickey %}
             <div class="recaptcha-field mb-3">
               <div class="g-recaptcha" data-sitekey="{{ g.recaptcha_publickey }}"></div>
