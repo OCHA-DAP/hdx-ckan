@@ -1,6 +1,6 @@
 <div class="stepper{% if spacing_class %} {{ spacing_class }}{% endif %}">
   {% for step in steps %}
-    <div class="stepper__item {% if current_step is not defined or loop.index < current_step %}stepper__item--completed{% elif loop.index == current_step %}stepper__item--active{% endif %}">
+    <div class="stepper__item {% if current_step is not defined or loop.index < current_step %}stepper__item_state_completed{% elif loop.index == current_step %}stepper__item_state_active{% endif %}">
       <div class="stepper__counter">{{ loop.index }}</div>
       <div class="stepper__name">{{ _(step) }}</div>
     </div>
