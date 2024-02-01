@@ -16,6 +16,7 @@ this.ckan.module('data-viewer', function (jQuery) {
     initialize: function () {
       jQuery.proxyAll(this, /_on/);
       this.el.on('load', this._onLoad);
+      this._recalibrate();
       this._FirefoxFix();
       this.sandbox.subscribe('data-viewer-error', this._onDataViewerError);
     },
@@ -33,7 +34,7 @@ this.ckan.module('data-viewer', function (jQuery) {
       // see if page is in part of the same domain
       if (this.el.attr('src').substring(0, loc.length) === loc) {
         this._recalibrate();
-        setInterval(function() {
+        this.refreshIntervalId = setInterval(function() {
           self._recalibrate();
         }, this.options.timeout);
       } else {
@@ -46,6 +47,7 @@ this.ckan.module('data-viewer', function (jQuery) {
       var height = this.el.contents().find('body').outerHeight(true);
       height = Math.max(height, this.options.minHeight);
       this.el.css('height', height + this.options.padding);
+      clearInterval(this.refreshIntervalId);
     },
 
     // firefox caches iframes so force it to get fresh content
