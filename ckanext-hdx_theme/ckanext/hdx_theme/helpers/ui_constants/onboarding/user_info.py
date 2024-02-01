@@ -22,4 +22,8 @@ CONSTANTS = {
 
     'CHECKBOX_TERMS_OF_SERVICE': '''I have read and accepted the <a href="{0}" title="HDX Terms of Service">HDX Terms of Service</a>''',
     'CHECKBOX_NEWSLETTER': '''Do you want to receive email updates from the Centre for Humanitarian Data about HDX features and events?''',
+
+    'BUTTON_SUBMIT': '''Next''',
+    'BUTTON_CANCEL': '''Cancel''',
+
 }
