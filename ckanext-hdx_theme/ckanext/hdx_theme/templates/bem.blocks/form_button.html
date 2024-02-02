@@ -1,4 +1,4 @@
-<div class="form-button{% if spacing_class %} {{ spacing_class }}{% endif %}">
+<div class="form-button{% if container_classes %} {{ container_classes|join(' ') }}{% endif %}">
   {% if not type == 'href' %}
     <button class="form-button__btn btn{% if button_classes %} {{ button_classes|join(' ') }}{% endif %}"
             type="{{ type }}">{{ _(title) }}</button>
