@@ -1,0 +1,131 @@
+.account-options > .row > [class*="col-"]:first-child .account-options__cell:last-child {
+  border-bottom: 0;
+}
+.account-options__cell {
+  display: flex;
+  align-items: center;
+  padding-left: 17px;
+  padding-right: 17px;
+  height: 110px;
+  border-bottom: 1px solid #D1D5DB;
+}
+@media (max-width: 1200px) {
+  .account-options__cell {
+    height: 130px;
+  }
+}
+@media (max-width: 992px) {
+  .account-options__cell {
+    padding-left: 40px;
+    padding-right: 40px;
+    height: auto;
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+}
+.account-options__cell_content_type {
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.account-options__cell_state_highlight {
+  background-color: #EDF6FD;
+}
+.account-options__cell_content_button {
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.account-options__cell_content_icon {
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+}
+.account-options__cell_content_icon .fa-solid {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 22px;
+}
+@media (max-width: 992px) {
+  .account-options__cell_content_icon .fa-solid {
+    padding-right: 30px;
+  }
+}
+.account-options__cell_content_icon .fa-solid.fa-circle-check {
+  color: #10B981;
+}
+.account-options__cell_content_icon .fa-solid.fa-minus {
+  color: #888;
+}
+.account-options__title {
+  color: #1F2937;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+@media (max-width: 992px) {
+  .account-options__title {
+    font-size: 16px;
+  }
+}
+.account-options__title_font_size_small {
+  font-size: 10px;
+}
+@media (max-width: 992px) {
+  .account-options__title_font_size_small {
+    font-size: 20px;
+  }
+}
+.account-options__title_icon {
+  color: #1F2937;
+  margin-left: 5px;
+  flex: 1;
+  text-align: right;
+}
+.account-options__title_icon_state_inactive {
+  color: #CCCCCC;
+}
+.account-options__subtitle {
+  color: #1F2937;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+@media (max-width: 992px) {
+  .account-options__subtitle {
+    font-size: 20px;
+  }
+}
+.account-options__description {
+  color: #1F2937;
+  font-size: 14px;
+}
+@media (max-width: 1200px) {
+  .account-options__description {
+    font-size: 12px;
+  }
+}
+@media (max-width: 992px) {
+  .account-options__description {
+    font-size: 16px;
+  }
+}
+.account-options__help {
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Gotham-Book', sans-serif;
+}
+.account-options__help a {
+  color: #007CE1;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 700;
+}
+.account-options__help a:hover {
+  color: #0162DD;
+}
