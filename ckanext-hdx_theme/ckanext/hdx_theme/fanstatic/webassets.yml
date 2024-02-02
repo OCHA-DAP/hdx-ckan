@@ -109,6 +109,7 @@ bem-blocks-styles:
     - bem.blocks/checkbox_field.css
     - bem.blocks/form_info.css
     - bem.blocks/form_button.css
+    - bem.blocks/account_options.css
 
 hdx-form-validator:
   <<: *common-js

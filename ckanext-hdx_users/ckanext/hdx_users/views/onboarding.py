@@ -157,5 +157,10 @@ class UserOnboardingView(MethodView):
         return aux
 
 
+def value_proposition():
+    return render('onboarding/signup/value-proposition.html', extra_vars={})
+
+
+hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition)
 hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),
                                  methods=[u'GET', u'POST'])
