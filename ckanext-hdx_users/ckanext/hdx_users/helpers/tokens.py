@@ -40,17 +40,15 @@ def refresh_token(context: Context, data_dict: Dict) -> Dict:
 
 
 
-def send_validation_email(user, token):
+def send_validation_email(user: Dict, token: Dict, subject: str, template_path: str) -> bool:
     validation_link = h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
     # link = '{0}{1}'
-    subject = "Complete your HDX registration"
     email_data = {
         'validation_link': validation_link
     }
     try:
-        print(validation_link)
         hdx_mailer.mail_recipient([{'email': user['email']}], subject, email_data, footer=user['email'],
-                                  snippet='email/content/onboarding_email_validation.html')
+                                  snippet=template_path)
         return True
     except Exception as e:
         error_summary = str(e)
