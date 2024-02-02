@@ -127,7 +127,10 @@ this.ckan.module('hdx-form-validator', function ($) {
 
     displayError: function (fieldName) {
       var field = $('[name="' + fieldName + '"]', this.el);
+      var feedbackField = field.parent().find('.invalid-feedback');
+      var errorMessage = field.data('validation-error');
       field.addClass('is-invalid');
+      feedbackField.text(errorMessage);
     },
 
     removeErrorMessages: function (fieldName) {
