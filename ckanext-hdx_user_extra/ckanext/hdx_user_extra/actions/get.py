@@ -30,10 +30,10 @@ def user_extra_show(context, data_dict):
 @tk.side_effect_free
 def user_extra_value_by_key_show(context, data_dict):
     '''
-    Retrieves user extra list based on 'user_id'
+    Retrieves user extra based on 'user_id' and 'key'
     :param context:
-    :param data_dict: contains the user_id
-    :return: list of user extra filtered by user_id
+    :param data_dict: contains the user_id, key
+    :return: user extra key and value
     '''
     user_id = data_dict.get('user_id')
     key = data_dict.get('key')

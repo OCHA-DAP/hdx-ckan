@@ -1,0 +1,2 @@
+HDX_ONBOARDING_CAME_FROM = 'hdx_onboarding_came_from'
+HDX_ONBOARDING_CAME_FROM_STATE = 'hdx_onboarding_came_from_state'
