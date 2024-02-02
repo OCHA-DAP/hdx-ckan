@@ -114,7 +114,10 @@ def register_email():
 
     if not g.user and 'nosetest' not in data_dict:
         # Send validation email
-        tokens.send_validation_email(user, token)
+        tokens.send_validation_email(user, token,
+                                     'Complete your HDX registration',
+                                     'email/content/onboarding_email_validation.html'
+                                     )
 
     g.user = save_user
     return OnbSuccess

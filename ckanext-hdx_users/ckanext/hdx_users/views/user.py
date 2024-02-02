@@ -102,7 +102,12 @@ class HDXRequestResetView(RequestResetView):
 
             if not token['valid']:
                 # redirect to validation page
-                if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
+                if user_obj and tokens.send_validation_email(
+                    {'id': user_obj.id, 'email': user_obj.email},
+                    token,
+                    'Complete your HDX registration',
+                    'email/content/onboarding_email_validation.html',
+                ):
                     return OnbSuccess
                 # return OnbErr
                 return OnbSuccess
