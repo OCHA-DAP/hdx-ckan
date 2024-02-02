@@ -20,7 +20,7 @@ ckan:
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
     - base/hdx-util-lib.js
-    - modules/data-viewer.js
+    - modules/data-viewer2.js
     - modules/resource-view-embed.js
     - modules/copy-into-buffer.js
     - hdx_confirm-action.js
