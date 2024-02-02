@@ -1,25 +1,19 @@
 import logging
+from typing import Any, Optional, Union, cast
 
 from flask import Blueprint
 from flask.views import MethodView
-from typing import Any, Optional, Union, cast
-from ckan.types import Context, Schema, Response
-import ckan.authz as new_authz
-import ckan.lib.navl.dictization_functions as dict_fns
+
 import ckan.logic as logic
 import ckan.model as model
-import ckan.plugins.toolkit as tk
-from ckan.common import (
-    config, g, current_user, login_user, logout_user, session
-)
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckanext.hdx_users.logic.schema as schema
 import ckanext.hdx_users.helpers.helpers as usr_h
+import ckanext.hdx_users.logic.schema as schema
+from ckan.common import (
+    config, current_user
+)
+from ckan.types import Context, Schema, Response, DataDict
+from ckanext.hdx_users.helpers.onboarding import HDX_ONBOARDING_CAME_FROM, HDX_ONBOARDING_CAME_FROM_STATE
 from ckanext.hdx_users.views.user_view_helper import *
-import ckanext.hdx_users.helpers.permissions as ph
-from ckan.views.home import CACHE_PARAMETERS
-from ckanext.hdx_users.helpers.permissions import Permissions
-
 
 log = logging.getLogger(__name__)
 
@@ -40,11 +34,38 @@ g = tk.g
 _ = tk._
 request = tk.request
 
-
 hdx_user_onboarding = Blueprint(u'hdx_user_onboarding', __name__, url_prefix=u'/signup')
+
 
 def _new_form_to_db_schema() -> Schema:
     return schema.onboarding_create_user_schema()
+
+
+def _save_came_from_in_user_extras(data_dict: DataDict,
+                                   user_dict: DataDict) -> list[dict[str, Any]]:
+    came_from = data_dict.get('came_from', None)
+    context_for_user_extra = cast(Context, {
+        u'model': model,
+        u'session': model.Session,
+        u'user': user_dict.get('name'),
+        u'auth_user_obj': model.User.by_name(user_dict.get('name')),
+        u'schema': _new_form_to_db_schema(),
+        u'save': u'save' in request.form
+    })
+    extras = [
+        {
+            'key': HDX_ONBOARDING_CAME_FROM,
+            'value': came_from
+        },
+        {
+            'key': HDX_ONBOARDING_CAME_FROM_STATE,
+            'value': 'active'
+        }
+    ]
+    ue_create = get_action('user_extra_create')(context_for_user_extra,
+                                                {'user_id': user_dict.get('id'), 'extras': extras})
+    return ue_create
+
 
 class UserOnboardingView(MethodView):
 
@@ -94,7 +115,12 @@ class UserOnboardingView(MethodView):
         try:
             data_dict['state'] = model.State.PENDING
             user_dict = logic.get_action(u'user_create')(context, data_dict)
-            log.info("user created, id: {0}, username: {1}, email: {2} ".format(user_dict.get('id'),user_dict.get('name'),user_dict.get('email')))
+            log.info(
+                "user created, id: {0}, username: {1}, email: {2} ".format(user_dict.get('id'), user_dict.get('name'),
+                                                                           user_dict.get('email')))
+            # save came from in user extras
+            user_extra = _save_came_from_in_user_extras(data_dict, user_dict)
+            log.info("user extra saved")
         except logic.NotAuthorized:
             abort(403, _(u'Unauthorized to create user %s') % u'')
         except logic.NotFound:
@@ -103,16 +129,16 @@ class UserOnboardingView(MethodView):
             errors = e.error_dict
             error_summary = e.error_summary
             return self.get(data_dict, errors, error_summary)
+        except Exception as e:
+            log.error(e)
+            abort(404, _(u'Something went wrong. Please contact support'))
 
         # TODO send user validation token
 
-        # TODO render the verify your email address page
-
+        # TODO render&redirect the verify your email address page
         extra_vars = {
             # TODO add relevant data
         }
-
-        # TODO render the verify your email address page
         return self.get(data_dict, {}, {})
 
     def get(self,
@@ -120,7 +146,7 @@ class UserOnboardingView(MethodView):
             errors: Optional[dict[str, Any]] = None,
             error_summary: Optional[dict[str, Any]] = None) -> str:
 
-        context = self._prepare()
+        # context = self._prepare()
 
         extra_vars = {
             u'data': data or {},
@@ -131,4 +157,5 @@ class UserOnboardingView(MethodView):
         return aux
 
 
-hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),  methods=[u'GET', u'POST'])
+hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),
+                                 methods=[u'GET', u'POST'])
