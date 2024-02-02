@@ -18,24 +18,11 @@ def token_show(context, user):
     return token_obj.as_dict()
 
 
-def token_show_by_id(context, data_dict):
-    token = data_dict.get('token', None)
+def get_user_id_from_token(token: str) -> str:
     token_obj = umodel.ValidationToken.get_by_token(token=token)
     if token_obj is None:
         raise NotFound
-    return token_obj.as_dict()
-
-
-def token_update(context, data_dict):
-    token = data_dict.get('token')
-    token_obj = umodel.ValidationToken.get_by_token(token=token)
-    if token_obj is None:
-        raise NotFound
-    session = context["session"]
-    token_obj.valid = True
-    session.add(token_obj)
-    session.commit()
-    return token_obj.as_dict()
+    return token_obj.user_id
 
 
 def send_validation_email(user, token):
