@@ -1,5 +1,4 @@
 from flask import Blueprint
-import hashlib
 import logging as logging
 import ckan.logic as logic
 from mailchimp3 import MailChimp
@@ -14,6 +13,7 @@ import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
 from ckan.logic.validators import name_validator
 from ckan.plugins import toolkit as tk
+from ckan.lib.mailer import make_key as ckan_make_key
 from ckanext.hdx_users.helpers.helpers import name_validator_with_changed_msg
 from ckanext.hdx_users.views.user_view_helper import *
 
@@ -62,9 +62,7 @@ def register_email():
                'schema': temp_schema, 'save': 'save' in request.form}
 
     if 'email' in data_dict:
-        md5 = hashlib.md5()
-        md5.update(data_dict['email'].encode())
-        data_dict['name'] = md5.hexdigest()
+        data_dict['name'] = ckan_make_key()
     context['message'] = data_dict.get('log_message', '')
 
     try:
@@ -152,8 +150,9 @@ def register_details():
     try:
         token_dict = tokens.token_show(context, data_dict)
         data_dict['token'] = token_dict['token']
-        get_action('user_update')(context, data_dict)
-        tokens.token_update(context, data_dict)
+        user_dict = get_action('user_update')(context, data_dict)
+        context['user'] = user_dict['name']
+        get_action('token_update')(context, data_dict)
 
         ue_data_dict = {'user_id': data_dict.get('id'), 'extras': [
             {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'},
@@ -228,23 +227,21 @@ def validate(token):
 
     try:
         check_access('user_can_validate', context, data_dict)
-    except NotAuthorized:
-        return OnbNotAuth
-    except ValidationError as e:
-        error_summary = e.error_summary
-        return error_message(error_summary)
+    except NotAuthorized as e:
+        log.warning('Cannot find token: ' +  e.message)
+        abort(404, 'Page not found')
 
     try:
         # Update token for user
-        token = tokens.token_show_by_id(context, data_dict)
-        data_dict['user_id'] = token['user_id']
+        data_dict['user_id'] = tokens.get_user_id_from_token(token)
         # removed because it is saved in next step. User is allowed to click on /validate link several times
         # get_action('user_extra_update')(context, data_dict)
     except NotFound:
-        return OnbUserNotFound
+        log.warning('Cannot find user for token')
+        abort(404, 'Page not found')
     except Exception as e:
-        error_summary = str(e)
-        return error_message(error_summary)
+        log.error(str(e))
+        abort(500, 'Something went wrong')
 
     user = model.User.get(data_dict['user_id'])
     template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])

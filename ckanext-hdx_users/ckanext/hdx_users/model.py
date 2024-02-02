@@ -60,7 +60,7 @@ class ValidationToken(DomainObject):
         return query.filter_by(user_id=user_id).first()
 
     @classmethod
-    def get_by_token(self, token):
+    def get_by_token(self, token) -> 'ValidationToken':
         query = meta.Session.query(ValidationToken)
         return query.filter_by(token=token).first()
 

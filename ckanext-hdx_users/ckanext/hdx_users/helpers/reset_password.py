@@ -5,15 +5,19 @@ import dateutil.parser
 from six import text_type
 
 import ckan.model as model
-from ckan.lib.mailer import make_key
+from ckan.lib.mailer import make_key as ckan_make_key
 
 log = logging.getLogger(__name__)
 
 
-def create_reset_key(user, expiration_in_minutes=20):
+def make_key(expiration_in_minutes=180) -> str:
     time_part = (datetime.utcnow() + timedelta(minutes=expiration_in_minutes)).isoformat()
-    random_part = text_type(make_key())
-    user.reset_key = '{}__{}'.format(random_part, time_part)
+    random_part = text_type(ckan_make_key())
+    key = '{}__{}'.format(random_part, time_part)
+    return key
+
+def create_reset_key(user, expiration_in_minutes=20):
+    user.reset_key = make_key(expiration_in_minutes)
     model.repo.commit_and_remove()
 
 
