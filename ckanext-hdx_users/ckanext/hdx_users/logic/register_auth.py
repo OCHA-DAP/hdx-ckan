@@ -43,7 +43,6 @@ def user_can_validate(context, data_dict=None):
 @tk.auth_allow_anonymous_access
 def onboarding_user_can_register(context, data_dict=None):
     auth_user_obj = context.get('auth_user_obj', None)
-    if auth_user_obj:
-        if context.get('user') or auth_user_obj.is_authenticated:
-            return {'success': False, 'msg': 'User logged in, it can not register another user'}
+    if context.get('user') or (auth_user_obj and auth_user_obj.is_authenticated):
+        return {'success': False, 'msg': 'User logged in, it can not register another user'}
     return {'success': True}

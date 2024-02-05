@@ -68,27 +68,28 @@ def _save_came_from_in_user_extras(data_dict: DataDict,
                                                 {'user_id': user_dict.get('id'), 'extras': extras})
     return ue_create
 
+def _prepare() -> Context:
+    context = cast(Context, {
+        u'model': model,
+        u'session': model.Session,
+        u'user': current_user.name,
+        u'auth_user_obj': current_user,
+        u'schema': _new_form_to_db_schema(),
+        u'save': u'save' in request.form
+    })
+    try:
+        check_access(u'user_create', context)
+        check_access(u'onboarding_user_can_register', context)
+    except NotAuthorized:
+        abort(403, _(u'Unauthorized to register as a user.'))
+    return context
 
 class UserOnboardingView(MethodView):
 
-    def _prepare(self) -> Context:
-        context = cast(Context, {
-            u'model': model,
-            u'session': model.Session,
-            u'user': current_user.name,
-            u'auth_user_obj': current_user,
-            u'schema': _new_form_to_db_schema(),
-            u'save': u'save' in request.form
-        })
-        try:
-            logic.check_access(u'user_create', context)
-            logic.check_access(u'onboarding_user_can_register', context)
-        except logic.NotAuthorized:
-            abort(403, _(u'Unauthorized to register as a user.'))
-        return context
+
 
     def post(self) -> Union[Response, str]:
-        context = self._prepare()
+        context = _prepare()
         try:
             data_dict = logic.clean_dict(
                 dictization_functions.unflatten(
@@ -116,18 +117,14 @@ class UserOnboardingView(MethodView):
         # user create
         try:
             data_dict['state'] = model.State.PENDING
-            user_dict = logic.get_action(u'user_create')(context, data_dict)
-            log.info(
-                "user created, id: {0}, username: {1}, email: {2} ".format(user_dict.get('id'), user_dict.get('name'),
-                                                                           user_dict.get('email')))
+            user_dict = get_action(u'user_create')(context, data_dict)
             # save came from in user extras
             user_extra = _save_came_from_in_user_extras(data_dict, user_dict)
-            log.info("user extra saved")
-        except logic.NotAuthorized:
+        except NotAuthorized:
             abort(403, _(u'Unauthorized to create user %s') % u'')
-        except logic.NotFound:
+        except NotFound:
             abort(404, _(u'User not found'))
-        except logic.ValidationError as e:
+        except ValidationError as e:
             errors = e.error_dict
             error_summary = e.error_summary
             return self.get(data_dict, errors, error_summary)
@@ -156,7 +153,7 @@ class UserOnboardingView(MethodView):
             errors: Optional[dict[str, Any]] = None,
             error_summary: Optional[dict[str, Any]] = None) -> str:
 
-        # context = self._prepare()
+        _prepare()
 
         extra_vars = {
             u'data': data or {},
@@ -168,9 +165,10 @@ class UserOnboardingView(MethodView):
 
 
 def value_proposition():
+    _prepare()
     return render('onboarding/signup/value-proposition.html', extra_vars={})
 
 
-hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition)
+hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),
                                  methods=[u'GET', u'POST'])
