@@ -117,6 +117,21 @@ hdx-form-validator:
   contents:
     - hdx-form-validator.js
 
+hdx-onboarding-flow:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-onboarding-flow.js
+  extra:
+    preload:
+      - base/hdx-util-lib.js
+  contents:
+    - hdx-onboarding-flow.js
+
+hdx-onboarding-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-onboarding-scripts.js
+  contents:
+    - onboarding/came-from-input.js
+
 search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
