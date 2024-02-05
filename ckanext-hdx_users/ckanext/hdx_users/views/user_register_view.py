@@ -130,6 +130,11 @@ def register_details():
         temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
                                temp_schema['name']]
     data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.form))))
+    try:
+        check_access('user_can_validate', {}, {'token': data_dict.get('token')})
+    except NotAuthorized as e:
+        log.warning('Cannot find token: ' +  e.message)
+        abort(404, 'Page not found')
     user_obj = model.User.get(data_dict['id'])
     context = {'model': model, 'session': model.Session, 'user': user_obj.name,
                'schema': temp_schema}
@@ -249,6 +254,7 @@ def validate(token):
     template_data['data']['email'] = user.email
     template_data['data']['name'] = user.name
     template_data['capcha_api_key'] = config.get('ckan.recaptcha.publickey')
+    template_data['token'] = token
     return render('home/index.html', extra_vars=template_data)
 
 

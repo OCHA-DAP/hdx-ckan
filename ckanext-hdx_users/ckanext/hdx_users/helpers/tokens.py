@@ -4,6 +4,10 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as umodel
 
+from typing import Dict
+from ckan.types import Context
+from ckanext.hdx_users.helpers.reset_password import make_key
+
 log = logging.getLogger(__name__)
 
 NotFound = tk.ObjectNotFound
@@ -23,6 +27,17 @@ def get_user_id_from_token(token: str) -> str:
     if token_obj is None:
         raise NotFound
     return token_obj.user_id
+
+
+def refresh_token(context: Context, data_dict: Dict) -> Dict:
+    token = data_dict.get('token')
+    token_obj = umodel.ValidationToken.get_by_token(token=token)
+    if token_obj is None:
+        raise NotFound
+    token_obj.token = make_key()
+    context['session'].commit()
+    return token_obj.as_dict()
+
 
 
 def send_validation_email(user, token):
