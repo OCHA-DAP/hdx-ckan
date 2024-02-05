@@ -76,8 +76,11 @@ class HDXRequestResetView(RequestResetView):
             # user_id should be lowercase (for name and email)
             user_id = request.form.get('user').lower()
 
-            context = {'model': model,
-                       'user': g.user}
+            context = {
+                'model': model,
+                'session': model.Session,
+                'user': g.user
+            }
 
             context_user_show = {
                 'model': model,
@@ -101,6 +104,7 @@ class HDXRequestResetView(RequestResetView):
                 return OnbSuccess
 
             if not token['valid']:
+                token = tokens.refresh_token(context, token)
                 # redirect to validation page
                 if user_obj and tokens.send_validation_email(
                     {'id': user_obj.id, 'email': user_obj.email},
