@@ -131,4 +131,22 @@
         };
         return resultObject;
     };
+
+    hdxUtil.net.getOnboardingFlowData = function () {
+        var onboardingFlowData = localStorage.getItem('onboarding_flow_start');
+        if (onboardingFlowData) {
+            return JSON.parse(onboardingFlowData);
+        }
+        else {
+            return null;
+        }
+    };
+
+    hdxUtil.net.updateOnboardingFlowData = function (newData) {
+        var onboardingFlowData = hdxUtil.net.getOnboardingFlowData() || {};
+        for (var key in newData) {
+            onboardingFlowData[key] = newData[key];
+        }
+        localStorage.setItem('onboarding_flow_start', JSON.stringify(onboardingFlowData));
+    };
 })();
