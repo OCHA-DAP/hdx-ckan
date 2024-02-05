@@ -1,5 +1,10 @@
 {% extends "onboarding/base.html" %}
 
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/hdx-onboarding-flow' %}
+{% endblock %}
+
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['VALUE_PROPOSITION'] %}
 
 {% block subtitle %}{{ _('Account options') }}{% endblock %}
@@ -124,7 +129,7 @@
                 </div>
               </div>
               <div class="account-options__cell account-options__cell_content_button">
-                {{ h.snippet('bem.blocks/form_button.html', type="href", url=h.url_for('hdx_user_onboarding.user-info'), title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_BUTTON, button_classes=["btn-primary", "d-block"], container_classes=["w-100"]) }}
+                {{ h.snippet('bem.blocks/form_button.html', type="href", data_attributes={"module": "hdx-onboarding-flow", "value-proposition-page": "individual_account"}, url=h.url_for('hdx_user_onboarding.user-info'), title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_BUTTON, button_classes=["btn-primary", "d-block"], container_classes=["w-100"]) }}
               </div>
             </div>
             <div class="col-12 col-lg-3">
@@ -164,7 +169,7 @@
                 </div>
               </div>
               <div class="account-options__cell account-options__cell_content_button">
-                {{ h.snippet('bem.blocks/form_button.html', type="href", url=h.url_for('hdx_user_onboarding.user-info'), title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_BUTTON, button_classes=["btn-outline-primary", "d-block"], container_classes=["w-100"]) }}
+                {{ h.snippet('bem.blocks/form_button.html', type="href", data_attributes={"module": "hdx-onboarding-flow", "value-proposition-page": "individual_account_with_org"}, url=h.url_for('hdx_user_onboarding.user-info'), title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_BUTTON, button_classes=["btn-outline-primary", "d-block"], container_classes=["w-100"]) }}
               </div>
             </div>
           </div>
