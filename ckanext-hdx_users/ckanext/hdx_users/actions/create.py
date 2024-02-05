@@ -1,8 +1,9 @@
-import hashlib
 import json
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
+
+from ckanext.hdx_users.helpers.reset_password import make_key
 
 ValidationError = tk.ValidationError
 _check_access = tk.check_access
@@ -15,10 +16,8 @@ OnbSuccess = json.dumps({'success': True})
 def token_create(context, user):
     _check_access('user_create', context, None)
     model = context['model']
-    token = hashlib.md5()
-    token_content = user['email'] + user['name']
-    token.update(token_content.encode())
-    token_obj = user_model.ValidationToken(user_id=user['id'], token=token.hexdigest(), valid=False)
+    key = make_key()
+    token_obj = user_model.ValidationToken(user_id=user['id'], token=key, valid=False)
     model.Session.add(token_obj)
     model.Session.commit()
     return token_obj.as_dict()
