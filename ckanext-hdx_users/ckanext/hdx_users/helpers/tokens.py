@@ -39,7 +39,6 @@ def refresh_token(context: Context, data_dict: Dict) -> Dict:
     return token_obj.as_dict()
 
 
-
 def send_validation_email(user: Dict, token: Dict, subject: str, template_path: str) -> bool:
     validation_link = h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
     # link = '{0}{1}'
