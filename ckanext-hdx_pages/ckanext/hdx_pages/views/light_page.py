@@ -438,11 +438,11 @@ class DeleteView(MethodView):
 
 
 # Rules definitions
-hdx_light_event.add_url_rule(u'/<id>', view_func=read_light_event)
-hdx_light_dashboard.add_url_rule(u'/<id>', view_func=read_light_dashboard)
+hdx_light_event.add_url_rule(u'/<id>/', view_func=read_light_event, strict_slashes=False)
+hdx_light_dashboard.add_url_rule(u'/<id>/', view_func=read_light_dashboard, strict_slashes=False)
 
-hdx_event.add_url_rule(u'/<id>', view_func=read_event)
-hdx_dashboard.add_url_rule(u'/<id>', view_func=read_dashboard)
+hdx_event.add_url_rule(u'/<id>/', view_func=read_event, strict_slashes=False)
+hdx_dashboard.add_url_rule(u'/<id>/', view_func=read_dashboard, strict_slashes=False)
 
 hdx_custom_page.add_url_rule(u'/new', view_func=CreateView.as_view(str(u'new')))
 hdx_custom_page.add_url_rule(u'/edit/<id>', view_func=EditView.as_view(str(u'edit')))
