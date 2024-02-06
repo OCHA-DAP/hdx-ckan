@@ -14,13 +14,10 @@
 
     <input id="field-username" type="hidden" name="name" value="{{ data.name }}"/>
 
-{#    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, error=errors.fullname, placeholder=_('eg. Joe Bloggs'), classes=['row', 'align-items-center', 'mb-3']) }}#}
-    {{ form.input('firstname', label=_('First name'), id='field-firstname', value=data.firstname or data.fullname,
-          error=errors.firstname, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
+    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname,
+          error=errors.fullname, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
           label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
-    {{ form.input('lastname', label=_('Last name'), id='field-lastname', value=data.lastname,
-          error=errors.lastname, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
-          label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
+
 
     {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email,
           error=errors.email, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
