@@ -3,9 +3,7 @@ ckan.module('hdx-onboarding-flow', function ($) {
     initialize: function () {
       this.el.on('click', this.onClick);
     },
-    onClick: function (event) {
-      event.preventDefault();
-
+    onClick: function () {
       var startPageType = $(this).data('start-page-type');
       var startPageAdditionalParams = $(this).data('start-page-additional-params');
       var valuePropositionPage = $(this).data('value-proposition-page');
@@ -22,7 +20,6 @@ ckan.module('hdx-onboarding-flow', function ($) {
       }
 
       hdxUtil.net.updateOnboardingFlowData(updateData);
-
     }
   };
 });

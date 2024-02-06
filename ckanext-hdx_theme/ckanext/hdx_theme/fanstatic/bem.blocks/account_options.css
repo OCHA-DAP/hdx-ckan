@@ -64,7 +64,7 @@
   color: #1F2937;
   font-family: 'Gotham-Bold', sans-serif;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 400;
   text-transform: uppercase;
 }
 @media (max-width: 992px) {
@@ -124,7 +124,7 @@
 .account-options__help a {
   color: #007CE1;
   font-family: 'Gotham-Bold', sans-serif;
-  font-weight: 700;
+  font-weight: 400;
 }
 .account-options__help a:hover {
   color: #0162DD;
