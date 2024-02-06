@@ -100,8 +100,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
-            'hdx_user_fullname_show': get.hdx_user_fullname_show,
-            'user_show': get.user_show,
             'notify_users_about_api_token_expiration': update.notify_users_about_api_token_expiration,
         }
 

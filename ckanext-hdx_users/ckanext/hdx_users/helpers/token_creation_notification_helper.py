@@ -82,11 +82,6 @@ def _get_user_full_name_and_email(username):
         raise NotFound('No user data found for username: {}'.format(username))
     if '@' not in user_dict.get('email', ''):
         raise NotFound('No email address found for username: {}'.format(username))
-    firstname = user_dict.get('firstname')
-    lastname = user_dict.get('lastname')
-    if firstname and lastname:
-        full_name = '{} {}'.format(firstname, lastname)
-    else:
-        full_name = user_dict.get('fullname') or user_dict.get('name')
+    fullname = user_dict.get('fullname')
 
-    return full_name, user_dict.get('email')
+    return fullname, user_dict.get('email')

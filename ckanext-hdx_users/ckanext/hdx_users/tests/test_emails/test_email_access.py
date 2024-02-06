@@ -267,8 +267,7 @@ def _get_user_params(user_dict):
         'password1': '',
         'password2': '',
         'name': user_dict.get('name'),
-        'firstname': 'Sue',
-        'lastname': 'User',
+        'fullname': 'Sue User',
         'id': user_dict.get('id'),
         'about': user_dict.get('about')
     }
@@ -299,8 +298,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         )
         # existing values in the form
         assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
-        assert '<input id="field-firstname" type="text" class="form-control" name="firstname"' in response.body
-        assert '<input id="field-lastname" type="text" class="form-control" name="lastname"' in response.body
+        assert '<input id="field-fullname" type="text" class="form-control" name="fullname"' in response.body
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
         assert '<textarea id="field-about" class="form-control" name="about" cols="20" rows="5"' in response.body
         # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
