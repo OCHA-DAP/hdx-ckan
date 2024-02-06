@@ -27,7 +27,7 @@
 {% block content %}
 
 {% if (data and data.current_step == 'hdx_onboarding_details') %}
-  {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email, capcha_api_key = capcha_api_key) }}
+  {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email, capcha_api_key = capcha_api_key, token=token) }}
 {% endif %}
 <div class="homepage-main">
   <div class="homepage-section hero-section">
