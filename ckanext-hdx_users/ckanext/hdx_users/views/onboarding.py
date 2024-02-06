@@ -186,8 +186,15 @@ def validate_account(token: str) -> str:
     return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
 
+def verify_email():
+    _prepare()
+    email_address = 'test@example.com'
+    return render('onboarding/signup/verify-email.html', {u'email_address': email_address})
+
+
 hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),
-                                 methods=[u'GET', u'POST'])
+                                 methods=[u'GET', u'POST'], strict_slashes=False)
+hdx_user_onboarding.add_url_rule(u'/verify-email', view_func=verify_email, strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/validate-account/<token>', view_func=validate_account,
                                  methods=[u'GET'])
