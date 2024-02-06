@@ -137,7 +137,8 @@ class UserOnboardingView(MethodView):
             user_dict,
             token,
             subject,
-            'email/content/onboarding_email_validation.html'
+            'email/content/onboarding_email_validation.html',
+            validation_link=h.url_for('hdx_user_onboarding.validate_account', token=token['token'], qualified=True)
         )
 
         # TODO render&redirect the verify your email address page
@@ -162,11 +163,31 @@ class UserOnboardingView(MethodView):
         return aux
 
 
-def value_proposition():
+def value_proposition() -> str:
     _prepare()
     return render('onboarding/signup/value-proposition.html', extra_vars={})
+
+def validate_account(token: str) -> str:
+    try:
+        check_access('user_can_validate', {}, {'token': token})
+    except NotAuthorized as e:
+        log.warning('Cannot find token: ' +  e.message)
+        return abort(404, 'Page not found')
+    context = {'session': model.Session, 'model': model}
+    user_dict = tokens.activate_user_and_disable_token(context, {'token': token})
+    if not user_dict:
+        log.error('Something went wrong when trying to activate user with email validation token')
+        return abort(500, 'Something went wrong.')
+
+    template_data = {
+        'fullname': user_dict.get('fullname', ''),
+        'url': h.url_for('hdx_user_auth.new_login')
+    }
+    return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
 
 hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/user-info', view_func=UserOnboardingView.as_view(str(u'user-info')),
                                  methods=[u'GET', u'POST'])
+hdx_user_onboarding.add_url_rule(u'/validate-account/<token>', view_func=validate_account,
+                                 methods=[u'GET'])
