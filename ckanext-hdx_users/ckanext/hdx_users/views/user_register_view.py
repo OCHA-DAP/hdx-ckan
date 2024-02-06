@@ -27,6 +27,7 @@ abort = tk.abort
 request = tk.request
 config = tk.config
 g = tk.g
+h = tk.h
 _ = tk._
 
 user_register = Blueprint(u'hdx_user_register', __name__, url_prefix=u'/user')
@@ -116,7 +117,8 @@ def register_email():
         # Send validation email
         tokens.send_validation_email(user, token,
                                      'Complete your HDX registration',
-                                     'email/content/onboarding_email_validation.html'
+                                     'email/content/onboarding_email_validation.html',
+                                     h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
                                      )
 
     g.user = save_user

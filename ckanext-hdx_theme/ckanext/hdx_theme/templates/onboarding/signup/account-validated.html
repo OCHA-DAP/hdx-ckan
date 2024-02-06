@@ -1,0 +1,35 @@
+{% extends "onboarding/base.html" %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['ACCOUNT_VALIDATED'] %}
+
+{% block subtitle %}{{ _('User info') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">Sign up</li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-md-7 mx-auto">
+        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=3) }}
+        <div class="text-center">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE.format(fullname), spacing_class="mb-4") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-7 mx-auto">
+        {{ h.snippet('bem.blocks/form_button.html',
+            type="href",
+            url=url,
+            title=CONST.BUTTON_SUBMIT,
+            button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100", "mb-5"]) }}
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

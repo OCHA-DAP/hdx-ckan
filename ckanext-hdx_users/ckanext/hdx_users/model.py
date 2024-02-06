@@ -52,6 +52,8 @@ class ValidationToken(DomainObject):
     def __init__(self, user_id, token, valid):
         self.user_id = user_id
         self.token = token
+
+        # Confusingly, valid is False when the token was not used yet
         self.valid = valid
 
     @classmethod
