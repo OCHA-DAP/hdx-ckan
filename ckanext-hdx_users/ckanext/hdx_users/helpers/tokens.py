@@ -1,10 +1,12 @@
 import logging as logging
 
 import ckan.plugins.toolkit as tk
+import ckan.model as model
+
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as umodel
 
-from typing import Dict
+from typing import Dict, Union
 from ckan.types import Context
 from ckanext.hdx_users.helpers.reset_password import make_key
 
@@ -39,8 +41,23 @@ def refresh_token(context: Context, data_dict: Dict) -> Dict:
     return token_obj.as_dict()
 
 
-def send_validation_email(user: Dict, token: Dict, subject: str, template_path: str) -> bool:
-    validation_link = h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
+def activate_user_and_disable_token(context: Context, data_dict: Dict) -> Union[Dict, None]:
+    session = context['session']
+    try:
+        token = data_dict.get('token')
+        token_obj = umodel.ValidationToken.get_by_token(token=token)
+        user_obj = model.User.get(token_obj.user_id)
+        user_obj.state = 'active'
+        token_obj.valid = True
+        session.commit()
+        context['user'] = user_obj.name
+        return tk.get_action('user_show')(context, {'id': token_obj.user_id})
+    except Exception as e:
+        log.error(str(e))
+        session.rollback()
+    return None
+
+def send_validation_email(user: Dict, token: Dict, subject: str, template_path: str, validation_link: str) -> bool:
     # link = '{0}{1}'
     email_data = {
         'validation_link': validation_link
