@@ -7,13 +7,13 @@
           id="checkbox-{{ name }}"
           {% if checked %}checked{% endif %}
           {% if required %}required{% endif %}
-          {% if data_attributes %}{% for key, value in data_attributes.items() %}{% if key != 'validation-error' %}data-{{ key }}="{{ value }}"
-          {% endif %}{% endfor %}{% endif %}
+          {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
+          {% endfor %}{% endif %}
   >
   <label class="checkbox-field__label form-check-label ms-2" for="checkbox-{{ name }}">
     {{ _(label)|safe }}
   </label>
   {% if data_attributes and data_attributes['validation-error'] %}
-    <div class="checkbox-field__feedback-message checkbox-field__feedback-message_state_invalid invalid-feedback ms-2">{{ data_attributes['validation-error'] }}</div>
+    <div class="checkbox-field__feedback-message checkbox-field__feedback-message_state_invalid invalid-feedback ms-2"></div>
   {% endif %}
 </div>
