@@ -40,7 +40,7 @@ hdx_user_onboarding = Blueprint(u'hdx_user_onboarding', __name__, url_prefix=u'/
 
 
 def _new_form_to_db_schema() -> Schema:
-    return schema.onboarding_create_user_schema()
+    return schema.onboarding_user_new_form_schema()
 
 
 def _save_came_from_in_user_extras(data_dict: DataDict,
@@ -85,8 +85,6 @@ def _prepare() -> Context:
     return context
 
 class UserOnboardingView(MethodView):
-
-
 
     def post(self) -> Union[Response, str]:
         context = _prepare()
