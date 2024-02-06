@@ -1,0 +1,10 @@
+.paragraph__text {
+  color: #000;
+  font-size: 14px;
+}
+.paragraph__text_font-size-big {
+  font-size: 20px;
+}
+.paragraph__text_font_size-small {
+  font-size: 12px;
+}
