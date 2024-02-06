@@ -9,6 +9,8 @@ Invalid = tk.Invalid
 def user_email_validator(key, data, errors, context):
     '''HDX validator for emails as identifiers.'''
     model = context['model']
+    session = context['session']
+
     # Convert email to lowercase
     data[key] = data[key].lower()
     email = data[key]
@@ -19,16 +21,25 @@ def user_email_validator(key, data, errors, context):
     if not isinstance(email, string_types):
         raise Invalid(_('User names must be strings'))
 
-    user = model.User.by_email(email)
-    if user:
-        # A user with new_user_name already exists in the database.
-        user_obj_from_context = context.get('user_obj')
-        if user_obj_from_context and user_obj_from_context.id == user.id:
-            # If there's a user_obj in context with the same id as the
-            # user found in the db, then we must be doing a user_update
-            # and not updating the user name, so don't return an error.
-            return
-        errors[key].append(_('The email address is already registered on HDX. Please use the sign in screen below.'))
+    # user = model.User.by_email(email)
+    users = session.query(model.User) \
+        .filter(model.User.email == data[key]) \
+        .filter(model.User.state == 'active').all()
+    # if there are no active users with this email, it's free
+    if not users:
+        return
+
+    else:
+        for user in users:
+            if user:
+                # A user with new_user_name already exists in the database.
+                user_obj_from_context = context.get('user_obj')
+                if user_obj_from_context and user_obj_from_context.id == user.id:
+                    # If there's a user_obj in context with the same id as the
+                    # user found in the db, then we must be doing a user_update
+                    # and not updating the user name, so don't return an error.
+                    return
+                errors[key].append(_('The email address is already registered on HDX. Please use the sign in screen below.'))
 
     return
 
