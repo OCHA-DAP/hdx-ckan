@@ -15,7 +15,7 @@
 .form-button__btn.btn-primary {
   padding: 10px;
   border-radius: 6px;
-  font-weight: 700;
+  font-weight: 400;
   font-family: 'Gotham-Bold', sans-serif;
   border-color: #007CE1;
   background-color: #007CE1;
@@ -36,7 +36,7 @@
   border-radius: 6px;
   background-color: #FFF;
   border-color: #007CE1;
-  font-weight: 700;
+  font-weight: 400;
   font-family: 'Gotham-Bold', sans-serif;
 }
 .form-button__btn.btn-outline-primary:hover {
