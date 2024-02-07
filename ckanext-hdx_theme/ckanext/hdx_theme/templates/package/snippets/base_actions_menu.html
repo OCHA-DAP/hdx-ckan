@@ -38,7 +38,12 @@
             {% endif %}
         {% else %}
             {% if not hide_contact_contributor%}
-                <li>
+                {% set onboarding_additional_params = h.dump_json({'dataset_id': pkg.id}) %}
+                <li
+                  data-module="hdx-onboarding-flow"
+                  data-start-page-type="contact-contributor"
+                  data-start-page-additional-params="{{ onboarding_additional_params }}">
+
                     <a href="/contact_hdx" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
                         <i class="icon-envelope"></i>
                       <span>Contact the contributor</span>
