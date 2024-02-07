@@ -16,9 +16,11 @@ def get_onboarding_came_from() -> Union[str, None]:
 
     user_id = g.userobj.id
 
-    check_access('user_extra_show',context, {'user_id': user_id})
+    check_access('user_extra_show', context, {'user_id': user_id})
 
-    ue_user = get_action('user_extra_show')(context, {'user_id': user_id})
+    ue_user = get_action('user_extra_value_by_keys_show')(context, {'user_id': user_id,
+                                                                        'keys': [HDX_ONBOARDING_CAME_FROM,
+                                                                                 HDX_ONBOARDING_CAME_FROM_STATE]})
 
     came_from, state = _get_user_extra(ue_user)
     if state == 'inactive':
