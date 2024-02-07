@@ -82,29 +82,9 @@
 
             </div>
             {% if step %}
-            <div class="onboarding-step">
               {% if step == "hdx_onboarding_first_login" %}
-              <div id="first-login" style="display: none;">first login</div>
-              <div id="incomplete-profile" class="float-start">
-                » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
-              </div>
+                <div id="first-login" style="display: none;">first login</div>
               {% endif %}
-              {% if step == "hdx_onboarding_follows" %}
-              <div id="incomplete-profile" class="float-start">
-                » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
-              </div>
-              {% endif %}
-              {% if step == "hdx_onboarding_org" %}
-              <div id="incomplete-profile" class="float-start">
-                » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup', '#user_extra', 'True');" href="#">Complete setting up your account</a>
-              </div>
-              {% endif %}
-              {% if step == "hdx_onboarding_friends" %}
-              <div id="incomplete-profile" class="float-start">
-                » <span>You haven't optimised your account.</span> <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
-              </div>
-              {% endif %}
-            </div>
             {% endif %}
             <div class="header-user-box float-end">
 
