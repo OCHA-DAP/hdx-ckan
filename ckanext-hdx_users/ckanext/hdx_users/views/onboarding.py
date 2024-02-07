@@ -189,5 +189,5 @@ hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slash
 hdx_user_onboarding.add_url_rule(u'/user-info/', view_func=UserOnboardingView.as_view(str(u'user-info')),
                                  methods=[u'GET', u'POST'], strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/verify-email', view_func=verify_email, strict_slashes=False)
-hdx_user_onboarding.add_url_rule(u'/validate-account/<token>', view_func=validate_account,
-                                 methods=[u'GET'])
+hdx_user_onboarding.add_url_rule(u'/validate-account/<token>/', view_func=validate_account,
+                                 methods=[u'GET'], strict_slashes=False)
