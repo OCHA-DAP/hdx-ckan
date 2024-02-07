@@ -32,6 +32,7 @@ ckan:
     - notifications/hdx_notifications_main.js
     - metadata-button.js
     - select-switch.js
+    - hdx-onboarding-flow.js
 
 page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
@@ -117,15 +118,6 @@ hdx-form-validator:
   output: ckanext-hdx_theme/%(version)s_hdx-form-validator.js
   contents:
     - hdx-form-validator.js
-
-hdx-onboarding-flow:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_hdx-onboarding-flow.js
-  extra:
-    preload:
-      - base/hdx-util-lib.js
-  contents:
-    - hdx-onboarding-flow.js
 
 hdx-onboarding-scripts:
   <<: *common-js
