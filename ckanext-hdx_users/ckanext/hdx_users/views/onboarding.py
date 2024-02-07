@@ -8,6 +8,8 @@ import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.logic.schema as schema
+import ckanext.hdx_users.helpers.tokens as tokens
+
 from ckan.common import (
     config, current_user
 )
@@ -129,6 +131,14 @@ class UserOnboardingView(MethodView):
             abort(404, _(u'Something went wrong. Please contact support'))
 
         # TODO send user validation token
+        token = get_action('token_create')(context, user_dict)
+        subject = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['EMAIL_SUBJECTS']['EMAIL_CONFIRMATION']
+        tokens.send_validation_email(
+            user_dict,
+            token,
+            subject,
+            'email/content/onboarding_email_validation.html'
+        )
 
         # TODO render&redirect the verify your email address page
         extra_vars = {

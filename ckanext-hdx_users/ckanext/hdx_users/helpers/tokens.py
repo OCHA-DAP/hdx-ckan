@@ -4,6 +4,10 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.model as umodel
 
+from typing import Dict
+from ckan.types import Context
+from ckanext.hdx_users.helpers.reset_password import make_key
+
 log = logging.getLogger(__name__)
 
 NotFound = tk.ObjectNotFound
@@ -18,37 +22,32 @@ def token_show(context, user):
     return token_obj.as_dict()
 
 
-def token_show_by_id(context, data_dict):
-    token = data_dict.get('token', None)
+def get_user_id_from_token(token: str) -> str:
     token_obj = umodel.ValidationToken.get_by_token(token=token)
     if token_obj is None:
         raise NotFound
-    return token_obj.as_dict()
+    return token_obj.user_id
 
 
-def token_update(context, data_dict):
+def refresh_token(context: Context, data_dict: Dict) -> Dict:
     token = data_dict.get('token')
     token_obj = umodel.ValidationToken.get_by_token(token=token)
     if token_obj is None:
         raise NotFound
-    session = context["session"]
-    token_obj.valid = True
-    session.add(token_obj)
-    session.commit()
+    token_obj.token = make_key()
+    context['session'].commit()
     return token_obj.as_dict()
 
 
-def send_validation_email(user, token):
+def send_validation_email(user: Dict, token: Dict, subject: str, template_path: str) -> bool:
     validation_link = h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
     # link = '{0}{1}'
-    subject = "Complete your HDX registration"
     email_data = {
         'validation_link': validation_link
     }
     try:
-        print(validation_link)
         hdx_mailer.mail_recipient([{'email': user['email']}], subject, email_data, footer=user['email'],
-                                  snippet='email/content/onboarding_email_validation.html')
+                                  snippet=template_path)
         return True
     except Exception as e:
         error_summary = str(e)

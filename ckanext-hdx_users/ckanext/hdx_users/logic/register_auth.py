@@ -5,7 +5,9 @@ Created on July 2nd, 2015
 '''
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_users.helpers.tokens as tokens
+import ckanext.hdx_users.model as umodel
+
+from ckanext.hdx_users.helpers.reset_password import ResetKeyHelper
 
 get_action = tk.get_action
 
@@ -25,15 +27,17 @@ def user_can_register(context, data_dict=None):
 
 @tk.auth_allow_anonymous_access
 def user_can_validate(context, data_dict=None):
-    token = tokens.token_show_by_id(context, data_dict)
+    token_str = data_dict.get('token', None)
+    token_obj = umodel.ValidationToken.get_by_token(token=token_str)
 
-    if not token:
+    if not token_obj:
         return {'success': False, 'msg': 'User has no token'}
 
-    if not token['valid']:
+    # Confusingly, valid is False when the token was not used yet
+    if not token_obj.valid and not ResetKeyHelper(token_obj.token).is_expired():
         return {'success': True}
     else:
-        return {'success': False, 'msg': 'User already validated'}
+        return {'success': False, 'msg': 'Token no longer usable'}
 
 
 @tk.auth_allow_anonymous_access
