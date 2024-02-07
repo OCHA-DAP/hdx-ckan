@@ -143,14 +143,7 @@ class HDXEditView(EditView):
 
         user = None
         try:
-            data_dict['fullname'] = data_dict.get('firstname', "") + u' ' + data_dict.get('lastname', "")
             user = get_action(u'user_update')(context, data_dict)
-            if user:
-                ue_data_dict = {'user_id': user.get('id'), 'extras': [
-                    {'key': user_model.HDX_FIRST_NAME, 'new_value': data_dict.get('firstname', '')},
-                    {'key': user_model.HDX_LAST_NAME, 'new_value': data_dict.get('lastname', '')},
-                ]}
-                get_action('user_extra_update')(context, ue_data_dict)
         except NotAuthorized:
             abort(403, _(u'Unauthorized to edit user %s') % id)
         except NotFound as ex:

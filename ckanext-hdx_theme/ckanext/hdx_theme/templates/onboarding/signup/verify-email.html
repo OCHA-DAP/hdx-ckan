@@ -1,0 +1,26 @@
+{% extends "onboarding/base.html" %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['VERIFY_EMAIL'] %}
+
+{% block subtitle %}{{ _('User info') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">{{ h.nav_link(_('Sign up'), named_route='hdx_user_onboarding.user-info') }}</li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-md-10 col-lg-5 mx-auto">
+        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=2) }}
+        <div class="text-center">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-5") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_MAIN_TEXT.format(email_address), paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

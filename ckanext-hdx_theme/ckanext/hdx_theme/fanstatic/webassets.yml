@@ -105,6 +105,7 @@ bem-blocks-styles:
     - bem.blocks/bem_fonts.css
     - bem.blocks/stepper.css
     - bem.blocks/heading.css
+    - bem.blocks/paragraph.css
     - bem.blocks/input_field.css
     - bem.blocks/checkbox_field.css
     - bem.blocks/form_info.css
