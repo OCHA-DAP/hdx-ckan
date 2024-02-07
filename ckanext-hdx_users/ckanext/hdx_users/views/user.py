@@ -111,6 +111,7 @@ class HDXRequestResetView(RequestResetView):
                     token,
                     'Complete your HDX registration',
                     'email/content/onboarding_email_validation.html',
+                    h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
                 ):
                     return OnbSuccess
                 # return OnbErr
