@@ -99,7 +99,8 @@
             </li>
             {% endblock %}
           </ul>
-            <span class="submit-data contribute-popup-init" dataset-id="{% if h.check_access('package_create') %}null{% else %}DO_IGNORE{% endif %}">
+            <span class="submit-data contribute-popup-init" dataset-id="{% if h.check_access('package_create') %}null{% else %}DO_IGNORE{% endif %}"
+                data-module="hdx-onboarding-flow" data-start-page-type="add-data">
                   {% set add_data_obj = h.hdx_check_add_data() %}
                   {% if add_data_obj %}
                     <a href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
@@ -146,7 +147,7 @@
 
                 <li class="sub-nav login top-pad">
                   <a onclick="showOnboardingWidget('#loginPopup');" href="#" aria-label="login">Login</a> |
-                  <a onclick="showOnboardingWidget('#signupPopup');" href="#" aria-label="sign up">Sign up</a>
+                  <a href="{{ h.url_for('hdx_user_onboarding.value_proposition') }}" aria-label="sign up">Sign up</a>
                 </li>
             </ul>
         </div>
