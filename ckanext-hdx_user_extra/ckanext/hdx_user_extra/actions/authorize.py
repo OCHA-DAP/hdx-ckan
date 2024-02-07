@@ -20,7 +20,7 @@ def user_extra_create(context, data_dict):
     extras_keys = [e['key'] for e in data_dict.get('extras', [])]
 
     user_obj = context.get('auth_user_obj') or context.get('user_obj')
-    if user_obj and user_obj.id == data_dict.get('user_id', '') and SYSADMIN_PROPERTIES.isdisjoint(extras_keys):
+    if user_obj and user_obj.is_authenticated and user_obj.id == data_dict.get('user_id', '') and SYSADMIN_PROPERTIES.isdisjoint(extras_keys):
         success = True
 
     if success:
