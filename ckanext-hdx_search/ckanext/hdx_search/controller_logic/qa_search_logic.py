@@ -63,8 +63,6 @@ class QASearchLogic(sl.SearchLogic):
         super(QASearchLogic, self)._process_found_package_list(package_list)
         self.__process_checklist_data(package_list)
         self.__process_script_check_data(package_list, 'pii_is_sensitive', 'pii_timestamp')
-        self.__process_script_check_data(package_list, 'pii_report_flag', 'pii_timestamp')
-        self.__process_script_check_data(package_list, 'sdc_report_flag', 'sdc_timestamp')
 
     def __process_checklist_data(self, package_list):
 

@@ -37,9 +37,6 @@
               <a class="dropdown-item" onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
             </li>
             <li>
-              <a class="dropdown-item" onclick="updateAllResourcesPIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
-            </li>
-            <li>
               <a class="dropdown-item" onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
             </li>
             <li>
@@ -63,20 +60,6 @@
       </div>
       <div class="dataset-pii">
         <ul class="pii-list">
-          <li class="pii-item">
-            <span class="pii-title">
-              DISK. RISK:
-            </span>
-            {% set sdc_status_text = 'ERR' if package.sdc_report_flag  == 'ERROR' else package.sdc_report_flag %}
-            {{ qa_macros.qa_check_item(package.sdc_report_flag, sdc_status_text, package.sdc_timestamp) }}
-          </li>
-          <li class="pii-item">
-            <span class="pii-title">
-              PII CHECK:
-            </span>
-            {% set pii_status_text = 'ERR' if package.pii_report_flag  == 'ERROR' else package.pii_report_flag %}
-            {{ qa_macros.qa_check_item(package.pii_report_flag, pii_status_text, package.pii_timestamp, None, package) }}
-          </li>
           <li class="pii-item">
             <span class="pii-title">
               CHECKLIST:

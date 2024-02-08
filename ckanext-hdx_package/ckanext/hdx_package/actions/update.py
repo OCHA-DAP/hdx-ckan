@@ -677,6 +677,7 @@ def resource_view_update(context, data_dict):
 
 def package_qa_checklist_update(context, data_dict):
     _check_access('hdx_package_qa_checklist_update', context, data_dict)
+    data_dict = json.loads(get_or_bust(data_dict, 'body'))
     id = get_or_bust(data_dict, 'id')
     del data_dict['id']
 

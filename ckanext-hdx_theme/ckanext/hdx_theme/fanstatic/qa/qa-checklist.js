@@ -120,6 +120,7 @@ function _saveQAChecklist(event) {
   _showLoading();
   let resourceIdSelector = this;
   let packageId = $("" + resourceIdSelector).attr('data-package-id');
+  var csrf_value = $('meta[name=_csrf_token]').attr('content');
 
   let data = {
     id: packageId,
@@ -141,8 +142,12 @@ function _saveQAChecklist(event) {
   _extractChecklistItem("#qa-data-protection", data.dataProtection);
   _extractChecklistItem("#qa-metadata", data.metadata);
   _extractChecklistItem(".qa-checklist-widget", data, "#checklist-complete");
+  let body = {
+    "body": JSON.stringify(data),
+    "_csrf_token": csrf_value
+  }
 
-  $.post("/api/action/hdx_package_qa_checklist_update", JSON.stringify(data))
+  $.post("/api/action/hdx_package_qa_checklist_update", body)
     .done((result) => {
       if (result.success) {
         _updateLoadingMessage("QA checklist successfully updated! Reloading page ...");

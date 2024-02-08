@@ -183,8 +183,6 @@ def hdx_qa_resource_patch(context, data_dict):
     pkg_id = resource_dict.get('package_id')
     data_revise_dict = {'match': {'id': pkg_id}}
 
-    _send_analytics_for_pii_if_needed(data_dict, dataset_dict, resource_dict)
-    _send_analytics_for_sdc_if_needed(data_dict, dataset_dict, resource_dict)
     _do_quarantine_related_processing_if_needed(context, data_dict, data_revise_dict, dataset_dict, resource_dict)
 
     update_resource_dict = {key: value for key, value in data_dict.items() if key != 'id'}
@@ -222,27 +220,6 @@ def _do_quarantine_related_processing_if_needed(context, data_dict, data_revise_
                 dataset_dict.get('name')
             )
     _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict)
-
-
-def _send_analytics_for_pii_if_needed(data_dict, dataset_dict, resource_dict):
-    new_pii_report_flag = data_dict.get('pii_report_flag')
-    pii_analytics_sender = None
-    if new_pii_report_flag is not None:
-        pii_analytics_sender = QAPiiAnalyticsSender(dataset_dict, resource_dict, new_pii_report_flag)
-        if pii_analytics_sender.should_send_analytics_event():
-            pii_analytics_sender.send_to_queue()
-    return pii_analytics_sender
-
-
-def _send_analytics_for_sdc_if_needed(data_dict, dataset_dict, resource_dict):
-    new_sdc_report_flag = data_dict.get('sdc_report_flag')
-    sdc_analytics_sender = None
-    if new_sdc_report_flag is not None:
-        sdc_analytics_sender = QASdcAnalyticsSender(dataset_dict, resource_dict, new_sdc_report_flag)
-        if sdc_analytics_sender.should_send_analytics_event():
-            sdc_analytics_sender.send_to_queue()
-    return sdc_analytics_sender
-
 
 def _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dict):
     if new_quarantine_value == 'true' and resource_dict.get('shape_info'):

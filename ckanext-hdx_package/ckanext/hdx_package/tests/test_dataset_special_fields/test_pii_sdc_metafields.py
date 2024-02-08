@@ -7,7 +7,6 @@ import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
-from ckanext.hdx_package.actions.patch import _send_analytics_for_pii_if_needed, _send_analytics_for_sdc_if_needed
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 from ckanext.hdx_users.helpers.permissions import Permissions
 
@@ -15,16 +14,6 @@ config = tk.config
 NotAuthorized = tk.NotAuthorized
 
 analytics_sender = None
-
-
-def _send_analytics_for_pii_if_needed_mocked(*args, **kwargs):
-    global analytics_sender
-    analytics_sender = _send_analytics_for_pii_if_needed(*args, **kwargs)
-
-
-def _send_analytics_for_sdc_if_needed_mocked(*args, **kwargs):
-    global analytics_sender
-    analytics_sender = _send_analytics_for_sdc_if_needed(*args, **kwargs)
 
 
 class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
@@ -153,8 +142,6 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         self._get_action('resource_delete')(context, {'id': res2_dict['id']})
 
     @mock.patch('ckanext.hdx_package.helpers.analytics.g')
-    @mock.patch('ckanext.hdx_package.actions.patch._send_analytics_for_pii_if_needed',
-                wraps=_send_analytics_for_pii_if_needed_mocked)
     @mock.patch('ckanext.hdx_theme.util.analytics.AbstractAnalyticsSender.send_to_queue')
     def test_pii_tracking(self, send_to_queue_mock, send_analytics_mock, g_mock):
         global analytics_sender
@@ -190,8 +177,6 @@ class TestPiiSdcMetafields(hdx_test_base.HdxBaseTest):
         self._get_action('resource_delete')(context, {'id': res2_dict['id']})
 
     @mock.patch('ckanext.hdx_package.helpers.analytics.g')
-    @mock.patch('ckanext.hdx_package.actions.patch._send_analytics_for_sdc_if_needed',
-                wraps=_send_analytics_for_sdc_if_needed_mocked)
     @mock.patch('ckanext.hdx_theme.util.analytics.AbstractAnalyticsSender.send_to_queue')
     def test_sdc_tracking(self, send_to_queue_mock, send_analytics_mock, g_mock):
         global analytics_sender

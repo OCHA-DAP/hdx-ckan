@@ -231,51 +231,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_update_in_quarantine_by_microdata'),
                     # tk.get_validator('hdx_reset_on_file_upload')
                 ],
-                'pii_timestamp': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('isodate'),
-                    tk.get_validator('hdx_isodate_to_string_converter'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
-                ],
-                'pii_report_flag': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
-                ],
-                'pii_report_id': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
-                ],
                 'pii_is_sensitive': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
                     tk.get_validator('boolean_validator')
-                ],
-                'pii_predict_score': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('hdx_float_number'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
-                ],
-                'sdc_timestamp': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('isodate'),
-                    tk.get_validator('hdx_isodate_to_string_converter'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
-                ],
-                'sdc_report_flag': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
-                ],
-                'sdc_report_id': [
-                    tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
-                    tk.get_validator('hdx_reset_on_file_upload'),
-                    tk.get_validator('ignore_missing')  # if None, don't save 'None' string
                 ],
                 'dataset_preview_enabled': [
                     tk.get_validator('hdx_convert_values_to_boolean_for_dataset_preview'),
