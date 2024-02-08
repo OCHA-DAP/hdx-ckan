@@ -44,7 +44,6 @@ Example:
         {% set requestdata_action = h.url_for('requestdata_send_request.send_request') %}
         {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name, 'package_title':pkg.title}) %}
         {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
-        {% trans %}
           <p class="empty">The contributor has only shared the <a href="#" id="switch-to-metadata-tab">metadata</a> for this dataset. To access the data, please use the request button.</p>
           <span data-module="bs_tooltip"
                data-module-placement="left"
@@ -53,16 +52,25 @@ Example:
                class="float-end"
                style="margin-top: 10px;"
           >
-            <a href="#" class="btn btn-primary"
-               data-module="hdx-modal-form"
-               data-module-template_file="request_contact.html"
-               data-module-submit_action="{{ requestdata_action }}"
-               data-module-post_data="{{ request_post_data }}"
-               data-module-is_logged_in="{{ is_logged_in }}"
-               data-module-is_hdx="{{ is_hdx }}"
-               data-module-redirect_url="{{ redirect_url }}"
-               data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
-            >Request data</a>
+            {% set onboarding_additional_params = h.dump_json({'dataset_id': pkg.id}) %}
+            <span
+              {% if g.userobj.is_anonymous %}
+                      data-module="hdx-onboarding-flow"
+                      data-start-page-type="hdx-connect"
+                      data-start-page-additional-params="{{ onboarding_additional_params }}"
+              {% endif %}
+            >
+              <a href="#" class="btn btn-primary"
+                 data-module="hdx-modal-form"
+                 data-module-template_file="request_contact.html"
+                 data-module-submit_action="{{ requestdata_action }}"
+                 data-module-post_data="{{ request_post_data }}"
+                 data-module-is_logged_in="{{ is_logged_in }}"
+                 data-module-is_hdx="{{ is_hdx }}"
+                 data-module-redirect_url="{{ redirect_url }}"
+                 data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+              >Request data</a>
+            </span>
           </span>
 
           <div class="container-subpanel">
@@ -74,7 +82,6 @@ Example:
             </div>
 
           </div>
-        {% endtrans %}
       {% else %}
         {# Comment out "add some" as action doesn't exist yet #}
         <p class="empty mTop20">This dataset has no data,
