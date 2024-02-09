@@ -7,7 +7,6 @@ from six.moves.urllib.parse import urlencode
 import ckan.lib.munge as munge
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_search.helpers.qa_data as qa_data
 
 log = logging.getLogger(__name__)
 
@@ -61,4 +60,3 @@ def hdx_get_package_showcase_id_list(context, data_dict):
     # get a list of showcase ids associated with the package id
     showcase_id_list = ShowcasePackageAssociation.get_showcase_ids_for_package(validated_data_dict['package_id'])
     return showcase_id_list
-
