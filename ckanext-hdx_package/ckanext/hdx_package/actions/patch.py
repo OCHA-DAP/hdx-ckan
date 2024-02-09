@@ -5,8 +5,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
     SKIP_VALIDATION
-from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender, \
-    QAPiiAnalyticsSender, QASdcAnalyticsSender
+from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD, NO_DATA
 from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import delete_geopreview_layer

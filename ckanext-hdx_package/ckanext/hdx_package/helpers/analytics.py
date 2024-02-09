@@ -481,38 +481,6 @@ class AbstractResourceAnalyticsSender(AbstractAnalyticsSender):
         raise NotImplemented('should_send_analytics_event is not implemented in {}'.format(self.__class__.__name__))
 
 
-class QAPiiAnalyticsSender(AbstractResourceAnalyticsSender):
-
-    def __init__(self, dataset_dict, resource_dict, new_pii_value):
-        super(QAPiiAnalyticsSender, self).__init__(dataset_dict, resource_dict)
-        self.new_pii_value = new_pii_value
-        self.old_pii_value = resource_dict.get('pii_report_flag')
-
-        if self.analytics_dict: # might not be initialized in case of tests
-            self.analytics_dict['event_name'] = 'qa set pii'
-            self.analytics_dict['mixpanel_meta']['flag value'] = new_pii_value
-            self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_pii_value),  # event action
-
-    def should_send_analytics_event(self):
-        return self.new_pii_value != self.old_pii_value
-
-
-class QASdcAnalyticsSender(AbstractResourceAnalyticsSender):
-
-    def __init__(self, dataset_dict, resource_dict, new_sdc_value):
-        super(QASdcAnalyticsSender, self).__init__(dataset_dict, resource_dict)
-        self.new_sdc_value = new_sdc_value
-        self.old_sdc_value = resource_dict.get('sdc_report_flag')
-
-        if self.analytics_dict:  # might not be initialized in case of tests
-            self.analytics_dict['event_name'] = 'qa set sdc'
-            self.analytics_dict['mixpanel_meta']['flag value'] = new_sdc_value
-            self.analytics_dict['ga_meta']['ea value'] = 'flagging pii: {}'.format(new_sdc_value),  # event action
-
-    def should_send_analytics_event(self):
-        return self.new_sdc_value != self.old_sdc_value
-
-
 class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
 
     def __init__(self, file_format, package_id=None, resource_id=None):

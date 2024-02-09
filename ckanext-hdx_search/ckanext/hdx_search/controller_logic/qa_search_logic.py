@@ -60,22 +60,20 @@ class QASearchLogic(sl.SearchLogic):
 
     def _process_found_package_list(self, package_list):
         super(QASearchLogic, self)._process_found_package_list(package_list)
-        self.__process_script_check_data(package_list, 'pii_is_sensitive', 'pii_timestamp')
+        self.__process_script_check_data(package_list, 'pii_is_sensitive')
 
-    def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
+    def __process_script_check_data(self, package_list, report_flag_field):
 
         if package_list:
             for package_dict in package_list:
                 resource_list = package_dict.get('resources', [])
                 package_dict[report_flag_field] = ''
-                package_dict[timestamp_field] = ''
                 package_pii_priority = 0
                 for r in resource_list:
                     res_pii_priority = STATUS_PRIORITIES.get(r.get(report_flag_field, ''), 0)
                     if res_pii_priority > package_pii_priority:
                         package_pii_priority = res_pii_priority
                         package_dict[report_flag_field] = r.get(report_flag_field, '')
-                        package_dict[timestamp_field] = r.get(timestamp_field, '')
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         super(QASearchLogic, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
