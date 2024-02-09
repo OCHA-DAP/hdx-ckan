@@ -53,29 +53,6 @@ function _updateBrokenLink(resource, flag) {
   return promise;
 }
 
-function _updateQAComplete(package, flag) {
-  var csrf_value = $('meta[name=_csrf_token]').attr('content');
-  let body = {
-    "id": `${package}`,
-    "qa_completed": flag,
-    "_csrf_token": csrf_value
-  };
-  let promise = new Promise((resolve, reject) => {
-    $.post('/api/action/hdx_mark_qa_completed', body)
-      .done((result) => {
-        if (result.success){
-          resolve(result);
-        } else {
-          reject(result);
-        }
-      })
-      .fail((result) => {
-        reject(result);
-      });
-  });
-  return promise;
-}
-
 function _updateAllResourcesKeyValue(package,key,value) {
   var csrf_value = $('meta[name=_csrf_token]').attr('content');
   let body = {
@@ -107,25 +84,6 @@ function _getPackageResourceList(elementId) {
 
 function _getPackageResourceIdList(elementId) {
   return _getPackageResourceList(elementId).map((resource) => resource.id);
-}
-
-function updateQASelection(cb) {
-  $(".dataset-heading").find("input[type='checkbox']").prop('checked', cb.checked);
-}
-
-function updateQAComplete(package, flag) {
-  _showLoading();
-  _updateQAComplete(package, flag)
-    .then(() => {
-        _updateLoadingMessage("QA Complete status successfully updated! Reloading page ...");
-    })
-    .catch(() => {
-        alert("Error, QA Complete status not updated!");
-        $("#loadingScreen").hide();
-    })
-    .finally(() => {
-      location.reload();
-    });
 }
 
 function updateAllResourcesQuarantine(package,value) {
@@ -206,38 +164,6 @@ function updateQuarantineList(resourceListId, flag) {
     })
     .catch(errors => {
       alert("Error, quarantine status not updated for at least one resource!");
-    })
-    .finally(() => {
-      location.reload();
-    });
-}
-
-function bulkUpdateQAComplete(flag) {
-  const packages = $(".dataset-heading").toArray().reduce((accumulator, item) => {
-    if ($(item).find("input[type='checkbox']").is(':checked')) {
-      let packageId = $(item).find(".package-resources").attr('data-package-id');
-      if (packageId) {
-        accumulator.push(packageId)
-      }
-    }
-    return accumulator;
-  }, []);
-
-  _showLoading();
-  let packagesPromise = packages.reduce((currentPromise, package) => {
-    return currentPromise
-      .then(() => {
-        _updateLoadingMessage(`Updating package with id [${package}], please wait ...`);
-        return _updateQAComplete(package, flag);
-      })
-  }, Promise.resolve([]));
-
-  packagesPromise
-    .then(values => {
-      _updateLoadingMessage("QA status successfully updated for all packages! Reloading page ...");
-    })
-    .catch(errors => {
-      alert("Error, QA status not updated for at least one package!");
     })
     .finally(() => {
       location.reload();

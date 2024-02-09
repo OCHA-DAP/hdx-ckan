@@ -66,15 +66,3 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         config['hdx.qadashboard.enabled'] = 'true'
         result = self._get_url(url, token)
         assert result.status_code == 200
-
-    def test_qa_questions_list(self):
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-
-        qa_q_list = self._get_action('qa_questions_list')(context_sysadmin, {})
-        assert 'metadata_checklist' in qa_q_list
-        assert 32 == len(qa_q_list.get('metadata_checklist'))
-        assert 'resources_checklist' in qa_q_list
-        assert 10 == len(qa_q_list.get('resources_checklist'))
-        assert 'data_protection_checklist' in qa_q_list
-        assert 6 == len(qa_q_list.get('data_protection_checklist'))

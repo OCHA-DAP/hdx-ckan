@@ -1115,7 +1115,6 @@ qa-package-scripts:
       - hdx_theme/qa-package-styles
   contents:
     - qa/qa-package.js
-    - qa/qa-checklist.js
 
 qa-package-styles:
   output: ckanext-hdx_theme/%(version)s_qa-package-styles.css

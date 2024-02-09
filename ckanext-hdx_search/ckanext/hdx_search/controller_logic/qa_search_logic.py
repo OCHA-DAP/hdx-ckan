@@ -61,42 +61,7 @@ class QASearchLogic(sl.SearchLogic):
 
     def _process_found_package_list(self, package_list):
         super(QASearchLogic, self)._process_found_package_list(package_list)
-        self.__process_checklist_data(package_list)
         self.__process_script_check_data(package_list, 'pii_is_sensitive', 'pii_timestamp')
-
-    def __process_checklist_data(self, package_list):
-
-        if package_list:
-            num_of_resource_questions = len(qa_data_questions_list['resources_checklist'])
-            num_of_package_questions = len(qa_data_questions_list['data_protection_checklist']) + \
-                                       len(qa_data_questions_list['metadata_checklist'])
-
-            for package_dict in package_list:
-                resource_list = package_dict.get('resources', [])
-                checklist = get_obj_from_json_in_dict(package_dict, 'qa_checklist')
-                package_dict['qa_checklist'] = checklist
-                package_dict['qa_checklist_num'] = len(checklist.get('dataProtection', [])) + \
-                                                   len(checklist.get('metadata', []))
-                package_dict['qa_checklist_total_num'] = num_of_package_questions + \
-                                                         num_of_resource_questions * len(resource_list)
-
-                for r in resource_list:
-                    r['qa_checklist_total_num'] = num_of_resource_questions
-                    if package_dict.get('qa_checklist_completed'):
-                        r['qa_checklist'] = None
-                        r['qa_checklist_num'] = 0
-                        r['qa_check_list_status'] = 'OK'
-                    else:
-                        r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
-                        r['qa_checklist_num'] = len(r['qa_checklist'])
-                        package_dict['qa_checklist_num'] += r['qa_checklist_num']
-                        r['qa_check_list_status'] = 'ERROR' if r['qa_checklist_num'] > 0 else None
-
-                # This needs to be set AFTER we've aggregated the statuses of the resources
-                package_dict['qa_check_list_status'] = \
-                    'OK' if package_dict.get('qa_checklist_completed') \
-                        else 'ERROR' if package_dict['qa_checklist_num'] > 0 \
-                        else None
 
     def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
 

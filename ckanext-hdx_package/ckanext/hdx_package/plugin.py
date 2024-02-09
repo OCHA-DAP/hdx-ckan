@@ -179,12 +179,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                              # tk.get_validator('ignore_missing'),
                              tk.get_validator('hdx_boolean_string_converter'),
                              tk.get_converter('convert_to_extras')],
-            'qa_checklist_completed': [tk.get_validator('hdx_reset_unless_allow_qa_checklist_completed'),
-                                       tk.get_validator('ignore_missing'),
-                                       tk.get_validator('hdx_boolean_string_converter'),
-                                       tk.get_converter('convert_to_extras')],
-            'qa_checklist': [tk.get_validator('hdx_keep_unless_allow_qa_checklist_field'),
-                             tk.get_converter('convert_to_extras')],
             'updated_by_script': [tk.get_validator('hdx_keep_prev_value_if_empty'),
                                   tk.get_converter('convert_to_extras')],
             'cod_level': [
@@ -375,12 +369,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('hdx_assume_missing_is_true'),
                 tk.get_validator('boolean_validator')
             ],
-            'qa_checklist_completed': [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing'),
-                tk.get_validator('boolean_validator')
-            ],
-            'qa_checklist': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'updated_by_script': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'cod_level': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'resource_grouping': [
@@ -445,9 +433,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             # 'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list,
             # 'hdx_test_recommend_tags': hdx_get.hdx_test_recommend_tags,
             'hdx_recommend_tags': hdx_get.hdx_recommend_tags,
-            'hdx_package_qa_checklist_update': hdx_update.package_qa_checklist_update,
-            'hdx_package_qa_checklist_show': hdx_get.package_qa_checklist_show,
-            'hdx_get_s3_link_for_resource': hdx_get.hdx_get_s3_link_for_resource,
             'hdx_mark_broken_link_in_resource': hdx_patch.hdx_mark_broken_link_in_resource,
             'hdx_mark_qa_completed': hdx_patch.hdx_mark_qa_completed,
             'hdx_mark_resource_in_quarantine': hdx_patch.hdx_mark_resource_in_quarantine,
@@ -484,10 +469,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
             'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field'),
             'hdx_reset_unless_allow_qa_completed': vd.hdx_delete_unless_field_in_context('allow_qa_completed_field'),
-            'hdx_reset_unless_allow_qa_checklist_completed':
-                vd.hdx_delete_unless_field_in_context('allow_qa_checklist_completed_field'),
-            'hdx_keep_unless_allow_qa_checklist_field':
-                vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_qa_checklist_field'),
             'hdx_keep_unless_allow_resource_qa_script_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_resource_qa_script_field',
                                                                                resource_level=True),
@@ -532,7 +513,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_resource_download': authorize.hdx_resource_download,
             'hdx_mark_qa_completed': authorize.hdx_mark_qa_completed,
             'hdx_mark_resource_in_quarantine': authorize.hdx_mark_resource_in_quarantine,
-            'hdx_package_qa_checklist_update': authorize.package_qa_checklist_update,
             'hdx_qa_resource_patch': authorize.hdx_qa_resource_patch,
             'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
             'hdx_cod_update': authorize.hdx_cod_update,

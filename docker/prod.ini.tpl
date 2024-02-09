@@ -128,11 +128,6 @@ hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/dat
 # if true, caching will be enabled and the "master" branch from the github repo will be used
 hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 
-# AWS api echo endpoint
-hdx.echo_url = https://${AWS_ECHO_API_URL}
-hdx.echo_api_key = ${HDX_ECHO_API_KEY}
-hdx.echo_log_bucket = ${HDX_ECHO_LOG_BUCKET_NAME}
-
 # QA dashboard
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 

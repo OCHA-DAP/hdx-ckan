@@ -62,30 +62,3 @@ def hdx_get_package_showcase_id_list(context, data_dict):
     showcase_id_list = ShowcasePackageAssociation.get_showcase_ids_for_package(validated_data_dict['package_id'])
     return showcase_id_list
 
-
-@side_effect_free
-def hdx_qa_questions_list(context, data_dict):
-    return qa_data.questions_list
-
-
-
-def _set_resource_proxy_url(context, data_dict, resource_dict, sheet=None):
-    proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.csv'
-    url = get_action("hdx_get_s3_link_for_resource")(context, {"id": resource_dict.get("id")})
-    params_dict = {'url': url.get('s3_url', resource_dict.get("download_url") or resource_dict.get("hdx_rel_url"))}
-    if sheet:
-        params_dict['sheet'] = sheet
-    params = urlencode(params_dict)
-    # {'sheet': sheet, 'url': resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")})
-    return proxy_data_preview_url + '?{params}'.format(params=params)
-
-
-def _get_resource_s3_path(resource_dict):
-    download_url = resource_dict.get("download_url") or resource_dict.get("hdx_rel_url")
-    if "download/" in download_url:
-        url = download_url.split("download/")[1]
-    else:
-        url = resource_dict.get("name")
-    munged_resource_name = munge.munge_filename(url)
-    return munged_resource_name
-
