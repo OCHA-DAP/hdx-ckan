@@ -4,7 +4,6 @@ import ckanext.hdx_search.controller_logic.search_logic as sl
 
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, PRIVATE_DATASETS_FACET_NAME, STATUS_PRIORITIES
-from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 
