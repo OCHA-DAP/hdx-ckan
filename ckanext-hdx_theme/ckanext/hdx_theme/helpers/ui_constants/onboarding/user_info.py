@@ -25,7 +25,7 @@ CONSTANTS = {
     'INPUT_PASSWORD2_PLACEHOLDER': '''Re-enter your password''',
     'INPUT_PASSWORD2_ERROR': '''Passwords must be valid and match''',
 
-    'CHECKBOX_TERMS_OF_SERVICE': '''I have read and accepted the <a href="{0}" title="HDX Terms of Service">HDX Terms of Service</a>''',
+    'CHECKBOX_TERMS_OF_SERVICE': '''I have read and accepted the <a href="{0}" target="_blank" title="HDX Terms of Service">HDX Terms of Service</a>''',
     'CHECKBOX_TERMS_OF_SERVICE_ERROR': '''Please accept the terms of service to continue''',
     'CHECKBOX_NEWSLETTER': '''Do you want to receive email updates from the Centre for Humanitarian Data about HDX features and events?''',
 
