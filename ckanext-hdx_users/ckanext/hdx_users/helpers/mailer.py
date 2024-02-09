@@ -57,7 +57,7 @@ def _mail_recipient_html(sender_name='Humanitarian Data Exchange (HDX)',
             'data': content_dict,
             'footer': footer,
             '_snippet': snippet,
-            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx-email.png'
+            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx.png'
         },
     }
     # body_html = render_jinja2('email/email.html', template_data)

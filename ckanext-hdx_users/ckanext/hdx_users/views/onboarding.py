@@ -137,7 +137,7 @@ class UserOnboardingView(MethodView):
             user_dict,
             token,
             subject,
-            'email/content/onboarding_email_validation.html',
+            'email/content/onboarding/email_confirmation.html',
             validation_link=h.url_for('hdx_user_onboarding.validate_account', token=token['token'], qualified=True)
         )
 
