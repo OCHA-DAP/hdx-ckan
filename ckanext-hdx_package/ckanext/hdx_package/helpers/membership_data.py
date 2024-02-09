@@ -58,7 +58,7 @@ def get_message_groups(current_user, org_id):
     }
     try:
         cnt_members_list = logic.get_action('hdx_member_list')(context, {'org_id': org_id})
-        if cnt_members_list.get('is_member', False):
+        if cnt_members_list and cnt_members_list.get('is_member', False):
             group_topics = [
                 ('all', membership_data['group_topics']['all'] + ' [' + str(
                         cnt_members_list.get('total_counter', 0)) + ']')
