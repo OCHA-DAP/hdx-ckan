@@ -124,6 +124,7 @@ hdx-onboarding-scripts:
   output: ckanext-hdx_theme/%(version)s_hdx-onboarding-scripts.js
   contents:
     - onboarding/came-from-input.js
+    - onboarding/confirm-page-leave.js
 
 search-scripts:
   <<: *common-js
