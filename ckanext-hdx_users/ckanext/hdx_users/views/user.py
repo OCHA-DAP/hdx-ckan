@@ -18,6 +18,7 @@ from ckan.views.user import PerformResetView, RequestResetView, rotate_token, ne
 from ckan.views.user import (
     follow as _follow, followers as _followers, unfollow as _unfollow, login as _login, logout as _logout
 )
+from ckanext.hdx_users.logic.first_login import FirstLoginLogic
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
@@ -243,6 +244,7 @@ def _check_email_validation(user_obj: "User") -> bool:
 def login() -> Union[Response, str]:
     '''
     This is based on ckan.views.user.login() but with the following changes:
+    - we added the first login logic
     - we skip the GET method, as we don't have a dedicated login page
     - we skip ckan.lib.authenticator.ckan_authenticator() as we want to fail if the user is not authenticated by
       ckanext.security
@@ -275,16 +277,25 @@ def login() -> Union[Response, str]:
                 return h.redirect_to('hdx_splash.index')
 
         if user_obj:
-            next = request.args.get('next', request.args.get('came_from'))
+            first_login_context = {
+                'model': model,
+                'session': model.Session,
+                'user': user_obj.name, 'auth_user_obj': user_obj
+            }
+            first_login_logic = FirstLoginLogic(first_login_context, user_obj.id)
+            first_login_url = first_login_logic.determine_initial_redirect_and_mark_first_login()
+            next = first_login_url or request.args.get('next', request.args.get('came_from'))
             if _remember:
                 from datetime import timedelta
                 duration_time = timedelta(milliseconds=int(_remember))
                 login_user(user_obj, remember=True, duration=duration_time)
                 rotate_token()
+                first_login_logic.mark_state_as_used_if_needed()
                 return next_page_or_default(next)
             else:
                 login_user(user_obj)
                 rotate_token()
+                first_login_logic.mark_state_as_used_if_needed()
                 return next_page_or_default(next)
         else:
             err = _(u"Login failed. Bad username or password.")
