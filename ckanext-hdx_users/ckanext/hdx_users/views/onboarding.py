@@ -14,6 +14,7 @@ from ckan.common import (
     config, current_user
 )
 from ckan.types import Context, Schema, Response, DataDict
+from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import send_username_confirmation_email
 from ckanext.hdx_users.helpers.onboarding import HDX_ONBOARDING_CAME_FROM, HDX_ONBOARDING_CAME_FROM_STATE
 from ckanext.hdx_users.views.user_view_helper import *
 
@@ -182,6 +183,7 @@ def validate_account(token: str) -> str:
         'fullname': user_dict.get('fullname', ''),
         'url': h.url_for('hdx_user_auth.new_login')
     }
+    send_username_confirmation_email(user_dict)
     return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
 
