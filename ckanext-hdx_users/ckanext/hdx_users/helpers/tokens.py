@@ -60,6 +60,7 @@ def activate_user_and_disable_token(context: Context, data_dict: Dict) -> Union[
 def send_validation_email(user: Dict, token: Dict, subject: str, template_path: str, validation_link: str) -> bool:
     # link = '{0}{1}'
     email_data = {
+        'user_fullname': user.get('fullname'),
         'validation_link': validation_link
     }
     try:

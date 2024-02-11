@@ -57,7 +57,7 @@ def send_email_on_token_creation(username, token_name, expiration_in_millis):
             'data': token_info,
             'footer': True,
             '_snippet': 'email/content/api_tokens/api_token_creation.html',
-            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx-email.png',
+            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx.png',
         }
     }
     rendered_html = _render('email/email.html', html_data_dict)
