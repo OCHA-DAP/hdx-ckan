@@ -126,6 +126,12 @@ hdx-onboarding-scripts:
     - onboarding/came-from-input.js
     - onboarding/confirm-page-leave.js
 
+prevent-back-button:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_prevent-back-button.js
+  contents:
+    - onboarding/prevent-back-button.js
+
 search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
