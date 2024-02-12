@@ -1,5 +1,10 @@
 {% extends "onboarding/base.html" %}
 
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/prevent-back-button' %}
+{% endblock %}
+
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['VERIFY_EMAIL'] %}
 
 {% block subtitle %}{{ _('User info') }}{% endblock %}
