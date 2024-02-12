@@ -6,15 +6,15 @@
             type="{{ type }}"
             {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
             {% endfor %}{% endif %}
-    >{{ _(title) }}</button>
+    >{{ title }}</button>
   {% else %}
     <a
             href="{{ url }}"
             class="form-button__btn btn{% if button_classes %} {{ button_classes|join(' ') }}{% endif %}"
             {% if button_id %}id="{{ button_id }}"{% endif %}
-            title="{{ _(title) }}"
+            title="{{ title }}"
             {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
             {% endfor %}{% endif %}
-    >{{ _(title) }}</a>
+    >{{ title }}</a>
   {% endif %}
 </div>

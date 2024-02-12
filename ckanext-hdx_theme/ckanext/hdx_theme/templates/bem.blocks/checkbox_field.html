@@ -11,7 +11,7 @@
           {% endfor %}{% endif %}
   >
   <label class="checkbox-field__label form-check-label ms-2" for="checkbox-{{ name }}">
-    {{ _(label)|safe }}
+    {{ label|safe }}
   </label>
   {% if data_attributes and data_attributes['validation-error'] %}
     <div class="checkbox-field__feedback-message checkbox-field__feedback-message_state_invalid invalid-feedback ms-2"></div>

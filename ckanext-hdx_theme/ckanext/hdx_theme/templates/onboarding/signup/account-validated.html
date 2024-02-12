@@ -16,7 +16,7 @@
       <div class="col-12 col-md-7 mx-auto">
         {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=3) }}
         <div class="text-center">
-          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE.format(fullname), spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/heading.html', title=_(CONST.PAGE_TITLE).format(fullname), spacing_class="mb-4") }}
         </div>
       </div>
     </div>
