@@ -19,7 +19,6 @@ import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
 import ckanext.hdx_users.views.user_register_view as urv
 import ckanext.hdx_users.views.onboarding as onboarding
-import ckanext.hdx_users.helpers.onboarding as h_onboarding
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -92,8 +91,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'get_user_extra': h_user_extra.get_user_extra,
             'get_login': h_user_extra.get_login,
             'find_first_global_settings_url': hdx_h.find_first_global_settings_url,
-            'hdx_get_user_notifications': hdx_h.hdx_get_user_notifications,
-            'hdx_get_onboarding_came_from': h_onboarding.get_onboarding_came_from
+            'hdx_get_user_notifications': hdx_h.hdx_get_user_notifications
         }
 
     def is_fallback(self):
