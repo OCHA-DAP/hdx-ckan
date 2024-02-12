@@ -6,7 +6,7 @@ window.onpopstate = function (event) {
     if (r === true) {
       history.back();
     } else {
-      window.history.pushState({page: 2}, '', '');
+      window.history.pushState({page: 2}, null, null);
     }
   }
 }
