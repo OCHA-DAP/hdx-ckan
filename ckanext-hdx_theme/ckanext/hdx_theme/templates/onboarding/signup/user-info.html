@@ -40,7 +40,7 @@
           {{ h.snippet('bem.blocks/input_field.html', type="password", required=True, label=CONST.INPUT_PASSWORD_LABEL, name="password1", errors=errors.get('password1'), data_attributes={"validation": "password", "validation-error": CONST.INPUT_PASSWORD_ERROR}, placeholder=CONST.INPUT_PASSWORD_PLACEHOLDER, help_text=CONST.INPUT_PASSWORD_HELP, spacing_class="mb-3") }}
           {{ h.snippet('bem.blocks/input_field.html', type="password", required=True, label=CONST.INPUT_PASSWORD2_LABEL, name="password2", errors=errors.get('password2'), data_attributes={"validation": "password,match", "validation-match": "password1", "validation-error": CONST.INPUT_PASSWORD2_ERROR}, placeholder=CONST.INPUT_PASSWORD2_PLACEHOLDER, spacing_class="mb-3") }}
           {{ h.snippet('bem.blocks/checkbox_field.html', required=True, label=CONST.CHECKBOX_TERMS_OF_SERVICE.format(h.url_for('hdx_faqs.read', category='terms')), data_attributes={"validation": "checkbox", "validation-error": CONST.CHECKBOX_TERMS_OF_SERVICE_ERROR}, name="user_info_accept_terms", checked=False, spacing_class="mb-3") }}
-          {{ h.snippet('bem.blocks/checkbox_field.html', label=CONST.CHECKBOX_NEWSLETTER, name="user_info_accept_emails", checked=False, spacing_class="mb-3") }}
+          {{ h.snippet('bem.blocks/checkbox_field.html', label=CONST.CHECKBOX_NEWSLETTER, name="user_info_accept_emails", checked=False, value="true", spacing_class="mb-3") }}
           {% if g.recaptcha_publickey %}
             <div class="recaptcha-field mb-3">
               <div class="g-recaptcha" data-sitekey="{{ g.recaptcha_publickey }}"></div>
