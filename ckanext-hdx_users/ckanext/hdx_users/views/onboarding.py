@@ -14,7 +14,7 @@ from ckan.common import (
     config, current_user
 )
 from ckan.types import Context, Schema, Response, DataDict
-from ckanext.hdx_users.helpers.onboarding import HDX_ONBOARDING_CAME_FROM, HDX_ONBOARDING_CAME_FROM_STATE
+from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY
 from ckanext.hdx_users.views.user_view_helper import *
 
 log = logging.getLogger(__name__)
@@ -56,11 +56,11 @@ def _save_came_from_in_user_extras(data_dict: DataDict,
     })
     extras = [
         {
-            'key': HDX_ONBOARDING_CAME_FROM,
+            'key': ONBOARDING_CAME_FROM_EXTRAS_KEY,
             'value': came_from
         },
         {
-            'key': HDX_ONBOARDING_CAME_FROM_STATE,
+            'key': ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY,
             'value': 'active'
         }
     ]
