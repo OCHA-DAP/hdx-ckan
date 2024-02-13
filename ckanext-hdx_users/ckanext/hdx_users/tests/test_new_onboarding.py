@@ -1,0 +1,189 @@
+import mock
+import pytest
+
+import ckan.model as model
+import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
+
+_get_action = tk.get_action
+h = tk.h
+
+USER = 'onboarding_testuser'
+SYSADMIN = 'onboarding_sysadmin'
+NEW_USER = 'onboarding_new_testuser'
+SYSADMIN_EMAIL = 'onboarding_sysadmin@test.org'
+USER_EMAIL = 'onboarding_testuser@test.org'
+NEW_USER_EMAIL = 'onboarding_new_testuser@test.org'
+
+
+@pytest.fixture()
+def setup_data():
+    factories.Sysadmin(name=SYSADMIN, email=SYSADMIN_EMAIL, fullname='Sysadmin User')
+    factories.User(name=USER, email=USER_EMAIL, fullname='Test User')
+
+def _sysadmin_context():
+    return{
+        'model': model,
+        'user': SYSADMIN
+    }
+def _user_context():
+    return{
+        'model': model,
+        'user': USER
+    }
+
+@pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
+class TestOnboarding(object):
+
+    def test_value_proposition_page_load(self, app):
+        sysadmin_token = factories.APIToken(user=SYSADMIN, expires_in=2, unit=60 * 60)['token']
+        testuser_token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']
+
+        url = h.url_for('hdx_user_onboarding.value_proposition')
+        result = app.get(url)
+        assert '<title>Account options ' in result.body
+        # this might change from translation
+        assert 'HDX account options' in result.body
+        assert 'href="/signup/user-info/"' in result.body
+
+        result = app.get(url, extra_environ={'Authorization': testuser_token}, status=403)
+        # if user is logged in, the page should not be visible
+        assert result.status_code == 403
+
+        result = app.get(url, extra_environ={'Authorization': sysadmin_token}, status=200)
+        # if user is sysadmin, page can be displayed
+        assert result.status_code == 200
+
+    def test_signup_user_info_load(self, app):
+        sysadmin_token = factories.APIToken(user=SYSADMIN, expires_in=2, unit=60 * 60)['token']
+        testuser_token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']
+
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.get(url)
+        assert '<title>User info ' in result.body
+        # this might change from translation
+        assert 'name="fullname"' in result.body
+        assert 'name="email"' in result.body
+        assert 'name="email2"' in result.body
+        assert 'name="name"' in result.body
+        assert 'name="password1"' in result.body
+        assert 'name="password2"' in result.body
+        assert 'name="user_info_accept_terms"' in result.body
+        assert 'name="user_info_accept_emails"' in result.body
+        assert 'id="user-info-submit-button"' in result.body
+        assert 'id="user-info-cancel-button"' in result.body
+
+        result = app.get(url, extra_environ={'Authorization': testuser_token}, status=403)
+        # if user is logged in, the page should not be visible
+        assert result.status_code == 403
+
+        result = app.get(url, extra_environ={'Authorization': sysadmin_token}, status=200)
+        # if user is sysadmin, page can be displayed
+        assert result.status_code == 200
+
+
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_onboarding_create_user(self,_mail_recipient_html, app):
+        data_dict ={
+            'fullname': 'Onboarding User',
+            'email': NEW_USER_EMAIL,
+            'email2': NEW_USER_EMAIL,
+            'name': NEW_USER,
+            'password1': 'asdASD123!@#',
+            'password2': 'asdASD123!@#',
+            'user_info_accept_terms': 'true',
+            'user_info_accept_email': 'false'
+
+        }
+
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert NEW_USER_EMAIL in result.body
+        assert '<div class="stepper__name">Personal details</div>' in result.body
+        assert '<div class="stepper__name">Verify email</div>' in result.body
+        assert '<div class="stepper__name">Account created</div>' in result.body
+
+        assert len(_mail_recipient_html.call_args_list) == 1
+        assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == NEW_USER_EMAIL
+
+        user_dict= _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
+        assert NEW_USER == user_dict.get('name')
+        assert NEW_USER_EMAIL == user_dict.get('email')
+        assert 'pending' == user_dict.get('state')
+
+    def test_onboarding_create_wrong_user(self, app):
+        testuser_token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']
+
+        data_dict ={
+        }
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert 'The passwords you entered do not match' in result.body
+        assert 'Missing value' in result.body
+
+        data_dict ={
+            'fullname': 'Onboarding User',
+            'email': NEW_USER_EMAIL,
+            'email2': USER_EMAIL,
+            'name': NEW_USER,
+            'password1': 'asdASD123!@#',
+            'password2': 'asdASD123!@#',
+            'user_info_accept_terms': 'true',
+            'user_info_accept_email': 'false'
+
+        }
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert 'The emails you entered do not match' in result.body
+
+        data_dict ={
+            'fullname': 'Onboarding User',
+            'email': NEW_USER_EMAIL,
+            'email2': NEW_USER_EMAIL,
+            'name': NEW_USER,
+            'password1': 'asdASD123!@#',
+            'password2': 'asdASD123!@#1',
+            'user_info_accept_terms': 'true',
+            'user_info_accept_email': 'false'
+
+        }
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert 'The passwords you entered do not match' in result.body
+
+        data_dict ={
+            'fullname': 'Onboarding User',
+            'email': NEW_USER_EMAIL,
+            'email2': NEW_USER_EMAIL,
+            'name': USER,
+            'password1': 'asdASD123!@#',
+            'password2': 'asdASD123!@#',
+            'user_info_accept_terms': 'true',
+            'user_info_accept_email': 'false'
+
+        }
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert 'That login name is not available' in result.body
+
+        data_dict ={
+            'fullname': 'Onboarding User',
+            'email': NEW_USER_EMAIL,
+            'email2': NEW_USER_EMAIL,
+            'name': NEW_USER,
+            'password1': 'asdASD123!@#',
+            'password2': 'asdASD123!@#',
+            'user_info_accept_terms': 'true',
+            'user_info_accept_email': 'false'
+
+        }
+        url = h.url_for('hdx_user_onboarding.user-info')
+        auth = {'Authorization': testuser_token}
+        result = app.post(url, data=data_dict, extra_environ=auth)
+        assert result.status_code == 403
+        assert 'Sorry, you don\'t have permission to access this page' in result.body

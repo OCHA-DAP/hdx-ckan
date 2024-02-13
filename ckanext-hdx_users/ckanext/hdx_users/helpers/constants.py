@@ -7,3 +7,5 @@ ONBOARDING_START_PAGE_ADD_DATA = 'add-data'
 
 ONBOARDING_CAME_FROM_EXTRAS_KEY = 'hdx_onboarding_came_from'
 ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY = 'hdx_onboarding_came_from_state'
+
+ONBOARDING_MAILCHIMP_OPTIN_KEY = 'hdx_onboarding_mailchimp_optin'

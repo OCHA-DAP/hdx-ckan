@@ -4,10 +4,8 @@ Created on July 2nd, 2015
 @author: dan
 '''
 
-from typing import cast
 import ckan.plugins.toolkit as tk
 from ckan.logic.schema import validator_args, user_new_form_schema
-from ckan.types import (Validator, Schema)
 
 unicode_safe = tk.get_validator('unicode_safe')
 
@@ -64,11 +62,11 @@ def register_details_user_schema(ignore_missing, not_empty, name_validator, user
 
 
 @validator_args
-def onboarding_user_new_form_schema(unicode_safe: Validator,
-                                    not_empty: Validator, strip_value: Validator,
-                                    user_email_validator: Validator, ignore_missing: Validator):
+def onboarding_user_new_form_schema(unicode_safe, not_empty, strip_value, user_email_validator, ignore_missing,
+                                    user_emails_match):
     schema = user_new_form_schema()
-    schema['email'] = [not_empty, strip_value, user_email_validator, unicode_safe]
+    schema['email'] = [not_empty, strip_value, user_email_validator, user_emails_match, unicode_safe]
+    schema['email2'] = [unicode_safe]
     schema['state'] = [ignore_missing]
 
     return schema
