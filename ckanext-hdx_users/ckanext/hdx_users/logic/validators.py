@@ -1,6 +1,11 @@
+from typing import Any
+
 from six import string_types
 
 import ckan.plugins.toolkit as tk
+from ckan.types import (
+    Context, FlattenDataDict, FlattenErrorDict,
+    FlattenKey)
 from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
 
 _ = tk._
@@ -74,3 +79,16 @@ def user_name_validator(key, data, errors, context):
             # name, so you can create a new user with that name or update an
             # existing user's name to that name.
             errors[key].append(_('That login name is not available.'))
+
+def user_emails_match(key: FlattenKey, data: FlattenDataDict,
+                         errors: FlattenErrorDict, context: Context) -> Any:
+    """Ensures that email and email confirmation match.
+    """
+    email = data.get(('email',),None)
+    email2 = data.get(('email2',),None)
+
+    if not email == email2:
+        errors[key].append(_('The emails you entered do not match'))
+    else:
+        #Set correct email
+        data[('email',)] = email
