@@ -75,16 +75,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config, 'fanstatic')
         toolkit.add_resource('fanstatic', 'hdx_theme')
         # Add configs needed for checks
-        self.__add_dataproxy_url_for_checks(config)
         self.__add_gis_layer_config_for_checks(config)
         self.__add_spatial_config_for_checks(config)
         self.__add_hxl_proxy_url_for_checks(config)
         self.__add_wp_faq_url_for_checks(config)
-
-    def __add_dataproxy_url_for_checks(self, config):
-        dataproxy_url = config.get('ckan.recline.dataproxy_url', '')
-        dataproxy_url = self._create_full_URL(dataproxy_url)
-        config['hdx_checks.dataproxy_url'] = dataproxy_url
 
     def __add_gis_layer_config_for_checks(self, config):
         gis_layer_api = config.get('hdx.gis.layer_import_url', '')
