@@ -3,14 +3,14 @@ from typing import Any, Optional, Union, cast
 
 from flask import Blueprint
 from flask.views import MethodView
-import ckan.plugins.toolkit as tk
+
+import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.helpers as usr_h
-import ckanext.hdx_users.logic.schema as schema
 import ckanext.hdx_users.helpers.tokens as tokens
-import ckan.lib.navl.dictization_functions as dictization_functions
-
+import ckanext.hdx_users.logic.schema as schema
 from ckan.common import (
     config, current_user
 )
