@@ -30,7 +30,7 @@ ckan.module('hdx_click_stopper', function ($, _) {
             href: null,
             link_type: null,
             just_send_event: false,
-            label: false,
+            label: null,
             selector: null // when you can't add the data-module on the targeted <a>, use selector to specify it
         }
     };
