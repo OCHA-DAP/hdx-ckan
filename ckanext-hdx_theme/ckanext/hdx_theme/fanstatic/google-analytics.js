@@ -485,6 +485,7 @@ $(
      *
      * @param {object} data
      * @param {?string} data.destinationUrl The url where the link was supposed to navigate
+     * @param {?string} data.label The label associated with the link
      * @param {?string} data.linkType One of: carousel, learn more faq, find data box, trending topic, main nav, footer
      * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded
      */
@@ -501,6 +502,9 @@ $(
         }
         if (data.linkType) {
             metadata["link type"] = data.linkType;
+        }
+        if (data.label) {
+            metadata.label = data.label;
         }
 
         var mixpanelData = {
