@@ -158,7 +158,7 @@ ckan.resource_proxy.max_file_size = 2097152
 # ckan.legacy_route_mappings = {"organization_activity": "organization_activity", "organization_members": "organization_members"}
 ckan.webassets.path = /tmp/ckan/webassets
 
-ckan.recline.dataproxy_url = /dataproxy
+#ckan.recline.dataproxy_url = /dataproxy
 ckanext.spatial.common_map.type = custom
 ckanext.spatial.common_map.custom.url = /crisis-tiles/{z}/{x}/{y}.png
 
