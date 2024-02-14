@@ -15,7 +15,9 @@ from ckan.common import (
     config, current_user
 )
 from ckan.types import Context, Schema, Response, DataDict
-from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import send_username_confirmation_email
+from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import \
+    send_username_confirmation_email, \
+    subscribe_user_to_mailchimp
 from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
     ONBOARDING_MAILCHIMP_OPTIN_KEY
 from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
@@ -197,6 +199,7 @@ def validate_account(token: str) -> str:
         'url': h.url_for('hdx_user_auth.new_login')
     }
     send_username_confirmation_email(user_dict)
+    subscribe_user_to_mailchimp(user_dict)
     return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
 
