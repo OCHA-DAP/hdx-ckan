@@ -75,10 +75,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         #             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         # map.connect('qa_dashboard', '/qa_dashboard',
         #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='search')
-        # map.connect('qa_pii_log', '/dataset/{id}/resource/{resource_id}/qa_pii_log/{file_name}',
-        #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_pii_log')
-        # map.connect('qa_sdcmicro_log', '/dataset/{id}/resource/{resource_id}/qa_sdcmicro_log',
-        #             controller='ckanext.hdx_search.controllers.qa_controller:HDXQAController', action='qa_sdcmicro_log')
         # return map
 
     # def after_map(self, map):
@@ -270,10 +266,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {
             'populate_related_items_count': actions.populate_related_items_count,
             'populate_showcase_items_count': actions.populate_showcase_items_count,
-            'qa_questions_list': actions.hdx_qa_questions_list,
-            'qa_sdcmicro_run': actions.hdx_qa_sdcmicro_run,
-            'qa_pii_run': actions.hdx_qa_pii_run,
-            'hdx_aws_log_update': actions.aws_log_update
         }
 
     # IFacets
@@ -309,8 +301,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def get_auth_functions(self):
         return {
             'qa_dashboard_show': authorize.hdx_qa_dashboard_show,
-            'qa_sdcmicro_run': authorize.hdx_qa_sdcmicro_run,
-            'qa_pii_run': authorize.hdx_qa_pii_run
         }
 
     # IBlueprint

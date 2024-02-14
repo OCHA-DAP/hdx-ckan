@@ -8,7 +8,6 @@
     <div class="dataset-content2 qa-package-item" data-package-id="{{ package.id }}">
       <div class="dataset-top">
         <div class="dataset-heading">
-          <input type="checkbox" />
           {% set title = package.title or package.name %}
           {{ h.link_to(title, h.url_for('dataset.read', id=package.name), class_='dataset-page-link') }}
           <div id="package-resources-{{loop.index}}" class="package-resources" data-package-id="{{package.id}}" style="display: none;">{{h.json_dumps(package.resources)}}</div>
@@ -34,15 +33,6 @@
               <a class="dropdown-item" onclick="updateAllResourcesQuarantine('{{ package.id }}','False');">Remove from quarantine all resources</a>
             </li>
             <li>
-              <a class="dropdown-item" onclick="updateQAComplete('{{ package.id }}', {% if package.qa_completed %}false{% else %}true{% endif %});">{% if package.qa_completed %}Remove {% else %}Mark as{% endif %} QA Complete</a>
-            </li>
-            <li>
-              <a class="dropdown-item" onclick="updateAllResourcesPIISensitive('{{ package.id }}');">Confirm Not Sensitive</a>
-            </li>
-            <li>
-              <a class="dropdown-item" onclick="openQAChecklist('#package-resources-{{loop.index}}')">Open QA checklist</a>
-            </li>
-            <li>
               <a class="dropdown-item" onclick="{{macro.contributor_action(package, h, 'true')}}"
                  id="contact-the-contributor">
                 <span>Contact the contributor</span>
@@ -54,39 +44,11 @@
 
 
       <div class="dataset-updated">
-      {% if package.qa_completed %}
-        <div><i style="color: green; font-weight: bold"> QA Completed</i></div>
-      {% endif %}
         {% block updated %}
           {{ super() }}
         {% endblock %}
       </div>
-      <div class="dataset-pii">
-        <ul class="pii-list">
-          <li class="pii-item">
-            <span class="pii-title">
-              DISK. RISK:
-            </span>
-            {% set sdc_status_text = 'ERR' if package.sdc_report_flag  == 'ERROR' else package.sdc_report_flag %}
-            {{ qa_macros.qa_check_item(package.sdc_report_flag, sdc_status_text, package.sdc_timestamp) }}
-          </li>
-          <li class="pii-item">
-            <span class="pii-title">
-              PII CHECK:
-            </span>
-            {% set pii_status_text = 'ERR' if package.pii_report_flag  == 'ERROR' else package.pii_report_flag %}
-            {{ qa_macros.qa_check_item(package.pii_report_flag, pii_status_text, package.pii_timestamp, None, package) }}
-          </li>
-          <li class="pii-item">
-            <span class="pii-title">
-              CHECKLIST:
-            </span>
-            {% set checklist_status_text = 'OK' if package.qa_check_list_status  == 'OK'
-                else package.qa_checklist_num ~ '/' ~ package.qa_checklist_total_num %}
-            {{ qa_macros.qa_check_item(package.qa_check_list_status, checklist_status_text, package.qa_checklist.modified_date) }}
-          </li>
-        </ul>
-      </div>
+      
 
     </div>
 {% endblock %}

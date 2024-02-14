@@ -63,7 +63,12 @@
 
   // Watch for close clicks and remove the alert.
   notify.el.on('click', '.close', function () {
-    jQuery(this).parent().alert('close');
+    // MODIFIED BY HDX
+    // The following line triggers an error: "Uncaught TypeError: Cannot read properties of null (reading 'remove')"
+    // jQuery(this).parent().alert('close');
+    // In Bootstrap 5, alert removal is automatically handled by the "alert-dismissible" class and the "data-bs-dismiss="alert"" attribute on the button
+    // Therefore, the alert is already removed at this point
+    // END MODIFIED BY HDX
   });
 
   // Export the objects.

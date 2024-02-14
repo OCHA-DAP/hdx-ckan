@@ -835,7 +835,7 @@ def hdx_check_http_response(response_code, comparison_http_code):
             return True
         elif response_code == str(comparison_http_code):
             return True
-        elif response_code[0] == comparison_http_code:
+        elif (hasattr(response_code, "__len__")) and (response_code[0] == comparison_http_code):
             return True
     except TypeError as e:
         log.info('Follwing error was generated from hdx_check_http_response():' + text_type(e))

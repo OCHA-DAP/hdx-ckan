@@ -24,7 +24,6 @@ from ckanext.hdx_package.helpers.constants import PACKAGE_METADATA_FIELDS_MAP, R
 from ckanext.hdx_package.helpers.helpers import filesize_format
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.views.light_dataset import generic_search
-from ckanext.hdx_search.controller_logic.qa_logs_logic import QALogsLogic
 from ckanext.hdx_theme.helpers.helpers import markdown_extract_strip
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
@@ -55,20 +54,6 @@ def search():
     if g.userobj and query_string:
         search_history.store_search(query_string, g.userobj.id)
     return generic_search(u'search/search.html')
-
-
-def qa_pii_log(id, resource_id, file_name):
-    qa_logs_logic = QALogsLogic(resource_id, file_name).read()
-
-    if request.args.get("noredirect"):
-        return qa_logs_logic.url
-    else:
-        return redirect(qa_logs_logic.url)
-
-
-def qa_sdcmicro_log(id, resource_id):
-    qa_logs_logic = QALogsLogic(resource_id, 'sdc.log.txt').read()
-    return redirect(qa_logs_logic.url)
 
 
 @check_redirect_needed
@@ -555,6 +540,4 @@ hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'<id>/download_metadata', view_func=package_metadata)
-hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_sdcmicro_log', view_func=qa_sdcmicro_log)
-hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/qa_pii_log/<file_name>', view_func=qa_pii_log)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/download_metadata', view_func=resource_metadata)
