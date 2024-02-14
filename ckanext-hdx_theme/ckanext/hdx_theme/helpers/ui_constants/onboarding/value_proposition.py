@@ -20,5 +20,5 @@ CONSTANTS = {
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP': '''associated with an approved organisation''',
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_BUTTON': '''SIGN UP''',
 
-    'ALREADY_HAVE_ACCOUNT_HELP': '''Already have an account? <a href="{0}" title="Login">Login</a>''',
+    'ALREADY_HAVE_ACCOUNT_HELP': '''Already have an account? <a href="{0}" title="Login" id="value-proposition-login-link">Login</a>''',
 }

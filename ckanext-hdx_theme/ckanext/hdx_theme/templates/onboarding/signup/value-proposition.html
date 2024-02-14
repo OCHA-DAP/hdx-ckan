@@ -91,8 +91,17 @@
                   <div class="account-options__description">{{ CONST.ROW_ADD_DATA_HELP }}</div>
                 </div>
               </div>
-              <div class="account-options__cell account-options__cell_content_button">
-                {{ h.snippet('bem.blocks/form_button.html', type="href", url=h.url_for('home.index'), title=CONST.COLUMN_NO_ACCOUNT_BUTTON, button_classes=["btn-outline-primary", "d-block"], container_classes=["w-100"]) }}
+              <div class="account-options__cell account-options__cell_content_button" data-module="hdx_click_stopper"
+                   data-module-link_type="no account" data-module-just_send_event="true"
+                   data-module-selector="#value-proposition-no-account-button">
+                {{ h.snippet('bem.blocks/form_button.html',
+                    type="href",
+                    url=h.url_for('home.index'),
+                    title=CONST.COLUMN_NO_ACCOUNT_BUTTON,
+                    button_id="value-proposition-no-account-button",
+                    button_classes=["btn-outline-primary", "d-block"],
+                    container_classes=["w-100"]
+                  )}}
               </div>
             </div>
             <div class="col-12 col-lg-3 mb-3 mb-lg-0">
@@ -128,12 +137,16 @@
                   <div class="account-options__description">{{ CONST.ROW_ADD_DATA_HELP }}</div>
                 </div>
               </div>
-              <div class="account-options__cell account-options__cell_content_button">
+              <div class="account-options__cell account-options__cell_content_button" data-module="hdx_click_stopper"
+                   data-module-link_type="individual account" data-module-just_send_event="true"
+                   data-module-selector="#value-proposition-individual-account-button">
                 {{ h.snippet('bem.blocks/form_button.html',
                     type="href",
                     data_attributes={"module": "hdx-onboarding-flow", "value-proposition-page": ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT},
                     url=h.url_for('hdx_user_onboarding.user-info'),
-                    title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_BUTTON, button_classes=["btn-primary", "d-block"],
+                    title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_BUTTON,
+                    button_id="value-proposition-individual-account-button",
+                    button_classes=["btn-primary", "d-block"],
                     container_classes=["w-100"]
                    ) }}
               </div>
@@ -174,12 +187,15 @@
                   <div class="account-options__description">{{ CONST.ROW_ADD_DATA_HELP }}</div>
                 </div>
               </div>
-              <div class="account-options__cell account-options__cell_content_button">
+              <div class="account-options__cell account-options__cell_content_button" data-module="hdx_click_stopper"
+                   data-module-link_type="individual account with org" data-module-just_send_event="true"
+                   data-module-selector="#value-proposition-individual-account-with-org-button">
                 {{ h.snippet('bem.blocks/form_button.html',
                     type="href",
                     data_attributes={"module": "hdx-onboarding-flow", "value-proposition-page": ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG},
                     url=h.url_for('hdx_user_onboarding.user-info'),
                     title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_BUTTON,
+                    button_id="value-proposition-individual-account-with-org-button",
                     button_classes=["btn-outline-primary", "d-block"], container_classes=["w-100"]
                    ) }}
               </div>
@@ -191,7 +207,10 @@
             <div class="col-12 col-lg-9">
               <div class="text-center mt-3 mb-5">
                 <div class="account-options__help">
-                  <p>{{ CONST.ALREADY_HAVE_ACCOUNT_HELP.format(h.url_for('hdx_user_auth.new_login'))|safe }}</p>
+                  <p data-module="hdx_click_stopper" data-module-link_type="login" data-module-just_send_event="true"
+                     data-module-selector="#value-proposition-login-link">
+                    {{ CONST.ALREADY_HAVE_ACCOUNT_HELP.format(h.url_for('hdx_user_auth.new_login'))|safe }}
+                  </p>
                 </div>
               </div>
             </div>
