@@ -17,8 +17,6 @@
 
 {% block primary_content %}
     {{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Sending, please wait ...") }}
-    {{ h.snippet('qa_dashboard/qa_checklist.html', id="qaChecklist") }}
-    {{ h.snippet('qa_dashboard/qa_sdc_micro.html', id="qaSDCMicro") }}
 
     {% block search_results_wrapper %}
         {% set contact_topics = data.membership.data.contributor_topics %}

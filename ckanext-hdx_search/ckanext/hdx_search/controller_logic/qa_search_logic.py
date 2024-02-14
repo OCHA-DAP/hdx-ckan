@@ -4,7 +4,6 @@ import ckanext.hdx_search.controller_logic.search_logic as sl
 
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
     DELINQUENT_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, PRIVATE_DATASETS_FACET_NAME, STATUS_PRIORITIES
-from ckanext.hdx_search.helpers.qa_data import questions_list as qa_data_questions_list
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 
 
@@ -61,59 +60,20 @@ class QASearchLogic(sl.SearchLogic):
 
     def _process_found_package_list(self, package_list):
         super(QASearchLogic, self)._process_found_package_list(package_list)
-        self.__process_checklist_data(package_list)
-        self.__process_script_check_data(package_list, 'pii_is_sensitive', 'pii_timestamp')
-        self.__process_script_check_data(package_list, 'pii_report_flag', 'pii_timestamp')
-        self.__process_script_check_data(package_list, 'sdc_report_flag', 'sdc_timestamp')
+        self.__process_script_check_data(package_list, 'pii_is_sensitive')
 
-    def __process_checklist_data(self, package_list):
-
-        if package_list:
-            num_of_resource_questions = len(qa_data_questions_list['resources_checklist'])
-            num_of_package_questions = len(qa_data_questions_list['data_protection_checklist']) + \
-                                       len(qa_data_questions_list['metadata_checklist'])
-
-            for package_dict in package_list:
-                resource_list = package_dict.get('resources', [])
-                checklist = get_obj_from_json_in_dict(package_dict, 'qa_checklist')
-                package_dict['qa_checklist'] = checklist
-                package_dict['qa_checklist_num'] = len(checklist.get('dataProtection', [])) + \
-                                                   len(checklist.get('metadata', []))
-                package_dict['qa_checklist_total_num'] = num_of_package_questions + \
-                                                         num_of_resource_questions * len(resource_list)
-
-                for r in resource_list:
-                    r['qa_checklist_total_num'] = num_of_resource_questions
-                    if package_dict.get('qa_checklist_completed'):
-                        r['qa_checklist'] = None
-                        r['qa_checklist_num'] = 0
-                        r['qa_check_list_status'] = 'OK'
-                    else:
-                        r['qa_checklist'] = get_obj_from_json_in_dict(r, 'qa_checklist')
-                        r['qa_checklist_num'] = len(r['qa_checklist'])
-                        package_dict['qa_checklist_num'] += r['qa_checklist_num']
-                        r['qa_check_list_status'] = 'ERROR' if r['qa_checklist_num'] > 0 else None
-
-                # This needs to be set AFTER we've aggregated the statuses of the resources
-                package_dict['qa_check_list_status'] = \
-                    'OK' if package_dict.get('qa_checklist_completed') \
-                        else 'ERROR' if package_dict['qa_checklist_num'] > 0 \
-                        else None
-
-    def __process_script_check_data(self, package_list, report_flag_field, timestamp_field):
+    def __process_script_check_data(self, package_list, report_flag_field):
 
         if package_list:
             for package_dict in package_list:
                 resource_list = package_dict.get('resources', [])
                 package_dict[report_flag_field] = ''
-                package_dict[timestamp_field] = ''
                 package_pii_priority = 0
                 for r in resource_list:
                     res_pii_priority = STATUS_PRIORITIES.get(r.get(report_flag_field, ''), 0)
                     if res_pii_priority > package_pii_priority:
                         package_pii_priority = res_pii_priority
                         package_dict[report_flag_field] = r.get(report_flag_field, '')
-                        package_dict[timestamp_field] = r.get(timestamp_field, '')
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         super(QASearchLogic, self)._process_complex_facet_data(existing_facets, title_translations, result_facets,
