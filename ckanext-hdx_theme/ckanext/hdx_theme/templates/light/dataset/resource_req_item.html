@@ -27,7 +27,7 @@
     >
       {% set onboarding_additional_params = h.dump_json({'dataset_id': pkg.id}) %}
       <span
-        {% if g.userobj.is_anonymous %}
+        {% if not g.userobj or g.userobj.is_anonymous %}
             data-module="hdx-onboarding-flow"
             data-start-page-type="hdx-connect"
             data-start-page-additional-params="{{ onboarding_additional_params }}"
