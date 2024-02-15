@@ -1,18 +1,23 @@
 import mock
 import pytest
 from mock.mock import MagicMock
-from werkzeug.test import TestResponse
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.tokens as tokens
 from ckan.tests.helpers import CKANTestApp
 
+from ckanext.hdx_users.tests.test_onboarding_v2.helper import (
+    _apply_for_user_account,
+    _validate_account,
+    _attempt_login,
+    USERNAME,
+    FULLNAME
+)
+
 _get_action = tk.get_action
 h = tk.h
 
-USERNAME = 'test_user'
-PASSWORD = 'Best_password_ever0'
-FULLNAME = 'Test User'
+
 
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
@@ -44,8 +49,10 @@ def test_validation_token(mock_send_validation_email: MagicMock, app):
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
 @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
 @mock.patch('ckanext.security.authenticator.LoginThrottle')
+@mock.patch('ckanext.hdx_users.views.onboarding.send_username_confirmation_email')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
-def test_user_login(mock_send_validation_email: MagicMock, MockLoginThrottle: MagicMock, app: CKANTestApp):
+def test_user_login(mock_send_validation_email: MagicMock, mock_send_username_confirmation_email: MagicMock,
+                    MockLoginThrottle: MagicMock, app: CKANTestApp):
     '''
     Some unusual config changes and mocks are used here to go around the brute force protection logic from
     ckanext.security:
@@ -57,37 +64,17 @@ def test_user_login(mock_send_validation_email: MagicMock, MockLoginThrottle: Ma
     '''
     MockLoginThrottle.return_value.is_locked.return_value = False
     user_detail_result = _apply_for_user_account(app)
-    login_url = h.url_for('user.login')
-    post_dict = {
-        'login': USERNAME,
-        'password': PASSWORD,
-        'mfa': ''
-    }
-    login_response_before_validation = app.post(login_url, data=post_dict)
+    assert mock_send_username_confirmation_email.call_count == 0
+
+    login_response_before_validation = _attempt_login(app)
     assert 'Login failed' in login_response_before_validation
 
     token = mock_send_validation_email.call_args[0][1]['token']
-    validate_account_result = _validate_account(app, token)
-    user_dict_after_validation = _get_action('user_show')({}, {'id': USERNAME})
+    _validate_account(app, token)
+    assert mock_send_username_confirmation_email.call_count == 1
+    _get_action('user_show')({}, {'id': USERNAME})
 
-    login_response_after_validation = app.post(login_url, data=post_dict)
+    login_response_after_validation = _attempt_login(app)
     assert FULLNAME in login_response_after_validation
 
 
-
-def _apply_for_user_account(app: CKANTestApp) -> TestResponse:
-    user_detail_url = h.url_for('hdx_user_onboarding.user-info')
-    post_dict = {
-        'fullname': FULLNAME,
-        'email': 'test@test.ttt',
-        'email2': 'test@test.ttt',
-        'name': USERNAME,
-        'password1': PASSWORD,
-        'password2': PASSWORD,
-        'user_info_accept_terms': '',
-    }
-    user_detail_result = app.post(user_detail_url, data=post_dict)
-    return user_detail_result
-
-def _validate_account(app: CKANTestApp, token: str) -> TestResponse:
-    return app.get(h.url_for('hdx_user_onboarding.validate_account', token=token))
