@@ -92,12 +92,18 @@ page-light-styles:
     - light/page-light.css
     - search-styles
 
+adaptive-page-styles:
+  output: ckanext-hdx_theme/%(version)s_adaptive-page-styles.css
+  contents:
+    - light/adaptive-page.css
+
 page-extra-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-extra-light-styles.css
   <<: *common-css
   contents:
     - page-common-styles
     - light/page-extra-light.css
+    - adaptive-page-styles
 
 bem-blocks-styles:
   output: ckanext-hdx_theme/%(version)s_bem-blocks-styles.css
@@ -995,6 +1001,7 @@ homepage-styles:
   contents:
     - homepage/homepage.css
     - homepage/homepage-responsive.css
+    - adaptive-page-styles
 
 country-custom-scripts:
   # not preloading country-custom-styles as sometimes we need nepal-quake-country-custom-styles instead

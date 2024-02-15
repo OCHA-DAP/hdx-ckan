@@ -23,14 +23,4 @@
   min-width: 126px;
   min-height: 31px;
 }
-@media (max-width: 1024px) {
-  .hdxLogo {
-    width: 45px;
-  }
-  .hdxLogo .logo .logo-img {
-    background-image: url("/images/homepage/logo-hdx-mobile.svg");
-    background-size: 28px 31px;
-    width: 28px;
-  }
-}
 /* END HDX Version display */
