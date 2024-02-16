@@ -55,7 +55,7 @@ class FirstLoginLogic:
                 dataset_id = start_page['additional_params']['dataset_id']
                 return tk.url_for('hdx_dataset.read', id=dataset_id)
             elif start_page['page_type'] == ONBOARDING_START_PAGE_ADD_DATA:
-                return tk.url_for('dashboard.organization')
+                return tk.url_for('dashboard.organizations')
         elif onboarding_source['value_proposition_page'] == ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG:
             return tk.url_for('dashboard.organizations')
         return None
