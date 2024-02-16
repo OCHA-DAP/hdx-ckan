@@ -91,6 +91,7 @@ page-light-styles:
     - page-common-styles
     - light/page-light.css
     - search-styles
+    - adaptive-page-styles
 
 adaptive-page-styles:
   output: ckanext-hdx_theme/%(version)s_adaptive-page-styles.css
