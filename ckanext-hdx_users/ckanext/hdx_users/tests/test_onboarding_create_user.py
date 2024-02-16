@@ -37,6 +37,19 @@ def _user_context():
         'user': USER
     }
 
+def build_data_dict():
+    data_dict = {
+        'fullname': 'Onboarding User',
+        'email': NEW_USER_EMAIL,
+        'email2': NEW_USER_EMAIL,
+        'name': NEW_USER,
+        'password1': 'asdASD123!@#',
+        'password2': 'asdASD123!@#',
+        'user_info_accept_terms': 'true',
+        'user_info_accept_emails': 'true'
+
+    }
+    return data_dict
 
 @pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
 class TestOnboarding(object):
@@ -89,17 +102,7 @@ class TestOnboarding(object):
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_onboarding_create_user(self, _mail_recipient_html, app):
-        data_dict = {
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_emails': 'true'
-
-        }
+        data_dict = build_data_dict()
 
         url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
@@ -146,66 +149,29 @@ class TestOnboarding(object):
         assert 'The passwords you entered do not match' in result.body
         assert 'Missing value' in result.body
 
-        data_dict = {
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_emails': 'false'
+        data_dict = build_data_dict()
+        data_dict['email2'] = USER_EMAIL
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert 'The emails you entered do not match' in result.body
 
-        data_dict = {
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#1',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_emails': 'false'
+        data_dict = build_data_dict()
+        data_dict['password2'] = 'asdASD123!@#1'
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert 'The passwords you entered do not match' in result.body
 
-        data_dict = {
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_emails': 'false'
+        data_dict = build_data_dict()
+        data_dict['name'] = USER
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert 'That login name is not available' in result.body
 
-        data_dict = {
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_emails': 'false'
+        data_dict = build_data_dict()
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         auth = {'Authorization': testuser_token}
         result = app.post(url, data=data_dict, extra_environ=auth)
         assert result.status_code == 403
