@@ -4,6 +4,8 @@ import pytest
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
+from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
+    ONBOARDING_MAILCHIMP_OPTIN_KEY
 
 _get_action = tk.get_action
 h = tk.h
@@ -21,16 +23,33 @@ def setup_data():
     factories.Sysadmin(name=SYSADMIN, email=SYSADMIN_EMAIL, fullname='Sysadmin User')
     factories.User(name=USER, email=USER_EMAIL, fullname='Test User')
 
+
 def _sysadmin_context():
-    return{
+    return {
         'model': model,
         'user': SYSADMIN
     }
+
+
 def _user_context():
-    return{
+    return {
         'model': model,
         'user': USER
     }
+
+def build_data_dict():
+    data_dict = {
+        'fullname': 'Onboarding User',
+        'email': NEW_USER_EMAIL,
+        'email2': NEW_USER_EMAIL,
+        'name': NEW_USER,
+        'password1': 'asdASD123!@#',
+        'password2': 'asdASD123!@#',
+        'user_info_accept_terms': 'true',
+        'user_info_accept_emails': 'true'
+
+    }
+    return data_dict
 
 @pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
 class TestOnboarding(object):
@@ -81,20 +100,9 @@ class TestOnboarding(object):
         # if user is sysadmin, page can be displayed
         assert result.status_code == 200
 
-
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
-    def test_onboarding_create_user(self,_mail_recipient_html, app):
-        data_dict ={
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_email': 'false'
-
-        }
+    def test_onboarding_create_user(self, _mail_recipient_html, app):
+        data_dict = build_data_dict()
 
         url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
@@ -107,15 +115,33 @@ class TestOnboarding(object):
         assert len(_mail_recipient_html.call_args_list) == 1
         assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == NEW_USER_EMAIL
 
-        user_dict= _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
+        user_dict = _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
         assert NEW_USER == user_dict.get('name')
         assert NEW_USER_EMAIL == user_dict.get('email')
         assert 'pending' == user_dict.get('state')
 
+        ue_user = _get_action('user_extra_value_by_keys_show')(_sysadmin_context(),
+                                                               {
+                                                                   'user_id': user_dict.get('id'),
+                                                                   'keys': [ONBOARDING_CAME_FROM_EXTRAS_KEY,
+                                                                            ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY,
+                                                                            ONBOARDING_MAILCHIMP_OPTIN_KEY]
+                                                               }
+                                                               )
+
+        for ue in ue_user:
+            if ue.get('key') == ONBOARDING_CAME_FROM_EXTRAS_KEY:
+                assert ue.get('value') is None
+            if ue.get('key') == ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY:
+                assert ue.get('value') == 'active'
+            if ue.get('key') == ONBOARDING_MAILCHIMP_OPTIN_KEY:
+                assert ue.get('value') == 'true'
+        assert len(ue_user) == 3
+
     def test_onboarding_create_wrong_user(self, app):
         testuser_token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']
 
-        data_dict ={
+        data_dict = {
         }
         url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
@@ -123,66 +149,29 @@ class TestOnboarding(object):
         assert 'The passwords you entered do not match' in result.body
         assert 'Missing value' in result.body
 
-        data_dict ={
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_email': 'false'
+        data_dict = build_data_dict()
+        data_dict['email2'] = USER_EMAIL
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert 'The emails you entered do not match' in result.body
 
-        data_dict ={
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#1',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_email': 'false'
+        data_dict = build_data_dict()
+        data_dict['password2'] = 'asdASD123!@#1'
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert 'The passwords you entered do not match' in result.body
 
-        data_dict ={
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_email': 'false'
+        data_dict = build_data_dict()
+        data_dict['name'] = USER
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert 'That login name is not available' in result.body
 
-        data_dict ={
-            'fullname': 'Onboarding User',
-            'email': NEW_USER_EMAIL,
-            'email2': NEW_USER_EMAIL,
-            'name': NEW_USER,
-            'password1': 'asdASD123!@#',
-            'password2': 'asdASD123!@#',
-            'user_info_accept_terms': 'true',
-            'user_info_accept_email': 'false'
+        data_dict = build_data_dict()
 
-        }
-        url = h.url_for('hdx_user_onboarding.user-info')
         auth = {'Authorization': testuser_token}
         result = app.post(url, data=data_dict, extra_environ=auth)
         assert result.status_code == 403
