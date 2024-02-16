@@ -3,8 +3,13 @@ import pytest
 from mock.mock import MagicMock
 
 import ckan.plugins.toolkit as tk
+import ckan.model as model
+
 import ckanext.hdx_users.helpers.tokens as tokens
+import ckanext.hdx_users.model as umodel
+
 from ckan.tests.helpers import CKANTestApp
+from ckanext.hdx_users.helpers.reset_password import make_key
 
 from ckanext.hdx_users.tests.test_onboarding_v2.helper import (
     _apply_for_user_account,
@@ -44,6 +49,39 @@ def test_validation_token(mock_send_validation_email: MagicMock, app):
     token_dict_after_validation = tokens.token_show({'ignore_auth': True}, user_dict_after_validation)
     assert user_dict_after_validation['state'] == 'active'
     assert token_dict_after_validation['valid'] == True
+
+
+@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
+def test_validation_token_expiration(mock_send_validation_email: MagicMock, app):
+    user_detail_result = _apply_for_user_account(app)
+    assert user_detail_result.status_code == 200
+
+    initial_token = mock_send_validation_email.call_args[0][1]['token']
+    token_obj = umodel.ValidationToken.get_by_token(initial_token)
+    user_id = token_obj.user_id
+
+    expired_token = make_key(-5) # create a key that expired already 5 mins ago
+    token_obj.token = expired_token
+    model.Session.commit()
+
+    expired_token_response = _validate_account(app, expired_token)
+    assert expired_token_response.status_code == 404
+
+    initial_token_response = _validate_account(app, initial_token)
+    assert initial_token_response.status_code == 404
+
+    token_obj = umodel.ValidationToken.get(user_id=user_id)
+    token_obj.token = initial_token
+    model.Session.commit()
+
+    expired_token_response = _validate_account(app, expired_token)
+    assert expired_token_response.status_code == 404
+
+    initial_token_response = _validate_account(app, initial_token)
+    assert initial_token_response.status_code == 200
+
+
 
 
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
