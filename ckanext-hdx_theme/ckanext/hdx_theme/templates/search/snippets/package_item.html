@@ -202,7 +202,7 @@
                     {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
                     {% set onboarding_additional_params = h.dump_json({'dataset_id': package.id}) %}
                     <span
-                      {% if g.userobj.is_anonymous %}
+                      {% if not g.userobj or g.userobj.is_anonymous %}
                           data-module="hdx-onboarding-flow"
                           data-start-page-type="hdx-connect"
                           data-start-page-additional-params="{{ onboarding_additional_params }}"
