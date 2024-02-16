@@ -1048,11 +1048,6 @@ ul.dataset-resources li + li.label-icons {
   content: "";
   margin: 0;
 }
-@media (max-width: 768px) {
-  .mainLinks {
-    display: none;
-  }
-}
 /* Style Modal Dialogs */
 .modal.show .modal-dialog .modal-content {
   min-width: 370px;
