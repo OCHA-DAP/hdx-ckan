@@ -59,8 +59,3 @@
   content: "";
   margin: 0;
 }
-@media (max-width: 768px) {
-  .mainLinks {
-    display: none;
-  }
-}

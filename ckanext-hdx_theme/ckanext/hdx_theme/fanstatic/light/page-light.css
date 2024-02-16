@@ -1132,11 +1132,6 @@ ul.dataset-resources li + li.label-icons {
   content: "";
   margin: 0;
 }
-@media (max-width: 768px) {
-  .mainLinks {
-    display: none;
-  }
-}
 /* Style Modal Dialogs */
 .modal.show .modal-dialog .modal-content {
   min-width: 370px;
@@ -3879,7 +3874,10 @@ ul.list-horizontal li:first-child:before {
 .new-header .hdx-header .navbar-toggle {
   display: none;
 }
-@media (max-width: 768px) {
+.new-header .hdx-header .navbar-toggler {
+  display: none;
+}
+@media (max-width: 1024px) {
   .new-header .hdx-header .navbar-toggler {
     flex: 1;
     text-align: right;
@@ -4012,11 +4010,6 @@ ul.list-horizontal li:first-child:before {
   color: #fff;
   text-transform: uppercase;
   white-space: nowrap;
-}
-@media (max-width: 1024px) {
-  .new-header .hdx-header .navbar-header .submit-data .submitData {
-    display: none;
-  }
 }
 .new-header .header-nav-search {
   display: flex;
@@ -4207,16 +4200,6 @@ ul.list-horizontal li:first-child:before {
   height: 31px;
   min-width: 126px;
   min-height: 31px;
-}
-@media (max-width: 1024px) {
-  .hdxLogo {
-    width: 45px;
-  }
-  .hdxLogo .logo .logo-img {
-    background-image: url("/images/homepage/logo-hdx-mobile.svg");
-    background-size: 28px 31px;
-    width: 28px;
-  }
 }
 /* END HDX Version display */
 /* HEADER Search Widget  */
