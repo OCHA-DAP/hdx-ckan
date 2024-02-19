@@ -127,8 +127,10 @@
         return resultObject;
     };
 
+    var ONBOARDING_FLOW_START_KEY = 'onboarding_flow_start';
+
     hdxUtil.net.getOnboardingFlowData = function () {
-        var onboardingFlowData = localStorage.getItem('onboarding_flow_start');
+        var onboardingFlowData = localStorage.getItem(ONBOARDING_FLOW_START_KEY);
         if (onboardingFlowData) {
             return JSON.parse(onboardingFlowData);
         }
@@ -140,8 +142,14 @@
     hdxUtil.net.updateOnboardingFlowData = function (newData) {
         var onboardingFlowData = hdxUtil.net.getOnboardingFlowData() || {};
         for (var key in newData) {
-            onboardingFlowData[key] = newData[key];
+            if (newData.hasOwnProperty(key)) {
+              onboardingFlowData[key] = newData[key];
+            }
         }
-        localStorage.setItem('onboarding_flow_start', JSON.stringify(onboardingFlowData));
+        localStorage.setItem(ONBOARDING_FLOW_START_KEY, JSON.stringify(onboardingFlowData));
+    };
+
+    hdxUtil.net.removeOnboardingFlowData = function () {
+      localStorage.removeItem(ONBOARDING_FLOW_START_KEY);
     };
 })();

@@ -13,6 +13,7 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
+from ckan.common import session
 from ckan.types import Response
 from ckan.views.user import PerformResetView, RequestResetView, rotate_token, next_page_or_default
 from ckan.views.user import (
@@ -291,11 +292,13 @@ def login() -> Union[Response, str]:
                 login_user(user_obj, remember=True, duration=duration_time)
                 rotate_token()
                 first_login_logic.mark_state_as_used_if_needed()
+                session['from_login'] = True
                 return next_page_or_default(next)
             else:
                 login_user(user_obj)
                 rotate_token()
                 first_login_logic.mark_state_as_used_if_needed()
+                session['from_login'] = True
                 return next_page_or_default(next)
         else:
             err = _(u"Login failed. Bad username or password.")
