@@ -94,8 +94,17 @@ $(document).ready(function(){
         }
     }
 
+    function checkFromLoginPage() {
+        var fromLoginPageElement = document.getElementById('from-login');
+        if (fromLoginPageElement && fromLoginPageElement.getAttribute('data-value') === 'true') {
+          hdxUtil.net.removeOnboardingFlowData();
+        }
+    }
+
     // initCookiePopup();
 
 
     // showDataUseSurveyPopup();
+
+    checkFromLoginPage();
 });

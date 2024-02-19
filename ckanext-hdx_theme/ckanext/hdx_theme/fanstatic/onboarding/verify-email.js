@@ -10,3 +10,5 @@ window.onpopstate = function (event) {
     }
   }
 }
+
+hdxUtil.net.removeOnboardingFlowData();
