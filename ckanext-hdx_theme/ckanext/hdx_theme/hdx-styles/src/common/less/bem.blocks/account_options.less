@@ -45,6 +45,17 @@
       background-color: @blue-extra-light-color;
     }
 
+    &_size_big {
+      height: 132px;
+
+      @media (max-width: @breakpoint-xl) {
+        height: 162px;
+      }
+      @media (max-width: @breakpoint-lg) {
+        height: auto;
+      }
+    }
+
     &_content_feature {
     }
 
