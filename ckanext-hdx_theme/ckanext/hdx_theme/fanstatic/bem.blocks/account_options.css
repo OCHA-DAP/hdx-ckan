@@ -33,6 +33,19 @@
 .account-options__cell_state_highlight {
   background-color: #EDF6FD;
 }
+.account-options__cell_size_big {
+  height: 132px;
+}
+@media (max-width: 1200px) {
+  .account-options__cell_size_big {
+    height: 162px;
+  }
+}
+@media (max-width: 992px) {
+  .account-options__cell_size_big {
+    height: auto;
+  }
+}
 .account-options__cell_content_button {
   border-bottom: 1px solid #000;
   border-left: 1px solid #000;
