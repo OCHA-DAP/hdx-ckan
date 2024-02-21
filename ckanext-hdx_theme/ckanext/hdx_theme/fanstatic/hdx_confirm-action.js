@@ -92,15 +92,15 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
       /* IF we have success URL we do an AJAX POST and then go to the URL if it succeeded */
       if (successUrl) {
         if (this.options.is_json) {
+          var headers = hdxUtil.net.getCsrfTokenAsObject();
+          headers['Content-Type'] = 'application/json';
+          headers['Accept'] = 'application/json';
           $.ajax({
-            beforeSend: function (xhrObj) {
-              xhrObj.setRequestHeader("Content-Type", "application/json");
-              xhrObj.setRequestHeader("Accept", "application/json");
-            },
-            type: "POST",
+            type: 'POST',
             url: uri,
             data: JSON.stringify(this.options.post_data),
-            dataType: "json",
+            dataType: 'json',
+            headers: headers,
             success: successHandler,
             error: function (xhr, status, errorThrown) {
               var errorMsg = errorThrown;
@@ -114,7 +114,13 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
           });
         }
         else {
-          $.post(uri,this.options.post_data,successHandler);
+          $.ajax({
+              url: uri,
+              type: 'POST',
+              headers: hdxUtil.net.getCsrfTokenAsObject(),
+              data: this.options.post_data,
+              success: successHandler
+          });
         }
       }
       /* ELSE stick to the original behaviour of adding a FORM elemennt to the body and submitting it */
@@ -124,6 +130,15 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
           action: uri,
           method: 'POST'
         });
+
+        var csrfField = hdxUtil.net.getCsrfFieldName();
+        var csrfValue = hdxUtil.net.getCsrfToken();
+
+        // set the hidden input
+        var hiddenCsrfInput = $('<input name="'+csrfField+'" type="hidden" value="'+csrfValue+'">');
+        // insert the hidden input at the beginning of the form
+        hiddenCsrfInput.prependTo(form);
+
         form.appendTo('body').submit();
       }
 
