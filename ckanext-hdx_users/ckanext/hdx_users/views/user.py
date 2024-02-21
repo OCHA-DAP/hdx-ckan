@@ -179,9 +179,9 @@ def read(id=None):
 
     # The legacy templates have the user's activity stream on the user
     # profile page, new templates do not.
-    if tk.asbool(config.get(u'ckan.legacy_templates', False)):
-        g.user_activity_stream = get_action(u'user_activity_list_html')(
-            context, {u'id': g.user_dict[u'id']})
+    # if tk.asbool(config.get(u'ckan.legacy_templates', False)):
+    #     g.user_activity_stream = get_action(u'user_activity_list_html')(
+    #         context, {u'id': g.user_dict[u'id']})
 
     return render(u'user/read.html', extra_vars=extra_vars)
 

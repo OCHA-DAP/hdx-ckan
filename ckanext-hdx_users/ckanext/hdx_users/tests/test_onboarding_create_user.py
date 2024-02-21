@@ -209,3 +209,27 @@ class TestOnboarding(object):
         assert NEW_USER == user_dict.get('name')
         assert NEW_USER_EMAIL == user_dict.get('email')
         assert 'pending' == user_dict.get('state')
+
+    def test_delete_user(self, app):
+        sysadmin_token = factories.APIToken(user=SYSADMIN, expires_in=2, unit=60 * 60)['token']
+        testuser_token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']
+
+        data_dict = build_data_dict()
+        url = h.url_for('hdx_user_onboarding.user-info')
+        result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert NEW_USER_EMAIL in result.body
+
+        user_dict = _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
+        delete_url = h.url_for('user.delete', id=user_dict.get('id'))
+        auth_sysadmin = {'Authorization': sysadmin_token}
+        result = app.post(delete_url, data={'id':user_dict.get('id')}, extra_environ=auth_sysadmin)
+
+        profile_url = h.url_for(u'hdx_user.read', id=user_dict.get('id'))
+
+        profile_result = app.get(profile_url, extra_environ=auth_sysadmin)
+        assert '<span class="label label-important">Deleted</span>' in profile_result.body
+
+        auth_testuser = {'Authorization': testuser_token}
+        profile_result2 = app.get(profile_url, status=404, extra_environ=auth_testuser)
+        assert '404' in profile_result2.status
