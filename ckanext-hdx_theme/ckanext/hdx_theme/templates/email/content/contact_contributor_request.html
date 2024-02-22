@@ -3,10 +3,10 @@
 <p>{{ data.user_fullname }} ({{ data.user_email }}) has used the 'contact the contributor' function in HDX to inquire about your dataset
   <a href="{{ data.pkg_url }}">{{ data.pkg_title }}</a>.</p>
 
-<p>
-Inquiry type: {{ data.topic }}<br/>
-Message: {{ data.msg }}
-</p>
+<div class="quote">
+  <p><strong>Inquiry type:</strong> {{ data.topic }}</p>
+  <p><strong>Message:</strong> {{ data.msg }}</p>
+</div>
 
 {#<p>We suggest you 'reply all' to this message in order to ensure that all of your organisation’s administrators are made aware.</p>#}
 
