@@ -55,12 +55,15 @@
 .stepper__item_state_completed .stepper__counter {
   border-color: #0162DD;
   background-color: #0162DD;
-  text-indent: -999px;
+}
+.stepper__item_state_completed .stepper__counter span {
+  visibility: hidden;
+  font-size: 0;
+  color: transparent;
 }
 .stepper__item_state_completed .stepper__counter::after {
   font: var(--fa-font-solid);
   content: '\f00c';
-  text-indent: 0;
 }
 .stepper__item_state_completed .stepper__counter::after::before {
   display: inline-block;
