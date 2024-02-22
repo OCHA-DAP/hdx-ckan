@@ -2,11 +2,11 @@
 
 <p>{{ data.user_fullname }} ({{ data.user_email }}){% if data.extras %} located in {{ data.extras.country }}, from {{ data.extras.organization_name }} - {{ h.hdx_organization_type_get_value(data.extras.organization_type) }}{% endif %}{% if data.extras and not data.extras.organization_member %} (Unverified - this user is not a member of this organization on HDX){% endif %} has requested access to one of your organisation’s metadata-only datasets on HDX.</p>
 
-<p>
-  <strong>Dataset name</strong>: <a href="{{ data.dataset_link }}">{{ data.dataset_title }}</a><br/>
-  {% if data.extras and data.extras.intend %}<strong>Intended use</strong>: {{ data.extras.intend }}<br/>{% endif %}
-  <strong>Message from requestor</strong>: {{ data.msg }}
-</p>
+<div class="quote">
+  <p><strong>Dataset name</strong>: <a href="{{ data.dataset_link }}">{{ data.dataset_title }}</a></p>
+  {% if data.extras and data.extras.intend %}<p><strong>Intended use</strong>: {{ data.extras.intend }}</p>{% endif %}
+  <p><strong>Message from requestor</strong>: {{ data.msg }}</p>
+</div>
 
 <p>We would appreciate it if you could respond to this request within two business days.
   <a href="{{ data.requestdata_org_url }}">Click here to approve or decline the dataset request</a>, which you will find on your organisation page in the "Requested Data" tab.</p>

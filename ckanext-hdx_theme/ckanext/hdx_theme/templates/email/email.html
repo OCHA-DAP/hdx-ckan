@@ -27,7 +27,21 @@
         font-size: 20px;
         line-height: 180%;
         margin-top: 0;
-        margin-bottom: 0;
+        margin-bottom: 15px;
+      }
+
+      .content ol, .content ul {
+        padding-left: 24px;
+      }
+
+      .content li {
+        font-size: 20px;
+        line-height: 150%;
+      }
+
+      .content a {
+        text-decoration: none;
+        color: #007CE1;
       }
 
       .content .button {
@@ -40,6 +54,17 @@
         font-size: 16px;
         line-height: 125%;
         text-decoration: none;
+      }
+
+      .content .quote {
+        margin-bottom: 15px;
+        margin-left: 15px;
+        padding-left: 10px;
+        border-left: 2px solid #F2F2F2;
+      }
+      .content .quote p {
+        margin-bottom: 0;
+        line-height: 150%;
       }
 
       .logo {
@@ -66,6 +91,10 @@
 
       .footer a {
         color: #494747;
+      }
+
+      .footer .social-icon {
+        text-decoration: none;
       }
 
       .footer img {
@@ -122,10 +151,10 @@
         </div>
         <footer class="footer">
           <p>{% if data.footer %}You are receiving this email because you are a registered HDX user. {% endif %}<a href="https://data.humdata.org" title="HDX" target="_blank">HDX</a> is a product of the <a href="https://www.unocha.org" title="OCHA" target="_blank">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) - <a href="https://centre.humdata.org/" title="Centre for Humanitarian Data" target="_blank">Centre for Humanitarian Data</a>. Keep in touch by <a href="https://twitter.com/humdata" title="X" target="_blank">following us on X</a>, <a href="https://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&amp;id=99796325d1" title="MailChimp" target="_blank">signing up for our mailing list</a>, or replying to this email. </p>
-          <a href="https://twitter.com/humdata" title="X" target="_blank">
+          <a href="https://twitter.com/humdata" title="X" class="social-icon" target="_blank">
             <img src="{{ config.get('ckan.site_url', '#') + '/images/homepage/social-x.png' }}" alt="X">
           </a>
-          <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data" title="LinkedIn" target="_blank">
+          <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data" class="social-icon" title="LinkedIn" target="_blank">
             <img src="{{ config.get('ckan.site_url', '#') + '/images/homepage/social-linkedin.png' }}" alt="LinkedIn">
           </a>
         </footer>
