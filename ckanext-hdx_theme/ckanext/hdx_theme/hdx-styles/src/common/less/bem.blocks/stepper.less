@@ -69,13 +69,17 @@
       .stepper__counter {
         border-color: @blue-color;
         background-color: @blue-color;
-        text-indent: -999px;
+
+        span {
+          visibility: hidden;
+          font-size: 0;
+          color: transparent;
+        }
 
         &::after {
           .fa-icon;
           font: var(--fa-font-solid);
           content: '\f00c';
-          text-indent: 0;
         }
       }
 
