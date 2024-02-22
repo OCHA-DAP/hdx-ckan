@@ -11,13 +11,11 @@
   </ol>
 </div>
 
-<div>
-  <p>Token details:</p>
-  <ul>
-    <li>Token name: <a href="{{ data.api_tokens_url }}">{{ data.token_name }}</a> </li>
-    <li>Expires: {{ data.expires }} (UTC time) </li>
-  </ul>
+<p>Token details:</p>
+<div class="quote">
+  <p><strong>Token name:</strong> <a href="{{ data.api_tokens_url }}">{{ data.token_name }}</a></p>
+  <p><strong>Expires:</strong> {{ data.expires }} (UTC time)</p>
 </div>
 
-<p>To manage your tokens go to <a href="{{ data.api_tokens_url }}">{{data.api_tokens_url}} .</a></p>
+<p>To manage your tokens go to <a href="{{ data.api_tokens_url }}">{{data.api_tokens_url}}</a>.</p>
 

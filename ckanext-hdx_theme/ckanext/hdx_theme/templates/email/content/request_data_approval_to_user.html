@@ -4,7 +4,10 @@
     {{ data.org_name }}.
 
 <p>{{ data.user_admin_fullname }} has passed along the following message:</p>
-<p>{{ data.msg }}</p>
+
+<div class="quote">
+  <p>{{ data.msg }}</p>
+</div>
 
 {#{% if data.is_attach %}#}
 {#  <p>The requested file has been attached to this email.</p>#}
