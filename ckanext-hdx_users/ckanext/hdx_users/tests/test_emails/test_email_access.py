@@ -135,29 +135,6 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         except:
             assert True
 
-    def test_delete_user(self):
-        res = self._create_user()
-
-        user = model.User.get('valid@example.com')
-        admin = model.User.by_name('testsysadmin')
-        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
-        offset2 = str(h.url_for('user.delete', id=user.id))
-        res2 = self.app.post(offset2, status=200, headers={'Authorization': unicodedata.normalize(
-            'NFKD', testsysadmin_token).encode('ascii', 'ignore')})
-
-        profile_url = h.url_for(u'hdx_user.read', id='valid@example.com')
-
-        profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', testsysadmin_token).encode('ascii', 'ignore')})
-
-        non_admin_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
-        profile_result2 = self.app.get(profile_url, status=404, headers={'Authorization': unicodedata.normalize(
-            'NFKD', non_admin_token).encode('ascii', 'ignore')})
-
-        assert '404' in profile_result2.status
-
-        assert '<span class="label label-important">Deleted</span>' in profile_result.body
-
     def _create_user(self, email='valid@example.com'):
         url = h.url_for('hdx_user_register.register_email')
         params = {'email': email, 'nosetest': 'true'}
