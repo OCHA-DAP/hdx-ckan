@@ -4,6 +4,7 @@ import ckan.logic as logic
 import ckan.logic.action.get as user_get
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
+from ckan.types import ActionResult, Context, DataDict
 
 config = tk.config
 log = logging.getLogger(__name__)
@@ -107,6 +108,48 @@ def hdx_user_autocomplete(context, data_dict):
 
     user_list = []
     for user in query3.all():
+        result_dict = {}
+        for k in ['id', 'name', 'fullname']:
+            result_dict[k] = getattr(user, k)
+
+        user_list.append(result_dict)
+
+    return user_list
+
+@logic.validate(logic.schema.default_autocomplete_schema)
+def user_autocomplete(context: Context, data_dict: DataDict) -> ActionResult.UserAutocomplete:
+    '''Return a list of user names that contain a string.
+
+    :param q: the string to search for
+    :type q: string
+    :param limit: the maximum number of user names to return (optional,
+        default: ``20``)
+    :type limit: int
+
+    :rtype: a list of user dictionaries each with keys ``'name'``,
+        ``'fullname'``, and ``'id'``
+
+    '''
+    model = context['model']
+    user = context['user']
+
+    _check_access('user_autocomplete', context, data_dict)
+
+    q = data_dict['q']
+    limit = data_dict.get('limit', 20)
+    ignore_self = data_dict.get('ignore_self', False)
+
+    #user_name wasn't included in the defaul CKAN behaviour, so email was not searched for sysadmins
+    query = model.User.search(q, user_name=user)
+    query = query.filter(model.User.state != model.State.DELETED)
+
+    if ignore_self:
+        query = query.filter(model.User.name != user)
+
+    query = query.limit(limit)
+
+    user_list: ActionResult.UserAutocomplete = []
+    for user in query.all():
         result_dict = {}
         for k in ['id', 'name', 'fullname']:
             result_dict[k] = getattr(user, k)
