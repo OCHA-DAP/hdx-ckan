@@ -16,6 +16,12 @@
 
 [ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
 
+# provide mailchimp defaults (mailchimp is enabled in common config)
+export HDX_MAILCHIMP_API_KEY=${HDX_MAILCHIMP_API_KEY:-ccc-fake}
+export HDX_MAILCHIMP_INTEREST_DATA_SERVICES=${HDX_MAILCHIMP_INTEREST_DATA_SERVICES:-90c34fef41}
+export HDX_MAILCHIMP_LIST_NEW_USER=${HDX_MAILCHIMP_LIST_NEW_USER:-564eb8df33}
+export HDX_MAILCHIMP_LIST_NEWSLETTER=${HDX_MAILCHIMP_LIST_NEWSLETTER:-d937b36390}
+
 # preparing to run ckan...
 bash /srv/ckan/docker/ckan_helper.sh
 
