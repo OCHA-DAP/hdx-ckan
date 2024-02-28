@@ -42,7 +42,7 @@ function prepareCountryList(countDatasets) {
 
           var item = $("<div class='country-item " + veryActive + "'></div>").appendTo(one_char_box);
           var countryIdLower = country_id.toLowerCase();
-          var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-bs-html='true' data-bs-placement='top'>" + country.title + "</a>").attr('data-bs-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
+          var line = $("<a href='/group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-bs-html='true' data-bs-placement='top'>" + country.title + "</a>").attr('data-bs-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
         }
       }
     }

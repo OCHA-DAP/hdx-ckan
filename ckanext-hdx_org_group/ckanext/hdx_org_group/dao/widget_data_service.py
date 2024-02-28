@@ -77,7 +77,7 @@ class RWWidgetDataService(WidgetDataService):
             resource_dict = None
             log.error(
                 'Not authorized to read resource "hdx.active_locations_reliefweb.resource_id" = {}. Exception: '
-                'NotFound'.format(
+                'NotAuthorized'.format(
                     resource_id))
         except logic.NotFound as e:
             resource_dict = None
