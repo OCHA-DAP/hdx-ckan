@@ -110,10 +110,15 @@
       };
     };
 
+    hdxUtil.net.getCsrfFieldName = function () {
+        var csrfFieldName = $('meta[name=csrf_field_name]').attr('content');
+        return csrfFieldName;
+    };
+
     hdxUtil.net.getCsrfToken = function () {
-        var csrf_field = $('meta[name=csrf_field_name]').attr('content');
-        var csrf_token = $('meta[name='+ csrf_field +']').attr('content');
-        return csrf_token;
+        var csrfFieldName = hdxUtil.net.getCsrfFieldName();
+        var csrfToken = $('meta[name='+ csrfFieldName +']').attr('content');
+        return csrfToken;
     };
 
     /**
