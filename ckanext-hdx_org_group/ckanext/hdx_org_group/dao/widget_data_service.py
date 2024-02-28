@@ -73,6 +73,12 @@ class RWWidgetDataService(WidgetDataService):
         resource_id = config.get('hdx.active_locations_reliefweb.resource_id')
         try:
             resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        except logic.NotAuthorized as e:
+            resource_dict = None
+            log.error(
+                'Not authorized to read resource "hdx.active_locations_reliefweb.resource_id" = {}. Exception: '
+                'NotFound'.format(
+                    resource_id))
         except logic.NotFound as e:
             resource_dict = None
             log.error(
