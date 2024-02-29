@@ -31,9 +31,10 @@ def _apply_for_user_account(app: CKANTestApp, additional_params: Dict = None) ->
     return user_detail_result
 
 def _validate_account(app: CKANTestApp, token: str) -> TestResponse:
-    return app.get(h.url_for('hdx_user_onboarding.validate_account', token=token))
+    headers = {'User-Agent': 'onboarding-test-UA'}
+    return app.get(h.url_for('hdx_user_onboarding.validate_account', token=token), headers=headers)
 
-def _attempt_login(app, follow_redirects=True):
+def _attempt_login(app: CKANTestApp, follow_redirects=True):
     login_url = h.url_for('user.login')
     post_dict = {
         'login': USERNAME,
