@@ -26,7 +26,7 @@ h = tk.h
 
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
-def test_validation_token(mock_send_validation_email: MagicMock, app):
+def test_validation_token(mock_send_validation_email: MagicMock, app: CKANTestApp):
     user_detail_result = _apply_for_user_account(app)
     assert user_detail_result.status_code == 200
     assert mock_send_validation_email.call_count == 1
@@ -41,7 +41,16 @@ def test_validation_token(mock_send_validation_email: MagicMock, app):
     first_char = 'b' if token[0] == 'a' else 'a'
     fake_token1 = first_char + token[1:]
     fake_token1_response = _validate_account(app, fake_token1)
-    assert fake_token1_response.status_code == 404
+    assert fake_token1_response.status_code == 404, 'Cannot validate account with wrong token'
+
+    empty_user_agent_response = \
+        app.get(h.url_for('hdx_user_onboarding.validate_account', token=token), headers={'User-Agent': ' '})
+    assert empty_user_agent_response.status_code == 404, 'Cannot validate account from request with empty user agent'
+
+    head_response = app.test_client().head(
+        h.url_for('hdx_user_onboarding.validate_account', token=token), headers={'User-Agent': 'onboarding-test-UA'}
+    )
+    assert head_response.status_code == 404, 'Cannot validate account via HEAD request'
 
     account_validation_response = _validate_account(app, token)
     assert account_validation_response.status_code == 200
@@ -53,7 +62,7 @@ def test_validation_token(mock_send_validation_email: MagicMock, app):
 
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
-def test_validation_token_expiration(mock_send_validation_email: MagicMock, app):
+def test_validation_token_expiration(mock_send_validation_email: MagicMock, app: CKANTestApp):
     user_detail_result = _apply_for_user_account(app)
     assert user_detail_result.status_code == 200
 
