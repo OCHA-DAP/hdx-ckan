@@ -72,8 +72,7 @@ RUN apt-get -qq -y update && \
     pip install -r requirement-setuptools.txt && \
     #pip install --upgrade -r requirements.txt && \
     pip install pip-tools==7.3.0 && \
-    pip install --upgrade -r requirements-hdxckantool.txt && \
-    pip-sync requirements.txt && \
+    pip-sync requirements.txt requirements-hdxckantool.txt  && \
     pip install \
       elastic-apm[flask] \
       newrelic && \
