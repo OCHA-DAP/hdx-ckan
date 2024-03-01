@@ -183,25 +183,28 @@ def value_proposition() -> str:
 
 
 def validate_account(token: str) -> str:
-    try:
-        check_access('user_can_validate', {}, {'token': token})
-    except NotAuthorized as e:
-        log.warning('Cannot find token: ' + e.message)
-        return abort(404, 'Page not found')
-    context = {'session': model.Session, 'model': model}
-    user_dict = tokens.activate_user_and_disable_token(context, {'token': token})
-    if not user_dict:
-        log.error('Something went wrong when trying to activate user with email validation token')
-        return abort(500, 'Something went wrong.')
+    if request.user_agent.string.strip() and request.method == 'GET':
+        # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
+        try:
+            check_access('user_can_validate', {}, {'token': token})
+        except NotAuthorized as e:
+            log.warning('Cannot find token: ' + e.message)
+            return abort(404, 'Page not found')
+        context = {'session': model.Session, 'model': model}
+        user_dict = tokens.activate_user_and_disable_token(context, {'token': token})
+        if not user_dict:
+            log.error('Something went wrong when trying to activate user with email validation token')
+            return abort(500, 'Something went wrong.')
 
-    template_data = {
-        'fullname': user_dict.get('fullname', ''),
-        'url': h.url_for('hdx_user_auth.new_login')
-    }
-    send_username_confirmation_email(user_dict)
-    subscribe_user_to_mailchimp(user_dict)
-    return render('onboarding/signup/account-validated.html', extra_vars=template_data)
+        template_data = {
+            'fullname': user_dict.get('fullname', ''),
+            'url': h.url_for('hdx_user_auth.new_login')
+        }
+        send_username_confirmation_email(user_dict)
+        subscribe_user_to_mailchimp(user_dict)
+        return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
+    return abort(404, 'Page not found')
 
 hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/user-info/', view_func=UserOnboardingView.as_view(str(u'user-info')),
