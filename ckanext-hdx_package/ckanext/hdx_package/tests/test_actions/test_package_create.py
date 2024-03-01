@@ -159,3 +159,60 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
                 'name') == 'roger', 'The group needs to be part of the created dataset'
         except logic.ValidationError as e:
             assert False, str(e)
+
+    def test_create_valid_tags(self):
+        package = {
+            "package_creator": "test function",
+            "private": False,
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
+            "caveats": "These are the caveats",
+            "license_other": "TEST OTHER LICENSE",
+            "methodology": "This is a test methodology",
+            "dataset_source": "World Bank",
+            "license_id": "hdx-other",
+            "notes": "This is a test activity",
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
+            'name': 'test_activity_4',
+            'title': 'Test Activity 4',
+            'tags': [{'name': 'children'}, {'name': 'boys'}]
+        }
+
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        self._get_action('package_create')(context, package)
+
+        pkg = self._get_action('package_show')(context, {'id': package['name']})
+
+        assert len(pkg.get('tags')) == 2
+        assert 'children' in [tag['name'] for tag in pkg.get('tags')]
+        assert 'boys' in [tag['name'] for tag in pkg.get('tags')]
+
+    def test_create_invalid_tags(self):
+        package = {
+            "package_creator": "test function",
+            "private": False,
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
+            "caveats": "These are the caveats",
+            "license_other": "TEST OTHER LICENSE",
+            "methodology": "This is a test methodology",
+            "dataset_source": "World Bank",
+            "license_id": "hdx-other",
+            "notes": "This is a test activity",
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
+            'name': 'test_activity_5',
+            'title': 'Test Activity 5',
+            'tags': [{'name': 'children'}, {'name': 'invalid_tag'}]
+        }
+
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        try:
+            self._get_action('package_create')(context, package)
+            assert False, 'ValidationError should be raised when creating package with invalid tags'
+        except logic.ValidationError as e:
+            assert 'tags' in e.error_dict, 'package_create should fail when using invalid tags'
+            assert len(e.error_dict.get('tags')) == 1, 'There should be one invalid tag'
+            assert "Tag name 'invalid_tag' is not in the approved list of tags" in e.error_dict.get('tags')[0]
+            assert "Check the list at: https://data.humdata.org/rdr/spreadsheets/approved-tags" in e.error_dict.get('tags')[0]

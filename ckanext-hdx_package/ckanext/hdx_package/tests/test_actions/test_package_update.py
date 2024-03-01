@@ -366,6 +366,45 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         modified_package = data_dict.get('modified_package')
         assert modified_package.get('maintainer') == joeadmin.id
 
+    def test_hdx_package_tags_validation(self):
+        package = {
+            "package_creator": "test function",
+            "private": False,
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
+            "caveats": "These are the caveats",
+            "license_other": "TEST OTHER LICENSE",
+            "methodology": "This is a test methodology",
+            "dataset_source": "World Bank",
+            "license_id": "hdx-other",
+            "notes": "This is a test activity",
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
+            'name': 'test_activity_8',
+            'title': 'Test Activity 8',
+            'maintainer': 'testsysadmin'
+        }
+
+        testsysadmin = model.User.by_name('testsysadmin')
+
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        self._get_action('package_create')(context, package)
+
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'tags', [{'name': 'children'}])
+        modified_package = data_dict.get('modified_package')
+        modified_package_obj = data_dict.get('modified_package_obj')
+
+        assert modified_package_obj.get('tags') is None
+        assert len(modified_package.get('tags')) == 1
+        assert 'children' in [tag['name'] for tag in modified_package.get('tags')]
+
+        try:
+            self._modify_field(context, testsysadmin, package['name'], 'tags', [{'name': 'invalid_tag1'}, {'name': 'invalid_tag2'}])
+        except ValidationError as e:
+            assert 'tags' in e.error_dict, 'package_update should fail when using invalid tags'
+            assert len(e.error_dict.get('tags')) == 2, 'There should be two invalid tags'
+            assert "Tag name 'invalid_tag1' is not in the approved list of tags" in e.error_dict.get('tags')[0]
+
     def _modify_field(self, context, user, package_id, key, value):
         modified_fields = {'id': package_id,
                            key: value,

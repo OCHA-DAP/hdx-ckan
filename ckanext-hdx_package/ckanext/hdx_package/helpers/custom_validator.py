@@ -686,3 +686,13 @@ def hdx_dataseries_title_validator(value, context):
         if not DATASERIES_TITLE_PATTERN.match(value):
             raise Invalid(_('Dataseries title is not valid'))
     return value
+
+
+def hdx_tag_name_approved_validator(key, data, errors, context):
+    tag_name = data.get(key)
+
+    approved_tags = get_action('cached_approved_tags_list')(context, {})
+
+    if tag_name not in approved_tags:
+        approved_tags_url = 'https://data.humdata.org/rdr/spreadsheets/approved-tags'
+        errors[key].append("Tag name '{}' is not in the approved list of tags. Check the list at: {}".format(tag_name, approved_tags_url))

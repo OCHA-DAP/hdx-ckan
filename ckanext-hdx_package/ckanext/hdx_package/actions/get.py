@@ -1029,7 +1029,10 @@ def recently_changed_packages_activity_list(context, data_dict):
 @logic.side_effect_free
 def hdx_recommend_tags(context, data_dict):
     tag_recommender = TagRecommender(data_dict.get('title'), data_dict.get('organization'))
-    return tag_recommender.find_recommended_tags()
+    recommended_tags = tag_recommender.find_recommended_tags()
+    approved_tags = get_action('cached_approved_tags_list')(context, {})
+    filtered_tags = [tag for tag in recommended_tags if tag['name'] in approved_tags]
+    return filtered_tags
 
 
 @logic.side_effect_free

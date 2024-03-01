@@ -232,7 +232,7 @@ def hdx_tag_autocomplete_list(context, data_dict):
 # code copied from get.py line 1748
 
 
-def hdx_tag_approved_list(context, data_dict):
+def hdx_retrieve_approved_tags(context, data_dict):
     """
     Get approved tag names from Google Spreadsheet and return a list.
     """
@@ -243,7 +243,9 @@ def hdx_tag_approved_list(context, data_dict):
 
     try:
         response = requests.get(proxy_data_preview_url, params=params)
-        return [item[0].lower() for item in json.loads(response.content)[1:]]
+        items = json.loads(response.content)[1:]
+        ordered_items = sorted([item[0].lower() for item in items])
+        return ordered_items
     except Exception as e:
         return []
 

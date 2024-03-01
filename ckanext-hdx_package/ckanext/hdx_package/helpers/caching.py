@@ -11,7 +11,7 @@ from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
-from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
+from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, dogpile_requests_region, \
     HDXRedisInvalidationStrategy
 
 log = logging.getLogger(__name__)
@@ -189,3 +189,15 @@ def cached_resource_id_apihighways():
 def invalidate_cached_resource_id_apihighways():
     log.info("Invalidating cache for apihighways")
     cached_resource_id_apihighways.invalidate()
+
+
+@dogpile_requests_region.cache_on_arguments()
+def cached_approved_tags_list():
+    log.info('Creating cache for approved tags list')
+    tags = tk.get_action('hdx_retrieve_approved_tags')({'user': '127.0.0.1'}, {})
+    return tags
+
+
+def invalidate_approved_tags_list():
+    log.info('Invalidating cache for approved tags list')
+    cached_approved_tags_list.invalidate()
