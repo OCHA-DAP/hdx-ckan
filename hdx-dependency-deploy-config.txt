@@ -1,5 +1,7 @@
 
 HDX_QUICKCHARTS_URL=https://gallery.ecr.aws/unocha/hdx-tools-quickcharts/
+
+HDX_QUICKCHARTS_TAG=1.10.4
 HDX_QUICKCHARTS_TAG=1.10.3
 
 HDX_DATACHECK_URL=https://gallery.ecr.aws/unocha/hdx-tools-datacheck/
