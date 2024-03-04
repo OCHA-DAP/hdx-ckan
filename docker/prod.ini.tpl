@@ -114,7 +114,8 @@ hdx.bitly.group = ${HDX_BITLY_GROUP}
 
 # MAILCHIMP
 hdx.mailchimp.api.key = ${HDX_MAILCHIMP_API_KEY}
-#hdx.mailchimp.list.newsletter = ${HDX_MAILCHIMP_LIST_NEWSLETTER}
+hdx.mailchimp.interest.data_services = ${HDX_MAILCHIMP_INTEREST_DATA_SERVICES}
+hdx.mailchimp.list.newsletter = ${HDX_MAILCHIMP_LIST_NEWSLETTER}
 hdx.mailchimp.list.newuser = ${HDX_MAILCHIMP_LIST_NEW_USER}
 
 hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d5
