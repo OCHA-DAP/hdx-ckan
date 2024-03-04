@@ -243,10 +243,15 @@ def hdx_retrieve_approved_tags(context, data_dict):
 
     try:
         response = requests.get(proxy_data_preview_url, params=params)
-        items = json.loads(response.content)[1:]
-        ordered_items = sorted([item[0].lower() for item in items])
-        return ordered_items
+        if response.status_code == 200:
+            items = json.loads(response.content)[1:]
+            ordered_items = sorted([item[0].lower() for item in items])
+            return ordered_items
+        else:
+            log.error("Failed to fetch approved tags. Status code: %s", response.status_code)
+            return []
     except Exception as e:
+        log.error("Failed to fetch approved tags. Exception: %s", e)
         return []
 
 

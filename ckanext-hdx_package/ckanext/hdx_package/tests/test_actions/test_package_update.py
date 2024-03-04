@@ -388,13 +388,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
-        self._get_action('package_create')(context, package)
+        pkg_dict = self._get_action('package_create')(context, package)
 
         data_dict = self._modify_field(context, testsysadmin, package['name'], 'tags', [{'name': 'children'}])
         modified_package = data_dict.get('modified_package')
-        modified_package_obj = data_dict.get('modified_package_obj')
 
-        assert modified_package_obj.get('tags') is None
+        assert len(pkg_dict.get('tags')) == 0
         assert len(modified_package.get('tags')) == 1
         assert 'children' in [tag['name'] for tag in modified_package.get('tags')]
 
