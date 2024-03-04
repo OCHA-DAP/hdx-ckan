@@ -196,12 +196,13 @@ def validate_account(token: str) -> str:
             log.error('Something went wrong when trying to activate user with email validation token')
             return abort(500, 'Something went wrong.')
 
+        send_username_confirmation_email(user_dict)
+        subscribe_user_to_mailchimp(user_dict)
+
         template_data = {
             'fullname': user_dict.get('fullname', ''),
             'url': h.url_for('hdx_user_auth.new_login')
         }
-        send_username_confirmation_email(user_dict)
-        subscribe_user_to_mailchimp(user_dict)
         return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
     return abort(404, 'Page not found')
