@@ -141,7 +141,7 @@
   <body>
     <div class="container">
       <div class="logo">
-        <a href="https://data.humdata.org" target="_blank">
+        <a href="{{ h.url_for('hdx_splash.index', qualified=True) }}" target="_blank">
           <img src="{{ data.logo_hdx_email }}" alt="HDX">
         </a>
       </div>
