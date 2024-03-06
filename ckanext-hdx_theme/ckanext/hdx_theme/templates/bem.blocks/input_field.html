@@ -21,11 +21,13 @@
       <i class="fa-regular fa-fw fa-eye"></i>
       <i class="fa-regular fa-fw fa-eye-slash d-none"></i>
     </span>
-  </div>
   {% endif %}
   {% if errors or (data_attributes and data_attributes['validation-error']) %}
     <div class="input-field__feedback-message input-field__feedback-message_state_invalid invalid-feedback">
       {% if errors %}{{ errors|join('. ') }}{% endif %}</div>
+  {% endif %}
+  {% if type == 'password' %}
+  </div>
   {% endif %}
   {% if help_text %}
     <span class="form-text input-field__help">{{ help_text }}</span>
