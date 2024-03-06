@@ -1,6 +1,9 @@
 <div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
   <label class="input-field__label" for="input-{{ name }}">
     {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
+  {% if type == 'password' %}
+  <div class="input-group">
+  {% endif %}
   <input
           type="{{ type }}"
           name="{{ name }}"
@@ -13,6 +16,13 @@
           {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
           {% endfor %}{% endif %}
   >
+  {% if type == 'password' %}
+    <span class="input-group-text input-field__input-group-text input-field__input-group-text_state_clickable">
+      <i class="fa-regular fa-fw fa-eye"></i>
+      <i class="fa-regular fa-fw fa-eye-slash d-none"></i>
+    </span>
+  </div>
+  {% endif %}
   {% if errors or (data_attributes and data_attributes['validation-error']) %}
     <div class="input-field__feedback-message input-field__feedback-message_state_invalid invalid-feedback">
       {% if errors %}{{ errors|join('. ') }}{% endif %}</div>
