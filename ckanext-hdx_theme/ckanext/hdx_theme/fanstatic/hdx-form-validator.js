@@ -33,12 +33,24 @@ this.ckan.module('hdx-form-validator', function ($) {
 
       form.find('[data-validation]').each(function () {
         var fieldName = $(this).attr('name');
+        var liveFeedback = $(this).data('live-feedback');
         $(this).on({
           focus: function () {
             self.removeErrorMessages(fieldName);
+            if (liveFeedback) {
+              self.showLiveFeedback(fieldName);
+            }
           },
           blur: function () {
             self.validateField(fieldName);
+            if (liveFeedback) {
+              self.hideLiveFeedback(fieldName);
+            }
+          },
+          input: function () {
+            if (liveFeedback) {
+              self.showLiveFeedback(fieldName);
+            }
           },
         });
       });
@@ -60,7 +72,10 @@ this.ckan.module('hdx-form-validator', function ($) {
         var types = validationTypes.split(',');
 
         for (var i = 0; i < types.length; i++) {
-          if (!self.validateWithType(field, types[i].trim(), fieldName)) {
+          var validationResults = self.validateWithType(field, types[i].trim(), fieldName);
+          var isValid = validationResults[0];
+          if (!isValid) {
+            this.displayError(fieldName);
             return false;
           }
         }
@@ -70,60 +85,121 @@ this.ckan.module('hdx-form-validator', function ($) {
     },
 
     validateWithType: function (field, validationType, fieldName) {
-      var isValid = true;
+      var validationErrors = [];
 
-      switch (validationType) {
-        case 'username':
-          isValid = this.validateRegex(field, /^[a-z0-9_-]{2,100}$/);
-          break;
-        case 'email':
-          isValid = this.validateRegex(field, /^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-          break;
-        case 'password':
-          isValid = this.validatePassword(field);
-          break;
-        case 'match':
-          isValid = this.matchFields(field);
-          break;
-        case 'checkbox':
-          isValid = this.validateCheckbox(field);
-          break;
+      var validators = {
+        username: [
+          {rule: this.validateRegex, args: [/^[a-z0-9_-]+$/]},
+          {rule: this.validateLength, args: [2, 100]}
+        ],
+        email: [
+          {rule: this.validateRegex, args: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/]}
+        ],
+        password: [
+          {rule: this.validateLength, args: [10, null]}
+        ],
+        match: [
+          {rule: this.validateFieldsMatch}
+        ],
+        checkbox: [
+          {rule: this.validateCheckbox}
+        ]
+      };
+
+      if (validators.hasOwnProperty(validationType)) {
+        validators[validationType].forEach(function (validator) {
+          var validation = validator.rule.apply(this, [field].concat(validator.args));
+          if (!validation[0]) validationErrors.push(validation[1]);
+        });
+
+        if (validationType === 'password') {
+          var passwordRules = [
+            {rule: this.validateUppercase},
+            {rule: this.validateLowercase},
+            {rule: this.validateDigit},
+            {rule: this.validatePunctuation}
+          ];
+
+          var metRules = 0;
+          passwordRules.forEach(function (rule) {
+            if (rule.rule(field)[0]) {
+              metRules++;
+            }
+            else {
+              validationErrors.push(rule.rule(field)[1]);
+            }
+          });
+
+          if (metRules < 3) {
+            validationErrors.push('no-strength');
+          }
+          else {
+            var invalidRuleMessages = [];
+            passwordRules.forEach(function (rule) {
+              if (!rule.rule(field)[0]) {
+                invalidRuleMessages.push(rule.rule(field)[1]);
+              }
+            });
+            validationErrors = validationErrors.filter(function (error) {
+              return !invalidRuleMessages.includes(error);
+            });
+          }
+        }
       }
 
-      if (!isValid) {
-        this.displayError(fieldName);
-      }
-
-      return isValid;
+      return [validationErrors.length === 0, validationErrors];
     },
+
 
     validateRegex: function (field, regex) {
-      return regex.test(field.val());
+      var isValid = regex.test(field.val());
+      return [isValid, isValid ? null : 'invalid-format'];
     },
 
-    validatePassword: function (field) {
-      var password = field.val();
-
-      var hasUppercase = /[A-Z]/.test(password);
-      var hasLowercase = /[a-z]/.test(password);
-      var hasDigit = /\d/.test(password);
-      var hasPunctuation = /[@$!%*?&]/.test(password);
-
-      var isLengthValid = password.length >= 10;
-
-      var characterSetCount = [hasUppercase, hasLowercase, hasDigit, hasPunctuation].filter(Boolean).length;
-
-      return characterSetCount >= 3 && isLengthValid;
-    },
-
-    matchFields: function (field) {
+    validateFieldsMatch: function (field) {
       var matchFieldName = field.data('validation-match');
       var matchField = $('[name="' + matchFieldName + '"]', this.el);
-      return field.val() === matchField.val();
+      var isValid = field.val() === matchField.val();
+      return [isValid, isValid ? null : 'fields-not-match'];
     },
 
     validateCheckbox: function (field) {
-      return field.is(':checked');
+      var isValid = field.is(':checked');
+      return [isValid, isValid ? null : 'checkbox-not-checked'];
+    },
+
+    validateUppercase: function (field) {
+      var isValid = /[A-Z]/.test(field.val());
+      return [isValid, isValid ? null : 'no-uppercase'];
+    },
+
+    validateLowercase: function (field) {
+      var isValid = /[a-z]/.test(field.val());
+      return [isValid, isValid ? null : 'no-lowercase'];
+    },
+
+    validateDigit: function (field) {
+      var isValid = /\d/.test(field.val());
+      return [isValid, isValid ? null : 'no-digit'];
+    },
+
+    validatePunctuation: function (field) {
+      var isValid = /[@$!%*?&]/.test(field.val());
+      return [isValid, isValid ? null : 'no-punctuation'];
+    },
+
+    validateLength: function (field, minLength, maxLength) {
+      var length = field.val().length;
+      var isValid = true;
+
+      if (minLength !== null && length < minLength) {
+        isValid = false;
+      }
+      if (maxLength !== null && length > maxLength) {
+        isValid = false;
+      }
+
+      return [isValid, isValid ? null : 'invalid-length'];
     },
 
     displayError: function (fieldName) {
@@ -137,6 +213,92 @@ this.ckan.module('hdx-form-validator', function ($) {
     removeErrorMessages: function (fieldName) {
       var field = $('[name="' + fieldName + '"]', this.el);
       field.removeClass('is-invalid');
+    },
+
+    addLiveFeedbackMessage: function (fieldName, key, message, className) {
+      var field = $('[name="' + fieldName + '"]', this.el);
+      var $liveFeedback = field.parent().parent().find('.live-feedback');
+      var $message = $('<li data-live-feedback-key="' + key + '"></li>');
+
+      $message.addClass('list-group-item');
+      if (className !== '') {
+        $message.addClass(className);
+      }
+      $liveFeedback.append($message);
+
+      $message.html(message);
+    },
+
+    showLiveFeedback: function (fieldName) {
+      var field = $('[name="' + fieldName + '"]', this.el);
+      var validationTypes = field.data('validation') ? field.data('validation').split(',') : [];
+
+      if (validationTypes.length) {
+        var $liveFeedback = field.parent().parent().find('.live-feedback');
+        this.showDefaultLiveFeedbackMessage(fieldName);
+
+        validationTypes.forEach(function (validationType) {
+          var validationResults = this.validateWithType(field, validationType.trim(), fieldName);
+          var validationErrors = validationResults[1];
+
+          validationErrors.forEach(function (errorKey) {
+            var $validationError = $liveFeedback.find('li[data-live-feedback-key="' + errorKey + '"]');
+            if ($validationError.length) {
+              $validationError.removeClass('text-success').addClass('text-danger');
+              $validationError.find('.fa-solid').removeClass('fa-check').addClass('fa-minus');
+            }
+            else {
+              this.addLiveFeedbackMessage(fieldName, errorKey, '<i class="fa-solid fa-fw me-1 fa-minus"></i>' + errorKey, 'text-danger');
+            }
+          }, this);
+        }, this);
+      }
+    },
+
+    hideLiveFeedback: function (fieldName) {
+      var field = $('[name="' + fieldName + '"]', this.el);
+      var $liveFeedback = field.parent().parent().find('.live-feedback');
+
+      $liveFeedback.addClass('d-none');
+    },
+
+    showDefaultLiveFeedbackMessage: function (fieldName) {
+      var field = $('[name="' + fieldName + '"]', this.el);
+      var $liveFeedback = field.parent().parent().find('.live-feedback');
+      var validationMessages = {
+        'name': [
+          {'key': 'invalid-length', 'message': 'Username should be between 2 and 100 characters in length'},
+          {'key': 'invalid-format', 'message': 'Use only lowercase alphanumeric characters, - or _'}
+        ],
+        'password1': [
+          {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},
+          {'key': 'no-strength', 'message': 'Should contain a minimum of three out of the following four character set:'},
+          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'Password should contain at least one uppercase letter'},
+          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'Password should contain at least one lowercase letter'},
+          {'key': 'no-digit', 'class': 'ps-5', 'message': 'Password should contain at least one digit'},
+          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'Password should contain at least one special character'
+          }
+        ],
+        'password2': [
+          {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},
+          {'key': 'no-strength', 'message': 'Should contain a minimum of three out of the following four character set:'},
+          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'Password should contain at least one uppercase letter'},
+          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'Password should contain at least one lowercase letter'},
+          {'key': 'no-digit', 'class': 'ps-5', 'message': 'Password should contain at least one digit'},
+          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'Password should contain at least one special character'},
+          {'key': 'fields-not-match', 'message': 'Passwords should match'}
+        ],
+      };
+
+      $liveFeedback.html('').removeClass('d-none');
+      var messages = validationMessages[fieldName] || [];
+      messages.forEach(function (message) {
+        var classes = 'text-success';
+        if (message.class) {
+          classes += ' ' + message.class;
+        }
+        this.addLiveFeedbackMessage(fieldName, message.key, '<i class="fa-solid fa-fw me-1 fa-check"></i>' + message.message, classes);
+      }, this);
     },
 
     validateForm: function () {
@@ -159,16 +321,11 @@ this.ckan.module('hdx-form-validator', function ($) {
       var topPosition = 0;
       var invalidInput = form.find('.is-invalid').first();
 
-      if(invalidInput.length) {
-        if (invalidInput.attr('type') === 'password') {
-          topPosition = invalidInput.parent().parent().offset().top + 200;
-        }
-        else {
-          topPosition = invalidInput.parent().offset().top + 200;
-        }
+      if (invalidInput.length) {
+        topPosition = invalidInput.parent().parent().offset().top + 200;
       }
 
-      if(topPosition > 0) {
+      if (topPosition > 0) {
         $('html, body').animate({
           scrollTop: topPosition
         }, 500);
