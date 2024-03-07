@@ -45,6 +45,7 @@ this.ckan.module('hdx-form-validator', function ($) {
 
       form.submit(function (event) {
         if (!self.validateForm()) {
+          self.scrollToError();
           event.preventDefault();
         }
       });
@@ -151,6 +152,27 @@ this.ckan.module('hdx-form-validator', function ($) {
       });
 
       return isValid;
+    },
+
+    scrollToError: function () {
+      var form = this.el;
+      var topPosition = 0;
+      var invalidInput = form.find('.is-invalid').first();
+
+      if(invalidInput.length) {
+        if (invalidInput.attr('type') === 'password') {
+          topPosition = invalidInput.parent().parent().offset().top + 200;
+        }
+        else {
+          topPosition = invalidInput.parent().offset().top + 200;
+        }
+      }
+
+      if(topPosition > 0) {
+        $('html, body').animate({
+          scrollTop: topPosition
+        }, 500);
+      }
     },
   };
 });

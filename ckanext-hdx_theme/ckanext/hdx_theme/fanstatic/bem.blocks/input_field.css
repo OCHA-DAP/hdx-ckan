@@ -40,6 +40,15 @@
   box-shadow: none;
   border-color: #0162DD;
 }
+.input-field__input-group-text {
+  color: #888;
+  border-color: #D1D5DB;
+  background-color: #FFF;
+}
+.input-field__input-group-text_state_clickable:hover {
+  cursor: pointer;
+  color: #4B5563;
+}
 .input-field__help {
   display: block;
   margin-top: 8px;

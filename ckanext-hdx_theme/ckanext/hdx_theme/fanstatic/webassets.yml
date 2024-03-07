@@ -132,6 +132,7 @@ hdx-onboarding-scripts:
   contents:
     - onboarding/came-from-input.js
     - onboarding/confirm-page-leave.js
+    - onboarding/toggle-password-visibility.js
 
 hdx-verify-email-scripts:
   <<: *common-js
