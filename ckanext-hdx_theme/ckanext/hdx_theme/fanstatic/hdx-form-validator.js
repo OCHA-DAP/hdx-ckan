@@ -30,10 +30,12 @@ this.ckan.module('hdx-form-validator', function ($) {
     setupFieldValidation: function () {
       var self = this;
       var form = this.el;
+      var invalidFields = [];
 
       form.find('[data-validation]').each(function () {
         var fieldName = $(this).attr('name');
         var liveFeedback = $(this).data('live-feedback');
+        var isFieldValid = true;
         $(this).on({
           focus: function () {
             self.removeErrorMessages(fieldName);
@@ -42,7 +44,23 @@ this.ckan.module('hdx-form-validator', function ($) {
             }
           },
           blur: function () {
-            self.validateField(fieldName);
+            isFieldValid = self.validateField(fieldName);
+            if(!isFieldValid && !invalidFields.includes(fieldName)) {
+              invalidFields.push(fieldName);
+            }
+            else {
+              invalidFields = invalidFields.filter(function (item) {
+                return item !== fieldName;
+              });
+            }
+
+            if(invalidFields.length) {
+              self.disableSubmitButton();
+            }
+            else {
+              self.enableSubmitButton();
+            }
+
             if (liveFeedback) {
               self.hideLiveFeedback(fieldName);
             }
@@ -157,8 +175,9 @@ this.ckan.module('hdx-form-validator', function ($) {
     },
 
     validateFieldsMatch: function (field) {
+      var form = field.closest('form');
       var matchFieldName = field.data('validation-match');
-      var matchField = $('[name="' + matchFieldName + '"]', this.el);
+      var matchField = $('[name="' + matchFieldName + '"]', form);
       var isValid = field.val() === matchField.val();
       return [isValid, isValid ? null : 'fields-not-match'];
     },
@@ -330,6 +349,18 @@ this.ckan.module('hdx-form-validator', function ($) {
           scrollTop: topPosition
         }, 500);
       }
+    },
+
+    disableSubmitButton: function () {
+      var form = this.el;
+      var $submitButton = form.find('[type="submit"]');
+      $submitButton.addClass('disabled').attr('disabled');
+    },
+
+    enableSubmitButton: function () {
+      var form = this.el;
+      var $submitButton = form.find('[type="submit"]');
+      $submitButton.removeClass('disabled').removeAttr('disabled');
     },
   };
 });
