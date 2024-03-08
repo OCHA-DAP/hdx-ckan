@@ -60,7 +60,10 @@
   margin-top: 8px;
   color: #000;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   font-family: 'Roboto', sans-serif;
   letter-spacing: 0.2px;
+}
+.input-field__feedback-message {
+  font-size: 14px;
 }
