@@ -6,6 +6,7 @@ import ckan.plugins.toolkit as tk
 from ckan.types import (
     Context, FlattenDataDict, FlattenErrorDict,
     FlattenKey)
+from ckanext.hdx_theme.helpers.ui_constants.onboarding.user_info import CONSTANTS as USER_INFO_CONSTANTS
 from ckanext.hdx_theme.util.mail import hdx_validate_email as validate_email
 
 _ = tk._
@@ -78,7 +79,7 @@ def user_name_validator(key, data, errors, context):
             # Otherwise return an error: there's already another user with that
             # name, so you can create a new user with that name or update an
             # existing user's name to that name.
-            errors[key].append(_('That login name is not available.'))
+            errors[key].append(_(USER_INFO_CONSTANTS['INPUT_USERNAME_ERROR_ALREADY_EXISTS']))
 
 def user_emails_match(key: FlattenKey, data: FlattenDataDict,
                          errors: FlattenErrorDict, context: Context) -> Any:

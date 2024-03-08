@@ -58,3 +58,6 @@
   font-family: 'Roboto', sans-serif;
   letter-spacing: 0.2px;
 }
+.input-field__feedback-message {
+  font-size: 14px;
+}
