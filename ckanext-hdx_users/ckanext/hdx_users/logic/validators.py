@@ -44,7 +44,7 @@ def user_email_validator(key, data, errors, context):
                     # user found in the db, then we must be doing a user_update
                     # and not updating the user name, so don't return an error.
                     return
-                errors[key].append(_('The email address is already registered on HDX. Please use the sign in screen below.'))
+                errors[key].append(_('The email address is already registered on HDX.'))
 
     return
 
