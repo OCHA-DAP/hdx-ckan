@@ -49,6 +49,12 @@
   cursor: pointer;
   color: #4B5563;
 }
+.input-field__live-feedback li {
+  font-size: 14px;
+  border-color: #D1D5DB;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}
 .input-field__help {
   display: block;
   margin-top: 8px;
