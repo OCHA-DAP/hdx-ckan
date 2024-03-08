@@ -1705,7 +1705,7 @@ msgstr "User names must be strings"
 
 #: ckan/logic/validators.py:583
 msgid "That login name is not available."
-msgstr "That login name is not available."
+msgstr "Username is already being used by another HDX account."
 
 #: ckan/logic/validators.py:587
 msgid "That login name can not be modified."
