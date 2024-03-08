@@ -172,7 +172,7 @@ class TestOnboarding(object):
 
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
-        assert 'That login name is not available' in result.body
+        assert 'Username is already being used by another HDX account.' in result.body
 
         data_dict = build_data_dict()
 

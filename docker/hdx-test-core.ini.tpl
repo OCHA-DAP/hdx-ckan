@@ -101,7 +101,7 @@ ckan.template_footer_end = <strong>TEST TEMPLATE_FOOTER_END TEST</strong>
 smtp.test_server = localhost:6675
 smtp.mail_from = hdx@humdata.org
 
-ckan.locale_default = en
+ckan.locale_default = en_AU
 ckan.locale_order = en pt_BR ja it cs_CZ ca es fr el sv sr sr@latin no sk fi ru de pl nl bg ko_KR hu sa sl lv
 ckan.locales_filtered_out =
 ckan.datastore.enabled = 1

@@ -115,7 +115,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_validators(self):
         return {
             'user_email_validator': hdx_validators.user_email_validator,
-            'user_name_validator': hdx_validators.user_name_validator,
+            # 'user_name_validator': hdx_validators.user_name_validator,
             'user_emails_match': hdx_validators.user_emails_match
         }
 

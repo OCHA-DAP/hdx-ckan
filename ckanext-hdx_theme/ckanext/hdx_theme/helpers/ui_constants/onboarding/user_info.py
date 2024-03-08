@@ -17,7 +17,6 @@ CONSTANTS = {
     'INPUT_USERNAME_PLACEHOLDER': '''Your username''',
     'INPUT_USERNAME_HELP': '''Username should be between 2 and 100 characters in length, containing only lowercase alphanumeric characters, - and _''',
     'INPUT_USERNAME_ERROR': '''Please use a valid username format''',
-    'INPUT_USERNAME_ERROR_ALREADY_EXISTS': '''Username is already being used by another HDX account.''',
     'INPUT_PASSWORD_LABEL': '''Choose a password''',
     'INPUT_PASSWORD_PLACEHOLDER': '''Your password''',
     'INPUT_PASSWORD_HELP': '''The password must be a minimum of 10 characters in length and should consist of characters from a minimum of three out of the following four character sets: uppercase letters, lowercase letters, numbers, and punctuation.''',
