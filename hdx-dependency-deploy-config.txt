@@ -1,6 +1,8 @@
 
 HDX_QUICKCHARTS_URL=https://gallery.ecr.aws/unocha/hdx-tools-quickcharts/
-HDX_QUICKCHARTS_TAG=1.10.0
+
+HDX_QUICKCHARTS_TAG=1.10.4
+HDX_QUICKCHARTS_TAG=1.10.3
 
 HDX_DATACHECK_URL=https://gallery.ecr.aws/unocha/hdx-tools-datacheck/
 HDX_DATACHECK_TAG=1.3.4
@@ -21,7 +23,7 @@ HDX_PCODE_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-pcode/
 HDX_PCODE_TAG=0.1.10
 
 HDX_N8N_IMAGE_URL=https://gallery.ecr.aws/unocha/hdx-n8n/
-HDX_N8N_IMAGE_TAG=0.2.0
+HDX_N8N_IMAGE_TAG=1.30.1
 
 HDX_N8N_WORKFLOW_URL=https://github.com/OCHA-DAP/hdx-n8n-qa-workflow
-HDX_N8N_WORKFLOW_TAG=0.2.2
+HDX_N8N_WORKFLOW_TAG=0.3.0

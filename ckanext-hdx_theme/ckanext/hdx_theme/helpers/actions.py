@@ -687,3 +687,9 @@ def hdx_organization_statistics(context, data_dict):
 #         detail_data_dict.pop('author_email', None)
 #
 #     return result
+
+
+@logic.side_effect_free
+def cached_approved_tags_list(context, data_dict):
+    tags = caching.cached_approved_tags_list()
+    return tags

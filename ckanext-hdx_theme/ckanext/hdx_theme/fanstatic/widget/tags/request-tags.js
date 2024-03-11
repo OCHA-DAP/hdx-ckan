@@ -50,7 +50,7 @@ function showTagRequestWidget(id) {
   });
 
   $.ajax({
-    url: '/api/action/hdx_tag_approved_list',
+    url: '/api/action/cached_approved_tags_list',
     type: 'POST',
     headers: hdxUtil.net.getCsrfTokenAsObject(),
     success: function(data) {
