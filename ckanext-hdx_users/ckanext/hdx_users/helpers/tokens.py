@@ -71,3 +71,9 @@ def send_validation_email(user: Dict, token: Dict, subject: str, template_path: 
         error_summary = str(e)
         log.error(error_summary)
         return False
+
+
+def is_user_validated_and_token_disabled(user_dict: Dict):
+    token = token_show({}, user_dict)
+    # valid is False when the token was not used yet
+    return user_dict.get('state') == 'active' and token['valid'] is True
