@@ -9,13 +9,16 @@ import datetime
 import logging
 import json
 import re
+from typing import Any
 
 import six
 import ckan.model as model
 import ckan.authz as authz
 import ckan.plugins.toolkit as tk
 import ckan.lib.navl.dictization_functions as df
-from ckan.common import _, c
+
+from ckan.types import (
+    FlattenDataDict, FlattenKey, Validator, Context, FlattenErrorDict)
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
@@ -24,6 +27,8 @@ from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, NO_DATA
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 from ckanext.hdx_package.helpers.resource_triggers.fs_check import FS_CHECK_FORMATS
 
+_ = tk._
+c = tk.c
 missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
@@ -696,3 +701,18 @@ def hdx_tag_name_approved_validator(key, data, errors, context):
     if tag_name not in approved_tags:
         approved_tags_url = 'https://data.humdata.org/rdr/spreadsheets/approved-tags'
         errors[key].append("Tag name '{}' is not in the approved list of tags. Check the list at: {}".format(tag_name, approved_tags_url))
+
+def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDict,
+                        errors: FlattenErrorDict, context: Context) -> Any:
+    url_key = key[:-1] + ('url',)
+    url_value = data.get(url_key)
+
+    resource_id = data.get(key[:-1] + ('id',))
+    package_id = data.get(('id',))
+
+    # resource_id can be None if we're just creating the resource
+    if resource_id and url_value:
+        prev_resource_dict = __get_previous_resource_dict(context, package_id, resource_id)
+        prev_url_value = prev_resource_dict.get('url')
+        if prev_url_value != url_value:
+            data[key] = datetime.datetime.utcnow()
