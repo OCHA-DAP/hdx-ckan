@@ -30,12 +30,11 @@ this.ckan.module('hdx-form-validator', function ($) {
     setupFieldValidation: function () {
       var self = this;
       var form = this.el;
-      var invalidFields = [];
+      var $submitButton = form.find('[type="submit"]');
 
       form.find('[data-validation]').each(function () {
         var fieldName = $(this).attr('name');
         var liveFeedback = $(this).data('live-feedback');
-        var isFieldValid = true;
         $(this).on({
           focus: function () {
             self.removeErrorMessages(fieldName);
@@ -44,26 +43,7 @@ this.ckan.module('hdx-form-validator', function ($) {
             }
           },
           blur: function () {
-            isFieldValid = self.validateField(fieldName);
-            if(!isFieldValid && !invalidFields.includes(fieldName)) {
-              invalidFields.push(fieldName);
-            }
-            else {
-              invalidFields = invalidFields.filter(function (item) {
-                return item !== fieldName;
-              });
-            }
-
-            if(invalidFields.length) {
-              self.disableSubmitButton();
-            }
-            else {
-              self.enableSubmitButton();
-            }
-
-            if (liveFeedback) {
-              self.hideLiveFeedback(fieldName);
-            }
+            self.validateForm(fieldName);
           },
           input: function () {
             if (liveFeedback) {
@@ -74,17 +54,24 @@ this.ckan.module('hdx-form-validator', function ($) {
       });
 
       form.submit(function (event) {
-        if (!self.validateForm()) {
+        if (!self.validateForm(null)) {
           self.scrollToError();
           event.preventDefault();
         }
       });
+
+      $submitButton.parent().on('click', function () {
+        if (!self.validateForm(null)) {
+          self.scrollToError();
+        }
+      });
     },
 
-    validateField: function (fieldName) {
+    validateField: function (fieldName, displayError) {
       var self = this;
       var field = $('[name="' + fieldName + '"]', this.el);
       var validationTypes = field.data('validation');
+      var liveFeedback = field.data('live-feedback');
 
       if (validationTypes) {
         var types = validationTypes.split(',');
@@ -92,8 +79,18 @@ this.ckan.module('hdx-form-validator', function ($) {
         for (var i = 0; i < types.length; i++) {
           var validationResults = self.validateWithType(field, types[i].trim(), fieldName);
           var isValid = validationResults[0];
-          if (!isValid) {
-            this.displayError(fieldName);
+          if (isValid) {
+            if (liveFeedback) {
+              self.hideLiveFeedback(fieldName);
+            }
+          }
+          else {
+            if (displayError) {
+              if (liveFeedback) {
+                self.showLiveFeedback(fieldName);
+              }
+              this.displayError(fieldName);
+            }
             return false;
           }
         }
@@ -203,7 +200,7 @@ this.ckan.module('hdx-form-validator', function ($) {
     },
 
     validatePunctuation: function (field) {
-      var isValid = /[@$!%*?&]/.test(field.val());
+      var isValid = /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(field.val());
       return [isValid, isValid ? null : 'no-punctuation'];
     },
 
@@ -320,19 +317,31 @@ this.ckan.module('hdx-form-validator', function ($) {
       }, this);
     },
 
-    validateForm: function () {
+    validateForm: function (currentField) {
       var self = this;
       var form = this.el;
-      var isValid = true;
+      var isFormValid = true;
 
       form.find('[data-validation]').each(function () {
         var fieldName = $(this).attr('name');
-        if (!self.validateField(fieldName)) {
-          isValid = false;
+        var displayError = currentField && currentField === fieldName || currentField == null;
+        var isFieldValid = self.validateField(fieldName, displayError);
+        if (!isFieldValid) {
+          isFormValid = false;
+        }
+        else {
+          self.removeErrorMessages(fieldName);
         }
       });
 
-      return isValid;
+      if (!isFormValid) {
+        self.disableSubmitButton();
+      }
+      else {
+        self.enableSubmitButton();
+      }
+
+      return isFormValid;
     },
 
     scrollToError: function () {
@@ -341,7 +350,7 @@ this.ckan.module('hdx-form-validator', function ($) {
       var invalidInput = form.find('.is-invalid').first();
 
       if (invalidInput.length) {
-        topPosition = invalidInput.parent().parent().offset().top + 200;
+        topPosition = invalidInput.parent().parent().offset().top - 100;
       }
 
       if (topPosition > 0) {

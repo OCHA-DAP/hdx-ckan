@@ -10,8 +10,14 @@
             placeholder="{{ placeholder }}"
             value="{% if value %}{{ value }}{% endif %}"
             {% if required %}required{% endif %}
-            {% if type == 'password' %}autocomplete="on"{% endif %}
+            {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
             {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
+            {% if data_attributes and data_attributes['live-feedback'] %}
+            data-bwignore="true"
+            data-1p-ignore="true"
+            data-lpignore="true"
+            data-form-type="other"
+            {% endif %}
             {% endfor %}{% endif %}
     >
     {% if type == 'password' %}
