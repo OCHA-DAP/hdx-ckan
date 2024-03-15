@@ -22,7 +22,8 @@
         {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=2) }}
         <div class="text-center">
           {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-5") }}
-          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_MAIN_TEXT.format(email_address), paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
+          {% set main_text = CONST.BODY_MAIN_TEXT.format(session.get('user_info_email')) if session.get('user_info_email') else CONST.BODY_MAIN_TEXT_WITHOUT_EMAIL %}
+          {{ h.snippet('bem.blocks/paragraph.html', text=main_text, paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
         </div>
       </div>
     </div>

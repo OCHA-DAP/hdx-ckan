@@ -124,6 +124,16 @@ class TestOnboarding(object):
         assert NEW_USER_EMAIL == user_dict.get('email')
         assert 'pending' == user_dict.get('state')
 
+        expected_url = '/signup/verify-email/{0}'.format(user_dict.get('id'))
+        assert expected_url in result.request.url, 'User should be redirected to the email verification page after ' \
+                                                   'creating an account'
+
+        url = h.url_for('hdx_user_onboarding.verify_email', user_id=user_dict.get('id'))
+        result = app.get(url)
+        assert NEW_USER_EMAIL not in result.body, 'User email should not be displayed in the body when accessing the ' \
+                                                  'email verification page directly (without coming from the signup ' \
+                                                  'form)'
+
         ue_user = _get_action('user_extra_value_by_keys_show')(_sysadmin_context(),
                                                                {
                                                                    'user_id': user_dict.get('id'),

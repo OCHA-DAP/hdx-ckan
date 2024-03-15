@@ -12,7 +12,7 @@ import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.logic.schema as schema
 from ckan.common import (
-    config, current_user
+    config, current_user, session
 )
 from ckan.types import Context, Schema, Response, DataDict
 from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import \
@@ -145,7 +145,6 @@ class UserOnboardingView(MethodView):
             log.error(e)
             abort(404, _(u'Something went wrong. Please contact support'))
 
-        # TODO send user validation token
         token = get_action('token_create')(context, user_dict)
         subject = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['EMAIL_SUBJECTS']['EMAIL_CONFIRMATION']
         tokens.send_validation_email(
@@ -156,10 +155,9 @@ class UserOnboardingView(MethodView):
             validation_link=h.url_for('hdx_user_onboarding.validate_account', token=token['token'], qualified=True)
         )
 
-        extra_vars = {
-            u'email_address': user_dict.get('email'),
-        }
-        return render('onboarding/signup/verify-email.html', extra_vars=extra_vars)
+        session['user_info_email'] = user_dict.get('email')
+
+        return redirect('hdx_user_onboarding.verify_email', user_id=user_dict.get('id'))
 
     def get(self,
             data: Optional[dict[str, Any]] = None,
@@ -182,9 +180,47 @@ def value_proposition() -> str:
     return render('onboarding/signup/value-proposition.html', extra_vars={})
 
 
+def verify_email(user_id: str) -> str:
+    try:
+        context = {
+            'model': model,
+            'session': model.Session,
+            'ignore_auth': True
+        }
+
+        user_dict = get_action('user_show')(context, {'id': user_id})
+
+        if user_dict.get('state') == 'pending':
+            return render('onboarding/signup/verify-email.html')
+        elif user_dict.get('state') == 'active':
+            return redirect('hdx_user_onboarding.validated_account', user_id=user_id)
+    except NotFound:
+        abort(404, _(u'User not found'))
+
+    return abort(404, _(u'Page not found'))
+
+
 def validate_account(token: str) -> str:
     if request.user_agent.string.strip() and request.method == 'GET':
         # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
+        try:
+            user_id = tokens.get_user_id_from_token(token)
+            context = {
+                'model': model,
+                'session': model.Session,
+                'ignore_auth': True
+            }
+            user_dict = get_action('user_show')(context, {'id': user_id})
+
+            is_user_validated_and_token_disabled = tokens.is_user_validated_and_token_disabled(user_dict)
+            if is_user_validated_and_token_disabled:
+                template_data = {
+                    'already_validated': True
+                }
+                return render('onboarding/signup/account-validated.html', extra_vars=template_data)
+        except NotFound:
+            pass
+
         try:
             check_access('user_can_validate', {}, {'token': token})
         except NotAuthorized as e:
@@ -199,16 +235,45 @@ def validate_account(token: str) -> str:
         send_username_confirmation_email(user_dict)
         subscribe_user_to_mailchimp(user_dict)
 
+        if session.get('user_info_email'):
+            session.pop('user_info_email')
+
         template_data = {
-            'fullname': user_dict.get('fullname', ''),
-            'url': h.url_for('hdx_user_auth.new_login')
+            'fullname': user_dict.get('fullname', '')
         }
         return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
     return abort(404, 'Page not found')
 
+
+def validated_account(user_id: str) -> str:
+    context = {
+        'model': model,
+        'session': model.Session,
+        'ignore_auth': True
+    }
+
+    try:
+        user_dict = get_action('user_show')(context, {'id': user_id})
+
+        is_user_validated_and_token_disabled = tokens.is_user_validated_and_token_disabled(user_dict)
+        if is_user_validated_and_token_disabled:
+            template_data = {
+                'already_validated': True
+            }
+            return render('onboarding/signup/account-validated.html', extra_vars=template_data)
+    except NotFound:
+        abort(404, _(u'User not found'))
+
+    return abort(404, _(u'Page not found'))
+
+
 hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/user-info/', view_func=UserOnboardingView.as_view(str(u'user-info')),
                                  methods=[u'GET', u'POST'], strict_slashes=False)
+hdx_user_onboarding.add_url_rule(u'/verify-email/<user_id>/', view_func=verify_email, methods=[u'GET'],
+                                 strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/validate-account/<token>/', view_func=validate_account,
                                  methods=[u'GET'], strict_slashes=False)
+hdx_user_onboarding.add_url_rule(u'/validated-account/<user_id>/', view_func=validated_account, methods=[u'GET'],
+                                 strict_slashes=False)

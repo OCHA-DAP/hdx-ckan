@@ -54,10 +54,23 @@ def test_validation_token(mock_send_validation_email: MagicMock, app: CKANTestAp
 
     account_validation_response = _validate_account(app, token)
     assert account_validation_response.status_code == 200
+    assert 'your HDX account has been created' in account_validation_response.body
     user_dict_after_validation = _get_action('user_show')({}, {'id': 'test_user'})
     token_dict_after_validation = tokens.token_show({'ignore_auth': True}, user_dict_after_validation)
     assert user_dict_after_validation['state'] == 'active'
     assert token_dict_after_validation['valid'] == True
+
+    account_revalidation_response = _validate_account(app, token)
+    assert 'Your account has been already validated' in account_revalidation_response.body
+
+    url = h.url_for('hdx_user_onboarding.verify_email', user_id=user_dict_after_validation.get('id'))
+    result = app.get(url)
+    expected_url = '/signup/validated-account/{0}'.format(user_dict_after_validation.get('id'))
+    assert result.status_code == 200
+    assert expected_url in result.request.url, 'User should be redirected to the validated account page when ' \
+                                               'accessing the email verification page after successfully validating ' \
+                                               'the account'
+    assert 'Your account has been already validated' in result.body
 
 
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
