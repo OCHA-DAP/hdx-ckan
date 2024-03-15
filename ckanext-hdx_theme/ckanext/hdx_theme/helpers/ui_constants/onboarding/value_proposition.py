@@ -17,7 +17,7 @@ CONSTANTS = {
     'COLUMN_INDIVIDUAL_ACCOUNT_BUTTON': '''SIGN UP''',
 
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL': '''Individual HDX account+''',
-    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP': '''associated with an approved organisation''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP': '''associated with an organisation''',
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_BUTTON': '''SIGN UP''',
 
     'ALREADY_HAVE_ACCOUNT_HELP': '''Already have an account? <a href="{0}" title="Log in" id="value-proposition-login-link">Log in</a>''',
