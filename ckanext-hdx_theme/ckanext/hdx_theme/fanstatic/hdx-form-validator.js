@@ -79,17 +79,12 @@ this.ckan.module('hdx-form-validator', function ($) {
         for (var i = 0; i < types.length; i++) {
           var validationResults = self.validateWithType(field, types[i].trim(), fieldName);
           var isValid = validationResults[0];
-          if (isValid) {
-            if (liveFeedback) {
-              self.hideLiveFeedback(fieldName);
-            }
-          }
-          else {
+          if (!isValid) {
             if (displayError) {
               if (liveFeedback) {
                 self.showLiveFeedback(fieldName);
               }
-              this.displayError(fieldName);
+              self.displayError(fieldName);
             }
             return false;
           }
@@ -283,25 +278,25 @@ this.ckan.module('hdx-form-validator', function ($) {
       var $liveFeedback = field.parent().parent().find('.live-feedback');
       var validationMessages = {
         'name': [
-          {'key': 'invalid-length', 'message': 'Username should be between 2 and 100 characters in length'},
-          {'key': 'invalid-format', 'message': 'Use only lowercase alphanumeric characters, - or _'}
+          {'key': 'invalid-length', 'message': 'Must be between 2 and 100 characters in length'},
+          {'key': 'invalid-format', 'message': 'Must use lowercase alphanumeric characters'},
+          {'key': null, 'message': 'Can use - (dash) or _ (underscore)'}
         ],
         'password1': [
           {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},
-          {'key': 'no-strength', 'message': 'Should contain a minimum of three out of the following four character set:'},
-          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'Password should contain at least one uppercase letter'},
-          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'Password should contain at least one lowercase letter'},
-          {'key': 'no-digit', 'class': 'ps-5', 'message': 'Password should contain at least one digit'},
-          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'Password should contain at least one special character'
-          }
+          {'key': 'no-strength', 'message': 'Must contain a minimum of three out of the following four:'},
+          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'at least one uppercase letter'},
+          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'at least one lowercase letter'},
+          {'key': 'no-digit', 'class': 'ps-5', 'message': 'at least one number'},
+          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'at least one special character'}
         ],
         'password2': [
           {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},
-          {'key': 'no-strength', 'message': 'Should contain a minimum of three out of the following four character set:'},
-          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'Password should contain at least one uppercase letter'},
-          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'Password should contain at least one lowercase letter'},
-          {'key': 'no-digit', 'class': 'ps-5', 'message': 'Password should contain at least one digit'},
-          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'Password should contain at least one special character'},
+          {'key': 'no-strength', 'message': 'Must contain a minimum of three out of the following four:'},
+          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'at least one uppercase letter'},
+          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'at least one lowercase letter'},
+          {'key': 'no-digit', 'class': 'ps-5', 'message': 'at least one number'},
+          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'at least one special character'},
           {'key': 'fields-not-match', 'message': 'Passwords should match'}
         ],
       };

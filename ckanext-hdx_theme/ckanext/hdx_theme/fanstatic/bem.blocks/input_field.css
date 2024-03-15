@@ -16,6 +16,7 @@
 }
 .input-field__required {
   color: #F2645A;
+  font-weight: 600;
 }
 .input-field__input {
   border: 1px solid #D1D5DB;

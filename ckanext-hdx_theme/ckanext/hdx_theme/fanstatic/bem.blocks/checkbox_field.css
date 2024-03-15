@@ -3,6 +3,10 @@
   color: #000;
   font-size: 16px;
 }
+.checkbox-field__required {
+  color: #F2645A;
+  font-weight: 600;
+}
 .checkbox-field__input.form-check-input {
   height: 20px;
   width: 20px;
