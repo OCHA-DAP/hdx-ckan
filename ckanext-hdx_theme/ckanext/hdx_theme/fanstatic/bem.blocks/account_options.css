@@ -1,5 +1,7 @@
-.account-options > .row > [class*="col-"]:first-child .account-options__cell:last-child {
-  border-bottom: 0;
+.account-options > .row .col .account-options__cell:last-child {
+  border-bottom: 1px solid #000;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 .account-options__cell {
   display: flex;
@@ -23,15 +25,11 @@
     padding-bottom: 28px;
   }
 }
-.account-options__cell_content_type {
-  border-top: 1px solid #000;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
 .account-options__cell_state_highlight {
   background-color: #EDF6FD;
+}
+.account-options__cell_state_empty {
+  border-bottom-color: transparent;
 }
 .account-options__cell_size_big {
   height: 132px;
@@ -46,12 +44,16 @@
     height: auto;
   }
 }
-.account-options__cell_content_button {
-  border-bottom: 1px solid #000;
+.account-options__cell_content_type {
+  border-top: 1px solid #000;
   border-left: 1px solid #000;
   border-right: 1px solid #000;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.account-options__cell_content_button {
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
 }
 .account-options__cell_content_icon {
   border-left: 1px solid #000;

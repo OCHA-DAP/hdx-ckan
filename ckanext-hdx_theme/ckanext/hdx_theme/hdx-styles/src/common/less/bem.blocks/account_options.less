@@ -3,14 +3,11 @@
 .account-options {
 
   > .row {
-
-    > [class*="col-"] {
-
-      &:first-child {
-
-        .account-options__cell:last-child {
-          border-bottom: 0;
-        }
+    .col {
+      .account-options__cell:last-child {
+        border-bottom: 1px solid @black-color;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
       }
     }
   }
@@ -33,16 +30,12 @@
       padding-bottom: 28px;
     }
 
-    &_content_type {
-      border-top: 1px solid @black-color;
-      border-left: 1px solid @black-color;
-      border-right: 1px solid @black-color;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
-
     &_state_highlight {
       background-color: @blue-extra-light-color;
+    }
+
+    &_state_empty {
+      border-bottom-color: transparent;
     }
 
     &_size_big {
@@ -56,15 +49,20 @@
       }
     }
 
+    &_content_type {
+      border-top: 1px solid @black-color;
+      border-left: 1px solid @black-color;
+      border-right: 1px solid @black-color;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
     &_content_feature {
     }
 
     &_content_button {
-      border-bottom: 1px solid @black-color;
       border-left: 1px solid @black-color;
       border-right: 1px solid @black-color;
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
     }
 
     &_content_icon {
