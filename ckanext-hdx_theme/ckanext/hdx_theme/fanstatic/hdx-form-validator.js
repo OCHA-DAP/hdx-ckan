@@ -88,6 +88,9 @@ this.ckan.module('hdx-form-validator', function ($) {
             }
             return false;
           }
+          else {
+            self.validateLiveFeedback(fieldName);
+          }
         }
       }
 
@@ -273,6 +276,16 @@ this.ckan.module('hdx-form-validator', function ($) {
       $liveFeedback.addClass('d-none');
     },
 
+    validateLiveFeedback: function (fieldName) {
+      var field = $('[name="' + fieldName + '"]', this.el);
+      var $liveFeedback = field.parent().parent().find('.live-feedback');
+
+      if ($liveFeedback.length) {
+        $liveFeedback.find('li').removeClass('text-danger').addClass('text-success');
+        $liveFeedback.find('li .fa-solid').removeClass('fa-minus').addClass('fa-check');
+      }
+    },
+
     showDefaultLiveFeedbackMessage: function (fieldName) {
       var field = $('[name="' + fieldName + '"]', this.el);
       var $liveFeedback = field.parent().parent().find('.live-feedback');
@@ -291,12 +304,6 @@ this.ckan.module('hdx-form-validator', function ($) {
           {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'at least one special character'}
         ],
         'password2': [
-          {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},
-          {'key': 'no-strength', 'message': 'Must contain a minimum of three out of the following four:'},
-          {'key': 'no-uppercase', 'class': 'ps-5', 'message': 'at least one uppercase letter'},
-          {'key': 'no-lowercase', 'class': 'ps-5', 'message': 'at least one lowercase letter'},
-          {'key': 'no-digit', 'class': 'ps-5', 'message': 'at least one number'},
-          {'key': 'no-punctuation', 'class': 'ps-5', 'message': 'at least one special character'},
           {'key': 'fields-not-match', 'message': 'Passwords should match'}
         ],
       };
