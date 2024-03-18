@@ -6,9 +6,9 @@
     {# MODIFIED BY HDX #}
     {# send dataset_type to avoid server error for new resource #}
     {# {% snippet "snippets/changes/{}.html".format( #}
-    {# change.type), change=change %} #}
+    {# change.type), change=change, pkg_dict=pkg_dict %} #}
     {% snippet "snippets/changes/{}.html".format(
-      change.type), change=change, dataset_type=activity_diff.activities[1].data.package.type %}
+      change.type), change=change, pkg_dict=pkg_dict, dataset_type=activity_diff.activities[1].data.package.type %}
     {# END MODIFIED BY HDX #}
     <br>
   {% endfor %}

@@ -318,7 +318,7 @@ groups:
           The dbm option is not recommended as it is not thread-safe.
 
       - key: beaker.session.validate_key
-        validators: not_empty
+        validators: configured_default("beaker.session.secret",None) not_empty
         placeholder_callable: secrets:token_urlsafe
         callable_args:
           nbytes: 20
@@ -527,9 +527,13 @@ groups:
 
       - key: ckan.auth.create_user_via_web
         type: bool
-        default: true
+        default: false
         example: "true"
-        description: Allow new user accounts to be created via the Web.
+        description: |
+          Allow new user accounts to be created via the web UI. When ``False`` (default value), user accounts can only be created by:
+            * Being invited by an organization admin,
+            * Being created directly by a sysadmin in the ``/user/register`` endpoint, or
+            * Being created in the CLI using ``ckan user add``
 
       - key: ckan.auth.roles_that_cascade_to_sub_groups
         default:
@@ -884,6 +888,15 @@ groups:
           this to false if on solr 4.0 and you have automatic (soft)commits
           enabled to improve dataset update/create speed (however there may be
           a slight delay before dataset gets seen in results).
+
+      - key: ckan.search.solr_allowed_query_parsers
+        type: list
+        default: []
+        example: ["bool", "knn"]
+        description: |
+          Local parameters are not allowed when passing queries to Solr. An exception to this is when passing local parameters for special query parsers, that need to be enabled explicitly using this config option. For instance, the example provided would allow sending queries like the following::
+            search_params["q"] = "{!bool must=test}..."
+            search_params["q"] = "{!knn field=vector topK=10}..."
 
       - key: ckan.search.show_all_types
         default: dataset
@@ -1372,21 +1385,25 @@ groups:
     options:
       - key: ckan.upload.user.types
         type: list
+        default: image
         example: image text
         description: File types allowed to upload as user's avatar. No restrictions applied when empty
 
       - key: ckan.upload.user.mimetypes
         type: list
+        default: image/png image/gif image/jpeg
         example: image/png text/svg
         description: File MIMETypes allowed to upload as user's avatar. No restrictions applied when empty
 
       - key: ckan.upload.group.types
         type: list
+        default: image
         example: image text
         description: File types allowed to upload as group image. No restrictions applied when empty
 
       - key: ckan.upload.group.mimetypes
         type: list
+        default: image/png image/gif image/jpeg
         example: image/png text/svg
         description: File MIMETypes allowed to upload as group image. No restrictions applied when empty
 
