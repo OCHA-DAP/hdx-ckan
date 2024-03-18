@@ -65,6 +65,7 @@ def register_details_user_schema(ignore_missing, not_empty, name_validator, user
 def onboarding_user_new_form_schema(unicode_safe, not_empty, strip_value, user_email_validator, ignore_missing,
                                     user_emails_match):
     schema = user_new_form_schema()
+    schema['fullname'] = [not_empty, strip_value, unicode_safe]
     schema['email'] = [not_empty, strip_value, user_email_validator, user_emails_match, unicode_safe]
     schema['email2'] = [unicode_safe]
     schema['state'] = [ignore_missing]

@@ -101,6 +101,9 @@ this.ckan.module('hdx-form-validator', function ($) {
       var validationErrors = [];
 
       var validators = {
+        fullname: [
+          {rule: this.validateLength, args: [1, null]}
+        ],
         username: [
           {rule: this.validateRegex, args: [/^[a-z0-9_-]+$/]},
           {rule: this.validateLength, args: [2, 100]}
