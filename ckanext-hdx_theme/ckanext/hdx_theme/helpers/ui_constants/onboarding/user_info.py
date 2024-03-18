@@ -7,6 +7,7 @@ CONSTANTS = {
 
     'INPUT_FULLNAME_LABEL': '''What is your name?''',
     'INPUT_FULLNAME_PLACEHOLDER': '''Your name''',
+    'INPUT_FULLNAME_ERROR': '''Full name cannot be empty''',
     'INPUT_EMAIL_LABEL': '''What is your email address?''',
     'INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
     'INPUT_EMAIL_ERROR': '''Please enter a valid email address''',
