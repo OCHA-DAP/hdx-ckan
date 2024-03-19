@@ -215,6 +215,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             }
         )
 
+        core_last_modified_validators = schema['resources']['last_modified'] or []
         schema['resources'].update(
             {
                 'name': [tk.get_validator('not_empty'), unicode_safe, tk.get_validator('remove_whitespace')],
@@ -226,6 +227,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     unicode_safe
                 ],
                 'url': [tk.get_validator('not_empty'), unicode_safe, tk.get_validator('remove_whitespace')],
+                'last_modified': [tk.get_validator('hdx_update_last_modified_if_url_changed')] \
+                                 + core_last_modified_validators,
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),
@@ -513,7 +516,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_float_number': vd.hdx_float_number,
             'hdx_keep_if_fs_check_format': vd.hdx_keep_if_fs_check_format,
             'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info,
-            'hdx_tag_name_approved_validator': vd.hdx_tag_name_approved_validator
+            'hdx_tag_name_approved_validator': vd.hdx_tag_name_approved_validator,
+            'hdx_update_last_modified_if_url_changed': vd.hdx_update_last_modified_if_url_changed,
         }
 
     def get_auth_functions(self):
