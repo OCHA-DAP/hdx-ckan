@@ -458,12 +458,16 @@ class PackageSearchQuery(SearchQuery):
                 if not _get_local_query_parser(value) in config["ckan.search.solr_allowed_query_parsers"]:
                    raise SearchError(f"Local parameters are not supported in param '{param}'.")
 
+        # Modified by HDX
+        allowed_query_fields = ["facet.field", "facet.query", "fq", "fq_list", "facet.range"]
         for param in query.keys():
-            if isinstance(query[param], str):
-                _check_query_parser(param, query[param])
-            elif isinstance(query[param], list):
-                for item in query[param]:
-                    _check_query_parser(param, item)
+            if param not in allowed_query_fields:
+        # END - modified by HDX
+                if isinstance(query[param], str):
+                    _check_query_parser(param, query[param])
+                elif isinstance(query[param], list):
+                    for item in query[param]:
+                        _check_query_parser(param, item)
 
 
         conn = make_connection(decode_dates=False)
