@@ -14,7 +14,7 @@
 
     <input id="field-username" type="hidden" name="name" value="{{ data.name }}"/>
 
-    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname,
+    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, is_required=true,
           error=errors.fullname, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
           label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
 

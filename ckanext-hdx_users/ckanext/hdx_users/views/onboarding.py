@@ -10,17 +10,17 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.tokens as tokens
-import ckanext.hdx_users.logic.schema as schema
 from ckan.common import (
     config, current_user, session
 )
-from ckan.types import Context, Schema, Response, DataDict
+from ckan.types import Context, Response, DataDict
 from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import \
     send_username_confirmation_email, \
     subscribe_user_to_mailchimp
 from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
     ONBOARDING_MAILCHIMP_OPTIN_KEY
 from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
+from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema
 
 log = logging.getLogger(__name__)
 
@@ -42,10 +42,6 @@ _ = tk._
 request = tk.request
 
 hdx_user_onboarding = Blueprint(u'hdx_user_onboarding', __name__, url_prefix=u'/signup')
-
-
-def _new_form_to_db_schema() -> Schema:
-    return schema.onboarding_user_new_form_schema()
 
 
 def _save_user_info_in_extras(user_dict: DataDict, data_dict: DataDict) -> list[dict[str, Any]]:
@@ -88,7 +84,7 @@ def _prepare() -> Context:
         u'session': model.Session,
         u'user': current_user.name,
         u'auth_user_obj': current_user,
-        u'schema': _new_form_to_db_schema(),
+        u'schema': onboarding_user_new_form_schema(),
         u'save': u'save' in request.form
     })
     try:

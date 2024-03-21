@@ -51,7 +51,13 @@ def set_repoze_user(user_id: str, resp: Optional[Response] = None) -> None:
 
 
 def _edit_form_to_db_schema() -> Schema:
-    return schema.user_edit_form_schema()
+    # MODIFIED BY HDX
+    # This function returns a modified schema for mapping user data from the edit form
+    from ckanext.hdx_users.logic.schema import onboarding_user_edit_form_schema
+
+    return onboarding_user_edit_form_schema()
+    # return schema.user_edit_form_schema()
+    # END - MODIFIED BY HDX
 
 
 def _new_form_to_db_schema() -> Schema:
