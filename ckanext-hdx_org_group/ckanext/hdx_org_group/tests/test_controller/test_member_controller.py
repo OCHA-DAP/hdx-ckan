@@ -1,51 +1,74 @@
-'''
-reCreated on 4 Sep, 2023
-
-@author: dan
-'''
+import logging as logging
 
 import mock
 import pytest
-import logging as logging
-import unicodedata
+
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
-
 import ckanext.hdx_org_group.tests as org_group_base
+from ckanext.hdx_org_group.tests.test_controller.member_controller_base import MemberControllerBase
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
 log = logging.getLogger(__name__)
 
+USER = 'some_user'
+SYSADMIN = 'testsysadmin'
+ORGADMIN = 'orgadmin'
+LOCATION = 'some_location'
+ORG = 'hdx-test-org'
 
-class TestMemberControllerBase(object):
+@pytest.fixture()
+def setup_data():
+    factories.User(name=USER, email='some_user@hdx.hdxtest.org', fullname="Some User",
+                   about="Just another Some User test user.")
+    factories.User(name='janedoe3', email='janedoe3@hdx.hdxtest.org', fullname="Jane Doe3",
+                   about="Just another Jane Doe3 test user.")
+    factories.User(name='johndoe1', email='johndoe1@hdx.hdxtest.org', fullname="John Doe1",
+                   about="Just another John Doe1 test user.")
+    factories.User(name=ORGADMIN, email='orgadmin@hdx.hdxtest.org', fullname="Org Admin",
+                   about="Just another Org Admin test user.")
+    factories.User(name=SYSADMIN, email='testsysadmin@hdx.hdxtest.org', sysadmin=True, fullname="Test Sysadmin",
+                   about="Just another Test Sysadmin test user.")
 
-    def _get_url(self, app, url, apitoken=None):
+    syadmin_obj = model.User.get('testsysadmin@hdx.hdxtest.org')
+    syadmin_obj.apikey = 'SYSADMIN_API_KEY'
+    model.Session.commit()
 
-        if apitoken:
-            page = app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')},
-                           follow_redirects=True)
-        else:
-            page = app.get(url)
-        return page
+    user_obj = model.User.get('some_user@hdx.hdxtest.org')
+    user_obj.apikey = 'SOME_USER_API_KEY'
+    model.Session.commit()
 
-    def _post_url(self, app, url, apitoken=None):
+    user_obj = model.User.get('janedoe3@hdx.hdxtest.org')
+    user_obj.apikey = 'JANEDOE3_API_KEY'
+    model.Session.commit()
 
-        if apitoken:
-            page = app.post(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')},
-                            follow_redirects=True)
-        else:
-            page = app.post(url)
-        return page
+    user_obj = model.User.get('johndoe1@hdx.hdxtest.org')
+    user_obj.apikey = 'JOHNDOE1_API_KEY'
+    model.Session.commit()
 
+    user_obj = model.User.get('orgadmin@hdx.hdxtest.org')
+    user_obj.apikey = 'ORGADMIN_API_KEY'
+    model.Session.commit()
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
-                         'with_request_context')
-class TestBulkInviteMembersController(TestMemberControllerBase):
+    group = factories.Group(name=LOCATION)
+    factories.Organization(
+        name=ORG,
+        title='HDX TEST ORG',
+        users=[
+            {'name': USER, 'capacity': 'member'},
+            {'name': 'janedoe3', 'capacity': 'member'},
+            {'name': 'johndoe1', 'capacity': 'member'},
+            {'name': ORGADMIN, 'capacity': 'admin'}
+        ],
+        hdx_org_type='donor',
+        org_url='https://hdx.hdxtest.org/'
+    )
+
+@pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
+class TestBulkInviteMembersController(MemberControllerBase):
 
     @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
@@ -98,7 +121,7 @@ class TestBulkInviteMembersController(TestMemberControllerBase):
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
                          'with_request_context')
-class TestMembersController(TestMemberControllerBase):
+class TestMembersController(MemberControllerBase):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
@@ -158,7 +181,7 @@ class TestMembersController(TestMemberControllerBase):
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
                          'with_request_context')
-class TestMembersDeleteController(TestMemberControllerBase):
+class TestMembersDeleteController(MemberControllerBase):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]

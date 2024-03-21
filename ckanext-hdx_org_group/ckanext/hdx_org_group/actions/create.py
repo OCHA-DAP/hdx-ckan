@@ -58,7 +58,7 @@ def hdx_user_invite(context, data_dict):
     # told it - they will need to reset it
     while True:
         password = ''.join(random.SystemRandom().choice(
-            string.ascii_lowercase + string.ascii_uppercase + string.digits)
+            string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation)
                            for _ in range(12))
         # Occasionally it won't meet the constraints, so check
         errors = {}
