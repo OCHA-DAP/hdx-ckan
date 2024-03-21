@@ -83,9 +83,9 @@ def onboarding_default_user_schema(not_empty, strip_value, user_email_validator)
 
 
 @validator_args
-def onboarding_default_update_user_schema(not_empty, strip_value, user_email_validator):
+def onboarding_default_update_user_schema(not_empty, strip_value, user_email_validator, ignore_missing):
     schema = default_update_user_schema()
-    schema['fullname'] = [not_empty, strip_value, unicode_safe]
+    schema['fullname'] = [ignore_missing, not_empty, strip_value, unicode_safe]
     schema['email'] = [not_empty, strip_value, user_email_validator, unicode_safe]
 
     return schema
