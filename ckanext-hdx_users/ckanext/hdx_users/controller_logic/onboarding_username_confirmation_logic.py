@@ -38,14 +38,13 @@ def send_username_confirmation_email(user_dict: ActionResult.UserShow) -> bool:
 
 
 def subscribe_user_to_mailchimp(user_dict: ActionResult.UserShow) -> bool:
-    """
-    Subscribes a user to Mailchimp newsletter lists if they have opted in.
+    """Subscribe a user to Mailchimp newsletter lists if they have opted in.
 
-    Args:
-        user_dict (dict): A dictionary containing user data.
+    :param user_dict: A dictionary containing user data.
+    :type user_dict: ActionResult.UserShow
 
-    Returns:
-        bool: True if the user was successfully subscribed, False otherwise.
+    :returns: True if the user was successfully subscribed, False otherwise.
+    :rtype: bool
     """
     if _is_subscribed_to_emails(user_dict) and 'email' in user_dict:
         newsletter_list_id = config.get('hdx.mailchimp.list.newsletter')
@@ -72,13 +71,16 @@ def subscribe_user_to_mailchimp(user_dict: ActionResult.UserShow) -> bool:
 
 
 def _subscribe_to_mailchimp_list(user_dict: ActionResult.UserShow, list_id: str, interests: DataDict = None):
-    """
-    Subscribes a user to a Mailchimp list with optional interests.
+    """Subscribe a user to a Mailchimp list with optional interests.
 
-    Args:
-        user_dict (dict): A dictionary containing user data.
-        list_id (str): The ID of the Mailchimp list.
-        interests (dict, optional): Dictionary of interests and their statuses. Defaults to None.
+    :param user_dict: A dictionary containing user data.
+    :type user_dict: ActionResult.UserShow
+
+    :param list_id: The ID of the Mailchimp list.
+    :type list_id: str
+
+    :param interests: Dictionary of interests and their statuses. Defaults to None.
+    :type interests: DataDict
     """
     member_info = {
         'email_address': user_dict.get('email'),
@@ -95,14 +97,13 @@ def _subscribe_to_mailchimp_list(user_dict: ActionResult.UserShow, list_id: str,
 
 
 def _is_subscribed_to_emails(user_data: DataDict) -> bool:
-    """
-    Checks if a user has opted in for email updates.
+    """Check if a user has opted in for email updates.
 
-    Args:
-        user_data (dict): A dictionary containing user data.
+    :param user_data: A dictionary containing user data.
+    :type user_data: DataDict
 
-    Returns:
-        bool: True if user has opted in, False otherwise.
+    :returns: True if user has opted in, False otherwise.
+    :rtype: bool
     """
     context = {'session': model.Session, 'model': model, 'ignore_auth': True}
     ue_data_dict = {
@@ -115,12 +116,13 @@ def _is_subscribed_to_emails(user_data: DataDict) -> bool:
 
 
 def _mailchimp_add_list_member(member_info: DataDict, list_id: str):
-    """
-    Adds a member in a Mailchimp list.
+    """Add a member in a Mailchimp list.
 
-    Args:
-        member_info (dict): Dictionary containing member data.
-        list_id (str): The ID of the Mailchimp list.
+    :param member_info: Dictionary containing member data.
+    :type member_info: DataDict
+
+    :param list_id: The ID of the Mailchimp list.
+    :type list_id: str
     """
     mailchimp = MailChimp(config.get('hdx.mailchimp.api.key'))
     try:
