@@ -57,5 +57,5 @@ def user_create(up_func, context, data_dict):
     """
     context['schema'] = context.get('schema') or onboarding_default_user_schema()
 
-    rval = up_func(context, data_dict)
-    return rval
+    result = up_func(context, data_dict)
+    return result
