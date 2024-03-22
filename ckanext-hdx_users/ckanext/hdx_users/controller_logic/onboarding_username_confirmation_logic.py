@@ -61,31 +61,37 @@ def subscribe_user_to_mailchimp(user_dict: ActionResult.UserShow) -> bool:
                 category_id)` to fetch category interests (options
                 """
                 ds_interest_id = config.get('hdx.mailchimp.interest.data_services')
-                _subscribe_to_mailchimp_list(user_dict['email'], newsletter_list_id, {ds_interest_id: True})
+                _subscribe_to_mailchimp_list(user_dict, newsletter_list_id, {ds_interest_id: True})
 
             if new_user_list_id:
-                _subscribe_to_mailchimp_list(user_dict['email'], new_user_list_id)
+                _subscribe_to_mailchimp_list(user_dict, new_user_list_id)
 
             return True
 
     return False
 
 
-def _subscribe_to_mailchimp_list(email: str, list_id: str, interests: DataDict = None):
+def _subscribe_to_mailchimp_list(user_dict: ActionResult.UserShow, list_id: str, interests: DataDict = None):
     """
     Subscribes a user to a Mailchimp list with optional interests.
 
     Args:
-        email (str): The email address of the user to subscribe.
+        user_dict (dict): A dictionary containing user data.
         list_id (str): The ID of the Mailchimp list.
         interests (dict, optional): Dictionary of interests and their statuses. Defaults to None.
     """
-    data_dict = {'email_address': email, 'status': 'subscribed'}
+    member_info = {
+        'email_address': user_dict.get('email'),
+        'status': 'subscribed',
+        'merge_fields': {
+            'FULLNAME': user_dict.get('fullname')
+        }
+    }
 
     if interests:
-        data_dict['interests'] = interests
+        member_info['interests'] = interests
 
-    _mailchimp_create_member(data_dict, list_id)
+    _mailchimp_add_list_member(member_info, list_id)
 
 
 def _is_subscribed_to_emails(user_data: DataDict) -> bool:
@@ -108,17 +114,17 @@ def _is_subscribed_to_emails(user_data: DataDict) -> bool:
     return ue_extra and ue_extra.get('hdx_onboarding_mailchimp_optin') == 'true'
 
 
-def _mailchimp_create_member(data_dict: DataDict, list_id: str):
+def _mailchimp_add_list_member(member_info: DataDict, list_id: str):
     """
-    Creates a member in a Mailchimp list.
+    Adds a member in a Mailchimp list.
 
     Args:
-        data_dict (dict): Dictionary containing member data.
+        member_info (dict): Dictionary containing member data.
         list_id (str): The ID of the Mailchimp list.
     """
     mailchimp = MailChimp(config.get('hdx.mailchimp.api.key'))
     try:
         mailchimp.ping.get()
-        mailchimp.lists.members.create(list_id, data_dict)
+        mailchimp.lists.members.create(list_id, member_info)
     except Exception as ex:
         log.error(ex)
