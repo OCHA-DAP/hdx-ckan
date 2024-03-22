@@ -4,6 +4,7 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
 import ckanext.hdx_users.model as umodel
 from ckanext.hdx_users.helpers.token_expiration_helper import find_expiring_api_tokens, send_emails_for_expiring_tokens
+from ckanext.hdx_users.logic.schema import onboarding_default_update_user_schema
 
 NotFound = tk.ObjectNotFound
 _check_access = tk.check_access
@@ -118,3 +119,18 @@ def __extract_token_expiration_params(data_dict):
     except ValueError:
         raise ValidationError('Limit must be a positive integer')
     return days_in_advance, expires_on_specified_day
+
+
+@tk.chained_action
+def user_update(up_func, context, data_dict):
+    """
+    Perform user_update with a modified default schema.
+
+    This function overrides the default schema used for updating users with a modified schema. By default,
+    it uses the schema specified by the 'onboarding_default_update_user_schema' function. If a schema is already
+    provided in the context, it will use that instead.
+    """
+    context['schema'] = context.get('schema') or onboarding_default_update_user_schema()
+
+    rval = up_func(context, data_dict)
+    return rval

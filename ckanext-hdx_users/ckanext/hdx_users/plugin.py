@@ -52,7 +52,9 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
             'hdx_send_request_data_auto_approval': misc.hdx_send_request_data_auto_approval,
             'hdx_first_login': create.hdx_first_login,
-            'user_delete': delete.hdx_user_delete
+            'user_delete': delete.hdx_user_delete,
+            'user_update': update.user_update,
+            'user_create': create.user_create,
         }
 
     def get_auth_functions(self):
