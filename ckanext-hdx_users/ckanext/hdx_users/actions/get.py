@@ -141,7 +141,8 @@ def user_autocomplete(context: Context, data_dict: DataDict) -> ActionResult.Use
 
     #user_name wasn't included in the defaul CKAN behaviour, so email was not searched for sysadmins
     query = model.User.search(q, user_name=user)
-    query = query.filter(model.User.state != model.State.DELETED)
+    #filtering only approved users
+    query = query.filter(model.User.state == model.State.ACTIVE)
 
     if ignore_self:
         query = query.filter(model.User.name != user)
