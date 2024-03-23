@@ -60,16 +60,20 @@ Example:
                       data-start-page-additional-params="{{ onboarding_additional_params }}"
               {% endif %}
             >
-              <a href="#" class="btn btn-primary"
-                 data-module="hdx-modal-form"
-                 data-module-template_file="request_contact.html"
-                 data-module-submit_action="{{ requestdata_action }}"
-                 data-module-post_data="{{ request_post_data }}"
-                 data-module-is_logged_in="{{ is_logged_in }}"
-                 data-module-is_hdx="{{ is_hdx }}"
-                 data-module-redirect_url="{{ redirect_url }}"
-                 data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
-              >Request data</a>
+              <span data-module="hdx_click_stopper"
+              data-module-link_type="dataset resources" data-module-label="Request data"
+              data-module-just_send_event="true" data-module-selector="#request-data-button">
+                <a href="javascript:void(0);" id="request-data-button" class="btn btn-primary"
+                   data-module="hdx-modal-form"
+                   data-module-template_file="request_contact.html"
+                   data-module-submit_action="{{ requestdata_action }}"
+                   data-module-post_data="{{ request_post_data }}"
+                   data-module-is_logged_in="{{ is_logged_in }}"
+                   data-module-is_hdx="{{ is_hdx }}"
+                   data-module-redirect_url="{{ redirect_url }}"
+                   data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+                >Request data</a>
+              </span>
             </span>
           </span>
 
