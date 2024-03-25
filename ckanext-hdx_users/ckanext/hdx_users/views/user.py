@@ -14,7 +14,7 @@ import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
 from ckan.common import session
-from ckan.types import Response
+from ckan.types import Response, Context
 from ckan.views.user import PerformResetView, RequestResetView, rotate_token, next_page_or_default
 from ckan.views.user import (
     follow as _follow, followers as _followers, unfollow as _unfollow, login as _login, logout as _logout
@@ -278,13 +278,13 @@ def login() -> Union[Response, str]:
                 return h.redirect_to('hdx_splash.index')
 
         if user_obj:
-            first_login_context = {
+            first_login_context: Context = {
                 'model': model,
                 'session': model.Session,
                 'user': user_obj.name, 'auth_user_obj': user_obj
             }
             first_login_logic = FirstLoginLogic(first_login_context, user_obj.id)
-            first_login_url = first_login_logic.determine_initial_redirect_and_mark_first_login()
+            first_login_url = first_login_logic.determine_initial_redirect()
             next = first_login_url or request.args.get('next', request.args.get('came_from'))
             if _remember:
                 from datetime import timedelta

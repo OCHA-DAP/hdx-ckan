@@ -11,7 +11,7 @@ from ckanext.hdx_users.helpers.constants import ONBOARDING_START_PAGE_HDX_CONNEC
     ONBOARDING_START_PAGE_CONTACT_CONTRIBUTOR, ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT, \
     ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG, ONBOARDING_START_PAGE_ADD_DATA
 from ckanext.hdx_users.tests.test_onboarding_v2.helper import _apply_for_user_account, _validate_account, _attempt_login
-from tests.helpers import CKANTestApp
+from ckan.tests.helpers import CKANTestApp
 
 came_from_list = [
     {
@@ -74,10 +74,12 @@ came_from_list = [
 @pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
 @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
 @pytest.mark.parametrize('came_from_entry', came_from_list)
+@mock.patch('ckanext.hdx_users.logic.first_login.FirstLoginAnalyticsSender.send_to_queue')
 @mock.patch('ckanext.security.authenticator.LoginThrottle')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
-def test_came_from_logic(mock_send_validation_email: MagicMock, MockLoginThrottle: MagicMock, app: CKANTestApp,
-                         came_from_entry: Dict):
+def test_came_from_logic(mock_send_validation_email: MagicMock, MockLoginThrottle: MagicMock,
+                         mock_analytics_send_to_queue: MagicMock,
+                         app: CKANTestApp, came_from_entry: Dict):
     '''
     Check the documentation of the `test_user_login()` function
     '''
@@ -92,3 +94,4 @@ def test_came_from_logic(mock_send_validation_email: MagicMock, MockLoginThrottl
     login_response = _attempt_login(app, follow_redirects=False)
     assert login_response.status_code == 302
     assert redirect_to_url in login_response.location
+    assert mock_analytics_send_to_queue.call_count == 1

@@ -2,7 +2,7 @@ import json
 import logging
 from enum import Enum
 
-from typing import Union
+from typing import Union, Optional
 from typing_extensions import TypedDict
 
 import ckan.plugins.toolkit as tk
@@ -18,6 +18,8 @@ from ckanext.hdx_users.helpers.constants import (
     ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY,
 )
 
+from ckanext.hdx_users.helpers.analytics import FirstLoginAnalyticsSender
+
 get_action = tk.get_action
 check_access = tk.check_access
 g = tk.g
@@ -29,15 +31,20 @@ class FirstLoginLogic:
     def __init__(self, context: Context, user_id: str):
         self.context = context
         self.user_id = user_id
-        self.state = None
+        self.state: Optional[str] = None
 
-    def determine_initial_redirect_and_mark_first_login(self) -> Union[str, None]:
+        self.onboarding_start_page: Optional[str] = None
+        self.value_proposition_choice: Optional[str] = None
+
+    def determine_initial_redirect(self) -> Union[str, None]:
         '''
         Determine where the user should be redirected to at first login
         '''
         onboarding_source_str = self._get_onboarding_came_from()
         try:
             onboarding_source: 'OnboardingSource' = json.loads(onboarding_source_str)
+            self.value_proposition_choice = onboarding_source['value_proposition_page']
+            self.onboarding_start_page = onboarding_source['start_page']['page_type']
             url = self._compute_url(onboarding_source)
             return url
         except Exception as e:
@@ -108,6 +115,7 @@ class FirstLoginLogic:
                 and result[0]['key'] == ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY and result[0]['value'] == 'inactive'):
                 self.state = 'inactive'
                 log.info('User {} logged in for the first time'.format(self.user_id))
+                FirstLoginAnalyticsSender(self.onboarding_start_page, self.value_proposition_choice).send_to_queue()
                 return True
             else:
                 log.error('Something went wrong while trying to mark "came from" state as inactive'
