@@ -507,6 +507,10 @@ $(
             metadata.label = data.label;
         }
 
+        if (analyticsInfo.authenticated !== undefined && analyticsInfo.authenticated !== null) {
+          metadata.authenticated = analyticsInfo.authenticated;
+        }
+
         var mixpanelData = {
             "eventName": "link click",
             "eventMeta": metadata
