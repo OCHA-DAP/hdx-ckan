@@ -19,6 +19,8 @@ import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
 import ckanext.hdx_users.views.user_register_view as urv
 
+import ckanext.security.validators as security_validators
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
@@ -115,7 +117,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_validators(self):
         return {
             'user_email_validator': hdx_validators.user_email_validator,
-            'user_name_validator': hdx_validators.user_name_validator
+            'user_name_validator': hdx_validators.user_name_validator,
+            'user_password_validator': security_validators.user_password_validator,
         }
 
     # IBlueprint
