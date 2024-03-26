@@ -14,7 +14,7 @@ CONSTANTS = {
     'INPUT_EMAIL2_LABEL': '''Re-enter your email address''',
     'INPUT_EMAIL2_PLACEHOLDER': '''Re-enter your email address''',
     'INPUT_EMAIL2_ERROR': '''Email addresses must be valid and match''',
-    'INPUT_USERNAME_LABEL': '''Choose a username''',
+    'INPUT_USERNAME_LABEL': '''Choose a username (visible to other users)''',
     'INPUT_USERNAME_PLACEHOLDER': '''Your username''',
     # 'INPUT_USERNAME_HELP': '''Username should be between 2 and 100 characters in length, containing only lowercase alphanumeric characters, - and _''',
     # 'INPUT_USERNAME_ERROR': '''Please use a valid username format''',
