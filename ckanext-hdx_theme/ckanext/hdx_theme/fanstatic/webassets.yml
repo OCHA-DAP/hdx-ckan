@@ -994,7 +994,7 @@ group-list-scripts:
   output: ckanext-hdx_theme/%(version)s_group-scripts.js
   extra:
     preload:
-      - hdx_theme/group-styles
+      - hdx_theme/group-list-styles
   contents:
     - browse_/world_json.js
     - browse_/countries.js
@@ -1002,7 +1002,7 @@ group-list-scripts:
     - browse_/group-init.js
 
 group-list-styles:
-  output: ckanext-hdx_theme/%(version)s_group-styles.css
+  output: ckanext-hdx_theme/%(version)s_group-list-styles.css
   <<: *common-css
   extra:
     preload:
@@ -1016,7 +1016,7 @@ group-light-styles:
   extra:
     preload:
       - hdx_theme/charting-styles
-      - hdx_theme/group-styles
+      - hdx_theme/group-list-styles
       - hdx_theme/topline-rw-styles
       - hdx_theme/requestdata-styles
       - hdx_theme/dataset-search-styles

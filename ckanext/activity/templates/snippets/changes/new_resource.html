@@ -1,6 +1,6 @@
 {# MODIFIED BY HDX #}
 {# changes page triggers server error for new resource: https://github.com/ckan/ckan/pull/8006 #}
-{# {% set dataset_type = request.view_args.package_type %} #}
+{# {% set dataset_type = request.view_args.package_type or pkg_dict['type'] or 'dataset' %} #}
 {# END MODIFIED BY HDX #}
 {% set pkg_url = h.url_for(dataset_type ~ '.read', id=change.pkg_id) %}
 {% set resource_url = h.url_for(dataset_type ~ '_resource.read', id=change.pkg_id, resource_id = change.resource_id, qualified=True) %}
