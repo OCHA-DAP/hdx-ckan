@@ -2,17 +2,17 @@
 
 <p>{{ data.user_fullname}} ({{ data.requestor_hdx_email }}) has requested the creation of a new organisation on HDX.</p>
 
-<p>
-Organisation name: {{ data.org_name }}<br/>
-Organisation acronym: {{ data.org_acronym }}<br/>
-Organisation description: {{ data.org_description }}<br/>
-Organisation type: {{ data.org_type }}<br/>
-Organisation website: {{ data.org_website }}<br/>
-Data description: {{ data.data_description }}<br/>
-Requestor work email: {{ data.requestor_work_email }}<br/>
-Requestor HDX username: {{ data.requestor_hdx_username }}<br/>
-Requestor HDX registered email: {{ data.requestor_hdx_email }}<br/>
-Request time: {{ data.request_time }}<br/>
-</p>
+<div class="quote">
+  <p><strong>Organisation name:</strong> {{ data.org_name }}</p>
+  <p><strong>Organisation acronym:</strong> {{ data.org_acronym }}</p>
+  <p><strong>Organisation description:</strong> {{ data.org_description }}</p>
+  <p><strong>Organisation type:</strong> {{ data.org_type }}</p>
+  <p><strong>Organisation website:</strong> {{ data.org_website }}</p>
+  <p><strong>Data description:</strong> {{ data.data_description }}</p>
+  <p><strong>Requestor work email:</strong> {{ data.requestor_work_email }}</p>
+  <p><strong>Requestor HDX username:</strong> {{ data.requestor_hdx_username }}</p>
+  <p><strong>Requestor HDX registered email:</strong> {{ data.requestor_hdx_email }}</p>
+  <p><strong>Request time:</strong> {{ data.request_time }}</p>
+</div>
 
 <p>Please reply directly to {{ data.user_fullname}} within two business days.</p>

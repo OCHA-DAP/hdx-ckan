@@ -10,7 +10,7 @@ from ckan.lib.mailer import make_key as ckan_make_key
 log = logging.getLogger(__name__)
 
 
-def make_key(expiration_in_minutes=180) -> str:
+def make_key(expiration_in_minutes=24*60) -> str:
     time_part = (datetime.utcnow() + timedelta(minutes=expiration_in_minutes)).isoformat()
     random_part = text_type(ckan_make_key())
     key = '{}__{}'.format(random_part, time_part)

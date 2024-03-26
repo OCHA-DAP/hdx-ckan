@@ -1,0 +1,41 @@
+@media (max-width: 1200px) {
+  .new-header .hdx-header .navbar-header .hdxLogo {
+    width: 45px;
+  }
+  .new-header .hdx-header .navbar-header .hdxLogo .logo .logo-img {
+    background-image: url("/images/homepage/logo-hdx-mobile.svg");
+    background-size: 28px 31px;
+    width: 28px;
+  }
+}
+@media (max-width: 1024px) {
+  .new-header .hdx-header .navbar-header .submit-data .submitData {
+    display: none;
+  }
+}
+@media (max-width: 1024px) {
+  .new-header .hdx-header .navbar-toggler {
+    display: block;
+  }
+}
+@media (max-width: 1024px) {
+  .mainLinks {
+    display: none;
+  }
+}
+@media (max-width: 1200px) {
+  .hdx-footer .social-footer .terms {
+    display: block;
+    line-height: 2;
+  }
+  .hdx-footer .social-footer .terms .social-actions {
+    display: block;
+    margin-top: 30px;
+  }
+}
+@media (max-width: 768px) {
+  .hdx-footer .social-footer .terms {
+    display: flex;
+    line-height: 20px;
+  }
+}

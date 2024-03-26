@@ -32,6 +32,7 @@ ckan:
     - notifications/hdx_notifications_main.js
     - metadata-button.js
     - select-switch.js
+    - hdx-onboarding-flow.js
 
 page-common-styles:
   output: ckanext-hdx_theme/%(version)s_page-common-styles.css
@@ -90,6 +91,54 @@ page-light-styles:
     - page-common-styles
     - light/page-light.css
     - search-styles
+    - adaptive-page-styles
+
+adaptive-page-styles:
+  output: ckanext-hdx_theme/%(version)s_adaptive-page-styles.css
+  contents:
+    - light/adaptive-page.css
+
+page-extra-light-styles:
+  output: ckanext-hdx_theme/%(version)s_page-extra-light-styles.css
+  <<: *common-css
+  contents:
+    - page-common-styles
+    - light/page-extra-light.css
+    - adaptive-page-styles
+
+bem-blocks-styles:
+  output: ckanext-hdx_theme/%(version)s_bem-blocks-styles.css
+  <<: *common-css
+  contents:
+    - bem.blocks/bem_fonts.css
+    - bem.blocks/stepper.css
+    - bem.blocks/heading.css
+    - bem.blocks/paragraph.css
+    - bem.blocks/input_field.css
+    - bem.blocks/checkbox_field.css
+    - bem.blocks/form_info.css
+    - bem.blocks/form_button.css
+    - bem.blocks/account_options.css
+
+hdx-form-validator:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-form-validator.js
+  contents:
+    - hdx-form-validator.js
+
+hdx-onboarding-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-onboarding-scripts.js
+  contents:
+    - onboarding/came-from-input.js
+    - onboarding/confirm-page-leave.js
+    - onboarding/toggle-password-visibility.js
+
+hdx-verify-email-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-verify-email-scripts.js
+  contents:
+    - onboarding/verify-email.js
 
 search-scripts:
   <<: *common-js
@@ -954,6 +1003,7 @@ homepage-styles:
   contents:
     - homepage/homepage.css
     - homepage/homepage-responsive.css
+    - adaptive-page-styles
 
 country-custom-scripts:
   # not preloading country-custom-styles as sometimes we need nepal-quake-country-custom-styles instead

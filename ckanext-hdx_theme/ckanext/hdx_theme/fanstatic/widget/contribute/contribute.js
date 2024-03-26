@@ -9,10 +9,10 @@ function contributeAddDetails(datasetId, typeOfCall, anchor){
   popup.show();
 
   let linkType = (typeOfCall ? typeOfCall + ' ' : '') + (datasetId ? 'edit data' : 'add data');
-  hdxUtil.analytics.sendLinkClickEvent({
-    destinationUrl: '#',
-    linkType: linkType
-  });
+  // hdxUtil.analytics.sendLinkClickEvent({
+  //   destinationUrl: '#',
+  //   linkType: linkType
+  // });
 
   if (popup.attr('dataset-id') != String(datasetId)) {
     prepareContributePopup(datasetId);

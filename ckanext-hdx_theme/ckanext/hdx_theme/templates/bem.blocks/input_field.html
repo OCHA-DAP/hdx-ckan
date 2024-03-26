@@ -1,0 +1,41 @@
+<div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <label class="input-field__label" for="input-{{ name }}">
+    {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
+  <div class="{% if type == 'password' %}input-group{% endif %}">
+    <input
+            type="{{ type }}"
+            name="{{ name }}"
+            class="form-control input-field__input{% if errors %} is-invalid{% endif %}"
+            id="input-{{ name }}"
+            placeholder="{{ placeholder }}"
+            value="{% if value %}{{ value }}{% endif %}"
+            {% if required %}required{% endif %}
+            {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+            {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
+            {% if data_attributes and data_attributes['live-feedback'] %}
+            data-bwignore="true"
+            data-1p-ignore="true"
+            data-lpignore="true"
+            data-form-type="other"
+            {% endif %}
+            {% endfor %}{% endif %}
+    >
+    {% if type == 'password' %}
+      <span class="input-group-text input-field__input-group-text input-field__input-group-text_state_clickable">
+        <i class="fa-regular fa-fw fa-eye"></i>
+        <i class="fa-regular fa-fw fa-eye-slash d-none"></i>
+      </span>
+    {% endif %}
+    {% if errors or (data_attributes and data_attributes['validation-error']) %}
+      <div class="input-field__feedback-message input-field__feedback-message_state_invalid invalid-feedback">
+        {% if errors %}{{ errors|join('. ') }}{% endif %}
+      </div>
+    {% endif %}
+  </div>
+  {% if data_attributes and data_attributes['live-feedback'] %}
+    <ul class="input-field__live-feedback live-feedback d-none list-group list-group-flush"></ul>
+  {% endif %}
+  {% if help_text %}
+    <span class="form-text input-field__help">{{ help_text }}</span>
+  {% endif %}
+</div>

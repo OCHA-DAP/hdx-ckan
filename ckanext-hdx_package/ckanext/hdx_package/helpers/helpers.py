@@ -453,7 +453,12 @@ def generate_mandatory_fields():
 
 
 def hdx_check_add_data():
-    data_dict = {}
+    data_dict = {
+        'href': '#',
+        'onclick': 'contributeAddDetails(null, \'header\')',
+        'data_module': 'hdx_click_stopper',
+        'data_module_link_type': 'header add data',
+    }
 
     context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
@@ -462,18 +467,12 @@ def hdx_check_add_data():
     try:
         _check_access("package_create", context, dataset_dict)
     except NotAuthorized as e:
-        data_dict['data_module'] = 'hdx_click_stopper'
-        data_dict['data_module_link_type'] = 'header add data'
         if c.userobj or c.user:
             data_dict['href'] = '/dashboard/organizations'
             data_dict['onclick'] = ''
             return data_dict
         data_dict['href'] = '/contribute'
         data_dict['onclick'] = ''
-        return data_dict
-
-    data_dict['href'] = '#'
-    data_dict['onclick'] = 'contributeAddDetails(null, \'header\')'
 
     return data_dict
 

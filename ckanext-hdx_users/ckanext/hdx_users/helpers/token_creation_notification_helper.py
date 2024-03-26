@@ -57,7 +57,7 @@ def send_email_on_token_creation(username, token_name, expiration_in_millis):
             'data': token_info,
             'footer': True,
             '_snippet': 'email/content/api_tokens/api_token_creation.html',
-            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx-email.png',
+            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx.png',
         }
     }
     rendered_html = _render('email/email.html', html_data_dict)
@@ -82,11 +82,6 @@ def _get_user_full_name_and_email(username):
         raise NotFound('No user data found for username: {}'.format(username))
     if '@' not in user_dict.get('email', ''):
         raise NotFound('No email address found for username: {}'.format(username))
-    firstname = user_dict.get('firstname')
-    lastname = user_dict.get('lastname')
-    if firstname and lastname:
-        full_name = '{} {}'.format(firstname, lastname)
-    else:
-        full_name = user_dict.get('fullname') or user_dict.get('name')
+    fullname = user_dict.get('fullname')
 
-    return full_name, user_dict.get('email')
+    return fullname, user_dict.get('email')

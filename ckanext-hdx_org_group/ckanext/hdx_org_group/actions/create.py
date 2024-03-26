@@ -68,6 +68,8 @@ def hdx_user_invite(context, data_dict):
 
     data['name'] = name
     data['password'] = password
+    # the "Full name" field is now mandatory. since we don't have the name here, we use the username instead
+    data['fullname'] = name
     data['state'] = core_model.State.PENDING
     user_dict = _get_action('user_create')(context, data)
     user = core_model.User.get(user_dict['id'])

@@ -10,7 +10,7 @@ import six
 
 import passlib.utils
 from passlib.hash import pbkdf2_sha512
-from sqlalchemy.sql.expression import or_
+from sqlalchemy.sql.expression import or_, and_
 from sqlalchemy.orm import synonym
 from sqlalchemy import types, Column, Table, func
 from sqlalchemy.dialects.postgresql import JSONB
@@ -90,13 +90,15 @@ class User(core.StatefulObjectMixin,
     def by_email(cls, email: str) -> Optional[Self]:
         return meta.Session.query(cls).filter_by(email=email).first()
 
-    # added email by HDX
+    # allow get by email - changed by HDX
     @classmethod
     def get(cls, user_reference: Optional[str]) -> Optional[Self]:
         query = meta.Session.query(cls).autoflush(False)
-        query = query.filter(or_(cls.name == user_reference,
-                                 cls.id == user_reference,
-                                 cls.email == user_reference))
+        query = query.filter(or_(
+            cls.name == user_reference,
+            cls.id == user_reference,
+            and_(cls.email == user_reference, cls.state == 'active'))
+        )
         return query.first()
 
     @classmethod
