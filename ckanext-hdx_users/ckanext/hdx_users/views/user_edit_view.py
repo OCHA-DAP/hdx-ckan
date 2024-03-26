@@ -75,8 +75,8 @@ class HDXTwoStep:
         user_name = SecurityTOTP.get_user_name(request.args['user'])
         locked = False
         lockout = {}
-        throttle = LoginThrottle(User.by_name(user_name), user_name)
-        if throttle:
+        if user_name:
+            throttle = LoginThrottle(User.by_name(user_name), user_name)
             locked = throttle.is_locked()
             if locked:
                 lockout['timeout'] = throttle.login_lock_timeout
