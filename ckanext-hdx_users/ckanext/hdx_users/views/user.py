@@ -13,11 +13,13 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
-from ckan.types import Response
+from ckan.common import session
+from ckan.types import Response, Context
 from ckan.views.user import PerformResetView, RequestResetView, rotate_token, next_page_or_default
 from ckan.views.user import (
     follow as _follow, followers as _followers, unfollow as _unfollow, login as _login, logout as _logout
 )
+from ckanext.hdx_users.logic.first_login import FirstLoginLogic
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
@@ -106,7 +108,13 @@ class HDXRequestResetView(RequestResetView):
             if not token['valid']:
                 token = tokens.refresh_token(context, token)
                 # redirect to validation page
-                if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
+                if user_obj and tokens.send_validation_email(
+                    {'id': user_obj.id, 'email': user_obj.email},
+                    token,
+                    'Complete your HDX registration',
+                    'email/content/onboarding_email_validation.html',
+                    h.url_for('hdx_user_register.validate', token=token['token'], qualified=True)
+                ):
                     return OnbSuccess
                 # return OnbErr
                 return OnbSuccess
@@ -146,6 +154,16 @@ class HDXPerformResetView(PerformResetView):
 
         return render(u'user/perform_reset.html')
 
+    def _get_form_password(self):
+        password1 = request.form.get(u'password1')
+        password2 = request.form.get(u'password2')
+        if password1 is not None and password1 != u'':
+            if password1 != password2:
+                raise ValueError(_(u'The passwords you entered' u' do not match.'))
+            return password1
+        msg = _(u'You must provide a password')
+        raise ValueError(msg)
+
 
 def read(id=None):
     """
@@ -171,9 +189,9 @@ def read(id=None):
 
     # The legacy templates have the user's activity stream on the user
     # profile page, new templates do not.
-    if tk.asbool(config.get(u'ckan.legacy_templates', False)):
-        g.user_activity_stream = get_action(u'user_activity_list_html')(
-            context, {u'id': g.user_dict[u'id']})
+    # if tk.asbool(config.get(u'ckan.legacy_templates', False)):
+    #     g.user_activity_stream = get_action(u'user_activity_list_html')(
+    #         context, {u'id': g.user_dict[u'id']})
 
     return render(u'user/read.html', extra_vars=extra_vars)
 
@@ -237,6 +255,7 @@ def _check_email_validation(user_obj: "User") -> bool:
 def login() -> Union[Response, str]:
     '''
     This is based on ckan.views.user.login() but with the following changes:
+    - we added the first login logic
     - we skip the GET method, as we don't have a dedicated login page
     - we skip ckan.lib.authenticator.ckan_authenticator() as we want to fail if the user is not authenticated by
       ckanext.security
@@ -269,16 +288,27 @@ def login() -> Union[Response, str]:
                 return h.redirect_to('hdx_splash.index')
 
         if user_obj:
-            next = request.args.get('next', request.args.get('came_from'))
+            first_login_context: Context = {
+                'model': model,
+                'session': model.Session,
+                'user': user_obj.name, 'auth_user_obj': user_obj
+            }
+            first_login_logic = FirstLoginLogic(first_login_context, user_obj.id)
+            first_login_url = first_login_logic.determine_initial_redirect()
+            next = first_login_url or request.args.get('next', request.args.get('came_from'))
             if _remember:
                 from datetime import timedelta
                 duration_time = timedelta(milliseconds=int(_remember))
                 login_user(user_obj, remember=True, duration=duration_time)
                 rotate_token()
+                first_login_logic.mark_state_as_used_if_needed()
+                session['from_login'] = True
                 return next_page_or_default(next)
             else:
                 login_user(user_obj)
                 rotate_token()
+                first_login_logic.mark_state_as_used_if_needed()
+                session['from_login'] = True
                 return next_page_or_default(next)
         else:
             err = _(u"Login failed. Bad username or password.")

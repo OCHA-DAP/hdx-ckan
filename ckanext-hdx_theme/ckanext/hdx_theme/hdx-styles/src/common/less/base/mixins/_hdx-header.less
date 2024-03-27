@@ -14,7 +14,10 @@
     .navbar-toggle {
       display: none;
     }
-    @media (max-width: @cut-point-tablet) {
+    .navbar-toggler {
+      display: none;
+    }
+    @media (max-width: @cut-point-laptop-s) {
       .navbar-toggler {
         flex: 1;
         text-align: right;
@@ -169,10 +172,6 @@
           color: @whiteColor;
           .uppercase;
           white-space: nowrap;
-
-          @media (max-width: @cut-point-laptop-s) {
-            display: none;
-          }
         }
       }
     }

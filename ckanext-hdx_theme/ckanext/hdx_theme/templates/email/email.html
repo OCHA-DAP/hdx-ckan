@@ -1,44 +1,166 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600&display=swap" rel="stylesheet" type="text/css">
     <style>
-      body{
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
+      .hdx-email {
+        background-color: #1EBFB3;
+        margin: 0;
+        padding: 40px 0;
+        font-family: 'Source Sans Pro', sans-serif;
       }
-      p {
-        font-size: 12px;
+
+      .hdx-email .hdx-container {
+        max-width: 658px;
+        margin: 0 auto;
+        padding: 0;
+        background-color: #ffffff;
+      }
+
+      .hdx-email .hdx-space {
+        padding: 48px;
+      }
+
+      .hdx-email .hdx-content p {
+        font-size: 20px;
+        line-height: 180%;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .hdx-email .hdx-content ol, .hdx-content ul {
+        padding-left: 24px;
+      }
+
+      .hdx-email .hdx-content li {
+        font-size: 20px;
+        line-height: 150%;
+      }
+
+      .hdx-email .hdx-content a {
+        text-decoration: none;
+        color: #007CE1;
+      }
+
+      .hdx-email .hdx-content .button {
+        display: inline-block;
+        color: #fff;
+        background-color: #007CE1;
+        padding: 19px 32px;
+        font-weight: 600;
+        margin: 32px 0;
+        font-size: 16px;
+        line-height: 125%;
+        text-decoration: none;
+      }
+
+      .hdx-email .hdx-content .quote {
+        margin-bottom: 15px;
+        margin-left: 15px;
+        padding-left: 10px;
+        border-left: 2px solid #F2F2F2;
+      }
+      .hdx-email .hdx-content .quote p {
+        margin-bottom: 0;
+        line-height: 150%;
+      }
+
+      .hdx-email .hdx-logo {
+        padding: 35px;
+        background-color: #F2F2F2;
+      }
+
+      .hdx-email .hdx-logo a {
+        display: block;
+      }
+
+      .hdx-email .hdx-logo img {
+        width: 136px;
+        height: auto;
+        display: block;
+      }
+
+      .hdx-email .hdx-footer {
+        background-color: #f5f8ff;
+        padding: 32px;
+        margin-top: 32px;
+        color: #494747;
+      }
+
+      .hdx-email .hdx-footer a {
+        color: #494747;
+      }
+
+      .hdx-email .hdx-footer .social-icon {
+        text-decoration: none;
+      }
+
+      .hdx-email .hdx-footer img {
+        max-width: 18px;
+        height: auto;
+        margin-right: 5px;
+        margin-top: 32px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .hdx-email .hdx-footer p {
+        font-size: 14px;
+        line-height: 150%;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 678px) {
+        .hdx-email {
+          background-color: #fff !important;
+          padding: 0 !important;
+        }
+
+        .hdx-email .hdx-container {
+          max-width: 100% !important;
+        }
+
+        .hdx-email .hdx-space {
+          padding: 35px !important;
+        }
+
+        .hdx-email .hdx-logo {
+          background-color: #fff !important;
+        }
+
+        .hdx-email .hdx-logo a {
+          width: 46px !important;
+          overflow: hidden !important;
+        }
       }
     </style>
   </head>
   <body>
-  <div align="center">
-    <img style="max-width:200px; width:50%" src="{{ data.logo_hdx_email }}" />
-  </div>
-  <div>
-    {% snippet data._snippet, data=data.data %}
-  </div>
-  <div>
-    <p>
-      Best regards,<br/>
-      The HDX team
-    </p>
-  </div>
-  <footer>
-    {% if data.footer %}
-      <p style="font-size:10px;text-align:center;">
-{#        You are receiving this email because you joined HDX with the email {{ data.footer }}.#}
-        You are receiving this email because you are a registered HDX user.
-      </p>
-    {% endif %}
-{#    <p style="font-size:10px;text-align:center;">#}
-    <p style="text-align:center;">
-      <a href="https://data.humdata.org">HDX</a> is a product of the <a href="https://unocha.org">United Nations Office
-      for the Coordination of Humanitarian Affairs</a> (OCHA) - <a href="https://centre.humdata.org">Centre for
-      Humanitarian Data</a>. Keep in touch by <a href="https://twitter.com/humdata">following us on Twitter</a>, <a
-            href="https://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1">signing up for
-      our mailing list</a>, or replying to this email.
-    </p>
-  </footer>
-
+    <div class="hdx-email">
+      <div class="hdx-container">
+        <div class="hdx-logo">
+          <a href="{{ h.url_for('hdx_splash.index', qualified=True) }}" target="_blank">
+            <img src="{{ data.logo_hdx_email }}" alt="HDX">
+          </a>
+        </div>
+        <div class="hdx-space">
+          <div class="hdx-content">
+            {% snippet data._snippet, data=data.data %}
+          </div>
+          <div class="hdx-footer">
+            <p>{% if data.footer %}You are receiving this email because you are a registered HDX user. {% endif %}<a href="https://data.humdata.org" title="HDX" target="_blank">HDX</a> is a product of the <a href="https://www.unocha.org" title="OCHA" target="_blank">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) - <a href="https://centre.humdata.org/" title="Centre for Humanitarian Data" target="_blank">Centre for Humanitarian Data</a>. Keep in touch by <a href="https://twitter.com/humdata" title="X" target="_blank">following us on X</a>, <a href="https://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&amp;id=99796325d1" title="MailChimp" target="_blank">signing up for our mailing list</a>, or replying to this email. </p>
+            <a href="https://twitter.com/humdata" title="X" class="social-icon" target="_blank">
+              <img src="{{ config.get('ckan.site_url', '#') + '/images/homepage/social-x.png' }}" alt="X">
+            </a>
+            <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data" class="social-icon" title="LinkedIn" target="_blank">
+              <img src="{{ config.get('ckan.site_url', '#') + '/images/homepage/social-linkedin.png' }}" alt="LinkedIn">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

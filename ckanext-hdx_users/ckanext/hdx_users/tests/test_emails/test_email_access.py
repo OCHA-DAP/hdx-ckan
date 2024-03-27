@@ -135,29 +135,6 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         except:
             assert True
 
-    def test_delete_user(self):
-        res = self._create_user()
-
-        user = model.User.get('valid@example.com')
-        admin = model.User.by_name('testsysadmin')
-        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
-        offset2 = str(h.url_for('user.delete', id=user.id))
-        res2 = self.app.post(offset2, status=200, headers={'Authorization': unicodedata.normalize(
-            'NFKD', testsysadmin_token).encode('ascii', 'ignore')})
-
-        profile_url = h.url_for(u'hdx_user.read', id='valid@example.com')
-
-        profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', testsysadmin_token).encode('ascii', 'ignore')})
-
-        non_admin_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
-        profile_result2 = self.app.get(profile_url, status=404, headers={'Authorization': unicodedata.normalize(
-            'NFKD', non_admin_token).encode('ascii', 'ignore')})
-
-        assert '404' in profile_result2.status
-
-        assert '<span class="label label-important">Deleted</span>' in profile_result.body
-
     def _create_user(self, email='valid@example.com'):
         url = h.url_for('hdx_user_register.register_email')
         params = {'email': email, 'nosetest': 'true'}
@@ -202,8 +179,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         # create 2
         res = json.loads(self.app.post(url, data=params).body)
         assert_false(res['success'])
-        assert_equal(res['error']['message'][0],
-                     'The email address is already registered on HDX. Please use the sign in screen below.')
+        assert_equal(res['error']['message'][0], 'The email address is already registered on HDX.')
 
     def test_create_user_duplicate_email_case_different(self):
         '''Creating a new user with same email (differently cased) is
@@ -217,8 +193,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         response = self.app.post(url, data=params_two)
         res = json.loads(response.data)
         assert_false(res['success'])
-        assert_equal(res['error']['message'][0],
-                     'The email address is already registered on HDX. Please use the sign in screen below.')
+        assert_equal(res['error']['message'][0], 'The email address is already registered on HDX.')
 
     def test_create_user_email_saved_as_lowercase(self):
         '''A newly created user will have their email transformed to lowercase
@@ -267,8 +242,7 @@ def _get_user_params(user_dict):
         'password1': '',
         'password2': '',
         'name': user_dict.get('name'),
-        'firstname': 'Sue',
-        'lastname': 'User',
+        'fullname': 'Sue User',
         'id': user_dict.get('id'),
         'about': user_dict.get('about')
     }
@@ -299,8 +273,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         )
         # existing values in the form
         assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
-        assert '<input id="field-firstname" type="text" class="form-control" name="firstname"' in response.body
-        assert '<input id="field-lastname" type="text" class="form-control" name="lastname"' in response.body
+        assert '<input id="field-fullname" type="text" class="form-control" name="fullname"' in response.body
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
         assert '<textarea id="field-about" class="form-control" name="about" cols="20" rows="5"' in response.body
         # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
@@ -345,7 +318,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
 
         # error message in response
-        assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
+        assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -405,7 +378,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params['email'] = 'existing@example.com'
         auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
-        assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
+        assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
         assert_equal(user.email, sue_user.get('email'))
@@ -435,7 +408,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params['email'] = 'EXISTING@example.com'
         auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, extra_environ=auth)
-        assert '<li data-field-label="Email">Email: The email address is already registered on HDX. Please use the sign in screen below.</li>' in user_updated.body
+        assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
         assert_equal(user.email, sue_user.get('email'))

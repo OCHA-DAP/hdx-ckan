@@ -838,7 +838,7 @@ def hdx_check_http_response(response_code, comparison_http_code):
         elif (hasattr(response_code, "__len__")) and (response_code[0] == comparison_http_code):
             return True
     except TypeError as e:
-        log.info('Follwing error was generated from hdx_check_http_response():' + text_type(e))
+        log.info('Following error was generated from hdx_check_http_response():' + text_type(e))
     return False
 
 
@@ -947,3 +947,21 @@ def _bs5_make_menu_item(menu_item, title, **kw):
     item.pop('highlight_controllers', False)
     link = h._link_to(title, menu_item, suppress_active_class=False, **item)
     return h.literal('<li class="nav-item">') + link + h.literal('</li>')
+
+
+def hdx_decode_markup(value):
+    try:
+        unescaped_value = value.unescape()
+        decoded_value = json.loads(unescaped_value.replace("'", '"'))
+
+        if isinstance(decoded_value, dict):
+            messages = []
+            for error_field, error_messages in decoded_value.items():
+                for error_message in error_messages:
+                    messages.append(error_message.strip().rstrip('.'))
+            return '. '.join(messages) + '.'
+        else:
+            return decoded_value
+
+    except Exception as e:
+        return value

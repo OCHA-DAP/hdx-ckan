@@ -1,0 +1,70 @@
+.input-placeholder::-webkit-input-placeholder,
+.input-placeholder:-moz-placeholder,
+.input-placeholder::-moz-placeholder,
+.input-placeholder:-ms-input-placeholder,
+.input-placeholder::placeholder {
+  color: #888;
+  font-weight: 500;
+  line-height: 20px;
+  font-family: 'Inter', sans-serif;
+}
+.input-field__label {
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.input-field__required {
+  color: #F2645A;
+  font-weight: 600;
+}
+.input-field__input {
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-weight: 500;
+  line-height: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #4B5563;
+}
+.input-field__input::-webkit-input-placeholder,
+.input-field__input:-moz-placeholder,
+.input-field__input::-moz-placeholder,
+.input-field__input:-ms-input-placeholder,
+.input-field__input::placeholder {
+  color: #888;
+  font-weight: 500;
+  line-height: 20px;
+  font-family: 'Inter', sans-serif;
+}
+.input-field__input:focus {
+  box-shadow: none;
+  border-color: #0162DD;
+}
+.input-field__input-group-text {
+  color: #888;
+  border-color: #D1D5DB;
+  background-color: #FFF;
+}
+.input-field__input-group-text_state_clickable:hover {
+  cursor: pointer;
+  color: #4B5563;
+}
+.input-field__live-feedback li {
+  font-size: 14px;
+  border-color: #D1D5DB;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}
+.input-field__help {
+  display: block;
+  margin-top: 8px;
+  color: #000;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 0.2px;
+}
+.input-field__feedback-message {
+  font-size: 14px;
+}
