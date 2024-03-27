@@ -154,6 +154,16 @@ class HDXPerformResetView(PerformResetView):
 
         return render(u'user/perform_reset.html')
 
+    def _get_form_password(self):
+        password1 = request.form.get(u'password1')
+        password2 = request.form.get(u'password2')
+        if password1 is not None and password1 != u'':
+            if password1 != password2:
+                raise ValueError(_(u'The passwords you entered' u' do not match.'))
+            return password1
+        msg = _(u'You must provide a password')
+        raise ValueError(msg)
+
 
 def read(id=None):
     """

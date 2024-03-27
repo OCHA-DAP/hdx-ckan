@@ -9,6 +9,7 @@ from ckanext.hdx_users.helpers.constants import (
     ONBOARDING_START_PAGE_ADD_DATA,
 )
 from ckanext.hdx_theme.helpers.ui_constants import CONSTANTS as UI_CONSTANTS
+from ckanext.security.validators import MIN_PASSWORD_LENGTH, MIN_LEN_ERROR
 
 CONSTANTS = {
     'DEFAULT_SORTING': DEFAULT_SORTING,
@@ -21,7 +22,8 @@ CONSTANTS = {
         'START_PAGE_HDX_CONNECT': ONBOARDING_START_PAGE_HDX_CONNECT,
         'START_PAGE_CONTACT_CONTRIBUTOR': ONBOARDING_START_PAGE_CONTACT_CONTRIBUTOR,
         'START_PAGE_ADD_DATA': ONBOARDING_START_PAGE_ADD_DATA,
-    }
+    },
+    'PASSWORD_RULES': MIN_LEN_ERROR.format(MIN_PASSWORD_LENGTH),
 }
 
 
