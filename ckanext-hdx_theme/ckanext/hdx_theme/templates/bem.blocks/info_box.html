@@ -1,0 +1,12 @@
+<div class="info-box{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <div class="row">
+    <div class="col-1 mt-2 text-center">
+      <i class="fa-solid fa-circle-info info-box__icon"></i>
+    </div>
+    <div class="col-11">
+      {% for paragraph in paragraphs %}
+        {{ h.snippet('bem.blocks/paragraph.html', text=paragraph, paragraph_classes=["paragraph__text_font-size-big", "mb-0"] if loop.last else ["paragraph__text_font-size-big"]) }}
+      {% endfor %}
+    </div>
+  </div>
+</div>
