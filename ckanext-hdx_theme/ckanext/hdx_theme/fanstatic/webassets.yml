@@ -119,6 +119,14 @@ bem-blocks-styles:
     - bem.blocks/form_info.css
     - bem.blocks/form_button.css
     - bem.blocks/account_options.css
+    - bem.blocks/info_box.css
+    - bem.blocks/select2_field.css
+
+bem-blocks-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_bem-blocks-scripts.js
+  contents:
+    - bem.blocks/select2_field.js
 
 hdx-form-validator:
   <<: *common-js

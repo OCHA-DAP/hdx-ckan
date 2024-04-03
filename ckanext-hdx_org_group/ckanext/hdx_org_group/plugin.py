@@ -302,4 +302,12 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     def get_blueprint(self):
         import ckanext.hdx_org_group.views.group as group
         import ckanext.hdx_org_group.views.light_group as light_group
-        return [group.hdx_group, group.hdx_country_topline, light_group.hdx_light_group, light_group.hdx_group_eaa_maps]
+        import ckanext.hdx_org_group.views.org_join as org_join
+
+        return [
+            group.hdx_group,
+            group.hdx_country_topline,
+            light_group.hdx_light_group,
+            light_group.hdx_group_eaa_maps,
+            org_join.hdx_org_join,
+        ]
