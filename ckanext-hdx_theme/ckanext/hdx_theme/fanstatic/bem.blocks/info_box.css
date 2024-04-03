@@ -1,0 +1,8 @@
+.info-box {
+  background-color: #EDF6FD;
+  padding: 22px;
+}
+.info-box__icon {
+  font-size: 22px;
+  color: #0162DD;
+}
