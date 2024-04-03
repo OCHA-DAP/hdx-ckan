@@ -78,7 +78,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
             'member_delete': authorize.member_delete,
             'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location,
-            'hdx_organization_follower_list': authorize.hdx_organization_follower_list
+            'hdx_organization_follower_list': authorize.hdx_organization_follower_list,
+            'hdx_org_join_request': authorize.hdx_org_join_request,
         }
 
     # IGroupForm
@@ -302,7 +303,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     def get_blueprint(self):
         import ckanext.hdx_org_group.views.group as group
         import ckanext.hdx_org_group.views.light_group as light_group
-        import ckanext.hdx_org_group.views.org_join as org_join
+        import ckanext.hdx_org_group.views.organization_join as org_join
 
         return [
             group.hdx_group,
