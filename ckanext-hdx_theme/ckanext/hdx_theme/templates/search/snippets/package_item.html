@@ -99,7 +99,7 @@
                       {% set confirmed_time = package.review_date %}
                       {% set hdx_added_time = package.metadata_created %}
                       <div class="d-none more-dates">
-                        <span title="{{ _('The date of the most recent change to any data in the dataset’s resources.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Modified')}} [?]:</span> {{ h.render_datetime(modified_time) }}
+                        <span title="{{ _('The date of the most recent change to any data or metadata.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Modified')}} [?]:</span> {{ h.render_datetime(modified_time) }}
                       </div>
                       {% if confirmed_time and confirmed_time > modified_time %}
                       <div class="d-none more-dates">
