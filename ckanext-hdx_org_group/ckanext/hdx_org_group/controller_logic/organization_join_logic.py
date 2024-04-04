@@ -17,8 +17,8 @@ log = logging.getLogger(__name__)
 
 class OrgJoinLogic(object):
     def __init__(self, context: Context):
-        self.active_org_list = []
-        self.inactive_org_list = []
+        self.active_org_dict = {}
+        self.inactive_org_dict = {}
         self.all_org_list = []
         self.context = context
 
@@ -38,7 +38,7 @@ class OrgJoinLogic(object):
         if len(self.all_org_list) > 0:
             for o in self.all_org_list:
                 if not o.get('closed_organization'):
-                    self.active_org_list.append({o.get('id'): o.get('display_name')})
+                    self.active_org_dict[o.get('id')] = o.get('display_name')
                 else:
-                    self.inactive_org_list.append({o.get('id'): o.get('display_name')})
+                    self.inactive_org_dict[o.get('id')] = o.get('display_name')
 

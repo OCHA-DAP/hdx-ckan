@@ -4,6 +4,15 @@ select2-css:
   contents:
     - select2/select2.css
 
+# HDX Edit
+# created this new entry to facilitate easy inclusion in hdx_theme/page-scripts, since we're using a new version of select2 in our onboarding pages
+select2-js:
+  filters: rjsmin
+  output: vendor/%(version)s_select2.js
+  contents:
+    - select2/select2.js
+# END HDX Edit
+
 fontawesome:
   output: vendor/%(version)s_fontawesome.css
   filters: cssrewrite
@@ -27,12 +36,20 @@ vendor:
   output: vendor/%(version)s_vendor.js
   extra:
     preload:
-      - vendor/select2-css
+      # HDX Edit
+      # commented out this line to allow a new version of select2 to be integrated into our new onboarding pages
+      # vendor/select2-css is now included in hdx_theme/page-styles
+      # - vendor/select2-css
+      # END HDX Edit
       - vendor/jquery
   contents:
     - jed.js
     - moment-with-locales.js
-    - select2/select2.js
+    # HDX Edit
+    # commented out this line to allow a new version of select2 to be integrated into our new onboarding pages
+    # vendor/select2-js (created above) is now included in hdx_theme/page-scripts
+    # - select2/select2.js
+    # END HDX Edit
     - popperjs.js
     - purify.js
 
