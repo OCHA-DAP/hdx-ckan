@@ -1,5 +1,10 @@
 <div class="form-button{% if container_classes %} {{ container_classes|join(' ') }}{% endif %}">
-  {% if not type == 'href' %}
+  {% if type == 'separator' %}
+    <span
+            class="form-button__btn form-button__btn_type_separator btn{% if button_classes %} {{ button_classes|join(' ') }}{% endif %}"
+            {% if button_id %}id="{{ button_id }}"{% endif %}
+    >{{ title }}</span>
+  {% elif not type == 'href' %}
     <button
             class="form-button__btn btn{% if button_classes %} {{ button_classes|join(' ') }}{% endif %}{% if disabled %} disabled{% endif %}"
             {% if button_id %}id="{{ button_id }}"{% endif %}
