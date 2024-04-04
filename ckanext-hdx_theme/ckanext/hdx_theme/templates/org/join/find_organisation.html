@@ -13,7 +13,7 @@
   <div class="container">
 
     <div class="row">
-      <div class="col-12 col-md-6 mx-auto">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
         {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=1) }}
         <div class="text-center">
           {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-4") }}
@@ -22,7 +22,7 @@
     </div>
 
     <div class="row">
-      <div class="col-12 col-md-5 mx-auto">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-5 mx-auto">
         {{ h.snippet('bem.blocks/info_box.html', paragraphs=[CONST.BODY_INFO_1ST_PARAGRAPH, CONST.BODY_INFO_2ND_PARAGRAPH], spacing_class="mb-5") }}
         {{ h.snippet('bem.blocks/paragraph.html', paragraph_classes=["paragraph__text_font-size-big", "fw-bold"], text=CONST.SELECT_ORGANISATION_NAME) }}
         {{ h.snippet('bem.blocks/paragraph.html', text=CONST.SELECT_ORGANISATION_LABEL.format(h.url_for('hdx_splash.index'))) }}
@@ -37,7 +37,6 @@
           {{ h.snippet('bem.blocks/form_button.html',
               type="submit",
               title=CONST.BUTTON_SUBMIT,
-              button_id="user-info-submit-button",
               button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
           <div class="text-center mb-5">
             {{ h.snippet('bem.blocks/form_button.html', type="href", url=h.url_for('home.index'), title=CONST.BUTTON_CANCEL, button_classes=["form-button__btn_font-size_medium", "btn-link"], container_classes=["mt-1"]) }}

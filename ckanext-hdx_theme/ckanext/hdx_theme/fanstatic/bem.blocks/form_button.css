@@ -42,3 +42,12 @@
 .form-button__btn.btn-outline-primary:hover {
   background-color: #0162DD;
 }
+.form-button__btn_type_separator {
+  cursor: text;
+}
+.form-button__btn_type_separator.btn-link {
+  color: #000;
+}
+.form-button__btn_type_separator.btn-link:hover {
+  color: #000;
+}
