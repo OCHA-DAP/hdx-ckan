@@ -10,6 +10,7 @@ CONSTANTS = {
 
     'SELECT_ORGANISATION_NAME': '''Please select an organisation to join from the list below:''',
     'SELECT_ORGANISATION_LABEL': '''If you can not find your organisation in the list, you can request to <a href="{0}" title="Create new organisation">create a new one</a>''',
+    'SELECT_ORGANISATION_PLACEHOLDER': '''Select an organisation...''',
 
     'BUTTON_SUBMIT': '''Continue''',
     'BUTTON_CANCEL': '''Cancel''',
