@@ -1,6 +1,6 @@
 import logging
 from typing import cast
-
+import json
 from flask import Blueprint
 
 import ckan.logic as logic
@@ -67,12 +67,28 @@ def find_organisation() -> str:
     return render('org/join/find_organisation.html', extra_vars=template_data)
 
 
+
+def _set_custom_rect_logo_url(org_dict):
+    if 'customization' in org_dict and org_dict.get('customization'):
+        customization = json.loads(org_dict.get('customization'))
+        if customization and customization.get('image_rect', None):
+            org_dict['custom_rect_logo_url'] = url_for('hdx_local_image_server.org_file',
+                                                       filename=customization.get('image_rect'), qualified=True)
 def confirm_organisation() -> str:
     context = _prepare_and_check_access()
 
-    org_id = request.form.get('org_id') or 'hdx'
+    org_dict = None
+    try:
+        org_id = request.form.get('org_id')
+        if org_id is not None:
+            org_dict = get_action(u'organization_show')(context, {'id':org_id})
+            _set_custom_rect_logo_url(org_dict)
+        else:
+            return redirect(url_for('hdx_org_join.find_organisation'))
+    except Exception as ex:
+        log.info("Organization not found or not accessible")
 
-    org_dict = get_action(u'organization_show')(context, {'id':org_id})
+
 
     template_data = {
         'data': {
@@ -82,6 +98,9 @@ def confirm_organisation() -> str:
     return render('org/join/confirm_organisation.html', extra_vars=template_data)
 
 
+
+
+
 hdx_org_join.add_url_rule(u'/', view_func=org_join, strict_slashes=False)
 hdx_org_join.add_url_rule(u'/find/', view_func=find_organisation, methods=[u'GET'], strict_slashes=False)
-hdx_org_join.add_url_rule(u'/confirm/', view_func=confirm_organisation, methods=[u'GET', u'POST'], strict_slashes=False)
+hdx_org_join.add_url_rule(u'/confirm/', view_func=confirm_organisation, methods=[u'POST'], strict_slashes=False)
