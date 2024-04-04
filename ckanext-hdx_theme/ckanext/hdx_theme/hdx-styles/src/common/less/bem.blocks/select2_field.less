@@ -1,6 +1,19 @@
 @import "bem_variables";
 
 .select2-field {
-  &__select {
+  .select2-container {
+    .select2-selection {
+      box-shadow: none;
+    }
+
+    .select2-dropdown {
+      .select2-search {
+        .select2-search__field {
+          &:focus {
+            box-shadow: none;
+          }
+        }
+      }
+    }
   }
 }

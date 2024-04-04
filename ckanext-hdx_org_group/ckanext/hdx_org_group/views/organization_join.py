@@ -8,7 +8,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckan.common import current_user
 from ckan.types import Context
-from ckanext.hdx_org_group.controller_logic.organization_join_logic import  OrgJoinLogic
+from ckanext.hdx_org_group.controller_logic.organization_join_logic import OrgJoinLogic
 
 log = logging.getLogger(__name__)
 
@@ -61,13 +61,13 @@ def find_organisation() -> str:
 
     template_data = {
         'data': {
-            'org_list': org_join_logic.active_org_list,
+            'org_dict': org_join_logic.active_org_dict,
         }
     }
-    return render('onboarding/org-join/find-organisation.html', extra_vars=template_data)
+    return render('org/join/find_organisation.html', extra_vars=template_data)
+
 
 def confirm_organisation() -> str:
-
     context = _prepare_and_check_access()
 
     org_id = request.form.get('org_id') or 'hdx'
@@ -79,7 +79,8 @@ def confirm_organisation() -> str:
             'org_dict': org_dict,
         }
     }
-    return render('onboarding/org-join/find-organisation.html', extra_vars=template_data)
+    return render('org/join/confirm_organisation.html', extra_vars=template_data)
+
 
 hdx_org_join.add_url_rule(u'/', view_func=org_join, strict_slashes=False)
 hdx_org_join.add_url_rule(u'/find/', view_func=find_organisation, methods=[u'GET'], strict_slashes=False)
