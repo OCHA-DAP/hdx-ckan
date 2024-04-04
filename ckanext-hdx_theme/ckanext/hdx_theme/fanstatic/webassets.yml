@@ -145,6 +145,7 @@ bem-blocks-scripts:
   extra:
     preload:
       - hdx_theme/select2-4-scripts
+      - hdx_theme/hdx-show-more
   contents:
     - bem.blocks/select2_field.js
 
