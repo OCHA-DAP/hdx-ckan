@@ -1,0 +1,19 @@
+<div class="select2-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <div>
+    <select
+            class="select2-field__select{% if select_classes %} {{ select_classes|join(' ') }}{% endif %}"
+            name="{{ name }}"
+            id="select-{{ name }}"
+            {% if required %}required{% endif %}
+            {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
+            {% endfor %}{% endif %}
+    >
+      {% if data_attributes and data_attributes['placeholder'] %}
+        <option></option>
+      {% endif %}
+      {% for value, name in data.items() %}
+        <option value="{{ value }}">{{ name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
