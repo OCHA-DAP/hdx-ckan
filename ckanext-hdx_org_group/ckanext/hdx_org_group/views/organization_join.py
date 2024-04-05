@@ -97,10 +97,28 @@ def confirm_organisation() -> str:
     }
     return render('org/join/confirm_organisation.html', extra_vars=template_data)
 
+def reason_request() -> str:
+    context = _prepare_and_check_access()
 
+    org_dict = None
+    try:
+        org_id = request.form.get('org_id')
+        if org_id is not None:
+            org_dict = get_action(u'organization_show')(context, {'id':org_id})
+        else:
+            return redirect(url_for('hdx_org_join.find_organisation'))
+    except Exception as ex:
+        log.info("Organization not found or not accessible")
 
+    template_data = {
+        'data': {
+            'org_dict': org_dict,
+        }
+    }
+    return render('org/join/reason_request.html', extra_vars=template_data)
 
 
 hdx_org_join.add_url_rule(u'/', view_func=org_join, strict_slashes=False)
 hdx_org_join.add_url_rule(u'/find/', view_func=find_organisation, methods=[u'GET'], strict_slashes=False)
 hdx_org_join.add_url_rule(u'/confirm/', view_func=confirm_organisation, methods=[u'POST'], strict_slashes=False)
+hdx_org_join.add_url_rule(u'/reason-request/', view_func=reason_request, methods=[u'POST'], strict_slashes=False)
