@@ -79,7 +79,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'member_delete': authorize.member_delete,
             'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location,
             'hdx_organization_follower_list': authorize.hdx_organization_follower_list,
-            'hdx_org_join_request': authorize.hdx_org_join_request,
+            # 'hdx_org_join_request': authorize.hdx_org_join_request,
         }
 
     # IGroupForm

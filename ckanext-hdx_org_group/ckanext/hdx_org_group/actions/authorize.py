@@ -36,7 +36,7 @@ def invalidate_data_completeness_for_location(context, data_dict):
 def hdx_organization_follower_list(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can view user permission page')}
 
-def hdx_org_join_request(context, data_dict):
-    if authz.auth_is_anon_user(context):
-        return {'success': False, 'msg': _('Only logged in users can join an organization')}
-    return {'success': True}
+# def hdx_org_join_request(context, data_dict):
+#     if authz.auth_is_anon_user(context):
+#         return {'success': False, 'msg': _('Only logged in users can join an organization')}
+#     return {'success': True}
