@@ -1,6 +1,8 @@
 <div class="textarea-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
-  <label class="textarea-field__label form-label" for="textarea-{{ name }}">
-    {{ label }}{% if required %} <span class="textarea-field__required">*</span>{% endif %}</label>
+  {% if label %}
+    <label class="textarea-field__label form-label" for="textarea-{{ name }}">
+      {{ label }}{% if required %} <span class="textarea-field__required">*</span>{% endif %}</label>
+  {% endif %}
   <div>
     <textarea
             class="textarea-field__textarea form-control{% if errors %} is-invalid{% endif %}"

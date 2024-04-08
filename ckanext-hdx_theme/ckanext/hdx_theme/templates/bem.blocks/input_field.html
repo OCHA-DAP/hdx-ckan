@@ -1,6 +1,8 @@
 <div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
-  <label class="input-field__label" for="input-{{ name }}">
-    {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
+  {% if label %}
+    <label class="input-field__label" for="input-{{ name }}">
+      {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
+  {% endif %}
   <div class="{% if type == 'password' %}input-group{% endif %}">
     <input
             type="{{ type }}"
