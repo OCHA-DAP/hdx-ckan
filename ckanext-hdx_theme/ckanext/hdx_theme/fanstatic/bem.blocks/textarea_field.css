@@ -1,0 +1,8 @@
+.textarea-field__textarea {
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  padding: 12px 16px;
+}
+.textarea-field__textarea:focus {
+  box-shadow: none;
+}
