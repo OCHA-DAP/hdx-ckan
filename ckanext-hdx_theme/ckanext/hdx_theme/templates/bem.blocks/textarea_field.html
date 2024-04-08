@@ -1,0 +1,13 @@
+<div class="textarea-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <div>
+    <textarea
+            class="textarea-field__textarea form-control{% if textarea_classes %} {{ textarea_classes|join(' ') }}{% endif %}"
+            name="{{ name }}"
+            id="textarea-{{ name }}"
+            {% if rows %}rows="{{ rows }}"{% endif %}
+            {% if required %}required{% endif %}
+            {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
+            {% endfor %}{% endif %}
+    ></textarea>
+  </div>
+</div>

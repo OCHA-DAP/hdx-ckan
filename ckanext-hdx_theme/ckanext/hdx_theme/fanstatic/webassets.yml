@@ -138,6 +138,7 @@ bem-blocks-styles:
     - bem.blocks/account_options.css
     - bem.blocks/info_box.css
     - bem.blocks/select2_field.css
+    - bem.blocks/textarea_field.css
 
 bem-blocks-scripts:
   <<: *common-js
