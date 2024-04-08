@@ -986,11 +986,11 @@ def hdx_send_mail_members(context, data_dict):
     if data_dict.get('topic_key') == 'all':
         users_role = 'administrator(s), editor(s), and member(s)'
     elif data_dict.get('topic_key') == 'admins':
-        users_role = 'administrator(s)]'
+        users_role = 'administrator(s)'
     elif data_dict.get('topic_key') == 'editors':
-        users_role = 'editor(s)]'
+        users_role = 'editor(s)'
     elif data_dict.get('topic_key') == 'members':
-        users_role = 'member(s)]'
+        users_role = 'member(s)'
     subject = u'HDX group message from ' + data_dict.get('pkg_owner_org')
     email_data = {
         'org_name': data_dict.get('pkg_owner_org'),
