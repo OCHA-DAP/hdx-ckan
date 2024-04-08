@@ -9,3 +9,6 @@
 .paragraph__text_font_size-small {
   font-size: 12px;
 }
+.paragraph__text_font-weight-bold {
+  font-weight: 600;
+}
