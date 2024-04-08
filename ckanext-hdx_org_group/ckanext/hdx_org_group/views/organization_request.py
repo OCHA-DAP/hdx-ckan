@@ -63,6 +63,18 @@ def org_new_request() -> str:
     return render('org/request/org_new_request.html', extra_vars=template_data)
 
 
+def completed_request() -> str:
+    context = _prepare_and_check_access()
+
+    template_data = {
+        'errors': {
+        },
+        'data': {
+        }
+    }
+    return render('org/request/completed_request.html', extra_vars=template_data)
+
+
 hdx_org_request.add_url_rule(u'/', view_func=org_request, strict_slashes=False)
 hdx_org_request.add_url_rule(u'/new/', view_func=org_new_request, methods=[u'GET'], strict_slashes=False)
-# hdx_org_request.add_url_rule(u'/completed/', view_func=completed_request, methods=[u'POST'], strict_slashes=False)
+hdx_org_request.add_url_rule(u'/completed/', view_func=completed_request, methods=[u'POST'], strict_slashes=False)
