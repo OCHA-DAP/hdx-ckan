@@ -1,0 +1,106 @@
+{% extends "onboarding/base.html" %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['REQUEST_CREATE_ORGANISATION'] %}
+
+{% block subtitle %}{{ _('Request to create a new organisation') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2], spacing_class="my-5", current_step=1) }}
+        <div class="text-center">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-4") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-5 mx-auto">
+        {{ h.snippet('bem.blocks/info_box.html', paragraphs=[CONST.BODY_INFO_1ST_PARAGRAPH, CONST.BODY_INFO_2ND_PARAGRAPH], spacing_class="mb-5") }}
+        {{ h.snippet('bem.blocks/form_info.html', message=CONST.MANDATORY_HELP, spacing_class="mb-4") }}
+        <form method="post" action="{{ h.url_for('hdx_user_onboarding.user-info') }}" id="org-new-request-form">
+          {{ h.csrf_input() }}
+          {{ h.snippet('bem.blocks/input_field.html',
+              type="text",
+              required=True,
+              label=CONST.INPUT_NAME_LABEL,
+              name="name",
+              value=data.get('name'),
+              errors=errors.get('name'),
+              placeholder=CONST.INPUT_NAME_PLACEHOLDER,
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/textarea_field.html',
+              name="description",
+              required=True,
+              label=CONST.TEXTAREA_DESCRIPTION_LABEL,
+              value=data.get('description'),
+              errors=errors.get('description'),
+              placeholder=CONST.TEXTAREA_DESCRIPTION_PLACEHOLDER,
+              rows=6,
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/input_field.html',
+              type="text",
+              required=False,
+              label=CONST.INPUT_WEBSITE_LABEL,
+              name="website",
+              value=data.get('website'),
+              errors=errors.get('website'),
+              placeholder=CONST.INPUT_WEBSITE_PLACEHOLDER,
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/input_field.html',
+              type="text",
+              required=True,
+              label=CONST.INPUT_ROLE_LABEL,
+              name="role",
+              value=data.get('role'),
+              errors=errors.get('role'),
+              placeholder=CONST.INPUT_ROLE_PLACEHOLDER,
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/textarea_field.html',
+              name="data_type",
+              required=True,
+              label=CONST.TEXTAREA_DATA_TYPE_LABEL,
+              value=data.get('data_type'),
+              errors=errors.get('data_type'),
+              placeholder=CONST.TEXTAREA_DATA_TYPE_PLACEHOLDER,
+              rows=6,
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/select2_field.html',
+              name="data_already_available",
+              data={'no': 'No', 'yes': 'Yes'},
+              label=CONST.SELECT_DATA_ALREADY_AVAILABLE_LABEL,
+              required=True,
+              selected=data.get('data_already_available'),
+              errors=errors.get('data_already_available'),
+              select_classes=['select2-field__select_size_large'],
+              data_attributes={"placeholder": CONST.SELECT_DATA_ALREADY_AVAILABLE_PLACEHOLDER},
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/input_field.html',
+              type="text",
+              required=False,
+              label=CONST.INPUT_DATA_ALREADY_AVAILABLE_LINK_LABEL,
+              name="data_already_available_link",
+              value=data.get('data_already_available_link'),
+              errors=errors.get('data_already_available_link'),
+              placeholder=CONST.INPUT_DATA_ALREADY_AVAILABLE_LINK_PLACEHOLDER,
+              spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/form_button.html',
+              type="submit",
+              title=CONST.BUTTON_SUBMIT,
+              button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
+          <div class="text-center mb-5">
+            {{ h.snippet('bem.blocks/form_button.html', type="href", url=h.url_for('home.index'), title=CONST.BUTTON_CANCEL, button_classes=["form-button__btn_font-size_medium", "btn-link"], container_classes=["mt-1"]) }}
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

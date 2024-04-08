@@ -304,6 +304,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         import ckanext.hdx_org_group.views.group as group
         import ckanext.hdx_org_group.views.light_group as light_group
         import ckanext.hdx_org_group.views.organization_join as org_join
+        import ckanext.hdx_org_group.views.organization_request as org_request
 
         return [
             group.hdx_group,
@@ -311,4 +312,5 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             light_group.hdx_light_group,
             light_group.hdx_group_eaa_maps,
             org_join.hdx_org_join,
+            org_request.hdx_org_request,
         ]
