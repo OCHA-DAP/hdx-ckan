@@ -1,6 +1,8 @@
 <div class="select2-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
-  <label class="select2-field__label form-label" for="select-{{ name }}">
-    {{ label }}{% if required %} <span class="select2-field__required">*</span>{% endif %}</label>
+  {% if label %}
+    <label class="select2-field__label form-label" for="select-{{ name }}">
+      {{ label }}{% if required %} <span class="select2-field__required">*</span>{% endif %}</label>
+  {% endif %}
   <div>
     <select
             class="select2-field__select{% if select_classes %} {{ select_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
