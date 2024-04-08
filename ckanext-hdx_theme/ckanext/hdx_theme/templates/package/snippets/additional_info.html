@@ -37,7 +37,7 @@
   {% set confirmed_time = pkg_dict.review_date %}
   {% set hdx_added_time = pkg_dict.metadata_created %}
   <tr class="d-none more-dates">
-    <th scope="row" class="dataset-label"><span title="{{ _('The date of the most recent change to any data in the dataset’s resources.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Modified')}} [?]</span></th>
+    <th scope="row" class="dataset-label"><span title="{{ _('The date of the most recent change to any data or metadata.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Modified')}} [?]</span></th>
     <td class="dataset-details">
       {{ h.render_datetime(modified_time) }}
     </td>

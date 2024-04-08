@@ -42,7 +42,7 @@ def _prepare_and_check_access() -> Context:
         u'save': u'save' in request.form,
     })
     try:
-        check_access(u'hdx_org_join_request', context)
+        check_access(u'hdx_send_new_org_request', context)
     except NotAuthorized:
         abort(403, _(u'Page not found'))
     return context
@@ -117,8 +117,44 @@ def reason_request() -> str:
     }
     return render('org/join/reason_request.html', extra_vars=template_data)
 
+def completed_request() -> str:
+    context = _prepare_and_check_access()
+
+    org_dict = None
+    try:
+        org_id = request.form.get('org_id')
+        msg = request.form.get('message')
+        if org_id is not None:
+            org_dict = get_action(u'organization_show')(context, {'id':org_id})
+        else:
+            return redirect(url_for('hdx_org_join.find_organisation'))
+
+        data_dict = {
+            'organization': org_id,
+            'message': msg,
+            'save': u'save',
+            'role': u'member',
+            'group': org_id
+        }
+        member = get_action('member_request_create')(context, data_dict)
+
+    except NotFound:
+        log.info("Organization not found or not accessible")
+    except ValidationError as ex:
+        log.error(ex)
+    except Exception as ex:
+        log.error(ex)
+        log.error("Something went wrong with your request. Please contact us.")
+
+    template_data = {
+        'data': {
+        }
+    }
+    return render('org/join/completed.html', extra_vars=template_data)
+
 
 hdx_org_join.add_url_rule(u'/', view_func=org_join, strict_slashes=False)
 hdx_org_join.add_url_rule(u'/find/', view_func=find_organisation, methods=[u'GET'], strict_slashes=False)
 hdx_org_join.add_url_rule(u'/confirm/', view_func=confirm_organisation, methods=[u'POST'], strict_slashes=False)
 hdx_org_join.add_url_rule(u'/reason-request/', view_func=reason_request, methods=[u'POST'], strict_slashes=False)
+hdx_org_join.add_url_rule(u'/completed/', view_func=completed_request, methods=[u'GET', u'POST'], strict_slashes=False)
