@@ -55,6 +55,8 @@ def org_new_request() -> str:
     context = _prepare_and_check_access()
 
     template_data = {
+        'errors': {
+        },
         'data': {
         }
     }
