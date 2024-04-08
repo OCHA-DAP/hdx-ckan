@@ -150,8 +150,7 @@ def completed_request() -> str:
         'data': {
         }
     }
-    return redirect(url_for('hdx_org_join.find_organisation'))
-    # return render('org/join/completed.html', extra_vars=template_data)
+    return render('org/join/completed.html', extra_vars=template_data)
 
 
 hdx_org_join.add_url_rule(u'/', view_func=org_join, strict_slashes=False)
