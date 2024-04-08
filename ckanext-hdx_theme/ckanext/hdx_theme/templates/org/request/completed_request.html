@@ -1,0 +1,38 @@
+{% extends "onboarding/base.html" %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['COMPLETED_ORGANISATION_CREATE'] %}
+
+{% block subtitle %}{{ _('Request submitted') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2], spacing_class="my-5", current_step=2) }}
+        <div class="text-center">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-5") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_MAIN_TEXT, paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+        <div class="mb-5">
+          {{ h.snippet('bem.blocks/form_button.html',
+              type="href",
+              url=h.url_for('home.index'),
+              title=CONST.BUTTON_SUBMIT,
+              button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
