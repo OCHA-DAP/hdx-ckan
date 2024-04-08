@@ -124,6 +124,8 @@ def completed_request() -> str:
     try:
         org_id = request.form.get('org_id')
         msg = request.form.get('message')
+        if msg is None or len(msg.strip())==0:
+            return redirect(url_for('hdx_org_join.find_organisation'))
         if org_id is not None:
             org_dict = get_action(u'organization_show')(context, {'id':org_id})
         else:
