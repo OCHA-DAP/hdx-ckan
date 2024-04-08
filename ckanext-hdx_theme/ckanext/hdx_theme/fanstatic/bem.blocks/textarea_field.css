@@ -1,8 +1,45 @@
+.textarea-placeholder::-webkit-input-placeholder,
+.textarea-placeholder:-moz-placeholder,
+.textarea-placeholder::-moz-placeholder,
+.textarea-placeholder:-ms-input-placeholder,
+.textarea-placeholder::placeholder {
+  color: #888;
+  font-weight: 500;
+  line-height: 20px;
+  font-family: 'Inter', sans-serif;
+}
 .textarea-field__textarea {
   border: 1px solid #D1D5DB;
   border-radius: 4px;
   padding: 12px 16px;
+  font-weight: 500;
+  line-height: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #4B5563;
+}
+.textarea-field__textarea::-webkit-input-placeholder,
+.textarea-field__textarea:-moz-placeholder,
+.textarea-field__textarea::-moz-placeholder,
+.textarea-field__textarea:-ms-input-placeholder,
+.textarea-field__textarea::placeholder {
+  color: #888;
+  font-weight: 500;
+  line-height: 20px;
+  font-family: 'Inter', sans-serif;
 }
 .textarea-field__textarea:focus {
   box-shadow: none;
+}
+.textarea-field__label {
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.textarea-field__required {
+  color: #F2645A;
+  font-weight: 600;
+}
+.textarea-field__feedback-message {
+  font-size: 14px;
 }

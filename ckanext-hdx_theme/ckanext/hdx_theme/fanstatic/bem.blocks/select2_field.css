@@ -1,3 +1,16 @@
+.select2-field__label {
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.select2-field__required {
+  color: #F2645A;
+  font-weight: 600;
+}
+.select2-field__feedback-message {
+  font-size: 14px;
+}
 .select2-field .select2-container .select2-selection {
   box-shadow: none;
 }
