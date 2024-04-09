@@ -13,9 +13,16 @@
   {% asset 'hdx_theme/onboarding-perform-reset-scripts' %}
 {% endblock %}
 
+{%- block meta -%}
+  {{ super() }}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{%- endblock -%}
+
+{%- block bodytag -%} {{ super() }} class="animated-gradient" {%- endblock -%}
+
 {% block page %}
   <div>
-    {{ h.snippet('widget/onboarding/password-reset.html', id="recoverPopup") }}
+    {{ h.snippet('widget/onboarding/password-reset.html', id="recoverPopup",  content_class="fade-in") }}
   </div>
 {% endblock %}
 
