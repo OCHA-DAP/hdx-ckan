@@ -69,39 +69,39 @@ class HDXUserOnboardingView:
             return error_message(error_summary)
         return OnbSuccess
 
-    def request_new_organization(self):
-        '''
-        Step 5a: user can request to create a new organization
-        :return:
-        '''
-        context = {'model': model, 'session': model.Session, 'auth_user_obj': g.userobj,
-                   'user': g.user}
-        try:
-            _check_access('hdx_send_new_org_request', context)
-        except NotAuthorized:
-            return OnbNotAuth
-
-        try:
-            user = model.User.get(context['user'])
-            data = self._process_new_org_request(user)
-            self._validate_new_org_request_field(data, context)
-
-            _get_action('hdx_send_new_org_request')(context, data)
-
-            if data.get('user_extra'):
-                ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
-                _get_action('user_extra_update')(context, ue_dict)
-
-        except hdx_mail.NoRecipientException as e:
-            error_summary = str(e)
-            return error_message(error_summary)
-        except ValidationError as e:
-            error_summary = e.error_summary.get('Message') if 'Message' in e.error_summary else e.error_summary
-            return error_message(error_summary)
-        except Exception as e:
-            error_summary = str(e)
-            return error_message(error_summary)
-        return OnbSuccess
+    # def request_new_organization(self):
+    #     '''
+    #     Step 5a: user can request to create a new organization
+    #     :return:
+    #     '''
+    #     context = {'model': model, 'session': model.Session, 'auth_user_obj': g.userobj,
+    #                'user': g.user}
+    #     try:
+    #         _check_access('hdx_send_new_org_request', context)
+    #     except NotAuthorized:
+    #         return OnbNotAuth
+    #
+    #     try:
+    #         user = model.User.get(context['user'])
+    #         data = self._process_new_org_request(user)
+    #         self._validate_new_org_request_field(data, context)
+    #
+    #         _get_action('hdx_send_new_org_request')(context, data)
+    #
+    #         if data.get('user_extra'):
+    #             ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
+    #             _get_action('user_extra_update')(context, ue_dict)
+    #
+    #     except hdx_mail.NoRecipientException as e:
+    #         error_summary = str(e)
+    #         return error_message(error_summary)
+    #     except ValidationError as e:
+    #         error_summary = e.error_summary.get('Message') if 'Message' in e.error_summary else e.error_summary
+    #         return error_message(error_summary)
+    #     except Exception as e:
+    #         error_summary = str(e)
+    #         return error_message(error_summary)
+    #     return OnbSuccess
 
     def request_membership(self):
         '''
