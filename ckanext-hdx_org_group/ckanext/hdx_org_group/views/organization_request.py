@@ -1,13 +1,16 @@
 import logging
-from typing import cast
+from typing import Any, Optional, Union, cast
 
 from flask import Blueprint
+from flask.views import MethodView
 
+import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckan.common import current_user
-from ckan.types import Context
+from ckan.types import Context, Response
+from ckanext.hdx_org_group.controller_logic.organization_request_logic import OrgRequestLogic
 
 log = logging.getLogger(__name__)
 
@@ -48,33 +51,46 @@ def _prepare_and_check_access() -> Context:
 
 
 def org_request() -> str:
-    return redirect(url_for('hdx_org_request.org_new_request'))
+    return redirect(url_for('hdx_org_request.new'))
 
+class OrgNewRequestView(MethodView):
 
-def org_new_request() -> str:
-    context = _prepare_and_check_access()
+    def post(self) -> Union[Response, str]:
+        context = _prepare_and_check_access()
+        data_dict = None
+        org_request_logic = OrgRequestLogic(context, request)
+        try:
+            data_dict = org_request_logic.read()
+        except dictization_functions.DataError:
+            abort(400, _(u'Integrity Error'))
 
-    template_data = {
-        'errors': {
-        },
-        'data': {
+        data, errors = org_request_logic.validate(data_dict)
+        if errors:
+            return self.get(data, errors)
+
+        get_action('hdx_send_new_org_request')(context, data)
+        return redirect('hdx_org_request.completed_request')
+    def get(self,
+            data: Optional[dict[str, Any]] = None,
+            errors: Optional[dict[str, Any]] = None,
+            error_summary: Optional[dict[str, Any]] = None) -> str:
+        context = _prepare_and_check_access()
+        extra_vars = {
+            u'data': data or {},
+            u'errors': errors or {},
+            u'error_summary': error_summary or {}
         }
-    }
-    return render('org/request/org_new_request.html', extra_vars=template_data)
-
+        return render('org/request/org_new_request.html', extra_vars=extra_vars)
 
 def completed_request() -> str:
-    context = _prepare_and_check_access()
-
-    template_data = {
-        'errors': {
-        },
-        'data': {
-        }
-    }
-    return render('org/request/completed_request.html', extra_vars=template_data)
+    if request and request.referrer and '/org/request/new' in request.referrer:
+        context = _prepare_and_check_access()
+        return render('org/request/completed_request.html')
+    else:
+        abort(404, _(u'Page not found'))
 
 
 hdx_org_request.add_url_rule(u'/', view_func=org_request, strict_slashes=False)
-hdx_org_request.add_url_rule(u'/new/', view_func=org_new_request, methods=[u'GET'], strict_slashes=False)
-hdx_org_request.add_url_rule(u'/completed/', view_func=completed_request, methods=[u'POST'], strict_slashes=False)
+hdx_org_request.add_url_rule(u'/new/', view_func=OrgNewRequestView.as_view(str(u'new')),
+                                 methods=[u'GET', u'POST'], strict_slashes=False)
+hdx_org_request.add_url_rule(u'/completed/', view_func=completed_request, methods=[u'GET'], strict_slashes=False)

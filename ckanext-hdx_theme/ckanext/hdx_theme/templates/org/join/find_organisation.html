@@ -25,7 +25,7 @@
       <div class="col-12 col-sm-10 col-md-8 col-lg-5 mx-auto">
         {{ h.snippet('bem.blocks/info_box.html', paragraphs=[CONST.BODY_INFO_1ST_PARAGRAPH, CONST.BODY_INFO_2ND_PARAGRAPH], spacing_class="mb-5") }}
         {{ h.snippet('bem.blocks/paragraph.html', paragraph_classes=["paragraph__text_font-size-big", "paragraph__text_font-weight-bold"], text=CONST.SELECT_ORGANISATION_NAME) }}
-        {{ h.snippet('bem.blocks/paragraph.html', text=CONST.SELECT_ORGANISATION_LABEL.format(h.url_for('hdx_splash.index'))) }}
+        {{ h.snippet('bem.blocks/paragraph.html', text=CONST.SELECT_ORGANISATION_LABEL.format(h.url_for('hdx_org_request.new'))) }}
 
         <form method="post" action="{{ h.url_for('hdx_org_join.confirm_organisation') }}" id="find-organisation-form">
           {{ h.csrf_input() }}

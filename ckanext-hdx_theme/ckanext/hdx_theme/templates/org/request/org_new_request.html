@@ -25,7 +25,7 @@
       <div class="col-12 col-sm-10 col-md-8 col-lg-5 mx-auto">
         {{ h.snippet('bem.blocks/info_box.html', paragraphs=[CONST.BODY_INFO_1ST_PARAGRAPH, CONST.BODY_INFO_2ND_PARAGRAPH], spacing_class="mb-5") }}
         {{ h.snippet('bem.blocks/form_info.html', message=CONST.MANDATORY_HELP, spacing_class="mb-4") }}
-        <form method="post" action="{{ h.url_for('hdx_org_request.completed_request') }}" id="org-new-request-form">
+        <form method="post" action="{{ h.url_for('hdx_org_request.new') }}" id="org-new-request-form">
           {{ h.csrf_input() }}
           {{ h.snippet('bem.blocks/input_field.html',
               type="text",
