@@ -1,18 +1,18 @@
 <p>Dear HDX Data Partnerships Team,</p>
 
-<p>{{ data.user_fullname}} ({{ data.requestor_hdx_email }}) has requested the creation of a new organisation on HDX.</p>
+<p>An application for a new organisation has been submitted by {{ data.user_fullname}} ({{ data.requestor_hdx_email }})</p>
 
+<p>The details of the application are as follows:</p>
 <div class="quote">
   <p><strong>Organisation name:</strong> {{ data.org_name }}</p>
-  <p><strong>Organisation acronym:</strong> {{ data.org_acronym }}</p>
   <p><strong>Organisation description:</strong> {{ data.org_description }}</p>
-  <p><strong>Organisation type:</strong> {{ data.org_type }}</p>
   <p><strong>Organisation website:</strong> {{ data.org_website }}</p>
-  <p><strong>Data description:</strong> {{ data.data_description }}</p>
-  <p><strong>Requestor work email:</strong> {{ data.requestor_work_email }}</p>
+  <p><strong>Data type:</strong> {{ data.data_type }}</p>
+  <p><strong>Data already available:</strong> {{ data.data_already_available }}</p>
+  <p><strong>Data already available link:</strong> {{ data.data_already_available_link }}</p>
+  <p><strong>User fullname:</strong> {{ data.user_fullname }}</p>
   <p><strong>Requestor HDX username:</strong> {{ data.requestor_hdx_username }}</p>
+  <p><strong>Requestor HDX role:</strong> {{ data.user_role }}</p>
   <p><strong>Requestor HDX registered email:</strong> {{ data.requestor_hdx_email }}</p>
   <p><strong>Request time:</strong> {{ data.request_time }}</p>
 </div>
-
-<p>Please reply directly to {{ data.user_fullname}} within two business days.</p>
