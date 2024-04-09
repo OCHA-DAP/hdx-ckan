@@ -62,26 +62,23 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         postparams = {
             'save': '',
             'name': 'Test org',
-            'url': 'http://test.com',
-            'acronym': 'TOACRONYM',
-            'org_type': ORGANIZATION_TYPE_LIST[0][1],
+            'website': 'https://test.com',
             'description': 'Test description',
-            'description_data': 'Test description data',
-            'work_email': 'emailwork1@testemail.com',
-            'your_email': 'email1@testemail.com',
-            'your_name': 'Test User'
+            'data_type': 'Test description data',
+            'data_already_available': 'yes',
+            'data_already_available_link': 'https://data.com',
+            'role': 'test role',
         }
 
-        offset = h.url_for('hdx_user.request_new_organization')
+        offset = h.url_for('hdx_org_request.new')
         res_post = self.app.post(offset, params=postparams, extra_environ=auth)
         args, kw_args = mocked_mail_recipient.call_args
 
         assert args, 'This needs to contain the email that will be sent'
         assert 'test@test.com' in args[0][0].get('email')
-        assert 'Test User' in args[0][0].get('display_name')
-        assert u'Confirmation of your request to create a new organisation on HDX' in args[1]
-        assert 'org_name' in args[2]
-        assert 'Test User' in args[2].get('user_fullname')
+        assert 'tester' in args[0][0].get('display_name')
+        assert u'Thank you for your request to create an organisation on HDX' in args[1]
+        assert 'user_fullname' in args[2]
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args.get('snippet')
         assert 'test@test.com' in kw_args.get('footer')
 
@@ -102,30 +99,30 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         auth = {'Authorization': user_token}
         postparams = {
             'save': '',
-            'name': 'Org êßȘ',
-            'acronym': 'SCOACRONYM',
-            'org_type': ORGANIZATION_TYPE_LIST[0][1],
-            'url': 'http://test.com',
+            'name': 'Test org',
+            'website': 'https://test.com',
             'description': 'Description ê,ß, and Ș',
-            'description_data': 'Description data ê,ß, and Ș',
-            'work_email': 'emailwork1@testemail.com',
-            'your_email': 'email1@testemail.com',
-            'your_name': 'Test êßȘ'
+            'data_type': 'Description data ê,ß, and Ș',
+            'data_already_available': 'yes',
+            'data_already_available_link': 'https://data.com',
+            'role': 'test role ê,ß, and Ș',
         }
-        offset = h.url_for('hdx_user.request_new_organization')
+
+        offset = h.url_for('hdx_org_request.new')
         res_post = self.app.post(offset, params=postparams, extra_environ=auth)
         args0, kw_args0 = mocked_mail_recipient.call_args_list[0]
         args1, kw_args1 = mocked_mail_recipient.call_args_list[1]
 
         req_dict = args0[2]
         assert self.convert_to_unicode(postparams.get('name')) == req_dict.get('org_name')
-        assert self.convert_to_unicode(postparams.get('acronym')) == req_dict.get('org_acronym')
-        assert self.convert_to_unicode(postparams.get('org_type')) == req_dict.get('org_type')
-        assert self.convert_to_unicode(postparams.get('url')) == req_dict.get('org_website')
+        assert self.convert_to_unicode(postparams.get('website')) == req_dict.get('org_website')
         assert self.convert_to_unicode(postparams.get('description')) == req_dict.get('org_description')
-        assert self.convert_to_unicode(postparams.get('description_data')) == req_dict.get('data_description')
-        assert self.convert_to_unicode(postparams.get('work_email')) == req_dict.get('requestor_work_email')
-        assert self.convert_to_unicode(postparams.get('your_name')) == req_dict.get('user_fullname')
+        assert self.convert_to_unicode(postparams.get('data_type')) == req_dict.get('data_type')
+        assert self.convert_to_unicode(postparams.get('data_already_available')) == req_dict.get(
+            'data_already_available')
+        assert self.convert_to_unicode(postparams.get('data_already_available_link')) == req_dict.get(
+            'data_already_available_link')
+        assert self.convert_to_unicode(postparams.get('role')) == req_dict.get('user_role')
 
         assert 'email/content/new_org_request_hdx_team_notification.html' in kw_args0.get('snippet')
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args1.get('snippet')
