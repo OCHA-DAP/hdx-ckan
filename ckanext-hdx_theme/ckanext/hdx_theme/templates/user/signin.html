@@ -19,11 +19,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 {%- endblock -%}
 
-{%- block bodytag -%} {{ super() }} class="animated-gradient" {%- endblock -%}
+{#{%- block bodytag -%} {{ super() }} class="animated-gradient" {%- endblock -%}#}
 
 {% block page %}
   <div>
-    {{ h.snippet('widget/onboarding/login.html', id="loginPopup", content_class="fade-in",
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup",
+        content_class="fade-in", class="popup-onboarding animated-gradient",
         show=True, error_message=error_message, info_message=info_message, data=data) }}
   </div>
 {% endblock %}

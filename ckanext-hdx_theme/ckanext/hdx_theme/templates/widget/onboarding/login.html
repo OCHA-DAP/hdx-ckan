@@ -2,14 +2,14 @@
 Shows the login popup
 
 Depends on:
-    Fanstatic resource bundle "popup"
+    Fanstatic resource bundle "popup".
+    The "class" and "content_class" parameters come from the "popup.html" that this extends.
 
 Example:
-    {{ h.snippet('widget/onboarding/login.html', id="loginPopup",
+   {{ h.snippet('widget/onboarding/login.html', id="loginPopup",
+        content_class="fade-in", class="popup-onboarding bg-transparent",
         show=True, error_message=error_message, info_message=info_message, data=data) }}
 #}
-
-{% set class = "popup-onboarding bg-transparent" %}
 
 {% extends "widget/popup/popup.html" %}
 

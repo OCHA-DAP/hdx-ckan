@@ -3,13 +3,13 @@ Recover Password widget
 
 Depends on:
     Fanstatic resource bundle "popup"
+    The "class" and "content_class" parameters come from the "popup.html" that this extends.
 
 Example:
-    {{ h.snippet('widget/onboarding/recover.html', id="recoverPopup") }}
+    {{ h.snippet('widget/onboarding/recover.html', id="recoverPopup",
+        class = "popup-onboarding animated-gradient", content_class="fade-in",
+        user_dict=user_dict, show=true, capcha_api_key=capcha_api_key) }}
 #}
-
-{% set class = "popup-onboarding" %}
-{% set title = "Forgot your password?" %}
 
 {% extends "widget/onboarding/notification.html" %}
 
