@@ -19,6 +19,7 @@ import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
 import ckanext.hdx_users.views.user_register_view as urv
 import ckanext.hdx_users.views.onboarding as onboarding
+import ckanext.hdx_users.views.signin as signin
 
 import ckanext.security.validators as security_validators
 
@@ -136,4 +137,5 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             rdv.requestdata_send_request,
             urv.user_register,
             onboarding.hdx_user_onboarding,
+            signin.hdx_signin,
         ]

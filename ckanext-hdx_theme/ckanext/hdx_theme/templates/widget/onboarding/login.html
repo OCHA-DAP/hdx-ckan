@@ -5,14 +5,16 @@ Depends on:
     Fanstatic resource bundle "popup"
 
 Example:
-    {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=None) }}
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup",
+        show=True, error_message=error_message, info_message=info_message, data=data) }}
 #}
 
-{% set class = "popup-onboarding" %}
+{% set class = "popup-onboarding bg-transparent" %}
 
 {% extends "widget/popup/popup.html" %}
 
 {% block titlebar %}{% endblock %}
+{% block popup_attributes %}{% if (not show) %} {{ super() }} {% endif %} {% endblock %}v
 {% block content %}
     <div class="login-widget">
         <div class="row">
@@ -25,39 +27,52 @@ Example:
                       <i class="fa fa-user"></i>
                     </div>
                 </div>
-                <i class="close humanitarianicons-Exit-Cancel"></i>
+{#                <i class="close humanitarianicons-Exit-Cancel"></i>#}
             </div>
         </div>
         <div class="row">
-            <form id="hdx-login-form" action="/user/login?came_from={{ (login_came_from or request.environ.get('REQUEST_URI', '')) | urlencode }}" method="post" onsubmit="checkLockout">
+            {% set form_url = h.url_for('hdx_signin.login', came_from=data.login_came_from) if data.login_came_from else h.url_for('hdx_signin.login') %}
+            <form id="hdx-login-form" action="{{ form_url }}" method="post" onsubmit="checkLockout">
                 <div class="login-content">
                     <div class="col-12">
-                        <div id="login-info-message" class="error-explanation alert alert-danger mBottom5 pTopBottom5" style="display: none;">
-
-                        </div>
+                        {% if info_message %}
+                          <div id="login-info-message" class="error-explanation alert alert-danger mBottom5 pTopBottom5">
+                            {{ info_message }}
+                          </div>
+                        {% endif %}
                         <div id="username-static" class="username-static" style="display: none;">
                             <div id="user-display-name" class="username-text center"></div>
-                            <div class="email-text center"> <span id="user-display-email"></span>&nbsp;<span><a onclick="notYou()" href="#">Not you?</a></span></div>
+                            <div class="email-text center"> <span id="user-display-email"></span>&nbsp;<span><a onclick="notYou()" href="javascript:void(0);">Not you?</a></span></div>
                         </div>
                         <div id="username-form-field" class="username mTop10 control">
+                            <label for="field-login" class="form-label">Username or Email</label>
                             <input id="field-login" name="login" class="full-width required" type="text" value="" required>
-                            <label for="field-login">Username or Email</label>
+{#                            <label for="field-login">Username or Email</label>#}
                         </div>
                         <div class="password mTop10 control">
+                            <label for="field-password" class="form-label">Password</label>
                             <input id="field-password" name="password" class="full-width required" type="password" required>
-                            <label for="field-password">Password</label>
+{#                            <label for="field-password">Password</label>#}
                         </div>
                         <div id="mfa-form-field" style="display: none;" class="mfa mTop10 control">
+                             <label for="field-mfa" class="form-label">One Time Password</label>
                             <input id="field-mfa" name="mfa" class="full-width required" type="number" min="0" max="999999" required>
-                            <label for="field-mfa">One Time Password</label>
+{#                            <label for="field-mfa">One Time Password</label>#}
                         </div>
-                        <div class="error-message" style="display: none;">
-
+                        <div class="error-message" style="{{ '' if error_message else 'display: none;' }}">
+                          {{ error_message }}
                         </div>
                         <div class="checkbox-style mTop10"><input id="field-remember" name="remember" type="checkbox" value="63072000"><label for="field-remember">Remember me</label> </div>
                         <div class="mTop10"><input class="full-width btn btn-primary btn-large" type="submit" value="Login" disabled></div>
                         <div class="member center mTop10"><a href="/user/reset">Forgot your password?</a></div>
-                        <div class="member center">Not a member? <a href="{{ h.url_for('hdx_user_onboarding.value_proposition') }}" aria-label="register">Register</a></div>
+                        <div class="member center">Not a member? <a
+                          href="{{ h.url_for('hdx_user_onboarding.value_proposition') }}"
+                          aria-label="register">Register</a></div>
+                        <div class="mTop20 center">
+                          <a href="/" rel="noopener noreferrer">
+                            <img class="footer-hdx-logo" src="/images/homepage/logo-combined.png"/>
+                          </a>
+                        </div>
                     </div>
                 </div>
             </form>

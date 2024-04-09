@@ -74,12 +74,6 @@
 .recover-widget .not-member a {
   font-weight: 700;
 }
-.recover-widget .logo {
-  height: 30px;
-}
-#recoverPopup .notification-widget {
-  width: 370px;
-}
 #recoverPopup .notification-title {
   padding: 0;
   height: 200px;

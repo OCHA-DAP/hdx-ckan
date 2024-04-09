@@ -46,7 +46,10 @@
                   data-start-page-type="contact-contributor"
                   data-start-page-additional-params="{{ onboarding_additional_params }}">
 
-                    <a href="/contact_hdx" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
+                    <a href="{{ h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', ''), info_message_type='contact-contributor') }}"
+                       title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}"
+                       data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
+
                         <i class="icon-envelope"></i>
                       <span>Contact the contributor</span>
                     </a>

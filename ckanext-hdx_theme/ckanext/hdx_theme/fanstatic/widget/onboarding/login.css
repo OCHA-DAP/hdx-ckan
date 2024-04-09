@@ -39,12 +39,8 @@
   background-color: #eeeeee;
 }
 .login-widget #hdx-login-form .login-content {
-  height: 355px;
   width: 100%;
-  padding: 57.5px 15px 35px;
-}
-.login-widget #hdx-login-form .login-content.login-content--size-big {
-  height: 399px;
+  padding: 57.5px 15px 20px;
 }
 .login-widget #hdx-login-form .login-content .username-text {
   font-family: 'Gotham-Bold', sans-serif;

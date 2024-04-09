@@ -461,6 +461,16 @@ onboarding-select-org-styles:
   contents:
     - widget/onboarding/select-organisation.css
 
+signin-styles:
+  output: ckanext-hdx_theme/%(version)s_singin-styles.css
+  contents:
+    - widget/signin/signin.css
+
+signin-scripts:
+  output: ckanext-hdx_theme/%(version)s_singin-scripts.js
+  contents:
+    - widget/signin/signin.js
+
 charting-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_charting-scripts.js

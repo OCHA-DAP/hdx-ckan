@@ -34,11 +34,7 @@ Example:
       </ul>
     {% else %}
       {% if pkg.is_requestdata_type %}
-        {% if c.userobj %}
-         {% set is_logged_in = 'true' %}
-        {% else %}
-         {% set is_logged_in = 'false' %}
-        {% endif %}
+        {% set is_logged_in = True if g.userobj and not g.userobj.is_anonymous else False %}
         {% set is_hdx = h.requestdata_is_hdx_portal() %}
         {% set redirect_url = h.url_for('user.login') %}
         {% set requestdata_action = h.url_for('requestdata_send_request.send_request') %}
@@ -54,24 +50,30 @@ Example:
           >
             {% set onboarding_additional_params = h.dump_json({'dataset_id': pkg.id}) %}
             <span
-              {% if not g.userobj or g.userobj.is_anonymous %}
+              {% if not is_logged_in %}
                       data-module="hdx-onboarding-flow"
                       data-start-page-type="hdx-connect"
                       data-start-page-additional-params="{{ onboarding_additional_params }}"
               {% endif %}
             >
               <span data-module="hdx_click_stopper"
-              data-module-link_type="dataset resources" data-module-label="Request data"
-              data-module-just_send_event="true" data-module-selector="#request-data-button">
-                <a href="javascript:void(0);" id="request-data-button" class="btn btn-primary"
-                   data-module="hdx-modal-form"
-                   data-module-template_file="request_contact.html"
-                   data-module-submit_action="{{ requestdata_action }}"
-                   data-module-post_data="{{ request_post_data }}"
-                   data-module-is_logged_in="{{ is_logged_in }}"
-                   data-module-is_hdx="{{ is_hdx }}"
-                   data-module-redirect_url="{{ redirect_url }}"
-                   data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+                data-module-link_type="dataset resources" data-module-label="Request data"
+                data-module-selector="#request-data-button">
+
+                <a id="request-data-button" class="btn btn-primary"
+                   {% if is_logged_in %}
+                     href="javascript:void(0);"
+                     data-module="hdx-modal-form"
+                     data-module-template_file="request_contact.html"
+                     data-module-submit_action="{{ requestdata_action }}"
+                     data-module-post_data="{{ request_post_data }}"
+                     data-module-is_logged_in="true"
+                     data-module-is_hdx="{{ is_hdx }}"
+                     data-module-redirect_url="{{ redirect_url }}"
+                     data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+                   {% else %}
+                    href="{{ h.url_for('hdx_signin.login', came_from=h.url_for('hdx_dataset.read', id=pkg.id), info_message_type='hdx-connect') }}"
+                   {% endif %}
                 >Request data</a>
               </span>
             </span>
