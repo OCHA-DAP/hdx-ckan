@@ -233,8 +233,8 @@ user.add_url_rule(u'/edit/<id>', view_func=_edit_view)
 
 user.add_url_rule(u'/follow_details', view_func=user_onboarding_view.follow_details, methods=(u'POST',))
 user.add_url_rule(u'/request_membership', view_func=user_onboarding_view.request_membership, methods=(u'POST',))
-user.add_url_rule(u'/request_new_organization', view_func=user_onboarding_view.request_new_organization,
-                  methods=(u'POST',))
+# user.add_url_rule(u'/request_new_organization', view_func=user_onboarding_view.request_new_organization,
+#                   methods=(u'POST',))
 user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_friends, methods=(u'POST',))
 
 user.add_url_rule(u'/logged_out_redirect', view_func=logged_out_page)
