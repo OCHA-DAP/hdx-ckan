@@ -130,7 +130,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
                                           snippet='email/content/join_organization_approval_to_admins.html')
 
         else:
-            subject = u'Denial of your request to join organisation ' + group_name
+            subject = u'Your request to join '+group_name+' on HDX has not been accepted'
             email_data = {
                 'user_fullname': member_user.display_name,
                 'org_name': group_name,

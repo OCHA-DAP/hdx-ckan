@@ -398,7 +398,7 @@ def _send_analytics_info(org_obj, new_members, invited_members):
 
 
 def _send_membership_confirmation(org_display_name, org_id, role, user_info):
-    subject = u'Confirmation of HDX organisation membership'
+    subject = u'Your request to join '+org_display_name+' on HDX has been accepted'
     email_data = {
         'user_fullname': user_info.display_name or user_info.fullname,
         'org_name': org_display_name,
