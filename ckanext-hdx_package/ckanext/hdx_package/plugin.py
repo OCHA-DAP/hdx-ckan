@@ -418,7 +418,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_resource_reorder': hdx_update.package_resource_reorder,
             'dataset_purge': hdx_delete.dataset_purge,
             'hdx_dataset_purge': hdx_delete.hdx_dataset_purge,
-            'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
+            # 'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
             'hdx_package_update_metadata': hdx_update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': hdx_update.hdx_resource_update_metadata,
             'hdx_resource_delete_metadata': hdx_update.hdx_resource_delete_metadata,
