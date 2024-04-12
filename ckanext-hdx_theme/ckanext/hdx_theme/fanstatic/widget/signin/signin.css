@@ -1,0 +1,4 @@
+.popup .content {
+  visibility: hidden;
+  max-width: 450px;
+}

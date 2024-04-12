@@ -62,7 +62,6 @@
   display: none;
 }
 #recoverPopup {
-  background: none;
   pointer-events: none;
 }
 #recoverPopup .content {
