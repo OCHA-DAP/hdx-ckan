@@ -17,15 +17,15 @@ log = logging.getLogger(__name__)
 
 
 @validator_args
-def request_new_organization_schema(not_empty, strip_value, ignore_missing, url_validator):
+def request_new_organization_schema(not_empty, strip_value, ignore_missing, hdx_url_validator):
     schema = {
         'name': [strip_value, not_empty, unicode_safe],
         'description': [strip_value, not_empty, unicode_safe],
-        'website': [ignore_missing, strip_value, url_validator, unicode_safe],
+        'website': [ignore_missing, strip_value, hdx_url_validator, unicode_safe],
         'role': [strip_value, not_empty, unicode_safe],
         'data_type': [strip_value, not_empty, unicode_safe],
         'data_already_available': [strip_value, not_empty, unicode_safe],
-        'data_already_available_link': [ignore_missing, strip_value, url_validator, unicode_safe],
+        'data_already_available_link': [ignore_missing, strip_value, hdx_url_validator, unicode_safe],
     }
     return schema
 
