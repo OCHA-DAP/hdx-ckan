@@ -9,14 +9,18 @@ import logging
 import ckan.authz as authz
 import ckan.plugins.toolkit as tk
 import ckan.lib.navl.dictization_functions as df
+import string
+from typing import Any
+from urllib.parse import urlparse
+
+from ckan.types import (
+    FlattenDataDict, FlattenKey, Context, FlattenErrorDict)
 
 missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
 get_action = tk.get_action
-# check_access = tk.check_access
-
-# NotAuthorized = tk.NotAuthorized
+_ = tk._
 
 log = logging.getLogger(__name__)
 
@@ -47,12 +51,13 @@ def active_if_missing(key, data, errors, context):
     if value is missing or value is None:
         data[key] = 'active'
 
+
 def set_inactive_if_closed_organization(key, data, errors, context):
     value = data.get(key)
     title = data.get(('title',))
     if title:
-        if value=='true' or value=='True':
-            title= title.replace('(closed)','')
+        if value == 'true' or value == 'True':
+            title = title.replace('(closed)', '')
             if not 'inactive' in title:
                 if title.endswith(' '):
                     title = title + '(inactive)'
@@ -63,5 +68,40 @@ def set_inactive_if_closed_organization(key, data, errors, context):
             title = title.replace('(inactive)', '')
             if title.endswith(' '):
                 title = title[:-1]
-        data[('title',)]= title
+        data[('title',)] = title
 
+
+def hdx_url_validator(
+    key: FlattenKey,
+    data: FlattenDataDict,
+    errors: FlattenErrorDict,
+    context: Context,
+) -> Any:
+    """Checks that the provided value (if it is present) is a valid URL"""
+    url = data.get(key, None)
+    if not url:
+        return
+    elif url.startswith('www.'):
+        url = 'https://' + url
+
+    try:
+        pieces = urlparse(url)
+        if all([pieces.scheme, pieces.netloc]) and pieces.scheme in [
+            "http",
+            "https",
+            "www"
+        ]:
+            hostname, port = (
+                pieces.netloc.split(":")
+                if ":" in pieces.netloc
+                else (pieces.netloc, None)
+            )
+            if set(hostname) <= set(
+                string.ascii_letters + string.digits + "-."
+            ) and (port is None or port.isdigit()):
+                return
+    except ValueError:
+        # url is invalid
+        pass
+
+    errors[key].append(_("Please provide a valid URL"))
