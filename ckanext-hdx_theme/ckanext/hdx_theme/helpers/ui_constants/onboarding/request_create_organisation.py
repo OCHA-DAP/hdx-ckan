@@ -15,7 +15,7 @@ CONSTANTS = {
     'TEXTAREA_DESCRIPTION_PLACEHOLDER': '''''',
     'TEXTAREA_DESCRIPTION_ERROR': '''Description cannot be empty''',
     'INPUT_WEBSITE_LABEL': '''Please share the website of the organisation''',
-    'INPUT_WEBSITE_PLACEHOLDER': '''https://''',
+    'INPUT_WEBSITE_PLACEHOLDER': '''https:// | www.''',
     'INPUT_WEBSITE_ERROR': '''''',
     'INPUT_ROLE_LABEL': '''Explain your role within the organisation''',
     'INPUT_ROLE_PLACEHOLDER': '''''',
@@ -27,7 +27,7 @@ CONSTANTS = {
     'SELECT_DATA_ALREADY_AVAILABLE_PLACEHOLDER': '''Select an option...''',
     'SELECT_DATA_ALREADY_AVAILABLE_ERROR': '''Data already available cannot be empty''',
     'INPUT_DATA_ALREADY_AVAILABLE_LINK_LABEL': '''If yes, please provide a link''',
-    'INPUT_DATA_ALREADY_AVAILABLE_LINK_PLACEHOLDER': '''https://''',
+    'INPUT_DATA_ALREADY_AVAILABLE_LINK_PLACEHOLDER': '''https:// | www.''',
     'INPUT_DATA_ALREADY_AVAILABLE_LINK_ERROR': '''''',
 
     'BUTTON_SUBMIT': '''Submit''',
