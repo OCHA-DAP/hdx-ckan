@@ -101,7 +101,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
             'hdx_org_keep_prev_value_if_empty_unless_sysadmin': org_custom_validator.hdx_org_keep_prev_value_if_empty_unless_sysadmin,
             'active_if_missing': org_custom_validator.active_if_missing,
-            'set_inactive_if_closed_organization': org_custom_validator.set_inactive_if_closed_organization
+            'set_inactive_if_closed_organization': org_custom_validator.set_inactive_if_closed_organization,
+            'hdx_url_validator': org_custom_validator.hdx_url_validator,
         }
 
     def _modify_group_schema(self, schema):
