@@ -305,9 +305,11 @@ hdx.locations.toplines_url = https://data.humdata.org/dataset/a0f8e926-9340-4034
 
 #mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp = true
-hdx.mailchimp.list.newsletter = 99796325d1
-hdx.mailchimp.list.newuser = bbb-fake
-hdx.mailchimp.api.key = ccc-fake
+# hdx.mailchimp.api.key = aaa-fake
+# hdx.mailchimp.list.newsletter = aaa-fake
+# hdx.mailchimp.list.newuser = bbb-fake
+# hdx.mailchimp.api.key = ccc-fake
+# hdx.mailchimp.interest.data_services = ddd-fake
 
 # hdx_requestdata setting
 hdx_portal = True

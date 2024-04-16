@@ -75,8 +75,8 @@ class HDXTwoStep:
         user_name = SecurityTOTP.get_user_name(request.args['user'])
         locked = False
         lockout = {}
-        throttle = LoginThrottle(User.by_name(user_name), user_name)
-        if throttle:
+        if user_name:
+            throttle = LoginThrottle(User.by_name(user_name), user_name)
             locked = throttle.is_locked()
             if locked:
                 lockout['timeout'] = throttle.login_lock_timeout
@@ -86,8 +86,12 @@ class HDXTwoStep:
 
     @staticmethod
     def check_mfa():
-        user_name = SecurityTOTP.get_user_name(request.args['user'])
-        totp_challenger = SecurityTOTP.get_for_user(user_name)
+        user_name = None
+        totp_challenger = None
+        if request.args.get('user'):
+            user_name = SecurityTOTP.get_user_name(request.args['user'])
+        if user_name:
+            totp_challenger = SecurityTOTP.get_for_user(user_name)
         return json.dumps({'result': totp_challenger is not None})
 
 
@@ -143,14 +147,7 @@ class HDXEditView(EditView):
 
         user = None
         try:
-            data_dict['fullname'] = data_dict.get('firstname', "") + u' ' + data_dict.get('lastname', "")
             user = get_action(u'user_update')(context, data_dict)
-            if user:
-                ue_data_dict = {'user_id': user.get('id'), 'extras': [
-                    {'key': user_model.HDX_FIRST_NAME, 'new_value': data_dict.get('firstname', '')},
-                    {'key': user_model.HDX_LAST_NAME, 'new_value': data_dict.get('lastname', '')},
-                ]}
-                get_action('user_extra_update')(context, ue_data_dict)
         except NotAuthorized:
             abort(403, _(u'Unauthorized to edit user %s') % id)
         except NotFound as ex:

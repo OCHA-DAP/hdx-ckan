@@ -21,9 +21,7 @@ main:
     - module.js
     - pubsub.js
     - client.js
-    # HDX fix: swapped the order of i18n.js and notify.js to resolve the JS error with ckan.i18n being undefined in notify.js.
     - i18n.js
-    # END HDX fix
     - notify.js
     - main.js
 

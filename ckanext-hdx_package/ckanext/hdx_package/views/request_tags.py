@@ -106,7 +106,7 @@ def request_tags():
         check_access('hdx_send_mail_request_tags', context, data_dict)
 
         data_dict = _process_tags_request()
-        approved_tags = get_action('hdx_tag_approved_list')(context, {})
+        approved_tags = get_action('cached_approved_tags_list')(context, {})
 
         _validate_tags_request_tags_field(data_dict['suggested_tags'], approved_tags)
         _validate_tags_request_fields(data_dict)

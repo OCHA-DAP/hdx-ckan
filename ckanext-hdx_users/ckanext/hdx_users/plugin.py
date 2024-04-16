@@ -18,6 +18,10 @@ import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
 import ckanext.hdx_users.views.user_register_view as urv
+import ckanext.hdx_users.views.onboarding as onboarding
+import ckanext.hdx_users.views.signin as signin
+
+import ckanext.security.validators as security_validators
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -51,13 +55,16 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
             'hdx_send_request_data_auto_approval': misc.hdx_send_request_data_auto_approval,
             'hdx_first_login': create.hdx_first_login,
-            'user_delete': delete.hdx_user_delete
+            'user_delete': delete.hdx_user_delete,
+            'user_update': update.user_update,
+            'user_create': create.user_create,
         }
 
     def get_auth_functions(self):
         return {
             'user_can_register': authorize.user_can_register,
             'user_can_validate': authorize.user_can_validate,
+            'onboarding_user_can_register': authorize.onboarding_user_can_register,
             'hdx_first_login': auth.hdx_first_login,
         }
 
@@ -98,8 +105,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
-            'hdx_user_fullname_show': get.hdx_user_fullname_show,
-            'user_show': get.user_show,
             'notify_users_about_api_token_expiration': update.notify_users_about_api_token_expiration,
         }
 
@@ -115,7 +120,9 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_validators(self):
         return {
             'user_email_validator': hdx_validators.user_email_validator,
-            'user_name_validator': hdx_validators.user_name_validator
+            'user_password_validator': security_validators.user_password_validator,
+            # 'user_name_validator': hdx_validators.user_name_validator,
+            'user_emails_match': hdx_validators.user_emails_match,
         }
 
     # IBlueprint
@@ -128,5 +135,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             permission.hdx_user_permission,
             rduv.hdx_requestdata_user,
             rdv.requestdata_send_request,
-            urv.user_register
+            urv.user_register,
+            onboarding.hdx_user_onboarding,
+            signin.hdx_signin,
         ]

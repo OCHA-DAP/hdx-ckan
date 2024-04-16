@@ -17,6 +17,10 @@ Information about how the CKAN search results are being computed can be found he
 
 Information about how to use the API endpoint :code:`package_search()` can be found here `Using the API to Search on HDX <search/package_search.rst>`_
 
+ONBOARDING
+++++++++++
+Information about how to modify the content of web pages and emails that are used in the process can be found
+here `Changing Content <onboarding/text_changes_tutorial.rst>`_
 
 DATASET FIELDS
 ++++++++++++++

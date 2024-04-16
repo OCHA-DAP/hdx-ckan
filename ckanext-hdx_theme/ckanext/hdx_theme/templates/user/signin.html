@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block subtitle %}{{ _('Log in') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/page-styles' %}
+  {% asset 'hdx_theme/onboarding-styles' %}
+  {% asset 'hdx_theme/onboarding-password-styles' %}
+  {% asset 'hdx_theme/signin-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/signin-scripts' %}
+{% endblock %}
+
+{%- block meta -%}
+  {{ super() }}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{%- endblock -%}
+
+{#{%- block bodytag -%} {{ super() }} class="animated-gradient" {%- endblock -%}#}
+
+{% block page %}
+  <div>
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup",
+        content_class="fade-in", class="popup-onboarding animated-gradient",
+        show=True, error_message=error_message, info_message=info_message, data=data) }}
+  </div>
+{% endblock %}
+
+{% block mixpanel_init %} {% endblock %}
+{% block google_analytics_init %} {% endblock %}

@@ -1,0 +1,21 @@
+@import "../../variables";
+.navbar.new-header {
+  margin: 0;
+  display: block;
+
+  &.navbar-static-top {
+    width: 100%;
+
+    .global-header {
+      background-color: @darkGrayColor;
+      > .header-message, > .container {
+        max-width: @containerRealSize;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  //.navbar-header {
+  //  position: relative;
+  //}
+}

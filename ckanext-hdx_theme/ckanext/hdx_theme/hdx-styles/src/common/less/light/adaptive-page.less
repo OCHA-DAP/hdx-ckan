@@ -1,0 +1,62 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.new-header {
+  .hdx-header {
+    .navbar-header {
+      .hdxLogo {
+        @media (max-width: @cut-point-laptop-m) {
+          width: 45px;
+          .logo {
+            .logo-img {
+              background-image: url("@{imagePath}/homepage/logo-hdx-mobile.svg");
+              background-size: 28px 31px;
+              width: 28px;
+            }
+          }
+        }
+      }
+
+      .submit-data {
+
+        .submitData {
+          @media (max-width: @cut-point-laptop-s) {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .navbar-toggler {
+      @media (max-width: @cut-point-laptop-s) {
+        display: block;
+      }
+    }
+  }
+}
+
+.mainLinks {
+  @media (max-width: @cut-point-laptop-s) {
+    display: none;
+  }
+}
+
+.hdx-footer {
+  .social-footer {
+
+    .terms {
+      @media (max-width: @cut-point-laptop-m) {
+        display: block;
+        line-height: 2;
+        .social-actions {
+          display: block;
+          margin-top: 30px;
+        }
+      }
+      @media (max-width: @cut-point-tablet) {
+        display: flex;
+        line-height: 20px;
+      }
+    }
+  }
+}

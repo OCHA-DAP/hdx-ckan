@@ -1,0 +1,36 @@
+CONSTANTS = {
+    'STEPS_1': '''Personal details''',
+    'STEPS_2': '''Verify email''',
+    'STEPS_3': '''Account created''',
+    'PAGE_TITLE': '''Please provide the following information''',
+    'MANDATORY_HELP': '''* indicates mandatory fields''',
+
+    'INPUT_FULLNAME_LABEL': '''What is your name?''',
+    'INPUT_FULLNAME_PLACEHOLDER': '''Your name''',
+    'INPUT_FULLNAME_ERROR': '''Full name cannot be empty''',
+    'INPUT_EMAIL_LABEL': '''What is your email address?''',
+    'INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
+    'INPUT_EMAIL_ERROR': '''Please enter a valid email address''',
+    'INPUT_EMAIL2_LABEL': '''Re-enter your email address''',
+    'INPUT_EMAIL2_PLACEHOLDER': '''Re-enter your email address''',
+    'INPUT_EMAIL2_ERROR': '''Email addresses must be valid and match''',
+    'INPUT_USERNAME_LABEL': '''Choose a username (visible to other users)''',
+    'INPUT_USERNAME_PLACEHOLDER': '''Your username''',
+    # 'INPUT_USERNAME_HELP': '''Username should be between 2 and 100 characters in length, containing only lowercase alphanumeric characters, - and _''',
+    # 'INPUT_USERNAME_ERROR': '''Please use a valid username format''',
+    'INPUT_PASSWORD_LABEL': '''Choose a password''',
+    'INPUT_PASSWORD_PLACEHOLDER': '''Your password''',
+    # 'INPUT_PASSWORD_HELP': '''The password must be a minimum of 10 characters in length and should consist of characters from a minimum of three out of the following four character sets: uppercase letters, lowercase letters, numbers, and punctuation.''',
+    # 'INPUT_PASSWORD_ERROR': '''Password should meet the required format''',
+    'INPUT_PASSWORD2_LABEL': '''Re-enter a password''',
+    'INPUT_PASSWORD2_PLACEHOLDER': '''Re-enter your password''',
+    # 'INPUT_PASSWORD2_ERROR': '''Passwords must be valid and match''',
+
+    'CHECKBOX_TERMS_OF_SERVICE': '''I have read and accepted the <a href="{0}" target="_blank" title="HDX Terms of Service">HDX Terms of Service</a>''',
+    'CHECKBOX_TERMS_OF_SERVICE_ERROR': '''Please accept the terms of service to continue''',
+    'CHECKBOX_NEWSLETTER': '''I want to receive email updates from the Centre for Humanitarian Data about HDX features and events''',
+
+    'BUTTON_SUBMIT': '''Next''',
+    'BUTTON_CANCEL': '''Cancel''',
+
+}

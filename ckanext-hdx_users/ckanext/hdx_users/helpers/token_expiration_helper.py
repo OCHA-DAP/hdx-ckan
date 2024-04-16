@@ -102,7 +102,7 @@ def send_emails_for_expiring_tokens(token_info_list):
                 'data': token_info,
                 'footer': True,
                 '_snippet': 'email/content/api_tokens/api_token_expiration.html',
-                'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx-email.png',
+                'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx.png',
             }
         }
         rendered_html = _render('email/email.html', html_data_dict)

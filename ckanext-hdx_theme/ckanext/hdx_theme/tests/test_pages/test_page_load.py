@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 pages = [
     # {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
     #  'action': 'register', 'usertype': None},
-    {'url_name': 'user.login', 'usertype': None},
+    {'url_name': 'hdx_signin.login', 'usertype': None},
     {'url_name': 'hdx_contribute_check.contribute', 'usertype': None},
     # {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
     #  'action': 'contribute', 'usertype': None},

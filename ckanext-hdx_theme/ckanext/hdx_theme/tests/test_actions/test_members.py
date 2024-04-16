@@ -57,7 +57,7 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
         result_members1 = self._query_members_in_org(org, admin, 'bar', True)
         assert len(result_members1) == 2, 'Users: username1 and adambar should match'
         result_mem_names = [result_mem1[4] for result_mem1 in result_members1]
-        assert 'adambar' in result_mem_names
+        assert 'Adam Bar' in result_mem_names
         assert 'George Foobar' in result_mem_names
 
         # queries should be case insensitive
@@ -73,7 +73,7 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
 
         result_basic_user_info = self._query_basic_user_info(admin)
         assert u'example-admin@example.com' == result_basic_user_info.get('email')
-        assert u'test123admin' == result_basic_user_info.get('display_name')
+        assert u'Test User' == result_basic_user_info.get('display_name')
         assert 'ds_num' in result_basic_user_info
         assert 'org_num' in result_basic_user_info
         assert 'grp_num' in result_basic_user_info
@@ -82,8 +82,8 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
     def _admin_create(self):
         context = {'ignore_auth': True,
                         'model': model, 'session': model.Session, 'user': 'nouser'}
-        u = self._get_action('user_create')(context,
-                {'name': 'test123admin', 'email': 'example-admin@example.com', 'password': 'Abcdefgh12'})
+        u = self._get_action('user_create')(context, {'name': 'test123admin', 'email': 'example-admin@example.com',
+                                                      'password': 'Abcdefgh12', 'fullname': 'Test User'})
         user = model.Session.query(model.User).filter(model.User.id == u['id']).first()
         user.sysadmin = True
         # user.apikey = 'TEST_API_KEY'
@@ -94,7 +94,7 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
 
     def _users_create(self):
         u1 = factories.User(name='johnfoo', fullname='John Foo', email='example@example.com')
-        u2 = factories.User(name='adambar', email='example2@example.com', fullname=None)
+        u2 = factories.User(name='adambar', email='example2@example.com', fullname='Adam Bar')
         u3 = factories.User(name='username1', fullname='George Foobar', email='example3@example.com')
         # u1 = tests.call_action_api(self.app, 'user_create', name='johnfoo', fullname='John Foo',
         #         email='example@example.com', password='Abcdefgh12',

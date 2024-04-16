@@ -1,0 +1,53 @@
+@import "bem_variables";
+
+.form-button {
+
+  &__btn {
+    font-size: 12px;
+    &_font-size_big {
+      font-size: 18px;
+    }
+    &_font-size_medium {
+      font-size: 16px;
+    }
+    @media (max-width: @breakpoint-lg) {
+      font-size: 16px;
+    }
+
+    &.btn-primary {
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 400;
+      font-family: 'Gotham-Bold', sans-serif;
+      border-color: @blue-light-color;
+      background-color: @blue-light-color;
+
+      &:hover {
+        background-color: @blue-color;
+      }
+    }
+
+    &.btn-link {
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      color: @blue-light-color;
+
+      &:hover {
+        color: @blue-color;
+      }
+    }
+
+    &.btn-outline-primary {
+      padding: 10px;
+      border-radius: 6px;
+      background-color: @white-color;
+      border-color: @blue-light-color;
+      font-weight: 400;
+      font-family: 'Gotham-Bold', sans-serif;
+
+      &:hover {
+        background-color: @blue-color;
+      }
+    }
+  }
+}

@@ -1,6 +1,29 @@
+@keyframes animatedBackgroundPosition {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .popup.popup-onboarding .content {
-  min-width: 370px;
   padding: 0 15px;
+}
+.popup.popup-onboarding .content.fade-in {
+  animation: fadeInAnimation ease-in 1700ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 .popup.popup-onboarding .error-message {
   color: red;
@@ -177,6 +200,9 @@
   font-size: 14px;
   letter-spacing: 0.01em;
 }
+.popup.popup-onboarding .footer-hdx-logo {
+  height: 30px;
+}
 #incomplete-profile {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
@@ -188,7 +214,7 @@
 #incomplete-profile > span {
   display: none;
 }
-@media (max-width: 375px) {
+@media (max-width: 768px) {
   .popup.popup-onboarding .content {
     left: 0;
     transform: translate(0, -50%);
@@ -205,4 +231,10 @@
   #incomplete-profile > span {
     display: none;
   }
+}
+.animated-gradient {
+  background: linear-gradient(-45deg, #007ce1, #1ebfb3);
+  background-size: 400% 400%;
+  animation: animatedBackgroundPosition 10s ease infinite;
+  height: 100vh;
 }

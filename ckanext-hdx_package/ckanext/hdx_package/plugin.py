@@ -202,6 +202,20 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             ]
         })
 
+        schema['tags'].update(
+            {
+                'name': [
+                    tk.get_validator('not_missing'),
+                    tk.get_validator('not_empty'),
+                    tk.get_validator('unicode_safe'),
+                    tk.get_validator('tag_length_validator'),
+                    tk.get_validator('hdx_tag_name_approved_validator'),
+                    tk.get_validator('tag_name_validator')
+                ]
+            }
+        )
+
+        core_last_modified_validators = schema['resources']['last_modified'] or []
         schema['resources'].update(
             {
                 'name': [tk.get_validator('not_empty'), unicode_safe, tk.get_validator('remove_whitespace')],
@@ -213,6 +227,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     unicode_safe
                 ],
                 'url': [tk.get_validator('not_empty'), unicode_safe, tk.get_validator('remove_whitespace')],
+                'last_modified': [tk.get_validator('hdx_update_last_modified_if_url_changed')] \
+                                 + core_last_modified_validators,
                 'in_quarantine': [
                     tk.get_validator('hdx_keep_unless_allow_resource_qa_script_field'),
                     tk.get_validator('boolean_validator'),
@@ -411,7 +427,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_view_delete': hdx_delete.resource_view_delete,
             'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
-            'hdx_tag_approved_list': hdx_actions.hdx_tag_approved_list,
+            'hdx_retrieve_approved_tags': hdx_actions.hdx_retrieve_approved_tags,
             'format_autocomplete': hdx_get.hdx_format_autocomplete,
             'hdx_guess_format_from_extension': hdx_get.hdx_guess_format_from_extension,
             'package_create': hdx_create.package_create,
@@ -499,7 +515,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_convert_old_date_to_daterange': vd.hdx_convert_old_date_to_daterange,
             'hdx_float_number': vd.hdx_float_number,
             'hdx_keep_if_fs_check_format': vd.hdx_keep_if_fs_check_format,
-            'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info
+            'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info,
+            'hdx_tag_name_approved_validator': vd.hdx_tag_name_approved_validator,
+            'hdx_update_last_modified_if_url_changed': vd.hdx_update_last_modified_if_url_changed,
         }
 
     def get_auth_functions(self):

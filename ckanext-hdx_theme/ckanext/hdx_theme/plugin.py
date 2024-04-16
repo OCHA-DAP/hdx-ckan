@@ -258,6 +258,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_approved_tags_list': hdx_helpers.hdx_get_approved_tags_list,
             'are_new_p_code_filters_enabled': hdx_helpers.are_new_p_code_filters_enabled,
             'bs5_build_nav_icon': hdx_helpers.bs5_build_nav_icon,
+            'hdx_decode_markup': hdx_helpers.hdx_decode_markup,
             'HDX_CONST': const
         }
 
@@ -296,6 +297,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_package_links_settings_update': hdx_actions.package_links_settings_update,
             'hdx_package_links_by_id_list': hdx_actions.package_links_by_id_list,
             # 'activity_detail_list': hdx_actions.hdx_activity_detail_list,
+            'cached_approved_tags_list': hdx_actions.cached_approved_tags_list,
         }
 
     def get_auth_functions(self):

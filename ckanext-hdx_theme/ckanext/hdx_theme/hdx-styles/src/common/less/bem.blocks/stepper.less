@@ -1,0 +1,125 @@
+@import "bem_variables";
+
+.fa-icon {
+  &::before {
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.stepper {
+  display: flex;
+  justify-content: center;
+
+  &__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 192px;
+
+    @media (max-width: @breakpoint-md) {
+      flex: 1;
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid @grey-color;
+      width: 100%;
+      top: 16px;
+      z-index: 1;
+    }
+
+    &::before {
+      left: -50%;
+    }
+
+    &::after {
+      left: 50%;
+    }
+
+    &:first-child::before,
+    &:last-child::after {
+      content: none;
+    }
+
+    &_state_active {
+      .stepper__counter {
+        color: @blue-color;
+        border-color: @blue-color;
+        background-color: @white-color;
+      }
+
+      .stepper__name {
+        color: @blue-color;
+      }
+
+      &::after {
+        border-bottom: 2px solid @grey-color;
+        z-index: 2;
+      }
+    }
+
+    &_state_completed {
+      .stepper__counter {
+        border-color: @blue-color;
+        background-color: @blue-color;
+
+        span {
+          visibility: hidden;
+          font-size: 0;
+          color: transparent;
+        }
+
+        &::after {
+          .fa-icon;
+          font: var(--fa-font-solid);
+          content: '\f00c';
+        }
+      }
+
+      .stepper__name {
+        color: @blue-color;
+      }
+
+      &::after {
+        border-bottom: 2px solid @blue-color;
+        z-index: 2;
+      }
+    }
+  }
+
+  &__counter {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 600;
+    border-width: 2px;
+    border-style: solid;
+    color: @white-color;
+    background: @grey-color;
+    border-color: @grey-color;
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 700;
+    color: @grey-color;
+    margin-top: 8px;
+
+    @media (max-width: @breakpoint-md) {
+      display: none;
+    }
+  }
+}

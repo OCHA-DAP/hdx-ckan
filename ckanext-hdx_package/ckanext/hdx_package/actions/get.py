@@ -986,11 +986,11 @@ def hdx_send_mail_members(context, data_dict):
     if data_dict.get('topic_key') == 'all':
         users_role = 'administrator(s), editor(s), and member(s)'
     elif data_dict.get('topic_key') == 'admins':
-        users_role = 'administrator(s)]'
+        users_role = 'administrator(s)'
     elif data_dict.get('topic_key') == 'editors':
-        users_role = 'editor(s)]'
+        users_role = 'editor(s)'
     elif data_dict.get('topic_key') == 'members':
-        users_role = 'member(s)]'
+        users_role = 'member(s)'
     subject = u'HDX group message from ' + data_dict.get('pkg_owner_org')
     email_data = {
         'org_name': data_dict.get('pkg_owner_org'),
@@ -1029,7 +1029,10 @@ def recently_changed_packages_activity_list(context, data_dict):
 @logic.side_effect_free
 def hdx_recommend_tags(context, data_dict):
     tag_recommender = TagRecommender(data_dict.get('title'), data_dict.get('organization'))
-    return tag_recommender.find_recommended_tags()
+    recommended_tags = tag_recommender.find_recommended_tags()
+    approved_tags = get_action('cached_approved_tags_list')(context, {})
+    filtered_tags = [tag for tag in recommended_tags if tag['name'] in approved_tags]
+    return filtered_tags
 
 
 @logic.side_effect_free

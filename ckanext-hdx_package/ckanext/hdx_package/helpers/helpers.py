@@ -232,7 +232,7 @@ def hdx_tag_autocomplete_list(context, data_dict):
 # code copied from get.py line 1748
 
 
-def hdx_tag_approved_list(context, data_dict):
+def hdx_retrieve_approved_tags(context, data_dict):
     """
     Get approved tag names from Google Spreadsheet and return a list.
     """
@@ -243,8 +243,15 @@ def hdx_tag_approved_list(context, data_dict):
 
     try:
         response = requests.get(proxy_data_preview_url, params=params)
-        return [item[0].lower() for item in json.loads(response.content)[1:]]
+        if response.status_code == 200:
+            items = json.loads(response.content)[1:]
+            ordered_items = sorted([item[0].lower() for item in items])
+            return ordered_items
+        else:
+            log.error("Failed to fetch approved tags. Status code: %s", response.status_code)
+            return []
     except Exception as e:
+        log.error("Failed to fetch approved tags. Exception: %s", e)
         return []
 
 
@@ -446,7 +453,12 @@ def generate_mandatory_fields():
 
 
 def hdx_check_add_data():
-    data_dict = {}
+    data_dict = {
+        'href': '#',
+        'onclick': 'contributeAddDetails(null, \'header\')',
+        'data_module': 'hdx_click_stopper',
+        'data_module_link_type': 'header add data',
+    }
 
     context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
@@ -455,18 +467,12 @@ def hdx_check_add_data():
     try:
         _check_access("package_create", context, dataset_dict)
     except NotAuthorized as e:
-        data_dict['data_module'] = 'hdx_click_stopper'
-        data_dict['data_module_link_type'] = 'header add data'
         if c.userobj or c.user:
             data_dict['href'] = '/dashboard/organizations'
             data_dict['onclick'] = ''
-            return data_dict
-        data_dict['href'] = '/contribute'
-        data_dict['onclick'] = ''
-        return data_dict
-
-    data_dict['href'] = '#'
-    data_dict['onclick'] = 'contributeAddDetails(null, \'header\')'
+        else:
+            data_dict['href'] = h.url_for('hdx_signin.login', info_message_type='add-data')
+            data_dict['onclick'] = ''
 
     return data_dict
 
