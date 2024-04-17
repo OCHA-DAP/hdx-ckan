@@ -81,15 +81,14 @@ def hdx_url_validator(
     url = data.get(key, None)
     if not url:
         return
-    elif url.startswith('www.'):
-        url = 'https://' + url
 
     try:
         pieces = urlparse(url)
-        if all([pieces.scheme, pieces.netloc]) and pieces.scheme in [
-            "http",
+        if pieces.scheme =='http' or pieces.scheme is None:
+            errors[key].append(_("Please provide a valid URL that starts with https://"))
+            return
+        elif all([pieces.scheme, pieces.netloc]) and pieces.scheme in [
             "https",
-            "www"
         ]:
             hostname, port = (
                 pieces.netloc.split(":")
