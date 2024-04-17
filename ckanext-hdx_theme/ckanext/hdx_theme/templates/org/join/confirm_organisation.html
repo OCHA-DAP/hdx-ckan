@@ -30,7 +30,7 @@
         {% endif %}
         {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_ABOUT_TEXT, paragraph_classes=["paragraph__text_font-size-big", "paragraph__text_font-weight-bold"], spacing_class="mt-3") }}
         {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_MEMBER_SINCE_TEXT.format(h.render_datetime(data.org_dict.created)), paragraph_classes=["text-muted fw-bold"]) }}
-        {{ h.snippet('bem.blocks/paragraph.html', show_more=True, text=data.org_dict.description, paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
+        {{ h.snippet('bem.blocks/paragraph.html', show_more=True, text=data.org_dict.description, spacing_class="mb-5") }}
 
         <form method="post" action="{{ h.url_for('hdx_org_join.reason_request') }}" id="confirm-organisation-form">
           {{ h.csrf_input() }}
