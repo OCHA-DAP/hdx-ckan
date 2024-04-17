@@ -10,10 +10,10 @@ import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
 import ckanext.hdx_users.views.user as hdx_user
-import ckanext.hdx_users.views.user_auth_view as user_auth_view
+# import ckanext.hdx_users.views.user_auth_view as user_auth_view
 import ckanext.hdx_users.views.dashboard as dashboard
 import ckanext.hdx_users.views.api as api
-import ckanext.hdx_users.views.user_checks_login as ucl
+# import ckanext.hdx_users.views.user_checks_login as ucl
 import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
@@ -76,7 +76,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [
             hdx_user.user,
-            user_auth_view.hdx_user_auth
+            # user_auth_view.hdx_user_auth
         ]
 
 
@@ -130,8 +130,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         return [
             dashboard.hdx_user_dashboard,
             api.hdx_user_autocomplete,
-            ucl.hdx_contribute,
-            ucl.hdx_contact_hdx,
+            # ucl.hdx_contribute,
+            # ucl.hdx_contact_hdx,
             permission.hdx_user_permission,
             rduv.hdx_requestdata_user,
             rdv.requestdata_send_request,

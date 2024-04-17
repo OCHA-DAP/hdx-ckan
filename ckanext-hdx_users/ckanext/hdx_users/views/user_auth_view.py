@@ -1,29 +1,29 @@
-import datetime
-import logging as logging
-
-from flask import Blueprint
-
-import ckan.plugins.toolkit as tk
-
-import ckanext.hdx_users.helpers.user_extra as ue_helpers
-from ckanext.hdx_users.views.user_view_helper import *
-
-abort = tk.abort
-render = tk.render
-log = logging.getLogger(__name__)
-unflatten = dictization_functions.unflatten
-_validate = dictization_functions.validate
-ValidationError = tk.ValidationError
-check_access = tk.check_access
-get_action = tk.get_action
-g = tk.g
-request = tk.request
-_ = tk._
-config = tk.config
-h = tk.h
-asbool = tk.asbool
-
-hdx_user_auth = Blueprint(u'hdx_user_auth', __name__)
+# import datetime
+# import logging as logging
+#
+# from flask import Blueprint
+#
+# import ckan.plugins.toolkit as tk
+#
+# import ckanext.hdx_users.helpers.user_extra as ue_helpers
+# from ckanext.hdx_users.views.user_view_helper import *
+#
+# abort = tk.abort
+# render = tk.render
+# log = logging.getLogger(__name__)
+# unflatten = dictization_functions.unflatten
+# _validate = dictization_functions.validate
+# ValidationError = tk.ValidationError
+# check_access = tk.check_access
+# get_action = tk.get_action
+# g = tk.g
+# request = tk.request
+# _ = tk._
+# config = tk.config
+# h = tk.h
+# asbool = tk.asbool
+#
+# hdx_user_auth = Blueprint(u'hdx_user_auth', __name__)
 
 # def logged_in():
 #
@@ -104,15 +104,15 @@ hdx_user_auth = Blueprint(u'hdx_user_auth', __name__)
 #         g.pop('login_came_from', '')
 #         return result
 
-def new_login(error=None, info_message=None, page_subtitle=None):
-    template_data = {}
-    if not g.user:
-        template_data = ue_helpers.get_login(True, "")
-    if info_message:
-        if 'data' not in template_data:
-            template_data['data'] = {}
-        template_data['data']['info_message'] = info_message
-        template_data['data']['page_subtitle'] = page_subtitle
-    return render('home/index.html', extra_vars=template_data)
+# def new_login(error=None, info_message=None, page_subtitle=None):
+#     template_data = {}
+#     if not g.user:
+#         template_data = ue_helpers.get_login(True, "")
+#     if info_message:
+#         if 'data' not in template_data:
+#             template_data['data'] = {}
+#         template_data['data']['info_message'] = info_message
+#         template_data['data']['page_subtitle'] = page_subtitle
+#     return render('home/index.html', extra_vars=template_data)
 
-hdx_user_auth.add_url_rule(u'/login', view_func=new_login)
+# hdx_user_auth.add_url_rule(u'/login', view_func=new_login)

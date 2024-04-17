@@ -25,7 +25,7 @@ def send_username_confirmation_email(user_dict: ActionResult.UserShow) -> bool:
     email_data = {
         'user_fullname': user_dict.get('fullname'),
         'username': user_dict['name'],
-        'login_link': h.url_for('hdx_user_auth.new_login', qualified=True)
+        'login_link': h.url_for('hdx_signin.login', qualified=True)
     }
     try:
         hdx_mailer.mail_recipient([{'email': user_dict['email']}], subject, email_data, footer=user_dict['email'],
