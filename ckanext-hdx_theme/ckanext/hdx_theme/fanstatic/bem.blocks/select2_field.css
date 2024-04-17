@@ -14,6 +14,16 @@
 .select2-field .select2-container .select2-selection {
   box-shadow: none;
 }
+.select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered {
+  font-weight: 500;
+  line-height: 30px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+.select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__placeholder {
+  font-weight: 500;
+  line-height: 30px;
+}
 .select2-field .select2-container .select2-dropdown .select2-search .select2-search__field:focus {
   box-shadow: none;
 }
