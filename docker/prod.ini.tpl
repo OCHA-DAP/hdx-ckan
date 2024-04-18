@@ -182,7 +182,7 @@ level = ${HDX_LOG_LEVEL}
 handlers = console, file, jsonFile
 
 [logger_ckan]
-level = WARNING
+level = INFO
 handlers = console, file, jsonFile
 qualname = ckan
 propagate = 0
