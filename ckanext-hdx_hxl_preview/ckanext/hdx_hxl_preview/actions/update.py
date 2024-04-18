@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 config = toolkit.config
 
 PROXY_CHECK_PATH = '/hxl-test.json'
-
+RESOURCE_TABULAR_FORMATS = ['xls', 'xlsx', 'csv', 'google sheet']
 
 def _check_has_hxl_tags(url):
     '''
@@ -76,7 +76,8 @@ def package_hxl_update(context, data_dict):
         for resource in package_dict.get('resources', []):
             view_list = _get_action('resource_view_list')(context, {'id': resource.get('id')})
             view = _view_already_exists(view_list)
-            if _check_has_hxl_tags(resource.get('url', '')):
+            is_res_tabular_format = resource.get('format', '').lower() in RESOURCE_TABULAR_FORMATS
+            if  is_res_tabular_format and _check_has_hxl_tags(resource.get('url', '')):
                 if not view:
                     resource_view_dict = {
                         'resource_id': resource.get('id'),
