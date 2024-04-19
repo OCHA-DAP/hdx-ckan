@@ -1,8 +1,9 @@
 import random
 from socket import error as socket_error
-import ckan.logic as logic
+
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.navl.dictization_functions as core_df
+import ckan.logic as logic
 import ckan.logic.action.create as core_create
 import ckan.logic.schema as core_schema
 import ckan.model as core_model
@@ -56,10 +57,10 @@ def hdx_user_invite(context, data_dict):
     name = core_create._get_random_username_from_email(data['email'])
     # Choose a password. However it will not be used - the invitee will not be
     # told it - they will need to reset it
-    while True:
+    for i in range(24):
         password = ''.join(random.SystemRandom().choice(
             string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation)
-                           for _ in range(12))
+                           for _ in range(24))
         # Occasionally it won't meet the constraints, so check
         errors = {}
         _get_validator('user_password_validator')('password', {'password': password}, errors, None)
