@@ -74,12 +74,12 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  height: 315px;
 }
 .hdx-wrapper .top-banner .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 90px;
+  padding-top: 68px;
+  padding-bottom: 68px;
   width: 50%;
   min-width: 530px;
 }
@@ -91,7 +91,6 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner .top-banner-text-wrapper {
     min-width: 400px;
-    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -136,25 +135,17 @@
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: 100% auto;
-  height: 315px;
   margin-left: -45px;
   margin-right: -45px;
 }
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 90px;
+  padding-top: 139px;
+  padding-bottom: 139px;
   width: 50%;
 }
 .hdx-wrapper .top-banner-archive .top-banner-text-wrapper .top-banner-title {
-  font-family: 'Gotham-Medium', sans-serif;
-  font-size: 36px;
-  color: #FFFFFF;
-  letter-spacing: 0.01em;
-  text-align: center;
-}
-.hdx-wrapper .top-banner-archive .top-banner-text-wrapper .top-banner-title-archive {
-  margin-top: 40px;
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 36px;
   color: #FFFFFF;
@@ -177,13 +168,13 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  height: 315px;
   background-image: url("/images/backgrounds/documentation_top_f.jpg");
 }
 .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 90px;
+  padding-top: 68px;
+  padding-bottom: 68px;
   width: 50%;
   min-width: 530px;
 }
@@ -195,7 +186,6 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
     min-width: 400px;
-    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -237,24 +227,30 @@
 .hdx-wrapper .top-banner-licenses {
   background-image: url("/images/backgrounds/faq_terms_banner.jpg");
 }
+.hdx-wrapper .top-banner-licenses .top-banner-text-wrapper {
+  padding-top: 139px;
+  padding-bottom: 139px;
+}
 .hdx-wrapper .top-banner-terms {
   background-image: url("/images/backgrounds/faq_licenses_banner.jpg");
 }
+.hdx-wrapper .top-banner-terms .top-banner-text-wrapper {
+  padding-top: 139px;
+  padding-bottom: 139px;
+}
 .hdx-wrapper .top-banner-faq-data-responsibility {
   background-image: url("/images/backgrounds/faq_top_f.png");
-  background-position: center;
-  background-size: cover;
   background-image: url("/images/backgrounds/faq_data_responsibility.jpg");
   background-color: #FFFFFF;
   background-repeat: no-repeat;
-  background-position: left bottom;
-  background-size: 100% auto;
-  height: 315px;
+  background-position: center;
+  background-size: cover;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 90px;
+  padding-top: 68px;
+  padding-bottom: 68px;
   width: 50%;
   min-width: 530px;
 }
@@ -266,7 +262,6 @@
 @media (max-width: 768px) {
   .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
     min-width: 400px;
-    padding: 45px;
   }
 }
 @media (max-width: 425px) {
@@ -308,8 +303,9 @@
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 70px;
   width: 50%;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title {
   font-family: 'Gotham-Medium', sans-serif;
@@ -318,14 +314,6 @@
   letter-spacing: 0.01em;
   text-align: center;
   line-height: 36px;
-}
-.hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-title-archive {
-  margin-top: 40px;
-  font-family: 'Gotham-Medium', sans-serif;
-  font-size: 36px;
-  color: #FFFFFF;
-  letter-spacing: 0.01em;
-  text-align: center;
 }
 .hdx-wrapper .top-banner-faq-data-responsibility .top-banner-text-wrapper .top-banner-more {
   font-family: 'Gotham-Book', sans-serif;
