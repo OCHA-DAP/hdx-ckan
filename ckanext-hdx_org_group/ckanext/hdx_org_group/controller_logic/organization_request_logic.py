@@ -17,15 +17,15 @@ log = logging.getLogger(__name__)
 
 
 @validator_args
-def request_new_organization_schema(not_empty, strip_value, ignore_missing, hdx_url_validator):
+def request_new_organization_schema(not_empty, ignore_missing, hdx_url_validator):
     schema = {
-        'name': [strip_value, not_empty, unicode_safe],
-        'description': [strip_value, not_empty, unicode_safe],
-        'website': [ignore_missing, strip_value, hdx_url_validator, unicode_safe],
-        'role': [strip_value, not_empty, unicode_safe],
-        'data_type': [strip_value, not_empty, unicode_safe],
-        'data_already_available': [strip_value, not_empty, unicode_safe],
-        'data_already_available_link': [ignore_missing, strip_value, hdx_url_validator, unicode_safe],
+        'name': [not_empty, unicode_safe],
+        'description': [not_empty, unicode_safe],
+        'website': [ignore_missing, unicode_safe, hdx_url_validator],
+        'role': [not_empty, unicode_safe],
+        'data_type': [not_empty, unicode_safe],
+        'data_already_available': [not_empty, unicode_safe],
+        'data_already_available_link': [ignore_missing, unicode_safe, hdx_url_validator],
     }
     return schema
 
@@ -44,4 +44,8 @@ class OrgRequestLogic(object):
         return data_dict
 
     def validate(self, data_dict):
-        return validate(data_dict, self.schema, self.context)
+        try:
+            validated_response = validate(data_dict, self.schema, self.context)
+        except Exception as ex:
+            log.error(ex)
+        return validated_response
