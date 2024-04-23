@@ -53,6 +53,7 @@ def _prepare_and_check_access() -> Context:
 def org_request() -> str:
     return redirect(url_for('hdx_org_request.new'))
 
+
 class OrgNewRequestView(MethodView):
 
     def post(self) -> Union[Response, str]:
@@ -70,6 +71,7 @@ class OrgNewRequestView(MethodView):
 
         get_action('hdx_send_new_org_request')(context, data)
         return redirect('hdx_org_request.completed_request')
+
     def get(self,
             data: Optional[dict[str, Any]] = None,
             errors: Optional[dict[str, Any]] = None,
@@ -82,9 +84,17 @@ class OrgNewRequestView(MethodView):
         }
         return render('org/request/org_new_request.html', extra_vars=extra_vars)
 
+
+# created this method to allow mock in test
+def _check_request_referrer_and_access(_request=None, url='/org/request/new'):
+    if _request and _request.referrer and url in _request.referrer:
+        _prepare_and_check_access()
+        return True
+    return False
+
+
 def completed_request() -> str:
-    if request and request.referrer and '/org/request/new' in request.referrer:
-        context = _prepare_and_check_access()
+    if _check_request_referrer_and_access(request):
         return render('org/request/completed_request.html')
     else:
         abort(404, _(u'Page not found'))
@@ -92,5 +102,5 @@ def completed_request() -> str:
 
 hdx_org_request.add_url_rule(u'/', view_func=org_request, strict_slashes=False)
 hdx_org_request.add_url_rule(u'/new/', view_func=OrgNewRequestView.as_view(str(u'new')),
-                                 methods=[u'GET', u'POST'], strict_slashes=False)
+                             methods=[u'GET', u'POST'], strict_slashes=False)
 hdx_org_request.add_url_rule(u'/completed/', view_func=completed_request, methods=[u'GET'], strict_slashes=False)
