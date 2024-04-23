@@ -2,10 +2,38 @@
 @import "../../base/variables";
 @import "onboarding-variables";
 
+@keyframes animatedBackgroundPosition {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .popup.popup-onboarding {
   .content {
-    min-width: @popupWidth;
+    //min-width: @popupWidth;
     padding: 0 15px;
+
+    &.fade-in {
+      animation: fadeInAnimation ease-in 1700ms;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+    }
   }
 
   .error-message {
@@ -151,6 +179,10 @@
     .gothamBoldFont(14px);
     .letter-spacing-1();
   }
+
+  .footer-hdx-logo {
+    height: 30px;
+  }
 }
 
 #incomplete-profile {
@@ -164,7 +196,7 @@
   }
 }
 
-@media (max-width: @cut-point-mobile-m) {
+@media (max-width: @cut-point-tablet) {
   .popup {
     &.popup-onboarding .content {
       left: 0;
@@ -187,4 +219,11 @@
       display: none;
     }
   }
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #007ce1, #1ebfb3);
+  background-size: 400% 400%;
+  animation: animatedBackgroundPosition 10s ease infinite;
+  height: 100vh;
 }

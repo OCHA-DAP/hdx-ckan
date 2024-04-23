@@ -14,7 +14,7 @@
   }
 
   .hero {
-    min-height: 315px;
+    min-height: 400px;
     background: url(/images/qa-process/hdx-qa-process-hero.jpg);
     background-size: cover;
     background-position-x: 68%;
@@ -69,6 +69,10 @@
         width: 500px;
         align-self: center;
         text-align: center;
+      }
+
+      @media (max-width: @cut-point-tablet) {
+        margin-top: 50px;
       }
     }
     .qa-intro-list {

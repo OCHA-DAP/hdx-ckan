@@ -470,9 +470,9 @@ def hdx_check_add_data():
         if c.userobj or c.user:
             data_dict['href'] = '/dashboard/organizations'
             data_dict['onclick'] = ''
-            return data_dict
-        data_dict['href'] = '/contribute'
-        data_dict['onclick'] = ''
+        else:
+            data_dict['href'] = h.url_for('hdx_signin.login', info_message_type='add-data')
+            data_dict['onclick'] = ''
 
     return data_dict
 

@@ -707,12 +707,17 @@ def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDi
     url_key = key[:-1] + ('url',)
     url_value = data.get(url_key)
 
-    resource_id = data.get(key[:-1] + ('id',))
-    package_id = data.get(('id',))
+    url_type_key = key[:-1] + ('url_type',)
+    url_type_value = data.get(url_type_key)
 
-    # resource_id can be None if we're just creating the resource
-    if resource_id and url_value:
-        prev_resource_dict = __get_previous_resource_dict(context, package_id, resource_id)
-        prev_url_value = prev_resource_dict.get('url')
-        if prev_url_value != url_value:
-            data[key] = datetime.datetime.utcnow()
+    # for external resources if the url has changed, update last_modified
+    if url_type_value == 'api':
+        resource_id = data.get(key[:-1] + ('id',))
+        package_id = data.get(('id',))
+
+        # resource_id can be None if we're just creating the resource
+        if resource_id and url_value:
+            prev_resource_dict = __get_previous_resource_dict(context, package_id, resource_id)
+            prev_url_value = prev_resource_dict.get('url')
+            if prev_url_value != url_value:
+                data[key] = datetime.datetime.utcnow()

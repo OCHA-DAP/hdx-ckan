@@ -1,25 +1,20 @@
 # encoding: utf-8
 import logging
-from typing import Union, Any, Optional, Mapping
+from typing import Any, Optional, Mapping
 
 from flask import Blueprint
 
 import ckan.authz as new_authz
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as tk
 import ckan.model as model
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
-from ckan.common import session
-from ckan.types import Response, Context
-from ckan.views.user import PerformResetView, RequestResetView, rotate_token, next_page_or_default
+from ckan.views.user import PerformResetView, RequestResetView
 from ckan.views.user import (
-    follow as _follow, followers as _followers, unfollow as _unfollow, login as _login, logout as _logout
+    follow as _follow, followers as _followers, unfollow as _unfollow, logout as _logout
 )
-from ckanext.hdx_users.logic.first_login import FirstLoginLogic
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
@@ -225,100 +220,6 @@ def _extra_template_variables(context, data_dict):
     return extra
 
 
-def _authenticate(identity: 'Mapping[str, Any]') -> Optional["User"]:
-    '''
-    This is based on ckan.lib.authenticator.ckan_authenticator() but with the following changes:
-    - we don't fall back to ckan.lib.authenticator.default_authenticator() if the user is not authenticated by
-      ckanext.security
-
-    Please note that ckanext.security does use ckan.lib.authenticator.default_authenticator() as part of its internal
-    logic.
-    '''
-    for item in plugins.PluginImplementations(plugins.IAuthenticator):
-        user_obj = item.authenticate(identity)
-        if user_obj:
-            return user_obj
-    return None
-
-def _check_email_validation(user_obj: "User") -> bool:
-    user_id = user_obj.id
-    try:
-        token = tokens.token_show({}, {'id': user_id})
-    except NotFound as e:
-        token = {'valid': True}  # Until we figure out what to do with existing users
-    except:
-        abort(500, _('Something wrong'))
-    if not token['valid']:
-        return False
-    return True
-
-def login() -> Union[Response, str]:
-    '''
-    This is based on ckan.views.user.login() but with the following changes:
-    - we added the first login logic
-    - we skip the GET method, as we don't have a dedicated login page
-    - we skip ckan.lib.authenticator.ckan_authenticator() as we want to fail if the user is not authenticated by
-      ckanext.security
-    - after a successful login, we check that the user validated their email
-    '''
-
-    extra_vars: dict[str, Any] = {}
-
-    if current_user.is_authenticated:
-        h.flash_notice(_('You are already logged in.'))
-        return render("home/index.html", extra_vars)
-
-    if request.method == "POST":
-        username_or_email = request.form.get("login")
-        password = request.form.get("password")
-        _remember = request.form.get("remember")
-
-        identity = {
-            u"login": username_or_email,
-            u"password": password
-        }
-
-        user_obj = _authenticate(identity)
-
-        if user_obj:
-            validated_email = _check_email_validation(user_obj)
-            if not validated_email:
-                _logout()
-                h.flash_error(_('You have not yet validated your email.'))
-                return h.redirect_to('hdx_splash.index')
-
-        if user_obj:
-            first_login_context: Context = {
-                'model': model,
-                'session': model.Session,
-                'user': user_obj.name, 'auth_user_obj': user_obj
-            }
-            first_login_logic = FirstLoginLogic(first_login_context, user_obj.id)
-            first_login_url = first_login_logic.determine_initial_redirect()
-            next = first_login_url or request.args.get('next', request.args.get('came_from'))
-            if _remember:
-                from datetime import timedelta
-                duration_time = timedelta(milliseconds=int(_remember))
-                login_user(user_obj, remember=True, duration=duration_time)
-                rotate_token()
-                first_login_logic.mark_state_as_used_if_needed()
-                session['from_login'] = True
-                return next_page_or_default(next)
-            else:
-                login_user(user_obj)
-                rotate_token()
-                first_login_logic.mark_state_as_used_if_needed()
-                session['from_login'] = True
-                return next_page_or_default(next)
-        else:
-            err = _(u"Login failed. Bad username or password.")
-            extra_vars = ue_helpers.get_login(False, err)
-            extra_vars['data']['login_came_from'] = request.args.get('came_from')
-            # h.flash_error(err)
-            return render("home/index.html", extra_vars)
-
-    return render("home/index.html", extra_vars)
-
 def logged_out_page():
     template_data = ue_helpers.get_logout(True, _('User logged out with success'))
     return render('home/index.html', extra_vars=template_data)
@@ -339,7 +240,7 @@ user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_frie
 user.add_url_rule(u'/logged_out_redirect', view_func=logged_out_page)
 user.add_url_rule(u'/logged_out_page', view_func=logged_out_page)
 # user.add_url_rule(u'/logged_in', view_func=hdx_auth_view.logged_in, methods=(u'GET', u'POST',))
-user.add_url_rule(u'/login', view_func=login, methods=(u'POST', u'GET'))
+# user.add_url_rule(u'/login', view_func=login, methods=(u'POST', u'GET'))
 user.add_url_rule(u'/_logout', view_func=_logout)
 # user.add_url_rule(u'/logged_out', view_func=_logged_out)
 

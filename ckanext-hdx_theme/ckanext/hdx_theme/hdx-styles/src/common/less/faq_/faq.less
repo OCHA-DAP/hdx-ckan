@@ -94,12 +94,12 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    height: 315px;
 
     .top-banner-text-wrapper{
       margin-left: auto;
       margin-right: auto;
-      padding-top: 90px;
+      padding-top: 68px;
+      padding-bottom: 68px;
       width: 50%;
       min-width: 530px;
 
@@ -108,7 +108,6 @@
       }
       @media (max-width: @cut-point-tablet) {
         min-width: 400px;
-        padding: 45px;
       }
       @media (max-width: @cut-point-mobile-l) {
         min-width: 325px;
@@ -148,25 +147,17 @@
     background-repeat: no-repeat;
     background-position: left bottom;
     background-size: 100% auto;
-    height: 315px;
     margin-left: -@containerMarginSize;
     margin-right: -@containerMarginSize;
 
     .top-banner-text-wrapper{
       margin-left: auto;
       margin-right: auto;
-      padding-top: 90px;
+      padding-top: 139px;
+      padding-bottom: 139px;
       width: 50%;
 
       .top-banner-title {
-        font-family: @gothamMediumFont;
-        font-size: 36px;
-        color: #FFFFFF;
-        letter-spacing: 0.01em;
-        text-align: center;
-      }
-      .top-banner-title-archive {
-        margin-top: 40px;
         font-family: @gothamMediumFont;
         font-size: 36px;
         color: #FFFFFF;
@@ -191,9 +182,17 @@
   }
   .top-banner-licenses {
     background-image: url("/images/backgrounds/faq_terms_banner.jpg");
+    .top-banner-text-wrapper {
+      padding-top: 139px;
+      padding-bottom: 139px;
+    }
   }
   .top-banner-terms {
     background-image: url("/images/backgrounds/faq_licenses_banner.jpg");
+    .top-banner-text-wrapper {
+      padding-top: 139px;
+      padding-bottom: 139px;
+    }
   }
 }
 
@@ -203,15 +202,15 @@
     background-image: url("/images/backgrounds/faq_data_responsibility.jpg");
     background-color: #FFFFFF;
     background-repeat: no-repeat;
-    background-position: left bottom;
-    background-size: 100% auto;
-    height: 315px;
+    background-position: center;
+    background-size: cover;
 
     .top-banner-text-wrapper{
       margin-left: auto;
       margin-right: auto;
-      padding-top: 70px;
       width: 50%;
+      padding-top: 50px;
+      padding-bottom: 50px;
 
       .top-banner-title {
         font-family: @gothamMediumFont;
@@ -220,14 +219,6 @@
         letter-spacing: 0.01em;
         text-align: center;
         line-height: 36px;
-      }
-      .top-banner-title-archive {
-        margin-top: 40px;
-        font-family: @gothamMediumFont;
-        font-size: 36px;
-        color: #FFFFFF;
-        letter-spacing: 0.01em;
-        text-align: center;
       }
 
       .top-banner-more {

@@ -4,6 +4,7 @@ import ckan.logic as logic
 import ckan.logic.action.get as user_get
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
+from ckan.types import ActionResult, Context, DataDict
 
 config = tk.config
 log = logging.getLogger(__name__)
@@ -104,13 +105,13 @@ def hdx_user_autocomplete(context, data_dict):
         # query3 = union(query1,query2)
 
         query3 = query3.limit(limit)
+        query = query3
 
     user_list = []
-    for user in query3.all():
+    for user in query.all():
         result_dict = {}
         for k in ['id', 'name', 'fullname']:
             result_dict[k] = getattr(user, k)
-
         user_list.append(result_dict)
 
     return user_list
