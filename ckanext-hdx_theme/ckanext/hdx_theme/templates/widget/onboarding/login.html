@@ -19,6 +19,8 @@ Example:
     <div class="login-widget">
         <div class="row">
             <div class="login-top">
+                <a href="{{data.login_came_from if data.login_came_from else h.url_for('hdx_splash.index')}}" class="humanitarianicons-Previous-item back-button">
+                </a>
                 <div class="login-photo center">
                     <div id="login-photo-gravatar" style="display: none;">
                         <img id="login-photo-gravatar-img" src="" class="gravatar" width="95" height="95">
@@ -63,7 +65,7 @@ Example:
                           {{ error_message }}
                         </div>
                         <div class="checkbox-style mTop10"><input id="field-remember" name="remember" type="checkbox" value="63072000"><label for="field-remember">Remember me</label> </div>
-                        <div class="mTop10"><input class="full-width btn btn-primary btn-large" type="submit" value="Login" disabled></div>
+                        <div class="mTop10"><input class="full-width btn btn-primary btn-large" type="submit" value="Log in" disabled></div>
                         <div class="member center mTop10"><a href="/user/reset">Forgot your password?</a></div>
                         <div class="member center">Not a member? <a
                           href="{{ h.url_for('hdx_user_onboarding.value_proposition') }}"
