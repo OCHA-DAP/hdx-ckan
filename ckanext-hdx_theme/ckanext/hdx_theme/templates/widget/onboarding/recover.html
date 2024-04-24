@@ -52,6 +52,9 @@ Example:
 {% endblock %}
 
 {% block notification_title %}
-  <img src="/images/onboarding/reset-password.png" />
+  <a href="{{h.url_for('hdx_signin.login')}}" class="humanitarianicons-Previous-item back-button">
+  </a>
   <span class="title">Forgot your password?</span>
 {% endblock %}
+
+{% block notification_title_class %}recover-background-image{% endblock %}
