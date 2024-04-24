@@ -1,15 +1,15 @@
+import logging
+
 import ckan.logic.action.update as _update
-
 import ckan.plugins.toolkit as tk
-
-import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
     SKIP_VALIDATION
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_KEEP_OLD, NO_DATA
-from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import delete_geopreview_layer
+from ckanext.hdx_package.helpers.s3_version_tagger import tag_s3_version_by_resource_id
 
+log = logging.getLogger(__name__)
 NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
@@ -226,8 +226,11 @@ def _remove_geopreview_data(new_quarantine_value, data_revise_dict, resource_dic
         data_revise_dict['filter'] = [
             "-resources__" + resource_id + "__shape_info"
         ]
-        delete_geopreview_layer(resource_id)
-
+        try:
+            delete_geopreview_layer(resource_id)
+        except Exception as e:
+            log.error("Removing geopreview data for resource: " + resource_id + " didn't work!")
+            log.error(e)
 
 def hdx_fs_check_resource_revise(context, data_dict):
     _check_access('hdx_fs_check_resource_revise', context, data_dict)
