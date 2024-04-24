@@ -18,6 +18,7 @@
   }
 }
 .popup.popup-onboarding .content {
+  min-width: 380px;
   padding: 0 15px;
 }
 .popup.popup-onboarding .content.fade-in {
@@ -202,6 +203,14 @@
 }
 .popup.popup-onboarding .footer-hdx-logo {
   height: 30px;
+}
+.popup.popup-onboarding .back-button {
+  display: block;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: white;
+  font-size: 24px;
 }
 #incomplete-profile {
   font-family: 'Gotham-Medium', sans-serif;

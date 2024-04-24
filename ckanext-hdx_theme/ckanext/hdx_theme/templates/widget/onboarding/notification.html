@@ -17,7 +17,7 @@ Example:
 {% block titlebar %}{% endblock %}
 {% block content %}
     <div class="notification-widget">
-        <div class="notification-title">
+        <div class="notification-title {% block notification_title_class %}{% endblock %}">
             {% block notification_title %}
                 {{ title }}
             {% endblock %}
