@@ -44,7 +44,8 @@ class FirstLoginLogic:
         try:
             onboarding_source: 'OnboardingSource' = json.loads(onboarding_source_str)
             self.value_proposition_choice = onboarding_source['value_proposition_page']
-            self.onboarding_start_page = onboarding_source['start_page']['page_type']
+            if 'start_page' in onboarding_source and 'page_type' in onboarding_source['start_page']:
+                self.onboarding_start_page = onboarding_source['start_page']['page_type']
             url = self._compute_url(onboarding_source)
             return url
         except Exception as e:
@@ -64,7 +65,7 @@ class FirstLoginLogic:
             elif start_page['page_type'] == ONBOARDING_START_PAGE_ADD_DATA:
                 return tk.url_for('dashboard.organizations')
         elif onboarding_source['value_proposition_page'] == ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG:
-            return tk.url_for('dashboard.organizations')
+            return tk.url_for('hdx_org_join.org_join')
         return None
 
     def _get_onboarding_came_from(self) -> Union[str, None]:
