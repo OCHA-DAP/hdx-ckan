@@ -3,6 +3,7 @@
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/homepage-qa-process-styles' %}
+  {% asset 'vendor/select2-css' %}
 {% endblock %}
 
 {% block subtitle %}{{ _('Quality Assurance Process') }}{% endblock %}
@@ -28,3 +29,8 @@
 {% endblock %}
 
 {% block secondary %}{% endblock %}
+
+{%- block scripts %}
+  {{ super() }}
+  {% asset 'vendor/select2-js' %}
+{% endblock -%}
