@@ -39,6 +39,7 @@
   max-width: 340px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 @media (max-width: 375px) {
   .tag-wrapper .tag {
