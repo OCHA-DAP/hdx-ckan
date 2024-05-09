@@ -65,7 +65,7 @@ came_from_list = [
             'value_proposition_page': ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG
         },
         'redirect_to': {
-            'flask_view': 'dashboard.organizations',
+            'flask_view': 'hdx_org_join.org_join',
             'other_params': {}
         }
     },

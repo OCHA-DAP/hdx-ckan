@@ -5,6 +5,7 @@ import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_org_group.helpers.analytics as org_analytics
+import ckan.model as model
 
 log = logging.getLogger(__name__)
 _check_access = tk.check_access
@@ -28,33 +29,37 @@ def hdx_send_new_org_request(context, data_dict):
     ckan_email = ''
     if g.userobj:
         ckan_email = g.userobj.email
+    user_obj = model.User.get(ckan_username)
+    if user_obj:
+        user_fullname = user_obj.fullname or user_obj.display_name
+    else:
+        user_fullname = 'User'
     if config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
         hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
-        subject = u'Request to create a new organisation on HDX'
         email_data = {
             'org_name': data_dict.get('name', ''),
-            'org_acronym': data_dict.get('acronym', ''),
             'org_description': data_dict.get('description', ''),
-            'org_type': data_dict.get('org_type', ''),
-            'org_website': data_dict.get('org_url', ''),
-            'data_description': data_dict.get('description_data', ''),
-            'requestor_work_email': data_dict.get('work_email', ''),
+            'org_website': data_dict.get('website', ''),
+            'data_type': data_dict.get('data_type', ''),
+            'data_already_available': data_dict.get('data_already_available', ''),
+            'data_already_available_link': data_dict.get('data_already_available_link', ''),
+            'user_fullname': user_fullname,
             'requestor_hdx_username': ckan_username,
+            'user_role': data_dict.get('role', ''),
             'requestor_hdx_email': ckan_email,
             'request_time': datetime.datetime.now().isoformat(),
-            'user_fullname': data_dict.get('your_name', ''),
         }
+        subject = u'Request to create a new organisation on HDX'
         hdx_mailer.mail_recipient([{'display_name': 'Humanitarian Data Exchange (HDX)', 'email': hdx_email}],
-                                  subject, email_data, sender_name=data_dict.get('your_name', ''),
+                                  subject, email_data, sender_name=user_fullname,
                                   sender_email=ckan_email,
                                   snippet='email/content/new_org_request_hdx_team_notification.html')
 
-        subject = u'Confirmation of your request to create a new organisation on HDX'
+        subject = u'Thank you for your request to create an organisation on HDX'
         email_data = {
-            'org_name': data_dict.get('name', ''),
-            'user_fullname': data_dict.get('your_name', ''),
+            'user_fullname': user_fullname,
         }
-        hdx_mailer.mail_recipient([{'display_name': data_dict.get('your_name', ''), 'email': ckan_email}],
+        hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': ckan_email}],
                                   subject, email_data, footer=ckan_email,
                                   snippet='email/content/new_org_request_confirmation_to_user.html')
 

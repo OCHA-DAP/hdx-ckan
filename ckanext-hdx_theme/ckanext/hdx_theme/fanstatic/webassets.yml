@@ -50,6 +50,7 @@ page-scripts:
   extra:
     preload:
       - hdx_theme/ckan
+      - vendor/select2-js
   contents:
     - base/header-init.js
     - bs_popover.js
@@ -106,9 +107,25 @@ page-extra-light-styles:
     - light/page-extra-light.css
     - adaptive-page-styles
 
+select2-4-styles:
+  output: ckanext-hdx_theme/%(version)s_select2-4.css
+  filters: cssrewrite
+  contents:
+    - vendor/select2-4/select2.min.css
+    - vendor/select2-4/select2-bootstrap-5-theme.min.css
+
+select2-4-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_select2-4-scripts.js
+  contents:
+    - vendor/select2-4/select2.min.js
+
 bem-blocks-styles:
   output: ckanext-hdx_theme/%(version)s_bem-blocks-styles.css
   <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/select2-4-styles
   contents:
     - bem.blocks/bem_fonts.css
     - bem.blocks/stepper.css
@@ -119,6 +136,19 @@ bem-blocks-styles:
     - bem.blocks/form_info.css
     - bem.blocks/form_button.css
     - bem.blocks/account_options.css
+    - bem.blocks/info_box.css
+    - bem.blocks/select2_field.css
+    - bem.blocks/textarea_field.css
+
+bem-blocks-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_bem-blocks-scripts.js
+  extra:
+    preload:
+      - hdx_theme/select2-4-scripts
+      - hdx_theme/hdx-show-more
+  contents:
+    - bem.blocks/select2_field.js
 
 hdx-form-validator:
   <<: *common-js

@@ -78,7 +78,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
             'member_delete': authorize.member_delete,
             'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location,
-            'hdx_organization_follower_list': authorize.hdx_organization_follower_list
+            'hdx_organization_follower_list': authorize.hdx_organization_follower_list,
+            # 'hdx_org_join_request': authorize.hdx_org_join_request,
         }
 
     # IGroupForm
@@ -100,7 +101,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
             'hdx_org_keep_prev_value_if_empty_unless_sysadmin': org_custom_validator.hdx_org_keep_prev_value_if_empty_unless_sysadmin,
             'active_if_missing': org_custom_validator.active_if_missing,
-            'set_inactive_if_closed_organization': org_custom_validator.set_inactive_if_closed_organization
+            'set_inactive_if_closed_organization': org_custom_validator.set_inactive_if_closed_organization,
+            'hdx_url_validator': org_custom_validator.hdx_url_validator,
         }
 
     def _modify_group_schema(self, schema):
@@ -302,4 +304,14 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     def get_blueprint(self):
         import ckanext.hdx_org_group.views.group as group
         import ckanext.hdx_org_group.views.light_group as light_group
-        return [group.hdx_group, group.hdx_country_topline, light_group.hdx_light_group, light_group.hdx_group_eaa_maps]
+        import ckanext.hdx_org_group.views.organization_join as org_join
+        import ckanext.hdx_org_group.views.organization_request as org_request
+
+        return [
+            group.hdx_group,
+            group.hdx_country_topline,
+            light_group.hdx_light_group,
+            light_group.hdx_group_eaa_maps,
+            org_join.hdx_org_join,
+            org_request.hdx_org_request,
+        ]

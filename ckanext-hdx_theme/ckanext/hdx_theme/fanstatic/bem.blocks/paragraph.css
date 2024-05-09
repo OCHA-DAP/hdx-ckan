@@ -1,6 +1,6 @@
 .paragraph__text {
   color: #000;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 140%;
 }
 .paragraph__text_font-size-big {
@@ -8,4 +8,7 @@
 }
 .paragraph__text_font_size-small {
   font-size: 12px;
+}
+.paragraph__text_font-weight-bold {
+  font-weight: 600;
 }

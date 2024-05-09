@@ -1,3 +1,9 @@
 <div class="paragraph{% if spacing_class %} {{ spacing_class }}{% endif %}">
-  <p class="paragraph__text{% if paragraph_classes %} {{ paragraph_classes|join(' ') }}{% endif %}">{{ text }}</p>
+  <p class="paragraph__text{% if paragraph_classes %} {{ paragraph_classes|join(' ') }}{% endif %}">
+    {% if show_more %}
+      <span data-module="hdx_show_more">{{ text|safe }}</span>
+    {% else %}
+      {{ text|safe }}
+    {% endif %}
+  </p>
 </div>
