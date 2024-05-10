@@ -102,6 +102,9 @@
                 <div class="flash-messages paddingLeftHack paddingRightHack">
                   {% block flash_inner %}
                     {% for category, message in h.get_flashed_messages(with_categories=true) %}
+                      {% if loop.first %}
+                        <div class="pt-3"></div>
+                      {% endif %}
                       <div class="alert alert-dismissible fade show {{ category }}">
                         {{ h.literal(message) }}
                       </div>
