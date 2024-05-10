@@ -74,7 +74,7 @@
             var html = this.template(template_data);
 
             this.$el.html(html);
-            this.$el.attr("class", this.model.attributes.tab_open ? 'col-12' : 'col-4');
+            this.$el.attr("class", this.model.attributes.tab_open ? 'col-12' : 'col-6');
             this.$el.find("select").select2();
 
             return this;

@@ -35,103 +35,78 @@
       <div class="hero-section-content">
         <div class="hero-description">
           <h1 class="section-title">The Humanitarian Data Exchange</h1>
-          <p class="mTB30">Find, share and use humanitarian data all in one place</p>
-          <a data-module="hdx_click_stopper" data-module-link_type="learn more faq" href="/faq" class="btn btn-faq" aria-label="learn more">{{_("LEARN MORE")}}</a>
         </div>
+        <div class="hero-boxes-container">
+          <div class="hero-boxes">
+            <div class="action-box">
+              <div class="box-header">
+                {{ _("Find data") }}
+              </div>
 
-        <div class="hero-boxes">
-          <div class="action-box">
-            <div class="box-header">
-              {{ _("Find data") }}
-            </div>
-
-            <div class="first-search">
-              {{ self.home_search() }}
-            </div>
-            <div class="count-items">
-              <div class="row">
-                <div class="col-4">
-                  <div class="row">
-                    <div class="col-12 item-count">
-                      <a href="{% url_for 'dataset.search' %}"
-                         data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                         data-url="{% url_for 'hdx_count.dataset' %}">
-                        0
-                      </a>
+              <div class="first-search">
+                {{ self.home_search() }}
+              </div>
+              <div class="count-items">
+                <div class="row">
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12 item-count">
+                        <a href="{% url_for 'dataset.search' %}"
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
+                           data-url="{% url_for 'hdx_count.dataset' %}">
+                          0
+                        </a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div id="datasets-count" class="col-12 item-name">
+                        {{ _("Datasets") }}
+                      </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <div id="datasets-count" class="col-12 item-name">
-                      {{ _("Datasets") }}
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12 item-count">
+                        <a href="{% url_for 'group.index' %}"
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
+                           data-url="{% url_for 'hdx_count.country' %}">
+                          0
+                        </a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 item-name">
+                        {{ _("Locations") }}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-4">
-                  <div class="row">
-                    <div class="col-12 item-count">
-                      <a href="{% url_for 'group.index' %}"
-                         data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                         data-url="{% url_for 'hdx_count.country' %}">
-                        0
-                      </a>
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12 item-count">
+                        <a href="javascript:void(0);"
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
+                           data-url="{% url_for 'hdx_count.source' %}">
+                          0
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12 item-name">
-                      {{ _("Locations") }}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="row">
-                    <div class="col-12 item-count">
-                      <a href="javascript:void(0);"
-                         data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                         data-url="{% url_for 'hdx_count.source' %}">
-                        0
-                      </a>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12 item-name">
-                      {{ _("Sources") }}
+                    <div class="row">
+                      <div class="col-12 item-name">
+                        {{ _("Sources") }}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="action-box">
-            {% set add_data_obj = h.hdx_check_add_data() %}
-            <div class="box-header orange">
-              {{ _("Add data") }}
-            </div>
-            <div class="add-data-actions">
-              <a class="add-data-item" href="{{ add_data_obj.href }}" {% if c.userobj %}onclick="contributeAddDetails(null, 'homepage')"{%else%}data-module="hdx_click_stopper" data-module-link_type="homepage add data"{% endif %}>
-                <div class="add-data-item-content">
-                  <img src="/images/add-fulldataset.svg" alt="Add full dataset"/>
-                  <div class="description">
-                    Make your dataset available on HDX
-                  </div>
-                  <div class="action">Upload File</div>
-                </div>
-              </a>
-
-              <a class="add-data-item" href="{{ add_data_obj.href }}" {% if c.userobj %}onclick="contributeAddDetails(null, 'homepage metadata')"{%else%}data-module="hdx_click_stopper" data-module-link_type="homepage metadata add data"{% endif %}>
-                <div class="add-data-item-content">
-                  <img src="/images/add-metadata-only-2.svg" alt="Add metadata only dataset"/>
-                  <div class="description">
-                    HDX Connect: let others request your data
-                  </div>
-                  <div class="action">Add Metadata</div>
-                </div>
-              </a>
-
-            </div>
-            <div class="add-data-footer">
-              Learn how the HDX team supports <a href="/about/hdx-qa-process">responsible data sharing</a>.
-            </div>
-          </div>
+        </div>
+        <div class="hero-description">
+          <p class="section-subtitle">Find, share and use humanitarian data all in one place</p>
+        </div>
+        <div class="hero-description">
+          <a data-module="hdx_click_stopper" data-module-link_type="learn more faq" href="/faq" class="btn btn-faq"
+             aria-label="learn more">{{ _("LEARN MORE") }}</a>
         </div>
       </div>
     </div>
@@ -145,81 +120,34 @@
         <div class="carousel-title">
           Highlights
         </div>
-        <!-- MOBILE CAROUSEL START-->
-        <div id="mobileCarousel" class="mobile-carousel carousel slide" data-bs-ride="carousel" data-bs-interval="false">
-            <div class="mobile-carousel-inner carousel-inner" role="listbox">
-                {% for item in carouselItems %}
-                  <div class="carousel-item">
-                    <div class="item-center">
-                      <div class="sub-item">
-                        <div class="sub-item-image">
-                          <img class="graphic lazyload" data-src="{{ item.graphic }}" alt="Highlight item">
-                          <div class="sub-item-action">
-                            {% if item.embed %}
-                            <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
-                            {% else %}
-                            <a href="{{ item.url }}" class="btn" {% if item.newTab %} target="_blank" {% endif %} data-module="hdx_click_stopper" data-module-link_type="carousel">{% if item.buttonText %} {{ item.buttonText }} {% else %} Explore {% endif %}</a>
-                            {% endif %}
-                          </div>
-                        </div>
-                        <div class="title">{{ item.title }}</div>
-                        <a href="{{ item.url }}" >
-                          <div class="sub-item-caption">
-                            <p class="description">{{ item.description }}</p>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-
-            </div>
-
-            <!-- Indicators -->
-            <ol class="carousel-indicators text-center"></ol>
-        </div>
-        <!--  MOBILE CAROUSEL END -->
-        <div id="homepage-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="20000">
-          <!-- Wrapper for slides -->
-          <div class="carousel-inner" role="listbox">
-
+        <div class="carousel-items">
+          <div class="row">
             {% for item in carouselItems %}
-            {% if (loop.index - 1) is divisibleby 4 %}
-            <div class="carousel-item {% if (loop.index - 1) == 0 %}active{% endif %}">
-              <div class="item-center">
-                {% endif %}
+              <div class="col-12 {% if loop.first %}col-sm-12{% else %}col-sm-6{% endif %} col-md-4">
                 <div class="sub-item">
                   <div class="sub-item-image">
-                    <img class="graphic lazyload" data-src="{{ item.graphic }}">
+                    <img class="graphic lazyload" data-src="{{ item.graphic }}" alt="Highlight item">
                     <div class="sub-item-action">
                       {% if item.embed %}
-                      <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
+                        <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper"
+                           data-module-link_type="carousel">Watch</a>
                       {% else %}
-                      <a href="{{ item.url }}" class="btn" {% if item.newTab %} target="_blank" {% endif %} data-module="hdx_click_stopper" data-module-link_type="carousel">{% if item.buttonText %} {{ item.buttonText }} {% else %} Explore {% endif %}</a>
+                        <a href="{{ item.url }}" class="btn" {% if item.newTab %} target="_blank" {% endif %}
+                           data-module="hdx_click_stopper" data-module-link_type="carousel">{% if item.buttonText %}
+                          {{ item.buttonText }} {% else %} Explore {% endif %}</a>
                       {% endif %}
                     </div>
                   </div>
                   <div class="title">{{ item.title }}</div>
-                  <a href="{{ item.url }}" >
+                  <a href="{{ item.url }}">
                     <div class="sub-item-caption">
                       <p class="description">{{ item.description }}</p>
                     </div>
                   </a>
                 </div>
-                {% if ((loop.index) is divisibleby 4) or (loop.index == carouselItems|length) %}
               </div>
-            </div>
-            {% endif %}
             {% endfor %}
           </div>
-          <!-- Indicators -->
-          <ol class="carousel-indicators">
-            {% for item in carouselItems %}
-            {% if (loop.index - 1) is divisibleby 4 %}
-            <li data-bs-target="#homepage-carousel" data-bs-slide-to="{{ (loop.index - 1) // 4}}" class="{% if (loop.index - 1) == 0 %}active{% endif %}"></li>
-            {% endif %}
-            {% endfor %}
-          </ol>
         </div>
       </div>
     </div>

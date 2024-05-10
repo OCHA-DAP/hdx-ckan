@@ -74,9 +74,16 @@
         background: @greenColor;
 
         .sub-item{
-          width: 215px;
+          width: calc(100% - 50px);
           margin: auto;
           float: none;
+          .sub-item-image {
+            height: auto;
+            .graphic {
+              width: 100%;
+              height: auto;
+            }
+          }
         }
       }
     }

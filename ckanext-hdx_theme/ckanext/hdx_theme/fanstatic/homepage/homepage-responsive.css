@@ -38,23 +38,24 @@
     width: 100%;
   }
   body.home .homepage-main .hero-section .hero-section-content {
-    flex-direction: column;
-    align-items: center;
+    margin-top: 0;
   }
   body.home .homepage-main .hero-section .hero-description {
-    margin-bottom: 50px;
     text-align: center;
+    width: 100%;
   }
   body.home .homepage-main .hero-section .hero-description .section-title {
     text-align: center;
   }
-  body.home .homepage-main .hero-section .hero-boxes {
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-bottom: 50px;
+  body.home .homepage-main .hero-section .hero-boxes-container {
+    width: 100%;
+    display: flex;
+    float: none;
   }
-  body.home .homepage-main .hero-section .hero-boxes .action-box ~ .action-box {
+  body.home .homepage-main .hero-section .hero-boxes-container .hero-boxes {
+    margin: 50px auto 28px;
+  }
+  body.home .homepage-main .hero-section .hero-boxes-container .hero-boxes .action-box ~ .action-box {
     margin-left: 0;
     margin-top: 30px;
   }

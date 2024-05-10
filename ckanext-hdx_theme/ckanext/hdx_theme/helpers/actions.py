@@ -344,6 +344,7 @@ def hdx_carousel_settings_show(context, data_dict):
 
     carousel_settings = []
     setting_value_json = model.get_system_info('hdx.carousel.config', config.get('hdx.carousel.config'))
+    max_carousel_items = context.get('max_items')
     if setting_value_json:
         try:
             carousel_settings = json.loads(setting_value_json)
@@ -354,6 +355,9 @@ def hdx_carousel_settings_show(context, data_dict):
         carousel_settings = INITIAL_CAROUSEL_DATA
         for i, item in enumerate(carousel_settings):
             item['order'] = i + 1
+
+    if max_carousel_items:
+        return carousel_settings[:max_carousel_items]
 
     return carousel_settings
 
