@@ -88,11 +88,14 @@
 }
 .homepage-main .hero-section .hero-section-content {
   margin-top: 60px;
+  margin-left: -12px;
+  margin-right: -12px;
 }
 .homepage-main .hero-section .hero-description {
   color: #fff;
-  width: 50%;
+  width: 66.666%;
   display: inline-block;
+  padding: 0 12px;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -107,14 +110,16 @@
 }
 .homepage-main .hero-section .hero-boxes-container {
   display: inline-block;
-  width: 50%;
+  width: 33.333%;
+  padding: 0 12px;
   float: right;
 }
 .homepage-main .hero-section .hero-boxes-container .hero-boxes {
+  width: 100%;
   float: right;
 }
 .homepage-main .hero-section .hero-boxes-container .hero-boxes .action-box {
-  width: 445px;
+  width: 100%;
   min-height: 200px;
   background-color: #eeeeee;
   border-radius: 6px;
@@ -318,6 +323,11 @@
 .homepage-main .carousel-section .carousel-items .sub-item .sub-item-image .graphic {
   height: auto;
   width: 100%;
+  aspect-ratio: 1.77777778;
+  border-radius: 6px;
+}
+.homepage-main .carousel-section .carousel-items .sub-item .sub-item-action {
+  border-radius: 6px;
 }
 .homepage-main .learn-section {
   background-color: #333333;

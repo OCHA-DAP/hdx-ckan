@@ -63,6 +63,11 @@
 #carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item .sub-item-image .graphic {
   width: 100%;
   height: auto;
+  aspect-ratio: 1.77777778;
+  border-radius: 6px;
+}
+#carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item .sub-item-action {
+  border-radius: 6px;
 }
 #carousel-config-main .carousel-item .sub-item {
   width: 215px;

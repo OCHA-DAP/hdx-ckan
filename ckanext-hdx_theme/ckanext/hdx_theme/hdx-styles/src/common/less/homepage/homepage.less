@@ -79,12 +79,15 @@
 
     .hero-section-content {
       margin-top: 60px;
+      margin-left: -12px; // .row
+      margin-right: -12px; // .row
     }
 
     .hero-description {
       color: @whiteColor;
-      width: 50%;
+      width: 66.666%;
       display: inline-block;
+      padding: 0 12px; // .col
       .sourceSansProFont(400, 18px);
 
       .section-title {
@@ -99,16 +102,18 @@
 
     .hero-boxes-container {
       display: inline-block;
-      width: 50%;
+      width: 33.333%;
+      padding: 0 12px; // .col
       float: right;
       .hero-boxes {
+        width: 100%;
         float: right;
 
         @searchBoxPadding: 20px;
         @searchBoxRadius: 6px;
         @searchBoxSize: 405px; //size of the actual search box inside the whole widget
         .action-box {
-          width: @searchBoxSize + 2*@searchBoxPadding;
+          width: 100%;
           min-height: 200px; //actual content will enlarge/shrink
           background-color: @extraLightGrayColor;
           border-radius: @searchBoxRadius;
@@ -260,7 +265,12 @@
           .graphic {
             height: auto;
             width: 100%;
+            aspect-ratio: 16/ 9;
+            border-radius: 6px;
           }
+        }
+        .sub-item-action {
+          border-radius: 6px;
         }
       }
     }

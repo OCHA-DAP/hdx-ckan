@@ -1734,6 +1734,9 @@ hr.dotted {
     padding: 0 15px;
     width: 100%;
   }
+  body.home .homepage-main .homepage-section .hero-boxes .action-box .count-items .item-count a {
+    font-size: 24px;
+  }
 }
 @media (max-width: 992px) {
   body.home .homepage-main .hero-section {
@@ -1758,6 +1761,7 @@ hr.dotted {
     float: none;
   }
   body.home .homepage-main .hero-section .hero-boxes-container .hero-boxes {
+    width: 50%;
     margin: 50px auto 28px;
   }
   body.home .homepage-main .hero-section .hero-boxes-container .hero-boxes .action-box ~ .action-box {
@@ -1805,6 +1809,9 @@ hr.dotted {
   body.home .homepage-main .carousel.mobile-carousel .carousel-indicators [data-bs-target] {
     width: 20px;
   }
+  body.home .homepage-main .homepage-section .hero-boxes .action-box .count-items .item-count a {
+    font-size: 30px;
+  }
 }
 @media (max-width: 768px) {
   body.home {
@@ -1821,8 +1828,8 @@ hr.dotted {
   body.home .homepage-main .homepage-section .section-title {
     font-size: 40px;
   }
-  body.home .homepage-main .homepage-section .hero-boxes .action-box {
-    width: 380px;
+  body.home .homepage-main .homepage-section .hero-boxes {
+    width: 100% !important;
   }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
     left: 15px;
