@@ -1,0 +1,49 @@
+@import "bem_variables";
+
+.select2-field {
+  &__label {
+    color: @grey-extra-dark-color;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  &__required {
+    color: @red-color;
+    font-weight: 600;
+  }
+
+  &__feedback-message {
+    font-size: 14px;
+  }
+
+  .select2-container {
+    .select2-selection {
+      box-shadow: none;
+
+      &.select2--large {
+        .select2-selection__rendered {
+          font-weight: 500;
+          line-height: 30px;
+          font-size: 1rem;
+          font-family: 'Inter', sans-serif;
+
+          .select2-selection__placeholder {
+            font-weight: 500;
+            line-height: 30px;
+          }
+        }
+      }
+    }
+
+    .select2-dropdown {
+      .select2-search {
+        .select2-search__field {
+          &:focus {
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}

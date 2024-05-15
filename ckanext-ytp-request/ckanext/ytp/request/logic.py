@@ -76,7 +76,7 @@ def _reset_lang():
 def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=None, admin_list=None):
     try:
         if admin_list:
-            subject = user_obj.display_name + u' has asked to join your organisation'
+            subject = user_obj.display_name + u' has requested to join '+group.display_name+' on HDX'
             email_data = {
                 'org_name': group.display_name,
                 'org_membership_url': config.get('ckan.site_url') + '/organization/members/' + group.name,
@@ -87,7 +87,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
             hdx_mailer.mail_recipient(admin_list, subject, email_data, footer=user_obj.email,
                                       snippet='email/content/join_organization_request.html')
 
-            subject = u'Your request to join organisation ' + group.display_name
+            subject = u'Your request to join ' + group.display_name + ' on HDX has been received'
             email_data = {
                 'org_name': group.display_name,
                 'user_fullname': user_obj.display_name,
@@ -130,7 +130,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity, gro
                                           snippet='email/content/join_organization_approval_to_admins.html')
 
         else:
-            subject = u'Denial of your request to join organisation ' + group_name
+            subject = u'Your request to join '+group_name+' on HDX has not been accepted'
             email_data = {
                 'user_fullname': member_user.display_name,
                 'org_name': group_name,

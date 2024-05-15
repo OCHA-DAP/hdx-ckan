@@ -3,6 +3,7 @@
 {%- block styles %}
   {{ super() }}
   {% asset 'hdx_theme/faq-styles' %}
+  {% asset 'vendor/select2-css' %}
 {% endblock %}
 
 {% block meta %}
@@ -165,3 +166,7 @@
   </div>
 {% endblock %}
 
+{%- block scripts %}
+  {{ super() }}
+  {% asset 'vendor/select2-js' %}
+{% endblock -%}
