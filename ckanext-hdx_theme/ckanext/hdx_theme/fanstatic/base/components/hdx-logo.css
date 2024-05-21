@@ -15,12 +15,10 @@
   display: block;
 }
 .hdxLogo .logo .logo-img {
-  background-image: url("/images/homepage/logo-hdx.svg");
+  background-image: url("/images/homepage/logo-hdx-accr-blk.svg");
   background-repeat: no-repeat;
-  background-size: 126px 31px;
+  background-position: left center;
   width: 126px;
   height: 31px;
-  min-width: 126px;
-  min-height: 31px;
 }
 /* END HDX Version display */

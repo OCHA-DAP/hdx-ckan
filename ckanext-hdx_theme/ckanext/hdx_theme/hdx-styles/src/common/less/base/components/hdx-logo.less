@@ -1,6 +1,6 @@
 @import "_mixins";
 
-@hdxLogoUrl: "@{imagePath}/homepage/logo-hdx.svg";
+@hdxLogoUrl: "@{imagePath}/homepage/logo-hdx-accr-blk.svg";
 
 /* HDX Version display */
 .hdxLogo {
@@ -24,11 +24,9 @@
     .logo-img {
       background-image: url(@hdxLogoUrl);
       background-repeat: no-repeat;
-      background-size: @logoImageWidth @logoImageHeight;
+      background-position: left center;
       width: @logoImageWidth;
       height: @logoImageHeight;
-      min-width: @logoImageWidth;
-      min-height: @logoImageHeight;
     }
   }
 }

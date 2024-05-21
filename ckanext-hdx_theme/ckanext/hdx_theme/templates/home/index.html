@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% set carouselItems = h.hdx_get_carousel_list() %}
+{% set mobileCarouselItems = carouselItems|batch(2)|list %}
 {% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Welcome") %}
 
 {% block subtitle %}{{ page_subtitle }}{% endblock %}
@@ -122,31 +123,39 @@
         </div>
         <div class="carousel-items">
           <div class="row">
-            {% for item in carouselItems %}
-              <div class="col-12 {% if loop.first %}col-sm-12{% else %}col-sm-6{% endif %} col-md-4">
-                <div class="sub-item">
-                  <div class="sub-item-image">
-                    <img class="graphic lazyload" data-src="{{ item.graphic }}" alt="Highlight item">
-                    <div class="sub-item-action">
-                      {% if item.embed %}
-                        <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper"
-                           data-module-link_type="carousel">Watch</a>
-                      {% else %}
-                        <a href="{{ item.url }}" class="btn" {% if item.newTab %} target="_blank" {% endif %}
-                           data-module="hdx_click_stopper" data-module-link_type="carousel">{% if item.buttonText %}
-                          {{ item.buttonText }} {% else %} Explore {% endif %}</a>
-                      {% endif %}
+            <div id="homepageCarousel" class="carousel slide" data-ride="false">
+              <div class="carousel-inner d-md-none">
+                {% for pair in mobileCarouselItems %}
+                  <div class="carousel-item{% if loop.first %} active{% endif %}">
+                    <div class="row">
+                      {% for item in pair %}
+                        <div class="col-6">
+                          {% snippet 'home/snippets/hdx_carousel_item.html', item=item %}
+                        </div>
+                      {% endfor %}
                     </div>
                   </div>
-                  <div class="title">{{ item.title }}</div>
-                  <a href="{{ item.url }}">
-                    <div class="sub-item-caption">
-                      <p class="description">{{ item.description }}</p>
-                    </div>
-                  </a>
+                {% endfor %}
+              </div>
+              <div class="carousel-inner d-none d-md-block">
+                <div class="carousel-item active">
+                  <div class="row">
+                    {% for item in carouselItems %}
+                      <div class="col-md-3">
+                        {% snippet 'home/snippets/hdx_carousel_item.html', item=item %}
+                      </div>
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
-            {% endfor %}
+              <div class="carousel-indicators d-md-none mt-3 mb-0">
+                {% for pair in mobileCarouselItems %}
+                  <button type="button" data-bs-target="#homepageCarousel" data-bs-slide-to="{{ loop.index0 }}"
+                          class="{% if loop.first %}active{% endif %}" aria-current="true"
+                          aria-label="Slide {{ loop.index }}"></button>
+                {% endfor %}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -63,6 +63,11 @@
 #carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item .sub-item-image .graphic {
   width: 100%;
   height: auto;
+  aspect-ratio: 1.5;
+  border-radius: 6px;
+}
+#carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item .sub-item-action {
+  border-radius: 6px;
 }
 #carousel-config-main .carousel-item .sub-item {
   width: 215px;
@@ -123,6 +128,8 @@
 #carousel-config-main .carousel-item .sub-item .sub-item-caption {
   text-align: left;
   color: #fff;
+  height: 40px;
+  overflow: hidden;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;
