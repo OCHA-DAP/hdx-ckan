@@ -93,7 +93,7 @@
 }
 .homepage-main .hero-section .hero-description {
   color: #fff;
-  width: 66.666%;
+  width: calc(100% - 469px);
   display: inline-block;
   padding: 0 12px;
   font-family: 'Source Sans Pro', sans-serif;
@@ -110,7 +110,7 @@
 }
 .homepage-main .hero-section .hero-boxes-container {
   display: inline-block;
-  width: 33.333%;
+  width: 469px;
   padding: 0 12px;
   float: right;
 }
@@ -303,6 +303,8 @@
 .homepage-main .carousel-section .carousel-items .sub-item .sub-item-caption {
   text-align: left;
   color: #fff;
+  height: 40px;
+  overflow: hidden;
 }
 .homepage-main .carousel-section .carousel-items .sub-item .sub-item-caption .description {
   font-family: 'Gotham-Book', sans-serif;
@@ -323,7 +325,7 @@
 .homepage-main .carousel-section .carousel-items .sub-item .sub-item-image .graphic {
   height: auto;
   width: 100%;
-  aspect-ratio: 1.77777778;
+  aspect-ratio: 1.5;
   border-radius: 6px;
 }
 .homepage-main .carousel-section .carousel-items .sub-item .sub-item-action {

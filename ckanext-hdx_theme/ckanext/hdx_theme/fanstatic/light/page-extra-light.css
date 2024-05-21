@@ -1628,13 +1628,11 @@ hr.dotted {
   display: block;
 }
 .hdxLogo .logo .logo-img {
-  background-image: url("/images/homepage/logo-hdx.svg");
+  background-image: url("/images/homepage/logo-hdx-accr-blk.svg");
   background-repeat: no-repeat;
-  background-size: 126px 31px;
+  background-position: left center;
   width: 126px;
   height: 31px;
-  min-width: 126px;
-  min-height: 31px;
 }
 /* END HDX Version display */
 /* Style breadcrumbs */
@@ -1768,47 +1766,6 @@ hr.dotted {
     margin-left: 0;
     margin-top: 30px;
   }
-  body.home .homepage-main .carousel {
-    bottom: auto;
-    margin-bottom: 30px;
-    position: relative;
-  }
-  body.home .homepage-main .carousel {
-    display: none;
-  }
-  body.home .homepage-main .carousel.mobile-carousel {
-    display: block;
-    min-height: 295px;
-    overflow: hidden;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel {
-    display: none;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
-    display: flex;
-    left: 45px;
-    position: absolute;
-    overflow: unset;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .carousel-item {
-    margin-right: 45px;
-    width: 215px;
-    display: block;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .carousel-item .graphic {
-    width: 215px;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .carousel-item .graphic img,
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .carousel-item .graphic iframe {
-    height: 100%;
-    width: 100%;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .carousel-indicators {
-    display: none;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .carousel-indicators [data-bs-target] {
-    width: 20px;
-  }
   body.home .homepage-main .homepage-section .hero-boxes .action-box .count-items .item-count a {
     font-size: 30px;
   }
@@ -1830,9 +1787,6 @@ hr.dotted {
   }
   body.home .homepage-main .homepage-section .hero-boxes {
     width: 100% !important;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
-    left: 15px;
   }
 }
 @media (max-width: 425px) {
@@ -1881,16 +1835,10 @@ hr.dotted {
   body.home .homepage-main .homepage-section .hero-boxes .action-box .add-data-actions .add-data-item .add-data-item-content .action {
     font-size: 12px;
   }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
-    left: 80px;
-  }
 }
 @media (max-width: 320px) {
   body.home .homepage-main .homepage-section .section-title {
     font-size: 28px;
     line-height: 1.3;
-  }
-  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
-    left: 37px;
   }
 }
