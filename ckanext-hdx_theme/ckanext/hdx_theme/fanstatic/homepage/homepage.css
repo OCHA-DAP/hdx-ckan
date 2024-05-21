@@ -30,6 +30,7 @@
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   position: relative;
+  min-height: calc(100vh - 100px);
 }
 .homepage-main .homepage-section .section-content {
   padding-bottom: 0;
@@ -71,7 +72,7 @@
   flex-direction: column;
   align-items: center;
   background-color: #1ebfb3;
-  padding-top: 50px;
+  padding-top: 160px;
 }
 .homepage-main .hero-section .btn-faq {
   font-family: 'Gotham-Bold', sans-serif;
@@ -87,7 +88,6 @@
   display: block;
 }
 .homepage-main .hero-section .hero-section-content {
-  margin-top: 60px;
   margin-left: -12px;
   margin-right: -12px;
 }
@@ -232,10 +232,10 @@
 }
 .homepage-main .carousel-section {
   background-color: #1ebfb3;
-  padding-bottom: 41px;
+  margin-top: 160px;
+  margin-bottom: 160px;
 }
 .homepage-main .carousel-section .carousel-title {
-  margin-top: 50px;
   margin-bottom: 30px;
   text-align: center;
   color: #fff;

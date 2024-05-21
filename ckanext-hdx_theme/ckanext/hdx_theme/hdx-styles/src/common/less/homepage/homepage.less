@@ -15,6 +15,7 @@
   font-family: @gothamBoldFont;
   font-weight: 400;
   position: relative; //used by #hdx-warning
+  min-height: calc(100vh - 100px); // viewport - header
 
 
   .homepage-section {
@@ -62,7 +63,7 @@
     flex-direction: column;
     align-items: center;
     background-color: @greenColor;
-    padding-top: 50px;
+    padding-top: 160px;
 
     .btn-faq {
       .gothamBoldFont(14px);
@@ -78,7 +79,6 @@
     }
 
     .hero-section-content {
-      margin-top: 60px;
       margin-left: -12px; // .row
       margin-right: -12px; // .row
     }
@@ -243,10 +243,10 @@
 
   .carousel-section {
     background-color: @greenColor;
-    padding-bottom: 41px;
+    margin-top: 160px;
+    margin-bottom: 160px;
 
     .carousel-title {
-      margin-top: 50px;
       margin-bottom: 30px;
       text-align: center;
       color: @whiteColor;

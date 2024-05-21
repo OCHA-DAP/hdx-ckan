@@ -4175,7 +4175,8 @@ ul.list-horizontal li:first-child:before {
   background-repeat: no-repeat;
   background-position: left center;
   width: 126px;
-  height: 31px;
+  height: 30px;
+  margin-top: 1px;
 }
 /* END HDX Version display */
 /* HEADER Search Widget  */
