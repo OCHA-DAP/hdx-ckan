@@ -1,0 +1,39 @@
+<div class="bem-partners{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <div id="partnersCarousel" class="carousel slide" data-ride="false">
+    {% set mobileCarouselItems = partners|batch(3)|list %}
+    <div class="carousel-inner d-md-none">
+      {% for pair in mobileCarouselItems %}
+        <div class="carousel-item{% if loop.first %} active{% endif %}">
+          <div class="row align-items-center">
+            {% for partner in pair %}
+              <div class="col-4">
+                <img src="/images/landing_pages/partners/{{ partner[0] + '.png' }}"
+                     class="img-fluid bem-partners__image"
+                     alt="{{ partner[1] }}">
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="carousel-inner d-none d-md-block">
+      <div class="carousel-item active">
+        <div class="row align-items-center">
+          {% for key, name in partners %}
+            <div class="col">
+              <img src="/images/landing_pages/partners/{{ key + '.png' }}" class="img-fluid bem-partners__image"
+                   alt="{{ name }}">
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="carousel-indicators bem-partners__indicators d-md-none mt-3 mb-0">
+      {% for pair in mobileCarouselItems %}
+        <button type="button" data-bs-target="#partnersCarousel" data-bs-slide-to="{{ loop.index0 }}"
+                class="{% if loop.first %}active{% endif %}" aria-current="true"
+                aria-label="Slide {{ loop.index }}"></button>
+      {% endfor %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+.bem-faq__item {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0 !important;
+  border-bottom: 1px solid #000;
+}
+.bem-faq__question {
+  color: #000 !important;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+}
+.bem-faq__question::after {
+  display: none;
+}
+.bem-faq__answer {
+  color: #000;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  line-height: 22px;
+}

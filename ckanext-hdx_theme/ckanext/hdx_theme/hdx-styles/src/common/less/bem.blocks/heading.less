@@ -1,14 +1,19 @@
 @import "bem_variables";
 
 .heading {
-  &__title {
-    color: @blue-dark-color;
-    line-height: 1.2;
+  h1 {
     font-size: 48px;
-    font-family: 'Gotham-Bold', sans-serif;
-    font-weight: 400;
     @media (max-width: @breakpoint-md) {
       font-size: 36px;
     }
+  }
+  h3 {
+    font-size: 30px;
+  }
+  &__title {
+    color: @blue-dark-color;
+    line-height: 1.2;
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 400;
   }
 }

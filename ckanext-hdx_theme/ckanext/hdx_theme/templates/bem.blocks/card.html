@@ -1,0 +1,11 @@
+<div class="bem-card card{% if spacing_class %} {{ spacing_class }}{% endif %}{% if card_classes %} {{ card_classes|join(' ') }}{% endif %}">
+  <div class="card-body bem-card__body">
+    {% if badge %}
+      <span class="bem-card__badge badge text-bg-info mb-3">{{ badge }}</span>
+    {% endif %}
+    <h5 class="card-title bem-card__title">{{ title }}</h5>
+    <p class="card-text bem-card__text">{{ text }}</p>
+    <a href="{{ link }}" class="btn btn-link px-0 bem-card__button">{{ button }} <i
+            class="fa-solid fa-arrow-right ms-2"></i></a>
+  </div>
+</div>

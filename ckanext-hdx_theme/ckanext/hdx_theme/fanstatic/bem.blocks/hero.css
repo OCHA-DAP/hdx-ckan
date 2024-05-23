@@ -1,0 +1,59 @@
+.bem-hero {
+  background-color: #FBF9F8;
+}
+.bem-hero__title {
+  color: #000;
+  font-weight: 400;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-size: 48px;
+  line-height: 48px;
+}
+@media (max-width: 992px) {
+  .bem-hero__title {
+    font-size: 36px;
+    line-height: 36px;
+  }
+}
+.bem-hero__text {
+  color: #000;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+}
+@media (max-width: 992px) {
+  .bem-hero__text {
+    font-size: 18px;
+  }
+}
+.bem-hero__text a {
+  color: #007CE1;
+}
+.bem-hero__text a:hover {
+  color: #0162DD;
+}
+.bem-hero__label {
+  color: #000;
+  font-weight: 400;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-size: 20px;
+  line-height: 28px;
+}
+.bem-hero__sections {
+  color: #000;
+  font-weight: 400;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+}
+@media (max-width: 992px) {
+  .bem-hero__sections {
+    font-size: 16px;
+  }
+}
+.bem-hero__sections a {
+  color: #007CE1;
+}
+.bem-hero__sections a:hover {
+  color: #0162DD;
+}

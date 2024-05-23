@@ -129,6 +129,11 @@ bem-blocks-styles:
   contents:
     - bem.blocks/bem_fonts.css
     - bem.blocks/stepper.css
+    - bem.blocks/hero.css
+    - bem.blocks/faq.css
+    - bem.blocks/card.css
+    - bem.blocks/partners.css
+    - bem.blocks/utilities.css
     - bem.blocks/heading.css
     - bem.blocks/paragraph.css
     - bem.blocks/input_field.css
