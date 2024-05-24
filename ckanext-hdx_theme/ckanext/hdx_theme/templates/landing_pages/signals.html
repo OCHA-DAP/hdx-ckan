@@ -1,0 +1,406 @@
+{% extends "landing_pages/page.html" %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE'] %}
+
+{% block subtitle %}{{ _('HDX Signals') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">{% link_for _('HDX Signals'), controller='hdx_landing_pages', action='signals' %}</li>
+{% endblock %}
+
+{% block content %}
+  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org'), label=CONST.HERO_SECTION_LABEL, sections=sections, spacing_class="mb-5") }}
+
+  <div class="container">
+
+    <div class="row" id="data-coverage">
+      <div class="col-12 mx-auto my-5">
+        <div class="text-center mb-4">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.DATA_COVERAGE_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_COVERAGE_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-medium", "mt-4"]) }}
+        </div>
+        <div class="row">
+          {% for card in data_coverage %}
+            <div class="col-6 col-sm-4 mb-3">
+              {{ h.snippet('bem.blocks/card.html', title=card.title, text=card.organization, button='Learn more', link=card.link, card_classes=["bem-card_type-slim"]) }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="signup">
+      <div class="col-12 mx-auto my-5">
+        <div class="text-center mb-4">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.SIGNUP_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
+          <div class="row">
+            <div class="col-12 col-md-10 col-lg-8 mx-auto">
+              {{ h.snippet('bem.blocks/paragraph.html', text=CONST.SIGNUP_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-medium", "mt-4"]) }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="bem-card card my-3">
+              <div class="card-body bem-card__body">
+                <div class="row">
+                  <div class="col-12 col-md-10 col-lg-8 mx-auto">
+                    <div id="mc_embed_shell">
+                      <div id="mc_embed_signup">
+                        <form action="https://humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&amp;id=e908cb9d48&amp;f_id=006ec2e1f0"
+                              method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                              class="validate" target="_self" novalidate="">
+                          <div id="mc_embed_signup_scroll">
+                            <div class="indicates-required mb-3">
+                              <span class="asterisk">*</span> indicates required
+                            </div>
+                            <div class="mc-field-group mb-3">
+                              <label class="form-label" for="mce-EMAIL">Email Address <span class="asterisk">*</span>
+                              </label>
+                              <input type="email" name="EMAIL" class="required email form-control" id="mce-EMAIL"
+                                     required="" value="">
+                            </div>
+                            <div class="mc-field-group mb-3">
+                              <label class="form-label" for="mce-FNAME">First Name </label>
+                              <input type="text" name="FNAME" class=" text form-control" id="mce-FNAME" value="">
+                            </div>
+                            <div class="row">
+                              <div class="col-12 col-md-12">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">Datasets of interest</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][128]" class="form-check-input"
+                                             id="mce-group[4389]-4389-0" value="">
+                                      <label class="form-check-label" for="mce-group[4389]-4389-0">Internal
+                                        displacement, conflict - IDMC</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][256]" class="form-check-input"
+                                             id="mce-group[4389]-4389-1" value="">
+                                      <label class="form-check-label" for="mce-group[4389]-4389-1">Internal
+                                        displacement, disaster - IDMC</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][1024]" class="form-check-input"
+                                             id="mce-group[4389]-4389-2" value="">
+                                      <label class="form-check-label" for="mce-group[4389]-4389-2">Armed conflict -
+                                        ACLED</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][2048]" class="form-check-input"
+                                             id="mce-group[4389]-4389-3" value="">
+                                      <label class="form-check-label" for="mce-group[4389]-4389-3">Food insecurity -
+                                        IPC/CH</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][4096]" class="form-check-input"
+                                             id="mce-group[4389]-4389-4" value="">
+                                      <label class="form-check-label" for="mce-group[4389]-4389-4">Agricultural hotspots
+                                        - JRC ASAP</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][8192]" class="form-check-input"
+                                             id="mce-group[4389]-4389-5" value="">
+                                      <label class="form-check-label" for="mce-group[4389]-4389-5">Market monitoring -
+                                        WFP</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">Asia and the Pacific</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4397][16384]" class="form-check-input"
+                                             id="mce-group[4397]-4397-0" value="">
+                                      <label class="form-check-label" for="mce-group[4397]-4397-0">All countries in the
+                                        region</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4397][32768]" class="form-check-input"
+                                             id="mce-group[4397]-4397-1" value="">
+                                      <label class="form-check-label" for="mce-group[4397]-4397-1">Afghanistan</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4397][131072]" class="form-check-input"
+                                             id="mce-group[4397]-4397-2" value="">
+                                      <label class="form-check-label" for="mce-group[4397]-4397-2">Myanmar</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">Europe</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4405][8388608]" class="form-check-input"
+                                             id="mce-group[4405]-4405-0" value="">
+                                      <label class="form-check-label" for="mce-group[4405]-4405-0">All countries in the
+                                        region</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4405][16777216]" class="form-check-input"
+                                             id="mce-group[4405]-4405-1" value="">
+                                      <label class="form-check-label" for="mce-group[4405]-4405-1">Ukraine</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">Latin America and the Caribbean</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][8589934592]" class="form-check-input"
+                                             id="mce-group[4417]-4417-0" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-0">All countries in the
+                                        region</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][17179869184]" class="form-check-input"
+                                             id="mce-group[4417]-4417-1" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-1">Colombia</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][34359738368]" class="form-check-input"
+                                             id="mce-group[4417]-4417-2" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-2">El Salvador</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][68719476736]" class="form-check-input"
+                                             id="mce-group[4417]-4417-3" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-3">Guatemala</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][137438953472]" class="form-check-input"
+                                             id="mce-group[4417]-4417-4" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-4">Haiti</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][274877906944]" class="form-check-input"
+                                             id="mce-group[4417]-4417-5" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-5">Honduras</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4417][4]" class="form-check-input"
+                                             id="mce-group[4417]-4417-6" value="">
+                                      <label class="form-check-label" for="mce-group[4417]-4417-6">Venezuela (Bolivarian
+                                        Republic of)</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">Middle East and North Africa</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4409][33554432]" class="form-check-input"
+                                             id="mce-group[4409]-4409-0" value="">
+                                      <label class="form-check-label" for="mce-group[4409]-4409-0">All countries in the
+                                        region</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4409][67108864]" class="form-check-input"
+                                             id="mce-group[4409]-4409-1" value="">
+                                      <label class="form-check-label" for="mce-group[4409]-4409-1">State of
+                                        Palestine</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4409][134217728]" class="form-check-input"
+                                             id="mce-group[4409]-4409-2" value="">
+                                      <label class="form-check-label" for="mce-group[4409]-4409-2">Syrian Arab
+                                        Republic</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4409][268435456]" class="form-check-input"
+                                             id="mce-group[4409]-4409-3" value="">
+                                      <label class="form-check-label" for="mce-group[4409]-4409-3">Yemen</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">North America</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4425][16]" class="form-check-input"
+                                             id="mce-group[4425]-4425-0" value="">
+                                      <label class="form-check-label" for="mce-group[4425]-4425-0">All countries in the
+                                        region</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">Southern and Eastern Africa</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4401][65536]" class="form-check-input"
+                                             id="mce-group[4401]-4401-0" value="">
+                                      <label class="form-check-label" for="mce-group[4401]-4401-0">All countries in the
+                                        region</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4401][524288]" class="form-check-input"
+                                             id="mce-group[4401]-4401-1" value="">
+                                      <label class="form-check-label" for="mce-group[4401]-4401-1">Ethiopia</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4401][2097152]" class="form-check-input"
+                                             id="mce-group[4401]-4401-2" value="">
+                                      <label class="form-check-label" for="mce-group[4401]-4401-2">Mozambique</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4401][4194304]" class="form-check-input"
+                                             id="mce-group[4401]-4401-3" value="">
+                                      <label class="form-check-label" for="mce-group[4401]-4401-3">Somalia</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4401][1]" class="form-check-input"
+                                             id="mce-group[4401]-4401-4" value="">
+                                      <label class="form-check-label" for="mce-group[4401]-4401-4">South Sudan</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4401][2]" class="form-check-input"
+                                             id="mce-group[4401]-4401-5" value="">
+                                      <label class="form-check-label" for="mce-group[4401]-4401-5">Sudan</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="mc-field-group mb-3">
+                                  <p class="fw-bold">West and Central Africa</p>
+                                  <ul class="list-unstyled">
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][549755813888]" class="form-check-input"
+                                             id="mce-group[4421]-4421-0" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-0">All countries in the
+                                        region</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][1099511627776]" class="form-check-input"
+                                             id="mce-group[4421]-4421-1" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-1">Burkina Faso</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][2199023255552]" class="form-check-input"
+                                             id="mce-group[4421]-4421-2" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-2">Cameroon</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][4398046511104]" class="form-check-input"
+                                             id="mce-group[4421]-4421-3" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-3">Central African
+                                        Republic</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][8796093022208]" class="form-check-input"
+                                             id="mce-group[4421]-4421-4" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-4">Chad</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][17592186044416]" class="form-check-input"
+                                             id="mce-group[4421]-4421-5" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-5">Democratic Republic
+                                        of the Congo</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][35184372088832]" class="form-check-input"
+                                             id="mce-group[4421]-4421-6" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-6">Mali</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][70368744177664]" class="form-check-input"
+                                             id="mce-group[4421]-4421-7" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-7">Niger</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4421][8]" class="form-check-input"
+                                             id="mce-group[4421]-4421-8" value="">
+                                      <label class="form-check-label" for="mce-group[4421]-4421-8">Nigeria</label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            <div id="mce-responses" class="clear">
+                              <div class="response" id="mce-error-response" style="display: none;"></div>
+                              <div class="response" id="mce-success-response" style="display: none;"></div>
+                            </div>
+                            <div aria-hidden="true" style="position: absolute; left: -5000px;">
+                              <input type="text" name="b_ea3f905d50ea939780139789d_e908cb9d48" tabindex="-1" value="">
+                            </div>
+                            <div class="clear mb-3">
+                              <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary"
+                                     value="Subscribe">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="resources">
+      <div class="col-12 mx-auto my-5">
+        <div class="text-center">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.RESOURCES_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.RESOURCES_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-big"]) }}
+        </div>
+        <div class="row mt-4">
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_MAP, text=CONST.RESOURCES_CARD_TEXT_MAP, button=CONST.RESOURCES_CARD_BUTTON_MAP, link=CONST.RESOURCES_CARD_BUTTON_LINK_MAP, spacing_class="my-3") }}
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_DATASET, text=CONST.RESOURCES_CARD_TEXT_DATASET, button=CONST.RESOURCES_CARD_BUTTON_DATASET, link=CONST.RESOURCES_CARD_BUTTON_LINK_DATASET, spacing_class="my-3") }}
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_METHODOLOGY, text=CONST.RESOURCES_CARD_TEXT_METHODOLOGY, button=CONST.RESOURCES_CARD_BUTTON_METHODOLOGY, link=CONST.RESOURCES_CARD_BUTTON_LINK_METHODOLOGY, spacing_class="my-3") }}
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_REPOSITORY, text=CONST.RESOURCES_CARD_TEXT_REPOSITORY, button=CONST.RESOURCES_CARD_BUTTON_REPOSITORY, link=CONST.RESOURCES_CARD_BUTTON_LINK_REPOSITORY, spacing_class="my-3") }}
+          </div>
+        </div>
+        <div class="mt-4">
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.RESOURCES_SECTION_PARAGRAPH.format('mailto:hdx-signals@un.org'), paragraph_classes=["paragraph__text_font-size-medium"]) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="faq">
+      <div class="col-12 mx-auto my-5">
+        {{ h.snippet('bem.blocks/heading.html', title=CONST.FAQ_SECTION_TITLE, heading_type=3) }}
+        {{ h.snippet('bem.blocks/faq.html', data=faq_data) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="py-5 background-color-snow">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <div class="text-center">
+            {{ h.snippet('bem.blocks/heading.html', title=CONST.PARTNERS_SECTION_TITLE, spacing_class="mb-5", heading_type=3) }}
+          </div>
+          {{ h.snippet('bem.blocks/partners.html', partners=partners) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

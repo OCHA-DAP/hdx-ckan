@@ -6,7 +6,7 @@
         <div class="carousel-item{% if loop.first %} active{% endif %}">
           <div class="row align-items-center">
             {% for partner in pair %}
-              <div class="col-4">
+              <div class="col-4 text-center">
                 <img src="/images/landing_pages/partners/{{ partner[0] + '.png' }}"
                      class="img-fluid bem-partners__image"
                      alt="{{ partner[1] }}">
@@ -20,7 +20,7 @@
       <div class="carousel-item active">
         <div class="row align-items-center">
           {% for key, name in partners %}
-            <div class="col">
+            <div class="col text-center">
               <img src="/images/landing_pages/partners/{{ key + '.png' }}" class="img-fluid bem-partners__image"
                    alt="{{ name }}">
             </div>
