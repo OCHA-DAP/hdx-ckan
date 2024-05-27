@@ -1,0 +1,23 @@
+<div class="bem-faq{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <div class="accordion" id="faqAccordion">
+    {% for category in data %}
+      {% for item in category.questions %}
+        <div class="accordion-item bem-faq__item">
+          <button class="accordion-button bem-faq__question p-4{% if not loop.first %} collapsed{% endif %}"
+                  type="button"
+                  data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}"
+                  aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
+                  aria-controls="collapse{{ loop.index }}">
+            {{ item.q }}
+          </button>
+          <div id="collapse{{ loop.index }}" class="accordion-collapse collapse{% if loop.first %} show{% endif %}"
+               aria-labelledby="heading{{ loop.index }}" data-bs-parent="#faqAccordion">
+            <div class="accordion-body bem-faq__answer px-4 py-0 ms-4">
+              {{ item.a | safe }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>

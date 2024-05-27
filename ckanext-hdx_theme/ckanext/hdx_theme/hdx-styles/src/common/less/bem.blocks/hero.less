@@ -1,0 +1,63 @@
+@import "bem_variables";
+
+.bem-hero {
+  background-color: @snow-color;
+
+  &__title {
+    color: @black-color;
+    font-weight: 400;
+    font-family: 'Gotham-Bold', sans-serif;
+    font-size: 48px;
+    line-height: 48px;
+    @media (max-width: @breakpoint-lg) {
+      font-size: 36px;
+      line-height: 36px;
+    }
+  }
+
+  &__text {
+    color: @black-color;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    @media (max-width: @breakpoint-lg) {
+      font-size: 18px;
+    }
+
+    a {
+      color: @blue-light-color;
+
+      &:hover {
+        color: @blue-color;
+      }
+    }
+  }
+
+  &__label {
+    color: @black-color;
+    font-weight: 400;
+    font-family: 'Gotham-Bold', sans-serif;
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  &__sections {
+    color: @black-color;
+    font-weight: 400;
+    font-family: 'Gotham-Bold', sans-serif;
+    font-size: 18px;
+    line-height: 24px;
+    @media (max-width: @breakpoint-lg) {
+      font-size: 16px;
+    }
+
+    a {
+      color: @blue-light-color;
+
+      &:hover {
+        color: @blue-color;
+      }
+    }
+  }
+}

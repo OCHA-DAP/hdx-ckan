@@ -375,6 +375,8 @@ hdx.wordpress.category.covid=566
 hdx.wordpress.category.devs=568
 hdx.wordpress.category.terms=577
 hdx.wordpress.category.licenses=581
+hdx.wordpress.category.hapi=581
+hdx.wordpress.category.signals=577
 
 # HDX http headers
 hdx.http_headers.routes = /country/topline/,/view/,/eaa-worldmap

@@ -1,3 +1,9 @@
 <div class="heading{% if spacing_class %} {{ spacing_class }}{% endif %}">
-  <h1 class="heading__title">{{ title }}</h1>
+  {% if heading_type %}
+    {% if heading_type == 3 %}
+      <h3 class="heading__title">{{ title }}</h3>
+    {% endif %}
+  {% else %}
+    <h1 class="heading__title">{{ title }}</h1>
+  {% endif %}
 </div>

@@ -1,0 +1,8 @@
+.bem-partner__image {
+  background: red;
+}
+@media (max-width: 768px) {
+  .bem-partner__image {
+    max-height: 50px;
+  }
+}

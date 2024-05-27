@@ -1,0 +1,9 @@
+.bem-partners__image {
+  max-width: 100px;
+}
+.bem-partners__indicators {
+  bottom: -2rem;
+}
+.bem-partners__indicators [data-bs-target] {
+  background-color: #000;
+}

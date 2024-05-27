@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
-{% block bodytag %}{{ super() }} class="home responsive"{% endblock %}
+{% block bodytag %}{{ super() }} class="{% block bodyclassname %}home responsive{% endblock %}"{% endblock %}
 
 {%- block page -%}
 
