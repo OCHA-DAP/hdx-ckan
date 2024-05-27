@@ -4,8 +4,8 @@ CONSTANTS = {
     'HERO_SECTION_LABEL': '''HDX HAPI Beta''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
-    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HAPI covers 57 indicators across 22 countries with a <a href="{1}" title="Humanitarian Response Plan">Humanitarian Response Plan</a>.''',
-    'DATA_COVERAGE_SECTION_PARAGRAPH': '''Refer to the <a href="{0}" target="_blank" title="HAPI - The Humanitarian API">documentation</a> for the latest coverage. <a href="{1}" title="Contact us">Contact us</a> to request additional indicators in future versions of HAPI.''',
+    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HAPI covers 57 indicators across 22 countries with a <a href="{1}" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>.''',
+    'DATA_COVERAGE_SECTION_PARAGRAPH': '''Refer to the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HAPI - The Humanitarian API">documentation</a> for the latest coverage. <a href="{1}" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="Contact us">Contact us</a> to request additional indicators in future versions of HAPI.''',
 
     'BE_INSPIRED_SECTION_TITLE': '''Be Inspired''',
     'BE_INSPIRED_SECTION_DESCRIPTION': '''Take a look at visualisations and code examples''',

@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx@un.org'), label=CONST.HERO_SECTION_LABEL, sections=sections, spacing_class="mb-5") }}
+  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx@un.org'), label=CONST.HERO_SECTION_LABEL, sections=sections, click_stopper_link_type='hapi jump nav', spacing_class="mb-5") }}
 
   <div class="container">
 
@@ -22,7 +22,7 @@
         <div class="row">
           {% for card in data_coverage %}
             <div class="col-6 col-sm-4 col-md-3 mb-3">
-              {{ h.snippet('bem.blocks/card.html', title=card.title, text=card.organization, badge=card.category, button='Learn more', link=card.link, card_classes=["bem-card_type-slim"]) }}
+              {{ h.snippet('bem.blocks/card.html', title=card.title, text=card.organization, badge=card.category, button='Learn more', link=card.link, click_stopper_link_type='hapi data coverage', click_stopper_link_label=card.title, card_classes=["bem-card_type-slim"]) }}
             </div>
           {% endfor %}
         </div>
@@ -40,16 +40,16 @@
         </div>
         <div class="row mt-4">
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, text=CONST.BE_INSPIRED_CARD_TEXT_POWER_BI, button=CONST.BE_INSPIRED_CARD_BUTTON_POWER_BI, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, text=CONST.BE_INSPIRED_CARD_TEXT_POWER_BI, button=CONST.BE_INSPIRED_CARD_BUTTON_POWER_BI, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, spacing_class="my-3") }}
           </div>
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_API, text=CONST.BE_INSPIRED_CARD_TEXT_API, button=CONST.BE_INSPIRED_CARD_BUTTON_API, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_API, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_API, text=CONST.BE_INSPIRED_CARD_TEXT_API, button=CONST.BE_INSPIRED_CARD_BUTTON_API, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_API, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_API, spacing_class="my-3") }}
           </div>
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, text=CONST.BE_INSPIRED_CARD_TEXT_VISUALIZATION, button=CONST.BE_INSPIRED_CARD_BUTTON_VISUALIZATION, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, text=CONST.BE_INSPIRED_CARD_TEXT_VISUALIZATION, button=CONST.BE_INSPIRED_CARD_BUTTON_VISUALIZATION, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, spacing_class="my-3") }}
           </div>
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_CHATBOT, text=CONST.BE_INSPIRED_CARD_TEXT_CHATBOT, button=CONST.BE_INSPIRED_CARD_BUTTON_CHATBOT, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_CHATBOT, text=CONST.BE_INSPIRED_CARD_TEXT_CHATBOT, button=CONST.BE_INSPIRED_CARD_BUTTON_CHATBOT, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_CHATBOT, spacing_class="my-3") }}
           </div>
         </div>
       </div>

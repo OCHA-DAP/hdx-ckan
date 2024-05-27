@@ -11,7 +11,7 @@ CONSTANTS = {
 
     'RESOURCES_SECTION_TITLE': '''Resources''',
     'RESOURCES_SECTION_DESCRIPTION': '''For more information about the datasets monitored by HDX signals as well as information for developers see the following:''',
-    'RESOURCES_SECTION_PARAGRAPH': '''For more information, please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>.''',
+    'RESOURCES_SECTION_PARAGRAPH': '''For more information, please contact us at <a href="{0}" title="Contact us" data-module="hdx_click_stopper" data-module-link_type="signals resources description">hdx-signals@un.org</a>.''',
 
     'RESOURCES_CARD_TITLE_MAP': '''Signals Map''',
     'RESOURCES_CARD_TEXT_MAP': '''See a visualiziation of present and historic Signals''',
