@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org'), label=CONST.HERO_SECTION_LABEL, sections=sections, spacing_class="mb-5") }}
+  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org'), label=CONST.HERO_SECTION_LABEL, sections=sections, click_stopper_link_type='signals jump nav', spacing_class="mb-5") }}
 
   <div class="container">
 
@@ -22,7 +22,7 @@
         <div class="row">
           {% for card in data_coverage %}
             <div class="col-6 col-sm-4 mb-3">
-              {{ h.snippet('bem.blocks/card.html', title=card.title, text=card.organization, button='Learn more', link=card.link, card_classes=["bem-card_type-slim"]) }}
+              {{ h.snippet('bem.blocks/card.html', title=card.title, text=card.organization, button='Learn more', click_stopper_link_type='signals data coverage', click_stopper_link_label=card.title, link=card.link, card_classes=["bem-card_type-slim"]) }}
             </div>
           {% endfor %}
         </div>
@@ -339,7 +339,8 @@
                             </div>
                             <div class="clear mb-3">
                               <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary"
-                                     value="Subscribe">
+                                     data-module="hdx_click_stopper" data-module-link_type="signals sign up"
+                                     data-module-just_send_event="true" data-module-label="Subscribe" value="Subscribe">
                             </div>
                           </div>
                         </form>
@@ -364,16 +365,16 @@
         </div>
         <div class="row mt-4">
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_MAP, text=CONST.RESOURCES_CARD_TEXT_MAP, button=CONST.RESOURCES_CARD_BUTTON_MAP, link=CONST.RESOURCES_CARD_BUTTON_LINK_MAP, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_MAP, text=CONST.RESOURCES_CARD_TEXT_MAP, button=CONST.RESOURCES_CARD_BUTTON_MAP, link=CONST.RESOURCES_CARD_BUTTON_LINK_MAP, click_stopper_link_type='signals resources', click_stopper_link_label=CONST.RESOURCES_CARD_TITLE_MAP, spacing_class="my-3") }}
           </div>
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_DATASET, text=CONST.RESOURCES_CARD_TEXT_DATASET, button=CONST.RESOURCES_CARD_BUTTON_DATASET, link=CONST.RESOURCES_CARD_BUTTON_LINK_DATASET, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_DATASET, text=CONST.RESOURCES_CARD_TEXT_DATASET, button=CONST.RESOURCES_CARD_BUTTON_DATASET, link=CONST.RESOURCES_CARD_BUTTON_LINK_DATASET, click_stopper_link_type='signals resources', click_stopper_link_label=CONST.RESOURCES_CARD_TITLE_DATASET, spacing_class="my-3") }}
           </div>
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_METHODOLOGY, text=CONST.RESOURCES_CARD_TEXT_METHODOLOGY, button=CONST.RESOURCES_CARD_BUTTON_METHODOLOGY, link=CONST.RESOURCES_CARD_BUTTON_LINK_METHODOLOGY, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_METHODOLOGY, text=CONST.RESOURCES_CARD_TEXT_METHODOLOGY, button=CONST.RESOURCES_CARD_BUTTON_METHODOLOGY, link=CONST.RESOURCES_CARD_BUTTON_LINK_METHODOLOGY, click_stopper_link_type='signals resources', click_stopper_link_label=CONST.RESOURCES_CARD_TITLE_METHODOLOGY, spacing_class="my-3") }}
           </div>
           <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_REPOSITORY, text=CONST.RESOURCES_CARD_TEXT_REPOSITORY, button=CONST.RESOURCES_CARD_BUTTON_REPOSITORY, link=CONST.RESOURCES_CARD_BUTTON_LINK_REPOSITORY, spacing_class="my-3") }}
+            {{ h.snippet('bem.blocks/card.html', title=CONST.RESOURCES_CARD_TITLE_REPOSITORY, text=CONST.RESOURCES_CARD_TEXT_REPOSITORY, button=CONST.RESOURCES_CARD_BUTTON_REPOSITORY, link=CONST.RESOURCES_CARD_BUTTON_LINK_REPOSITORY, click_stopper_link_type='signals resources', click_stopper_link_label=CONST.RESOURCES_CARD_TITLE_REPOSITORY, spacing_class="my-3") }}
           </div>
         </div>
         <div class="mt-4">
