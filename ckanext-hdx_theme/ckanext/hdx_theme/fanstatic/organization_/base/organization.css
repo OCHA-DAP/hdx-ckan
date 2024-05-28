@@ -1887,6 +1887,16 @@ ul.dataset-resources li + li.label-icons {
 #homepage-alerts .flash-messages {
   background-color: transparent;
 }
+#homepage-alerts .paddingRowHack {
+  margin-left: 0;
+  margin-right: 0;
+}
+#homepage-alerts .paddingRowHack .paddingLeftHack {
+  padding-left: 0;
+}
+#homepage-alerts .paddingRowHack .paddingRightHack {
+  padding-right: 0;
+}
 /* END Style Bootstrap Flash messages*/
 /* Common Classes */
 .mTop60 {
@@ -4288,13 +4298,12 @@ ul.list-horizontal li:first-child:before {
   display: block;
 }
 .hdxLogo .logo .logo-img {
-  background-image: url("/images/homepage/logo-hdx.svg");
+  background-image: url("/images/homepage/logo-hdx-accr-blk.svg");
   background-repeat: no-repeat;
-  background-size: 126px 31px;
+  background-position: left center;
   width: 126px;
-  height: 31px;
-  min-width: 126px;
-  min-height: 31px;
+  height: 30px;
+  margin-top: 1px;
 }
 /* END HDX Version display */
 /* HEADER Search Widget  */

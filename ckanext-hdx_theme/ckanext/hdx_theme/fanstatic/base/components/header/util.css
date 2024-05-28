@@ -96,6 +96,16 @@
 #homepage-alerts .flash-messages {
   background-color: transparent;
 }
+#homepage-alerts .paddingRowHack {
+  margin-left: 0;
+  margin-right: 0;
+}
+#homepage-alerts .paddingRowHack .paddingLeftHack {
+  padding-left: 0;
+}
+#homepage-alerts .paddingRowHack .paddingRightHack {
+  padding-right: 0;
+}
 /* END Style Bootstrap Flash messages*/
 /* Common Classes */
 .mTop60 {

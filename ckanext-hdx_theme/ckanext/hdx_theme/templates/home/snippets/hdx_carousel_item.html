@@ -1,0 +1,21 @@
+<div class="sub-item">
+  <div class="sub-item-image">
+    <img class="graphic lazyload" data-src="{{ item.graphic }}" alt="Highlight item">
+    <div class="sub-item-action">
+      {% if item.embed %}
+        <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper"
+           data-module-link_type="carousel">Watch</a>
+      {% else %}
+        <a href="{{ item.url }}" class="btn" {% if item.newTab %} target="_blank" {% endif %}
+           data-module="hdx_click_stopper" data-module-link_type="carousel">{% if item.buttonText %}
+          {{ item.buttonText }} {% else %} Explore {% endif %}</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="title">{{ item.title }}</div>
+  <a href="{{ item.url }}">
+    <div class="sub-item-caption">
+      <p class="description">{{ item.description }}</p>
+    </div>
+  </a>
+</div>

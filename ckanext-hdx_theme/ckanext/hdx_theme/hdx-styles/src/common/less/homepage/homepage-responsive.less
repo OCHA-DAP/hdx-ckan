@@ -46,6 +46,21 @@
 				padding: 0 15px;
 				width: 100%;
 			}
+
+      .homepage-main {
+        .homepage-section {
+          .hero-boxes {
+            .action-box {
+              .count-items {
+
+                .item-count a {
+                  font-size: 24px;
+                }
+              }
+            }
+          }
+        }
+      }
 		}
 	}
 }
@@ -55,48 +70,45 @@
 		&.home{
       .homepage-main {
         .hero-section {
-          margin-bottom: 0;
-
           .section-title {
             width: 100%;
           }
-          .hero-section-content {
-            flex-direction: column;
-            align-items: center;
-          }
           .hero-description {
-            margin-bottom: 50px;
             text-align: center;
+            width: 100%;
             .section-title {
               text-align: center;
             }
           }
 
-          .hero-boxes {
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-evenly;
-            margin-bottom: 50px;
+          .hero-boxes-container {
+            width: 100%;
+            display: flex;
+            float: none;
+            .hero-boxes {
+              width: 50%;
+              margin: 50px auto 28px;
 
-            .action-box ~ .action-box {
-              margin-left: 0;
-              margin-top: 30px;
+              .action-box ~ .action-box {
+                margin-left: 0;
+                margin-top: 30px;
+              }
             }
           }
         }
-        .carousel{
-					bottom: auto;
-					margin-bottom: 30px;
-					position: relative;
-				}
 
-				.carousel{
-					display: none;
-					&.mobile-carousel{
-            @import "mobile-carousel";
-						.mobile-carousel-style();
-					}
-				}
+        .homepage-section {
+          .hero-boxes {
+            .action-box {
+              .count-items {
+
+                .item-count a {
+                  font-size: 30px;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -125,17 +137,7 @@
             font-size: 40px;
           }
           .hero-boxes {
-            .action-box {
-              width: 380px;
-            }
-          }
-        }
-
-        .carousel{
-          &.mobile-carousel{
-            .mobile-carousel-inner{
-              left: @carousel-left-pos;
-            }
+            width: 100% !important;
           }
         }
       }
@@ -199,13 +201,6 @@
             }
           }
         }
-        .carousel{
-          &.mobile-carousel{
-            .mobile-carousel-inner{
-              left: @carousel-left-pos;
-            }
-          }
-        }
       }
     }
   }
@@ -222,14 +217,54 @@
             line-height: 1.3;
           }
         }
-        .carousel{
-					&.mobile-carousel{
-						.mobile-carousel-inner{
-							left: @carousel-left-pos;
-						}
-					}
-				}
 			}
 		}
 	}
+}
+
+@media (max-height: 1050px) {
+  .homepage-main {
+    .hero-section {
+      padding-top: 150px;
+    }
+    .carousel-section {
+      margin-top: 150px;
+      margin-bottom: 150px;
+    }
+  }
+}
+@media (max-height: 1024px) {
+  .homepage-main {
+    .hero-section {
+      padding-top: 140px;
+    }
+    .carousel-section {
+      margin-top: 140px;
+      margin-bottom: 140px;
+    }
+  }
+}
+
+@media (max-height: 900px) {
+  .homepage-main {
+    .hero-section {
+      padding-top: 100px;
+    }
+    .carousel-section {
+      margin-top: 100px;
+      margin-bottom: 100px;
+    }
+  }
+}
+
+@media (max-height: 800px) {
+  .homepage-main {
+    .hero-section {
+      padding-top: 65px;
+    }
+    .carousel-section {
+      margin-top: 65px;
+      margin-bottom: 65px;
+    }
+  }
 }
