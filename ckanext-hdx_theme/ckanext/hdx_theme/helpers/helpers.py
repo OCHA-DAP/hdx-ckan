@@ -736,7 +736,7 @@ def hdx_get_frequency_by_value(value):
 
 
 def hdx_get_carousel_list():
-    return logic.get_action('hdx_carousel_settings_show')({'max_items': 4}, {})
+    return logic.get_action('hdx_carousel_settings_show')({'max_items': 3}, {})
 
 
 def hdx_get_quick_links_list(archived=None):
