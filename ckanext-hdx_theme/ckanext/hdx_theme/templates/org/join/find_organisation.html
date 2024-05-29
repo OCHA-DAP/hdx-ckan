@@ -1,6 +1,7 @@
 {% extends "onboarding/base.html" %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['REQUEST_JOIN_ORGANISATION'] %}
+{% set selected_org_id = request.args.get('selected', None) %}
 
 {% block subtitle %}{{ _('Request to join an organisation') }}{% endblock %}
 
@@ -32,6 +33,7 @@
           {{ h.snippet('bem.blocks/select2_field.html',
               data=data.org_dict, name="org_id",
               required=True,
+              selected=selected_org_id,
               select_classes=['select2-field__select_size_large'],
               data_attributes={"placeholder": CONST.SELECT_ORGANISATION_PLACEHOLDER},
               spacing_class="mb-4") }}

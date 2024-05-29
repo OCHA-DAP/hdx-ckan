@@ -33,7 +33,7 @@ Example:
             </dd>
             {% else %}
               {% if not h.user_in_org_or_group(organization.id) and h.check_access('hdx_basic_user_info') %}
-                <a href="{{ h.url_for('hdx_org_join.find_organisation') }}" class="">
+                <a href="{{ h.url_for('hdx_org_join.find_organisation', selected=organization.id) }}" class="">
                   {{ _("Request Membership") }}
                 </a>
                 {#            		<a href="#req-membership-div" data-bs-toggle="modal" class="btn hdx-btn org-btn">{{ _('Request Membership') }}</a>#}
