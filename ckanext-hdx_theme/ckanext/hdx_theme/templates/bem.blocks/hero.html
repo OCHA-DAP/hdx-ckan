@@ -12,6 +12,7 @@
             {{ _('Jump to') }}:
             {% for section in sections %}
               <a href="{{ section.url }}" title="{{ section.name }}" class="px-1 px-md-3"
+                 {% if not section.url.startswith('#') %}target="_blank"{% endif %}
                  {% if click_stopper_link_type %}data-module="hdx_click_stopper"
                  data-module-link_type="{{ click_stopper_link_type }}"
                  {% if click_stopper_link_label %}data-module-label="{{ click_stopper_link_label }}"
