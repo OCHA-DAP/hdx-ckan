@@ -154,6 +154,7 @@ bem-blocks-scripts:
       - hdx_theme/hdx-show-more
   contents:
     - bem.blocks/select2_field.js
+    - bem.blocks/textarea_field.js
 
 hdx-form-validator:
   <<: *common-js

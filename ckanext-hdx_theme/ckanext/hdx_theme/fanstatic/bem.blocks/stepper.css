@@ -1,3 +1,6 @@
+.background-color-snow {
+  background-color: #FBF9F8;
+}
 .fa-icon::before {
   display: inline-block;
   text-rendering: auto;

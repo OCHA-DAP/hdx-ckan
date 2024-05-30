@@ -3,6 +3,16 @@
     <label class="textarea-field__label form-label" for="textarea-{{ name }}">
       {{ label }}{% if required %} <span class="textarea-field__required">*</span>{% endif %}</label>
   {% endif %}
+  {% if label_guidelines %}
+    <div class="textarea-field__label-guideline">
+      {% if label_guideline_title %}{{ label_guideline_title }}{% endif %}
+      <ul class="mb-0">
+        {% for label_guideline in label_guidelines %}
+          <li>{{ label_guideline }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
   <div>
     <textarea
             class="textarea-field__textarea form-control{% if errors %} is-invalid{% endif %}"
@@ -14,6 +24,9 @@
             {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
             {% endfor %}{% endif %}
     >{% if value %}{{ value }}{% endif %}</textarea>
+    {% if character_count %}
+      <div id="help-block-{{ name }}" class="textarea-field__character-count form-text text-end"></div>
+    {% endif %}
     {% if errors or (data_attributes and data_attributes['validation-error']) %}
       <div class="textarea-field__feedback-message textarea-field__feedback-message_state_invalid invalid-feedback">
         {% if errors %}{{ errors|join('. ') }}{% endif %}

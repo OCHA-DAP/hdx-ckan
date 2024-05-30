@@ -1,4 +1,5 @@
 @import "bem_variables";
+@import "utilities";
 
 .select2-field {
   &__label {
@@ -38,7 +39,17 @@
 
     .select2-dropdown {
       .select2-search {
+        &::after {
+          .fa-icon;
+          font: var(--fa-font-solid);
+          content: '\f002';
+          color: @grey-color;
+          position: absolute;
+          top: 18px; // (50px .select2-search - 14px .fa-icon) / 2
+          right: 30px;
+        }
         .select2-search__field {
+          padding-right: 30px;
           &:focus {
             box-shadow: none;
           }
