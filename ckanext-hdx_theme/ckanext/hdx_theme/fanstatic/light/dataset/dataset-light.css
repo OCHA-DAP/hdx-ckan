@@ -147,6 +147,7 @@
   margin-bottom: 3px;
   border: 1px solid #eeeeee;
   padding: 0;
+  width: 100%;
 }
 .dataset-light .resource-list .resource-item.in-review {
   opacity: 60%;
@@ -163,10 +164,12 @@
   max-height: 0;
 }
 .dataset-light .resource-list .resource-item .resource-item-title {
-  padding: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  height: 1em;
+  flex-grow: 1;
+  padding-right: 5px;
   height: 40px;
 }
 .dataset-light .resource-list .resource-item .spacer {
@@ -179,15 +182,16 @@
   color: #007CE0;
 }
 .dataset-light .resource-list .resource-item .heading {
+  width: calc(100% - 70px);
+}
+.dataset-light .resource-list .resource-item .heading .resource-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex-grow: 0;
 }
 .dataset-light .resource-list .resource-item .format-label {
   position: initial;
-  min-width: 32px;
-  margin: 2px 0 0 -20px;
+  margin: 2px 0 0 -10px;
 }
 .dataset-light .resource-list .resource-item .content {
   border-top: 1px solid #eeeeee;
