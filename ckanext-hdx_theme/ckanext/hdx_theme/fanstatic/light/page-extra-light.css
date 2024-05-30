@@ -674,11 +674,11 @@ hr.dotted {
   line-height: 20px;
 }
 .hdx-footer .logo-gray {
-  height: 40px;
+  height: 30px;
   margin-bottom: 10px;
 }
 .hdx-footer .match-logo-margin {
-  margin-top: 50px;
+  margin-top: 40px;
 }
 @media (max-width: 768px) {
   .hdx-footer .match-logo-margin {
@@ -686,7 +686,7 @@ hr.dotted {
   }
 }
 .hdx-footer .other-services img {
-  max-height: 40px;
+  max-height: 30px;
   max-width: 100%;
 }
 .hdx-footer .other-services img.logo-hdx {
