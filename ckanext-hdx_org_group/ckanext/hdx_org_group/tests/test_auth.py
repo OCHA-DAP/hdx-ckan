@@ -195,7 +195,7 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
             self._get_action('hdx_send_new_org_request')(
                 {'model': model, 'session': model.Session},
                 {'title': 'Org Title', 'description': 'Org Description',
-                 'org_url': 'http://test-org.com/',
+                 'org_url': 'https://test-org.com/',
                  'your_name': 'Some Name', 'your_email': 'test@test.com'}
             )
             assert False, 'anon user should not be allowed to send new org request'
