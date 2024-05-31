@@ -18,16 +18,18 @@
       {% block resource_item_title %}
       <div class="resource-item-title">
         <span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
-        <span class="heading" title="{{ res.name or res.description }}">
-          {{ h.resource_display_name(res) | truncate(50) }}
+        <div class="heading" title="{{ res.name or res.description }}">
+          <div class="resource-title">
+            {{ h.resource_display_name(res) }}
+          </div>
           {% if res.size %}
             <span class="format-filesize-label">({{ h.filesize_format(res.size) }})</span>
           {% endif %}
           {% if res.tracking_summary %}
-            {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
+            <span>{{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}</span>
           {% endif %}
-        </span>
-        <span class="spacer"></span>
+        </div>
+        <div class="spacer"></div>
         <a class="toggle-show"><i class="fa fa-plus"></i></a>
       </div>
       {% endblock %}

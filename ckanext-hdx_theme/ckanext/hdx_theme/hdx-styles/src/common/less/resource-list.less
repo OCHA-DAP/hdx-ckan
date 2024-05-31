@@ -2,39 +2,57 @@
 @import "base/mixins";
 
 /* Style Resources List */
-.resource-list{
+.resource-list {
   list-style: none;
 }
 
 .resource-item {
-  .update-date{
+  .heading {
+    display: flex;
+    .resource-name {
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      margin-right: 5px;
+    }
+  }
+
+  .update-date {
     margin-bottom: 7px;
+
     .icn-txt-p-code {
       vertical-align: text-bottom;
       margin-right: 3px;
     }
   }
+
   .description {
     text-align: justify;
     max-width: 450px;
   }
 }
 
-.format-filesize-label{
+.format-filesize-label {
   font-size: 14px;
   font-weight: normal;
   color: #000;
 }
+
 /* END Style Resources List*/
 
 .data-check-modal.modal.show {
   .modal-dialog {
     width: @containerSize + 2*@gutterSize;
     max-width: none;
+
     .modal-content {
       height: 90vh;
+
       .modal-body {
         padding: 0;
+
         iframe {
           width: 100%;
           height: 80vh;
