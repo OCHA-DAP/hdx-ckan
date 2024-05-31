@@ -26,7 +26,7 @@ organization = {
     'title': 'Hdx Test Org',
     'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
     'org_acronym': 'HTO',
-    'org_url': 'http://test-org.test',
+    'org_url': 'https://test-org.test',
     'description': 'This is a test organization',
     'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
 }
@@ -130,7 +130,7 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
 
     def test_create_dataset_as_normal_user(self):
         normal_user = factories.User()
-        org = factories.Organization(user=normal_user, org_url='http://test.local/', hdx_org_type='donor')
+        org = factories.Organization(user=normal_user, org_url='https://test.local/', hdx_org_type='donor')
 
         package = {
             'package_creator': 'test function',

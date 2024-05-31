@@ -60,7 +60,7 @@ class TestSitemap(object):
         '''
         if create_org_and_group:
             factories.Organization(name='test_owner_org',
-                                   org_url='http://example.org/',
+                                   org_url='https://example.org/',
                                    hdx_org_type='academic_research',
                                    users=[{'name': 'testsysadmin', 'capacity': 'admin'}]
                                    )
