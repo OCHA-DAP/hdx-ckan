@@ -1,0 +1,15 @@
+<div class="bem-card card{% if spacing_class %} {{ spacing_class }}{% endif %}{% if card_classes %} {{ card_classes|join(' ') }}{% endif %}">
+  <div class="card-body bem-card__body">
+    {% if badge %}
+      <span class="bem-card__badge badge text-bg-info mb-3">{{ badge }}</span>
+    {% endif %}
+    <h5 class="card-title bem-card__title">{{ title }}</h5>
+    <p class="card-text bem-card__text">{{ text }}</p>
+    <a href="{{ link }}" class="btn btn-link px-0 bem-card__button"
+       {% if not link.startswith('#') %}target="_blank"{% endif %}
+       {% if click_stopper_link_type %}data-module="hdx_click_stopper"
+       data-module-link_type="{{ click_stopper_link_type }}"
+       {% if click_stopper_link_label %}data-module-label="{{ click_stopper_link_label }}"
+       {% endif %}{% endif %}>{{ button }} <i class="fa-solid fa-arrow-right ms-2"></i></a>
+  </div>
+</div>

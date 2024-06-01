@@ -34,7 +34,7 @@ class TestOrgFTSIDAPI(org_group_base.OrgGroupBaseTest):
         new_org_dict = {
             'name': 'test_org_dd',
             'title': 'Test Org D',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -48,7 +48,7 @@ class TestOrgFTSIDAPI(org_group_base.OrgGroupBaseTest):
             'id': org_dict.get('id'),
             'name': 'test_org_dd',
             'title': 'Test Org DD',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -65,7 +65,7 @@ class TestOrgFTSIDAPI(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org D',
             'fts_id': '123456',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -163,7 +163,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org D',
             'fts_id': '123456',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'save': 'save'
@@ -189,7 +189,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             'id': org_dict.get('id'),
             'name': 'test_org_d',
             'title': 'Test Org E',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'save': 'save'
@@ -207,7 +207,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org E',
             'fts_id': '789',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'save': 'save'
@@ -240,7 +240,7 @@ class TestOrgUserSurveyUrlAPI(org_group_base.OrgGroupBaseTest):
         new_org_dict = {
             'name': 'test_org_dd',
             'title': 'Test Org D',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -254,7 +254,7 @@ class TestOrgUserSurveyUrlAPI(org_group_base.OrgGroupBaseTest):
             'id': org_dict.get('id'),
             'name': 'test_org_dd',
             'title': 'Test Org DD',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -271,7 +271,7 @@ class TestOrgUserSurveyUrlAPI(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org D',
             'user_survey_url': self.USER_SURVEY_URL,
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -372,7 +372,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org D',
             'user_survey_url': self.USER_SURVEY_URL,
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'save': 'save'
@@ -398,7 +398,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             'id': org_dict.get('id'),
             'name': 'test_org_d',
             'title': 'Test Org E',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'save': 'save'
@@ -418,7 +418,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org E',
             'user_survey_url': self.USER_SURVEY_UPDATED_URL,
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'save': 'save'
@@ -452,7 +452,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
         new_org_dict = {
             'name': 'test_org_dd',
             'title': 'Test Org D',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -467,7 +467,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
             'id': org_dict.get('id'),
             'name': 'test_org_dd',
             'title': 'Test Org DD',
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }
@@ -486,7 +486,7 @@ class TestClosedOrganizationAPI(org_group_base.OrgGroupBaseTest):
             'name': 'test_org_d',
             'title': 'Test Org D',
             'closed_organization': True,
-            'org_url': 'www.exampleorganization.org',
+            'org_url': 'https://www.exampleorganization.org',
             'description': 'just a simple description',
             'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1]
         }

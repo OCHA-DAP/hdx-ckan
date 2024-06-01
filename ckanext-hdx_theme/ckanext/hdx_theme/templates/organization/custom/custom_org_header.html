@@ -28,7 +28,7 @@
             {{ h.hdx_follow_button('group', org_meta.id, follow_extra_text=' ' ) }}
 
             {% if org_meta.allow_req_membership %}
-              <a href="{{ h.url_for('hdx_org_join.find_organisation') }}" class="">
+              <a href="{{ h.url_for('hdx_org_join.find_organisation', selected=org_meta.id) }}" class="">
                 {{ _("Request Membership") }}
               </a>
 

@@ -5,8 +5,8 @@
 
 .dataset-light {
   .nav-tabs {
-    margin: 0 -@gutterSmallSize;
-    padding: 0 @gutterSmallSize;
+    margin: 0 -(@gutterSmallSize);
+    padding: 0 (@gutterSmallSize);
   }
 
   .table-condensed > tbody > tr {
@@ -37,6 +37,7 @@
       margin-bottom: 3px;
       border: 1px solid @extraLightGrayColor;
       padding: 0;
+      width: 100%;
 
       &.in-review {
         opacity: 60%;
@@ -57,10 +58,12 @@
       }
 
       .resource-item-title {
-        padding: @resourceItemPadding;
         display: flex;
         flex-direction: row;
         align-items: center;
+        height: 1em;
+        flex-grow: 1;
+        padding-right: 5px;
         height: 40px;
       }
 
@@ -74,16 +77,17 @@
         }
       }
       .heading {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        flex-grow: 0;
+        width: calc(100% - 70px);
+        .resource-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
       .format-label {
         //transform: scale(0.6);
         position: initial;
-        min-width: 32px;
-        margin: 2px 0 0 -20px;
+        margin: 2px 0 0 -10px;
       }
 
       .content {
@@ -103,8 +107,8 @@
 
   .tab-content {
     background-color: #fafafa;
-    margin: 0 -@gutterSmallSize;
-    padding: 5px @gutterSmallSize 15px @gutterSmallSize;
+    margin: 0 -(@gutterSmallSize);
+    padding: 5px (@gutterSmallSize) 15px (@gutterSmallSize);
 
     .tab-pane-background {
       margin: @resourceItemPadding 0;

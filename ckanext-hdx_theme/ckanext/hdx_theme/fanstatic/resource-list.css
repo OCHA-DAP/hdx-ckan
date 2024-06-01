@@ -2,6 +2,17 @@
 .resource-list {
   list-style: none;
 }
+.resource-item .heading {
+  display: flex;
+}
+.resource-item .heading .resource-name {
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  margin-right: 5px;
+}
 .resource-item .update-date {
   margin-bottom: 7px;
 }

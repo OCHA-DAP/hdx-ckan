@@ -36,6 +36,13 @@
   font-size: 16px;
   margin-bottom: 8px;
 }
+.textarea-field__label-guideline {
+  color: #4B5563;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 22px;
+}
 .textarea-field__required {
   color: #F2645A;
   font-weight: 600;

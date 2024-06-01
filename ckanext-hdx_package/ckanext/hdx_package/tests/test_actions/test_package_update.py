@@ -28,7 +28,7 @@ organization = {
     'title': 'Hdx Test Org',
     'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
     'org_acronym': 'HTO',
-    'org_url': 'http://test-org.test',
+    'org_url': 'https://test-org.test',
     'description': 'This is a test organization',
     'users': [{'name': 'testsysadmin', 'capacity': 'admin'}, {'name': 'joeadmin', 'capacity': 'admin'}]
 }

@@ -1,0 +1,79 @@
+{% extends "landing_pages/page.html" %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE'] %}
+
+{% block subtitle %}{{ _('HDX HAPI Beta') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">{% link_for _('HAPI'), controller='hdx_landing_pages', action='hapi' %}</li>
+{% endblock %}
+
+{% block content %}
+  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx@un.org'), label=CONST.HERO_SECTION_LABEL, sections=sections, click_stopper_link_type='hapi jump nav', spacing_class="mb-5") }}
+
+  <div class="container">
+
+    <div class="row" id="data-coverage">
+      <div class="col-12 mx-auto my-5">
+        <div class="text-center mb-4">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.DATA_COVERAGE_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_COVERAGE_SECTION_DESCRIPTION.format('https://data.humdata.org/dashboards/overview-of-data-grids', 'https://humanitarianaction.info/document/global-humanitarian-overview-2024/article/response-plans-overview-2024'), paragraph_classes=["paragraph__text_font-size-medium", "mt-4"]) }}
+        </div>
+        <div class="row">
+          {% for card in data_coverage %}
+            <div class="col-6 col-sm-4 col-md-3 mb-3">
+              {{ h.snippet('bem.blocks/card.html', title=card.title, text=card.organization, badge=card.category, button='Learn more', link=card.link, click_stopper_link_type='hapi data coverage', click_stopper_link_label=card.title, card_classes=["bem-card_type-slim"]) }}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="mt-4">
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_COVERAGE_SECTION_PARAGRAPH.format('https://hdx-hapi.readthedocs.io/en/latest/', 'mailto:hdx@un.org'), paragraph_classes=["paragraph__text_font-size-medium"]) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="be-inspired">
+      <div class="col-12 mx-auto my-5">
+        <div class="text-center">
+          {{ h.snippet('bem.blocks/heading.html', title=CONST.BE_INSPIRED_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BE_INSPIRED_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-big"]) }}
+        </div>
+        <div class="row mt-4">
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, text=CONST.BE_INSPIRED_CARD_TEXT_POWER_BI, button=CONST.BE_INSPIRED_CARD_BUTTON_POWER_BI, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, spacing_class="my-3") }}
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_API, text=CONST.BE_INSPIRED_CARD_TEXT_API, button=CONST.BE_INSPIRED_CARD_BUTTON_API, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_API, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_API, spacing_class="my-3") }}
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, text=CONST.BE_INSPIRED_CARD_TEXT_VISUALIZATION, button=CONST.BE_INSPIRED_CARD_BUTTON_VISUALIZATION, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, spacing_class="my-3") }}
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 d-flex align-items-stretch">
+            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_CHATBOT, text=CONST.BE_INSPIRED_CARD_TEXT_CHATBOT, button=CONST.BE_INSPIRED_CARD_BUTTON_CHATBOT, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_CHATBOT, spacing_class="my-3") }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="faq">
+      <div class="col-12 mx-auto my-5">
+        {{ h.snippet('bem.blocks/heading.html', title=CONST.FAQ_SECTION_TITLE, heading_type=3) }}
+        {{ h.snippet('bem.blocks/faq.html', data=faq_data) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="py-5 background-color-snow">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <div class="text-center">
+            {{ h.snippet('bem.blocks/heading.html', title=CONST.PARTNERS_SECTION_TITLE, spacing_class="mb-5", heading_type=3) }}
+          </div>
+          {{ h.snippet('bem.blocks/partners.html', partners=partners) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

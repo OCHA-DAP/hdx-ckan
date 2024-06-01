@@ -1855,6 +1855,11 @@ ul.dataset-resources li + li.label-icons {
   font-weight: 400;
   font-size: 14px;
 }
+.sspRegular16 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
 .sspBold16 {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -1886,6 +1891,16 @@ ul.dataset-resources li + li.label-icons {
 }
 #homepage-alerts .flash-messages {
   background-color: transparent;
+}
+#homepage-alerts .paddingRowHack {
+  margin-left: 0;
+  margin-right: 0;
+}
+#homepage-alerts .paddingRowHack .paddingLeftHack {
+  padding-left: 0;
+}
+#homepage-alerts .paddingRowHack .paddingRightHack {
+  padding-right: 0;
 }
 /* END Style Bootstrap Flash messages*/
 /* Common Classes */
@@ -3334,11 +3349,11 @@ ul.list-horizontal li:first-child:before {
   line-height: 20px;
 }
 .hdx-footer .logo-gray {
-  height: 40px;
+  height: 30px;
   margin-bottom: 10px;
 }
 .hdx-footer .match-logo-margin {
-  margin-top: 50px;
+  margin-top: 40px;
 }
 @media (max-width: 768px) {
   .hdx-footer .match-logo-margin {
@@ -3346,7 +3361,7 @@ ul.list-horizontal li:first-child:before {
   }
 }
 .hdx-footer .other-services img {
-  max-height: 40px;
+  max-height: 30px;
   max-width: 100%;
 }
 .hdx-footer .other-services img.logo-hdx {
@@ -4288,13 +4303,12 @@ ul.list-horizontal li:first-child:before {
   display: block;
 }
 .hdxLogo .logo .logo-img {
-  background-image: url("/images/homepage/logo-hdx.svg");
+  background-image: url("/images/homepage/logo-hdx-accr-blk.svg");
   background-repeat: no-repeat;
-  background-size: 126px 31px;
+  background-position: left center;
   width: 126px;
-  height: 31px;
-  min-width: 126px;
-  min-height: 31px;
+  height: 30px;
+  margin-top: 1px;
 }
 /* END HDX Version display */
 /* HEADER Search Widget  */

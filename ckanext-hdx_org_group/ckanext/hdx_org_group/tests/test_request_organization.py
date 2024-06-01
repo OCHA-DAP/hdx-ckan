@@ -133,16 +133,16 @@ class TestRequestOrg(object):
         new_wrong_org_dict['data_already_available_link'] = 'www.no.com123'
         result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
         assert result.status_code == 200
-        assert result.body.count('Please provide a valid URL') == 2
+        assert result.body.count('Please provide a valid URL') == 0
 
         new_wrong_org_dict['website'] = 'http://www.no.com'
         new_wrong_org_dict['data_already_available_link'] = 'http://www.no.com'
         result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
         assert result.status_code == 200
-        assert result.body.count('Please provide a valid URL') == 2
+        assert result.body.count('Please provide a valid URL') == 0
 
         new_wrong_org_dict['website'] = 'no.com'
         new_wrong_org_dict['data_already_available_link'] = 'no.com'
         result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
         assert result.status_code == 200
-        assert result.body.count('Please provide a valid URL') == 2
+        assert result.body.count('Please provide a valid URL') == 0

@@ -1,0 +1,67 @@
+@import "bem_variables";
+
+.bem-card {
+  border-radius: 8px !important;
+  border: 1px solid @grey-extra-light-color !important;
+  box-shadow: 0 1px 4px 0 @grey-light-color;
+
+  &__body {
+    padding: 28px 32px;
+  }
+
+  &__title {
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    font-style: normal;
+    line-height: 28px;
+  }
+
+  &__text {
+    color: @black-color;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+
+  &__badge {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: 'Inter', sans-serif;
+    border-radius: 12px;
+    text-wrap: initial;
+
+    &.text-bg-info {
+      background-color: @cyan-light-color !important;
+    }
+  }
+
+  &__button {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: @blue-light-color;
+    text-decoration: none;
+
+    &:hover {
+      color: @blue-color;
+    }
+  }
+
+
+  &_type-slim {
+    border-radius: 0 !important;
+    border: 0 !important;
+    box-shadow: none;
+
+    .bem-card__body {
+      padding: 0;
+    }
+
+    .bem-card__title {
+      font-size: 18px;
+    }
+  }
+}

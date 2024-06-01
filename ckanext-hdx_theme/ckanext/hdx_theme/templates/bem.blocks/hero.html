@@ -1,0 +1,29 @@
+<div class="bem-hero py-5{% if spacing_class %} {{ spacing_class }}{% endif %}">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        {% if label %}
+          <p class="bem-hero__label text-uppercase mb-3">{{ label }}</p>
+        {% endif %}
+        <h1 class="bem-hero__title">{{ title }}</h1>
+        <h2 class="bem-hero__text py-4">{{ text|safe }}</h2>
+        {% if sections %}
+          <p class="bem-hero__sections text-uppercase mb-0">
+            {{ _('Jump to') }}:
+            {% for section in sections %}
+              <a href="{{ section.url }}" title="{{ section.name }}" class="px-1 px-md-3"
+                 {% if not section.url.startswith('#') %}target="_blank"{% endif %}
+                 {% if click_stopper_link_type %}data-module="hdx_click_stopper"
+                 data-module-link_type="{{ click_stopper_link_type }}"
+                 {% if click_stopper_link_label %}data-module-label="{{ click_stopper_link_label }}"
+                 {% endif %}{% endif %}>
+                {{ section.name }}{% if not section.url.startswith('#') %}
+                  <i class="fa-solid fa-arrow-up-right-from-square ms-2"></i>{% endif %}</a>{% if not loop.last %}
+              <span>|</span>{% endif %}
+            {% endfor %}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

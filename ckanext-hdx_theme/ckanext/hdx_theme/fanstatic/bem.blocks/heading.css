@@ -1,12 +1,17 @@
+.heading h1 {
+  font-size: 48px;
+}
+@media (max-width: 768px) {
+  .heading h1 {
+    font-size: 36px;
+  }
+}
+.heading h3 {
+  font-size: 30px;
+}
 .heading__title {
   color: #0F172A;
   line-height: 1.2;
-  font-size: 48px;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-}
-@media (max-width: 768px) {
-  .heading__title {
-    font-size: 36px;
-  }
 }

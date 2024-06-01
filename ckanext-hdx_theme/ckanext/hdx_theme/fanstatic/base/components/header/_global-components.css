@@ -1422,6 +1422,11 @@ ul.dataset-resources li + li.label-icons {
   font-weight: 400;
   font-size: 14px;
 }
+.sspRegular16 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
 .sspBold16 {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -1453,6 +1458,16 @@ ul.dataset-resources li + li.label-icons {
 }
 #homepage-alerts .flash-messages {
   background-color: transparent;
+}
+#homepage-alerts .paddingRowHack {
+  margin-left: 0;
+  margin-right: 0;
+}
+#homepage-alerts .paddingRowHack .paddingLeftHack {
+  padding-left: 0;
+}
+#homepage-alerts .paddingRowHack .paddingRightHack {
+  padding-right: 0;
 }
 /* END Style Bootstrap Flash messages*/
 /* Common Classes */

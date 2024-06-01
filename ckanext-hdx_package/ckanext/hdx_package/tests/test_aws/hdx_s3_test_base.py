@@ -115,7 +115,7 @@ class HDXS3TestBase(object):
         :rtype: str
         '''
         if create_org_and_group:
-            factories.Organization(name='test_owner_org', org_url='http://example.org/',
+            factories.Organization(name='test_owner_org', org_url='https://example.org/',
                                    hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
                                    users=[{'name': 'testsysadmin', 'capacity': 'admin'}]
                                    )
