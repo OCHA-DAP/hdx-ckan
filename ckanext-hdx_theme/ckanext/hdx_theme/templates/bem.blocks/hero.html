@@ -5,6 +5,9 @@
         {% if label %}
           <p class="bem-hero__label text-uppercase mb-3">{{ label }}</p>
         {% endif %}
+        {% if image %}
+          <img src="{{ image }}" class="img-fluid bem-hero__image mb-3" alt="hero image">
+        {% endif %}
         <h1 class="bem-hero__title">{{ title }}</h1>
         <h2 class="bem-hero__text py-4">{{ text|safe }}</h2>
         {% if sections %}

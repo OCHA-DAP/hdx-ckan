@@ -39,6 +39,9 @@
   font-size: 20px;
   line-height: 28px;
 }
+.bem-hero__image {
+  max-height: 50px;
+}
 .bem-hero__sections {
   color: #000;
   font-weight: 400;
