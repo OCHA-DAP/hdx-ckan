@@ -1,13 +1,12 @@
 CONSTANTS = {
-    'HERO_SECTION_TITLE': '''HDX Signals monitors key datasets and generates automated emails when significant, negative changes are detected''',
-    'HERO_SECTION_DESCRIPTION': '''HDX Signals is a new product. We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>''',
-    'HERO_SECTION_LABEL': '''HDX Signals''',
+    'HERO_SECTION_TITLE': '''A new product that monitors key datasets and generates automated emails when significant, negative changes are detected''',
+    'HERO_SECTION_DESCRIPTION': '''We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
     'DATA_COVERAGE_SECTION_DESCRIPTION': '''Datasets monitored by HDX signals at the moment are as follows:''',
 
     'SIGNUP_SECTION_TITLE': '''Sign up''',
-    'SIGNUP_SECTION_DESCRIPTION': '''Sign up below to receive HDX Signals emails. You must select specific datasets, plus regions and/or HRP countries, to receive content that you are interested in.''',
+    'SIGNUP_SECTION_DESCRIPTION': '''Sign up below to receive HDX Signals emails. To receive the content you are interested in, please make sure you have selected AT LEAST ONE dataset and region or priority humanitarian location from the options below.''',
 
     'RESOURCES_SECTION_TITLE': '''Resources''',
     'RESOURCES_SECTION_DESCRIPTION': '''For more information about the datasets monitored by HDX signals as well as information for developers see the following:''',
@@ -19,9 +18,9 @@ CONSTANTS = {
     'RESOURCES_CARD_BUTTON_LINK_MAP': '''https://baripembo.github.io/viz-hdx-signals/''',
 
     'RESOURCES_CARD_TITLE_DATASET': '''Download HDX Signals dataset on HDX''',
-    'RESOURCES_CARD_TEXT_DATASET': '''Preview or download the full HDX Signals dataset''',
+    'RESOURCES_CARD_TEXT_DATASET': '''Explore the full HDX Signals dataset''',
     'RESOURCES_CARD_BUTTON_DATASET': '''Learn more''',
-    'RESOURCES_CARD_BUTTON_LINK_DATASET': '''#''',
+    'RESOURCES_CARD_BUTTON_LINK_DATASET': '''https://data.humdata.org/dataset/hdx-signals''',
 
     'RESOURCES_CARD_TITLE_METHODOLOGY': '''Methodology''',
     'RESOURCES_CARD_TEXT_METHODOLOGY': '''Read the HDX Signals methodology''',
@@ -50,7 +49,7 @@ DATA_COVERAGE_CONSTANTS = [
         "link": "https://data.humdata.org/organization/acled"
     },
     {
-        "title": "Food security",
+        "title": "Food insecurity",
         "organization": "the Integrated Food Security Phase Classification (IPC)",
         "link": "https://data.humdata.org/dataset/global-acute-food-insecurity-country-data"
     },
@@ -60,15 +59,15 @@ DATA_COVERAGE_CONSTANTS = [
         "link": "https://data.humdata.org/organization/international-displacement-monitoring-centre-idmc"
     },
     {
-        "title": "Market monitor",
+        "title": "Market monitoring",
         "organization": "World Food Programme (WFP)",
-        "link": "https://data.humdata.org/organization/wfp"
+        "link": "https://data.humdata.org/datasets/global-market-monitor"
     },
 ]
 
 SECTIONS_CONSTANTS = [
-    {'name': 'Data Coverage', 'url': '#data-coverage'},
     {'name': 'Signup', 'url': '#signup'},
+    {'name': 'Data Coverage', 'url': '#data-coverage'},
     {'name': 'Signals map', 'url': 'https://baripembo.github.io/viz-hdx-signals/'},
     {'name': 'Resources', 'url': '#resources'},
     {'name': 'FAQ', 'url': '#faq'},
