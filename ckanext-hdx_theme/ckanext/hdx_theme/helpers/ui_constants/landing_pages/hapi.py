@@ -1,7 +1,6 @@
 CONSTANTS = {
     'HERO_SECTION_TITLE': '''The HDX Humanitarian API (HAPI) is a way to access standardised indicators from multiple sources to automate workflows and visualisations''',
     'HERO_SECTION_DESCRIPTION': '''HAPI is in beta phase, and we are seeking feedback. To share your thoughts or join our Slack channel, send an email to <a href="{0}" title="Contact us">hdx@un.org</a>.''',
-    'HERO_SECTION_LABEL': '''HDX HAPI Beta''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
     'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HAPI covers 57 indicators across 22 countries with a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>.''',
