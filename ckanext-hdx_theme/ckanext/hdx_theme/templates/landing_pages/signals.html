@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block content %}
-  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org'), image='/images/landing_pages/logo_hdx_signals.png', sections=sections, click_stopper_link_type='signals jump nav', spacing_class="mb-5") }}
+  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org'), image='/images/landing_pages/logo_hdx_signals.png', sections=sections, click_stopper_link_type='signals jump nav', spacing_class="mb-3") }}
 
   <div class="container">
 
     <div class="row" id="signup">
-      <div class="col-12 mx-auto my-5">
+      <div class="col-12 mx-auto my-3">
         <div class="text-center mb-4">
           {{ h.snippet('bem.blocks/heading.html', title=CONST.SIGNUP_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
           <div class="row">
@@ -349,7 +349,7 @@
     </div>
 
     <div class="row" id="data-coverage">
-      <div class="col-12 mx-auto my-5">
+      <div class="col-12 mx-auto my-3">
         <div class="text-center mb-4">
           {{ h.snippet('bem.blocks/heading.html', title=CONST.DATA_COVERAGE_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
           {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_COVERAGE_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-medium", "mt-4"]) }}
@@ -365,7 +365,7 @@
     </div>
 
     <div class="row" id="resources">
-      <div class="col-12 mx-auto my-5">
+      <div class="col-12 mx-auto my-3">
         <div class="text-center">
           {{ h.snippet('bem.blocks/heading.html', title=CONST.RESOURCES_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
           {{ h.snippet('bem.blocks/paragraph.html', text=CONST.RESOURCES_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-big"]) }}
@@ -391,14 +391,14 @@
     </div>
 
     <div class="row" id="faq">
-      <div class="col-12 mx-auto my-5">
+      <div class="col-12 mx-auto my-3">
         {{ h.snippet('bem.blocks/heading.html', title=CONST.FAQ_SECTION_TITLE, heading_type=3) }}
         {{ h.snippet('bem.blocks/faq.html', data=faq_data) }}
       </div>
     </div>
   </div>
 
-  <div class="py-5 background-color-snow">
+  <div class="py-5 background-color-snow mt-3">
     <div class="container">
       <div class="row">
         <div class="col-12 mx-auto">

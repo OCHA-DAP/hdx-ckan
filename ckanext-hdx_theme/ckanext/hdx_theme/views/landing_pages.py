@@ -72,5 +72,5 @@ def signals():
     return render('landing_pages/signals.html', extra_vars=template_data)
 
 
-# hdx_landing_pages.add_url_rule(u'/hapi/', view_func=hapi, strict_slashes=False)
-# hdx_landing_pages.add_url_rule(u'/signals/', view_func=signals, strict_slashes=False)
+hdx_landing_pages.add_url_rule(u'/hapi/', view_func=hapi, strict_slashes=False)
+hdx_landing_pages.add_url_rule(u'/signals/', view_func=signals, strict_slashes=False)
