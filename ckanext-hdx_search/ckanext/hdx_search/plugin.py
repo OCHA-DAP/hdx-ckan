@@ -116,6 +116,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                     elif int(search_params['extras'][req_param]) == 0:
                         search_params['fq'] += fq_filter_0
             except Exception as ex:
+                log.error(f'Problem parsing param_name "{param_name}": {ex}')
                 raise NotFound('Wrong parameter value for fq')
 
         # If indicator flag is set, search only that type

@@ -94,7 +94,10 @@ def generic_search(html_template):
 
     search_logic = SearchLogic()
 
-    search_logic._search(use_solr_collapse=True)
+    try:
+        search_logic._search(use_solr_collapse=True)
+    except NotFound as ex:
+        abort(404, _('Page not found'))
 
     archived_url_helper = search_logic.add_archived_url_helper()
     redirect_result = archived_url_helper.redirect_if_needed()
