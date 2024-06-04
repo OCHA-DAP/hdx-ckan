@@ -418,8 +418,10 @@ def ckan_before_request() -> Optional[Response]:
         # eg "organization.edit" -> "group.edit", or custom dataset types
         endpoint = request.endpoint or ""
         view = current_app.view_functions.get(endpoint)
-        dest = f"{view.__module__}.{view.__name__}"     # type: ignore
-        csrf.exempt(dest)
+        # Changed by HDX based on https://github.com/ckan/ckan/pull/7616
+        if view:
+            dest = f"{view.__module__}.{view.__name__}"     # type: ignore
+            csrf.exempt(dest)
 
     # Set the csrf_field_name so we can use it in our templates
     g.csrf_field_name = config.get("WTF_CSRF_FIELD_NAME")
