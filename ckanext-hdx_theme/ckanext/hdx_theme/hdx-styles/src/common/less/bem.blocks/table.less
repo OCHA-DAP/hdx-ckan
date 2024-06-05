@@ -1,0 +1,80 @@
+@import "bem_variables";
+
+.bem-table {
+
+  &__thead {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    color: @black-color;
+  }
+
+  &__tbody {
+    font-size: 18px;
+    line-height: 24px;
+    color: @black-color;
+  }
+
+  &__cell {
+
+    a {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: @blue-light-color;
+    }
+  }
+
+  &_state_bordered {
+    border: 1px solid @grey-extra-light-color;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px 0 @grey-light-color;
+
+    @media (max-width: @breakpoint-md) {
+      border: 0;
+      border-radius: 0;
+      box-shadow: unset;
+    }
+
+    .bem-table__thead,
+    .bem-table__tbody {
+      .bem-table__row {
+        .row {
+          > * {
+            border-bottom: 1px solid @grey-extra-light-color;
+            border-right: 1px solid @grey-extra-light-color;
+
+            &:last-child {
+              border-right: 0;
+            }
+
+            @media (max-width: @breakpoint-md) {
+              border-bottom: 0;
+              border-right: 0;
+            }
+
+          }
+        }
+
+        @media (max-width: @breakpoint-md) {
+          border: 1px solid @grey-extra-light-color;
+          border-radius: 8px;
+          box-shadow: 0 1px 4px 0 @grey-light-color;
+          padding: 28px 32px;
+        }
+      }
+
+      &.bem-table__tbody {
+        .bem-table__row {
+          &:last-child {
+            .row {
+              > * {
+                border-bottom: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
