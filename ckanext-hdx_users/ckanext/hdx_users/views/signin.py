@@ -1,6 +1,6 @@
 from typing import Union, Any, Optional, Mapping
 from urllib.parse import quote
-
+import logging
 from flask import Blueprint, Response
 
 from ckan.common import session
@@ -17,6 +17,8 @@ import ckanext.hdx_users.helpers.tokens as tokens
 
 
 hdx_signin = Blueprint(u'hdx_signin', __name__, url_prefix=u'/')
+
+log = logging.getLogger(__name__)
 
 abort = tk.abort
 render = tk.render
@@ -130,9 +132,11 @@ def login() -> Union[Response, str]:
             session['from_login'] = True
             res = next_page_or_default(next)
             _remember_user_for_next_signin(res, user_obj)
+            log.warning(f'Login succeeded for: {username_or_email}')
             return res
         else:
             extra_vars['error_message'] = _(u"Login failed. Bad username or password.")
+            log.warning(f'Login failed for: {username_or_email} .  Bad username or password.')
             return render("user/signin.html", extra_vars=extra_vars)
 
     info_message_type = request.args.get('info_message_type')
