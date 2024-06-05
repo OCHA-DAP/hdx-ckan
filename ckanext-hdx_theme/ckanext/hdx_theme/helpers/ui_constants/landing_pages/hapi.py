@@ -17,7 +17,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_TITLE_API': '''API Sandbox''',
     'BE_INSPIRED_CARD_TEXT_API': '''A sandbox environment to help construct queries and get a data response.''',
     'BE_INSPIRED_CARD_BUTTON_API': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_API': '''https://stage.hapi-humdata-org.ahconu.org/docs#/Locations%20and%20Administrative%20Divisions/get_locations_api_v1_metadata_location_get''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_API': '''https://hapi.humdata.org/docs#/Metadata/get_locations_api_v1_metadata_location_get''',
 
     'BE_INSPIRED_CARD_TITLE_VISUALIZATION': '''Visualisation''',
     'BE_INSPIRED_CARD_TEXT_VISUALIZATION': '''A dashboard with a selection of key figures, charts and a map for all countries in HDX HAPI.''',
@@ -29,7 +29,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_BUTTON_CHATBOT': '''Learn more''',
     'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''#''',
 
-    'FAQ_SECTION_TITLE': '''FAQ''',
+    'FAQ_SECTION_TITLE': '''FAQs''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
