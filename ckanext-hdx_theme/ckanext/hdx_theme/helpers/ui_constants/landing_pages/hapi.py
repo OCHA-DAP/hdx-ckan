@@ -29,7 +29,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_BUTTON_CHATBOT': '''Learn more''',
     'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''#''',
 
-    'FAQ_SECTION_TITLE': '''FAQ''',
+    'FAQ_SECTION_TITLE': '''FAQs''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
