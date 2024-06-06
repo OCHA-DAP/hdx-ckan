@@ -24,12 +24,12 @@ def hapi():
     data = fw.faq_for_category(wp_category_terms)
 
     partners = [
-        ('european_comission', 'European Commission'),
         ('acled', 'ACLED'),
         ('inform', 'INFORM'),
-        ('ipc', 'IPC'),
+        ('fts', 'FTS'),
         ('unfpa', 'UNFPA'),
         ('ophi', 'OPHI'),
+        ('fsnwg', 'FSNWG'),
         ('unchr', 'UNHCR'),
         ('ocha', 'OCHA'),
         ('wfp', 'WFP')
