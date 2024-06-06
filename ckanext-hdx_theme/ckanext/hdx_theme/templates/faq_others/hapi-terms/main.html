@@ -1,0 +1,49 @@
+{% extends "faq_others/faq/main.html" %}
+
+{% block subtitle %}{{ _("HAPI Terms of Service") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active">{{ h.nav_link(_('HAPI TERMS OF SERVICE'), named_route='hdx_faqs.read', category='hapi-terms') }}</li>
+{% endblock %}
+
+{% block pre_primary %}
+  <div class="row">
+    <div class="col-12">
+      <div class="top-banner top-banner-terms">
+        <div class="top-banner-text-wrapper">
+          <div class="top-banner-title">
+            {{ _('HAPI Terms of Service') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block primary %}
+  <div class="row mTop60">
+    <div class="col-12">
+      <div id="body-about-hdx" class="section-flag" style="">HAPI Terms of Service</div>
+      <p class="mTop10">
+        By using the HDX HAPI, you acknowledge that you have read, understood, and agreed to these terms of service.
+      </p>
+    </div>
+  </div>
+  {% snippet 'faq_others/questions_sections.html', data=data.faq_data %}
+{% endblock %}
+
+{% block secondary %}
+  <div id="hdx-faq-sidebar-wrapper" class="mTop60">
+    <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+      <p>
+        {% snippet 'faq_others/faq/search.html' %}
+      </p>
+    </div>
+  </div>
+{% endblock %}
+
+
+{%- block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/faq-scripts' %}
+{% endblock %}
