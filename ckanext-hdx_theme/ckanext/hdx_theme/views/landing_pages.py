@@ -2,7 +2,7 @@ import logging
 import flask
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
-from ckan.common import config
+from ckanext.hdx_theme.views.faqs import read as faq_read
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.hapi import \
     DATA_COVERAGE_CONSTANTS as HAPI_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as HAPI_SECTIONS_CONSTANTS
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
@@ -13,6 +13,7 @@ g = tk.g
 check_access = tk.check_access
 get_action = tk.get_action
 render = tk.render
+config = tk.config
 
 log = logging.getLogger(__name__)
 
@@ -47,6 +48,10 @@ def hapi():
     return render('landing_pages/hapi.html', extra_vars=template_data)
 
 
+def hapi_terms():
+    return faq_read('hapi-terms')
+
+
 def signals():
     wp_category_terms = config.get('hdx.wordpress.category.signals')
     data = fw.faq_for_category(wp_category_terms)
@@ -73,4 +78,5 @@ def signals():
 
 
 hdx_landing_pages.add_url_rule(u'/hapi/', view_func=hapi, strict_slashes=False)
+hdx_landing_pages.add_url_rule(u'/hapi/terms/', view_func=hapi_terms, strict_slashes=False)
 hdx_landing_pages.add_url_rule(u'/signals/', view_func=signals, strict_slashes=False)
