@@ -142,6 +142,7 @@ bem-blocks-styles:
     - bem.blocks/form_button.css
     - bem.blocks/account_options.css
     - bem.blocks/info_box.css
+    - bem.blocks/table.css
     - bem.blocks/select2_field.css
     - bem.blocks/textarea_field.css
 
@@ -347,11 +348,15 @@ onboarding-bulk-user-styles:
       - hdx_theme/onboarding-done-styles
       - hdx_theme/onboarding-select-org-styles
       - hdx_theme/onboarding-survey-styles
+  contents:
+    - css/empty.css
 
 onboarding-bulk-user-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
+  contents:
+    - css/empty.css
 
 onboarding-bulk-user-complete-onboarding-scripts:
   extra:
@@ -360,6 +365,8 @@ onboarding-bulk-user-complete-onboarding-scripts:
       - hdx_theme/onboarding-follow-scripts
       - hdx_theme/onboarding-invite-scripts
       - hdx_theme/onboarding-select-org-scripts
+  contents:
+    - css/empty.css
 
 onboarding-bulk-anon-styles:
   extra:
@@ -367,12 +374,17 @@ onboarding-bulk-anon-styles:
       - hdx_theme/onboarding-styles
       - hdx_theme/onboarding-verify-styles
       - hdx_theme/onboarding-survey-styles
+  contents:
+    - css/empty.css
+
 
 onboarding-bulk-anon-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
       - hdx_theme/onboarding-password-scripts
+  contents:
+    - css/empty.css
 
 onboarding-verify-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-verify-styles.css
@@ -664,6 +676,8 @@ dataset-read-styles:
       - hdx_theme/group-message-styles
       - requestdata/main-styles
       - hdx_theme/resource-list-styles
+  contents:
+    - css/empty.css
 
 dataset-light-scripts:
   <<: *common-js
@@ -1006,6 +1020,8 @@ country-topline-scripts:
       - hdx_theme/country-scripts
       - hdx_theme/charting-scripts
       # this should not load here - hdx_theme/homepage-scripts
+  contents:
+    - css/empty.css
 
 country-topline-styles:
   output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
@@ -1084,6 +1100,8 @@ group-form-scripts:
     preload:
       - hdx_theme/ckan
       - hdx_theme/organization-form-styles
+  contents:
+    - css/empty.css
 
 group-list-scripts:
   <<: *common-js
@@ -1338,6 +1356,8 @@ group-message-styles:
 
 dataviz-scripts:
   output: ckanext-hdx_theme/%(version)s_dataviz-scripts.js
+  contents:
+    - css/empty.css
 
 dataviz-styles:
   output: ckanext-hdx_theme/%(version)s_dataviz-styles.css

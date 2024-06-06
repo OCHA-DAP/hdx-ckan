@@ -4,7 +4,7 @@
 .bem-hero__title {
   color: #000;
   font-weight: 400;
-  font-family: 'Gotham-Bold', sans-serif;
+  font-family: 'Gotham-Book', sans-serif;
   font-size: 48px;
   line-height: 48px;
 }
@@ -40,7 +40,7 @@
   line-height: 28px;
 }
 .bem-hero__image {
-  max-height: 50px;
+  max-height: 45px;
 }
 .bem-hero__sections {
   color: #000;

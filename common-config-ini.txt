@@ -376,6 +376,7 @@ hdx.wordpress.category.devs=568
 hdx.wordpress.category.terms=577
 hdx.wordpress.category.licenses=581
 hdx.wordpress.category.hapi=597
+hdx.wordpress.category.hapi-terms=599
 hdx.wordpress.category.signals=595
 
 # HDX http headers

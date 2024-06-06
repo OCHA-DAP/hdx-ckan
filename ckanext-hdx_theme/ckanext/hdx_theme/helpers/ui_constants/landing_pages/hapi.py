@@ -1,11 +1,10 @@
 CONSTANTS = {
     'HERO_SECTION_TITLE': '''The HDX Humanitarian API (HAPI) is a way to access standardised indicators from multiple sources to automate workflows and visualisations''',
-    'HERO_SECTION_DESCRIPTION': '''HAPI is in beta phase, and we are seeking feedback. To share your thoughts or join our Slack channel, send an email to <a href="{0}" title="Contact us">hdx@un.org</a>.''',
-    'HERO_SECTION_LABEL': '''HDX HAPI Beta''',
+    'HERO_SECTION_DESCRIPTION': '''HDX HAPI is in beta phase, and we are seeking feedback. To share your thoughts or join our slack channel, send an email to <a href="{0}" title="Contact us">hdx@un.org</a>.''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
-    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HAPI covers 57 indicators across 22 countries with a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>.''',
-    'DATA_COVERAGE_SECTION_PARAGRAPH': '''Refer to the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HAPI - The Humanitarian API">documentation</a> for the latest coverage. <a href="{1}" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="Contact us">Contact us</a> to request additional indicators in future versions of HAPI.''',
+    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 10 sub-categories. Our beta version of HDX HAPI covers 44 indicators across 25 locations that have a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>. This data has been shared by 9 different contributing organisations.''',
+    'DATA_COVERAGE_SECTION_PARAGRAPH': '''Refer to the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HAPI - The Humanitarian API">documentation</a> for the latest coverage. <a href="{1}" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="Contact us">Contact us</a> to request additional indicators in future versions of HDX HAPI.''',
 
     'BE_INSPIRED_SECTION_TITLE': '''Be Inspired''',
     'BE_INSPIRED_SECTION_DESCRIPTION': '''Take a look at visualisations and code examples''',
@@ -13,24 +12,24 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_TITLE_POWER_BI': '''Power BI workflow''',
     'BE_INSPIRED_CARD_TEXT_POWER_BI': '''A tutorial to demonstrate how easy it is to bring in data.''',
     'BE_INSPIRED_CARD_BUTTON_POWER_BI': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''#''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''https://docs.google.com/presentation/d/19HfMI9gnKXAMhe0SFZdbbUFesNnTnfeUI9rnshN2kkk/edit?usp=sharing''',
 
     'BE_INSPIRED_CARD_TITLE_API': '''API Sandbox''',
     'BE_INSPIRED_CARD_TEXT_API': '''A sandbox environment to help construct queries and get a data response.''',
     'BE_INSPIRED_CARD_BUTTON_API': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_API': '''https://stage.hapi-humdata-org.ahconu.org/docs#/Locations%20and%20Administrative%20Divisions/get_locations_api_v1_metadata_location_get''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_API': '''https://hapi.humdata.org/docs''',
 
     'BE_INSPIRED_CARD_TITLE_VISUALIZATION': '''Visualisation''',
-    'BE_INSPIRED_CARD_TEXT_VISUALIZATION': '''A dashboard with a selection of key figures, charts and a map for all countries in HAPI.''',
+    'BE_INSPIRED_CARD_TEXT_VISUALIZATION': '''A dashboard with a selection of key figures, charts and a map for all countries in HDX HAPI.''',
     'BE_INSPIRED_CARD_BUTTON_VISUALIZATION': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION': '''#''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION': '''https://ocha-dap.github.io/hdx-hapi-example''',
 
     'BE_INSPIRED_CARD_TITLE_CHATBOT': '''Chatbot''',
     'BE_INSPIRED_CARD_TEXT_CHATBOT': '''An early stage AI chatbot developed with DataKind to ask questions about the data.''',
     'BE_INSPIRED_CARD_BUTTON_CHATBOT': '''Learn more''',
     'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''#''',
 
-    'FAQ_SECTION_TITLE': '''FAQ''',
+    'FAQ_SECTION_TITLE': '''FAQs''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
@@ -38,63 +37,63 @@ CONSTANTS = {
 DATA_COVERAGE_CONSTANTS = [
     {
         "category": "Affected People",
-        "title": "Humanitarian Needs Overview",
-        "organization": "OCHA offices",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Humanitarian Needs",
+        "contributor": "OCHA offices",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/affected_people/#humanitarian-needs"
     },
     {
         "category": "Affected People",
-        "title": "Refugees and Persons of Concern",
-        "organization": "UNHCR",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Refugees and Persons of Concern",
+        "contributor": "UN Refugee Agency (UNHCR)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/affected_people/#refugees-persons-of-concern"
     },
     {
         "category": "Coordination & Context",
-        "title": "3W",
-        "organization": "OCHA offices",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Conflict Events",
+        "contributor": "The Armed Conflict Location & Event Data Project (ACLED)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#conflict-events"
     },
     {
         "category": "Coordination & Context",
-        "title": "Conflict Events",
-        "organization": "The Armed Conflict Location & Event Data Project (ACLED)",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Funding",
+        "contributor": "OCHA Financial Tracking System (FTS)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#funding"
     },
     {
         "category": "Coordination & Context",
-        "title": "Funding",
-        "organization": "OCHA Financial Tracking System (FTS)",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "National Risk",
+        "contributor": "INFORM",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#national-risk"
     },
     {
         "category": "Coordination & Context",
-        "title": "National Risk",
-        "organization": "INFORM",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Who is Doing What Where - Operational Presence",
+        "contributor": "OCHA offices",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#operational-presence"
     },
     {
         "category": "Food Security & Nutrition",
-        "title": "Food Security",
-        "organization": "IPC",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Food Prices",
+        "contributor": "World Food Programme (WFP)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/food_security_and_nutrition/#food-prices"
     },
     {
         "category": "Food Security & Nutrition",
-        "title": "Food Prices",
-        "organization": "WFP",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Food Security",
+        "contributor": "Food Security and Nutrition Working Group, West and Central Africa",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/food_security_and_nutrition/#food-security"
     },
     {
         "category": "Population & Socio-economy",
-        "title": "Population",
-        "organization": "United Nations Population Fund (UNFPA) and OCHA offices",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Population",
+        "contributor": "United Nations Population Fund (UNFPA) and OCHA offices",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/population_and_socio-economy/#baseline-population"
     },
     {
         "category": "Population & Socio-economy",
-        "title": "Poverty Rate",
-        "organization": "OPHI",
-        "link": "https://docs.google.com/document/d/1phLaYU905R9oKqO5C4e5tQ8LTb1fv-MKkbGgONhCVGI/edit?usp=sharing"
+        "subcategory": "Poverty Rate",
+        "contributor": "The Oxford Poverty and Human Development Initiative (OPHI)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/population_and_socio-economy/#poverty-rate"
     }
 ]
 

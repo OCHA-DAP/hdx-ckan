@@ -32,7 +32,7 @@ CONSTANTS = {
     'RESOURCES_CARD_BUTTON_REPOSITORY': '''Learn more''',
     'RESOURCES_CARD_BUTTON_LINK_REPOSITORY': '''https://github.com/OCHA-DAP/hdx-signals''',
 
-    'FAQ_SECTION_TITLE': '''FAQ''',
+    'FAQ_SECTION_TITLE': '''FAQs''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
