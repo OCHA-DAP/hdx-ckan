@@ -15,7 +15,7 @@ CONSTANTS = {
     'RESOURCES_CARD_TITLE_MAP': '''Signals Map''',
     'RESOURCES_CARD_TEXT_MAP': '''See a visualiziation of present and historic Signals''',
     'RESOURCES_CARD_BUTTON_MAP': '''Learn more''',
-    'RESOURCES_CARD_BUTTON_LINK_MAP': '''https://baripembo.github.io/viz-hdx-signals/''',
+    'RESOURCES_CARD_BUTTON_LINK_MAP': '''https://data.humdata.org/visualization/signals/''',
 
     'RESOURCES_CARD_TITLE_DATASET': '''Download HDX Signals dataset on HDX''',
     'RESOURCES_CARD_TEXT_DATASET': '''Explore the full HDX Signals dataset''',
@@ -68,7 +68,7 @@ DATA_COVERAGE_CONSTANTS = [
 SECTIONS_CONSTANTS = [
     {'name': 'Signup', 'url': '#signup'},
     {'name': 'Data Coverage', 'url': '#data-coverage'},
-    {'name': 'Signals map', 'url': 'https://baripembo.github.io/viz-hdx-signals/'},
+    {'name': 'Signals map', 'url': 'https://data.humdata.org/visualization/signals/'},
     {'name': 'Resources', 'url': '#resources'},
     {'name': 'FAQ', 'url': '#faq'},
 ]
