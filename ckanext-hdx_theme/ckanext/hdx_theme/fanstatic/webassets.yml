@@ -2,7 +2,7 @@ common-js: &common-js
   filters: rjsmin
 
 common-css: &common-css
-  filters: cssrewrite
+  filters: cssrewrite, rcssmin
 
 ckan:
   <<: *common-js
@@ -64,12 +64,12 @@ page-styles:
   extra:
     preload:
       - vendor/select2-css
-      - hdx_theme/banner-styles
   contents:
     - page-common-styles
     - base/base.css
     - base/header.css
     - search-styles
+    - banner-styles
 
 page-light-scripts:
   output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
@@ -87,15 +87,16 @@ page-light-styles:
   extra:
     preload:
       - vendor/select2-css
-      - hdx_theme/banner-styles
   contents:
     - page-common-styles
     - light/page-light.css
     - search-styles
+    - banner-styles
     - adaptive-page-styles
 
 adaptive-page-styles:
   output: ckanext-hdx_theme/%(version)s_adaptive-page-styles.css
+  <<: *common-css
   contents:
     - light/adaptive-page.css
 
@@ -109,6 +110,7 @@ page-extra-light-styles:
 
 select2-4-styles:
   output: ckanext-hdx_theme/%(version)s_select2-4.css
+  <<: *common-css
   filters: cssrewrite
   contents:
     - vendor/select2-4/select2.min.css
@@ -183,7 +185,6 @@ search-scripts:
   extra:
     preload:
       - hdx_theme/jquery-extra
-      - hdx_theme/search-styles
       - hdx_theme/hdx-show-more
   contents:
     - search_/minisearch.min.js
@@ -194,12 +195,13 @@ search-scripts:
     - search_/search.js
 
 search-styles:
-  output: ckanext-hdx_theme/%(version)s_search-styles.css
+  <<: *common-css
   contents:
     - search_/search.css
 
 search-light-styles:
   output: ckanext-hdx_theme/%(version)s_search-light-styles.css
+  <<: *common-css
   contents:
     - light/search/search-light.css
 
@@ -211,6 +213,7 @@ search-box-scripts:
 
 custom-org-styles:
   output: ckanext-hdx_theme/%(version)s_base-org-styles.css
+  <<: *common-css
   contents:
     - organization_/base/organization.css
 
@@ -244,12 +247,14 @@ custom-org-creation-scripts:
 
 custom-org-search-facets-styles:
   output: ckanext-hdx_theme/%(version)s_custom-org-search-facets-styles.css
+  <<: *common-css
   contents:
     - search_/facets/facets.css
 
 
 jquery-extra:
   output: ckanext-hdx_theme/%(version)s_jquery-extra.js
+  <<: *common-js
   extra:
     preload:
       - hdx_theme/ckan
@@ -279,6 +284,7 @@ popup-scripts:
 
 popup-styles:
   output: ckanext-hdx_theme/%(version)s_popup-styles.css
+  <<: *common-css
   contents:
     - widget/popup/popup.css
     - widget/loading/loading.css
@@ -295,6 +301,7 @@ popup-embed-scripts:
 
 popup-embed-styles:
   output: ckanext-hdx_theme/%(version)s_popup-embed-styles.css
+  <<: *common-css
   contents:
     - widget/popup/popup-embed.css
 
@@ -310,6 +317,7 @@ popup-hxl-scripts:
 
 popup-hxl-styles:
   output: ckanext-hdx_theme/%(version)s_popup-hxl-styles.css
+  <<: *common-css
   contents:
     - widget/popup/popup-hxl.css
 
@@ -319,18 +327,14 @@ onboarding-scripts:
   extra:
     preload:
       - hdx_theme/ckan
-      - hdx_theme/onboarding-styles
   contents:
     - widget/onboarding/onboarding.js
     - widget/onboarding/signup.js
     - popup-scripts
 
 onboarding-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-styles.css
-  extra:
-    preload:
-      - hdx_theme/popup-styles
   contents:
+    - popup-styles
     - widget/onboarding/onboarding.css
     - widget/onboarding/two-column.css
     - widget/onboarding/notification.css
@@ -339,24 +343,21 @@ onboarding-styles:
     - widget/onboarding/signup.css
 
 onboarding-bulk-user-styles:
-  extra:
-    preload:
-      - hdx_theme/onboarding-styles
-      - hdx_theme/onboarding-registered-styles
-      - hdx_theme/onboarding-follow-styles
-      - hdx_theme/onboarding-invite-styles
-      - hdx_theme/onboarding-done-styles
-      - hdx_theme/onboarding-select-org-styles
-      - hdx_theme/onboarding-survey-styles
+  output: ckanext-hdx_theme/%(version)s_onboarding-user.css
   contents:
-    - css/empty.css
+    - onboarding-styles
+    - onboarding-registered-styles
+    - onboarding-follow-styles
+    - onboarding-invite-styles
+    - onboarding-done-styles
+    - onboarding-select-org-styles
+    - onboarding-survey-styles
 
+  
 onboarding-bulk-user-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
-  contents:
-    - css/empty.css
 
 onboarding-bulk-user-complete-onboarding-scripts:
   extra:
@@ -365,38 +366,28 @@ onboarding-bulk-user-complete-onboarding-scripts:
       - hdx_theme/onboarding-follow-scripts
       - hdx_theme/onboarding-invite-scripts
       - hdx_theme/onboarding-select-org-scripts
-  contents:
-    - css/empty.css
 
 onboarding-bulk-anon-styles:
-  extra:
-    preload:
-      - hdx_theme/onboarding-styles
-      - hdx_theme/onboarding-verify-styles
-      - hdx_theme/onboarding-survey-styles
+  output: ckanext-hdx_theme/%(version)s_onboarding-anon.css
   contents:
-    - css/empty.css
-
+    - onboarding-styles
+    - onboarding-verify-styles
+    - onboarding-survey-styles
 
 onboarding-bulk-anon-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
       - hdx_theme/onboarding-password-scripts
-  contents:
-    - css/empty.css
 
 onboarding-verify-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-verify-styles.css
+  <<: *common-css
   contents:
     - widget/onboarding/verify.css
 
 onboarding-password-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-password-scripts.js
-  extra:
-    preload:
-      - hdx_theme/onboarding-password-styles
   contents:
     - widget/onboarding/forgot-password.js
     - widget/onboarding/recover.js
@@ -410,29 +401,30 @@ onboarding-perform-reset-scripts:
 
 onboarding-password-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-password-styles.css
-  extra:
-    preload:
-      - hdx_theme/onboarding-verify-styles
   contents:
+    - onboarding-styles
+    - onboarding-verify-styles
     - widget/onboarding/forgot-password.css
     - widget/onboarding/recover.css
 
 onboarding-perform-reset-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-perform-reset-styles.css
   extra:
     preload:
       - hdx_theme/popup-styles
-      - hdx_theme/onboarding-password-styles
   contents:
+    - onboarding-password-styles
     - widget/onboarding/perform-reset.css
 
 onboarding-done-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-done-styles.css
   contents:
     - widget/onboarding/done.css
 
 onboarding-survey-styles:
-  output: ckanext-hdx_theme/%(version)s_onboarding-survey-styles.css
+  <<: *common-css
   contents:
     - widget/onboarding/survey.css
 
@@ -447,6 +439,7 @@ onboarding-follow-scripts:
     - widget/onboarding/follow.js
 
 onboarding-follow-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-follow-styles.css
   contents:
     - widget/onboarding/follow.css
@@ -461,6 +454,7 @@ onboarding-invite-scripts:
     - widget/onboarding/invite.js
 
 onboarding-invite-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-invite-styles.css
   contents:
     - widget/onboarding/invite.css
@@ -476,6 +470,7 @@ onboarding-register-scripts:
     - widget/onboarding/register.js
 
 onboarding-register-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-register-styles.css
   contents:
     - widget/onboarding/register.css
@@ -490,6 +485,7 @@ onboarding-registered-scripts:
     - widget/onboarding/registered.js
 
 onboarding-registered-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-registered-styles.css
   contents:
     - widget/onboarding/registered.css
@@ -505,16 +501,21 @@ onboarding-select-org-scripts:
     - widget/onboarding/select-organisation.js
 
 onboarding-select-org-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_onboarding-select-org-styles.css
   contents:
     - widget/onboarding/select-organisation.css
 
 signin-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_singin-styles.css
   contents:
+    - onboarding-styles
+    - onboarding-password-styles
     - widget/signin/signin.css
 
 signin-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_singin-scripts.js
   contents:
     - widget/signin/signin.js
@@ -618,20 +619,22 @@ dataset-scripts:
     - datasets/stats-chart.js
 
 dataset-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataset-styles.css
   extra:
     preload:
       - hdx_theme/dataset-search-styles
       - hdx_theme/requestdata-styles
-      - hdx_theme/banner-styles
       - hdx_theme/charting-styles
   contents:
       - datasets/dataset.css
       - datasets/datasets.css
       - datasets/hdx_custom_dataviz_show.css
       - datasets/related.css
+      - banner-styles
 
 dataset-quick-edit-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataset-quick-edit-styles.css
   contents:
     - datasets/dataset-quick-edit.css
@@ -643,6 +646,7 @@ dataset-quick-edit-scripts:
     - hdx-quick-edit.js
 
 dataset-related-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataset-related-styles.css
   contents:
     - datasets/related.css
@@ -665,19 +669,19 @@ dataset-search-styles:
       - vendor/multiple-select-1.1.0/multiple-select.css
 
 dataset-diff-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataset-diff-styles.css
   contents:
       - datasets/diff.css
 
 dataset-read-styles:
+  <<: *common-css
   extra:
     preload:
       - hdx_theme/contact-contributor-styles
       - hdx_theme/group-message-styles
       - requestdata/main-styles
       - hdx_theme/resource-list-styles
-  contents:
-    - css/empty.css
 
 dataset-light-scripts:
   <<: *common-js
@@ -691,6 +695,7 @@ dataset-light-scripts:
     - light/dataset/dataset.js
 
 dataset-light-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataset-light-styles.css
   extra:
     preload:
@@ -730,11 +735,13 @@ requestdata-scripts:
     - requestdata_/switch-tab.js
 
 requestdata-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_requestdata-styles.css
   contents:
     - requestdata/request-data.css
 
 delete-member-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_delete-member-styles.css
   contents:
     - widget/membership/delete-member.css
@@ -750,6 +757,7 @@ resource-list-scripts:
     - resource-list.js
 
 resource-list-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_resource-list-styles.css
   contents:
     - resource-list.css
@@ -770,6 +778,7 @@ crisis-base-scripts:
     - crisis/crisis-base.js
 
 crisis-base-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_crisis-base-styles.css
   contents:
     - crisis/crisis-base.css
@@ -789,6 +798,7 @@ crisis-ebola-scripts:
     - crisis/ebola/regions.js
 
 crisis-ebola-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_crisis-ebola-styles.css
   contents:
     - crisis/topline.css
@@ -811,6 +821,7 @@ shape-view-scripts:
 #    - vendor/leaflet-0.7.3/leaflet.css
 
 two-step-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_two-step-styles.css
   contents:
     - widget/security/popup-security.css
@@ -825,6 +836,7 @@ two-step-scripts:
     - widget/security/popup-security.js
 
 admin-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_admin-styles.css
   extra:
     preload:
@@ -891,6 +903,7 @@ admin-custom-pages-scripts:
       - custom_pages/custom_pages.js
 
 base-dashboard-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_base-dashboard-styles.css
   contents:
     - dashboard.css
@@ -907,6 +920,7 @@ custom-pages-scripts:
     - contribute_flow/form_element_manager.js
 
 custom-pages-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_custom-pages-styles.css
   contents:
     - custom_pages/custom_pages.css
@@ -925,6 +939,7 @@ custom-pages-light-scripts:
     - light/dataset/dataset.js
 
 custom-pages-light-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_custom-pages-light-styles.css
   contents:
     - custom_pages/custom_pages_view.css
@@ -941,8 +956,10 @@ faq-scripts:
     - faq_/faq.js
     - faq_/faq-search.js
     - widget/faq/faq.js
+    - https://www.google.com/recaptcha/api.js
 
 faq-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_faq-styles.css
   contents:
     - faq_/faq.css
@@ -959,6 +976,7 @@ user-waiting-scripts:
     - widget/contribute/user_waiting.js
 
 user-waiting-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_user-waiting-styles.css
   contents:
     - widget/contribute/user_waiting.css
@@ -988,11 +1006,10 @@ contribute-flow-scripts:
     - contribute_flow/contribute_flow_main.js
 
 contribute-flow-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_contribute-flow-styles.css
-  extra:
-    preload:
-      - hdx_theme/search-styles
   contents:
+    - search-styles
     - contribute_flow/contribute.css
 
 country-scripts:
@@ -1006,13 +1023,14 @@ country-scripts:
     - country/country.js
 
 country-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_country-styles.css
   contents:
     - crisis/topline.css
     - country/country.css
 
 country-topline-scripts:
-#  <<: *common-js
+  <<: *common-js
 #  output: ckanext-hdx_theme/%(version)s_country-topline-scripts.js
   extra:
     preload:
@@ -1020,10 +1038,9 @@ country-topline-scripts:
       - hdx_theme/country-scripts
       - hdx_theme/charting-scripts
       # this should not load here - hdx_theme/homepage-scripts
-  contents:
-    - css/empty.css
 
 country-topline-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_country-topline-styles.css
   extra:
     preload:
@@ -1032,11 +1049,13 @@ country-topline-styles:
     - country/topline.css
 
 topline-rw-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_topline-rw-styles.css
   contents:
     - crisis/topline-rw.css
 
 alert-bar-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_alert-bar-scripts.js
   contents:
     - alert_bar/warning-bar.js
@@ -1045,6 +1064,7 @@ alert-bar-scripts:
       - hdx_theme/ckan
 
 alert-bar-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_alert-bar-styles.css
   contents:
     - alert_bar/warning-bar.css
@@ -1061,6 +1081,7 @@ homepage-scripts:
     - homepage/homepage-responsive.js
 
 homepage-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_homepage-styles.css
   contents:
     - homepage/homepage.css
@@ -1075,12 +1096,14 @@ country-custom-scripts:
     - country/custom/country-custom.js
 
 country-custom-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_country-custom-styles.css
   contents:
     - crisis/topline-colombia.css
     - country/custom/country-custom.css
 
 nepal-quake-country-custom-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_nepal-quake-country-custom-styles.css
   extra:
     preload:
@@ -1096,12 +1119,11 @@ dataviewer:
     - dataviewer.js
 
 group-form-scripts:
+  <<: *common-css
   extra:
     preload:
       - hdx_theme/ckan
       - hdx_theme/organization-form-styles
-  contents:
-    - css/empty.css
 
 group-list-scripts:
   <<: *common-js
@@ -1126,6 +1148,7 @@ group-list-styles:
     - css/humanitarian_icons.css
 
 group-light-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_group-light-styles.css
   extra:
     preload:
@@ -1155,6 +1178,7 @@ eaa-map-scripts:
     - eaa/eaa-init.js
 
 eaa-map-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_eaa-map-styles.css
   contents:
     - browse_/browse.css
@@ -1170,11 +1194,13 @@ organizations-scripts:
     - organization_/organizations.js
 
 organizations-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_organizations-styles.css
   contents:
     - organization_/organizations.css
 
 organization-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_organization-styles.css
   extra:
     preload:
@@ -1185,24 +1211,27 @@ organization-styles:
     - organization_/organization-read.css
 
 organization-form-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_organization-form-styles.css
   contents:
     - organization_/organization-form.css
 
 organization-create-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_organization-create-styles.css
   contents:
     - organization_/organization-create.css
 
 organization-light-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_organization-light-styles.css
   extra:
     preload:
       - hdx_theme/dataset-light-styles
-      - hdx_theme/search-styles
       - hdx_theme/dataset-search-styles
       - hdx_theme/dataset-styles
   contents:
+    - search-styles 
     - light/organization/org-light.css
 
 organization-members-scripts:
@@ -1212,11 +1241,13 @@ organization-members-scripts:
     - organization_/members.js
 
 homepage-about-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_homepage-about-styles.css
   contents:
     - homepage/about.css
 
 homepage-qa-process-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_homepage-qa-process-styles.css
   contents:
     - qa/qa-process.css
@@ -1231,6 +1262,7 @@ qa-package-scripts:
     - qa/qa-package.js
 
 qa-package-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_qa-package-styles.css
   contents:
     - qa/qa-package.css
@@ -1238,6 +1270,7 @@ qa-package-styles:
     - qa/qa-checklist-widget.css
 
 base-fonts-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_base-fonts-styles.css
   contents:
     - base/fonts.css
@@ -1253,6 +1286,7 @@ organization-stats-scripts:
     - datasets/stats-chart.js
 
 organization-stats-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_organization-stats-styles.css
   contents:
     - crisis/topline.css
@@ -1270,6 +1304,7 @@ colorpicker-scripts:
     - vendor/colorpicker/rainbowvis.js
 
 colorpicker-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_colorpicker-styles.css
   contents:
     - vendor/colorpicker/spectrum.css
@@ -1284,6 +1319,7 @@ image-upload-scripts:
     - hdx-image-upload.js
 
 image-upload-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_image-upload-styles.css
   contents:
     - css/image-upload.css
@@ -1298,12 +1334,14 @@ login-scripts:
     - login_form.js
 
 login-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_login-styles.css
   contents:
     - css/login.css
     - new_user_form.css
 
 base-widget-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_base-widget-styles.css
   contents:
     - base/base-widget.css
@@ -1314,11 +1352,11 @@ banner-scripts:
   extra:
     preload:
       - hdx_theme/ckan
-      - hdx_theme/banner-styles
   contents:
     - base/components/banner.js
 
 banner-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_banner-styles.css
   contents:
     - base/components/banner.css
@@ -1331,9 +1369,11 @@ contact-contributor-scripts:
       - hdx_theme/ckan
       - hdx_theme/contact-contributor-styles
   contents:
+    - https://www.google.com/recaptcha/api.js 
     - widget/membership/contact-contributor.js
 
 contact-contributor-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_contact-contributor-styles.css
   contents:
     - widget/membership/contact-contributor.css
@@ -1346,25 +1386,28 @@ group-message-scripts:
       - hdx_theme/ckan
       - hdx_theme/group-message-styles
   contents:
+    - https://www.google.com/recaptcha/api.js
     - widget/membership/group-message.js
 
 group-message-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_group-message-styles.css
   contents:
     - widget/membership/group-message.css
 
 
 dataviz-scripts:
+  <<: *common-js
   output: ckanext-hdx_theme/%(version)s_dataviz-scripts.js
-  contents:
-    - css/empty.css
 
 dataviz-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataviz-styles.css
   contents:
     - dataviz/dataviz.css
 
 qa-dashboard-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_qa-dashboard-styles.css
   extra:
     preload:
@@ -1378,6 +1421,7 @@ qa-dashboard-styles:
     - dataviz/dataviz.css
 
 request-tags-styles:
+  <<: *common-css
   output: ckanext-hdx_theme/%(version)s_request-tags-styles.css
   extra:
     preload:
@@ -1392,4 +1436,5 @@ request-tags-scripts:
     preload:
       - hdx_theme/ckan
   contents:
+    - https://www.google.com/recaptcha/api.js
     - widget/tags/request-tags.js

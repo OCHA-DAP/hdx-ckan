@@ -119,7 +119,8 @@
 {#  {% if g.tracking_enabled %}#}
 {#      {% resource 'hdx_theme/package/tracking.js' %}#}
 {#  {% endif %}#}
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <link rel=preconnect href="https://fonts.gstatic.com" />
+  {#<script src="https://www.google.com/recaptcha/api.js" async defer></script>#}
   {{ super() }}
   {% if c.userobj %}
     {% set data = h.get_user_extra(c.userobj.id) %}
