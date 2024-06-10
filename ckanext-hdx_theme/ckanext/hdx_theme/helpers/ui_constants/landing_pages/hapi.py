@@ -27,7 +27,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_TITLE_CHATBOT': '''Chatbot''',
     'BE_INSPIRED_CARD_TEXT_CHATBOT': '''An early stage AI chatbot developed with DataKind to ask questions about the data.''',
     'BE_INSPIRED_CARD_BUTTON_CHATBOT': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''#''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''https://www.datakind.org/our-domains/humanitarian-response/''',
 
     'FAQ_SECTION_TITLE': '''FAQs''',
 
@@ -85,7 +85,7 @@ DATA_COVERAGE_CONSTANTS = [
     },
     {
         "category": "Population & Socio-economy",
-        "subcategory": "Population",
+        "subcategory": "Baseline Population",
         "contributor": "United Nations Population Fund (UNFPA) and OCHA offices",
         "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/population_and_socio-economy/#baseline-population"
     },
