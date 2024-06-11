@@ -61,7 +61,7 @@ DATA_COVERAGE_CONSTANTS = [
     {
         "title": "Market monitoring",
         "organization": "World Food Programme (WFP)",
-        "link": "https://data.humdata.org/datasets/global-market-monitor"
+        "link": "https://data.humdata.org/dataset/global-market-monitor"
     },
 ]
 
