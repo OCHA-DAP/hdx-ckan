@@ -25,7 +25,7 @@ CONSTANTS = {
     'RESOURCES_CARD_TITLE_METHODOLOGY': '''Methodology''',
     'RESOURCES_CARD_TEXT_METHODOLOGY': '''Read the HDX Signals methodology''',
     'RESOURCES_CARD_BUTTON_METHODOLOGY': '''Learn more''',
-    'RESOURCES_CARD_BUTTON_LINK_METHODOLOGY': '''https://github.com/OCHA-DAP/hdx-signals''',
+    'RESOURCES_CARD_BUTTON_LINK_METHODOLOGY': '''https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-signals''',
 
     'RESOURCES_CARD_TITLE_REPOSITORY': '''Code Respository''',
     'RESOURCES_CARD_TEXT_REPOSITORY': '''Access the HDX Signals code repository''',
@@ -61,7 +61,7 @@ DATA_COVERAGE_CONSTANTS = [
     {
         "title": "Market monitoring",
         "organization": "World Food Programme (WFP)",
-        "link": "https://data.humdata.org/datasets/global-market-monitor"
+        "link": "https://data.humdata.org/dataset/global-market-monitor"
     },
 ]
 
