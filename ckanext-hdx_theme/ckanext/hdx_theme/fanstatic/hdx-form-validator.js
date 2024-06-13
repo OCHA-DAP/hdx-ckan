@@ -295,8 +295,8 @@ this.ckan.module('hdx-form-validator', function ($) {
       var validationMessages = {
         'name': [
           {'key': 'invalid-length', 'message': 'Must be between 2 and 100 characters in length'},
-          {'key': 'invalid-format', 'message': 'Must use lowercase alphanumeric characters'},
-          {'key': null, 'message': 'Can use - (dash) or _ (underscore)'}
+          {'key': 'invalid-format', 'message': 'Must use lowercase alphanumeric characters (a-z, 0-9)'},
+          {'key': null, 'message': 'Allowed special characters - (dash) or _ (underscore)'},
         ],
         'password1': [
           {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},
