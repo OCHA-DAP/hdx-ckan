@@ -98,3 +98,12 @@ def onboarding_user_edit_form_schema(not_empty, strip_value, user_email_validato
     schema['email'] = [not_empty, strip_value, user_email_validator, unicode_safe]
 
     return schema
+
+
+@validator_args
+def onboarding_user_change_email_form_schema(not_empty, strip_value, user_email_validator, user_emails_match):
+    schema = {
+        'email': [not_empty, strip_value, user_email_validator, user_emails_match, unicode_safe],
+        'email2': [unicode_safe],
+    }
+    return schema
