@@ -7,5 +7,7 @@ CONSTANTS = {
 
     'PAGE_TITLE': '''Verify your email address''',
     'BODY_MAIN_TEXT': '''We have sent an email to {0} so that you can verify your email address. If you don’t see the email, please check your spam or junk folder.''',
-    'BODY_MAIN_TEXT_WITHOUT_EMAIL': '''We have sent an email so that you can verify your email address. If you don’t see the email, please check your spam or junk folder.'''
+    'BODY_MAIN_TEXT_WITHOUT_EMAIL': '''We have sent an email so that you can verify your email address. If you don’t see the email, please check your spam or junk folder.''',
+
+    'CHANGE_EMAIL_TEXT': '''If you need to change your email address, <a href="{0}" title="Change email address">click here</a>''',
 }

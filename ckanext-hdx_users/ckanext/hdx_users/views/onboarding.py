@@ -20,7 +20,7 @@ from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic i
 from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
     ONBOARDING_MAILCHIMP_OPTIN_KEY
 from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
-from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema
+from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema, onboarding_user_change_email_form_schema
 
 log = logging.getLogger(__name__)
 
@@ -151,6 +151,7 @@ class UserOnboardingView(MethodView):
             validation_link=h.url_for('hdx_user_onboarding.validate_account', token=token['token'], qualified=True)
         )
 
+        session['user_info_id'] = user_dict.get('id')
         session['user_info_email'] = user_dict.get('email')
 
         return redirect('hdx_user_onboarding.verify_email', user_id=user_dict.get('id'))
@@ -196,6 +197,85 @@ def verify_email(user_id: str) -> str:
     return abort(404, _(u'Page not found'))
 
 
+def change_email() -> str:
+    if session.get('user_info_id'):
+        user_id = session.get('user_info_id')
+
+        try:
+            context = {
+                'model': model,
+                'session': model.Session,
+                'schema': onboarding_user_change_email_form_schema(),
+                'keep_email': True,
+                'ignore_auth': True
+            }
+
+            user_dict = get_action('user_show')(context, {'id': user_id})
+
+            is_user_validated_and_token_disabled = tokens.is_user_validated_and_token_disabled(user_dict)
+            if is_user_validated_and_token_disabled:
+                return redirect('hdx_user_onboarding.validated_account', user_id=user_id)
+
+            if request.method == 'POST':
+                try:
+                    data_dict = logic.clean_dict(
+                        dictization_functions.unflatten(logic.tuplize_dict(logic.parse_params(request.form))))
+                except dictization_functions.DataError:
+                    abort(400, _(u'Integrity Error'))
+
+                # email update
+                try:
+                    updated_user = get_action('user_patch')(context, {
+                        'id': user_dict['id'],
+                        'email': data_dict.get('email'),
+                        'email2': data_dict.get('email2'),
+                    })
+
+                    old_token = tokens.token_show(context, user_dict)
+                    new_token = tokens.refresh_token(context, old_token)
+                    subject = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['EMAIL_SUBJECTS']['EMAIL_CONFIRMATION']
+                    tokens.send_validation_email(
+                        updated_user,
+                        new_token,
+                        subject,
+                        'email/content/onboarding/email_confirmation.html',
+                        validation_link=h.url_for('hdx_user_onboarding.validate_account', token=new_token['token'],
+                                                  qualified=True)
+                    )
+
+                    session['user_info_email'] = updated_user.get('email')
+                    return redirect('hdx_user_onboarding.verify_email', user_id=user_dict.get('id'))
+                except NotAuthorized:
+                    log.error(f'Unauthorized to change email address for user "{user_id}"')
+                    abort(403, _(u'Unauthorized to edit user %s') % user_id)
+                except NotFound:
+                    log.error(f'User "{user_id}" could not be found to change email address')
+                    abort(404, _(u'User not found'))
+                except ValidationError as e:
+                    errors = e.error_dict
+                    error_summary = e.error_summary
+                    template_data = {
+                        u'errors': errors,
+                        u'error_summary': error_summary,
+                    }
+                    return render('onboarding/signup/change-email.html', template_data)
+                except Exception as e:
+                    log.error(e)
+                    abort(404, _(u'Something went wrong. Please contact support'))
+
+            template_data = {
+                u'errors': {},
+                u'error_summary': {},
+            }
+            return render('onboarding/signup/change-email.html', template_data)
+
+        except NotFound:
+            log.error(f'User "{user_id}" could not be found to change email address')
+            abort(404, _(u'User not found'))
+
+    return abort(404, _(u'Page not found'))
+
+
 def validate_account(token: str) -> str:
     if request.user_agent.string.strip() and request.method == 'GET':
         # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
@@ -233,6 +313,8 @@ def validate_account(token: str) -> str:
 
         if session.get('user_info_email'):
             session.pop('user_info_email')
+        if session.get('user_info_id'):
+            session.pop('user_info_id')
 
         template_data = {
             'fullname': user_dict.get('fullname', '')
@@ -268,6 +350,8 @@ hdx_user_onboarding.add_url_rule(u'/', view_func=value_proposition, strict_slash
 hdx_user_onboarding.add_url_rule(u'/user-info/', view_func=UserOnboardingView.as_view(str(u'user-info')),
                                  methods=[u'GET', u'POST'], strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/verify-email/<user_id>/', view_func=verify_email, methods=[u'GET'],
+                                 strict_slashes=False)
+hdx_user_onboarding.add_url_rule(u'/change-email/', view_func=change_email, methods=[u'GET', u'POST'],
                                  strict_slashes=False)
 hdx_user_onboarding.add_url_rule(u'/validate-account/<token>/', view_func=validate_account,
                                  methods=[u'GET'], strict_slashes=False)
