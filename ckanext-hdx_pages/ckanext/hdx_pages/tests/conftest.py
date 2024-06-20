@@ -1,8 +1,8 @@
+import pytest
+
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
-import pytest
 from ckan import model as model
-
 from ckanext.hdx_pages.tests import LOCATION, ORG, SYSADMIN, USER
 
 _get_action = tk.get_action
@@ -11,31 +11,31 @@ NotAuthorized = tk.NotAuthorized
 
 @pytest.fixture()
 def setup_user_data():
-    factories.User(name=USER, email="some_user@hdx.hdxtest.org")
+    factories.User(name=USER, email='some_user@hdx.hdxtest.org')
     factories.User(
-        name=SYSADMIN, email="some_sysadmin@hdx.hdxtest.org", sysadmin=True
+        name=SYSADMIN, email='some_sysadmin@hdx.hdxtest.org', sysadmin=True
     )
 
-    syadmin_obj = model.User.get("some_sysadmin@hdx.hdxtest.org")
-    syadmin_obj.apikey = "SYSADMIN_API_KEY"
+    syadmin_obj = model.User.get('some_sysadmin@hdx.hdxtest.org')
+    syadmin_obj.apikey = 'SYSADMIN_API_KEY'
     model.Session.commit()
 
-    user_obj = model.User.get("some_user@hdx.hdxtest.org")
-    user_obj.apikey = "USER_API_KEY"
+    user_obj = model.User.get('some_user@hdx.hdxtest.org')
+    user_obj.apikey = 'USER_API_KEY'
     model.Session.commit()
 
     factories.Group(name=LOCATION)
     factories.Organization(
         name=ORG,
-        title="ORG NAME FOR PAGES",
+        title='ORG NAME FOR PAGES',
         users=[
-            {"name": USER, "capacity": "editor"},
+            {'name': USER, 'capacity': 'editor'},
         ],
-        hdx_org_type="donor",
-        org_url="https://hdx.hdxtest.org/",
+        hdx_org_type='donor',
+        org_url='https://hdx.hdxtest.org/',
     )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def keep_db_tables_on_clean():
     model.repo.tables_created_and_initialised = True

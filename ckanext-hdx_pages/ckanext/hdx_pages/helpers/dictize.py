@@ -11,15 +11,15 @@ def page_dictize(page):
     """
 
     return {
-        "id": page.id,
-        "name": page.name,
-        "title": page.title,
-        "description": page.description,
-        "keywords": page.description,
-        "type": page.type,
-        "state": page.state,
-        "status": page.status,
-        "sections": page.sections,
-        "extras": json.loads(page.extras) if page.extras else None,
-        "modified": page.modified.isoformat(),
+        'id': page.id,
+        'name': page.name,
+        'title': page.title,
+        'description': page.description,
+        'keywords': page.description,
+        'type': page.type,
+        'state': page.state,
+        'status': page.status,
+        'sections': page.sections,
+        'extras': json.loads(page.extras) if page.extras else None,
+        'modified': page.modified.isoformat(),
     }

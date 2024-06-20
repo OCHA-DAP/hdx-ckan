@@ -1,5 +1,4 @@
 import ckan.lib.helpers as h
-
 import ckanext.hdx_search.controller_logic.search_logic as sl
 
 
@@ -11,9 +10,9 @@ class CustomPagesSearchLogic(sl.SearchLogic):
 
     def _generate_action_name(self, type):
         return (
-            "hdx_event.read_event"
-            if type == "event"
-            else "hdx_dashboard.read_dashboard"
+            'hdx_event.read_event'
+            if type == 'event'
+            else 'hdx_dashboard.read_dashboard'
         )
 
     def _search_url(self, params, package_type=None):
@@ -27,7 +26,7 @@ class CustomPagesSearchLogic(sl.SearchLogic):
         :rtype: string
         """
         url = self._current_url()
-        return sl.url_with_params(url, params) + "#datasets-section"
+        return sl.url_with_params(url, params) + '#datasets-section'
 
     def _current_url(self):
         action_name = self._generate_action_name(self.type)

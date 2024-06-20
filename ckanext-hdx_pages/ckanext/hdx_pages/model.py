@@ -3,14 +3,15 @@ from __future__ import print_function
 import datetime
 import logging
 
-import ckan.model as model
-import ckan.model.types as _types
 import sqlalchemy.orm as orm
 import sqlalchemy.types as types
-from ckan.model import meta
-from ckan.model.domain_object import DomainObject
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.schema import Column, ForeignKey, Table
+
+import ckan.model as model
+import ckan.model.types as _types
+from ckan.model import meta
+from ckan.model.domain_object import DomainObject
 
 mapper = orm.mapper
 log = logging.getLogger(__name__)
@@ -23,15 +24,15 @@ page_tag_association_table = None
 def setup():
     if page_table is None:
         define_page_table()
-        log.debug("Page table defined in memory")
+        log.debug('Page table defined in memory')
 
     if page_group_association_table is None:
         define_page_group_association_table()
-        log.debug("Page group association table defined in memory")
+        log.debug('Page group association table defined in memory')
 
     if page_tag_association_table is None:
         define_page_tag_association_table()
-        log.debug("Page tag association table defined in memory")
+        log.debug('Page tag association table defined in memory')
 
     # checks for existence first
     create_table()
@@ -56,9 +57,9 @@ class PageBaseModel(DomainObject):
 
     @classmethod
     def create(cls, **kwargs):
-        defer_commit = kwargs.get("defer_commit")
+        defer_commit = kwargs.get('defer_commit')
         if defer_commit:
-            del kwargs["defer_commit"]
+            del kwargs['defer_commit']
         instance = cls(**kwargs)
         meta.Session.add(instance)
         if not defer_commit:
@@ -116,27 +117,27 @@ def define_page_table():
     global page_table
 
     page_table = Table(
-        "page",
+        'page',
         meta.metadata,
         Column(
-            "id", types.UnicodeText, primary_key=True, default=_types.make_uuid
+            'id', types.UnicodeText, primary_key=True, default=_types.make_uuid
         ),
         Column(
-            "name", types.UnicodeText, nullable=False, unique=True, index=True
+            'name', types.UnicodeText, nullable=False, unique=True, index=True
         ),
-        Column("title", types.UnicodeText, nullable=False),
-        Column("description", types.UnicodeText, nullable=True),
-        Column("type", types.UnicodeText),
-        Column("state", types.UnicodeText),
-        Column("sections", types.UnicodeText),
-        Column("extras", types.UnicodeText),
+        Column('title', types.UnicodeText, nullable=False),
+        Column('description', types.UnicodeText, nullable=True),
+        Column('type', types.UnicodeText),
+        Column('state', types.UnicodeText),
+        Column('sections', types.UnicodeText),
+        Column('extras', types.UnicodeText),
         Column(
-            "modified",
+            'modified',
             types.DateTime,
             default=datetime.datetime.now,
             nullable=False,
         ),
-        Column("status", types.UnicodeText),
+        Column('status', types.UnicodeText),
     )
 
     mapper(Page, page_table)
@@ -183,19 +184,19 @@ def define_page_group_association_table():
     global page_group_association_table
 
     page_group_association_table = Table(
-        "page_group_association",
+        'page_group_association',
         meta.metadata,
         Column(
-            "group_id",
+            'group_id',
             types.UnicodeText,
-            ForeignKey("group.id", ondelete="CASCADE", onupdate="CASCADE"),
+            ForeignKey('group.id', ondelete='CASCADE', onupdate='CASCADE'),
             primary_key=True,
             nullable=False,
         ),
         Column(
-            "page_id",
+            'page_id',
             types.UnicodeText,
-            ForeignKey("page.id", ondelete="CASCADE", onupdate="CASCADE"),
+            ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'),
             primary_key=True,
             nullable=False,
         ),
@@ -205,10 +206,10 @@ def define_page_group_association_table():
         PageGroupAssociation,
         page_group_association_table,
         properties={
-            "page": orm.relation(
+            'page': orm.relation(
                 Page,
                 backref=orm.backref(
-                    "countries_assoc_all", cascade="all, delete-orphan"
+                    'countries_assoc_all', cascade='all, delete-orphan'
                 ),
             )
         },
@@ -219,19 +220,19 @@ def define_page_tag_association_table():
     global page_tag_association_table
 
     page_tag_association_table = Table(
-        "page_tag_association",
+        'page_tag_association',
         meta.metadata,
         Column(
-            "tag_id",
+            'tag_id',
             types.UnicodeText,
-            ForeignKey("tag.id", ondelete="CASCADE", onupdate="CASCADE"),
+            ForeignKey('tag.id', ondelete='CASCADE', onupdate='CASCADE'),
             primary_key=True,
             nullable=False,
         ),
         Column(
-            "page_id",
+            'page_id',
             types.UnicodeText,
-            ForeignKey("page.id", ondelete="CASCADE", onupdate="CASCADE"),
+            ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'),
             primary_key=True,
             nullable=False,
         ),
@@ -241,10 +242,10 @@ def define_page_tag_association_table():
         PageTagAssociation,
         page_tag_association_table,
         properties={
-            "page": orm.relation(
+            'page': orm.relation(
                 Page,
                 backref=orm.backref(
-                    "tags_assoc_all", cascade="all, delete-orphan"
+                    'tags_assoc_all', cascade='all, delete-orphan'
                 ),
             )
         },
@@ -255,16 +256,16 @@ def create_table():
     if model.group_table.exists():
         if not page_table.exists():
             page_table.create()
-            print("Page table created")
+            print('Page table created')
         else:
-            patch_table_add_column("extras")
+            patch_table_add_column('extras')
 
         if not page_group_association_table.exists():
             page_group_association_table.create()
-            print("page group association table created")
+            print('page group association table created')
         if not page_tag_association_table.exists():
             page_tag_association_table.create()
-            print("page tag association table created")
+            print('page tag association table created')
 
 
 #
@@ -298,25 +299,25 @@ def create_table():
 
 
 def patch_table_add_column(column_name):
-    table_name = "page"
+    table_name = 'page'
     try:
         # print('Starting to patch table %s' % table_name)
         engine = model.meta.engine
         inspector = Inspector.from_engine(engine)
         columns = inspector.get_columns(table_name)
 
-        if not any(column["name"] == column_name for column in columns):
-            column = Column(column_name, types.UnicodeText, default="")
+        if not any(column['name'] == column_name for column in columns):
+            column = Column(column_name, types.UnicodeText, default='')
             column_name = column.compile(dialect=engine.dialect)
             column_type = column.type.compile(engine.dialect)
             engine.execute(
-                "ALTER TABLE %s ADD COLUMN %s %s"
+                'ALTER TABLE %s ADD COLUMN %s %s'
                 % (table_name, column_name, column_type)
             )
 
         # print('Finish to patch table %s' % table_name)
     except Exception:
         print(
-            "There was an error during patching %s table. Column: %s"
+            'There was an error during patching %s table. Column: %s'
             % (table_name, column_name)
         )

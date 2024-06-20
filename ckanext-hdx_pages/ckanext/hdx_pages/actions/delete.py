@@ -1,5 +1,4 @@
 import ckan.logic as logic
-
 import ckanext.hdx_pages.helpers.dictize as dictize
 import ckanext.hdx_pages.model as pages_model
 
@@ -15,10 +14,10 @@ def page_delete(context, data_dict):
     :rtype: dict
     """
 
-    logic.check_access("page_delete", context, data_dict)
+    logic.check_access('page_delete', context, data_dict)
 
-    model = context["model"]
-    page = pages_model.Page.get_by_id(id=data_dict["id"])
+    model = context['model']
+    page = pages_model.Page.get_by_id(id=data_dict['id'])
     if page is None:
         raise NotFound
     page.delete()
