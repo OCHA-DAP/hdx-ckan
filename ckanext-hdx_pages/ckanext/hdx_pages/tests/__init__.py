@@ -1,13 +1,12 @@
-from ckan import model as model
-
 import ckan.plugins.toolkit as tk
+from ckan import model as model
 
 _get_action = tk.get_action
 
-USER = 'some_user'
-SYSADMIN = 'some_sysadmin'
-LOCATION = 'some_location'
-ORG = 'some_org_name'
+USER = "some_user"
+SYSADMIN = "some_sysadmin"
+LOCATION = "some_location"
+ORG = "some_org_name"
 
 #
 #

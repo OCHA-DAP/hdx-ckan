@@ -1,34 +1,43 @@
+import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.model as model
-from six.moves.urllib.parse import parse_qs, urlparse
 from ckan.common import _, c, request
-import ckan.lib.helpers as h
+from six.moves.urllib.parse import parse_qs, urlparse
 
 
 def hdx_events_list():
-    context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+    context = {
+        "model": model,
+        "session": model.Session,
+        "user": c.user or c.author,
+        "auth_user_obj": c.userobj,
+    }
 
-    events = logic.get_action('page_list')(context, {})
+    events = logic.get_action("page_list")(context, {})
     archived = []
     ongoing = []
     for e in events:
-        if e.get("type") == 'event':
-            if e.get("status") == 'ongoing':
+        if e.get("type") == "event":
+            if e.get("status") == "ongoing":
                 ongoing.append(e)
-            if e.get("status") == 'archived':
+            if e.get("status") == "archived":
                 archived.append(e)
 
-    return {"archived": sorted(archived, key=lambda x: x['title']),
-            "ongoing": sorted(ongoing, key=lambda x: x['title'])}
+    return {
+        "archived": sorted(archived, key=lambda x: x["title"]),
+        "ongoing": sorted(ongoing, key=lambda x: x["title"]),
+    }
 
 
 def _compute_iframe_style(section, is_mobile=False):
-    style = 'width: 100%; '
-    max_height = section.get('m_max_height') if is_mobile else section.get('max_height')
-    height = max_height if max_height else '400px'
-    style += 'max-height: {}; '.format(max_height) if max_height else ''
-    style += 'height: {}; '.format(height)
-    section['style'] = style
+    style = "width: 100%; "
+    max_height = (
+        section.get("m_max_height") if is_mobile else section.get("max_height")
+    )
+    height = max_height if max_height else "400px"
+    style += "max-height: {}; ".format(max_height) if max_height else ""
+    style += "height: {}; ".format(height)
+    section["style"] = style
     return section
 
 
@@ -38,33 +47,36 @@ def _find_dataset_filters(url):
 
 
 def generate_dataset_results(page_id, type, saved_filters):
-    params_nopage = {
-        k: v for k, v in request.params.items() if k != 'page'}
+    params_nopage = {k: v for k, v in request.params.items() if k != "page"}
 
     mapping_name = _generate_action_name(type)
 
     def pager_url(q=None, page=None):
         params = params_nopage
-        params['page'] = page
-        url = h.url_for(mapping_name, id=page_id, **params) + '#datasets-section'
+        params["page"] = page
+        url = (
+            h.url_for(mapping_name, id=page_id, **params) + "#datasets-section"
+        )
         return url
 
-    fq = ''
+    fq = ""
     search_params = {}
     for key, values_list in saved_filters.items():
-        if key == 'q':
-            fq = '(text:({})) {}'.format(values_list[0], fq)
+        if key == "q":
+            fq = "(text:({})) {}".format(values_list[0], fq)
         elif key in _get_default_facet_titles().keys():
-            or_filter = ' OR '.join('"{}"'.format(value) for value in values_list)
-            fq += '+{}:({})'.format(key, or_filter)
-        elif key == 'fq':
-            fq += '%s ' % (values_list[0],)
-        elif key == 'sort':
-            search_params['default_sort_by'] = values_list[0]
-        elif key == 'ext_page_size':
-            search_params['num_of_items'] = values_list[0]
+            or_filter = " OR ".join(
+                '"{}"'.format(value) for value in values_list
+            )
+            fq += "+{}:({})".format(key, or_filter)
+        elif key == "fq":
+            fq += "%s " % (values_list[0],)
+        elif key == "sort":
+            search_params["default_sort_by"] = values_list[0]
+        elif key == "ext_page_size":
+            search_params["num_of_items"] = values_list[0]
 
-    search_params['additional_fq'] = fq
+    search_params["additional_fq"] = fq
 
     # package_type = 'dataset'
     # full_facet_info = self._search(package_type, pager_url, **search_params)
@@ -75,25 +87,28 @@ def generate_dataset_results(page_id, type, saved_filters):
 
 
 def _generate_action_name(type):
-    return 'read_event' if type == 'event' else 'read_dashboards'
+    return "read_event" if type == "event" else "read_dashboards"
 
 
 def _get_default_facet_titles():
     return {
-        'organization': _('Organizations'),
-        'groups': _('Groups'),
+        "organization": _("Organizations"),
+        "groups": _("Groups"),
         # 'tags': _('Tags'),
-        'vocab_Topics': _('Tags'),
-        'res_format': _('Formats'),
-        'license_id': _('Licenses'),
-        'cod_level': _('Cod level'),
+        "vocab_Topics": _("Tags"),
+        "res_format": _("Formats"),
+        "license_id": _("Licenses"),
+        "cod_level": _("Cod level"),
     }
 
 
 def has_permission(username_or_id):
     try:
         from ckanext.hdx_users.helpers.permissions import Permissions
-        result = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_CRISIS)
+
+        result = Permissions(username_or_id).has_permission(
+            Permissions.PERMISSION_MANAGE_CRISIS
+        )
     except ImportError:
         return False
     return result
