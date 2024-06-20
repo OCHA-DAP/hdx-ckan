@@ -6,7 +6,7 @@ CONSTANTS = {
     'DATA_COVERAGE_SECTION_DESCRIPTION': '''Datasets monitored by HDX signals at the moment are as follows:''',
 
     'SIGNUP_SECTION_TITLE': '''Sign up''',
-    'SIGNUP_SECTION_DESCRIPTION': '''Sign up below to receive HDX Signals emails. To receive the content you are interested in, please make sure you have selected AT LEAST ONE dataset and region or priority humanitarian location from the options below.''',
+    'SIGNUP_SECTION_DESCRIPTION': '''Sign up below to receive HDX Signals emails. To receive the content you are interested in, please make sure you have selected AT LEAST ONE dataset and region or priority humanitarian location from the options below. All locations in a region include all locations covered by the datasets, not just priority humanitarian locations listed below.''',
 
     'RESOURCES_SECTION_TITLE': '''Resources''',
     'RESOURCES_SECTION_DESCRIPTION': '''For more information about the datasets monitored by HDX signals as well as information for developers see the following:''',
