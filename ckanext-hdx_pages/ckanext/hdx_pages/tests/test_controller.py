@@ -120,7 +120,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
             page_new = self._get_url(app, url)
             assert 'Page not found' in page_new.body, 'a regular user can not not access a page creation form'
             assert '404 Not Found'.lower() in page_new.status.lower()
-        except Exception as ex:
+        except Exception:
             assert False
 
         context['user'] = SYSADMIN
@@ -155,7 +155,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
             page_edit = self._get_url(app, url)
             assert 'Page not found' in page_edit.body, 'a regular user can not not access a page edit form'
             assert '404 Not Found'.lower() in page_edit.status.lower()
-        except Exception as ex:
+        except Exception:
             assert False
 
         context['user'] = SYSADMIN
@@ -205,7 +205,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
             eldashbo_result = self._get_url(app, url)
             assert 'Page not found' in eldashbo_result.body, 'page doesn\'t exist'
             assert '404 Not Found'.lower() in eldashbo_result.status.lower()
-        except Exception as ex:
+        except Exception:
             assert False
 
     # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
@@ -238,7 +238,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             assert 'El Deleted' in eldeleted_dict.get('title')
             assert 'eldeleted' in eldeleted_dict.get('name')
             assert 'El Deleted Lorem Ipsum' in eldeleted_dict.get('description')
-        except Exception as ex:
+        except Exception:
             assert False
 
         eldeleted_page = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
@@ -260,7 +260,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             page_delete = self._get_url(app, url)
             assert 'Page not found' in page_delete.body, 'page doesn\'t exist'
             assert '404 NOT FOUND'.lower() in page_delete.status.lower()
-        except Exception as ex:
+        except Exception:
             assert False
 
         context['user'] = SYSADMIN
@@ -272,5 +272,5 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
             assert False
         except logic.NotFound:
             assert True
-        except Exception as ex:
+        except Exception:
             assert False

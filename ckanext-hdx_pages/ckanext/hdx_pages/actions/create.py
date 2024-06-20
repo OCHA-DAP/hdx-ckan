@@ -50,12 +50,11 @@ def page_create(context, data_dict):
                 # We validate for id duplication, so this shouldn't be true during create.
                 if pages_model.PageTagAssociation.exists(page_id=page.id, tag_id=tag_id):
                     raise toolkit.ValidationError("Tag already associated with page.",
-                                                  error_summary=u"The tag, {0}, is already in the page".format(
-                                                      tag_id))
+                                                  error_summary=u"The tag, {0}, is already in the page".format(tag_id))
                 # create the association
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag_id, defer_commit=True)
             else:
-                raise logic.ValidationError({'tag_string': ['Tag % not found' % tag.get('name')]})
+                raise logic.ValidationError({'tag_string': ['Tag %s not found' % tag.get('name')]})
 
         model.Session.commit()
         page_dict = dictize.page_dictize(page)
@@ -65,4 +64,4 @@ def page_create(context, data_dict):
     except Exception as e:
         msg = str(e)
         log.error(msg)
-        raise logic.ValidationError({'message': ['Something went wrong while processing the request: %' % msg]})
+        raise logic.ValidationError({'message': ['Something went wrong while processing the request: %s' % msg]})

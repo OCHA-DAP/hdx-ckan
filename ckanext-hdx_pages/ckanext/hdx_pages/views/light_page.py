@@ -1,7 +1,5 @@
 import json
 import logging
-import six
-from decorator import decorator
 from flask import Blueprint
 from flask.views import MethodView
 from six import string_types
@@ -407,18 +405,18 @@ class DeleteView(MethodView):
         except NotAuthorized:
             abort(404, _('Page not found'))
         try:
-            page_dict = logic.get_action('page_delete')(context, {'id': id})
+            logic.get_action('page_delete')(context, {'id': id})
         except NotFound:
             abort(404, _('Page not found'))
-        except Exception as ex:
+        except Exception:
             abort(404, _('Page not found'))
         _update_lunr()
 
-        vars = {
-            'data': page_dict,
-            'errors': {},
-            'error_summary': {},
-        }
+        # vars = {
+        #     'data': page_dict,
+        #     'errors': {},
+        #     'error_summary': {},
+        # }
         url = h.url_for('hdx_custom_pages.index')
         return h.redirect_to(url)
 

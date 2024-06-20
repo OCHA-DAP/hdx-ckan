@@ -6,7 +6,6 @@ Created on March 19, 2019
 
 '''
 import pytest
-import six
 import ckan.model as model
 import logging as logging
 import ckan.logic as logic
@@ -67,7 +66,7 @@ class TestHDXControllerPage(object):
         assert 'Lorem Ipsum is simply dummy text' in page_dict.get('description')
         assert 'show_title' in page_dict.get('extras') and page_dict.get('extras').get('show_title') == 'on'
 
-        user = model.User.by_name(USER)
+        # user = model.User.by_name(USER)
 
         post_params = self._get_page_post_param()
 
@@ -77,18 +76,18 @@ class TestHDXControllerPage(object):
             assert '404 Not Found'.lower() in res.status.lower()
             assert 'Sorry, the page you are looking for could not be found.' in res.body
             assert 'Please check the URL or login to HDX if you know that you have a permission to see this page.' in res.body
-        except AssertionError as ex:
+        except AssertionError:
             assert False
-        except Exception as ex:
+        except Exception:
             assert False
 
-        user = model.User.by_name(SYSADMIN)
+        model.User.by_name(SYSADMIN)
 
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
                                 environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert True
-        except Exception as ex:
+        except Exception:
             assert False
         assert '302 FOUND' in res.status
 
@@ -97,7 +96,7 @@ class TestHDXControllerPage(object):
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
                            environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert 'Tag some_new_tag not found' in res.body
-        except Exception as ex:
+        except Exception:
             assert False
         assert '200 OK' in res.status
         del post_params['tag_string']
@@ -112,5 +111,5 @@ class TestHDXControllerPage(object):
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_elnino.get('name')), data=post_params,
                                 environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
-        except Exception as ex:
+        except Exception:
             assert True

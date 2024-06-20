@@ -19,7 +19,7 @@ def page_name_validator(page_dict, context):
         if existing_page and existing_page.get('id') != page_dict.get('id') and page_dict.get('id') != page_dict.get(
             'name'):
             raise logic.ValidationError({'name': [_('Page name already exists')]})
-    except logic.NotFound as e:
+    except logic.NotFound:
         # This is good: means there's no page with the same name.
         pass
 

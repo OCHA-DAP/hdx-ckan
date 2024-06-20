@@ -91,7 +91,7 @@ class TestHDXApiPage(object):
         try:
             _get_action('page_update')(context_sysadmin, {'id': page_dict.get('id')})
             assert False
-        except Exception as ex:
+        except Exception:
             assert True
 
         grp_dict = _get_action('group_show')(context_sysadmin, {'id': LOCATION})
@@ -112,7 +112,7 @@ class TestHDXApiPage(object):
             assert False
         except logic.NotAuthorized:
             assert True
-        except Exception as ex:
+        except Exception:
             assert True
 
         try:
@@ -120,7 +120,7 @@ class TestHDXApiPage(object):
             assert False
         except logic.NotAuthorized:
             assert True
-        except Exception as ex:
+        except Exception:
             assert True
 
         try:
@@ -128,7 +128,7 @@ class TestHDXApiPage(object):
             assert False
         except logic.NotAuthorized:
             assert True
-        except Exception as ex:
+        except Exception:
             assert True
 
         try:
@@ -138,7 +138,7 @@ class TestHDXApiPage(object):
             assert True
         except logic.ValidationError:
             assert True
-        except Exception as ex:
+        except Exception:
             assert True
 
         try:
@@ -148,7 +148,7 @@ class TestHDXApiPage(object):
             assert True
         except logic.ValidationError:
             assert True
-        except Exception as ex:
+        except Exception:
             assert True
 
         _get_action('page_delete')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
@@ -157,7 +157,7 @@ class TestHDXApiPage(object):
             assert False
         except logic.NotFound:
             assert True
-        except Exception as ex:
+        except Exception:
             assert True
 
         assert True
@@ -167,7 +167,7 @@ class TestHDXApiPage(object):
 class TestHDXPageWithGroups(object):
 
     def test_page_with_groups(self):
-        context = {'model': model, 'session': model.Session, 'user': USER}
+        # context = {'model': model, 'session': model.Session, 'user': USER}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
         page_dict = _get_action('page_create')(context_sysadmin, page_elgroupo)
@@ -178,7 +178,7 @@ class TestHDXPageWithGroups(object):
             log.info(ex)
             assert True
 
-        elgroupo = _get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+        _get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
 
         page_group_list = _get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('id')})
         assert page_group_list
@@ -214,7 +214,7 @@ class TestHDXPageWithGroups(object):
 class TestHDXValidationPage(object):
 
     def test_validation_page(self):
-        context = {'model': model, 'session': model.Session, 'user': USER}
+        # context = {'model': model, 'session': model.Session, 'user': USER}
         context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
         del page_elpico['name']

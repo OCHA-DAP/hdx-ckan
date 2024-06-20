@@ -9,7 +9,7 @@ from ckan.model.domain_object import DomainObject
 from ckan.model import meta
 import ckan.model.types as _types
 
-from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
+from sqlalchemy.schema import Table, Column, ForeignKey
 from sqlalchemy.engine.reflection import Inspector
 
 mapper = orm.mapper
@@ -97,7 +97,7 @@ class Page(PageBaseModel):
         return query.filter_by(name=name).first()
 
     @classmethod
-    def check_exists(self):
+    def check_exists(cls):
         return page_table.exists()
 
 
@@ -256,5 +256,5 @@ def patch_table_add_column(column_name):
                 'ALTER TABLE %s ADD COLUMN %s %s' % (table_name, column_name, column_type))
 
         # print('Finish to patch table %s' % table_name)
-    except Exception as e:
+    except Exception:
         print('There was an error during patching %s table. Column: %s' % (table_name, column_name))

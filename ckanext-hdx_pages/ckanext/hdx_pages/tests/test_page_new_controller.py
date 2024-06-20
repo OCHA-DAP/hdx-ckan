@@ -6,7 +6,6 @@ Created on March 19, 2019
 
 '''
 import pytest
-import six
 import ckan.model as model
 import logging as logging
 import ckan.logic as logic
@@ -61,8 +60,8 @@ class TestHDXPageController(object):
     def test_page_create(self, app):
         context = {'model': model, 'session': model.Session, 'user': USER}
 
-        user = model.User.by_name(USER)
-        auth = {'Authorization': str(user.apikey)}
+        # user = model.User.by_name(USER)
+        # auth = {'Authorization': str(user.apikey)}
         url = url_for(u'hdx_custom_page.new')
         post_params = self._get_page_post_param()
         initial_post_params = self._get_page_post_param()
@@ -70,15 +69,15 @@ class TestHDXPageController(object):
         try:
             res = app.post(url, data=post_params, extra_environ={"REMOTE_USER": USER})
             assert 'Page not found' in res.body
-        except Exception as ex:
+        except Exception:
             assert False
 
-        user = model.User.by_name(SYSADMIN)
+        # user = model.User.by_name(SYSADMIN)
 
         try:
             res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert True
-        except Exception as ex:
+        except Exception:
             assert False
         assert '302 FOUND' in res.status
 
@@ -92,7 +91,7 @@ class TestHDXPageController(object):
         try:
             res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert 'Page title cannot be empty' in res.body
-        except Exception as ex:
+        except Exception:
             assert False
 
         post_params['title'] = initial_post_params['title']
@@ -100,5 +99,5 @@ class TestHDXPageController(object):
         try:
             res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
             assert 'Page name cannot be empty' in res.body
-        except Exception as ex:
+        except Exception:
             assert False

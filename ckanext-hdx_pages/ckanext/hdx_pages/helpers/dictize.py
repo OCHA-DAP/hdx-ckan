@@ -1,4 +1,3 @@
-import ckanext.hdx_pages.model as pages_model
 import json
 
 

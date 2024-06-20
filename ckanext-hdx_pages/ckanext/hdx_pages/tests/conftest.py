@@ -24,7 +24,7 @@ def setup_user_data():
     user_obj.apikey = 'USER_API_KEY'
     model.Session.commit()
 
-    group = factories.Group(name=LOCATION)
+    factories.Group(name=LOCATION)
     factories.Organization(
         name=ORG,
         title='ORG NAME FOR PAGES',
