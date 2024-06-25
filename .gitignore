@@ -62,3 +62,5 @@ travis.env
 
 # cypress
 cypress/videos
+
+src/
