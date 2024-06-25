@@ -46,6 +46,7 @@ ijson==3.2.3
 mailchimp3==3.0.21
 ua-parser==0.18.0
 user_agents==2.2.0
+rcssmin==1.1.2
 
 # We want to use repoze.who.plugins.use_beaker in who.ini with sessions in redis
 # Based on ideas from https://github.com/data-govt-nz/ckanext-security
