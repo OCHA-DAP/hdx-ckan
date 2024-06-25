@@ -685,6 +685,26 @@ def hdx_resources_not_allowed_if_requested_data(key, data, errors, context):
         raise df.Invalid(_('By request - HDX Connect datasets can not store resources'))
 
 
+def hdx_disable_live_frequency_filestore_resources_only(key, data, errors, context):
+    """
+    Validates that a dataset marked as 'Live' has at least one external resource
+    """
+    if data[key] == '0':  # '0' means 'Live'
+        has_resources = False
+        has_external_resource = False
+
+        for resource_key, value in data.items():
+            if resource_key[0] == 'resources':
+                has_resources = True
+                if resource_key[-1] == 'url_type':
+                    if value == 'api':
+                        has_external_resource = True
+                        break
+
+        if has_resources and not has_external_resource:
+            raise Invalid(_('Live datasets should have at least one external resource'))
+
+
 DATASERIES_TITLE_PATTERN = re.compile('^[\w ,-]+$', re.UNICODE)
 def hdx_dataseries_title_validator(value, context):
     if value:
