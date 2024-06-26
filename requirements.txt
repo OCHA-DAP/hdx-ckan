@@ -149,6 +149,8 @@ pyutilib==6.0.0
     # via -r requirements.in
 pyyaml==6.0.1
     # via -r requirements.in
+rcssmin==1.1.2
+    # via -r requirements.in
 rdflib==4.2.1
     # via
     #   -r requirements.in

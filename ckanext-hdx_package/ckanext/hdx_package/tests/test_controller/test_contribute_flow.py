@@ -124,7 +124,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
             'maintainer': 'testsysadmin',
             'license_id': 'cc-by',
             'methodology': 'Census',
-            'data_update_frequency': 0,
+            'data_update_frequency': -1,
             'resources__0__position': 0,
             'resources__0__url': 'http://yahoo.com',
             'resources__0__format': 'link',

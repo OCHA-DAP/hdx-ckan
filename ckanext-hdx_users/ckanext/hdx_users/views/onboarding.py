@@ -95,6 +95,10 @@ def _prepare() -> Context:
     return context
 
 
+def _user_can_change_email():
+    return session.get('user_info_id')
+
+
 class UserOnboardingView(MethodView):
 
     def post(self) -> Union[Response, str]:
@@ -198,9 +202,8 @@ def verify_email(user_id: str) -> str:
 
 
 def change_email() -> str:
-    if session.get('user_info_id'):
-        user_id = session.get('user_info_id')
-
+    user_id = _user_can_change_email()
+    if user_id:
         try:
             context = {
                 'model': model,

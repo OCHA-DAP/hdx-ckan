@@ -155,7 +155,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('not_empty'),
                 tk.get_validator('unicode_safe'),
                 tk.get_validator('hdx_in_update_frequency_values'),
-                tk.get_converter('convert_to_extras')
+                tk.get_validator('hdx_disable_live_frequency_filestore_resources_only'),
+                tk.get_converter('convert_to_extras'),
             ],
             'batch': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
@@ -518,6 +519,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info,
             'hdx_tag_name_approved_validator': vd.hdx_tag_name_approved_validator,
             'hdx_update_last_modified_if_url_changed': vd.hdx_update_last_modified_if_url_changed,
+            'hdx_disable_live_frequency_filestore_resources_only': vd.hdx_disable_live_frequency_filestore_resources_only,
         }
 
     def get_auth_functions(self):
