@@ -4,14 +4,64 @@ common-js: &common-js
 common-css: &common-css
   filters: cssrewrite, rcssmin
 
+vendor-vendor-css:
+  <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_vendor-vendor.css
+  contents:
+    - fontawesome-free/css/all.css    
+
+vendor-vendor:
+  #original is base/vendor/webassets.yml -> vendor
+  extra:
+    preload:
+      - vendor-vendor-css    
+  contents:
+    - jed.js
+    - moment-with-locales.js
+    # HDX Edit
+    # commented out this line to allow a new version of select2 to be integrated into our new onboarding pages
+    # vendor/select2-js (created above) is now included in hdx_theme/page-scripts
+    # - select2/select2.js
+    # END HDX Edit
+    - popperjs.js
+    - purify.js
+    - jquery.js
+
+vendor-bootstrap:
+  #original is base/vendor/webassets.yml -> vendor
+  contents:
+    - bootstrap/js/bootstrap.js
+
+base-main:
+  <<: *common-js
+  output: base/%(version)s_main.js
+  contents:
+    - vendor-vendor
+    - vendor-bootstrap
+    - apply-html-class.js
+    - plugins/jquery.inherit.js
+    - plugins/jquery.proxy-all.js
+    - plugins/jquery.url-helpers.js
+    - plugins/jquery.date-helpers.js
+    - plugins/jquery.slug.js
+    - plugins/jquery.slug-preview.js
+    - plugins/jquery.truncator.js
+    - plugins/jquery.masonry.js
+    - plugins/jquery.form-warning.js
+    - plugins/jquery.images-loaded.js
+    - sandbox.js
+    - module.js
+    - pubsub.js
+    - client.js
+    - notify.js
+    - i18n.js
+    - main.js
+
 ckan:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_ckan.js
-  extra:
-    preload:
-      - vendor/vendor
-      - base/main
   contents:
+    - base-main
     - vendor/ckan/jquery.slug.js
     - vendor/ckan/jquery.slug-preview.js
     - vendor/ckan/slug-preview.js
@@ -50,8 +100,8 @@ page-scripts:
   extra:
     preload:
       - hdx_theme/ckan
-      - vendor/select2-js
   contents:
+    - select2/select2.js
     - base/header-init.js
     - bs_popover.js
     - bs_tooltip.js
@@ -61,10 +111,8 @@ page-scripts:
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - vendor/select2-css
   contents:
+    - select2/select2.css
     - page-common-styles
     - base/base.css
     - base/header.css
@@ -84,10 +132,8 @@ page-light-scripts:
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - vendor/select2-css
   contents:
+    - select2/select2.css
     - page-common-styles
     - light/page-light.css
     - search-styles
@@ -182,11 +228,8 @@ hdx-verify-email-scripts:
 search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
-  extra:
-    preload:
-      - hdx_theme/jquery-extra
-      - hdx_theme/hdx-show-more
   contents:
+    - hdx-show-more
     - search_/minisearch.min.js
     - search_/normalize.js
     - search_/lunr/feature-index.js
@@ -265,10 +308,8 @@ jquery-extra:
 hdx-show-more:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_hdx-show-more.js
-  extra:
-    preload:
-      - hdx_theme/jquery-extra
   contents:
+    - jquery-extra
     - hdx_show_more.js
 
 popup-scripts:
@@ -689,7 +730,6 @@ dataset-light-scripts:
   extra:
     preload:
       - hdx_theme/dataset-light-styles
-      - hdx_theme/jquery-extra
       - hdx_theme/hdx-show-more
   contents:
     - light/dataset/dataset.js
@@ -932,7 +972,6 @@ custom-pages-light-scripts:
   extra:
     preload:
       - hdx_theme/custom-pages-light-styles
-      - hdx_theme/jquery-extra
       - hdx_theme/hdx-show-more
   contents:
     - light/custom_pages/custom-pages-light.js
