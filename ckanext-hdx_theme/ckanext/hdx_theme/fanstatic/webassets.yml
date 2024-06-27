@@ -8,29 +8,26 @@ vendor-vendor-css:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_vendor-vendor.css
   contents:
-    - fontawesome-free/css/all.css    
+    - vendor/fontawesome-free/css/all.css    
 
 vendor-vendor:
   #original is base/vendor/webassets.yml -> vendor
-  extra:
-    preload:
-      - vendor-vendor-css    
   contents:
-    - jed.js
-    - moment-with-locales.js
+    - vendor/jed.js
+    - vendor/moment-with-locales.js
     # HDX Edit
     # commented out this line to allow a new version of select2 to be integrated into our new onboarding pages
     # vendor/select2-js (created above) is now included in hdx_theme/page-scripts
     # - select2/select2.js
     # END HDX Edit
-    - popperjs.js
-    - purify.js
-    - jquery.js
+    - vendor/popperjs.js
+    - vendor/purify.js
+    - vendor/jquery.js
 
 vendor-bootstrap:
   #original is base/vendor/webassets.yml -> vendor
   contents:
-    - bootstrap/js/bootstrap.js
+    - vendor/bootstrap/js/bootstrap.js
 
 base-main:
   <<: *common-js
@@ -112,6 +109,7 @@ page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
   <<: *common-css
   contents:
+    - vendor-vendor-css
     - select2/select2.css
     - page-common-styles
     - base/base.css
