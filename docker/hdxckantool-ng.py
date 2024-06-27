@@ -48,28 +48,28 @@ def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'],
     except:
         raise click.ClickException("I am unable to connect to the database, exiting.")
 
-def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=False):
+def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True):
     """assign a new owner to a schema."""
 
-    try:
-        if verbose:
-            print("Assigning {} as owner of {} schema of {} database...".format(owner, schema, dbname))
-        con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
-        con.set_isolation_level(0)
-        cur = con.cursor()
-        query = "alter schema {} owner to {};".format(schema, owner)
-        cur.execute(query)
-        con.commit()
-        if verbose:
-            print("Done.")
-    except:
-        raise click.ClickException("I can't assign a new owner")
-    finally:
-        con.close()
+    # try:
+    if verbose:
+        print("Assigning {} as owner of {} schema of {} database...".format(owner, schema, dbname))
+    con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+    con.set_isolation_level(0)
+    cur = con.cursor()
+    query = "alter schema {} owner to {};".format(schema, owner)
+    cur.execute(query)
+    con.commit()
+    if verbose:
+        print("Done.")
+    # except:
+    #     raise click.ClickException("I can't assign a new owner")
+    # finally:
+    #     con.close()
 
 
 
-def db_empty(dbname, verbose=False):
+def db_empty(dbname, verbose=True):
     """Recreate the schema for a database."""
 
     try:
@@ -891,6 +891,62 @@ def do_magic(ctx, force, solr_config):
 
     # solr reindex time
     ctx.invoke(solr_reindex, clear=True, fast=True)
+
+@cli.command(name='test')
+@click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Just go.")
+@click.option('-s', '--solr-config', default=SOLR['CONFIGSET'], show_default=True, help="SOLR configset name")
+@click.pass_context
+def do_test(ctx, force, solr_config):
+    """Does sufficient setup for tests to run"""
+
+    print('Will do all the initial setup for you. Or just refresh the dbs and files for you')
+    print('    - pulls the latest db backup')
+    print('    - restores the database')
+    print('    - pulls the latest files backup (other than the filestore)')
+    print('    - restores the files (other than filestore)')
+    print('    - syncronizes the filestore from the dev filestore')
+    print('    - creates a new solr collection')
+    print('    - reindex solr')
+    print('Please be warned this will take quite a while')
+    print('    (especially the filestore sync and the solr reindex)')
+
+    if not force:
+        whee = input('Do you want to proceed? [y/n]: ')
+        if whee not in ['y', 'Y']:
+            print('Maybe later then.')
+            return
+
+    # print('You will be asked to enter your username and password used to get the database snapshots.')
+    # # pull latest dbs
+    # ctx.invoke(db_pull, all=True)
+    # # pull latest files
+    # ctx.invoke(files_pull)
+
+    # add pgpass
+    ctx.invoke(refresh_pgpass_command)
+    # fix schemas
+    ctx.invoke(db_set_schema)
+    # create solr collection
+    ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
+
+    # restore dbs and files
+    # ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
+    # ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=True)
+    # # fix datastore permissions
+    ctx.invoke(db_set_perms)
+
+    # restore files
+    # ctx.invoke(files_restore, targetdir='/srv/filestore', filename='/srv/backup/files.tar')
+    # # sync filestore
+    # ctx.invoke(filestore_sync,
+    #     source='hdx-dev-filestore',
+    #     destination=os.getenv('AWS_BUCKET_NAME'),
+    #     source_region='us-east-1',
+    #     region=os.getenv('REGION_NAME'),
+    #     clear=True)
+
+    # solr reindex time
+    # ctx.invoke(solr_reindex, clear=True, fast=True)
 
 
 if __name__ == '__main__':

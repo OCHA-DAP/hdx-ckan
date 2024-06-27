@@ -5,6 +5,8 @@
 1. Add the "Dev Containers" extension
 1. Clone this git repository
 1. Open this repo in VSCode
+1. Remember to create an `.env.secrets` file in the `.devcontainer` folder from `.env.secrets.template`
+1. Run `docker network create proxy`?
 1. Click the popup saying "Reopen in container"
 1. Wait for a few minutes while everything is set up for the first time
 

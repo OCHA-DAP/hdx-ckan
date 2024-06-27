@@ -1,2 +1,5 @@
 #*.po -diff
 *.mo -diff
+
+* text=auto eol=lf
+
