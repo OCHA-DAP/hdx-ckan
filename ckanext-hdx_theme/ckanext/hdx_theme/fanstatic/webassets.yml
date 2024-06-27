@@ -4,11 +4,10 @@ common-js: &common-js
 common-css: &common-css
   filters: cssrewrite, rcssmin
 
-vendor-vendor-css:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_vendor-vendor.css
-  contents:
-    - vendor/fontawesome-free/css/all.css    
+# vendor-vendor-css:
+#   contents:
+    #same version as CKANs but from CDN and min
+    # Fontawesome is included directly in page.html
 
 vendor-vendor:
   #original is base/vendor/webassets.yml -> vendor
@@ -109,7 +108,7 @@ page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
   <<: *common-css
   contents:
-    - vendor-vendor-css
+    # - vendor-vendor-css - Fontawesome is included directly in page.html
     - select2/select2.css
     - page-common-styles
     - base/base.css
