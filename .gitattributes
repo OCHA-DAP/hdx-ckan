@@ -2,4 +2,5 @@
 *.mo -diff
 
 * text=auto eol=lf
+*.sh eol=lf
 
