@@ -8,6 +8,7 @@
 {% asset 'hdx_theme/login-styles' %}
 {% asset 'hdx_theme/login-scripts' %}
 <form class="form registerForm" action="" method="post">
+  {{ h.csrf_input() }}
   {{ form.errors(error_summary) }}
 <div class="field-with-info" data-module="hdx_style_on_focus" data-module-target_element_id="username-info-field" data-module-class_name="info-field-focus">
   {{ form.input("name", id="field-username", label=_("Username"), placeholder="", value=data.name, error=errors.name, classes=["control-medium"]) }}

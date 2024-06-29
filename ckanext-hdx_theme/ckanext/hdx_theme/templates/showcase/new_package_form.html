@@ -6,6 +6,7 @@
 {% set showcase_delete_route = 'showcase_blueprint.delete' %}
 
 <form id="dataset-edit" class="hdx-form" method="post" action="{{ action }}" data-module="basic-form" enctype="multipart/form-data">
+  {{ h.csrf_input() }}
 
   <input type="hidden" name="_ckan_phase" value="dataset_new_1" />
   {# pkg_name used in 3 stage edit #}

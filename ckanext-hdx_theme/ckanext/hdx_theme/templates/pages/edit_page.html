@@ -19,6 +19,7 @@
 {% block primary %}
 <div id="section_container" data-module="hdx_custom_pages">
     <form id="create_page_form" class="cp-form hdx-form" method="post" enctype="multipart/form-data" data-module="basic-form">
+        {{ h.csrf_input() }}
         <div class="paddingRowHack background-gray pTopBottom35">
             <div class="paddingLeftHack paddingRightHack">
                 <div class="form-section">

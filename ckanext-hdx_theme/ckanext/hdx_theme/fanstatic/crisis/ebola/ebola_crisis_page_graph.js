@@ -11,6 +11,7 @@ $.ajax({
   type: 'POST',
   dataType: 'json',
   url: '/api/3/action/datastore_search_sql',
+  headers: hdxUtil.net.getCsrfTokenAsObject(),
   data: data,
   success: function(data) {
       var processedData = processData(data.result.records);
@@ -55,7 +56,7 @@ function processData(dataIn){
                 data[data.length-1]['cases'][e['Country']]=e['value'];
             } else {
                 data[data.length-1]['cases']['other']+=e['value'];
-            }            
+            }
         }
     });
     return data;
@@ -65,9 +66,9 @@ function generateLineChart(id,data){
     data.forEach(function(e){
         e.date = new Date(e.date);
     });
-    
+
     var varNames = d3.keys(data[0].deaths).filter(function (key) { return key !== 'total';});;
-    
+
     var seriesDeathArr = [], series = {};
         varNames.forEach(function (name) {
           series[name] = {name: name, values:[]};
@@ -78,7 +79,7 @@ function generateLineChart(id,data){
             series[name].values.push({label: d.date, value: +d.deaths[name]});
           });
         });
-        
+
     var seriesDeathArr = [], series = {};
         varNames.forEach(function (name) {
           series[name] = {name: name, values:[]};
@@ -88,12 +89,12 @@ function generateLineChart(id,data){
           varNames.map(function (name) {
             series[name].values.push({label: d.date, value: +d.deaths[name]});
           });
-        });        
-        
+        });
+
     var deathColor = d3.scale.ordinal()
           //.range(["#B71C1C","#E53935","#EF9A9A","#FFEBEE"]);
             .range(["#f2645a","#F58A83","#F8B1AC","#FBD8D5"]);
-  
+
     var seriesCaseArr = [], series = {};
         varNames.forEach(function (name) {
           series[name] = {name: name, values:[]};
@@ -103,7 +104,7 @@ function generateLineChart(id,data){
           varNames.map(function (name) {
             series[name].values.push({label: d.date, value: +d.cases[name]});
           });
-        });        
+        });
 
     var caseColor = d3.scale.ordinal()
           //.range(["#1A237E","#3949AB","#7986CB","#E8EAF6"])
@@ -118,10 +119,10 @@ function generateLineChart(id,data){
 
     var y = d3.scale.linear()
             .range([height, 0]);
-    
-    x.domain(d3.extent(data, function(d) { 
+
+    x.domain(d3.extent(data, function(d) {
         return d.date; }));
-    y.domain([0,d3.max(data, function(d) { return d.cases.total; })]);    
+    y.domain([0,d3.max(data, function(d) { return d.cases.total; })]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -169,7 +170,7 @@ function generateLineChart(id,data){
         .x(function (d) { return x(d.label); })
         .y0(function (d) { return y(d.y0); })
         .y1(function (d) { return y(d.y0 + d.y); });
-  
+
     stack(seriesDeathArr);
     stack(seriesCaseArr);
     var svg = d3.select(id).append("svg")
@@ -360,7 +361,7 @@ function generateLineChart(id,data){
             d3.selectAll(".deathPath").transition().duration(500).attr("opacity",0);
             d3.selectAll(".linelabels").transition().duration(500).attr("opacity",1);
             d3.selectAll(".areadeathlabels").transition().duration(500).attr("opacity",0);
-        });        
+        });
 
     svg.append("path")
         .datum(data)

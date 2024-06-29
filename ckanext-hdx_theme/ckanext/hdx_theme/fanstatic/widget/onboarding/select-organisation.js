@@ -20,34 +20,45 @@ $(document).ready(function(){
 
     $selectOrgForm.on('submit', function(){
         $this = $(this);
-        $.post('/user/request_membership', $this.serialize(), function(result_data){
+        $.ajax({
+          url: '/user/request_membership',
+          type: 'POST',
+          data: $this.serialize(),
+          headers: hdxUtil.net.getCsrfTokenAsObject(),
+          success: function (result_data) {
             var result = JSON.parse(result_data);
             $sel = $($("#select-organisation-form .select2-container.mTop20.required").find("a:first"));
             $sel.css("border", "");
-            if (result.success){
-                closeCurrentWidget($this);
-                let skipNext = false;
-                if ($this.attr('skipNext') === 'true') {
-                  $this.removeAttr('skipNext');
-                  skipNext = true;
-                }
-                if (!skipNext) {
-                  $selectOrgForm[0].reset();
-                  showOnboardingWidget('#invitePopup');
-                }
+            if (result.success) {
+              closeCurrentWidget($this);
+              let skipNext = false;
+              if ($this.attr('skipNext') === 'true') {
+                $this.removeAttr('skipNext');
+                skipNext = true;
+              }
+              if (!skipNext) {
+                $selectOrgForm[0].reset();
+                showOnboardingWidget('#invitePopup');
+              }
             } else {
-                alert("Can't join org: " + result.error.message);
-                $sel.css("border", "1px solid red");
+              alert("Can't join org: " + result.error.message);
+              $sel.css("border", "1px solid red");
             }
+          }
         });
         return false;
     });
 
     $createOrgForm.on('submit', function(){
         $this = $(this);
-        $.post('/user/request_new_organization', $this.serialize(), function(result_data){
+        $.ajax({
+          url: '/user/request_new_organization',
+          type: 'POST',
+          data: $this.serialize(),
+          headers: hdxUtil.net.getCsrfTokenAsObject(),
+          success: function (result_data) {
             var result = JSON.parse(result_data);
-            if (result.success){
+            if (result.success) {
               let skipNext = false;
               if ($this.attr('skipNext') === 'true') {
                 $this.removeAttr('skipNext');
@@ -55,12 +66,13 @@ $(document).ready(function(){
               }
               $createOrgForm[0].reset();
               closeCurrentWidget($this);
-              if(!skipNext && $('#user_extra').val() === 'True'){
+              if (!skipNext && $('#user_extra').val() === 'True') {
                 showOnboardingWidget('#invitePopup');
               }
             } else {
-                alert("Can't create org: " + result.error.message);
+              alert("Can't create org: " + result.error.message);
             }
+          }
         });
         return false;
     });

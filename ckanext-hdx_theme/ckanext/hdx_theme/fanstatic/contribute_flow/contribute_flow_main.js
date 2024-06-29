@@ -63,29 +63,33 @@
 
                             formDataArray.push({'name': 'id', 'value': datasetId});
 
-                            $.post(validateUrl, formDataArray,
-                                function (data, status, xhr) {
-                                    data.error_summary = data.error_summary ? data.error_summary : {};
+                            $.ajax({
+                              url: validateUrl,
+                              type: 'POST',
+                              data: formDataArray,
+                              headers: hdxUtil.net.getCsrfTokenAsObject(),
+                              success: function (data, status, xhr) {
+                                data.error_summary = data.error_summary ? data.error_summary : {};
 
-                                    // Resources are not required for metadata-only datasets
-                                    if (!data.data.is_requestdata_type && (!resourceDataArray || resourceDataArray.length === 0)) {
-                                        data.error_summary['resource-list'] = 'Please add at least 1 resource to the dataset';
-
-                                    }
-
-                                    // Tags are required for metadata-only datasets
-                                    if (data.data.is_requestdata_type && data.data.tag_string.length === 0) {
-                                        data.errors.tag_string = ['Missing value'];
-                                    }
-
-                                    contributeGlobal.updateValidationUi(data, status, xhr);
-                                    // contributeGlobal._managePrivateField();
-                                    deferred.resolve(contributeGlobal.validateSucceeded(data, status));
-                                    moduleLog('Validation finished');
-
+                                // Resources are not required for metadata-only datasets
+                                if (!data.data.is_requestdata_type && (!resourceDataArray || resourceDataArray.length === 0)) {
+                                  data.error_summary['resource-list'] = 'Please add at least 1 resource to the dataset';
                                 }
-                            ).fail(contributeGlobal.recoverFromServerError);
 
+                                // Tags are required for metadata-only datasets
+                                if (data.data.is_requestdata_type && data.data.tag_string.length === 0) {
+                                  data.errors.tag_string = ['Missing value'];
+                                }
+
+                                contributeGlobal.updateValidationUi(data, status, xhr);
+                                // contributeGlobal._managePrivateField();
+                                deferred.resolve(contributeGlobal.validateSucceeded(data, status));
+                                moduleLog('Validation finished');
+                              },
+                              error: function (xhr, status, error) {
+                                contributeGlobal.recoverFromServerError();
+                              }
+                            });
                         }.bind(this)
                     );
 
@@ -156,12 +160,19 @@
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
 
                                 $.when(analyticsPromise).done(function () {
-                                    $.post(requestUrl, formDataArray,
-                                        function (data, status, xhr) {
-                                            contributeGlobal.updateInnerState(data, status);
-                                            deferred.resolve(data, status, xhr);
-                                        }
-                                    ).fail(contributeGlobal.recoverFromServerError);
+                                    $.ajax({
+                                      url: requestUrl,
+                                      type: 'POST',
+                                      data: formDataArray,
+                                      headers: hdxUtil.net.getCsrfTokenAsObject(),
+                                      success: function (data, status, xhr) {
+                                        contributeGlobal.updateInnerState(data, status);
+                                        deferred.resolve(data, status, xhr);
+                                      },
+                                      error: function (xhr, status, error) {
+                                        contributeGlobal.recoverFromServerError();
+                                      }
+                                    });
                                 });
                             }
                         }

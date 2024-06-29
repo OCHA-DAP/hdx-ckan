@@ -9,6 +9,7 @@ Example:
 {% asset 'hdx_theme/hdx-autocomplete' %}
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
+  {{ h.csrf_input() }}
   <div id="{{ modal_div_id }}" class="modal confirmation-modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label"
        aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
