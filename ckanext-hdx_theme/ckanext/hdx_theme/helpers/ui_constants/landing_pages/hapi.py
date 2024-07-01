@@ -12,7 +12,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_TITLE_POWER_BI': '''Power BI workflow''',
     'BE_INSPIRED_CARD_TEXT_POWER_BI': '''A tutorial to demonstrate how easy it is to bring in data.''',
     'BE_INSPIRED_CARD_BUTTON_POWER_BI': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''https://docs.google.com/presentation/d/19HfMI9gnKXAMhe0SFZdbbUFesNnTnfeUI9rnshN2kkk/edit?usp=sharing''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''https://drive.google.com/file/d/1EQ4UAshvFvpqmoifdBH0mJxKck7xoSGN/view''',
 
     'BE_INSPIRED_CARD_TITLE_API': '''API Sandbox''',
     'BE_INSPIRED_CARD_TEXT_API': '''A sandbox environment to help construct queries and get a data response.''',
