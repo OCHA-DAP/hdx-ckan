@@ -18,6 +18,7 @@ Example:
 {% asset 'hdx_theme/login-scripts' %}
 
 <form action="{{ action }}" method="post" class="hdx-form login-form">
+  {{ h.csrf_input() }}
   <div class="form-horizontal">
     {{ form.errors(errors=error_summary) }}
 

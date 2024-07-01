@@ -18,7 +18,12 @@ $(document).ready(function(){
         var analyticsPromise =
             hdxUtil.analytics.sendMessagingEvent('dataset', 'group message',
                 null, $this.find('select[name="topic"]').val(), true);
-        var postPromise = $.post('/membership/contact_members', $this.serialize());
+        var postPromise = $.ajax({
+          url: '/membership/contact_members',
+          type: 'POST',
+          data: $this.serialize(),
+          headers: hdxUtil.net.getCsrfTokenAsObject(),
+        });
 
         $.when(postPromise, analyticsPromise).then(
             function (postData, analyticsData) {

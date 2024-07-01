@@ -15,17 +15,22 @@ function _updateQuarantine(resource, flag) {
     "_csrf_token": csrf_value
   };
   let promise = new Promise((resolve, reject) => {
-    $.post('/api/action/hdx_qa_resource_patch', body)
-      .done((result) => {
-        if (result.success){
+    $.ajax({
+      url: '/api/action/hdx_qa_resource_patch',
+      type: 'POST',
+      data: body,
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+      success: function (result) {
+        if (result.success) {
           resolve(result);
         } else {
           reject(result);
         }
-      })
-      .fail((result) => {
+      },
+      error: function (result) {
         reject(result);
-      });
+      }
+    });
   });
   return promise;
 }
@@ -38,17 +43,22 @@ function _updateBrokenLink(resource, flag) {
     "_csrf_token": csrf_value
   };
   let promise = new Promise((resolve, reject) => {
-    $.post('/api/action/hdx_mark_broken_link_in_resource', body)
-      .done((result) => {
-        if (result.success){
+    $.ajax({
+      url: '/api/action/hdx_mark_broken_link_in_resource',
+      type: 'POST',
+      data: body,
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+      success: function (result) {
+        if (result.success) {
           resolve(result);
         } else {
           reject(result);
         }
-      })
-      .fail((result) => {
+      },
+      error: function (result) {
         reject(result);
-      });
+      }
+    });
   });
   return promise;
 }
@@ -63,17 +73,22 @@ function _updateAllResourcesKeyValue(package,key,value) {
   };
 
   let promise = new Promise((resolve, reject) => {
-    $.post('/api/action/hdx_qa_package_revise_resource', body)
-      .done((result) => {
-        if (result.success){
+    $.ajax({
+      url: '/api/action/hdx_qa_package_revise_resource',
+      type: 'POST',
+      data: body,
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+      success: function (result) {
+        if (result.success) {
           resolve(result);
         } else {
           reject(result);
         }
-      })
-      .fail((result) => {
+      },
+      error: function (result) {
         reject(result);
-      });
+      }
+    });
   });
   return promise;
 }
@@ -187,7 +202,13 @@ function _updateResourceConfirmState(resource, flag, score, piiReportId) {
 
   let promise = new Promise((resolve, reject) => {
     const mixpanelPromise = hdxUtil.analytics.sendQADashboardEvent(resource,flag,score,piiReportId);
-    const patchPromise = $.post('/api/action/hdx_qa_resource_patch', body);
+    const patchPromise = $.ajax({
+      url: '/api/action/hdx_qa_resource_patch',
+      type: 'POST',
+      data: body,
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+    });
+
     mixpanelPromise.then((mixpanelResults) => {
       patchPromise
         .done((result) => {

@@ -1173,6 +1173,7 @@ CKAN.Utils = function($, my) {
         contentType: 'application/json',
         url: CKAN.SITE_URL + '/api/3/action/related_' + action,
         data: data ? JSON.stringify(data) : undefined,
+        headers: hdxUtil.net.getCsrfTokenAsObject(),
         error: function(err, txt, w) {
           // This needs to be far more informative.
           addAlert('<strong>Error:</strong> Unable to ' + action + ' related item');
@@ -1301,9 +1302,15 @@ CKAN.Utils = function($, my) {
         $target.addClass('depressed');
         raw_markdown=textarea.val();
         preview.html("<em>"+CKAN.Strings.loading+"<em>");
-        $.post(CKAN.SITE_URL + "/api/util/markdown", { q: raw_markdown },
-          function(data) { preview.html(data); }
-        );
+          $.ajax({
+              url: CKAN.SITE_URL + "/api/util/markdown",
+              type: 'POST',
+              data: {q: raw_markdown},
+              headers: hdxUtil.net.getCsrfTokenAsObject(),
+              success: function (data) {
+                  preview.html(data);
+              }
+          });
         preview.width(textarea.width());
         preview.height(textarea.height());
         textarea.hide();
@@ -1438,6 +1445,7 @@ CKAN.Utils = function($, my) {
       dataType: 'json',
       processData: false,
       type: 'POST',
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
       success: function(data) {
         button.setAttribute('data-state', nextState);
         button.innerHTML = nextString;

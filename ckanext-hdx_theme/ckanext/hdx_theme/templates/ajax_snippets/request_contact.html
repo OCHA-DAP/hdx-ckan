@@ -26,6 +26,7 @@
               Dataset {{ package_name }}
             </div>
             <form class="form-horizontal form-request-contact" id="request-data-form">
+              {{ h.csrf_input() }}
               {% if pending_request %}
                 <div class="alert alert-danger mTop20">{{ _('You already have a pending request. Please wait for the reply.') }}</div>
               {% else %}

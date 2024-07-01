@@ -141,6 +141,7 @@ function autoGraph() {
                     type: 'POST',
                     dataType: 'json',
                     url: '/api/3/action/datastore_search_sql',
+                    headers: hdxUtil.net.getCsrfTokenAsObject(),
                     data: urldata,
                     index: sIdx,
                     success: function (data) {
@@ -436,6 +437,7 @@ function loadMapData(map, confJson, layers){
             type: 'POST',
             dataType: 'json',
             url: '/api/3/action/datastore_search_sql',
+            headers: hdxUtil.net.getCsrfTokenAsObject(),
             data: urldata,
             success: function(result){
                 values = processMapValues(result.result.records, confJson, pcodeColumnName, valueColumnName, descriptionColumnName);

@@ -138,7 +138,6 @@ class TestMembersController(MemberControllerBase):
         context = {'model': model, 'session': model.Session, 'user': orgadmin}
         orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': orgadmin_token}
-        # test_client = self.get_backwards_compatible_test_client()
 
         member_with_name_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -236,16 +235,17 @@ class TestRequestMembershipMembersController(org_group_base.OrgGroupBaseWithInds
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
+    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
-    def test_request_membership(self, _mail_recipient_html):
+    def test_request_membership(self, _mail_recipient_html, app):
         test_sysadmin = 'testsysadmin'
         test_username = 'johndoe1'
-        test_client = self.get_backwards_compatible_test_client()
+        test_username_token = factories.APIToken(user=test_username, expires_in=2, unit=60 * 60)['token']
         context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        test_client.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
+        app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
 
         member_list = self._get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -262,9 +262,9 @@ class TestRequestMembershipMembersController(org_group_base.OrgGroupBaseWithInds
 
         # send a membership request
         url = h.url_for('ytp_request.new')
-        ret_page = test_client.post(url, params={'organization': 'hdx-test-org', 'role': 'member', 'save': 'save',
-                                                 'message': 'add me to your organization'},
-                                    extra_environ={"REMOTE_USER": test_username})
+        ret_page = app.post(url, params={'organization': 'hdx-test-org', 'role': 'member', 'save': 'save',
+                                         'message': 'add me to your organization'},
+                            headers={'Authorization': test_username_token})
         member_requests = self._get_action('member_request_list')(context, {'group': 'hdx-test-org'})
         assert len(member_requests) == 1, 'Exactly one member request should exist for this org'
         assert member_requests[0].get('user_name') == test_username
@@ -280,16 +280,17 @@ class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsT
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
+    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
-    def test_request_membership(self, _mail_recipient_html):
+    def test_request_membership(self, _mail_recipient_html, app):
         test_sysadmin = 'testsysadmin'
         test_username = 'johndoe1'
-        test_client = self.get_backwards_compatible_test_client()
+        test_username_token = factories.APIToken(user=test_username, expires_in=2, unit=60 * 60)['token']
         context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        test_client.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
+        app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
 
         member_list = self._get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -306,9 +307,9 @@ class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsT
 
         # send a membership request
         url = h.url_for('ytp_request.new')
-        ret_page = test_client.post(url, params={'organization': 'hdx-test-org', 'role': 'editor', 'save': 'save',
-                                                 'message': 'add me to your organization'},
-                                    extra_environ={"REMOTE_USER": test_username})
+        ret_page = app.post(url, params={'organization': 'hdx-test-org', 'role': 'editor', 'save': 'save',
+                                         'message': 'add me to your organization'},
+                            headers={'Authorization': test_username_token})
         member_requests = self._get_action('member_request_list')(context, {'group': 'hdx-test-org'})
         assert len(member_requests) == 1, 'Exactly one member request should exist for this org'
         assert member_requests[0].get('user_name') == test_username

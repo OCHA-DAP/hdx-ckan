@@ -51,6 +51,7 @@
             options.emulateJSON = true; // Important because your sending formdata
             options.processData = false;
             options.contentType = false;
+            options.headers = hdxUtil.net.getCsrfTokenAsObject();
 
             return Backbone.Model.prototype.sync.call(this, method, model, options);
             // return Backbone.sync.apply(this, arguments);
