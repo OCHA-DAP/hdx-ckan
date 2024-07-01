@@ -43,7 +43,7 @@ def are_strings_in_text(text, search_strings,
 #         assert item not in section, item + ' exists in text section'
 
 
-def count_string_occurences(text, search_item,
+def count_string_occurrences(text, search_item,
                             begin_str=None, end_str=None):
     start = 0
     end = len(text)
@@ -68,7 +68,7 @@ def test_string_checks():
     end_str = '</section>'
     search_item = 'name="q"'
 
-    count = count_string_occurences(page, search_item, begin_str, end_str)
+    count = count_string_occurrences(page, search_item, begin_str, end_str)
     assert count == 1, 'There should be exactly one input with name q in the form'
 
     page = 'lorep ipsum <section class="search-list list-items"> /dataset lorep Test Dataset 1 name="q" ipsumlorep test_dataset_1</section>'
