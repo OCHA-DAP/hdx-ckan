@@ -407,7 +407,7 @@ class SearchLogic(object):
     def _params_nopage(self):
         params_to_skip = ['_show_filters']
         # most search operations should reset the page counter:
-        return [(k, v) for k, v in request.args.items()
+        return [(k, v) for k, v in request.args.items(multi=True)
                 if k != 'page' and k not in params_to_skip]
 
     def _set_search_url_params(self):
