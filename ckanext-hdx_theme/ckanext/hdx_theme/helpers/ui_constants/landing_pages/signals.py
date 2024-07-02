@@ -3,13 +3,13 @@ CONSTANTS = {
     'HERO_SECTION_DESCRIPTION': '''We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
-    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Datasets monitored by HDX signals at the moment are as follows:''',
+    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Datasets monitored by HDX Signals at the moment are as follows:''',
 
     'SIGNUP_SECTION_TITLE': '''Sign up''',
     'SIGNUP_SECTION_DESCRIPTION': '''Sign up below to receive HDX Signals emails. To receive the content you are interested in, please make sure you have selected AT LEAST ONE dataset and region or priority humanitarian location from the options below. All locations in a region include all locations covered by the datasets, not just priority humanitarian locations listed below.''',
 
     'RESOURCES_SECTION_TITLE': '''Resources''',
-    'RESOURCES_SECTION_DESCRIPTION': '''For more information about the datasets monitored by HDX signals as well as information for developers see the following:''',
+    'RESOURCES_SECTION_DESCRIPTION': '''For more information about the datasets monitored by HDX Signals as well as information for developers see the following:''',
     'RESOURCES_SECTION_PARAGRAPH': '''For more information, please contact us at <a href="{0}" title="Contact us" data-module="hdx_click_stopper" data-module-link_type="signals resources description">hdx-signals@un.org</a>.''',
 
     'RESOURCES_CARD_TITLE_MAP': '''Signals Map''',
