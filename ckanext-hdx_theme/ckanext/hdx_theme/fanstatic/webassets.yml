@@ -367,7 +367,6 @@ onboarding-scripts:
       - hdx_theme/ckan
   contents:
     - widget/onboarding/onboarding.js
-    - widget/onboarding/signup.js
     - popup-scripts
 
 onboarding-styles:
@@ -378,17 +377,12 @@ onboarding-styles:
     - widget/onboarding/notification.css
     - widget/onboarding/logout.css
     - widget/onboarding/login.css
-    - widget/onboarding/signup.css
 
 onboarding-bulk-user-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-user.css
   contents:
     - onboarding-styles
-    - onboarding-registered-styles
-    - onboarding-follow-styles
-    - onboarding-invite-styles
     - onboarding-done-styles
-    - onboarding-select-org-styles
     - onboarding-survey-styles
 
 
@@ -396,14 +390,6 @@ onboarding-bulk-user-scripts:
   extra:
     preload:
       - hdx_theme/onboarding-scripts
-
-onboarding-bulk-user-complete-onboarding-scripts:
-  extra:
-    preload:
-      - hdx_theme/onboarding-registered-scripts
-      - hdx_theme/onboarding-follow-scripts
-      - hdx_theme/onboarding-invite-scripts
-      - hdx_theme/onboarding-select-org-scripts
 
 onboarding-bulk-anon-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-anon.css
@@ -466,84 +452,14 @@ onboarding-survey-styles:
   contents:
     - widget/onboarding/survey.css
 
-onboarding-follow-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_onboarding-follow-scripts.js
-  extra:
-    preload:
-      - hdx_theme/onboarding-follow-styles
-  contents:
-#    - follow.js
-    - widget/onboarding/follow.js
-
-onboarding-follow-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_onboarding-follow-styles.css
-  contents:
-    - widget/onboarding/follow.css
-
-onboarding-invite-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_onboarding-invite-scripts.js
-  extra:
-    preload:
-      - hdx_theme/onboarding-invite-styles
-  contents:
-    - widget/onboarding/invite.js
-
-onboarding-invite-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_onboarding-invite-styles.css
-  contents:
-    - widget/onboarding/invite.css
-
-onboarding-register-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_onboarding-register-scripts.js
-  extra:
-    preload:
-      - hdx_theme/ckan
-      - hdx_theme/onboarding-register-styles
-  contents:
-    - widget/onboarding/register.js
-
-onboarding-register-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_onboarding-register-styles.css
-  contents:
-    - widget/onboarding/register.css
-
-onboarding-registered-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_onboarding-registered-scripts.js
-  extra:
-    preload:
-      - hdx_theme/onboarding-registered-styles
-  contents:
-    - widget/onboarding/registered.js
-
-onboarding-registered-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_onboarding-registered-styles.css
-  contents:
-    - widget/onboarding/registered.css
-
 onboarding-select-org-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_onboarding-select-org-scripts.js
   extra:
     preload:
       - hdx_theme/ckan
-      - hdx_theme/onboarding-select-org-styles
   contents:
     - base/hdx-util-lib.js
-    - widget/onboarding/select-organisation.js
-
-onboarding-select-org-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_onboarding-select-org-styles.css
-  contents:
-    - widget/onboarding/select-organisation.css
 
 signin-styles:
   <<: *common-css

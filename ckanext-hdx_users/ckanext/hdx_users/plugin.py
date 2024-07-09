@@ -3,7 +3,6 @@ import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.actions.delete as delete
-import ckanext.hdx_users.helpers.user_extra as h_user_extra
 import ckanext.hdx_users.helpers.helpers as hdx_h
 import ckanext.hdx_users.actions.auth as auth
 import ckanext.hdx_users.logic.register_auth as authorize
@@ -17,7 +16,6 @@ import ckanext.hdx_users.views.api as api
 import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.requestdata_view as rdv
-import ckanext.hdx_users.views.user_register_view as urv
 import ckanext.hdx_users.views.onboarding as onboarding
 import ckanext.hdx_users.views.signin as signin
 
@@ -50,11 +48,9 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return {
             'token_create': create.token_create,
             'token_update': update.token_update,
-            'onboarding_followee_list': get.onboarding_followee_list,
             'hdx_send_reset_link': update.hdx_send_reset_link,
             'hdx_send_new_org_request': misc.hdx_send_new_org_request,
             'hdx_send_request_data_auto_approval': misc.hdx_send_request_data_auto_approval,
-            'hdx_first_login': create.hdx_first_login,
             'user_delete': delete.hdx_user_delete,
             'user_update': update.user_update,
             'user_create': create.user_create,
@@ -65,7 +61,6 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_register': authorize.user_can_register,
             'user_can_validate': authorize.user_can_validate,
             'onboarding_user_can_register': authorize.onboarding_user_can_register,
-            'hdx_first_login': auth.hdx_first_login,
         }
 
     # IConfigurable
@@ -93,8 +88,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     def get_helpers(self):
         return {
-            'get_user_extra': h_user_extra.get_user_extra,
-            'get_login': h_user_extra.get_login,
             'find_first_global_settings_url': hdx_h.find_first_global_settings_url,
             'hdx_get_user_notifications': hdx_h.hdx_get_user_notifications
         }
@@ -135,7 +128,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             permission.hdx_user_permission,
             rduv.hdx_requestdata_user,
             rdv.requestdata_send_request,
-            urv.user_register,
             onboarding.hdx_user_onboarding,
             signin.hdx_signin,
         ]

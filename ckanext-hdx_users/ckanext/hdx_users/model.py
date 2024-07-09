@@ -13,35 +13,6 @@ import ckan.model.types as _types
 mapper = orm.mapper
 log = logging.getLogger(__name__)
 
-HDX_ONBOARDING_USER_REGISTERED = 'hdx_onboarding_user_registered'
-HDX_ONBOARDING_USER_VALIDATED = 'hdx_onboarding_user_validated'
-HDX_ONBOARDING_DETAILS = 'hdx_onboarding_details'
-HDX_ONBOARDING_FIRST_LOGIN = 'hdx_onboarding_first_login'
-HDX_ONBOARDING_FOLLOWS = 'hdx_onboarding_follows'
-HDX_ONBOARDING_ORG = 'hdx_onboarding_org'
-HDX_ONBOARDING_FRIENDS = 'hdx_onboarding_friends'
-HDX_LOGIN = 'hdx_login'
-HDX_REGISTER = 'hdx_register'
-HDX_LOGOUT = 'hdx_logout'
-HDX_FIRST_LOGIN = "hdx_first_login"
-HDX_FIRST_NAME = "hdx_first_name"
-HDX_LAST_NAME = "hdx_last_name"
-
-USER_DETAILS = [
-    HDX_FIRST_NAME,
-    HDX_LAST_NAME
-]
-
-USER_STATUSES = [
-    HDX_ONBOARDING_USER_REGISTERED,
-    HDX_ONBOARDING_USER_VALIDATED,
-    HDX_ONBOARDING_DETAILS,
-    HDX_ONBOARDING_FIRST_LOGIN,
-    HDX_ONBOARDING_FOLLOWS,
-    HDX_ONBOARDING_ORG,
-    HDX_ONBOARDING_FRIENDS
-]
-
 validation_token_table = None
 
 class ValidationToken(DomainObject):

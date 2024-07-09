@@ -28,23 +28,6 @@ def token_update(context, data_dict):
     return token_obj.as_dict()
 
 
-def user_fullname_update(context, data_dict):
-    # Logged in user should have edit access to account token belongs to
-    _check_access('user_update', context, {'id': data_dict.get('id')})
-    first_name = data_dict.get('first_name')
-    last_name = data_dict.get('last_name')
-    fullname = first_name + ' ' + last_name
-    user_obj = model.User.get(data_dict.get('id'))
-    if not user_obj:
-        raise NotFound('User id not found')
-    ue_data_dict = {'user_id': user_obj.id, 'extras': [
-        {'key': umodel.HDX_FIRST_NAME, 'new_value': first_name},
-        {'key': umodel.HDX_LAST_NAME, 'new_value': last_name},
-    ]}
-    ue_result = get_action('user_extra_update')(context, ue_data_dict)
-    return ue_result
-
-
 def hdx_send_reset_link(context, data_dict):
     from six.moves.urllib.parse import urljoin
 

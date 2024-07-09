@@ -24,13 +24,6 @@ def manage_permissions(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can view user permission page')}
 
 
-def hdx_first_login(context, data_dict):
-    if context.get('auth_user_obj'):
-        return {'success': True}
-    else:
-        return {'success': False, 'msg': _("You must be logged in to send a first_login update")}
-
-
 @tk.auth_allow_anonymous_access
 def user_update(context, data_dict):
     if data_dict.get('reset_key'):

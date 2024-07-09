@@ -63,26 +63,6 @@ $(document).ready(function(){
     //   // }
     // }
 
-    function showSurveyPopup(){
-      var SURVEY_COOKIE = "hdx-survey-popup";
-      var cookie = $.cookie(SURVEY_COOKIE);
-      if (!cookie) {
-        $("#surveyPopup a.btn-primary").click(function (e) {
-          hdxUtil.analytics.sendSurveyEvent('confirm popup');
-          window.open("https://www.surveymonkey.com/r/FWXQ6W2", "_blank");
-          $("#surveyPopup").hide();
-          $.cookie(SURVEY_COOKIE, true, {
-            expires: 200 //days
-          });
-        });
-        $.cookie(SURVEY_COOKIE, true, {
-          expires: 2 //days
-        });
-        hdxUtil.analytics.sendSurveyEvent('show popup');
-        $("#surveyPopup").show();
-      }
-    }
-
     function initCookiePopup(){
         var consent = $.cookie("hdx-cookie-consent");
         if (!consent) {
