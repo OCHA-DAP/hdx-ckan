@@ -89,6 +89,10 @@ page-common-styles:
     - css/Humanitarian-Icons-v02.css
     - widget/contribute/details.css
 
+hdx-show-more:
+  contents:
+    - jquery-extra
+    - hdx_show_more.js
 
 page-scripts:
   <<: *common-js
@@ -103,6 +107,7 @@ page-scripts:
     - bs_tooltip.js
     - follow.js
     - widget/contribute/contribute.js
+    - hdx-show-more
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
@@ -117,14 +122,16 @@ page-styles:
     - banner-styles
 
 page-light-scripts:
-  output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
   <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
   extra:
     preload:
       - hdx_theme/ckan
   contents:
+    - select2/select2.js
     - base/header-init.js
     - widget/contribute/contribute.js
+    - hdx-show-more
 
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
@@ -197,7 +204,6 @@ bem-blocks-scripts:
   extra:
     preload:
       - hdx_theme/select2-4-scripts
-      - hdx_theme/hdx-show-more
   contents:
     - bem.blocks/select2_field.js
     - bem.blocks/textarea_field.js
@@ -226,7 +232,6 @@ search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
   contents:
-    - hdx-show-more
     - search_/minisearch.min.js
     - search_/normalize.js
     - search_/lunr/feature-index.js
@@ -301,13 +306,6 @@ jquery-extra:
   contents:
     - vendor/jquery.expander/jquery.expander.js
     - vendor/jquery.highlight/jquery.highlight.js
-
-hdx-show-more:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_hdx-show-more.js
-  contents:
-    - jquery-extra
-    - hdx_show_more.js
 
 popup-scripts:
   <<: *common-js
@@ -728,7 +726,6 @@ dataset-light-scripts:
   extra:
     preload:
       - hdx_theme/dataset-light-styles
-      - hdx_theme/hdx-show-more
   contents:
     - light/dataset/dataset.js
 
@@ -790,7 +787,6 @@ resource-list-scripts:
   extra:
     preload:
       - hdx_theme/resource-list-styles
-      - hdx_theme/hdx-show-more
   contents:
     - resource-list.js
 
@@ -970,7 +966,6 @@ custom-pages-light-scripts:
   extra:
     preload:
       - hdx_theme/custom-pages-light-styles
-      - hdx_theme/hdx-show-more
   contents:
     - light/custom_pages/custom-pages-light.js
     - light/dataset/dataset.js
