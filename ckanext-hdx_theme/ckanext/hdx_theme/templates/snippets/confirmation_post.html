@@ -12,6 +12,7 @@ Example:
 
   <div id="{{ modal_div_id }}" class="modal confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
 	<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
+    {{ h.csrf_input() }}
 		<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content hdx-modal">
 			<div class="modal-header">

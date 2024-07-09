@@ -79,7 +79,12 @@ $(document).ready(function(){
         var analyticsPromise =
             hdxUtil.analytics.sendMessagingEvent('faq', 'faq',
                 $this.find('select[name="topic"]').val(), null, false);
-        var postPromise = $.post('/faq/contact_us', $this.serialize());
+        var postPromise = $.ajax({
+          url: '/faq/contact_us',
+          type: 'POST',
+          data: $this.serialize(),
+          headers: hdxUtil.net.getCsrfTokenAsObject(),
+        });
 
         $.when(postPromise, analyticsPromise).then(
             function (postData, analyticsData) {

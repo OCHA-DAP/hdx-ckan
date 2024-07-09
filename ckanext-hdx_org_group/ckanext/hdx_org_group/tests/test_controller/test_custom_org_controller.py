@@ -140,7 +140,7 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         org_dict = _get_action('organization_update')(context, org_dict)
 
         data_access_cls.return_value.get_top_line_items.side_effect = mock_get_top_line_items
-        req_mock.args = {}
+        req_mock.args = mock.MagicMock()
         tk.g.user = sysadmin_user
         tk.g.userobj = None
         org_helper_c_mock.user = sysadmin_user

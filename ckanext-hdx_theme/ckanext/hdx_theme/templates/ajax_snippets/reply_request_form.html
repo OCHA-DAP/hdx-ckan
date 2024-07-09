@@ -33,6 +33,7 @@
               Reply to this request
             </div>
             <form class="form-horizontal form-request-contact" id="request-data-form" enctype="multipart/form-data">
+              {{ h.csrf_input() }}
 
               <div class="alert alert-danger mTop20 d-none"></div>
 

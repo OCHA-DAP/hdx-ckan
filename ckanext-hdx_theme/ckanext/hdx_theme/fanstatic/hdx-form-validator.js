@@ -105,8 +105,9 @@ this.ckan.module('hdx-form-validator', function ($) {
           {rule: this.validateLength, args: [1, null]}
         ],
         username: [
-          {rule: this.validateRegex, args: [/^[a-z0-9_-]+$/]},
-          {rule: this.validateLength, args: [2, 100]}
+          {rule: this.validateLowercaseAlphanumeric},
+          {rule: this.validateLength, args: [2, 100]},
+          {rule: this.validateCharacters, args: [/^[a-zA-Z0-9_-]+$/]},
         ],
         email: [
           {rule: this.validateRegex, args: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/]}
@@ -166,10 +167,28 @@ this.ckan.module('hdx-form-validator', function ($) {
       return [validationErrors.length === 0, validationErrors];
     },
 
-
     validateRegex: function (field, regex) {
       var isValid = regex.test(field.val());
       return [isValid, isValid ? null : 'invalid-format'];
+    },
+
+    validateLowercaseAlphanumeric: function (field) {
+      var value = field.val();
+
+      var isValid = true;
+      if (/[A-Z]/.test(value)) {
+        isValid = false;
+      }
+      if (!/[a-z0-9]/.test(value)) {
+        isValid = false;
+      }
+
+      return [isValid, isValid ? null : 'no-lowercase-alphanumeric'];
+    },
+
+    validateCharacters: function (field, regex) {
+      var isValid = regex.test(field.val());
+      return [isValid, isValid ? null : 'invalid-characters'];
     },
 
     validateFieldsMatch: function (field) {
@@ -295,8 +314,8 @@ this.ckan.module('hdx-form-validator', function ($) {
       var validationMessages = {
         'name': [
           {'key': 'invalid-length', 'message': 'Must be between 2 and 100 characters in length'},
-          {'key': 'invalid-format', 'message': 'Must use lowercase alphanumeric characters'},
-          {'key': null, 'message': 'Can use - (dash) or _ (underscore)'}
+          {'key': 'no-lowercase-alphanumeric', 'message': 'Must use lowercase alphanumeric characters (a-z, 0-9)'},
+          {'key': 'invalid-characters', 'message': 'Only allowed special characters - (dash) or _ (underscore)'},
         ],
         'password1': [
           {'key': 'invalid-length', 'message': 'The password must be a minimum of 10 characters in length'},

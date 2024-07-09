@@ -10,7 +10,12 @@ $(document).ready(function(){
         var analyticsPromise =
             hdxUtil.analytics.sendMessagingEvent('dataset', 'contact contributor',
                 $this.find('select[name="topic"]').val(), null, true);
-        var postPromise = $.post('/membership/contact_contributor', $this.serialize());
+        var postPromise = $.ajax({
+          url: '/membership/contact_contributor',
+          type: 'POST',
+          data: $this.serialize(),
+          headers: hdxUtil.net.getCsrfTokenAsObject(),
+        });
 
         $.when(postPromise, analyticsPromise).then(
             function (postData, analyticsData) {

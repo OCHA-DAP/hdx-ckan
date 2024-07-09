@@ -3,7 +3,7 @@ CONSTANTS = {
     'HERO_SECTION_DESCRIPTION': '''HDX HAPI is in beta phase, and we are seeking feedback. To share your thoughts or join our slack channel, send an email to <a href="{0}" title="Contact us">hdx@un.org</a>.''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
-    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 10 sub-categories. Our beta version of HDX HAPI covers 44 indicators across 25 locations that have a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>. This data has been shared by 9 different contributing organisations.''',
+    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HDX HAPI covers 44 indicators across 25 locations that have a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>. This data has been shared by nine different contributing organisations.''',
     'DATA_COVERAGE_SECTION_PARAGRAPH': '''Refer to the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HAPI - The Humanitarian API">documentation</a> for the latest coverage. <a href="{1}" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="Contact us">Contact us</a> to request additional indicators in future versions of HDX HAPI.''',
 
     'BE_INSPIRED_SECTION_TITLE': '''Be Inspired''',
@@ -12,7 +12,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_TITLE_POWER_BI': '''Power BI workflow''',
     'BE_INSPIRED_CARD_TEXT_POWER_BI': '''A tutorial to demonstrate how easy it is to bring in data.''',
     'BE_INSPIRED_CARD_BUTTON_POWER_BI': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''https://docs.google.com/presentation/d/19HfMI9gnKXAMhe0SFZdbbUFesNnTnfeUI9rnshN2kkk/edit?usp=sharing''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''https://drive.google.com/file/d/1EQ4UAshvFvpqmoifdBH0mJxKck7xoSGN/view''',
 
     'BE_INSPIRED_CARD_TITLE_API': '''API Sandbox''',
     'BE_INSPIRED_CARD_TEXT_API': '''A sandbox environment to help construct queries and get a data response.''',
@@ -27,7 +27,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_TITLE_CHATBOT': '''Chatbot''',
     'BE_INSPIRED_CARD_TEXT_CHATBOT': '''An early stage AI chatbot developed with DataKind to ask questions about the data.''',
     'BE_INSPIRED_CARD_BUTTON_CHATBOT': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''#''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''https://www.datakind.org/our-domains/humanitarian-response/''',
 
     'FAQ_SECTION_TITLE': '''FAQs''',
 
@@ -85,7 +85,7 @@ DATA_COVERAGE_CONSTANTS = [
     },
     {
         "category": "Population & Socio-economy",
-        "subcategory": "Population",
+        "subcategory": "Baseline Population",
         "contributor": "United Nations Population Fund (UNFPA) and OCHA offices",
         "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/population_and_socio-economy/#baseline-population"
     },

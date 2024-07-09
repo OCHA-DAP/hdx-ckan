@@ -135,7 +135,7 @@ class HDXS3TestBase(object):
             "owner_org": "test_owner_org",
             "groups": [{"name": "test_group1"}],
             "maintainer": "testsysadmin",
-            "data_update_frequency": "0",
+            "data_update_frequency": "-1",
             "resources": [
                 {
                     'package_id': pkg_name,

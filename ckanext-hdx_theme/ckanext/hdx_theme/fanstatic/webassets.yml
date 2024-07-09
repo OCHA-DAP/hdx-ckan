@@ -392,7 +392,7 @@ onboarding-bulk-user-styles:
     - onboarding-select-org-styles
     - onboarding-survey-styles
 
-  
+
 onboarding-bulk-user-scripts:
   extra:
     preload:
@@ -537,6 +537,7 @@ onboarding-select-org-scripts:
       - hdx_theme/ckan
       - hdx_theme/onboarding-select-org-styles
   contents:
+    - base/hdx-util-lib.js
     - widget/onboarding/select-organisation.js
 
 onboarding-select-org-styles:
@@ -1267,7 +1268,7 @@ organization-light-styles:
       - hdx_theme/dataset-search-styles
       - hdx_theme/dataset-styles
   contents:
-    - search-styles 
+    - search-styles
     - light/organization/org-light.css
 
 organization-members-scripts:
@@ -1405,7 +1406,7 @@ contact-contributor-scripts:
       - hdx_theme/ckan
       - hdx_theme/contact-contributor-styles
   contents:
-    - https://www.google.com/recaptcha/api.js 
+    - https://www.google.com/recaptcha/api.js
     - widget/membership/contact-contributor.js
 
 contact-contributor-styles:

@@ -13,6 +13,7 @@
       <h1 class="page-heading">{{ _('Reset Your Password') }}</h1>
       {% block form %}
         <form action="" method="post" class="form-inline control-medium">
+          {{ h.csrf_input() }}
           <label for="field-username">{{ _('Username or Email') }}</label>
           <input id="field-username" name="user" value="" />
           <button class="btn btn-large btn-primary" type="submit" name="reset">{{ _("Request Reset") }}</button>

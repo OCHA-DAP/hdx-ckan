@@ -101,6 +101,7 @@
         options.data = formData;
         options.processData = false;
         options.contentType = false;
+        options.headers = hdxUtil.net.getCsrfTokenAsObject();
 
         // Handle "progress" events
         if (!options.xhr) {
