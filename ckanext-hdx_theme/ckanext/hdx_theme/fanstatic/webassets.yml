@@ -49,8 +49,8 @@ base-main:
     - module.js
     - pubsub.js
     - client.js
-    - notify.js
     - i18n.js
+    - notify.js
     - main.js
 
 ckan:
@@ -117,12 +117,13 @@ page-styles:
     - banner-styles
 
 page-light-scripts:
-  output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
   <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_page-light-scripts.js
   extra:
     preload:
       - hdx_theme/ckan
   contents:
+    - select2/select2.js
     - base/header-init.js
     - widget/contribute/contribute.js
 
@@ -197,8 +198,8 @@ bem-blocks-scripts:
   extra:
     preload:
       - hdx_theme/select2-4-scripts
-      - hdx_theme/hdx-show-more
   contents:
+    - hdx-show-more
     - bem.blocks/select2_field.js
     - bem.blocks/textarea_field.js
 
@@ -727,8 +728,8 @@ dataset-light-scripts:
   extra:
     preload:
       - hdx_theme/dataset-light-styles
-      - hdx_theme/hdx-show-more
   contents:
+    - hdx-show-more
     - light/dataset/dataset.js
 
 dataset-light-styles:
@@ -789,7 +790,6 @@ resource-list-scripts:
   extra:
     preload:
       - hdx_theme/resource-list-styles
-      - hdx_theme/hdx-show-more
   contents:
     - resource-list.js
 
@@ -969,8 +969,8 @@ custom-pages-light-scripts:
   extra:
     preload:
       - hdx_theme/custom-pages-light-styles
-      - hdx_theme/hdx-show-more
   contents:
+    - hdx-show-more
     - light/custom_pages/custom-pages-light.js
     - light/dataset/dataset.js
 
