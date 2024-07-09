@@ -41,16 +41,38 @@ SNAPSHOTS_TOKEN = None
 
 def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
     """connects to postgres"""
-
     try:
         con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
         return con
     except:
-        raise click.ClickException("I am unable to connect to the database, exiting.")
+        raise click.ClickException(f"I am unable to connect to the database ({dbname}) with username ({user}), exiting.")
+
+def create_db(dbname:str):
+    conn = db_connect_to_postgres(dbname='postgres', user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+    conn.autocommit = True
+
+    #Creating a cursor object using the cursor() method
+    cursor = conn.cursor()
+
+    #Preparing query to create a database
+    sql = f'CREATE database {dbname}'
+
+    #Creating a database
+    try:
+        cursor.execute(sql)
+        print(f"Database '{dbname}' created successfully........")
+    except psycopg2.errors.DuplicateDatabase:
+        print(f"Database '{dbname}' already exists")
+
+    #Closing the connection
+    conn.close()
+
 
 def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True):
     """assign a new owner to a schema."""
-
+    print("db_schema_owner", flush=True)
+    print(SQL['SUPERUSER'], flush=True)
+    print(SQL['SUPERPASS'], flush=True)
     # try:
     if verbose:
         print("Assigning {} as owner of {} schema of {} database...".format(owner, schema, dbname))
@@ -65,28 +87,28 @@ def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True):
     # except:
     #     raise click.ClickException("I can't assign a new owner")
     # finally:
-    #     con.close()
+    con.close()
 
 
 
 def db_empty(dbname, verbose=True):
     """Recreate the schema for a database."""
 
-    try:
-        if verbose:
-            print("Flushing database {}...".format(dbname))
-        con = db_connect_to_postgres(dbname=dbname)
-        con.set_isolation_level(0)
-        cur = con.cursor()
-        query = "drop schema public cascade; create schema public;"
-        cur.execute(query)
-        con.commit()
-        if verbose:
-            print("Done.")
-    except:
-        raise click.ClickException("I can't flush database {} as {}, try sudo :)".format(dbname, SQL['USER']))
-    finally:
-        con.close()
+    #  try:
+    if verbose:
+        print("Flushing database {}...".format(dbname))
+    con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+    con.set_isolation_level(0)
+    cur = con.cursor()
+    query = "drop schema public cascade; create schema public;"
+    cur.execute(query)
+    con.commit()
+    if verbose:
+        print("Done.")
+    # except:
+    #     raise click.ClickException("I can't flush database {} as {}, try sudo :)".format(dbname, SQL['USER']))
+    # finally:
+    con.close()
 
 
 def db_query(query):
@@ -400,11 +422,11 @@ def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_
             for line in schema_only:
                 f.write('{}\n'.format(str(line)))
         restore.extend("-U {} -d {} -L {}.tables {}" \
-            .format(SQL['USER'], database, filename, filename).split())
+            .format(SQL['SUPERUSER'], database, filename, filename).split())
     else:
         print('Restoring minimal database {} from {} ...'.format(database,filename))
         restore.extend("-U {} -d {} {}" \
-            .format(SQL['USER'], database, filename).split())
+            .format(SQL['SUPERUSER'], database, filename).split())
     if ctx.obj['VERBOSE']:
         subprocess.call(restore, stderr=subprocess.STDOUT)
     else:
@@ -443,16 +465,16 @@ def db_set_perms():
             .replace('{datastoredb}', SQL['DB_DATASTORE'])
         )
 
-    try:
-        con = db_connect_to_postgres(dbname=SQL['DB_DATASTORE'])
-        con.set_isolation_level(0)
-        cur = con.cursor()
-        cur.execute(query)
-        con.commit()
-    except:
-        raise click.ClickException("Failed to set proper permissions. Exiting.")
-    finally:
-        con.close()
+    # try:
+    con = db_connect_to_postgres(dbname=SQL['DB_DATASTORE'], user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+    con.set_isolation_level(0)
+    cur = con.cursor()
+    cur.execute(query)
+    con.commit()
+    # except:
+    #     raise click.ClickException("Failed to set proper permissions. Exiting.")
+    # finally:
+    con.close()
 
     print("Datastore permissions have been reset to default.")
 
@@ -866,16 +888,28 @@ def do_magic(ctx, force, solr_config):
     # pull latest files
     ctx.invoke(files_pull)
 
+    #Make sure ckan user exists:
+    ctx.invoke(db_create_user, user="ckan")
+    ctx.invoke(db_create_user, user="datastore")
+
     # add pgpass
     ctx.invoke(refresh_pgpass_command)
+
+    # Create databases
+    ctx.invoke(create_db, dbname="datastore")
+    ctx.invoke(create_db, dbname="ckan")
+
     # fix schemas
     ctx.invoke(db_set_schema)
+    
     # create solr collection
     ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
 
     # restore dbs and files
     ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
     ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=True)
+    
+
     # fix datastore permissions
     ctx.invoke(db_set_perms)
 
@@ -892,61 +926,19 @@ def do_magic(ctx, force, solr_config):
     # solr reindex time
     ctx.invoke(solr_reindex, clear=True, fast=True)
 
-@cli.command(name='test')
-@click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Just go.")
-@click.option('-s', '--solr-config', default=SOLR['CONFIGSET'], show_default=True, help="SOLR configset name")
-@click.pass_context
-def do_test(ctx, force, solr_config):
-    """Does sufficient setup for tests to run"""
+def db_create_user(user:str=None):
+    conn = db_connect_to_postgres(dbname='postgres', user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+    conn.autocommit = True
+    password=SQL['PASSWORD']
+    new_user_sql = f"CREATE ROLE {user} LOGIN PASSWORD '{password}';"
+    cursor = conn.cursor()
+    try:
+        cursor.execute(new_user_sql)
+    except psycopg2.errors.DuplicateObject:
+        print("CKAN user already exists", flush=True)
+    conn.close()
 
-    print('Will do all the initial setup for you. Or just refresh the dbs and files for you')
-    print('    - pulls the latest db backup')
-    print('    - restores the database')
-    print('    - pulls the latest files backup (other than the filestore)')
-    print('    - restores the files (other than filestore)')
-    print('    - syncronizes the filestore from the dev filestore')
-    print('    - creates a new solr collection')
-    print('    - reindex solr')
-    print('Please be warned this will take quite a while')
-    print('    (especially the filestore sync and the solr reindex)')
 
-    if not force:
-        whee = input('Do you want to proceed? [y/n]: ')
-        if whee not in ['y', 'Y']:
-            print('Maybe later then.')
-            return
-
-    # print('You will be asked to enter your username and password used to get the database snapshots.')
-    # # pull latest dbs
-    # ctx.invoke(db_pull, all=True)
-    # # pull latest files
-    # ctx.invoke(files_pull)
-
-    # add pgpass
-    ctx.invoke(refresh_pgpass_command)
-    # fix schemas
-    ctx.invoke(db_set_schema)
-    # create solr collection
-    ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
-
-    # restore dbs and files
-    # ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
-    # ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=True)
-    # # fix datastore permissions
-    ctx.invoke(db_set_perms)
-
-    # restore files
-    # ctx.invoke(files_restore, targetdir='/srv/filestore', filename='/srv/backup/files.tar')
-    # # sync filestore
-    # ctx.invoke(filestore_sync,
-    #     source='hdx-dev-filestore',
-    #     destination=os.getenv('AWS_BUCKET_NAME'),
-    #     source_region='us-east-1',
-    #     region=os.getenv('REGION_NAME'),
-    #     clear=True)
-
-    # solr reindex time
-    # ctx.invoke(solr_reindex, clear=True, fast=True)
 
 
 if __name__ == '__main__':
