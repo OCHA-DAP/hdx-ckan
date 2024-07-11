@@ -1,5 +1,10 @@
 {% extends "landing_pages/page.html" %}
 
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/hdx-signals-scripts' %}
+{% endblock %}
+
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE'] %}
 
 {% block subtitle %}{{ _('HDX Signals') }}{% endblock %}
@@ -58,8 +63,15 @@
                                   <input type="text" name="ORG" class="required text form-control" id="mce-ORG"
                                          required="" value="">
                                 </div>
+                                <div>
+                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3 me-3" id="select-all">Give me everything</button>
+                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3 me-3" id="select-all-datasets">Select all datasets</button>
+                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3 me-3" id="select-all-locations">Select all locations</button>
+                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="select-all-hrp-locations">Select all HRP locations</button>
+                                </div>
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">Datasets of interest</p>
+                                  <p class="fw-bold mb-0">Datasets of interest</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4389][128]" class="form-check-input"
@@ -102,7 +114,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">Asia and the Pacific</p>
+                                  <p class="fw-bold mb-0">Asia and the Pacific</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4397][16384]" class="form-check-input"
@@ -125,7 +138,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">Europe</p>
+                                  <p class="fw-bold mb-0">Europe</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4405][8388608]" class="form-check-input"
@@ -143,7 +157,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">Latin America and the Caribbean</p>
+                                  <p class="fw-bold mb-0">Latin America and the Caribbean</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4417][8589934592]" class="form-check-input"
@@ -187,7 +202,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">Middle East and North Africa</p>
+                                  <p class="fw-bold mb-0">Middle East and North Africa</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4409][33554432]" class="form-check-input"
@@ -217,7 +233,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">Southern and Eastern Africa</p>
+                                  <p class="fw-bold mb-0">Southern and Eastern Africa</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4401][65536]" class="form-check-input"
@@ -255,7 +272,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">West and Central Africa</p>
+                                  <p class="fw-bold mb-0">West and Central Africa</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4421][549755813888]" class="form-check-input"
@@ -310,7 +328,8 @@
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="mc-field-group mb-3">
-                                  <p class="fw-bold">North America</p>
+                                  <p class="fw-bold mb-0">North America</p>
+                                  <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
                                       <input type="checkbox" name="group[4425][16]" class="form-check-input"
