@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 
 BASEDIR = os.getenv('HDX_CKAN_BASEDIR', "/srv/ckan")
 INI_FILE = os.getenv('INI_FILE', "/etc/ckan/prod.ini")
-VERBOSE_INI_FILE = os.getenv('VERBOSE_INI_FILE', "/etc/ckan/less.ini")
+VERBOSE_INI_FILE = os.getenv('VERBOSE_INI_FILE', "/etc/ckan/prod.ini")
 
 SQL = dict(
     HOST=str(os.getenv('HDX_CKANDB_ADDR')),
@@ -47,13 +47,15 @@ def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'],
     except:
         raise click.ClickException(f"I am unable to connect to the database ({dbname}) with username ({user}), exiting.")
 
-def create_db(dbname:str):
+def db_create(dbname:str, test:bool):
     conn = db_connect_to_postgres(dbname='postgres', user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
     conn.autocommit = True
 
     #Creating a cursor object using the cursor() method
     cursor = conn.cursor()
 
+    if test:
+        dbname = f"{dbname}_test"
     #Preparing query to create a database
     sql = f'CREATE database {dbname}'
 
@@ -68,18 +70,23 @@ def create_db(dbname:str):
     conn.close()
 
 
-def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True):
+def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True, test=False):
     """assign a new owner to a schema."""
-    print("db_schema_owner", flush=True)
-    print(SQL['SUPERUSER'], flush=True)
-    print(SQL['SUPERPASS'], flush=True)
     # try:
+    if test:
+        dbname = f"{dbname}_test"
     if verbose:
-        print("Assigning {} as owner of {} schema of {} database...".format(owner, schema, dbname))
+        print(f"Assigning {owner} as owner of {schema} schema of {dbname} database...")
     con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
     con.set_isolation_level(0)
     cur = con.cursor()
-    query = "alter schema {} owner to {};".format(schema, owner)
+
+    if dbname.startswith("ckan"):
+        query = (f"GRANT ALL PRIVILEGES ON DATABASE {dbname} TO {owner};"
+                 f"GRANT ALL ON SCHEMA public TO {owner};"
+                 f"GRANT ALL ON ALL TABLES IN SCHEMA {schema} TO {owner};")
+    else:
+        query = (f"alter schema {schema} owner to {owner};")
     cur.execute(query)
     con.commit()
     if verbose:
@@ -91,18 +98,20 @@ def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True):
 
 
 
-def db_empty(dbname, verbose=True):
+def db_empty(dbname:str, verbose:bool=True):
     """Recreate the schema for a database."""
 
     #  try:
     if verbose:
         print("Flushing database {}...".format(dbname))
     con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+    con.autocommit = True
     con.set_isolation_level(0)
     cur = con.cursor()
     query = "drop schema public cascade; create schema public;"
+    # query = f"drop database {dbname};"
     cur.execute(query)
-    con.commit()
+    # con.commit()
     if verbose:
         print("Done.")
     # except:
@@ -335,8 +344,6 @@ def token():
 def refresh_pgpass_command(ctx):
     """Make sure the pgpass file is up to date."""
     verbose = ctx.obj['VERBOSE']
-    if verbose:
-        print("Refreshing .pgpass file...")
     (host, port, user, password)=(SQL['HOST'], SQL['PORT'], SQL['USER'], SQL['PASSWORD'])
     pgpass = '/root/.pgpass'
     correct_line = ':'.join([host, port, '*', user, password])
@@ -387,7 +394,7 @@ def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_
     else:
         print('Ckan will keep running in the background.')
 
-    restore = "pg_restore -h {} -vOx -n public".format(server).split()
+    restore = "pg_restore -h {} -vOx -n public --no-owner --no-privileges ".format(server).split()
     if clear_database:
         db_empty(database)
         # two hammers should be better than one hammer
@@ -422,11 +429,13 @@ def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_
             for line in schema_only:
                 f.write('{}\n'.format(str(line)))
         restore.extend("-U {} -d {} -L {}.tables {}" \
-            .format(SQL['SUPERUSER'], database, filename, filename).split())
+            .format("ckan", database, filename, filename).split())
     else:
         print('Restoring minimal database {} from {} ...'.format(database,filename))
         restore.extend("-U {} -d {} {}" \
-            .format(SQL['SUPERUSER'], database, filename).split())
+            .format("ckan", database, filename).split())
+    print(f"\nRestore statement: \n{restore}")
+    
     if ctx.obj['VERBOSE']:
         subprocess.call(restore, stderr=subprocess.STDOUT)
     else:
@@ -444,11 +453,11 @@ def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_
 
 @db.command(name='schema')
 @click.pass_context
-def db_set_schema(ctx):
+def db_set_schema(ctx, test:bool=False):
     """Set the owner of the ckan and datastore databases schema"""
     verbose = ctx.obj['VERBOSE']
-    db_schema_owner(dbname='datastore', schema='public', owner=SQL['USER'], verbose=verbose)
-    db_schema_owner(dbname='ckan', schema='public', owner=SQL['USER'], verbose=verbose)
+    db_schema_owner(dbname='datastore', schema='public', owner=SQL['USER'], verbose=verbose, test=test)
+    db_schema_owner(dbname='ckan', schema='public', owner=SQL['USER'], verbose=verbose, test=test)
 
 
 @db.command(name='perms')
@@ -539,11 +548,11 @@ def filestore_sync(ctx, source, destination, source_region, region, clear):
         's3://{}/'.format(source), 's3://{}/'.format(destination),
         '--source-region', source_region, '--region', region
     ]
-    try:
-        print(' '.join(sync_array))
-        subprocess.check_call(sync_array)
-    except:
-        raise click.ClickException("S3 sync failed.")
+    # try:
+    print(' '.join(sync_array))
+    subprocess.check_call(sync_array)
+    # except:
+    #     raise click.ClickException("S3 sync failed.")
 
 
 @cli.command(name='less')
@@ -690,6 +699,7 @@ def solr_reindex(ctx, fast, refresh, clear):
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'search-index']
     if clear:
         print("Clearing solr index...")
+        print(cmd)
         subprocess.call(cmd + ['clear'])
     if fast:
         cmd.append('rebuild-fast')
@@ -700,6 +710,8 @@ def solr_reindex(ctx, fast, refresh, clear):
         if refresh:
             cmd.append('-r')
     os.chdir(BASEDIR)
+    print("Rebuilding index...")
+    print(cmd)
     subprocess.call(cmd)
 
 
@@ -861,19 +873,30 @@ def webassets(ctx):
 @cli.command(name='magic')
 @click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Just go.")
 @click.option('-s', '--solr-config', default=SOLR['CONFIGSET'], show_default=True, help="SOLR configset name")
+@click.option('-t', '--test', is_flag=True, default=False, show_default=True, help="setup the test databases rather than production")
 @click.pass_context
-def do_magic(ctx, force, solr_config):
+def do_magic(ctx, force, solr_config, test:bool=False):
     """Automagically sets things up for you"""
+    print("*****************************")
+    print("* hdxckantool magic command *")
+    print("*****************************")
+    print(f"Test flag: {test}")
+    verbose = ctx.obj['VERBOSE']
+    print(f"Verbose: {verbose}")
 
-    print('Will do all the initial setup for you. Or just refresh the dbs and files for you')
-    print('    - pulls the latest db backup')
-    print('    - restores the database')
-    print('    - pulls the latest files backup (other than the filestore)')
-    print('    - restores the files (other than filestore)')
-    print('    - syncronizes the filestore from the dev filestore')
-    print('    - creates a new solr collection')
-    print('    - reindex solr')
-    print('Please be warned this will take quite a while')
+    print('\nWill do all the initial setup for you. Or just refresh the dbs and files for you')
+    print('    - creates the required users (ckan and datastore)')
+    print('    - creates the required databases (ckan and datastore)')
+    print('    - applies the correct permissions to the databases (ckan and datastore)')
+    print('    - pulls the latest db backups*')
+    print('    - restores the databases*')
+    print('    - pulls the latest files backup (other than the filestore)*')
+    print('    - restores the files (other than filestore)*')
+    print('    - syncronizes the filestore from the dev filestore*')
+    print('    - creates a new solr collection*')
+    print('    - reindex solr*')
+    print('\nItems marked * are only performed if the --test flag is not set')
+    print('\nPlease be warned this will take quite a while')
     print('    (especially the filestore sync and the solr reindex)')
 
     if not force:
@@ -882,50 +905,64 @@ def do_magic(ctx, force, solr_config):
             print('Maybe later then.')
             return
 
-    print('You will be asked to enter your username and password used to get the database snapshots.')
-    # pull latest dbs
-    ctx.invoke(db_pull, all=True)
-    # pull latest files
-    ctx.invoke(files_pull)
-
-    #Make sure ckan user exists:
-    ctx.invoke(db_create_user, user="ckan")
-    ctx.invoke(db_create_user, user="datastore")
-
     # add pgpass
+    print("\nRefreshing .pgpass file")
     ctx.invoke(refresh_pgpass_command)
 
-    # Create databases
-    ctx.invoke(create_db, dbname="datastore")
-    ctx.invoke(create_db, dbname="ckan")
+    # # #Make sure ckan user exists:
+    print("\nEnsure required users exist")
+    ctx.invoke(db_create_user, user="ckan")
+    ctx.invoke(db_create_user, user="datastore")
+    # # Create databases
+    print("\nEnsure required databases exist")
+    ctx.invoke(db_create, dbname="datastore", test=test)
+    ctx.invoke(db_create, dbname="ckan",test=test)
 
-    # fix schemas
-    ctx.invoke(db_set_schema)
-    
-    # create solr collection
-    ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
-
-    # restore dbs and files
-    ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
-    ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=True)
-    
+    # Set the correct permissions on the schemas
+    print("\nSet permissions on the ckan database")
+    ctx.invoke(db_set_schema, test=test)
 
     # fix datastore permissions
+    print("\nSet permissions on the datastore database")
     ctx.invoke(db_set_perms)
+    
+    if not test:
+        # pass
+        # restore dbs and files
+        # print("\nDownloading backups and files")
+        # print('You will be asked to enter your username and password used to get the database snapshots.')
+        # # pull latest dbs
+        # ctx.invoke(db_pull, all=True)
+        # # # pull latest files
+        # ctx.invoke(files_pull)
+        print("\nRestoring database backups")
+        ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=False)
+        ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
 
-    # restore files
-    ctx.invoke(files_restore, targetdir='/srv/filestore', filename='/srv/backup/files.tar')
-    # sync filestore
-    ctx.invoke(filestore_sync,
-        source='hdx-dev-filestore',
-        destination=os.getenv('AWS_BUCKET_NAME'),
-        source_region='us-east-1',
-        region=os.getenv('REGION_NAME'),
-        clear=True)
+        # restore files
+        print("\nRestoring filestore")
+        ctx.invoke(files_restore, targetdir='/srv/filestore', filename='/srv/backup/files.tar')
+        # sync filestore
+        print("\nSyncing filestore")
+        ctx.invoke(filestore_sync,
+            source='hdx-dev-filestore',
+            destination=os.getenv('AWS_BUCKET_NAME'),
+            source_region='eu-central-1',
+            region=os.getenv('REGION_NAME'),
+            clear=True)
+        
 
-    # solr reindex time
-    ctx.invoke(solr_reindex, clear=True, fast=True)
+    
 
+    # create and reindex the solr collection
+    if not test:
+        print("\nCreating solr index")
+        ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
+        # solr reindex time
+        print("\nRebuilding solr index")
+        ctx.invoke(solr_reindex, clear=True, fast=True)
+
+    
 def db_create_user(user:str=None):
     conn = db_connect_to_postgres(dbname='postgres', user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
     conn.autocommit = True
@@ -935,11 +972,8 @@ def db_create_user(user:str=None):
     try:
         cursor.execute(new_user_sql)
     except psycopg2.errors.DuplicateObject:
-        print("CKAN user already exists", flush=True)
+        print(f"'{user}' user already exists", flush=True)
     conn.close()
-
-
-
 
 if __name__ == '__main__':
     cli()
