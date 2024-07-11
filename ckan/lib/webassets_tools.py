@@ -60,7 +60,7 @@ def webassets_init() -> None:
 
     env = Environment()
     env.directory = static_path
-    env.debug = config.get(u'debug')
+    env.debug = True
     env.url = u'/webassets/'
 
     add_public_path(base_path, u'/base/')
