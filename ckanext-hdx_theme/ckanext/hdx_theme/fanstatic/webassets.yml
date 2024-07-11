@@ -66,6 +66,7 @@ ckan:
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
     - base/hdx-util-lib.js
+    - google-analytics.js
     - modules/data-viewer2.js
     - modules/resource-view-embed.js
     - modules/copy-into-buffer.js
@@ -74,7 +75,6 @@ ckan:
     - hdx_terms_checkbox.js
     - hdx_visibility_toggler.js
     - external-links.js
-    - google-analytics.js
     - notifications/hdx_notifications_main.js
     - metadata-button.js
     - select-switch.js
