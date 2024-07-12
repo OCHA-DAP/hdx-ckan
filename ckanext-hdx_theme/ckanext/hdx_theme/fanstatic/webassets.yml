@@ -128,7 +128,7 @@ page-light-scripts:
     preload:
       - hdx_theme/ckan
   contents:
-    - select2/select2.js
+#    - select2/select2.js
     - base/header-init.js
     - widget/contribute/contribute.js
     - hdx-show-more
@@ -137,7 +137,7 @@ page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
   <<: *common-css
   contents:
-    - select2/select2.css
+#    - select2/select2.css
     - page-common-styles
     - light/page-light.css
     - search-styles
