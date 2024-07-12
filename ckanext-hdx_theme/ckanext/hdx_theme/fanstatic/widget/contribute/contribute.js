@@ -15,7 +15,7 @@ function contributeAddDetails(datasetId, typeOfCall, anchor){
   // });
 
   if (popup.attr('dataset-id') != String(datasetId)) {
-    prepareContributePopup(datasetId);
+    // prepareContributePopup(datasetId);
   }
   if (anchor) {
     $("#addDataPopupFrame").prop("src", _getContributeURL(datasetId, anchor));
@@ -65,6 +65,6 @@ $(document).ready(function() {
   let link = $('.contribute-popup-init:last');
   let datasetId = link.attr('dataset-id');
   if (datasetId !== "DO_IGNORE") {
-    prepareContributePopup(datasetId);
+    // prepareContributePopup(datasetId);
   }
 });
