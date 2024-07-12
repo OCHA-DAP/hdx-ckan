@@ -534,7 +534,6 @@ onboarding-select-org-scripts:
       - hdx_theme/ckan
       - hdx_theme/onboarding-select-org-styles
   contents:
-    - base/hdx-util-lib.js
     - widget/onboarding/select-organisation.js
 
 onboarding-select-org-styles:
