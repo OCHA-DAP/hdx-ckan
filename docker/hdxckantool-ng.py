@@ -98,18 +98,21 @@ def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=True, te
 
 
 
-def db_empty(dbname:str, verbose:bool=True):
+def db_empty(dbname:str, test:bool=False, verbose:bool=True):
     """Recreate the schema for a database."""
 
+    if test:
+        dbname = f"{dbname}_test"
     #  try:
     if verbose:
         print("Flushing database {}...".format(dbname))
-    con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+
+    con = db_connect_to_postgres(dbname="postgres", user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
     con.autocommit = True
     con.set_isolation_level(0)
     cur = con.cursor()
-    query = "drop schema public cascade; create schema public;"
-    # query = f"drop database {dbname};"
+    # query = "drop schema public cascade; create schema public;"
+    query = f"drop database {dbname};"
     cur.execute(query)
     # con.commit()
     if verbose:
@@ -909,7 +912,14 @@ def do_magic(ctx, force, solr_config, test:bool=False):
     print("\nRefreshing .pgpass file")
     ctx.invoke(refresh_pgpass_command)
 
-    # # #Make sure ckan user exists:
+    # Drop databases
+    print("\nDropping ckan and datastore databases")
+    ctx.invoke(db_empty, test=test, dbname="ckan")
+    ctx.invoke(db_empty, test=test, dbname="datastore")
+
+    
+
+    # Make sure ckan user exists:
     print("\nEnsure required users exist")
     ctx.invoke(db_create_user, user="ckan")
     ctx.invoke(db_create_user, user="datastore")
@@ -927,17 +937,16 @@ def do_magic(ctx, force, solr_config, test:bool=False):
     ctx.invoke(db_set_perms)
     
     if not test:
-        # pass
         # restore dbs and files
-        # print("\nDownloading backups and files")
-        # print('You will be asked to enter your username and password used to get the database snapshots.')
-        # # pull latest dbs
-        # ctx.invoke(db_pull, all=True)
-        # # # pull latest files
-        # ctx.invoke(files_pull)
+        print("\nDownloading backups and files")
+        print('You will be asked to enter your username and password used to get the database snapshots.')
+        # pull latest dbs
+        ctx.invoke(db_pull, all=True)
+        # pull latest files
+        ctx.invoke(files_pull)
         print("\nRestoring database backups")
         ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=False)
-        ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
+        ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=False)
 
         # restore files
         print("\nRestoring filestore")
