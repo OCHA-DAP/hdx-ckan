@@ -1,218 +1,176 @@
 {
   "": {
-    "domain": "ckan", 
-    "lang": "ca", 
-    "plural-forms": "nplurals=2; plural=(n != 1)"
-  }, 
-  "%(color)s shirt": [
-    "%(color)s shirts", 
-    "%(color)s shirt", 
-    "%(color)s shirts"
-  ], 
-  "%(num)d item": [
-    "%(num)d items", 
-    "%(num)d item", 
-    "%(num)d items"
-  ], 
-  "%(num)d missing translation": [
-    "%(num)d missing translations", 
-    "%(num)d missing translation", 
-    "%(num)d missing translations"
-  ], 
+    "domain": "ckan",
+    "lang": "ca",
+    "plural-forms": "nplurals=2; plural=(n != 1);"
+  },
   "Add Filter": [
-    null, 
+    null,
     "Afegir filtre"
-  ], 
-  "An Error Occurred": [
-    null, 
-    "Ha tingut lloc un error"
-  ], 
+  ],
+  "An error occured during AJAX request. Could not load view.": [
+    null,
+    "S'ha produit un error durant la sol·licitud AJAX. No s'ha pogut carregar la vista."
+  ],
   "Are you sure you want to perform this action?": [
-    null, 
+    null,
     "Teniu tota la seguretat per a dur a terme aquesta acció?"
-  ], 
+  ],
   "Cancel": [
-    null, 
+    null,
     "Cancel·lar"
-  ], 
+  ],
+  "Close": [
+    null,
+    "Tancar"
+  ],
   "Confirm": [
-    null, 
+    null,
     "Confirma"
-  ], 
+  ],
   "Could not load view": [
-    null, 
+    null,
     "No s'ha pogut carregar la vista"
-  ], 
+  ],
   "DataProxy returned an error": [
-    null, 
+    null,
     "DataProxy ha retornat un error"
-  ], 
+  ],
   "DataStore returned an error": [
-    null, 
+    null,
     "DataStore ha retornat un error"
-  ], 
+  ],
   "Edit": [
-    null, 
+    null,
     "Editar"
-  ], 
+  ],
   "Failed to load data API information": [
-    null, 
+    null,
     "Ha fallat la càrrega d'informació de l'API"
-  ], 
+  ],
   "File": [
-    null, 
+    null,
     "Arxiu"
-  ], 
+  ],
   "Filters": [
-    null, 
+    null,
     "Filtres"
-  ], 
+  ],
   "Follow": [
-    null, 
+    null,
     "Seguir"
-  ], 
+  ],
   "Graph": [
-    null, 
+    null,
     "Gràfic"
-  ], 
+  ],
   "Grid": [
-    null, 
+    null,
     "Taula"
-  ], 
+  ],
   "Hide": [
-    null, 
+    null,
     "Oculta"
-  ], 
+  ],
   "Image": [
-    null, 
+    null,
     "Imatge"
-  ], 
+  ],
   "Input is too short, must be at least one character": [
-    "Input is too short, must be at least %(num)d characters", 
-    "L'entrada de dades és massa curta, almenys ha de tenir un caràcter", 
+    "Input is too short, must be at least %(num)d characters",
+    "L'entrada de dades és massa curta, almenys ha de tenir un caràcter",
     "L'entrada de dades és massa curta, almenys ha de tenir %(num)d caràcters"
-  ], 
+  ],
   "Link": [
-    null, 
+    null,
     "Enllaç"
-  ], 
+  ],
   "Link to a URL on the internet (you can also link to an API)": [
-    null, 
+    null,
     "Enllaçar a una URL a l'Internet (també podeu enllaçar a una API)"
-  ], 
+  ],
   "Loading...": [
-    null, 
+    null,
     "Carregant..."
-  ], 
+  ],
   "Map": [
-    null, 
+    null,
     "Mapa"
-  ], 
+  ],
   "No matches found": [
-    null, 
+    null,
     "No s'ha trobat coincidències"
-  ], 
+  ],
   "Please Confirm Action": [
-    null, 
+    null,
     "Acció de confirmació"
-  ], 
+  ],
+  "Please select the file to upload again": [
+    null,
+    "Si us plau seleccioneu una altra vegada l'arxiu a pujar"
+  ],
   "Remove": [
-    null, 
+    null,
     "Esborra"
-  ], 
-  "Resource uploaded": [
-    null, 
-    "El recurs s'ha carregat"
-  ], 
+  ],
+  "Reorder resources": [
+    null,
+    "Reordenar recursos"
+  ],
+  "Reset": [
+    null,
+    "Reinicia"
+  ],
   "Save order": [
-    null, 
+    null,
     "Desar ordre"
-  ], 
+  ],
   "Saving...": [
-    null, 
+    null,
     "Desant..."
-  ], 
+  ],
   "Select a field": [
-    null, 
+    null,
     "Selecciona un camp"
-  ], 
+  ],
   "Show more": [
-    null, 
+    null,
     "Mostra més"
-  ], 
+  ],
   "Start typing…": [
-    null, 
+    null,
     "Comenceu a escriure..."
-  ], 
+  ],
   "There are unsaved modifications to this form": [
-    null, 
+    null,
     "Aquest formulari conté modificacions no desades"
-  ], 
+  ],
   "There is no API data to load for this resource": [
-    null, 
+    null,
     "No hi ha dades de l'API per a carregar-les en aquest recurs"
-  ], 
+  ],
   "URL": [
-    null, 
+    null,
     "URL"
-  ], 
-  "Unable to authenticate upload": [
-    null, 
-    "No es pot autenticar la càrrega"
-  ], 
-  "Unable to get data for uploaded file": [
-    null, 
-    "No es pot obtenir les dades per a l'arxiu carregat"
-  ], 
-  "Unable to upload file": [
-    null, 
-    "No es pot carregar l'arxiu"
-  ], 
+  ],
   "Unfollow": [
-    null, 
+    null,
     "Deixar de seguir"
-  ], 
+  ],
   "Upload": [
-    null, 
+    null,
     "Carregar"
-  ], 
-  "Upload a file": [
-    null, 
-    "Carregar un arxiu"
-  ], 
+  ],
   "Upload a file on your computer": [
-    null, 
+    null,
     "Pujar un arxiu des del vostre ordinador"
-  ], 
-  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null, 
-    "Esteu pujant un arxiu. Esteu segurs que voleu marxar de la pàgina i aturar la pujada?"
-  ], 
-  "bar": [
-    "bars", 
-    "bar", 
-    "bars"
-  ], 
+  ],
+  "You can rearrange the resources by dragging them using the arrow icon. Drag the resource to the right and place it to the desired location on the list. When you are done, click the \"Save order\" -button.": [
+    null,
+    "Podeu re-ordernar els recursos arrossegant-los amb la icona de la fletxa. Arrossegueu els recursos a la dreta i col·loqueu-lo a la posició desitjada. Quan estigueu llestos, feu clic en el botó \"Desar ordre\""
+  ],
   "error loading view": [
-    null, 
+    null,
     "Error carregant la vista"
-  ], 
-  "foo": [
-    null, 
-    "foo"
-  ], 
-  "hello %(name)s!": [
-    null, 
-    "hola %(name)s!"
-  ], 
-  "no %(attr)s translation": [
-    "no %(attr)s translations", 
-    "no %(attr)s translation", 
-    "no %(attr)s translations"
-  ], 
-  "no translation": [
-    "no translations", 
-    "no translation", 
-    "no translations"
   ]
 }
