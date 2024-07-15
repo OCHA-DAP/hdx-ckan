@@ -1,7 +1,8 @@
 {
     "python.testing.pytestArgs": [
-        "--ckan-ini=test-core.ini",
+        "--ckan-ini=hdx-test-core.ini",
         "ckan/tests",
+        "ckanext-hdx_package/ckanext/hdx_package/tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
