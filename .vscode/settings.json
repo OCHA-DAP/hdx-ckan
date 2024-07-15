@@ -1,6 +1,7 @@
 {
     "python.testing.pytestArgs": [
-        "ckan/tests"
+        "--ckan-ini=test-core.ini",
+        "ckan/tests",
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
