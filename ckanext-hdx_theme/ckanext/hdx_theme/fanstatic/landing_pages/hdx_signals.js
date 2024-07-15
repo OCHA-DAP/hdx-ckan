@@ -52,9 +52,15 @@ $(document).ready(function () {
     });
   }
 
+  function unselect_values(values) {
+    values.forEach(function (value) {
+      $form.find('input[name="group' + value + '"]').prop('checked', false);
+    });
+  }
+
   function add_select_buttons(group_label, group) {
     var select_btn = $('<button type="button" class="btn btn-link p-0 me-2"><small>Select all</small></button>');
-    var unselect_btn = $('<button type="button" class="btn btn-link p-0"><small>Select none</small></button>');
+    var unselect_btn = $('<button type="button" class="btn btn-link p-0"><small>Clear all</small></button>');
 
     group_label.append(select_btn);
     group_label.append(unselect_btn);
@@ -67,10 +73,6 @@ $(document).ready(function () {
     });
   }
 
-  $form.find('#select-all').click(function () {
-    select_group(DATASETS_GROUP);
-    select_values(ALL_LOCATIONS);
-  });
   $form.find('#select-all-datasets').on('click', function () {
     select_group(DATASETS_GROUP);
   });
@@ -79,6 +81,10 @@ $(document).ready(function () {
   });
   $form.find('#select-all-hrp-locations').on('click', function () {
     select_values(HRP_LOCATIONS);
+  });
+  $form.find('#clear-all-locations').on('click', function () {
+    unselect_values(ALL_LOCATIONS);
+    unselect_values(HRP_LOCATIONS);
   });
 
   $form.find('.mc-field-group').each(function () {

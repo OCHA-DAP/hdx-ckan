@@ -57,20 +57,14 @@
                             </div>
                             <div class="row">
                               <div class="col-12 col-md-12">
-                                <div class="mc-field-group mb-3">
+                                <div class="mc-field-group mb-4">
                                   <label class="form-label" for="mce-ORG">Organisation <span class="asterisk">*</span>
                                   </label>
                                   <input type="text" name="ORG" class="required text form-control" id="mce-ORG"
                                          required="" value="">
                                 </div>
-                                <div>
-                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3 me-3" id="select-all">Give me everything</button>
-                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3 me-3" id="select-all-datasets">Select all datasets</button>
-                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3 me-3" id="select-all-locations">Select all locations</button>
-                                  <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="select-all-hrp-locations">Select all HRP locations</button>
-                                </div>
-                                <div class="mc-field-group mb-3">
-                                  <p class="fw-bold mb-0">Datasets of interest</p>
+                                <div class="mc-field-group mb-4">
+                                  {{ h.snippet('bem.blocks/paragraph.html', text='Step 1: Datasets of interest', paragraph_classes=["paragraph__text_font-size-medium", "fw-bold", "mb-0"]) }}
                                   <p class="action-buttons"></p>
                                   <ul class="list-unstyled">
                                     <li class="form-check">
@@ -110,6 +104,16 @@
                                         WFP</label>
                                     </li>
                                   </ul>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-12">
+                                <div class="mc-field-group mb-4">
+                                  {{ h.snippet('bem.blocks/paragraph.html', text='Step 2: Locations of interest', paragraph_classes=["paragraph__text_font-size-medium", "fw-bold", "mb-0"]) }}
+                                  <p class="action-buttons">
+                                    <button type="button" class="btn btn-link p-0 me-2" id="select-all-locations"><small>Select all</small></button>
+                                    <button type="button" class="btn btn-link p-0 me-2" id="select-all-hrp-locations"><small>Select all HRP locations <span data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-bs-original-title="Locations with a Humanitarian Response Plan">[?]</span></small></button>
+                                    <button type="button" class="btn btn-link p-0" id="clear-all-locations"><small>Clear all</small></button>
+                                  </p>
                                 </div>
                               </div>
                               <div class="col-12 col-md-6">

@@ -212,6 +212,7 @@ hdx-signals-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_hdx-signals-scripts.js
   contents:
+    - bs_tooltip.js
     - landing_pages/hdx_signals.js
 
 hdx-form-validator:
