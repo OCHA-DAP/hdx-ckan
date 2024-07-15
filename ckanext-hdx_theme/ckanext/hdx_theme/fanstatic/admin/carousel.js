@@ -80,11 +80,40 @@
 
             return this;
         },
-        onFieldEdit: function(e) {
+        _getImageWidth: async function(file) {
+            let promise = new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        resolve(img.width);
+                    };
+                    img.onerror = function() {
+                        reject('Failed to load the image.');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = function() {
+                    reject('Failed to read the file.');
+                };
+                reader.readAsDataURL(file);
+            });
+            let width = await promise;
+            return width;
+        },
+        onFieldEdit: async function(e) {
             var value = e.target.value;
             if (e.target.type === "file"){
                 value = e.target.files[0];
-                this.model.set('graphic_upload_preview', URL.createObjectURL(value));
+                width = await this._getImageWidth(value);
+                const urlParams = new URLSearchParams(window.location.search);
+                const overrideImageContraints = urlParams.get('overrideImage');
+                if ((overrideImageContraints != "true") && (value.size > 50000 || (width != 550 && width != 275))) {
+                    alert("Please keep files under 50KB and width at either 275px or 550px!");
+                    value = null; 
+                } else {
+                    this.model.set('graphic_upload_preview', URL.createObjectURL(value));
+                }
             }
             this.model.set(e.target.name, value);
             this.render();
