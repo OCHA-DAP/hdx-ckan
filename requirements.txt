@@ -6,18 +6,16 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.206#egg=ckanext-dcat
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.30#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.32#egg=ckanext-requestdata
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.6.0#egg=ckanext-s3filestore
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.2#egg=ckanext-security
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.3161#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.4#egg=ckanext-showcase
     # via -r requirements.in
 alembic==1.8.1
     # via -r requirements.in
-async-timeout==4.0.3
-    # via redis
 babel==2.10.3
     # via
     #   -r requirements.in
@@ -30,11 +28,11 @@ blinker==1.5
     # via -r requirements.in
 boto3==1.34.77
     # via ckanext-s3filestore
-botocore==1.34.132
+botocore==1.34.77
     # via
     #   boto3
     #   s3transfer
-certifi==2024.6.2
+certifi==2021.5.30
     # via requests
 charset-normalizer==2.1.1
     # via requests
@@ -69,13 +67,13 @@ flask-multistatic==1.0
     # via -r requirements.in
 flask-wtf==1.0.1
     # via -r requirements.in
-geomet==1.1.0
+geomet==1.0.0
     # via -r requirements.in
 greenlet==2.0.2
     # via
     #   -r requirements.in
     #   sqlalchemy
-idna==3.7
+idna==2.8
     # via requests
 ijson==3.2.3
     # via -r requirements.in
@@ -83,7 +81,7 @@ ipaddress==1.0.23
     # via -r requirements.in
 isodate==0.6.1
     # via rdflib
-itsdangerous==2.2.0
+itsdangerous==2.1.2
     # via
     #   flask
     #   flask-wtf
@@ -92,24 +90,24 @@ jinja2==3.1.2
     #   -r requirements.in
     #   flask
     #   flask-babel
-jmespath==1.0.1
+jmespath==0.10.0
     # via
     #   boto3
     #   botocore
-lxml==5.2.2
+lxml==4.9.1
     # via feedgen
 mailchimp3==3.0.21
     # via -r requirements.in
-mako==1.3.5
+mako==1.1.5
     # via alembic
 markdown==3.4.1
     # via -r requirements.in
-markupsafe==2.1.5
+markupsafe==2.1.3
     # via
     #   jinja2
     #   mako
     #   wtforms
-mypy==1.10.1
+mypy==1.7.0
     # via sqlalchemy
 mypy-extensions==1.0.0
     # via mypy
@@ -121,13 +119,13 @@ pbr==6.0.0
     # via stevedore
 polib==1.1.1
     # via -r requirements.in
-psycopg2-binary==2.9.3
+psycopg2==2.9.3
     # via -r requirements.in
 pyjwt==2.4.0
     # via -r requirements.in
 pyotp==2.6.0
     # via -r requirements.in
-pyparsing==3.1.2
+pyparsing==3.0.7
     # via rdflib
 pysolr==3.9.0
     # via -r requirements.in
@@ -140,7 +138,7 @@ python-json-logger==2.0.7
     # via -r requirements.in
 python-magic==0.4.27
     # via -r requirements.in
-pytz==2024.1
+pytz==2023.3
     # via
     #   -r requirements.in
     #   babel
@@ -151,13 +149,15 @@ pyutilib==6.0.0
     # via -r requirements.in
 pyyaml==6.0.1
     # via -r requirements.in
+rcssmin==1.1.2
+    # via -r requirements.in
 rdflib==4.2.1
     # via
     #   -r requirements.in
     #   rdflib-jsonld
 rdflib-jsonld==0.4.0
     # via -r requirements.in
-redis==5.0.6
+redis==3.5.3
     # via rq
 requests==2.28.1
     # via
@@ -166,13 +166,14 @@ requests==2.28.1
     #   pysolr
 rq==1.11.0
     # via -r requirements.in
-s3transfer==0.10.2
+s3transfer==0.10.1
     # via boto3
 simplejson==3.17.6
     # via -r requirements.in
 six==1.16.0
     # via
     #   bleach
+    #   geomet
     #   isodate
     #   python-dateutil
     #   pyutilib
@@ -181,11 +182,11 @@ sqlalchemy[mypy]==1.4.41
     #   -r requirements.in
     #   alembic
     #   sqlalchemy
-sqlalchemy2-stubs==0.0.2a38
+sqlalchemy2-stubs==0.0.2a37
     # via sqlalchemy
 sqlparse==0.4.2
     # via -r requirements.in
-stevedore==5.2.0
+stevedore==5.1.0
     # via dogpile-cache
 timeago==1.0.16
     # via -r requirements.in
@@ -197,7 +198,7 @@ typing-extensions==4.3.0
     #   dogpile-cache
     #   mypy
     #   sqlalchemy2-stubs
-tzdata==2024.1
+tzdata==2023.3
     # via pytz-deprecation-shim
 tzlocal==4.2
     # via -r requirements.in
@@ -205,13 +206,13 @@ ua-parser==0.18.0
     # via
     #   -r requirements.in
     #   user-agents
-urllib3==1.26.19
+urllib3==1.26.6
     # via
     #   botocore
     #   requests
 user-agents==2.2.0
     # via -r requirements.in
-watchdog==4.0.1
+watchdog==2.1.5
     # via werkzeug
 webassets==2.0
     # via -r requirements.in
@@ -223,7 +224,7 @@ werkzeug[watchdog]==2.0.3
     #   flask
     #   flask-login
     #   werkzeug
-wtforms==3.1.2
+wtforms==3.1.1
     # via flask-wtf
 zope-interface==5.4.0
     # via -r requirements.in
