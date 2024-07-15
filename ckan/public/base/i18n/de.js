@@ -1,240 +1,218 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "de",
-    "plural-forms": "nplurals=2; plural=(n != 1);"
-  },
+    "domain": "ckan", 
+    "lang": "de", 
+    "plural-forms": "nplurals=2; plural=(n != 1)"
+  }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "%(color)s Hemd", 
+    "%(color)s Hemden"
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "%(num)d Stück", 
+    "%(num)d Stücke"
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d fehlende Übersetzung", 
+    "%(num)d fehlende Übersetzungen"
+  ], 
   "Add Filter": [
-    null,
+    null, 
     "Filter hinzufügen"
-  ],
-  "An error occured during AJAX request. Could not load view.": [
-    null,
-    "Ein Fehler ist aufgetreten bei einer AJAX Anforderung. Die Ansicht konnte nicht geladen werden."
-  ],
+  ], 
+  "An Error Occurred": [
+    null, 
+    "Es trat ein Fehler auf"
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "Sind Sie sicher, dass Sie diese Aktion ausführen wollen?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "Abbrechen"
-  ],
-  "Close": [
-    null,
-    "Schließen"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "Bestätigen"
-  ],
-  "Copied deeplink to clipboard": [
-    null,
-    "Deeplink in Zwischenablage kopieren"
-  ],
-  "Copy to clipboard": [
-    null,
-    "In Zwischenablage kopieren"
-  ],
+  ], 
   "Could not load view": [
-    null,
+    null, 
     "Ansicht konnte nicht geladen werden"
-  ],
+  ], 
   "DataProxy returned an error": [
-    null,
+    null, 
     "DataProxy gab einen Fehler zurück"
-  ],
+  ], 
   "DataStore returned an error": [
-    null,
+    null, 
     "DataStore gab einen Fehler zurück"
-  ],
-  "Double-click to reset filters": [
-    null,
-    "Doppelklick zum Rücksetzen der Filter"
-  ],
+  ], 
   "Edit": [
-    null,
+    null, 
     "Bearbeiten"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "Informationen zur Daten-API konnten nicht geladen werden"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "Datei"
-  ],
-  "Filtered": [
-    null,
-    "Gefiltert"
-  ],
-  "Filtered download": [
-    null,
-    "Gefilterte herunterladen"
-  ],
+  ], 
   "Filters": [
-    null,
+    null, 
     "Filter"
-  ],
+  ], 
   "Follow": [
-    null,
+    null, 
     "Folgen"
-  ],
+  ], 
   "Graph": [
-    null,
+    null, 
     "Graph"
-  ],
+  ], 
   "Grid": [
-    null,
+    null, 
     "Raster"
-  ],
+  ], 
   "Hide": [
-    null,
+    null, 
     "Verstecken"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "Bild"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    "Input is too short, must be at least %(num)d characters",
-    "Die Eingabe muss mindestens ein Zeichen lang sein",
+    "Input is too short, must be at least %(num)d characters", 
+    "Die Eingabe muss mindestens ein Zeichen lang sein", 
     "Die Eingabe muss mindestens %(num)d Zeichen lang sein"
-  ],
+  ], 
   "Link": [
-    null,
+    null, 
     "Link"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "Link zu einer URL im Internet (Sie können auch den Link zu einer API angeben)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "Lädt..."
-  ],
+  ], 
   "Map": [
-    null,
+    null, 
     "Karte"
-  ],
+  ], 
   "No matches found": [
-    null,
+    null, 
     "Keine Treffer"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "Bestätige bitte die Aktion"
-  ],
-  "Please select the file to upload again": [
-    null,
-    "Bitte Datei auswählen und erneut hochladen"
-  ],
-  "Press SHIFT key while clicking on\nsort control for multi-column sort": [
-    null,
-    "Mit der SHIFT-Taste beim Klicken auf die Spaltensortierung kann die Mehrspalten-Sortierung aktiviert werden"
-  ],
-  "Print": [
-    null,
-    "Drucken"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "Entfernen"
-  ],
-  "Reorder resource view": [
-    null,
-    "Reihenfolge der Resource views anpassen"
-  ],
-  "Reorder resources": [
-    null,
-    "Ressourcen neu ordnen"
-  ],
-  "Reset": [
-    null,
-    "Zurücksetzen"
-  ],
-  "Restore visibility": [
-    null,
-    "Sichtbarkeit wiederherstellen"
-  ],
+  ], 
+  "Resource uploaded": [
+    null, 
+    "Ressource hochgeladen"
+  ], 
   "Save order": [
-    null,
+    null, 
     "Reihenfolge speichern"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "Speichern..."
-  ],
+  ], 
   "Select a field": [
-    null,
+    null, 
     "Wählen Sie ein Feld"
-  ],
-  "Share current view": [
-    null,
-    "Aktuelle Ansicht teilen"
-  ],
-  "Show all": [
-    null,
-    "Alles anzeigen"
-  ],
+  ], 
   "Show more": [
-    null,
+    null, 
     "Mehr anzeigen"
-  ],
-  "Show none": [
-    null,
-    "Ausblenden"
-  ],
-  "Sort": [
-    null,
-    "Sortieren"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "Gib etwas ein..."
-  ],
-  "Table/List toggle": [
-    null,
-    "Umschaltung Tabellen- / Listenansicht"
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "Dieses Formular hat ungespeicherte Änderungen"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "Diese Ressource hat keine API-Daten zum Laden"
-  ],
-  "Toggle column visibility": [
-    null,
-    "Spalte ein-/ausblenden"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
+  "Unable to authenticate upload": [
+    null, 
+    "Upload konnte nicht autentifiziert werden"
+  ], 
+  "Unable to get data for uploaded file": [
+    null, 
+    "Daten für hochgeladen Datei konnten nicht abgerufen werden"
+  ], 
+  "Unable to upload file": [
+    null, 
+    "Datei konnte nicht hochgeladen werden"
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "Entfolgen"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "Hochladen"
-  ],
+  ], 
+  "Upload a file": [
+    null, 
+    "Datei hochladen"
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "Datei von Ihrem Computer hochladen"
-  ],
-  "You can rearrange the resources by dragging them using the arrow icon. Drag the resource to the right and place it to the desired location on the list. When you are done, click the \"Save order\" -button.": [
-    null,
-    "Sie können die Ressourcen neu anordnen, in dem sie mit dem Pfeil-Icon verschoben werden. Ziehen sie die Ressource nach rechts auf die gewünschte Stelle in der Liste. Wenn Sie fertig sind, klicken sie den Speichern-Button"
-  ],
+  ], 
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
+    null, 
+    "Eine Datei wird hochgeladen. Soll das wirklich abgebrochen werden?"
+  ], 
+  "bar": [
+    "bars", 
+    "bar", 
+    "bars"
+  ], 
   "error loading view": [
-    null,
+    null, 
     "Fehler beim Laden der Ansicht"
-  ],
-  "seconds": [
-    null,
-    "Sekunden"
+  ], 
+  "foo": [
+    null, 
+    "foo"
+  ], 
+  "hello %(name)s!": [
+    null, 
+    "Hallo %(name)s!"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "Keine Übersetzung für \"%(attr)s\"", 
+    "Keine Übersetzungen für \"%(attr)s\""
+  ], 
+  "no translation": [
+    "no translations", 
+    "keine Übersetzung", 
+    "keine Übersetzungen"
   ]
 }

@@ -1,169 +1,210 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "fr",
-    "plural-forms": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
-  },
+    "domain": "ckan", 
+    "lang": "fr", 
+    "plural-forms": "nplurals=2; plural=(n > 1)"
+  }, 
+  "%(color)s shirt": [
+    "%(color)s shirts", 
+    "", 
+    ""
+  ], 
+  "%(num)d item": [
+    "%(num)d items", 
+    "", 
+    ""
+  ], 
+  "%(num)d missing translation": [
+    "%(num)d missing translations", 
+    "%(num)d traduction manquante", 
+    "%(num)d traductions manquantes"
+  ], 
   "Add Filter": [
-    null,
+    null, 
     "Ajouter un filtre"
-  ],
-  "An error occured during AJAX request. Could not load view.": [
-    null,
-    "Une erreur est survenue durant une requête AJAX. La vue n'a pas pu être chargée."
-  ],
+  ], 
+  "An Error Occurred": [
+    null, 
+    "Erreur"
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "Etes-vous sûr de vouloir exécuter cette commande ?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "Annuler"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "Confirmation"
-  ],
+  ], 
   "Could not load view": [
-    null,
+    null, 
     "Impossible de charger la vue"
-  ],
+  ], 
   "DataProxy returned an error": [
-    null,
+    null, 
     "DataProxy a retourné une erreur"
-  ],
+  ], 
   "DataStore returned an error": [
-    null,
+    null, 
     "Le Magasin de Données a retourné une erreur"
-  ],
+  ], 
   "Edit": [
-    null,
-    "Modifier"
-  ],
+    null, 
+    "Éditer"
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "Le chargement de l'information de l'API de données a échoué"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "Fichier"
-  ],
+  ], 
   "Filters": [
-    null,
+    null, 
     "Filtres"
-  ],
+  ], 
   "Follow": [
-    null,
+    null, 
     "S'abonner"
-  ],
+  ], 
   "Graph": [
-    null,
+    null, 
     "Graphe"
-  ],
+  ], 
   "Grid": [
-    null,
+    null, 
     "Grille"
-  ],
+  ], 
   "Hide": [
-    null,
+    null, 
     "Cacher"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "Image"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    "Input is too short, must be at least %(num)d characters",
-    "Saisie trop courte, au moins un caractère est nécessaire",
-    "Saisie trop courte, au moins %(num)d caractères  sont nécessaires",
+    "Input is too short, must be at least %(num)d characters", 
+    "Saisie trop courte, au moins un caractère est nécessaire", 
     "Saisie trop courte, au moins %(num)d caractères  sont nécessaires"
-  ],
+  ], 
   "Link": [
-    null,
+    null, 
     "Lien"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "Lien vers une URL sur internet (vous pouvez aussi donner un lien vers une API)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "Chargement..."
-  ],
+  ], 
   "Map": [
-    null,
+    null, 
     "Carte"
-  ],
+  ], 
   "No matches found": [
-    null,
+    null, 
     "Aucune correspondance trouvée"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "Veuillez confirmer l'action"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "Supprimer"
-  ],
-  "Reorder resources": [
-    null,
-    "Réordonner les ressources"
-  ],
-  "Reset": [
-    null,
-    "Réinitialisation"
-  ],
+  ], 
+  "Resource uploaded": [
+    null, 
+    "Ressource  téléchargée"
+  ], 
   "Save order": [
-    null,
-    "Enregistrer l'ordre"
-  ],
+    null, 
+    "Sauvegarder la commande"
+  ], 
   "Saving...": [
-    null,
+    null, 
     "Sauvegarde en cours..."
-  ],
+  ], 
   "Select a field": [
-    null,
+    null, 
     "Sélectionnez un champ"
-  ],
+  ], 
   "Show more": [
-    null,
+    null, 
     "Montrer plus"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "Commencez la saisie ..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "Des modifications de ce formulaire n'ont pas été enregistrées"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "Il n'y a pas de données API à télécharger pour cette ressource"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
+  "Unable to authenticate upload": [
+    null, 
+    "Échec de l'authentification du transfert"
+  ], 
+  "Unable to get data for uploaded file": [
+    null, 
+    "Impossible d'accéder aux données du fichier déposé"
+  ], 
+  "Unable to upload file": [
+    null, 
+    "Échec du transfert de fichier "
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "Se désabonner"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "Envoi"
-  ],
+  ], 
+  "Upload a file": [
+    null, 
+    "Envoyer un fichier depuis votre ordinateur"
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "Télécharger un fichier sur votre ordinateur"
-  ],
-  "You can rearrange the resources by dragging them using the arrow icon. Drag the resource to the right and place it to the desired location on the list. When you are done, click the \"Save order\" -button.": [
-    null,
-    "Vous pouvez trier les resources par glisser-déposer en utilisant l'icône en forme de flèches. Quand vous avez terminé, cliquez sur le bouton « Enregistrer l'ordre »."
-  ],
+  ], 
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
+    null, 
+    "Vous êtes en train de transférer un fichier. Êtes-vous sûr de vouloir naviguer ailleurs et interrompre ce transfert ?"
+  ], 
+  "bar": [
+    "bars", 
+    "", 
+    ""
+  ], 
   "error loading view": [
-    null,
+    null, 
     "erreur lors du chargement de la vue"
+  ], 
+  "no %(attr)s translation": [
+    "no %(attr)s translations", 
+    "", 
+    ""
+  ], 
+  "no translation": [
+    "no translations", 
+    "pas de traduction", 
+    "pas de traduction"
   ]
 }
