@@ -29,7 +29,7 @@ The "magic" setup prepares the ckan databases and loads them with the latest (mi
 1. This will take quite a while; go get a few coffees and walks. In the mean time, the following will be done for you (not necessarily in this order):
     1. pull the latest database backups and files backups
     1. restore the files (not filestore)
-    1. syncronise the s3 filestore with the dev filestore
+    1. syncronise the s3 filestore with the dev filestore - this is slow (hours) because it transfers all of the files in HDX to the developer's S3 bucket 
     1. [re]create the databases and restores from the last backups
     1. [re]create the solr collection and reindexes it
 1.Type in: `hdxckantool --verbose magic --test` - this does similar but does not restore databases or rebuild the solr index
@@ -90,4 +90,6 @@ Note: All commands shown below are typed in the ckan container; if you do use VS
     `hdxckantool solr reindex --clear --fast`
 
 ## Sync your S3 filestore
+This moves something like 250GB of files from the production filestore to your developer bucket, taking around 6 hours for an initially empty bucket.
+
 1. Type in: `hdxckantool filestore sync -c`
