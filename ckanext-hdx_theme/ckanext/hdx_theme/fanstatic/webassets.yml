@@ -208,6 +208,13 @@ bem-blocks-scripts:
     - bem.blocks/select2_field.js
     - bem.blocks/textarea_field.js
 
+hdx-signals-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_hdx-signals-scripts.js
+  contents:
+    - bs_tooltip.js
+    - landing_pages/hdx_signals.js
+
 hdx-form-validator:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_hdx-form-validator.js
