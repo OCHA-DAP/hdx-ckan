@@ -134,7 +134,7 @@ class HdxBaseTest(object):
                     data_dict['maintainer_email'] = 'test@test.org'
                 if not private:
                     if not data_dict.get('data_update_frequency'):
-                        data_dict['data_update_frequency'] = '0'
+                        data_dict['data_update_frequency'] = '-1'
                     if not data_dict.get('dataset_date'):
                         data_dict['dataset_date'] = '[2011-11-11 TO 2011-11-11]'
                     if not data_dict.get('methodology'):

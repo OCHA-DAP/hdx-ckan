@@ -46,7 +46,7 @@ class TestDatasetSearchParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest
         end_str = '</section>'
         search_item = 'name="q"'
 
-        count = hdx_test_util.count_string_occurences(page, search_item,
+        count = hdx_test_util.count_string_occurrences(page, search_item,
                                                       begin_str, end_str)
 
         assert count == 1, 'There should be exactly one input with name q in the form'

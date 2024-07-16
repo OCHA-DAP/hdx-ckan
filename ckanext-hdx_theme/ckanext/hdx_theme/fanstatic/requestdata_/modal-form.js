@@ -24,7 +24,15 @@ ckan.module('hdx-modal-form', function($) {
             }
             var base_url = ckan.sandbox().client.endpoint;
             var url = base_url + '/api/' + api_ver + '/action/' + action;
-            return $.post(url, JSON.stringify(data), "json");
+            return $.ajax({
+              url: url,
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data),
+              dataType: 'json',
+              headers: hdxUtil.net.getCsrfTokenAsObject(),
+            });
+
         }
     };
 
@@ -167,6 +175,7 @@ ckan.module('hdx-modal-form', function($) {
                 data: formData,
                 processData: false,
                 contentType: false,
+                headers: hdxUtil.net.getCsrfTokenAsObject(),
                 type: 'POST'
               })
                 .done(function(data) {

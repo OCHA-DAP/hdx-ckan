@@ -106,7 +106,12 @@ $(document).ready(function () {
       }
     }
 
-    var postPromise = $.post('/request_tags/suggest', $this.serialize());
+    var postPromise = $.ajax({
+      url: '/request_tags/suggest',
+      type: 'POST',
+      data: $this.serialize(),
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+    });
 
     $.when(postPromise).then(
       function (postData) {

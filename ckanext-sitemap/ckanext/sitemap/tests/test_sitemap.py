@@ -80,7 +80,7 @@ class TestSitemap(object):
             "owner_org": "test_owner_org",
             "groups": [{"name": "test_group1"}],
             "maintainer": user,
-            "data_update_frequency": "0",
+            "data_update_frequency": "-1",
             "resources": [
                 {
                     'package_id': pkg_name,

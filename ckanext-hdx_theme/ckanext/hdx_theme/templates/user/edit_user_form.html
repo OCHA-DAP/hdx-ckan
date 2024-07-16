@@ -7,6 +7,7 @@
 <div class="paddingLeftHack">
   <div class="row mTop35 mBottom35">
 <form class="col-8" method="post" action="{{ action }}" id="user-edit-form">
+  {{ h.csrf_input() }}
   {{ form.errors(error_summary) }}
 
   <fieldset>

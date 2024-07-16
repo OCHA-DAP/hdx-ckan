@@ -40,6 +40,7 @@
           {% block package_search_results_list %}
             {% if c.page.items %}
               <form method="POST" data-module="basic-form">
+                {{ h.csrf_input() }}
                 {#{% block errors %}{{ form.errors(error_summary) }}{% endblock %}#}
                 <table class="table table-bordered table-header table-hover table-bulk-edit table-edit-hover" data-module="table-selectable-rows">
                   <col width="8">
@@ -99,6 +100,7 @@
           <h3 class="page-heading">{{ _('Datasets in this showcase') }}</h3>
           {% if c.showcase_pkgs %}
             <form method="POST" data-module="basic-form">
+              {{ h.csrf_input() }}
               <table class="table table-bordered table-header table-hover table-bulk-edit table-edit-hover" data-module="table-selectable-rows">
                 <col width="8">
                 <col width="120">

@@ -7,6 +7,7 @@
   <h2 class="hide-heading">{% block page_heading %}{{ _('User Permission') }}{% endblock %}</h2>
   <div class="paddingLeftHack">
     <form method="POST" data-module="basic-form">
+      {{ h.csrf_input() }}
       {% for p in permissions %}
         {{ form.checkbox(p.key, id='field_'+ p.key , label=p.label, value=p.key, checked=p.checked, classes=[""]) }}
       {% endfor %}

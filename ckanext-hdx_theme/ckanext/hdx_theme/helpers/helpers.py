@@ -409,10 +409,7 @@ def hdx_member_roles_list():
 
 
 def hdx_version():
-    ver = version.hdx_version
-    if six.PY3:
-        ver += ' PY3'
-    return ver
+    return version.hdx_version
 
 
 def hdx_get_extras_element(data_dict, key='key', value_key='org_url', ret_key='value'):

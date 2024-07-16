@@ -6,13 +6,13 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.206#egg=ckanext-dcat
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.30#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.32#egg=ckanext-requestdata
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.6.0#egg=ckanext-s3filestore
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.2#egg=ckanext-security
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.3161#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.4#egg=ckanext-showcase
     # via -r requirements.in
 alembic==1.8.1
     # via -r requirements.in
@@ -148,6 +148,8 @@ pytz-deprecation-shim==0.1.0.post0
 pyutilib==6.0.0
     # via -r requirements.in
 pyyaml==6.0.1
+    # via -r requirements.in
+rcssmin==1.1.2
     # via -r requirements.in
 rdflib==4.2.1
     # via

@@ -9,10 +9,15 @@ $(document).ready(function() {
     msgContainer.removeClass('alert-success');
     msgContainer.removeClass('alert-danger');
 
-    $.post(`/user/configure_mfa/${userName}`, body)
-      .done((response) => {
+    $.ajax({
+      url: `/user/configure_mfa/${userName}`,
+      type: 'POST',
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+      contentType: 'application/json',
+      data: JSON.stringify(body),
+      success: function (response) {
         const result = JSON.parse(response);
-        if (result.success == true){
+        if (result.success == true) {
           msgContainer.html('Code is valid, two-step verification is configured correctly!');
           msgContainer.addClass('alert-success');
           msgContainer.show();
@@ -25,11 +30,12 @@ $(document).ready(function() {
           msgContainer.addClass('alert-danger');
           msgContainer.show();
         }
-      })
-      .fail((result) => {
+      },
+      error: function () {
         msgContainer.html('Error while attempting test!');
         msgContainer.addClass('alert-danger');
-      });
+      }
+    });
   }
 
   function toggleTwoStep(on = false) {

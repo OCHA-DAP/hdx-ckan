@@ -1,9 +1,9 @@
 {% extends "page_light.html" %}
 
 {%- block styles %}
+  {% asset 'vendor/select2-css' %}
   {{ super() }}
   {% asset 'hdx_theme/faq-styles' %}
-  {% asset 'vendor/select2-css' %}
 {% endblock %}
 
 {% block meta %}

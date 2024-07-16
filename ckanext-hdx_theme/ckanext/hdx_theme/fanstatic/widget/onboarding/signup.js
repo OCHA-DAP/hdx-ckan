@@ -12,44 +12,50 @@ $(document).ready(function(){
                 'g-recaptcha-response': grecaptcha.getResponse()
             };
 
-            $.post(url, data, function(result_data){
+            $.ajax({
+              url: url,
+              type: 'POST',
+              data: data,
+              headers: hdxUtil.net.getCsrfTokenAsObject(),
+              success: function (result_data) {
                 var result = JSON.parse(result_data);
                 console.log(result);
-                if (result.success){
-                    hdxUtil.analytics.sendUserRegisteredEvent("submit email register").then(function() {
-                        //check for newsletter - we're moving the registration to the backend
-                        // if ($("#signup-send-updates").is(":checked")){
-                        //     console.log("Attempt to register to newsletter!");
-                        //     $.ajax({
-                        //         url: "//unocha.us2.list-manage.com/subscribe/post-json",
-                        //         dataType: "jsonp",
-                        //         jsonp: "c",
-                        //         data: {
-                        //             u: "83487eb1105d72ff2427e4bd7",
-                        //             id: "6fd988326c",
-                        //             EMAIL: email,
-                        //             subscribe: "Subscribe",
-                        //             _: Date.now()
-                        //         },
-                        //         success: function(result){
-                        //             if (result.result == "success")
-                        //                 console.log("Registered to the newsletter!");
-                        //             else
-                        //                 console.log("Error:" + JSON.stringify(result));
-                        //         }
-                        //     });
-                        // }
+                if (result.success) {
+                  hdxUtil.analytics.sendUserRegisteredEvent("submit email register").then(function () {
+                    //check for newsletter - we're moving the registration to the backend
+                    // if ($("#signup-send-updates").is(":checked")){
+                    //     console.log("Attempt to register to newsletter!");
+                    //     $.ajax({
+                    //         url: "//unocha.us2.list-manage.com/subscribe/post-json",
+                    //         dataType: "jsonp",
+                    //         jsonp: "c",
+                    //         data: {
+                    //             u: "83487eb1105d72ff2427e4bd7",
+                    //             id: "6fd988326c",
+                    //             EMAIL: email,
+                    //             subscribe: "Subscribe",
+                    //             _: Date.now()
+                    //         },
+                    //         success: function(result){
+                    //             if (result.result == "success")
+                    //                 console.log("Registered to the newsletter!");
+                    //             else
+                    //                 console.log("Error:" + JSON.stringify(result));
+                    //         }
+                    //     });
+                    // }
 
-                        $("#verifyPopup").find(".verify-email").html(email);
-                        closeCurrentWidget($(".signup-widget:first"));
-                        showOnboardingWidget('#verifyPopup');
-                    });
+                    $("#verifyPopup").find(".verify-email").html(email);
+                    closeCurrentWidget($(".signup-widget:first"));
+                    showOnboardingWidget('#verifyPopup');
+                  });
                 } else {
-                    var errMsg = $signupForm.find(".error-message");
-                    errMsg.text(result.error.message);
-                    $("#field-email").addClass("error");
-                    errMsg.show();
+                  var errMsg = $signupForm.find(".error-message");
+                  errMsg.text(result.error.message);
+                  $("#field-email").addClass("error");
+                  errMsg.show();
                 }
+              }
             });
         }
         grecaptcha.reset();

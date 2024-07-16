@@ -49,13 +49,20 @@ $(document).ready(function(){
             $('#follow-form-item-loading').hide();
             $('#follow-form').on("submit", function(){
                 $this = $(this);
-                $.post('/user/follow_details', $this.serialize(), function(result_data){
+                $.ajax({
+                  url: '/user/follow_details',
+                  type: 'POST',
+                  data: $this.serialize(),
+                  headers: hdxUtil.net.getCsrfTokenAsObject(),
+                  success: function (result_data) {
                     var result = JSON.parse(result_data);
-                    if (result.success){
-                        closeCurrentWidget($this);showOnboardingWidget('#selectOrgPopup');
+                    if (result.success) {
+                      closeCurrentWidget($this);
+                      showOnboardingWidget('#selectOrgPopup');
                     } else {
-                        alert("Can't follow org: " + result.error.message);
+                      alert("Can't follow org: " + result.error.message);
                     }
+                  }
                 });
                 return false;
             });

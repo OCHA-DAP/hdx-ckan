@@ -18,6 +18,7 @@
   <p>{{ _('Are you sure you want to delete showcase - {showcase_name}?').format(showcase_name=pkg.name) }}</p>
   <p class="form-actions">
   <form action="{{ h.url_for(showcase_delete_route, id=c.pkg_dict.name) }}" method="post">
+    {{ h.csrf_input() }}
     <button class="btn" type="submit" name="cancel" >{{ _('Cancel') }}</button>
     <button class="btn btn-danger" type="submit" name="delete" >{{ _('Confirm Delete') }}</button>
   </form>
