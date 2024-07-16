@@ -53,18 +53,20 @@
                                                   <div class="sample-text">Preview Item</div>
                                                   <div class="thumbnail-container">
                                                       <div class="sub-item">
-                                                          <div class="sub-item-image">
-                                                              <%
-                                                                  var preview = graphic_upload_preview || graphic;
-                                                                  if (preview){
-                                                              %>
-                                                                  <img class="graphic" src="<%= preview %>">
-                                                              <%  } %>
-                                                              <div class="sub-item-action">
-                                                                  <a href="<%= url %>" class="btn"><%= (buttonText?buttonText:"Explore") %></a>
-                                                              </div>
+                                                          <div class="sub-item-wrapper">
+                                                            <div class="sub-item-image">
+                                                                <%
+                                                                    var preview = graphic_upload_preview || graphic;
+                                                                    if (preview){
+                                                                %>
+                                                                    <img class="graphic" src="<%= preview %>">
+                                                                <%  } %>
+                                                                <div class="sub-item-action">
+                                                                    <a href="<%= url %>" class="btn"><%= (buttonText?buttonText:"Explore") %></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="title"><%= title %></div>
                                                           </div>
-                                                          <div class="title"><%= title %></div>
                                                           <a href="<%= url %>" >
                                                               <div class="sub-item-caption">
                                                                   <p class="description"><%= description %></p>

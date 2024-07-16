@@ -261,12 +261,15 @@
   background-color: #333333;
   color: #fff;
   position: absolute;
-  top: 0;
+  bottom: 0;
   text-transform: uppercase;
   line-height: 1;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
+}
+.homepage-main .carousel-section .carousel-items .sub-item .sub-item-wrapper {
+  position: relative;
 }
 .homepage-main .carousel-section .carousel-items .sub-item .sub-item-image {
   position: relative;
