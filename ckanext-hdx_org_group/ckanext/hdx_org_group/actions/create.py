@@ -82,12 +82,10 @@ def hdx_user_invite(context, data_dict):
 
     if group.is_organization:
         _get_action('organization_member_create')(context, member_dict)
-        group_dict = _get_action('organization_show')(context,
-                                                      {'id': data['group_id']})
+        group_dict = _get_action('organization_show')({}, {'id': data['group_id']})
     else:
         _get_action('group_member_create')(context, member_dict)
-        group_dict = _get_action('group_show')(context,
-                                               {'id': data['group_id']})
+        group_dict = _get_action('group_show')({}, {'id': data['group_id']})
     try:
         expiration_in_hours = int(config.get('hdx.password.invitation_reset_key.expiration_in_hours', 48))
         reset_password.create_reset_key(user, expiration_in_minutes=60 * expiration_in_hours)
