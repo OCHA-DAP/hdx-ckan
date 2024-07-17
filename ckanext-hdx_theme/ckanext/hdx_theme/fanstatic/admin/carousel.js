@@ -108,8 +108,8 @@
                 width = await this._getImageWidth(value);
                 const urlParams = new URLSearchParams(window.location.search);
                 const overrideImageContraints = urlParams.get('overrideImage');
-                if ((overrideImageContraints != "true") && (value.size > 50000 || (width != 550 && width != 275))) {
-                    alert("Please keep files under 50KB and width at either 275px or 550px!");
+                if ((overrideImageContraints != "true") && (value.size > 50000 || width != 550)) {
+                    alert("Please keep files under 50KB and width at 550px!");
                     value = null; 
                 } else {
                     this.model.set('graphic_upload_preview', URL.createObjectURL(value));
