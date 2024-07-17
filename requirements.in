@@ -83,7 +83,7 @@ dogpile.cache==1.3.0
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.6.1#egg=ckanext-s3filestore
 
 # ckanext-security
--e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.2#egg=ckanext-security
+-e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.3#egg=ckanext-security
 pyotp~=2.6.0
 # END ckanext-security
 
