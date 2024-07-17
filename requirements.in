@@ -80,7 +80,7 @@ ckantoolkit==0.0.3
 dogpile.cache==1.3.0
 
 # ckanext-s3filestore
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.6.0#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.6.1#egg=ckanext-s3filestore
 
 # ckanext-security
 -e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.2#egg=ckanext-security
