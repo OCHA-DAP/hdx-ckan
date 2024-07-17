@@ -116,31 +116,6 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         return False
 
-    def test_create_validation_token(self):
-        res = self._create_user()
-        user = model.User.get('valid@example.com')
-        assert user
-        # token = umodel.ValidationToken.get(user.id)
-        try:
-            token = tkh.token_show({}, {'id': user.id})
-        except Exception as ex:
-            assert False
-        assert token
-
-    def test_no_duplicate_tokens(self):
-        res = self._create_user()
-        try:
-            res2 = self._create_user()
-            assert 'The email address is already registered on HDX' in res2.body
-        except:
-            assert True
-
-    def _create_user(self, email='valid@example.com'):
-        url = h.url_for('hdx_user_register.register_email')
-        params = {'email': email, 'nosetest': 'true'}
-        res = self.app.post(url, data=params)
-        return res
-
 # @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
@@ -150,69 +125,6 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     def setup(self):
         test_helpers.reset_db()
         test_helpers.search.clear_all()
-
-    def test_create_user(self):
-        '''Creating a new user is successful.'''
-        user_list = test_helpers.call_action('user_list')
-        before_len = len(user_list)
-
-        url = h.url_for('hdx_user_register.register_email')
-        params = {'email': 'valid@example.com', 'nosetest': 'true'}
-        res = self.app.post(url, data=params)
-        assert_true(json.loads(res.body)['success'])
-
-        user = model.User.get('valid@example.com')
-
-        assert_true(user is not None)
-        assert_true(user.password is None)
-
-        user_list = test_helpers.call_action('user_list')
-        after_len = len(user_list)
-        assert_equal(after_len, before_len + 1)
-
-    def test_create_user_duplicate_email(self):
-        '''Creating a new user with identical email is unsuccessful.'''
-        url = h.url_for('hdx_user_register.register_email')
-        params = {'email': 'valid@example.com', 'nosetest': 'true'}
-        # create 1
-        self.app.post(url, data=params)
-        # create 2
-        res = json.loads(self.app.post(url, data=params).body)
-        assert_false(res['success'])
-        assert_equal(res['error']['message'][0], 'The email address is already registered on HDX.')
-
-    def test_create_user_duplicate_email_case_different(self):
-        '''Creating a new user with same email (differently cased) is
-        unsuccessful.'''
-        url = h.url_for('hdx_user_register.register_email')
-        params_one = {'email': 'valid@example.com', 'nosetest': 'true'}
-        params_two = {'email': 'VALID@example.com', 'nosetest': 'true'}
-        # create 1
-        self.app.post(url, data=params_one)
-        # create 2
-        response = self.app.post(url, data=params_two)
-        res = json.loads(response.data)
-        assert_false(res['success'])
-        assert_equal(res['error']['message'][0], 'The email address is already registered on HDX.')
-
-    def test_create_user_email_saved_as_lowercase(self):
-        '''A newly created user will have their email transformed to lowercase
-        before saving.'''
-        url = h.url_for('hdx_user_register.register_email')
-        params = {'email': 'VALID@example.com', 'nosetest': 'true'}
-        self.app.post(url, data=params)
-        user = model.User.get('valid@example.com')
-        # retrieved user has lowercase email
-        assert_equal(user.email, 'valid@example.com')
-        assert_not_equal(user.email, 'VALID@example.com')
-
-    def test_create_user_email_format(self):
-        '''Email must be valid email format.'''
-        url = h.url_for('hdx_user_register.register_email')
-        params = {'email': 'invalidexample.com', 'nosetest': 'true'}
-
-        res = json.loads(self.app.post(url, data=params).data)
-        assert_equal(res['error']['message'][0], u'Email invalidexample.com is not a valid format')
 
 
 # Below imports and definitions are needed so that the tests below don't give an error when running pytest.

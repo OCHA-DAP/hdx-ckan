@@ -9,7 +9,6 @@ import ckan.model as model
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
-import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
 from ckan.views.user import PerformResetView, RequestResetView
 from ckan.views.user import (
@@ -18,7 +17,6 @@ from ckan.views.user import (
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
-from ckanext.hdx_users.views.user_onboarding_view import HDXUserOnboardingView
 from ckanext.hdx_users.views.user_view_helper import *
 
 
@@ -43,7 +41,6 @@ ValidationError = tk.ValidationError
 
 User = model.User
 
-user_onboarding_view = HDXUserOnboardingView()
 user = Blueprint(u'hdx_user', __name__, url_prefix=u'/user')
 
 
@@ -221,7 +218,12 @@ def _extra_template_variables(context, data_dict):
 
 
 def logged_out_page():
-    template_data = ue_helpers.get_logout(True, _('User logged out with success'))
+    template_data = {
+        'data': {
+            'success': True,
+            'message': _('User logged out with success')
+        }
+    }
     return render('home/index.html', extra_vars=template_data)
 
 user.add_url_rule(u'/reset', view_func=HDXRequestResetView.as_view(str(u'request_reset')))
@@ -230,12 +232,6 @@ user.add_url_rule(u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'pe
 _edit_view = HDXEditView.as_view(str(u'edit'))
 user.add_url_rule(u'/edit', view_func=_edit_view)
 user.add_url_rule(u'/edit/<id>', view_func=_edit_view)
-
-user.add_url_rule(u'/follow_details', view_func=user_onboarding_view.follow_details, methods=(u'POST',))
-user.add_url_rule(u'/request_membership', view_func=user_onboarding_view.request_membership, methods=(u'POST',))
-# user.add_url_rule(u'/request_new_organization', view_func=user_onboarding_view.request_new_organization,
-#                   methods=(u'POST',))
-user.add_url_rule(u'/invite_friends', view_func=user_onboarding_view.invite_friends, methods=(u'POST',))
 
 user.add_url_rule(u'/logged_out_redirect', view_func=logged_out_page)
 user.add_url_rule(u'/logged_out_page', view_func=logged_out_page)

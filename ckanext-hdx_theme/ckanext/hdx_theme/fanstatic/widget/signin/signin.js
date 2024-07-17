@@ -105,25 +105,6 @@ $(
         checkMfa();
     }
 
-    // //check for first login
-    // var firstLogin = $("#first-login").text();
-    // if (firstLogin && firstLogin !== ""){
-    //     showOnboardingWidget("#registeredPopup");
-    //     return;
-    // }
-
-    //check for logout event
-    // var userLogout = $("#user-logout").text();
-    // if (userLogout && userLogout !== ""){
-    //     showOnboardingWidget("#logoutPopup");
-    //     return;
-    // }
-    // //check for login error
-    // var loginError = $("#login-error").text();
-    // if (loginError && loginError !== ""){
-    //   _showLoginError(loginError);
-    // }
-
     //check for login info message
     var loginInfo = $("#login-info").text();
     if (loginInfo && loginInfo !== ""){
@@ -138,12 +119,6 @@ $(
         showOnboardingWidget("#loginPopup");
         return;
     }
-
-    // var userRegister = $("#user-register").text();
-    // if (userRegister && userRegister !== ""){
-    //     showOnboardingWidget('#signupPopup');
-    //     return;
-    // }
 
     $('.popup .content').css('visibility', 'visible');
   }

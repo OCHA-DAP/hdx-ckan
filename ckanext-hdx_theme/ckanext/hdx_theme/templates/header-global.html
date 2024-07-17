@@ -85,11 +85,6 @@
               <div id="from-login" data-value="true" class="d-none"></div>
               {% set from_login = session.pop('from_login', None) %}
             {% endif %}
-            {% if step %}
-              {% if step == "hdx_onboarding_first_login" %}
-                <div id="first-login" style="display: none;">first login</div>
-              {% endif %}
-            {% endif %}
             <div class="header-user-box float-end">
 
               <ul class="separated-list">
