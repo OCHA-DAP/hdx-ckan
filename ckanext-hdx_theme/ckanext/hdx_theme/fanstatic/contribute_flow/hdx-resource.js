@@ -69,7 +69,7 @@ $(function(){
 
         hashResource: function() {
             var newUpload = this.get('upload') ? 'true' : 'false';
-            var dpe = this.get('dataset_preview_enabled') === '1' || this.get('dataset_preview_enabled') === 'True' ? 'True' : 'False';
+            var dpe = this.get('dataset_preview_enabled') ? 'true' : 'false';
             var microdata = this.get('microdata') ? 'true' : 'false';
             var properties = [
                 this.get('name'), this.get('format'), this.get('url'),
@@ -121,16 +121,11 @@ $(function(){
 
             sandbox.subscribe('hdx-resource-information', function (message) {
                 if (message.type == 'dataset_preview_resource_change' && message.newValue!=null) {
-                    var resIdx = Number(message.newValue);
-                    var modelsList = this.models;
-                    for(var i=0; i<modelsList.length; i++){
-                        // modelsList[i].attributes['dataset_preview_enabled'] = '0';
-                        modelsList[i].set('dataset_preview_enabled', '0');
-                    }
-                    if(!isNaN(resIdx)){
-                        modelsList[resIdx].set('dataset_preview_enabled', '1');
-                    }
-
+                    let resIdx = Number(message.newValue);                    
+                    this.models.forEach((model, idx) => { 
+                        const value = !isNaN(resIdx) && idx === resIdx; //true for selected resource
+                        model.set({ 'dataset_preview_enabled': value });
+                    });
                 }
             }.bind(this));
         },
