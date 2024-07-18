@@ -69,7 +69,7 @@ services:
     #   context: ./
     #   dockerfile: Dockerfile
 
-    mem_limit: 16g
+    mem_limit: 4g
     restart: always
     # volumes:
     # - "./:/srv/ckan"
@@ -99,7 +99,7 @@ services:
       TERM: xterm
     hostname: hdx-local-dbckan
     image: postgis/postgis:11-3.2-alpine
-    mem_limit: 16g
+    mem_limit: 4g
     ports:
       - "0.0.0.0:25432:5432"
     restart: always
@@ -115,7 +115,7 @@ services:
       TERM: xterm
     hostname: hdx-local-redis
     image: public.ecr.aws/unocha/redis:5
-    mem_limit: 16g
+    mem_limit: 4g
     restart: always
     volumes:
     - "redis-data:/var/lib/redis"
