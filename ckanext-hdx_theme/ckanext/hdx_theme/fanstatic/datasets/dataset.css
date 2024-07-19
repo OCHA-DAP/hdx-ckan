@@ -92,6 +92,9 @@
   text-align: justify;
   word-break: break-word;
 }
+.additional-info td.dataset-details pre {
+  text-wrap: wrap;
+}
 .additional-info th {
   max-width: 200px;
   width: 190px;
