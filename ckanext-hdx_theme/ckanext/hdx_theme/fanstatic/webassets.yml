@@ -247,6 +247,7 @@ search-scripts:
     - search_/search.js
 
 search-styles:
+  output: ckanext-hdx_theme/%(version)s_search-styles.css
   <<: *common-css
   contents:
     - search_/search.css
