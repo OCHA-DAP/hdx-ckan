@@ -247,7 +247,6 @@ search-scripts:
     - search_/search.js
 
 search-styles:
-  output: ckanext-hdx_theme/%(version)s_search-styles.css
   <<: *common-css
   contents:
     - search_/search.css
@@ -688,6 +687,7 @@ requestdata-styles:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_requestdata-styles.css
   contents:
+    - search-styles
     - requestdata/request-data.css
 
 delete-member-styles:
