@@ -1061,6 +1061,8 @@ def hdx_get_s3_link_for_resource(context, data_dict):
         filename = os.path.basename(res_dict['url'])
         key_path = upload.get_path(res_dict['id'], filename)
 
+        force_download = res_dict.get('format').lower() in ['geojson', 'json']
+
         try:
             s3 = upload.get_s3_session()
             client = s3.client(service_name='s3', endpoint_url=host_name)
@@ -1068,7 +1070,7 @@ def hdx_get_s3_link_for_resource(context, data_dict):
             #                                     Params={'Bucket': bucket.name,
             #                                             'Key': key_path},
             #                                     ExpiresIn=60)
-            url = generate_temporary_link(client, bucket.name, key_path)
+            url = generate_temporary_link(client, bucket.name, key_path, force_download)
             return {'s3_url': url}
 
         except ClientError as ex:

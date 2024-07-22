@@ -29,36 +29,14 @@
           <div id="login-info" style="display: none;">{{ data.info_message }}</div>
         {% endif %}
       {% endif %}
-      {% if step == "hdx_logout" %}
-        <div id="user-logout" style="display: none;">{{data.message}}</div>
-      {% endif %}
-      {% if step == "hdx_register" %}
-        <div id="user-register" style="display: none;">User Register</div>
-      {% endif %}
     {% endif %}
 
     {% if c.userobj %}
-      {% set data = h.get_user_extra(c.userobj.id) %}
-      {% if data is not string %}
-        {% set step = data.data.current_step %}
-      {% else %}
-        {% set step = 'hdx_onboarding_details' %}
-      {% endif %}
-      {% if step %}
-        {{ h.snippet('widget/onboarding/registered.html', id="registeredPopup") }}
-        {{ h.snippet('widget/onboarding/follow.html', id="followPopup") }}
-        {{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
-        {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
-        {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
-      {% endif %}
       {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
     {% else %}
       {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup")}}
 {#      {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=data.login_came_from if data else None) }}#}
-{#      {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
-      {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }} #}
     {% endif %}
-    {{ h.snippet('widget/onboarding/survey.html', id="surveyPopup") }}
 
     {% block header_core scoped %}
       {# Override this block as in the homepage section to get the fullwidth header #}
@@ -227,16 +205,7 @@
   {{ super() }}
   {% asset 'hdx_theme/search-scripts' %}
   {% if c.userobj %}
-    {% set data = h.get_user_extra(c.userobj.id) %}
-    {% if data is not string %}
-      {% set step = data.data.current_step %}
-    {% else %}
-      {% set step = 'hdx_onboarding_details' %}
-    {% endif %}
     {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
-    {% if step %}
-      {% asset 'hdx_theme/onboarding-bulk-user-complete-onboarding-scripts' %}
-    {% endif %}
   {% else %}
     {% asset 'hdx_theme/onboarding-bulk-anon-scripts' %}
   {% endif %}

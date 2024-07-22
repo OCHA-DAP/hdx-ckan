@@ -296,9 +296,9 @@ def hdx_group_update(context, data_dict):
 def hdx_group_delete(context, data_dict):
     return _run_core_group_org_action(context, data_dict, core.delete.group_delete)
 
-def _check_user_is_maintainer(context, user_id, org_id):
+def _check_user_is_maintainer(user_id, org_id):
     group = model.Group.get(org_id)
-    result = logic.get_action('package_search')(context, {
+    result = logic.get_action('package_search')({}, {
         'q': '*:*',
         'fq': 'maintainer:{0}, organization:{1}'.format(user_id, group.name),
         'rows': 100,
@@ -314,7 +314,7 @@ def organization_member_delete(original_action, context, data_dict):
     if not user_id:
         user_id = model.User.get(data_dict.get('username')).id
 
-    if _check_user_is_maintainer(context, user_id, data_dict.get('id')):
+    if _check_user_is_maintainer(user_id, data_dict.get('id')):
         abort(403, _('User is set as maintainer for datasets belonging to this org. Can\t delete, please change maintainer first'))
 
     return original_action(context, data_dict)
@@ -326,7 +326,7 @@ def organization_member_create(original_action, context, data_dict):
         user_id = model.User.get(data_dict.get('username')).id
 
     if data_dict.get('role') == 'member':
-        if _check_user_is_maintainer(context, user_id, data_dict.get('id')):
+        if _check_user_is_maintainer(user_id, data_dict.get('id')):
             abort(403, _('User is set as maintainer for datasets belonging to this org. Can\'t change role to \'member\', please change maintainer first'))
 
     return original_action(context, data_dict)

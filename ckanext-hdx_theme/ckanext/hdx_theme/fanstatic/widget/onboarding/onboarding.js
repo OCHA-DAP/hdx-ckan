@@ -35,10 +35,6 @@ function showContributorPopup(popupId, pkgTitle, pkgOwnerOrg, pkgId, overwritePo
 }
 
 function showOnboardingWidget(id, elid, val){
-    if (id == "#signupPopup") {
-        // we only want to send the analytics event for the sign-up widget
-        hdxUtil.analytics.sendUserRegisteredEvent("start user register");
-    }
     $(id).show();
     $(id).find("input[type!='button']:visible:first").focus();
 
@@ -123,14 +119,3 @@ requiredFieldsFormValidator = function () {
     $submitButton.removeAttr('disabled');
   }
 };
-
-$(
-  function () {
-    //  check for logout event
-    var userLogout = $("#user-logout").text();
-    if (userLogout && userLogout !== "") {
-      showOnboardingWidget("#logoutPopup");
-      return;
-    }
-  }
-);

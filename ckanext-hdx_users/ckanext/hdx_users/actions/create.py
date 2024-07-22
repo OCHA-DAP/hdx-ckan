@@ -24,24 +24,6 @@ def token_create(context, user):
     return token_obj.as_dict()
 
 
-@tk.side_effect_free
-def hdx_first_login(context, data_dict):
-    _check_access('hdx_first_login', context, data_dict)
-    data_dict = {'extras': [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]}
-    user = context.get('auth_user_obj', None)
-    if user:
-        try:
-            data_dict['user_id'] = user.id
-            get_action('user_extra_update')(context, data_dict)
-        except NotFound as e:
-            raise NotFound('User not found')
-        except Exception as e:
-            return error_message(str(e))
-    else:
-        raise NotFound('User not found')
-    return True
-
-
 def error_message(error_summary):
     return json.dumps({'success': False, 'error': {'message': error_summary}})
 
