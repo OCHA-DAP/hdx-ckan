@@ -367,7 +367,12 @@
    */
   function initMap() {
     const map = options.map;
-    map.addControl(new maplibregl.AttributionControl({}), 'top-right');
+    const customAttributionConfig = {
+      compact: true,
+      customAttribution: '<a href="https://www.maplibre.org/" target="_blank">MapLibre</a>' +
+        ' | <a href="https://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>'
+    };
+    map.addControl(new maplibregl.AttributionControl(customAttributionConfig), 'top-right');
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
     map.scrollZoom.disable();
     map.dragRotate.disable();
