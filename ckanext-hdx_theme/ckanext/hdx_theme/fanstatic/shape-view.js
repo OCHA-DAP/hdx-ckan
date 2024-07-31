@@ -223,10 +223,24 @@
     return bounds;
   }
 
+  /**
+   * Compute full URL for HDX vector tiles
+   * @param {string} url
+   * @returns {string}
+   */
+  function computeHDXVectorTilesUrl(url) {
+    let tilesBaseUrl = url;
+    if (url.startsWith('//')) {
+      tilesBaseUrl = vectorTileHDXLayerConfig.serverUrl.startsWith('https://') ? 'https:' + url : 'http:' + url;
+    }
+    else if (!url.startsWith('https://') && !url.startsWith('http://')) {
+      tilesBaseUrl = vectorTileHDXLayerConfig.serverUrl + url;
+    }
+    return tilesBaseUrl + '?geom=wkb_geometry&fields=ogc_fid';
+  }
+
   async function getFieldListAndBuildLayer(layerData, info, firstAdded, options, layers) {
-    const value = layerData.url;
-    const tilesBaseUrl = value.indexOf('//') >= 0 ? value : vectorTileHDXLayerConfig.serverUrl + value;
-    const tilesURL = tilesBaseUrl + '?geom=wkb_geometry&fields=ogc_fid';
+    const tilesURL = computeHDXVectorTilesUrl(layerData.url);
     const bounds = getBounds(layerData.bounding_box);
     const res = await fetch(`${vectorTileHDXLayerConfig.serverUrl}/gis/layer-type/${layerData.layer_id}`);
     let geomType;
