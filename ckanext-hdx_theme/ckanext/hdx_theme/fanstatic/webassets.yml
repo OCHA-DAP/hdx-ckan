@@ -486,7 +486,7 @@ charting-scripts:
 
 charting-styles:
   output: ckanext-hdx_theme/%(version)s_charting-styles.css
-  <<: *common-css
+  filters: cssrewrite
   contents:
     - vendor/c3/c3.css
 #    - vendor/leaflet-1.7.1/leaflet.css

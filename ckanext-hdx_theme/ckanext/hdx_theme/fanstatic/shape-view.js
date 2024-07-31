@@ -91,7 +91,7 @@
         '<h4>' +
         'Shape info' +
         '</h4>' +
-        (props ? '<table>' + innerData + '</table>' : 'Click on a shape');
+        (props ? '<table>' + innerData + '</table>' : 'Hover over a shape');
     }
     showOtherMessage(message) {
       this._container.innerHTML = message;
