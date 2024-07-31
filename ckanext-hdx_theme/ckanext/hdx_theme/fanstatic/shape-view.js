@@ -1,9 +1,14 @@
 (function () {
-  var options = {
+  const ALLOWED_COLUMN_TYPES = ['character varying', 'integer', 'numeric'];
+  const NOT_ALLOWED_PROPERTIES = ['ogc_fid', '__geometryDimension', 'srid'];
+
+  let info;
+
+  const options = {
     pcode: null,
     value: null,
-    pcodeSelectorId: "#pcode",
-    valueSelectorId: "#value",
+    pcodeSelectorId: '#pcode',
+    valueSelectorId: '#value',
     baseLayer: null,
     invertLatLong: true,
     boundaryPoly: {
@@ -11,399 +16,461 @@
       maxLat: null,
       minLong: null,
       maxLong: null,
-      overlap: true
+      overlap: true,
     },
     data: null,
     fields: null,
     geoData: null,
-    pcodeMap: {}
-
+    pcodeMap: {},
   };
 
-  var defaultStyle = {
-    weight: 1,
-    fill: true,
-    fillColor: 'rgb(255, 73, 61)',
-    fillOpacity: 0.6,
-    color: 'rgb(255, 73, 61)',
+  const defaultStyle = {
+    type: 'fill',
+    paint: {
+      'fill-color': 'hsl(4, 100%, 62%)',
+      'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.6],
+      'fill-outline-color': 'hsl(4, 100%, 31%)',
+    },
   };
-  var defaultLineStyle = {
-    color: 'rgb(255, 73, 61)',
-    weight: 3,
+  const defaultLineStyle = {
+    type: 'line',
+    paint: {
+      'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 6, 3],
+      'line-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.6],
+      'line-color': 'hsl(4, 100%, 62%)',
+    },
   };
-  var defaultPointStyle = {
-    weight: 0,
-    color: 'rgb(255, 73, 61)',
-    radius: 8,
-    fill: true,
-    fillColor: 'rgb(255, 73, 61)',
-    fillOpacity: 0.6,
+  const defaultPointStyle = {
+    type: 'circle',
+    paint: {
+      'circle-color': 'hsl(4, 100%, 62%)',
+      'circle-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.6],
+      'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 11, 8],
+    },
+  };
 
+  let vectorTileBaseMapConfig = {
+    baseMapUrl: null,
+    token: null,
+  };
+  let vectorTileHDXLayerConfig = {
+    serverUrl: null,
   };
 
-  function layerStyling(properties, zoom, geometryDimension) {
-    if (!properties.__geometryDimension) {
-      properties.__geometryDimension = geometryDimension;
-    } else if (!geometryDimension) {
-      geometryDimension = properties.__geometryDimension;
+  /**
+   * Class implementing the information panel that appears when hovering over the layer
+   */
+  class InfoControl {
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'map-info maplibregl-ctrl';
+      this._container.textContent = 'Hello, world';
+      return this._container;
     }
-    if (geometryDimension === 1) {   // point
-      return defaultPointStyle;
-    } else if (geometryDimension === 2) {   // line
-      return defaultLineStyle;
-    } else {   // polygon
-      return defaultStyle;
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+    update(props) {
+      let innerData = '';
+      if (props) {
+        for (const key in props) {
+          if (!NOT_ALLOWED_PROPERTIES.includes(key)) {
+            const value = props[key];
+            innerData +=
+              '<tr><td style="text-align: right;">' +
+              key +
+              '</td><td>&nbsp;&nbsp; <b>' +
+              value +
+              '</b><td></tr>';
+          }
+        }
+      }
+      this._container.innerHTML =
+        '<h4>' +
+        'Shape info' +
+        '</h4>' +
+        (props ? '<table>' + innerData + '</table>' : 'Click on a shape');
+    }
+    showOtherMessage(message) {
+      this._container.innerHTML = message;
     }
   }
 
-  function getFieldListAndBuildLayer(layerData, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers) {
-    var ALLOWED_COLUMN_TYPES = ["character varying", "integer", "numeric"];
-
-    var value = layerData.url;
-
-    var bboxArray = layerData.bounding_box.replace("BOX(", "").replace(")", "").split(",");
-    var xmin = bboxArray[0].split(" ")[0];
-    var ymin = bboxArray[0].split(" ")[1];
-    var xmax = bboxArray[1].split(" ")[0];
-    var ymax = bboxArray[1].split(" ")[1];
-    var bounds = [[ymin, xmin], [ymax, xmax]];
-
-    function createLayer(extraFields) {
-      var mvtSource = L.vectorGrid.protobuf(
-        // value + "?geom_column=wkb_geometry&id_column=ogc_fid&columns=ogc_fid" + extraFields, //dirt-simple-postgis
-        value + "?geom=wkb_geometry&fields=ogc_fid" + extraFields, // postile
-        // url: value + "?fields=ogc_fid" + extraFields,
-        //debug: true,
-        {
-          interactive: true,
-          getFeatureId: function (feature) {
-            return feature.properties.ogc_fid;
-          },
-          vectorTileLayerStyles: {
-            // A plain set of L.Path options.
-            [layerData.layer_id]: layerStyling, // for newer vector tiles servers
-            'PROJ_LIB': layerStyling, // for the old GISAPI server
-          },
-          layerLink: function (layerName) {
-            if (layerName.indexOf('_label') > -1) {
-              return layerName.replace('_label', '');
-            }
-            return layerName + '_label';
-          }
-
-        });
-      mvtSource.on('mouseover', function (event) {
-        if (event.layer && event.layer.properties) {
-          var layer = event.layer;
-          var featureId = layer.properties.ogc_fid;
-          mvtSource.setFeatureStyle(featureId, {
-            weight: layer.options.weight + 3,
-            color: layer.options.color,
-            fillColor: layer.options.fillColor,
-            fillOpacity: 0.8,
-            fill: layer.options.fill,
-          });
-          info.update(event.layer.properties);
-        }
-      });
-      mvtSource.on('mouseout', function (event) {
-        if (event.layer && event.layer.properties) {
-          var featureId = event.layer.properties.ogc_fid;
-          mvtSource.resetFeatureStyle(featureId);
-        }
-      });
-      mvtSource.myFitBounds = function () {
-        options.map.fitBounds(bounds);
-      };
-      if (!firstAdded) {
-        mvtSource.myFitBounds();
-        options.map.addLayer(mvtSource);
-        firstAdded = true;
+  /**
+   * Class implementing layers control to allow toggling the visibility of the layers
+   */
+  class LayersControl {
+    constructor(ctrls) {
+      this._container = document.createElement('div');
+      this._container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'layers-control');
+      this._ctrls = ctrls;
+      this._inputs = [];
+      const hover = document.createElement('a');
+      hover.classList.add('layers-control-toggle');
+      hover.href = '#';
+      const list = document.createElement('div');
+      list.classList.add('layers-control-list');
+      this._container.appendChild(hover);
+      this._container.appendChild(list);
+      for (const [key, [value, bounds]] of Object.entries(this._ctrls)) {
+        const labeled_checkbox = this._createLabeledCheckbox(key, value, bounds);
+        list.appendChild(labeled_checkbox);
       }
-
-      layers[layerData.resource_name] = mvtSource;
     }
 
-    var promise = null;
-    var layer_fields = layerData.layer_fields;
+    _createLabeledCheckbox(key, value, bounds) {
+      const label = document.createElement('label');
+      label.classList.add('layer-control');
+      const text = document.createTextNode(key);
+      const input = document.createElement('input');
+      this._inputs.push(input);
+      input.type = 'checkbox';
+      input.id = key;
+      input.value = value;
+      input.bounds = bounds;
+      input.addEventListener('change', (e) => {
+        const layer = e.target.value;
+        const visibility = e.target.checked ? 'visible' : 'none';
+        this._map.setLayoutProperty(layer, 'visibility', visibility);
+        if (e.target.checked) this._map.fitBounds(e.target.bounds);
+      });
+      label.appendChild(input);
+      label.appendChild(text);
+      return label;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      for (const input of this._inputs) {
+        const layername = this._ctrls[input.id][0];
+        let isVisible = true;
+        isVisible = isVisible && this._map.getLayoutProperty(layername, 'visibility') !== 'none';
+        input.checked = isVisible;
+      }
+      return this._container;
+    }
+
+    onRemove(map) {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
+
+  /**
+   * Determine HDX vector tile server config (especially base/origin URL) from vector tile layer URL
+   * @param {string} layerUrl
+   */
+  function setVectorTileHDXLayerConfig(layerUrl) {
+    let hdxVectorTileServerUrl = null;
+    try {
+      const urlObj = new URL(layerUrl);
+      hdxVectorTileServerUrl = urlObj.origin;
+    }
+    catch (e) {
+      hdxVectorTileServerUrl= window.location.origin;
+    }
+    vectorTileHDXLayerConfig.serverUrl= hdxVectorTileServerUrl;
+  }
+
+
+  /**
+   * Determine vector tile base map config (base map URL and token) from hidden <div>
+   */
+  function setVectorTileBaseMapConfig() {
+    let baseMapUrl = null;
+    let token = null;
+    let urlObj = null;
+    try {
+      const config = JSON.parse($('#mapbox-baselayer-url-div').text());
+      baseMapUrl = config.baseMapUrl;
+      token = config.token;
+      urlObj = new URL(baseMapUrl);
+    }
+    catch (e) {
+      baseMapUrl = baseMapUrl || '/mapbox';
+      token = token || 'cacheToken';
+      urlObj = new URL(baseMapUrl, window.location.href);
+    }
+    vectorTileBaseMapConfig.baseMapUrl = urlObj.href;
+    vectorTileBaseMapConfig.token = token;
+  }
+
+  function getLayerStyling(geomType) {
+    const geomTypeUpper = geomType.toUpperCase();
+    if (['POINT', 'MULTIPOINT', 'ST_POINT', 'ST_MULTIPOINT'].includes(geomTypeUpper)) {
+      return defaultPointStyle;
+    } else if (
+      ['LINESTRING', 'MULTILINESTRING', 'ST_LINESTRING', 'ST_MULTILINESTRING'].includes(
+        geomTypeUpper
+      )
+    ) {
+      return defaultLineStyle;
+    } else return defaultStyle;
+  }
+
+  function getBounds(BBOX) {
+    const bboxArray = BBOX.replace('BOX(', '').replace(')', '').split(',');
+    const xmin = Number(bboxArray[0].split(' ')[0]);
+    const ymin = Number(bboxArray[0].split(' ')[1]);
+    const xmax = Number(bboxArray[1].split(' ')[0]);
+    const ymax = Number(bboxArray[1].split(' ')[1]);
+    const bounds = [
+      [xmin, ymin],
+      [xmax, ymax],
+    ];
+    return bounds;
+  }
+
+  async function getFieldListAndBuildLayer(layerData, info, firstAdded, options, layers) {
+    const value = layerData.url;
+    const tilesBaseUrl = value.indexOf('//') >= 0 ? value : vectorTileHDXLayerConfig.serverUrl + value;
+    const tilesURL = tilesBaseUrl + '?geom=wkb_geometry&fields=ogc_fid';
+    const bounds = getBounds(layerData.bounding_box);
+    const res = await fetch(`${vectorTileHDXLayerConfig.serverUrl}/gis/layer-type/${layerData.layer_id}`);
+    let geomType;
+    if (res.ok) {
+      const resJSON = await res.json();
+      geomType = resJSON.result;
+    } else {
+      const tile0 = tilesURL.replace('{z}', '0').replace('{x}', '0').replace('{y}', '0');
+      const r = await fetch(tile0);
+      const buffer = await r.arrayBuffer();
+      const tileLayer = new VectorTile(new Pbf(buffer)).layers[layerData.layer_id];
+      geomType = tileLayer ?
+        tileLayer.feature(0).toGeoJSON(0, 0, 0).geometry.type
+        : 'ST_MultiPolygon';
+    }
+
+    /**
+     * Create a layer with the given extra fields
+     * @param {string} extraFields - extra fields given as URL params string to be added to the URL requesting PBFs
+     */
+    function createLayer(extraFields) {
+      const map = options.map;
+      map.addSource(layerData.layer_id, {
+        type: 'vector',
+        promoteId: 'ogc_fid',
+        tiles: [tilesURL + extraFields],
+      });
+      map.addLayer({
+        id: layerData.layer_id,
+        source: layerData.layer_id,
+        'source-layer': layerData.layer_id,
+        ...getLayerStyling(geomType),
+      });
+      const visibility = firstAdded ? 'visible' : 'none';
+      map.setLayoutProperty(layerData.layer_id, 'visibility', visibility);
+
+      let featureId;
+
+      function onMouseMove(e) {
+        if (e.features.length > 0) {
+          map.getCanvas().style.cursor = 'pointer';
+          if (featureId) {
+            map.setFeatureState(
+              { source: layerData.layer_id, sourceLayer: layerData.layer_id, id: featureId },
+              { hover: false }
+            );
+          }
+          featureId = e.features[0].id;
+          info.update(e.features[0].properties);
+          map.setFeatureState(
+            { source: layerData.layer_id, sourceLayer: layerData.layer_id, id: featureId },
+            { hover: true }
+          );
+        }
+      }
+
+      function onMouseLeave() {
+        if (featureId) {
+          map.getCanvas().style.cursor = '';
+          map.setFeatureState(
+            { source: layerData.layer_id, sourceLayer: layerData.layer_id, id: featureId },
+            { hover: false }
+          );
+        }
+        featureId = undefined;
+        info.update();
+      }
+
+      map.on('mousemove', layerData.layer_id, onMouseMove);
+      map.on('mouseleave', layerData.layer_id, onMouseLeave);
+
+      if (firstAdded) options.map.fitBounds(bounds, { animate: false });
+    }
+
+    let promise = null;
+    const layer_fields = layerData.layer_fields;
     if (layer_fields && layer_fields.length > 0) {
       // New way in which the fields are stored in 'shape_info' in CKAN
 
-      var extraFields = "";
-      for (var i = 0; i < layer_fields.length; i++) {
-        var field = layer_fields[i];
+      let extraFields = '';
+      for (let i = 0; i < layer_fields.length; i++) {
+        const field = layer_fields[i];
         if (field.field_name !== 'ogc_fid' && ALLOWED_COLUMN_TYPES.indexOf(field.data_type) >= 0) {
-          var escaped_field_name = encodeURIComponent(field.field_name);
+          const escaped_field_name = encodeURIComponent(field.field_name);
           extraFields += ',"' + escaped_field_name + '"';
         }
       }
       createLayer(extraFields);
-    } else {
-      // Still supporting the old way for backwards compatibility - fetching fields from spatial server
-
-      var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
-      var splitString = "/postgis/";
-      var splitPosition = fieldsInfo.indexOf(splitString);
-      fieldsInfo = fieldsInfo.substr(0, splitPosition) + "/tables/" + fieldsInfo.substr(splitPosition + splitString.length);
-
-
-      promise = $.getJSON(fieldsInfo + "?format=geojson", function (data) {
-        var extraFields = "";
-        if (data.columns) {
-          for (var i = 0; i < data.columns.length; i++) {
-            var column = data.columns[i];
-            var escaped_column_name = encodeURIComponent(column.column_name);
-            if (column.column_name !== 'ogc_fid' && ALLOWED_COLUMN_TYPES.indexOf(column.data_type) >= 0) {
-              extraFields += ',"' + escaped_column_name + '"';
-            }
-          }
-        }
-
-        createLayer(extraFields)
-      });
     }
     return promise;
   }
 
-  function getData(options) {
-    //call DataProxy to get data for resource
+  async function getData(options) {
 
     /**
      * List of shape info for each geopreviewable resource
      * @type {[{resource_name: string, url: string, bounding_box: string, layer_fields: Array, layer_id: string}]}
      */
-    var NOT_ALLOWED_PROPERTIES = ['ogc_fid', '__geometryDimension', 'srid'];
-    var data = JSON.parse($("#shapeData").text());
-    var layers = [];
+    const data = options.data;
+    const layers = [];
 
-    var info = L.control({position: 'topleft'});
-
-    info.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
-      return this._div;
-    };
-
-    // method that we will use to update the control based on feature properties passed
-    info.update = function (props) {
-      var innerData = "";
-      if (props) {
-        for (var key in props) {
-          if (!NOT_ALLOWED_PROPERTIES.includes(key)) {
-            var value = props[key];
-            innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
-          }
-        }
-      }
-      this._div.innerHTML = '<h4>' + "Shape info" + '</h4>' + (props ? '<table>' + innerData + '</table>' : 'Click on a shape');
-    };
-    info.showOtherMessage = function (message) {
-      this._div.innerHTML = message;
-    };
-    info.addTo(options.map);
+    info = new InfoControl();
+    options.map.addControl(info, 'top-left');
     info.update();
 
-    var promises = [];
-    var firstAdded = false;
-    for (var idx = 0; idx < data.length; idx++) {
-
-      var promise = getFieldListAndBuildLayer(data[idx], defaultPointStyle, defaultLineStyle, defaultStyle,
-        info, firstAdded, options, layers, data[idx].resource_name);
-      if (!firstAdded) {
-        firstAdded = true;
+    const promises = [];
+    let firstAdded = true;
+    for (let idx = 0; idx < data.length; idx++) {
+      const promise = await getFieldListAndBuildLayer(
+        data[idx],
+        info,
+        firstAdded,
+        options,
+        layers,
+        data[idx].resource_name
+      );
+      if (firstAdded) {
+        firstAdded = false;
       }
-      if (promise)
-        promises.push(promise);
+      if (promise) promises.push(promise);
     }
 
-    $.when.apply($, promises).done(function (sources) {
-      L.control.layers([], layers).addTo(options.map);
-      options.map.on('overlayadd', function (e) {
-        e.layer.myFitBounds();
-      });
+    $.when.apply($, promises).done(() => {
+      layerConfig = {};
+      for (const row of data) {
+        layerConfig[row.resource_name] = [row.layer_id, getBounds(row.bounding_box)];
+      }
+      options.map.addControl(new LayersControl(layerConfig), 'top-right');
     });
 
-    $('.map-info').mousedown(
-      function (event) {
-        event.stopPropagation();
-      }
-    );
-
-    //addLayersToMap(options, []);
+    $('.map-info').mousedown(function (event) {
+      event.stopPropagation();
+    });
   }
 
-
-  function computeBoundaryPoly(options, data) {
-    //Need to compute Top-Left corner and Bottom-Right corner for polygon.
-    var minLat, minLng, maxLat, maxLng;
-    var init = false;
-
-    //Use a stack to traverse the geojson since we can gave many levels of arrays in arrays
-    var stackArrays = [];
-    var stackIndex = [];
-
-    for (var featureIdx in data.features) {
-      var featureItem = data.features[featureIdx];
-      stackArrays.push(featureItem.geometry.coordinates);
-      stackIndex.push(0);
-    }
-    //stackArrays.push(data.geometry.coordinates);
-    //stackIndex.push(0);
-    while (stackArrays.length > 0) {
-      var array = stackArrays.pop();
-      var index = stackIndex.pop();
-
-      if (index < array.length) {
-        var item = array[index];
-        //check if we reached a tuple of coordinates
-        if (!$.isArray(item)) {
-          //if (options.invertLatLong){
-          //    var temp = array[0];
-          //    array[0] = array[1];
-          //    array[1] = temp;
-          //}
-
-          var lat = parseFloat(array[1]);
-          var lng = parseFloat(array[0]);
-          //adjust min/max
-          if (init) {
-            if (lat < minLat)
-              minLat = lat;
-            if (lat > maxLat)
-              maxLat = lat;
-            if (lng < minLng)
-              minLng = lng;
-            if (lng > maxLng)
-              maxLng = lng;
-          } else {
-            init = true;
-            minLat = maxLat = lat;
-            minLng = maxLng = lng;
-          }
-        }
-        //push in the stack the current array with the next index
-        index++;
-        stackArrays.push(array);
-        stackIndex.push(index);
-        //if we haven't reached a tuple of coordinates, add in the stack the array
-        if ($.isArray(item)) {
-          stackArrays.push(item);
-          stackIndex.push(0);
-        }
-      }
-    }
-
-    //check if boundary poly's of all layers are a perfect overlap
-    if ((options.boundaryPoly.minLat != minLat && options.boundaryPoly.minLat != null) &&
-      (options.boundaryPoly.maxLat != maxLat && options.boundaryPoly.maxLat != null) &&
-      (options.boundaryPoly.minLng != minLng && options.boundaryPoly.minLng != null) &&
-      (options.boundaryPoly.maxLng != maxLng && options.boundaryPoly.maxLng != null))
-      options.boundaryPoly.overlap = false;
-
-    if (options.boundaryPoly.minLat > minLat || options.boundaryPoly.minLat == null)
-      options.boundaryPoly.minLat = minLat;
-    if (options.boundaryPoly.maxLat < maxLat || options.boundaryPoly.maxLat == null)
-      options.boundaryPoly.maxLat = maxLat;
-    if (options.boundaryPoly.minLng > minLng || options.boundaryPoly.minLng == null)
-      options.boundaryPoly.minLng = minLng;
-    if (options.boundaryPoly.maxLng > maxLng || options.boundaryPoly.maxLng == null)
-      options.boundaryPoly.maxLng = maxLng;
-  }
-
-  function buildMap(options) {
-    let map = L.map('map', {attributionControl: false});
-    setHDXBaseMap(map, 16);
-    options.map = map;
+  /**
+   * Function that runs when the map is being initialized by MapLibre
+   */
+  function initMap() {
+    const map = options.map;
+    map.addControl(new maplibregl.AttributionControl({}), 'top-right');
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+    map.scrollZoom.disable();
+    map.dragRotate.disable();
+    map.keyboard.disable();
+    map.touchZoomRotate.disableRotation();
     getData(options);
   }
 
-  function addLayersToMap(option, data) {
-    var map = option.map;
-    var defaultStyle = {color: '#ff493d', fillColor: '#ff493d', fillOpacity: 0.6, opacity: 0.7, weight: 1};
-    var defaultPointStyle = {
-      radius: 7,
-      color: '#ff493d',
-      fillColor: '#ff493d',
-      fillOpacity: 0.6,
-      opacity: 0.7,
-      weight: 1
+  function isMapboxURL(r) {
+    return 0 === r.indexOf('mapbox:');
+  }
+  function transformMapboxUrl(r, t, o) {
+    return r.indexOf('/styles/') > -1 && -1 === r.indexOf('/sprite')
+      ? { url: normalizeStyleURL(r, o) }
+      : r.indexOf('/sprites/') > -1
+      ? { url: normalizeSpriteURL(r, o) }
+      : r.indexOf('/fonts/') > -1
+      ? { url: normalizeGlyphsURL(r, o) }
+      : r.indexOf('/v4/') > -1 || 'Source' === t
+      ? { url: normalizeSourceURL(r, o) }
+      : void 0;
+  }
+  function parseUrl(r) {
+    const t = r.match(/^(\w+):\/\/([^/?]*)(\/[^?]+)?\??(.+)?/);
+    if (!t) throw new Error('Unable to parse URL object');
+    return {
+      protocol: t[1],
+      authority: t[2],
+      path: t[3] || '/',
+      params: t[4] ? t[4].split('&') : [],
     };
-    var hoverStyle = {color: '#000000', fillColor: '#ff493d', fillOpacity: 1, opacity: 0.7, weight: 1};
-
-
-    var info = L.control({position: 'topleft'});
-
-    info.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
-      return this._div;
-    };
-
-    // method that we will use to update the control based on feature properties passed
-    info.update = function (props) {
-      var innerData = "";
-      if (props) {
-        for (var key in props) {
-          var value = props[key];
-          innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
-        }
+  }
+  function formatUrl(r, t) {
+    const o = parseUrl(vectorTileBaseMapConfig.baseMapUrl);
+    (r.protocol = o.protocol), (r.authority = o.authority),
+      (r.path = o.path + r.path), r.params.push(`access_token=${t}`);
+    const n = r.params.length ? `?${r.params.join('&')}` : '';
+    return `${r.protocol}://${r.authority}${r.path}${n}`;
+  }
+  function normalizeStyleURL(r, t) {
+    const o = parseUrl(r);
+    return (o.path = `/styles/v1${o.path}`), formatUrl(o, t);
+  }
+  function normalizeGlyphsURL(r, t) {
+    const o = parseUrl(r);
+    return (o.path = `/fonts/v1${o.path}`), formatUrl(o, t);
+  }
+  function normalizeSourceURL(r, t) {
+    const o = parseUrl(r);
+    return (o.path = `/v4/${o.authority}.json`), o.params.push('secure'), formatUrl(o, t);
+  }
+  function normalizeSpriteURL(r, t) {
+    const o = parseUrl(r);
+    let n = o.path.split('.'),
+      e = n[0];
+    const a = n[1];
+    let s = '';
+    return (
+      e.indexOf('@2x') && ((e = e.split('@2x')[0]), (s = '@2x')),
+      (o.path = `/styles/v1${e}/sprite${s}.${a}`),
+      formatUrl(o, t)
+    );
+  }
+  function normalizeTiles(r, t) {
+    const o = parseUrl(r);
+    for (let i = 0; i < o.params.length; i++) {
+      const key = o.params[i].split('=');
+      if ('access_token' === key[0]) {
+        o.params.splice(i, 1); // remove item from params
+        break;
       }
-      this._div.innerHTML = '<h4>' + "Shape info" + '</h4>' + (props ? '<table>' + innerData + '</table>' : 'Hover over a shape');
-    };
-    info.showOtherMessage = function (message) {
-      this._div.innerHTML = message;
-    };
-    info.addTo(map);
-
-    var layers = [];
-    var firstLayer = false;
-    for (var key in data) {
-      var value = data[key];
-      var layer = L.geoJson(value, {
-        style: function (feature) {
-          return defaultStyle;
-        },
-        pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, defaultPointStyle);
-        },
-        onEachFeature: function (feature, layer) {
-          (function (layer, properties) {
-            // Create a mouseover event
-            layer.on("mouseover", function (e) {
-              if (!L.Browser.ie && !L.Browser.opera) {
-                layer.bringToFront();
-              }
-
-              layer.setStyle(hoverStyle);
-              info.update(properties);
-            });
-            // Create a mouseout event that undoes the mouseover changes
-            layer.on("mouseout", function (e) {
-              // Start by reverting the style back
-              layer.setStyle(defaultStyle);
-              info.update();
-            });
-            // Close the "anonymous" wrapper function, and call it while passing
-            // in the variables necessary to make the events work the way we want.
-          })(layer, feature.properties);
-        }
-      });
-      if (!firstLayer) {
-        layer.addTo(map);
-        firstLayer = true;
-      }
-      layers[key] = layer;
     }
-
-    L.control.layers([], layers).addTo(map);
-
-    map.fitBounds([[options.boundaryPoly.minLat, options.boundaryPoly.minLng], [options.boundaryPoly.maxLat, options.boundaryPoly.maxLng]]);
-    info.update();
+    return formatUrl(o, t);
   }
 
+  function buildMap(options) {
 
-  $(document).ready(
-    function () {
-      buildMap(options);
+    /**
+     * Transform requests URLs
+     * @param {string} url
+     * @param {string} resourceType
+     * @returns {{url: string}}
+     */
+    function transformRequest(url, resourceType) {
+      if (isMapboxURL(url)) return transformMapboxUrl(url, resourceType, vectorTileBaseMapConfig.token);
+      if (url.indexOf('tiles.mapbox') > 0) return {url: normalizeTiles(url, vectorTileBaseMapConfig.token)};
+      return { url };
     }
-  );
 
+    options.data = JSON.parse($('#shapeData').text());
+    setVectorTileHDXLayerConfig(options.data[0].url);
+    options.map = new maplibregl.Map({
+      container: 'map',
+      attributionControl: false,
+      style: 'mapbox://styles/humdata/cl3lpk27k001k15msafr9714b',
+      transformRequest,
+      bounds: getBounds(options.data[0].bounding_box),
+    });
+    options.map.once('load', initMap);
+  }
+
+  $(function () {
+    setVectorTileBaseMapConfig();
+    buildMap(options);
+  });
 })();
