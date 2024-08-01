@@ -337,10 +337,9 @@
 
     /**
      * List of shape info for each geopreviewable resource
-     * @type {[{resource_name: string, url: string, bounding_box: string, layer_fields: Array, layer_id: string}]}
+     * @type {[{resource_name: string, resource_format: string, url: string, bounding_box: string, layer_fields: Array, layer_id: string}]}
      */
     const data = options.data;
-    const layers = [];
 
     info = new InfoControl();
     options.map.addControl(info, 'top-left');
@@ -348,14 +347,18 @@
 
     const promises = [];
     let firstAdded = true;
+
+    const duplicateLayerNames = {};
+    /* Check for duplicate layer names */
+    for (let idx = 0; idx < data.length; idx++) {
+      duplicateLayerNames[data[idx].resource_name] = ( duplicateLayerNames[data[idx].resource_name] || 0 ) + 1;
+    }
     for (let idx = 0; idx < data.length; idx++) {
       const promise = await getFieldListAndBuildLayer(
         data[idx],
         info,
         firstAdded,
         options,
-        layers,
-        data[idx].resource_name
       );
       if (firstAdded) {
         firstAdded = false;
@@ -364,14 +367,17 @@
     }
 
     $.when.apply($, promises).done(() => {
-      layerConfig = {};
+      const layerConfig = {};
       for (const row of data) {
-        layerConfig[row.resource_name] = [row.layer_id, getBounds(row.bounding_box)];
+        const resourceName = row.resource_name;
+        const layerName = duplicateLayerNames[resourceName] === 1 ?
+          resourceName :  resourceName + `-${row.resource_format || duplicateLayerNames[resourceName]}`;
+        layerConfig[layerName] = [row.layer_id, getBounds(row.bounding_box)];
       }
       options.map.addControl(new LayersControl(layerConfig), 'top-right');
     });
 
-    $('.map-info').mousedown(function (event) {
+    $('.map-info').on('mousedown',function (event) {
       event.stopPropagation();
     });
   }
@@ -388,79 +394,94 @@
     };
     map.addControl(new maplibregl.AttributionControl(customAttributionConfig), 'top-right');
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
-    map.scrollZoom.disable();
     map.dragRotate.disable();
     map.keyboard.disable();
     map.touchZoomRotate.disableRotation();
     getData(options);
   }
 
-  function isMapboxURL(r) {
-    return 0 === r.indexOf('mapbox:');
+  /**
+   * Based on https://github.com/rowanwins/maplibregl-mapbox-request-transformer/blob/ac86b25afa1028192ae2dc2500714ce864bbe443/src/index.js
+   *
+   * Adapted to work with HDX configuration and servers
+   */
+  function isMapboxURL(url) {
+    return url.indexOf('mapbox:') === 0;
   }
-  function transformMapboxUrl(r, t, o) {
-    return r.indexOf('/styles/') > -1 && -1 === r.indexOf('/sprite')
-      ? { url: normalizeStyleURL(r, o) }
-      : r.indexOf('/sprites/') > -1
-      ? { url: normalizeSpriteURL(r, o) }
-      : r.indexOf('/fonts/') > -1
-      ? { url: normalizeGlyphsURL(r, o) }
-      : r.indexOf('/v4/') > -1 || 'Source' === t
-      ? { url: normalizeSourceURL(r, o) }
-      : void 0;
+  function transformMapboxUrl(url, resourceType, accessToken) {
+    if (url.indexOf('/styles/') > -1 && url.indexOf('/sprite') === -1)
+      return { url: normalizeStyleURL(url, accessToken) };
+    if (url.indexOf('/sprites/') > -1)
+      return { url: normalizeSpriteURL(url, '', '.json', accessToken) };
+    if (url.indexOf('/fonts/') > -1) return { url: normalizeGlyphsURL(url, accessToken) };
+    if (url.indexOf('/v4/') > -1) return { url: normalizeSourceURL(url, accessToken) };
+    if (resourceType === 'Source') return { url: normalizeSourceURL(url, accessToken) };
   }
-  function parseUrl(r) {
-    const t = r.match(/^(\w+):\/\/([^/?]*)(\/[^?]+)?\??(.+)?/);
-    if (!t) throw new Error('Unable to parse URL object');
+  function parseUrl(url) {
+    const urlRe = /^(\w+):\/\/([^/?]*)(\/[^?]+)?\??(.+)?/;
+    const parts = url.match(urlRe);
+    if (!parts) {
+      throw new Error('Unable to parse URL object');
+    }
     return {
-      protocol: t[1],
-      authority: t[2],
-      path: t[3] || '/',
-      params: t[4] ? t[4].split('&') : [],
+      protocol: parts[1],
+      authority: parts[2],
+      path: parts[3] || '/',
+      params: parts[4] ? parts[4].split('&') : [],
     };
   }
-  function formatUrl(r, t) {
-    const o = parseUrl(vectorTileBaseMapConfig.baseMapUrl);
-    (r.protocol = o.protocol), (r.authority = o.authority),
-      (r.path = o.path + r.path), r.params.push(`access_token=${t}`);
-    const n = r.params.length ? `?${r.params.join('&')}` : '';
-    return `${r.protocol}://${r.authority}${r.path}${n}`;
+
+  /* Modified by HDX to use HDX config */
+  function formatUrl(urlObject, accessToken) {
+    const apiUrlObject = parseUrl(vectorTileBaseMapConfig.baseMapUrl);
+    urlObject.protocol = apiUrlObject.protocol;
+    urlObject.authority = apiUrlObject.authority;
+    urlObject.path = apiUrlObject.path + urlObject.path;
+    urlObject.params.push(`access_token=${accessToken}`);
+    const params = urlObject.params.length ? `?${urlObject.params.join('&')}` : '';
+    return `${urlObject.protocol}://${urlObject.authority}${urlObject.path}${params}`;
   }
-  function normalizeStyleURL(r, t) {
-    const o = parseUrl(r);
-    return (o.path = `/styles/v1${o.path}`), formatUrl(o, t);
+  /* END - Modified by HDX */
+
+  function normalizeStyleURL(url, accessToken) {
+    const urlObject = parseUrl(url);
+    urlObject.path = `/styles/v1${urlObject.path}`;
+    return formatUrl(urlObject, accessToken);
   }
-  function normalizeGlyphsURL(r, t) {
-    const o = parseUrl(r);
-    return (o.path = `/fonts/v1${o.path}`), formatUrl(o, t);
+  function normalizeGlyphsURL(url, accessToken) {
+    const urlObject = parseUrl(url);
+    urlObject.path = `/fonts/v1${urlObject.path}`;
+    return formatUrl(urlObject, accessToken);
   }
-  function normalizeSourceURL(r, t) {
-    const o = parseUrl(r);
-    return (o.path = `/v4/${o.authority}.json`), o.params.push('secure'), formatUrl(o, t);
+  function normalizeSourceURL(url, accessToken) {
+    const urlObject = parseUrl(url);
+    urlObject.path = `/v4/${urlObject.authority}.json`;
+    urlObject.params.push('secure');
+    return formatUrl(urlObject, accessToken);
   }
-  function normalizeSpriteURL(r, t) {
-    const o = parseUrl(r);
-    let n = o.path.split('.'),
-      e = n[0];
-    const a = n[1];
-    let s = '';
-    return (
-      e.indexOf('@2x') && ((e = e.split('@2x')[0]), (s = '@2x')),
-      (o.path = `/styles/v1${e}/sprite${s}.${a}`),
-      formatUrl(o, t)
-    );
+  function normalizeSpriteURL(url, format, extension, accessToken) {
+    const urlObject = parseUrl(url);
+    const path = urlObject.path.split('.');
+    urlObject.path = `/styles/v1${path[0]}/sprite.${path[1]}`;
+    return formatUrl(urlObject, accessToken);
   }
-  function normalizeTiles(r, t) {
-    const o = parseUrl(r);
-    for (let i = 0; i < o.params.length; i++) {
-      const key = o.params[i].split('=');
+
+  /* Added by HDX to transform vector tiles URL */
+  function normalizeTiles(url, accessToken) {
+    const urlObject = parseUrl(url);
+    for (let i = 0; i < urlObject.params.length; i++) {
+      const key = urlObject.params[i].split('=');
       if ('access_token' === key[0]) {
-        o.params.splice(i, 1); // remove item from params
+        /*remove token param as it will be added later*/
+        urlObject.params.splice(i, 1);
         break;
       }
     }
-    return formatUrl(o, t);
+    return formatUrl(urlObject, accessToken);
   }
+  /* END - added by HDX */
+
+  /* END - based on https://github.com/rowanwins/maplibregl-mapbox-request-transformer/blob/ac86b25afa1028192ae2dc2500714ce864bbe443/src/index.js */
 
   function buildMap(options) {
 
@@ -481,6 +502,7 @@
     options.map = new maplibregl.Map({
       container: 'map',
       attributionControl: false,
+      cooperativeGestures: true,
       style: 'mapbox://styles/humdata/cl3lpk27k001k15msafr9714b',
       transformRequest,
       bounds: getBounds(options.data[0].bounding_box),
