@@ -1,6 +1,8 @@
 $(document).ready(function () {
-  var $form = $('#mc_embed_signup form');
+
+  var $form = $('#signals-form-card form');
   var $button = $form.find('#mc-embedded-subscribe');
+  var $fields = $form.find('#mce-EMAIL, #mce-FNAME, #mce-ORG');
 
   var DATASETS_GROUPS = [
     '[4389]'
@@ -105,7 +107,11 @@ $(document).ready(function () {
       return $form.find('input[name^="group' + group + '"]:checked').length > 0;
     });
 
-    if(dataset_checked && location_checked) {
+    var fields_filled = $fields.toArray().every(function(field) {
+      return $(field).val().trim() !== '';
+    });
+
+    if(dataset_checked && location_checked && fields_filled) {
       $button.removeClass('disabled').removeAttr('disabled');
     }
     else {
@@ -142,4 +148,9 @@ $(document).ready(function () {
       disable_submit_button();
     });
   });
+
+  $fields.on('input', function() {
+    disable_submit_button();
+  });
+
 });
