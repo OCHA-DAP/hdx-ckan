@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page %}
-  	<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+  	<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_generate_basemap_config_string() }}</div>
     <div id="shapeData" style="display: none;">
         {{ shape_info }}
     </div>
@@ -10,11 +10,9 @@
             <div id="map" style="height: 400px;"></div>
     </div>
 
-{#  {% resource 'hdx_theme/d3' %}#}
-{#  {% resource 'hdx_theme/crisis-base' %}#}
-{#  {% resource 'hdx_theme/shape-view' %}#}
-
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
   {% asset 'hdx_theme/shape-view-scripts' %}
   {% asset 'hdx_theme/crisis-base-scripts' %}
-
 {% endblock %}
