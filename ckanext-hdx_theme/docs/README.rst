@@ -40,3 +40,9 @@ Adding a new field to dataset. Please note that doesn't necessarily mean storing
 HOW TO DOWNLOAD FILES/RESOURCES FROM HDX
 --------------
 Information about how to download the files from HDX can be found here `Download Files from HDX <download/index.rst>`_
+
+CODE QUALITY
+++++++++++++
+Information about configuring the linter (Ruff) can be found here: `Linter Configuration <code_quality/linter.rst>`_.
+
+Information about configuring the type(s) checker can be found here: `Type Checker Configuration <code_quality/type_checker.rst>`_.
