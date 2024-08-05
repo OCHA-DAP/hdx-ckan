@@ -10,6 +10,10 @@ Installing Ruff Linter
 
 Since we utilize CKAN within a Docker container, you'll need Ruff installed locally on your development machine.
 
+The PyCharm Ruff plugin doesn't know how to use the Ruff installation from the CKAN container. It needs a Ruff executable on the Docker host (the real machine). It also cannot execute Ruff from a Python virtual environment as there doesn't seem to be a way to activate a specific virtual env before running Ruff.
+
+Please note that since Ruff is written in the Rust programming language, you don't necessarily need to install it as a Python package, although you can. Please see below the various options.
+
 Ruff is available as ``ruff`` on PyPI:
 
 ::
@@ -35,6 +39,15 @@ For **macOS Homebrew** and **Linuxbrew** users, Ruff is also available as ``ruff
 ::
 
     brew install ruff
+
+Direct downloads of Ruff executables:
+
+- `Linux x86_64 <https://github.com/astral-sh/ruff/releases/download/0.5.6/ruff-x86_64-unknown-linux-gnu.tar.gz>`_
+- `Linux ARM64 <https://github.com/astral-sh/ruff/releases/download/0.5.6/ruff-aarch64-unknown-linux-gnu.tar.gz>`_
+- `macOS x86_64 <https://github.com/astral-sh/ruff/releases/download/0.5.6/ruff-x86_64-apple-darwin.tar.gz>`_
+- `macOS ARM64 <https://github.com/astral-sh/ruff/releases/download/0.5.6/ruff-aarch64-apple-darwin.tar.gz>`_
+- `Windows x86_64 <https://github.com/astral-sh/ruff/releases/download/0.5.6/ruff-x86_64-pc-windows-msvc.zip>`_
+
 
 Enabling Ruff Extension in PyCharm
 ----------------------------------
