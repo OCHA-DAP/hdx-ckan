@@ -3,6 +3,7 @@ import ckan.logic.action.update as _update
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
+from ckan.types import Context, DataDict
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
     SKIP_VALIDATION
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
@@ -363,3 +364,21 @@ def hdx_p_coded_resource_update(context, data_dict):
     return next((r for r in result['package']['resources'] if r['id'] == resource_id), None)
 
 
+def hdx_mark_resource_in_hapi(context: Context, data_dict: DataDict):
+    """
+    This action uses PERMISSIONS! Please be careful if changing the scope of its changes!
+    """
+    _check_access('hdx_mark_resource_in_hapi', context, data_dict)
+
+    if 'id' in data_dict and 'in_hapi' in data_dict:
+        new_data_dict = {
+            'id': _get_or_bust(data_dict, 'id'),
+            'in_hapi': _get_or_bust(data_dict, 'in_hapi')
+        }
+    else:
+        raise NotFound('Resource ID or key were not provided.')
+
+    context['ignore_auth'] = True
+    context['allow_resource_in_hapi_field'] = True
+
+    return _get_action('resource_patch')(context, new_data_dict)

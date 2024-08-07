@@ -80,3 +80,5 @@ RESOURCE_METADATA_FIELDS_MAP = {'created': 'Created', 'description': 'Descriptio
                                 'package_id': None, 'dataset_id': 'Dataset ID', 'resource_type': 'Resource Type',
                                 'name': 'Resource Name',
                                 'mimetype': 'MIME Type', 'size': 'Size'}
+
+IN_HAPI_FLAG_VALUES = [NO_DATA, 'yes']
