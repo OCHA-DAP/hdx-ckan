@@ -1,0 +1,21 @@
+@import "../bem.blocks/bem_variables";
+
+#signals-form-card {
+  #mc_embed_signup {
+    span {
+      &.asterisk {
+        font-size: 1rem;
+        font-weight: normal;
+        color: @red-color;
+      }
+    }
+
+    #mc-embedded-subscribe {
+      &:disabled,
+      &.disabled {
+        background-color: @grey-extra-dark-color;
+        border-color: @grey-extra-dark-color;
+      }
+    }
+  }
+}
