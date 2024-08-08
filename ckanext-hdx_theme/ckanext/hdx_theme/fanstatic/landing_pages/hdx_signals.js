@@ -2,6 +2,7 @@ $(document).ready(function () {
 
   var $form = $('#signals-form-card form');
   var $button = $form.find('#mc-embedded-subscribe');
+  var $alert = $form.find('#mc-embedded-subscribe-alert');
   var $fields = $form.find('#mce-EMAIL, #mce-FNAME, #mce-ORG');
 
   var DATASETS_GROUPS = [
@@ -113,9 +114,11 @@ $(document).ready(function () {
 
     if(dataset_checked && location_checked && fields_filled) {
       $button.removeClass('disabled').removeAttr('disabled');
+      $alert.addClass('d-none');
     }
     else {
       $button.addClass('disabled').attr('disabled', 'disabled');
+      $alert.removeClass('d-none');
     }
   }
 
