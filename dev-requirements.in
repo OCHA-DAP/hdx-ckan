@@ -26,3 +26,4 @@ pytest-rerunfailures==10.2
 towncrier==22.8.0
 
 moto==2.3.2
+ruff==0.5.5

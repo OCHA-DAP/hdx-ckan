@@ -1,0 +1,10 @@
+#signals-form-card #mc_embed_signup span.asterisk {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #F2645A;
+}
+#signals-form-card #mc_embed_signup #mc-embedded-subscribe:disabled,
+#signals-form-card #mc_embed_signup #mc-embedded-subscribe.disabled {
+  background-color: #4B5563;
+  border-color: #4B5563;
+}

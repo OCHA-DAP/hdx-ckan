@@ -1,6 +1,24 @@
 $(document).ready(function () {
-  var $form = $('#mc_embed_signup form');
-  var DATASETS_GROUP = '[4389]';
+
+  var $form = $('#signals-form-card form');
+  var $button = $form.find('#mc-embedded-subscribe');
+  var $alert = $form.find('#mc-embedded-subscribe-alert');
+  var $fields = $form.find('#mce-EMAIL, #mce-FNAME, #mce-ORG');
+
+  var DATASETS_GROUPS = [
+    '[4389]'
+  ];
+  var LOCATIONS_GROUPS = [
+    '[4397]',
+    '[4405]',
+    '[4417]',
+    '[4409]',
+    '[4401]',
+    '[4421]',
+    '[4425]'
+  ];
+  var DATASETS_LOCATIONS_GROUPS = DATASETS_GROUPS.concat(LOCATIONS_GROUPS);
+
   var ALL_LOCATIONS = [
     '[4397][16384]',
     '[4405][8388608]',
@@ -38,24 +56,32 @@ $(document).ready(function () {
     '[4421][8]',
   ];
 
-  function select_group(group) {
-    $form.find('input[name^="group' + group + '"]').prop('checked', true);
+  function select_groups(groups) {
+    groups.forEach(function (group) {
+      $form.find('input[name^="group' + group + '"]').prop('checked', true);
+    });
+    disable_submit_button();
   }
 
-  function unselect_group(group) {
-    $form.find('input[name^="group' + group + '"]').prop('checked', false);
+  function unselect_group(groups) {
+    groups.forEach(function (group) {
+      $form.find('input[name^="group' + group + '"]').prop('checked', false);
+    });
+    disable_submit_button();
   }
 
   function select_values(values) {
     values.forEach(function (value) {
       $form.find('input[name="group' + value + '"]').prop('checked', true);
     });
+    disable_submit_button();
   }
 
   function unselect_values(values) {
     values.forEach(function (value) {
       $form.find('input[name="group' + value + '"]').prop('checked', false);
     });
+    disable_submit_button();
   }
 
   function add_select_buttons(group_label, group) {
@@ -66,15 +92,38 @@ $(document).ready(function () {
     group_label.append(unselect_btn);
 
     select_btn.click(function () {
-      select_group(group);
+      select_groups([group]);
     });
     unselect_btn.click(function () {
-      unselect_group(group);
+      unselect_group([group]);
     });
   }
 
+  function disable_submit_button() {
+    var dataset_checked = DATASETS_GROUPS.some(function (group) {
+      return $form.find('input[name^="group' + group + '"]:checked').length > 0;
+    });
+
+    var location_checked = LOCATIONS_GROUPS.some(function (group) {
+      return $form.find('input[name^="group' + group + '"]:checked').length > 0;
+    });
+
+    var fields_filled = $fields.toArray().every(function(field) {
+      return $(field).val().trim() !== '';
+    });
+
+    if(dataset_checked && location_checked && fields_filled) {
+      $button.removeClass('disabled').removeAttr('disabled');
+      $alert.addClass('d-none');
+    }
+    else {
+      $button.addClass('disabled').attr('disabled', 'disabled');
+      $alert.removeClass('d-none');
+    }
+  }
+
   $form.find('#select-all-datasets').on('click', function () {
-    select_group(DATASETS_GROUP);
+    select_groups(DATASETS_GROUPS);
   });
   $form.find('#select-all-locations').on('click', function () {
     select_values(ALL_LOCATIONS);
@@ -95,6 +144,16 @@ $(document).ready(function () {
       var group = group_name.split('[')[1].split(']')[0];
       add_select_buttons(group_label, '[' + group + ']');
     }
+  });
+
+  DATASETS_LOCATIONS_GROUPS.forEach(function (group) {
+    $form.find('input[name^="group' + group + '"]').on('change', function () {
+      disable_submit_button();
+    });
+  });
+
+  $fields.on('input', function() {
+    disable_submit_button();
   });
 
 });

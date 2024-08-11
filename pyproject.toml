@@ -80,10 +80,11 @@ reportOptionalCall = true
 reportOptionalIterable = true
 reportOptionalContextManager = true
 reportOptionalOperand = true
-reportTypedDictNotRequiredAccess = false # We are using Context in a way that conflicts with this check
+# We are using Context in a way that conflicts with this check
+reportTypedDictNotRequiredAccess = false
 reportConstantRedefinition = true
 reportIncompatibleMethodOverride = false
-reportIncompatibleVariableOverride = true
+reportIncompatibleVariableOverride = false
 reportOverlappingOverload = true
 reportUntypedFunctionDecorator = false
 reportUnknownParameterType = true
@@ -149,3 +150,31 @@ module = [
     "webassets.*",
     "zope.*",
 ]
+
+[tool.ruff]
+extend-exclude = [
+    "./src",
+]
+
+# Allow lines to be as long as 120 characters.
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "Q",
+    "INP001", # Checks for packages that are missing an __init__.py file.
+]
+extend-ignore = [
+    "Q003", # avoidable-escaped-quote
+    "E712", # true-false-comparison (interferes with sqlAlchemy queries)
+]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "single"
+
+[tool.ruff.format]
+# Prefer single quotes over double quotes
+quote-style = "single"

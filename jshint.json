@@ -1,1 +1,5 @@
-{"onevar": false, "browser":  true}
+{
+  "onevar": false,
+  "browser": true,
+  "esversion": 9
+}
