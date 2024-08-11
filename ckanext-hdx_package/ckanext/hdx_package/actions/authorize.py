@@ -2,6 +2,7 @@ import logging
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
 import ckan.plugins.toolkit as tk
+from ckan.types import Context, DataDict
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
@@ -158,3 +159,7 @@ def hdx_send_mail_request_tags(context, data_dict):
         'success': False,
         'msg': _('Not authorized to perform this request')
     }
+
+
+def hdx_mark_resource_in_hapi(context: Context, data_dict: DataDict):
+    return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_IN_HAPI_FLAG)
