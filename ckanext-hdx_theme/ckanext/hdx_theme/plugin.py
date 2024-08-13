@@ -260,6 +260,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'are_new_p_code_filters_enabled': hdx_helpers.are_new_p_code_filters_enabled,
             'bs5_build_nav_icon': hdx_helpers.bs5_build_nav_icon,
             'hdx_decode_markup': hdx_helpers.hdx_decode_markup,
+            'hdx_generate_basemap_config_string': hdx_helpers.hdx_generate_basemap_config_string,
             'HDX_CONST': const
         }
 

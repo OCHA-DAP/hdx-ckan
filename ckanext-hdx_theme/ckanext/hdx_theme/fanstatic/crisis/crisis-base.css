@@ -36,6 +36,11 @@
     max-height: 320px;
     overflow-y: auto;
 }
+
+.map-info td {
+  color: white;
+}
+
 .map-info h4 {
     font: 'Source Sans Pro';
     margin: 0 0 5px;
@@ -61,6 +66,34 @@
 }
 
 .leaflet-container label::after {
-    content: "";
+  content: '';
 }
 
+.layers-control-toggle {
+  background-image: url("/images/maps/layers-2x.png");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 26px 26px;
+  display: block;
+  height: 44px;
+  width: 44px;
+}
+.layers-control-list {
+  display: none;
+  padding: 0.2em;
+}
+
+.layers-control:hover > .layers-control-list {
+  display: block;
+}
+.layers-control:hover > .layers-control-toggle {
+  display: none;
+}
+
+.layer-control {
+  display: block;
+  padding: 0.2em;
+}
+.layer-control > input[type='checkbox'] {
+  margin-right: 0.4em;
+}

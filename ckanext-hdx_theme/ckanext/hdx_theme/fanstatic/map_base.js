@@ -1,3 +1,5 @@
+/* This file is deprecated. Keeping it for the still existing but deprecated /ebola page */
+
 function setHDXBaseMap(map, maxZoomValue) {
   map.scrollWheelZoom.disable();
 
