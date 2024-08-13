@@ -123,6 +123,11 @@ def hdx_fs_check_resource_revise(context, data_dict=None):
     '''
     return {'success': False, 'msg': _('Only sysadmins can change the file structure check info')}
 
+def hdx_qa_hapi_report_view(context, data_dict=None):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return {'success': False, 'msg': _('Only sysadmins can change the file structure check info')}
 
 def hdx_cod_update(context, data_dict):
     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_COD)

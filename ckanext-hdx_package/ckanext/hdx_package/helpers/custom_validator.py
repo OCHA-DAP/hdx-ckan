@@ -397,6 +397,31 @@ def hdx_resource_keep_prev_value_unless_sysadmin(key, data, errors, context):
     if key not in data:
         raise StopOnError
 
+def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key, data, errors, context):
+    '''
+    By default, this should inject the value from the previous version.
+    The exception is if the user is a sysadmin, then the new value is used.
+    '''
+
+    user = context.get('user')
+    ignore_auth = context.get('ignore_auth')
+    allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
+
+    if not allowed_to_change or data[key] is missing:
+        data.pop(key, None)
+        resource_id = data.get(key[:-1] + ('id',))
+        package_id = data.get(('id',))
+        if resource_id:
+            specific_key = key[2]
+            context_key = 'resource_' + resource_id
+            resource_dict = context.get(context_key)
+            if not resource_dict:
+                resource_dict = __get_previous_resource_dict(context, package_id, resource_id)
+                context[context_key] = resource_dict
+            if resource_dict:
+                old_value = resource_dict.get(specific_key)
+                if old_value is not None:
+                    data[key] = old_value
 
 # def hdx_update_field_if_value_wrapper(context_field, value):
 #     def hdx_update_field_if_value(key, data, errors, context):
