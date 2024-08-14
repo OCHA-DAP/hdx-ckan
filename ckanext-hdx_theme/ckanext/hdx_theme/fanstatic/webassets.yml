@@ -635,7 +635,6 @@ dataset-read-styles:
   <<: *common-css
   extra:
     preload:
-      - hdx_theme/contact-contributor-styles
       - hdx_theme/group-message-styles
       - requestdata/main-styles
       - hdx_theme/resource-list-styles
@@ -1317,19 +1316,8 @@ banner-styles:
 contact-contributor-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_contact-contributor-scripts.js
-  extra:
-    preload:
-      - hdx_theme/ckan
-      - hdx_theme/contact-contributor-styles
   contents:
-    - https://www.google.com/recaptcha/api.js
-    - widget/membership/contact-contributor.js
-
-contact-contributor-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_contact-contributor-styles.css
-  contents:
-    - widget/membership/contact-contributor.css
+    - datasets/contact-contributor.js
 
 group-message-scripts:
   <<: *common-js
@@ -1364,7 +1352,6 @@ qa-dashboard-styles:
   output: ckanext-hdx_theme/%(version)s_qa-dashboard-styles.css
   extra:
     preload:
-      - hdx_theme/contact-contributor-styles
       - hdx_theme/dataset-search-styles
       - hdx_theme/qa-package-styles
       - hdx_theme/requestdata-styles

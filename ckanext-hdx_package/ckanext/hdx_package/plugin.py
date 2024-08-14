@@ -551,6 +551,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_dataseries_update': authorize.hdx_dataseries_update,
             'hdx_p_coded_resource_update': authorize.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': authorize.hdx_mark_resource_in_hapi,
+            'hdx_contact_contributor': authorize.hdx_contact_contributor,
         }
 
     def make_middleware(self, app, config):

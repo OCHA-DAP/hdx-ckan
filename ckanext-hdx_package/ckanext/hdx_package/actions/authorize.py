@@ -1,4 +1,5 @@
 import logging
+import ckan.authz as new_authz
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
 import ckan.plugins.toolkit as tk
@@ -163,3 +164,12 @@ def hdx_send_mail_request_tags(context, data_dict):
 
 def hdx_mark_resource_in_hapi(context: Context, data_dict: DataDict):
     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_IN_HAPI_FLAG)
+
+
+def hdx_contact_contributor(context: Context, data_dict: DataDict):
+    logged_in = not new_authz.auth_is_anon_user(context)
+
+    if logged_in:
+        return {'success': True}
+    else:
+        return {'success': False, 'msg': _('You must be logged in to contact the contributor.')}

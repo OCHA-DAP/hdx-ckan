@@ -5,8 +5,16 @@ import logging
 import re
 
 from flask import Blueprint, make_response
+from flask.views import MethodView
+from typing import Any, Optional, Union
+from six import text_type
+
+from ckan.types import Response
+from ckan.lib.mailer import MailerException
 
 import ckan.authz as authz
+import ckan.lib.captcha as captcha
+import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -16,17 +24,21 @@ import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
+from ckanext.hdx_package.controller_logic.dataset_contact_contributor import DatasetContactContributorLogic
 
 from ckan.views.dataset import _setup_template_variables
 
 from ckanext.hdx_package.helpers import resource_grouping
 from ckanext.hdx_package.helpers.constants import PACKAGE_METADATA_FIELDS_MAP, RESOURCE_METADATA_FIELDS_MAP
+from ckanext.hdx_package.helpers.membership_data import contributor_topics
 from ckanext.hdx_package.helpers.helpers import filesize_format
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_theme.helpers.helpers import markdown_extract_strip
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+
+import ckanext.hdx_users.helpers.helpers as usr_h
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +55,7 @@ g = tk.g
 
 NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
+ValidationError = tk.ValidationError
 
 hdx_dataset = Blueprint(u'hdx_dataset', __name__, url_prefix=u'/dataset')
 hdx_search = Blueprint(u'hdx_search', __name__, url_prefix=u'/search')
@@ -535,9 +548,134 @@ def _process_resource_metadata(metadata_dict: dict, fields: dict, file_format: s
     return metadata_dict
 
 
+class DatasetContactContributorView(MethodView):
+
+    def post(self, id: str) -> Union[Response, str]:
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user or g.author,
+            u'auth_user_obj': g.userobj,
+        }
+
+        try:
+            pkg_dict = get_action('package_show')(context, {'id': id})
+
+            check_access(u'hdx_contact_contributor', context)
+
+            dataset_contact_contributor_logic = DatasetContactContributorLogic(context, request)
+
+            data_dict = None
+            try:
+                data_dict = dataset_contact_contributor_logic.read()
+            except dictization_functions.DataError:
+                abort(400, _(u'Integrity Error'))
+
+            data, errors = dataset_contact_contributor_logic.validate(data_dict)
+            if errors:
+                return self.get(id, data, errors)
+
+            usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
+
+            check_access('hdx_send_mail_contributor', context, data_dict)
+
+            data_dict['topic'] = request.form.get('topic')
+            data_dict['fullname'] = request.form.get('fullname')
+            data_dict['email'] = request.form.get('email')
+            data_dict['msg'] = request.form.get('msg')
+            data_dict['pkg_owner_org'] = request.form.get('pkg_owner_org')
+            data_dict['pkg_title'] = request.form.get('pkg_title')
+            data_dict['pkg_id'] = request.form.get('pkg_id')
+            data_dict['pkg_url'] = h.url_for('dataset_read', id=request.form.get('pkg_id'), qualified=True)
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+
+            get_action('hdx_send_mail_contributor')(context, data_dict)
+
+            analytics_is_cod = analytics.is_cod(pkg_dict)
+            analytics_is_indicator = analytics.is_indicator(pkg_dict)
+            analytics_is_archived = analytics.is_archived(pkg_dict)
+            analytics_group_names, analytics_group_ids = analytics.extract_locations_in_json(pkg_dict)
+            analytics_dataset_availability = analytics.dataset_availability(pkg_dict)
+
+            extra_vars = {
+                u'pkg_dict': pkg_dict,
+                u'analytics_is_cod': analytics_is_cod,
+                u'analytics_is_indicator': 'false',
+                u'analytics_is_archived': analytics_is_archived,
+                u'analytics_group_names': analytics_group_names,
+                u'analytics_group_ids': analytics_group_ids,
+                u'analytics_dataset_availability': analytics_dataset_availability,
+                u'message_subject': request.form.get('topic'),
+                u'message_sent': True,
+            }
+            return render('package/contact_contributor.html', extra_vars=extra_vars)
+
+        except NotFound:
+            return abort(404, _('Dataset not found'))
+
+        except NotAuthorized:
+            came_from = h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.get('name'))
+            return redirect(h.url_for('hdx_signin.login', info_message_type='contact-contributor', came_from=came_from))
+
+        except captcha.CaptchaError:
+            error_summary = _(u'Bad Captcha. Please try again.')
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+        except MailerException as e:
+            error_summary = _('Could not send request for: %s') % text_type(e)
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+        except ValidationError as e:
+            error_summary = e.error_summary
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+        except Exception:
+            error_summary = _('Request can not be sent. Contact an administrator')
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+    def get(self, id: str,
+            data: Optional[dict[str, Any]] = None,
+            errors: Optional[dict[str, Any]] = None,
+            error_summary: Optional[str] = None):
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user or g.author,
+            u'auth_user_obj': g.userobj,
+        }
+
+        try:
+            pkg_dict = get_action('package_show')(context, {'id': id})
+
+            check_access(u'hdx_contact_contributor', context)
+
+            extra_vars = {
+                u'pkg_dict': pkg_dict,
+                u'contact_topics': contributor_topics,
+                u'data': data or {},
+                u'errors': errors or {},
+                u'error_summary': error_summary or {},
+            }
+            return render('package/contact_contributor.html', extra_vars=extra_vars)
+
+        except NotFound:
+            return abort(404, _('Dataset not found'))
+
+        except NotAuthorized:
+            came_from = h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.get('name'))
+            return redirect(h.url_for('hdx_signin.login', info_message_type='contact-contributor', came_from=came_from))
+
+
 hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
+hdx_dataset.add_url_rule(u'/<id>/contact/',
+                         view_func=DatasetContactContributorView.as_view(str(u'contact_contributor')),
+                         methods=[u'GET', u'POST'], strict_slashes=False)
 hdx_dataset.add_url_rule(u'<id>/download_metadata', view_func=package_metadata)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/download_metadata', view_func=resource_metadata)

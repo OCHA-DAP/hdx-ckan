@@ -1,0 +1,143 @@
+{% extends "onboarding/base.html" %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  {% if message_sent %}
+    {% asset 'hdx_theme/contact-contributor-scripts' %}
+  {% endif %}
+{% endblock %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['CONTACT_CONTRIBUTOR'] %}
+
+{% block subtitle %}{{ CONST.PAGE_TITLE }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li
+    class="breadcrumb-item">{{ h.nav_link( pkg_dict.title|truncate(120), named_route='hdx_dataset.read', id=pkg_dict.name) }}</li>
+  <li class="breadcrumb-item active"><a
+    href="{{ h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.name or pkg_dict.id) }}">{{ CONST.PAGE_TITLE }}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+        <div class="text-center mt-5">
+          {% set main_title = CONST.PAGE_TITLE_MESSAGE_SENT if message_sent else CONST.PAGE_TITLE %}
+          {% set main_text = CONST.BODY_MAIN_TEXT_MESSAGE_SENT.format(h.url_for('hdx_dataset.read', id=pkg_dict.name or pkg_dict.id), pkg_dict.title) if message_sent else CONST.BODY_MAIN_TEXT %}
+          {{ h.snippet('bem.blocks/heading.html', title=main_title, spacing_class="mb-5") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=main_text, paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
+        </div>
+      </div>
+    </div>
+
+    {% if message_sent %}
+      <input type="hidden" id="message_sent" value="{{ message_sent }}">
+      <input type="hidden" id="message_subject" value="{{ message_subject }}">
+    {% else %}
+      <div class="row">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+          <div class="text-center">
+            {{ h.snippet('bem.blocks/paragraph.html', text='--', spacing_class="mb-5") }}
+            {{ h.snippet('bem.blocks/paragraph.html', text=CONST.FEEDBACK_NOTICE_TEXT.format('mailto:hdx@un.org'), spacing_class="mb-5") }}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+          {{ h.snippet('bem.blocks/form_info.html', message=CONST.MANDATORY_HELP, spacing_class="mb-4") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATASET_NAME_TEXT.format(pkg_dict.title), paragraph_classes=["paragraph__text_font-weight-bold"], spacing_class="mb-4") }}
+
+          {% if error_summary %}
+            <div class="alert alert-danger">
+              <p class="mb-0">{{ error_summary }}</p>
+            </div>
+          {% endif %}
+
+          <form method="post"
+                action="{{ h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.name or pkg_dict.id) }}" novalidate>
+
+            {{ h.csrf_input() }}
+
+            <input type="hidden" name="pkg_title" value="{{ pkg_dict.title }}">
+            <input type="hidden" name="pkg_owner_org" value="{{ pkg_dict.owner_org }}">
+            <input type="hidden" name="pkg_id" value="{{ pkg_dict.name or pkg_dict.id }}">
+
+            {{ h.snippet('bem.blocks/select2_field.html',
+              name="topic",
+              data=contact_topics,
+              label=CONST.SELECT_INQUIRY_TYPE_LABEL,
+              required=True,
+              selected=data.get('topic'),
+              errors=errors.get('topic'),
+              select_classes=['select2-field__select_size_large'],
+              data_attributes={"placeholder": CONST.SELECT_INQUIRY_TYPE_PLACEHOLDER},
+              spacing_class="mb-4") }}
+
+            {{ h.snippet('bem.blocks/input_field.html',
+              type="text",
+              required=True,
+              label=CONST.INPUT_FULLNAME_LABEL,
+              name="fullname",
+              value=data.get('fullname') if 'fullname' in data else c.userobj.fullname,
+              errors=errors.get('fullname'),
+              placeholder=CONST.INPUT_FULLNAME_PLACEHOLDER,
+              spacing_class="mb-4") }}
+
+            {{ h.snippet('bem.blocks/input_field.html',
+              type="email",
+              required=True,
+              autocomplete='new-email',
+              label=CONST.INPUT_EMAIL_LABEL,
+              name="email",
+              value=data.get('email') if 'email' in data else c.userobj.email,
+              errors=errors.get('email'),
+              placeholder=CONST.INPUT_EMAIL_PLACEHOLDER,
+              spacing_class="mb-4") }}
+
+            {{ h.snippet('bem.blocks/textarea_field.html',
+              name="msg",
+              required=True,
+              label=CONST.TEXTAREA_MSG_LABEL,
+              value=data.get('msg'),
+              errors=errors.get('msg'),
+              placeholder=CONST.TEXTAREA_MSG_PLACEHOLDER,
+              rows=6,
+              spacing_class="mb-4") }}
+
+            {% if g.recaptcha_publickey %}
+              <div class="recaptcha-field mb-4">
+                <div class="g-recaptcha" data-sitekey="{{ g.recaptcha_publickey }}"></div>
+              </div>
+            {% endif %}
+
+            {{ h.snippet('bem.blocks/form_button.html', type="submit", title=CONST.BUTTON_SUBMIT, button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
+
+            <div class="text-center mb-5">
+              {{ h.snippet('bem.blocks/form_button.html', type="href", url=h.url_for('hdx_dataset.read', id=pkg_dict.name), title=CONST.BUTTON_CANCEL, button_classes=["form-button__btn_font-size_medium", "btn-link"], container_classes=["mt-1"]) }}
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+{% endblock %}
+
+{% block analytics_org_name %}{{ pkg_dict.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ pkg_dict.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ analytics_is_indicator }}{% endblock %}
+{% block analytics_is_archived %}{{ analytics_is_archived }}{% endblock %}
+{% block analytics_group_names %}{{ analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ pkg_dict.name }}{% endblock %}
+{% block analytics_dataset_id %}{{ pkg_dict.id }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics_dataset_availability }}{% endblock %}

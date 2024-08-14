@@ -1,9 +1,7 @@
 {% set url = request.url %}
-{% import 'package/snippets/base_actions_macros.html' as macro %}
 
 {% set panel_title = panel_title or "panel title" %}
 {% set title = title or "title" %}
-{% set contact_topics = contact_topics or {} %}
 {% set group_topics = group_topics or {} %}
 {% set hide_contact_contributor = (hide_contact_contributor or false) or  (pkg.is_requestdata_type and pkg.is_requestdata_type == True) %}
 {% set hide_membership = hide_membership or false %}
@@ -14,9 +12,6 @@
 
 {% if not hide_membership %}
     {% set membership_data = membership.data %}
-    {% if not hide_contact_contributor%}
-        {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, pkg = pkg, membership_data=membership_data) }}
-    {% endif %}
     {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title, base_type=base_type) }}
     {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
 {% endif %}
@@ -32,7 +27,7 @@
             {% endif %}
             {% if not hide_contact_contributor %}
                 <li>
-                    <a href="#" onclick="{{macro.contributor_action(pkg, h)}}" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
+                    <a href="{{ h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id) }}" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
                         <i class="icon-envelope"></i>
                         <span>Contact the contributor</span>
                     </a>
@@ -46,7 +41,7 @@
                   data-start-page-type="contact-contributor"
                   data-start-page-additional-params="{{ onboarding_additional_params }}">
 
-                    <a href="{{ h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', ''), info_message_type='contact-contributor') }}"
+                    <a href="{{ h.url_for('hdx_signin.login', came_from=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id), info_message_type='contact-contributor') }}"
                        title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}"
                        data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" data-delay='{"show":"700"}' id="contact-the-contributor">
 
