@@ -1,1 +1,1 @@
-from ckanext.hdx_theme.tests.conftest import keep_db_tables_on_clean
+from ckanext.hdx_theme.tests.conftest import keep_db_tables_on_clean, dataset_with_uploaded_resource
