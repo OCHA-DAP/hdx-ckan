@@ -5,7 +5,6 @@ Created on Jul 07, 2015
 '''
 
 import datetime
-import json
 import logging
 
 from six import text_type
@@ -31,6 +30,7 @@ from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 from ckanext.hdx_package.helpers.analytics import QACompletedAnalyticsSender
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, \
     BATCH_MODE, BATCH_MODE_DONT_GROUP, BATCH_MODE_KEEP_OLD
+from ckanext.hdx_package.helpers.resource_processors.csrf_field_remover import remove_unwanted_csrf_field
 from ckanext.hdx_package.helpers.resource_triggers import \
     BEFORE_PACKAGE_UPDATE_LISTENERS, AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 from ckanext.hdx_package.helpers.file_removal import file_remove, find_filename_in_url
@@ -225,6 +225,7 @@ def package_update(
 
     process_batch_mode(context, data_dict)
     process_skip_validation(context, data_dict)
+    remove_unwanted_csrf_field(data_dict)
 
     model = context['model']
     session = context['session']
