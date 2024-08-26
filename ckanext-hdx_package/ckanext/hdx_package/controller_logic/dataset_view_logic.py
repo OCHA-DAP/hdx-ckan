@@ -15,8 +15,10 @@ def process_shapes(resources, id=None):
 
             res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
             name = resource['name']
+            res_format = resource['format']
             shp_dict = {
                 'resource_name': name,
+                'resource_format': res_format,
                 'url': res_pbf_url,
                 'bounding_box': shp_info['bounding_box'],
                 'layer_fields': shp_info.get('layer_fields', []),

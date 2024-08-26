@@ -30,7 +30,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
-from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP
+from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP, IN_HAPI_FLAG_VALUES
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_users.helpers.permissions import Permissions
 
@@ -275,7 +275,21 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_delete_unless_authorized_to_update_p_coded'),
                     tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
                     tk.get_validator('boolean_validator'),
-                ]
+                ],
+                'in_hapi': [
+                    tk.get_validator('hdx_keep_unless_allow_resource_in_hapi_field'),
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_in_hapi_flag_values'),
+                    tk.get_validator('hdx_delete_if_marked_with_no_data'),
+                ],
+                'qa_hapi_report': [
+                    # tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
+                    tk.get_validator('hdx_resource_keep_prev_value_if_exist_unless_sysadmin'),
+                    tk.get_validator('hdx_reset_on_file_upload'),
+                    tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
+
+
+                ],
             }
         )
 
@@ -334,6 +348,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dataset_preview_enabled': [
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('boolean_validator'),
+                ],
+                'qa_hapi_report': [
+                    tk.get_validator('ignore_missing'),
                 ],
             }
         )
@@ -462,6 +479,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
             'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
             'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
+            'hdx_mark_resource_in_hapi': hdx_patch.hdx_mark_resource_in_hapi,
         }
 
     # IValidators
@@ -482,6 +500,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_assume_missing_is_true': vd.hdx_assume_missing_is_true,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
             'hdx_resource_keep_prev_value_unless_sysadmin': vd.hdx_resource_keep_prev_value_unless_sysadmin,
+            'hdx_resource_keep_prev_value_if_exist_unless_sysadmin': vd.hdx_resource_keep_prev_value_if_exist_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,
             'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
             'hdx_delete_unless_allow_broken_link': vd.hdx_delete_unless_field_in_context('allow_broken_link_field'),
@@ -520,6 +539,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_tag_name_approved_validator': vd.hdx_tag_name_approved_validator,
             'hdx_update_last_modified_if_url_changed': vd.hdx_update_last_modified_if_url_changed,
             'hdx_disable_live_frequency_filestore_resources_only': vd.hdx_disable_live_frequency_filestore_resources_only,
+            'hdx_in_hapi_flag_values': vd.hdx_value_in_list_wrapper(IN_HAPI_FLAG_VALUES, True),
+            'hdx_keep_unless_allow_resource_in_hapi_field':
+                vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper(
+                'allow_resource_in_hapi_field', resource_level=True),
         }
 
     def get_auth_functions(self):
@@ -539,6 +562,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags,
             'hdx_dataseries_update': authorize.hdx_dataseries_update,
             'hdx_p_coded_resource_update': authorize.hdx_p_coded_resource_update,
+            'hdx_mark_resource_in_hapi': authorize.hdx_mark_resource_in_hapi,
+            'hdx_qa_hapi_report_view': authorize.hdx_qa_hapi_report_view,
         }
 
     def make_middleware(self, app, config):

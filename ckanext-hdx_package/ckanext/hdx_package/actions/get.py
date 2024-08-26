@@ -526,7 +526,7 @@ def resource_show(context, data_dict):
     return resource_dict
 
 
-def _additional_hdx_resource_show_processing(context, resource_dict):
+def _additional_hdx_resource_show_processing(context, resource_dict, just_for_reindexing=False):
     # if _should_manually_load_property_value(context, resource_dict, 'size'):
     #     resource_dict['size'] = _get_resource_filesize(resource_dict)
     # if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
@@ -549,6 +549,12 @@ def _additional_hdx_resource_show_processing(context, resource_dict):
             del resource_dict['apihighways_url']
     if resource_dict.get('url'):
         _process_url(context, resource_dict)
+    if not just_for_reindexing:
+        try:
+            _check_access('hdx_qa_hapi_report_view', context, {})
+        except NotAuthorized:
+            if 'qa_hapi_report' in resource_dict:
+                del resource_dict['qa_hapi_report']
 
 
 # process urls for resource in case of in quarantine

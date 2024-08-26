@@ -28,6 +28,8 @@ class Permissions(object):
     LABEL_PERMISSION_MANAGE_QUICK_LINKS = 'Manage Quick Links'
     PERMISSION_MANAGE_QA = 'permission_manage_qa'  # QA Complete and quarantine
     LABEL_PERMISSION_MANAGE_QA = 'Manage QA'
+    PERMISSION_MANAGE_IN_HAPI_FLAG = 'permission_manage_in_hapi_flag'
+    LABEL_PERMISSION_MANAGE_IN_HAPI_FLAG = 'Manage In HAPI Flag'
 
     # These are tasks that a bot needs to trigger: HDX daily stats, api token expiry emails.
     # Note that this permission shouldn't allow for any change to be done to HDX
@@ -44,6 +46,7 @@ class Permissions(object):
         PERMISSION_VIEW_REQUEST_DATA,
         PERMISSION_MANAGE_QUICK_LINKS,
         PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS,
+        PERMISSION_MANAGE_IN_HAPI_FLAG,
     ]
 
     ALL_PERMISSIONS_LABELS_DICT = {
@@ -56,6 +59,7 @@ class Permissions(object):
         PERMISSION_MANAGE_QUICK_LINKS: LABEL_PERMISSION_MANAGE_QUICK_LINKS,
         PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS: LABEL_PERMISSION_MANAGE_BASIC_SCHEDULED_TASKS,
         PERMISSION_MANAGE_QA: LABEL_PERMISSION_MANAGE_QA,
+        PERMISSION_MANAGE_IN_HAPI_FLAG: LABEL_PERMISSION_MANAGE_IN_HAPI_FLAG,
     }
 
     USER_EXTRA_FIELD = 'hdx_permissions'
