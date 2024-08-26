@@ -63,10 +63,6 @@ hdx.caching.redis_db = ${HDX_REDIS_DB}
 hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
 
-#https://{s}.tiles.mapbox.com/v3/reliefweb.l43d4f5j/{z}/{x}/{y}.png
-hdx.mapbox.baselayer.url   = /mapbox-base-tiles/{z}/{x}/{y}.png
-#https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/{z}/{x}/{y}.png
-
 # disabled during work on HDX-6899
 # hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
 # hdx.rest.indicator.endpoint.facets = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2

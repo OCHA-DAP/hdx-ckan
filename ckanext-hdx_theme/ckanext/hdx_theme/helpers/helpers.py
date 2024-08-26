@@ -1013,3 +1013,10 @@ def hdx_decode_markup(value):
 
     except Exception as e:
         return value
+
+def hdx_generate_basemap_config_string() -> str:
+    conf_dict = {
+        'baseMapUrl': config.get('hdx.mapbox.baselayer.url'),
+        'token': config.get('hdx.mapbox.baselayer.token'),
+    }
+    return json.dumps(conf_dict)
