@@ -133,11 +133,11 @@
 
 {% block analytics_org_name %}{{ pkg_dict.organization.name }}{% endblock %}
 {% block analytics_org_id %}{{ pkg_dict.organization.id }}{% endblock %}
-{% block analytics_is_cod %}{{ analytics_is_cod }}{% endblock %}
-{% block analytics_is_indicator %}{{ analytics_is_indicator }}{% endblock %}
-{% block analytics_is_archived %}{{ analytics_is_archived }}{% endblock %}
-{% block analytics_group_names %}{{ analytics_group_names | safe }}{% endblock %}
-{% block analytics_group_ids %}{{ analytics_group_ids | safe }}{% endblock %}
+{% block analytics_is_cod %}{{ analytics.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ analytics.analytics_is_indicator }}{% endblock %}
+{% block analytics_is_archived %}{{ analytics.analytics_is_archived }}{% endblock %}
+{% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}
 {% block analytics_dataset_name %}{{ pkg_dict.name }}{% endblock %}
 {% block analytics_dataset_id %}{{ pkg_dict.id }}{% endblock %}
-{% block analytics_dataset_availability %}{{ analytics_dataset_availability }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}

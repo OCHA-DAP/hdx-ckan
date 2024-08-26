@@ -16,7 +16,6 @@ CONSTANTS = {
 
     'SELECT_INQUIRY_TYPE_LABEL': '''Your inquiry is regarding''',
     'SELECT_INQUIRY_TYPE_PLACEHOLDER': '''Select an option...''',
-    'SELECT_INQUIRY_TYPE_ERROR': '''Inquiry type cannot be empty''',
 
     'INPUT_FULLNAME_LABEL': '''Your name''',
     'INPUT_FULLNAME_PLACEHOLDER': '''What is your name?''',
@@ -27,6 +26,6 @@ CONSTANTS = {
     'TEXTAREA_MSG_LABEL': '''Comments''',
     'TEXTAREA_MSG_PLACEHOLDER': '''Ask a question or provide comments''',
 
-    'BUTTON_SUBMIT': '''Continue''',
+    'BUTTON_SUBMIT': '''Submit''',
     'BUTTON_CANCEL': '''Cancel''',
 }

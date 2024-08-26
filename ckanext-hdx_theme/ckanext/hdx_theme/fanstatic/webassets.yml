@@ -1319,6 +1319,12 @@ contact-contributor-scripts:
   contents:
     - datasets/contact-contributor.js
 
+request-access-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_request-access-scripts.js
+  contents:
+    - datasets/request-access.js
+
 group-message-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_group-message-scripts.js
