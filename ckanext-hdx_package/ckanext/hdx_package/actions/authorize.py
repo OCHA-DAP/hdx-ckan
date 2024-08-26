@@ -166,10 +166,13 @@ def hdx_mark_resource_in_hapi(context: Context, data_dict: DataDict):
     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_IN_HAPI_FLAG)
 
 
-def hdx_contact_contributor(context: Context, data_dict: DataDict):
-    logged_in = not new_authz.auth_is_anon_user(context)
+def hdx_request_access(context: Context):
+    """
+    Only a logged-in user can request data access.
+    """
 
-    if logged_in:
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    if user_obj:
         return {'success': True}
-    else:
-        return {'success': False, 'msg': _('You must be logged in to contact the contributor.')}
+
+    return {'success': False, 'msg': _('Not authorized to perform this request.')}

@@ -45,3 +45,18 @@ class DatasetContactContributorLogic(object):
             log.error(ex)
 
         return validated_response
+
+    def send_mail(self):
+        data_dict = {
+            'topic': self.request.form.get('topic'),
+            'fullname': self.request.form.get('fullname'),
+            'email': self.request.form.get('email'),
+            'msg': self.request.form.get('msg'),
+            'pkg_owner_org': self.request.form.get('pkg_owner_org'),
+            'pkg_title': self.request.form.get('pkg_title'),
+            'pkg_id': self.request.form.get('pkg_id'),
+            'pkg_url': h.url_for('dataset_read', id=self.request.form.get('pkg_id'), qualified=True),
+            'hdx_email': config.get('hdx.faqrequest.email', 'hdx@humdata.org'),
+        }
+
+        get_action('hdx_send_mail_contributor')(self.context, data_dict)

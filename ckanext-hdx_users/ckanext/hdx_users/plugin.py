@@ -15,7 +15,6 @@ import ckanext.hdx_users.views.api as api
 # import ckanext.hdx_users.views.user_checks_login as ucl
 import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
-import ckanext.hdx_users.views.requestdata_view as rdv
 import ckanext.hdx_users.views.onboarding as onboarding
 import ckanext.hdx_users.views.signin as signin
 
@@ -127,7 +126,6 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             # ucl.hdx_contact_hdx,
             permission.hdx_user_permission,
             rduv.hdx_requestdata_user,
-            rdv.requestdata_send_request,
             onboarding.hdx_user_onboarding,
             signin.hdx_signin,
         ]

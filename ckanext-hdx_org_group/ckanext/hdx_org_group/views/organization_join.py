@@ -68,7 +68,7 @@ def find_organisation() -> str:
 
 
 
-def _set_custom_rect_logo_url(org_dict):
+def set_custom_rect_logo_url(org_dict):
     if 'customization' in org_dict and org_dict.get('customization'):
         customization = json.loads(org_dict.get('customization'))
         if customization and customization.get('image_rect', None):
@@ -82,7 +82,7 @@ def confirm_organisation() -> str:
         org_id = request.form.get('org_id')
         if org_id is not None:
             org_dict = get_action(u'organization_show')(context, {'id':org_id})
-            _set_custom_rect_logo_url(org_dict)
+            set_custom_rect_logo_url(org_dict)
         else:
             return redirect(url_for('hdx_org_join.find_organisation'))
     except Exception as ex:

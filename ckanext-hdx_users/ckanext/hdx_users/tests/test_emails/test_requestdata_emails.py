@@ -47,7 +47,6 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'package_id': pkg_dict['id'],
             'sender_name': 'Normal User1',
             'message_content': 'I want to add additional data.',
-            'organization': self.ORG_TITLE,
             'email_address': 'test@test.com',
             'sender_country': 'Romania',
             'sender_organization_id': 'hdx-test-org',
@@ -55,11 +54,11 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'sender_intend': 'Research Purposes'
         }
 
-        url = url_for('requestdata_send_request.send_request')
+        url = url_for('hdx_dataset.request_access', id=pkg_dict.get('name') or pkg_dict.get('id'))
 
         res = self.app.post(url, params=post_params, extra_environ=auth)
 
-        assert '{"success": true, "message": "Email message was successfully sent."}' in res.body
+        assert 'Your request was sent' in res.body
 
         args, kw_args = mocked_mail_recipient.call_args
 
@@ -106,17 +105,16 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'package_id': pkg_dict['id'],
             'sender_name': 'Normal User1',
             'message_content': 'I want to add additional data.',
-            'organization': self.ORG_TITLE,
             'email_address': 'test@test.com',
             'sender_country': 'Romania',
             'sender_organization_id': 'hdx-test-org',
             'sender_organization_type': 'Military',
             'sender_intend': 'Research Purposes'
         }
-        url = url_for('requestdata_send_request.send_request')
+        url = url_for('hdx_dataset.request_access', id=pkg_dict.get('name') or pkg_dict.get('id'))
         res = self.app.post(url, params=post_params, extra_environ=auth)
 
-        assert '{"success": true, "message": "Email message was successfully sent."}' in res.body
+        assert 'Your request was sent' in res.body
 
         archive = get_action('requestdata_request_archive_by_package_id')(context, {
             'package_id': pkg_dict['id']

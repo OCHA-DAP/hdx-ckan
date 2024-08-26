@@ -26,6 +26,7 @@ import ckan.logic as logic
 import ckan.logic.action as core
 import ckan.model as model
 import ckan.plugins as plugins
+from collections import OrderedDict
 from ckan.common import _, c, config
 import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
@@ -756,13 +757,14 @@ def hdx_user_in_org_or_group(group_id, include_pending=False):
     return length != 0
 
 
-def hdx_organization_type_list(include_default_value=None):
-    result = []
+def hdx_organization_type_dict(include_default_value=None):
+    result = OrderedDict()
+
     if include_default_value:
-        result.append({'value': '-1', 'text': _('-- Please select --')})
-    result.extend([{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST])
-    # return [{'value': '-1', 'text': _('-- Please select --')}] + \
-    #        [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
+        result['-1'] = _('-- Please select --')
+
+    result.update(OrderedDict({t[1]: _(t[0]) for t in static_lists.ORGANIZATION_TYPE_LIST}))
+
     return result
 
 

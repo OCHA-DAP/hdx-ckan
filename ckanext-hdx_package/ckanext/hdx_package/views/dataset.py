@@ -25,6 +25,7 @@ import ckanext.hdx_package.helpers.membership_data as membership_data
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
 from ckanext.hdx_package.controller_logic.dataset_contact_contributor import DatasetContactContributorLogic
+from ckanext.hdx_package.controller_logic.dataset_request_access import DatasetRequestAccessLogic
 
 from ckan.views.dataset import _setup_template_variables
 
@@ -37,6 +38,8 @@ from ckanext.hdx_package.views.light_dataset import generic_search
 from ckanext.hdx_theme.helpers.helpers import markdown_extract_strip
 from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+
+from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
 
 import ckanext.hdx_users.helpers.helpers as usr_h
 
@@ -561,7 +564,10 @@ class DatasetContactContributorView(MethodView):
         try:
             pkg_dict = get_action('package_show')(context, {'id': id})
 
-            check_access(u'hdx_contact_contributor', context)
+            if pkg_dict.get('is_requestdata_type'):
+                return abort(404, _('Dataset not found'))
+
+            check_access(u'hdx_send_mail_contributor', context)
 
             dataset_contact_contributor_logic = DatasetContactContributorLogic(context, request)
 
@@ -577,34 +583,13 @@ class DatasetContactContributorView(MethodView):
 
             usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
 
-            check_access('hdx_send_mail_contributor', context, data_dict)
+            dataset_contact_contributor_logic.send_mail()
 
-            data_dict['topic'] = request.form.get('topic')
-            data_dict['fullname'] = request.form.get('fullname')
-            data_dict['email'] = request.form.get('email')
-            data_dict['msg'] = request.form.get('msg')
-            data_dict['pkg_owner_org'] = request.form.get('pkg_owner_org')
-            data_dict['pkg_title'] = request.form.get('pkg_title')
-            data_dict['pkg_id'] = request.form.get('pkg_id')
-            data_dict['pkg_url'] = h.url_for('dataset_read', id=request.form.get('pkg_id'), qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
-
-            get_action('hdx_send_mail_contributor')(context, data_dict)
-
-            analytics_is_cod = analytics.is_cod(pkg_dict)
-            analytics_is_indicator = analytics.is_indicator(pkg_dict)
-            analytics_is_archived = analytics.is_archived(pkg_dict)
-            analytics_group_names, analytics_group_ids = analytics.extract_locations_in_json(pkg_dict)
-            analytics_dataset_availability = analytics.dataset_availability(pkg_dict)
+            analytics_dict = h.hdx_compute_analytics(pkg_dict)
 
             extra_vars = {
                 u'pkg_dict': pkg_dict,
-                u'analytics_is_cod': analytics_is_cod,
-                u'analytics_is_indicator': 'false',
-                u'analytics_is_archived': analytics_is_archived,
-                u'analytics_group_names': analytics_group_names,
-                u'analytics_group_ids': analytics_group_ids,
-                u'analytics_dataset_availability': analytics_dataset_availability,
+                u'analytics': analytics_dict,
                 u'message_subject': request.form.get('topic'),
                 u'message_sent': True,
             }
@@ -632,7 +617,7 @@ class DatasetContactContributorView(MethodView):
             log.error(error_summary)
             return self.get(id, data, errors, error_summary)
 
-        except Exception:
+        except Exception as e:
             error_summary = _('Request can not be sent. Contact an administrator')
             log.error(error_summary)
             return self.get(id, data, errors, error_summary)
@@ -651,14 +636,20 @@ class DatasetContactContributorView(MethodView):
         try:
             pkg_dict = get_action('package_show')(context, {'id': id})
 
-            check_access(u'hdx_contact_contributor', context)
+            if pkg_dict.get('is_requestdata_type'):
+                return abort(404, _('Dataset not found'))
+
+            check_access(u'hdx_send_mail_contributor', context)
+
+            analytics_dict = h.hdx_compute_analytics(pkg_dict)
 
             extra_vars = {
                 u'pkg_dict': pkg_dict,
+                u'analytics': analytics_dict,
                 u'contact_topics': contributor_topics,
                 u'data': data or {},
                 u'errors': errors or {},
-                u'error_summary': error_summary or {},
+                u'error_summary': error_summary or '',
             }
             return render('package/contact_contributor.html', extra_vars=extra_vars)
 
@@ -670,12 +661,135 @@ class DatasetContactContributorView(MethodView):
             return redirect(h.url_for('hdx_signin.login', info_message_type='contact-contributor', came_from=came_from))
 
 
+class DatasetRequestAccessView(MethodView):
+
+    def post(self, id: str) -> Union[Response, str]:
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user or g.author,
+            u'auth_user_obj': g.userobj,
+        }
+
+        try:
+            pkg_dict = get_action('package_show')(context, {'id': id})
+
+            check_access(u'hdx_request_access', context)
+
+            if not pkg_dict.get('is_requestdata_type'):
+                return abort(404, _('Dataset not request data type'))
+
+            pending_request = h.hdx_pending_request_data(g.userobj.id, pkg_dict.get('id'))
+            if len(pending_request) > 0:
+                return redirect('hdx_dataset.request_access', id=pkg_dict.get('name'))
+
+            dataset_request_access_logic = DatasetRequestAccessLogic(context, request)
+
+            data_dict = None
+            try:
+                data_dict = dataset_request_access_logic.read()
+            except dictization_functions.DataError:
+                abort(400, _(u'Integrity Error'))
+
+            data, errors = dataset_request_access_logic.validate(data_dict)
+            if errors:
+                return self.get(id, data, errors)
+
+            request_sent, send_request_message = dataset_request_access_logic.send_request()
+
+            if request_sent:
+                analytics_dict = h.hdx_compute_analytics(pkg_dict)
+
+                extra_vars = {
+                    u'pkg_dict': pkg_dict,
+                    u'analytics': analytics_dict,
+                    u'request_sent': request_sent,
+                }
+                return render('package/request_access.html', extra_vars=extra_vars)
+            else:
+                error_summary = send_request_message
+                log.error(error_summary)
+                return self.get(id, data, errors, error_summary)
+
+        except NotFound:
+            return abort(404, _('Dataset not found'))
+
+        except NotAuthorized:
+            came_from = h.url_for('hdx_dataset.request_access', id=pkg_dict.get('name'))
+            return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
+
+        except MailerException as e:
+            error_summary = _('Could not send request for: %s') % text_type(e)
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+        except ValidationError as e:
+            error_summary = e.error_summary
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+        except Exception as e:
+            error_summary = _('Request can not be sent. Contact an administrator')
+            log.error(error_summary)
+            return self.get(id, data, errors, error_summary)
+
+    def get(self, id: str,
+            data: Optional[dict[str, Any]] = None,
+            errors: Optional[dict[str, Any]] = None,
+            error_summary: Optional[str] = None):
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user or g.author,
+            u'auth_user_obj': g.userobj,
+        }
+
+        try:
+            pkg_dict = get_action('package_show')(context, {'id': id})
+
+            check_access(u'hdx_request_access', context)
+
+            if not pkg_dict.get('is_requestdata_type'):
+                return abort(404, _('Dataset not request data type'))
+
+            pending_request = h.hdx_pending_request_data(g.userobj.id, pkg_dict.get('id'))
+            if pending_request:
+                if not error_summary:
+                    error_summary = _('You already have a pending request. Please wait for the reply.')
+
+            org_dict = get_action(u'organization_show')(context, {'id': pkg_dict.get('organization', {}).get('id')})
+            set_custom_rect_logo_url(org_dict)
+
+            analytics_dict = h.hdx_compute_analytics(pkg_dict)
+
+            extra_vars = {
+                u'pkg_dict': pkg_dict,
+                u'analytics': analytics_dict,
+                u'org_dict': org_dict,
+                u'pending_request': pending_request,
+                u'data': data or {},
+                u'errors': errors or {},
+                u'error_summary': error_summary or '',
+            }
+            return render('package/request_access.html', extra_vars=extra_vars)
+
+        except NotFound:
+            return abort(404, _('Dataset not found'))
+
+        except NotAuthorized:
+            came_from = h.url_for('hdx_dataset.request_access', id=pkg_dict.get('name'))
+            return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
+
+
 hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'/<id>/contact/',
                          view_func=DatasetContactContributorView.as_view(str(u'contact_contributor')),
+                         methods=[u'GET', u'POST'], strict_slashes=False)
+hdx_dataset.add_url_rule(u'/<id>/request-access/',
+                         view_func=DatasetRequestAccessView.as_view(str(u'request_access')),
                          methods=[u'GET', u'POST'], strict_slashes=False)
 hdx_dataset.add_url_rule(u'<id>/download_metadata', view_func=package_metadata)
 hdx_dataset.add_url_rule(u'<id>/resource/<resource_id>/download_metadata', view_func=resource_metadata)
