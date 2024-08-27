@@ -561,6 +561,7 @@ class DatasetContactContributorView(MethodView):
             u'auth_user_obj': g.userobj,
         }
 
+        data = errors = {}
         try:
             pkg_dict = get_action('package_show')(context, {'id': id})
 
@@ -599,7 +600,7 @@ class DatasetContactContributorView(MethodView):
             return abort(404, _('Dataset not found'))
 
         except NotAuthorized:
-            came_from = h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.get('name'))
+            came_from = h.url_for('hdx_dataset.contact_contributor', id=id)
             return redirect(h.url_for('hdx_signin.login', info_message_type='contact-contributor', came_from=came_from))
 
         except captcha.CaptchaError:
@@ -657,7 +658,7 @@ class DatasetContactContributorView(MethodView):
             return abort(404, _('Dataset not found'))
 
         except NotAuthorized:
-            came_from = h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.get('name'))
+            came_from = h.url_for('hdx_dataset.contact_contributor', id=id)
             return redirect(h.url_for('hdx_signin.login', info_message_type='contact-contributor', came_from=came_from))
 
 
@@ -671,6 +672,7 @@ class DatasetRequestAccessView(MethodView):
             u'auth_user_obj': g.userobj,
         }
 
+        data = errors = {}
         try:
             pkg_dict = get_action('package_show')(context, {'id': id})
 
@@ -681,7 +683,7 @@ class DatasetRequestAccessView(MethodView):
 
             pending_request = h.hdx_pending_request_data(g.userobj.id, pkg_dict.get('id'))
             if len(pending_request) > 0:
-                return redirect('hdx_dataset.request_access', id=pkg_dict.get('name'))
+                return redirect('hdx_dataset.request_access', id=id)
 
             dataset_request_access_logic = DatasetRequestAccessLogic(context, request)
 
@@ -715,7 +717,7 @@ class DatasetRequestAccessView(MethodView):
             return abort(404, _('Dataset not found'))
 
         except NotAuthorized:
-            came_from = h.url_for('hdx_dataset.request_access', id=pkg_dict.get('name'))
+            came_from = h.url_for('hdx_dataset.request_access', id=id)
             return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
 
         except MailerException as e:
@@ -777,7 +779,7 @@ class DatasetRequestAccessView(MethodView):
             return abort(404, _('Dataset not found'))
 
         except NotAuthorized:
-            came_from = h.url_for('hdx_dataset.request_access', id=pkg_dict.get('name'))
+            came_from = h.url_for('hdx_dataset.request_access', id=id)
             return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
 
 

@@ -59,8 +59,7 @@
             </div>
           {% endif %}
 
-          <form method="post"
-                action="{{ h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.name or pkg_dict.id) }}" novalidate>
+          <form method="post" action="{{ h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.name or pkg_dict.id) }}" id="contact-contributor-form" novalidate>
 
             {{ h.csrf_input() }}
 
