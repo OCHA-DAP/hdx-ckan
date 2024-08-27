@@ -24,8 +24,8 @@ import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.membership_data as membership_data
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
-from ckanext.hdx_package.controller_logic.dataset_contact_contributor import DatasetContactContributorLogic
-from ckanext.hdx_package.controller_logic.dataset_request_access import DatasetRequestAccessLogic
+from ckanext.hdx_package.controller_logic.dataset_contact_contributor_logic import DatasetContactContributorLogic
+from ckanext.hdx_package.controller_logic.dataset_request_access_logic import DatasetRequestAccessLogic
 
 from ckan.views.dataset import _setup_template_variables
 
