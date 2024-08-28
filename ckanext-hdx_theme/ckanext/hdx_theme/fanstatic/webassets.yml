@@ -1089,6 +1089,9 @@ group-list-scripts:
     preload:
       - hdx_theme/group-list-styles
   contents:
+    - select2/select2.js
+    - vendor/leaflet-1.7.1/leaflet.js
+    - map_base.js
     - browse_/world_json.js
     - browse_/countries.js
     - browse_/browse.js
@@ -1101,6 +1104,8 @@ group-list-styles:
     preload:
       - hdx_theme/charting-styles
   contents:
+    - select2/select2.css
+    - vendor/leaflet-1.7.1/leaflet.css
     - browse_/browse.css
     - css/humanitarian_icons.css
 
