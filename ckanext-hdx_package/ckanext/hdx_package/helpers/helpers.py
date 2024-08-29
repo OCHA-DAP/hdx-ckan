@@ -13,6 +13,7 @@ from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 
+import ckan.authz as new_authz
 import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -203,6 +204,10 @@ def hdx_tag_autocomplete_list(context, data_dict):
     searched. If the ``vocabulary_id`` argument is given then only tags
     belonging to that vocabulary will be searched instead.
 
+    This was changed to return a list of approved tag names that contain a given string.
+    This searches for tags in the approved list that contain the provided query string. If the query string starts
+    with "crisis-" and the user is a sysadmin, the query itself can be added as a new tag.
+
     :param query: the string to search for
     :type query: string
     :param vocabulary_id: the id or name of the tag vocabulary to search in
@@ -220,17 +225,16 @@ def hdx_tag_autocomplete_list(context, data_dict):
 
     '''
     _check_access('tag_autocomplete', context, data_dict)
-    data_dict.update({
-        'vocabulary_id': 'Topics',
 
-    })
-    matching_tags, count = _tag_search(context, data_dict)
-    if matching_tags:
-        return [tag.name for tag in matching_tags]
-    else:
-        return []
+    approved_tags = get_action('cached_approved_tags_list')(context, {})
+    query = data_dict.get('q', '').lower()
+    matching_tags = [tag for tag in approved_tags if query in tag.lower()]
 
-# code copied from get.py line 1748
+    # Allow sysadmins to add tags starting with "crisis-"
+    if new_authz.is_sysadmin(c.user) and query.startswith('crisis-') and query != 'crisis-':
+        matching_tags.append(query)
+
+    return matching_tags
 
 
 def hdx_retrieve_approved_tags(context, data_dict):
