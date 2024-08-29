@@ -261,7 +261,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'bs5_build_nav_icon': hdx_helpers.bs5_build_nav_icon,
             'hdx_decode_markup': hdx_helpers.hdx_decode_markup,
             'hdx_generate_basemap_config_string': hdx_helpers.hdx_generate_basemap_config_string,
-            'HDX_CONST': const
+            'hdx_location_dict': hdx_helpers.hdx_location_dict,
+            'hdx_user_orgs_dict': hdx_helpers.hdx_user_orgs_dict,
+            'HDX_CONST': const,
         }
 
     def get_actions(self):

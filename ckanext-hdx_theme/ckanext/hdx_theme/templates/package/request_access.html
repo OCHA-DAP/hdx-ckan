@@ -1,0 +1,200 @@
+{% extends "onboarding/base.html" %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/request-access-scripts' %}
+{% endblock %}
+
+{% set CONST = h.HDX_CONST('UI_CONSTANTS')['REQUEST_ACCESS'] %}
+
+{% block subtitle %}{{ CONST.PAGE_TITLE }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li
+    class="breadcrumb-item">{{ h.nav_link( pkg_dict.title|truncate(120), named_route='hdx_dataset.read', id=pkg_dict.name) }}</li>
+  <li class="breadcrumb-item active"><a
+    href="{{ h.url_for('hdx_dataset.request_access', id=pkg_dict.name or pkg_dict.id) }}">{{ CONST.PAGE_TITLE }}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+        <div class="text-center mt-5">
+          {% set main_title = CONST.PAGE_TITLE_REQUEST_SENT if request_sent else CONST.PAGE_TITLE %}
+          {% set main_text = CONST.BODY_MAIN_TEXT_REQUEST_SENT.format(h.url_for('hdx_dataset.read', id=pkg_dict.name or pkg_dict.id), pkg_dict.title) if request_sent else CONST.BODY_MAIN_TEXT %}
+          {{ h.snippet('bem.blocks/heading.html', title=main_title, spacing_class="mb-5") }}
+          {{ h.snippet('bem.blocks/paragraph.html', text=main_text, paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
+        </div>
+      </div>
+    </div>
+
+    {% if request_sent %}
+      <input type="hidden" id="request_sent" value="{{ request_sent }}">
+    {% else %}
+      <div class="row">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+          <div class="text-center">
+            {{ h.snippet('bem.blocks/paragraph.html', text='--', spacing_class="mb-5") }}
+            {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_USAGE_TEXT.format('mailto:hdx@un.org'), spacing_class="mb-5") }}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+          {% if org_dict.custom_rect_logo_url %}
+            <div class="text-center">
+              <img src="{{ org_dict.custom_rect_logo_url }}" alt="{{ org_dict.display_name }}"
+                   class="img-responsive mb-4" style="max-height: 45px;">
+            </div>
+          {% endif %}
+
+          {% if error_summary %}
+            <div class="alert alert-danger">
+              <p class="mb-0">{{ error_summary }}</p>
+            </div>
+          {% endif %}
+
+          {% if not pending_request %}
+            {{ h.snippet('bem.blocks/form_info.html', message=CONST.MANDATORY_HELP, spacing_class="mb-4") }}
+            {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATASET_NAME_TEXT.format(pkg_dict.title), paragraph_classes=["paragraph__text_font-weight-bold"], spacing_class="mb-4") }}
+
+            <form method="post" action="{{ h.url_for('hdx_dataset.request_access', id=pkg_dict.name or pkg_dict.id) }}" id="request-access-form">
+
+              {{ h.csrf_input() }}
+
+              {{ h.snippet('bem.blocks/input_field.html',
+                type="hidden",
+                name="package_id",
+                value=pkg_dict.id,
+                errors=errors.get('package_id')) }}
+
+              {{ h.snippet('bem.blocks/input_field.html',
+                type="text",
+                required=True,
+                label=CONST.INPUT_FULLNAME_LABEL,
+                name="sender_name",
+                value=data.get('sender_name') if 'sender_name' in data else c.userobj.fullname,
+                errors=errors.get('sender_name'),
+                placeholder=CONST.INPUT_FULLNAME_PLACEHOLDER,
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/input_field.html',
+                type="email",
+                required=True,
+                autocomplete='new-email',
+                label=CONST.INPUT_EMAIL_LABEL,
+                name="email_address",
+                value=data.get('email_address') if 'email_address' in data else c.userobj.email,
+                errors=errors.get('email_address'),
+                placeholder=CONST.INPUT_EMAIL_PLACEHOLDER,
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/select2_field.html',
+                name="sender_organization_id",
+                data=h.hdx_user_orgs_dict(g.userobj.id, include_org_type=True),
+                label=CONST.SELECT_ORGANIZATION_LABEL,
+                required=True,
+                other_option=True,
+                other_option_value=data.get('sender_organization_id_other'),
+                other_option_error=errors.get('sender_organization_id_other'),
+                selected=data.get('sender_organization_id'),
+                errors=errors.get('sender_organization_id'),
+                select_classes=['select2-field__select_size_large'],
+                data_attributes={"placeholder": CONST.SELECT_ORGANIZATION_PLACEHOLDER},
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/select2_field.html',
+                name="sender_organization_type",
+                data=h.hdx_organization_type_dict(),
+                label=CONST.SELECT_ORGANIZATION_TYPE_LABEL,
+                required=True,
+                other_option=True,
+                other_option_value=data.get('sender_organization_type_other'),
+                other_option_error=errors.get('sender_organization_type_other'),
+                selected=data.get('sender_organization_type'),
+                errors=errors.get('sender_organization_type'),
+                select_classes=['select2-field__select_size_large'],
+                data_attributes={"placeholder": CONST.SELECT_ORGANIZATION_TYPE_PLACEHOLDER},
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/select2_field.html',
+                name="sender_country",
+                data=h.hdx_location_dict(include_world=False),
+                label=CONST.SELECT_LOCATION_LABEL,
+                required=True,
+                selected=data.get('sender_country'),
+                errors=errors.get('sender_country'),
+                select_classes=['select2-field__select_size_large'],
+                data_attributes={"placeholder": CONST.SELECT_LOCATION_PLACEHOLDER},
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/select2_field.html',
+                name="sender_intend",
+                data={'Humanitarian Assistance': 'Humanitarian Assistance', 'Academic': 'Academic', 'Advocacy': 'Advocacy', 'other': 'Other'},
+                label=CONST.SELECT_INTENDED_USE_LABEL,
+                required=True,
+                other_option=True,
+                other_option_value=data.get('sender_intend_other'),
+                other_option_error=errors.get('sender_intend_other'),
+                selected=data.get('sender_intend'),
+                errors=errors.get('sender_intend'),
+                select_classes=['select2-field__select_size_large'],
+                data_attributes={"placeholder": CONST.SELECT_INTENDED_USE_PLACEHOLDER},
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/textarea_field.html',
+                name="message_content",
+                required=True,
+                label=CONST.TEXTAREA_MSG_LABEL,
+                value=data.get('message_content'),
+                errors=errors.get('message_content'),
+                placeholder=CONST.TEXTAREA_MSG_PLACEHOLDER,
+                rows=6,
+                spacing_class="mb-4") }}
+
+              {{ h.snippet('bem.blocks/checkbox_field.html',
+                required=True,
+                label=CONST.DATA_REQUEST_ACKNOWLEDGMENT,
+                name="user_info_accept_terms",
+                checked=False,
+                spacing_class="mb-3") }}
+
+              {{ h.snippet('bem.blocks/form_button.html',
+                type="submit",
+                title=CONST.BUTTON_SUBMIT,
+                button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
+
+              <div class="text-center mb-5">
+                {{ h.snippet('bem.blocks/form_button.html',
+                  type="href",
+                  url=h.url_for('hdx_dataset.read', id=pkg_dict.name),
+                  title=CONST.BUTTON_CANCEL,
+                  button_classes=["form-button__btn_font-size_medium", "btn-link"],
+                  container_classes=["mt-1"]) }}
+              </div>
+
+            </form>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+{% endblock %}
+
+{% block analytics_org_name %}{{ pkg_dict.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ pkg_dict.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ analytics.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ analytics.analytics_is_indicator }}{% endblock %}
+{% block analytics_is_archived %}{{ analytics.analytics_is_archived }}{% endblock %}
+{% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ pkg_dict.name }}{% endblock %}
+{% block analytics_dataset_id %}{{ pkg_dict.id }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}

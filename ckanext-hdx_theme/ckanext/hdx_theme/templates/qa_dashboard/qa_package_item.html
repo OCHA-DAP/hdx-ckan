@@ -1,5 +1,4 @@
 {% extends  "search/snippets/package_item.html" %}
-{% import 'package/snippets/base_actions_macros.html' as macro %}
 {% import "qa_dashboard/qa_macros.html" as qa_macros with context %}
 
 {% block package_item_content %}
@@ -33,7 +32,7 @@
               <a class="dropdown-item" onclick="updateAllResourcesQuarantine('{{ package.id }}','False');">Remove from quarantine all resources</a>
             </li>
             <li>
-              <a class="dropdown-item" onclick="{{macro.contributor_action(package, h, 'true')}}"
+              <a class="dropdown-item" href="{{ h.url_for('hdx_dataset.contact_contributor', id=package.name or package.id) }}"
                  id="contact-the-contributor">
                 <span>Contact the contributor</span>
               </a>
@@ -48,7 +47,7 @@
           {{ super() }}
         {% endblock %}
       </div>
-      
+
 
     </div>
 {% endblock %}

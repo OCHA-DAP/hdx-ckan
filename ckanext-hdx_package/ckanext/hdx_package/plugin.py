@@ -563,6 +563,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_dataseries_update': authorize.hdx_dataseries_update,
             'hdx_p_coded_resource_update': authorize.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': authorize.hdx_mark_resource_in_hapi,
+            'hdx_request_access': authorize.hdx_request_access,
             'hdx_qa_hapi_report_view': authorize.hdx_qa_hapi_report_view,
         }
 

@@ -2,14 +2,12 @@ import json
 import logging
 
 from flask import Blueprint, make_response
-from six import text_type
 
 import ckan.lib.captcha as captcha
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
 from ckan.views.api import CONTENT_TYPES
-from ckan.lib.mailer import MailerException
 
 import ckanext.hdx_package.helpers.membership_data as membership_data
 import ckanext.hdx_users.helpers.helpers as usr_h
@@ -41,60 +39,6 @@ def _build_json_response(data_dict, status=200):
     body = json.dumps(data_dict)
     response = make_response((body, status, headers))
     return response
-
-
-def contact_contributor():
-    '''
-    Send a contact request form
-    :return:
-    '''
-    context = {
-        'model': model,
-        'session': model.Session,
-        'user': g.user,
-        'auth_user_obj': g.userobj
-    }
-    data_dict = {}
-    try:
-        usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
-
-        check_access('hdx_send_mail_contributor', context, data_dict)
-        # for k, v in membership_data.get('contributor_topics').iteritems():
-        #     if v == request.form.get('topic'):
-        #         data_dict['topic'] = v
-        data_dict['topic'] = request.form.get('topic')
-        data_dict['fullname'] = request.form.get('fullname')
-        data_dict['email'] = request.form.get('email')
-        data_dict['msg'] = request.form.get('msg')
-        data_dict['pkg_owner_org'] = request.form.get('pkg_owner_org')
-        data_dict['pkg_title'] = request.form.get('pkg_title')
-        data_dict['pkg_id'] = request.form.get('pkg_id')
-        data_dict['pkg_url'] = h.url_for('dataset_read', id=request.form.get('pkg_id'), qualified=True)
-        data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
-
-        hdx_validate_email(data_dict['email'])
-
-    except NotAuthorized:
-        return _build_json_response(
-            {'success': False, 'error': {'message': u'You have to log in before sending a contact request'}})
-    except captcha.CaptchaError:
-        return _build_json_response(
-            {'success': False, 'error': {'message': _(u'Bad Captcha. Please try again.')}})
-    except Exception as e:
-        log.error(e)
-        return _build_json_response({'success': False, 'error': {'message': u'There was an error. Please contact support'}})
-
-    try:
-        get_action('hdx_send_mail_contributor')(context, data_dict)
-    except MailerException as e:
-        error_summary = _('Could not send request for: %s') % text_type(e)
-        log.error(error_summary)
-        return _build_json_response({'success': False, 'error': {'message': error_summary}})
-    except Exception as e:
-        # error_summary = e.error or str(e)
-        log.error(e)
-        return _build_json_response({'success': False, 'error': {'message': u'There was an error. Please contact support'}})
-    return _build_json_response({'success': True})
 
 
 def contact_members():
@@ -150,5 +94,4 @@ def contact_members():
     return _build_json_response({'success': True})
 
 
-hdx_contact.add_url_rule(u'/contact_contributor', view_func=contact_contributor, methods=[u'POST'])
 hdx_contact.add_url_rule(u'/contact_members', view_func=contact_members, methods=[u'POST'])
