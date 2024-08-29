@@ -4,6 +4,9 @@ common-js: &common-js
 hdx-hxl-preview:
   <<: *common-js
   output: ckanext-hdx_hxl_preview/%(version)s_page-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
   contents:
     - hdx_hxl_preview.js
 
