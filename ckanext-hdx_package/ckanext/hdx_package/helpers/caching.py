@@ -198,6 +198,6 @@ def cached_approved_tags_list():
     return tags
 
 
-def invalidate_approved_tags_list():
+def invalidate_cached_approved_tags():
     log.info('Invalidating cache for approved tags list')
     cached_approved_tags_list.invalidate()

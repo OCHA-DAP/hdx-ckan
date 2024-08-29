@@ -709,11 +709,7 @@
                                             {% set approved_tags = h.hdx_get_approved_tags_list() %}
                                             {% set selected_tags = data.tag_string.split(', ') if data.tag_string else '' %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" data-module-required="requestdata">
-                                              {% if approved_tags %}
-                                                {{ form.select('tag_string', id='field_tag_string', label=_('Tags'), options=approved_tags, selected=selected_tags, error=errors.tag_string, classes=['mb-3', 'tags-select'], attrs={'class':'choices-orange', 'multiple':'true' }) }}
-                                              {% else %}
-                                                {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['', 'mb-3', 'tags-select'], attrs=tag_input_attrs) }}
-                                              {% endif %}
+                                              {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['', 'mb-3', 'tags-select'], attrs=tag_input_attrs) }}
                                               <div data-module="hdx_tag_recommender" data-module-tag_input_selector="#field_tag_string"
                                                    data-module-recommended_tag_wrapper_selector="#recommended-tags-wrapper" class="mb-3">
                                                 <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">

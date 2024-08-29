@@ -16,6 +16,8 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.hxl.transformers.transformers as transformers
 import ckan.authz as authz
 
+from ckan.types import Context, DataDict
+
 from ckanext.activity.model.activity import Activity
 from ckanext.hdx_theme.helpers.hdx_stats import HDXStatsHelper
 from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
@@ -161,6 +163,11 @@ def invalidate_cache_for_organizations(context, data_dict):
 def invalidate_cached_resource_id_apihighways(context, data_dict):
     _check_access('invalidate_cached_resource_id_apihighways', context, data_dict)
     caching.invalidate_cached_resource_id_apihighways()
+
+
+def invalidate_cached_approved_tags(context: Context, data_dict: DataDict):
+    _check_access('invalidate_cached_approved_tags', context, data_dict)
+    caching.invalidate_cached_approved_tags()
 
 
 def invalidate_region(context, data_dict):
