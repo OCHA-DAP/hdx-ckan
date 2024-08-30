@@ -189,6 +189,7 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         assert 'boys' in [tag['name'] for tag in pkg.get('tags')]
 
     def test_create_valid_crisis_tags(self):
+        crisis_tag_name = 'crisis-opt-israel-hostilities'
         package = {
             "package_creator": "test function",
             "private": False,
@@ -203,7 +204,7 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
             "owner_org": "hdx-test-org",
             'name': 'test_activity_6',
             'title': 'Test Activity 6',
-            'tags': [{'name': 'crisis-ebola'}, {'name': 'crisis-response'}]
+            'tags': [{'name': crisis_tag_name}]
         }
 
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -212,9 +213,8 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
 
         pkg = self._get_action('package_show')(context, {'id': package['name']})
 
-        assert len(pkg.get('tags')) == 2
-        assert 'crisis-ebola' in [tag['name'] for tag in pkg.get('tags')]
-        assert 'crisis-response' in [tag['name'] for tag in pkg.get('tags')]
+        assert len(pkg.get('tags')) == 1
+        assert crisis_tag_name in [tag['name'] for tag in pkg.get('tags')]
 
     def test_create_invalid_tags(self):
         package = {
