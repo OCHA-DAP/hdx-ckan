@@ -47,44 +47,52 @@ Example usage:
 <div id="id-{{ item.package_id }}" class="collapse requested-data-container__collapse">
     {% for x in item.requests_archived %}
       <div class="requested-data-container__collapse--sections requested-data-container__collapse--sections-archive" style="{% if loop.last %}border-bottom: none;{% endif %}">
-
-        {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
-
-        <div class="requested-data-container__collapse--request-status">
-            <div >
-              {% set action_reopen = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}
-              {% set post_data_reopen = h.dump_json({'id': x.id, 'package_id': x.package_id, 'state': 'open'}) %}
-              <span class="mL30">
-                <a data-module="handle-reopen-request"
-                  data-module-action="{{ action_reopen }}"
-                  data-module-post_data="{{ post_data_reopen }}"
-                  data-module-refresh_on_success="1"
-                  style="cursor: pointer;">{{ _('Reopen this request') }}</a>
-              </span>
-              <div class="alert alert-dismissible request-message-alert d-none" role="alert">
-                <div class="alert-text"></div>
+          <div class="row">
+              <div class="col-8">
+                {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
               </div>
-            </div>
-          {% if x.rejected %}
-            <div style="margin-right: 2px;">
-              <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
-              <span class="requested-data-container__collapse--status-text">Request Denied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
-            </div>
-          {% else %}
-            <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
-            <span class="requested-data-container__collapse--status-text">Request Replied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+              <div class="col-4">
+                  <div class="requested-data-container__collapse--request-status">
+                      <div>
+                        {% set action_reopen = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}
+                        {% set post_data_reopen = h.dump_json({'id': x.id, 'package_id': x.package_id, 'state': 'open'}) %}
+                          <span class="mL30">
+                  <a data-module="handle-reopen-request"
+                     data-module-action="{{ action_reopen }}"
+                     data-module-post_data="{{ post_data_reopen }}"
+                     data-module-refresh_on_success="1"
+                     style="cursor: pointer;">{{ _('Reopen this request') }}</a>
+                </span>
+                          <div class="alert alert-dismissible request-message-alert d-none" role="alert">
+                              <div class="alert-text"></div>
+                          </div>
+                      </div>
+                    {% if x.rejected %}
+                        <div style="margin-right: 2px;">
+                            <img src="/images/icons/declined.svg"
+                                 class="requested-data-container__content-item-counters--icon"/>
+                            <span class="requested-data-container__collapse--status-text">Request Denied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+                        </div>
+                    {% else %}
+                        <img src="/images/icons/reply.svg"
+                             class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied"/>
+                        <span class="requested-data-container__collapse--status-text">Request Replied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
 
-            <div style="margin-top: 8px;">
-            {% if x.data_shared %}
-              <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
-              <span class="requested-data-container__collapse--status-text">Data Shared</span>
-            {% else %}
-              <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
-              <span class="requested-data-container__collapse--status-text">Data Not Shared</span>
-            {% endif %}
-            </div>
-          {% endif %}
-        </div>
+                        <div style="margin-top: 8px;">
+                          {% if x.data_shared %}
+                              <img src="/images/icons/shared.svg"
+                                   class="requested-data-container__content-item-counters--icon"/>
+                              <span class="requested-data-container__collapse--status-text">Data Shared</span>
+                          {% else %}
+                              <img src="/images/icons/declined.svg"
+                                   class="requested-data-container__content-item-counters--icon"/>
+                              <span class="requested-data-container__collapse--status-text">Data Not Shared</span>
+                          {% endif %}
+                        </div>
+                    {% endif %}
+                  </div>
+              </div>
+          </div>
       </div>
     {% endfor %}
   <div class=" requested-data-container__collapse--line"></div>

@@ -673,8 +673,22 @@
     margin-right: 62px !important;
   }
 
-  .requested-data-container__collapse--sections-archive .requested-data-container__content-item--requested-by {
-    margin-right: 132px !important;
+  .requested-data-container__collapse--sections-archive {
+    display: block;
+    .requested-data-container__content-item--requested-by {
+      margin: 0 !important;
+      width: unset;
+    }
+    .requested-data-container__content-item--requested-by-message {
+      width: unset;
+    }
+    .requested-data-container__content-item--requested-by-info {
+      width: unset;
+      float: none !important;
+    }
+    .requested-data-container__collapse--request-status {
+      margin-right: 0 !important;
+    }
   }
 
   .requested-data-order-btn {
