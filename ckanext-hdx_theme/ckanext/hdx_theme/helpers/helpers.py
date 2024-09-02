@@ -942,13 +942,22 @@ def hdx_dataset_is_p_coded(resource_list):
     return False
 
 
-def hdx_get_approved_tags_list():
+def hdx_get_allowed_tags_list():
     context = {'model': model, 'session': model.Session, 'user': c.user}
 
     approved_tags = logic.get_action('cached_approved_tags_list')(context, {})
-    approved_tags_dict_list = [{'value': tag, 'text': tag} for tag in approved_tags]
 
-    return approved_tags_dict_list
+    is_sysadmin = new_authz.is_sysadmin(c.user)
+    allowed_tags = []
+    for tag in approved_tags:
+        # Only sysadmins are allowed to use tags starting with "crisis-"
+        if tag.startswith('crisis-') and not is_sysadmin:
+            continue
+        allowed_tags.append(tag)
+
+    allowed_tags_dict_list = [{'value': tag, 'text': tag} for tag in allowed_tags]
+
+    return allowed_tags_dict_list
 
 
 def bs5_build_nav_icon(menu_item, title, **kw):

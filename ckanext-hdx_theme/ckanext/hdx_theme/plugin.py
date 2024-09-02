@@ -256,7 +256,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_request_param': hdx_helpers.hdx_get_request_param,
             'hdx_pending_request_data': hdx_helpers.hdx_pending_request_data,
             'hdx_dataset_is_p_coded': hdx_helpers.hdx_dataset_is_p_coded,
-            'hdx_get_approved_tags_list': hdx_helpers.hdx_get_approved_tags_list,
+            'hdx_get_allowed_tags_list': hdx_helpers.hdx_get_allowed_tags_list,
             'are_new_p_code_filters_enabled': hdx_helpers.are_new_p_code_filters_enabled,
             'bs5_build_nav_icon': hdx_helpers.bs5_build_nav_icon,
             'hdx_decode_markup': hdx_helpers.hdx_decode_markup,

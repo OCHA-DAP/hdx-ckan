@@ -21,6 +21,7 @@ import ckan.model.misc as misc
 import ckan.model.package as package
 import ckan.plugins.toolkit as tk
 from ckan.common import _, c, request
+from ckan.types import Context, DataDict
 
 log = logging.getLogger(__name__)
 
@@ -197,16 +198,14 @@ def hdx_find_license_name(license_id, license_name):
 #     return extra_vars
 
 
-def hdx_tag_autocomplete_list(context, data_dict):
-    '''Return a list of tag names that contain a given string.
+def hdx_tag_autocomplete_list(context: Context, data_dict: DataDict):
+    """Return a list of tag names that contain a given string.
 
-    By default only free tags (tags that don't belong to any vocabulary) are
+    By default, only free tags (tags that don't belong to any vocabulary) are
     searched. If the ``vocabulary_id`` argument is given then only tags
     belonging to that vocabulary will be searched instead.
 
     This was changed to return a list of approved tag names that contain a given string.
-    This searches for tags in the approved list that contain the provided query string. If the query string starts
-    with "crisis-" and the user is a sysadmin, the query itself can be added as a new tag.
 
     :param query: the string to search for
     :type query: string
@@ -223,16 +222,22 @@ def hdx_tag_autocomplete_list(context, data_dict):
 
     :rtype: list of strings
 
-    '''
+    """
     _check_access('tag_autocomplete', context, data_dict)
 
     approved_tags = get_action('cached_approved_tags_list')(context, {})
     query = data_dict.get('q', '').lower()
-    matching_tags = [tag for tag in approved_tags if query in tag.lower()]
 
-    # Allow sysadmins to add tags starting with "crisis-"
-    if new_authz.is_sysadmin(c.user) and query.startswith('crisis-') and query != 'crisis-':
-        matching_tags.append(query)
+    is_sysadmin = new_authz.is_sysadmin(c.user)
+
+    matching_tags = []
+
+    for tag in approved_tags:
+        if query in tag.lower():
+            # Only sysadmins are allowed to use tags starting with "crisis-"
+            if tag.startswith('crisis-') and not is_sysadmin:
+                continue
+            matching_tags.append(tag)
 
     return matching_tags
 
