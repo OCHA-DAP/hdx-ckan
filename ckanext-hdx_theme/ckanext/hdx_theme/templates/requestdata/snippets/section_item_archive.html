@@ -53,20 +53,20 @@ Example usage:
               </div>
               <div class="col-4">
                   <div class="requested-data-container__collapse--request-status">
-                      <div>
-                        {% set action_reopen = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}
-                        {% set post_data_reopen = h.dump_json({'id': x.id, 'package_id': x.package_id, 'state': 'open'}) %}
-                          <span class="mL30">
-                  <a data-module="handle-reopen-request"
-                     data-module-action="{{ action_reopen }}"
-                     data-module-post_data="{{ post_data_reopen }}"
-                     data-module-refresh_on_success="1"
-                     style="cursor: pointer;">{{ _('Reopen this request') }}</a>
-                </span>
-                          <div class="alert alert-dismissible request-message-alert d-none" role="alert">
-                              <div class="alert-text"></div>
-                          </div>
-                      </div>
+{#                      <div>#}
+{#                        {% set action_reopen = h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) %}#}
+{#                        {% set post_data_reopen = h.dump_json({'id': x.id, 'package_id': x.package_id, 'state': 'open'}) %}#}
+{#                          <span class="mL30">#}
+{#                            <a data-module="handle-reopen-request"#}
+{#                               data-module-action="{{ action_reopen }}"#}
+{#                               data-module-post_data="{{ post_data_reopen }}"#}
+{#                               data-module-refresh_on_success="1"#}
+{#                               style="cursor: pointer;">{{ _('Reopen this request') }}</a>#}
+{#                          </span>#}
+{#                          <div class="alert alert-dismissible request-message-alert d-none" role="alert">#}
+{#                              <div class="alert-text"></div>#}
+{#                          </div>#}
+{#                      </div>#}
                     {% if x.rejected %}
                         <div style="margin-right: 2px;">
                             <img src="/images/icons/declined.svg"
