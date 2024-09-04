@@ -17,7 +17,7 @@
     "axe-core": "^4.4.1",
     "cypress": "^9.5.1",
     "cypress-axe": "^0.14.0",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-if": "^3.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^5.0.0",
