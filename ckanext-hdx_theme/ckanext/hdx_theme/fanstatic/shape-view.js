@@ -85,9 +85,9 @@
             if (key.length < 100 && value.length < 100) {
               innerData +=
                 '<tr><td style="text-align: right;">' +
-                key +
+                hdxUtil.text.sanitize(key) +
                 '</td><td>&nbsp;&nbsp; <b>' +
-                value +
+                hdxUtil.text.sanitize(value) +
                 '</b><td></tr>';
               addedLines++;
             }
