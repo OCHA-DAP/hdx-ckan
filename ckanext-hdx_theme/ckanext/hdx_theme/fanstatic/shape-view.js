@@ -250,11 +250,16 @@
     } else {
       const tile0 = tilesURL.replace('{z}', '0').replace('{x}', '0').replace('{y}', '0');
       const r = await fetch(tile0);
-      const buffer = await r.arrayBuffer();
-      const tileLayer = new VectorTile(new Pbf(buffer)).layers[layerData.layer_id];
-      geomType = tileLayer ?
-        tileLayer.feature(0).toGeoJSON(0, 0, 0).geometry.type
-        : 'ST_MultiPolygon';
+      if (r.ok) {
+        const buffer = await r.arrayBuffer();
+        const tileLayer = new VectorTile(new Pbf(buffer)).layers[layerData.layer_id];
+        geomType = tileLayer ?
+          tileLayer.feature(0).toGeoJSON(0, 0, 0).geometry.type
+          : 'ST_MultiPolygon';
+      }
+      else {
+        geomType = 'ST_MultiPolygon';
+      }
     }
 
     /**
