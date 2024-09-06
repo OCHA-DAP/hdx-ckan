@@ -36,9 +36,15 @@
     max-height: 320px;
     overflow-y: auto;
 }
-
+.map-info table td:first-of-type {
+  max-width: 200px;
+}
+.map-info table td:first-of-type + td {
+  max-width: 250px;
+}
 .map-info td {
   color: white;
+  overflow-wrap: break-word;
 }
 
 .map-info h4 {
