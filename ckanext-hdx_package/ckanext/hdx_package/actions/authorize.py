@@ -1,4 +1,5 @@
 import logging
+import ckan.authz as new_authz
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
 import ckan.plugins.toolkit as tk
@@ -168,3 +169,15 @@ def hdx_send_mail_request_tags(context, data_dict):
 
 def hdx_mark_resource_in_hapi(context: Context, data_dict: DataDict):
     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_IN_HAPI_FLAG)
+
+
+def hdx_request_access(context: Context, data_dict: DataDict):
+    """
+    Only a logged-in user can request data access.
+    """
+
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    if user_obj:
+        return {'success': True}
+
+    return {'success': False, 'msg': _('Not authorized to perform this request.')}

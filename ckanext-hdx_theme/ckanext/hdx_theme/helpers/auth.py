@@ -5,6 +5,7 @@ import ckan.plugins.toolkit as tk
 
 # from ckan.logic.auth.update import user_generate_apikey
 from ckan.logic.auth import get_user_object
+from ckan.types import Context, DataDict
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 _ = tk._
@@ -62,6 +63,10 @@ def invalidate_cache_for_organizations(context, data_dict):
 
 def invalidate_cached_resource_id_apihighways(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate apihighways cache')}
+
+
+def invalidate_cached_approved_tags(context: Context, data_dict: DataDict) -> dict:
+    return {'success': False, 'msg': _('Only sysadmins can invalidate approved tags cache')}
 
 
 def invalidate_region(context, data_dict):

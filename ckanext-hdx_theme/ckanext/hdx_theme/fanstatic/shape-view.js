@@ -75,17 +75,29 @@
     update(props) {
       let innerData = '';
       if (props) {
+        let maxKeyLength = 0, maxValLength = 0;
+        let addedLines = 0;
         for (const key in props) {
           if (!NOT_ALLOWED_PROPERTIES.includes(key)) {
             const value = props[key];
-            innerData +=
-              '<tr><td style="text-align: right;">' +
-              key +
-              '</td><td>&nbsp;&nbsp; <b>' +
-              value +
-              '</b><td></tr>';
+            maxKeyLength = key.length > maxKeyLength ? key.length : maxKeyLength;
+            maxValLength = value.length > maxValLength ? value.length : maxValLength;
+            if (key.length < 100 && value.length < 100) {
+              innerData +=
+                '<tr><td style="text-align: right;">' +
+                hdxUtil.text.sanitize(key) +
+                '</td><td>&nbsp;&nbsp; <b>' +
+                hdxUtil.text.sanitize(value) +
+                '</b><td></tr>';
+              addedLines++;
+            }
+          }
+          if (addedLines >= 100) {
+            break;
           }
         }
+        console.log(`Number of keys in metadata is ${Object.keys(props).length}.` +
+            `Max key length is ${maxKeyLength} and max value length is ${maxValLength}`);
       }
       this._container.innerHTML =
         '<h4>' +
@@ -250,11 +262,16 @@
     } else {
       const tile0 = tilesURL.replace('{z}', '0').replace('{x}', '0').replace('{y}', '0');
       const r = await fetch(tile0);
-      const buffer = await r.arrayBuffer();
-      const tileLayer = new VectorTile(new Pbf(buffer)).layers[layerData.layer_id];
-      geomType = tileLayer ?
-        tileLayer.feature(0).toGeoJSON(0, 0, 0).geometry.type
-        : 'ST_MultiPolygon';
+      if (r.ok) {
+        const buffer = await r.arrayBuffer();
+        const tileLayer = new VectorTile(new Pbf(buffer)).layers[layerData.layer_id];
+        geomType = tileLayer ?
+          tileLayer.feature(0).toGeoJSON(0, 0, 0).geometry.type
+          : 'ST_MultiPolygon';
+      }
+      else {
+        geomType = 'ST_MultiPolygon';
+      }
     }
 
     /**
@@ -306,11 +323,15 @@
           );
         }
         featureId = undefined;
+        // info.update(); // don't hide info table on mouse-leave because users can't scroll on it if it's long
+      }
+      function onClick() {
         info.update();
       }
 
       map.on('mousemove', layerData.layer_id, onMouseMove);
       map.on('mouseleave', layerData.layer_id, onMouseLeave);
+      map.on('click', layerData.layer_id, onClick);
 
       if (firstAdded) options.map.fitBounds(bounds, { animate: false });
     }
@@ -326,6 +347,7 @@
         if (field.field_name !== 'ogc_fid' && ALLOWED_COLUMN_TYPES.indexOf(field.data_type) >= 0) {
           const escaped_field_name = encodeURIComponent(field.field_name);
           extraFields += ',"' + escaped_field_name + '"';
+          if (extraFields.length > 7000) break;
         }
       }
       createLayer(extraFields);
@@ -397,6 +419,7 @@
     map.dragRotate.disable();
     map.keyboard.disable();
     map.touchZoomRotate.disableRotation();
+    map.on('click', () => info.update());
     getData(options);
   }
 

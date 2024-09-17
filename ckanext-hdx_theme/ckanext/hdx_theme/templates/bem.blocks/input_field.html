@@ -1,4 +1,4 @@
-<div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
+<div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}{% if container_classes %} {{ container_classes|join(' ') }}{% endif %}">
   {% if label %}
     <label class="input-field__label" for="input-{{ name }}">
       {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>

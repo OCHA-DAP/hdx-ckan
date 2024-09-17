@@ -739,6 +739,10 @@ def hdx_dataseries_title_validator(value, context):
 
 
 def hdx_tag_name_approved_validator(key, data, errors, context):
+    user = context.get('user')
+    ignore_auth = context.get('ignore_auth')
+    allowed_to_add_crisis_tags = ignore_auth or (user and authz.is_sysadmin(user))
+
     tag_name = data.get(key)
 
     approved_tags = get_action('cached_approved_tags_list')(context, {})
@@ -746,6 +750,10 @@ def hdx_tag_name_approved_validator(key, data, errors, context):
     if tag_name not in approved_tags:
         approved_tags_url = 'https://data.humdata.org/rdr/spreadsheets/approved-tags'
         errors[key].append("Tag name '{}' is not in the approved list of tags. Check the list at: {}".format(tag_name, approved_tags_url))
+    # Only sysadmins are allowed to use tags starting with "crisis-"
+    if tag_name.startswith('crisis-') and not allowed_to_add_crisis_tags:
+        errors[key].append("Tag name '{}' can only be added by sysadmins".format(tag_name))
+
 
 def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDict,
                         errors: FlattenErrorDict, context: Context) -> Any:

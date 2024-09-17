@@ -19,10 +19,6 @@
     {{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Sending, please wait ...") }}
 
     {% block search_results_wrapper %}
-        {% set contact_topics = data.membership.data.contributor_topics %}
-        {% set membership_data = data.membership.data %}
-        {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, membership_data=membership_data) }}
-
         <div id="search-recs" class="d-none"></div>
         {% snippet 'qa_dashboard/qa_search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=data.search_template_data, display_min=true %}

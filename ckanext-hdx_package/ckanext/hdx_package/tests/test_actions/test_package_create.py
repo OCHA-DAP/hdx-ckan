@@ -188,6 +188,34 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         assert 'children' in [tag['name'] for tag in pkg.get('tags')]
         assert 'boys' in [tag['name'] for tag in pkg.get('tags')]
 
+    def test_create_valid_crisis_tags(self):
+        crisis_tag_name = 'crisis-opt-israel-hostilities'
+        package = {
+            "package_creator": "test function",
+            "private": False,
+            "dataset_date": "[1960-01-01 TO 2012-12-31]",
+            "caveats": "These are the caveats",
+            "license_other": "TEST OTHER LICENSE",
+            "methodology": "This is a test methodology",
+            "dataset_source": "World Bank",
+            "license_id": "hdx-other",
+            "notes": "This is a test activity 6",
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
+            'name': 'test_activity_6',
+            'title': 'Test Activity 6',
+            'tags': [{'name': crisis_tag_name}]
+        }
+
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        self._get_action('package_create')(context, package)
+
+        pkg = self._get_action('package_show')(context, {'id': package['name']})
+
+        assert len(pkg.get('tags')) == 1
+        assert crisis_tag_name in [tag['name'] for tag in pkg.get('tags')]
+
     def test_create_invalid_tags(self):
         package = {
             "package_creator": "test function",

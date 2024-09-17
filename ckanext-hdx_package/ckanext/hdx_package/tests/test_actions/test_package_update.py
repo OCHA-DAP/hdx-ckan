@@ -385,8 +385,10 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         }
 
         testsysadmin = model.User.by_name('testsysadmin')
+        joeadmin = model.User.by_name('joeadmin')
 
         context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        context_user = {'model': model, 'session': model.Session, 'user': 'joeadmin', 'auth_user_obj': joeadmin}
 
         pkg_dict = self._get_action('package_create')(context, package)
 
@@ -397,12 +399,30 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert len(modified_package.get('tags')) == 1
         assert 'children' in [tag['name'] for tag in modified_package.get('tags')]
 
+        crisis_tag_name = 'crisis-opt-israel-hostilities'
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'tags',
+                                       [{'name': crisis_tag_name}, {'name': 'children'}])
+        modified_package = data_dict.get('modified_package')
+
+        assert len(modified_package.get('tags')) == 2
+        assert crisis_tag_name in [tag['name'] for tag in modified_package.get('tags')]
+        assert 'children' in [tag['name'] for tag in modified_package.get('tags')]
+
         try:
-            self._modify_field(context, testsysadmin, package['name'], 'tags', [{'name': 'invalid_tag1'}, {'name': 'invalid_tag2'}])
+            self._modify_field(context, testsysadmin, package['name'], 'tags',
+                               [{'name': 'invalid_tag1'}, {'name': 'invalid_tag2'}])
         except ValidationError as e:
             assert 'tags' in e.error_dict, 'package_update should fail when using invalid tags'
             assert len(e.error_dict.get('tags')) == 2, 'There should be two invalid tags'
             assert "Tag name 'invalid_tag1' is not in the approved list of tags" in e.error_dict.get('tags')[0]
+
+        try:
+            self._modify_field(context_user, joeadmin, package['name'], 'tags', [{'name': crisis_tag_name}])
+        except ValidationError as e:
+            assert 'tags' in e.error_dict, 'Only sysadmins are allowed to add tags starting with "crisis-"'
+            assert "Tag name '{}' can only be added by sysadmins".format(crisis_tag_name) in e.error_dict.get('tags')[
+                0], 'Only sysadmins are allowed to add tags starting with "crisis-"'
+
 
     def _modify_field(self, context, user, package_id, key, value):
         modified_fields = {'id': package_id,

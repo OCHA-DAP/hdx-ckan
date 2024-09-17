@@ -10,17 +10,47 @@
             id="select-{{ name }}"
             {% if required %}required{% endif %}
             {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
+            {% if other_option %}data-has-other-option="true"{% endif %}
             {% endfor %}{% endif %}
     >
       {% if data_attributes and data_attributes['placeholder'] %}
         <option></option>
       {% endif %}
       {% if data %}
-        {% for value, name in data.items() %}
-          <option value="{{ value }}"{% if value == selected %} selected{% endif %}>{{ name }}</option>
+        {% for value, item in data.items() %}
+          {% if item is mapping %}
+            <option value="{{ value }}"
+              {% if value == selected %} selected{% endif %}
+              {% for key, attr_value in item.items() %}
+                {% if key != 'name' %}
+                    data-{{ key }}="{{ attr_value }}"
+                {% endif %}
+              {% endfor %}
+            >{{ item.name }}</option>
+          {% else %}
+            <option value="{{ value }}"{% if value == selected %} selected{% endif %}>{{ item }}</option>
+          {% endif %}
         {% endfor %}
       {% endif %}
+      {% if other_option and 'other' not in data %}
+        <option value="other"{% if selected == 'other' %} selected{% endif %}>Other...</option>
+      {% endif %}
     </select>
+
+    {% if other_option %}
+      {% set other_name = name ~ "_other" %}
+      {% set container_classes = [] if selected == 'other' else ["d-none"] %}
+      {{ h.snippet('bem.blocks/input_field.html',
+              type="text",
+              label=label,
+              name=other_name,
+              value=other_option_value,
+              errors=other_option_error,
+              placeholder=label,
+              container_classes=container_classes,
+              spacing_class="mt-4") }}
+    {% endif %}
+
     {% if errors or (data_attributes and data_attributes['validation-error']) %}
       <div class="select2-field__feedback-message select2-field__feedback-message_state_invalid invalid-feedback">
         {% if errors %}{{ errors|join('. ') }}{% endif %}

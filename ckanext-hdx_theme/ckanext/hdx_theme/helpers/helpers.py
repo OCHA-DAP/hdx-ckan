@@ -17,6 +17,7 @@ import ckanext.hdx_theme.version as version
 
 from six import text_type
 
+from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
@@ -688,6 +689,56 @@ def hdx_location_list(include_world=True):
     return top_locations + bottom_locations
 
 
+def hdx_location_dict(include_world=True):
+    world_location_name = 'world'
+    top_values = [world_location_name] if include_world else []
+
+    locations = logic.get_action('cached_group_list')({}, {})
+
+    top_locations = OrderedDict()
+    bottom_locations = OrderedDict()
+
+    for loc in locations:
+        key = loc.get('title')
+        value = loc.get('title')
+        if loc.get('name') in top_values:
+            top_locations[key] = value
+        else:
+            if loc.get('name') == world_location_name and include_world is False:
+                continue
+            bottom_locations[key] = value
+
+    return OrderedDict(list(top_locations.items()) + list(bottom_locations.items()))
+
+
+def hdx_user_orgs_dict(user_id, include_org_type=False):
+    try:
+        orgs = _get_action('organization_list_for_user', {'id': user_id})
+
+        if include_org_type:
+            query = model.Session.query(model.GroupExtra).filter_by(key='hdx_org_type', state='active')
+            org_extras = query.all()
+
+            extras = {org_extra.group_id: org_extra.value for org_extra in org_extras}
+
+            for org in orgs:
+                org_id = org.get('id')
+                if org_id in extras:
+                    org['org_type'] = extras[org_id]
+
+        result = OrderedDict()
+        for org in orgs:
+            org_data = {'name': org.get('display_name')}
+            if include_org_type and 'org_type' in org:
+                org_data['org_type'] = org['org_type']
+            result[org.get('display_name')] = org_data
+
+        return result
+
+    except Exception:
+        return OrderedDict()
+
+
 def hdx_organisation_list():
     orgs = h.organizations_available('create_dataset')
     orgs_dict_list = [{'value': org.get('name'), 'text': org.get('title')} for org in orgs]
@@ -891,13 +942,22 @@ def hdx_dataset_is_p_coded(resource_list):
     return False
 
 
-def hdx_get_approved_tags_list():
+def hdx_get_allowed_tags_list():
     context = {'model': model, 'session': model.Session, 'user': c.user}
 
     approved_tags = logic.get_action('cached_approved_tags_list')(context, {})
-    approved_tags_dict_list = [{'value': tag, 'text': tag} for tag in approved_tags]
 
-    return approved_tags_dict_list
+    is_sysadmin = new_authz.is_sysadmin(c.user)
+    allowed_tags = []
+    for tag in approved_tags:
+        # Only sysadmins are allowed to use tags starting with "crisis-"
+        if tag.startswith('crisis-') and not is_sysadmin:
+            continue
+        allowed_tags.append(tag)
+
+    allowed_tags_dict_list = [{'value': tag, 'text': tag} for tag in allowed_tags]
+
+    return allowed_tags_dict_list
 
 
 def bs5_build_nav_icon(menu_item, title, **kw):

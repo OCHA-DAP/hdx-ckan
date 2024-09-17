@@ -256,12 +256,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_request_param': hdx_helpers.hdx_get_request_param,
             'hdx_pending_request_data': hdx_helpers.hdx_pending_request_data,
             'hdx_dataset_is_p_coded': hdx_helpers.hdx_dataset_is_p_coded,
-            'hdx_get_approved_tags_list': hdx_helpers.hdx_get_approved_tags_list,
+            'hdx_get_allowed_tags_list': hdx_helpers.hdx_get_allowed_tags_list,
             'are_new_p_code_filters_enabled': hdx_helpers.are_new_p_code_filters_enabled,
             'bs5_build_nav_icon': hdx_helpers.bs5_build_nav_icon,
             'hdx_decode_markup': hdx_helpers.hdx_decode_markup,
             'hdx_generate_basemap_config_string': hdx_helpers.hdx_generate_basemap_config_string,
-            'HDX_CONST': const
+            'hdx_location_dict': hdx_helpers.hdx_location_dict,
+            'hdx_user_orgs_dict': hdx_helpers.hdx_user_orgs_dict,
+            'HDX_CONST': const,
         }
 
     def get_actions(self):
@@ -273,6 +275,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'invalidate_cache_for_groups': hdx_actions.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': hdx_actions.invalidate_cache_for_organizations,
             'invalidate_cached_resource_id_apihighways': hdx_actions.invalidate_cached_resource_id_apihighways,
+            'invalidate_cached_approved_tags': hdx_actions.invalidate_cached_approved_tags,
             'invalidate_region': hdx_actions.invalidate_region,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
@@ -311,6 +314,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'invalidate_cache_for_groups': auth.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,
             'invalidate_cached_resource_id_apihighways': auth.invalidate_cached_resource_id_apihighways,
+            'invalidate_cached_approved_tags': auth.invalidate_cached_approved_tags,
             'invalidate_region': auth.invalidate_region,
             'hdx_user_statistics': auth.hdx_user_statistics,
             'hdx_push_general_stats': auth.hdx_push_general_stats,
