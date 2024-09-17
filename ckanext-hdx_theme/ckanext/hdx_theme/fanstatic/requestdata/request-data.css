@@ -650,8 +650,22 @@
 .request-data-module .requested-data-container__collapse--request-status {
   margin-right: 62px !important;
 }
+.request-data-module .requested-data-container__collapse--sections-archive {
+  display: block;
+}
 .request-data-module .requested-data-container__collapse--sections-archive .requested-data-container__content-item--requested-by {
-  margin-right: 132px !important;
+  margin: 0 !important;
+  width: unset;
+}
+.request-data-module .requested-data-container__collapse--sections-archive .requested-data-container__content-item--requested-by-message {
+  width: unset;
+}
+.request-data-module .requested-data-container__collapse--sections-archive .requested-data-container__content-item--requested-by-info {
+  width: unset;
+  float: none !important;
+}
+.request-data-module .requested-data-container__collapse--sections-archive .requested-data-container__collapse--request-status {
+  margin-right: 0 !important;
 }
 .request-data-module .requested-data-order-btn {
   font-weight: bold;
