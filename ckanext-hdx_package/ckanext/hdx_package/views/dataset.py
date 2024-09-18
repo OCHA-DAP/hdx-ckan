@@ -41,8 +41,6 @@ from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
 
-import ckanext.hdx_users.helpers.helpers as usr_h
-
 log = logging.getLogger(__name__)
 
 config = tk.config
@@ -582,8 +580,6 @@ class DatasetContactContributorView(MethodView):
             if errors:
                 return self.get(id, data, errors)
 
-            usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
-
             dataset_contact_contributor_logic.send_mail()
 
             analytics_dict = h.hdx_compute_analytics(pkg_dict)
@@ -602,11 +598,6 @@ class DatasetContactContributorView(MethodView):
         except NotAuthorized:
             came_from = h.url_for('hdx_dataset.contact_contributor', id=id)
             return redirect(h.url_for('hdx_signin.login', info_message_type='contact-contributor', came_from=came_from))
-
-        except captcha.CaptchaError:
-            error_summary = _(u'Bad Captcha. Please try again.')
-            log.error(error_summary)
-            return self.get(id, data, errors, error_summary)
 
         except MailerException as e:
             error_summary = _('Could not send request for: %s') % text_type(e)

@@ -2,7 +2,6 @@
 
 {% block scripts %}
   {{ super() }}
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   {% if message_sent %}
     {% asset 'hdx_theme/contact-contributor-scripts' %}
   {% endif %}
@@ -108,12 +107,6 @@
               placeholder=CONST.TEXTAREA_MSG_PLACEHOLDER,
               rows=6,
               spacing_class="mb-4") }}
-
-            {% if g.recaptcha_publickey %}
-              <div class="recaptcha-field mb-4">
-                <div class="g-recaptcha" data-sitekey="{{ g.recaptcha_publickey }}"></div>
-              </div>
-            {% endif %}
 
             {{ h.snippet('bem.blocks/form_button.html', type="submit", title=CONST.BUTTON_SUBMIT, button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
 
