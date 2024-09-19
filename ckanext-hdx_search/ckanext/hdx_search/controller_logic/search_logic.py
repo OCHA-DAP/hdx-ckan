@@ -155,7 +155,7 @@ class SearchLogic(object):
             self.template_data.sort_by_fields = [field.split()[0]
                                 for field in sort_by.split(',')]
 
-        self._set_other_links()
+        self.template_data.other_links = {'current_page_url': self._current_url()}
 
         search_extras = {}
         try:
@@ -413,29 +413,6 @@ class SearchLogic(object):
     def _set_search_url_params(self):
         params_nopage = self._params_nopage()
         self.template_data['search_url_params'] = urlencode(_encode_params(params_nopage))
-
-    def _set_other_links(self, suffix='', other_params_dict=None):
-        url_param_list = ['sort', 'q', 'organization', 'tags',
-                          'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters']
-        # named_route = self._get_named_route()
-        params = {}
-
-        for k, v in request.args.items():
-            if k in url_param_list:
-                if k in params:
-                    params[k].append(v)
-                else:
-                    params[k] = [v]
-
-        if other_params_dict:
-            params.update(other_params_dict)
-
-        self.template_data.other_links = {}
-        self.template_data.other_links['params_noq'] = {k: v for k, v in params.items()
-                                       if k not in ['q', '_show_filters', 'id']}
-        self.template_data.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
-                                              if k not in ['sort', 'q', 'id']}
-        self.template_data.other_links['current_page_url'] = self._current_url()
 
     def _current_url(self):
         url = h.url_for('hdx_light_dataset.search')
