@@ -194,6 +194,8 @@ bem-blocks-styles:
     - bem.blocks/form_button.css
     - bem.blocks/account_options.css
     - bem.blocks/info_box.css
+    - bem.blocks/floating_button.css
+    - bem.blocks/modal.css
     - bem.blocks/table.css
     - bem.blocks/select2_field.css
     - bem.blocks/textarea_field.css
