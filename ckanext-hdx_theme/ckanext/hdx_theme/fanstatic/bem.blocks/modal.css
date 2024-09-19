@@ -1,0 +1,11 @@
+.bem-modal__content .bem-modal__header {
+  border-radius: 0;
+}
+.bem-modal__content .bem-modal__footer .btn-link {
+  background-color: unset;
+  padding-left: 0;
+  padding-right: 0;
+  color: #000;
+  text-decoration: none;
+  border-color: transparent;
+}
