@@ -407,3 +407,7 @@ hdx.change_detection.layer_url = http://layer:5000/api/create-change-events
 # JSON Log File
 hdx.ckan_json_log.enable = true
 hdx.ckan_json_log.file = /var/log/ckan/ckan.json.log
+
+# HDX Notification Platform
+hdx.notifications.novu.api_url = https://api.novu.co/v1
+hdx.notifications.novu.api_key =

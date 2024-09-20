@@ -3,6 +3,8 @@ import logging
 import ckan.authz as new_authz
 import ckan.logic.auth.update as core_auth_update
 import ckan.plugins.toolkit as tk
+
+from ckan.types import Context, DataDict, AuthResult
 from ckanext.hdx_theme.helpers.auth import _check_hdx_user_permission
 from ckanext.hdx_users.helpers.permissions import Permissions
 from ckanext.hdx_users.helpers.reset_password import ResetKeyHelper
@@ -22,6 +24,12 @@ def hdx_send_new_org_request(context, data_dict):
 ## USERS
 def manage_permissions(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can view user permission page')}
+
+def hdx_add_notification_subscription(context: Context, data_dict: DataDict) -> AuthResult:
+    return {'success': False, 'msg': _('Only sysadmins can manage notification subscriptions')}
+
+def hdx_delete_notification_subscription(context: Context, data_dict: DataDict) -> AuthResult:
+    return {'success': False, 'msg': _('Only sysadmins can manage notification subscriptions')}
 
 
 @tk.auth_allow_anonymous_access
