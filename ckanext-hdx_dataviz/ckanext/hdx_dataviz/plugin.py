@@ -12,7 +12,7 @@ from ckanext.hdx_dataviz.util.schema import showcase_update_schema_wrapper, show
 
 request = toolkit.request
 
-
+@toolkit.blanket.config_declarations
 class HdxDatavizPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     # if dataviz:

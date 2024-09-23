@@ -45,8 +45,8 @@ unicode_safe = tk.get_validator('unicode_safe')
 
 
 def run_on_startup():
-    cache_on_startup = config.get('hdx.cache.onstartup', 'true')
-    if 'true' == cache_on_startup:
+    cache_on_startup = config.get('hdx.cache.onstartup')
+    if cache_on_startup:
         _generate_license_list()
         # caching.cached_get_group_package_stuff()
 
@@ -83,7 +83,7 @@ def _generate_license_list():
 def cached_group_list():
     return tk.get_action('cached_group_list')()
 
-
+@tk.blanket.config_declarations
 class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)

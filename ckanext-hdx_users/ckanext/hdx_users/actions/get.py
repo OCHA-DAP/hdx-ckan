@@ -13,8 +13,6 @@ NotFound = tk.ObjectNotFound
 get_action = tk.get_action
 NoOfLocs = 5
 NoOfOrgs = 5
-c_nepal_earthquake = config.get('hdx.crisis.nepal_earthquake')
-
 
 def create_item(item, type, follow=False):
     return {'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,

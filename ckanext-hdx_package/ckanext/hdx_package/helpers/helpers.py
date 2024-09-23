@@ -454,7 +454,7 @@ def generate_mandatory_fields():
         'dataset_source': selected_org.get('title'),
         'maintainer': user,
         'subnational': 1,
-        'data_update_frequency': config.get('hdx.default_frequency', '-999'),
+        'data_update_frequency': config.get('hdx.default_frequency'),
         'dataset_preview_check': '1',
         'dataset_preview': vd._DATASET_PREVIEW_FIRST_RESOURCE,
         'dataset_preview_value': vd._DATASET_PREVIEW_FIRST_RESOURCE

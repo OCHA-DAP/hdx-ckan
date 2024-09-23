@@ -25,7 +25,7 @@ if dogpile_config_filter == 'cache.redis.':
 def cached_data_completeness(location_code):
     log.info('Fetching data completness for ' + location_code)
     url_pattern = config.get('hdx.datagrid.config_url_pattern')
-    for_prod = config.get('hdx.datagrid.prod') == 'true'
+    for_prod = config.get('hdx.datagrid.prod')
     branch = 'master' if for_prod else location_code
     url = url_pattern.format(branch=branch, iso=location_code)
 
