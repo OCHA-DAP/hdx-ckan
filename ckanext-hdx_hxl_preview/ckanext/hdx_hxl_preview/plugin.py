@@ -18,6 +18,7 @@ log = logging.getLogger(__name__)
 
 ignore_empty = plugins.toolkit.get_validator('ignore_empty')
 
+@toolkit.blanket.config_declarations
 class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IResourceView, inherit=True)

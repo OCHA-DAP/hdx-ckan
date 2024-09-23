@@ -12,6 +12,7 @@ import ckanext.hdx_pages.model as pages_model
 
 import ckanext.hdx_pages.views.light_page as light_page
 
+@toolkit.blanket.config_declarations
 class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IActions, inherit=True)

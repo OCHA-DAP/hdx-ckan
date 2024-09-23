@@ -53,7 +53,7 @@ def contact_us():
         fullname = request.form.get('fullname')
         email = request.form.get('email')
         msg = request.form.get('faq-msg')
-        hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+        hdx_email = config.get('hdx.faqrequest.email')
 
         test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
         if not test:
