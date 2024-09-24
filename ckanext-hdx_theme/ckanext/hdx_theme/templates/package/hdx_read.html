@@ -93,6 +93,7 @@
               {% endfor %}
             {% endif %}
                 <div class="row mBottom15">
+                    {{ h.snippet('notification_platform/sign_up_paragraph.html') }}
                     <div class="col-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>
                         {% if pkg.notes %}
                         <div data-module="hdx_show_more" style="visibility:hidden" class="notes embedded-content">

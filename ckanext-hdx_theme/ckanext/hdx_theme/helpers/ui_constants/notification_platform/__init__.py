@@ -1,5 +1,5 @@
 CONSTANTS = {
-    'FLOATING_BUTTON_TEXT': '''Sign up to receive alerts when this dataset is updated''',
+    'OPT_IN_TEXT': '''<span>Sign up</span> to receive alerts when this dataset is updated''',
 
     'SIGNUP_MODAL_TITLE': '''Do you want to receive alerts when this dataset is updated?''',
     'SIGNUP_MODAL_INTRO_TEXT': '''Would you like to receive emails when resources in this dataset are added,

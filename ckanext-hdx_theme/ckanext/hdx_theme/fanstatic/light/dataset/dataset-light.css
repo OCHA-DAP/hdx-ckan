@@ -121,6 +121,23 @@
 .wrapper-secondary .form-check .form-check-input {
   box-shadow: none;
 }
+.notification-platform-sign-up p {
+  cursor: pointer;
+}
+.notification-platform-sign-up p i {
+  background-color: #007CE1;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  font-size: 12px;
+  text-align: center;
+  margin-right: 3px;
+}
+.notification-platform-sign-up p > span span {
+  color: #007CE1;
+}
 .dataset-light .nav-tabs {
   margin: 0 -15px;
   padding: 0 15px;
@@ -235,6 +252,16 @@
   margin-top: -10px;
   margin-bottom: 10px;
   margin-left: 0;
+}
+.dataset-light .notification-platform-sign-up p {
+  margin-bottom: 0;
+}
+.dataset-light .notification-platform-sign-up p i {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 9px;
+  font-size: 10px;
 }
 @media (max-width: 375px) {
   .dataset-light .nav-tabs .hdx-tab-button {

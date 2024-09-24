@@ -1,0 +1,8 @@
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+
+<div class="col-12">
+  {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+  <div class="notification-platform-sign-up" data-bs-toggle="modal" data-bs-target="#notificationsSignupBemModal">
+    <p><i class="fa-solid fa-fw fa-bell"></i> <span>{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT|safe }}</span></p>
+  </div>
+</div>

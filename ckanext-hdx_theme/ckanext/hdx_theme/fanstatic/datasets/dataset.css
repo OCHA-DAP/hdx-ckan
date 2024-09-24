@@ -121,3 +121,20 @@
 .wrapper-secondary .form-check .form-check-input {
   box-shadow: none;
 }
+.notification-platform-sign-up p {
+  cursor: pointer;
+}
+.notification-platform-sign-up p i {
+  background-color: #007CE1;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  font-size: 12px;
+  text-align: center;
+  margin-right: 3px;
+}
+.notification-platform-sign-up p > span span {
+  color: #007CE1;
+}

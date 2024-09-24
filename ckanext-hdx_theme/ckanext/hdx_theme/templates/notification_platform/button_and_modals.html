@@ -5,7 +5,7 @@
 {{ h.snippet('bem.blocks/floating_button.html',
   icon="bell",
   modal="notificationsSignupBemModal",
-  text=CONST_NOTIFICATION_PLATFORM.FLOATING_BUTTON_TEXT) }}
+  text=CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT|safe) }}
 
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsSignupBemModal",

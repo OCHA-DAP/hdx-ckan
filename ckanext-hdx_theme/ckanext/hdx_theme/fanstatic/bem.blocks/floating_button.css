@@ -1,6 +1,6 @@
 .floating-button {
   cursor: pointer;
-  background-color: #0162DD;
+  background-color: #007CE1;
   position: fixed;
   padding: 10px;
   bottom: 30px;
@@ -15,7 +15,7 @@
   border-radius: 20px;
   text-align: center;
   font-size: 22px;
-  color: #0162DD;
+  color: #007CE1;
   background-color: #FFF;
 }
 .floating-button__paragraph {
