@@ -157,4 +157,27 @@
     hdxUtil.net.removeOnboardingFlowData = function () {
       localStorage.removeItem(ONBOARDING_FLOW_START_KEY);
     };
+
+    var NOTIFICATION_MODAL_SHOWN_KEY = 'notification_platform_modal_shown';
+
+    hdxUtil.net.getNotificationModalData = function () {
+        var notificationModalData = localStorage.getItem(NOTIFICATION_MODAL_SHOWN_KEY);
+        if (notificationModalData) {
+            return JSON.parse(notificationModalData);
+        }
+        else {
+            return null;
+        }
+    };
+
+    hdxUtil.net.updateNotificationModalData = function (newData) {
+        var notificationModalData = hdxUtil.net.getNotificationModalData() || {};
+        for (var key in newData) {
+            if (newData.hasOwnProperty(key)) {
+                notificationModalData[key] = newData[key];
+            }
+        }
+        localStorage.setItem(NOTIFICATION_MODAL_SHOWN_KEY, JSON.stringify(notificationModalData));
+    };
+
 })();

@@ -3,9 +3,10 @@
 {{ h.snippet('bem.blocks/paragraph.html',
   text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_INTRO_TEXT) }}
 
-<form method="post" action="{{ h.url_for('hdx_user_onboarding.user-info') }}" id="notifications-form" novalidate
-      data-module="hdx-form-validator">
-  {{ h.csrf_input() }}
+<form method="post" id="notification-platform-form" novalidate data-module="hdx-form-validator">
+  <input type="hidden" name="dataset_id" value="{{ pkg.id }}">
+  {# TODO: update token #}
+  <input type="hidden" name="token" value="token123">
 
   {{ h.snippet('bem.blocks/input_field.html',
     type="email",

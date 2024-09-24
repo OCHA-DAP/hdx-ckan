@@ -7,6 +7,8 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div class="alert alert-danger d-none"></div>
+        <div class="alert alert-success d-none"></div>
         {% if text %}
           {{ h.snippet('bem.blocks/paragraph.html', text=text) }}
         {% endif %}
@@ -24,7 +26,7 @@
             </div>
             <div class="col-6 text-end">
               {% if submit_btn_text %}
-                <button type="button" class="btn btn-primary">{{ submit_btn_text }}</button>
+                <button type="submit" class="btn btn-primary">{{ submit_btn_text }}</button>
               {% else %}
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ close_btn_text }}</button>
               {% endif %}

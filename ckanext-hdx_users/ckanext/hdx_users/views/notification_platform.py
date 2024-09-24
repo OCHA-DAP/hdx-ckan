@@ -1,8 +1,16 @@
 import logging
 import ckan.plugins.toolkit as tk
+import json
 
-from flask import Blueprint
-from ckan.types import Response
+import ckanext.hdx_users.helpers.helpers as usr_h
+import ckanext.hdx_users.helpers.mailer as hdx_mailer
+
+from flask import Blueprint, make_response
+from ckan.lib.mailer import MailerException
+from ckan.types import Response, DataDict
+from ckan.views.api import CONTENT_TYPES
+
+from ckanext.hdx_theme.util.mail import hdx_validate_email
 
 _h = tk.h
 
@@ -82,5 +90,70 @@ def unsubscribe_from_dataset() -> Response:
     dataset_url = tk.url_for('dataset.read', id=dataset_id)
     return tk.redirect_to(dataset_url)
 
+
+def subscription_confirmation() -> Response:
+    email = tk.request.form.get('email')
+    dataset_id = tk.request.form.get('dataset_id')
+    token = tk.request.form.get('token')
+
+    try:
+        usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
+
+        if not email:
+            raise tk.Invalid(tk._('Email address is missing'))
+        hdx_validate_email(email)
+
+        subject = u'Please verify your email address'
+        verify_email_link = _h.url_for(
+            'hdx_notifications.subscribe_to_dataset',
+            email=email, dataset_id=dataset_id, token=token, qualified=True
+        )
+        email_data = {
+            'verify_email_link': verify_email_link
+        }
+        hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
+                                  snippet='email/content/notification_platform/verify_email.html')
+
+    except tk.ValidationError as e:
+        return _build_json_response(
+            {
+                'success': False,
+                'error': {
+                    'message': e.error_summary
+                }
+            }
+        )
+    except tk.Invalid as e:
+        return _build_json_response(
+            {
+                'success': False,
+                'error': {
+                    'message': e.error
+                }
+            }
+        )
+    except MailerException as e:
+        log.error(e)
+        return _build_json_response(
+            {
+                'success': False,
+                'error': {
+                    'message': u'Error sending the confirmation email, please try again.'
+                }
+            }
+        )
+    return _build_json_response({'success': True})
+
+
+def _build_json_response(data_dict: DataDict, status=200):
+    headers = {
+        'Content-Type': CONTENT_TYPES['json'],
+    }
+    body = json.dumps(data_dict)
+    response = make_response((body, status, headers))
+    return response
+
+
 hdx_notifications.add_url_rule(u'/subscribe-to-dataset', view_func=subscribe_to_dataset)
 hdx_notifications.add_url_rule(u'/unsubscribe-from-dataset', view_func=unsubscribe_from_dataset)
+hdx_notifications.add_url_rule(u'/subscription-confirmation', view_func=subscription_confirmation, methods=['POST'])
