@@ -180,4 +180,18 @@
         localStorage.setItem(NOTIFICATION_MODAL_SHOWN_KEY, JSON.stringify(notificationModalData));
     };
 
+    var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
+    var NOTIFICATION_OPTIN_OPTIONS = ['paragraph', 'button'];
+
+    hdxUtil.net.getNotificationOptinLocation = function () {
+      var optinLocation = localStorage.getItem(NOTIFICATION_OPTIN_KEY);
+
+      if (!optinLocation) {
+        var randomIndex = Math.floor(Math.random() * NOTIFICATION_OPTIN_OPTIONS.length);
+        optinLocation = NOTIFICATION_OPTIN_OPTIONS[randomIndex];
+        localStorage.setItem(NOTIFICATION_OPTIN_KEY, optinLocation);
+      }
+
+      return optinLocation;
+    };
 })();

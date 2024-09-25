@@ -121,10 +121,10 @@
 .wrapper-secondary .form-check .form-check-input {
   box-shadow: none;
 }
-.notification-platform-sign-up p {
+.notification-platform-opt-in-paragraph p {
   cursor: pointer;
 }
-.notification-platform-sign-up p i {
+.notification-platform-opt-in-paragraph p i {
   background-color: #007CE1;
   color: #fff;
   width: 24px;
@@ -135,7 +135,7 @@
   text-align: center;
   margin-right: 3px;
 }
-.notification-platform-sign-up p > span span {
+.notification-platform-opt-in-paragraph p > span span {
   color: #007CE1;
 }
 .dataset-light .nav-tabs {
@@ -253,10 +253,10 @@
   margin-bottom: 10px;
   margin-left: 0;
 }
-.dataset-light .notification-platform-sign-up p {
+.dataset-light .notification-platform-opt-in-paragraph p {
   margin-bottom: 0;
 }
-.dataset-light .notification-platform-sign-up p i {
+.dataset-light .notification-platform-opt-in-paragraph p i {
   width: 18px;
   height: 18px;
   line-height: 18px;

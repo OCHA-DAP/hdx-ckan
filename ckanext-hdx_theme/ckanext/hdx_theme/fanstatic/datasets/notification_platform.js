@@ -45,8 +45,21 @@ $(document).ready(function () {
     $dangerAlert.text('').addClass('d-none');
   };
 
+  var displayNotificationOptinOption = function () {
+    var optinLocation = hdxUtil.net.getNotificationOptinLocation();
+
+    if (optinLocation === 'paragraph') {
+      $('.notification-platform-opt-in-paragraph').removeClass('d-none');
+    }
+    else if (optinLocation === 'button') {
+      $('.notification-platform-opt-in-button').removeClass('d-none');
+    }
+  };
+
   $form.on('submit', onSubmit);
   $submitButton.on('click', onSubmit);
+
+  displayNotificationOptinOption();
 });
 
 var showNotificationsSignupModal = function (datasetId) {

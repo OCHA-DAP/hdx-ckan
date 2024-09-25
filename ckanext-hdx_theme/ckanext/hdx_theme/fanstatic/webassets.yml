@@ -1400,4 +1400,4 @@ notification-platform-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_notification-platform-scripts.js
   contents:
-    - datasets/notification-platform.js
+    - datasets/notification_platform.js
