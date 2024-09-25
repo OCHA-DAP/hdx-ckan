@@ -1,7 +1,8 @@
 import logging
-import ckan.plugins.toolkit as tk
 import json
 
+import ckan.plugins.toolkit as tk
+import ckan.model as model
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
@@ -11,6 +12,7 @@ from ckan.types import Response, DataDict
 from ckan.views.api import CONTENT_TYPES
 
 from ckanext.hdx_theme.util.mail import hdx_validate_email
+from ckanext.hdx_users.general_token_model import validate_token, TokenType, HDXGeneralToken
 
 _h = tk.h
 
@@ -19,24 +21,29 @@ log = logging.getLogger(__name__)
 hdx_notifications = Blueprint(u'hdx_notifications', __name__, url_prefix=u'/notifications')
 
 
-def _verify_token(email:str, token: str) -> bool:
-    return True
+def _verify_email_validation_token(token: str) -> HDXGeneralToken:
+    return validate_token(model.Session, token, TokenType.EMAIL_VALIDATION_FOR_DATASET)
+
+def _verify_unsubscribe_token(token: str) -> HDXGeneralToken:
+    return validate_token(model.Session, token, TokenType.UNSUBSCRIBE_FOR_DATASET)
 
 
 def subscribe_to_dataset() -> Response:
     # Get parameters from the URL
-    email = tk.request.args.get('email')
-    dataset_id = tk.request.args.get('dataset_id')
+    # email = tk.request.args.get('email')
+    # dataset_id = tk.request.args.get('dataset_id')
     token = tk.request.args.get('token')
 
     dataset_list_url = tk.url_for('dataset.search')
-    token_valid = _verify_token(email, token)
-    if not token_valid:
+    token_obj = _verify_email_validation_token(token)
+    if not token_obj:
         _h.flash_error('Your token is invalid or has expired. Please try to subscribe again.')
         return tk.redirect_to(dataset_list_url)
 
+    email = token_obj.user_id
+    dataset_id = token_obj.object_id
     if not email or not dataset_id:
-        _h.flash_error('Missing required parameters: email and dataset_id.')
+        _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
         return tk.redirect_to(dataset_list_url)
 
     context = {'ignore_auth': True}
@@ -64,7 +71,7 @@ def unsubscribe_from_dataset() -> Response:
     token = tk.request.args.get('token')
 
     dataset_list_url = tk.url_for('dataset.search')
-    token_valid = _verify_token(email, token)
+    token_valid = _verify_unsubscribe_token(token)
     if not token_valid:
         _h.flash_error('Your token is invalid.')
         return tk.redirect_to(dataset_list_url)

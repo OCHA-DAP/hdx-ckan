@@ -100,8 +100,7 @@ def get_by_type_and_user_id(token_type: str, user_id: str) -> Optional[List[HDXG
             .all()
 
 
-def validate_token(session: AlchemySession, token: str, token_type: TokenType, user_id: str,
-                   object_type: Optional[ObjectType] = None, object_id: Optional[str] = None, inactivate=True) -> bool:
+def validate_token(session: AlchemySession, token: str, token_type: TokenType, inactivate=True) -> HDXGeneralToken:
     token_obj = get_by_token(token)
     if not token_obj:
         log.warning(f'Token object not found for token string {token}')
@@ -116,20 +115,20 @@ def validate_token(session: AlchemySession, token: str, token_type: TokenType, u
                     f'but it is of type {token_obj.token_type} instead of {token_type}')
         raise Exception(f'Token object found for given token string but the type is wrong')
 
-    if token_obj.user_id != user_id:
-        log.warning(f'Token object found for token string {token} '
-                    f'but it has user id {token_obj.user_id} instead of {user_id}')
-        raise Exception(f'Token object found for given token string but the user id is wrong')
-
-    if token_obj.object_type and token_obj.object_type != object_type:
-        log.warning(f'Token object found for token string {token} but it has object type {token_obj.object_type} '
-                    f'instead of {object_type}')
-        raise Exception(f'Token object found for given token string but it had wrong object type')
-
-    if token_obj.object_type and token_obj.object_id and token_obj.object_id != object_id:
-        log.warning(f'Token object found for token string {token} but it has object id {token_obj.object_id} '
-                    f'instead of {object_id}')
-        raise Exception(f'Token object found for given token string but it had wrong object id')
+    # if token_obj.user_id != user_id:
+    #     log.warning(f'Token object found for token string {token} '
+    #                 f'but it has user id {token_obj.user_id} instead of {user_id}')
+    #     raise Exception(f'Token object found for given token string but the user id is wrong')
+    #
+    # if token_obj.object_type and token_obj.object_type != object_type:
+    #     log.warning(f'Token object found for token string {token} but it has object type {token_obj.object_type} '
+    #                 f'instead of {object_type}')
+    #     raise Exception(f'Token object found for given token string but it had wrong object type')
+    #
+    # if token_obj.object_type and token_obj.object_id and token_obj.object_id != object_id:
+    #     log.warning(f'Token object found for token string {token} but it has object id {token_obj.object_id} '
+    #                 f'instead of {object_id}')
+    #     raise Exception(f'Token object found for given token string but it had wrong object id')
 
     if inactivate:
         token_obj.state = State.INACTIVE.value
@@ -137,4 +136,4 @@ def validate_token(session: AlchemySession, token: str, token_type: TokenType, u
     session.add(token_obj)
     session.commit()
 
-    return True
+    return token_obj
