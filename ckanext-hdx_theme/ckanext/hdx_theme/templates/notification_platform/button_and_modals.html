@@ -3,6 +3,9 @@
 {% asset 'hdx_theme/notification-platform-scripts' %}
 
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+{% set unsubscribe_token = unsubscribe_token or None %}
+
+<span class="d-none" id="unsubscribe_token" data-token="{{ unsubscribe_token }}"></span>
 
 {{ h.snippet('bem.blocks/floating_button.html',
   container_classes=['notification-platform-opt-in-floating-button', 'd-none'],

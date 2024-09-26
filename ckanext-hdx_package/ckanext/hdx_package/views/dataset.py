@@ -26,6 +26,7 @@ import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
 from ckanext.hdx_package.controller_logic.dataset_contact_contributor_logic import DatasetContactContributorLogic
 from ckanext.hdx_package.controller_logic.dataset_request_access_logic import DatasetRequestAccessLogic
+from ckanext.hdx_users.controller_logic.notification_platform_logic import verify_unsubscribe_token
 
 from ckan.views.dataset import _setup_template_variables
 
@@ -182,6 +183,15 @@ def read(id):
     else:
         logo_config = {}
 
+    # notification platform
+    unsubscribe_token = request.args.get('unsubscribe_token', None)
+    if unsubscribe_token:
+        try:
+            token_obj = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
+        except Exception as e:
+            unsubscribe_token = None
+            h.flash_error('Your token is invalid or has expired.')
+
     template_data = {
         'pkg_dict': pkg_dict,
         'pkg': pkg,
@@ -189,6 +199,7 @@ def read(id):
         'hdx_activities': hdx_activities,
         'membership': membership,
         'user_has_edit_rights': user_has_edit_rights,
+        'unsubscribe_token': unsubscribe_token,
         'analytics_is_cod': analytics_is_cod,
         'analytics_is_indicator': 'false',
         'analytics_is_archived': analytics_is_archived,

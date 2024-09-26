@@ -12,20 +12,13 @@ from ckan.types import Response, DataDict
 from ckan.views.api import CONTENT_TYPES
 
 from ckanext.hdx_theme.util.mail import hdx_validate_email
-from ckanext.hdx_users.general_token_model import generate_new_token_obj, validate_token, ObjectType, TokenType, HDXGeneralToken
+from ckanext.hdx_users.controller_logic import notification_platform_logic
 
 _h = tk.h
 
 log = logging.getLogger(__name__)
 
 hdx_notifications = Blueprint(u'hdx_notifications', __name__, url_prefix=u'/notifications')
-
-
-def _verify_email_validation_token(token: str) -> HDXGeneralToken:
-    return validate_token(model.Session, token, TokenType.EMAIL_VALIDATION_FOR_DATASET)
-
-def _verify_unsubscribe_token(token: str) -> HDXGeneralToken:
-    return validate_token(model.Session, token, TokenType.UNSUBSCRIBE_FOR_DATASET)
 
 
 def subscribe_to_dataset() -> Response:
@@ -35,8 +28,9 @@ def subscribe_to_dataset() -> Response:
     token = tk.request.args.get('token')
 
     dataset_list_url = tk.url_for('dataset.search')
-    token_obj = _verify_email_validation_token(token)
-    if not token_obj:
+    try:
+        token_obj = notification_platform_logic.verify_email_validation_token(token)
+    except Exception as e:
         _h.flash_error('Your token is invalid or has expired. Please try to subscribe again.')
         return tk.redirect_to(dataset_list_url)
 
@@ -51,40 +45,7 @@ def subscribe_to_dataset() -> Response:
 
     try:
         result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
-        _h.flash_success(result['message'])
-    except tk.ValidationError as e:
-        log.error('An exception occurred:' + str(e))
-        _h.flash_error(str(e))
-    except Exception as e:
-        log.error('An exception occurred:' + str(e))
-        _h.flash_error('An error occurred: ' + str(e))
-
-    # Redirect to the dataset page
-    dataset_url = tk.url_for('dataset.read', id=dataset_id)
-    return tk.redirect_to(dataset_url)
-
-
-def unsubscribe_from_dataset() -> Response:
-    # Get parameters from the URL
-    email = tk.request.args.get('email')
-    dataset_id = tk.request.args.get('dataset_id')
-    token = tk.request.args.get('token')
-
-    dataset_list_url = tk.url_for('dataset.search')
-    token_valid = _verify_unsubscribe_token(token)
-    if not token_valid:
-        _h.flash_error('Your token is invalid.')
-        return tk.redirect_to(dataset_list_url)
-
-    if not email or not dataset_id:
-        _h.flash_error('Missing required parameters: email and dataset_id.')
-        return tk.redirect_to(dataset_list_url)
-
-    context = {'ignore_auth': True}
-    data_dict = {'email': email, 'dataset_id': dataset_id}
-
-    try:
-        result = tk.get_action('hdx_delete_notification_subscription')(context, data_dict)
+        notification_platform_logic.generate_unsubscribe_token(email, dataset_id)
         _h.flash_success(result['message'])
     except tk.ValidationError as e:
         log.error('An exception occurred:' + str(e))
@@ -109,7 +70,7 @@ def subscription_confirmation() -> Response:
             raise tk.Invalid(tk._('Email address is missing'))
         hdx_validate_email(email)
 
-        token_obj = generate_new_token_obj(model.Session, TokenType.EMAIL_VALIDATION_FOR_DATASET, email, object_type=ObjectType.DATASET, object_id=dataset_id)
+        token_obj = notification_platform_logic.generate_email_validation_token(email, dataset_id)
 
         subject = u'Please verify your email address'
         verify_email_link = _h.url_for(
@@ -140,6 +101,16 @@ def subscription_confirmation() -> Response:
                 }
             }
         )
+    except MailerException as e:
+        log.error(e)
+        return _build_json_response(
+            {
+                'success': False,
+                'error': {
+                    'message': u'Error sending the confirmation email, please try again.'
+                }
+            }
+        )
     except Exception as e:
         log.error(e)
         return _build_json_response(
@@ -150,13 +121,35 @@ def subscription_confirmation() -> Response:
                 }
             }
         )
-    except MailerException as e:
-        log.error(e)
+    return _build_json_response({'success': True})
+
+
+def unsubscribe_confirmation() -> Response:
+    token = tk.request.form.get('token')
+
+    try:
+        token_obj = notification_platform_logic.verify_unsubscribe_token(token, inactivate=True)
+
+        context = {'ignore_auth': True}
+        data_dict = {'email': token_obj.user_id, 'dataset_id': token_obj.object_id}
+        result = tk.get_action('hdx_delete_notification_subscription')(context, data_dict)
+    except tk.ValidationError as e:
+        log.error('An exception occurred:' + str(e))
         return _build_json_response(
             {
                 'success': False,
                 'error': {
-                    'message': u'Error sending the confirmation email, please try again.'
+                    'message': 'An exception occurred:' + str(e)
+                }
+            }
+        )
+    except Exception as e:
+        log.error('An exception occurred:' + str(e))
+        return _build_json_response(
+            {
+                'success': False,
+                'error': {
+                    'message': 'An error occurred: ' + str(e)
                 }
             }
         )
@@ -173,5 +166,5 @@ def _build_json_response(data_dict: DataDict, status=200):
 
 
 hdx_notifications.add_url_rule(u'/subscribe-to-dataset', view_func=subscribe_to_dataset)
-hdx_notifications.add_url_rule(u'/unsubscribe-from-dataset', view_func=unsubscribe_from_dataset)
 hdx_notifications.add_url_rule(u'/subscription-confirmation', view_func=subscription_confirmation, methods=['POST'])
+hdx_notifications.add_url_rule(u'/unsubscribe-confirmation', view_func=unsubscribe_confirmation, methods=['POST'])

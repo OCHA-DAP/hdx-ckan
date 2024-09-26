@@ -11,6 +11,7 @@ import ckanext.hdx_package.helpers.custom_pages as cp_h
 from ckanext.hdx_search.controller_logic.search_logic import SearchLogic, ArchivedUrlHelper
 from ckanext.hdx_theme.util.http_exception_helper import catch_http_exceptions
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_users.controller_logic.notification_platform_logic import verify_unsubscribe_token
 
 get_action = tk.get_action
 check_access = tk.check_access
@@ -68,10 +69,20 @@ def read(id):
         dataset_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, dataset_dict)
         dataset_dict['link_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
 
+        # notification platform
+        unsubscribe_token = tk.request.args.get('unsubscribe_token', None)
+        if unsubscribe_token:
+            try:
+                token_obj = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
+            except Exception as e:
+                unsubscribe_token = None
+                tk.h.flash_error('Your token is invalid or has expired.')
+
         template_data = {
             'dataset_dict': dataset_dict,
             'analytics': analytics_dict,
-            'user_survey_url': user_survey_url
+            'user_survey_url': user_survey_url,
+            'unsubscribe_token': unsubscribe_token,
         }
 
         return render(u'light/dataset/read.html', template_data)
