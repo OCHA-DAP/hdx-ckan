@@ -181,7 +181,7 @@
     };
 
     var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
-    var NOTIFICATION_OPTIN_OPTIONS = ['paragraph', 'button'];
+    var NOTIFICATION_OPTIN_OPTIONS = ['action_menu', 'floating_button'];
 
     hdxUtil.net.getNotificationOptinLocation = function () {
       var optinLocation = localStorage.getItem(NOTIFICATION_OPTIN_KEY);

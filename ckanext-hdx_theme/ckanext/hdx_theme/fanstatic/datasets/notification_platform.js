@@ -48,11 +48,11 @@ $(document).ready(function () {
   var displayNotificationOptinOption = function () {
     var optinLocation = hdxUtil.net.getNotificationOptinLocation();
 
-    if (optinLocation === 'paragraph') {
-      $('.notification-platform-opt-in-paragraph').removeClass('d-none');
+    if (optinLocation === 'action_menu') {
+      $('.notification-platform-opt-in-action-menu').removeClass('d-none');
     }
-    else if (optinLocation === 'button') {
-      $('.notification-platform-opt-in-button').removeClass('d-none');
+    else if (optinLocation === 'floating_button') {
+      $('.notification-platform-opt-in-floating-button').removeClass('d-none');
     }
   };
 

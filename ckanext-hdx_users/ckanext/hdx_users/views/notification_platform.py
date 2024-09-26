@@ -12,7 +12,7 @@ from ckan.types import Response, DataDict
 from ckan.views.api import CONTENT_TYPES
 
 from ckanext.hdx_theme.util.mail import hdx_validate_email
-from ckanext.hdx_users.general_token_model import validate_token, TokenType, HDXGeneralToken
+from ckanext.hdx_users.general_token_model import generate_new_token_obj, validate_token, ObjectType, TokenType, HDXGeneralToken
 
 _h = tk.h
 
@@ -101,7 +101,6 @@ def unsubscribe_from_dataset() -> Response:
 def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
     dataset_id = tk.request.form.get('dataset_id')
-    token = tk.request.form.get('token')
 
     try:
         usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
@@ -110,10 +109,12 @@ def subscription_confirmation() -> Response:
             raise tk.Invalid(tk._('Email address is missing'))
         hdx_validate_email(email)
 
+        token_obj = generate_new_token_obj(model.Session, TokenType.EMAIL_VALIDATION_FOR_DATASET, email, object_type=ObjectType.DATASET, object_id=dataset_id)
+
         subject = u'Please verify your email address'
         verify_email_link = _h.url_for(
             'hdx_notifications.subscribe_to_dataset',
-            email=email, dataset_id=dataset_id, token=token, qualified=True
+            email=email, dataset_id=dataset_id, token=token_obj.token, qualified=True
         )
         email_data = {
             'verify_email_link': verify_email_link
@@ -136,6 +137,16 @@ def subscription_confirmation() -> Response:
                 'success': False,
                 'error': {
                     'message': e.error
+                }
+            }
+        )
+    except Exception as e:
+        log.error(e)
+        return _build_json_response(
+            {
+                'success': False,
+                'error': {
+                    'message': str(e)
                 }
             }
         )

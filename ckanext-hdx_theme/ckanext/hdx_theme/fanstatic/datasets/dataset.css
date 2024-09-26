@@ -121,20 +121,13 @@
 .wrapper-secondary .form-check .form-check-input {
   box-shadow: none;
 }
-.notification-platform-opt-in-paragraph p {
-  cursor: pointer;
-}
-.notification-platform-opt-in-paragraph p i {
+.notification-platform-opt-in-action-menu i {
   background-color: #007CE1;
   color: #fff;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  border-radius: 12px;
-  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 11px;
+  font-size: 10px;
   text-align: center;
-  margin-right: 3px;
-}
-.notification-platform-opt-in-paragraph p > span span {
-  color: #007CE1;
 }
