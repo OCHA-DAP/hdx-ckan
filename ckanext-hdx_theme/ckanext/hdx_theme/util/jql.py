@@ -18,7 +18,7 @@ config = tk.config
 log = logging.getLogger(__name__)
 
 dogpile_config = {
-    'cache.redis.expiration_time': config.get('hdx.analytics.hours_for_results_in_cache') * 60 * 60,
+    'cache.redis.expiration_time': config.get('hdx.analytics.hours_for_results_in_cache', 24) * 60 * 60,
 }
 dogpile_config.update(dogpile_standard_config)
 
