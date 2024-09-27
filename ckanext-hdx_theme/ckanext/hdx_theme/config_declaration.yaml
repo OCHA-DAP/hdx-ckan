@@ -225,12 +225,14 @@ groups:
         example: http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
         description: URL for spreadsheet file structure checker
       - key: hdx.gis.layer_import_url
+        default: http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
         example: http://gislayer:5000/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
         description: URL for GIS layer import for geopreview
       - key: hdx.gis.layer_delete_url
         example: http://gislayer:5000/api/delete-one-layer/{resource_id}
         description: URL for GIS layer delete for geopreview
       - key: hdx.gis.resource_pbf_url
+        default: //${HDX_DOMAIN}/gis/{resource_id}/{z}/{x}/{y}.pbf
         example: http://gislayer:5000/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
         description: URL for Resource PBF used in rendering maps
       - key: hdx.mapbox.baselayer.url
