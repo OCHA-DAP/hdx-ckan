@@ -17,7 +17,7 @@ config = tk.config
 dogpile_config_filter = 'cache.redis.' if config.get('hdx.caching.use_redis') else 'cache.local.'
 dogpile_standard_config = {
     'cache.local.backend': 'dogpile.cache.dbm',
-    'cache.local.arguments.filename': config.get('hdx.caching.dogpile_filename'),
+    'cache.local.arguments.filename': config.get('hdx.caching.dogpile_filename', '/tmp/hdx_dogpile_cache.dbm'),
     'cache.local.expiration_time': 60 * 60 * 1,
 
     'cache.redis.backend': 'dogpile.cache.redis',

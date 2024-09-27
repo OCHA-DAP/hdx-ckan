@@ -354,16 +354,6 @@ groups:
         description: The request data extension wants to know if it's running inside HDX portal or not
   - annotation: HDX Generic
     options: 
-      - key: 
-        type: bool
-        default: true
-        example: true
-        description: The request data extension wants to know if it's running inside HDX portal or not
-      - key: hdx_portal
-        type: bool
-        default: true
-        example: true
-        description: The request data extension wants to know if it's running inside HDX portal or not
       - key: hdx.qadashboard.enabled
         type: bool 
         default: true
