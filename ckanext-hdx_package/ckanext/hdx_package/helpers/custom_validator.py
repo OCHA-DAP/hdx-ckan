@@ -738,7 +738,8 @@ def hdx_dataseries_title_validator(value, context):
     return value
 
 
-def hdx_tag_name_approved_validator(key, data, errors, context):
+def hdx_tag_name_approved_validator(key: FlattenKey, data: FlattenDataDict, errors: FlattenErrorDict,
+                                    context: Context) -> Any:
     user = context.get('user')
     ignore_auth = context.get('ignore_auth')
     allowed_to_add_crisis_tags = ignore_auth or (user and authz.is_sysadmin(user))
@@ -747,12 +748,32 @@ def hdx_tag_name_approved_validator(key, data, errors, context):
 
     approved_tags = get_action('cached_approved_tags_list')(context, {})
 
+    pkg_id = data.get(('id',))
+    if pkg_id:
+        prev_package_dict = __get_previous_package_dict(context, pkg_id)
+        old_tags = prev_package_dict.get(key[0], [])
+    else:
+        old_tags = []
+
+    if key not in errors:
+        errors[key] = []
+
     if tag_name not in approved_tags:
         approved_tags_url = 'https://data.humdata.org/rdr/spreadsheets/approved-tags'
         errors[key].append("Tag name '{}' is not in the approved list of tags. Check the list at: {}".format(tag_name, approved_tags_url))
     # Only sysadmins are allowed to use tags starting with "crisis-"
-    if tag_name.startswith('crisis-') and not allowed_to_add_crisis_tags:
-        errors[key].append("Tag name '{}' can only be added by sysadmins".format(tag_name))
+    if tag_name.startswith('crisis-'):
+        if not allowed_to_add_crisis_tags and tag_name not in [old_tag.get('display_name') for old_tag in old_tags]:
+            errors[key].append("Tag name '{}' can only be added by sysadmins".format(tag_name))
+
+
+def hdx_tag_string_approved_validator(key: FlattenKey, data: FlattenDataDict, errors: FlattenErrorDict,
+                                      context: Context) -> Any:
+    index = 0
+    while ('tags', index, 'name') in data:
+        key = ('tags', index, 'name')
+        hdx_tag_name_approved_validator(key, data, errors, context)
+        index += 1
 
 
 def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDict,
