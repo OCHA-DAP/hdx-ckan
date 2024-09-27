@@ -241,7 +241,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         auth = {'Authorization': self.testsysadmin_token}
 
         post_params = self._get_dataset_post_param('testing-dataset-edit-lists')
-        post_params['tag_string'] = 'list_test_tag'
+        post_params['tag_string'] = 'boys'
 
         post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
         post_params['save'] = 'update-dataset-json'
