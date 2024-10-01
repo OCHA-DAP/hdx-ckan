@@ -115,3 +115,16 @@ SECTIONS_CONSTANTS = [
     {'name': 'FAQ', 'url': '#faq'},
     {'name': 'Read the documentation', 'url': 'https://hdx-hapi.readthedocs.io/'},
 ]
+
+PARTNERS_CONSTANTS = [
+    ('acled', 'ACLED'),
+    ('inform', 'INFORM'),
+    ('fts', 'FTS'),
+    ('unfpa', 'UNFPA'),
+    ('ophi', 'OPHI'),
+    ('fsnwg', 'FSNWG'),
+    ('unchr', 'UNHCR'),
+    ('ocha', 'OCHA'),
+    ('wfp', 'WFP'),
+    ('iom', 'IOM'),
+]
