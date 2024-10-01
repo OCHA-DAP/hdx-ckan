@@ -46,7 +46,10 @@ def subscribe_to_dataset() -> Response:
     try:
         result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
         notification_platform_logic.generate_unsubscribe_token(email, dataset_id)
-        _h.flash_success(result['message'])
+        _h.flash_success(tk._(
+            u'You have successfully set up email notifications for this dataset. These will be sent to {0} when the '
+            u'dataset is updated on HDX.'.format(
+                email)))
     except tk.ValidationError as e:
         log.error('An exception occurred:' + str(e))
         _h.flash_error(str(e))

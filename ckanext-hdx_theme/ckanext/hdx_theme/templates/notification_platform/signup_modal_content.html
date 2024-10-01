@@ -11,7 +11,6 @@
     required=True,
     autocomplete='new-email',
     data_attributes={"validation": "email", "validation-error": CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_ERROR},
-    label=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_LABEL,
     name="email",
     value=c.userobj.email if c.userobj else '',
     placeholder=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_PLACEHOLDER,
@@ -30,4 +29,5 @@
   text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_UPDATE_FREQUENCY_TEXT.format(update_frequency)) }}
 
 {{ h.snippet('bem.blocks/paragraph.html',
-  text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_BETA_TEXT) }}
+  text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_BETA_TEXT,
+  paragraph_classes=['paragraph__text_font_size-small']) }}
