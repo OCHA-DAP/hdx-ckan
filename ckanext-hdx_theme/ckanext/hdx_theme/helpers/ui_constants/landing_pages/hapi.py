@@ -3,7 +3,7 @@ CONSTANTS = {
     'HERO_SECTION_DESCRIPTION': '''HDX HAPI is in beta phase, and we are seeking feedback. To share your thoughts or join our slack channel, send an email to <a href="{0}" title="Contact us">hdx@un.org</a>.''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
-    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HDX HAPI covers 44 indicators across 25 locations that have a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>. This data has been shared by nine different contributing organisations.''',
+    'DATA_COVERAGE_SECTION_DESCRIPTION': '''Our initial coverage aligns with the data included in the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HDX Data Grids">HDX Data Grids</a>, which places the most important crisis data into six categories and 20 sub-categories. Our beta version of HDX HAPI covers 62 indicators across 25 locations that have a <a href="{1}" target="_blank" title="Humanitarian Response Plan" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description">Humanitarian Response Plan</a>. This data has been shared by nine different contributing organisations.''',
     'DATA_COVERAGE_SECTION_PARAGRAPH': '''Refer to the <a href="{0}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="HAPI - The Humanitarian API">documentation</a> for the latest coverage. <a href="{1}" data-module="hdx_click_stopper" data-module-link_type="hapi data coverage description" title="Contact us">Contact us</a> to request additional indicators in future versions of HDX HAPI.''',
 
     'BE_INSPIRED_SECTION_TITLE': '''Be Inspired''',
@@ -43,9 +43,21 @@ DATA_COVERAGE_CONSTANTS = [
     },
     {
         "category": "Affected People",
+        "subcategory": "Internally-Displaced Persons",
+        "contributor": "International Organization for Migration (IOM)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/affected_people/#internally-displaced-persons"
+    },
+    {
+        "category": "Affected People",
         "subcategory": "Refugees and Persons of Concern",
         "contributor": "UN Refugee Agency (UNHCR)",
         "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/affected_people/#refugees-persons-of-concern"
+    },
+    {
+        "category": "Affected People",
+        "subcategory": "Returnees",
+        "contributor": "UN Refugee Agency (UNHCR)",
+        "link": "https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/affected_people/#returnees"
     },
     {
         "category": "Coordination & Context",
