@@ -202,6 +202,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('convert_to_extras')
             ],
             'tag_string': [
+                tk.get_validator('hdx_keep_crisis_tag_string_if_not_sysadmin'),
                 tk.get_validator('ignore_missing'),
                 tk.get_validator('tag_string_convert'),
                 tk.get_validator('hdx_tag_string_approved_validator'),
@@ -211,6 +212,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema['tags'].update(
             {
                 'name': [
+                    tk.get_validator('hdx_keep_crisis_tags_if_not_sysadmin'),
                     tk.get_validator('not_missing'),
                     tk.get_validator('not_empty'),
                     tk.get_validator('unicode_safe'),
@@ -543,6 +545,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_add_update_fs_check_info': vd.hdx_add_update_fs_check_info,
             'hdx_tag_name_approved_validator': vd.hdx_tag_name_approved_validator,
             'hdx_tag_string_approved_validator': vd.hdx_tag_string_approved_validator,
+            'hdx_keep_crisis_tag_string_if_not_sysadmin': vd.hdx_keep_crisis_tag_string_if_not_sysadmin,
+            'hdx_keep_crisis_tags_if_not_sysadmin': vd.hdx_keep_crisis_tags_if_not_sysadmin,
             'hdx_update_last_modified_if_url_changed': vd.hdx_update_last_modified_if_url_changed,
             'hdx_disable_live_frequency_filestore_resources_only': vd.hdx_disable_live_frequency_filestore_resources_only,
             'hdx_in_hapi_flag_values': vd.hdx_value_in_list_wrapper(IN_HAPI_FLAG_VALUES, True),
