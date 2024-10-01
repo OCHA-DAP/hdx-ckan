@@ -72,3 +72,11 @@ SECTIONS_CONSTANTS = [
     {'name': 'Resources', 'url': '#resources'},
     {'name': 'FAQ', 'url': '#faq'},
 ]
+
+PARTNERS_CONSTANTS = [
+    ('european_comission', 'European Commission'),
+    ('acled', 'ACLED'),
+    ('ipc', 'IPC'),
+    ('idmc', 'IDMC'),
+    ('wfp', 'WFP'),
+]
