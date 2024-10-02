@@ -4,9 +4,11 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.faq_wordpress as fw
 from ckanext.hdx_theme.views.faqs import read as faq_read
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.hapi import \
-    DATA_COVERAGE_CONSTANTS as HAPI_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as HAPI_SECTIONS_CONSTANTS
+    DATA_COVERAGE_CONSTANTS as HAPI_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as HAPI_SECTIONS_CONSTANTS, \
+    PARTNERS_CONSTANTS as HAPI_PARTNERS_CONSTANTS
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
-    DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as SIGNALS_SECTIONS_CONSTANTS
+    DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as SIGNALS_SECTIONS_CONSTANTS, \
+    PARTNERS_CONSTANTS as SIGNALS_PARTNERS_CONSTANTS
 
 abort = tk.abort
 g = tk.g
@@ -24,17 +26,7 @@ def hapi():
     wp_category_terms = config.get('hdx.wordpress.category.hapi')
     data = fw.faq_for_category(wp_category_terms)
 
-    partners = [
-        ('acled', 'ACLED'),
-        ('inform', 'INFORM'),
-        ('fts', 'FTS'),
-        ('unfpa', 'UNFPA'),
-        ('ophi', 'OPHI'),
-        ('fsnwg', 'FSNWG'),
-        ('unchr', 'UNHCR'),
-        ('ocha', 'OCHA'),
-        ('wfp', 'WFP')
-    ]
+    partners = HAPI_PARTNERS_CONSTANTS
     sections = HAPI_SECTIONS_CONSTANTS
     data_coverage = HAPI_DATA_COVERAGE_CONSTANTS
 
@@ -56,14 +48,7 @@ def signals():
     wp_category_terms = config.get('hdx.wordpress.category.signals')
     data = fw.faq_for_category(wp_category_terms)
 
-    partners = [
-        ('european_comission', 'European Commission'),
-        ('acled', 'ACLED'),
-        ('ipc', 'IPC'),
-        ('idmc', 'IDMC'),
-        ('wfp', 'WFP')
-    ]
-
+    partners = SIGNALS_PARTNERS_CONSTANTS
     sections = SIGNALS_SECTIONS_CONSTANTS
     data_coverage = SIGNALS_DATA_COVERAGE_CONSTANTS
 
