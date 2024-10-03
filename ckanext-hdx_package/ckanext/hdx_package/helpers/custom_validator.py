@@ -738,21 +738,108 @@ def hdx_dataseries_title_validator(value, context):
     return value
 
 
-def hdx_tag_name_approved_validator(key, data, errors, context):
+def hdx_tag_name_approved_validator(key: FlattenKey, data: FlattenDataDict, errors: FlattenErrorDict,
+                                    context: Context) -> Any:
     user = context.get('user')
-    ignore_auth = context.get('ignore_auth')
-    allowed_to_add_crisis_tags = ignore_auth or (user and authz.is_sysadmin(user))
+    allowed_to_add_crisis_tags = user and authz.is_sysadmin(user)
 
     tag_name = data.get(key)
 
     approved_tags = get_action('cached_approved_tags_list')(context, {})
 
+    pkg_id = data.get(('id',))
+    if pkg_id:
+        old_tag_names = _extract_old_tag_names(context, pkg_id)
+    else:
+        old_tag_names = []
+
+    if key not in errors:
+        errors[key] = []
+
     if tag_name not in approved_tags:
         approved_tags_url = 'https://data.humdata.org/rdr/spreadsheets/approved-tags'
         errors[key].append("Tag name '{}' is not in the approved list of tags. Check the list at: {}".format(tag_name, approved_tags_url))
     # Only sysadmins are allowed to use tags starting with "crisis-"
-    if tag_name.startswith('crisis-') and not allowed_to_add_crisis_tags:
-        errors[key].append("Tag name '{}' can only be added by sysadmins".format(tag_name))
+    if tag_name.startswith('crisis-'):
+        if not allowed_to_add_crisis_tags and tag_name not in old_tag_names:
+            errors[key].append("Tag name '{}' can only be added by sysadmins".format(tag_name))
+
+
+def hdx_tag_string_approved_validator(key: FlattenKey, data: FlattenDataDict, errors: FlattenErrorDict,
+                                      context: Context) -> Any:
+    index = 0
+    while ('tags', index, 'name') in data:
+        key = ('tags', index, 'name')
+        hdx_tag_name_approved_validator(key, data, errors, context)
+        index += 1
+
+
+def hdx_keep_crisis_tag_string_if_not_sysadmin(key: FlattenKey, data: FlattenDataDict, errors: FlattenErrorDict,
+                                               context: Context) -> Any:
+    user = context.get('user')
+
+    can_remove_crisis_tags = user and authz.is_sysadmin(user)
+    has_new_tags = ('tags', 0, 'name') in data
+
+    if not can_remove_crisis_tags and not has_new_tags:
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            new_tag_names_value = data.get(key)
+            if isinstance(new_tag_names_value, list):
+                new_tag_names = set(new_tag_names_value)
+            elif isinstance(new_tag_names_value, str):
+                new_tag_names = set(new_tag_names_value.split(','))
+            else:
+                new_tag_names = set()
+            old_tag_names = _extract_old_tag_names(context, pkg_id)
+
+            crisis_tags = [tag for tag in old_tag_names if tag.startswith('crisis-') and tag not in new_tag_names]
+
+            combined_tags = new_tag_names.union(crisis_tags)
+            data[key] = ','.join(combined_tags)
+
+
+def hdx_keep_crisis_tags_if_not_sysadmin(key: FlattenKey, data: FlattenDataDict, errors: FlattenErrorDict,
+                                         context: Context) -> Any:
+    user = context.get('user')
+
+    can_remove_crisis_tags = user and authz.is_sysadmin(user)
+
+    if not can_remove_crisis_tags:
+        pkg_id = data.get(('id',))
+        if pkg_id:
+            current_tags = _extract_tag_names(data)
+            old_tag_names = _extract_old_tag_names(context, pkg_id)
+
+            i = len(current_tags)
+            for old_tag in old_tag_names:
+                if old_tag.startswith('crisis-') and old_tag not in current_tags:
+                    data[('tags', i, 'name')] = old_tag
+                    current_tags.append(old_tag)
+                    i += 1
+
+
+def _extract_tag_names(data: FlattenDataDict) -> list:
+    tag_names = []
+
+    index = 0
+    while ('tags', index, 'name') in data:
+        tag_names.append(data.get(('tags', index, 'name'), ''))
+        index += 1
+
+    return tag_names
+
+
+def _extract_old_tag_names(context: Context, pkg_id: str) -> list:
+    tag_names = []
+
+    prev_package_dict = __get_previous_package_dict(context, pkg_id)
+    tags = prev_package_dict.get('tags', [])
+
+    for tag in tags:
+        tag_names.append(tag.get('display_name'))
+
+    return tag_names
 
 
 def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDict,
