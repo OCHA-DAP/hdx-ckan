@@ -111,7 +111,7 @@ groups:
         description: URL Pattern(template) for the datagrid config
       - key: hdx.datagrid.prod
         type: bool
-        default: true
+        default: false #needs to be false so that tests pass
         example: true
         description: Caching will be enabled if true and the "master" branch from the github repo will be used for the Datagrid config
   - annotation: HDX Caching
@@ -225,14 +225,14 @@ groups:
         example: http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
         description: URL for spreadsheet file structure checker
       - key: hdx.gis.layer_import_url
-        default: http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
+        # default: Needs to be empty for tests to work
         example: http://gislayer:5000/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
         description: URL for GIS layer import for geopreview
       - key: hdx.gis.layer_delete_url
         example: http://gislayer:5000/api/delete-one-layer/{resource_id}
         description: URL for GIS layer delete for geopreview
       - key: hdx.gis.resource_pbf_url
-        default: //${HDX_DOMAIN}/gis/{resource_id}/{z}/{x}/{y}.pbf
+        # default: Needs to be empty for tests to work
         example: http://gislayer:5000/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
         description: URL for Resource PBF used in rendering maps
       - key: hdx.mapbox.baselayer.url
