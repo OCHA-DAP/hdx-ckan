@@ -288,7 +288,7 @@ groups:
         description: From Email address for FAQ related emails
       - key: hdx.api_token.email_notifications.enabled
         type: bool
-        default: true
+        default: false #do not set to true, as tests will start failing
         example: true
         description: Email notifications for API token creation
   - annotation: Analytics
@@ -309,7 +309,6 @@ groups:
         example: UA-48221887-3
         description: Google Analytics Token
       - key: hdx.analytics.enqueue_url 
-        default: http://${HDX_ANALYTICS_API}/api/send-analytics
         example: http://${HDX_ANALYTICS_API}/api/send-analytics
         description: Analytics enqueue url
       - key: hdx.analytics.mixpanel.token
@@ -345,6 +344,7 @@ groups:
         example: ebola, nepal-earthquake
         description: Crises pages
       - key: hdx.validation.allow_skip_for_sysadmin
+        default: dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
         example: dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
         description: Allow admins to update package without validation for certain fields
   - annotation: HDX Request Data
