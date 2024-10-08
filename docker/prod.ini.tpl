@@ -169,7 +169,7 @@ hdx.notifications.novu.api_key = ${HDX_NOVU_API_KEY}
 # HDX Notification Platform
 hdx.notifications.novu.api_url = https://api.novu.co/v1
 hdx.notifications.novu.api_key = ${HDX_NOVU_API_KEY}
-hdx.notifications.enabled_datasets_csv = ${HDX_ENABLED_DATASETS_URL}
+# hdx.notifications.enabled_datasets_csv = ${HDX_ENABLED_DATASETS_URL}
 
 ## Logging configuration
 [loggers]
