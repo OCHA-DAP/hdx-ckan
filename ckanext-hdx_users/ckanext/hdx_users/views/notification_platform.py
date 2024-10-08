@@ -41,11 +41,15 @@ def subscribe_to_dataset() -> Response:
         return tk.redirect_to(dataset_list_url)
 
     context = {'ignore_auth': True}
-    data_dict = {'email': email, 'dataset_id': dataset_id}
 
     try:
+        unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
+        data_dict = {
+            'email': email,
+            'dataset_id': dataset_id,
+            'unsubscribe_token': unsubscribe_token.token,
+        }
         result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
-        notification_platform_logic.generate_unsubscribe_token(email, dataset_id)
         _h.flash_success(tk._(
             u'You have successfully set up email notifications for this dataset. These will be sent to {0} when the '
             u'dataset is updated on HDX.'.format(
@@ -73,12 +77,12 @@ def subscription_confirmation() -> Response:
             raise tk.Invalid(tk._('Email address is missing'))
         hdx_validate_email(email)
 
-        token_obj = notification_platform_logic.generate_email_validation_token(email, dataset_id)
+        token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, dataset_id)
 
         subject = u'Please verify your email address'
         verify_email_link = _h.url_for(
             'hdx_notifications.subscribe_to_dataset',
-            email=email, dataset_id=dataset_id, token=token_obj.token, qualified=True
+            token=token_obj.token, qualified=True
         )
         email_data = {
             'verify_email_link': verify_email_link

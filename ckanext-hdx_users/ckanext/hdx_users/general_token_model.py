@@ -90,14 +90,28 @@ def get_by_token(token: str) -> Optional[HDXGeneralToken]:
     return meta.Session.query(HDXGeneralToken).filter(HDXGeneralToken.token == token).first()
 
 
-def get_by_type_and_user_id(token_type: str, user_id: str) -> Optional[List[HDXGeneralToken]]:
+def get_by_type_and_user_id(token_type: TokenType, user_id: str) -> Optional[List[HDXGeneralToken]]:
     if not token_type or not user_id:
         return None
 
     return meta.Session.query(HDXGeneralToken) \
-            .filter(HDXGeneralToken.token_type == token_type) \
+            .filter(HDXGeneralToken.token_type == token_type.value) \
             .filter(HDXGeneralToken.user_id == user_id) \
             .all()
+
+
+def get_by_type_and_user_id_and_object(token_type: TokenType, user_id: str,
+                                       object_type: ObjectType, object_id: str) -> Optional[HDXGeneralToken]:
+    if not token_type or not user_id or not object_type or not object_id:
+        return None
+
+    return meta.Session.query(HDXGeneralToken) \
+        .filter(HDXGeneralToken.token_type == token_type.value) \
+        .filter(HDXGeneralToken.user_id == user_id) \
+        .filter(HDXGeneralToken.object_type == object_type.value) \
+        .filter(HDXGeneralToken.object_id == object_id) \
+        .filter(HDXGeneralToken.state == 'active') \
+        .first()
 
 
 def validate_token(session: AlchemySession, token: str, token_type: TokenType, inactivate=True) -> HDXGeneralToken:

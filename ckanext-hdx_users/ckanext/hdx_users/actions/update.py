@@ -131,6 +131,8 @@ def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
 
     email = data_dict.get('email')
     dataset_id = data_dict.get('dataset_id')
+    unsubscribe_token = data_dict.get('unsubscribe_token')
+    unsubscribe_token_key = 'unsubscribeToken_' + dataset_id.replace('-', '_')
 
     if not email or not dataset_id:
         raise tk.ValidationError('Missing required parameters: email and dataset_id')
@@ -153,13 +155,25 @@ def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
         # Subscriber doesn't exist; create a new one
         subscriber_data = {
             'subscriberId': subscriber_id,
-            'email': email
+            'email': email,
+            'data': {
+                unsubscribe_token_key: unsubscribe_token
+            }
         }
         response = requests.post(f'{novu_api_url}/subscribers', json=subscriber_data, headers=headers)
         if response.status_code != 201:
             raise Exception(f'Failed to create subscriber: {response.text}')
 
-    elif response.status_code != 200:
+    elif response.status_code == 200:
+        data = response.json().get('data', {}).get('data', {})
+        data[unsubscribe_token_key] = unsubscribe_token
+        subscriber_data = {
+            'data': data
+        }
+        response = requests.put(f'{novu_api_url}/subscribers/{email}', json=subscriber_data, headers=headers)
+        if response.status_code != 200:
+            raise Exception(f'Failed to update subscriber: {response.text}')
+    else:
         raise Exception(f'Error checking subscriber: {response.text}')
 
     topic_key = f'dataset-{dataset_id}'
