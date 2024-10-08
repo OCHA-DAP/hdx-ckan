@@ -41,6 +41,7 @@ from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
+from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
 
 log = logging.getLogger(__name__)
 
@@ -184,6 +185,7 @@ def read(id):
         logo_config = {}
 
     # notification platform
+    supports_notifications = check_notifications_enabled_for_dataset(pkg_dict['id'])
     unsubscribe_token = request.args.get('unsubscribe_token', None)
     if unsubscribe_token:
         try:
@@ -209,6 +211,7 @@ def read(id):
         'stats_downloads_last_weeks': stats_downloads_last_weeks,
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
+        'supports_notifications': supports_notifications,
     }
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:

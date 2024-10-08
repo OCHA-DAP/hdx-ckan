@@ -410,4 +410,5 @@ hdx.ckan_json_log.file = /var/log/ckan/ckan.json.log
 
 # HDX Notification Platform
 hdx.notifications.novu.api_url = https://api.novu.co/v1
-hdx.notifications.novu.api_key = <add-your-key-here>
+hdx.notifications.novu.api_key =
+hdx.notifications.enabled_datasets_csv =

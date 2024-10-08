@@ -5,6 +5,7 @@ import ckan.model as model
 
 from ckanext.hdx_users.general_token_model import generate_new_token_obj, validate_token, ObjectType, TokenType, \
     HDXGeneralToken
+from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
 
 log = logging.getLogger(__name__)
 
@@ -14,8 +15,13 @@ get_action = tk.get_action
 
 
 def generate_email_validation_token(email: str, dataset_id: str) -> HDXGeneralToken:
-    return generate_new_token_obj(model.Session, TokenType.EMAIL_VALIDATION_FOR_DATASET, email,
-                                  object_type=ObjectType.DATASET, object_id=dataset_id)
+    dataset_supports_notifications = check_notifications_enabled_for_dataset(dataset_id)
+    if dataset_supports_notifications:
+        return generate_new_token_obj(model.Session, TokenType.EMAIL_VALIDATION_FOR_DATASET, email,
+                                      object_type=ObjectType.DATASET, object_id=dataset_id)
+    else:
+        log.warning(f'Tried to generate token for dataset {dataset_id} but dataset does not support notifications')
+        raise Exception(f'Dataset {dataset_id} does not support notifications')
 
 
 def generate_unsubscribe_token(email: str, dataset_id: str) -> HDXGeneralToken:

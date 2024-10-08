@@ -67,7 +67,9 @@
             {% endif %}
           </div>
         {% endif %}
-        {{ h.snippet('notification_platform/action_menu_button.html') }}
+        {% if supports_notifications %}
+          {{ h.snippet('notification_platform/action_menu_button.html') }}
+        {% endif %}
         <ul class="nav nav-tabs">
           <li class="nav-item">
             <a id="link-data-resources-tab" href="#data-resources" class="nav-link active"
@@ -100,7 +102,9 @@
 </div>
 
 {% snippet "widget/banner/hdx-light-banner.html", pkg=pkg %}
-{% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token %}
+{% if supports_notifications %}
+  {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token %}
+{% endif %}
 {% endblock %}
 
 {%- block scripts %}
