@@ -423,6 +423,30 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             assert "Tag name '{}' can only be added by sysadmins".format(crisis_tag_name) in e.error_dict.get('tags')[
                 0], 'Only sysadmins are allowed to add tags starting with "crisis-"'
 
+        data_dict = self._modify_field(context_user, joeadmin, package['name'], 'tags',
+                                       [{'name': crisis_tag_name}, {'name': 'disease'}])
+        modified_package = data_dict.get('modified_package')
+
+        assert len(modified_package.get('tags')) == 2
+        assert crisis_tag_name in [tag['name'] for tag in modified_package.get(
+            'tags')], 'Crisis tags should be kept if specified by a user, as they were already added by a sysadmin'
+        assert 'disease' in [tag['name'] for tag in modified_package.get('tags')]
+
+        data_dict = self._modify_field(context_user, joeadmin, package['name'], 'tags', [{'name': 'boys'}])
+        modified_package = data_dict.get('modified_package')
+
+        assert len(modified_package.get('tags')) == 2
+        assert 'boys' in [tag['name'] for tag in modified_package.get('tags')], \
+            'Crisis tags should be kept even if not specified by a user, as they were already added by a sysadmin'
+
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'tags',
+                                       [{'name': 'boys'}, {'name': 'disease'}])
+        modified_package = data_dict.get('modified_package')
+
+        assert len(modified_package.get('tags')) == 2
+        assert 'boys' in [tag['name'] for tag in modified_package.get('tags')], \
+            'Crisis tags should be removed if not specified by a sysadmin'
+
 
     def _modify_field(self, context, user, package_id, key, value):
         modified_fields = {'id': package_id,
