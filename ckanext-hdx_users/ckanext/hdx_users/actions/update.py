@@ -132,7 +132,7 @@ def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
     email = data_dict.get('email')
     dataset_id = data_dict.get('dataset_id')
     unsubscribe_token = data_dict.get('unsubscribe_token')
-    unsubscribe_token_key = dataset_id
+    unsubscribe_token_key = 'unsubscribe_token_' + dataset_id.replace('-', '_')
 
     if not email or not dataset_id:
         raise tk.ValidationError('Missing required parameters: email and dataset_id')
