@@ -256,7 +256,4 @@
 {% block scripts2 %}
     {{ super() }}
     {% asset 'hdx_theme/country-scripts' %}
-  {% if not data.country_dict.alert_bar_url %}
-    {% snippet "widget/banner/hdx-dataset-banner.html" %}
-  {% endif %}
 {% endblock %}
