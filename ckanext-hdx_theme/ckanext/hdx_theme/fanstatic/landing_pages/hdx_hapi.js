@@ -23,6 +23,5 @@ $(document).ready(function () {
     if (bodyHeight >= IFRAME_MIN_HEIGHT) {
       $iframe.attr('height', bodyHeight);
     }
-    $iframe.removeClass('placeholder').removeClass('bg-light');
   }
 });
