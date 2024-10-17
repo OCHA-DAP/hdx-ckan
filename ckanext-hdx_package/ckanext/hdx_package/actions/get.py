@@ -537,16 +537,16 @@ def _additional_hdx_resource_show_processing(context, resource_dict, just_for_re
     if not resource_dict.get('last_modified'):
         resource_dict['last_modified'] = resource_dict['metadata_modified']
 
-    if config.get('hdx.apihighways.enabled') == 'true':
-        resource_dict['apihighways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
-        if resource_dict['apihighways_id']:
-            resource_dict['apihighways_url'] = config.get('hdx.apihighways.baseurl') + resource_dict.get(
-                'apihighways_id')
-    else:
-        if 'apihighways_id' in resource_dict:
-            del resource_dict['apihighways_id']
-        if 'apihighways_url' in resource_dict:
-            del resource_dict['apihighways_url']
+    # if config.get('hdx.apihighways.enabled'):
+    #     resource_dict['apihighways_id'] = _get_resource_id_apihighways(resource_dict.get('id'))
+    #     if resource_dict['apihighways_id']:
+    #         resource_dict['apihighways_url'] = config.get('hdx.apihighways.baseurl') + resource_dict.get(
+    #             'apihighways_id')
+    # else:
+    #     if 'apihighways_id' in resource_dict:
+    #         del resource_dict['apihighways_id']
+    #     if 'apihighways_url' in resource_dict:
+    #         del resource_dict['apihighways_url']
     if resource_dict.get('url'):
         _process_url(context, resource_dict)
     if not just_for_reindexing:
@@ -1109,7 +1109,7 @@ def hdx_guess_format_from_extension(context, data_dict):
 def hdx_send_mail_request_tags(context, data_dict):
     _check_access('hdx_send_mail_request_tags', context, data_dict)
 
-    hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+    hdx_email = config.get('hdx.faqrequest.email')
 
     subject = u'New tag(s) request'
     email_data = {

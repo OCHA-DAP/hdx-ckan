@@ -5,7 +5,7 @@ import ckanext.hdx_service_checker.actions.get as actions
 import ckanext.hdx_service_checker.actions.authorize as authorize
 import ckanext.hdx_service_checker.views.run_checks as run_checks
 
-
+@toolkit.blanket.config_declarations
 class HdxServiceCheckerPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)

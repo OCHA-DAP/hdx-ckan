@@ -1,0 +1,8 @@
+version: 1
+groups:
+  - annotation: Ignore Plugin
+    options:
+      - key: hdx.ignore.plugin.hdx_pages
+###############################################################################
+#  All options are in the config_declarations.yml of the hdx_theme extension  
+###############################################################################

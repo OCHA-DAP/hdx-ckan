@@ -4,6 +4,8 @@ import logging
 from ckan.common import config
 
 log = logging.getLogger(__name__)
+
+@toolkit.blanket.config_declarations
 class Hdx_Office_PreviewPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IResourceView, inherit=True)

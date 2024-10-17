@@ -205,7 +205,7 @@ def rebuild(package_id: Optional[str] = None,
     })
 
     from ckan.common import config, asbool
-    use_hdx_reindex = asbool(config.get('hdx.reindexing.enabled', True))
+    use_hdx_reindex = config.get('hdx.reindexing.enabled')
     if use_hdx_reindex:
         from ckanext.hdx_search.helpers.reindexing import HdxSolrReindexer
         hdx_reindexer = HdxSolrReindexer(context, model, package_index, query_for, text_traceback)

@@ -59,10 +59,10 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         qa_dashboard_result = self._get_url(url, token)
         assert qa_dashboard_result.status_code == 200
 
-        config['hdx.qadashboard.enabled'] = 'false'
+        config['hdx.qadashboard.enabled'] = False
         result = self._get_url(url, token)
         assert result.status_code == 404
 
-        config['hdx.qadashboard.enabled'] = 'true'
+        config['hdx.qadashboard.enabled'] = True
         result = self._get_url(url, token)
         assert result.status_code == 200

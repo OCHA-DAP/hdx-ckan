@@ -33,7 +33,7 @@ To manage your tokens go to {api_tokens_url} .\n
 
 
 def send_email_on_token_creation(username, token_name, expiration_in_millis):
-    if tk.asbool(config.get('hdx.api_token.email_notifications.enabled', 'true')) is False:
+    if config.get('hdx.api_token.email_notifications.enabled') is False:
         log.warning('API token email notifications are disabled')
         return
 

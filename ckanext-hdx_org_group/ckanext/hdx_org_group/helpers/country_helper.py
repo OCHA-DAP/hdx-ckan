@@ -254,7 +254,7 @@ def _db_to_form_schema(group_type=None):
 
 
 def _get_data_completeness(location_code):
-    cached = config.get('hdx.datagrid.prod') == 'true'
+    cached = config.get('hdx.datagrid.prod')
     data = None
     if cached:
         data = caching.cached_data_completeness(location_code)

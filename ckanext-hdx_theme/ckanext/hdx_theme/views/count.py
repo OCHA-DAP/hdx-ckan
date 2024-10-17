@@ -53,7 +53,8 @@ def source():
             where pe.key = 'dataset_source' and p.state='active'
             and p.private=false;''')
     result = model.Session.connection().execute(q, entity_id=id).scalar()
-    extra_src = int(config.get('hdx.homepage.extrasources', '13'))
+    # extra_src = int(config.get('hdx.homepage.extrasources', '13'))
+    extra_src = 0 # DEPRECATED old behaviour above
     return json.dumps({'count': result + extra_src})
 
 

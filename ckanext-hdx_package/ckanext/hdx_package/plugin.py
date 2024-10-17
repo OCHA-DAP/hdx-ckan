@@ -45,8 +45,8 @@ unicode_safe = tk.get_validator('unicode_safe')
 
 
 def run_on_startup():
-    cache_on_startup = config.get('hdx.cache.onstartup', 'true')
-    if 'true' == cache_on_startup:
+    cache_on_startup = config.get('hdx.cache.onstartup')
+    if cache_on_startup:
         _generate_license_list()
         # caching.cached_get_group_package_stuff()
 
@@ -83,7 +83,7 @@ def _generate_license_list():
 def cached_group_list():
     return tk.get_action('cached_group_list')()
 
-
+@tk.blanket.config_declarations
 class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -598,7 +598,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             if is_requestdata_type:
                 self._update_with_requestdata_modify_package_schema(schema)
 
-            fields_to_skip = config.get('hdx.validation.allow_skip_for_sysadmin', '').split(',')
+            allow_skip_for_sysadmin = config.get('hdx.validation.allow_skip_for_sysadmin') or ''
+            fields_to_skip = allow_skip_for_sysadmin.split(',')
             if len(fields_to_skip) > 0 and fields_to_skip[0] and \
                     self._user_allowed_to_skip_validation(c.user) and context.get(hdx_update.SKIP_VALIDATION):
                 self._update_with_skip_validation(schema, fields_to_skip)
