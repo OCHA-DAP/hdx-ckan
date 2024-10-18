@@ -1,5 +1,10 @@
 {% extends "landing_pages/page.html" %}
 
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/hdx-hapi-scripts' %}
+{% endblock %}
+
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE'] %}
 
 {% block subtitle %}{{ _('HDX HAPI Beta') }}{% endblock %}
@@ -13,60 +18,17 @@
 
   <div class="container">
 
-    <div class="row" id="data-coverage">
+    <div class="row" id="data-availability">
       <div class="col-12 mx-auto my-3">
-        <div class="text-center mb-4">
-          {{ h.snippet('bem.blocks/heading.html', title=CONST.DATA_COVERAGE_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
-          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_COVERAGE_SECTION_DESCRIPTION.format('https://data.humdata.org/dashboards/overview-of-data-grids', 'https://humanitarianaction.info/document/global-humanitarian-overview-2024/article/response-plans-overview-2024'), paragraph_classes=["paragraph__text_font-size-medium", "mt-4"]) }}
-        </div>
         <div class="row">
-          <div class="col-12 col-lg-10 mx-auto">
-            <div class="bem-table bem-table_state_bordered">
-              <div class="bem-table__thead d-none d-md-block">
-                <div class="bem-table__row mb-3 mb-md-0">
-                  <div class="row g-0">
-                    <div class="col-12 col-md-3">
-                      <div class="bem-table__cell p-0 p-md-3">Category</div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <div class="bem-table__cell p-0 p-md-3">Sub-category</div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <div class="bem-table__cell p-0 p-md-3">Contributor</div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <div class="bem-table__cell p-0 p-md-3"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="bem-table__tbody">
-                {% for entry in data_coverage %}
-                  <div class="bem-table__row mb-3 mb-md-0">
-                    <div class="row g-0">
-                      <div class="col-12 col-md-3">
-                        <div class="bem-table__cell p-0 p-md-3">{{ entry.category }}</div>
-                      </div>
-                      <div class="col-12 col-md-3">
-                        <div class="bem-table__cell p-0 p-md-3">{{ entry.subcategory }}</div>
-                      </div>
-                      <div class="col-12 col-md-3">
-                        <div class="bem-table__cell p-0 p-md-3">{{ entry.contributor }}</div>
-                      </div>
-                      <div class="col-12 col-md-3">
-                        <div class="bem-table__cell p-0 p-md-3">
-                          <a href="{{ entry.link }}" target="_blank" data-module="hdx_click_stopper"
-                             data-module-link_type="hapi data coverage" data-module-label="{{ entry.subcategory }}">Learn
-                            more <i class="fa-solid fa-arrow-right ms-2"></i></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="mt-4">
-              {{ h.snippet('bem.blocks/paragraph.html', text=CONST.DATA_COVERAGE_SECTION_PARAGRAPH.format('https://hdx-hapi.readthedocs.io/en/latest/', 'mailto:hdx@un.org'), paragraph_classes=["paragraph__text_font-size-medium"]) }}
+          <div class="col-12">
+            <div class="row">
+              <iframe
+                class="col-12"
+                height="866"
+                id="hapi-availability-iframe"
+                src="/visualization/hapi-availability/"
+              ></iframe>
             </div>
           </div>
         </div>
