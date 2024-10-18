@@ -34,8 +34,8 @@ def hdx_send_new_org_request(context, data_dict):
         user_fullname = user_obj.fullname or user_obj.display_name
     else:
         user_fullname = 'User'
-    if config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
-        hdx_email = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+    if config.get('hdx.onboarding.send_confirmation_email'):
+        hdx_email = config.get('hdx.faqrequest.email')
         email_data = {
             'org_name': data_dict.get('name', ''),
             'org_description': data_dict.get('description', ''),

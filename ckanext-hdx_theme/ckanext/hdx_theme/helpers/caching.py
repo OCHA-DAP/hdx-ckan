@@ -14,16 +14,16 @@ import ckan.plugins.toolkit as tk
 log = logging.getLogger(__name__)
 config = tk.config
 
-dogpile_config_filter = 'cache.redis.' if config.get('hdx.caching.use_redis') == 'true' else 'cache.local.'
+dogpile_config_filter = 'cache.redis.' if config.get('hdx.caching.use_redis') else 'cache.local.'
 dogpile_standard_config = {
     'cache.local.backend': 'dogpile.cache.dbm',
     'cache.local.arguments.filename': config.get('hdx.caching.dogpile_filename', '/tmp/hdx_dogpile_cache.dbm'),
     'cache.local.expiration_time': 60 * 60 * 1,
 
     'cache.redis.backend': 'dogpile.cache.redis',
-    'cache.redis.arguments.host': config.get('hdx.caching.redis_host', 'gisredis') or 'gisredis',
-    'cache.redis.arguments.port': int(config.get('hdx.caching.redis_port', '6379') or 6379),
-    'cache.redis.arguments.db': int(config.get('hdx.caching.redis_db', '3') or 3),
+    'cache.redis.arguments.host': config.get('hdx.caching.redis_host'),
+    'cache.redis.arguments.port': config.get('hdx.caching.redis_port'),
+    'cache.redis.arguments.db': config.get('hdx.caching.redis_db'),
     'cache.redis.arguments.redis_expiration_time': 60 * 60 * 24 * 3,  # 3 days - higher than the expiration time
     'cache.redis.arguments.distributed_lock': True,
     'cache.redis.arguments.lock_timeout': 60 * 2,  # 2 mins

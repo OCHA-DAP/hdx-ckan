@@ -79,12 +79,6 @@ ckan.views.default_views = recline_view
 ckan.csrf_protection.ignore_extensions = false
 
 ckan.use_pylons_response_cleanup_middleware = False
-hdx_portal = True
-
-# Map Explorer configs
-hdx.explorer.url = /mpx/#/
-hdx.explorer.iframe.width = 100%%
-hdx.explorer.iframe.height = 750px
 
 hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
 hdx.hxlproxy.url = https://proxy.hxlstandard.org

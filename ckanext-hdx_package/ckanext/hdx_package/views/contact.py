@@ -75,7 +75,7 @@ def contact_members():
             data_dict['pkg_id'] = request.form.get('pkg_id')
             data_dict['pkg_url'] = h.url_for('dataset_read', id=request.form.get('pkg_id'),
                                              qualified=True)
-        data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@humdata.org')
+        data_dict['hdx_email'] = config.get('hdx.faqrequest.email')
 
         hdx_validate_email(data_dict['email'])
 

@@ -41,7 +41,7 @@ def convert_country(q):
             q += ' '+c['name']
     return q
 
-
+@tk.blanket.config_declarations
 class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
     # plugins.implements(plugins.IRoutes, inherit=True)

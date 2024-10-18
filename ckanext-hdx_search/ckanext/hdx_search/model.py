@@ -48,7 +48,7 @@ class SearchedString(domain_object.DomainObject):
         :rtype: list[SearchedString]
         '''
 
-        hours_from_actual_search = asint(config.get('hdx.search_history.hours_from_actual_search', '24'))
+        hours_from_actual_search = config.get('hdx.search_history.hours_from_actual_search')
 
         hours_ago = datetime.datetime.utcnow() - datetime.timedelta(hours=hours_from_actual_search)
         query = meta.Session.query(cls).filter(cls.user == user_id).filter(cls.last_modified < hours_ago)\
