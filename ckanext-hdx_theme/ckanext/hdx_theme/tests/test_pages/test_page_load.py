@@ -14,32 +14,56 @@ import ckan.tests.factories as factories
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
-
 pages = [
-    # {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
-    #  'action': 'register', 'usertype': None},
-    {'url_name': 'hdx_signin.login', 'usertype': None},
-    # {'url_name': 'hdx_contribute_check.contribute', 'usertype': None},
-    # {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-    #  'action': 'contribute', 'usertype': None},
+    # homepage
+    {'url_name': 'hdx_splash.index', 'usertype': 'all'},
+    {'url_name': 'hdx_splash.index', 'usertype': None},
+
+    # datasets list
     {'url_name': 'hdx_dataset.search', 'usertype': 'all'},
+    {'url_name': 'hdx_dataset.search', 'usertype': None},
+
+    # dataset
+    {'url_name': 'hdx_dataset.read', 'usertype': 'all', 'url_params': {'id': 'test_dataset_1'}},
+    {'url_name': 'hdx_dataset.read', 'usertype': None, 'url_params': {'id': 'test_dataset_1'}},
+
+    # locations list
     {'url_name': 'hdx_group.index', 'usertype': 'all'},
+    {'url_name': 'hdx_group.index', 'usertype': None},
+
+    # location
+    {'url_name': 'hdx_group.read', 'usertype': 'all', 'url_params': {'id': 'roger'}},
+    {'url_name': 'hdx_group.read', 'usertype': None, 'url_params': {'id': 'roger'}},
+
+    # organizations list
     {'url_name': 'hdx_org.index', 'usertype': 'all'},
+    {'url_name': 'hdx_org.index', 'usertype': None},
+
+    # organization
+    {'url_name': 'hdx_org.read', 'usertype': 'all', 'url_params': {'id': 'hdx-test-org'}},
+    {'url_name': 'hdx_org.read', 'usertype': None, 'url_params': {'id': 'hdx-test-org'}},
+
+    # login
+    {'url_name': 'hdx_signin.login', 'usertype': None},
+
+
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'url_name': 'activity.dashboard', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all', 'url_params': {'id': 'tester'}},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
-    {'url_name': 'hdx_splash.index', 'usertype': 'all'},
+
     {'url_name': 'hdx_archived_quick_links.show', 'usertype': 'all'},
 
 ]
 
+
 # @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
-class TestPageLoad(hdx_test_base.HdxBaseTest):
+class TestPageLoad(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     tester_token = None
     testsysadmin_token = None
@@ -64,11 +88,7 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
 
     @pytest.mark.parametrize("page", pages)
     def test_page_load(self, page):
-        # global pages
         test_client = self.get_backwards_compatible_test_client()
-        # for page in pages:
-        # controller = page.get('controller')
-        # action = page.get('action')
         url_name = page.get('url_name')
         url_params = page.get('url_params')
         if not page['usertype']:
