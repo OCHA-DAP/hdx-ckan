@@ -15,6 +15,8 @@ from ckanext.hdx_theme.util.mail import hdx_validate_email
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 
 _h = tk.h
+abort = tk.abort
+request = tk.request
 
 log = logging.getLogger(__name__)
 
@@ -25,46 +27,49 @@ def subscribe_to_dataset() -> Response:
     # Get parameters from the URL
     # email = tk.request.args.get('email')
     # dataset_id = tk.request.args.get('dataset_id')
-    token = tk.request.args.get('token')
 
-    dataset_list_url = tk.url_for('dataset.search')
-    try:
-        token_obj = notification_platform_logic.verify_email_validation_token(token)
-    except Exception as e:
-        _h.flash_error('Your token is invalid or has expired. Please try to subscribe again.')
-        return tk.redirect_to(dataset_list_url)
+    if request.user_agent.string.strip() and request.method == 'GET':
+        # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
+        token = tk.request.args.get('token')
 
-    email = token_obj.user_id
-    dataset_id = token_obj.object_id
-    if not email or not dataset_id:
-        _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
-        return tk.redirect_to(dataset_list_url)
+        dataset_list_url = tk.url_for('dataset.search')
+        try:
+            token_obj = notification_platform_logic.verify_email_validation_token(token)
+        except Exception as e:
+            _h.flash_error('Your token is invalid or has expired. Please try to subscribe again.')
+            return tk.redirect_to(dataset_list_url)
 
-    context = {'ignore_auth': True}
+        email = token_obj.user_id
+        dataset_id = token_obj.object_id
+        if not email or not dataset_id:
+            _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
+            return tk.redirect_to(dataset_list_url)
 
-    try:
-        unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
-        data_dict = {
-            'email': email,
-            'dataset_id': dataset_id,
-            'unsubscribe_token': unsubscribe_token.token,
-        }
-        result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
-        _h.flash_success(tk._(
-            u'You have successfully set up email notifications for this dataset. These will be sent to {0} when the '
-            u'dataset is updated on HDX.'.format(
-                email)))
-    except tk.ValidationError as e:
-        log.error('An exception occurred:' + str(e))
-        _h.flash_error(str(e))
-    except Exception as e:
-        log.error('An exception occurred:' + str(e))
-        _h.flash_error('An error occurred: ' + str(e))
+        context = {'ignore_auth': True}
 
-    # Redirect to the dataset page
-    dataset_url = tk.url_for('dataset.read', id=dataset_id)
-    return tk.redirect_to(dataset_url)
+        try:
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
+            data_dict = {
+                'email': email,
+                'dataset_id': dataset_id,
+                'unsubscribe_token': unsubscribe_token.token,
+            }
+            result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
+            _h.flash_success(tk._(
+                u'You have successfully set up email notifications for this dataset. These will be sent to {0} when the '
+                u'dataset is updated on HDX.'.format(
+                    email)))
+        except tk.ValidationError as e:
+            log.error('An exception occurred:' + str(e))
+            _h.flash_error(str(e))
+        except Exception as e:
+            log.error('An exception occurred:' + str(e))
+            _h.flash_error('An error occurred: ' + str(e))
 
+        # Redirect to the dataset page
+        dataset_url = tk.url_for('dataset.read', id=dataset_id)
+        return tk.redirect_to(dataset_url)
+    return abort(404, 'Page not found')
 
 def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
