@@ -18,7 +18,7 @@ config = tk.config
 log = logging.getLogger(__name__)
 
 dogpile_config = {
-    'cache.redis.expiration_time': int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
+    'cache.redis.expiration_time': config.get('hdx.analytics.hours_for_results_in_cache', 24) * 60 * 60,
 }
 dogpile_config.update(dogpile_standard_config)
 
@@ -28,7 +28,6 @@ if dogpile_config_filter == 'cache.redis.':
     dogpile_jql_region.region_invalidator = HDXRedisInvalidationStrategy(dogpile_jql_region)
 
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
-JQL_WARNING_THRESHOLD = int(config.get('hdx.analytics.mixpanel.warning_threshold_seconds', 90))
 
 MIXPANEL_GROUPS = ['0123', '4567', '89ab', 'cdef']
 
@@ -216,6 +215,7 @@ def timer_wrapper(original_caching_function):
     def timed_caching_function(*args):
         args_to_name = ', '.join(args)
         name = '{} with args ({})'.format(original_caching_function.__name__, args_to_name)
+        JQL_WARNING_THRESHOLD = config.get('hdx.analytics.mixpanel.warning_threshold_seconds', 90)
         timer = Timer(name,
                       init_message='creating cache',
                       in_millis=False, log_warning_step_threshold=JQL_WARNING_THRESHOLD)

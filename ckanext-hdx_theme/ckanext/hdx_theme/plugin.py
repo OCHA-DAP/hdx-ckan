@@ -39,6 +39,7 @@ g = tk.g
 redirect = tk.redirect_to
 h = tk.h
 
+@tk.blanket.config_declarations
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
@@ -82,7 +83,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         self.__add_wp_faq_url_for_checks(config)
 
     def __add_gis_layer_config_for_checks(self, config):
-        gis_layer_api = config.get('hdx.gis.layer_import_url', '')
+        gis_layer_api = config.get('hdx.gis.layer_import_url') or ''
         api_index = gis_layer_api.find('/api')
         gis_layer_base_api = gis_layer_api[0:api_index]
         gis_layer_base_api = self._create_full_URL(gis_layer_base_api)
@@ -90,7 +91,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     def __add_spatial_config_for_checks(self, config):
         # search_str = '/services'
-        spatial_url = config.get('hdx.gis.resource_pbf_url', '')
+        spatial_url = config.get('hdx.gis.resource_pbf_url') or ''
         url_parts = urlparse(spatial_url)
         spatial_check_url = urlunparse((url_parts.scheme, url_parts.netloc, '/gis/test', '', '', ''))
         # url_index = spatial_url.find(search_str)

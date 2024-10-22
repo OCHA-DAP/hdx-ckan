@@ -4,6 +4,7 @@ $(document).ready(function() {
     let body = {
       mfa: $("#field-mfa").val()
     };
+    let mfaTestForm = $("#form-mfa-test");
     const msgContainer = $('#test-two-step-result');
     msgContainer.html('');
     msgContainer.removeClass('alert-success');
@@ -13,8 +14,7 @@ $(document).ready(function() {
       url: `/user/configure_mfa/${userName}`,
       type: 'POST',
       headers: hdxUtil.net.getCsrfTokenAsObject(),
-      contentType: 'application/json',
-      data: JSON.stringify(body),
+      data: mfaTestForm.serialize(),
       success: function (response) {
         const result = JSON.parse(response);
         if (result.success == true) {
@@ -90,6 +90,7 @@ $(document).ready(function() {
     }
   }
 
+  $("#form-mfa-test").on('submit', (e) => { e.preventDefault(); return false; });
   $('#test-two-step-btn').on('click', onTestTwoStep);
   $('#two-step-turn-off').on('click', () => toggleTwoStep(false));
   $('#two-step-turn-on, #two-step-regenerate').on('click', () => toggleTwoStep(true));
