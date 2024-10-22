@@ -14,35 +14,96 @@ import ckan.tests.factories as factories
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
-
 pages = [
-    # {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
-    #  'action': 'register', 'usertype': None},
-    {'url_name': 'hdx_signin.login', 'usertype': None},
-    # {'url_name': 'hdx_contribute_check.contribute', 'usertype': None},
-    # {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-    #  'action': 'contribute', 'usertype': None},
+    # homepage
+    {'url_name': 'hdx_splash.index', 'usertype': 'all'},
+    {'url_name': 'hdx_splash.index', 'usertype': None},
+
+    # search
+    {'url_name': 'hdx_search.search', 'usertype': 'all', 'url_params': {'q': 'test'}},
+    {'url_name': 'hdx_search.search', 'usertype': None, 'url_params': {'q': 'test'}},
+
+    # datasets list
     {'url_name': 'hdx_dataset.search', 'usertype': 'all'},
+    {'url_name': 'hdx_dataset.search', 'usertype': None},
+
+    # dataset
+    {'url_name': 'hdx_dataset.read', 'usertype': 'all', 'url_params': {'id': 'test_dataset_1'}},
+    {'url_name': 'hdx_dataset.read', 'usertype': None, 'url_params': {'id': 'test_dataset_1'}},
+
+    # resource
+    {'url_name': 'dataset_resource.read', 'usertype': 'sysadmin',
+     'url_params': {'id': 'test_private_dataset_1', 'resource_id': '<>'}},
+
+    # showcases list
+    {'url_name': 'showcase_blueprint.index', 'usertype': 'all'},
+    {'url_name': 'showcase_blueprint.index', 'usertype': None},
+
+    # showcases
+    {'url_name': 'showcase_blueprint.read', 'usertype': 'all', 'url_params': {'id': 'test_showcase_1'}},
+    {'url_name': 'showcase_blueprint.read', 'usertype': None, 'url_params': {'id': 'test_showcase_1'}},
+
+    # locations/groups list
     {'url_name': 'hdx_group.index', 'usertype': 'all'},
+    {'url_name': 'hdx_group.index', 'usertype': None},
+
+    # location/group
+    {'url_name': 'hdx_group.read', 'usertype': 'all', 'url_params': {'id': 'roger'}},
+    {'url_name': 'hdx_group.read', 'usertype': None, 'url_params': {'id': 'roger'}},
+
+    # organizations list
     {'url_name': 'hdx_org.index', 'usertype': 'all'},
+    {'url_name': 'hdx_org.index', 'usertype': None},
+
+    # organization
+    {'url_name': 'hdx_org.read', 'usertype': 'all', 'url_params': {'id': 'hdx-test-org'}},
+    {'url_name': 'hdx_org.read', 'usertype': None, 'url_params': {'id': 'hdx-test-org'}},
+
+    # login
+    {'url_name': 'hdx_signin.login', 'usertype': None},
+
+    # faq
+    {'url_name': 'hdx_faqs.read', 'usertype': 'all', 'url_params': {'category': 'faq'}},
+    {'url_name': 'hdx_faqs.read', 'usertype': None, 'url_params': {'category': 'faq'}},
+
+    # terms of service
+    {'url_name': 'hdx_faqs.read', 'usertype': 'all', 'url_params': {'category': 'terms'}},
+    {'url_name': 'hdx_faqs.read', 'usertype': None, 'url_params': {'category': 'terms'}},
+
+    # resources for developers
+    {'url_name': 'hdx_faqs.read', 'usertype': 'all', 'url_params': {'category': 'devs'}},
+    {'url_name': 'hdx_faqs.read', 'usertype': None, 'url_params': {'category': 'devs'}},
+
+    # data licenses
+    {'url_name': 'hdx_faqs.read', 'usertype': 'all', 'url_params': {'category': 'licenses'}},
+    {'url_name': 'hdx_faqs.read', 'usertype': None, 'url_params': {'category': 'licenses'}},
+
+    # qa process
+    {'url_name': 'hdx_splash.about', 'usertype': 'all', 'url_params': {'page': 'hdx-qa-process'}},
+    {'url_name': 'hdx_splash.about', 'usertype': None, 'url_params': {'page': 'hdx-qa-process'}},
+
+    # archive page
+    {'url_name': 'hdx_archived_quick_links.show', 'usertype': 'all'},
+    {'url_name': 'hdx_archived_quick_links.show', 'usertype': None},
+
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'url_name': 'activity.dashboard', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
     {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all', 'url_params': {'id': 'tester'}},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
-    {'url_name': 'hdx_splash.index', 'usertype': 'all'},
-    {'url_name': 'hdx_archived_quick_links.show', 'usertype': 'all'},
-
 ]
 
-# @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
-class TestPageLoad(hdx_test_base.HdxBaseTest):
 
+# @pytest.mark.skipif(six.PY3, reason=u"Needed plugins are not on PY3 yet")
+class TestPageLoad(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     tester_token = None
     testsysadmin_token = None
+    resource_id = None
+
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
@@ -62,15 +123,24 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         cls.tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
         cls.testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
+        cls.resource_id = cls._get_action('package_show')(
+            {'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'test_private_dataset_1'}
+        ).get('resources')[0].get('id')
+
+    @classmethod
+    def _create_test_data(cls):
+        super(TestPageLoad, cls)._create_test_data(create_datasets=True, create_members=True, create_showcases=True)
+
+
     @pytest.mark.parametrize("page", pages)
     def test_page_load(self, page):
-        # global pages
         test_client = self.get_backwards_compatible_test_client()
-        # for page in pages:
-        # controller = page.get('controller')
-        # action = page.get('action')
         url_name = page.get('url_name')
         url_params = page.get('url_params')
+        if url_params and 'resource_id' in url_params:
+            url_params['resource_id'] = self.resource_id
+
         if not page['usertype']:
             self._try_page_load(test_client, url_name, None, None, url_params)
         else:
