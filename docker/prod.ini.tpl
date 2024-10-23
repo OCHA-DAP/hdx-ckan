@@ -165,6 +165,7 @@ hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-
 
 # HDX Notification Platform
 hdx.notifications.novu.api_key = ${HDX_NOVU_API_KEY}
+hdx.notifications.enabled_datasets_csv = ${HDX_ENABLED_DATASETS_CSV}
 
 ## Logging configuration
 [loggers]
