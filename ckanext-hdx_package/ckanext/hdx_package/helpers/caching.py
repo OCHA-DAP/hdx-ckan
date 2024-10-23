@@ -3,9 +3,11 @@ Created on Jun 2, 2014
 
 @author: alexandru-m-g
 '''
-
+import csv
 import logging
 import unicodedata
+from typing import Set
+
 import requests
 from dogpile.cache import make_region
 
@@ -201,3 +203,28 @@ def cached_approved_tags_list():
 def invalidate_cached_approved_tags():
     log.info('Invalidating cache for approved tags list')
     cached_approved_tags_list.invalidate()
+
+@dogpile_requests_region.cache_on_arguments()
+def cached_datasets_with_notifications() -> Set[str]:
+    log.info('Creating cache list of datasets with notifications')
+    return hdx_retrieve_datasets_with_notifications(None, None)
+
+def hdx_retrieve_datasets_with_notifications(context, data_dict) -> Set[str]:
+    url = config.get('hdx.notifications.enabled_datasets_csv')
+    if url:
+        try:
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+        except requests.exceptions.RequestException as e:
+            error_msg = str(e)
+            log.error(f"An error occurred: {error_msg}")
+            raise Exception(f'Couldn\'t fetch datasets with notifications from Google Spreadsheets: {error_msg}')
+
+        csv_data = response.text
+        csv_reader = csv.reader(csv_data.splitlines())
+
+        datasets = {row[0] for row in csv_reader}
+        return datasets
+    else:
+        log.error('No URL for notification-enabled datasets found in config')
+        return set()

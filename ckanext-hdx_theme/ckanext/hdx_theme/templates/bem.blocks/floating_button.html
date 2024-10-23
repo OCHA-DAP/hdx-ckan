@@ -1,0 +1,15 @@
+<div class="floating-button{% if container_classes %} {{ container_classes|join(' ') }}{% endif %}"
+     {% if modal %}data-bs-toggle="modal" data-bs-target="#{{ modal }}"{% endif %}>
+  <div class="row align-items-center g-0">
+    <div class="col-auto">
+      <div class="floating-button__icon">
+        <i class="fa-solid fa-fw fa-{{ icon }}"></i>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="floating-button__paragraph">
+        <p class="mb-0">{{ text }}</p>
+      </div>
+    </div>
+  </div>
+</div>

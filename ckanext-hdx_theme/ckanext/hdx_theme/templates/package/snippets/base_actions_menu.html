@@ -5,7 +5,9 @@
 {% set group_topics = group_topics or {} %}
 {% set hide_contact_contributor = (hide_contact_contributor or false) or  (pkg.is_requestdata_type and pkg.is_requestdata_type == True) %}
 {% set hide_membership = hide_membership or false %}
-{% set hide_follow = hide_follow or false %}
+{#{% set hide_follow = hide_follow or false %}#}
+{% set hide_follow = true %}
+{# TODO: show follow button if dataset is not part of notifications? #}
 {% set icon_font_size = icon_font_size or "24px" %}
 {% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) if pkg else false %}
 {% set follow_confirm_text = "WARNING: You are maintainer of the dataset which you want to follow. Do you wish to continue?" if is_current_user_a_maintainer else None %}
@@ -19,6 +21,9 @@
     <ul data-module="hdx_click_stopper"
         data-module-link_type="dataset header"
         data-module-just_send_event="false" data-module-selector="#contact-the-contributor">
+        {% if supports_notifications %}
+          {{ h.snippet('notification_platform/action_menu_button.html') }}
+        {% endif %}
         {% if c.user %}
             {% if not hide_follow%}
                 <li>

@@ -1,10 +1,14 @@
-import ckan.model as model
+import logging
+import requests
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
 import ckanext.hdx_users.model as umodel
+from ckan.types import Context, DataDict
+from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset, read_novu_config
 from ckanext.hdx_users.helpers.token_expiration_helper import find_expiring_api_tokens, send_emails_for_expiring_tokens
 from ckanext.hdx_users.logic.schema import onboarding_default_update_user_schema
+
 
 NotFound = tk.ObjectNotFound
 _check_access = tk.check_access
@@ -13,6 +17,7 @@ ValidationError = tk.ValidationError
 get_action = tk.get_action
 config = tk.config
 
+log = logging.getLogger(__name__)
 
 def token_update(context, data_dict):
     token = data_dict.get('token')
@@ -117,3 +122,85 @@ def user_update(up_func, context, data_dict):
 
     result = up_func(context, data_dict)
     return result
+
+
+def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
+    tk.check_access('hdx_add_notification_subscription', context, {})
+
+    novu_api_key, novu_api_url = read_novu_config()
+
+    email = data_dict.get('email')
+    dataset_id = data_dict.get('dataset_id')
+    unsubscribe_token = data_dict.get('unsubscribe_token')
+    unsubscribe_token_key = 'unsubscribe_token_' + dataset_id.replace('-', '_')
+
+    if not email or not dataset_id:
+        raise tk.ValidationError('Missing required parameters: email and dataset_id')
+
+    notifications_enabled = check_notifications_enabled_for_dataset(dataset_id)
+    if not notifications_enabled:
+        raise tk.ValidationError('Notifications are not enabled for the dataset')
+
+    headers = {
+        'Authorization': f'ApiKey {novu_api_key}',
+        'Content-Type': 'application/json'
+    }
+
+    # Use the email as the subscriber ID
+    subscriber_id = email
+
+    response = requests.get(f'{novu_api_url}/subscribers/{subscriber_id}', headers=headers)
+
+    if response.status_code == 404:
+        # Subscriber doesn't exist; create a new one
+        subscriber_data = {
+            'subscriberId': subscriber_id,
+            'email': email,
+            'data': {
+                unsubscribe_token_key: unsubscribe_token
+            }
+        }
+        response = requests.post(f'{novu_api_url}/subscribers', json=subscriber_data, headers=headers)
+        if response.status_code != 201:
+            raise Exception(f'Failed to create subscriber: {response.text}')
+
+    elif response.status_code == 200:
+        data = response.json().get('data', {}).get('data', {})
+        data[unsubscribe_token_key] = unsubscribe_token
+        subscriber_data = {
+            'data': data
+        }
+        response = requests.put(f'{novu_api_url}/subscribers/{email}', json=subscriber_data, headers=headers)
+        if response.status_code != 200:
+            raise Exception(f'Failed to update subscriber: {response.text}')
+    else:
+        raise Exception(f'Error checking subscriber: {response.text}')
+
+    topic_key = f'dataset-{dataset_id}'
+
+    # Check if the topic exists
+    response = requests.get(f'{novu_api_url}/topics/{topic_key}', headers=headers)
+
+    if response.status_code == 404:
+        # Topic doesn't exist; create a new one
+        topic_data = {
+            'key': topic_key,
+            'name': f'Dataset {dataset_id} Updates'
+        }
+        response = requests.post(f'{novu_api_url}/topics', json=topic_data, headers=headers)
+        if response.status_code != 201:
+            raise Exception(f'Failed to create topic: {response.text}')
+
+    elif response.status_code != 200:
+        raise Exception(f'Error checking topic: {response.text}')
+
+    add_subscriber_data = {
+        'subscribers': [subscriber_id]
+    }
+    response = requests.post(f'{novu_api_url}/topics/{topic_key}/subscribers', json=add_subscriber_data,
+                             headers=headers)
+
+    if response.status_code != 200:
+        raise Exception(f'Failed to add subscriber to topic: {response.text}')
+
+    return {'message': f'You have successfully subscribed to notifications for this dataset.'}

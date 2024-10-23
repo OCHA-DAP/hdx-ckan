@@ -33,6 +33,14 @@
         margin-right: @listMarginUnit;
       }
 
+      &.d-none {
+        + li {
+          &:before {
+            border-left: 0;
+          }
+        }
+      }
+
       &.delete-override{
         a {
           color: @orangeColor;
