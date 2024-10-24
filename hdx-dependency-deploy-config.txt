@@ -18,7 +18,7 @@ HDX_QAINGEST_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-qa-ingest/
 HDX_QAINGEST_TAG=0.1.3
 
 HDX_NOTIFICATION_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-notification-platform
-HDX_NOTIFICATION_TAG=0.1.3
+HDX_NOTIFICATION_TAG=0.1.4
 
 HDX_PCODE_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-pcode/
 HDX_PCODE_TAG=0.1.10
