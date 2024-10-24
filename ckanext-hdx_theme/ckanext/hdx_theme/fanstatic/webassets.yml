@@ -1246,6 +1246,7 @@ organization-stats-scripts:
   output: ckanext-hdx_theme/%(version)s_organization-stats-scripts.js
   extra:
     preload:
+      - hdx_theme/ckan
       - hdx_theme/organization-stats-styles
   contents:
     - organization_/stats.js
