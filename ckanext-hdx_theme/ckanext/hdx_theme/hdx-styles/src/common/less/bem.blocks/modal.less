@@ -1,0 +1,22 @@
+@import "bem_variables";
+
+.bem-modal {
+
+  &__content {
+    .bem-modal__header {
+      border-radius: 0; // clear inherited HDX style
+    }
+
+    .bem-modal__footer {
+      .btn-link {
+        background-color: unset;
+        padding-left: 0;
+        padding-right: 0;
+        color: @black-color;
+        text-decoration: none;
+        border-color: transparent;
+      }
+    }
+
+  }
+}

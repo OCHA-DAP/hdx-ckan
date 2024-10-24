@@ -65,8 +65,10 @@
             {% if pkg.dataseries_name %}
               <div class="dataseries-info">{{_('This dataset is part of the data series')}} <span class="dataseries-explanation" title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization') }}" data-module="bs_tooltip" data-bs-toggle="tooltip">[?]</span>: <a href="{% url_for 'search', dataseries_name=pkg.dataseries_name %}" data-module="hdx_click_stopper" data-module-link_type="dataseries dataset page">{{ pkg.dataseries_name }}</a></div>
             {% endif %}
-
           </div>
+        {% endif %}
+        {% if supports_notifications %}
+          {{ h.snippet('notification_platform/action_menu_button.html') }}
         {% endif %}
         <ul class="nav nav-tabs">
           <li class="nav-item">
@@ -99,7 +101,9 @@
   </div>
 </div>
 
-{% snippet "widget/banner/hdx-light-banner.html", pkg=pkg %}
+{% if supports_notifications %}
+  {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token %}
+{% endif %}
 {% endblock %}
 
 {%- block scripts %}

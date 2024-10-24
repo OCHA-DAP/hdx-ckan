@@ -17,6 +17,7 @@ import ckanext.hdx_users.views.permission as permission
 import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.onboarding as onboarding
 import ckanext.hdx_users.views.signin as signin
+import ckanext.hdx_users.views.notification_platform as notification_platform
 
 import ckanext.security.validators as security_validators
 
@@ -98,6 +99,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
             'notify_users_about_api_token_expiration': update.notify_users_about_api_token_expiration,
+            'hdx_add_notification_subscription': update.hdx_add_notification_subscription,
+            'hdx_delete_notification_subscription': delete.hdx_delete_notification_subscription,
         }
 
     def get_auth_functions(self):
@@ -107,6 +110,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_update': auth.user_update,
             'notify_users_about_api_token_expiration': auth.notify_users_about_api_token_expiration,
             'hdx_send_request_data_auto_approval': auth.hdx_send_request_data_auto_approval,
+            'hdx_add_notification_subscription': auth.hdx_add_notification_subscription,
+            'hdx_delete_notification_subscription': auth.hdx_delete_notification_subscription,
         }
 
     def get_validators(self):
@@ -128,4 +133,5 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             rduv.hdx_requestdata_user,
             onboarding.hdx_user_onboarding,
             signin.hdx_signin,
+            notification_platform.hdx_notifications,
         ]

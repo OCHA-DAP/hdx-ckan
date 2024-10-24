@@ -142,6 +142,13 @@ hdx.http_headers.mimetypes = application/json,text/html,text/json
 # Disabling email sending in tests
 hdx.api_token.email_notifications.enabled = false
 
+# FAQ - Wordpress
+hdx.wordpress.url=https://centre.humdata.org
+hdx.wordpress.category.faq=554
+hdx.wordpress.category.devs=568
+hdx.wordpress.category.terms=577
+hdx.wordpress.category.licenses=581
+
 
 # Logging configuration
 [loggers]

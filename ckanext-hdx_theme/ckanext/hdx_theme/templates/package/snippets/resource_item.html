@@ -61,10 +61,13 @@
             {% if not in_review and h.check_access('hdx_resource_download', res) %}
               {% set btn_dict = {'title':'This will take you outside HDX to access the data', 'value':'Access Data', 'type':'external'} if h.hdx_get_ckan_config('ckan.resource_formats.external_system')==res.format else {'title':'Download', 'value':'Download', 'type':'download'} %}
               <a href="{{ res.hdx_rel_url }}"
-                 class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download"
+                 class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download resource-download-button"
                  title="{{ btn_dict.title }}"
+                 target="_blank"
+                 data-resource-id="{{ res.id }}"
+                 data-dataset-id="{{ pkg.id }}"
+                 data-user-survey-url="{{ pkg.user_survey_url }}"
                  tracking-type="{{res.url_type}}"
-                 onclick="showDataUseSurveyPopup('{{ res.id }}', '{{ pkg.user_survey_url }}');return true;"
               >
                   {% if btn_dict.type == 'download' %}
                     <img src="/images/homepage/download.svg" alt="{{ btn_dict.title }}" />

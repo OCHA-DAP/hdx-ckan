@@ -16,6 +16,8 @@
 
 [ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
 
+[ -z "$HDX_ENABLED_DATASETS_CSV" ] && export HDX_ENABLED_DATASETS_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=0&single=true&output=csv"
+
 # provide mailchimp defaults (mailchimp is enabled in common config)
 export HDX_MAILCHIMP_API_KEY=${HDX_MAILCHIMP_API_KEY:-ccc-fake}
 export HDX_MAILCHIMP_INTEREST_DATA_SERVICES=${HDX_MAILCHIMP_INTEREST_DATA_SERVICES:-90c34fef41}

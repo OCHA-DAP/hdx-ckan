@@ -131,6 +131,18 @@ def get_users():
     return new_users
 
 
+def get_showcases():
+    showcases = [
+        {
+            'name': 'test_showcase_1',
+            'title': 'Test Showcase test_showcase_1',
+            'notes': 'This is a test showcase',
+            'dataviz_label': 'Test Label',
+        }
+    ]
+    return showcases
+
+
 class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
     '''
     This class extends the HDX Base test class by adding additional test data.
@@ -146,7 +158,7 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
         return tk.get_action(action_name)
 
     @classmethod
-    def _create_test_data(cls, create_datasets=True, create_members=False):
+    def _create_test_data(cls, create_datasets=True, create_members=False, create_showcases=False):
         '''
         This method is responsible for creating additional test data.
         Please note that the corresponding function from the parent is still called
@@ -160,6 +172,8 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
         :param create_members: If the org should have some members set this flag to True. Default False.
             Note that 'testsysadmin' will be a member (admin) of the org regardless of the flag.
         :type create_members: boolean
+        :param create_showcases: If the org should have showcases set this flag to True. Default False.
+        :type create_showcases: boolean
 
         '''
         super(HDXWithIndsAndOrgsTest, cls)._create_test_data()
@@ -168,6 +182,7 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
         organization = get_organization()
         resource = get_resource()
         users = get_users()
+        showcases = get_showcases()
 
         if create_members:
             organization['users'] = []
@@ -192,3 +207,10 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
                 cls._get_action('package_update')(c, package)
 
             cls._get_action('resource_create')(context, resource)
+
+        if create_showcases:
+            for showcase in showcases:
+                c = {'ignore_auth': True,
+                     'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+                cls._get_action('ckanext_showcase_create')(c, showcase)
+

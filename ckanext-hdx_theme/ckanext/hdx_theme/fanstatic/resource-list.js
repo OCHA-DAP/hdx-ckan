@@ -26,7 +26,7 @@ function showDataCheck(url){
   iframe.focus();
 }
 var DATA_USE_SURVEY_LOAD_COUNT;
-function showDataUseSurveyPopup(resId, userSurveyUrl) {
+function showDataUseSurveyPopup(resId, datasetId, userSurveyUrl) {
   const orgName = $("#dataUseSurveyOrgName").text();
 
   const SURVEY_KEY = "/organization:" + "hdx-data-use-survey-popup-" + orgName;
@@ -68,4 +68,17 @@ function showDataUseSurveyPopup(resId, userSurveyUrl) {
     iframe.hide();
     $("#dataUseSurveyPopup").show();
   }
+  else {
+    showNotificationsSignupModal(datasetId);
+  }
 }
+
+$('.resource-download-button').on('click', function (event) {
+  var resId = $(this).data('resource-id');
+  var datasetId = $(this).data('dataset-id');
+  var userSurveyUrl = $(this).data('user-survey-url');
+
+  showDataUseSurveyPopup(resId, datasetId, userSurveyUrl);
+
+  return true;
+});

@@ -119,7 +119,6 @@ page-styles:
     - base/base.css
     - base/header.css
     - search-styles
-    - banner-styles
 
 page-light-scripts:
   <<: *common-js
@@ -141,7 +140,6 @@ page-light-styles:
     - page-common-styles
     - light/page-light.css
     - search-styles
-    - banner-styles
     - adaptive-page-styles
 
 adaptive-page-styles:
@@ -194,6 +192,8 @@ bem-blocks-styles:
     - bem.blocks/form_button.css
     - bem.blocks/account_options.css
     - bem.blocks/info_box.css
+    - bem.blocks/floating_button.css
+    - bem.blocks/modal.css
     - bem.blocks/table.css
     - bem.blocks/select2_field.css
     - bem.blocks/textarea_field.css
@@ -596,7 +596,6 @@ dataset-styles:
       - datasets/datasets.css
       - datasets/hdx_custom_dataviz_show.css
       - datasets/related.css
-      - banner-styles
 
 dataset-quick-edit-styles:
   <<: *common-css
@@ -1313,21 +1312,6 @@ base-widget-styles:
   contents:
     - base/base-widget.css
 
-banner-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_banner-scripts.js
-  extra:
-    preload:
-      - hdx_theme/ckan
-  contents:
-    - base/components/banner.js
-
-banner-styles:
-  <<: *common-css
-  output: ckanext-hdx_theme/%(version)s_banner-styles.css
-  contents:
-    - base/components/banner.css
-
 contact-contributor-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_contact-contributor-scripts.js
@@ -1399,3 +1383,9 @@ request-tags-scripts:
   contents:
     - https://www.google.com/recaptcha/api.js
     - widget/tags/request-tags.js
+
+notification-platform-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_notification-platform-scripts.js
+  contents:
+    - datasets/notification_platform.js

@@ -163,6 +163,10 @@ hdx.security.site_name = ${HDX_SECURITY_SITENAME}
 # Change detection settings
 hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-events
 
+# HDX Notification Platform
+hdx.notifications.novu.api_key = ${HDX_NOVU_API_KEY}
+hdx.notifications.enabled_datasets_csv = ${HDX_ENABLED_DATASETS_CSV}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer

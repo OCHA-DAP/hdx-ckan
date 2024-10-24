@@ -54,6 +54,5 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             res = self.app.get('/m/dataset/test_dataset_1?force_layout=light')
         except Exception as ex:
             assert False
-        assert 'hdx-dataset-light-banner' in res.body
         assert '\"dataset-light\"' in res.body
 

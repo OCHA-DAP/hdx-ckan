@@ -1,0 +1,39 @@
+<div class="bem-modal modal fade{% if spacing_class %} {{ spacing_class }}{% endif %}" id="{{ id }}" tabindex="-1"
+     aria-labelledby="{{ id }}Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="bem-modal__content modal-content">
+      <div class="bem-modal__header modal-header">
+        <h6 class="modal-title" id="{{ id }}Label">{{ title }}</h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger d-none"></div>
+        <div class="alert alert-success d-none"></div>
+        {% if text %}
+          {{ h.snippet('bem.blocks/paragraph.html', text=text) }}
+        {% endif %}
+        {% if content %}
+          {{ content }}
+        {% endif %}
+      </div>
+      <div class="bem-modal__footer modal-footer">
+        <div class="w-100">
+          <div class="row align-content-center">
+            <div class="col-6">
+              {% if submit_btn_text %}
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ close_btn_text }}</button>
+              {% endif %}
+            </div>
+            <div class="col-6 text-end">
+              {% if submit_btn_text %}
+                <button type="submit" class="btn btn-primary">{{ submit_btn_text }}</button>
+              {% else %}
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ close_btn_text }}</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

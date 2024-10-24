@@ -550,6 +550,9 @@ body {
   height: 16px;
   margin-right: 16px;
 }
+.base-actions-menu ul li.d-none + li:before {
+  border-left: 0;
+}
 .base-actions-menu ul li.delete-override a {
   color: #f2645a;
   text-transform: none;

@@ -121,6 +121,16 @@
 .wrapper-secondary .form-check .form-check-input {
   box-shadow: none;
 }
+.notification-platform-opt-in-action-menu i {
+  background-color: #007CE1;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 11px;
+  font-size: 10px;
+  text-align: center;
+}
 .dataset-light .nav-tabs {
   margin: 0 -15px;
   padding: 0 15px;
@@ -235,6 +245,18 @@
   margin-top: -10px;
   margin-bottom: 10px;
   margin-left: 0;
+}
+.dataset-light .notification-platform-opt-in-action-menu {
+  display: block;
+  margin-bottom: 1rem;
+}
+.dataset-light .notification-platform-opt-in-action-menu i {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 9px;
+  font-size: 10px;
+  margin-right: 3px;
 }
 @media (max-width: 375px) {
   .dataset-light .nav-tabs .hdx-tab-button {

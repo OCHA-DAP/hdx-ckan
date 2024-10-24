@@ -1,0 +1,33 @@
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+
+{{ h.snippet('bem.blocks/paragraph.html',
+  text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_INTRO_TEXT) }}
+
+<form method="post" id="notification-platform-form" novalidate data-module="hdx-form-validator">
+  <input type="hidden" name="dataset_id" value="{{ pkg.id }}">
+
+  {{ h.snippet('bem.blocks/input_field.html',
+    type="email",
+    required=True,
+    autocomplete='new-email',
+    data_attributes={"validation": "email", "validation-error": CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_ERROR},
+    name="email",
+    value=c.userobj.email if c.userobj else '',
+    placeholder=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_PLACEHOLDER,
+    spacing_class="mb-4") }}
+
+  {% if g.recaptcha_publickey %}
+    <div class="recaptcha-field mb-4">
+      <div class="g-recaptcha" data-sitekey="{{ g.recaptcha_publickey }}"></div>
+    </div>
+  {% endif %}
+</form>
+
+{% set update_frequency = h.hdx_get_frequency_by_value(pkg.data_update_frequency) %}
+
+{{ h.snippet('bem.blocks/paragraph.html',
+  text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_UPDATE_FREQUENCY_TEXT.format(update_frequency)) }}
+
+{{ h.snippet('bem.blocks/paragraph.html',
+  text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_BETA_TEXT,
+  paragraph_classes=['paragraph__text_font_size-small']) }}

@@ -1,0 +1,44 @@
+{% asset 'hdx_theme/bem-blocks-styles' %}
+
+{% asset 'hdx_theme/notification-platform-scripts' %}
+
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+{% set unsubscribe_token = unsubscribe_token or None %}
+
+<span class="d-none" id="unsubscribe_token" data-token="{{ unsubscribe_token }}"></span>
+
+{{ h.snippet('bem.blocks/floating_button.html',
+  container_classes=['notification-platform-opt-in-floating-button', 'd-none'],
+  icon="bell",
+  modal="notificationsSignupBemModal",
+  text=CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT_FLOATING_BUTTON) }}
+
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsSignupBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE,
+  content=h.snippet('notification_platform/signup_modal_content.html', pkg=pkg),
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_CLOSE_BUTTON_TEXT,
+  submit_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT) }}
+
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsVerificationBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE,
+  text=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_CLOSE_BUTTON_TEXT) }}
+
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsUnsubscribeBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
+  text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_CLOSE_BUTTON_TEXT,
+  submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_SUBMIT_BUTTON_TEXT) }}
+
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsUnsubscribedBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE,
+  text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_CLOSE_BUTTON_TEXT) }}
+
+{% asset 'hdx_theme/bem-blocks-scripts' %}
+{% asset 'hdx_theme/hdx-form-validator' %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
