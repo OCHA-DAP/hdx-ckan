@@ -8,13 +8,14 @@ import json
 import logging
 import os
 import six
-
+import openpyxl
 import ckanext.hdx_search.cli.click_feature_search_command as lunr
 import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
-
+from flask import make_response
+from tempfile import NamedTemporaryFile
 import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
@@ -30,6 +31,7 @@ from collections import OrderedDict
 from ckan.common import _, c, config
 import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
+import ckanext.hdx_theme.util.jql as jql
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 abort = base.abort
@@ -799,3 +801,43 @@ def org_add_last_updated_field(displayed_orgs):
 def hdx_organization_type_get_value(org_type_key):
     return next((org_type[0] for org_type in static_lists.ORGANIZATION_TYPE_LIST if org_type[1] == org_type_key),
                 org_type_key)
+
+def hdx_generate_organization_stats(org_dict):
+    # Define variable to load the dataframe
+    wb = openpyxl.Workbook()
+
+    # Create SheetOne with Data
+    sheetOne = wb.create_sheet("Downloads and Page Views")
+
+    result = jql.pageviews_downloads_per_organization_last_5_years(org_dict.get('id'))
+    data = [('Date', 'Page View - Unique', 'Page Views - Total', 'Resource Download - Unique', 'Resource Download - Total')]
+    for key, value in result.items():
+        data.append((key, value.get('pageviews_unique'), value.get('pageviews_total'), value.get('downloads_unique'), value.get('downloads_total')))
+    for item in data:
+        sheetOne.append(item)
+
+    # Create SheetTwo with Data
+    sheetTwo = wb.create_sheet("README")
+
+    data = [('Overview', 'This spreadsheet contains the number of downloads of files and page views of datasets of the organization, tracked monthly over the past 4 years.'),
+            ('Data Source', 'The data has been sourced from the analytics platform Mixpanel.'),
+            ('Contents', 'The spreadsheet includes the following information: 1. Page Views: Total page views by month. 2. Downloads: Total number of downloads by month.'),
+            ('Caveats', 'To ensure accurate data representation, we have excluded as much bot traffic as possible.'),
+            ('Update Frequency', 'The spreadsheet is refreshed automatically on the first day of each month.'),
+            ('Contact', 'For additional inquiries, please contact us at hdx@un.org')]
+
+    for item in data:
+        sheetTwo.append(item)
+
+    # Remove default Sheet
+    wb.remove(wb['Sheet'])
+
+    # Iterate the loop to read the cell values
+    with NamedTemporaryFile() as tmp:
+        wb.save(tmp)
+        tmp.seek(0)
+        output = make_response(tmp.read())
+        output.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        output.headers['Content-Disposition'] = f'attachment; filename="{org_dict.get("name")}_stats.xlsx"'
+
+    return output

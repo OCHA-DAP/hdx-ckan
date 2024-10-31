@@ -2,7 +2,7 @@ import requests
 import logging
 
 from dogpile.cache import make_region
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from collections import OrderedDict
 from functools import wraps
 
@@ -53,12 +53,12 @@ class JqlQueryExecutor(object):
         }
 
     def _run_query(self, transformer):
-        '''
+        """
         :param transformer: transforms the request result
         :type transformer: MappingResultTransformer
         :return: a dict mapping the key to the values
         :rtype: dict
-        '''
+        """
         nose_test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
         if nose_test:
             return {}
@@ -75,12 +75,12 @@ class JqlQueryExecutorForHoursSinceNow(JqlQueryExecutor):
 
     @staticmethod
     def _compute_period(hours_since_now):
-        '''
+        """
         :param hours_since_now: for how many hours back should the mixpanel call be made
         :type hours_since_now: int
         :return: a list with 2 iso date strings representing the beginning and ending of the period
         :rtype: list[str]
-        '''
+        """
         until_date_str = datetime.utcnow().isoformat()[:10]
 
         from_date_str = (datetime.utcnow() - timedelta(hours=hours_since_now)).isoformat()[
@@ -91,27 +91,27 @@ class JqlQueryExecutorForHoursSinceNow(JqlQueryExecutor):
 
 class JqlQueryExecutorForWeeksSinceNow(JqlQueryExecutor):
     def __init__(self, query, weeks_since, since_date):
-        '''
+        """
         :param query:
         :type query: str
         :param weeks_since:
         :type weeks_since: int
         :param since_date:
         :type since_date: datetime
-        '''
+        """
         super(JqlQueryExecutorForWeeksSinceNow, self).__init__(query)
         self.args += self._compute_period(weeks_since, since_date)
 
     @staticmethod
     def _compute_period(weeks_since, since_date):
-        '''
+        """
         :param weeks_since_now: for how many weeks back should the mixpanel call be made ( a week starts monday )
         :type weeks_since_now: int
         :param since_date:
         :type since_date: datetime
         :return: a list with 2 iso date strings representing the beginning and ending of the period
         :rtype: list[str]
-        '''
+        """
         until_date = since_date
         until_date_str = until_date.isoformat()[:10]
 
@@ -120,10 +120,39 @@ class JqlQueryExecutorForWeeksSinceNow(JqlQueryExecutor):
 
         return [from_date_str, until_date_str]
 
+class JqlQueryExecutorForLast5Years(JqlQueryExecutor):
+    def __init__(self, query, org_id):
+        """
+        :param query:
+        :type query: str
+        """
+        super(JqlQueryExecutorForLast5Years, self).__init__(query)
+        self.args += self._compute_period()
+        self.args += [org_id]
+
+    @staticmethod
+    def _compute_period():
+        """
+        :return: a list with 2 iso date strings representing the beginning and ending of the period,
+                since 5 years ago on January 1st until last day of previous month
+        :rtype: list[str]
+        """
+        today = datetime.now(timezone.utc)
+
+        # Calculate the date 5 years ago on January 1st
+        from_date = today.replace(year=today.year - 5, month=1, day=1)
+        from_date_str = from_date.isoformat()[:10]
+
+        # last day of previous month
+        until_date = today.replace(day=1) - timedelta(days=1)
+        until_date_str = until_date.isoformat()[:10]
+
+        return [from_date_str, until_date_str]
+
 
 class JqlQueryExecutorForWeeksSinceNowWithGroupFiltering(JqlQueryExecutorForWeeksSinceNow):
     def __init__(self, query, weeks_since, since_date, group):
-        '''
+        """
         :param query:
         :type query: str
         :param weeks_since:
@@ -132,7 +161,7 @@ class JqlQueryExecutorForWeeksSinceNowWithGroupFiltering(JqlQueryExecutorForWeek
         :type since_date: datetime
         :param group:
         :type group: MixpanelDatasetGroups
-        '''
+        """
         super(JqlQueryExecutorForWeeksSinceNowWithGroupFiltering, self).__init__(query, weeks_since, since_date)
         self.args.append(group)
 
@@ -142,15 +171,44 @@ class MappingResultTransformer(object):
         self.key_name = key_name
 
     def transform(self, response):
-        '''
+        """
 
         :param response: the HTTP response
         :type response: requests.Response
         :return:
         :rtype: dict
-        '''
+        """
         return {item.get(self.key_name): item.get('value') for item in response.json()}
 
+
+class MappingCustomResultTransformer(object):
+    # def __init__(self, key_name):
+    #     self.key_name = key_name
+
+    def __init__(self):
+        # self.key_name = key_name
+        pass
+
+    def transform(self, response):
+        """
+
+        :param response: the HTTP response
+        :type response: requests.Response
+        :return:
+        :rtype: dict
+        """
+        # return {item.get(self.key_name): item.get('value') for item in response.json()}
+        result = OrderedDict()
+        for item in response.json():
+            if item.get('date') not in result:
+                result[item.get('date')] = OrderedDict()
+            if item.get('event_name') == 'page view':
+                result[item.get('date')]['pageviews_unique'] = item.get('unique_count')
+                result[item.get('date')]['pageviews_total'] = item.get('total_count')
+            if item.get('event_name') == 'resource download':
+                result[item.get('date')]['downloads_unique'] = item.get('unique_count')
+                result[item.get('date')]['downloads_total'] = item.get('total_count')
+        return dict(sorted(result.items()))
 
 class MultipleValueMappingResultTransformer(MappingResultTransformer):
     def __init__(self, key_name, secondary_key_name):
@@ -372,3 +430,11 @@ def _generate_mandatory_dates(since, weeks):
         mandatory_dates.insert(0, since - timedelta(weeks=i, days=since.weekday()))
     mandatory_values = list(map(lambda x: x.isoformat()[:10], mandatory_dates))
     return mandatory_values
+
+def pageviews_downloads_per_organization_last_5_years(org_id):
+    query_executor = JqlQueryExecutorForLast5Years(jql_queries.PAGEVIEWS_AND_DOWNLOADS_PER_ORGANIZATION, org_id = org_id)
+
+    result = query_executor.run_query(MappingCustomResultTransformer())
+        # MultipleValueMappingResultTransformer('org_id', 'dataset_id'))
+
+    return result
