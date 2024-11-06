@@ -812,10 +812,10 @@ def hdx_generate_organization_stats(org_dict):
 
     # Create SheetOne with Data
     sheet_one = wb.active
-    sheet_one.title = 'Downloads and Page Views'
+    sheet_one.title = 'Page views and Downloads'
 
     result = jql.pageviews_downloads_per_organization_last_5_years(org_dict.get('id'))
-    data = [('Date', 'Page View - Unique', 'Page Views - Total', 'Resource Download - Unique', 'Resource Download - Total')]
+    data = [('Date', 'Page Views - Unique', 'Page Views - Total', 'File Downloads - Unique', 'File Downloads - Total')]
     for key, value in result.items():
         data.append((key, value.get('pageviews_unique'), value.get('pageviews_total'), value.get('downloads_unique'), value.get('downloads_total')))
 
@@ -831,7 +831,7 @@ def hdx_generate_organization_stats(org_dict):
         sheet_one.column_dimensions[col_letter].width = 25
 
     # Create SheetTwo with Data
-    sheet_two = wb.create_sheet(title='README')
+    sheet_two = wb.create_sheet(title='READ ME')
 
     data = [('Overview', 'This spreadsheet contains the number of downloads of files and page views of datasets of the organization, tracked monthly over the past 4 years.'),
             ('Data Source', 'The data has been sourced from the analytics platform Mixpanel [https://mixpanel.com/].'),
