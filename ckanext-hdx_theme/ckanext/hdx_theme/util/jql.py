@@ -431,10 +431,11 @@ def _generate_mandatory_dates(since, weeks):
     mandatory_values = list(map(lambda x: x.isoformat()[:10], mandatory_dates))
     return mandatory_values
 
+@dogpile_jql_region.cache_on_arguments()
+@timer_wrapper
 def pageviews_downloads_per_organization_last_5_years(org_id):
     query_executor = JqlQueryExecutorForLast5Years(jql_queries.PAGEVIEWS_AND_DOWNLOADS_PER_ORGANIZATION, org_id = org_id)
 
     result = query_executor.run_query(MappingCustomResultTransformer())
-        # MultipleValueMappingResultTransformer('org_id', 'dataset_id'))
 
     return result
