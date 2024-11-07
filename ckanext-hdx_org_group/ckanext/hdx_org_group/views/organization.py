@@ -367,7 +367,7 @@ def activity_offset(id, offset=0):
         template = lib_plugins.lookup_group_plugin('organization').activity_template()
     return render(template, extra_vars)
 
-def organization_stats(id):
+def download_organization_stats(id):
     """
         Handles downloading .xlsx organization stats
 
@@ -396,6 +396,8 @@ def organization_stats(id):
         return abort(404, _('Organization not found'))
     except NotAuthorized:
         return abort(404, _('Organization not found'))
+    except Exception as e:
+        return abort(404, _('Something went wrong, please contact us'))
 
 
 hdx_org.add_url_rule(u'/', view_func=index, strict_slashes=False)
@@ -414,4 +416,4 @@ hdx_org.add_url_rule(u'/stats/<id>', view_func=stats)
 hdx_org.add_url_rule(u'/restore/<id>', view_func=restore, methods=[u'POST'])
 hdx_org.add_url_rule(u'/activity/<id>', view_func=activity)
 hdx_org.add_url_rule(u'/activity/<id>/<int:offset>', view_func=activity_offset, defaults={'offset': 0})
-hdx_org.add_url_rule(u'/<id>/download_stats', view_func=organization_stats)
+hdx_org.add_url_rule(u'/<id>/download_stats', view_func=download_organization_stats)

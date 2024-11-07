@@ -802,6 +802,9 @@ def hdx_organization_type_get_value(org_type_key):
     return next((org_type[0] for org_type in static_lists.ORGANIZATION_TYPE_LIST if org_type[1] == org_type_key),
                 org_type_key)
 
+def _get_mixpanel_data(org_id):
+    return jql.pageviews_downloads_per_organization_last_5_years(org_id)
+
 def hdx_generate_organization_stats(org_dict):
 
     # Define variable to load the dataframe
@@ -814,8 +817,8 @@ def hdx_generate_organization_stats(org_dict):
     sheet_one = wb.active
     sheet_one.title = 'Page views and Downloads'
 
-    result = jql.pageviews_downloads_per_organization_last_5_years(org_dict.get('id'))
-    data = [('Date', 'Page Views - Unique', 'Page Views - Total', 'File Downloads - Unique', 'File Downloads - Total')]
+    result = _get_mixpanel_data(org_dict.get('id'))
+    data = [('Date', 'Page Views - Unique', 'Page Views - Total', 'Downloads - Unique', 'Downloads - Total')]
     for key, value in result.items():
         data.append((key, value.get('pageviews_unique'), value.get('pageviews_total'), value.get('downloads_unique'), value.get('downloads_total')))
 
@@ -833,7 +836,7 @@ def hdx_generate_organization_stats(org_dict):
     # Create SheetTwo with Data
     sheet_two = wb.create_sheet(title='READ ME')
 
-    data = [('Overview', 'This spreadsheet contains the number of downloads of files and page views of datasets of the organization, tracked monthly over the past 4 years.'),
+    data = [('Overview', 'This spreadsheet contains the total number of downloads and page views of your data on HDX, tracked monthly over the past 4 years.'),
             ('Data Source', 'The data has been sourced from the analytics platform Mixpanel [https://mixpanel.com/].'),
             ('Contents', 'The spreadsheet includes the following information: \n1. Page Views: Total page views by month. \n2. Downloads: Total number of downloads by month.'),
             ('Caveats', 'To ensure accurate data representation, we have excluded as much bot traffic as possible.'),
