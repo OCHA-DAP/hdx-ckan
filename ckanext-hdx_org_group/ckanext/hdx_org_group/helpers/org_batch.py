@@ -40,8 +40,7 @@ def get_batch(org_identifier):
 
     org_specific_period_config = '{}_{}'.format(BATCH_PERIOD_CONFIG, group.name)
 
-    max_minutes = int(config.get(org_specific_period_config,
-                                 config.get(BATCH_PERIOD_CONFIG, '3')))
+    max_minutes = config.get(org_specific_period_config, config.get(BATCH_PERIOD_CONFIG))
 
     organization_id = group.id
 

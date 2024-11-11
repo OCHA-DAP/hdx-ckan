@@ -83,8 +83,8 @@ def find_user_id(username_or_id):
 
 
 def is_valid_captcha(captcha_response):
-    is_captcha_enabled = config.get('hdx.captcha', 'false')
-    if is_captcha_enabled == 'true':
+    is_captcha_enabled = config.get('hdx.captcha')
+    if is_captcha_enabled:
         # captcha_response = request.params.get('g-recaptcha-response')
         if not validate_captcha(response=captcha_response):
             raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)

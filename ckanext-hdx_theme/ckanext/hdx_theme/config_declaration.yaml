@@ -1,0 +1,362 @@
+version: 1
+groups:
+  - annotation: HDX Wordpress FAQ Settings
+    options:
+      - key: hdx.wordpress.url
+        required: true
+        default: https://centre.humdata.org
+        example: https://centre.humdata.org
+        description: Url to the WP instance where the FAQ is served from.
+      - key: hdx.wordpress.auth.basic
+        example: Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM=
+        description: Base64-encoded username and password, seprated by a colon
+      - key: hdx.wordpress.category.faq
+        type: int
+        default: 554
+        example: 554
+        description: FAQ Category ID for faq section
+      - key: hdx.wordpress.category.covid
+        type: int
+        default: 566
+        example: 566
+        description: FAQ Category ID for covid section
+      - key: hdx.wordpress.category.devs
+        type: int
+        default: 568
+        example: 568
+        description: FAQ Category ID for devs section
+      - key: hdx.wordpress.category.terms
+        type: int
+        default: 577
+        example: 577
+        description: FAQ Category ID for terms section
+      - key: hdx.wordpress.category.licenses
+        type: int
+        default: 581
+        example: 581
+        description: FAQ Category ID for licenses section
+      - key: hdx.wordpress.category.hapi
+        type: int
+        default: 597
+        example: 597
+        description: FAQ Category ID for hapi section
+      - key: hdx.wordpress.category.hapi-terms
+        type: int
+        default: 599
+        example: 599
+        description: FAQ Category ID for hapi section
+      - key: hdx.wordpress.category.signals
+        type: int
+        default: 595
+        example: 595
+        description: FAQ Category ID for signals section
+  - annotation: HDX http headers whitelist 
+    options: 
+      - key: hdx.http_headers.routes
+        type: list
+        default: /country/topline/,/view/,/eaa-worldmap
+        example: /country/topline/,/view/,/eaa-worldmap
+        description: Whitelist for some routes that won't require X-Frame-Options SAMEORIGIN
+      - key: hdx.http_headers.mimetypes
+        type: list
+        default: application/json,text/html,text/json\
+        example: application/json,text/html,text/json\
+        description: Whitelist for some mimetypes that won't require X-Frame-Options SAMEORIGIN
+      - key: hdx.p_code.new_filters.enabled
+        type: bool
+        default: false
+        example: false
+        description: P-Code Filters feature toggle
+  - annotation: HDX Authentication - 2FA 
+    options: 
+      - key: hdx.security.2fa.redirect
+        type: bool
+        default: true
+        example: true
+        description: Makes it mandatory for HDX Admins to setup 2FA
+      - key: hdx.security.site_name
+        default: HDX
+        example: HDX
+        description: Used for issuer name in the QR code for 2FA
+    options: 
+      - key: hdx.password.reset_key.expiration_in_minutes
+        type: int
+        default: 20
+        example: 20
+        description: Valability for the reset key in minutes        
+      - key: hdx.password.invitation_reset_key.expiration_in_hours
+        type: int
+        default: 48
+        example: 48
+        description: Password reset link expiry time in hours
+  - annotation: HDX specific default Solr query parameters
+    options: 
+      - key: hdx.solr.query.qf
+        default: name^4 title^4 vocab_text_Topics^2 notes groups^2 text
+        example: name^4 title^4 vocab_text_Topics^2 notes groups^2 text
+        description: Solr Query Fields - fields and weights influencing search ranking.
+      - key: hdx.solr.query.tie
+        default: 0.3
+        example: 0.3
+        description: Solr Tie Breaker, balances multiple matching terms in queries.
+      - key: hdx.solr.query.bf
+        default: scale(log(pageviews_last_14_days),0,8)
+        example: scale(log(pageviews_last_14_days),0,8)
+        description: Solr Boost Function - boosts document relevance using custom functions.
+  - annotation: Data Grid / Completeness
+    options: 
+      - key: hdx.datagrid.config_url_pattern
+        default: https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
+        example: https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
+        description: URL Pattern(template) for the datagrid config
+      - key: hdx.datagrid.prod
+        type: bool
+        default: false #needs to be false so that tests pass
+        example: true
+        description: Caching will be enabled if true and the "master" branch from the github repo will be used for the Datagrid config
+  - annotation: HDX Caching
+    options: 
+      - key: hdx.caching.use_redis
+        type: bool
+        default: true
+        example: true
+        description: Enable Redis for caching, or use local Dogpile
+      - key: hdx.caching.redis_host
+        default: gisredis
+        example: gisredis
+        description: Redis host name
+      - key: hdx.caching.redis_port
+        type: int
+        default: 6379
+        example: 6379
+        description: Redis Port
+      - key: hdx.caching.redis_db
+        type: int
+        default: 3
+        example: 3
+        description: Redis db index for the HDX Caching
+      - key: hdx.caching.dogpile_filename
+        default: /tmp/hdx_dogpile_cache.dbm
+        example: /tmp/hdx_dogpile_cache.dbm
+        description: Dogpile Filename if caching is on disk and not Redis
+      - key: hdx.cache.onstartup
+        type: bool
+        default: true
+        example: true
+        description: Enable generating caches on HDX Startup (eg. licenses list)
+  - annotation: Indexing & Search
+    options: 
+      - key: hdx.reindexing.enabled
+        default: true 
+        example: true
+        description: Enable HDX-specific reindexing using Solr
+      - key: hdx.reindexing.batch_size
+        type: int
+        default: 200
+        example: 200
+        description: Number of datasets to process at a time during Solr Reindeix
+      - key: hdx.lunr.index_location
+        default: ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_
+        example: ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_
+        description: Search Index Location (ex-LUNR)
+      - key: hdx.search_history.hours_from_actual_search
+        type: int
+        default: 24
+        example: 24
+        description: Configure search history length in hours
+  - annotation: Organization Batch / Search Grouping
+    options: 
+      - key: hdx.batch.period_in_mins
+        type: int
+        default: 3
+        example: 3
+        description: Default batch period
+      - key: hdx.batch.period_in_mins_unesco
+        type: int
+        default: 90
+        example: 90
+        description: Specific batch period for UNESCO
+      - key: hdx.batch.period_in_mins_hot
+        type: int
+        default: 1500
+        example: 1500
+        description: Specific batch period for HOT
+  - annotation: HDX Mailchimp Config
+    options: 
+      - key: hdx.mailchimp.api.key
+        example: < regular secret key format >
+        description: Mailchimp API Key
+      - key: hdx.mailchimp.list.newsletter
+        example: <ten letters>
+        description: Mailchimp ID for the HDX newsletter
+      - key: hdx.mailchimp.list.newuser
+        example: <ten letters>
+        description: Mailchimp ID for the HDX newuser list
+      - key: hdx.mailchimp.interest.data_services
+        example: <ten letters>
+        description: Mailchimp ID for the Data Services interest
+  - annotation: Locations
+    options: 
+      - key: hdx.locations.toplines_url
+        default: https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
+        example: https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
+        description: The url containing a hxlated date with country topline numbers
+      - key: hdx.active_locations_reliefweb.resource_id
+        default: 4551480e-448e-4b09-b02f-ed31d42a43d5
+        example: 4551480e-448e-4b09-b02f-ed31d42a43d5
+        description: The resource for topline data for active locations
+  - annotation: HXL Related
+    options: 
+      - key: hdx.hxl_preview_app.url
+        default: http://172.17.42.1/hxlpreview
+        example: http://172.17.42.1/hxlpreview
+        description: HXL Preview Application URL
+      - key: hdx.hxlproxy.url
+        default: https://proxy.hxlstandard.org
+        example: https://proxy.hxlstandard.org
+        description: HXL Proxy URL
+      - key: hdx.hxlproxy.source_info_url
+        default: https://proxy.hxlstandard.org/api/source-info?url={url}
+        example: https://proxy.hxlstandard.org/api/source-info?url={url}
+        description: HXL Proxy Source Info URL
+  - annotation: Job Processing
+    options: 
+      - key: hdx.file_structure.check_url
+        example: http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
+        description: URL for spreadsheet file structure checker
+      - key: hdx.gis.layer_import_url
+        # default: Needs to be empty for tests to work
+        example: http://gislayer:5000/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
+        description: URL for GIS layer import for geopreview
+      - key: hdx.gis.layer_delete_url
+        example: http://gislayer:5000/api/delete-one-layer/{resource_id}
+        description: URL for GIS layer delete for geopreview
+      - key: hdx.gis.resource_pbf_url
+        # default: Needs to be empty for tests to work
+        example: http://gislayer:5000/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
+        description: URL for Resource PBF used in rendering maps
+      - key: hdx.mapbox.baselayer.url
+        default: https://data.humdata.org/mapbox
+        example: https://data.humdata.org/mapbox
+        description: Base Layer URL for Mapbox integration, actual it's the caching URL on our proxy
+      - key: hdx.mapbox.baselayer.token
+        default: cacheToken 
+        example: cacheToken or < usual token format >
+        description: Provide "cacheToken" if Base URL is HDX caching, as the proxy will inject the token; otherwise add the actual Mapbox Token
+      - key: hdx.change_detection.layer_url
+        example: http://layer:5000/api/create-change-events
+        description: Layer Change detection Url
+  - annotation: Service Checks Config
+    options: 
+      - key: hdx.checks.config_path
+        default: /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
+        example: /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
+        description: Config path for service checks
+      - key: hdx.checks.allowed_user_agent
+        default: HDX-CHECKER
+        example: HDX-CHECKER
+        description: User agent for service checker
+  - annotation: Captcha
+    options: 
+      - key: hdx.captcha
+        type: bool
+        default: false
+        example: false
+        description: Enable Captcha
+      - key: hdx.captcha.url
+        default: https://www.google.com/recaptcha/api/siteverify
+        example: https://www.google.com/recaptcha/api/siteverify
+        description: URL for Captcha
+  - annotation: Mails
+    options: 
+      - key: hdx.onboarding.send_confirmation_email
+        type: bool
+        default: false
+        example: false
+        description: Enable sending confirmation mail for requests
+      - key: hdx.orgrequest.sendmails
+        type: bool
+        default: true
+        example: true
+        description: Enable sending confirmation mail for org requests | Very similar to hdx.onboarding.send_confirmation_email
+      - key: hdx.orgrequest.email
+        example: hdx@un.org
+        description: From Email address for org request emails
+      - key: hdx.faqrequest.email
+        default: hdx@humdata.org
+        example: hdx@humdata.org
+        description: From Email address for FAQ related emails
+      - key: hdx.api_token.email_notifications.enabled
+        type: bool
+        default: false #do not set to true, as tests will start failing
+        example: true
+        description: Email notifications for API token creation
+  - annotation: Analytics
+    options: 
+      - key: hdx.analytics.track_api
+        type: bool
+        default: false
+        example: false
+        description: HDX API tracking
+      - key: hdx.analytics.track_api.exclude_browsers
+        example: 
+        description: List of user agent browser family to exclude
+      - key: hdx.analytics.track_api.exclude_other
+        example: 
+        description: List of other user agent to exclude
+      - key: hdx.analytics.ga.token
+        default: UA-48221887-3
+        example: UA-48221887-3
+        description: Google Analytics Token
+      - key: hdx.analytics.enqueue_url 
+        example: http://${HDX_ANALYTICS_API}/api/send-analytics
+        description: Analytics enqueue url
+      - key: hdx.analytics.mixpanel.token
+        example: < regular secret key format >
+        description: Mixpanel Token
+      - key: hdx.analytics.mixpanel.secret
+        example: < regular secret key format >
+        description: Mixpanel Secret
+      - key: hdx.analytics.mixpanel.warning_threshold_seconds
+        type: int
+        default: 90
+        example: 90
+        description: Mixpanel JQL Warning Treshhold
+      - key: hdx.analytics.hours_for_results_in_cache
+        type: int
+        default: 24
+        example: 24
+        description: Mixpanel JQL Warning Treshhold
+  - annotation: Custom Pages
+    options: 
+      - key: hdx.ebola.datastore.cases
+        default: c59b5722-ca4b-41ca-a446-472d6d824d01
+        example: c59b5722-ca4b-41ca-a446-472d6d824d01
+        description: Ebola page
+  - annotation: Package Related
+    options: 
+      - key: hdx.default_frequency
+        default: -999
+        example: -999
+        description: Default Frequency
+      - key: hdx.crises
+        default: ebola, nepal-earthquake
+        example: ebola, nepal-earthquake
+        description: Crises pages
+      - key: hdx.validation.allow_skip_for_sysadmin
+        example: dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
+        description: Allow admins to update package without validation for certain fields
+  - annotation: HDX Request Data
+    options: 
+      - key: hdx_portal
+        type: bool
+        default: true
+        example: true
+        description: The request data extension wants to know if it's running inside HDX portal or not
+  - annotation: HDX Generic
+    options: 
+      - key: hdx.qadashboard.enabled
+        type: bool 
+        default: true
+        example: true
+        description: Feature toggle for QA Dashboard

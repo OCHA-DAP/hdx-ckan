@@ -74,7 +74,7 @@ class HdxSolrReindexer(object):
 
     def _hdx_fast_reindex(self, context, package_ids, package_index, defer_commit, force, quiet):
         total_packages = len(package_ids)
-        step = int(config.get('hdx.reindexing.batch_size', '100'))
+        step = config.get('hdx.reindexing.batch_size')
         start = 0
         stop = step
         counter = 0

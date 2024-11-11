@@ -36,20 +36,21 @@ Depends on:
         <p>
           {% trans %}If you are not able to scan the QR code, you can manually enter this secret into your authenticator app:{% endtrans %} <code id="totp-secret">{{c.totp_secret}}</code>
         </p>
-
-        <div class="test-two-step">
-          {{ form.input('mfa',
-          label=_("Enter the code from your app to test"),
-          id='field-mfa',
-          type="text",
-          value="",
-          error=c.mfa_test_invalid,
-          classes=["control-medium"],
-          attrs={"autocomplete": "off"})
-          }}
-          <button id="test-two-step-btn" class="btn btn-primary">{{_('Test')}}</button>
-          <div id="test-two-step-result" style="display: none;" class="alert"></div>
-        </div>
+        <form id="form-mfa-test">
+          <div class="test-two-step">
+            {{ form.input('mfa',
+            label=_("Enter the code from your app to test"),
+            id='field-mfa',
+            type="text",
+            value="",
+            error=c.mfa_test_invalid,
+            classes=["control-medium"],
+            attrs={"autocomplete": "off"})
+            }}
+            <button id="test-two-step-btn" class="btn btn-primary">{{_('Test')}}</button>
+            <div id="test-two-step-result" style="display: none;" class="alert"></div>
+          </div>
+        </form>  
         <p>
           <b>If your one-time password does not work:</b><br/>
           Click on the "{{ generate_new_title }}" and repeat from step 3 above.

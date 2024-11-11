@@ -56,7 +56,7 @@ class DatasetContactContributorLogic(object):
             'pkg_title': self.request.form.get('pkg_title'),
             'pkg_id': self.request.form.get('pkg_id'),
             'pkg_url': h.url_for('dataset_read', id=self.request.form.get('pkg_id'), qualified=True),
-            'hdx_email': config.get('hdx.faqrequest.email', 'hdx@humdata.org'),
+            'hdx_email': config.get('hdx.faqrequest.email'),
         }
 
         get_action('hdx_send_mail_contributor')(self.context, data_dict)

@@ -6,6 +6,7 @@
   {% asset 'hdx_theme/organization-light-styles' %}
 {% endblock -%}
 
+{% block subtitle %}{{ org.title }}{% endblock %}
 
 {% block links %}
   <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">

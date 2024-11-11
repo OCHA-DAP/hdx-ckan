@@ -178,13 +178,13 @@ def cached_resource_id_apihighways():
     log.info("Creating cache for HDX resource_id to apihighways dataset_id mapping")
 
     result = {}
-    if config.get('hdx.apihighways.enabled') == 'true':
-        try:
-            response = requests.get(config.get('hdx.apihighways.url'))
-            response.raise_for_status()
-            result = response.json()
-        except Exception as ex:
-            log.error(ex)
+    # if config.get('hdx.apihighways.enabled') == 'true':
+    #     try:
+    #         response = requests.get(config.get('hdx.apihighways.url'))
+    #         response.raise_for_status()
+    #         result = response.json()
+    #     except Exception as ex:
+    #         log.error(ex)
     return result
 
 

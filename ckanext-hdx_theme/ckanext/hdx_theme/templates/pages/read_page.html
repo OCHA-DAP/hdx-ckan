@@ -5,6 +5,11 @@
 
 {% block subtitle %}{{ data.title or data.name }}{% endblock %}
 
+{% block links %}
+  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {{ super() }}
+{% endblock %}
+
 {% block breadcrumb_content %}
     <li class="breadcrumb-item"><a>{{ data.type }}</a></li>
     {% if data.type == 'event' %}

@@ -107,5 +107,24 @@ def switch_url_path(path=None, force=True):
         new_path = urlparse.urlunparse(
             parsed_url[0:4] + (query + force_query,) + parsed_url[5:]
         )
+    else: 
+        parsed_url = urlparse.urlparse(new_path)
+        query_params = urlparse.parse_qs(parsed_url.query, True)
+
+        if FORCE_REDIRECT_URL_PARAM in query_params:
+            del query_params[FORCE_REDIRECT_URL_PARAM]
+
+        # Reconstruct the URL
+        new_query = urlparse.urlencode(query_params, doseq=True)
+        new_url = urlparse.urlunparse((
+            parsed_url.scheme,
+            parsed_url.netloc,
+            parsed_url.path,
+            parsed_url.params,
+            new_query,
+            parsed_url.fragment
+        ))
+
+        new_path = new_url
 
     return new_path

@@ -17,6 +17,12 @@
         {% endif %}
     </span>
 {% endblock %}
+
+{% block links %}
+  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {{ super() }}
+{% endblock %}
+
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
   <li class="breadcrumb-item active">{{ h.nav_link(data.country_title,

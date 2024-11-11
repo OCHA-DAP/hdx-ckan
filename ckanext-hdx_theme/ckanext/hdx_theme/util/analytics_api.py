@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def send_api_analytics():
-    api_tracking_enabled = config.get('hdx.analytics.track_api', 'false')
+    api_tracking_enabled = config.get('hdx.analytics.track_api')
     if api_tracking_enabled:
         environ = request.environ
         if APICallAnalyticsSender._should_send_analytics_event(environ):

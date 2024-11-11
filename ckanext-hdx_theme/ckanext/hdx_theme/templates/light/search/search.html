@@ -6,6 +6,8 @@
   {% asset 'hdx_theme/search-light-styles' %}
 {% endblock -%}
 
+{% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
+
 {% block links %}
   <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
   {{ super() }}

@@ -1,6 +1,11 @@
 {% extends "page.html" %}
 {% set page_has_mobile_version = True %}
 
+{% block links %}
+  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {{ super() }}
+{% endblock %}
+
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/custom-org-search-facets-styles' %}

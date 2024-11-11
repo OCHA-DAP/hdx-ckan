@@ -208,10 +208,7 @@ hdx.download_with_cache.folder = /srv/filestore/download_cache
 hdx.orgrequest.sendmails = true
 hdx.faqrequest.email = hdx@humdata.org
 hdx.cache.onstartup = true
-hdx.less_compile.onstartup = false
-hdx.homepage.extrasources = 13
-hdx.ogre.url = http://ogre:3000
-
+# DEPRECATED -> hdx.homepage.extrasources = 13
 hdx.mapbox.baselayer.url = https://data.humdata.org/mapbox
 hdx.mapbox.baselayer.token = cacheToken
 
@@ -219,51 +216,18 @@ hdx.mapbox.baselayer.token = cacheToken
 
 # Current active crises
 hdx.crises = ebola, nepal-earthquake
-hdx.crisis.ebola = ebola
-hdx.crisis.nepal_earthquake = nepal-earthquake
-
-## Featured Org settings
-hdx.featured_org_config = 1f3dbfae-76d1-42da-bc29-b497fa144e90
-hdx.default_frequency = -999
 
 # Ebola page
-# hdx.ebola.datastore.top_line_num = a02903a9-022b-4047-bbb5-45127b591c85
 hdx.ebola.datastore.cases = c59b5722-ca4b-41ca-a446-472d6d824d01
-# hdx.ebola.datastore.appeal = 93b92803-f9fa-45f4-bf72-73a8ab1d8922
-
-# Columbia page
-hdx.colombia.datastore.top_line_num = f78fe6f8-c363-4988-a847-b7c1c81ca233
-hdx.colombia.datastore.displaced = 1f56da93-6622-477f-9b55-b109def3f248
-hdx.colombia.datastore.access_constraints = 9e69d499-0b2b-4da6-9c61-10e453a57504
-
-
-# Nepal Earthquake page
-hdx.nepal_earthquake.filestore.circle_markers = /dataset/json-repository/resource_download/c7a5b4a5-ce29-484e-9f8c-581ccefba04e
-hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_download/475656c7-ee1e-4cd1-a11e-fd20e397be1c
-
-# GIS
-# This should be overriden in your own prod.ini
-# hdx.gis.layer_import_url = http://localhost:1234/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
-# hdx.gis.resource_pbf_url = http://localhost:7101/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
 
 # Analytics
 hdx.analytics.ga.token = UA-48221887-3
-hdx.analytics.hotjar.site_id =
 # This should be overriden in your own prod.ini
 # hdx.analytics.enqueue_url = http://localhost:1234/api/send-analytics
-hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165
+hdx.analytics.mixpanel.token = OVERWRITE_WITH_TOKEN_FROM_MP_PROJECT
 hdx.analytics.mixpanel.secret = OVERWRITE_WITH_SECRET_FROM_MP_PROJECT
 hdx.analytics.hours_for_results_in_cache = 12
 hdx.analytics.mixpanel.warning_threshold_seconds = 90
-# Disable HDX API tracking
-# added in prod.ini.tpl as env vars; the env vars get their defaults in the ckn startup script
-# hdx.analytics.track_api = false
-# hdx.analytics.track_api.exclude_browsers =
-# hdx.analytics.track_api.exclude_other =
-
-# Scheduled execution
-# This should be overriden in your own prod.ini.
-hdx.jobprocessor.scheduled.base_url = http://localhost:1234/api/scheduler/
 
 hdx.captcha = true
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
@@ -271,12 +235,6 @@ hdx.onboarding.send_confirmation_email = true
 
 # The configuration for running the service checks
 hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
-hdx.checks.allowed_user_agent = HDX-CHECKER
-
-# Map Explorer configs
-hdx.explorer.url = /mpx/#/
-hdx.explorer.iframe.width = 100%%
-hdx.explorer.iframe.height = 750px
 
 #file structure check
 hdx.file_structure.check_url = http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
@@ -289,16 +247,9 @@ hdx.hxlproxy.source_info_url = https://proxy.hxlstandard.org/api/source-info?url
 # HXL Preview
 hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
 
-# HDX Snap Service
-hdx.snap_service.url = http://snap:8080
-
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
-
-# The url for topline data for active locations
-# DEPRECATED. Replaced by hdx.active_locations_reliefweb.resource_id
-# hdx.active_locations_toplines.url = https://raw.githubusercontent.com/reliefweb/crisis-app-data/master/crisis.json
 
 # The resource for topline data for active locations
 hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d5
@@ -306,57 +257,27 @@ hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d
 # The url containing a hxlated date with country topline numbers
 hdx.locations.toplines_url = https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
 
-#mailchimp settings - update your prod.ini with real ones
-hdx.mailchimp = true
-# hdx.mailchimp.api.key = aaa-fake
-# hdx.mailchimp.list.newsletter = aaa-fake
-# hdx.mailchimp.list.newuser = bbb-fake
-# hdx.mailchimp.api.key = ccc-fake
-# hdx.mailchimp.interest.data_services = ddd-fake
-
+hdx.caching.use_redis = true 
 # hdx_requestdata setting
-hdx_portal = True
-ckanext.requestdata.newsletter_url = http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1
-ckanext.requestdata.twitter_url = https://twitter.com/humdata
-ckanext.requestdata.contact_email = hdx@un.org
+hdx_portal = true
+#mailchimp settings - update your prod.ini with real ones
+# documentation in hdx_theme / config_declaration.yaml
 
-# CPS
-hdx.cps.off = true
-
-# BATCH
-hdx.batch.period_in_mins = 3
+#!! DEPRECATE to be removed next time :) hdx_requestdata setting
+# ckanext.requestdata.newsletter_url = http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1
+# ckanext.requestdata.twitter_url = https://twitter.com/humdata
+# ckanext.requestdata.contact_email = hdx@un.org
 
 #SEARCH_HISTORY
 hdx.search_history.hours_from_actual_search = 1
 
-#SEARCH GROUPING/BATCH
-hdx.batch.period_in_mins_unesco = 90
-hdx.batch.period_in_mins_hot = 1500
-
 #Search Index Location (ex-LUNR)
 hdx.lunr.index_location = ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_
 
-#Enable HDX-specific reindexing
-hdx.reindexing.enabled = true
-# number of datasets to process at a time
-hdx.reindexing.batch_size = 200
-
-# Dataset Validation
-# hdx.validation.allow_skip_for_sysadmin = dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
-
 # DATA GRID / COMPLETENESS
 hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
-
 # if true, caching will be enabled and the "master" branch from the github repo will be used
 hdx.datagrid.prod = true
-
-hdx.caching.use_redis = true
-
-hdx.apihighways.enabled = false
-hdx.apihighways.url = https://api.apihighways.org/dataset?vocabulary[legacy]=hdx-full-set&page[size]=10000&includes=metadata
-hdx.apihighways.baseurl = https://apihighways.org/data-sets/
-
-hdx.qadashboard.enabled = true
 
 # HDX specific default solr query parameters
 hdx.solr.query.qf = name^4 title^4 vocab_text_Topics^2 notes groups^2 text
@@ -398,8 +319,6 @@ ckanext.security.brute_force_key = user_name
 
 # Redirect admins to setup 2FA
 hdx.security.2fa.redirect = true
-# Used for issuer name in the QR code for 2FA
-hdx.security.site_name = HDX
 
 # Change detection settings
 hdx.change_detection.layer_url = http://layer:5000/api/create-change-events

@@ -26,8 +26,8 @@ def send_mail(rawRecipients, subject, body, one_email=False):
             .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject,
                     body=body)
         log.info(email_info)
-        send_mails = config.get('hdx.orgrequest.sendmails', 'true')
-        if 'true' == send_mails:
+        send_mails = config.get('hdx.orgrequest.sendmails')
+        if send_mails:
             if one_email:
                 # new_recipients = []
                 # for recipient in recipients:

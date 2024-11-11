@@ -10,8 +10,9 @@ import ckanext.hdx_user_extra.actions.create as create
 import ckanext.hdx_user_extra.actions.get as get
 import ckanext.hdx_user_extra.actions.update as update
 import ckanext.hdx_user_extra.model as user_extra_model
+import ckan.plugins.toolkit as tk
 
-
+@tk.blanket.config_declarations
 class HDX_User_ExtraPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer)

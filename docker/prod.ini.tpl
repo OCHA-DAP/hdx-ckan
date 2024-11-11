@@ -53,8 +53,6 @@ smtp.starttls    = ${HDX_SMTP_TLS}
 hdx.download_with_cache.datasets = repository-for-pdf-files
 hdx.download_with_cache.folder = /srv/filestore/download_cache
 
-hdx_smtp.mail_from_please_reply   = please-reply@${HDX_SMTP_DOMAIN}
-
 hdx.cache.onstartup = true
 hdx.caching.redis_host = ${HDX_REDIS_ADDR}
 hdx.caching.redis_port = ${HDX_REDIS_PORT}
@@ -62,14 +60,6 @@ hdx.caching.redis_db = ${HDX_REDIS_DB}
 
 hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
-
-# disabled during work on HDX-6899
-# hdx.rest.indicator.endpoint        = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2/values
-# hdx.rest.indicator.endpoint.facets = http://${HDX_PREFIX}manage.${HDX_DOMAIN}/public/api2
-
-#DEPRECATED hdx.css.basepath           = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated
-#DEPRECATED hdx.less.basepath          = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less
-#DEPRECATED hdx.less_compile.onstartup = False
 
 # GIS
 hdx.gis.layer_delete_url = http://${HDX_GEOPREVIEW_API}/api/delete-one-layer/{resource_id}
@@ -79,7 +69,6 @@ hdx.gis.layer_import_url = http://${HDX_GEOPREVIEW_API}/api/add-layer/dataset/{d
 # at Alex suggestion, i made this proto unaware
 hdx.gis.resource_pbf_url = //${HDX_DOMAIN}/gis/{resource_id}/{z}/{x}/{y}.pbf
 
-hdx.analytics.hotjar.site_id = ${HDX_HOTJAR_SITEID}
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
 hdx.analytics.mixpanel.secret = ${HDX_MIXPANEL_SECRET}
 hdx.analytics.enqueue_url    = http://${HDX_ANALYTICS_API}/api/send-analytics
@@ -100,13 +89,6 @@ hdx.hxlproxy.source_info_url = ${HDX_HXLPROXY}/api/source-info?url={url}
 
 # Quickcharts!
 hdx.hxl_preview_app.url = https://${HDX_DOMAIN}/tools/quickcharts
-
-# GOOGLE DEV
-hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
-
-#Bit.ly DEV
-hdx.bitly.token = ${HDX_BITLY_TOKEN}
-hdx.bitly.group = ${HDX_BITLY_GROUP}
 
 # MAILCHIMP
 hdx.mailchimp.api.key = ${HDX_MAILCHIMP_API_KEY}

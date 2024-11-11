@@ -27,4 +27,4 @@ HDX_N8N_IMAGE_URL=https://gallery.ecr.aws/unocha/hdx-n8n/
 HDX_N8N_IMAGE_TAG=1.31.2
 
 HDX_N8N_WORKFLOW_URL=https://github.com/OCHA-DAP/hdx-n8n-qa-workflow
-HDX_N8N_WORKFLOW_TAG=0.4.1
+HDX_N8N_WORKFLOW_TAG=0.5.0

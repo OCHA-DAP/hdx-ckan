@@ -52,7 +52,7 @@ def hdx_send_reset_link(context, data_dict):
         if user is None:
             raise NotFound
 
-    expiration_in_minutes = int(config.get('hdx.password.reset_key.expiration_in_minutes', 20))
+    expiration_in_minutes = config.get('hdx.password.reset_key.expiration_in_minutes')
     if user:
         reset_password.create_reset_key(user, expiration_in_minutes)
 

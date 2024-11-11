@@ -246,7 +246,7 @@ def hdx_send_editor_request_for_org(context, data_dict):
              '(This is an automated mail)' \
              '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'],
                         org=data_dict['organization'], msg=data_dict.get('message', ''))
-    if config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
+    if config.get('hdx.onboarding.send_confirmation_email'):
         hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body, one_email=True)
 
 

@@ -27,8 +27,8 @@ hdx_qa = Blueprint(u'hdx_qa', __name__, url_prefix=u'/qa_dashboard')
 
 
 def dashboard():
-    qa_dashboard_enabled = config.get('hdx.qadashboard.enabled', 'true')
-    if qa_dashboard_enabled == 'false':
+    qa_dashboard_enabled = config.get('hdx.qadashboard.enabled')
+    if not qa_dashboard_enabled:
         abort(404, _('Page not found'))
 
     try:

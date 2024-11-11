@@ -17,7 +17,7 @@ from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsS
 
 log = logging.getLogger(__name__)
 
-
+@tk.blanket.config_declarations
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)

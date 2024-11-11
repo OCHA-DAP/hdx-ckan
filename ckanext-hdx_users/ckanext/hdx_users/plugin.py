@@ -29,7 +29,6 @@ def user_create(context, data_dict=None):
     # Disable registering new users
     return {'success': False, 'msg': 'Registering is disabled at the moment!'}
 
-
 class HDXValidatePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -74,7 +73,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             # user_auth_view.hdx_user_auth
         ]
 
-
+@toolkit.blanket.config_declarations
 class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IActions)
