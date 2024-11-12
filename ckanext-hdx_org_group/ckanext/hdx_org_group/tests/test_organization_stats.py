@@ -76,23 +76,23 @@ class TestStatsOrg(object):
         url = h.url_for('hdx_org.stats', id=org_id)
         # no user
         result = app.get(url, headers={})
-        assert 'Export more detailed usage statistics' not in result.body
+        assert 'Export monthly usage statistics' not in result.body
 
         url = h.url_for('hdx_org.stats', id=org_id)
         # regular user
         result = app.get(url, headers=auth_user)
-        assert 'Export more detailed usage statistics' not in result.body
+        assert 'Export monthly usage statistics' not in result.body
 
         url = h.url_for('hdx_org.stats', id=org_id)
         # org member
         result = app.get(url, headers=auth_member)
-        assert 'Export more detailed usage statistics' not in result.body
+        assert 'Export monthly usage statistics' not in result.body
 
         url = h.url_for('hdx_org.stats', id=org_id)
         # org admin
         result = app.get(url, headers=auth_admin)
         assert result.status_code == 200
-        assert 'Export more detailed usage statistics' in result.body
+        assert 'Export monthly usage statistics' in result.body
 
 
         # download xls access

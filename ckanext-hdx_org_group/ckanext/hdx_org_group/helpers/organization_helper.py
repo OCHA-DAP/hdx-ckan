@@ -837,7 +837,7 @@ def hdx_generate_organization_stats(org_dict):
     # Create SheetTwo with Data
     sheet_two = wb.create_sheet(title='READ ME')
 
-    data = [('Overview', 'This spreadsheet contains the total number of downloads and page views of your data on HDX, tracked monthly over the past 4 years.'),
+    data = [('Overview', 'This spreadsheet contains the number of downloads of files and page views of datasets of the organization, tracked monthly over the past 4 years.'),
             ('Data Source', 'The data has been sourced from the analytics platform Mixpanel [https://mixpanel.com/].'),
             ('Contents', 'The spreadsheet includes the following information: \n1. Page Views: Total page views by month. \n2. Downloads: Total number of downloads by month.'),
             ('Caveats', 'To ensure accurate data representation, we have excluded as much bot traffic as possible.'),
