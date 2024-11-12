@@ -127,8 +127,10 @@ class JqlQueryExecutorForLast5Years(JqlQueryExecutor):
         :type query: str
         """
         super(JqlQueryExecutorForLast5Years, self).__init__(query)
-        self.args += self._compute_period()
+        period_list = self._compute_period()
+        self.args += [period_list[0], period_list[1]]
         self.args += [org_id]
+        self.from_to_date  = [period_list[2], period_list[3]]
 
     @staticmethod
     def _compute_period():
@@ -147,7 +149,7 @@ class JqlQueryExecutorForLast5Years(JqlQueryExecutor):
         until_date = today.replace(day=1) - timedelta(days=1)
         until_date_str = until_date.isoformat()[:10]
 
-        return [from_date_str, until_date_str]
+        return [from_date_str, until_date_str, from_date, until_date]
 
 
 class JqlQueryExecutorForWeeksSinceNowWithGroupFiltering(JqlQueryExecutorForWeeksSinceNow):
@@ -182,12 +184,8 @@ class MappingResultTransformer(object):
 
 
 class MappingCustomResultTransformer(object):
-    # def __init__(self, key_name):
-    #     self.key_name = key_name
-
-    def __init__(self):
-        # self.key_name = key_name
-        pass
+    def __init__(self, data_for_each_month):
+        self.data_for_each_month = data_for_each_month
 
     def transform(self, response):
         """
@@ -197,8 +195,7 @@ class MappingCustomResultTransformer(object):
         :return:
         :rtype: dict
         """
-        # return {item.get(self.key_name): item.get('value') for item in response.json()}
-        result = OrderedDict()
+        result = self.data_for_each_month
         for item in response.json():
             if item.get('date') not in result:
                 result[item.get('date')] = OrderedDict()
@@ -435,7 +432,26 @@ def _generate_mandatory_dates(since, weeks):
 @timer_wrapper
 def pageviews_downloads_per_organization_last_5_years(org_id):
     query_executor = JqlQueryExecutorForLast5Years(jql_queries.PAGEVIEWS_AND_DOWNLOADS_PER_ORGANIZATION, org_id = org_id)
+    result = None
+    try:
+        data_for_each_month = _generate_data_for_each_month(query_executor.from_to_date[0], query_executor.from_to_date[1])
+        result = query_executor.run_query(MappingCustomResultTransformer(data_for_each_month))
+    except Exception as ex:
+        log.error(ex)
 
-    result = query_executor.run_query(MappingCustomResultTransformer())
+    return result
+
+def _generate_data_for_each_month(start_date, end_date):
+    from dateutil.relativedelta import relativedelta
+    current_date = start_date
+    result = OrderedDict()
+    while current_date < end_date:
+        current_date_iso = current_date.isoformat()[:10]
+        result[current_date_iso]=OrderedDict()
+        result[current_date_iso]['pageviews_unique'] = 0
+        result[current_date_iso]['pageviews_total'] = 0
+        result[current_date_iso]['downloads_unique'] = 0
+        result[current_date_iso]['downloads_total'] = 0
+        current_date += relativedelta(months=1)
 
     return result
