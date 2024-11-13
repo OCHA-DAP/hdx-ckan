@@ -42,13 +42,12 @@
                           {% endif %}
 
                           {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['mb-3', 'required', '', 'control-large'], attrs={'data-module': 'slug-preview-target', }) }}
-                          {% set prefix = h.url_for('hdx_event.read_event',id='', qualified=true) %}
-                          {% set full_domain_event = h.url_for('hdx_event.read_event',id='', qualified=true) %}
-                          {% set full_domain_dashboards = h.url_for('hdx_dashboard.read_dashboard',id='', qualified=true) %}
-                          {% set domain = prefix|replace("http://", "")|replace("https://", "") %}
-                          {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<my-page>'} %}
-                          {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
-
+                          {% set prefix = h.url_for('hdx_event.read_event',id='') %}
+                          {% set full_domain_event = h.url_for('hdx_event.read_event',id='page_id', qualified=true) %}
+                          {% set full_domain_dashboards = h.url_for('hdx_dashboard.read_dashboard',id='page_id', qualified=true) %}
+                          {% set full_domain_event_no_id = full_domain_event|replace("page_id/", "")|replace("page_id", "") %}
+                          {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': full_domain_event_no_id, 'data-module-placeholder': 'page_id'} %}
+                          {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. page_id'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
                           <div class="mb-3">
                               <div class="checkbox">
                                   <label>
