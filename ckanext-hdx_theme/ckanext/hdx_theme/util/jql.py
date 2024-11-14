@@ -120,13 +120,13 @@ class JqlQueryExecutorForWeeksSinceNow(JqlQueryExecutor):
 
         return [from_date_str, until_date_str]
 
-class JqlQueryExecutorForLast5Years(JqlQueryExecutor):
+class JqlQueryExecutorForLast4Years(JqlQueryExecutor):
     def __init__(self, query, org_id):
         """
         :param query:
         :type query: str
         """
-        super(JqlQueryExecutorForLast5Years, self).__init__(query)
+        super(JqlQueryExecutorForLast4Years, self).__init__(query)
         period_list = self._compute_period()
         self.args += [period_list[0], period_list[1]]
         self.args += [org_id]
@@ -136,13 +136,13 @@ class JqlQueryExecutorForLast5Years(JqlQueryExecutor):
     def _compute_period():
         """
         :return: a list with 2 iso date strings representing the beginning and ending of the period,
-                since 5 years ago on January 1st until last day of previous month
+                since 4 years ago on January 1st until last day of previous month
         :rtype: list[str]
         """
         today = datetime.now(timezone.utc)
 
-        # Calculate the date 5 years ago on January 1st
-        from_date = today.replace(year=today.year - 5, month=1, day=1)
+        # Calculate the date 4 years ago on January 1st
+        from_date = today.replace(year=today.year - 4, month=1, day=1)
         from_date_str = from_date.isoformat()[:10]
 
         # last day of previous month
@@ -430,8 +430,8 @@ def _generate_mandatory_dates(since, weeks):
 
 @dogpile_jql_region.cache_on_arguments()
 @timer_wrapper
-def pageviews_downloads_per_organization_last_5_years(org_id):
-    query_executor = JqlQueryExecutorForLast5Years(jql_queries.PAGEVIEWS_AND_DOWNLOADS_PER_ORGANIZATION, org_id = org_id)
+def pageviews_downloads_per_organization_last_4_years(org_id):
+    query_executor = JqlQueryExecutorForLast4Years(jql_queries.PAGEVIEWS_AND_DOWNLOADS_PER_ORGANIZATION, org_id = org_id)
     result = None
     try:
         data_for_each_month = _generate_data_for_each_month(query_executor.from_to_date[0], query_executor.from_to_date[1])

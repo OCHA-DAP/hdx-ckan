@@ -803,7 +803,7 @@ def hdx_organization_type_get_value(org_type_key):
                 org_type_key)
 
 def _get_mixpanel_data(org_id):
-    result = jql.pageviews_downloads_per_organization_last_5_years(org_id)
+    result = jql.pageviews_downloads_per_organization_last_4_years(org_id)
     return result
 
 def hdx_generate_organization_stats(org_dict):
