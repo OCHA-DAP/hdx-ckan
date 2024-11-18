@@ -837,12 +837,16 @@ def hdx_generate_organization_stats(org_dict):
     # Create SheetTwo with Data
     sheet_two = wb.create_sheet(title='READ ME')
 
-    data = [('Overview', 'This spreadsheet contains the number of downloads of files and page views of datasets of the organization, tracked monthly over the past 4 years.'),
-            ('Data Source', 'The data has been sourced from the analytics platform Mixpanel [https://mixpanel.com/].'),
-            ('Contents', 'The spreadsheet includes the following information: \n1. Page Views: Total page views by month. \n2. Downloads: Total number of downloads by month.'),
-            ('Caveats', 'To ensure accurate data representation, we have excluded as much bot traffic as possible.'),
+    data = [
+            ('Organisation Name', org_dict.get('title') or org_dict.get('name')),
+            ('Overview', 'This spreadsheet contains the number of dataset downloads and page views of the organisation, tracked monthly.'),
+            ('Contents', '1. Total and unique number of downloads by month. \n2. Total and unique number of page views by month.'),
+            ('Time Period', 'Includes monthly data for the current year and the preceding four years.'),
             ('Update Frequency', 'The spreadsheet is refreshed automatically on the first day of each month.'),
-            ('Contact', 'For additional inquiries, please contact us at hdx@un.org')]
+            ('Data Source', 'The data comes from the analytics platform Mixpanel.'),
+            ('Caveats', 'To ensure accuracy, we have excluded as much bot traffic as possible. \nThe data in this spreadsheet may differ from that on the organisation page stats dashboard as they cover different time periods.'),
+            ('Contact', 'For additional inquiries, please contact us at hdx@un.org')
+    ]
 
     # Add data to the worksheet
     for row_num, (header, text) in enumerate(data, start=1):

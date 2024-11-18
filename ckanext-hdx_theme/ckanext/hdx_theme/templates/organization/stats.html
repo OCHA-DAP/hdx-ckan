@@ -20,10 +20,11 @@
       {% set margin_top="" %}
       {% if h.check_access('organization_update', {'id': org_meta.org_dict.id}) %}
         <div class="text-end mt-3">
-          <p>Export monthly usage statistics <span
-            title="{{ _('Number of datasets downloads and page views by month') }}" data-module="bs_tooltip"
-            data-module-placement="top" data-bs-toggle="tooltip"> [?]</span>: <a
-            href="{{ h.url_for('hdx_org.download_organization_stats', id=org_meta.org_dict.id) }}">XLSX</a></p>
+          <p>Monthly dataset download and page view statistics:
+{#            <span#}
+{#            title="{{ _('Number of datasets downloads and page views by month') }}" data-module="bs_tooltip"#}
+{#            data-module-placement="top" data-bs-toggle="tooltip"> [?]</span>: #}
+            <a href="{{ h.url_for('hdx_org.download_organization_stats', id=org_meta.org_dict.id) }}">XLSX</a></p>
         </div>
         {% set margin_top="mt0" %}
       {% endif %}
