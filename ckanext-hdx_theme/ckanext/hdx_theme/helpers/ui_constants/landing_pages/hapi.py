@@ -20,11 +20,6 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_BUTTON_VISUALIZATION': '''Learn more''',
     'BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION': '''https://ocha-dap.github.io/hdx-hapi-example''',
 
-    'BE_INSPIRED_CARD_TITLE_CHATBOT': '''Chatbot''',
-    'BE_INSPIRED_CARD_TEXT_CHATBOT': '''An early stage AI chatbot developed with DataKind to ask questions about the data.''',
-    'BE_INSPIRED_CARD_BUTTON_CHATBOT': '''Learn more''',
-    'BE_INSPIRED_CARD_BUTTON_LINK_CHATBOT': '''https://www.datakind.org/our-domains/humanitarian-response/''',
-
     'FAQ_SECTION_TITLE': '''FAQs''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',

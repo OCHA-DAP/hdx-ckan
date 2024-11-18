@@ -444,6 +444,6 @@ hdx_light_dashboard.add_url_rule(u'/<id>/', view_func=read_light_dashboard, stri
 hdx_event.add_url_rule(u'/<id>/', view_func=read_event, strict_slashes=False)
 hdx_dashboard.add_url_rule(u'/<id>/', view_func=read_dashboard, strict_slashes=False)
 
-hdx_custom_page.add_url_rule(u'/new', view_func=CreateView.as_view(str(u'new')))
-hdx_custom_page.add_url_rule(u'/edit/<id>', view_func=EditView.as_view(str(u'edit')))
-hdx_custom_page.add_url_rule(u'/delete/<id>', view_func=DeleteView.as_view(str(u'delete_page')))
+hdx_custom_page.add_url_rule(u'/new', view_func=CreateView.as_view(str(u'new')), strict_slashes=False)
+hdx_custom_page.add_url_rule(u'/edit/<id>', view_func=EditView.as_view(str(u'edit')), strict_slashes=False)
+hdx_custom_page.add_url_rule(u'/delete/<id>', view_func=DeleteView.as_view(str(u'delete_page')), strict_slashes=False)
