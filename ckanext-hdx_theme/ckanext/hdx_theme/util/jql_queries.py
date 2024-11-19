@@ -303,6 +303,8 @@ function main() {{
       {{event: "page view"}}
     ]
   }})
+  ''' + COMMON_FILTER + \
+  '''
   .filter(event => event.properties["org id"] == "{}")
   .groupByUser(["name", mixpanel.numeric_bucket('time', mixpanel.monthly_time_buckets)], mixpanel.reducer.count()) // unique
   .map(function(r){{
