@@ -92,7 +92,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     # IGroupForm
     def setup_template_variables(self, context, data_dict):
-        org.new_org_template_variables(context, data_dict)
+        org.new_org_template_variables(data_dict)
 
     # IValidators
     def get_validators(self):

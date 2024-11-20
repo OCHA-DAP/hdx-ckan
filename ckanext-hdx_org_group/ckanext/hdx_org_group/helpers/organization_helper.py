@@ -1,20 +1,20 @@
-'''
+"""
 Created on Jan 14, 2015
 
 @author: alexandru-m-g
-'''
+"""
 
 import json
 import logging
 import os
 import six
-
+import openpyxl
 import ckanext.hdx_search.cli.click_feature_search_command as lunr
-import ckanext.hdx_theme.helpers.helpers as h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 from sqlalchemy import func
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
-
+from flask import make_response
+from tempfile import NamedTemporaryFile
 import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
@@ -30,6 +30,8 @@ from collections import OrderedDict
 from ckan.common import _, c, config
 import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
+import ckanext.hdx_theme.util.jql as jql
+from openpyxl.styles import Alignment, Font
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 abort = base.abort
@@ -46,7 +48,7 @@ ValidationError = logic.ValidationError
 
 
 def filter_and_sort_results_case_insensitive(results, sort_by, q=None, has_datasets=False):
-    '''
+    """
     :param results: list of organizations to filter/sort
     :type results: list[dict]
     :param sort_by:
@@ -57,7 +59,7 @@ def filter_and_sort_results_case_insensitive(results, sort_by, q=None, has_datas
     :type has_datasets: bool
     :return: sorted/filtered list
     :rtype: list[dict]
-    '''
+    """
 
     filtered_results = results
     if q:
@@ -348,9 +350,9 @@ def hdx_organization_delete(context, data_dict):
 
 
 def _run_core_group_org_action(context, data_dict, core_action):
-    '''
+    """
     Runs core ckan action with lunr update
-    '''
+    """
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core_action(context, data_dict)
     if not test:
@@ -366,7 +368,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     id = _get_or_bust(data_dict, 'id')
 
     group = model.Group.get(id)
-    context["group"] = group
+    context['group'] = group
     if group is None:
         raise NotFound('Group was not found.')
 
@@ -604,7 +606,7 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
         # to ensure they still work
         try:
             group_plugin.check_data_dict(data_dict, schema)
-        except TypeError as e:
+        except TypeError:
             group_plugin.check_data_dict(data_dict)
 
     data, errors = lib_plugins.plugin_validate(
@@ -666,8 +668,8 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
 
     if not context.get('defer_commit'):
         model.repo.commit()
-    context["group"] = group
-    context["id"] = group.id
+    context['group'] = group
+    context['id'] = group.id
 
     # creator of group/org becomes an admin
     # this needs to be after the repo.commit or else revisions break
@@ -718,9 +720,9 @@ def notify_admins(data_dict):
             # for admin in data_dict.get('admins'):
             hdx_mailer.mail_recipient(data_dict.get('admins'), data_dict.get('subject'), data_dict.get('message'))
     except Exception as e:
-        log.error("Email server error: can not send email to admin users" + e.message)
+        log.error('Email server error: can not send email to admin users' + e.message)
         return False
-    log.info("admin users where notified by email")
+    log.info('admin users where notified by email')
     return True
 
 
@@ -775,11 +777,11 @@ def _find_last_update_for_orgs(org_names):
             'model': model,
             'session': model.Session
         }
-        filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
+        fq_filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
 
         data_dict = {
             'q': '',
-            'fq': filter,
+            'fq': fq_filter,
             'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
             'rows': len(org_names),
             'start': 0,
@@ -799,3 +801,71 @@ def org_add_last_updated_field(displayed_orgs):
 def hdx_organization_type_get_value(org_type_key):
     return next((org_type[0] for org_type in static_lists.ORGANIZATION_TYPE_LIST if org_type[1] == org_type_key),
                 org_type_key)
+
+def _get_mixpanel_data(org_id):
+    result = jql.pageviews_downloads_per_organization_last_4_years(org_id)
+    return result
+
+def hdx_generate_organization_stats(org_dict):
+
+    # Define variable to load the dataframe
+    wb = openpyxl.Workbook()
+
+    # Bold font style
+    bold_font = Font(bold=True)
+
+    # Create SheetOne with Data
+    sheet_one = wb.active
+    sheet_one.title = 'Page views and Downloads'
+
+    result = _get_mixpanel_data(org_dict.get('id'))
+    data = [('Date', 'Page Views - Unique', 'Page Views - Total', 'Downloads - Unique', 'Downloads - Total')]
+    for key, value in result.items():
+        data.append((key, value.get('pageviews_unique'), value.get('pageviews_total'), value.get('downloads_unique'), value.get('downloads_total')))
+
+    for row_num, row_data in enumerate(data, start=1):
+        for col_num, cell_value in enumerate(row_data, start=1):
+            cell = sheet_one.cell(row=row_num, column=col_num, value=cell_value)
+            if row_num == 1:
+                cell.font = bold_font  # Apply bold to header row
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+
+    # Set the width of the columns for the second sheet
+    for col_letter in ['A', 'B', 'C', 'D', 'E']:
+        sheet_one.column_dimensions[col_letter].width = 25
+
+    # Create SheetTwo with Data
+    sheet_two = wb.create_sheet(title='READ ME')
+
+    data = [
+            ('Organisation Name', org_dict.get('title') or org_dict.get('name')),
+            ('Overview', 'This spreadsheet contains the number of dataset downloads and page views of the organisation, tracked monthly.'),
+            ('Contents', '1. Total and unique number of downloads by month. \n2. Total and unique number of page views by month.'),
+            ('Time Period', 'Includes monthly data for the current year and the preceding four years.'),
+            ('Update Frequency', 'The spreadsheet is refreshed automatically on the first day of each month.'),
+            ('Data Source', 'The data comes from the analytics platform Mixpanel.'),
+            ('Caveats', 'To ensure accuracy, we have excluded as much bot traffic as possible. \nThe data in this spreadsheet may differ from that on the organisation page stats dashboard as they cover different time periods.'),
+            ('Contact', 'For additional inquiries, please contact us at hdx@un.org')
+    ]
+
+    # Add data to the worksheet
+    for row_num, (header, text) in enumerate(data, start=1):
+        sheet_two[f'A{row_num}'] = header
+        sheet_two[f'A{row_num}'].font = bold_font  # Apply bold to the first column
+        sheet_two[f'B{row_num}'] = text
+        sheet_two[f'A{row_num}'].alignment = Alignment(horizontal='left', vertical='top')
+        sheet_two[f'B{row_num}'].alignment = Alignment(horizontal='left', vertical='top', wrap_text=True)
+
+    # Set the width of the columns
+    sheet_two.column_dimensions['A'].width = 20
+    sheet_two.column_dimensions['B'].width = 100
+
+    # Iterate the loop to read the cell values
+    with NamedTemporaryFile() as tmp:
+        wb.save(tmp)
+        tmp.seek(0)
+        output = make_response(tmp.read())
+        output.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        output.headers['Content-Disposition'] = f'attachment; filename="{org_dict.get("name")}_stats.xlsx"'
+
+    return output

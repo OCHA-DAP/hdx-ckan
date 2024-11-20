@@ -2,19 +2,19 @@ import logging
 
 from flask import Blueprint
 from six.moves.urllib.parse import urlencode
-
+from ckan.types import Context
+import ckan.lib.plugins as lib_plugins
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckan.lib.plugins as lib_plugins
-
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
-
-from ckan.views.group import _get_group_template, CreateGroupView, EditGroupView
+from ckan.views.group import CreateGroupView, EditGroupView, _get_group_template
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
-from ckanext.hdx_org_group.controller_logic.organization_stats_logic import OrganizationStatsLogic
+from ckanext.hdx_org_group.controller_logic.organization_stats_logic import (
+    OrganizationStatsLogic,
+)
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import NoRecipientException
@@ -46,7 +46,7 @@ def index():
 
 @check_redirect_needed
 def read(id):
-    context = {
+    context: Context = {
         'model': model,
         'session': model.Session,
         'for_view': True,
@@ -82,19 +82,19 @@ def read(id):
             }
             template_file = _get_group_template('read_template', 'organization')
             return render(template_file, template_data)
-    except NotFound as e:
+    except NotFound:
         abort(404, _('Page not found'))
-    except NotAuthorized as e:
+    except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
 
 def _generate_template_data_for_custom_org(org_read_logic):
-    '''
+    """
     :param org_read_logic:
     :type org_read_logic: OrgReadLogic
     :returns: the template data dict
     :rtype: dict
-    '''
+    """
     org_meta = org_read_logic.org_meta
     org_dict = org_meta.org_dict
     org_id = org_dict['id']
@@ -147,7 +147,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
 
             },
 
-            # This is hear for compatibility with the custom_org_header.html template, which is still
+            # This is here for compatibility with the custom_org_header.html template, which is still
             # used from pylon controllers
             'org_meta': {
                 'id': org_dict['name'],
@@ -177,7 +177,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
 
 
 def request_new():
-    context = {'model': model, 'session': model.Session, 'user': g.user}
+    context: Context = {'model': model, 'session': model.Session, 'user': g.user}
     try:
         check_access('hdx_send_new_org_request', context)
     except NotAuthorized:
@@ -231,7 +231,7 @@ def _process_new_org_request():
 
     if hdx_org_type_code:
         hdx_org_type = next(
-            (type[0] for type in static_lists.ORGANIZATION_TYPE_LIST if type[1] == hdx_org_type_code), '-1')
+            (_type[0] for _type in static_lists.ORGANIZATION_TYPE_LIST if _type[1] == hdx_org_type_code), '-1')
 
     data = {
         'name': request.form.get('name', ''),
@@ -271,7 +271,7 @@ def _transform_dict_for_mailing(data_dict):
     return data_dict_for_mailing
 
 
-def new_org_template_variables(context, data_dict):
+def new_org_template_variables(data_dict):
     data_dict['hdx_org_type_list'] = [{'value': '-1', 'text': _('-- Please select --')}] + \
                               [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
 
@@ -296,7 +296,7 @@ def stats(id):
 
 
 def restore(id):
-    context = {
+    context: Context = {
         'model': model, 'session': model.Session,
         'user': g.user,
         'for_edit': True,
@@ -304,7 +304,7 @@ def restore(id):
 
     try:
         check_access('organization_patch', context, {'id': id})
-    except NotAuthorized as e:
+    except NotAuthorized:
         return abort(403, _('Unauthorized to restore this organization'))
 
     try:
@@ -329,7 +329,7 @@ def activity(id):
 
 
 def activity_offset(id, offset=0):
-    '''
+    """
      Modified core functionality to use the new OrgMetaDao class
     for fetching information needed on all org-related pages.
 
@@ -340,7 +340,7 @@ def activity_offset(id, offset=0):
     :param offset:
     :type offset: int
     :return:
-    '''
+    """
     org_meta = org_meta_dao.OrgMetaDao(id, g.user, g.userobj)
     org_meta.fetch_all()
     org_dict = org_meta.org_dict
@@ -350,12 +350,10 @@ def activity_offset(id, offset=0):
 
     # Add the group's activity stream (already rendered to HTML) to the
     # template context for the group/read.html template to retrieve later.
-    context = {'model': model, 'session': model.Session,
+    context: Context = {'model': model, 'session': model.Session,
                'user': g.user, 'for_view': True}
     group_activity_stream = get_action('organization_activity_list')(
         context, {'id': org_dict['id'], 'offset': offset})
-
-
 
     extra_vars = {
         'org_dict': org_dict,
@@ -363,12 +361,43 @@ def activity_offset(id, offset=0):
         'group_activity_stream': group_activity_stream,
 
     }
-    template = None
     if org_meta.is_custom:
         template = 'organization/custom_activity_stream.html'
     else:
         template = lib_plugins.lookup_group_plugin('organization').activity_template()
     return render(template, extra_vars)
+
+def download_organization_stats(id):
+    """
+        Handles downloading .xlsx organization stats
+
+        :returns: xlsx
+    """
+
+    context: Context = {
+        'model': model,
+        'session': model.Session,
+        'user': g.user or g.author,
+        'auth_user_obj': g.userobj
+    }
+
+    try:
+        check_access('organization_update', context, {'id': id})
+    except NotAuthorized:
+        return abort(403, _('Unauthorized to restore this organization'))
+
+    # check if organization exists
+    try:
+        org_dict = get_action('organization_show')(context, {'id': id})
+        output = helper.hdx_generate_organization_stats(org_dict)
+        return output
+
+    except NotFound:
+        return abort(404, _('Organization not found'))
+    except NotAuthorized:
+        return abort(404, _('Organization not found'))
+    except Exception as e:
+        return abort(404, _('Something went wrong, please contact us'))
 
 
 hdx_org.add_url_rule(u'/', view_func=index, strict_slashes=False)
@@ -387,3 +416,4 @@ hdx_org.add_url_rule(u'/stats/<id>', view_func=stats)
 hdx_org.add_url_rule(u'/restore/<id>', view_func=restore, methods=[u'POST'])
 hdx_org.add_url_rule(u'/activity/<id>', view_func=activity)
 hdx_org.add_url_rule(u'/activity/<id>/<int:offset>', view_func=activity_offset, defaults={'offset': 0})
+hdx_org.add_url_rule(u'/<id>/download_stats', view_func=download_organization_stats)

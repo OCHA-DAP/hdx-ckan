@@ -283,3 +283,46 @@ function main() {{
   }});
 }}
 '''
+
+
+PAGEVIEWS_AND_DOWNLOADS_PER_ORGANIZATION = '''
+/* 9. pageviews and downloads by organization and unique pageviews and downloads by organization
+VER 1.1
+
+Used for stats download by org admins
+*/
+
+''' + COMMON_HEADER + \
+'''
+function main() {{
+  return Events({{
+    from_date: "{}",
+    to_date: "{}",
+    event_selectors: [
+      {{event: "resource download"}},
+      {{event: "page view"}}
+    ]
+  }})
+  ''' + COMMON_FILTER + \
+  '''
+  .filter(event => event.properties["org id"] == "{}")
+  .groupByUser(["name", mixpanel.numeric_bucket('time', mixpanel.monthly_time_buckets)], mixpanel.reducer.count()) // unique
+  .map(function(r){{
+    return {{
+      user_id: r.key[0],
+      event_name: r.key[1],
+      date:  new Date(r.key[2]).toISOString().substring(0,10),
+      count: r.value,
+    }};
+  }})
+  .groupBy(["event_name", "date"], [mixpanel.reducer.count(), mixpanel.reducer.sum("count")])
+  .map(function(r){{
+    return {{
+      event_name: r.key[0],
+      date: new Date(r.key[1]).toISOString().substring(0,10),
+      unique_count: r.value[0],
+      total_count: r.value[1],
+    }};
+  }})
+}}
+'''
