@@ -1,32 +1,42 @@
+// modals
 var $notificationsSignupModal = $('#notificationsSignupBemModal');
+var $verificationModal = $('#notificationsVerificationBemModal');
+var $unsubscribeModal = $('#notificationsUnsubscribeBemModal');
+var $unsubscribedModal = $('#notificationsUnsubscribedBemModal');
+
+// BS modals
 var notificationsSignupModal = bootstrap.Modal.getOrCreateInstance($notificationsSignupModal.get(0));
+var verificationModal = bootstrap.Modal.getOrCreateInstance($verificationModal.get(0));
+var unsubscribeModal = bootstrap.Modal.getOrCreateInstance($unsubscribeModal.get(0));
+var unsubscribedModal = bootstrap.Modal.getOrCreateInstance($unsubscribedModal.get(0));
+
+// signup
 var $signupSubmitButton = $notificationsSignupModal.find('button[type="submit"]');
 var $signupDangerAlert = $notificationsSignupModal.find('.alert-danger');
 var $signupForm = $notificationsSignupModal.find('#notification-platform-form');
 var $signupFormPopupSourceInput = $signupForm.find('input[name="popup_source"]');
 
-var $verificationModal = $('#notificationsVerificationBemModal');
-var verificationModal = bootstrap.Modal.getOrCreateInstance($verificationModal.get(0));
-
-var $unsubscribeModal = $('#notificationsUnsubscribeBemModal');
-var unsubscribeModal = bootstrap.Modal.getOrCreateInstance($unsubscribeModal.get(0));
-
-var $unsubscribedModal = $('#notificationsUnsubscribedBemModal');
-var unsubscribedModal = bootstrap.Modal.getOrCreateInstance($unsubscribedModal.get(0));
-
-var $unsubscribeSubmitButton = $unsubscribeModal.find('button[type="submit"]');
-var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
-
-var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
-var $floatingButton = $('.notification-platform-opt-in-floating-button');
-
-var $unsubscribeToken = $('#unsubscribe_token');
-var unsubscribeToken = null;
-if($unsubscribeToken.length > 0 && $unsubscribeToken.data('token').toLowerCase() !== 'none') {
-  unsubscribeToken = $unsubscribeToken.data('token');
-}
-
 $(document).ready(function () {
+  // unsubscribe
+  var $unsubscribeSubmitButton = $unsubscribeModal.find('button[type="submit"]');
+  var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
+
+  // buttons
+  var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
+  var $floatingButton = $('.notification-platform-opt-in-floating-button');
+
+  // notification platform data
+  var $notificationPlatformData = $('#notification_platform_data');
+  var datasetId = null;
+  var datasetName = null;
+  var unsubscribeToken = null;
+  var unsubscribeEmail = null;
+  if ($notificationPlatformData.length > 0) {
+    datasetId = $notificationPlatformData.data('dataset-id');
+    datasetName = $notificationPlatformData.data('dataset-name');
+    unsubscribeToken = $notificationPlatformData.data('unsubscribe-token').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token') : null;
+    unsubscribeEmail = $notificationPlatformData.data('unsubscribe-email').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-email') : null;
+  }
 
   var onSignupSubmit = function (e) {
     e.preventDefault();
@@ -36,7 +46,6 @@ $(document).ready(function () {
       formData[field.name] = field.value;
     });
 
-    var datasetId = formData.dataset_id;
     var email = formData.email;
 
     $.ajax({
@@ -61,7 +70,7 @@ $(document).ready(function () {
             'subscribe to notifications',
             formData.popup_source,
             datasetId,
-            formData.dataset_name,
+            datasetName,
             hdxUtil.compute.strHash(email, 'notification_platform')
           );
 
@@ -82,10 +91,6 @@ $(document).ready(function () {
   var onUnsubscribeSubmit = function (e) {
     e.preventDefault();
 
-    var unsubscribeToken = $unsubscribeModal.data('token');
-    var email = $unsubscribeModal.data('email');
-    var datasetId = $unsubscribeModal.data('dataset-id');
-    var datasetName = $unsubscribeModal.data('dataset-name');
     $.ajax({
       url: '/notifications/unsubscribe-confirmation',
       method: 'POST',
@@ -99,13 +104,15 @@ $(document).ready(function () {
           unsubscribeModal.hide();
           unsubscribedModal.show();
 
+          hdxUtil.net.removeNotificationSubscribedDataset(datasetId);
+
           hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
             'confirm popup',
             'unsubscribe from notifications',
             null,
             datasetId,
             datasetName,
-            hdxUtil.compute.strHash(email, 'notification_platform')
+            hdxUtil.compute.strHash(unsubscribeEmail, 'notification_platform')
           );
         }
         else {
@@ -129,7 +136,14 @@ $(document).ready(function () {
   };
 
   var displayNotificationOptinOption = function () {
-    var optinLocation = hdxUtil.net.getNotificationOptinLocation();
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var cameFrom = urlParams.get('came_from');
+    if(cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') {
+      hdxUtil.net.addNotificationSubscribedDataset(datasetId);
+    }
+
+    var optinLocation = hdxUtil.net.getNotificationOptinLocation(datasetId);
 
     if (optinLocation === 'action_menu') {
       $actionMenuButton.removeClass('d-none');
@@ -146,24 +160,21 @@ $(document).ready(function () {
 
   $actionMenuButton.on('click', function(e) {
     e.preventDefault();
-    var datasetId = $(this).data('dataset-id');
-    var datasetName = $(this).data('dataset-name');
     showNotificationsSignupModal('action menu', datasetId, datasetName);
     return false;
   });
-
   $floatingButton.on('click', function(e) {
     e.preventDefault();
-    var datasetId = $(this).data('dataset-id');
-    var datasetName = $(this).data('dataset-name');
     showNotificationsSignupModal('floating button', datasetId, datasetName);
     return false;
   });
 
+  $notificationsSignupModal.on('hide.bs.modal', function () {
+    $signupFormPopupSourceInput.val('');
+  });
+
   if(unsubscribeToken) {
     unsubscribeModal.show();
-    var datasetId = $unsubscribeModal.data('dataset-id');
-    var datasetName = $unsubscribeModal.data('dataset-name');
 
     hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
       'show popup',
@@ -201,7 +212,3 @@ var showNotificationsSignupModal = function (popupSource, datasetId, datasetName
     }
   }
 };
-
-$notificationsSignupModal.on('hide.bs.modal', function () {
-  $signupFormPopupSourceInput.val('');
-});

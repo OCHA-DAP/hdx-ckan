@@ -180,12 +180,44 @@
         localStorage.setItem(NOTIFICATION_MODAL_SHOWN_KEY, JSON.stringify(notificationModalData));
     };
 
+    var NOTIFICATION_SUBSCRIBED_DATASETS_KEY = 'notification_platform_subscribed_datasets';
+
+    hdxUtil.net.getNotificationSubscribedDatasets = function () {
+      var subscribedDatasets = localStorage.getItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY);
+      if (subscribedDatasets) {
+        return JSON.parse(subscribedDatasets);
+      } else {
+        return [];
+      }
+    };
+
+    hdxUtil.net.addNotificationSubscribedDataset = function (datasetId) {
+      var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
+      if (!subscribedDatasets.includes(datasetId)) {
+        subscribedDatasets.push(datasetId);
+        localStorage.setItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY, JSON.stringify(subscribedDatasets));
+      }
+    };
+
+    hdxUtil.net.removeNotificationSubscribedDataset = function (datasetId) {
+      var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
+      var index = subscribedDatasets.indexOf(datasetId);
+      if (index !== -1) {
+        subscribedDatasets.splice(index, 1);
+        localStorage.setItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY, JSON.stringify(subscribedDatasets));
+      }
+    };
+
     var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
     var NOTIFICATION_OPTIN_OPTIONS = ['action_menu', 'floating_button'];
 
-    hdxUtil.net.getNotificationOptinLocation = function () {
-      var optinLocation = localStorage.getItem(NOTIFICATION_OPTIN_KEY);
+    hdxUtil.net.getNotificationOptinLocation = function (datasetId) {
+      var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
+      if(subscribedDatasets.includes(datasetId)) {
+          return false;
+      }
 
+      var optinLocation = localStorage.getItem(NOTIFICATION_OPTIN_KEY);
       if (!optinLocation) {
         var randomIndex = Math.floor(Math.random() * NOTIFICATION_OPTIN_OPTIONS.length);
         optinLocation = NOTIFICATION_OPTIN_OPTIONS[randomIndex];
