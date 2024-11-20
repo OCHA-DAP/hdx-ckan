@@ -110,9 +110,9 @@ SECTIONS_CONSTANTS = [
 PARTNERS_CONSTANTS = [
     ('acled', 'ACLED'),
     ('fts', 'FTS'),
-    ('ipc', 'IPC'),
     ('inform', 'INFORM'),
     ('iom', 'IOM'),
+    ('ipc', 'IPC'),
     ('ocha', 'OCHA'),
     ('ophi', 'OPHI'),
     ('unfpa', 'UNFPA'),
