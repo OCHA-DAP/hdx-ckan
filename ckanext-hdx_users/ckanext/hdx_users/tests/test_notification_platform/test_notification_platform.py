@@ -97,8 +97,10 @@ def setup_data(migrate_db_for):
 class TestNotificationPlatform(object):
 
     @mock.patch(
+        'ckanext.hdx_users.views.notification_platform.hdx_mailer')
+    @mock.patch(
         'ckanext.hdx_users.controller_logic.notification_platform_logic.check_notifications_enabled_for_dataset')
-    def test_user_subscribing_to_dataset(self, check_dataset_enabled_mock, app):
+    def test_user_subscribing_to_dataset(self, check_dataset_enabled_mock, hdx_mailer_mock, app):
         requester_email_address = 'test@test.test'
         check_dataset_enabled_mock.return_value = True
         subscribe_url = tk.url_for('hdx_notifications.subscription_confirmation')
