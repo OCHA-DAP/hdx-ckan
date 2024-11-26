@@ -75,7 +75,8 @@ def subscribe_to_dataset() -> Response:
         EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
 
         # Redirect to the dataset page
-        dataset_url = tk.url_for('dataset.read', id=dataset_id, came_from='notification_platform_subscription')
+        dataset_url = tk.url_for('dataset.read', id=dataset_id, came_from='notification_platform_subscription',
+                                 u=data_dict.get('unsubscribe_token'))
         return tk.redirect_to(dataset_url)
     return abort(404, 'Page not found')
 

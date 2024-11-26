@@ -21,9 +21,12 @@ $(document).ready(function () {
   var $unsubscribeSubmitButton = $unsubscribeModal.find('button[type="submit"]');
   var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
 
-  // buttons
+  // opt in buttons
   var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
   var $floatingButton = $('.notification-platform-opt-in-floating-button');
+
+  // opt out button
+  var $optOutButton = $('.notification-platform-opt-out-action-menu');
 
   // notification platform data
   var $notificationPlatformData = $('#notification_platform_data');
@@ -139,8 +142,9 @@ $(document).ready(function () {
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
     var cameFrom = urlParams.get('came_from');
-    if(cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') {
-      hdxUtil.net.addNotificationSubscribedDataset(datasetId);
+    var unsubscribeToken = urlParams.get('u');
+    if ((cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') && unsubscribeToken) {
+      hdxUtil.net.addNotificationSubscribedDataset(datasetId, unsubscribeToken);
     }
 
     var optinLocation = hdxUtil.net.getNotificationOptinLocation(datasetId);
@@ -150,6 +154,16 @@ $(document).ready(function () {
     }
     else if (optinLocation === 'floating_button') {
       $floatingButton.removeClass('d-none');
+    }
+  };
+
+  var displayNotificationOptoutOption = function () {
+    var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
+    if (subscribedDatasets[datasetId]) {
+      var unsubscribeToken = subscribedDatasets[datasetId];
+      var unsubscribeUrl = '/dataset/' + datasetId + '?unsubscribe_token=' + unsubscribeToken;
+      $optOutButton.find('a').attr('href', unsubscribeUrl);
+      $optOutButton.removeClass('d-none');
     }
   };
 
@@ -187,6 +201,7 @@ $(document).ready(function () {
   }
   else {
     displayNotificationOptinOption();
+    displayNotificationOptoutOption();
   }
 });
 

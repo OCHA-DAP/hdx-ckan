@@ -59,7 +59,7 @@
           </a>
         </div>
         {% if supports_notifications %}
-          {{ h.snippet('notification_platform/action_menu_button.html', pkg=pkg) }}
+          {{ h.snippet('notification_platform/action_menu_buttons.html') }}
         {% endif %}
         {% if pkg.notes %}
           <div data-module="hdx_show_more" data-module-points="70" style="visibility:hidden" class="notes embedded-content">

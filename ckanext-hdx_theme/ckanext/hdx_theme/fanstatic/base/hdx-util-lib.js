@@ -187,23 +187,22 @@
       if (subscribedDatasets) {
         return JSON.parse(subscribedDatasets);
       } else {
-        return [];
+        return {};
       }
     };
 
-    hdxUtil.net.addNotificationSubscribedDataset = function (datasetId) {
+    hdxUtil.net.addNotificationSubscribedDataset = function (datasetId, unsubscribeToken) {
       var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-      if (!subscribedDatasets.includes(datasetId)) {
-        subscribedDatasets.push(datasetId);
+      if (!subscribedDatasets[datasetId]) {
+        subscribedDatasets[datasetId] = unsubscribeToken;
         localStorage.setItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY, JSON.stringify(subscribedDatasets));
       }
     };
 
     hdxUtil.net.removeNotificationSubscribedDataset = function (datasetId) {
       var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-      var index = subscribedDatasets.indexOf(datasetId);
-      if (index !== -1) {
-        subscribedDatasets.splice(index, 1);
+      if (subscribedDatasets[datasetId]) {
+        delete subscribedDatasets[datasetId];
         localStorage.setItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY, JSON.stringify(subscribedDatasets));
       }
     };
@@ -213,7 +212,7 @@
 
     hdxUtil.net.getNotificationOptinLocation = function (datasetId) {
       var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-      if(subscribedDatasets.includes(datasetId)) {
+      if(subscribedDatasets[datasetId]) {
           return false;
       }
 
