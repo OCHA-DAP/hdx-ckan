@@ -33,11 +33,13 @@ $(document).ready(function () {
   var datasetId = null;
   var datasetName = null;
   var unsubscribeToken = null;
+  var unsubscribeTokenValidated = null;
   var unsubscribeEmail = null;
   if ($notificationPlatformData.length > 0) {
     datasetId = $notificationPlatformData.data('dataset-id');
     datasetName = $notificationPlatformData.data('dataset-name');
     unsubscribeToken = $notificationPlatformData.data('unsubscribe-token').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token') : null;
+    unsubscribeTokenValidated = $notificationPlatformData.data('unsubscribe-token-validated').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token-validated') : null;
     unsubscribeEmail = $notificationPlatformData.data('unsubscribe-email').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-email') : null;
   }
 
@@ -186,6 +188,10 @@ $(document).ready(function () {
   $notificationsSignupModal.on('hide.bs.modal', function () {
     $signupFormPopupSourceInput.val('');
   });
+
+  if(unsubscribeTokenValidated && unsubscribeTokenValidated.toLowerCase() === 'false') {
+    hdxUtil.net.removeNotificationSubscribedDataset(datasetId);
+  }
 
   if(unsubscribeToken) {
     unsubscribeModal.show();
