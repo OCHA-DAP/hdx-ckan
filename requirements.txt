@@ -50,6 +50,8 @@ dogpile-cache==1.3.0
     # via -r requirements.in
 dominate==2.7.0
     # via -r requirements.in
+et-xmlfile==2.0.0
+    # via openpyxl
 feedgen==0.9.0
     # via -r requirements.in
 flask==2.0.3
@@ -113,6 +115,8 @@ mypy-extensions==1.0.0
     # via mypy
 nose==1.3.7
     # via pyutilib
+openpyxl==3.1.5
+    # via -r requirements.in
 passlib==1.7.4
     # via -r requirements.in
 pbr==6.0.0
@@ -228,7 +232,6 @@ wtforms==3.1.1
     # via flask-wtf
 zope-interface==5.4.0
     # via -r requirements.in
-openpyxl==3.1.5
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

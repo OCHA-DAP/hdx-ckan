@@ -229,6 +229,8 @@ responses==0.21.0
     # via
     #   -r dev-requirements.in
     #   moto
+ruff==0.5.5
+    # via -r dev-requirements.in
 s3transfer==0.10.1
     # via
     #   -c requirements.txt
