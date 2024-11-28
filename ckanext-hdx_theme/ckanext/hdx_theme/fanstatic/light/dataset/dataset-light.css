@@ -263,7 +263,8 @@
   margin-bottom: 10px;
   margin-left: 0;
 }
-.dataset-light .notification-platform-opt-in-action-menu {
+.dataset-light .notification-platform-opt-in-action-menu,
+.dataset-light .notification-platform-opt-out-action-menu {
   margin-top: 5px;
 }
 @media (max-width: 375px) {
