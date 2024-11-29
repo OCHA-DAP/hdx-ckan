@@ -841,7 +841,7 @@ def hdx_generate_organization_stats(org_dict):
             ('Organisation Name', org_dict.get('title') or org_dict.get('name')),
             ('Overview', 'This spreadsheet contains the number of dataset downloads and page views of the organisation, tracked monthly.'),
             ('Contents', '1. Total and unique number of downloads by month. \n2. Total and unique number of page views by month.'),
-            ('Time Period', 'Includes monthly data for the current year and the preceding four years.'),
+            ('Time Period', 'Includes monthly data for the current year (January to December) as well as the previous four years.'),
             ('Update Frequency', 'The spreadsheet is refreshed automatically on the first day of each month.'),
             ('Data Source', 'The data comes from the analytics platform Mixpanel.'),
             ('Caveats', 'To ensure accuracy, we have excluded as much bot traffic as possible. \nThe data in this spreadsheet may differ from that on the organisation page stats dashboard as they cover different time periods.'),
