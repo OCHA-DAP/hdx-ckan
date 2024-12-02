@@ -10,6 +10,11 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_BUTTON_POWER_BI': '''Learn more''',
     'BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI': '''https://drive.google.com/file/d/1EQ4UAshvFvpqmoifdBH0mJxKck7xoSGN/view''',
 
+    'BE_INSPIRED_CARD_TITLE_POWER_QUERY': '''Power Query workflow''',
+    'BE_INSPIRED_CARD_TEXT_POWER_QUERY': '''A tutorial to demonstrate how to integrate HDX HAPI into Excel.''',
+    'BE_INSPIRED_CARD_BUTTON_POWER_QUERY': '''Learn more''',
+    'BE_INSPIRED_CARD_BUTTON_LINK_POWER_QUERY': '''https://drive.google.com/file/d/1KaUc2X9OOHgOP2q7toJ6XoewZy0ALsIW/view''',
+
     'BE_INSPIRED_CARD_TITLE_API': '''API Sandbox''',
     'BE_INSPIRED_CARD_TEXT_API': '''A sandbox environment to help construct queries and get a data response.''',
     'BE_INSPIRED_CARD_BUTTON_API': '''Learn more''',
