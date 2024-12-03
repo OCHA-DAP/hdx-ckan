@@ -1,5 +1,6 @@
 CONSTANTS = {
     'OPT_IN_TEXT': '''Sign up to receive email notifications when this dataset is updated''',
+    'OPT_OUT_TEXT': '''Unsubscribe from emails for this dataset''',
 
     'SIGNUP_MODAL_TITLE': '''Sign up for email notifications on this dataset''',
     'SIGNUP_MODAL_INTRO_TEXT': '''Would you like to receive email notifications when resources (files) in this

@@ -74,11 +74,14 @@ def read(id):
         # notification platform
         supports_notifications = check_notifications_enabled_for_dataset(dataset_dict['id'])
         unsubscribe_token = tk.request.args.get('unsubscribe_token', None)
+        unsubscribe_token_validated = None
         if unsubscribe_token:
             try:
                 token_obj = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
+                unsubscribe_token_validated = True
             except Exception as e:
                 unsubscribe_token = None
+                unsubscribe_token_validated = False
                 tk.h.flash_error('Your token is invalid or has expired.')
 
         template_data = {
@@ -86,6 +89,7 @@ def read(id):
             'analytics': analytics_dict,
             'user_survey_url': user_survey_url,
             'unsubscribe_token': unsubscribe_token,
+            'unsubscribe_token_validated': unsubscribe_token_validated,
             'supports_notifications': supports_notifications,
         }
 

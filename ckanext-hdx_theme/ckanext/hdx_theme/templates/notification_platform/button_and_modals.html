@@ -5,12 +5,19 @@
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 {% set unsubscribe_token = unsubscribe_token or {} %}
 
-<span class="d-none" id="unsubscribe_token" data-token="{{ unsubscribe_token['token'] }}"></span>
+<span
+  class="d-none"
+  id="notification_platform_data"
+  data-dataset-id="{{ pkg.id }}"
+  data-dataset-name="{{ pkg.name }}"
+  data-unsubscribe-token="{{ unsubscribe_token['token'] }}"
+  data-unsubscribe-token-validated="{{ unsubscribe_token_validated }}"
+  data-unsubscribe-email="{{ unsubscribe_token['user_id'] }}"
+></span>
 
 {{ h.snippet('bem.blocks/floating_button.html',
   container_classes=['notification-platform-opt-in-floating-button', 'd-none'],
   icon="bell",
-  data_attributes={"dataset-id": pkg.id, "dataset-name": pkg.name},
   text=CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT) }}
 
 {{ h.snippet('bem.blocks/modal.html',
@@ -28,7 +35,6 @@
 
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsUnsubscribeBemModal",
-  data_attributes={"dataset-id": pkg.id, "dataset-name": pkg.name, "email": unsubscribe_token['user_id'], "token": unsubscribe_token['token']},
   title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
   text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT,
   close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_CLOSE_BUTTON_TEXT,

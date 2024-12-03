@@ -189,11 +189,14 @@ def read(id):
     # notification platform
     supports_notifications = check_notifications_enabled_for_dataset(pkg_dict['id'])
     unsubscribe_token = request.args.get('unsubscribe_token', None)
+    unsubscribe_token_validated = None
     if unsubscribe_token:
         try:
             unsubscribe_token = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
+            unsubscribe_token_validated = True
         except Exception as e:
             unsubscribe_token = None
+            unsubscribe_token_validated = False
             h.flash_error('Your token is invalid or has expired.')
 
     template_data = {
@@ -204,6 +207,7 @@ def read(id):
         'membership': membership,
         'user_has_edit_rights': user_has_edit_rights,
         'unsubscribe_token': unsubscribe_token,
+        'unsubscribe_token_validated': unsubscribe_token_validated,
         'analytics_is_cod': analytics_is_cod,
         'analytics_is_indicator': 'false',
         'analytics_is_archived': analytics_is_archived,
