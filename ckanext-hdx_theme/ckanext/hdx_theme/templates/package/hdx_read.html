@@ -95,7 +95,7 @@
               {% endfor %}
             {% endif %}
             {% if supports_notifications %}
-              {{ h.snippet('notification_platform/action_menu_button.html', pkg=pkg) }}
+              {{ h.snippet('notification_platform/action_menu_buttons.html') }}
             {% endif %}
                 <div class="row mBottom15">
                     <div class="col-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>
@@ -198,7 +198,7 @@
   </div>
   {% snippet "package/hdx_resources_list.html", pkg=pkg %}
   {% if supports_notifications %}
-    {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token %}
+    {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated %}
   {% endif %}
 
 {% endblock %}
