@@ -2,14 +2,16 @@ import logging
 
 from flask import Blueprint
 from six.moves.urllib.parse import urlencode
-from ckan.types import Context
+
 import ckan.lib.plugins as lib_plugins
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_org_group.helpers.analytics as org_analytics
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
+from ckan.types import Context
 from ckan.views.group import CreateGroupView, EditGroupView, _get_group_template
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import OrgReadLogic
 from ckanext.hdx_org_group.controller_logic.organization_stats_logic import (
@@ -390,6 +392,8 @@ def download_organization_stats(id):
     try:
         org_dict = get_action('organization_show')(context, {'id': id})
         output = helper.hdx_generate_organization_stats(org_dict)
+        org_analytics.OrganizationStatsDownloadAnalyticsSender(org_dict.get('name', ''), org_dict.get('id', '')) \
+            .send_to_queue()
         return output
 
     except NotFound:
@@ -397,6 +401,7 @@ def download_organization_stats(id):
     except NotAuthorized:
         return abort(404, _('Organization not found'))
     except Exception as e:
+        log.error(e)
         return abort(404, _('Something went wrong, please contact us'))
 
 
