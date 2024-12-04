@@ -309,8 +309,9 @@ DATA_COMPLETENESS_STATE_DICT = {
     'empty':'empty',
 }
 
+DATA_COMPLETENESS_KEYS_TBR_LIST = ['rules']
 
-def transform_data_completeness(data):
+def _transform_data_completeness(data):
     if isinstance(data, dict):
         new_dict = {}
         for key, value in data.items():
@@ -322,16 +323,37 @@ def transform_data_completeness(data):
                 value = DATA_COMPLETENESS_STATE_DICT.get(value, value)
 
             # Recursively transform values
-            new_dict[new_key] = transform_data_completeness(value)
+            new_dict[new_key] = _transform_data_completeness(value)
         return new_dict
     elif isinstance(data, list):
-        return [transform_data_completeness(item) for item in data]
+        return [_transform_data_completeness(item) for item in data]
     return data
 
 
+def remove_keys_from_dict(data, keys_to_remove):
+    """
+    Recursively removes specified keys from a dictionary.
+
+    :param data: The dictionary to process.
+    :param keys_to_remove: List of keys to remove.
+    :return: The modified dictionary.
+    """
+    if isinstance(data, dict):
+        return {
+            key: remove_keys_from_dict(value, keys_to_remove)
+            for key, value in data.items()
+            if key not in keys_to_remove
+        }
+    elif isinstance(data, list):
+        return [remove_keys_from_dict(item, keys_to_remove) for item in data]
+    else:
+        return data
+
 def hdx_replace_datagrid_labels(data_completeness, grp_dict):
     # Replace keys in the dictionary
-    updated_data = transform_data_completeness(data_completeness)
+    updated_data = _transform_data_completeness(data_completeness)
+    # Remove specified keys
+    updated_data = remove_keys_from_dict(updated_data, DATA_COMPLETENESS_KEYS_TBR_LIST)
     updated_data.pop("inherits_from", None)
     updated_data.pop("name", None)
     updated_data.pop("title", None)
