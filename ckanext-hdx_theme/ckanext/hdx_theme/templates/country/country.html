@@ -177,7 +177,7 @@
     </div>
     {% endif %}
 
-    {% if data.data_completness %}
+    {% if data.data_completeness %}
     <div class="row data-completeness">
       <div class="col-12">
         <div class="list-header crisis-list-header">
@@ -187,19 +187,19 @@
 
 
           <div class="progress-breakdown progress-header">
-            {% set dataseries_good_percentage = 100*data.data_completness.stats.dataseries_good_percentage %}
+            {% set dataseries_good_percentage = 100*data.data_completeness.stats.dataseries_good_percentage %}
             <span class="progress-blue" style="width: {{ dataseries_good_percentage }}%;"
                   data-module="bs_tooltip" data-module-placement="top"
                   data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="{{ dataseries_good_percentage | int }}%">
               {% if dataseries_good_percentage > 30 %} {{ dataseries_good_percentage | int }}%&nbsp; {% endif %}
             </span>
-            {% set dataseries_not_good_percentage = 100*data.data_completness.stats.dataseries_not_good_percentage %}
+            {% set dataseries_not_good_percentage = 100*data.data_completeness.stats.dataseries_not_good_percentage %}
             <span class="progress-striped" style="width: {{ dataseries_not_good_percentage }}%;"
                   data-module="bs_tooltip" data-module-placement="top"
                   data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="{{ dataseries_not_good_percentage | int }}%">
               {% if dataseries_not_good_percentage > 30 %} {{ dataseries_not_good_percentage | int }}%&nbsp; {% endif %}
             </span>
-            {% set dataseries_other_percentage = 100*(1 - data.data_completness.stats.dataseries_good_percentage - data.data_completness.stats.dataseries_not_good_percentage) %}
+            {% set dataseries_other_percentage = 100*(1 - data.data_completeness.stats.dataseries_good_percentage - data.data_completeness.stats.dataseries_not_good_percentage) %}
             <span class="progress-empty" style="width: {{ dataseries_other_percentage }}%;"
                   data-module="bs_tooltip" data-module-placement="top"
                   data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="{{ dataseries_other_percentage | int }}%">
@@ -208,9 +208,9 @@
           </div>
 
           <span class="mL45 list-header-showall list-completeness">
-            <span>{{data.data_completness.stats.good_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
-            <span>{{ data.data_completness.stats.total_datasets_num }} Datasets</span>
-            <span>{{ data.data_completness.stats.org_num }} Organisations</span>
+            <span>{{data.data_completeness.stats.good_dataseries_num}}/{{data.data_completeness.stats.total_dataseries_num}} Core Data</span>
+            <span>{{ data.data_completeness.stats.total_datasets_num }} Datasets</span>
+            <span>{{ data.data_completeness.stats.org_num }} Organisations</span>
           </span>
 
           <span class="mL45 float-end completeness-header-actions">

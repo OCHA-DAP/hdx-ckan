@@ -1,6 +1,6 @@
 <div class="col-12">
   {% set loop_items = 3 %}
-  {% for category in data.data_completness.categories %}
+  {% for category in data.data_completeness.categories %}
     {% if (loop.index - 1) is divisibleby loop_items %}
       <div class="row">
     {% endif %}
@@ -90,7 +90,7 @@
         </div>
       </div>
     </div>
-    {% if ((loop.index) is divisibleby loop_items) or (loop.index == data.data_completness.categories|length) %}
+    {% if ((loop.index) is divisibleby loop_items) or (loop.index == data.data_completeness.categories|length) %}
       </div>
     {% endif %}
   {% endfor %}

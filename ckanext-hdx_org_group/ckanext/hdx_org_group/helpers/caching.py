@@ -2,7 +2,7 @@ import logging
 from dogpile.cache import make_region
 
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_org_group.helpers.data_completness as data_completness
+import ckanext.hdx_org_group.helpers.data_completeness as data_completeness
 from ckanext.hdx_theme.helpers.caching import dogpile_standard_config, dogpile_config_filter, \
     HDXRedisInvalidationStrategy
 
@@ -23,13 +23,13 @@ if dogpile_config_filter == 'cache.redis.':
 
 @dogpile_country_region.cache_on_arguments()
 def cached_data_completeness(location_code):
-    log.info('Fetching data completness for ' + location_code)
+    log.info('Fetching data completeness for ' + location_code)
     url_pattern = config.get('hdx.datagrid.config_url_pattern')
     for_prod = config.get('hdx.datagrid.prod')
     branch = 'master' if for_prod else location_code
     url = url_pattern.format(branch=branch, iso=location_code)
 
-    return data_completness.DataCompletness(location_code, url).get_config()
+    return data_completeness.DataCompleteness(location_code, url).get_config()
 
 
 @dogpile_country_region.cache_on_arguments()

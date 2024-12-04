@@ -69,7 +69,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location,
             'hdx_organization_follower_list': get_actions.hdx_organization_follower_list,
             'hdx_user_invite': create_actions.hdx_user_invite,
-            'member_create': create_actions.hdx_member_create
+            'member_create': create_actions.hdx_member_create,
+            'hdx_datagrid_show': get_actions.hdx_datagrid_show,
 
         }
 

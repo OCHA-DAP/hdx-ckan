@@ -9,7 +9,7 @@ import ckan.tests.factories as factories
 
 import ckanext.hdx_org_group.helpers.country_helper as grp_h
 
-from ckanext.hdx_org_group.helpers.data_completness import DataCompletness, FLAG_NOT_APPLICABLE
+from ckanext.hdx_org_group.helpers.data_completeness import DataCompleteness, FLAG_NOT_APPLICABLE
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 _get_action = tk.get_action
@@ -112,7 +112,7 @@ def keep_db_tables_on_clean():
     model.repo.tables_created_and_initialised = True
 
 
-class MockedDataCompleteness(DataCompletness):
+class MockedDataCompleteness(DataCompleteness):
 
     def __init__(self, yaml_dict):
         self.yaml_dict = yaml_dict
@@ -125,7 +125,7 @@ class MockedDataCompleteness(DataCompletness):
 @pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
 class TestDataCompleteness(object):
 
-    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness(self, patched_DataCompleteness):
         data = self.__compute_data_completeness(_generate_test_yaml_dict(), patched_DataCompleteness)
 
@@ -148,7 +148,7 @@ class TestDataCompleteness(object):
         assert subcategory2_stats['good_datasets_num'] == 0
         assert subcategory2_stats['total_datasets_num'] == 1
 
-    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_force_incomplete(self, patched_DataCompleteness):
         yaml_dict = _generate_test_yaml_dict()
         incomplete_dataset = 'dataset2-category1'
@@ -169,7 +169,7 @@ class TestDataCompleteness(object):
         dataset = next(d for d in subcategory1['datasets'] if d['name'] == incomplete_dataset)
         assert dataset['general_comment'] == incomplete_comment
 
-    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_force_complete(self, patched_DataCompleteness):
         yaml_dict = _generate_test_yaml_dict()
         complete_dataset = 'dataset1-category1'
@@ -190,7 +190,7 @@ class TestDataCompleteness(object):
         dataset = next(d for d in subcategory1['datasets'] if d['name'] == complete_dataset)
         assert dataset['general_comment'] == complete_comment
 
-    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_not_available(self, patched_DataCompleteness):
         yaml_dict = _generate_test_yaml_dict()
         not_applicable_comment = 'not applicable comment'
@@ -217,7 +217,7 @@ class TestDataCompleteness(object):
         assert subcategory1_stats['good_datasets_num'] == 0
         assert subcategory1_stats['total_datasets_num'] == 0
 
-    @mock.patch('ckanext.hdx_org_group.helpers.data_completness.DataCompletness')
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_dataset_up_to_date(self, patched_DataCompleteness):
         review_date = datetime.datetime.utcnow() - datetime.timedelta(days=31)
         _generate_dataset_dict('dataset3-category1', ORG, LOCATION, review_date)
