@@ -292,6 +292,7 @@ def hdx_datagrid_org_get_display_text(dataseries_dict):
     return 'Not applicable'
 
 DATA_COMPLETENESS_LABELS_DICT = {
+    'data_series': 'subcategories',
     'good_datasets_num': 'available_datasets_num',
     'dataset_goodness_percentage':'dataset_availability_percentage',
     'good_dataseries_num':'available_dataseries_num',
