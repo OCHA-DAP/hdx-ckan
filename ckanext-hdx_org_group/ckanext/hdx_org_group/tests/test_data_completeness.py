@@ -6,10 +6,11 @@ import pytest
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
-
 import ckanext.hdx_org_group.helpers.country_helper as grp_h
-
-from ckanext.hdx_org_group.helpers.data_completeness import DataCompleteness, FLAG_NOT_APPLICABLE
+from ckanext.hdx_org_group.helpers.data_completeness import (
+    FLAG_NOT_APPLICABLE,
+    DataCompleteness,
+)
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 _get_action = tk.get_action
@@ -17,6 +18,7 @@ _get_action = tk.get_action
 
 USER = 'some_user'
 LOCATION = 'some_location'
+LOCATION_DISPLAY_NAME = LOCATION_TITLE = 'Some Location'
 ORG = 'org_name_4_completeness'
 
 
@@ -61,22 +63,22 @@ def _generate_test_yaml_dict():
 
 def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=USER, ignore_auth=False):
     dataset = {
-        "package_creator": "test function",
-        "private": False,
-        "dataset_date": "[1960-01-01 TO 2012-12-31]",
-        "caveats": "These are the caveats",
-        "license_other": "TEST OTHER LICENSE",
-        "methodology": "This is a test methodology",
-        "dataset_source": "Test data",
-        "license_id": "hdx-other",
-        "name": dataset_name,
-        "notes": "This is a test dataset",
-        "title": "Test Dataset " + dataset_name,
-        "owner_org": org_id,
-        "groups": [{"name": group_name}],
-        "review_date": review_date.isoformat(),
-        "data_update_frequency": "30",
-        "maintainer": user
+        'package_creator': 'test function',
+        'private': False,
+        'dataset_date': '[1960-01-01 TO 2012-12-31]',
+        'caveats': 'These are the caveats',
+        'license_other': 'TEST OTHER LICENSE',
+        'methodology': 'This is a test methodology',
+        'dataset_source': 'Test data',
+        'license_id': 'hdx-other',
+        'name': dataset_name,
+        'notes': 'This is a test dataset',
+        'title': 'Test Dataset ' + dataset_name,
+        'owner_org': org_id,
+        'groups': [{'name': group_name}],
+        'review_date': review_date.isoformat(),
+        'data_update_frequency': '30',
+        'maintainer': user
     }
 
     context = {'model': model, 'session': model.Session, 'user': user}
@@ -89,7 +91,7 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=U
 @pytest.fixture()
 def setup_data():
     factories.User(name=USER, email='some_user@hdx.hdxtest.org')
-    group = factories.Group(name=LOCATION)
+    group = factories.Group(name=LOCATION, title=LOCATION_TITLE, display_name=LOCATION_DISPLAY_NAME)
     factories.Organization(
         name=ORG,
         title='ORG NAME FOR COMPLETENESS',
@@ -122,7 +124,7 @@ class MockedDataCompleteness(DataCompleteness):
         return self.yaml_dict
 
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_data')
 class TestDataCompleteness(object):
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
@@ -240,9 +242,44 @@ class TestDataCompleteness(object):
         assert subcategory3_stats['state'] == 'good'
         assert subcategory3_stats['good_datasets_num'] == 1
 
+    @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
+    def test_data_completeness_datagrid_show(self, patched_DataCompleteness):
+        data = self.__compute_data_completeness(_generate_test_yaml_dict(), patched_DataCompleteness)
+        # datagrid_dict = grp_h.hdx_replace_datagrid_labels(data, {'name':LOCATION, 'title': LOCATION_TITLE, 'display_name': LOCATION_DISPLAY_NAME})
+        context = {'model': model, 'session': model.Session, 'user': USER, 'ignore_auth': True}
+        datagrid_dict = _get_action('hdx_datagrid_show')(context, {'id':LOCATION})
+        assert datagrid_dict['iso3'] == LOCATION
+        assert datagrid_dict['title'] == LOCATION_TITLE
+        assert 'date' in datagrid_dict
+        assert 'state' not in datagrid_dict.get('stats')
+        assert 'available_dataseries_num' in datagrid_dict.get('stats')
+        assert 'dataseries_available_percentage' in datagrid_dict.get('stats')
+        assert 'outdated_dataseries_num' in datagrid_dict.get('stats')
+        assert 'dataseries_outdated_percentage' in datagrid_dict.get('stats')
+
+        categ = datagrid_dict.get('categories')[0].get('stats')
+        assert 'dataset_availability_percentage' in categ
+        assert 'available_dataseries_num' in categ
+        assert 'dataseries_available_percentage' in categ
+        assert 'outdated_dataseries_num' in categ
+        assert 'dataseries_outdated_percentage' in categ
+        assert 'available_dataseries_text' in categ
+        assert 'outdated_dataseries_text' in categ
+
+        subcateg_stats = datagrid_dict.get('categories')[0].get('subcategories')[0].get('stats')
+        assert 'available_datasets_num' in subcateg_stats
+        assert subcateg_stats['state'] == 'available'
+
+        subcateg_stats = datagrid_dict.get('categories')[0].get('subcategories')[1].get('stats')
+        assert 'available_datasets_num' in subcateg_stats
+        assert subcateg_stats['state'] == 'outdated'
+
+
+
     def __compute_data_completeness(self, yaml_dict, patched_DataCompleteness):
         mocked_data_completeness = MockedDataCompleteness(yaml_dict)
         patched_DataCompleteness.return_value = mocked_data_completeness
         grp_h._get_data_completeness('test_location')
         data = mocked_data_completeness.config
         return data
+
