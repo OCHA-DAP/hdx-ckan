@@ -956,6 +956,9 @@ ul.dataset-resources li.label-icons a .humanitarianicons-Chart:hover::before {
 ul.dataset-resources li.label-icons a .icon-hxl-tags:hover::before {
   color: #f2645a;
 }
+ul.dataset-resources li.label-icons a.humanitarianicons-Environment.fresh::before {
+  color: #1bb580;
+}
 ul.dataset-resources li.label-icons span {
   padding: 0;
 }
