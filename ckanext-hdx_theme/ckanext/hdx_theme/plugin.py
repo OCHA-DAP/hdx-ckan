@@ -104,7 +104,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
 
     def __add_wp_faq_url_for_checks(self, config):
-        wp_url = '{0}/custom-ufaq-category/{1}'\
+        wp_url = '{0}/custom-ufaq-category/{1}.json'\
             .format(config.get('hdx.wordpress.url'), config.get('hdx.wordpress.category.faq'))
         config['hdx_checks.wp_faq_url'] = wp_url
         basic_auth = config.get('hdx.wordpress.auth.basic')
