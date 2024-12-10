@@ -301,6 +301,7 @@ DATA_COMPLETENESS_LABELS_DICT = {
     'not_good_dataseries_text': 'outdated_dataseries_text',
     'dataseries_good_percentage':'dataseries_available_percentage',
     'dataseries_not_good_percentage':'dataseries_outdated_percentage',
+    'is_good': 'is_available',
 }
 
 DATA_COMPLETENESS_STATE_DICT = {

@@ -274,6 +274,13 @@ class TestDataCompleteness(object):
         assert 'available_datasets_num' in subcateg_stats
         assert subcateg_stats['state'] == 'outdated'
 
+        dataset_0 = datagrid_dict.get('categories')[0].get('subcategories')[0].get('datasets')[0]
+        assert 'is_available' in dataset_0
+        assert 'is_good' not in dataset_0
+
+        dataset_1 = datagrid_dict.get('categories')[0].get('subcategories')[0].get('datasets')[1]
+        assert 'is_available' in dataset_1
+        assert 'is_good' not in dataset_1
 
 
     def __compute_data_completeness(self, yaml_dict, patched_DataCompleteness):
