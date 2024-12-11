@@ -5,7 +5,7 @@ import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.caching as caching
 # import ckanext.hdx_package.helpers.screenshot as screenshot
-
+from datetime import datetime
 from ckanext.hdx_org_group.controller_logic.group_search_logic import GroupSearchLogic
 import ckan.lib.helpers as h
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
@@ -39,11 +39,11 @@ GROUP_TYPES = ['group']
 
 
 def _sort_datasets_by_is_good(data_completeness):
-    categories = data_completeness.get("categories")
+    categories = data_completeness.get('categories')
     for cat in categories:
-        if cat.get("data_series"):
-            for ds in cat.get("data_series"):
-                datasets_list = ds.get("datasets")
+        if cat.get('data_series'):
+            for ds in cat.get('data_series'):
+                datasets_list = ds.get('datasets')
                 if datasets_list:
                     datasets_sorted_list = sorted(datasets_list, key=lambda item: item['is_good'] == False)
                     ds['datasets'] = datasets_sorted_list
@@ -52,7 +52,7 @@ def _sort_datasets_by_is_good(data_completeness):
 
 
 def country_topline(id):
-    log.info("The id of the page is: " + id)
+    log.info('The id of the page is: ' + id)
 
     country_dict = get_country(id)
     top_line_data_list = caching.cached_topline_numbers(id)
@@ -88,11 +88,11 @@ def get_template_data(country_dict, not_filtered_facet_info):
     # f_organization_list = _get_org_list_for_featured_from_facets(not_filtered_facet_info)
     # f_tag_list = _get_tag_list_for_featured_from_facets(not_filtered_facet_info)
 
-    data_completness = _get_data_completeness(country_dict.get('name')) \
+    data_completeness = _get_data_completeness(country_dict.get('name')) \
         if country_dict.get('data_completeness') == 'active' else None
 
-    if data_completness:
-        data_completness = _sort_datasets_by_is_good(data_completness)
+    if data_completeness:
+        data_completeness = _sort_datasets_by_is_good(data_completeness)
 
     template_data = {
         'data': {
@@ -117,7 +117,7 @@ def get_template_data(country_dict, not_filtered_facet_info):
             #     'tag_list': f_tag_list[:10],
             #     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
             # },
-            'data_completness': data_completness,
+            'data_completeness': data_completeness,
 
         },
         'errors': None,
@@ -248,8 +248,8 @@ def get_country(id):
 
 
 def _db_to_form_schema(group_type=None):
-    '''This is an interface to manipulate data from the database
-    into a format suitable for the form (optional)'''
+    """This is an interface to manipulate data from the database
+    into a format suitable for the form (optional)"""
     return lookup_group_plugin(group_type).db_to_form_schema()
 
 
@@ -290,3 +290,77 @@ def hdx_datagrid_org_get_display_text(dataseries_dict):
                     if flag.get('key', '') == 'not_applicable' and flag.get('display_text'):
                         return flag.get('display_text')
     return 'Not applicable'
+
+DATA_COMPLETENESS_LABELS_DICT = {
+    'data_series': 'subcategories',
+    'good_datasets_num': 'available_datasets_num',
+    'dataset_goodness_percentage':'dataset_availability_percentage',
+    'good_dataseries_num':'available_dataseries_num',
+    'not_good_dataseries_num': 'outdated_dataseries_num',
+    'good_dataseries_text': 'available_dataseries_text',
+    'not_good_dataseries_text': 'outdated_dataseries_text',
+    'dataseries_good_percentage':'dataseries_available_percentage',
+    'dataseries_not_good_percentage':'dataseries_outdated_percentage',
+    'is_good': 'is_available',
+}
+
+DATA_COMPLETENESS_STATE_DICT = {
+    'good':'available',
+    'not_good':'outdated',
+    'empty':'empty',
+}
+
+DATA_COMPLETENESS_KEYS_TBR_LIST = ['rules']
+
+def _transform_data_completeness(data):
+    if isinstance(data, dict):
+        new_dict = {}
+        for key, value in data.items():
+            # Replace keys if present in DATA_COMPLETENESS_LABELS_DICT
+            new_key = DATA_COMPLETENESS_LABELS_DICT.get(key, key)
+
+            # Replace state values if applicable
+            if key == 'state' and isinstance(value, str):
+                value = DATA_COMPLETENESS_STATE_DICT.get(value, value)
+
+            # Recursively transform values
+            new_dict[new_key] = _transform_data_completeness(value)
+        return new_dict
+    elif isinstance(data, list):
+        return [_transform_data_completeness(item) for item in data]
+    return data
+
+
+def remove_keys_from_dict(data, keys_to_remove):
+    """
+    Recursively removes specified keys from a dictionary.
+
+    :param data: The dictionary to process.
+    :param keys_to_remove: List of keys to remove.
+    :return: The modified dictionary.
+    """
+    if isinstance(data, dict):
+        return {
+            key: remove_keys_from_dict(value, keys_to_remove)
+            for key, value in data.items()
+            if key not in keys_to_remove
+        }
+    elif isinstance(data, list):
+        return [remove_keys_from_dict(item, keys_to_remove) for item in data]
+    else:
+        return data
+
+def hdx_replace_datagrid_labels(data_completeness, grp_dict):
+    # Replace keys in the dictionary
+    updated_data = _transform_data_completeness(data_completeness)
+    # Remove specified keys
+    updated_data = remove_keys_from_dict(updated_data, DATA_COMPLETENESS_KEYS_TBR_LIST)
+    updated_data.pop('inherits_from', None)
+    updated_data.pop('name', None)
+    updated_data.pop('title', None)
+    updated_data.pop('description', None)
+    updated_data['stats'].pop('state', None)
+    updated_data['date'] = datetime.now()
+    updated_data['iso3'] = grp_dict.get('name')
+    updated_data['title'] = grp_dict.get('title') or grp_dict.get('display_name')
+    return updated_data

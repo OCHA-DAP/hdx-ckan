@@ -40,3 +40,6 @@ def hdx_organization_follower_list(context, data_dict):
 #     if authz.auth_is_anon_user(context):
 #         return {'success': False, 'msg': _('Only logged in users can join an organization')}
 #     return {'success': True}
+
+def hdx_datagrid_show(context, data_dict):
+    return {'success': False, 'msg': _('Only sysadmins can see the datagrid for location')}

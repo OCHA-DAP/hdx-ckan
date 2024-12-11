@@ -14,7 +14,7 @@ GOODNESS_PROPERTY = 'is_good'
 FLAG_NOT_APPLICABLE = 'not_applicable'
 
 
-class DataCompletness(object):
+class DataCompleteness(object):
 
     basic_query_params = {
         'start': 0,
