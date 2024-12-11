@@ -17,6 +17,8 @@ _get_action = tk.get_action
 
 
 USER = 'some_user'
+SYSADMIN = 'test_sysadmin'
+SYSADMIN_EMAIL = 'test_sysadmin@email.com'
 LOCATION = 'some_location'
 LOCATION_DISPLAY_NAME = LOCATION_TITLE = 'Some Location'
 ORG = 'org_name_4_completeness'
@@ -91,6 +93,7 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=U
 @pytest.fixture()
 def setup_data():
     factories.User(name=USER, email='some_user@hdx.hdxtest.org')
+    factories.Sysadmin(name=SYSADMIN, email=SYSADMIN_EMAIL, fullname='Sysadmin User')
     group = factories.Group(name=LOCATION, title=LOCATION_TITLE, display_name=LOCATION_DISPLAY_NAME)
     factories.Organization(
         name=ORG,
@@ -245,9 +248,15 @@ class TestDataCompleteness(object):
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_datagrid_show(self, patched_DataCompleteness):
         data = self.__compute_data_completeness(_generate_test_yaml_dict(), patched_DataCompleteness)
-        # datagrid_dict = grp_h.hdx_replace_datagrid_labels(data, {'name':LOCATION, 'title': LOCATION_TITLE, 'display_name': LOCATION_DISPLAY_NAME})
-        context = {'model': model, 'session': model.Session, 'user': USER, 'ignore_auth': True}
-        datagrid_dict = _get_action('hdx_datagrid_show')(context, {'id':LOCATION})
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        context_user = {'model': model, 'session': model.Session, 'user': USER}
+        try:
+            datagrid_dict = _get_action('hdx_datagrid_show')(context_user, {'id': LOCATION})
+            assert False
+        except Exception:
+            assert True
+        datagrid_dict = _get_action('hdx_datagrid_show')(context_sysadmin, {'id':LOCATION})
+
         assert datagrid_dict['iso3'] == LOCATION
         assert datagrid_dict['title'] == LOCATION_TITLE
         assert 'date' in datagrid_dict

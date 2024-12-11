@@ -338,6 +338,9 @@ def _user_list_dictize(obj_list, context,
 
 @side_effect_free
 def hdx_datagrid_show(context, data_dict):
+
+    _check_access('hdx_datagrid_show', context, data_dict)
+
     id = _get_or_bust(data_dict, 'id')
     if id:
         grp_dict = get_action('hdx_light_group_show')(context, {'id':id})
