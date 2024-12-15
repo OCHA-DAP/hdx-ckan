@@ -283,12 +283,10 @@ def requires_ckan_version(min_version: str, max_version: Optional[str] = None):
 
 def get_endpoint() -> Union[tuple[str, str], tuple[None, None]]:
     """Returns tuple in format: (blueprint, view)."""
-    # Changed by HDX https://github.com/ckan/ckan/pull/7616
     # skip CLI requests and requests with unallowed method
     if not request or not request.endpoint:
         return None, None
 
-    # Changed by HDX: https://github.com/ckan/ckan/pull/7616
     blueprint, *rest = request.endpoint.split(".", 1)
     # service routes, like `static`
     view = rest[0] if rest else "index"
