@@ -71,7 +71,7 @@ RUN apt-get -qq -y update && \
     python -m pip install --upgrade pip && \
     pip install -r requirement-setuptools.txt && \
     #pip install --upgrade -r requirements.txt && \
-    pip install pip-tools==7.3.0 && \
+    pip install pip-tools==7.4.1 && \
     pip-sync requirements.txt requirements-hdxckantool.txt  && \
     pip install \
       elastic-apm[flask] \
