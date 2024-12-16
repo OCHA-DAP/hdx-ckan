@@ -137,7 +137,7 @@ hdx.http_headers.mimetypes = application/json,text/html,text/json
 hdx.api_token.email_notifications.enabled = false
 
 # FAQ - Wordpress
-hdx.wordpress.url=https://centre.humdata.org
+hdx.wordpress.url=https://dev-centre.humdata.org
 hdx.wordpress.category.faq=554
 hdx.wordpress.category.devs=568
 hdx.wordpress.category.terms=577
