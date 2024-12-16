@@ -1,20 +1,19 @@
-'''
+"""
 Created on April 24, 2015
 
 @author: alexandru-m-g
-'''
+"""
 import json
 import logging
 
 import ckan.lib.dictization as d
 import ckan.lib.helpers as helpers
 import ckan.lib.navl.dictization_functions
-import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 from ckan.common import c
 from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
@@ -36,7 +35,7 @@ IndicatorAccess = indicator_access.IndicatorAccess
 
 @side_effect_free
 def hdx_datasets_for_group(context, data_dict):
-    '''
+    """
     Returns a paginated list of datasets for a group with 25 items per page.
     Options for sorting are: metadata_modified desc, title_case_insensitive desc, title_case_insensitive asc,
     views_recent desc, score desc ( only useful if query string is specified, should be combined
@@ -52,11 +51,11 @@ def hdx_datasets_for_group(context, data_dict):
     :param type: 'all', 'indicators', 'datasets'. Defaults to 'all'
     :type q: string
     :return:
-    '''
+    """
 
     skipped_keys = ['q', 'id', 'sort', 'type', 'page']
 
-    id = _get_or_bust(data_dict, "id")
+    id = _get_or_bust(data_dict, 'id')
 
     limit = 25
 
@@ -74,31 +73,31 @@ def hdx_datasets_for_group(context, data_dict):
         new_data_dict['ext_indicator'] = u'0'
 
     search_param_list = [
-        key + ":" + value for key, value in data_dict.iteritems() if key not in skipped_keys]
+        key + ':' + value for key, value in data_dict.iteritems() if key not in skipped_keys]
     search_param_list.append(u'groups:{}'.format(id))
 
     if search_param_list != None:
-        new_data_dict['fq'] = " ".join(
+        new_data_dict['fq'] = ' '.join(
             search_param_list) + ' +dataset_type:dataset'
 
     if data_dict.get('q', None):
         new_data_dict['q'] = data_dict['q']
 
-    query = get_action("package_search")(context, new_data_dict)
+    query = get_action('package_search')(context, new_data_dict)
 
     return query
 
 
 @side_effect_free
 def hdx_topline_num_for_group(context, data_dict):
-    '''
+    """
     :param id: the id of the group for which top line numbers are requested
     :type id: string
     :return: a dict of top line numbers. Please note that depending on the selected group the source
     of the data ( either the datastore or CPS/indicators ) might be different. The data will have some fields
      that are specific to the source.
-    '''
-    id = _get_or_bust(data_dict, "id")
+    """
+    id = _get_or_bust(data_dict, 'id')
     grp_result = get_group(id)
     group_info = grp_result.get('group_info')
     # custom_dict = grp_result.get('custom_dict')
@@ -124,14 +123,14 @@ def hdx_topline_num_for_group(context, data_dict):
 
 
 def __get_toplines_for_active_country(group_info, common_format):
-    '''
+    """
     :param group_info:
     :type group_info: dict
     :param common_format:
     :type common_format: bool
     :return:
     :rtype: list
-    '''
+    """
 
     # source is rw
     top_line_data_list = widget_data_service.build_widget_data_access(group_info).get_dataset_results()
@@ -162,14 +161,14 @@ def __get_toplines_for_active_country(group_info, common_format):
 
 
 def __get_toplines_for_standard_country(group_info, common_format):
-    '''
+    """
     :param group_info:
     :type group_info: dict
     :param common_format:
     :type common_format: bool
     :return:
     :rtype: list
-    '''
+    """
     # source is configured in 'hdx.locations.toplines_url'
     # ckan_site_url = config.get('ckan.site_url')
     raw_top_line_items = widget_data_service.build_widget_data_access(group_info).get_dataset_results()
@@ -197,13 +196,13 @@ def __get_toplines_for_standard_country(group_info, common_format):
 
 @side_effect_free
 def hdx_light_group_show(context, data_dict):
-    '''
+    """
     Return a lightweight ( less resource intensive,faster but without datasets ) version of the group details
     :param id: the id of the group for which top line numbers are requested
     :type id: string
-    '''
+    """
 
-    id = _get_or_bust(data_dict, "id")
+    id = _get_or_bust(data_dict, 'id')
     group_dict = {}
     group = model.Group.get(id)
     if not group:
@@ -226,13 +225,13 @@ def hdx_light_group_show(context, data_dict):
         dictized = d.table_dictize(extra, context)
         if not extra.state == 'active':
             continue
-        value = dictized["value"]
+        value = dictized['value']
         result_list.append(dictized)
 
         # Keeping the above for backwards compatibility
-        group_dict[name] = dictized["value"]
+        group_dict[name] = dictized['value']
 
-    group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
+    group_dict['extras'] = sorted(result_list, key=lambda x: x['key'])
     return group_dict
 
 
@@ -283,20 +282,20 @@ def hdx_get_locations_info_from_rw(context, data_dict):
             return cached_make_rest_api_request(url)
         return None
     except:
-        log.error("RW file was not found or can not be accessed")
+        log.error('RW file was not found or can not be accessed')
         return None
 
 
 @side_effect_free
 def hdx_organization_follower_list(context, data_dict):
-    '''Return the list of users that are following the given organization.
+    """Return the list of users that are following the given organization.
 
     :param id: the id or name of the organization
     :type id: string
 
     :rtype: list of dictionaries
 
-    '''
+    """
     _check_access('hdx_organization_follower_list', context, data_dict)
     context['keep_email'] = True
     return _follower_list(
@@ -336,3 +335,17 @@ def _user_list_dictize(obj_list, context,
         # user_dict.pop('email', None)
         result_list.append(user_dict)
     return sorted(result_list, key=sort_key, reverse=reverse)
+
+@side_effect_free
+def hdx_datagrid_show(context, data_dict):
+
+    _check_access('hdx_datagrid_show', context, data_dict)
+
+    id = _get_or_bust(data_dict, 'id')
+    if id:
+        grp_dict = get_action('hdx_light_group_show')(context, {'id':id})
+        data_completeness = country_helper._get_data_completeness(grp_dict.get('name'))
+        replaced_data_completeness = country_helper.hdx_replace_datagrid_labels(data_completeness, grp_dict)
+        return replaced_data_completeness
+    else:
+        raise NotFound('Group was not found.')
