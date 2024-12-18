@@ -112,11 +112,11 @@
                   <div class="col-12 paddingLeftHack paddingRightHack">
                     <div class="row">
                       {% if secondary_block_output|trim != '' and not secondary_right_side %}
-                        <div class="col-3 wrapper-secondary">
+                        <div class="{% if wrapper_secondary_class %}{{ wrapper_secondary_class }}{% else %}col-3{% endif %} wrapper-secondary">
                           {{ secondary_block_output }}
                         </div>
                       {% endif %}
-                      <div class="{% if secondary_block_output|trim != '' %} col-9 wrapper-primary pL15{% else %} col-12 {% endif %}">
+                      <div class="{% if secondary_block_output|trim != '' %} {% if wrapper_primary_class %}{{ wrapper_primary_class }}{% else %}col-9{% endif %} wrapper-primary pL15{% else %} col-12 {% endif %}">
                         {{ self.primary() }}
                       </div>
                       {% if secondary_block_output|trim != '' and secondary_right_side %}

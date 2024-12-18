@@ -72,32 +72,26 @@
             {% endif %}
           </div>
         {% endif %}
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a id="link-data-resources-tab" href="#data-resources" class="nav-link active"
-               data-module="hdx_click_stopper" data-module-link_type="dataset resources tab" data-module-just_send_event="true"
-               data-bs-toggle="tab" class="hdx-tab-button">Data and Resources
-            </a>
-          </li>
-          <li class="nav-item">
-            <a id="link-metadata-tab" href="#metadata" class="nav-link"
-               data-module="hdx_click_stopper" data-module-link_type="dataset metadata tab" data-module-just_send_event="true"
-               data-bs-toggle="tab" class="hdx-tab-button">Metadata
-            </a>
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane active" id="data-resources">
-            {% block package_resources %}
-              {% snippet "light/dataset/resources_list.html", pkg=pkg, resources=pkg.resources, user_survey_url=user_survey_url %}
-            {% endblock %}
+        {% block package_resources %}
+          <div class="list-header crisis-list-header">
+            <span class="mL15 list-header-title">
+              {{ _("Data and Resources") }} [{{ pkg.num_resources }}]
+            </span>
           </div>
-          <div class="tab-pane" id="metadata">
-            {% block indicator_additional_info %}
-            {% snippet "light/dataset/additional_info.html", pkg_dict=pkg %}
-            {% endblock %}
+          {% snippet "light/dataset/resources_list.html", pkg=pkg, resources=pkg.resources, user_survey_url=user_survey_url %}
+        {% endblock %}
+        {% block indicator_additional_info %}
+        <div class="list-header crisis-list-header">
+          <span class="mL15 list-header-title">
+            {{ _("Additional information") }}
+          </span>
+        </div>
+        <div class="px-2">
+          <div class="mTop10">
+            {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
           </div>
         </div>
+        {% endblock %}
       </div>
     </div>
   </div>

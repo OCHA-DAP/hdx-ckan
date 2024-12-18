@@ -1,205 +1,228 @@
-<section class="additional-info info-wrapper mTop35">
+<section class="additional-info info-wrapper">
   {% set metadata_url = h.url_for('hdx_dataset.package_metadata', id=pkg_dict.id) %}
 
-  <div class="text-end">
-    <p>Export metadata for this dataset: <a href="{{ metadata_url }}?format=json">JSON</a> | <a
-            href="{{ metadata_url }}?format=csv">CSV</a></p>
-  </div>
+  <div class="additional-info-content">
 
-  <table class="table-condensed mTop10">
+    {% block package_additional_info %}
+      {% set edit_mode = h.check_access('package_update', {'id':pkg_dict.id }) %}
 
-    <tbody>
-
-{% block package_additional_info %}
-  {% set edit_mode = h.check_access('package_update', {'id':pkg_dict.id })  %}
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_dataset_source" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Source') }}</th>
-		<td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
-	</tr>
-
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_owner_org" data-module-dataset="{{pkg_dict.id}}" {% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
-		<td class="dataset-details metadata-link">
-		{% if pkg_dict.owner_org %}
-		{% set org_id = pkg_dict.owner_org or pkg_dict.organization.name %}
-			<a class="mx-ga-dimension-organization"
-               href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
-	            	{{ pkg_dict.organization.title }}
-	        </a>
-	    {% endif %}
-		</td>
-    </tr>
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="ui_date_range1" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label"><span title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Time Period of the Dataset')}} [?]</span></th>
-		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }} <a href="#" id="show-more-dates">... {{ _('More') }}</a></td>
-  </tr>
-  {% set modified_time = pkg_dict.last_modified %}
-  {% set confirmed_time = pkg_dict.review_date %}
-  {% set hdx_added_time = pkg_dict.metadata_created %}
-  <tr class="d-none more-dates">
-    <th scope="row" class="dataset-label"><span title="{{ _('The date of the most recent change to any data or metadata.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Modified')}} [?]</span></th>
-    <td class="dataset-details">
-      {{ h.render_datetime(modified_time) }}
-    </td>
-  </tr>
-  {% if confirmed_time and confirmed_time > modified_time %}
-  <tr class="d-none more-dates">
-    <th scope="row" class="dataset-label"><span title="{{ _('The date when the contributor last confirmed that all resources in the dataset are up-to-date.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Confirmed')}} [?]</span></th>
-    <td class="dataset-details">
-      {{ h.render_datetime(confirmed_time) }}
-    </td>
-  </tr>
-  {% endif %}
-  <tr class="d-none more-dates">
-    <th scope="row" class="dataset-label"><span title="{{ _('The date when the dataset was first added to HDX.') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{_('Dataset Added on HDX')}} [?]</span></th>
-    <td class="dataset-details">
-      {{ h.render_datetime(hdx_added_time) }} <a href="#" class="d-none" id="hide-more-dates">{{ _('Less') }}</a>
-    </td>
-  </tr>
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_data_update_frequency" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Expected Update Frequency') }}</th>
-		<td class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</td>
-  </tr>
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_locations" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
-		<td class="dataset-details metadata-link mx-country">
+      <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="ui_date_range1"
+           data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+        <div class="dataset-label"><span
+          title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}"
+          data-module="bs_tooltip" data-module-placement="top"
+          data-bs-toggle="tooltip">{{ _('Time Period of the Dataset') }} [?]</span></div>
+        <div class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }} <a href="#"
+                                                                                                   id="show-extra-dates">... {{ _('More') }}</a>
+        </div>
+      </div>
+      {% set modified_time = pkg_dict.last_modified %}
+      {% set confirmed_time = pkg_dict.review_date %}
+      {% set hdx_added_time = pkg_dict.metadata_created %}
+      <div class="mb-3 d-none more-dates">
+        <div class="dataset-label"><span title="{{ _('The date of the most recent change to any data or metadata.') }}"
+                                         data-module="bs_tooltip" data-module-placement="top"
+                                         data-bs-toggle="tooltip">{{ _('Modified') }} [?]</span></div>
+        <div class="dataset-details">
+          {{ h.render_datetime(modified_time) }}
+        </div>
+      </div>
+      {% if confirmed_time and confirmed_time > modified_time %}
+        <div class="mb-3 d-none more-dates">
+          <div class="dataset-label"><span
+            title="{{ _('The date when the contributor last confirmed that all resources in the dataset are up-to-date.') }}"
+            data-module="bs_tooltip" data-module-placement="top"
+            data-bs-toggle="tooltip">{{ _('Confirmed') }} [?]</span></div>
+          <div class="dataset-details">
+            {{ h.render_datetime(confirmed_time) }}
+          </div>
+        </div>
+      {% endif %}
+      <div class="mb-3 d-none more-dates">
+        <div class="dataset-label"><span title="{{ _('The date when the dataset was first added to HDX.') }}"
+                                         data-module="bs_tooltip" data-module-placement="top"
+                                         data-bs-toggle="tooltip">{{ _('Dataset Added on HDX') }} [?]</span></div>
+        <div class="dataset-details">
+          {{ h.render_datetime(hdx_added_time) }} <a href="#" class="d-none" id="hide-extra-dates">{{ _('Less') }}</a>
+        </div>
+      </div>
+      <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit"
+           data-module-anchor="s2id_field_data_update_frequency" data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+        <div class="dataset-label">{{ _('Expected Update Frequency') }}</div>
+        <div class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</div>
+      </div>
+      <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_locations"
+           data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+        <div class="dataset-label">{{ _('Location') }}</div>
+        <div class="dataset-details metadata-link mx-country">
 			<span data-module="hdx_show_more" style="visibility:hidden"><div>
 				{% for grp in pkg_dict.groups %}
-					<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %},&nbsp;{% endif %}
-				{% endfor %}
-			<br/></div></span>
-		</td>
-  </tr>
-    {# Metadata-only datasets are public, so this option is only for full datasets #}
-{% if not pkg_dict.is_requestdata_type %}
-    {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
-{#    	<hidden id="controller_url" value="{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}">#}
-		<tr>
-			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
-			<td class="dataset-details">
-				{% if pkg_dict.private %}
-					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
-					<a onclick="contributeAddDetails('{{ pkg_dict.id }}', 'make public')" href="#">{{ _('make it public') }}</a></div>
-				{% else %}
-					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
-                    <a onclick="contributeAddDetails('{{ pkg_dict.id }}', 'make private')" href="#">{{ _('make it private') }}</a></div>
-				{% endif %}
-			</td>
-		</tr>
-	{% else %}
-		<tr>
-    	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
-  		<td class="dataset-details">
-  			{% if pkg_dict.private %}
-  				<div id="private_block"><span id="visibility">{{ _('Private') }}</span></div>
-		  	{% else %}
-		  		<div id="private_block"><span id="visibility">{{ _('Public') }}</span></div>
-		  	{% endif %}
-  		</td>
-	</tr>
-    {% endif %}
-{% endif %}
+          <a
+            href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>
+          {% if not loop.last %},&nbsp;{% endif %}
+        {% endfor %}
+        <br/></div></span>
+        </div>
+      </div>
 
-    {% if not pkg_dict.is_requestdata_type %}
-    <tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_license_id" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-    	<th scope="row" class="dataset-label">{{ _('License') }}</th>
-    	<td class="dataset-details  metadata-link">
-        	{% if pkg_dict.license_id %}
-				<span property="dc:rights"><a href="{{ h.url_for('hdx_faqs.read', category='licenses') }}">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
-				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
-				: <span data-module="hdx_show_more" style="visibility:hidden">{{h.render_markdown(pkg_dict.license_other)}}</span>
-				{% endif %}
+      <div class="mb-3">
+        <a href="#" id="show-extra-fields">... {{ _('More') }}</a>
+      </div>
+      <div class="additional-info-extra-fields d-none">
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_dataset_source"
+             data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+          <div class="dataset-label">{{ _('Source') }}</div>
+          <div class="dataset-details">{{ pkg_dict.dataset_source }}</div>
+        </div>
 
-				{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
-		            {% if 'license_url' in pkg_dict %}
-		                <a class="info-item-name" href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
-		            {% else %}
-		                <span property="dc:rights">{{ pkg_dict.license_title }}</span>
-		            {% endif %}
-		            {% if pkg_dict.isopen %}
-		                <a href="https://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
-		                    <img class="open-data" src="https://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="[Open Data]" />
-		                </a>
-		            {% endif %}
-           		 #}
-
-          {% endif %}
-      </td>
-    </tr>
-   {% endif %}
-	{% if pkg_dict.is_requestdata_type %}
-        <tr>
-            <th scope="row" class="dataset-label">{{ _('Field Names') }}</th>
-            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.field_names | replace(",", ", ") }}</td>
-        </tr>
-        <tr>
-            <th scope="row" class="dataset-label">{{ _('File Types') }}</th>
-            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.file_types | replace(",", ", ")  }}</td>
-        </tr>
-        <tr>
-            <th scope="row" class="dataset-label">{{ _('Number of Rows') }}</th>
-            <td class="dataset-details">{{ pkg_dict.num_of_rows }}</td>
-        </tr>
-    {% endif %}
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_methodology" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
-		{% set methodology, methodology_other = h.methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
-	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">
-			  {% if not methodology_other %}
-			  	{% if methodology != None %}
-			  		{{methodology}}
-			  	{% endif %}
-			  {% else %}
-			  	{{methodology_other}}
-			  {% endif %}
-		  </span></td>
-	</tr>
-	<tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_caveats" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
-		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
-	</tr>
-
-  <tr {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_tag_string" data-module-dataset="{{pkg_dict.id}}"{% endif %}>
-		<th scope="row" class="dataset-label">{{ _('Tags') }}</th>
-		<td class="dataset-details">
-			{% for tag in pkg_dict.tags %}
-	    		<div class="tag-wrapper">
-	    			{% if tag.vocabulary_id %}
-              <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'hdx_dataset.search', vocab_Topics=tag.name %}">{{ tag.display_name }}</a>
-            {% else %}
-              <a class="label tag" title="{{tag.display_name}}" href="{% url_for 'hdx_dataset.search', tags=tag.name %}">{{ tag.display_name }}</a>
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_owner_org"
+             data-module-dataset="{{ pkg_dict.id }}" {% endif %}>
+          <div class="dataset-label">{{ _('Contributor') }}</div>
+          <div class="dataset-details metadata-link">
+            {% if pkg_dict.owner_org %}
+              {% set org_id = pkg_dict.owner_org or pkg_dict.organization.name %}
+              <a class="mx-ga-dimension-organization"
+                 href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
+                {{ pkg_dict.organization.title }}
+              </a>
             {% endif %}
-	    		</div>
-	  		{% endfor %}
-		</td>
-	</tr>
+          </div>
+        </div>
 
-  {% if pkg_dict.resources %}
-    <tr>
-      <th scope="row" class="dataset-label">{{ _('File Format') }}</th>
-      <td class="dataset-details">
-        <ul class="list-items dataset-resources unstyled">
-          {% for resource in h.dict_list_reduce(pkg_dict.resources, 'format') %}
-            <li>
-              <a class="label" data-format="{{ resource.lower() }}"  onclick="$('#link-data-resources-tab').tab('show');">{{ resource }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </td>
-    </tr>
-  {% endif %}
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_methodology"
+             data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+          <div class="dataset-label">{{ _('Methodology') }}</div>
+          {% set methodology, methodology_other = h.methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
+          <div class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">
+			  {% if not methodology_other %}
+          {% if methodology != None %}
+            {{ methodology }}
+          {% endif %}
+        {% else %}
+          {{ methodology_other }}
+        {% endif %}
+		  </span></div>
+        </div>
+
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_caveats"
+             data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+          <div class="dataset-label">{{ _('Caveats / Comments') }}</div>
+          <div class="dataset-details"><span data-module="hdx_show_more"
+                                             style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span>
+          </div>
+        </div>
 
 
-      {# for extra in h.sorted_extras(pkg_dict.extras) %}
-        {% set key, value = extra %}
-        <tr rel="dc:relation" resource="_:extra{{ i }}">
-          <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-          <td class="dataset-details" property="rdf:value">{{ value }}</td>
-        </tr>
-      {% endfor #}
 
-{% endblock %}
+        {% if not pkg_dict.is_requestdata_type %}
+          <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_license_id"
+               data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+            <div class="dataset-label">{{ _('License') }}</div>
+            <div class="dataset-details  metadata-link">
+              {% if pkg_dict.license_id %}
+                <span property="dc:rights"><a
+                  href="{{ h.url_for('hdx_faqs.read', category='licenses') }}">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
+                {% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}:{% endif %}
+                {% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
+                  <span data-module="hdx_show_more"
+                        style="visibility:hidden">{{ h.render_markdown(pkg_dict.license_other) }}</span>
+                {% endif %}
 
-    </tbody>
-  </table>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        {% if pkg_dict.is_requestdata_type %}
+          <div class="mb-3">
+            <div class="dataset-label">{{ _('Field Names') }}</div>
+            <div class="dataset-details"
+                 style="word-break: break-all;">{{ pkg_dict.field_names | replace(",", ", ") }}</div>
+          </div>
+          <div class="mb-3">
+            <div class="dataset-label">{{ _('File Types') }}</div>
+            <div class="dataset-details"
+                 style="word-break: break-all;">{{ pkg_dict.file_types | replace(",", ", ") }}</div>
+          </div>
+          <div class="mb-3">
+            <div class="dataset-label">{{ _('Number of Rows') }}</div>
+            <div class="dataset-details">{{ pkg_dict.num_of_rows }}</div>
+          </div>
+        {% endif %}
+
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_tag_string"
+             data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+          <div class="dataset-label">{{ _('Tags') }}</div>
+          <div class="dataset-details">
+            {% for tag in pkg_dict.tags %}
+              <div class="tag-wrapper">
+                {% if tag.vocabulary_id %}
+                  <a class="label tag" title="{{ tag.display_name }}"
+                     href="{% url_for 'hdx_dataset.search', vocab_Topics=tag.name %}">{{ tag.display_name }}</a>
+                {% else %}
+                  <a class="label tag" title="{{ tag.display_name }}"
+                     href="{% url_for 'hdx_dataset.search', tags=tag.name %}">{{ tag.display_name }}</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
+        {% if pkg_dict.resources %}
+          <div class="mb-3">
+            <div class="dataset-label">{{ _('File Format') }}</div>
+            <div class="dataset-details">
+              <ul class="list-items dataset-resources unstyled">
+                {% for resource in h.dict_list_reduce(pkg_dict.resources, 'format') %}
+                  <li>
+                    <a class="label" data-format="{{ resource.lower() }}"
+                       onclick="$('#link-data-resources-tab').tab('show');">{{ resource }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+
+        {# Metadata-only datasets are public, so this option is only for full datasets #}
+        {% if not pkg_dict.is_requestdata_type %}
+          {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
+            <div class="mb-3">
+              <div class="dataset-label">{{ _('Visibility') }}</div>
+              <div class="dataset-details">
+                {% if pkg_dict.private %}
+                  <div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
+                    <a onclick="contributeAddDetails('{{ pkg_dict.id }}', 'make public')"
+                       href="#">{{ _('make it public') }}</a></div>
+                {% else %}
+                  <div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
+                    <a onclick="contributeAddDetails('{{ pkg_dict.id }}', 'make private')"
+                       href="#">{{ _('make it private') }}</a></div>
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            <div class="mb-3">
+              <div class="dataset-label">{{ _('Visibility') }}</div>
+              <div class="dataset-details">
+                {% if pkg_dict.private %}
+                  <div id="private_block"><span id="visibility">{{ _('Private') }}</span></div>
+                {% else %}
+                  <div id="private_block"><span id="visibility">{{ _('Public') }}</span></div>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <div class="dataset-details">
+          Export metadata for this dataset: <a href="{{ metadata_url }}?format=json">JSON</a> | <a
+          href="{{ metadata_url }}?format=csv">CSV</a>
+        </div>
+      </div>
+
+    {% endblock %}
+  </div>
 </section>

@@ -15,10 +15,18 @@ $(document).ready(function() {
     }
   );
 
-  $('#show-more-dates, #hide-more-dates').on('click', function(e) {
+  $('#show-extra-dates, #hide-extra-dates').on('click', function(e) {
       e.preventDefault();
-      $('#show-more-dates, #hide-more-dates').toggleClass('d-none');
+      $('#show-extra-dates, #hide-extra-dates').toggleClass('d-none');
       $('.more-dates').toggleClass('d-none');
+  });
+
+  $('#show-extra-fields').on('click', function(e) {
+    e.preventDefault();
+    var $wrapper = $(this).parent();
+    var $extraFields = $wrapper.parent().find('.additional-info-extra-fields');
+    $wrapper.remove();
+    $extraFields.removeClass('d-none');
   });
 
   $('#showDatasetActivity').on('change', function() {

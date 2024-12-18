@@ -145,11 +145,19 @@ $('document').ready(function(){
         $results.hide();
     });
 
-  $('.show-more-dates, .hide-more-dates').on('click', function(e) {
+  $('.show-extra-dates, .hide-extra-dates').on('click', function(e) {
     e.preventDefault();
     var parent = $(this).closest('.dataset-dates');
-    $('.show-more-dates, .hide-more-dates', parent).toggleClass('d-none');
+    $('.show-extra-dates, .hide-extra-dates', parent).toggleClass('d-none');
     $('.more-dates', parent).toggleClass('d-none');
+  });
+
+  $('#show-extra-fields').on('click', function(e) {
+    e.preventDefault();
+    var $wrapper = $(this).parent();
+    var $extraFields = $wrapper.parent().find('.additional-info-extra-fields');
+    $wrapper.remove();
+    $extraFields.removeClass('d-none');
   });
 });
 
