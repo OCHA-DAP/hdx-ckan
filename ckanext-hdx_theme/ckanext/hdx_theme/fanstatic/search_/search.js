@@ -151,14 +151,6 @@ $('document').ready(function(){
     $('.show-extra-dates, .hide-extra-dates', parent).toggleClass('d-none');
     $('.more-dates', parent).toggleClass('d-none');
   });
-
-  $('#show-extra-fields').on('click', function(e) {
-    e.preventDefault();
-    var $wrapper = $(this).parent();
-    var $extraFields = $wrapper.parent().find('.additional-info-extra-fields');
-    $wrapper.remove();
-    $extraFields.removeClass('d-none');
-  });
 });
 
 function process_title(title, termList){
