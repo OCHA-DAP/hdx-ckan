@@ -54,8 +54,14 @@ def replace_iframe_src(content):
     content = re.sub(p, "\g<1>load-\g<2>\g<3>", content)
     return content
 
+
+def replace_centre_domain(content: str):
+    return content.replace('https://centre.innovation.humdata.org', config.get('hdx.wordpress.url'))
+
+
 def process_content(content):
     content = replace_iframe_src(content)
+    content = replace_centre_domain(content)
     return content
 
 # this is not used?
