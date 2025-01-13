@@ -38,7 +38,7 @@ certifi==2021.5.30
     # via
     #   -c requirements.txt
     #   requests
-cffi==1.15.0
+# cffi==1.15.0
     # via cryptography
 chardet==4.0.0
     # via binaryornot
@@ -64,7 +64,7 @@ coverage[toml]==6.2
     #   pytest-cov
 coveralls==3.3.1
     # via -r dev-requirements.in
-cryptography==36.0.1
+# cryptography==36.0.1
     # via moto
 decorator==5.1.1
     # via
@@ -220,13 +220,11 @@ requests==2.28.1
     #   -c requirements.txt
     #   cookiecutter
     #   coveralls
-    #   moto
     #   responses
     #   sphinx
 responses==0.21.0
     # via
     #   -r dev-requirements.in
-    #   moto
 ruff==0.5.5
     # via -r dev-requirements.in
 s3transfer==0.10.1
@@ -297,11 +295,8 @@ werkzeug==2.0.3
     #   -c requirements.txt
     #   flask
     #   flask-debugtoolbar
-    #   moto
 whichcraft==0.6.1
     # via cookiecutter
-xmltodict==0.12.0
-    # via moto
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
