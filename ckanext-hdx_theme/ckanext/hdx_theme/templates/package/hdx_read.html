@@ -24,6 +24,9 @@
 
 {% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 
+{% set wrapper_primary_class = 'col-8' %}
+{% set wrapper_secondary_class = 'col-4' %}
+
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}
 {% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}
@@ -157,38 +160,51 @@
 {% endblock %}
 
 {% block secondary %}
+
+  <div class="list-header crisis-list-header mTop35">
+    <span class="mL15 list-header-title">
+      {{ _("Additional information") }}
+    </span>
+  </div>
+  <div class="px-4">
+    {% block indicator_additional_info %}
+      <div class="mTop35">
+        {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+      </div>
+    {% endblock %}
     {% if not pkg.is_requestdata_type %}
-    <div >
-        <div id="dataset-downloads-data" style="display: none">
-            {{ h.json_dumps(stats_downloads_last_weeks) }}
+      <div id="dataset-downloads-data" class="d-none">
+        {{ h.json_dumps(stats_downloads_last_weeks) }}
+      </div>
+      <h2 class="uppercase">{{ _('Downloads') }}</h2>
+      <div id="dataset-downloads-chart">
+        <div id="dataset-downloads-chart-no-data" style="display: none;">
+          <div class="title">NO DATA</div>
         </div>
-        <h2 class="uppercase">{{_('Downloads')}}</h2>
-        <div id="dataset-downloads-chart">
-            <div id="dataset-downloads-chart-no-data" style="display: none;">
-                <div class="title">NO DATA</div>
-            </div>
-        </div>
-    </div>
+      </div>
     {% endif %}
     <div class="row">
       <div class="col-12">
-        <h2 class="uppercase">{{_('Related Showcases')}}</h2>
+        <h2 class="uppercase">{{ _('Related Showcases') }}</h2>
         {% snippet "package/snippets/related_list.html", pkg=pkg, user=c.userobj, showcases=showcase_list %}
       </div>
       <div class="col-12">
         <div class="form-check form-switch ps-0 mTop20">
           <input class="form-check-input float-end" type="checkbox" role="switch" id="showDatasetActivity">
-          <label class="form-check-label" for="showDatasetActivity"><h2 class="uppercase mt-0">{{_('Activity')}}</h2></label>
+          <label class="form-check-label" for="showDatasetActivity"><h2 class="uppercase mt-0">{{ _('Activity') }}</h2>
+          </label>
         </div>
         <div class="dataset-activity-wrapper d-none">
           {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
           <br>
           {% if h.follow_status('dataset', pkg.name) %}
-              <span class="more mb-2">See more in <a href="{{ h.url_for('activity.dashboard') }}">your dashboard</a></span>
+            <span class="more mb-2">See more in <a
+              href="{{ h.url_for('activity.dashboard') }}">your dashboard</a></span>
           {% endif %}
         </div>
       </div>
     </div>
+  </div>
 {% endblock %}
 
 {% block primary %}

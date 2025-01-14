@@ -20,9 +20,15 @@ $(document).ready(function() {
     }
   });
 
-  $('#show-more-dates, #hide-more-dates').on('click', function(e) {
+  $('#show-extra-dates, #hide-extra-dates').on('click', function(e) {
       e.preventDefault();
-      $('#show-more-dates, #hide-more-dates').toggleClass('d-none');
+      $('#show-extra-dates, #hide-extra-dates').toggleClass('d-none');
       $('.more-dates').toggleClass('d-none');
+  });
+
+  $('#show-extra-fields, #hide-extra-fields').on('click', function(e) {
+    e.preventDefault();
+    $('#show-extra-fields, #hide-extra-fields').toggleClass('d-none');
+    $('.additional-info-extra-fields').toggleClass('d-none');
   });
 });
