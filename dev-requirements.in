@@ -16,7 +16,7 @@ sphinx-rtd-theme==1.0.0
 sqlalchemy-stubs==0.4
 mock==2.0.0
 pycodestyle==2.5.0
-pyfakefs==3.2
+pyfakefs==5.7.3
 sphinx==5.1.1
 towncrier==22.8.0
 

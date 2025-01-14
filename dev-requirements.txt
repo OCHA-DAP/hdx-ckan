@@ -189,7 +189,7 @@ pycodestyle==2.5.0
     # via -r dev-requirements.in
 pycparser==2.21
     # via cffi
-pyfakefs==3.2
+pyfakefs==5.7.3
     # via -r dev-requirements.in
 pygments==2.10.0
     # via
