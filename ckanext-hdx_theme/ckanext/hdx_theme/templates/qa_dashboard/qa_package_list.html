@@ -12,7 +12,7 @@
           <div class="mL30">
             <div class="qa-dataset-description" data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"><div>{{ h.render_markdown(h.get_translated(package, 'notes')) | urlize }}</div></div>
           </div>
-          {% snippet "package/hdx_resources_list.html", pkg=package, id_suffix=loop.index, resource_item_snippet='qa_dashboard/qa_resource_item.html' %}
+          {% snippet "package/hdx_resources_list.html", pkg=package, resource_item_snippet='qa_dashboard/qa_resource_item.html' %}
         </div>
       {% endfor %}
     </div>

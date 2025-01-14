@@ -1,5 +1,6 @@
 @import "../base/variables";
 @import "../base/mixins";
+@import "../bem.blocks/bem_variables";
 /**
  OLD Dataset CSS
 **/
@@ -96,26 +97,34 @@
 
 /* Style Additional Info */
 .additional-info {
-  table tr {
-    height: 38px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-  }
+  .additional-info-content {
+    .dataset-label {
+      color: @blue-medium-dark-color;
+      font-family: @gothamBoldFont;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 14.4px;
+      text-transform: uppercase;
+    }
 
-  td {
-    text-align: justify;
-    word-break: break-word;
-    &.dataset-details {
-      pre {
-        text-wrap: wrap;
+    .dataset-details {
+      color: @black-color;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 14px;
+      line-height: 18px;
+      margin-top: .25rem;
+
+      .tag-wrapper {
+        float: none;
+        display: inline-block;
       }
     }
-  }
 
-  th {
-    max-width: 200px;
-    width: 190px;
+    .quick-edit {
+      .dataset-details {
+        padding-right: 0;
+      }
+    }
   }
 }
 /* END Style Additional Info */
@@ -145,10 +154,19 @@
 }
 
 .wrapper-secondary {
+  &.col-4 {
+    border-right: 0;
+  }
   .form-check {
     .form-check-input {
       box-shadow: none;
     }
+  }
+}
+.wrapper-primary {
+  &.col-8 {
+    border-left: 0;
+    margin-left: 0;
   }
 }
 

@@ -654,6 +654,7 @@ dataset-light-scripts:
       - hdx_theme/dataset-light-styles
   contents:
     - light/dataset/dataset.js
+    - select2/select2.js
 
 dataset-light-styles:
   <<: *common-css
