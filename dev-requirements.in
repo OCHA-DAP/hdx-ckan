@@ -28,5 +28,6 @@ pytest-freezegun==0.4.2
 pytest-rerunfailures==10.2
 pytest-split==0.8.0
 
-moto==5.0.25
+#moto==5.0.25
+moto==4.2.14
 ruff==0.5.5
