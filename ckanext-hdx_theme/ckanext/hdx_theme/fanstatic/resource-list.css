@@ -20,6 +20,10 @@
   vertical-align: text-bottom;
   margin-right: 3px;
 }
+.resource-item .pcode-label {
+  margin-bottom: 7px;
+  margin-top: -7px;
+}
 .resource-item .description {
   text-align: justify;
   max-width: 450px;
