@@ -3,7 +3,7 @@ from copy import deepcopy
 from werkzeug.datastructures import FileStorage
 
 import boto3 as boto3
-from moto import mock_s3
+from moto import mock_aws
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -40,7 +40,7 @@ class HDXS3TestBase(object):
         cls.original_config = deepcopy(config)
         cls._change_config(config)
 
-        cls.m_s3 = mock_s3()
+        cls.m_s3 = mock_aws()
         cls.m_s3.start()
 
         region_name = config['ckanext.s3filestore.region_name']

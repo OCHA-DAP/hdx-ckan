@@ -17,23 +17,13 @@ Notes
 Compilation steps
 -----------------
 
-#. Make sure to have *pip-tools* installed, at least version 5.5.0 for python2 and 6.6.0 for python3:
-    *  FOR PYTHON 2::
-
-        pip install pip-tools==5.5.0
+#. Make sure to have *pip-tools* installed:
 
     *  FOR PYTHON 3::
 
-        pip install pip-tools==6.10.0
-
-        #for python 3.10
-        pip install pip-tools==7.3.0
+        pip install pip-tools==7.4.1
 
 #. Compile the main dependencies:
-
-   *  FOR PYTHON 2::
-
-       pip-compile requirements-py2.in --output-file=requirements-py2.txt
 
    *  FOR PYTHON 3::
 
@@ -41,20 +31,11 @@ Compilation steps
 
 #. Compile the dev dependencies:
 
-   *  FOR PYTHON 2::
-
-       pip-compile dev-requirements-py2.in --output-file=dev-requirements-py2.txt
-
    *  FOR PYTHON 3::
 
        pip-compile dev-requirements.in --output-file=dev-requirements.txt
 
-#. Make sure your python environment has the correct libraries installed. Notice that
-   we're using the *dev-requirements-local.txt* file here:
-
-   *  FOR PYTHON 2::
-
-       pip-sync requirements-py2.txt dev-requirements-py2.txt
+#. Make sure your python environment has the correct libraries installed:
 
    *  FOR PYTHON 3::
 
