@@ -55,13 +55,11 @@
            data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
         <div class="dataset-label">{{ _('Location') }}</div>
         <div class="dataset-details metadata-link mx-country">
-			<span data-module="hdx_show_more" style="visibility:hidden"><div>
-				{% for grp in pkg_dict.groups %}
-          <a
-            href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>
-          {% if not loop.last %},&nbsp;{% endif %}
-        {% endfor %}
-        <br/></div></span>
+          <span data-module="hdx_show_more">
+            <span class="d-block">
+              {% for grp in pkg_dict.groups %}<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+            </span>
+          </span>
         </div>
       </div>
 
