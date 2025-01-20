@@ -98,21 +98,6 @@
   padding: 0 3px;
   position: relative;
 }
-.qa-dataset-list-head {
-  padding: 15px 0;
-  position: absolute;
-  top: 0;
-  width: 38%;
-}
-.qa-dataset-list-head input[type='checkbox'] {
-  margin-left: 10px;
-  margin-right: 5px;
-}
-.qa-dataset-list-head .more-options {
-  position: absolute;
-  right: 10px;
-  top: 17px;
-}
 .qa-dataset-list {
   display: flex;
   height: 100%;
@@ -175,9 +160,6 @@
 }
 .resource-item .dataset-pii .pii-list .pii-item:first-child {
   border-top: none;
-}
-#dataset-resources {
-  display: none;
 }
 .qa-package-details {
   margin-left: -15px;
