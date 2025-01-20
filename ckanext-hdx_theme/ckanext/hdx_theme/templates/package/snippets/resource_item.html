@@ -34,6 +34,11 @@
     {{ _('Modified') }}:
     {{ h.hdx_render_resource_updated_date(res, pkg) }}
   </div>
+  {% if res.p_coded == True %}
+    <div class="pcode-label">
+      {{ _('P-code') }}: Yes
+    </div>
+  {% endif %}
   <div class="description">
     {% if res.description %}
       <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>
