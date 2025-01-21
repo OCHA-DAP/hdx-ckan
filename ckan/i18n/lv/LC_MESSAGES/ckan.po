@@ -5,6 +5,7 @@
 # 
 # Translators:
 # Adrià Mercader <amercadero@gmail.com>, 2022
+# Gatis Zeiris <gatis@dsistemas.lv>, 2024
 # 
 #, fuzzy
 msgid ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-11-30 16:00+0100\n"
 "PO-Revision-Date: 2022-11-16 11:05+0000\n"
-"Last-Translator: Adrià Mercader <amercadero@gmail.com>, 2022\n"
+"Last-Translator: Gatis Zeiris <gatis@dsistemas.lv>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/okfn/teams/11162/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1215,7 +1216,7 @@ msgstr "Pievienot filtru"
 #: ckan/public-bs3/base/javascript/modules/resource-view-filters.js:52
 #: ckan/public/base/javascript/modules/resource-view-filters.js:52
 msgid "Select a field"
-msgstr ""
+msgstr "Izvēlēties lauku"
 
 #: ckan/public-bs3/base/javascript/modules/resource-view-reorder.js:40
 #: ckan/public/base/javascript/modules/resource-view-reorder.js:40
@@ -1648,6 +1649,12 @@ msgid ""
 "password at: %(reset_link)s Have a nice day. -- Message sent by "
 "%(site_title)s (%(site_url)s)"
 msgstr ""
+"Cienījamais %(user_name)s, Jūs esat uzaicināts pievienoties  %(site_title)s."
+" Jums jau ir izveidots lietotājs ar lietotājvārdu %(user_name)s. Vēlāk "
+"varēsiet to nomainīt. Jūs esat pievienots grupai %(group_type)s "
+"%(group_title)s ar šādu lomu: %(role_name)s. TLai pieņemtu šo uzaicinājumu, "
+"lūdzu, atiestatiet savu paroli, izmantojot saiti: %(reset_link)s Lai Jums "
+"jauka diena! -- Ziņojumu nosūtīja %(site_title)s (%(site_url)s)"
 
 #: ckan/templates/emails/invite_user_subject.txt:1
 #, python-format
@@ -1662,11 +1669,15 @@ msgid ""
 "%(reset_link)s Have a nice day. -- Message sent by %(site_title)s "
 "(%(site_url)s)"
 msgstr ""
+"Cienījamais %(user_name)s, Jūs esat pieprasījis atiestatīt paroli "
+"vietnē%(site_title)s. Lūdzu, noklikšķiniet uz šīs saites, lai apstiprinātu "
+"pieprasījumu: %(reset_link)s Lai Jums jauka diena! -- Ziņojumu nosūtīja "
+"%(site_title)s (%(site_url)s)"
 
 #: ckan/templates/emails/reset_password_subject.txt:1
 #, python-format
 msgid "Reset your password - %(site_title)s"
-msgstr ""
+msgstr "Attiestatīt jūsu paroli - %(site_title)s"
 
 #: ckan/templates/group/admins.html:3 ckan/templates/group/admins.html:6
 #: ckan/templates/organization/admins.html:3
@@ -2126,6 +2137,10 @@ msgid ""
 "bs-toggle=\"popover\" data-bs-content=\"%(markdown_tooltip)s\" data-bs-"
 "html=\"true\">Markdown formatting</a> here"
 msgstr ""
+"Šeit tu vari izmantot<a href=\"#markdown\" title=\"Markdown quick "
+"reference\" data-bs-toggle=\"popover\" data-bs-"
+"content=\"%(markdown_tooltip)s\" data-bs-html=\"true\">Markdown "
+"formatējumu</a> "
 
 #: ckan/templates/macros/form/required_message.html:11
 msgid "Required field"
@@ -3157,16 +3172,16 @@ msgstr "Notiek ielāde..."
 
 #: ckan/templates/user/api_tokens.html:20
 msgid "Create API Token"
-msgstr ""
+msgstr "Izveidot API žetonu"
 
 #: ckan/templates/user/api_tokens.html:30
 #: ckan/templates/user/read_base.html:22
 msgid "API Tokens"
-msgstr ""
+msgstr "API Tokens"
 
 #: ckan/templates/user/api_tokens.html:38
 msgid "You haven't created any API Tokens."
-msgstr ""
+msgstr "Jūs neesat izveidojis nevienu API žetonu."
 
 #: ckan/templates/user/confirm_delete.html:11
 msgid "Are you sure you want to delete user - {name}?"
@@ -3414,7 +3429,7 @@ msgstr "Izveidot kontu"
 #: ckan/templates/user/perform_reset.html:4
 #: ckan/templates/user/perform_reset.html:15
 msgid "Reset Your Password"
-msgstr "Atjaunot jūsu paroli"
+msgstr "Attiestatīt jūsu paroli"
 
 #: ckan/templates/user/perform_reset.html:7
 #: ckan/templates/user/request_reset.html:6
@@ -3465,7 +3480,7 @@ msgstr "Biedrs kopš"
 
 #: ckan/templates/user/read_base.html:91
 msgid "Last Active"
-msgstr ""
+msgstr "Pēdējo reizi redzēts"
 
 #: ckan/templates/user/read_base.html:101
 msgid "API Key"
@@ -3478,29 +3493,31 @@ msgstr "Attiestatīt jūsu paroli"
 
 #: ckan/templates/user/request_reset.html:18
 msgid "Email or username"
-msgstr ""
+msgstr "E-pasts vai lietotājvārds"
 
 #: ckan/templates/user/request_reset.html:23
 msgid "Request Reset"
-msgstr ""
+msgstr "Pieprasīt atiestatīšanu"
 
 #: ckan/templates/user/request_reset.html:39
 msgid ""
 "Enter your email address or username into the box and we will send you an "
 "email with a link to enter a new password."
 msgstr ""
+"Ievadiet savu lietotājvārdu lodziņā, un mēs nosūtīsim jums e-pastu ar saiti,"
+" lai ievadītu jaunu paroli."
 
 #: ckan/templates/user/snippets/api_token_list.html:13
 msgid "Token"
-msgstr ""
+msgstr "Žetons"
 
 #: ckan/templates/user/snippets/api_token_list.html:14
 msgid "Last access"
-msgstr ""
+msgstr "Pēdējo reizi piekļūts"
 
 #: ckan/templates/user/snippets/api_token_list.html:15
 msgid "Actions"
-msgstr ""
+msgstr "Darbības"
 
 #: ckan/templates/user/snippets/api_token_list.html:32
 #: ckanext/datapusher/templates-bs3/datapusher/resource_data.html:56
@@ -3518,7 +3535,7 @@ msgstr "Nav sekotāju"
 
 #: ckan/templates/user/snippets/login_form.html:21
 msgid "Username or Email"
-msgstr ""
+msgstr "Lietotājvārds vai e-pasts"
 
 #: ckan/templates/user/snippets/user_search.html:5
 msgid "Search Users"
@@ -3869,6 +3886,8 @@ msgid ""
 "API Token created: <code style=\"word-break:break-all;\">{token}</code> "
 "{copy}<br>Make sure to copy it now, you won't be able to see it again!"
 msgstr ""
+"API žetons izveidots: <code style=\"word-break:break-all;\">{token}</code> "
+"{copy}<br>Noteikti nokopējiet to tūlīt, jo jūs to vairs neredzēsiet!"
 
 #: ckan/views/user.py:253
 msgid "Unauthorized to revoke API tokens."
@@ -3948,6 +3967,8 @@ msgid ""
 "A reset link has been emailed to you (unless the account specified does not "
 "exist)"
 msgstr ""
+"Atiestatīšanas saite ir nosūtīta uz Jūsu e-pastu (ja vien norādītais konts "
+"neeksistē)."
 
 #: ckan/views/user.py:742
 msgid "Unauthorized to reset password."
@@ -4286,10 +4307,11 @@ msgstr ""
 #: ckanext/activity/templates/snippets/changes/extra_fields.html:5
 msgid "Added field <q>{key}</q> with value <q>{value}</q> to {pkg_link}"
 msgstr ""
+"Pievienots lauks <q>{key}</q> ar vērtību <q>{value}</q> priekš {pkg_link}"
 
 #: ckanext/activity/templates/snippets/changes/extra_fields.html:13
 msgid "Added field <q>{key}</q> to {pkg_link}"
-msgstr ""
+msgstr "Pievienots lauks <q>{key}</q> to {pkg_link}"
 
 #: ckanext/activity/templates/snippets/changes/extra_fields.html:20
 msgid "Added the following fields to {pkg_link}"
@@ -4725,6 +4747,8 @@ msgid ""
 "Data Dictionary saved. Any type overrides will take effect when the resource"
 " is next uploaded to DataStore"
 msgstr ""
+"Datu vārdnīca saglabāta. Jebkāda veida pārrakstīšana stāsies spēkā, kad "
+"resurss tiks nākamo reizi augšupielādēts Datu glabātuvē."
 
 #: ckanext/datastore/backend/postgres.py:1159
 msgid "The data was invalid: {}"
@@ -4832,12 +4856,12 @@ msgstr "Piemērs: Python"
 #: ckanext/datastore/templates-bs3/datastore/snippets/dictionary_form.html:3
 #: ckanext/datastore/templates/datastore/snippets/dictionary_form.html:3
 msgid "Field {num}."
-msgstr ""
+msgstr "Lauks {num}."
 
 #: ckanext/datastore/templates-bs3/datastore/snippets/dictionary_form.html:12
 #: ckanext/datastore/templates/datastore/snippets/dictionary_form.html:12
 msgid "Type Override"
-msgstr ""
+msgstr "Pārrrakstīt ar datu tipu"
 
 #: ckanext/datastore/templates-bs3/datastore/snippets/dictionary_form.html:20
 #: ckanext/datastore/templates-bs3/package/resource_read.html:21
@@ -4845,7 +4869,7 @@ msgstr ""
 #: ckanext/datastore/templates/package/resource_read.html:21
 #: ckanext/datatablesview/templates/datatables/datatables_form.html:35
 msgid "Label"
-msgstr ""
+msgstr "Virsraksts"
 
 #: ckanext/datastore/templates-bs3/package/resource_edit_base.html:6
 #: ckanext/datastore/templates-bs3/package/resource_read.html:14
@@ -4855,7 +4879,7 @@ msgstr ""
 #: ckanext/datastore/templates/package/resource_edit_base.html:6
 #: ckanext/datastore/templates/package/resource_read.html:14
 msgid "Data Dictionary"
-msgstr ""
+msgstr "Datu vārdnīca"
 
 #: ckanext/datastore/templates-bs3/package/resource_read.html:19
 #: ckanext/datastore/templates/package/resource_read.html:19

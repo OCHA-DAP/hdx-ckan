@@ -143,6 +143,9 @@ hdx.wordpress.category.devs=568
 hdx.wordpress.category.terms=577
 hdx.wordpress.category.licenses=581
 
+# AWS S3 filestore configs
+ckanext.s3filestore.aws_bucket_name = some-bucket-name
+hdx.s3filestore = enabled
 
 # Logging configuration
 [loggers]

@@ -20,7 +20,7 @@ Example:
 {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
 {% set resource_item_snippet = resource_item_snippet or 'package/snippets/resource_item.html' %}
 
-<p id="dataset-resources" class="resources mTop35 info-wrapper">
+<div id="dataset-resources" class="resources mTop35 info-wrapper">
   <div class="requested-data-message"></div>
   {% block resource_list %}
     {% if resources %}
@@ -86,6 +86,7 @@ Example:
     {% endif %}
 
     {% endblock %}
+</div>
 
 <div class="modal data-check-modal" id="preview-data-check" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog modal-dialog-centered" role="document">
