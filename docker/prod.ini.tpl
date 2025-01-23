@@ -111,7 +111,8 @@ hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
 # P-CODE
-hdx.p_code.new_filters.enabled = ${HDX_P_CODE_NEW_FILTERS_ENABLED}
+# hdx.p_code.new_filters.enabled = ${HDX_P_CODE_NEW_FILTERS_ENABLED}
+hdx.p_code.new_filters.enabled = false
 
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}

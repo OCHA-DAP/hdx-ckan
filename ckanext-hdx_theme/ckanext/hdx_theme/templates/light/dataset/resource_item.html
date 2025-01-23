@@ -39,7 +39,7 @@
           {{ _('Modified') }}:
           {{ h.hdx_render_resource_updated_date(res, pkg) }}
         </div>
-        {% if res.p_coded == True %}
+        {% if h.are_new_p_code_filters_enabled() and res.p_coded == True %}
           <div class="pcode-label">
             {{ _('P-coded') }}: Yes
           </div>
