@@ -121,8 +121,8 @@ $(function(){
 
             sandbox.subscribe('hdx-resource-information', function (message) {
                 if (message.type == 'dataset_preview_resource_change' && message.newValue!=null) {
-                    let resIdx = Number(message.newValue);                    
-                    this.models.forEach((model, idx) => { 
+                    let resIdx = Number(message.newValue);
+                    this.models.forEach((model, idx) => {
                         const value = !isNaN(resIdx) && idx === resIdx; //true for selected resource
                         model.set({ 'dataset_preview_enabled': value });
                     });
@@ -1072,7 +1072,6 @@ $(function(){
             var selectMethodology = $('#field_methodology');
             var methodologySelectModule = $('.methodology-select');
             var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen');
-            var formBody = $('#contribute-flow-form-body');
             var selectUpdateFrequency = $('#field_data_update_frequency');
             var updateFrequencySelectModule = $('.update-frequency-select');
             var currentlySelectedUpdateFrequency = updateFrequencySelectModule.find('.select2-chosen');
@@ -1083,10 +1082,6 @@ $(function(){
             var selectNumOfRows = $('.num-of-rows-select');
             var isEdit = data.isEdit;
             var req_type_notification = $('#requestdata_type_notification');
-
-
-            // // We set the type so that the right schema is used in the backend
-            // formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
 
 
             if(is_req_dataset) {

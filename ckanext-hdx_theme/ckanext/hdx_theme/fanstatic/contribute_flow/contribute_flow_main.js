@@ -6,7 +6,6 @@
 		    initialize : function() {
             var moduleLog = this.moduleLog;
             var sandbox = this.sandbox;
-            var formBodyId = this.options.form_body_id;
             var dataset_id = this.options.dataset_id;
             var validateUrl = this.options.validate_url;
             var hxlPreviewApi = this.options.hxl_preview_api;
@@ -193,7 +192,6 @@
                     return isRequestedData;
                 },
                 'getFormValues': function(save_mode) {
-                    // var formSelector = "#" + formBodyId;
                     var formSelector = ".contribute-form-container-items";
                     var modifiedFormDataArray = [
                         {
@@ -598,7 +596,6 @@
         },
         options: {
             form_id: 'create_dataset_form',
-            form_body_id: 'contribute-flow-form-body',
             validate_url: '/contribute/validate',
             hxl_preview_api: '/api/action/package_hxl_update',
             dataset_id: null
