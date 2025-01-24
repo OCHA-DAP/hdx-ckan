@@ -1,10 +1,13 @@
 import logging
+from functools import wraps
+
 import requests
 import time
 # import datetime
 # import dateutil.parser
 
 from dogpile.cache import make_region
+from dogpile.cache.api import NO_VALUE
 from dogpile.cache.region import RegionInvalidationStrategy, CacheRegion
 
 from redis import StrictRedis
@@ -149,3 +152,31 @@ def cached_make_rest_api_request(url):
     response.raise_for_status()
 
     return response.json()
+
+def cache_only_if_truthy_wrapper(region: CacheRegion, *args, **kwargs):
+    # original_decorator = region.cache_on_arguments(*args, **kwargs)
+
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*fn_args, **fn_kwargs):
+            key_generator = region.function_key_generator('only_truthy_values', f)
+            key = key_generator(*fn_args, *fn_kwargs)
+
+            cached_value = region.get(key)
+            if cached_value is not NO_VALUE:
+                return cached_value
+            # Call the original function
+            result = f(*fn_args, **fn_kwargs)
+
+            # Cache the result only if it's truthy
+            if result:
+                log.info(f'Caching result for key "{key}"')
+                region.set(key, result)
+            else:
+                log.warning(f'Not caching result for key "{key}" because returned value was: {result}')
+
+            return result
+
+        return wrapper
+
+    return decorator
