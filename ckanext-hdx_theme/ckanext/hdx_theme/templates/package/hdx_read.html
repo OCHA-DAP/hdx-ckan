@@ -22,7 +22,14 @@
   {{ super() }}
 {% endblock %}
 
-{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
+{% set page_title = pkg.title or pkg.name %}
+{% block subtitle %}{{ page_title }} | Humanitarian Dataset {% endblock %}
+
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=1260">
+    <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
+{% endblock %}
 
 {% set wrapper_primary_class = 'col-8' %}
 {% set wrapper_secondary_class = 'col-4' %}
