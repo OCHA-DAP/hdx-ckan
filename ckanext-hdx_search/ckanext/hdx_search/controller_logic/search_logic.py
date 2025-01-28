@@ -467,6 +467,7 @@ class SearchLogic(object):
         result = OrderedDict()
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
+        result['selected_titles'] = []
 
         for param in FEATURED_FACET_PARAMS:
             if param in search_extras:
@@ -540,13 +541,14 @@ class SearchLogic(object):
                     category_tooltip = 'A data series is a collection of datasets that has a shared topic usually ' \
                                        'provided by a single organization'
 
-                standard_facet_category, anything_selected = \
+                standard_facet_category, anything_selected, selected_titles = \
                     self._create_standard_facet_category(category_key, category_title, category_tooltip, item_list,
                                                          selected_facets)
 
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
-
+                result['selected_titles'].extend(selected_titles)
+        
         cod_category = result['facets'].pop('cod_level', None)
         if cod_category:
             modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
@@ -587,6 +589,12 @@ class SearchLogic(object):
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_archived', 'Archived datasets',
         #                                   num_of_archived, search_extras, explanation=archived_explanation)
 
+        for item in featured_facet_items:
+            if item['selected']:
+                result['selected_titles'].append(item['display_name'])
+
+        result['selected_titles_str'] = " ".join([item.replace("-", " ").capitalize() for item in result['selected_titles']])
+
         # result['num_of_indicators'] = num_of_indicators
         # result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
@@ -625,6 +633,7 @@ class SearchLogic(object):
                                         selected_facets):
         sorted_item_list = []
         anything_selected = False
+        selected_titles = []
         for item in item_list:
             item_name = item.get('name', '')
             if item_name and item_name.strip():
@@ -637,6 +646,8 @@ class SearchLogic(object):
                     'display_name': item.get('display_name', ''),
                     'selected': selected,
                 }
+                if selected:
+                    selected_titles.append(new_item['display_name'])
                 sorted_item_list.append(new_item)
 
         sorted_item_list.sort(key=lambda x: ('a' if x.get('selected') else 'b', x.get('display_name')))
@@ -647,7 +658,7 @@ class SearchLogic(object):
             'tooltip': category_tooltip,
             'show_everything': len(sorted_item_list) < 5
         }
-        return standard_facet_category, anything_selected
+        return standard_facet_category, anything_selected, selected_titles
 
     def _generate_facet_name_to_title_map(self, package_type):
         facets = OrderedDict()
