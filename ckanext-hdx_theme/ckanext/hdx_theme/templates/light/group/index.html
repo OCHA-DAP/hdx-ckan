@@ -1,6 +1,10 @@
 {% extends "page_light.html" %}
 
-{% block subtitle %}{{ _("Locations") }}{% endblock %}
+{% block subtitle %}{{ _('Humanitarian Data by Location') }} | {{ _('Country Datasets')}} {% endblock %}
+{% block meta %}
+    {{ super() }}
+    <meta name="description" content="Explore humanitarian datasets organized by country and region on HDX. Access data for specific locations to support crisis response and decision-making." />
+{% endblock %}
 
 {% block breadcrumb_content %}
     <li class="breadcrumb-item active">{% link_for _('Locations'), controller='group', action='index' %}</li>

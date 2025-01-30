@@ -5,8 +5,13 @@
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
 {% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
 
-{% block subtitle %}
-    {{ data.country_dict.display_name }}
+{% set num_of_pack = data.stats_section.num_of_datasets %}
+{% set num_of_orgs = data.stats_section.num_of_organizations %}
+
+{% block subtitle %}{{ data.country_dict.display_name }} Humanitarian Data | Crisis Response Datasets {% endblock %}
+{% block meta %}
+    {{ super() }}
+    <meta name="description" content="Access {{ num_of_pack }} humanitarian datasets for {{ data.country_dict.display_name }} from {{ num_of_orgs }} organizations on HDX. Explore data to support crisis response, disaster recovery, and informed decision-making." />
 {% endblock %}
 
 {% block links %}
@@ -41,7 +46,6 @@
                   <div class="base-actions-menu">
                       <ul>
                           <li>
-                              {% set num_of_pack = data.stats_section.num_of_datasets %}
                               {% if num_of_pack%}
                                   <span class="sspBold14">
                                       <a class="sspBold14" href="?#dataset-filter-start">
@@ -65,7 +69,6 @@
                           <li>
                               <span class="dropdown dropdown-on-hover">
                                   <a href="#" data-bs-toggle="dropdown" data-bs-display="static">
-                                      {% set num_of_orgs = data.stats_section.num_of_organizations %}
                                       <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
                                   </a>
                                   <div class="followers-list-popup dropdown-menu bottom">
