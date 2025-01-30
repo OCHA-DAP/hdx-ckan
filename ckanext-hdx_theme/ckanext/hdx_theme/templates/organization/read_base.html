@@ -8,7 +8,7 @@
   {% asset 'hdx_theme/organization-styles' %}
 {% endblock %}
 
-{% block subtitle %}{{ org_dict.display_name }}{% endblock %}
+{% block subtitle %}{{ org_dict.display_name }} Humanitarian Data {% endblock %}
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organisations'), controller='organization', action='index', position=2 %}

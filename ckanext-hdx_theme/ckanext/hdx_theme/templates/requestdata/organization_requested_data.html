@@ -1,5 +1,9 @@
 {% extends "organization/read.html" %}
 
+{% block subtitle_suffix %}{{ _('Dataset Requests') }} {% endblock %}
+{% block meta_description %}
+{% endblock %}
+
 {% block breadcrumb_content %}
   <li class="breadcrumb-item">{% link_for _('Organizations'), named_route='organization.index' %}</li>
   {% block breadcrumb_content_inner %}
@@ -10,8 +14,6 @@
     </li>
   {% endblock %}
 {% endblock %}
-
-{% block subtitle %}{{ _('Dataset Requests') }} - {{ super() }}{% endblock %}
 
 {% set total_archived_requests = [] %}
 

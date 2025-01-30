@@ -14,6 +14,14 @@
 
 {% set page_has_mobile_version = True %}
 
+{% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{org_dict.search_template_data.item_count}} Datasets {% endblock %}{% endblock %}
+{% block meta %}
+    {{ super() }}
+	{% block meta_description %}
+    	<meta name="description" content="Explore {{ org_dict.search_template_data.item_count }} humanitarian datasets from the {{ org_dict.display_name }} on HDX. Access critical data supporting disaster relief, crisis response, and recovery efforts worldwide." />
+	{% endblock %}
+{% endblock %}
+
 {% block item_title_contrib %}
 	<div>
 		<ul style="list-style: none; padding: 0;" class="mTop40">

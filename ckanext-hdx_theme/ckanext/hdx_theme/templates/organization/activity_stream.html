@@ -1,6 +1,10 @@
 {% extends "organization/read.html" %}
 
-{% block subtitle %}{{ _('Activity Stream') }} - {{ org_dict.title or org_dict.name }}{% endblock %}
+{% block subtitle_suffix %}{{ _('Activity Stream') }} {% endblock %}
+{% block meta_description %}
+	<meta name="description" content="Explore recent activity for the {{ org_dict.display_name }} organization on HDX. Recent datasets updates are listed in this section." />
+{% endblock %}
+
 
 {% block primary_content_inner %}
 	<h2 class="hide-heading">{% block page_heading %}{{ _('Activity Stream') }}{% endblock %}</h2>
