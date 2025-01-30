@@ -2,7 +2,7 @@
 {% set logged_in = true if c.userobj else false %}
 {% set is_sys_admin = c.userobj.sysadmin %}
 
-{% block subtitle %}{{ _('Explore Humanitarian Organizations') | _('Data Contributors ') }} {% endblock %}
+{% block subtitle %}{{ _('Explore Humanitarian Organizations')}} | {{_('Data Contributors ') }} {% endblock %}
 {% block meta %}
     {{ super() }}
     <meta name="description" content="Discover {{page.item_count}} organizations contributing reliable humanitarian data on HDX. Explore datasets from global NGOs, UN agencies, and research institutions supporting crisis response." />
