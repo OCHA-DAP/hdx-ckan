@@ -24,7 +24,7 @@
 {% set url_org = h.url_for(controller='organization', action='read', id=pkg.organization.id) or '#' %}
 
 {% set page_title = pkg.title or pkg.name %}
-{% block subtitle %}{{ page_title }} | Humanitarian Dataset {% endblock %}
+{% block subtitle %}{{ page_title }} | Humanitarian Dataset{% endblock %}
 
 {% block meta %}
     {{ super() }}

@@ -123,7 +123,7 @@
       {%- block title -%}
         {%- block subtitle %}{% endblock -%}
         {%- if self.subtitle()|trim %}{{ g.template_title_deliminater }}{% endif -%}
-        | HDX
+        {{_(" | HDX")}}
       {%- endblock -%}
     </title>
 

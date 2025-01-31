@@ -21,7 +21,7 @@
 {% set num_of_pack = data.stats_section.num_of_datasets %}
 {% set num_of_orgs = data.stats_section.num_of_organizations %}
 
-{% block subtitle %}{{ data.country_dict.display_name }} Humanitarian Data | Crisis Response Datasets {% endblock %}
+{% block subtitle %}{{ data.country_dict.display_name }} Humanitarian Data | Crisis Response Datasets{% endblock %}
 {% block meta %}
     {{ super() }}
     <meta name="description" content="Access {{ num_of_pack }} humanitarian datasets for {{ data.country_dict.display_name }} from {{ num_of_orgs }} organizations on HDX. Explore data to support crisis response, disaster recovery, and informed decision-making." />

@@ -23,8 +23,12 @@
   <meta property="og:description" content="{{ description|forceescape }}">
 {% endblock -%}
 
-{% block subtitle %}{{ h.dataset_display_name(package) }} - {{ h.resource_display_name(res) }}{% endblock %}
-
+{% block subtitle %}{{ h.resource_display_name(res) }} | {{ h.dataset_display_name(package) }} | Humanitarian Dataset {% endblock %}
+            
+{% block meta %}
+    {{ super() }}
+    <meta name="description" content="{% if res.description %}{{ res.description }}{% else %}Explore data for resource {{ h.resource_display_name(res) }} from the {{ h.dataset_display_name(package) }} humanitarian dataset.{% endif %}" />
+{% endblock %}
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
