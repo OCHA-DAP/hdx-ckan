@@ -1,6 +1,9 @@
 {% extends "faq_others/faq/main.html" %}
 
-{% block subtitle %}{{ _("Data Licenses") }}{% endblock %}
+{% block subtitle %}{{ _("Data Licenses Explained") }} | {{ _("Usage and Attribution Guidelines") }}{% endblock %}
+{% block meta_description %}
+    <meta name="description" content="Learn about data licenses on HDX, including usage rights, attribution requirements, and guidelines for sharing humanitarian datasets. Ensure compliant data use." />
+{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="breadcrumb-item active">{{ h.nav_link(_('DATA LICENSES'), named_route='hdx_faqs.read', category='licenses') }}</li>

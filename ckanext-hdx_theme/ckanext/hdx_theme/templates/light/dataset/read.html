@@ -1,7 +1,6 @@
 {% extends "page_light.html" %}
 
 {# The line below is for google analytics #}
-{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 {% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}
 {% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}
 {% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}
@@ -23,6 +22,14 @@
 {% set pkg = dataset_dict %}
 {% set org_title = pkg.organization.title %}
 {% set url_org = h.url_for(controller='organization', action='read', id=pkg.organization.id) or '#' %}
+
+{% set page_title = pkg.title or pkg.name %}
+{% block subtitle %}{{ page_title }} | Humanitarian Dataset{% endblock %}
+
+{% block meta %}
+    {{ super() }}
+    <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
+{% endblock %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}

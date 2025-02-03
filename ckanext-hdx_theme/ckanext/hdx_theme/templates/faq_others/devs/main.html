@@ -1,6 +1,9 @@
 {% extends "faq_others/faq/main.html" %}
 
-{% block subtitle %}{{ _("Resources for Developers") }}{% endblock %}
+{% block subtitle %}{{ _("Developer Resources") }} | {{ _("APIs, Documentation, and Guides") }}{% endblock %}
+{% block meta_description %}
+    <meta name="description" content="Access developer resources for HDX, including APIs, documentation, and integration guides. Learn how to access humanitarian datasets and contribute to the platform programmatically." />
+{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="breadcrumb-item active">{{ h.nav_link(_('Resources for Developers'), named_route='hdx_faqs.read', category='devs') }}</li>
