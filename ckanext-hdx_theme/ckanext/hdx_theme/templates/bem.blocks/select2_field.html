@@ -83,13 +83,13 @@
         {% endif %}
       {% endif %}
       {% if other_option and not other_option_found %}
-        <option value="other"{% if selected|lower in other_option_values %} selected{% endif %}>Other...</option>
+        <option value="other"{% if selected and selected|lower in other_option_values %} selected{% endif %}>Other...</option>
       {% endif %}
     </select>
 
     {% if other_option %}
       {% set other_name = other_option_name if other_option_name else name ~ "_other"%}
-      {% set container_classes = [] if selected|lower in other_option_values else ["d-none"] %}
+      {% set container_classes = [] if selected and selected|lower in other_option_values else ["d-none"] %}
       {% if other_option_type == 'textarea' %}
         {{ h.snippet('bem.blocks/textarea_field.html',
                 label=label,
