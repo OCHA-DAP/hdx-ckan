@@ -5,7 +5,11 @@
   {% if container_id %}id="{{ container_id }}"{% endif %}>
   {% if label %}
     <label class="textarea-field__label form-label" for="{{ textarea_id }}">
-      {{ label }}{% if required %} <span class="textarea-field__required">*</span>{% endif %}</label>
+      {{ label }}
+      {% if required or dynamic_required %}
+        <span class="textarea-field__required{% if dynamic_required %} d-none{% endif %}">*</span>
+      {% endif %}
+    </label>
   {% endif %}
   {% if label_guidelines or label_guideline_title %}
     <div class="textarea-field__label-guideline">

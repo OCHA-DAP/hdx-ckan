@@ -29,11 +29,40 @@
 .select2-field .select2-container .select2-selection {
   box-shadow: none;
 }
+.select2-field .select2-container .select2-selection.select2--large .select2-selection__clear {
+  background-color: #FFF;
+}
 .select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered {
   font-weight: 500;
   line-height: 30px;
   font-size: 1rem;
   font-family: 'Inter', sans-serif;
+}
+.select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__choice {
+  padding: 0 0.75rem;
+  border-radius: 0;
+  background: #888;
+  color: #FFF;
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+.select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__choice__remove {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.35rem;
+  padding: 0.25rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
+  background-position-x: 50%;
+  background-position-y: center;
+  background-size: 1rem;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__choice__remove:hover {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234B5563'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
 }
 .select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__placeholder {
   font-weight: 500;

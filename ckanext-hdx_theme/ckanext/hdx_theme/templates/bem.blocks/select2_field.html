@@ -11,7 +11,11 @@
 <div class="select2-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
   {% if label %}
     <label class="select2-field__label form-label" for="select-{{ name }}">
-      {{ label }}{% if required %} <span class="select2-field__required">*</span>{% endif %}</label>
+      {{ label }}
+      {% if required or dynamic_required %}
+        <span class="select2-field__required{% if dynamic_required %} d-none{% endif %}">*</span>
+      {% endif %}
+    </label>
   {% endif %}
   {% if label_guidelines or label_guideline_title %}
     <div class="select2-field__label-guideline">
@@ -64,10 +68,17 @@
           {% endfor %}
         {% else %}
           {% for entry in data %}
+            {% if entry.value and entry.text %}
               <option value="{{ entry.value }}" {{ is_selected(entry.value, selected) }}>{{ entry.text }}</option>
               {% if other_option and entry.value|lower in other_option_values %}
                 {% do other_option_found.append(entry.value) %}
               {% endif %}
+            {% else %}
+              <option value="{{ entry }}" {{ is_selected(entry, selected) }}>{{ entry }}</option>
+              {% if other_option and entry|lower in other_option_values %}
+                {% do other_option_found.append(entry) %}
+              {% endif %}
+            {% endif %}
           {% endfor %}
         {% endif %}
       {% endif %}

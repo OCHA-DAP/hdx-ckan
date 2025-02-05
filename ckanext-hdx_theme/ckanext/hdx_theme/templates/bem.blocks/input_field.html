@@ -5,7 +5,11 @@
   {% if container_id %}id="{{ container_id }}"{% endif %}>
   {% if label %}
     <label class="input-field__label" for="{{ input_id }}">
-      {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
+      {{ label }}
+      {% if required or dynamic_required %}
+        <span class="input-field__required{% if dynamic_required %} d-none{% endif %}">*</span>
+      {% endif %}
+    </label>
   {% endif %}
   {% if label_guidelines or label_guideline_title %}
     <div class="input-field__label-guideline">
@@ -19,12 +23,16 @@
       {% endif %}
     </div>
   {% endif %}
-  <div class="{% if type == 'password' %}input-group{% endif %}">
+  <div class="{% if type == 'password' or prepend %}input-group{% endif %}">
+    {% if prepend %}
+      <span class="input-group-text input-field__input-group-text input-field__input-group-text_position_left">
+        {{ prepend }}
+      </span>
+    {% endif %}
     <input
             type="{{ type }}"
             name="{{ name }}"
             class="form-control input-field__input{% if input_classes %} {{ input_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
-            {% if id %}id="{{ id }}"{% else %}id="input-{{ name }}"{% endif %}
             id={{ input_id }},
             placeholder="{{ placeholder }}"
             value="{% if value %}{{ value }}{% endif %}"
@@ -40,7 +48,7 @@
             {% endfor %}{% endif %}
     >
     {% if type == 'password' %}
-      <span class="input-group-text input-field__input-group-text input-field__input-group-text_state_clickable">
+      <span class="input-group-text input-field__input-group-text input-field__input-group-text_state_clickable input-field__input-group-text_position_right">
         <i class="fa-regular fa-fw fa-eye"></i>
         <i class="fa-regular fa-fw fa-eye-slash d-none"></i>
       </span>

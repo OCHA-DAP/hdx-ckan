@@ -5,6 +5,8 @@ $(document).ready(function () {
 
     var placeholder = $selectElement.data('placeholder');
     var multiple = $selectElement.data('multiple') === true;
+    var tags = $selectElement.data('tags') === true;
+    var allowClear = $selectElement.data('allow-clear') !== false;
 
     var ajaxURL = $selectElement.data('ajax-url');
 
@@ -13,9 +15,10 @@ $(document).ready(function () {
       'theme': 'bootstrap-5',
       'placeholder': placeholder,
       'multiple': multiple,
+      'tags': tags,
+      'allowClear': allowClear,
       'selectionCssClass': $selectElement.hasClass('select2-field__select_size_large') ? 'select2--large' : $selectElement.hasClass('select2-field__select_size_small') ? 'select2--small' : '',
       // 'dropdownCssClass': $selectElement.hasClass('select2-field__select_size_large') ? 'select2--large' : $selectElement.hasClass('select2-field__select_size_small') ? 'select2--small' : '',
-      'allowClear': 'true',
       'width': '100%',
     };
 

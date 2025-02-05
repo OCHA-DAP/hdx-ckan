@@ -5,7 +5,11 @@
   <div class="form-check">
     {% if label %}
       <label class="radio-field__label form-check-label" for="{{ radio_id }}">
-        {{ label }}{% if required %} <span class="radio-field__required">*</span>{% endif %}</label>
+        {{ label }}
+        {% if required or dynamic_required %}
+          <span class="radio-field__required{% if dynamic_required %} d-none{% endif %}">*</span>
+        {% endif %}
+      </label>
     {% endif %}
     <input
       class="radio-field__input form-check-input{% if input_classes %} {{ input_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
@@ -13,7 +17,7 @@
       {% if checked %}checked{% endif %}
       type="radio"
       name="{{ name }}"
-      {% if id %}id="{{ radio_id }}"{% endif %}>
+      id="{{ radio_id }}">
     {% if label_guidelines or label_guideline_title %}
       <div class="textarea-field__label-guideline">
         {% if label_guideline_title %}{{ label_guideline_title }}{% endif %}
