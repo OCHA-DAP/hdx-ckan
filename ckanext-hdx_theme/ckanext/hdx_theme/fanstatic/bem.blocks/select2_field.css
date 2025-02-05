@@ -12,6 +12,13 @@
   font-size: 16px;
   margin-bottom: 8px;
 }
+.select2-field__label-guideline {
+  color: #4B5563;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 22px;
+}
 .select2-field__required {
   color: #F2645A;
   font-weight: 600;
@@ -31,6 +38,9 @@
 .select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__placeholder {
   font-weight: 500;
   line-height: 30px;
+}
+.select2-field .select2-container .select2-dropdown .select2-search input {
+  background: none;
 }
 .select2-field .select2-container .select2-dropdown .select2-search::after {
   font: var(--fa-font-solid);

@@ -9,6 +9,9 @@
 .heading h3 {
   font-size: 30px;
 }
+.heading h6 {
+  font-size: 20px;
+}
 .heading__title {
   color: #0F172A;
   line-height: 1.2;
