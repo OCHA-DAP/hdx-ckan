@@ -77,22 +77,26 @@ class TestStatsOrg(object):
         # no user
         result = app.get(url, headers={})
         assert 'Monthly dataset download and page view statistics' not in result.body
+        assert 'If you are the administrator of this organization, you can log in to see monthly statistics going back 5 years.' in result.body
 
         url = h.url_for('hdx_org.stats', id=org_id)
         # regular user
         result = app.get(url, headers=auth_user)
         assert 'Monthly dataset download and page view statistics' not in result.body
+        assert 'If you are the administrator of this organization, you can log in to see monthly statistics going back 5 years.' in result.body
 
         url = h.url_for('hdx_org.stats', id=org_id)
         # org member
         result = app.get(url, headers=auth_member)
         assert 'Monthly dataset download and page view statistics' not in result.body
+        assert 'If you are the administrator of this organization, you can log in to see monthly statistics going back 5 years.' in result.body
 
         url = h.url_for('hdx_org.stats', id=org_id)
         # org admin
         result = app.get(url, headers=auth_admin)
         assert result.status_code == 200
         assert 'Monthly dataset download and page view statistics' in result.body
+        assert 'If you are the administrator of this organization, you can log in to see monthly statistics going back 5 years.' not in result.body
 
 
         # download xls access
