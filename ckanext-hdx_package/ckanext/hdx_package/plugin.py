@@ -553,6 +553,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_resource_in_hapi_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper(
                 'allow_resource_in_hapi_field', resource_level=True),
+            'hdx_comma_separated_validator': vd.hdx_comma_separated_validator,
         }
 
     def get_auth_functions(self):
@@ -659,8 +660,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     schema.update(requestdata_schema)
 
         schema.update({
-            'field_names': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
-            'file_types': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'field_names': [tk.get_validator('not_empty'), tk.get_validator('hdx_comma_separated_validator'),
+                            tk.get_converter('convert_to_extras')],
+            'file_types': [tk.get_validator('not_empty'), tk.get_validator('hdx_comma_separated_validator'),
+                           tk.get_converter('convert_to_extras')],
             'num_of_rows': [tk.get_validator('ignore_missing'), tk.get_validator('is_positive_integer'),
                             tk.get_converter('convert_to_extras')],
             'data_update_frequency': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],

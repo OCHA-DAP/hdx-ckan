@@ -7,8 +7,8 @@ ckan.module('hdx_custom_dataviz_manager', function($, _) {
               this.contributeGlobal = global;
 
               var itemEl = this.el.find('.custom-viz-item');
-              this.titleLabelTemplate = itemEl.find(this.options.title_label_selector).html();
-              this.controlLabelTemplate = itemEl.find(this.options.control_label_selector).html();
+              // this.titleLabelTemplate = itemEl.find(this.options.title_label_selector).html();
+              // this.controlLabelTemplate = itemEl.find(this.options.control_label_selector).html();
 
               this.itemTemplate = itemEl.prop('outerHTML');
               this.el.html('');
@@ -109,12 +109,12 @@ ckan.module('hdx_custom_dataviz_manager', function($, _) {
           this.el.find('.custom-viz-url').each(createListOfUrls);
 
           var setNewIndexOnItem = function (index, item) {
-            item = $(item);
-            index = index + 1;
-            var title_label_text = this.titleLabelTemplate.replace(/\$\{index\}/g, index);
-            var control_label_text = this.controlLabelTemplate.replace(/\$\{index\}/g, index);
-            item.find(this.options.title_label_selector).html(title_label_text);
-            item.find(this.options.control_label_selector).html(control_label_text);
+            // item = $(item);
+            // index = index + 1;
+            // var title_label_text = this.titleLabelTemplate.replace(/\$\{index\}/g, index);
+            // var control_label_text = this.controlLabelTemplate.replace(/\$\{index\}/g, index);
+            // item.find(this.options.title_label_selector).html(title_label_text);
+            // item.find(this.options.control_label_selector).html(control_label_text);
           }.bind(this);
 
           this.el.find('.custom-viz-item').each(setNewIndexOnItem);

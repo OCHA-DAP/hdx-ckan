@@ -197,6 +197,8 @@ bem-blocks-styles:
     - bem.blocks/table.css
     - bem.blocks/select2_field.css
     - bem.blocks/textarea_field.css
+    - bem.blocks/hr.css
+    - bem.blocks/radio_field.css
 
 bem-blocks-scripts:
   <<: *common-js
@@ -954,7 +956,7 @@ contribute-flow-scripts:
     - jquery.ui.datepicker.js
     - hdx-datepicker.js
 #    - bs_tooltip.js (it's in the page-scripts)
-    - contribute_flow/form_element_manager.js
+    - contribute_flow/form_element_manager_bem.js
     - contribute_flow/tag_recommender.js
     - contribute_flow/error_block_manager.js
     - contribute_flow/hdx_custom_dataviz_manager.js

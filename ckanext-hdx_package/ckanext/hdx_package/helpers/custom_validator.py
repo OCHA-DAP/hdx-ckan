@@ -861,3 +861,11 @@ def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDi
             prev_url_value = prev_resource_dict.get('url')
             if prev_url_value != url_value:
                 data[key] = datetime.datetime.utcnow()
+
+def hdx_comma_separated_validator(value):
+    if isinstance(value, list):
+        return ','.join(value)
+    elif isinstance(value, str):
+        return value
+    else:
+        raise tk.ValidationError('Value must be a string or a list.')

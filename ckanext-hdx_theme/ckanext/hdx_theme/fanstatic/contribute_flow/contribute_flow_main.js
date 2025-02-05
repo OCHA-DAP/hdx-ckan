@@ -521,6 +521,13 @@
               }
             );
 
+            // Suggest new tag
+            $('#suggest-new-tag').on('click', function() {
+              closeCurrentWidget(this);
+              spawnRecaptcha("#requestTagsPopup");
+              showTagRequestWidget("#requestTagsPopup");
+            });
+
             // Initialize private/public logic
             this.managePrivateField();
 

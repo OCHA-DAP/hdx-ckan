@@ -451,6 +451,7 @@ def generate_mandatory_fields():
         # 'title': dataset_name,
         'license_id': 'cc-by',
         'owner_org': selected_org.get('id'),
+        'owner_org_name': selected_org.get('name'),
         'dataset_source': selected_org.get('title'),
         'maintainer': user,
         'subnational': 1,
