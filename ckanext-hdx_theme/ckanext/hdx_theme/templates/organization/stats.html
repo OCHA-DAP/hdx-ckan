@@ -30,6 +30,11 @@
             <a href="{{ h.url_for('hdx_org.download_organization_stats', id=org_meta.org_dict.id) }}">XLSX</a></p>
         </div>
         {% set margin_top="mt0" %}
+      {% else %}
+         <div class="text-end mt-3">
+           <p>If you are an administrator of this organization, you can log in to download monthly statistics going back five years.</p>
+         </div>
+        {% set margin_top="mt0" %}
       {% endif %}
       <div class="{{ margin_top }} list-header crisis-list-header">
         <span class="mL15 list-header-title">Number of Downloads (last 24 weeks)</span>
