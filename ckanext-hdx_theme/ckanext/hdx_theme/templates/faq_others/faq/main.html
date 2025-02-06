@@ -6,11 +6,6 @@
   {% asset 'hdx_theme/faq-styles' %}
 {% endblock %}
 
-{% block meta %}
-  {{ super() }}
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-{% endblock %}
-
 {% block header_core %}
   {% set page_has_desktop_version = False %}
   {% set page_has_mobile_version = False %}
@@ -18,6 +13,13 @@
 {% endblock %}
 
 {% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block meta_description %}
+    <meta name="description" content="Find answers to common questions about using HDX, accessing datasets, contributing data, and more. Explore the FAQ for detailed guidance on humanitarian data." />
+    {% endblock %}
+{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="breadcrumb-item active">{{ h.nav_link(_('FAQ'), named_route='hdx_main_faq.main_faq') }}</li>

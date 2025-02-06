@@ -1,6 +1,9 @@
 {% extends "faq_others/faq/main.html" %}
 
 {% block subtitle %}{{ _("Terms of Service") }}{% endblock %}
+{% block meta_description %}
+    <meta name="description" content="Review the Terms of Service for using the Humanitarian Data Exchange (HDX). Learn about user responsibilities, data usage policies, and platform guidelines." />
+{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="breadcrumb-item active">{{ h.nav_link(_('TERMS OF SERVICE'), named_route='hdx_faqs.read', category='terms') }}</li>

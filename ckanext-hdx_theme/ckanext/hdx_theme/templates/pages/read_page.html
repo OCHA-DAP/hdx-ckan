@@ -3,7 +3,11 @@
 {% set data = page_dict %}
 {% set page_title = data.title if data.title and data.title!='' else data.name %}
 
-{% block subtitle %}{{ data.title or data.name }}{% endblock %}
+{% block subtitle %}{{ data.title or data.name }} | Crisis Datasets{% endblock %}
+{% block meta %}
+    {{ super() }}
+    <meta name="description" content="Find curated humanitarian datasets for the {{ data.title or data.name }}. Access data on affected populations, crisis response, health, and infrastructure to aid humanitarian efforts." />
+{% endblock %}
 
 {% block links %}
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">

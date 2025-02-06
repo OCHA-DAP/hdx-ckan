@@ -7,7 +7,7 @@
 
 {% set carouselItems = h.hdx_get_carousel_list() %}
 {% set mobileCarouselItems = carouselItems|batch(2)|list %}
-{% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Welcome") %}
+{% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Humanitarian Data Exchange | Find & Use Crisis Data") %}
 
 {% block subtitle %}{{ page_subtitle }}{% endblock %}
 
@@ -18,6 +18,7 @@
 {% block meta %}
     {{ super() }}
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Access and share humanitarian data across crises and organizations. Explore on HDX {{count.datasets}} datasets from {{count.locations}} locations and {{count.sources}} sources to support effective humanitarian response." />
 {% endblock %}
 
 {% block header_core %}
@@ -50,9 +51,8 @@
                     <div class="row">
                       <div class="col-12 item-count">
                         <a href="{% url_for 'dataset.search' %}"
-                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                           data-url="{% url_for 'hdx_count.dataset' %}">
-                          0
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box">
+                          {{ count.datasets }}
                         </a>
                       </div>
                     </div>
@@ -68,7 +68,7 @@
                         <a href="{% url_for 'group.index' %}"
                            data-module="count hdx_click_stopper" data-module-link_type="find data box"
                            data-url="{% url_for 'hdx_count.country' %}">
-                          0
+                          {{ count.locations }}
                         </a>
                       </div>
                     </div>
@@ -81,10 +81,10 @@
                   <div class="col-4">
                     <div class="row">
                       <div class="col-12 item-count">
-                        <a href="javascript:void(0);"
+                        <a 
                            data-module="count hdx_click_stopper" data-module-link_type="find data box"
                            data-url="{% url_for 'hdx_count.source' %}">
-                          0
+                          {{ count.sources }}
                         </a>
                       </div>
                     </div>

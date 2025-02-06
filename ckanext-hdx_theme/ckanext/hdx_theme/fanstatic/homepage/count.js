@@ -29,15 +29,11 @@ ckan.module('count', function ($, _) {
         };
       })(jQuery),
     initialize: function () {
-      var currentElement = this.el;
-      $.ajax({
-        url: this.el.data('url'),
-        context: document.body
-      }).done(function(data){
-        var json = $.parseJSON(data); // create an object with the key of the array
-        //$(currentElement).html(json.count);
-        $(currentElement).animateNumbers(json.count, true, 1000);
-      })
+      const currentElement = this.el;
+      const count = parseInt($(currentElement).text());
+      $(currentElement).text("0");
+      $(currentElement).animateNumbers(count, true, 1000);
+      
     }
   };
 });
