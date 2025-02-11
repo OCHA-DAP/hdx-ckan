@@ -99,7 +99,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata s3filestore showcase stats resource_proxy text_view datastore activity
+ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata s3filestore showcase stats resource_proxy text_view datastore activity datapusher_plus
 ckan.views.default_views = image_view recline_view text_view
 ckan.csrf_protection.ignore_extensions = false
 
@@ -189,6 +189,37 @@ smtp.starttls = False
 #smtp.user = your_username@gmail.com
 #smtp.password = your_password
 #smtp.mail_from =
+
+## Datapusher plus settings
+ckanext.datapusher_plus.copy_readbuffer_size = 1048576
+ckanext.datapusher_plus.max_content_length = 1256000000000
+ckanext.datapusher_plus.ignore_file_hash = true
+ckanext.datapusher_plus.chunk_size = 16384
+ckanext.datapusher_plus.download_timeout = 300
+ckanext.datapusher_plus.ssl_verify = false
+ckanext.datapusher_plus.download_proxy =
+ckanext.datapusher_plus.types = csv xls xlsx tsv application/csv application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+ckanext.datapusher_plus.type_mapping = {"String": "text", "Integer": "numeric","Float": "numeric","DateTime": "timestamp","Date": "timestamp","NULL": "text"}
+ckanext.datapusher_plus.pii_screening = false
+ckanext.datapusher_plus.pii_quick_screen = false
+ckanext.datapusher_plus.pii_found_abort = false
+ckanext.datapusher_plus.pii_show_candidates = false
+ckanext.datapusher_plus.pii_regex_resource_id_or_alias =
+ckanext.datapusher_plus.qsv_bin =  /usr/local/bin/qsvdp
+ckanext.datapusher_plus.file_bin = /usr/bin/file
+ckanext.datapusher_plus.prefer_dmy = false
+ckanext.datapusher_plus.preview_rows = 100
+ckanext.datapusher_plus.auto_index_threshold = 3
+ckanext.datapusher_plus.auto_unique_index = true
+ckanext.datapusher_plus.auto_index_dates = true
+ckanext.datapusher_plus.sort_and_dupe_check = true
+ckanext.datapusher_plus.dedup = false
+ckanext.datapusher_plus.default_excel_sheet = 0
+ckanext.datapusher_plus.add_summary_stats_resource = false
+ckanext.datapusher_plus.summary_stats_options =
+ckanext.datapusher_plus.auto_alias = true
+ckanext.datapusher_plus.auto_alias_unique = false
+ckanext.datapusher_plus.api_token =
 
 ## AWS S3 settings
 ckanext.s3filestore.aws_access_key_id = aws_access_key_id
