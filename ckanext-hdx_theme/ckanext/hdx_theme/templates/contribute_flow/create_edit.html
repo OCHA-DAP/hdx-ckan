@@ -758,15 +758,15 @@
                                       </label>
                                     </div>
                                   </div>
-                                  <div class="item-description alert alert-danger mt-2"
-                                  <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
-                                  <p>HDX does not allow data that includes personally identifiable information (PII) to
-                                    be shared publicly through the site. Please delete the resource(s) containing PII.
-                                    If you wish to share this resource, take steps to ensure that it is properly
-                                    anonymised (with all the direct identifiers removed) and upload it again.</p>
-                                  <p>You can learn more in the <a
-                                    href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank"
-                                    title="HDX Terms of Service">HDX Terms of Service</a>.</p>
+                                  <div class="item-description alert alert-danger mt-2" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
+                                    <p>HDX does not allow data that includes personally identifiable information (PII) to
+                                      be shared publicly through the site. Please delete the resource(s) containing PII.
+                                      If you wish to share this resource, take steps to ensure that it is properly
+                                      anonymised (with all the direct identifiers removed) and upload it again.</p>
+                                    <p>You can learn more in the <a
+                                      href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank"
+                                      title="HDX Terms of Service">HDX Terms of Service</a>.</p>
+                                  </div>
                                 </div>
                               </div>
                               <div class="controls">
@@ -785,18 +785,18 @@
                                     </label>
                                   </div>
                                 </div>
-                                <div class="item-description alert alert-danger mt-2"
-                                <% if (!microdata) { print('style="display:none;"'); } %>>
-                                <p>HDX allows microdata to be shared publicly through the site. However, to protect
-                                  individuals and vulnerable groups, our team runs a disclosure risk assessment on any
-                                  resource containing microdata. We do this because it may still be possible to
-                                  re-identify individuals or expose confidential information even after direct
-                                  identifiers have been removed from microdata.</p>
-                                <p>We will notify you within 24 hours if our team detects any disclosure risk. During
-                                  this time, the resource will appear on your dataset page but be marked as under
-                                  review.</p>
-                                <p>Learn more about the <a href="/about/hdx-qa-process" title="HDX QA process"
-                                                           target="_blank">HDX QA process</a>.</p>
+                                <div class="item-description alert alert-danger mt-2" <% if (!microdata) { print('style="display:none;"'); } %>>
+                                  <p>HDX allows microdata to be shared publicly through the site. However, to protect
+                                    individuals and vulnerable groups, our team runs a disclosure risk assessment on any
+                                    resource containing microdata. We do this because it may still be possible to
+                                    re-identify individuals or expose confidential information even after direct
+                                    identifiers have been removed from microdata.</p>
+                                  <p>We will notify you within 24 hours if our team detects any disclosure risk. During
+                                    this time, the resource will appear on your dataset page but be marked as under
+                                    review.</p>
+                                  <p>Learn more about the <a href="/about/hdx-qa-process" title="HDX QA process"
+                                                             target="_blank">HDX QA process</a>.</p>
+                                </div>
                               </div>
                             </div>
                           </div>
