@@ -33,7 +33,7 @@
             type="{{ type }}"
             name="{{ name }}"
             class="form-control input-field__input{% if input_classes %} {{ input_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
-            id={{ input_id }},
+            id={{ input_id }}
             placeholder="{{ placeholder }}"
             value="{% if value %}{{ value }}{% endif %}"
             {% if required %}required{% endif %}

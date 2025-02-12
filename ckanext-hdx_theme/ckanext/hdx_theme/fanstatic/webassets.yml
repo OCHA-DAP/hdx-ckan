@@ -968,6 +968,7 @@ contribute-flow-scripts:
     - vendor/sortable/Sortable.js
 #    - vendor/ckan/autocomplete.js (it's in ckan)
     - contribute_flow/contribute_flow_main.js
+    - widget/contribute/contribute.js
 
 contribute-flow-styles:
   <<: *common-css
