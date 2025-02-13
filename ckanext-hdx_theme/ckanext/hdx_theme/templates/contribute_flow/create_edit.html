@@ -171,7 +171,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Use clear, specific titles like [Country] - [Topic/Theme], avoiding abbreviations, dates, or terms like “current” or “latest.” Include dates in the additional information or file description. Example: "Haiti - Operational Presence", “Palestine - Conflict Events”'],
+                                                    paragraphs=['Tip: Use clear, specific titles like [Country] - [Topic/Theme], avoiding abbreviations, dates, or terms like “current” or “latest.” Include dates in the additional information or file description. Example: "Haiti - Operational Presence", “Palestine - Conflict Events”'],
                                                     spacing_class="mb-3") }}
                       </div>
 
@@ -180,6 +180,7 @@
 
                       <div data-module="hdx_form_element_manager_bem" data-module-element_name="name"
                            data-module-required="private,public,requestdata">
+                        {% set slug_locale = h.dump_json({'URL': 'This is how the URL will appear on HDX, you can change this through the ‘Edit’ button:'}) %}
                         {{ h.snippet('bem.blocks/input_field.html',
                                                   type="text",
                                                   name="name",
@@ -191,7 +192,7 @@
                                                   value=data.name,
                                                   errors=errors.name,
                                                   label_guideline_title='This is how the URL will appear on HDX.',
-                                                  data_attributes={'module': 'slug-preview-slug', 'module-prefix': domain},
+                                                  data_attributes={'module': 'slug-preview-slug', 'module-prefix': domain, 'module-i18n': slug_locale},
                                                   spacing_class="mb-3") }}
                         <!-- .mb-3 spacing class is mandatory here! -->
                       </div>
@@ -213,7 +214,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Provide specific details about the dataset, including its purpose, context, potential use. Use <a href="{0}" title="markdown formatting" target="_blank">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')]) }}
+                                                    paragraphs=['Tip: Provide specific details about the dataset, including its purpose, context, potential use. Use <a href="{0}" title="markdown formatting" target="_blank">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')]) }}
                       </div>
                     </div>
                   </div>
@@ -357,7 +358,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['This time period should cover all resources.files in the dataset, spanning from the earliest start date to the latest end date.'],
+                                                    paragraphs=['Tip: This time period should cover all files in the dataset, spanning from the earliest start date to the latest end date.'],
                                                     spacing_class="mb-3") }}
                       </div>
 
@@ -404,7 +405,7 @@
                       <div data-module="hdx_form_element_manager_bem" data-module-element_name="subnational"
                            data-module-required="public">
                         {{ h.snippet('bem.blocks/checkbox_field.html',
-                                                    label='Dataset contains sub-national data',
+                                                    label='This dataset includes sub-national data',
                                                     name="subnational",
                                                     value='1',
                                                     id='field_subnational',
@@ -416,7 +417,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Sub-national means the data covers areas such as regions, districts, or cities.'],
+                                                    paragraphs=['Tip: Sub-national means the data covers areas such as regions, districts, or cities.'],
                                                     spacing_class="mb-3") }}
                       </div>
 
@@ -449,7 +450,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['In general "Creative Commons XXXXX” is our recommended license for data on HDX as it allows others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format('https://data.humdata.local/faqs/licenses')],
+                                                    paragraphs=['Tip: In general "Creative Commons XXXXX” is our recommended license for data on HDX as it allows others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format('https://data.humdata.local/faqs/licenses')],
                                                     spacing_class="mb-3") }}
                       </div>
 
@@ -539,7 +540,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Highlight issues with data quality or any limitations with the data. For example, issues such as estimated data for inaccessible locations, missing data, or derived data. Use <a href="{0}" target="_blank" title="Markdown formatting">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')],
+                                                    paragraphs=['Tip: Highlight issues with data quality or any limitations with the data. For example, issues such as estimated data for inaccessible locations, missing data, or derived data. Use <a href="{0}" target="_blank" title="Markdown formatting">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')],
                                                     spacing_class="mb-3") }}
                       </div>
 
@@ -552,7 +553,7 @@
                                                   id="field_tag_string",
                                                   label='Tags',
                                                   dynamic_required=True,
-                                                  label_guideline_title='Add tags to help others find your dataset',
+                                                  label_guideline_title='Add tags to help others find your dataset.',
                                                   data=allowed_tags,
                                                   selected=selected_tags,
                                                   errors=errors.tag_string,
@@ -578,7 +579,7 @@
                                                   rounded=True,
                                                   icon=False,
                                                   paragraph_classes=['paragraph__text_font_size-small'],
-                                                  paragraphs=['Tags are auto-generated from an approved list based on content provided in this form. Suggestions will appear as you type. Click here to <a href="{0}" target="_blank" title="HDX tags">see all tags</a> or here to <a href="#" id="suggest-new-tag">suggest a new tag</a>.'.format('https://data.humdata.org/rdr/spreadsheets/approved-tags')],
+                                                  paragraphs=['Tip: Tags are auto-generated from an approved list based on content provided in this form. Suggestions will appear as you type. Click here to <a href="{0}" target="_blank" title="HDX tags">see all tags</a> or here to <a href="#" id="suggest-new-tag">suggest a new tag</a>.'.format('https://data.humdata.org/rdr/spreadsheets/approved-tags')],
                                                   spacing_class="mb-3") }}
 
                       {% if user_is_sysadmin %}
@@ -642,6 +643,9 @@
                                                           <i class="fa-solid fa-square-caret-down ms-1 grey"></i>
                                                           <i class="fa-solid fa-square-caret-up ms-1 grey"></i>
                                                         </span>
+                        </div>
+                        <div  class="col-12">
+                          <p class="mt-2 mb-0">Choose how to upload your file</p>
                         </div>
                         <div class="col-12">
                           <ul class="list-group list-group-horizontal resource-upload-type mt-2">
@@ -856,7 +860,7 @@
                                           <div class="row">
                                               <div class="col-4">
                                                 {{ h.snippet('bem.blocks/heading.html',
-                                                  title='5. Add automatic Data Previews',
+                                                  title='5. Add automatic Data Previews (Optional)',
                                                   heading_type=6,
                                                   spacing_class="mb-3") }}
                                                 {{ h.snippet('bem.blocks/paragraph.html',
@@ -911,7 +915,7 @@
                   <div class="row">
                     <div class="col-4">
                       {{ h.snippet('bem.blocks/heading.html',
-                                          title='6. Add data visualisations',
+                                          title='6. Add other data visualisations (Optional)',
                                           heading_type=6,
                                           spacing_class="mb-3") }}
                       {{ h.snippet('bem.blocks/paragraph.html',
@@ -976,11 +980,11 @@
                     <div class="row">
                       <div class="col-4">
                         {{ h.snippet('bem.blocks/heading.html',
-                                          title='7. Archive dataset',
+                                          title='6.a Archive dataset',
                                           heading_type=6,
                                           spacing_class="mb-3") }}
                         {{ h.snippet('bem.blocks/paragraph.html',
-                                          text='A dataset should be archived when it is no longer of operational relevance and will not be updated, but remains available primarily for historical purposes. Archived datasets are still visible in search results when the "Archived Datasets" filter is applied.') }}
+                                          text='Archive a dataset when it is no longer needed for operational purposes and will not be updated, but can remain available for historical reference. Ensure that archived datasets are still visible in search results by applying the "Archived" filter.') }}
                       </div>
                       <div class="col-8">
                         {% set archive_values = {False: 'No', True: 'Yes'} %}
@@ -988,7 +992,7 @@
                                             select_classes=['select2-field__select_size_large'],
                                             name="archived",
                                             id="field_archived",
-                                            label='Archive this dataset and its resources',
+                                            label='Archive this dataset',
                                             data=archive_values,
                                             selected=data.archived,
                                             errors=errors.archived,
@@ -1002,7 +1006,13 @@
               </section>
 
               <div class="row">
-                <div class="col-4"></div>
+                <div class="col-4">
+                        {{ h.snippet('bem.blocks/heading.html',
+                                          title='7. Confirm and submit',
+                                          required=True,
+                                          heading_type=6,
+                                          spacing_class="mb-3") }}
+                </div>
                 <div class="col-8">
                   <div>
                     <div>
@@ -1016,17 +1026,18 @@
                           <label id="terms-of-service-label" data-module="hdx_terms_checkbox"
                                  data-module-button="create-form-submit"
                                  class="checkbox-field__label form-check-label ms-2" for="checkbox-hdx-terms">
-                            I confirm that this dataset does not contain Personally Identifiable Information (PII) or
-                            otherwise violate the <a target="_blank"
+                            I confirm this dataset does not contain Personally Identifiable Data (PII) or otherwise violate the <a target="_blank"
                                                      href="{{ h.url_for('hdx_faqs.read', category='terms') }}"
                                                      title="HDX Terms of Service">HDX Terms of Service</a>.
                           </label>
                         </div>
                       </div>
 
+                      <p>Need help? <a href="/faq" title="FAQ" target="_blank">Visit our FAQ</a> or <a href="/faq#body-faq-Contact" title="Contact" target="_blank">Contact support</a>.</p>
+
                       {{ h.snippet('bem.blocks/form_button.html',
                                         type="submit",
-                                        title='Submit',
+                                        title='Submit Dataset',
                                         button_id="create-form-submit",
                                         button_classes=["form-button__btn_font-size_big", "disabled", "btn-primary", "btn-lg", "d-block", "w-100"],
                                         container_classes=["mt-3"]) }}
