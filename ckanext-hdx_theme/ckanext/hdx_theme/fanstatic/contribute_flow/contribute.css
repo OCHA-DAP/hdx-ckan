@@ -150,12 +150,6 @@
 .drag-drop-component.source-file .source-file-upload .drag-drop-area .overwrite-text {
   display: none;
 }
-.drag-drop-component.source-file-selected .url-field {
-  display: none;
-}
-.drag-drop-component.source-file-selected .source-file-upload .drag-drop-content {
-  display: none;
-}
 .drag-drop-component.source-url .source-file-upload {
   display: none;
 }
