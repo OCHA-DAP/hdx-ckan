@@ -140,7 +140,7 @@
 .drag-drop-component.source-file.error {
   border: 1px solid #f2645a;
 }
-.drag-drop-component.source-file .source-file-fields {
+.drag-drop-component.source-file .source-file-fields .url-field {
   display: none;
 }
 .drag-drop-component.source-file .source-file-upload {

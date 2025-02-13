@@ -207,7 +207,7 @@ bem-blocks-scripts:
     preload:
       - hdx_theme/select2-4-scripts
   contents:
-    - bem.blocks/select2_field.js
+    - hdx-select2-field.js
     - bem.blocks/textarea_field.js
 
 hdx-signals-scripts:

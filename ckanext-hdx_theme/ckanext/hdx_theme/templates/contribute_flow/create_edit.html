@@ -710,28 +710,18 @@
                                                                   spacing_class="mb-4") }}
                             </div>
                             <div class="col-4">
-                              {#                                                                        {{ h.snippet('bem.blocks/select2_field.html',#}
-                              {#                                                                          name="format",#}
-                              {#                                                                          label='File format',#}
-                              {#                                                                          selected='<%= format %>'|safe,#}
-                              {#                                                                          required=True,#}
-                              {#                                                                          data={'<%= format %>'|safe: '<%= format %>'|safe},#}
-                              {#                                                                          select_classes=['resource_format_field'],#}
-                              {#                                                                          data_attributes={"placeholder": 'File type', 'ajax-url': '/api/2/util/resource/format_autocomplete?incomplete'},#}
-                              {#                                                                          spacing_class="mb-4") }}#}
-
-
-                              {#                                                                , 'module': 'hdx_autocomplete', 'module-source': "/api/2/util/resource/format_autocomplete?incomplete=?"#}
-                              <div class="mb-3" style="background-color: yellow;">
-                                <div class="controls">
-                                  <label>File format <span class="required">*</span></label>
-                                  <input class="form-control resource_format_field" type="text" name="format"
-                                         value="<%= format %>" placeholder="{{ _('File type') }} *"
-                                         data-module="hdx_autocomplete"
-                                         data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?"/>
-                                  <span class="error-block"></span>
-                                </div>
-                              </div>
+                              {% set template_position = '<%= template_position %>' %}
+                              {% set resource_field_id = 'resource_format_' ~ template_position %}
+                              {{ h.snippet('bem.blocks/select2_field.html',
+                                name="format",
+                                label='File format',
+                                id=resource_field_id|safe,
+                                selected='<%= format %>'|safe,
+                                required=True,
+                                data={'<%= format %>'|safe: '<%= format %>'|safe},
+                                select_classes=['select2-field__select_size_large', 'resource_format_field'],
+                                data_attributes={'allow-clear': 'false', "placeholder": 'File type', 'ajax-url': '/api/2/util/resource/format_autocomplete', 'ajax-extra-params': '[{"key": "incomplete"}]', 'ajax-response-params': '[{"key": "id", "value": "Format"}, {"key": "text", "value": "Format"}]'},
+                                spacing_class="mb-4") }}
                             </div>
                             <div class="col-12">
                               {{ h.snippet('bem.blocks/textarea_field.html',
@@ -801,27 +791,27 @@
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col-3 source-file-upload">
-                        <div class="drag-drop-area">
-                          <div class="drop-here-mask" style="display: none;"></div>
-                          <div class="drag-drop-content">
-                            <span class="drag-text1">Drop file <span
-                              class="overwrite-text">to overwrite</span> or</span>
-                            <span class="drag-text2">Incoming file</span>
-                            <label class="browse-button">
-                                                                      <span>
-                                                                          Browse
-                                                                      </span>
-                              <input type="file" name="upload" style="" value=""
-                                     class="resource_file_field form-control"/>
-                            </label>
+                        <div class="source-file-upload">
+                          <div class="drag-drop-area">
+                            <div class="drop-here-mask" style="display: none;"></div>
+                            <div class="drag-drop-content">
+                              <span class="drag-text1">Drop file <span
+                                class="overwrite-text">to overwrite</span> or</span>
+                              <span class="drag-text2">Incoming file</span>
+                              <label class="browse-button">
+                                                                        <span>
+                                                                            Browse
+                                                                        </span>
+                                <input type="file" name="upload" style="" value=""
+                                       class="resource_file_field form-control"/>
+                              </label>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="text-end">
-                        <button type="button" class="delete_resource">Delete this file <i class="fa fa-trash ms-1"></i>
-                        </button>
+                        <div class="text-end">
+                          <button type="button" class="delete_resource">Delete this file <i class="fa fa-trash ms-1"></i>
+                          </button>
+                        </div>
                       </div>
                     </script>
 
