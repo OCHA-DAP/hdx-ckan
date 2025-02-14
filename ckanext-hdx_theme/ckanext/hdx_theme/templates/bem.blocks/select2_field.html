@@ -31,7 +31,7 @@
   {% endif %}
   <div>
     <select
-            class="select2-field__select{% if select_classes %} {{ select_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
+            class="form-field select2-field__select{% if select_classes %} {{ select_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
             {% if data_attributes and data_attributes['multiple'] == 'true' %}multiple{% endif %}
             data-module="hdx-select2-field"
             name="{{ name }}"

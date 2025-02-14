@@ -374,7 +374,7 @@ $(function(){
             'change input[type=radio].resource-source': 'onSourceChange',
             'change input[type=checkbox][name=pii]': 'onPiiChange',
             'change input[type=checkbox][name=microdata]': 'onMicrodataChange',
-            'change .source-file-fields .form-control': 'onFieldEdit',
+            'change .source-file-fields .form-field': 'onFieldEdit',
             'click .dropbox a': 'onDropboxBtn',
             'click .googledrive a': 'onGoogleDriveBtn'
         },

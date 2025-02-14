@@ -12,7 +12,7 @@
       </label>
     {% endif %}
     <input
-      class="radio-field__input form-check-input{% if input_classes %} {{ input_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
+      class="form-field radio-field__input form-check-input{% if input_classes %} {{ input_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
       value="{% if value %}{{ value }}{% endif %}"
       {% if checked %}checked{% endif %}
       type="radio"
