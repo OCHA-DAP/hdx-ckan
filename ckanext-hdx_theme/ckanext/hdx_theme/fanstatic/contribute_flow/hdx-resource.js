@@ -493,9 +493,7 @@ $(function(){
                 error_block.html(error_text);
                 if (error_text) {
                     $input.addClass('is-invalid');
-                    var parent_el = $input.parent('.controls');
-                    parent_el.addClass('error');
-                    parent_el.closest('.source-file').addClass('error');
+                    $input.closest('.source-file').addClass('error');
                 }
             }.bind(this));
 
@@ -525,10 +523,10 @@ $(function(){
           count = Math.max(0, count + value);
           terms.attr("piiCount", count);
           if (count > 0) {
-            terms.addClass('disabled');
+            $termsCheckbox.attr('disabled', 'disabled');
             $termsCheckbox.prop("checked", false).change();
           } else {
-            terms.removeClass('disabled');
+            $termsCheckbox.removeAttr('disabled');
             $termsCheckbox.prop("disabled", false);
           }
         },
@@ -1165,5 +1163,6 @@ $(function(){
         initial_resource_data = JSON.parse($('#resource-list-json').html());
     }
     this.app = new AppView({sandbox: sandbox, data: initial_resource_data});
+    return true;
 
 }());
