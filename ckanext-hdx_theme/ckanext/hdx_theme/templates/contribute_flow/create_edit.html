@@ -30,7 +30,11 @@
 
 {% set user_is_sysadmin = h.check_access('sysadmin') %}
 
-{% block page %}
+{% block breadcrumb_content %}
+  <li class="breadcrumb-item active"><a href="#">{{ page_title }}</a></li>
+{% endblock %}
+
+{% block content %}
 
   {% if data.resources %}
     <script id="resource-list-json" type="application/json">{{ h.escaped_dump_json(data.resources)|safe }}</script>

@@ -6,7 +6,9 @@
  */
 function contributeAddDetails(datasetId, typeOfCall, anchor){
   let popup = $("#addDataPopup");
+  let $body = $('body');
   popup.show();
+  $body.addClass('contribute-mode');
 
   let linkType = (typeOfCall ? typeOfCall + ' ' : '') + (datasetId ? 'edit data' : 'add data');
   // hdxUtil.analytics.sendLinkClickEvent({
@@ -58,6 +60,10 @@ function _contributePopupReset() {
   const $addDataPopupFrame = $("#addDataPopupFrame");
   let src = $addDataPopupFrame.prop('src');
   $addDataPopupFrame.closest(".details-content").html('');
+
+  let $body = $('body');
+  $body.removeClass('contribute-mode');
+
   _generateContributeFrame(src);
 }
 

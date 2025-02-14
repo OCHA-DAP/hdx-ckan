@@ -1,9 +1,11 @@
+body.contribute-mode {
+  overflow: hidden;
+}
 .popup.popup-contribute {
   z-index: 90000;
   overflow: auto;
 }
 .popup.popup-contribute .content {
-  max-width: 1260px;
   height: 100%;
   padding: 0;
   position: static;
@@ -25,8 +27,8 @@
 }
 .popup.popup-contribute .content .custom-close-container i.close {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 17px;
   font-size: 20px;
   color: #888888;
   opacity: 0.8;
