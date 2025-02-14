@@ -858,62 +858,61 @@
 
                 {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
 
-                {% if user_is_sysadmin %}
-                  <span id="_dataset_preview">
-                                        <div class="form-section">
-                                          <div class="row">
-                                              <div class="col-4">
-                                                {{ h.snippet('bem.blocks/heading.html',
-                                                  title='5. Add automatic Data Previews (Optional)',
-                                                  heading_type=6,
-                                                  spacing_class="mb-3") }}
-                                                {{ h.snippet('bem.blocks/paragraph.html',
-                                                  text='Enable data previews to help others quickly understand the insights in your data. The following previews are generated automatically from your data if it is formatted appropriately:') }}
-                                                <ul>
-                                                  <li>Maps (if your data includes geo-data) or</li>
-                                                  <li>Quick Charts that show graphs and key figures (for data with HXL tags).</li>
-                                                </ul>
-                                                {{ h.snippet('bem.blocks/paragraph.html',
-                                                  text='<a href="{0}" title="Data Preview options" target="_blank">Find out more</a> about Data Preview options.'.format('#')) }}
-                                              </div>
-                                              <div class="col-8">
-                                                  <div data-module="hdx_form_element_manager_bem"
-                                                       data-module-element_name="dataset_preview_check"
-                                                       data-module-broadcast_change="true">
-                                                    {{ h.snippet('bem.blocks/checkbox_field.html',
-                                                        label='Enable Data Preview',
-                                                        name="dataset_preview_check",
-                                                        value='1',
-                                                        id='field_dataset_preview_check',
-                                                        checked=data.dataset_preview_check,
-                                                        data_attributes={"validation-error": errors.dataset_preview_check},
-                                                        spacing_class="mb-3") }}
-                                                  </div>
-                                                  <div data-module="hdx_form_element_manager_bem"
-                                                       data-module-element_name="dataset_preview_check_other"
-                                                       id="dataset-preview-check-other-define"
-                                                    {% if data.dataset_preview_check != '1' %}
-                                                       style="display:none;" {% endif %}>
-                                                    {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
-                                                    {{ h.snippet('bem.blocks/select2_field.html',
-                                                      select_classes=['select2-field__select_size_large'],
-                                                      name="dataset_preview_value",
-                                                      id="field_dataset_preview_value",
-                                                      label='Select which file to preview',
-                                                      data=dataset_preview_values_list,
-                                                      selected=data.dataset_preview_value,
-                                                      errors=errors.dataset_preview_value,
-                                                      data_attributes={"placeholder": 'Select'},
-                                                      spacing_class="mb-4") }}
-                                                  </div>
-                                              </div>
-                                          </div>
-                                        </div>
+{#                {% if user_is_sysadmin %}#}
+                  <div id="_dataset_preview">
+                    <div class="form-section">
+                      <div class="row">
+                          <div class="col-4">
+                            {{ h.snippet('bem.blocks/heading.html',
+                              title='5. Add automatic Data Previews (Optional)',
+                              heading_type=6,
+                              spacing_class="mb-3") }}
+                            {{ h.snippet('bem.blocks/paragraph.html',
+                              text='Enable data previews to help others quickly understand the insights in your data. The following previews are generated automatically from your data if it is formatted appropriately:') }}
+                            <ul>
+                              <li>Maps (if your data includes geo-data) or</li>
+                              <li>Quick Charts that show graphs and key figures (for data with HXL tags).</li>
+                            </ul>
+                            {{ h.snippet('bem.blocks/paragraph.html',
+                              text='<a href="{0}" title="Data Preview options" target="_blank">Find out more</a> about Data Preview options.'.format('#')) }}
+                          </div>
+                          <div class="col-8">
+                              <div data-module="hdx_form_element_manager_bem"
+                                   data-module-element_name="dataset_preview_check"
+                                   data-module-broadcast_change="true">
+                                {{ h.snippet('bem.blocks/checkbox_field.html',
+                                    label='Enable Data Preview',
+                                    name="dataset_preview_check",
+                                    value='1',
+                                    id='field_dataset_preview_check',
+                                    checked=data.dataset_preview_check,
+                                    data_attributes={"validation-error": errors.dataset_preview_check},
+                                    spacing_class="mb-3") }}
+                              </div>
+                              <div data-module="hdx_form_element_manager_bem"
+                                   data-module-element_name="dataset_preview_check_other"
+                                   id="dataset-preview-check-other-define"
+                                {% if data.dataset_preview_check != '1' %}
+                                   style="display:none;" {% endif %}>
+                                {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
+                                {{ h.snippet('bem.blocks/select2_field.html',
+                                  select_classes=['select2-field__select_size_large'],
+                                  name="dataset_preview_value",
+                                  id="field_dataset_preview_value",
+                                  label='Select which file to preview',
+                                  data=dataset_preview_values_list,
+                                  selected=data.dataset_preview_value,
+                                  errors=errors.dataset_preview_value,
+                                  data_attributes={"placeholder": 'Select'},
+                                  spacing_class="mb-4") }}
+                              </div>
+                          </div>
+                      </div>
+                    </div>
 
-                                        {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-                                    </span>
-                {% endif %}
+                    {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
+                  </div>
+{#                {% endif %}#}
 
                 <div class="form-section">
                   <div class="row">
