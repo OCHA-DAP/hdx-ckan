@@ -256,7 +256,9 @@ $(function(){
         el: '#resource-list',
 
         events: {
-            'sort-updated': 'onSortOrderChange'
+            'sort-updated': 'onSortOrderChange',
+            'click .move-up': 'moveResourceUp',
+            'click .move-down': 'moveResourceDown',
         },
 
         initialize: function(options) {
@@ -331,9 +333,33 @@ $(function(){
           console.log('User waiting msg: ' + msg);
         },
 
+        moveResourceUp: function (event) {
+          var $clickedButton = $(event.currentTarget);
+          var $resourceEl = $clickedButton.closest('.drag-drop-component');
+          var currentIndex = $resourceEl.index();
+
+          if (currentIndex > 0) {
+            var $prevResourceEl = $resourceEl.prev();
+            $resourceEl.insertBefore($prevResourceEl);
+            this.$el.trigger('sort-updated');
+          }
+        },
+
+        moveResourceDown: function (event) {
+          var $clickedButton = $(event.currentTarget);
+          var $resourceEl = $clickedButton.closest('.drag-drop-component');
+          var currentIndex = $resourceEl.index();
+          var lastIndex = this.resource_list.children().length - 1;
+
+          if (currentIndex < lastIndex) {
+            var $nextResourceEl = $resourceEl.next();
+            $resourceEl.insertAfter($nextResourceEl);
+            this.$el.trigger('sort-updated');
+          }
+        },
+
         onSortOrderChange: function(e) {
-            // Sort order may be changed either by drag n drop reordering, or
-            // by removing a resource.
+            // Sort order may be changed by drag n drop reordering, sorting arrows or by removing a resource.
             var has_changed = false;
             this.collection.each(function(resource, i) {
                 var new_pos = resource.view.$el.index();
