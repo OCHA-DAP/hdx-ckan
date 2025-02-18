@@ -24,7 +24,7 @@ from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATE
     ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
-    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME
+    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.views.qa import hdx_qa
 from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
@@ -153,6 +153,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                       ' -extras_updated_by_script:[* TO *]')
         adapt_solr_fq(SADD_DATASETS_FACET_NAME,
                       ' +{}'.format(SADD_DATASETS_FACET_QUERY), ' -{}'.format(SADD_DATASETS_FACET_QUERY))
+        adapt_solr_fq(HDX_HAPI_DATA_FACET_NAME,
+                      ' +{}'.format(HDX_HAPI_DATA_FACET_QUERY), ' -{}'.format(HDX_HAPI_DATA_FACET_QUERY))
 
         if 'ext_batch' in search_params['extras']:
             batch = search_params['extras']['ext_batch'].strip()

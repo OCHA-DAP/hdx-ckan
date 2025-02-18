@@ -29,6 +29,9 @@ REQUESTDATA_DATASETS_FACET_NAME = 'requestdata'
 SHOWCASE_DATASETS_FACET_NAME = 'showcases'
 ARCHIVED_DATASETS_FACET_NAME = 'archived'
 
+HDX_HAPI_DATA_FACET_NAME = 'hdx_hapi'
+HDX_HAPI_DATA_FACET_QUERY = 'organization:hdx-hapi'
+
 STATUS_PRIORITIES = {
     '': 0,
     'OK': 1,
