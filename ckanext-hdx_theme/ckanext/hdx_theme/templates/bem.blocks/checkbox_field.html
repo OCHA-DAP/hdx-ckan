@@ -12,8 +12,15 @@
             {% endfor %}{% endif %}
     >
     {% if label %}
-      <label class="checkbox-field__label form-check-label ms-2" for="checkbox-{{ name }}">
+      <label
+        class="checkbox-field__label form-check-label ms-2"
+        for="checkbox-{{ name }}">
         {{ label|safe }}
+        {% if label_tooltip %}
+          <span class="checkbox-field__tooltip" title="{{ label_tooltip }}" data-module="bs_tooltip" data-bs-toggle="tooltip">
+            <i class="fa-regular fa-circle-question"></i>
+          </span>
+        {% endif %}
         {% if required or dynamic_required %}
           <span class="checkbox-field__required{% if dynamic_required %} d-none{% endif %}">*</span>
         {% endif %}

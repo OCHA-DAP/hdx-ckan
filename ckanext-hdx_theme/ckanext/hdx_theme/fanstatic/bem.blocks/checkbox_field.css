@@ -7,6 +7,13 @@
   color: #F2645A;
   font-weight: 600;
 }
+.checkbox-field__tooltip {
+  cursor: pointer;
+  font-size: 11px;
+  margin-left: 2px;
+  color: #888;
+  display: inline-flex;
+}
 .checkbox-field__input.form-check-input {
   height: 20px;
   width: 20px;
