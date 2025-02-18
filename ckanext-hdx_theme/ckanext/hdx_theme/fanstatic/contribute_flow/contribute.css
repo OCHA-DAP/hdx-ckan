@@ -69,6 +69,14 @@
 .new-contribute-main .resources .resource-sort {
   font-size: 16px;
 }
+.new-contribute-main .resources .resource-sort .move-up,
+.new-contribute-main .resources .resource-sort .move-down {
+  cursor: pointer;
+}
+.new-contribute-main .resources .resource-sort .move-up:hover,
+.new-contribute-main .resources .resource-sort .move-down:hover {
+  color: #333333;
+}
 .new-contribute-main .resources .drag-handle {
   cursor: grab;
 }
