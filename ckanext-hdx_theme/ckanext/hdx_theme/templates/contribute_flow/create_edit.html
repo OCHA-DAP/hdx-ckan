@@ -5,8 +5,6 @@
   {{ super() }}
   {% asset 'hdx_theme/contribute-flow-styles' %}
   {% asset 'hdx_theme/bem-blocks-styles' %}
-
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css">
 {% endblock %}
 
 {# The line below is for google analytics #}
@@ -286,84 +284,57 @@
                                                   spacing_class="mb-4") }}
                       </div>
 
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="dataset_date"
-                           data-module-required="public,requestdata">
-                        <div class="mb-2" style="background-color: yellow;">
-                          <label class="control-label"
-                                 style="font-weight:inherit"
-                                 data-module='bs_tooltip'
-                                 data-module-placement='top'
-                                 data-original-title='The earliest start date and latest end date across all resources included in the dataset.'
-                                 data-bs-toggle='tooltip'>
-                            {{ _('Time Period') }} [?]
+                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="dataset_date" data-module-required="public,requestdata">
+                        <div class="input-field">
+                          <label class="input-field__label" for="ui_date_range1">
+                            Time Period
+                            <span class="input-field__required d-none">*</span>
                           </label>
-                          <p>The time period covered by the dataset or the data collection period.</p>
-                          <div class="controls">
-                            <div style="display: flex">
-                              <div>
-                                <input type="text" name='ui_date_range1' id='ui_date_range1' autocomplete="off"
-                                       onkeydown="return false;"
-                                       data-module='hdx_datepicker' data-module-group='2'
-                                       data-module-type="start-period" data-module-topic='date-field-clicked'
-                                       data-module-alt_field_id='date_range1'
-                                       data-module-original_value="{{ data.dataset_date }}"
-                                       label="{{ _('Start Date') }}" placeholder="{{ _('Start date') }}" value=''
-                                       error='{{ errors.dataset_date }}' class='form-control' style="width: 100%;"/>
-                                <input type="hidden" name='date_range1' id='date_range1'
-                                       error='{{ errors.dataset_date }}'/>
-
-                              </div>
-                              <span style="width: 15px; text-align: center; padding-top: 10px;">-</span>
-                              <div>
-                                <input type="text" name='ui_date_range2' id='ui_date_range2' autocomplete="off"
-                                       onkeydown="return false;"
-                                       data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period"
-                                       data-module-topic='date-field-clicked'
-                                       data-module-alt_field_id='date_range2'
-                                       data-module-original_value="{{ data.dataset_date }}"
-                                       label="{{ _('End Date') }}" placeholder="{{ _('End date') }}" value=''
-                                       error='{{ errors.dataset_date }}' class='form-control' style="width: 100%;"/>
-                                <input type="hidden" name='date_range2' id='date_range2'
-                                       error='{{ errors.dataset_date }}'/>
-                              </div>
+                          <div class="input-field__label-guideline">
+                            The time period covered by the dataset or the data collection period.
+                          </div>
+                          <div class="row g-1">
+                            <div class="col-6">
+                              <input type="text" name="ui_date_range1" id="ui_date_range1" autocomplete="off"
+                                 onkeydown="return false;"
+                                 data-module="hdx_datepicker" data-module-group="2"
+                                 data-module-type="start-period" data-module-topic="date-field-clicked"
+                                 data-module-alt_field_id="date_range1"
+                                 data-module-original_value="{{ data.dataset_date }}"
+                                 placeholder="Start date" value=""
+                                 class="form-field form-control input-field__input">
+                              <input type="hidden" name='date_range1' id='date_range1'>
                             </div>
-                            <div style="padding-top: 10px; margin-left: 10px;">
-                              <label style="font-weight: inherit; min-width: 90px;"
-                                     data-module='bs_tooltip'
-                                     data-module-placement='top'
-                                     data-bs-original-title='The end date will always advance to be the current date'
-                                     data-bs-toggle='tooltip'>
-                                <input style="margin-right: 5px; width: auto;"
-                                       type="checkbox"
-                                       name="ui_date_ongoing"
-                                       value="1"
-                                       id="ui_date_ongoing"
-                                       data-module='hdx_datepicker'
-                                       data-module-group='2'
-                                       data-module-type="date_ongoing"
-                                       data-module-topic='date-field-clicked'
-                                       data-module-alt_field_id='date_ongoing'
-                                       data-module-original_value="{{ data.ui_date_ongoing }}"
-                                       {% if data.ui_date_ongoing %}checked="checked"{% endif %}/>
-                                Ongoing [?]
-                              </label>
+                            <div class="col-6">
+                              <input type="text" name="ui_date_range2" id="ui_date_range2" autocomplete="off"
+                                     onkeydown="return false;"
+                                     data-module="hdx_datepicker" data-module-group="2" data-module-type="end-period"
+                                     data-module-topic="date-field-clicked"
+                                     data-module-alt_field_id="date_range2"
+                                     data-module-original_value="{{ data.dataset_date }}"
+                                     placeholder="End date" value=""
+                                     class="form-field form-control input-field__input"
+                                     >
+                              <input type="hidden" name="date_range2" id="date_range2">
                             </div>
-
-                            <div class="row">
-                              <div class="col-12">
-                                <span class="error-block"></span>
-                              </div>
-                            </div>
-
                           </div>
                         </div>
+                        {{ h.snippet('bem.blocks/checkbox_field.html',
+                          label='Ongoing',
+                          label_tooltip='The end date will always advance to be the current date',
+                          name="ui_date_ongoing",
+                          value='1',
+                          id='ui_date_ongoing',
+                          checked=data.ui_date_ongoing,
+                          data_attributes={"module": 'hdx_datepicker', 'module-group': '2', 'module-type': "date_ongoing", 'module-topic': 'date-field-clicked', 'module-alt_field_id': 'date_ongoing', 'module-original_value': data.ui_date_ongoing},
+                          spacing_class="mt-2") }}
                         {{ h.snippet('bem.blocks/info_box.html',
-                                                    compact=True,
-                                                    rounded=True,
-                                                    icon=False,
-                                                    paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: This time period should cover all files in the dataset, spanning from the earliest start date to the latest end date.'],
-                                                    spacing_class="mb-3") }}
+                          compact=True,
+                          rounded=True,
+                          icon=False,
+                          paragraph_classes=['paragraph__text_font_size-small'],
+                          paragraphs=['Tip: This time period should cover all files in the dataset, spanning from the earliest start date to the latest end date.'],
+                          spacing_class="my-3") }}
                       </div>
 
                       {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}

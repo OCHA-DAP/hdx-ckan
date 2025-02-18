@@ -1,0 +1,36 @@
+@import "../base/variables";
+
+.ui-datepicker {
+  .ui-datepicker-prev-hover,
+  .ui-datepicker-next-hover {
+    top: 2px;
+  }
+
+  .ui-datepicker-next-hover {
+    right: 2px;
+  }
+
+  .ui-datepicker-prev-hover {
+    left: 2px;
+  }
+
+  .ui-datepicker-header {
+    border-bottom: 1px solid @lightGrayColor;
+  }
+
+  td {
+    span, a {
+      padding: .5em;
+    }
+  }
+
+  select {
+    border-color: @lightGrayColor;
+    background-color: @whiteColor;
+    :focus-visible,
+    :focus-within {
+      box-shadow: none;
+    }
+  }
+}
+

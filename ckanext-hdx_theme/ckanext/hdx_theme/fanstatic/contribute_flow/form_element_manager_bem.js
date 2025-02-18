@@ -3,7 +3,8 @@
 ckan.module('hdx_form_element_manager_bem', function ($, _) {
   var selectors = {
     'groups_list': 'locations',
-    'license': 'license_id'
+    'license': 'license_id',
+    'dataset_date': 'ui_date_range1',
   };
 
   return {
@@ -15,8 +16,7 @@ ckan.module('hdx_form_element_manager_bem', function ($, _) {
       var elementName = this.options.element_name;
       var selectorName = selectors[elementName] || elementName;
       var $element = $('[name="' + selectorName + '"]');
-
-      var $requiredLabel = $element.parent().parent().find('[class*="-field__required"]');
+      var $requiredLabel = $element.parent().parent().parent().find('[class*="-field__required"]');
       var required = [];
       if (this.options.required) {
         required = this.options.required.split(',');

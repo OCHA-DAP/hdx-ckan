@@ -209,6 +209,7 @@ bem-blocks-scripts:
   contents:
     - hdx-select2-field.js
     - bem.blocks/textarea_field.js
+    - bs_tooltip.js
 
 hdx-signals-scripts:
   <<: *common-js
@@ -976,6 +977,9 @@ contribute-flow-styles:
   contents:
     - search-styles
     - contribute_flow/contribute.css
+    - datepicker/jquery-ui.css
+    - datepicker/jquery-ui.theme.css
+    - datepicker/custom.css
 
 country-scripts:
   <<: *common-js
