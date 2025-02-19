@@ -425,7 +425,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: In general "Creative Commons XXXXX” is our recommended license for data on HDX as it allows others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format('https://data.humdata.local/faqs/licenses')],
+                                                    paragraphs=['Tip: In general "Creative Commons XXXXX” is our recommended license for data on HDX as it allows others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.url_for('hdx_faqs.read', category='licenses'))],
                                                     spacing_class="mb-3") }}
                       </div>
 
