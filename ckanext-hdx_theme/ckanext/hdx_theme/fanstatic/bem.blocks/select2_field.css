@@ -6,6 +6,13 @@
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
 }
+.input-placeholder::placeholder {
+  color: #6c757d;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 30px;
+}
 .select2-field__label {
   color: #4B5563;
   font-weight: 600;
@@ -89,4 +96,15 @@
 }
 .select2-field .select2-container .select2-dropdown .select2-search .select2-search__field:focus {
   box-shadow: none;
+}
+.select2-field .select2-container .select2-search__field {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+}
+.select2-field .select2-container .select2-search__field::placeholder {
+  color: #6c757d;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 30px;
 }

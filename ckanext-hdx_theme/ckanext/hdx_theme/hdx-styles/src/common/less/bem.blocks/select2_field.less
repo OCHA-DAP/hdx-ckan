@@ -1,6 +1,21 @@
 @import "bem_variables";
 @import "utilities";
 
+
+.input-placeholder {
+  //&::-webkit-input-placeholder,
+  //&:-moz-placeholder,
+  //&::-moz-placeholder,
+  //&:-ms-input-placeholder,
+  &::placeholder {
+    color: #6c757d; // select2 bootstrap5 theme
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 30px;
+  }
+}
+
 .select2-field {
   &__label {
     color: @grey-extra-dark-color;
@@ -97,6 +112,12 @@
           }
         }
       }
+    }
+
+    .select2-search__field {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      .input-placeholder;
     }
   }
 }

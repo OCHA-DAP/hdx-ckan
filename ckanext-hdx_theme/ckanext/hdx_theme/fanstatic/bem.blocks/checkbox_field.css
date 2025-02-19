@@ -9,9 +9,9 @@
 }
 .checkbox-field__tooltip {
   cursor: pointer;
-  font-size: 11px;
+  font-size: 13px;
   margin-left: 2px;
-  color: #888;
+  color: #4B5563;
   display: inline-flex;
 }
 .checkbox-field__input.form-check-input {

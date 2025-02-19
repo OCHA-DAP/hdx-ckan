@@ -48,7 +48,7 @@
     <div id="create-dataset-app">
       <div class="hdx-contribute-form container create-step2 {{ 'edit-mode' if edit_mode else '' }}">
         <div class="row">
-          <form id="create_dataset_form" class="col-10 mx-auto" method="post" enctype="multipart/form-data"
+          <form id="create_dataset_form" class="col-10 mt-5 mx-auto" method="post" enctype="multipart/form-data"
                 data-module="basic-form" novalidate>
             {{ h.csrf_input() }}
             {% if data.is_requestdata_type %}
@@ -161,7 +161,7 @@
                                                   name="title",
                                                   id="field_title",
                                                   label='Title',
-                                                  placeholder='ie. Humanitarian Needs Assessment in Afghanistan, Jan-Dec 2023',
+                                                  placeholder='...',
                                                   dynamic_required=True,
                                                   value=data.title,
                                                   errors=errors.title,
@@ -321,7 +321,7 @@
                         </div>
                         {{ h.snippet('bem.blocks/checkbox_field.html',
                           label='Ongoing',
-                          label_tooltip='The end date will always advance to be the current date',
+                          label_tooltip='The end date will always be today’s date.',
                           name="ui_date_ongoing",
                           value='1',
                           id='ui_date_ongoing',
