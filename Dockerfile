@@ -41,6 +41,11 @@ RUN apt-get -qq -y update && \
         psmisc \
         vim \
         wget && \
+    # install datapusher+ deps
+    wget -O - https://dathere.github.io/qsv-deb-releases/qsv-deb.gpg | gpg --dearmor -o /usr/share/keyrings/qsv-deb.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/qsv-deb.gpg] https://dathere.github.io/qsv-deb-releases ./" | tee /etc/apt/sources.list.d/qsv.list && \
+    apt-get -q -y update && \
+    apt-get -q -y install qsv && \
     # prepare files and folders
     mkdir -p /var/log/ckan /srv/filestore /srv/webassets /etc/services.d/unit /etc/ckan && \
     cd /srv/ckan && \
