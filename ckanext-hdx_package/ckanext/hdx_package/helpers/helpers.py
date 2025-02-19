@@ -487,8 +487,8 @@ def hdx_check_add_data():
     return data_dict
 
 
-def hdx_get_last_modification_date(dataset_dict):
-    return FreshnessCalculator.dataset_last_change_date(dataset_dict)
+# def hdx_get_last_modification_date(dataset_dict):
+#     return FreshnessCalculator.dataset_last_change_date(dataset_dict)
 
 
 def hdx_get_due_overdue_date(dataset_dict, type='due', format='%b %-d %Y'):

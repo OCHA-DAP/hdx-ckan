@@ -9,6 +9,8 @@ from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 
 log = logging.getLogger(__name__)
 
+UPDATE_FREQ_LIVE = '0'
+
 UPDATE_FREQ_INFO = OrderedDict(
     (
         ('1', {
@@ -53,7 +55,7 @@ UPDATE_FREQ_INFO = OrderedDict(
             'title': 'Every year',
             'special': False
         }),
-        ('0', {
+        (UPDATE_FREQ_LIVE, {
             'overdue': None,
             'delinquent': None,
             'title': 'Live',
@@ -95,17 +97,21 @@ def get_calculator_instance(dataset_dict, type=None):
     else:
         return FreshnessCalculator(dataset_dict)
 
+def get_utc_end_of_today():
+    now = datetime.datetime.utcnow()  # Get current UTC time (naive datetime)
+    end_of_day = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
+    return end_of_day
 
 class FreshnessCalculator(object):
 
     @staticmethod
     def dataset_last_change_date(dataset_dict):
-        '''
+        """
         :param dataset_dict:
         :type dataset_dict: dict
         :return:
         :rtype: datetime.datetime
-        '''
+        """
         last_change_date = None
         last_modified = dataset_dict.get('last_modified')  # last_modified is not an extra; only stored in solr
         reviewed = get_extra_from_dataset('review_date', dataset_dict) # dataset_dict.get('review_date')
@@ -121,13 +127,36 @@ class FreshnessCalculator(object):
         last_change_date = last_change_date.replace(tzinfo=None) if last_change_date else None
         return last_change_date
 
+    @staticmethod
+    def end_of_dataset_date(dataset_dict):
+        """
+        Extracts the end date from dataset_date and returns a timezone-aware datetime object.
+
+        :param dataset_dict: Dictionary containing dataset metadata.
+        :type dataset_dict: dict
+        :return: End date as a datetime object.
+        :rtype: datetime.datetime
+        """
+
+        dataset_date = dataset_dict.get('dataset_date', '')
+        if dataset_date:
+            dataset_end_date = dataset_date.split(' TO ')[-1].strip('[]')
+            if dataset_end_date == '*':
+                dataset_end_date = get_utc_end_of_today()
+            else:
+                dataset_end_date = dateutil.parser.parse(dataset_end_date)
+        else:
+            dataset_end_date = get_utc_end_of_today()
+        return dataset_end_date
+
     def __init__(self, dataset_dict):
         self.surely_not_fresh = True
         self.dataset_dict = dataset_dict
         update_freq = get_extra_from_dataset('data_update_frequency', dataset_dict)
         # modified = dataset_dict.get('metadata_modified')
         try:
-            self.modified = FreshnessCalculator.dataset_last_change_date(dataset_dict)
+            # self.modified = FreshnessCalculator.dataset_last_change_date(dataset_dict)
+            self.modified = FreshnessCalculator.end_of_dataset_date(dataset_dict)
             if self.modified and update_freq and UPDATE_FREQ_OVERDUE_INFO.get(update_freq):
                 # if '.' not in modified:
                 #     modified += '.000'
@@ -140,11 +169,14 @@ class FreshnessCalculator(object):
             log.error(text_type(e))
 
     def is_fresh(self, now=datetime.datetime.utcnow()):
-        '''
+        """
         Using utcnow because this is used by core ckan, see ckan.model.package
         :return: True if fresh, otherwise False
         :rtype: bool
-        '''
+        """
+        update_freq = get_extra_from_dataset('data_update_frequency', self.dataset_dict)
+        if update_freq == UPDATE_FREQ_LIVE:
+            return True
         start_of_expiration = self.compute_range_beginnings()[0]
         if start_of_expiration:
             now = datetime.datetime.utcnow() # using utcnow bc this is used by core ckan, see ckan.model.package
@@ -154,13 +186,13 @@ class FreshnessCalculator(object):
             return False
 
     def is_overdue(self, now=datetime.datetime.utcnow()):
-        '''
+        """
         This might seem like (not is_fresh()) but the definition of fresh in CKAN might change
         so implementing this separately
         Using utcnow because this is used by core ckan, see ckan.model.package
         :return: True if overdue, otherwise False
         :rtype: bool
-        '''
+        """
         start_of_overdue_range = self.compute_range_beginnings()[1]
         if start_of_overdue_range:
             overdue = now > start_of_overdue_range
@@ -229,7 +261,7 @@ class DataCompletenessFreshnessCalculator(FreshnessCalculator):
         try:
             if update_freq is not None and int(update_freq) <= 0:
                 return True
-        except ValueError as e:
+        except ValueError:
             log.info('Update frequency for dataset "{}" is not a number'.format(self.dataset_dict.get('name')))
 
         return super(DataCompletenessFreshnessCalculator, self).is_fresh(now)
