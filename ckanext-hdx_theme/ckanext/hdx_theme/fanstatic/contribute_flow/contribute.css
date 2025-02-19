@@ -60,7 +60,6 @@
   font-size: 16px;
   font-weight: 600;
   color: #F2645A;
-  margin-top: 1rem;
 }
 .new-contribute-main .resources .resource-position {
   font-size: 16px;
@@ -88,6 +87,7 @@
 }
 .drag-drop-component .drag-drop-area .drag-drop-content {
   margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   border-radius: 6px;
   border: 3px dashed #cccccc;
   background-color: #eeeeee;
