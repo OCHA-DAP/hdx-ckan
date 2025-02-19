@@ -21,7 +21,7 @@ from ckanext.hdx_search.helpers.constants import \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
-    P_CODED_DATASET_FACET_NAME
+    P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
@@ -33,7 +33,7 @@ FEATURED_FACETS = [
     COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME,
     GEODATA_DATASETS_FACET_NAME, REQUESTDATA_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_NAME,
     SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
-    SADD_DATASETS_FACET_NAME, P_CODED_DATASET_FACET_NAME
+    SADD_DATASETS_FACET_NAME, P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
 
@@ -115,13 +115,13 @@ class SearchLogic(object):
 
     @property
     def archived_url_helper(self):
-        '''
+        """
         :return:
         :rtype: ArchivedUrlHelper
-        '''
+        """
         try:
             return self.template_data['full_facet_info']['archived_url_helper']
-        except KeyError as ke:
+        except KeyError:
             log.error('archived_url_helper object is only available after calling _search() '
                       'and add_archived_url_helper()')
 
@@ -298,6 +298,7 @@ class SearchLogic(object):
             'facet.query': [
                 '{{!key={} ex=batch}} {}'.format(HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY),
+                '{{!key={} ex=batch}} {}'.format(HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(ADMIN_DIVISIONS_DATASETS_FACET_NAME,
                                                  ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY),
@@ -376,7 +377,7 @@ class SearchLogic(object):
         pass
 
     def _search_url(self, params, package_type=None):
-        '''
+        """
         Returns the url of the current search type
         :param params: the parameters that will be added to the search url
         :type params: list of key-value tuples
@@ -384,7 +385,7 @@ class SearchLogic(object):
         :type package_type: string
 
         :rtype: string
-        '''
+        """
         if not package_type or package_type == 'dataset':
             url = h.url_for('search')
         else:
@@ -401,7 +402,7 @@ class SearchLogic(object):
     def _page_number(self):
         try:
             return int(request.args.get('page', 1))
-        except ValueError as e:
+        except ValueError:
             abort(400, ('"page" parameter must be an integer'))
 
     def _params_nopage(self):
@@ -485,10 +486,13 @@ class SearchLogic(object):
         # num_of_administrative_divisions = 0
         num_of_archived = 0
         num_of_unarchived = 0
+        num_of_hdx_hapi = 0
 
         p_coded_explanation = _('A P-Code, short for place code, is a unique identifier for locations in humanitarian '
                                 'datasets. It is most commonly used to uniquely identify subnational administrative '
                                 'divisions.')
+        hdx_hapi_explanation = _('Downloadable files of standardized data from the HDX Humanitarian API, '
+                                 'organized by indicator and country.')
 
         featured_facet_items = []
         result['facets']['featured'] = {
@@ -548,7 +552,9 @@ class SearchLogic(object):
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
                 result['selected_titles'].extend(selected_titles)
-        
+
+        self._add_facet_query_item_to_list(featured_facet_items, HDX_HAPI_DATA_FACET_NAME, _('HDX HAPI Data'),
+                                           existing_facets, search_extras, hdx_hapi_explanation)
         cod_category = result['facets'].pop('cod_level', None)
         if cod_category:
             modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
@@ -567,22 +573,22 @@ class SearchLogic(object):
                                          num_of_p_coded, search_extras, p_coded_explanation)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_administrative_divisions', 'Administrative Divisions',
         #                                   num_of_administrative_divisions, search_extras)
-        self._add_facet_query_item_to_list(featured_facet_items, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
-                                           _('Administrative Divisions'), existing_facets, search_extras)
-        self._add_facet_item_to_list(featured_facet_items, REQUESTDATA_DATASETS_FACET_NAME,
-                                     'Datasets on request (HDX Connect)', num_of_requestdata, search_extras)
-        self._add_facet_item_to_list(featured_facet_items, QUICKCHARTS_DATASETS_FACET_NAME,
-                                     'Datasets with Quick Charts', num_of_quickcharts, search_extras)
-        self._add_facet_item_to_list(featured_facet_items, SHOWCASE_DATASETS_FACET_NAME, 'Datasets with Showcase',
-                                     num_of_showcases, search_extras)
+        # self._add_facet_query_item_to_list(featured_facet_items, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
+        #                                    _('Administrative Divisions'), existing_facets, search_extras)
+        # self._add_facet_item_to_list(featured_facet_items, REQUESTDATA_DATASETS_FACET_NAME,
+        #                              'Datasets on request (HDX Connect)', num_of_requestdata, search_extras)
+        # self._add_facet_item_to_list(featured_facet_items, QUICKCHARTS_DATASETS_FACET_NAME,
+        #                              'Datasets with Quick Charts', num_of_quickcharts, search_extras)
+        # self._add_facet_item_to_list(featured_facet_items, SHOWCASE_DATASETS_FACET_NAME, 'Datasets with Showcase',
+        #                              num_of_showcases, search_extras)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
         #                                   num_of_hxl, search_extras)
-        self._add_facet_query_item_to_list(featured_facet_items, HXLATED_DATASETS_FACET_NAME,
-                                           _('Datasets with HXL tags'), existing_facets, search_extras)
+        # self._add_facet_query_item_to_list(featured_facet_items, HXLATED_DATASETS_FACET_NAME,
+        #                                    _('Datasets with HXL tags'), existing_facets, search_extras)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_sadd', 'Datasets with SADD tags',
         #                                   num_of_sadd, search_extras)
-        self._add_facet_query_item_to_list(featured_facet_items, SADD_DATASETS_FACET_NAME, _('Datasets with SADD tags'),
-                                           existing_facets, search_extras)
+        # self._add_facet_query_item_to_list(featured_facet_items, SADD_DATASETS_FACET_NAME, _('Datasets with SADD tags'),
+        #                                    existing_facets, search_extras)
 
         # archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
         #                          'but remains available primarily for historical purposes')
@@ -593,7 +599,7 @@ class SearchLogic(object):
             if item['selected']:
                 result['selected_titles'].append(item['display_name'])
 
-        result['selected_titles_str'] = " ".join([item.replace("-", " ").capitalize() for item in result['selected_titles']])
+        result['selected_titles_str'] = ' '.join([item.replace('-', ' ').capitalize() for item in result['selected_titles']])
 
         # result['num_of_indicators'] = num_of_indicators
         # result['num_of_cods'] = num_of_cods
@@ -614,6 +620,8 @@ class SearchLogic(object):
         result['num_of_total_items'] = total_count
         result['num_of_archived'] = num_of_archived
         result['num_of_unarchived'] = num_of_unarchived
+
+        result['num_of_hdx_hapi'] = num_of_hdx_hapi
 
         # result['archived_explanation'] = archived_explanation
 
@@ -682,8 +690,8 @@ class SearchLogic(object):
                                                  explanation=explanation)
         item_list.append(new_facet_item)
 
-    def _add_facet_query_item_to_list(self, item_list, item_name, item_display_name, existing_facets, search_extras):
-        '''
+    def _add_facet_query_item_to_list(self, item_list, item_name, item_display_name, existing_facets, search_extras, explanation=None):
+        """
         :param item_list: the list where the new facet item should be added
         :type item_list: list
         :param item_name: the facet key, the name that appears in existing_facets->queries list
@@ -696,13 +704,13 @@ class SearchLogic(object):
         :type search_extras: dict
         :returns: the item that was added to the list
         :rtype: dict
-        '''
+        """
 
         item = next(
             (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
         if item:
             new_facet_item = self._create_facet_item(item_name, item_display_name, item['count'],
-                                                     search_extras=search_extras)
+                                                     search_extras=search_extras, explanation=explanation)
             item_list.append(new_facet_item)
             return new_facet_item
         return {}
