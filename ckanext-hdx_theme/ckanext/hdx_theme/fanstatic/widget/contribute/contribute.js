@@ -37,6 +37,17 @@ function prepareContributePopup(datasetId, anchor) {
 function _generateContributeFrame(url) {
   let popup = $("#addDataPopup");
   popup.find(".details-content").html("<iframe id='addDataPopupFrame' src='" + url + "'></iframe>");
+
+
+  popup.find('#addDataPopupFrame').on('load', function () {
+    const currentUrl = this.contentWindow.location.href;
+    const pageUrl = new URL(currentUrl);
+    if (pageUrl.pathname.startsWith('/contribute/')) {
+      $(this).contents().find('.submitData').addClass('d-none');
+    } else {
+      history.pushState(null, '', currentUrl);
+    }
+  });
 }
 function _getContributeURL(datasetId, anchor) {
   let url;

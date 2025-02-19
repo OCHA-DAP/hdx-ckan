@@ -28,6 +28,8 @@
 
 {% set user_is_sysadmin = h.check_access('sysadmin') %}
 
+{% block contribute_widget %}{% endblock %}
+
 {% block breadcrumb_content %}
   <li class="breadcrumb-item active"><a href="#">{{ page_title }}</a></li>
 {% endblock %}

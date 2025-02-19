@@ -1,3 +1,4 @@
+{% set input_id = id if id else "checkbox-" ~ name %}
 <div class="checkbox-field form-check{% if spacing_class %} {{ spacing_class }}{% endif %}">
   <div>
     <input
@@ -5,7 +6,7 @@
             type="checkbox"
             name="{{ name }}"
             value="{{ value }}"
-            id="checkbox-{{ name }}"
+            id="{{ id }}"
             {% if checked %}checked{% endif %}
             {% if required %}required{% endif %}
             {% if data_attributes %}{% for key, value in data_attributes.items() %}data-{{ key }}="{{ value }}"
@@ -14,7 +15,7 @@
     {% if label %}
       <label
         class="checkbox-field__label form-check-label ms-2"
-        for="checkbox-{{ name }}">
+        for="{{ id }}">
         {{ label|safe }}
         {% if label_tooltip %}
           <span class="checkbox-field__tooltip" title="{{ label_tooltip }}" data-module="bs_tooltip" data-bs-toggle="tooltip">

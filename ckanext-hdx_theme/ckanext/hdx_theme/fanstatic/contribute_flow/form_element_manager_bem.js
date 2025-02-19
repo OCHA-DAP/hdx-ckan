@@ -67,6 +67,22 @@ ckan.module('hdx_form_element_manager_bem', function ($, _) {
         }
       );
 
+      if (elementName.indexOf('_other') > 0) {
+        this.sandbox.subscribe(this.options.broadcast_channel,
+          function (message) {
+            /* If we get the message from the correct select element */
+            //moduleLog('Processing broadcast message: ' + JSON.stringify(message));
+            if (elementName.indexOf(message.srcElement) === 0) {
+              if (message.newValue === 'Other' || message.newValue === 'hdx-other' || message.newValue === 'dataset_preview_show') {
+                moduleEl.removeClass('d-none');
+              } else {
+                moduleEl.addClass('d-none');
+              }
+            }
+          }
+        );
+      }
+
       if (broadcastChange) {
         var changeableEl = this.findChangeableElement(moduleEl);
         var isText = changeableEl.prop('type') === 'text';
