@@ -134,8 +134,7 @@ def detect_format(key, data, errors, context):
         if file_format:
             data[key] = file_format
             return file_format
-        err_message = "We couldn't determine your file type. If it is a compressed format (zip, etc), please  \
-                      indicate the primary format of the data files inside compressed file."
+        err_message = "Please specify the file format."
         errors[key].append(_(err_message))
         raise df.StopOnError()
 
