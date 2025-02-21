@@ -42,9 +42,6 @@
             {% if other_option %}data-has-other-option="true"{% endif %}
             {% endfor %}{% endif %}
     >
-      {% if data_attributes and data_attributes['placeholder'] %}
-        <option></option>
-      {% endif %}
       {% if data %}
         {% set entries = data.items() if data is mapping else data %}
         {% if data is mapping %}
