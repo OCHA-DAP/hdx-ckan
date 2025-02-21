@@ -66,6 +66,7 @@
             font-weight: 600;
             font-size: 15px;
             letter-spacing: .5px;
+            border: 0;
             &__remove {
               width: .75rem;
               height: .75rem;
@@ -118,6 +119,22 @@
       font-family: 'Inter', sans-serif;
       font-size: 1rem;
       .input-placeholder;
+    }
+  }
+
+  &_color {
+    &-orange {
+      .select2-container {
+        .select2-selection {
+          &.select2--large {
+            .select2-selection__rendered {
+              .select2-selection__choice {
+                background: @red-color;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

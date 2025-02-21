@@ -55,6 +55,7 @@
   font-weight: 600;
   font-size: 15px;
   letter-spacing: 0.5px;
+  border: 0;
 }
 .select2-field .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__choice__remove {
   width: 0.75rem;
@@ -107,4 +108,7 @@
   font-size: 1rem;
   font-weight: 500;
   line-height: 30px;
+}
+.select2-field_color-orange .select2-container .select2-selection.select2--large .select2-selection__rendered .select2-selection__choice {
+  background: #F2645A;
 }

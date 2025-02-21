@@ -8,8 +8,9 @@
     {% endif %}
 {% endmacro %}
 
-<div class="select2-field{% if spacing_class %} {{ spacing_class }}{% endif %}">
-  {% if label %}
+<div
+  class="select2-field{% if spacing_class %} {{ spacing_class }}{% endif %}{% if field_class %} {{ field_class }}{% endif %}">
+{% if label %}
     <label class="select2-field__label form-label" for="select-{{ name }}">
       {{ label }}
       {% if required or dynamic_required %}
