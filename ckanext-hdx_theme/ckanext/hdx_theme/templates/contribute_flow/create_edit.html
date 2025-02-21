@@ -176,7 +176,7 @@
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
                                                     paragraphs=['Tip: Use clear, specific titles like [Country] - [Topic/Theme], avoiding abbreviations, dates, or terms like “current” or “latest.” Include dates in the additional information or file description. Example: "Haiti - Operational Presence", “Palestine - Conflict Events”'],
-                                                    spacing_class="mb-3") }}
+                                                    spacing_class="mb-4") }}
                       </div>
 
                       {% set domain = h.url_for('dataset.read', id='', qualified=true) %}
@@ -329,14 +329,14 @@
                           id='ui_date_ongoing',
                           checked=data.ui_date_ongoing,
                           data_attributes={"module": 'hdx_datepicker', 'module-group': '2', 'module-type': "date_ongoing", 'module-topic': 'date-field-clicked', 'module-alt_field_id': 'date_ongoing', 'module-original_value': data.ui_date_ongoing},
-                          spacing_class="mt-2") }}
+                          spacing_class="my-2") }}
                         {{ h.snippet('bem.blocks/info_box.html',
                           compact=True,
                           rounded=True,
                           icon=False,
                           paragraph_classes=['paragraph__text_font_size-small'],
                           paragraphs=['Tip: This time period should cover all files in the dataset, spanning from the earliest start date to the latest end date.'],
-                          spacing_class="my-3") }}
+                          spacing_class="mb-4") }}
                       </div>
 
                       {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
@@ -374,9 +374,8 @@
                                                   data=location_list,
                                                   selected=data.locations,
                                                   errors=errors.locations,
-                                                  data_attributes={"multiple": "true", "placeholder": 'Select'},
-                                                  select_classes=['select2-field__select_size_large'],
-                                                  spacing_class="mb-4") }}
+                                                  data_attributes={"multiple": "true", "placeholder": 'Select', 'allow-clear': 'false'},
+                                                  select_classes=['select2-field__select_size_large']) }}
                       </div>
 
                       <div data-module="hdx_form_element_manager_bem" data-module-element_name="subnational"
@@ -388,14 +387,14 @@
                                                     id='field_subnational',
                                                     checked=data.subnational and data.subnational != '0',
                                                     data_attributes={"validation-error": errors.subnational},
-                                                    spacing_class="mb-3") }}
+                                                    spacing_class="my-2") }}
                         {{ h.snippet('bem.blocks/info_box.html',
                                                     compact=True,
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
                                                     paragraphs=['Tip: Sub-national means the data covers areas such as regions, districts, or cities.'],
-                                                    spacing_class="mb-3") }}
+                                                    spacing_class="mb-4") }}
                       </div>
 
                       {% set licenses = h.hdx_license_list() %}
@@ -421,14 +420,14 @@
                                                   other_option_container_id='license-other-define',
                                                   other_option_container_data_attributes={'module': 'hdx_form_element_manager_bem', 'module-element_name': 'license_other'},
                                                   data_attributes={"placeholder": 'Select', 'allow-clear': 'false'},
-                                                  spacing_class="mb-4") }}
+                                                  spacing_class="mb-2") }}
                         {{ h.snippet('bem.blocks/info_box.html',
                                                     compact=True,
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
                                                     paragraphs=['Tip: In general "Creative Commons XXXXX” is our recommended license for data on HDX as it allows others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.url_for('hdx_faqs.read', category='licenses'))],
-                                                    spacing_class="mb-3") }}
+                                                    spacing_class="mb-4") }}
                       </div>
 
                       <div data-module="hdx_form_element_manager_bem" data-module-element_name="field_names"
@@ -511,14 +510,14 @@
                                                     value=data.caveats,
                                                     errors=errors.caveats,
                                                     label_guideline_title='Note any limitations or special considerations that relate to this data.',
-                                                    spacing_class="mb-4") }}
+                                                    spacing_class="mb-2") }}
                         {{ h.snippet('bem.blocks/info_box.html',
                                                     compact=True,
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
                                                     paragraphs=['Tip: Highlight issues with data quality or any limitations with the data. For example, issues such as estimated data for inaccessible locations, missing data, or derived data. Use <a href="{0}" target="_blank" title="Markdown formatting">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')],
-                                                    spacing_class="mb-3") }}
+                                                    spacing_class="mb-4") }}
                       </div>
 
                       {% set allowed_tags = h.hdx_get_allowed_tags_list() %}
@@ -534,7 +533,7 @@
                                                   data=allowed_tags,
                                                   selected=selected_tags,
                                                   errors=errors.tag_string,
-                                                  data_attributes={"multiple": "true", "placeholder": 'Select'},
+                                                  data_attributes={"multiple": "true", "placeholder": 'Select', 'allow-clear': 'false'},
                                                   select_classes=['select2-field__select_size_large', 'tags-select'],
                                                   field_class='select2-field_color-orange',
                                                   spacing_class="mb-2") }}
@@ -558,7 +557,7 @@
                                                   icon=False,
                                                   paragraph_classes=['paragraph__text_font_size-small'],
                                                   paragraphs=['Tip: Tags are auto-generated from an approved list based on content provided in this form. Suggestions will appear as you type. Click here to <a href="{0}" target="_blank" title="HDX tags">see all tags</a> or here to <a href="#" id="suggest-new-tag">suggest a new tag</a>.'.format('https://data.humdata.org/rdr/spreadsheets/approved-tags')],
-                                                  spacing_class="mb-3") }}
+                                                  spacing_class="mb-4") }}
 
                       {% if user_is_sysadmin %}
                         <div data-module="hdx_form_element_manager_bem" data-module-element_name="quality">

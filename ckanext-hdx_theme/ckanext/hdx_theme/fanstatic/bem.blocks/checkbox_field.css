@@ -1,5 +1,5 @@
 .checkbox-field__label.form-check-label {
-  vertical-align: middle;
+  vertical-align: sub;
   color: #000;
   font-size: 16px;
 }
