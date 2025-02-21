@@ -38,5 +38,5 @@ class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         field_locations_options = [i.findAll('option') for i in
                                    bs_edit_page.findAll('select', attrs={'id': 'field_locations'})]
 
-        assert field_locations_options and field_locations_options[0][1].attrs.get(
-            'value') == 'world', 'world should be the second entry in locations list, after placeholder'
+        assert field_locations_options and field_locations_options[0][0].attrs.get(
+            'value') == 'world', 'world should be the first entry in locations list'
