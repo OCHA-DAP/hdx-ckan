@@ -231,6 +231,7 @@ def _prepare_data_for_saving(context, package_type):
 def _customize_error_messages(errors):
     custom_messages = {
         'name': {
+            'Missing value': 'Please provide a URL for your dataset.',
             'That URL is already in use.': 'Please provide a different URL for your dataset as this already exists.'
         },
         'notes': {
@@ -250,6 +251,12 @@ def _customize_error_messages(errors):
         },
         'methodology': {
             'Missing value': 'Please choose a methodology for your dataset.'
+        },
+        'owner_org': {
+            'Missing value': 'Please select the organisation responsible for this dataset.'
+        },
+        'dataset_date': {
+            'Missing value': 'Please specify the time period covered by your data.'
         },
     }
 
