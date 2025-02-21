@@ -552,9 +552,10 @@
 		    var sandbox = this.sandbox;
             var selectOptions = $('#field_dataset_preview_value');
             selectOptions.on("change", function(e){
+                var selectedValue = $(this).val();
                 sandbox.publish('hdx-resource-information', {
                     'type': 'dataset_preview_resource_change',
-                    'newValue': e.val
+                    'newValue': selectedValue
                     }
                 );
             });
