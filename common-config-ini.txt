@@ -86,6 +86,9 @@ search.facets = dataseries_name groups res_format organization vocab_Topics lice
 ckan.site_id = default
 #!solr_url = http://127.0.0.1:8983/solr
 
+# CKAN JOBS
+# ckan.redis.url = redis://gisredis:6379/0
+
 #ckan.simple_search = 1
 
 
@@ -205,7 +208,8 @@ ckanext.datapusher_plus.pii_quick_screen = false
 ckanext.datapusher_plus.pii_found_abort = false
 ckanext.datapusher_plus.pii_show_candidates = false
 ckanext.datapusher_plus.pii_regex_resource_id_or_alias =
-ckanext.datapusher_plus.qsv_bin =  /usr/local/bin/qsvdp
+# ckanext.datapusher_plus.qsv_bin =  /usr/local/bin/qsvdp
+ckanext.datapusher_plus.qsv_bin =  /usr/local/bin/qsv
 ckanext.datapusher_plus.file_bin = /usr/bin/file
 ckanext.datapusher_plus.prefer_dmy = false
 ckanext.datapusher_plus.preview_rows = 100
@@ -220,6 +224,7 @@ ckanext.datapusher_plus.summary_stats_options =
 ckanext.datapusher_plus.auto_alias = true
 ckanext.datapusher_plus.auto_alias_unique = false
 ckanext.datapusher_plus.api_token =
+ckan.datapusher.callback_url_base = http://localhost:5000
 
 ## AWS S3 settings
 ckanext.s3filestore.aws_access_key_id = aws_access_key_id
