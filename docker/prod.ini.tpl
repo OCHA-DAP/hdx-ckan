@@ -30,6 +30,9 @@ ckan.site_id = default
 solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/${HDX_SOLR_CORE}
 #ckan.simple_search = 1
 
+# CKAN JOBS
+ckan.redis.url = redis://${HDX_CKAN_JOBS_REDIS_ADDR}:${HDX_CKAN_JOBS_REDIS_PORT}/${HDX_CKAN_JOBS_REDIS_DB}
+
 ckan.recaptcha.publickey  = 6Lcl60EUAAAAAE46a3XcPM2nPUKI2K4XZbcsorkR
 ckan.recaptcha.privatekey = ${HDX_CKAN_RECAPTCHA_KEY}
 
