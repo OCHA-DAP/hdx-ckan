@@ -604,7 +604,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             allow_skip_for_sysadmin = config.get('hdx.validation.allow_skip_for_sysadmin') or ''
             fields_to_skip = allow_skip_for_sysadmin.split(',')
             if len(fields_to_skip) > 0 and fields_to_skip[0] and \
-                    self._user_allowed_to_skip_validation(c.user) and context.get(hdx_update.SKIP_VALIDATION):
+                    self._user_allowed_to_skip_validation(context.get('user') or c.user) and context.get(hdx_update.SKIP_VALIDATION):
                 self._update_with_skip_validation(schema, fields_to_skip)
 
         if action == 'package_show':

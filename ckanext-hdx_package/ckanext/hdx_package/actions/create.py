@@ -92,6 +92,9 @@ def resource_create(context, data_dict):
          'package': package
          })
 
+    for plugin in plugins.PluginImplementations(plugins.IResourceController):
+        plugin.after_resource_create(context, resource)
+
     return resource
 
 

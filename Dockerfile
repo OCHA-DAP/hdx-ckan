@@ -40,7 +40,8 @@ RUN apt-get -qq -y update && \
         procps \
         psmisc \
         vim \
-        wget && \
+        wget \
+        uchardet && \
     # install datapusher+ deps
     wget -O - https://dathere.github.io/qsv-deb-releases/qsv-deb.gpg | gpg --dearmor -o /usr/share/keyrings/qsv-deb.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/qsv-deb.gpg] https://dathere.github.io/qsv-deb-releases ./" | tee /etc/apt/sources.list.d/qsv.list && \
