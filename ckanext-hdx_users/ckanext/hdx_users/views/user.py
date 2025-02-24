@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Optional, Mapping
 
-from flask import Blueprint
+from flask import Blueprint, url_for
 
 import ckan.authz as new_authz
 import ckan.model as model
@@ -218,13 +218,7 @@ def _extra_template_variables(context, data_dict):
 
 
 def logged_out_page():
-    template_data = {
-        'data': {
-            'success': True,
-            'message': _('User logged out with success')
-        }
-    }
-    return render('home/index.html', extra_vars=template_data)
+    return redirect(url_for('home.index'))
 
 user.add_url_rule(u'/reset', view_func=HDXRequestResetView.as_view(str(u'request_reset')))
 user.add_url_rule(u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'perform_reset')))
