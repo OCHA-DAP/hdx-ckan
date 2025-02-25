@@ -807,7 +807,7 @@
                       <div
                         class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
                         {% if data.id and not data.get('update_status') == 'unknown' %}
-                          <div id="confirm-resource-freshness" class="alert alert-danger">
+                          <div id="confirm-resource-freshness" class="alert alert-danger my-2">
                             <input type="hidden" name='review_date' value='{{ data.review_date }}'>
                             {{ h.snippet('bem.blocks/checkbox_field.html',
                                                           label='I confirm that to the best of my knowledge these resources are up-to-date.',
