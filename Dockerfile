@@ -28,6 +28,7 @@ RUN apt-get -qq -y update && \
     apt-get -q -y install \
         build-essential \
         curl \
+        file \
         gettext-base \
         git-core \
         gpg \
@@ -57,6 +58,12 @@ RUN apt-get -qq -y update && \
     pip-sync requirements.txt requirements-hdxckantool.txt  && \
     pip install \
       elastic-apm[flask] && \
+    # install datapusher_plus requirements (TODO: remove them from here)
+    pip install \
+        semver==2.13.0 \
+        datasize==1.0.0 && \
+    # install datapusher_plus from git
+    pip install -e "git+https://github.com/dathere/datapusher-plus.git@1.0.4#egg=datapusher-plus" && \
     chmod +x run_pytest_with_coverage.sh && \
     chmod +x setup_py_helper.sh && \
     ./setup_py_helper.sh && \
