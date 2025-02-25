@@ -57,6 +57,8 @@ this.ckan.module('hdx-select2-field', function ($) {
           processResults: function (data) {
             var responseParams = $selectElement.data('ajax-response-params');
             var results = [];
+            var uniqueResults = [];
+            var seenIds = new Set();
 
             if (data.ResultSet && Array.isArray(data.ResultSet.Result)) {
               results = $.map(data.ResultSet.Result, function (entry) {
@@ -76,8 +78,15 @@ this.ckan.module('hdx-select2-field', function ($) {
               });
             }
 
+            for (var result of results) {
+              if (!seenIds.has(result.id)) {
+                uniqueResults.push(result);
+                seenIds.add(result.id);
+              }
+            }
+
             return {
-              results: results
+              results: uniqueResults
             };
           },
           cache: true,
