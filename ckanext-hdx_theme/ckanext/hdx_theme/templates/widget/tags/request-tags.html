@@ -51,9 +51,9 @@ Example:
             <span class="error-block"></span>
           </div>
           <div class="mTop15">
-            <div>
-              {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '', 'class': 'required'} %}
-              {{ form.input('suggested_tags', id='suggested_tags', label='', placeholder=_('Tag(s) you’d like to request'), classes=['required suggested-tags'], attrs=tag_attrs) }}
+            <div class="control">
+              <input id="suggested_tags" name="suggested_tags" class="full-width required" type="text" value="">
+              <label for="suggested_tags">Tag(s) you’d like to request</label>
             </div>
             <span class="error-block"></span>
           </div>
