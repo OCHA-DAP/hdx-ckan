@@ -603,198 +603,200 @@
                   <div class="col-8" id="resource-widget">
 
                     <script type="text/template" id="resource-item-tmpl">
-                      <div class="row">
-                        <div class="col-9">
-                                                          <span class="drag-handle">
-                                                            <i class="fa fa-arrows-v grey"></i>
-                                                            <i class="fa fa fa-align-justify grey mx-2"></i>
+                      <div class="p-3">
+                        <div class="row">
+                          <div class="col-9">
+                                                            <span class="drag-handle">
+                                                              <i class="fa fa-arrows-v grey"></i>
+                                                              <i class="fa fa fa-align-justify grey mx-2"></i>
+                                                            </span>
+                            <span class="resource-position">
+                                                              <% if (position === 'new') {
+                                                                  print('New File');
+                                                              }else{
+                                                                  print('File '); print(template_position + 1);
+                                                              } %>
+                                                            </span>
+                          </div>
+                          <div class="col-3 text-end">
+                                                          <span class="resource-sort">
+                                                            Sort:
+                                                            <i class="move-up fa-solid fa-square-caret-up ms-1 grey"></i>
+                                                            <i class="move-down fa-solid fa-square-caret-down ms-1 grey"></i>
                                                           </span>
-                          <span class="resource-position">
-                                                            <% if (position === 'new') {
-                                                                print('New File');
-                                                            }else{
-                                                                print('File '); print(template_position + 1);
-                                                            } %>
-                                                          </span>
-                        </div>
-                        <div class="col-3 text-end">
-                                                        <span class="resource-sort">
-                                                          Sort:
-                                                          <i class="move-up fa-solid fa-square-caret-up ms-1 grey"></i>
-                                                          <i class="move-down fa-solid fa-square-caret-down ms-1 grey"></i>
-                                                        </span>
-                        </div>
-                        <div  class="col-12">
-                          <p class="mt-2 mb-0">Choose how to upload your file</p>
-                        </div>
-                        <div class="col-12">
-                          <ul class="list-group list-group-horizontal resource-upload-type mt-2">
-                            <li class="list-group-item border-0 p-0">
-                              {{ h.snippet('bem.blocks/radio_field.html',
-                                                                    name='resource<%= position %>-upload_type'|safe,
-                                                                    id='resource<%= position %>-upload_type_file'|safe,
-                                                                    value='file',
-                                                                    checked=True,
-                                                                    input_classes=['resource-source'],
-                                                                    label='Upload file') }}
-                            </li>
-                            <li class="list-group-item border-0 p-0 mx-3"> |</li>
-                            <li class="list-group-item border-0 p-0">
-                              {{ h.snippet('bem.blocks/radio_field.html',
-                                                                    name='resource<%= position %>-upload_type'|safe,
-                                                                    id='resource<%= position %>-upload_type_url'|safe,
-                                                                    value='url',
-                                                                    input_classes=['resource-source'],
-                                                                    label='Import from URL') }}
-                            </li>
-                            <li class="list-group-item border-0 p-0 mx-3"> |</li>
-                            <li class="list-group-item border-0 p-0 dropbox">
-                              <a data-module="bs_tooltip" data-module-placement="top"
-                                 data-bs-original-title="{{ _('By adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
-                                 data-bs-toggle="tooltip" href="#">
-                                Dropbox <img class="ms-2 cloud-img" src="/images/icons/dropbox.png" alt="Dropbox">
-                              </a>
-                            </li>
-                            <li class="list-group-item border-0 p-0 mx-3"> |</li>
-                            <li class="list-group-item border-0 p-0 googledrive">
-                              <a data-module="bs_tooltip" data-module-placement="top"
-                                 data-bs-original-title="{{ _('In order to add files via Google Drive, sharing settings has to be on') }}"
-                                 data-bs-toggle="tooltip" href="#">
-                                Google Drive <img class="ms-2 cloud-img" src="/images/icons/drive.png"
-                                                  alt="Google Drive">
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="source-file-upload">
-                          <div class="drag-drop-area">
-                            <div class="drop-here-mask" style="display: none;"></div>
-                            <div class="drag-drop-content">
-                              <span class="drag-text1">Drop file <span
-                                class="overwrite-text">to overwrite</span> or</span>
-                              <span class="drag-text2">Incoming file</span>
-                              <label class="browse-button">
-                                                                        <span>
-                                                                            Browse
-                                                                        </span>
-                                <input type="file" name="upload" style="" value=""
-                                       class="resource_file_field form-control"/>
-                              </label>
+                          </div>
+                          <div  class="col-12">
+                            <p class="mt-2 mb-0">Choose how to upload your file</p>
+                          </div>
+                          <div class="col-12">
+                            <ul class="list-group list-group-horizontal resource-upload-type mt-2">
+                              <li class="list-group-item border-0 p-0">
+                                {{ h.snippet('bem.blocks/radio_field.html',
+                                                                      name='resource<%= position %>-upload_type'|safe,
+                                                                      id='resource<%= position %>-upload_type_file'|safe,
+                                                                      value='file',
+                                                                      checked=True,
+                                                                      input_classes=['resource-source'],
+                                                                      label='Upload file') }}
+                              </li>
+                              <li class="list-group-item border-0 p-0 mx-3"> |</li>
+                              <li class="list-group-item border-0 p-0">
+                                {{ h.snippet('bem.blocks/radio_field.html',
+                                                                      name='resource<%= position %>-upload_type'|safe,
+                                                                      id='resource<%= position %>-upload_type_url'|safe,
+                                                                      value='url',
+                                                                      input_classes=['resource-source'],
+                                                                      label='Import from URL') }}
+                              </li>
+                              <li class="list-group-item border-0 p-0 mx-3"> |</li>
+                              <li class="list-group-item border-0 p-0 dropbox">
+                                <a data-module="bs_tooltip" data-module-placement="top"
+                                   data-bs-original-title="{{ _('By adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
+                                   data-bs-toggle="tooltip" href="#">
+                                  Dropbox <img class="ms-2 cloud-img" src="/images/icons/dropbox.png" alt="Dropbox">
+                                </a>
+                              </li>
+                              <li class="list-group-item border-0 p-0 mx-3"> |</li>
+                              <li class="list-group-item border-0 p-0 googledrive">
+                                <a data-module="bs_tooltip" data-module-placement="top"
+                                   data-bs-original-title="{{ _('In order to add files via Google Drive, sharing settings has to be on') }}"
+                                   data-bs-toggle="tooltip" href="#">
+                                  Google Drive <img class="ms-2 cloud-img" src="/images/icons/drive.png"
+                                                    alt="Google Drive">
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="source-file-upload">
+                            <div class="drag-drop-area">
+                              <div class="drop-here-mask" style="display: none;"></div>
+                              <div class="drag-drop-content">
+                                <span class="drag-text1">Drop file <span
+                                  class="overwrite-text">to overwrite</span> or</span>
+                                <span class="drag-text2">Incoming file</span>
+                                <label class="browse-button">
+                                                                          <span>
+                                                                              Browse
+                                                                          </span>
+                                  <input type="file" name="upload" style="" value=""
+                                         class="resource_file_field form-control"/>
+                                </label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-12 source-file-fields">
-                          <div class="row url-field">
-                            <div class="col-12">
-                              {{ h.snippet('bem.blocks/input_field.html',
-                                                                  type="text",
-                                                                  name="url",
-                                                                  label='Remote file location',
-                                                                  placeholder='eg. https://example.com/population-jan-2011.json *',
-                                                                  value='<%= url %>"'|safe,
-                                                                  input_classes=['resource_url_field'],
-                                                                  spacing_class="my-2") }}
+                          <div class="col-12 source-file-fields">
+                            <div class="row url-field">
+                              <div class="col-12">
+                                {{ h.snippet('bem.blocks/input_field.html',
+                                                                    type="text",
+                                                                    name="url",
+                                                                    label='Remote file location',
+                                                                    placeholder='eg. https://example.com/population-jan-2011.json *',
+                                                                    value='<%= url %>"'|safe,
+                                                                    input_classes=['resource_url_field'],
+                                                                    spacing_class="my-2") }}
+                              </div>
                             </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-8">
-                              <div data-format="<%= lower_case_format %>" class="format-label"
-                                   property="dc:format"></div>
-                              {{ h.snippet('bem.blocks/input_field.html',
-                                                                  type="text",
-                                                                  name="name",
-                                                                  label='File name',
-                                                                  required=True,
-                                                                  placeholder='File name',
-                                                                  value='<%= name %>'|safe,
-                                                                  input_classes=['resource_name_field'],
-                                                                  spacing_class="mb-2") }}
-                            </div>
-                            <div class="col-4">
-                              {% set template_position = '<%= template_position %>' %}
-                              {% set resource_field_id = 'resource_format_' ~ template_position %}
-                              {{ h.snippet('bem.blocks/select2_field.html',
-                                name="format",
-                                label='File format',
-                                id=resource_field_id|safe,
-                                selected='<%= format %>'|safe,
-                                required=True,
-                                data={'<%= format %>'|safe: '<%= format %>'|safe},
-                                select_classes=['select2-field__select_size_large', 'resource_format_field'],
-                                data_attributes={'allow-clear': 'false', "placeholder": 'File type', 'ajax-url': '/api/2/util/resource/format_autocomplete', 'ajax-extra-params': '[{"key": "incomplete"}]', 'ajax-response-params': '[{"key": "id", "value": "Format"}, {"key": "text", "value": "Format"}]'},
-                                spacing_class="mb-2") }}
-                            </div>
-                            <div class="col-12">
-                              {{ h.snippet('bem.blocks/textarea_field.html',
-                                                                    name="description",
-                                                                    label='Notes about this file',
-                                                                    placeholder='Add a note about this resource',
-                                                                    rows=3,
-                                                                    value='<%= description %>'|safe,
+                            <div class="row">
+                              <div class="col-8">
+                                <div data-format="<%= lower_case_format %>" class="format-label"
+                                     property="dc:format"></div>
+                                {{ h.snippet('bem.blocks/input_field.html',
+                                                                    type="text",
+                                                                    name="name",
+                                                                    label='File name',
+                                                                    required=True,
+                                                                    placeholder='File name',
+                                                                    value='<%= name %>'|safe,
+                                                                    input_classes=['resource_name_field'],
                                                                     spacing_class="mb-2") }}
-                              <div class="mb-2">
-                                <div class="controls">
+                              </div>
+                              <div class="col-4">
+                                {% set template_position = '<%= template_position %>' %}
+                                {% set resource_field_id = 'resource_format_' ~ template_position %}
+                                {{ h.snippet('bem.blocks/select2_field.html',
+                                  name="format",
+                                  label='File format',
+                                  id=resource_field_id|safe,
+                                  selected='<%= format %>'|safe,
+                                  required=True,
+                                  data={'<%= format %>'|safe: '<%= format %>'|safe},
+                                  select_classes=['select2-field__select_size_large', 'resource_format_field'],
+                                  data_attributes={'allow-clear': 'false', "placeholder": 'File type', 'ajax-url': '/api/2/util/resource/format_autocomplete', 'ajax-extra-params': '[{"key": "incomplete"}]', 'ajax-response-params': '[{"key": "id", "value": "Format"}, {"key": "text", "value": "Format"}]'},
+                                  spacing_class="mb-2") }}
+                              </div>
+                              <div class="col-12">
+                                {{ h.snippet('bem.blocks/textarea_field.html',
+                                                                      name="description",
+                                                                      label='Notes about this file',
+                                                                      placeholder='Add a note about this resource',
+                                                                      rows=3,
+                                                                      value='<%= description %>'|safe,
+                                                                      spacing_class="mb-2") }}
+                                <div class="mb-2">
+                                  <div class="controls">
+                                    <div class="checkbox-field form-check">
+                                      <div>
+                                        <input
+                                          class="checkbox-field__input form-check-input"
+                                          type="checkbox"
+                                          name="pii"
+                                          id="resource<%= position %>-pii"
+                                        <% if (pii === true || pii === 'true') { print('checked'); } %>
+                                        >
+                                        <label class="checkbox-field__label form-check-label ms-2"
+                                               for="resource<%= position %>-pii">
+                                          contains Personally Identifiable Information (PII)
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div class="item-description alert alert-danger mt-2" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
+                                      <p>HDX does not allow data that includes personally identifiable information (PII) to
+                                        be shared publicly through the site. Please delete the resource(s) containing PII.
+                                        If you wish to share this resource, take steps to ensure that it is properly
+                                        anonymised (with all the direct identifiers removed) and upload it again.</p>
+                                      <p>You can learn more in the <a
+                                        href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank"
+                                        title="HDX Terms of Service">HDX Terms of Service</a>.</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="controls mb-2">
                                   <div class="checkbox-field form-check">
                                     <div>
                                       <input
                                         class="checkbox-field__input form-check-input"
                                         type="checkbox"
-                                        name="pii"
-                                        id="resource<%= position %>-pii"
-                                      <% if (pii === true || pii === 'true') { print('checked'); } %>
+                                        name="microdata"
+                                        id="resource<%= position %>-microdata"
+                                      <% if (microdata) { print('checked'); } %>
                                       >
                                       <label class="checkbox-field__label form-check-label ms-2"
-                                             for="resource<%= position %>-pii">
-                                        contains Personally Identifiable Information (PII)
+                                             for="resource<%= position %>-microdata">
+                                        contains Microdata
                                       </label>
                                     </div>
                                   </div>
-                                  <div class="item-description alert alert-danger mt-2" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
-                                    <p>HDX does not allow data that includes personally identifiable information (PII) to
-                                      be shared publicly through the site. Please delete the resource(s) containing PII.
-                                      If you wish to share this resource, take steps to ensure that it is properly
-                                      anonymised (with all the direct identifiers removed) and upload it again.</p>
-                                    <p>You can learn more in the <a
-                                      href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank"
-                                      title="HDX Terms of Service">HDX Terms of Service</a>.</p>
+                                  <div class="item-description alert alert-danger mt-2" <% if (!microdata) { print('style="display:none;"'); } %>>
+                                    <p>HDX allows microdata to be shared publicly through the site. However, to protect
+                                      individuals and vulnerable groups, our team runs a disclosure risk assessment on any
+                                      resource containing microdata. We do this because it may still be possible to
+                                      re-identify individuals or expose confidential information even after direct
+                                      identifiers have been removed from microdata.</p>
+                                    <p>We will notify you within 24 hours if our team detects any disclosure risk. During
+                                      this time, the resource will appear on your dataset page but be marked as under
+                                      review.</p>
+                                    <p>Learn more about the <a href="/about/hdx-qa-process" title="HDX QA process"
+                                                               target="_blank">HDX QA process</a>.</p>
                                   </div>
-                                </div>
-                              </div>
-                              <div class="controls mb-2">
-                                <div class="checkbox-field form-check">
-                                  <div>
-                                    <input
-                                      class="checkbox-field__input form-check-input"
-                                      type="checkbox"
-                                      name="microdata"
-                                      id="resource<%= position %>-microdata"
-                                    <% if (microdata) { print('checked'); } %>
-                                    >
-                                    <label class="checkbox-field__label form-check-label ms-2"
-                                           for="resource<%= position %>-microdata">
-                                      contains Microdata
-                                    </label>
-                                  </div>
-                                </div>
-                                <div class="item-description alert alert-danger mt-2" <% if (!microdata) { print('style="display:none;"'); } %>>
-                                  <p>HDX allows microdata to be shared publicly through the site. However, to protect
-                                    individuals and vulnerable groups, our team runs a disclosure risk assessment on any
-                                    resource containing microdata. We do this because it may still be possible to
-                                    re-identify individuals or expose confidential information even after direct
-                                    identifiers have been removed from microdata.</p>
-                                  <p>We will notify you within 24 hours if our team detects any disclosure risk. During
-                                    this time, the resource will appear on your dataset page but be marked as under
-                                    review.</p>
-                                  <p>Learn more about the <a href="/about/hdx-qa-process" title="HDX QA process"
-                                                             target="_blank">HDX QA process</a>.</p>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="text-end">
-                          <button type="button" class="delete_resource">Delete this file <i class="fa fa-trash ms-1"></i>
-                          </button>
+                          <div class="text-end">
+                            <button type="button" class="delete_resource">Delete this file <i class="fa fa-trash ms-1"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </script>

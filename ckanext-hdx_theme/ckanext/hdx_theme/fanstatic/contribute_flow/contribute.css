@@ -41,7 +41,6 @@
 .new-contribute-main .resources > div {
   border: 1px solid #888;
   border-radius: 8px;
-  padding: 1rem;
   margin-top: 2rem;
 }
 .new-contribute-main .resources > div .resource-upload-type .radio-field .radio-field__label {

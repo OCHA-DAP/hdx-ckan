@@ -299,6 +299,7 @@ $(function(){
                 onEnd: function(e){
                     console.log("Drag Area Enable");
                     this.$el.find(".drag-drop-component").trigger("drag-area-enable");
+                    this.render();
                 }.bind(this)
             });
         },
