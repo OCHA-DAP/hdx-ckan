@@ -9,7 +9,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     HDX_CKAN_WORKERS=4 \
     INI_FILE=/etc/ckan/prod.ini \
     HDX_CACHE_DIR=/srv/cache \
-    HDX_LOG_LEVEL=INFO
+    HDX_LOG_LEVEL=INFO \
+    HDX_DATAPUSHER_INTERNAL_CKAN_ADDR=localhost \
+    HDX_DATAPUSHER_INTERNAL_CKAN_PORT=5000
 
 WORKDIR /srv/ckan
 
