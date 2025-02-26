@@ -522,6 +522,10 @@ $(function(){
                     $input.addClass('is-invalid');
                     $input.closest('.source-file').addClass('error');
                 }
+                else {
+                    $input.removeClass('is-invalid');
+                    $input.closest('.source-file').removeClass('error');
+                }
             }.bind(this));
 
             //this._setUpForSourceType('source-url');
