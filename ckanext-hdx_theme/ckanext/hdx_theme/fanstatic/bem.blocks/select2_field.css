@@ -76,6 +76,17 @@
   font-weight: 500;
   line-height: 30px;
 }
+.select2-field .select2-container .select2-selection--multiple {
+  padding-right: 36px;
+}
+.select2-field .select2-container .select2-selection--multiple::after {
+  position: absolute;
+  right: 12px;
+  top: calc(50% - 6px);
+  font: var(--fa-font-solid);
+  font-size: 0.75rem;
+  content: '\f078';
+}
 .select2-field .select2-container .select2-dropdown .select2-search input {
   background: none;
 }

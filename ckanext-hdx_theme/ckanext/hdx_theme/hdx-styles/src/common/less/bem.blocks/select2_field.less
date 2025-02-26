@@ -90,6 +90,19 @@
           }
         }
       }
+
+      &--multiple {
+        padding-right: 36px;
+        &::after {
+          position: absolute;
+          right: 12px; // (36px - 12px) / 2
+          top: calc(50% - 6px); // 12px / 2
+          // .fa-icon;
+          font: var(--fa-font-solid);
+          font-size: .75rem;
+          content: '\f078';
+        }
+      }
     }
 
     .select2-dropdown {
