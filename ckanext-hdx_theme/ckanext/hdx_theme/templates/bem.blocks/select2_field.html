@@ -94,7 +94,7 @@
       {% set container_classes = [] if selected and selected|lower in other_option_values else ["d-none"] %}
       {% if other_option_type == 'textarea' %}
         {{ h.snippet('bem.blocks/textarea_field.html',
-                label=label,
+                label=other_option_label if other_option_label else label,
                 name=other_name,
                 id=other_option_id if other_option_id else "textarea-" ~ name,
                 rows=3,
@@ -108,7 +108,7 @@
       {% else %}
         {{ h.snippet('bem.blocks/input_field.html',
                 type="text",
-                label=label,
+                label=other_option_label if other_option_label else label,
                 name=other_name,
                 id=other_option_id if other_option_id else "input-" ~ name,
                 value=other_option_value,

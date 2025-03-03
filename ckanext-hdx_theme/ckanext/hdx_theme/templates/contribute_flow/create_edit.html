@@ -429,7 +429,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: In general "Creative Commons XXXXX” is our recommended license for data on HDX as it allows others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.url_for('hdx_faqs.read', category='licenses'))],
+                                                    paragraphs=['Tip: In general CC BY-IGO or CC-BY are our recommended licenses for data on HDX as they allow others to use data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.url_for('hdx_faqs.read', category='licenses'))],
                                                     spacing_class="mb-4") }}
                       </div>
 
@@ -495,6 +495,7 @@
                                                   other_option_type='textarea',
                                                   other_option_name='methodology_other',
                                                   other_option_id='field_method_other',
+                                                  other_option_label='Define methodology',
                                                   other_option_value=data.methodology_other,
                                                   other_option_error=errors.methodology_other,
                                                   other_option_container_id='methodology-other-define',
@@ -593,7 +594,7 @@
                     {{ h.snippet('bem.blocks/paragraph.html',
                                               text='Use a consistent file naming convention so that users can reliably find your file. We recommend making sure the name is a clear indication of the file’s content as well as the dates of the data it contains.') }}
                     {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='We accept all machine readable data formats but only offer preview features for: CSV, TXT, XLS, JSON, zipped shape files, KML, and GeoJSON. <a href="{0}" title="formats" target="_blank">Learn more about formats</a>.'.format('#')) }}
+                                              text='We accept all machine readable data formats but only offer preview features for: CSV, TXT, XLS, JSON, zipped shape files, KML, and GeoJSON. <a href="{0}" title="formats" target="_blank">Learn more about formats</a>.'.format('/faq#auto-faq-Sharing_and_Using_Data-What_are_the_recommended_data_formats_-a')) }}
                     {{ h.snippet('bem.blocks/paragraph.html',
                                               text='Personally Identifiable Information (PII) includes data that could identify individuals, such as names, email addresses, phone numbers, or ID numbers.') }}
                     {{ h.snippet('bem.blocks/paragraph.html',
@@ -847,12 +848,10 @@
                               spacing_class="mb-3") }}
                             {{ h.snippet('bem.blocks/paragraph.html',
                               text='Enable data previews to help others quickly understand the insights in your data. The following previews are generated automatically from your data if it is formatted appropriately:') }}
-                            <ul>
+                            <ul class="mb-0">
                               <li>Maps (if your data includes geo-data) or</li>
                               <li>Quick Charts that show graphs and key figures (for data with HXL tags).</li>
                             </ul>
-                            {{ h.snippet('bem.blocks/paragraph.html',
-                              text='<a href="{0}" title="Data Preview options" target="_blank">Find out more</a> about Data Preview options.'.format('#')) }}
                           </div>
                           <div class="col-8">
                               <div data-module="hdx_form_element_manager_bem"
