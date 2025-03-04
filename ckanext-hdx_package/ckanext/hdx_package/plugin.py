@@ -68,7 +68,7 @@ def _generate_license_list():
         license.License(
             hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
         license.License(hdx_licenses.LicenseHDXCreativeCommonsAttributionInternational()),
-        license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
+        license.License(hdx_licenses.LicenseHDXCreativeCommonsAttributionShareAlike()),
         license.License(hdx_licenses.LicenseHdxOpenDatabaseLicense()),
         license.License(
             hdx_licenses.LicenseHdxOpenDataCommonsAttributionLicense()),

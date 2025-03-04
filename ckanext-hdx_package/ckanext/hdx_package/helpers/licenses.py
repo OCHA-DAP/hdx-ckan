@@ -17,7 +17,7 @@ class LicenseCreativeCommonsIntergovernmentalOrgs(DefaultLicense):
 
     @property
     def title(self):
-        return _("Creative Commons Attribution for Intergovernmental Organisations")
+        return _("Creative Commons Attribution for Intergovernmental Organisations (CC BY-IGO)")
 
 #class LicenseCreativeCommonsNoDerives(DefaultLicense):
 #     domain_content = True
@@ -38,7 +38,7 @@ class LicenseOtherPublicDomainNoRestrictions(DefaultLicense):
 
     @property
     def title(self):
-        return _("Public Domain / No Restrictions")
+        return _("Public Domain / No restrictions (CC0)")
 
 class LicenseHdxMultiple(DefaultLicense):
 #     domain_content = True
@@ -98,4 +98,15 @@ class LicenseHDXCreativeCommonsAttributionInternational(DefaultLicense):
 
     @property
     def title(self):
-        return _("Creative Commons Attribution International")
+        return _("Creative Commons Attribution International (CC BY)")
+
+
+class LicenseHDXCreativeCommonsAttributionShareAlike(DefaultLicense):
+    # domain_content = True
+    id = "cc-by-sa"
+    od_conformance = 'approved'
+    url = "http://www.opendefinition.org/licenses/cc-by-sa"
+
+    @property
+    def title(self):
+        return _("Creative Commons Attribution Share-Alike (CC BY-SA)")
