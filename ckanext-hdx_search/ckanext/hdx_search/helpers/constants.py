@@ -3,7 +3,7 @@ DEFAULT_NUMBER_OF_ITEMS_PER_PAGE = 25
 
 NEW_DATASETS_FACET_NAME = 'new_datasets'
 UPDATED_DATASETS_FACET_NAME = 'updated_datasets'
-DELINQUENT_DATASETS_FACET_NAME = 'delinquent_datasets'
+# DELINQUENT_DATASETS_FACET_NAME = 'delinquent_datasets'
 BULK_DATASETS_FACET_NAME = 'bulk_datasets'
 PRIVATE_DATASETS_FACET_NAME = 'private_datasets'
 

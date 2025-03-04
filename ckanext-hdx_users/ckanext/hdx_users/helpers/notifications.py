@@ -41,10 +41,10 @@ class FreshnessNotificationsChecker(object):
         return self.notification_info.set_domain_data(DOMAIN_FRESHNESS, data)
 
     def set_dashboard_viewed(self, viewed_date):
-        '''
+        """
         :param viewed_date:
         :type viewed_date: datetime.datetime
-        '''
+        """
         self.set_freshness_data({FreshnessNotificationsChecker.DASHBOARD_VIEWED: viewed_date.isoformat()})
 
     def has_unseen_expired_datasets(self, date_field='due_date'):
@@ -125,11 +125,11 @@ class NotificationsInfo(object):
         get_action(action)({'ignore_auth': True}, data_dict)
 
     def get_all_data(self):
-        '''
+        """
         :return:
         :rtype: dict
         :raises: NotificationUserExtraNotFound
-        '''
+        """
         all_notification_data = {}
 
         user_extra = ue_model.UserExtra.get(self.user_id, NotificationsInfo.USER_EXTRA_FIELD)
@@ -140,21 +140,21 @@ class NotificationsInfo(object):
         elif user_extra.value:
             try:
                 all_notification_data = json.loads(user_extra.value)
-            except ValueError as e:
+            except ValueError:
                 log.info('No parsable data found in notification user_extra for user {} '
                          'although the user extra entry exists'.format(self.user_id))
 
         return all_notification_data
 
     def get_domain_data(self, domain, default_data=None):
-        '''
+        """
         :param domain:
         :type domain: str
         :param default_data: optional
         :type default_data: dict
         :return:
         :rtype: dict
-        '''
+        """
         if domain not in DOMAINS:
             raise WrongDomainNameException('Wrong domain name specified. "{}" is not a valid value'.format(domain))
 

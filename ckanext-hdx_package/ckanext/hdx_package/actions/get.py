@@ -587,10 +587,10 @@ def _process_url(context, resource_dict):
 
 @logic.side_effect_free
 def package_show(context, data_dict):
-    '''
+    """
     Wraps the default package_show and adds additional information to the resources:
     resource size (for uploaded files) and resource revision timestamp
-    '''
+    """
     # data_dict['include_tracking'] = True
     package_dict = logic_get.package_show(context, data_dict)
 
@@ -665,7 +665,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
             package_dict.pop('due_date', None)
             package_dict.pop('overdue_date', None)
-            package_dict.pop('delinquent_date', None)
+            # package_dict.pop('delinquent_date', None)
             freshness_calculator.populate_with_date_ranges()
 
         if not just_for_reindexing:
