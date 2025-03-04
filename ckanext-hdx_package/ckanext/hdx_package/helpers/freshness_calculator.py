@@ -15,61 +15,61 @@ UPDATE_FREQ_INFO = OrderedDict(
     (
         ('1', {
             'overdue': 1,
-            'delinquent': 2,
+            # 'delinquent': 2,
             'title': 'Every day',
             'special': False
         }),
         ('7', {
             'overdue': 7,
-            'delinquent': 14,
+            # 'delinquent': 14,
             'title': 'Every week',
             'special': False
         }),
         ('14', {
             'overdue': 7,
-            'delinquent': 14,
+            # 'delinquent': 14,
             'title': 'Every two weeks',
             'special': False
         }),
         ('30', {
             'overdue': 14,
-            'delinquent': 30,
+            # 'delinquent': 30,
             'title': 'Every month',
             'special': False
         }),
         ('90', {
             'overdue': 30,
-            'delinquent': 60,
+            # 'delinquent': 60,
             'title': 'Every three months',
             'special': False
         }),
         ('180', {
             'overdue': 30,
-            'delinquent': 60,
+            # 'delinquent': 60,
             'title': 'Every six months',
             'special': False
         }),
         ('365', {
             'overdue': 60,
-            'delinquent': 90,
+            # 'delinquent': 90,
             'title': 'Every year',
             'special': False
         }),
         (UPDATE_FREQ_LIVE, {
             'overdue': None,
-            'delinquent': None,
+            # 'delinquent': None,
             'title': 'Live',
             'special': True
         }),
         ('-2', {
             'overdue': None,
-            'delinquent': None,
+            # 'delinquent': None,
             'title': 'As needed',
             'special': True
         }),
         ('-1', {
             'overdue': None,
-            'delinquent': None,
+            # 'delinquent': None,
             'title': 'Never',
             'special': True
         }),
@@ -78,7 +78,7 @@ UPDATE_FREQ_INFO = OrderedDict(
 
 UPDATE_FREQ_OVERDUE_INFO = {key: val['overdue'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
 
-UPDATE_FREQ_DELINQUENT_INFO = {key: val['delinquent'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
+# UPDATE_FREQ_DELINQUENT_INFO = {key: val['delinquent'] for key, val in UPDATE_FREQ_INFO.items() if not val['special']}
 
 FRESHNESS_PROPERTY = 'is_fresh'
 OVERDUE_PROPERTY = 'is_overdue'
@@ -146,7 +146,7 @@ class FreshnessCalculator(object):
             else:
                 dataset_end_date = dateutil.parser.parse(dataset_end_date)
         else:
-            dataset_end_date = get_utc_end_of_today()
+            dataset_end_date = None #get_utc_end_of_today()
         return dataset_end_date
 
     def __init__(self, dataset_dict):
@@ -162,7 +162,7 @@ class FreshnessCalculator(object):
                 #     modified += '.000'
                 # self.modified = datetime.datetime.strptime(modified, "%Y-%m-%dT%H:%M:%S.%f")
                 self.extra_overdue_days = UPDATE_FREQ_OVERDUE_INFO.get(update_freq)
-                self.extra_delinquent_days = UPDATE_FREQ_DELINQUENT_INFO[update_freq]
+                # self.extra_delinquent_days = UPDATE_FREQ_DELINQUENT_INFO[update_freq]
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
         except Exception as e:
@@ -212,11 +212,12 @@ class FreshnessCalculator(object):
             self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_UNKNOWN
 
     def populate_with_date_ranges(self):
-        start_of_due_range, start_of_overdue_range, start_of_delinquent_range = self.compute_range_beginnings()
+        # start_of_due_range, start_of_overdue_range, start_of_delinquent_range = self.compute_range_beginnings()
+        start_of_due_range, start_of_overdue_range = self.compute_range_beginnings()
         if start_of_due_range and start_of_overdue_range:
             self.dataset_dict['due_date'] = start_of_due_range.isoformat()
             self.dataset_dict['overdue_date'] = start_of_overdue_range.isoformat()
-            self.dataset_dict['delinquent_date'] = start_of_delinquent_range.isoformat()
+            # self.dataset_dict['delinquent_date'] = start_of_delinquent_range.isoformat()
             # self.dataset_dict['due_daterange'] = \
             #     '[{}Z TO {}Z]'.format(start_of_due_range.isoformat(), start_of_overdue_range.isoformat())
             #
@@ -228,11 +229,11 @@ class FreshnessCalculator(object):
                 .replace(microsecond=0)
             start_of_overdue_range = (start_of_due_range + datetime.timedelta(days=self.extra_overdue_days))\
                 .replace(microsecond=0)
-            start_of_delinquent_range = (start_of_due_range + datetime.timedelta(days=self.extra_delinquent_days))\
-                .replace(microsecond=0)
-            return start_of_due_range, start_of_overdue_range, start_of_delinquent_range
+            # start_of_delinquent_range = (start_of_due_range + datetime.timedelta(days=self.extra_delinquent_days))\
+            #     .replace(microsecond=0)
+            return start_of_due_range, start_of_overdue_range #, start_of_delinquent_range
         else:
-            return None, None, None
+            return None, None
 
     def read_due_overdue_dates(self):
         try:
