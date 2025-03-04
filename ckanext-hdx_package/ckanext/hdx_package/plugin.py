@@ -404,7 +404,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             # 'due_daterange': [tk.get_validator('ignore_missing')],
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
-            'overdue_date': [tk.get_validator('ignore_missing')],
+            # 'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_converter('hdx_assume_missing_is_true'),

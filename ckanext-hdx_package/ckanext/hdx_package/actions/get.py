@@ -661,10 +661,10 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
 
         __inject_qa_completed_in_old_datasets(context, package_dict)
 
-        freshness_calculator = freshness.get_calculator_instance(package_dict, None)
+        freshness_calculator = freshness.get_calculator_instance(package_dict)
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
             package_dict.pop('due_date', None)
-            package_dict.pop('overdue_date', None)
+            # package_dict.pop('overdue_date', None)
             # package_dict.pop('delinquent_date', None)
             freshness_calculator.populate_with_date_ranges()
 
