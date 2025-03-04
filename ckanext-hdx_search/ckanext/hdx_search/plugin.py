@@ -215,7 +215,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         ext_compute_freshness = search_params.get('extras', {}).get('ext_compute_freshness')
         if ext_compute_freshness in {'true', 'for-data-completeness'}:
             for dataset in search_results.get('results', []):
-                get_calculator_instance(dataset, ext_compute_freshness).populate_with_freshness()
+                get_calculator_instance(dataset).populate_with_freshness()
         return search_results
 
     # IPackageController
