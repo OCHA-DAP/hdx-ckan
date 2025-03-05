@@ -31,24 +31,27 @@ function prepareContributePopup(datasetId, anchor) {
   popup.attr('dataset-id', String(datasetId));
   let url = _getContributeURL(datasetId, anchor);
   _generateContributeFrame(url);
-  popup.find(".humanitarianicons-Exit-Cancel").click(_contributePopupReset);
 }
 
 function _generateContributeFrame(url) {
   let popup = $("#addDataPopup");
   popup.find(".details-content").html("<iframe id='addDataPopupFrame' src='" + url + "'></iframe>");
 
+  var iframe = popup.find('#addDataPopupFrame');
+  iframe.on('load', function () {
+    const iframeDocument = iframe[0].contentDocument || iframe[0].contentWindow.document;
 
-  popup.find('#addDataPopupFrame').on('load', function () {
-    const currentUrl = this.contentWindow.location.href;
-    const pageUrl = new URL(currentUrl);
-    if (pageUrl.pathname.startsWith('/contribute/')) {
-      $(this).contents().find('.submitData').addClass('d-none');
-    } else {
-      history.pushState(null, '', currentUrl);
-    }
+    $(iframeDocument).on('click', '.close-iframe, .new-header a, .breadcrumb a, .hdx-footer a', function (event) {
+      const url = $(this).attr('href');
+      const target = $(this).attr('target');
+      if (url !== '#' && target !== '_blank') {
+        event.preventDefault();
+        window.location.href = url;
+      }
+    });
   });
 }
+
 function _getContributeURL(datasetId, anchor) {
   let url;
   let popup = $("#addDataPopup");
@@ -64,18 +67,6 @@ function _getContributeURL(datasetId, anchor) {
     url += anchor;
   }
   return url;
-}
-
-function _contributePopupReset() {
-  console.log("resetting popup");
-  const $addDataPopupFrame = $("#addDataPopupFrame");
-  let src = $addDataPopupFrame.prop('src');
-  $addDataPopupFrame.closest(".details-content").html('');
-
-  let $body = $('body');
-  $body.removeClass('contribute-mode');
-
-  _generateContributeFrame(src);
 }
 
 $(document).ready(function() {
