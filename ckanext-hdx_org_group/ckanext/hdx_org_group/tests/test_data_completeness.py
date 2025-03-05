@@ -67,7 +67,7 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=U
     dataset = {
         'package_creator': 'test function',
         'private': False,
-        'dataset_date': '[1960-01-01 TO 2012-12-31]',
+        'dataset_date': '[1960-01-01 TO {}]'.format(review_date.strftime('%Y-%m-%d')),
         'caveats': 'These are the caveats',
         'license_other': 'TEST OTHER LICENSE',
         'methodology': 'This is a test methodology',
@@ -78,7 +78,7 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=U
         'title': 'Test Dataset ' + dataset_name,
         'owner_org': org_id,
         'groups': [{'name': group_name}],
-        'review_date': review_date.isoformat(),
+        # 'review_date': review_date.isoformat(),
         'data_update_frequency': '30',
         'maintainer': user
     }
@@ -105,12 +105,16 @@ def setup_data():
         org_url='https://hdx.hdxtest.org/'
     )
 
+    context = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+
     review_date1 = datetime.datetime.utcnow() - datetime.timedelta(days=60)
     _generate_dataset_dict('dataset1-category1', ORG, group.get('name'), review_date1)
+    pkg_dict_1 = _get_action('package_show')(context, {'id': 'dataset1-category1'})
 
     review_date2 = datetime.datetime.utcnow()
     _generate_dataset_dict('dataset2-category1', ORG, group.get('name'), review_date2)
-
+    pkg_dict_2 = _get_action('package_show')(context, {'id': 'dataset2-category1'})
+    assert True
 
 @pytest.fixture(scope='module')
 def keep_db_tables_on_clean():

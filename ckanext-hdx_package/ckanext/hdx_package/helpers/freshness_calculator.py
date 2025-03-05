@@ -128,7 +128,7 @@ class FreshnessCalculator(object):
     #     return last_change_date
 
     @staticmethod
-    def end_of_dataset_date(dataset_dict):
+    def end_of_dataset_date(dataset_date):
         """
         Extracts the end date from dataset_date and returns a timezone-aware datetime object.
 
@@ -138,7 +138,7 @@ class FreshnessCalculator(object):
         :rtype: datetime.datetime
         """
 
-        dataset_date = dataset_dict.get('dataset_date', '')
+        # dataset_date = dataset_dict.get('dataset_date', '')
         if dataset_date:
             dataset_end_date = dataset_date.split(' TO ')[-1].strip('[]')
             if dataset_end_date == '*':
@@ -153,17 +153,10 @@ class FreshnessCalculator(object):
         self.surely_not_fresh = True
         self.dataset_dict = dataset_dict
         update_freq = get_extra_from_dataset('data_update_frequency', dataset_dict)
-        # modified = dataset_dict.get('metadata_modified')
         try:
-            # self.modified = FreshnessCalculator.dataset_last_change_date(dataset_dict)
-            self.modified = FreshnessCalculator.end_of_dataset_date(dataset_dict)
+            dataset_date = get_extra_from_dataset('dataset_date', dataset_dict)
+            self.modified = FreshnessCalculator.end_of_dataset_date(dataset_date)
             if self.modified and update_freq:
-            # if self.modified and update_freq and UPDATE_FREQ_OVERDUE_INFO.get(update_freq):
-                # if '.' not in modified:
-                #     modified += '.000'
-                # self.modified = datetime.datetime.strptime(modified, "%Y-%m-%dT%H:%M:%S.%f")
-                # self.extra_overdue_days = UPDATE_FREQ_OVERDUE_INFO.get(update_freq)
-                # self.extra_delinquent_days = UPDATE_FREQ_DELINQUENT_INFO[update_freq]
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
         except Exception as e:

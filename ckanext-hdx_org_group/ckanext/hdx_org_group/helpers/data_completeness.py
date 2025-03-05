@@ -21,7 +21,11 @@ class DataCompleteness(object):
         'rows': 500,
         'fl': ['id', 'name', 'title', 'organization',
                'extras_data_update_frequency',
-               'last_modified', 'review_date'],
+               'last_modified',
+               'review_date',
+               'dataset_date',
+               'extras_dataset_date',
+               ],
         'ext_compute_freshness': 'for-data-completeness'
     }
 
