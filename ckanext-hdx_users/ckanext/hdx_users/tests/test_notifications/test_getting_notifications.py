@@ -15,7 +15,6 @@ from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, R
 get_action = tk.get_action
 
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestGettingNotifications(hdx_test_base.HdxBaseTest):
     ORG_NAME = 'notification_test_org'
     ORG_TITLE = 'Notification Test Org'

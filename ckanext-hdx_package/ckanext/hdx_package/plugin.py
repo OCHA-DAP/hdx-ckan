@@ -430,7 +430,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
             'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
             'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
-            # 'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date,
             'hdx_render_resource_updated_date': hdx_helpers.hdx_render_resource_updated_date,
             'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
             'hdx_end_of_dataset_date': hdx_helpers.end_of_dataset_date,

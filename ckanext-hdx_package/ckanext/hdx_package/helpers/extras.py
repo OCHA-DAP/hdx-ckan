@@ -3,7 +3,6 @@ import ckan.plugins.toolkit as tk
 
 ALLOWED_EXTRAS = {
     'dataset_date': None,
-    # 'review_date': None,
     'data_update_frequency': None,
     'is_requestdata_type': [tk.get_validator('boolean_validator')],
 }
