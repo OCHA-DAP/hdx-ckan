@@ -1,8 +1,8 @@
-'''
+"""
 Created on Sep 02, 2015
 
 @author: alexandru-m-g
-'''
+"""
 
 import json
 import logging
@@ -21,7 +21,6 @@ import ckan.lib.plugins as lib_plugins
 import ckan.lib.search as search
 import ckan.logic as logic
 import ckan.logic.action.get as logic_get
-import ckan.logic.schema
 import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
@@ -40,7 +39,6 @@ from ckanext.hdx_package.helpers.resource_grouping import ResourceGrouping
 from ckanext.hdx_package.helpers.tag_recommender import TagRecommender, TagRecommenderTest
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
-from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 from ckanext.s3filestore.helpers import generate_temporary_link
 
 config = tk.config
@@ -316,7 +314,7 @@ def package_search(context, data_dict):
             for package in query.results:
                 if isinstance(package, str):
                     package = {result_fl[0]: package}
-                extras = cast("dict[str, Any]", package.pop('extras', {}))
+                extras = cast('dict[str, Any]', package.pop('extras', {}))
                 package.update(extras)
                 results.append(package)
         else:
@@ -514,10 +512,10 @@ def _remove_unwanted_dataset_properties(dataset_list):
 
 @logic.side_effect_free
 def resource_show(context, data_dict):
-    '''
+    """
     Wraps the default resource_show and adds additional information like:
     resource size (for uploaded files) and resource revision timestamp
-    '''
+    """
     resource_dict = logic_get.resource_show(context, data_dict)
 
     # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
@@ -562,7 +560,7 @@ def _process_url(context, resource_dict):
     # for users with package_update access the urls will be displayed
     try:
         can_edit = _check_access('package_update', context, {'id': resource_dict.get('package_id')})
-    except Exception as ex:
+    except Exception:
         can_edit = False
     can_have_url = True
     # for users with no package_update access and if resource is in quarantine, we don't display urls
@@ -570,7 +568,7 @@ def _process_url(context, resource_dict):
         can_have_url = False
     if can_have_url:
         resource_dict['download_url'] = resource_dict.get('url')
-        if resource_dict.get('url_type') == "upload" and resource_dict.get('resource_type') == "file.upload" and \
+        if resource_dict.get('url_type') == 'upload' and resource_dict.get('resource_type') == 'file.upload' and \
             config.get('ckan.site_url') in resource_dict.get('url'):
             resource_dict['alt_url'] = resource_dict.get('url').split('/download/')[0] + '/download/'
     else:
@@ -629,7 +627,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
             for resource_dict in package_dict.get('resources', []):
                 resource_views = get_action('resource_view_list')(context, {'id': resource_dict['id']}) or []
                 for view in resource_views:
-                    if view.get("view_type") == 'hdx_hxl_preview':
+                    if view.get('view_type') == 'hdx_hxl_preview':
                         package_dict['has_quickcharts'] = True
                         break
 
@@ -664,8 +662,6 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
         freshness_calculator = freshness.get_calculator_instance(package_dict)
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
             package_dict.pop('due_date', None)
-            # package_dict.pop('overdue_date', None)
-            # package_dict.pop('delinquent_date', None)
             freshness_calculator.populate_with_date_ranges()
 
         if not just_for_reindexing:
@@ -729,7 +725,7 @@ def fs_check_info_show(context, data_dict):
 #     return use_cache is False and current_value
 
 def _should_manually_load_property_value(context, data_dict, property_name):
-    '''
+    """
     IF use_cache is false OR if the property doesn't exist in the dict we need to load it manually
     :param context:
     :type context: dict
@@ -739,7 +735,7 @@ def _should_manually_load_property_value(context, data_dict, property_name):
     :type property_name: str
     :return: True if we need to load manually, otherwise False
     :rtype: bool
-    '''
+    """
     use_cache = context.get('use_cache', True)
     current_value = data_dict.get(property_name)
 
@@ -748,7 +744,7 @@ def _should_manually_load_property_value(context, data_dict, property_name):
 
 @logic.side_effect_free
 def package_show_edit(context, data_dict):
-    '''A package_show action for editing a package and resources.'''
+    """A package_show action for editing a package and resources."""
 
     # Requires use_cache and for_edit in the context so resource urls for file
     # uploads don't include the full qualified url path.
@@ -772,12 +768,12 @@ def _get_resource_filesize(resource_dict):
 
 
 def _get_resource_revison_timestamp(resource_dict):
-    '''
+    """
     :param resource_dict: the dictized resource information
     :type resource_dict: dict
     :return: timestamp of the revision of the resource
     :rtype: str
-    '''
+    """
     revision_id = resource_dict.get('revision_id')
     if revision_id:
         # context = {'model': model, 'session': model.Session}
@@ -815,7 +811,7 @@ def _get_resource_id_apihighways(resource_id):
 @logic.side_effect_free
 def package_validate(context, data_dict):
     model = context['model']
-    id = data_dict.get("id")
+    id = data_dict.get('id')
 
     pkg = model.Package.get(id) if id else None
 
@@ -825,8 +821,8 @@ def package_validate(context, data_dict):
     else:
         action = 'package_update'
         type = pkg.type
-        context["package"] = pkg
-        data_dict["id"] = pkg.id
+        context['package'] = pkg
+        data_dict['id'] = pkg.id
 
     logic.check_access(action, context, data_dict)
     package_plugin = lib_plugins.lookup_package_plugin(type)
@@ -853,7 +849,7 @@ def hdx_member_list(context, data_dict):
     result = {}
     try:
         org_members = get_action('member_list')(context, {'id': data_dict.get('org_id'), 'object_type': 'user'})
-    except Exception as e:
+    except Exception:
         return None
 
     admins = []
@@ -889,27 +885,27 @@ def hdx_send_mail_contributor(context, data_dict):
     _check_access('hdx_send_mail_contributor', context, data_dict)
 
     pkg_title = data_dict.get('pkg_title')
-    subject = u'[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
+    subject = u'[HDX] {fullname} {topic} for "[Dataset] {pkg_title}"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=pkg_title)
     requester_body_html = __create_body_for_contributor(data_dict, False)
 
     admins_body_html = __create_body_for_contributor(data_dict, True)
 
     recipients_list = []
-    org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
+    org_members = get_action('hdx_member_list')(context, {'org_id': data_dict.get('pkg_owner_org')})
     if org_members:
         admins = org_members.get('admins')
         for admin in admins:
             context['keep_email'] = True
-            user = get_action("user_show")(context, {'id': admin})
+            user = get_action('user_show')(context, {'id': admin})
             if user.get('email'):
                 recipients_list.append({'email': user.get('email'), 'display_name': user.get('display_name')})
 
-    pkg_dict = get_action("package_show")(context, {'id': data_dict.get('pkg_id')})
-    maintainer = pkg_dict.get("maintainer")
+    pkg_dict = get_action('package_show')(context, {'id': data_dict.get('pkg_id')})
+    maintainer = pkg_dict.get('maintainer')
     if maintainer:
         context['keep_email'] = True
-        m_user = get_action("user_show")(context, {'id': maintainer})
+        m_user = get_action('user_show')(context, {'id': maintainer})
         if not any(r['email'] == m_user.get('email') for r in recipients_list):
             recipients_list.append({'email': m_user.get('email'), 'display_name': m_user.get('display_name')})
 
@@ -945,24 +941,24 @@ def hdx_send_mail_contributor(context, data_dict):
 
 
 def __create_body_for_contributor(data_dict, for_admins):
-    '''
+    """
     :param data_dict:
     :type data_dict: dict
     :param for_admins: True for the email that should go to org admins. Some additional info is added in this case.
     :type for_admins: boolean
     :return: the html body for the email
     :rtype: str
-    '''
+    """
 
     fullname = data_dict.get('fullname') if for_admins else 'You'
 
-    html = u"""\
+    html = u'''\
             <p>{fullname} sent the following message: </p>
             <br />
             <p><em>{msg}</em></p>
             <br />
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a></p>
-        """.format(fullname=fullname, msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'),
+        '''.format(fullname=fullname, msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'),
                    pkg_title=data_dict.get('pkg_title'))
 
     if for_admins:
@@ -979,7 +975,7 @@ def __create_body_for_contributor(data_dict, for_admins):
 
 def hdx_send_mail_members(context, data_dict):
     recipients_list = []
-    org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org_id')})
+    org_members = get_action('hdx_member_list')(context, {'org_id': data_dict.get('pkg_owner_org_id')})
     if org_members:
         users_list = org_members.get(data_dict.get('topic_key'))
         for _user in users_list:

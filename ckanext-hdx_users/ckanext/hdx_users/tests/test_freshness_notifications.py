@@ -7,7 +7,6 @@ import ckan.model as model
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 from ckanext.hdx_users.helpers.notifications import FreshnessNotificationsChecker
-# from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_OVERDUE_INFO
 
 
 class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
@@ -42,7 +41,6 @@ class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsT
             'groups': [{'name': 'roger'}],
             'owner_org': 'hdx-test-org',
             'maintainer': tester_user.id,
-            # 'review_date': review_date.isoformat(),
             'data_update_frequency': data_update_frequency
 
         }

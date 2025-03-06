@@ -1,13 +1,13 @@
 import ckan.plugins.toolkit as tk
-
 import ckanext.hdx_search.controller_logic.search_logic as sl
-
-from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
-    BULK_DATASETS_FACET_NAME, PRIVATE_DATASETS_FACET_NAME, STATUS_PRIORITIES
+from ckanext.hdx_search.helpers.constants import (
+    BULK_DATASETS_FACET_NAME,
+    NEW_DATASETS_FACET_NAME,
+    PRIVATE_DATASETS_FACET_NAME,
+    STATUS_PRIORITIES,
+    UPDATED_DATASETS_FACET_NAME,
+)
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
-
-
-from ckanext.hdx_theme.helpers.json_transformer import get_obj_from_json_in_dict
 
 h = tk.h
 config = tk.config
@@ -37,15 +37,12 @@ class QASearchLogic(sl.SearchLogic):
         super(QASearchLogic, self)._add_additional_faceting_queries(search_data_dict)
         new_datasets_query = generate_datetime_period_query('metadata_created', last_x_days=7)
         updated_datasets_query = generate_datetime_period_query('metadata_modified', last_x_days=7)
-        # delinquent_datasets_query = generate_datetime_period_query('delinquent_date')
         updated_by_script_query = 'extras_updated_by_script:[* TO *]'
         private_datasets_query = 'capacity:private'
 
         facet_queries = search_data_dict.get('facet.query') or []
         facet_queries.append('{{!key={} ex=batch}} {}'.format(NEW_DATASETS_FACET_NAME, new_datasets_query))
         facet_queries.append('{{!key={} ex=batch}} {}'.format(UPDATED_DATASETS_FACET_NAME, updated_datasets_query))
-        # facet_queries.append('{{!key={} ex=batch}} {}'.format(DELINQUENT_DATASETS_FACET_NAME,
-        #                                                       delinquent_datasets_query))
         facet_queries.append('{{!key={} ex=batch}} {}'.format(BULK_DATASETS_FACET_NAME, updated_by_script_query))
         facet_queries.append('{{!key={} ex=batch}} {}'.format(PRIVATE_DATASETS_FACET_NAME, private_datasets_query))
         search_data_dict['facet.query'] = facet_queries
@@ -92,8 +89,6 @@ class QASearchLogic(sl.SearchLogic):
                                                search_extras)
             self._add_facet_query_item_to_list(item_list, UPDATED_DATASETS_FACET_NAME, _('Updated datasets'),
                                                existing_facets, search_extras)
-            # self._add_facet_query_item_to_list(item_list, DELINQUENT_DATASETS_FACET_NAME, _('Delinquent datasets'),
-            #                                    existing_facets, search_extras)
             self.__process_bulk_dataset_facet(existing_facets, item_list, search_extras)
 
             self.__process_private_dataset_facet(existing_facets, item_list, search_extras)
@@ -183,11 +178,11 @@ class QASearchLogic(sl.SearchLogic):
                                     force_selected=non_private_facet_item_selected, value='0'))
 
     def __process_methodology(self, title_translations):
-        '''
+        """
         :param title_translations:
         :type title_translations: collections.OrderedDict
         :return:
-        '''
+        """
         cloned_dict = title_translations.copy()
         title_translations.clear()
         title_translations['{!ex=methodology,batch}methodology'] = _('Methodology')

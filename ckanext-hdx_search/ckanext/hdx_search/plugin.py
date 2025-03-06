@@ -223,7 +223,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
         before_indexing_clean_resource_formats(pkg_dict)
 
-        pkg_dict['title_string'] = unicodedata.normalize("NFKD", pkg_dict['title']).replace(r'\xc3', 'I')
+        pkg_dict['title_string'] = unicodedata.normalize('NFKD', pkg_dict['title']).replace(r'\xc3', 'I')
         pkg_dict.pop('resource_grouping', None)
 
         self.__process_dates_in_resource_extra(pkg_dict)
@@ -244,12 +244,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     #         pkg_dict[key] = new_value
 
     def __process_dates_in_resource_extra(self, pkg_dict):
-        '''
+        """
         This is very similar to what happens in :func:`ckan.lib.search.index.index_package()`
         for '_date' fields
         :param pkg_dict:
         :type pkg_dict: dict
-        '''
+        """
         new_dict = {}
         for key, values in pkg_dict.items():
             key = six.text_type(key.encode('ascii', 'ignore'))

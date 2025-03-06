@@ -562,8 +562,8 @@ def end_of_dataset_date(dataset_date):
     """
     Extracts the end date from dataset_date and returns a timezone-aware datetime object.
 
-    :param dataset_dict: Dictionary containing dataset metadata.
-    :type dataset_dict: dict
+    :param dataset_date: dataset_date metadata.
+    :type dataset_date: str
     :return: End date as a datetime object.
     :rtype: datetime.datetime
     """

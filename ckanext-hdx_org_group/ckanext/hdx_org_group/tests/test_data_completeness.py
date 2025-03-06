@@ -78,7 +78,6 @@ def _generate_dataset_dict(dataset_name, org_id, group_name, end_dataset_date, u
         'title': 'Test Dataset ' + dataset_name,
         'owner_org': org_id,
         'groups': [{'name': group_name}],
-        # 'review_date': review_date.isoformat(),
         'data_update_frequency': '30',
         'maintainer': user
     }
@@ -109,11 +108,9 @@ def setup_data():
 
     end_dataset_date1 = datetime.datetime.utcnow() - datetime.timedelta(days=60)
     _generate_dataset_dict('dataset1-category1', ORG, group.get('name'), end_dataset_date1)
-    pkg_dict_1 = _get_action('package_show')(context, {'id': 'dataset1-category1'})
 
     end_dataset_date2 = datetime.datetime.utcnow()
     _generate_dataset_dict('dataset2-category1', ORG, group.get('name'), end_dataset_date2)
-    pkg_dict_2 = _get_action('package_show')(context, {'id': 'dataset2-category1'})
     assert True
 
 @pytest.fixture(scope='module')
