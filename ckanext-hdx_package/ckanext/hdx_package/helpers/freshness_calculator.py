@@ -91,6 +91,7 @@ UPDATE_STATUS_FRESH = 'fresh'
 UPDATE_STATUS_UNKNOWN = 'unknown'
 UPDATE_STATUS_NEEDS_UPDATE = 'needs_update'
 
+DELTA_END_DATASET_DATE_INFINITE_DAYS = 365*100
 
 def get_calculator_instance(dataset_dict, type='for-data-completeness'):
     # if type == 'for-data-completeness':
@@ -127,13 +128,14 @@ class FreshnessCalculator(object):
 
 
     def __init__(self, dataset_dict):
+
         self.surely_not_fresh = True
         self.dataset_dict = dataset_dict
         update_freq = get_extra_from_dataset('data_update_frequency', dataset_dict)
         try:
             dataset_date = get_extra_from_dataset('dataset_date', dataset_dict)
-            self.modified = h.hdx_end_of_dataset_date(dataset_date)
-            if self.modified and update_freq:
+            self.end_dataset_date, self.is_end_dataset_date_star = h.hdx_end_of_dataset_date(dataset_date)
+            if self.end_dataset_date and update_freq:
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
         except Exception as e:
@@ -196,7 +198,12 @@ class FreshnessCalculator(object):
 
     def compute_range_beginnings(self):
         if not self.surely_not_fresh:
-            start_of_due_range = (self.modified + datetime.timedelta(days=self.update_freq_in_days))\
+            if self.is_end_dataset_date_star or not self.update_freq_in_days or self.update_freq_in_days == -1:
+                start_of_due_range = (
+                    self.end_dataset_date + datetime.timedelta(days=DELTA_END_DATASET_DATE_INFINITE_DAYS)
+                ).replace(microsecond=0)
+            else:
+                start_of_due_range = (self.end_dataset_date + datetime.timedelta(days=self.update_freq_in_days))\
                 .replace(microsecond=0)
             # start_of_overdue_range = (start_of_due_range + datetime.timedelta(days=self.extra_overdue_days))\
             #     .replace(microsecond=0)
