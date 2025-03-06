@@ -99,6 +99,7 @@ this.ckan.module('hdx-select2-field', function ($) {
       if ($selectElement.data('has-other-option') === true) {
         this.setupOtherOptionEvents($selectElement);
       }
+      this.fixAutofocus($selectElement);
     },
 
     setupOtherOptionEvents: function ($selectElement) {
@@ -147,6 +148,15 @@ this.ckan.module('hdx-select2-field', function ($) {
             $other_input.val('');
             $other_input_container.addClass('d-none');
           }
+        });
+    },
+
+    // https://github.com/select2/select2/issues/5993
+    fixAutofocus: function ($selectElement) {
+      $selectElement
+        .on('select2:open', function (e) {
+          console.log($(this).parent().parent().find('.select2-search__field'));
+          $(this).parent().parent().find('.select2-search__field').get(0).focus();
         });
     },
 
