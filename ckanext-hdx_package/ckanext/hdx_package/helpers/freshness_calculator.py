@@ -4,11 +4,12 @@ from collections import OrderedDict
 
 import dateutil.parser
 from six import text_type
-
+import ckan.plugins.toolkit as tk
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
+# from ckanext.hdx_package.helpers.helpers import end_of_dataset_date
 
 log = logging.getLogger(__name__)
-
+h=tk.h
 UPDATE_FREQ_LIVE = '0'
 
 UPDATE_FREQ_INFO = OrderedDict(
@@ -91,16 +92,12 @@ UPDATE_STATUS_UNKNOWN = 'unknown'
 UPDATE_STATUS_NEEDS_UPDATE = 'needs_update'
 
 
-def get_calculator_instance(dataset_dict):
+def get_calculator_instance(dataset_dict, type='for-data-completeness'):
     # if type == 'for-data-completeness':
     #     return DataCompletenessFreshnessCalculator(dataset_dict)
     # else:
     return FreshnessCalculator(dataset_dict)
 
-def get_utc_end_of_today():
-    now = datetime.datetime.utcnow()  # Get current UTC time (naive datetime)
-    end_of_day = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
-    return end_of_day
 
 class FreshnessCalculator(object):
 
@@ -127,27 +124,7 @@ class FreshnessCalculator(object):
     #     last_change_date = last_change_date.replace(tzinfo=None) if last_change_date else None
     #     return last_change_date
 
-    @staticmethod
-    def end_of_dataset_date(dataset_date):
-        """
-        Extracts the end date from dataset_date and returns a timezone-aware datetime object.
 
-        :param dataset_dict: Dictionary containing dataset metadata.
-        :type dataset_dict: dict
-        :return: End date as a datetime object.
-        :rtype: datetime.datetime
-        """
-
-        # dataset_date = dataset_dict.get('dataset_date', '')
-        if dataset_date:
-            dataset_end_date = dataset_date.split(' TO ')[-1].strip('[]')
-            if dataset_end_date == '*':
-                dataset_end_date = get_utc_end_of_today()
-            else:
-                dataset_end_date = dateutil.parser.parse(dataset_end_date)
-        else:
-            dataset_end_date = None #get_utc_end_of_today()
-        return dataset_end_date
 
     def __init__(self, dataset_dict):
         self.surely_not_fresh = True
@@ -155,7 +132,7 @@ class FreshnessCalculator(object):
         update_freq = get_extra_from_dataset('data_update_frequency', dataset_dict)
         try:
             dataset_date = get_extra_from_dataset('dataset_date', dataset_dict)
-            self.modified = FreshnessCalculator.end_of_dataset_date(dataset_date)
+            self.modified = h.hdx_end_of_dataset_date(dataset_date)
             if self.modified and update_freq:
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
@@ -262,8 +239,8 @@ class FreshnessCalculator(object):
 #         return super(DataCompletenessFreshnessCalculator, self).is_fresh(now)
 #
 #     def populate_with_freshness(self):
-#         is_overdue = self.is_overdue()
-#         self.dataset_dict[OVERDUE_PROPERTY] = is_overdue
+#         is_fresh = self.is_fresh()
+#         self.dataset_dict[FRESHNESS_PROPERTY] = is_fresh
 #         super(DataCompletenessFreshnessCalculator, self).populate_with_freshness()
 
 

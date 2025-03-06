@@ -22,9 +22,10 @@ class DataCompleteness(object):
         'fl': ['id', 'name', 'title', 'organization',
                'extras_data_update_frequency',
                'last_modified',
-               'review_date',
+               # 'review_date',
                'dataset_date',
-               'extras_dataset_date',
+               # 'due_date',
+               # 'extras_dataset_date',
                ],
         'ext_compute_freshness': 'for-data-completeness'
     }
@@ -145,7 +146,7 @@ class DataCompleteness(object):
             dataset['is_complete'] = override.get('display_state') == 'complete'
             dataset[GOODNESS_PROPERTY] = dataset.get('is_complete')
         else:
-            dataset[GOODNESS_PROPERTY] = not dataset.get(FRESHNESS_PROPERTY, True)
+            dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False)
 
     @staticmethod
     def __add_general_comments(dataset, overrides_map):
