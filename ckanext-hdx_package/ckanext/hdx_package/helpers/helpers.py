@@ -567,13 +567,14 @@ def end_of_dataset_date(dataset_date):
     :return: End date as a datetime object.
     :rtype: datetime.datetime
     """
-
+    is_dataset_date_star = False
     if dataset_date:
         dataset_end_date = dataset_date.split(' TO ')[-1].strip('[]')
         if dataset_end_date == '*':
             dataset_end_date = get_utc_end_of_today()
+            is_dataset_date_star = True
         else:
             dataset_end_date = dateutil.parser.parse(dataset_end_date)
     else:
         dataset_end_date = None
-    return dataset_end_date
+    return dataset_end_date, is_dataset_date_star
