@@ -1,8 +1,9 @@
+import datetime
 import json
 import logging
 import requests
-import re
 import six.moves.urllib.parse as urlparse
+import dateutil.parser
 
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.analytics as analytics
@@ -22,6 +23,7 @@ import ckan.model.package as package
 import ckan.plugins.toolkit as tk
 from ckan.common import _, c, request
 from ckan.types import Context, DataDict
+
 
 log = logging.getLogger(__name__)
 
@@ -258,10 +260,10 @@ def hdx_retrieve_approved_tags(context, data_dict):
             ordered_items = sorted([item[0].lower() for item in items])
             return ordered_items
         else:
-            log.error("Failed to fetch approved tags. Status code: %s", response.status_code)
+            log.error('Failed to fetch approved tags. Status code: %s', response.status_code)
             return []
     except Exception as e:
-        log.error("Failed to fetch approved tags. Exception: %s", e)
+        log.error('Failed to fetch approved tags. Exception: %s', e)
         return []
 
 
@@ -365,16 +367,16 @@ def filesize_format(size_in_bytes):
 
         for unit in ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
             if size < d:
-                return "%3.1f%s" % (size, unit)
+                return '%3.1f%s' % (size, unit)
             size /= d
-        return "%.1f%s" % (size, 'Yi')
+        return '%.1f%s' % (size, 'Yi')
     except Exception as e:
         log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
         return size_in_bytes
 
 
 def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
-    '''
+    """
     This function replaces the one with the similar name from ckanext.resourceproxy.plugin .
     Changes:
     1) Don't look at the protocol when checking if it is the same domain
@@ -384,7 +386,7 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
     :type data_dict: dict
     :param proxy_schemes: list of url schemes to proxy for.
     :type data_dict: list
-    '''
+    """
 
     same_domain = is_ckan_domain(data_dict['resource']['url'])
     parsed_url = urlparse.urlparse(data_dict['resource']['url'])
@@ -402,12 +404,12 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
 
 
 def is_ckan_domain(url):
-    '''
+    """
     :param url: url to check whether it's on the same domain as ckan
     :type url: str
     :return: True if it's the same domain. False otherwise
     :rtype: bool
-    '''
+    """
     ckan_url = config.get('ckan.site_url', '//localhost:5000')
     parsed_url = urlparse.urlparse(url)
     ckan_parsed_url = urlparse.urlparse(ckan_url)
@@ -415,22 +417,22 @@ def is_ckan_domain(url):
     return same_domain
 
 def make_url_relative(url):
-    '''
+    """
     Transforms something like http://testdomain.com/test to /test
     :param url: url to check whether it's on the same domain as ckan
     :type url: str
     :return: the new url as a string
     :rtype: str
-    '''
+    """
     parsed_url = urlparse.urlparse(url)
     return urlparse.urlunparse(('', '') + parsed_url[2:])
 
 def generate_mandatory_fields():
-    '''
+    """
 
     :return: dataset dict with mandatory fields filled
     :rtype: dict
-    '''
+    """
 
     user = c.user or c.author
 
@@ -476,8 +478,8 @@ def hdx_check_add_data():
                    'save': 'save' in request.params}
     dataset_dict = None
     try:
-        _check_access("package_create", context, dataset_dict)
-    except NotAuthorized as e:
+        _check_access('package_create', context, dataset_dict)
+    except NotAuthorized:
         if g.userobj or g.user:
             data_dict['href'] = h.url_for('hdx_org_join.find_organisation') #'/dashboard/organizations'
             data_dict['onclick'] = ''
@@ -551,3 +553,28 @@ def remove_previous_package_dict_from_context(context, id):
     if id:
         context_key = _create_prev_package_context_key(id)
         context.pop(context_key, None)
+
+def get_utc_end_of_today():
+    now = datetime.datetime.utcnow()  # Get current UTC time (naive datetime)
+    end_of_day = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
+    return end_of_day
+
+def end_of_dataset_date(dataset_date):
+    """
+    Extracts the end date from dataset_date and returns a timezone-aware datetime object.
+
+    :param dataset_dict: Dictionary containing dataset metadata.
+    :type dataset_dict: dict
+    :return: End date as a datetime object.
+    :rtype: datetime.datetime
+    """
+
+    if dataset_date:
+        dataset_end_date = dataset_date.split(' TO ')[-1].strip('[]')
+        if dataset_end_date == '*':
+            dataset_end_date = get_utc_end_of_today()
+        else:
+            dataset_end_date = dateutil.parser.parse(dataset_end_date)
+    else:
+        dataset_end_date = None
+    return dataset_end_date

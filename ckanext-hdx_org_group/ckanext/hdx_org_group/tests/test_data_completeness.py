@@ -63,11 +63,11 @@ def _generate_test_yaml_dict():
     return input_yaml_for_1_country
 
 
-def _generate_dataset_dict(dataset_name, org_id, group_name, review_date, user=USER, ignore_auth=False):
+def _generate_dataset_dict(dataset_name, org_id, group_name, end_dataset_date, user=USER, ignore_auth=False):
     dataset = {
         'package_creator': 'test function',
         'private': False,
-        'dataset_date': '[1960-01-01 TO {}]'.format(review_date.strftime('%Y-%m-%d')),
+        'dataset_date': '[1960-01-01 TO {}]'.format(end_dataset_date.strftime('%Y-%m-%d')),
         'caveats': 'These are the caveats',
         'license_other': 'TEST OTHER LICENSE',
         'methodology': 'This is a test methodology',
@@ -107,12 +107,12 @@ def setup_data():
 
     context = {'model': model, 'session': model.Session, 'user': SYSADMIN}
 
-    review_date1 = datetime.datetime.utcnow() - datetime.timedelta(days=60)
-    _generate_dataset_dict('dataset1-category1', ORG, group.get('name'), review_date1)
+    end_dataset_date1 = datetime.datetime.utcnow() - datetime.timedelta(days=60)
+    _generate_dataset_dict('dataset1-category1', ORG, group.get('name'), end_dataset_date1)
     pkg_dict_1 = _get_action('package_show')(context, {'id': 'dataset1-category1'})
 
-    review_date2 = datetime.datetime.utcnow()
-    _generate_dataset_dict('dataset2-category1', ORG, group.get('name'), review_date2)
+    end_dataset_date2 = datetime.datetime.utcnow()
+    _generate_dataset_dict('dataset2-category1', ORG, group.get('name'), end_dataset_date2)
     pkg_dict_2 = _get_action('package_show')(context, {'id': 'dataset2-category1'})
     assert True
 
@@ -176,7 +176,7 @@ class TestDataCompleteness(object):
         assert subcategory1_stats['total_datasets_num'] == 2
 
         dataset = next(d for d in subcategory1['datasets'] if d['name'] == incomplete_dataset)
-        assert dataset['general_comment'] == incomplete_comment
+        assert dataset['general_comment'] == incomplete_comment + ' The dataset is not up-to-date.'
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_force_complete(self, patched_DataCompleteness):
@@ -228,8 +228,8 @@ class TestDataCompleteness(object):
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_dataset_up_to_date(self, patched_DataCompleteness):
-        review_date = datetime.datetime.utcnow() - datetime.timedelta(days=31)
-        _generate_dataset_dict('dataset3-category1', ORG, LOCATION, review_date)
+        end_dataset_date = datetime.datetime.utcnow() - datetime.timedelta(days=31)
+        _generate_dataset_dict('dataset3-category1', ORG, LOCATION, end_dataset_date)
         yaml_dict = _generate_test_yaml_dict()
         yaml_dict['categories'][0]['data_series'].append({
             'rules': {
@@ -246,8 +246,9 @@ class TestDataCompleteness(object):
         data = self.__compute_data_completeness(yaml_dict, patched_DataCompleteness)
 
         subcategory3_stats = data['categories'][0]['data_series'][2]['stats']
-        assert subcategory3_stats['state'] == 'good'
-        assert subcategory3_stats['good_datasets_num'] == 1
+        assert subcategory3_stats['state'] == 'not_good'
+        assert subcategory3_stats['good_datasets_num'] == 0
+        assert subcategory3_stats['total_datasets_num'] == 1
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_datagrid_show(self, patched_DataCompleteness):
