@@ -65,7 +65,7 @@ RUN apt-get -qq -y update && \
         semver==2.13.0 \
         datasize==1.0.0 && \
     # install datapusher_plus from git
-    pip install -e "git+https://github.com/dathere/datapusher-plus.git@1.0.4#egg=datapusher-plus" && \
+    pip install -e "git+https://github.com/OCHA-DAP/datapusher-plus.git@feature/hdx-changes-over-1_0_4#egg=datapusher-plus" && \
     chmod +x run_pytest_with_coverage.sh && \
     chmod +x setup_py_helper.sh && \
     ./setup_py_helper.sh && \
