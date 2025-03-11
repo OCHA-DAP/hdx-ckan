@@ -10,7 +10,7 @@ import logging
 from six import text_type
 from flask import request
 from sqlalchemy import or_
-from typing import Any
+from typing import Any, Dict
 
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.munge as munge
@@ -188,6 +188,17 @@ def _fetch_prev_resources_info(model, resource_ids):
     return id_to_resource_map
 
 
+def _submit_uploads_to_datapusher_plus(context: Context, data: Dict[str, Any]):
+    for uploaded_resource_id in context.get(FILE_WAS_UPLOADED, {}):
+        if uploaded_resource_id != 'NEW':
+            uploaded_resource_dict = next(
+                (r for r in data.get('resources', []) if r.get('id') == uploaded_resource_id), None
+            )
+            for item in plugins.PluginImplementations(plugins.IResourceController):
+                if item.name == 'datapusher_plus':
+                    item._submit_to_datapusher(uploaded_resource_dict)  # noqa
+
+
 @ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
     BEFORE_PACKAGE_UPDATE_LISTENERS, AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 )
@@ -348,6 +359,9 @@ def package_update(
         item.edit(pkg)
 
         item.after_dataset_update(context, data)
+
+    # Added by HDX - triggering datapusher plus on file uploads
+    _submit_uploads_to_datapusher_plus(context, data)
 
     if not context.get('defer_commit'):
         model.repo.commit()
