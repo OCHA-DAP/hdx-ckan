@@ -148,6 +148,7 @@ hdx.security.site_name = ${HDX_SECURITY_SITENAME}
 
 # Datapusher Plus Config
 ckan.datapusher.callback_url_base = http://${HDX_DATAPUSHER_INTERNAL_CKAN_ADDR}:${HDX_DATAPUSHER_INTERNAL_CKAN_PORT}
+ckanext.datapusher_plus.api_token = ${HDX_DATAPUSHER_CKAN_API_TOKEN}
 
 # Change detection settings
 hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-events
