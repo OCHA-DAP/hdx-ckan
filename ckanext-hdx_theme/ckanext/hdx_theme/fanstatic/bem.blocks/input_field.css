@@ -14,6 +14,13 @@
   font-size: 16px;
   margin-bottom: 8px;
 }
+.input-field__label-guideline {
+  color: #4B5563;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 22px;
+}
 .input-field__required {
   color: #F2645A;
   font-weight: 600;
@@ -45,6 +52,14 @@
   color: #888;
   border-color: #D1D5DB;
   background-color: #FFF;
+}
+.input-field__input-group-text_position_left {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.input-field__input-group-text_position_right {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 .input-field__input-group-text_state_clickable:hover {
   cursor: pointer;

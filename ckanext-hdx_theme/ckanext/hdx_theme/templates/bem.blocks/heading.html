@@ -1,9 +1,13 @@
 <div class="heading{% if spacing_class %} {{ spacing_class }}{% endif %}">
   {% if heading_type %}
-    {% if heading_type == 3 %}
-      <h3 class="heading__title">{{ title }}</h3>
+    {% if heading_type == 1 %}
+      <h1 class="heading__title">{{ title }}{% if required %} <span class="heading__required">*</span>{% endif %}</h1>
+    {% elif heading_type == 3 %}
+      <h3 class="heading__title">{{ title }}{% if required %} <span class="heading__required">*</span>{% endif %}</h3>
+    {% elif heading_type == 6 %}
+      <h6 class="heading__title">{{ title }}{% if required %} <span class="heading__required">*</span>{% endif %}</h6>
     {% endif %}
   {% else %}
-    <h1 class="heading__title">{{ title }}</h1>
+    <h1 class="heading__title">{{ title }}{% if required %} <span class="heading__required">*</span>{% endif %}</h1>
   {% endif %}
 </div>

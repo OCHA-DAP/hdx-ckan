@@ -1,0 +1,27 @@
+.radio-field__input:focus {
+  box-shadow: none;
+}
+.radio-field__input:checked {
+  background-color: #000;
+  border-color: #000;
+}
+.radio-field__label {
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.radio-field__label-guideline {
+  color: #4B5563;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 22px;
+}
+.radio-field__required {
+  color: #F2645A;
+  font-weight: 600;
+}
+.radio-field__feedback-message {
+  font-size: 14px;
+}

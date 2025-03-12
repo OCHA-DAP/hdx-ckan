@@ -1,11 +1,18 @@
 .checkbox-field__label.form-check-label {
-  vertical-align: middle;
+  vertical-align: sub;
   color: #000;
   font-size: 16px;
 }
 .checkbox-field__required {
   color: #F2645A;
   font-weight: 600;
+}
+.checkbox-field__tooltip {
+  cursor: pointer;
+  font-size: 13px;
+  margin-left: 2px;
+  color: #4B5563;
+  display: inline-flex;
 }
 .checkbox-field__input.form-check-input {
   height: 20px;

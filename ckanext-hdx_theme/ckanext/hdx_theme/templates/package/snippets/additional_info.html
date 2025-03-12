@@ -47,11 +47,11 @@
         </div>
       </div>
       <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit"
-           data-module-anchor="s2id_field_data_update_frequency" data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
+           data-module-anchor="field_data_update_frequency" data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
         <div class="dataset-label">{{ _('Expected Update Frequency') }}</div>
         <div class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</div>
       </div>
-      <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_locations"
+      <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_locations"
            data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
         <div class="dataset-label">{{ _('Location') }}</div>
         <div class="dataset-details metadata-link mx-country">
@@ -74,7 +74,7 @@
       </div>
       <div class="additional-info-extra-fields d-none">
 
-        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_owner_org"
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_owner_org"
              data-module-dataset="{{ pkg_dict.id }}" {% endif %}>
           <div class="dataset-label">{{ _('Contributor') }}</div>
           <div class="dataset-details metadata-link">
@@ -88,7 +88,7 @@
           </div>
         </div>
 
-        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_methodology"
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_methodology"
              data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
           <div class="dataset-label">{{ _('Methodology') }}</div>
           {% set methodology, methodology_other = h.methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
@@ -114,7 +114,7 @@
 
 
         {% if not pkg_dict.is_requestdata_type %}
-          <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_license_id"
+          <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_license_id"
                data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
             <div class="dataset-label">{{ _('License') }}</div>
             <div class="dataset-details  metadata-link">
@@ -148,7 +148,7 @@
           </div>
         {% endif %}
 
-        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="s2id_field_tag_string"
+        <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_tag_string"
              data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
           <div class="dataset-label">{{ _('Tags') }}</div>
           <div class="dataset-details">

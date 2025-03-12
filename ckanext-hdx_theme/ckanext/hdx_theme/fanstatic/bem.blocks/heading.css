@@ -9,9 +9,17 @@
 .heading h3 {
   font-size: 30px;
 }
+.heading h6 {
+  font-size: 20px;
+}
 .heading__title {
   color: #0F172A;
   line-height: 1.2;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
+}
+.heading__required {
+  color: #F2645A;
+  font-weight: 600;
+  font-size: 1rem;
 }

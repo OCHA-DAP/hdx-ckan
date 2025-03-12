@@ -24,173 +24,182 @@
   }
 }
 
-.popup.popup-onboarding {
-  .content {
-    min-width: 380px;
-    padding: 0 15px;
-
-    &.fade-in {
-      animation: fadeInAnimation ease-in 1700ms;
-      animation-iteration-count: 1;
-      animation-fill-mode: forwards;
+.popup {
+  &#privateDatasetInfoPopup {
+    .content {
+      max-width: 600px;
     }
   }
 
-  .error-message {
-    color: red;
-    .gothamBookFont(10px);
-  }
+  &.popup-onboarding {
 
-  .close {
-    opacity: 1;
-    color: @whiteColor;
-    font-weight: 400;
-    text-shadow: none;
-    font-size: 21px;
-    &:hover,&:focus{
-      opacity: 0.5;
-    }
-  }
+    .content {
+      min-width: 380px;
+      padding: 0 15px;
 
-  .control {
-    position: relative;
-  }
-
-  input[type="text"], input[type="password"], input[type="number"], textarea {
-    height: @inputHeight;
-    border-radius: 6px;
-    border: 1px solid white;
-    padding-left: @inputPadding;
-    font-size: 16px;
-    color: @darkGrayColor;
-
-    &:focus {
-      outline: none;
+      &.fade-in {
+        animation: fadeInAnimation ease-in 1700ms;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+      }
     }
 
-    & ~ label {
-      color: #cccccc;
-      .sourceSansProFont(700, 16px);
+    .error-message {
+      color: red;
+      .gothamBookFont(10px);
+    }
+
+    .close {
       opacity: 1;
-      position: absolute;
-      bottom: 0;
-      margin: 0;
-      left: @inputPadding;
-      line-height: @inputHeight;
-      cursor: text;
-
-      transition: 1s;
-
-      &:after{
-        content:"";
+      color: @whiteColor;
+      font-weight: 400;
+      text-shadow: none;
+      font-size: 21px;
+      &:hover,&:focus{
+        opacity: 0.5;
       }
     }
 
-    &.input-content ~ label {
-      .sourceSansProFont(400, 10px);
-      line-height: 10px;
-      color: @grayColor;
-      bottom: 1px;
+    .control {
+      position: relative;
     }
 
-    &.required.input-content ~ label:after {
-      content: "";
-    }
-    &.required.error{
-      border-color: red;
-    }
-
-    &.required ~ label {
-      &:after{
-        content:"*";
-        margin-left: 5px;
-        color: red;
-      }
-    }
-
-  }
-
-  .center {
-    text-align: center;
-  }
-
-  .full-width {
-    width: 100%;
-  }
-  .member {
-    .gothamBookFont(12px);
-    color: @grayColor;
-    .letter-spacing-1();
-
-    a {
-      .gothamBoldFont(12px);
-    }
-  }
-  input[type="checkbox"] {
-    top: 0;
-    .sourceSansProFont(400, 10px);
-    ~ label{
-      .sourceSansProFont(400, 10px);
+    input[type="text"], input[type="password"], input[type="number"], textarea {
+      height: @inputHeight;
+      border-radius: 6px;
+      border: 1px solid white;
+      padding-left: @inputPadding;
+      font-size: 16px;
       color: @darkGrayColor;
-      .letter-spacing-1();
-      padding: 0;
-      margin-left: 5px;
 
-      &:after{
+      &:focus {
+        outline: none;
+      }
+
+      & ~ label {
+        color: #cccccc;
+        .sourceSansProFont(700, 16px);
+        opacity: 1;
+        position: absolute;
+        bottom: 0;
+        margin: 0;
+        left: @inputPadding;
+        line-height: @inputHeight;
+        cursor: text;
+
+        transition: 1s;
+
+        &:after{
+          content:"";
+        }
+      }
+
+      &.input-content ~ label {
+        .sourceSansProFont(400, 10px);
+        line-height: 10px;
+        color: @grayColor;
+        bottom: 1px;
+      }
+
+      &.required.input-content ~ label:after {
         content: "";
       }
+      &.required.error{
+        border-color: red;
+      }
+
+      &.required ~ label {
+        &:after{
+          content:"*";
+          margin-left: 5px;
+          color: red;
+        }
+      }
+
     }
-  }
 
-  .large-title {
-    .gothamBookFont(36px);
-    line-height: 40px;
-    .letter-spacing-1();
-    strong{
-      .gothamBoldFont(36px);
+    .center {
+      text-align: center;
     }
-  }
 
-  .btn-large {
-    min-width: 150px;
-    &.btn-empty {
-      min-width: 0;
+    .full-width {
+      width: 100%;
     }
-  }
+    .member {
+      .gothamBookFont(12px);
+      color: @grayColor;
+      .letter-spacing-1();
 
-  .bold-regular-text {
-    .gothamBoldFont(14px);
-    line-height: 20px;
-    .letter-spacing-1();
-  }
+      a {
+        .gothamBoldFont(12px);
+      }
+    }
+    input[type="checkbox"] {
+      top: 0;
+      .sourceSansProFont(400, 10px);
+      ~ label{
+        .sourceSansProFont(400, 10px);
+        color: @darkGrayColor;
+        .letter-spacing-1();
+        padding: 0;
+        margin-left: 5px;
 
-  .large-text {
-    .gothamBookFont(18px);
-    line-height: 24px;
-    .letter-spacing-1();
-  }
+        &:after{
+          content: "";
+        }
+      }
+    }
 
-  .regular-text {
-    .sourceSansProFont(400, 14px);
-    line-height: 20px;
-  }
+    .large-title {
+      .gothamBookFont(36px);
+      line-height: 40px;
+      .letter-spacing-1();
+      strong{
+        .gothamBoldFont(36px);
+      }
+    }
 
-  .small-form-title {
-    .gothamBoldFont(14px);
-    .letter-spacing-1();
-  }
+    .btn-large {
+      min-width: 150px;
+      &.btn-empty {
+        min-width: 0;
+      }
+    }
 
-  .footer-hdx-logo {
-    height: 26px;
-  }
+    .bold-regular-text {
+      .gothamBoldFont(14px);
+      line-height: 20px;
+      .letter-spacing-1();
+    }
 
-  .back-button {
-    display: block;
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    color: white;
-    font-size: 24px;
+    .large-text {
+      .gothamBookFont(18px);
+      line-height: 24px;
+      .letter-spacing-1();
+    }
+
+    .regular-text {
+      .sourceSansProFont(400, 14px);
+      line-height: 20px;
+    }
+
+    .small-form-title {
+      .gothamBoldFont(14px);
+      .letter-spacing-1();
+    }
+
+    .footer-hdx-logo {
+      height: 26px;
+    }
+
+    .back-button {
+      display: block;
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: white;
+      font-size: 24px;
+    }
   }
 }
 

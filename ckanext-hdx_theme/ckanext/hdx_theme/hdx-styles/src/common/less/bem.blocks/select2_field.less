@@ -1,12 +1,35 @@
 @import "bem_variables";
 @import "utilities";
 
+
+.input-placeholder {
+  //&::-webkit-input-placeholder,
+  //&:-moz-placeholder,
+  //&::-moz-placeholder,
+  //&:-ms-input-placeholder,
+  &::placeholder {
+    color: #6c757d; // select2 bootstrap5 theme
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 30px;
+  }
+}
+
 .select2-field {
   &__label {
     color: @grey-extra-dark-color;
     font-weight: 600;
     font-size: 16px;
     margin-bottom: 8px;
+  }
+
+  &__label-guideline {
+    color: @grey-extra-dark-color;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 8px;
+    line-height: 22px;
   }
 
   &__required {
@@ -23,11 +46,43 @@
       box-shadow: none;
 
       &.select2--large {
+        .select2-selection__clear {
+          background-color: @white-color;
+        }
+
         .select2-selection__rendered {
           font-weight: 500;
           line-height: 30px;
           font-size: 1rem;
           font-family: 'Inter', sans-serif;
+
+          .select2-selection__choice {
+            padding: 0 0.75rem;
+            border-radius: 0;
+            background: @grey-dark-color;
+            color: @white-color;
+            text-transform: uppercase;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: .5px;
+            border: 0;
+            &__remove {
+              width: .75rem;
+              height: .75rem;
+              margin-right: .35rem;
+              padding: .25rem;
+              background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
+              background-position-x: 50%;
+              background-position-y: center;
+              background-size: 1rem;
+              background-repeat: no-repeat;
+              background-color: transparent;
+              &:hover {
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234B5563'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
+              }
+            }
+          }
 
           .select2-selection__placeholder {
             font-weight: 500;
@@ -35,10 +90,26 @@
           }
         }
       }
+
+      &--multiple {
+        padding-right: 36px;
+        &::after {
+          position: absolute;
+          right: 12px; // (36px - 12px) / 2
+          top: calc(50% - 6px); // 12px / 2
+          // .fa-icon;
+          font: var(--fa-font-solid);
+          font-size: .75rem;
+          content: '\f078';
+        }
+      }
     }
 
     .select2-dropdown {
       .select2-search {
+        input {
+          background: none;
+        }
         &::after {
           .fa-icon;
           font: var(--fa-font-solid);
@@ -52,6 +123,28 @@
           padding-right: 30px;
           &:focus {
             box-shadow: none;
+          }
+        }
+      }
+    }
+
+    .select2-search__field {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      .input-placeholder;
+    }
+  }
+
+  &_color {
+    &-orange {
+      .select2-container {
+        .select2-selection {
+          &.select2--large {
+            .select2-selection__rendered {
+              .select2-selection__choice {
+                background: @red-color;
+              }
+            }
           }
         }
       }

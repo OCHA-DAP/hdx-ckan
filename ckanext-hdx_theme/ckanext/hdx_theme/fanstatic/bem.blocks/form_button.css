@@ -23,6 +23,17 @@
 .form-button__btn.btn-primary:hover {
   background-color: #0162DD;
 }
+.form-button__btn.btn-danger {
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 400;
+  font-family: 'Gotham-Bold', sans-serif;
+  border-color: #F38077;
+  background-color: #F38077;
+}
+.form-button__btn.btn-danger:hover {
+  background-color: #F2645A;
+}
 .form-button__btn.btn-link {
   text-decoration: none;
   font-family: 'Inter', sans-serif;

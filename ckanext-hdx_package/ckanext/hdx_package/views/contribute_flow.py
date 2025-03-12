@@ -202,7 +202,10 @@ def validate(package_type=None):
                                                for key, val in err_dict.items()}
                 for idx, err_dict in enumerate(e.error_dict.get('resources', ())) if err_dict
             }
-        return _prepare_and_render(save_type=save_type, data=data_dict, errors=e.error_dict,
+
+        customized_errors = _customize_error_messages(e.error_dict)
+
+        return _prepare_and_render(save_type=save_type, data=data_dict, errors=customized_errors,
                                         error_summary=error_summary)
     except Exception as e:
         ex_msg = e.message if hasattr(e, 'message') else str(e)
@@ -223,6 +226,50 @@ def _prepare_data_for_saving(context, package_type):
     write_logic.process_all(g.user)
 
     return data_dict
+
+
+def _customize_error_messages(errors):
+    custom_messages = {
+        'name': {
+            'Missing value': 'Please provide a URL for your dataset.',
+            'That URL is already in use.': 'Please provide a different URL for your dataset as this already exists.'
+        },
+        'notes': {
+            'Missing value': 'A description of your dataset is required.'
+        },
+        'dataset_source': {
+            'Missing value': 'Please specify the source of your data.'
+        },
+        'maintainer': {
+            'Missing value': 'Please choose an individual maintainer for this dataset.'
+        },
+        'data_update_frequency': {
+            'Missing value': 'Please select how often this dataset is expected to be updated.'
+        },
+        'groups_list': {
+            'Missing value': 'Please specify the location(s) covered by this dataset.'
+        },
+        'methodology': {
+            'Missing value': 'Please choose a methodology for your dataset.'
+        },
+        'owner_org': {
+            'Missing value': 'Please select the organisation responsible for this dataset.'
+        },
+        'dataset_date': {
+            'Missing value': 'Please specify the time period covered by your data.'
+        },
+    }
+
+    customized_errors = {}
+    for field, error_list in errors.items():
+        customized_errors[field] = []
+        for error in error_list:
+            if field in custom_messages and error in custom_messages[field]:
+                customized_errors[field].append(custom_messages[field][error])
+            else:
+                customized_errors[field].append(error)
+
+    return customized_errors
 
 
 hdx_contribute.add_url_rule(u'/new', view_func=new, methods=[u'GET', u'POST'])

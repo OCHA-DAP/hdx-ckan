@@ -1,14 +1,39 @@
-<div class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}{% if container_classes %} {{ container_classes|join(' ') }}{% endif %}">
+{% set input_id = id if id else "input-" ~ name %}
+<div
+  class="input-field{% if spacing_class %} {{ spacing_class }}{% endif %}{% if container_classes %} {{ container_classes|join(' ') }}{% endif %}"
+  {% if container_data_attributes %}{% for key, value in container_data_attributes.items() %} data-{{ key }}="{{ value }}"{% endfor %}{% endif %}
+  {% if container_id %}id="{{ container_id }}"{% endif %}>
   {% if label %}
-    <label class="input-field__label" for="input-{{ name }}">
-      {{ label }}{% if required %} <span class="input-field__required">*</span>{% endif %}</label>
+    <label class="input-field__label" for="{{ input_id }}">
+      {{ label }}
+      {% if required or dynamic_required %}
+        <span class="input-field__required{% if dynamic_required %} d-none{% endif %}">*</span>
+      {% endif %}
+    </label>
   {% endif %}
-  <div class="{% if type == 'password' %}input-group{% endif %}">
+  {% if label_guidelines or label_guideline_title %}
+    <div class="input-field__label-guideline">
+      {% if label_guideline_title %}{{ label_guideline_title }}{% endif %}
+      {% if label_guidelines %}
+        <ul class="mb-0">
+          {% for label_guideline in label_guidelines %}
+            <li>{{ label_guideline }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="{% if type == 'password' or prepend %}input-group{% endif %}">
+    {% if prepend %}
+      <span class="input-group-text input-field__input-group-text input-field__input-group-text_position_left">
+        {{ prepend }}
+      </span>
+    {% endif %}
     <input
             type="{{ type }}"
             name="{{ name }}"
-            class="form-control input-field__input{% if errors %} is-invalid{% endif %}"
-            id="input-{{ name }}"
+            class="form-field form-control input-field__input{% if input_classes %} {{ input_classes|join(' ') }}{% endif %}{% if errors %} is-invalid{% endif %}"
+            id={{ input_id }}
             placeholder="{{ placeholder }}"
             value="{% if value %}{{ value }}{% endif %}"
             {% if required %}required{% endif %}
@@ -23,12 +48,12 @@
             {% endfor %}{% endif %}
     >
     {% if type == 'password' %}
-      <span class="input-group-text input-field__input-group-text input-field__input-group-text_state_clickable">
+      <span class="input-group-text input-field__input-group-text input-field__input-group-text_state_clickable input-field__input-group-text_position_right">
         <i class="fa-regular fa-fw fa-eye"></i>
         <i class="fa-regular fa-fw fa-eye-slash d-none"></i>
       </span>
     {% endif %}
-    {% if errors or (data_attributes and data_attributes['validation-error']) %}
+    {% if errors != None or (data_attributes and data_attributes['validation-error']) %}
       <div class="input-field__feedback-message input-field__feedback-message_state_invalid invalid-feedback">
         {% if errors %}{{ errors|join('. ') }}{% endif %}
       </div>

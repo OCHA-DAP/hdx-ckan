@@ -10,6 +10,9 @@
   font-size: 18px;
 }
 .paragraph__text_font_size-small {
+  font-size: 14px;
+}
+.paragraph__text_font_size-extra-small {
   font-size: 12px;
 }
 .paragraph__text_font-weight-bold {
