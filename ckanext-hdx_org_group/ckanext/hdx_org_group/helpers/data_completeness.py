@@ -23,6 +23,7 @@ class DataCompleteness(object):
                'extras_data_update_frequency',
                'last_modified',
                'dataset_date',
+               'due_date',
                ],
         'ext_compute_freshness': 'for-data-completeness'
     }

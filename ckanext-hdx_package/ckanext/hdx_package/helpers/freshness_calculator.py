@@ -86,11 +86,41 @@ class FreshnessCalculator(object):
         try:
             dataset_date = get_extra_from_dataset('dataset_date', dataset_dict)
             self.end_dataset_date, self.is_end_dataset_date_star = h.hdx_end_of_dataset_date(dataset_date)
+            if not self.end_dataset_date:
+                due_date = dataset_dict.get('due_date')
+                if due_date and 'Z' in due_date:
+                    self.end_dataset_date = self._compute_due_date(due_date, update_freq)
+                    # due_date = due_date.replace('Z', '')
+                    # due_date = dateutil.parser.parse(due_date)
+                    # _update_freq = int(update_freq)
+                    # if self.is_end_dataset_date_star or not _update_freq or _update_freq == -1:
+                    #     due_date = (
+                    #         self.end_dataset_date - datetime.timedelta(days=DELTA_END_DATASET_DATE_INFINITE_DAYS)
+                    #     ).replace(microsecond=0)
+                    # else:
+                    #     due_date = (
+                    #         self.end_dataset_date - datetime.timedelta(days=_update_freq)
+                    #     ).replace(microsecond=0)
+                    # self.end_dataset_date = due_date
+
             if self.end_dataset_date and update_freq:
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
         except Exception as e:
             log.error(text_type(e))
+
+    def _compute_due_date(self, due_date, update_freq):
+        if due_date and 'Z' in due_date:
+            due_date = due_date.replace('Z', '')
+            due_date = dateutil.parser.parse(due_date)
+            _update_freq = int(update_freq)
+            if self.is_end_dataset_date_star or not _update_freq or _update_freq == -1:
+                due_date = (
+                    due_date - datetime.timedelta(days=DELTA_END_DATASET_DATE_INFINITE_DAYS)
+                ).replace(microsecond=0)
+            else:
+                due_date = (due_date - datetime.timedelta(days=_update_freq)).replace(microsecond=0)
+            return due_date
 
     def is_fresh(self, now=datetime.datetime.utcnow()):
         """
