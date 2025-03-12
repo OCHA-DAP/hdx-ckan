@@ -394,20 +394,20 @@
 
                                           <div id="resource-list" data-module="hdx_form_element_manager" data-module-element_name="resource-list">
                                               <div class="label-title-style mBottom10"><span class="resources_total">0 Resources</span> <small>(drag and drop to sort)</small></div>
-                                              <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
-                                                {% if data.id and not data.get('update_status') == 'unknown' %}
-                                                <div id="confirm-resource-freshness">
-                                                  <input type="hidden" name='review_date' value='{{ data.review_date }}' />
-                                                  <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. {% if data.get('update_status') == 'needs_update' %} You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u>{% endif %}</label>
-                                                </div>
-                                                {% endif %}
+{#                                              <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">#}
+{#                                                {% if data.id and not data.get('update_status') == 'unknown' %}#}
+{#                                                <div id="confirm-resource-freshness">#}
+{#                                                  <input type="hidden" name='review_date' value='{{ data.review_date }}' />#}
+{#                                                  <label class="confirm-resources-label"><input type="checkbox" name="dataset_confirm_freshness"/> I confirm that the data in these resources is as up to date as possible. {% if data.get('update_status') == 'needs_update' %} You may also want to update <u><a href="#data_update_frequency">Expected Update Frequency</a></u>{% endif %}</label>#}
+{#                                                </div>#}
+{#                                                {% endif %}#}
                                                 <div>
                                                     <input class="add_new_resource btn btn-primary btn-lg" type="button" value="Add more resources"/>
                                                 </div>
                                                 <div id="resource-create"></div>
                                                 <div class="resources">
                                                 </div>
-                                              </div>
+{#                                              </div>#}
                                           </div>
 
                                       </div>
