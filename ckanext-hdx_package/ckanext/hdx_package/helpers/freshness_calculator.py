@@ -10,6 +10,8 @@ from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 log = logging.getLogger(__name__)
 h=tk.h
 UPDATE_FREQ_LIVE = '0'
+UPDATE_FREQ_AS_NEEDED = '-2'
+UPDATE_FREQ_NEVER = '-1'
 
 UPDATE_FREQ_INFO = OrderedDict(
     (
@@ -45,11 +47,11 @@ UPDATE_FREQ_INFO = OrderedDict(
             'title': 'Live',
             'special': True
         }),
-        ('-2', {
+        (UPDATE_FREQ_AS_NEEDED, {
             'title': 'As needed',
             'special': True
         }),
-        ('-1', {
+        (UPDATE_FREQ_NEVER, {
             'title': 'Never',
             'special': True
         }),
@@ -99,6 +101,9 @@ class FreshnessCalculator(object):
         update_freq = get_extra_from_dataset('data_update_frequency', self.dataset_dict)
         if update_freq == UPDATE_FREQ_LIVE:
             return True
+        if update_freq == UPDATE_FREQ_NEVER or update_freq == UPDATE_FREQ_AS_NEEDED:
+            return False
+
         start_of_expiration = self.compute_range_beginnings()
         if start_of_expiration:
             now = datetime.datetime.utcnow() # using utcnow bc this is used by core ckan, see ckan.model.package
@@ -119,9 +124,13 @@ class FreshnessCalculator(object):
             self.dataset_dict[UPDATE_STATUS_PROPERTY] = UPDATE_STATUS_UNKNOWN
 
     def populate_with_date_ranges(self):
-        start_of_due_range= self.compute_range_beginnings()
-        if start_of_due_range:
-            self.dataset_dict['due_date'] = start_of_due_range.isoformat()
+        update_freq = get_extra_from_dataset('data_update_frequency', self.dataset_dict)
+        if update_freq == UPDATE_FREQ_LIVE or update_freq == UPDATE_FREQ_NEVER or update_freq == UPDATE_FREQ_AS_NEEDED:
+            self.dataset_dict['due_date'] = None
+        else:
+            start_of_due_range= self.compute_range_beginnings()
+            if start_of_due_range:
+                self.dataset_dict['due_date'] = start_of_due_range.isoformat()
 
     def compute_range_beginnings(self):
         if not self.surely_not_fresh:
@@ -139,6 +148,9 @@ class FreshnessCalculator(object):
     def read_due_overdue_dates(self):
         try:
             if 'due_date' in self.dataset_dict:
+                update_freq = get_extra_from_dataset('data_update_frequency', self.dataset_dict)
+                if update_freq == UPDATE_FREQ_LIVE or update_freq == UPDATE_FREQ_NEVER or update_freq == UPDATE_FREQ_AS_NEEDED:
+                    return None
                 due_date_str = self.dataset_dict.get('due_date')
                 due_date = dateutil.parser.parse(due_date_str[0:-1])
                 # overdue_date_str = self.dataset_dict.get('overdue_date')
