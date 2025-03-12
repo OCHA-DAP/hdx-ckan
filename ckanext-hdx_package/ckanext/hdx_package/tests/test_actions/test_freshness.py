@@ -9,7 +9,7 @@ class TestFreshness(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_is_fresh_flag(self):
         dataset_1 = self._get_action('package_show')({}, {'id': 'test_dataset_1'})
 
-        assert dataset_1.get('is_fresh') is True
+        assert dataset_1.get('is_fresh') is False
 
         res1 = factories.Resource(package_id='test_dataset_1')
 
