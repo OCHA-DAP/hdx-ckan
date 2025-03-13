@@ -201,7 +201,7 @@
           <label class="form-check-label" for="showDatasetActivity"><h2 class="uppercase mt-0">{{ _('Activity') }}</h2>
           </label>
         </div>
-        <div class="dataset-activity-wrapper d-none">
+        <div class="dataset-activity-wrapper d-none" data-fetched="false" data-dataset-id="{{ pkg.id }}">
           {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
           <br>
           {% if h.follow_status('dataset', pkg.name) %}

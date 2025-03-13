@@ -28,7 +28,49 @@ $(document).ready(function() {
   });
 
   $('#showDatasetActivity').on('change', function() {
-      $('.dataset-activity-wrapper').toggleClass('d-none');
+      var checked = $(this).prop('checked');
+
+      var $wrapper = $('.dataset-activity-wrapper');
+      var datasetId = $wrapper.data('dataset-id');
+      var fetched = $wrapper.data('fetched');
+
+      if(checked) {
+        if(fetched === false) {
+          fetchActivities(datasetId, 7);
+          $wrapper.data('fetched', true);
+        }
+        $wrapper.removeClass('d-none');
+      }
+      else {
+        $wrapper.addClass('d-none');
+      }
   });
 
+  function fetchActivities(datasetId, limit) {
+    var $wrapper = $('.dataset-activity-wrapper');
+    $.ajax({
+      url: '/api/3/action/hdx_package_activity_stream',
+      type: 'POST',
+      headers: hdxUtil.net.getCsrfTokenAsObject(),
+      contentType: 'application/json',
+      data: JSON.stringify({
+        id: datasetId,
+        limit: limit
+      }),
+      success: function (response) {
+        if (response.success) {
+          $wrapper.html(response.result);
+          var $activities = $wrapper.find('.activity');
+          if($.trim($activities.text()) === '') {
+            $activities.html('<p>No activities found.</p>');
+          }
+        } else {
+          console.error('Error fetching activities: ', response.error);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX error:', status, error);
+      }
+    });
+  }
 });
