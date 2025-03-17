@@ -14,7 +14,7 @@ this.ckan.module('hdx_terms_checkbox', function (jQuery, _) {
      */
     initialize: function () {
       jQuery.proxyAll(this, /_on/);
-      this.checkboxEl = jQuery(jQuery(this.el).find("input[type='checkbox']")[0]);
+      this.checkboxEl = jQuery(jQuery(this.el).parent().find("input[type='checkbox']")[0]);
       this.checkboxEl.on('change', this._onClick);
       this.buttonEl = jQuery(jQuery("#" + this.options.button)[0]);
 

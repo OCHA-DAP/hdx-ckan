@@ -22,7 +22,15 @@ ckan.module('hdx_tag_recommender', function ($, _) {
       var tag = $(e.target).text();
       var currentTags = this.tagInputEl.val();
       if (!currentTags || currentTags.indexOf(tag) < 0) {
-        var newTagsString = currentTags ? currentTags + ',' + tag : tag;
+        var newTagsString;
+
+        if (Array.isArray(currentTags) && currentTags.length > 0 && currentTags[0] !== '') {
+          newTagsString = currentTags.join(',') + ',' + tag;
+        }
+        else {
+          newTagsString = tag;
+        }
+
         this.tagInputEl.val((typeof currentTags === 'object') ? newTagsString.split(',') : newTagsString);
         this.tagInputEl.trigger('change');
         hdxUtil.analytics.sendLinkClickEvent({

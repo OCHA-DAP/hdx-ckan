@@ -49,35 +49,35 @@ function showTagRequestWidget(id) {
     _tagRequestTriggerInputDataClass($(this));
   });
 
-  $.ajax({
-    url: '/api/action/cached_approved_tags_list',
-    type: 'POST',
-    headers: hdxUtil.net.getCsrfTokenAsObject(),
-    success: function(data) {
-        if (data.success) {
-            var existingTags = [];
-            $(id).find('#suggested_tags').on('change', function(e) {
-                if (e.added) {
-                    if (data.result.includes(e.added.text.toLowerCase())) {
-                        existingTags.push(e.added.text);
-                        _markAlreadyApprovedTags(existingTags);
-                    }
-                } else if (e.removed) {
-                    var index = existingTags.indexOf(e.removed.text);
-                    if (index !== -1) {
-                        existingTags.splice(index, 1);
-                        _showAlreadyApprovedTagsError(existingTags);
-                    }
-                }
-            });
-        } else {
-            console.log('Error, approved tags not loaded!');
-        }
-    },
-    error: function() {
-        console.log('Error, approved tags not loaded!');
-    }
-  });
+  // $.ajax({
+  //   url: '/api/action/cached_approved_tags_list',
+  //   type: 'POST',
+  //   headers: hdxUtil.net.getCsrfTokenAsObject(),
+  //   success: function(data) {
+  //       if (data.success) {
+  //           var existingTags = [];
+  //           $(id).find('#suggested_tags').on('change', function(e) {
+  //               if (e.added) {
+  //                   if (data.result.includes(e.added.text.toLowerCase())) {
+  //                       existingTags.push(e.added.text);
+  //                       _markAlreadyApprovedTags(existingTags);
+  //                   }
+  //               } else if (e.removed) {
+  //                   var index = existingTags.indexOf(e.removed.text);
+  //                   if (index !== -1) {
+  //                       existingTags.splice(index, 1);
+  //                       _showAlreadyApprovedTagsError(existingTags);
+  //                   }
+  //               }
+  //           });
+  //       } else {
+  //           console.log('Error, approved tags not loaded!');
+  //       }
+  //   },
+  //   error: function() {
+  //       console.log('Error, approved tags not loaded!');
+  //   }
+  // });
 }
 
 $(document).ready(function () {

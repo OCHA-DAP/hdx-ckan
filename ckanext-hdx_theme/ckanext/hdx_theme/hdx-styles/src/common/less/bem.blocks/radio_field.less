@@ -1,0 +1,38 @@
+@import "bem_variables";
+
+.radio-field {
+
+  &__input {
+    &:focus {
+      box-shadow: none;
+    }
+    &:checked {
+      background-color: @black-color;
+      border-color: @black-color;
+    }
+  }
+
+  &__label {
+    color: @grey-extra-dark-color;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  &__label-guideline {
+    color: @grey-extra-dark-color;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 8px;
+    line-height: 22px;
+  }
+
+  &__required {
+    color: @red-color;
+    font-weight: 600;
+  }
+
+  &__feedback-message {
+    font-size: 14px;
+  }
+}

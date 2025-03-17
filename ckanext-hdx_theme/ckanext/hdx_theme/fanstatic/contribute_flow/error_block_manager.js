@@ -60,15 +60,13 @@ ckan.module('hdx_error_block_manager', function($, _) {
                 function (message) {
 
                     if (message.type === 'reset' ) {
-                        thisEl.addClass('hdx-invisible-element');
-                        thisEl.removeClass('hdx-visible-element');
+                        thisEl.addClass('d-none');
                         // if (errorEl.length){
                         //     errorEl.html('');
                         // }
                     }
                     else if (message.elementName === 'error_block' && message.errorBlock) {
-                        thisEl.removeClass('hdx-invisible-element');
-                        thisEl.addClass('hdx-visible-element');
+                        thisEl.removeClass('d-none');
                         if (message.errorBlock !== null) {
                           let errorItems = [];
                           Object.keys(message.errorBlock).forEach((item) => {
