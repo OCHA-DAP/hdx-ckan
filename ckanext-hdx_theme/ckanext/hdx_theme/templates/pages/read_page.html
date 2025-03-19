@@ -11,6 +11,8 @@
 
 {% block links %}
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {% set canonical_url = h.url_for('hdx_event.read_event', id=data.name) %}
+  {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
   {{ super() }}
 {% endblock %}
 
