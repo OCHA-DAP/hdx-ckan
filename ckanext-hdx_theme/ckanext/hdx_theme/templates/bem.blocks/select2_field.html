@@ -3,7 +3,12 @@
 {% set other_option_found = [] %}
 
 {% macro is_selected(value, selected) %}
-    {% if (selected is string and value == selected) or (selected is iterable and value in selected) %}
+    {% if (selected is string and value == selected) or
+        (selected is not string and selected is iterable and value in selected) %}
+        {#
+        If current value is a string compare the option's value to it.
+        If it's a list of strings (like in the case of locations) then check if the option's value is contained inside
+        #}
         selected="selected"
     {% endif %}
 {% endmacro %}
