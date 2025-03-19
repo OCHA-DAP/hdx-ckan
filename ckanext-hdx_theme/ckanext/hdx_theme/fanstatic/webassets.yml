@@ -209,7 +209,7 @@ bem-blocks-scripts:
   contents:
     - hdx-select2-field.js
     - bem.blocks/textarea_field.js
-    - bs_tooltip.js
+#    - bs_tooltip.js
 
 hdx-signals-scripts:
   <<: *common-js
