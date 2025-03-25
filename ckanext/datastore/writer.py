@@ -54,7 +54,7 @@ def tsv_writer(fields: list[dict[str, Any]], bom: bool = False):
 
 
 class TextWriter(object):
-    u'text in, text out'
+    'text in, text out'
     def __init__(self, output: StringIO):
         self.output = output
 
@@ -84,7 +84,7 @@ def json_writer(fields: list[dict[str, Any]], bom: bool = False):
 
     output.write(
         '{\n  "fields": %s,\n  "records": [' % dumps(
-            fields, ensure_ascii=False, separators=(u',', u':')))
+            fields, ensure_ascii=False, separators=(',', ':')))
     yield JSONWriter(output)
 
 
@@ -128,7 +128,7 @@ def xml_writer(fields: list[dict[str, Any]], bom: bool = False):
 
     output.write(
         b'<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n')
-    yield XMLWriter(output, [f[u'id'] for f in fields])
+    yield XMLWriter(output, [f['id'] for f in fields])
 
 
 class XMLWriter(object):

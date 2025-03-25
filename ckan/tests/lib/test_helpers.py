@@ -2,8 +2,8 @@
 
 import datetime
 import hashlib
-import six
 import os
+import sys
 
 import pytz
 import tzlocal
@@ -495,7 +495,7 @@ class TestGetDisplayTimezone(object):
         (
             datetime.datetime(2008, 4, 13, 20, 40, 59, 123456),
             {"with_seconds": True},
-            "April 13, 2008 at 8:40:59 PM UTC",
+            "April 13, 2008, 8:40:59\u202fPM UTC",
         ),
         ("2008-04-13T20:40:20.123456", {}, "April 13, 2008"),
         (None, {}, ""),
@@ -635,7 +635,7 @@ class TestBuildNavMain(object):
         with test_request_context(u'/dataset/' + resource['package_id'] + '/resource/' + resource['id']):
             menu = (
                 ("home.index", "Home"),
-                ("dataset.search", "Datasets", ['dataset', 'resource']),
+                ("dataset.search", "Datasets", ['dataset', 'resource', 'dataset_resource']),
                 ("organization.index", "Organizations"),
                 ("group.index", "Groups"),
                 ("home.about", "About"),
@@ -656,8 +656,8 @@ class TestBuildNavMain(object):
         link2 == '<a class="tag" href="/dataset/?tags=name">display_name</a>'
 
     def test_build_nav_icon(self):
-        link = h.build_nav_icon('organization.edit', 'Edit', id='org-id', icon='pencil-square')
-        assert link == '<li><a href="/organization/edit/org-id"><i class="fa fa-pencil-square"></i> Edit</a></li>'
+        link = h.build_nav_icon('organization.edit', 'Edit', id='org-id', icon='pencil')
+        assert link == '<li><a href="/organization/edit/org-id"><i class="fa fa-pencil"></i> Edit</a></li>'
 
 
 class TestRemoveUrlParam:
@@ -742,17 +742,30 @@ Notes: this is the classic RDF source but historically has had some problems wit
     ("2008-04-13T20:40:20.123456", datetime.datetime(2008, 4, 13, 20, 40, 20, 123456)),
     ("2008-04-13T20:40:20", datetime.datetime(2008, 4, 13, 20, 40, 20)),
     ("2008-04-13T20:40:20.1234", datetime.datetime(2008, 4, 13, 20, 40, 20, 123400)),
+    (
+        "2008-04-13T20:40:20.123-01:30",
+        datetime.datetime(2008, 4, 13, 20, 40, 20, 123000, datetime.timezone(
+            -datetime.timedelta(minutes=90)
+        ))),
+    pytest.param(
+        "2008-04-13T20:40:20-0130",
+        datetime.datetime(2008, 4, 13, 20, 40, 20, tzinfo=datetime.timezone(
+            datetime.timedelta(days=-1, seconds=81000))),
+        marks=pytest.mark.skipif(sys.version_info < (3, 11), reason="This is invalid in py<3.11")
+    )
 ])
-def test_date_str_to_datetime_valid(string, date):
+def test_date_str_to_datetime_valid(string: str, date: datetime.datetime):
     assert h.date_str_to_datetime(string) == date
 
 
 @pytest.mark.parametrize("string", [
-    "2008-04-13T20:40:20-01:30",
-    "2008-04-13T20:40:20-0130",
-    "2008-04-13T20:40:20foobar",
+    pytest.param(
+        "2008-04-13T20:40:20-0130",  # no `:` in timezone
+        marks=pytest.mark.skipif(sys.version_info >= (3, 11), reason="This is valid in py>=3.11"),
+    ),
+    "2008-04-13T20:40:20foobar",  # cannot parse the rest as milliseconds
 ])
-def test_date_str_to_datetime_invalid(string):
+def test_date_str_to_datetime_invalid(string: str):
     with pytest.raises(ValueError):
         h.date_str_to_datetime(string)
 
@@ -780,7 +793,7 @@ def test_gravatar():
     email = "zephod@gmail.com"
     expected = '<img src="//gravatar.com/avatar/7856421db6a63efa5b248909c472fbd2?s=200&amp;d=mm"'
 
-    email_hash = hashlib.md5(six.ensure_binary(email)).hexdigest()
+    email_hash = hashlib.md5(email.encode()).hexdigest()
     res = h.gravatar(email_hash, 200, default="mm")
     assert expected in res
 
@@ -793,7 +806,7 @@ def test_gravatar_config_set_default(ckan_config):
         '<img src="//gravatar.com/avatar/7856421db6a63efa5b248909c472fbd2?s=200&amp;d=%s"'
         % default
     )
-    email_hash = hashlib.md5(six.ensure_binary(email)).hexdigest()
+    email_hash = hashlib.md5(email.encode()).hexdigest()
     res = h.gravatar(email_hash, 200)
     assert expected in res
 
@@ -804,7 +817,7 @@ def test_gravatar_encodes_url_correctly():
     default = "http://example.com/images/avatar.jpg"
     expected = '<img src="//gravatar.com/avatar/7856421db6a63efa5b248909c472fbd2?s=200&amp;d=http%3A%2F%2Fexample.com%2Fimages%2Favatar.jpg"'
 
-    email_hash = hashlib.md5(six.ensure_binary(email)).hexdigest()
+    email_hash = hashlib.md5(email.encode()).hexdigest()
     res = h.gravatar(email_hash, 200, default=default)
     assert expected in res
 

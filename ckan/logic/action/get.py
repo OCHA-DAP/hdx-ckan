@@ -10,7 +10,7 @@ import socket
 from typing import (Container, Optional,
                     Union, Any, cast, Type)
 
-from ckan.common import config, asbool
+from ckan.common import config, asbool, aslist
 import sqlalchemy
 from sqlalchemy import text
 
@@ -55,15 +55,7 @@ _or_ = sqlalchemy.or_
 _and_ = sqlalchemy.and_
 _func = sqlalchemy.func
 _case = sqlalchemy.case
-
-
-def site_read(context: Context, data_dict: Optional[DataDict]=None) -> bool:
-    '''Return ``True``.
-
-    :rtype: bool
-    '''
-    _check_access('site_read', context, data_dict)
-    return True
+_null = sqlalchemy.null
 
 
 @logic.validate(ckan.logic.schema.default_pagination_schema)
@@ -89,7 +81,7 @@ def package_list(context: Context, data_dict: DataDict) -> ActionResult.PackageL
     package_table = model.package_table
     col = (package_table.c["id"]
            if api == 2 else package_table.c["name"])
-    query = _select([col])
+    query = _select(col)
     query = query.where(_and_(
         package_table.c["state"] == 'active',
         package_table.c["private"] == False,
@@ -105,7 +97,9 @@ def package_list(context: Context, data_dict: DataDict) -> ActionResult.PackageL
         query = query.offset(offset)
 
     ## Returns the first field in each result record
-    return [r[0] for r in query.execute() or []]
+    return context["session"].scalars(
+        query
+    ).all()
 
 
 @logic.validate(ckan.logic.schema.default_package_list_schema)
@@ -183,12 +177,13 @@ def member_list(context: Context, data_dict: DataDict) -> ActionResult.MemberLis
     # User must be able to update the group to remove a member from it
     _check_access('group_show', context, data_dict)
 
-    q = model.Session.query(model.Member).\
-        filter(model.Member.group_id == group.id).\
+    q = model.Session.query(model.Member)
+    if obj_type:
+        q = model.Member.all(obj_type)
+
+    q = q.filter(model.Member.group_id == group.id).\
         filter(model.Member.state == "active")
 
-    if obj_type:
-        q = q.filter(model.Member.table_name == obj_type)
     if capacity:
         q = q.filter(model.Member.capacity == capacity)
 
@@ -392,15 +387,14 @@ def _group_or_org_list(
     query = query.filter(model.Group.state == 'active')
 
     if groups:
-        # type_ignore_reason: incomplete SQLAlchemy types
-        query = query.filter(model.Group.name.in_(groups))  # type: ignore
+        groups = aslist(groups, sep=",")
+        query = query.filter(model.Group.name.in_(groups))
     if q:
         q = u'%{0}%'.format(q)
         query = query.filter(_or_(
-            # type_ignore_reason: incomplete SQLAlchemy types
-            model.Group.name.ilike(q),  # type: ignore
-            model.Group.title.ilike(q),  # type: ignore
-            model.Group.description.ilike(q),  # type: ignore
+            model.Group.name.ilike(q),
+            model.Group.title.ilike(q),
+            model.Group.description.ilike(q),
         ))
 
     query = query.filter(model.Group.is_organization == is_org)
@@ -409,7 +403,7 @@ def _group_or_org_list(
     if sort_info:
         sort_field = sort_info[0][0]
         sort_direction = sort_info[0][1]
-        sort_model_field = sqlalchemy.func.count(model.Group.id)
+        sort_model_field: Any = sqlalchemy.func.count(model.Group.id)
         if sort_field == 'package_count':
             query = query.group_by(model.Group.id, model.Group.name)
         elif sort_field == 'name':
@@ -599,8 +593,7 @@ def group_list_authz(context: Context,
         q: Any = model.Session.query(model.Member.group_id) \
             .filter(model.Member.table_name == 'user') \
             .filter(
-                # type_ignore_reason: incomplete SQLAlchemy types
-                model.Member.capacity.in_(roles)  # type: ignore
+                model.Member.capacity.in_(roles)
             ).filter(model.Member.table_id == user_id) \
             .filter(model.Member.state == 'active')
         group_ids = []
@@ -615,8 +608,7 @@ def group_list_authz(context: Context,
         .filter(model.Group.state == 'active')
 
     if not sysadmin or am_member:
-        # type_ignore_reason: incomplete SQLAlchemy types
-        q = q.filter(model.Group.id.in_(group_ids))  # type: ignore
+        q = q.filter(model.Group.id.in_(group_ids))
 
     groups = q.all()
 
@@ -625,7 +617,9 @@ def group_list_authz(context: Context,
         if package:
             groups = set(groups) - set(package.get_groups())
 
-    group_list = model_dictize.group_list_dictize(groups, context)
+    group_list = model_dictize.group_list_dictize(groups, context,
+        with_package_counts=asbool(data_dict.get('include_dataset_count')),
+        with_member_counts=asbool(data_dict.get('include_member_count')))
     return group_list
 
 
@@ -707,8 +701,7 @@ def organization_list_for_user(context: Context,
         q: Query[tuple[model.Member, model.Group]] = model.Session.query(model.Member, model.Group) \
             .filter(model.Member.table_name == 'user') \
             .filter(
-                # type_ignore_reason: incomplete SQLAlchemy types
-                model.Member.capacity.in_(roles)  # type: ignore
+                model.Member.capacity.in_(roles)
             ) \
             .filter(model.Member.table_id == user_id) \
             .filter(model.Member.state == 'active') \
@@ -736,14 +729,14 @@ def organization_list_for_user(context: Context,
         if not group_ids:
             return []
 
-        # type_ignore_reason: incomplete SQLAlchemy types
-        orgs_q = orgs_q.filter(model.Group.id.in_(group_ids))  # type: ignore
+        orgs_q = orgs_q.filter(model.Group.id.in_(group_ids))
         orgs_and_capacities = [
             (org, group_ids_to_capacities[org.id]) for org in orgs_q.all()]
 
     context['with_capacity'] = True
     orgs_list = model_dictize.group_list_dictize(orgs_and_capacities, context,
-        with_package_counts=asbool(data_dict.get('include_dataset_count')))
+        with_package_counts=asbool(data_dict.get('include_dataset_count')),
+        with_member_counts=asbool(data_dict.get('include_member_count')))
     return orgs_list
 
 
@@ -852,18 +845,16 @@ def user_list(
     if all_fields:
         query: 'Query[Any]' = model.Session.query(
             model.User,
-            # type_ignore_reason: incomplete SQLAlchemy types
-            model.User.name.label('name'),  # type: ignore
-            model.User.fullname.label('fullname'),  # type: ignore
-            model.User.about.label('about'),  # type: ignore
-            model.User.email.label('email'),  # type: ignore
-            model.User.created.label('created'),  # type: ignore
-            _select([_func.count(model.Package.id)],
-                    _and_(
-                        model.Package.creator_user_id == model.User.id,
-                        model.Package.state == 'active',
-                        model.Package.private == False,
-                    )).label('number_created_packages')
+            model.User.name.label('name'),
+            model.User.fullname.label('fullname'),
+            model.User.about.label('about'),
+            model.User.email.label('email'),
+            model.User.created.label('created'),
+            _select(_func.count(model.Package.id)).where(
+                model.Package.creator_user_id == model.User.id,
+                model.Package.state == 'active',
+                model.Package.private == False,
+            ).label('number_created_packages')
         )
     else:
         query = model.Session.query(model.User.name)
@@ -891,16 +882,10 @@ def user_list(
             pass
     if order_by == 'display_name' or order_by_field is None:
         query = query.order_by(
-            _case(
-                [(
-                    _or_(
-                        model.User.fullname == None,
-                        model.User.fullname == ''
-                    ),
-                    model.User.name
-                )],
-                else_=model.User.fullname
-            )
+            _case((_or_(
+                model.User.fullname.is_(None),
+                model.User.fullname == ''
+            ), model.User.name), else_=model.User.fullname)
         )
     elif order_by_field == 'number_created_packages' \
          or order_by_field == 'fullname' \
@@ -920,7 +905,7 @@ def user_list(
 
     if all_fields:
         for user in query.all():
-            result_dict = model_dictize.user_dictize(user[0], context)
+            result_dict: Any = model_dictize.user_dictize(user[0], context)
             users_list.append(result_dict)
     else:
         for user in query.all():
@@ -989,9 +974,6 @@ def package_show(context: Context, data_dict: DataDict) -> ActionResult.PackageS
     :param use_default_schema: use default package schema instead of
         a custom schema defined with an IDatasetForm plugin (default: ``False``)
     :type use_default_schema: bool
-    :param include_tracking: add tracking information to dataset and
-        resources (default: ``False``)
-    :type include_tracking: bool
     :param include_plugin_data: Include the internal plugin data object
         (sysadmin only, optional, default:``False``)
     :type: include_plugin_data: bool
@@ -1005,7 +987,10 @@ def package_show(context: Context, data_dict: DataDict) -> ActionResult.PackageS
 
     include_plugin_data = asbool(data_dict.get('include_plugin_data', False))
     if user_obj and user_obj.is_authenticated:
-        include_plugin_data = user_obj.sysadmin and include_plugin_data
+        include_plugin_data = (
+            user_obj.sysadmin  # type: ignore
+            and include_plugin_data
+        )
 
         if include_plugin_data:
             context['use_cache'] = False
@@ -1020,9 +1005,8 @@ def package_show(context: Context, data_dict: DataDict) -> ActionResult.PackageS
     context['package'] = pkg
     _check_access('package_show', context, data_dict)
 
-    if data_dict.get('use_default_schema', False):
+    if asbool(data_dict.get('use_default_schema', False)):
         context['schema'] = ckan.logic.schema.default_show_package_schema()
-    include_tracking = asbool(data_dict.get('include_tracking', False))
 
     package_dict = None
     use_cache = (context.get('use_cache', True))
@@ -1054,16 +1038,6 @@ def package_show(context: Context, data_dict: DataDict) -> ActionResult.PackageS
             pkg, context, include_plugin_data
         )
         package_dict_validated = False
-
-    if include_tracking:
-        # page-view tracking summary data
-        package_dict['tracking_summary'] = (
-            model.TrackingSummary.get_for_package(package_dict['id']))
-
-        for resource_dict in package_dict['resources']:
-            summary =  model.TrackingSummary.get_for_resource(
-                resource_dict['url'])
-            resource_dict['tracking_summary'] = summary
 
     if context.get('for_view'):
         for item in plugins.PluginImplementations(plugins.IPackageController):
@@ -1099,9 +1073,6 @@ def resource_show(
 
     :param id: the id of the resource
     :type id: string
-    :param include_tracking: add tracking information to dataset and
-        resources (default: ``False``)
-    :type include_tracking: bool
 
     :rtype: dictionary
 
@@ -1110,17 +1081,15 @@ def resource_show(
     id = _get_or_bust(data_dict, 'id')
 
     resource = model.Resource.get(id)
-    resource_context = cast(Context, dict(context, resource=resource))
-
     if not resource:
         raise NotFound
 
+    resource_context = Context(context, resource=resource)
     _check_access('resource_show', resource_context, data_dict)
 
     pkg_dict = logic.get_action('package_show')(
-        context.copy(),
-        {'id': resource.package.id,
-        'include_tracking': asbool(data_dict.get('include_tracking', False))})
+        context.copy(), {'id': resource.package.id}
+        )
 
     for resource_dict in pkg_dict['resources']:
         if resource_dict['id'] == id:
@@ -1210,6 +1179,7 @@ def _group_or_org_show(
         include_groups = asbool(data_dict.get('include_groups', True))
         include_extras = asbool(data_dict.get('include_extras', True))
         include_followers = asbool(data_dict.get('include_followers', True))
+        include_member_count = asbool(data_dict.get('include_member_count', False))
     except ValueError:
         raise logic.ValidationError({
             'message': _('Parameter is not an bool')
@@ -1234,7 +1204,8 @@ def _group_or_org_show(
                                              include_tags=include_tags,
                                              include_extras=include_extras,
                                              include_groups=include_groups,
-                                             include_users=include_users,)
+                                             include_users=include_users,
+                                             include_member_count=include_member_count,)
 
     if is_org:
         plugin_type = plugins.IOrganizationController
@@ -1245,13 +1216,18 @@ def _group_or_org_show(
         item.read(group)
 
     group_plugin = lib_plugins.lookup_group_plugin(group_dict['type'])
-    try:
-        schema: Schema = group_plugin.db_to_form_schema_options({
-            'type': 'show',
-            'api': 'api_version' in context,
+
+    if context.get("schema"):
+        schema: Schema = context["schema"]
+    elif hasattr(group_plugin, "show_group_schema"):
+        schema: Schema = group_plugin.show_group_schema()
+    # TODO: remove these fallback deprecated methods in the next release
+    elif hasattr(group_plugin, "db_to_form_schema_options"):
+        schema: Schema = getattr(group_plugin, "db_to_form_schema_options")({
+            'type': 'show', 'api': 'api_version' in context,
             'context': context})
-    except AttributeError:
-        schema = group_plugin.db_to_form_schema()
+    else:
+        schema: Schema = group_plugin.db_to_form_schema()
 
     if include_followers:
         context = plugins.toolkit.fresh_context(context)
@@ -1261,8 +1237,6 @@ def _group_or_org_show(
     else:
         group_dict['num_followers'] = 0
 
-    if not schema:
-        schema = ckan.logic.schema.default_show_group_schema()
     group_dict, _errors = lib_plugins.plugin_validate(
         group_plugin, context, group_dict, schema,
         'organization_show' if is_org else 'group_show')
@@ -1611,8 +1585,7 @@ def format_autocomplete(context: Context, data_dict: DataDict) -> ActionResult.F
         .filter(_and_(
             model.Resource.state == 'active',
         ))
-        # type_ignore_reason: incomplete SQLAlchemy types
-        .filter(model.Resource.format.ilike(like_q))  # type: ignore
+        .filter(model.Resource.format.ilike(like_q))
         .group_by(model.Resource.format)
         .order_by(text('total DESC'))
         .limit(limit))
@@ -1643,7 +1616,7 @@ def user_autocomplete(context: Context, data_dict: DataDict) -> ActionResult.Use
     limit = data_dict.get('limit', 20)
     ignore_self = data_dict.get('ignore_self', False)
 
-    query = model.User.search(q)
+    query = model.User.search(q, user_name=user)
     query = query.filter(model.User.state != model.State.DELETED)
 
     if ignore_self:
@@ -1985,9 +1958,8 @@ def package_search(context: Context, data_dict: DataDict) -> ActionResult.Packag
         group_names.extend(facets.get(field_name, {}).keys())
 
     groups = (session.query(model.Group.name, model.Group.title)
-                    # type_ignore_reason: incomplete SQLAlchemy types
-                    .filter(model.Group.name.in_(group_names))  # type: ignore
-                    .all()
+              .filter(model.Group.name.in_(group_names))
+              .all()
               if group_names else [])
     group_titles_by_name = dict(groups)
 
@@ -2224,7 +2196,7 @@ def _tag_search(
         q = q.filter(model.Tag.vocabulary_id == vocab.id)
     else:
         # If no vocabulary_name in data dict then show free tags only.
-        q = q.filter(model.Tag.vocabulary_id == None)
+        q = q.filter(model.Tag.vocabulary_id.is_(None))
         # If we're searching free tags, limit results to tags that are
         # currently applied to a package.
         q: Query[model.Tag] = q.distinct().join(model.Tag.package_tags)
@@ -2239,9 +2211,7 @@ def _tag_search(
     for term in terms:
         escaped_term = misc.escape_sql_like_special_characters(
             term, escape='\\')
-        q = q.filter(
-            # type_ignore_reason: incomplete SQLAlchemy types
-            model.Tag.name.ilike('%' + escaped_term + '%'))  # type: ignore
+        q = q.filter(model.Tag.name.ilike('%' + escaped_term + '%'))
 
     count = q.count()
     q = q.offset(offset)
@@ -2385,7 +2355,7 @@ def term_translation_show(
 
     trans_table = model.term_translation_table
 
-    q = _select([trans_table])
+    q = _select(trans_table)
 
     if 'terms' not in data_dict:
         raise ValidationError({'terms': 'terms not in data'})

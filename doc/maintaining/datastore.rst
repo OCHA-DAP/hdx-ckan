@@ -11,7 +11,7 @@ the DataStore.
 
 When a resource is added to the DataStore, you get:
 
-* Automatic data previews on the resource's page, using the :ref:`Data Explorer extension <data-explorer>`
+* Automatic data previews on the resource's page, using for instance the :ref:`DataTables view extension <datatables-view>`
 * `The Data API`_: search, filter and update the data, without having to download
   and upload the entire data file
 
@@ -42,14 +42,12 @@ the spreadsheet data is stored in the DataStore, one would be able to access
 individual spreadsheet rows via a simple web API, as well as being able to make
 queries over the spreadsheet contents.
 
+
+.. _setting_up_datastore:
+
 ------------------------
 Setting up the DataStore
 ------------------------
-
-.. versionchanged:: 2.6
-
-   Previous CKAN (and DataStore) versions were compatible with earlier versions
-   of |postgres|.
 
 1. Enable the plugin
 ====================
@@ -236,12 +234,14 @@ each column:
 * **Label:** a human-friendly label for this column
 * **Description:** a full description for this column in markdown format
 
-Extension developers may add new fields to this form by overriding the default
-Data Dictionary form template ``datastore/snippets/dictionary_form.html``.
-
 The Data Dictionary is set through the API as part of the :ref:`fields` passed
 to :meth:`~ckanext.datastore.logic.action.datastore_create` and
 returned from :meth:`~ckanext.datastore.logic.action.datastore_search`.
+
+.. seealso::
+
+   For information on customizing the Data Dictionary form, see
+   :doc:`/extensions/custom-data-dictionary`.
 
 
 .. _dump:
@@ -333,7 +333,7 @@ expect from a powerful database management system.
 
 A DataStore resource can not be created on its own. It is always required to have an
 associated CKAN resource. If data is stored in the DataStore, it can automatically be
-previewed by a :ref:`preview extension <data-explorer>`.
+previewed by a :ref:`preview extension <datatables-view>`.
 
 
 Making a Data API request
@@ -347,7 +347,7 @@ returns its response in a JSON dictionary. See the :doc:`/api/index` for details
 API reference
 =============
 
-.. note:: Lists can always be expressed in different ways. It is possible to use lists, comma separated strings or single items. These are valid lists: ``['foo', 'bar']``, ``'foo, bar'``, ``"foo", "bar"`` and ``'foo'``. Additionally, there are several ways to define a boolean value. ``True``, ``on`` and ``1`` are all vaid boolean values.
+.. note:: Lists can always be expressed in different ways. It is possible to use lists, comma separated strings or single items. These are valid lists: ``['foo', 'bar']``, ``'foo, bar'``, ``"foo", "bar"`` and ``'foo'``. Additionally, there are several ways to define a boolean value. ``True``, ``on`` and ``1`` are all valid boolean values.
 
 .. note:: The table structure of the DataStore is explained in :ref:`db_internals`.
 
@@ -369,36 +369,20 @@ Fields define the column names and the type of the data in a column. A field is 
             "label":  # human-readable label for column
             "notes":  # markdown description of column
             "type_override":  # type for datapusher to use when importing data
-            ...:  # other user-defined fields
+            ...:  # free-form user-defined values
 	}
+        ...:  # values defined and validated with IDataDictionaryForm
     }
 
 Field types not provided will be guessed based on the first row of provided data.
 Set the types to ensure that future inserts will not fail because of an incorrectly
 guessed type. See :ref:`valid-types` for details on which types are valid.
 
-Extra ``"info"`` field values will be stored along with the column. ``"label"``,
-``"notes"`` and ``"type_override"`` can be managed from the default :ref:`data_dictionary`
-form.  Additional fields can be stored by customizing the Data Dictionary form or by
-passing their values to the API directly.
+.. seealso::
 
-Example::
+   For more on custom field values and customizing the Data Dictionary form, see
+   :doc:`/extensions/custom-data-dictionary`.
 
-    [
-        {
-            "id": "code_number",
-            "type": "numeric"
-        },
-        {
-            "id": "description"
-            "type": "text",
-            "info": {
-                "label": "Description",
-                "notes": "A brief usage description for this code",
-                "example": "Used for temporary service interruptions"
-            }
-        }
-    ]
 
 .. _records:
 
@@ -460,6 +444,47 @@ bool
 You can find more information about the formatting of dates in the `date/time types section of the PostgreSQL documentation`_.
 
 .. _date/time types section of the PostgreSQL documentation: http://www.postgresql.org/docs/9.1/static/datatype-datetime.html
+
+.. _filters:
+
+Filters
+-------
+
+Filters define the matching conditions to select from the DataStore. A filter is defined as follows::
+
+    {
+        "resource_id":  # the resource ID (required)
+        "filters": {
+            # column name: # field value
+            # column name: # List of field values
+            ...:  # other user-defined filters
+  }
+    }
+
+Filters must be supplied as a dictonary. Filters are used as `WHERE` statements.
+The filters have to be valid key/value pairs. The key must be a valid column name
+and the value must match the respective column type. The value may be provided as a List
+of multiple matching values. See :ref:`valid-types` for details on which types are valid.
+
+Example (single filter values, used as `WHERE =` statements)::
+
+    {
+        "resource_id":  "5f38da22-7d55-4312-81ce-17f1a9e84788",
+        "filters": {
+            "name": "Fred",
+            "dob":  "1994-7-07"
+        }
+    }
+
+Example (multiple filter values, used as `WHERE IN` statements)::
+
+    {
+        "resource_id":  "5f38da22-7d55-4312-81ce-17f1a9e84788",
+        "filters": {
+            "name": ["Fred", "Jones"],
+            "dob":  ["1994-7-07", "1992-7-27"]
+        }
+    }
 
 .. _resource-aliases:
 

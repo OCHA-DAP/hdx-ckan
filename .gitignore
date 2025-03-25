@@ -62,3 +62,12 @@ travis.env
 
 # cypress
 cypress/videos
+
+#testing
+junit
+.coverage*
+.cache
+.bash_history
+.gitconfig
+.npm
+.test_durations

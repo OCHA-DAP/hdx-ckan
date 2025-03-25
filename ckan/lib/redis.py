@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-u'''
+'''
 Redis utilities.
 
 .. versionadded:: 2.7
@@ -21,8 +21,8 @@ log = logging.getLogger(__name__)
 _connection_pool = None
 
 
-def connect_to_redis() -> Redis:  # type: ignore
-    u'''
+def connect_to_redis() -> Redis:
+    '''
     (Lazily) connect to Redis.
 
     The connection is set up but not actually established. The latter
@@ -42,7 +42,7 @@ def connect_to_redis() -> Redis:  # type: ignore
 
 
 def is_redis_available() -> bool:
-    u'''
+    '''
     Check whether Redis is available.
 
     :returns: The availability of Redis.
@@ -50,10 +50,12 @@ def is_redis_available() -> bool:
 
     .. seealso:: :py:func:`connect_to_redis`
     '''
+    # HDX EDIT (?) #
     # redis_conn = connect_to_redis()
     # try:
-    #     return redis_conn.ping()
+    #     return redis_conn.ping() is True
     # except Exception:
     #     log.exception(u'Redis is not available')
     #     return False
     return False
+    # END HDX EDIT #

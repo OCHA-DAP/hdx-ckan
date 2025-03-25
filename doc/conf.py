@@ -85,7 +85,9 @@ rst_epilog = '''
 extensions = [
     'sphinx.ext.autodoc', 'sphinx.ext.todo',
     'sphinx.ext.autosummary', 'ckan.plugins.toolkit_sphinx_extension',
+    'sphinx_rtd_theme', 'sphinx.ext.extlinks',
 ]
+html_theme = 'sphinx_rtd_theme'
 autodoc_member_order = 'bysource'
 todo_include_todos = True
 
@@ -309,16 +311,6 @@ def get_current_package_name(distro, py_version=None):
     return name
 
 
-def get_min_setuptools_version():
-    '''
-    Get the minimum setuptools version as defined in requirement-setuptools.txt
-    '''
-    filename = os.path.join(os.path.dirname(__file__), '..',
-                            'requirement-setuptools.txt')
-    with open(filename) as f:
-        return f.read().split('==')[1].strip()
-
-
 def config_defaults_from_declaration():
     from ckan.config.declaration import Declaration
     decl = Declaration()
@@ -326,7 +318,6 @@ def config_defaults_from_declaration():
     decl.load_plugin("resource_proxy")
     decl.load_plugin("text_view")
     decl.load_plugin("image_view")
-    decl.load_plugin("recline_view")
     decl.load_plugin("datatables_view")
     decl.load_plugin("datastore")
     decl.load_plugin("datapusher")
@@ -407,7 +398,6 @@ write_substitutions_file(
     latest_release_version_format=latest_release_version_format,
     current_package_name_jammy=get_current_package_name('jammy'),
     current_package_name_focal=get_current_package_name('focal'),
-    min_setuptools_version=get_min_setuptools_version(),
     **config_defaults_from_declaration()
 )
 
@@ -569,3 +559,8 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+extlinks = {'source-blob': (
+    f'https://github.com/ckan/ckan/blob/{current_release_tag_value}/%s',
+    'source for %s'
+)}

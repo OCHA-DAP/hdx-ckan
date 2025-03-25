@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-import six
 import pytest
 
 import ckan.tests.factories as factories
@@ -66,7 +65,7 @@ def test_apitoken_contains_unicode(app):
 
 def test_options(app):
     response = app.options(url="/", status=200)
-    assert len(six.ensure_str(response.data)) == 0, "OPTIONS must return no content"
+    assert len(response.data) == 0, "OPTIONS must return no content"
 
 
 def test_cors_config_no_cors(app):
@@ -130,7 +129,7 @@ def test_cors_config_origin_allow_all_true_with_origin(app):
     )
     assert (
         response_headers["Access-Control-Allow-Headers"]
-        == "X-CKAN-API-KEY, Authorization, Content-Type"
+        == "Authorization, Content-Type"
     )
 
 
@@ -177,7 +176,7 @@ def test_cors_config_origin_allow_all_false_with_whitelisted_origin(app):
     )
     assert (
         response_headers["Access-Control-Allow-Headers"]
-        == "X-CKAN-API-KEY, Authorization, Content-Type"
+        == "Authorization, Content-Type"
     )
 
 
@@ -211,7 +210,7 @@ def test_cors_config_origin_allow_all_false_with_multiple_whitelisted_origins(
     )
     assert (
         response_headers["Access-Control-Allow-Headers"]
-        == "X-CKAN-API-KEY, Authorization, Content-Type"
+        == "Authorization, Content-Type"
     )
 
 
@@ -243,7 +242,7 @@ def test_cors_config_origin_allow_all_false_with_whitelist_not_containing_origin
 @pytest.mark.usefixtures("with_plugins")
 def test_options_2(app):
     response = app.options(url="/simple_url", status=200)
-    assert len(six.ensure_str(response.data)) == 0, "OPTIONS must return no content"
+    assert len(response.data) == 0, "OPTIONS must return no content"
 
 
 @pytest.mark.ckan_config("ckan.plugins", "test_blueprint_plugin")
@@ -315,7 +314,7 @@ def test_cors_config_origin_allow_all_true_with_origin_2(app):
     )
     assert (
         response_headers["Access-Control-Allow-Headers"]
-        == "X-CKAN-API-KEY, Authorization, Content-Type"
+        == "Authorization, Content-Type"
     )
 
 
@@ -368,7 +367,7 @@ def test_cors_config_origin_allow_all_false_with_whitelisted_origin_2(app):
     )
     assert (
         response_headers["Access-Control-Allow-Headers"]
-        == "X-CKAN-API-KEY, Authorization, Content-Type"
+        == "Authorization, Content-Type"
     )
 
 
@@ -404,7 +403,27 @@ def test_cors_config_origin_allow_all_false_with_multiple_whitelisted_origins_2(
     )
     assert (
         response_headers["Access-Control-Allow-Headers"]
-        == "X-CKAN-API-KEY, Authorization, Content-Type"
+        == "Authorization, Content-Type"
+    )
+
+
+@pytest.mark.ckan_config("ckan.cors.origin_allow_all", "true")
+@pytest.mark.ckan_config("ckan.site_url", "http://test.ckan.org")
+@pytest.mark.ckan_config("apitoken_header_name", "X-CKAN-API-TOKEN")
+@pytest.mark.ckan_config("ckan.plugins", "test_blueprint_plugin")
+@pytest.mark.usefixtures("with_plugins")
+def test_cors_config_custom_auth_header(app):
+    """
+    When using a custom value for the auth header, this should be returned
+    in the Access-Control-Allow-Headers header in the response.
+    """
+    request_headers = {"Origin": "http://thirdpartyrequests.org"}
+    response = app.get("/simple_url", headers=request_headers)
+    response_headers = dict(response.headers)
+
+    assert (
+        response_headers["Access-Control-Allow-Headers"]
+        == "X-CKAN-API-TOKEN, Content-Type"
     )
 
 

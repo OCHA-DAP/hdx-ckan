@@ -11,7 +11,7 @@ from ckan import model
 from ckan.logic.schema import (
     default_create_package_schema,
     default_update_package_schema,
-    default_group_schema,
+    default_update_group_schema,
     default_tags_schema,
 )
 from ckan.lib.navl.dictization_functions import validate
@@ -480,9 +480,7 @@ class TestPackageDictize:
         self.assert_equals_expected(expected_dict, result["resources"][0])
 
     def test_package_dictize_resource_upload_and_striped(self):
-        dataset = factories.Dataset()
         resource = factories.Resource(
-            package=dataset["id"],
             name="test_pkg_dictize",
             url_type="upload",
             url="some_filename.csv",
@@ -496,9 +494,7 @@ class TestPackageDictize:
         assert expected_dict["url"] == result.url
 
     def test_package_dictize_resource_upload_with_url_and_striped(self):
-        dataset = factories.Dataset()
         resource = factories.Resource(
-            package=dataset["id"],
             name="test_pkg_dictize",
             url_type="upload",
             url="http://some_filename.csv",
@@ -566,6 +562,7 @@ class TestPackageDictize:
             u"state": group["state"],
             u"title": group["title"],
             u"type": group["type"],
+            u"member_count": 1,
         }
         self.assert_equals_expected(expected_dict, result["groups"][0])
 
@@ -779,7 +776,7 @@ class TestPackageSchema(object):
             ]
         }, pformat(errors)
 
-    @pytest.mark.usefixtures("clean_index")
+    @pytest.mark.usefixtures("clean_index", "clean_db")
     def test_group_schema(self):
         group = factories.Group.model()
         context = {"model": model, "session": model.Session}
@@ -794,7 +791,7 @@ class TestPackageSchema(object):
         del data["extras"]
 
         converted_data, errors = validate(
-            data, default_group_schema(), context
+            data, default_update_group_schema(), context
         )
         assert not errors
         group_pack = sorted(group.packages(), key=operator.attrgetter("id"))
@@ -838,7 +835,7 @@ class TestPackageSchema(object):
         data["packages"][1].pop("name")
 
         converted_data, errors = validate(
-            data, default_group_schema(), context
+            data, default_update_group_schema(), context
         )
         assert errors == {
             "packages": [

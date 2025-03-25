@@ -3,8 +3,6 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-import six
-
 from urllib.parse import quote
 from flask.wrappers import Response
 
@@ -40,7 +38,7 @@ def set_cors_headers_for_response(response: Response) -> Response:
             response.headers['Access-Control-Allow-Methods'] = \
                 'POST, PUT, GET, DELETE, OPTIONS'
             response.headers['Access-Control-Allow-Headers'] = \
-                'X-CKAN-API-KEY, Authorization, Content-Type'
+                f'{config.get("apitoken_header_name")}, Content-Type'
 
     return response
 
@@ -49,6 +47,7 @@ def set_cache_control_headers_for_response(response: Response) -> Response:
 
     # __no_cache__ should not be present when caching is allowed
     allow_cache = u'__no_cache__' not in request.environ
+    limit_cache_by_cookie = u'__limit_cache_by_cookie__' in request.environ
 
     if u'Pragma' in response.headers:
         del response.headers["Pragma"]
@@ -63,6 +62,10 @@ def set_cache_control_headers_for_response(response: Response) -> Response:
             pass
     else:
         response.cache_control.private = True
+
+    # Invalidate cached pages upon login/logout
+    if limit_cache_by_cookie:
+        response.vary.add("Cookie")
 
     return response
 
@@ -120,23 +123,13 @@ def identify_user() -> Optional[Response]:
 
 
 def _get_user_for_apitoken() -> Optional[model.User]:  # type: ignore
-    apitoken_header_name = config.get("apikey_header_name")
-
+    apitoken_header_name = config.get("apitoken_header_name")
     apitoken: str = request.headers.get(apitoken_header_name, u'')
-    if not apitoken:
-        apitoken = request.environ.get(apitoken_header_name, u'')
-    if not apitoken:
-        # For misunderstanding old documentation (now fixed).
-        apitoken = request.environ.get(u'HTTP_AUTHORIZATION', u'')
-    if not apitoken:
-        apitoken = request.environ.get(u'Authorization', u'')
-        # Forget HTTP Auth credentials (they have spaces).
-        if u' ' in apitoken:
-            apitoken = u''
+
     if not apitoken:
         return None
-    apitoken = six.ensure_text(apitoken, errors=u"ignore")
-    log.debug(u'Received API Token: %s' % apitoken)
+    apitoken = str(apitoken)
+    log.debug(f'Received API Token: {apitoken[:10]}[...]')
 
     user = api_token.get_user_from_token(apitoken)
 

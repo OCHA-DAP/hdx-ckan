@@ -44,9 +44,8 @@ import os
 import os.path
 from typing import Any, Optional
 
-import six
 from babel import Locale
-from babel.core import (LOCALE_ALIASES,  # type: ignore
+from babel.core import (LOCALE_ALIASES,
                         get_locale_identifier,
                         UnknownLocaleError)
 import polib
@@ -55,6 +54,7 @@ from ckan.plugins import PluginImplementations
 from ckan.plugins.interfaces import ITranslation
 from ckan.types import Request
 from ckan.common import config
+from ckan.lib.io import get_ckan_temp_directory
 
 log = logging.getLogger(__name__)
 
@@ -65,9 +65,6 @@ LOCALE_ALIASES['pt'] = 'pt_BR'
 # CKAN root directory
 _CKAN_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), u'..'))
 
-# Output directory for generated JavaScript translations
-_JS_TRANSLATIONS_DIR = os.path.join(_CKAN_DIR, u'public', u'base', u'i18n')
-
 
 def get_ckan_i18n_dir() -> str:
     path = config.get(u'ckan.i18n_directory') or os.path.join(
@@ -76,6 +73,14 @@ def get_ckan_i18n_dir() -> str:
         path = os.path.join(path, u'i18n')
 
     return path
+
+
+def get_js_translations_dir() -> str:
+    storage_path = config["ckan.storage_path"] or get_ckan_temp_directory()
+
+    js_translations_path = os.path.join(storage_path, "i18n", "js")
+
+    return js_translations_path
 
 
 def get_locales_from_config() -> set[str]:
@@ -202,7 +207,7 @@ def get_available_locales() -> list[Locale]:
             # to properly construct urls with url_for
             parsed_locale = Locale.parse(locale)
             assert parsed_locale
-            parsed_locale.short_name = locale
+            parsed_locale.short_name = locale  # type: ignore
 
             # Add the full identifier (eg `pt_BR`) to the locale classes,
             # as it does not offer a way of accessing it directly
@@ -210,7 +215,7 @@ def get_available_locales() -> list[Locale]:
                 parsed_locale
             )
 
-            parsed_locale.identifier = identifier
+            parsed_locale.identifier = identifier  # type: ignore
             available_locales.append(parsed_locale)
     return available_locales
 
@@ -301,12 +306,20 @@ def _build_js_translation(
             elif entry.msgstr_plural:
                 plural = result[entry.msgid] = [entry.msgid_plural]
                 ordered_plural = sorted(
-                    entry.msgstr_plural.items())  # type: ignore
+                    entry.msgstr_plural.items())
                 for _, msgstr in ordered_plural:
                     plural.append(msgstr)
     with open(dest_filename, u'w', encoding='utf-8') as f:
-        s = json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
-        f.write(six.ensure_str(s))
+        s = json.dumps(
+            result, sort_keys=True, ensure_ascii=False, separators=(',', ':')
+        )
+        f.write(s)
+
+
+def _check_js_translations_dest_dir() -> None:
+    dest_dir = get_js_translations_dir()
+    if not os.path.isdir(dest_dir):
+        os.makedirs(dest_dir)
 
 
 def build_js_translations() -> None:
@@ -320,6 +333,9 @@ def build_js_translations() -> None:
     '''
     log.debug(u'Generating JavaScript translations')
     ckan_i18n_dir = get_ckan_i18n_dir()
+    dest_dir = get_js_translations_dir()
+    _check_js_translations_dest_dir()
+
     # Collect all language codes (an extension might add support for a
     # language that isn't supported by CKAN core, yet).
     langs = set()
@@ -358,7 +374,7 @@ def build_js_translations() -> None:
             continue
 
         latest = max(os.path.getmtime(fn) for fn in po_files)
-        dest_file = os.path.join(_JS_TRANSLATIONS_DIR, lang + u'.js')
+        dest_file = os.path.join(dest_dir, lang + u'.js')
 
         if (not os.path.isfile(dest_file) or
                 os.path.getmtime(dest_file) < latest):

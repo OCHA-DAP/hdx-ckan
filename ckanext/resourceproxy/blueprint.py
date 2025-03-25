@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-from typing import cast
 from ckan.types import Context, DataDict
 from logging import getLogger
 
@@ -8,7 +7,6 @@ import requests
 from urllib.parse import urlsplit
 from flask import Blueprint, make_response
 
-import ckan.model as model
 import ckan.logic as logic
 from ckan.common import config, _
 from ckan.plugins.toolkit import (abort, get_action, c)
@@ -81,7 +79,6 @@ def proxy_resource(context: Context, data_dict: DataDict):
             )
 
         response.headers[u'content-type'] = r.headers[u'content-type']
-        response.charset = r.encoding or "utf-8"
 
         length = 0
         chunk_size = config.get(u'ckan.resource_proxy.chunk_size')
@@ -98,9 +95,11 @@ def proxy_resource(context: Context, data_dict: DataDict):
                 )
 
     except requests.exceptions.HTTPError as error:
-        details = u'Could not proxy resource. Server responded with %s %s' % (
-            error.response.status_code, error.response.reason
-        )
+        details = 'Could not proxy resource.'
+        if error.response is not None:
+            details += ' Server responded with %s %s' % (
+                error.response.status_code, error.response.reason
+            )
         return abort(409, detail=details)
     except requests.exceptions.ConnectionError as error:
         details = u'''Could not proxy resource because a
@@ -114,11 +113,7 @@ def proxy_resource(context: Context, data_dict: DataDict):
 
 def proxy_view(id: str, resource_id: str):
     data_dict = {u'resource_id': resource_id}
-    context = cast(Context, {
-        u'model': model,
-        u'session': model.Session,
-        u'user': c.user
-    })
+    context: Context = {'user': c.user}
     return proxy_resource(context, data_dict)
 
 

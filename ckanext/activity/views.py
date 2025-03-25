@@ -3,18 +3,16 @@ from __future__ import annotations
 import logging
 
 from datetime import datetime
-from typing import Any, Optional, Union, cast
+from typing import Any, Optional, Union
 
 from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
 import ckan.model as model
+from ckan.logic import NotFound
 from ckan.views.group import (
-    set_org,
     # TODO: don't use hidden funcitons
-    _get_group_dict,
     _get_group_template,
-    _replace_group_org,
 )
 
 # TODO: don't use hidden funcitons
@@ -99,13 +97,10 @@ def _get_newer_activities_url(
 
 @bp.route("/dataset/<id>/resources/<resource_id>/history/<activity_id>")
 def resource_history(id: str, resource_id: str, activity_id: str) -> str:
-    context = cast(
-        Context,
-        {
-            "auth_user_obj": tk.g.userobj,
-            "for_view": True,
-        },
-    )
+    context: Context = {
+        "auth_user_obj": tk.g.userobj,
+        "for_view": True,
+    }
 
     try:
         package = tk.get_action("package_show")(context, {"id": id})
@@ -156,10 +151,15 @@ def resource_history(id: str, resource_id: str, activity_id: str) -> str:
     except KeyError:
         package["isopen"] = False
 
-    resource_views = tk.get_action("resource_view_list")(
-        context, {"id": resource_id}
-    )
-    resource["has_views"] = len(resource_views) > 0
+    try:
+        resource_views = tk.get_action("resource_view_list")(
+            context, {"id": resource["id"]}
+        )
+        resource["has_views"] = len(resource_views) > 0
+    except NotFound:
+        # Resource has been deleted since this version
+        resource_views = []
+        resource["has_views"] = False
 
     current_resource_view = None
     view_id = tk.request.args.get("view_id")
@@ -202,14 +202,11 @@ def resource_history(id: str, resource_id: str, activity_id: str) -> str:
 
 @bp.route("/dataset/<id>/history/<activity_id>")
 def package_history(id: str, activity_id: str) -> Union[Response, str]:
-    context = cast(
-        Context,
-        {
-            "for_view": True,
-            "auth_user_obj": tk.g.userobj,
-        },
-    )
-    data_dict = {"id": id, "include_tracking": True}
+    context: Context = {
+        "for_view": True,
+        "auth_user_obj": tk.g.userobj,
+    }
+    data_dict = {"id": id}
 
     # check if package exists
     try:
@@ -277,10 +274,14 @@ def package_history(id: str, activity_id: str) -> Union[Response, str]:
 
     # can the resources be previewed?
     for resource in pkg_dict["resources"]:
-        resource_views = tk.get_action("resource_view_list")(
-            context, {"id": resource["id"]}
-        )
-        resource["has_views"] = len(resource_views) > 0
+        try:
+            resource_views = tk.get_action("resource_view_list")(
+                context, {"id": resource["id"]}
+            )
+            resource["has_views"] = len(resource_views) > 0
+        except NotFound:
+            # Resource has been deleted since this version
+            resource["has_views"] = False
 
     package_type = pkg_dict["type"] or "dataset"
     _setup_template_variables(context, {"id": id}, package_type=package_type)
@@ -302,13 +303,10 @@ def package_activity(id: str) -> Union[Response, str]:  # noqa
     before = tk.request.args.get("before")
     activity_type = tk.request.args.get("activity_type")
 
-    context = cast(
-        Context,
-        {
-            "for_view": True,
-            "auth_user_obj": tk.g.userobj,
-        },
-    )
+    context: Context = {
+        "for_view": True,
+        "auth_user_obj": tk.g.userobj,
+    }
 
     data_dict = {"id": id}
     limit = _get_activity_stream_limit()
@@ -380,7 +378,7 @@ def package_changes(id: str) -> Union[Response, str]:  # noqa
     Shows the changes to a dataset in one particular activity stream item.
     """
     activity_id = id
-    context = cast(Context, {"auth_user_obj": tk.g.userobj})
+    context: Context = {"auth_user_obj": tk.g.userobj}
     try:
         activity_diff = tk.get_action("activity_diff")(
             context,
@@ -424,7 +422,7 @@ def package_changes_multiple() -> Union[Response, str]:  # noqa
     new_id = tk.h.get_request_param("new_id")
     old_id = tk.h.get_request_param("old_id")
 
-    context = cast(Context, {"auth_user_obj": tk.g.userobj})
+    context: Context = {"auth_user_obj": tk.g.userobj}
 
     # check to ensure that the old activity is actually older than
     # the new activity
@@ -497,53 +495,57 @@ def package_changes_multiple() -> Union[Response, str]:  # noqa
 @bp.route(
     "/group/activity/<id>",
     endpoint="group_activity",
-    defaults={"group_type": "group"},
+    defaults={
+        "group_type": "group",
+        "is_organization": False,
+    },
 )
 @bp.route(
     "/organization/activity/<id>",
     endpoint="organization_activity",
-    defaults={"group_type": "organization"},
+    defaults={
+        "group_type": "organization",
+        "is_organization": True,
+    },
 )
-def group_activity(id: str, group_type: str) -> str:
+def group_activity(id: str, group_type: str, is_organization: bool) -> str:
     """Render this group's public activity stream page."""
     after = tk.request.args.get("after")
     before = tk.request.args.get("before")
 
-    if group_type == 'organization':
-        set_org(True)
-
-    context = cast(Context, {"user": tk.g.user, "for_view": True})
+    context: Context = {"user": tk.g.user, "for_view": True}
 
     try:
-        group_dict = _get_group_dict(id, group_type)
+        action_name = "organization_show" if is_organization else "group_show"
+        group_dict = tk.get_action(action_name)(context, {"id": id})
     except (tk.ObjectNotFound, tk.NotAuthorized):
         tk.abort(404, tk._("Group not found"))
-
-    real_group_type = group_dict["type"]
-    action_name = "organization_activity_list"
-    if not group_dict.get("is_organization"):
-        action_name = "group_activity_list"
 
     activity_type = tk.request.args.get("activity_type")
     activity_types = [activity_type] if activity_type else None
 
     limit = _get_activity_stream_limit()
-
+    action_name = (
+        "organization_activity_list"
+        if is_organization
+        else "group_activity_list"
+    )
     try:
         activity_stream = tk.get_action(action_name)(
-            context, {
+            context,
+            {
                 "id": group_dict["id"],
                 "before": before,
                 "after": after,
                 "limit": limit + 1,
                 "activity_types": activity_types
-                }
-            )
+            }
+        )
     except tk.ValidationError as error:
         tk.abort(400, error.message or "")
 
     filter_types = VALIDATORS_PACKAGE_ACTIVITY_TYPES.copy()
-    if group_type == 'organization':
+    if is_organization:
         filter_types.update(VALIDATORS_ORGANIZATION_ACTIVITY_TYPES)
     else:
         filter_types.update(VALIDATORS_GROUP_ACTIVITY_TYPES)
@@ -573,7 +575,7 @@ def group_activity(id: str, group_type: str) -> str:
     extra_vars = {
         "id": id,
         "activity_stream": activity_stream,
-        "group_type": real_group_type,
+        "group_type": group_dict["type"],
         "group_dict": group_dict,
         "activity_type": activity_type,
         "activity_types": filter_types.keys(),
@@ -600,14 +602,10 @@ def group_changes(id: str, group_type: str, is_organization: bool) -> str:
     Shows the changes to an organization in one particular activity stream
     item.
     """
-    extra_vars = {}
     activity_id = id
-    context = cast(
-        Context,
-        {
-            "auth_user_obj": tk.g.userobj,
-        },
-    )
+    context: Context = {
+        "auth_user_obj": tk.g.userobj,
+    }
     try:
         activity_diff = tk.get_action("activity_diff")(
             context,
@@ -623,10 +621,16 @@ def group_changes(id: str, group_type: str, is_organization: bool) -> str:
     # Use the current version of the package, in case the name/title have
     # changed, and we need a link to it which works
     group_id = activity_diff["activities"][1]["data"]["group"]["id"]
-    current_group_dict = tk.get_action(group_type + "_show")(
+
+    action_name = "organization_show" if is_organization else "group_show"
+    current_group_dict = tk.get_action(action_name)(
         context, {"id": group_id}
     )
-    group_activity_list = tk.get_action(group_type + "_activity_list")(
+    action_name = (
+        "organization_activity_list"
+        if is_organization else "group_activity_list"
+    )
+    group_activity_list = tk.get_action(action_name)(
         context, {"id": group_id, "limit": 100}
     )
 
@@ -636,8 +640,11 @@ def group_changes(id: str, group_type: str, is_organization: bool) -> str:
         "group_activity_list": group_activity_list,
         "group_type": current_group_dict["type"],
     }
-
-    return tk.render(_replace_group_org("group/changes.html"), extra_vars)
+    template_name = (
+        "organization/changes.html"
+        if is_organization else "group/changes.html"
+    )
+    return tk.render(template_name, extra_vars)
 
 
 @bp.route(
@@ -656,16 +663,12 @@ def group_changes_multiple(is_organization: bool, group_type: str) -> str:
     activity diffs for the changes in the given version range, then
     re-renders changes.html with the list.
     """
-    extra_vars = {}
     new_id = tk.h.get_request_param("new_id")
     old_id = tk.h.get_request_param("old_id")
 
-    context = cast(
-        Context,
-        {
-            "auth_user_obj": tk.g.userobj,
-        },
-    )
+    context: Context = {
+        "auth_user_obj": tk.g.userobj,
+    }
 
     # check to ensure that the old activity is actually older than
     # the new activity
@@ -723,10 +726,15 @@ def group_changes_multiple(is_organization: bool, group_type: str) -> str:
             current_id = activity_diff["activities"][0]["id"]
 
     group_id: str = diff_list[0]["activities"][1]["data"]["group"]["id"]
-    current_group_dict = tk.get_action(group_type + "_show")(
+    action_name = "organization_show" if is_organization else "group_show"
+    current_group_dict = tk.get_action(action_name)(
         context, {"id": group_id}
     )
-    group_activity_list = tk.get_action(group_type + "_activity_list")(
+    action_name = (
+        "organization_activity_list"
+        if is_organization else "group_activity_list"
+    )
+    group_activity_list = tk.get_action(action_name)(
         context, {"id": group_id, "limit": 100}
     )
 
@@ -736,8 +744,11 @@ def group_changes_multiple(is_organization: bool, group_type: str) -> str:
         "group_activity_list": group_activity_list,
         "group_type": current_group_dict["type"],
     }
-
-    return tk.render(_replace_group_org("group/changes.html"), extra_vars)
+    template_name = (
+        "organization/changes.html"
+        if is_organization else "group/changes.html"
+    )
+    return tk.render(template_name, extra_vars)
 
 
 @bp.route("/user/activity/<id>")
@@ -746,13 +757,10 @@ def user_activity(id: str) -> str:
     after = tk.request.args.get("after")
     before = tk.request.args.get("before")
 
-    context = cast(
-        Context,
-        {
-            "auth_user_obj": tk.g.userobj,
-            "for_view": True,
-        },
-    )
+    context: Context = {
+        "auth_user_obj": tk.g.userobj,
+        "for_view": True,
+    }
     data_dict: dict[str, Any] = {
         "id": id,
         "user_obj": tk.g.userobj,
@@ -811,13 +819,14 @@ def user_activity(id: str) -> str:
 
 @bp.route("/dashboard/", strict_slashes=False)
 def dashboard() -> str:
-    context = cast(
-        Context,
-        {
-            "auth_user_obj": tk.g.userobj,
-            "for_view": True,
-        },
-    )
+    if tk.current_user.is_anonymous:
+        tk.h.flash_error(tk._(u'Not authorized to see this page'))
+        return tk.h.redirect_to(u'user.login')
+
+    context: Context = {
+        "auth_user_obj": tk.g.userobj,
+        "for_view": True,
+    }
     data_dict: dict[str, Any] = {"user_obj": tk.g.userobj}
     extra_vars = _extra_template_variables(context, data_dict)
 
@@ -896,13 +905,10 @@ def _get_dashboard_context(
         return display_name or fullname or title or name
 
     if filter_type and filter_id:
-        context = cast(
-            Context,
-            {
-                "auth_user_obj": tk.g.userobj,
-                "for_view": True,
-            },
-        )
+        context: Context = {
+            "auth_user_obj": tk.g.userobj,
+            "for_view": True,
+        }
         data_dict: dict[str, Any] = {
             "id": filter_id,
             "include_num_followers": True,

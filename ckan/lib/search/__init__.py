@@ -9,7 +9,7 @@ import warnings
 import traceback
 
 import xml.dom.minidom
-from typing import Collection, Any, Optional, Type, cast, overload
+from typing import Collection, Any, Optional, Type, overload
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -57,7 +57,7 @@ def text_traceback() -> str:
     return res
 
 
-SUPPORTED_SCHEMA_VERSIONS = ['2.8', '2.9', '2.10']
+SUPPORTED_SCHEMA_VERSIONS = ['2.8', '2.9', '2.10', '2.11']
 
 DEFAULT_OPTIONS = {
     'limit': 20,
@@ -165,13 +165,11 @@ class SynchronousSearchPlugin(p.SingletonPlugin):
         if operation != domain_object.DomainObjectOperation.deleted:
             dispatch_by_operation(
                 entity.__class__.__name__,
-                logic.get_action('package_show')(cast(
-                    Context, {
-                        'model': model,
+                logic.get_action('package_show')({
                         'ignore_auth': True,
                         'validate': False,
                         'use_cache': False
-                    }), {'id': entity.id}), operation)
+                    }, {'id': entity.id}), operation)
         elif operation == domain_object.DomainObjectOperation.deleted:
             dispatch_by_operation(entity.__class__.__name__,
                                   {'id': entity.id}, operation)
@@ -198,14 +196,13 @@ def rebuild(package_id: Optional[str] = None,
     log.info("Rebuilding search index...")
 
     package_index = index_for(model.Package)
-    context = cast(Context, {
-        'model': model,
+    context: Context = {
         'ignore_auth': True,
         'validate': False,
         'use_cache': False
-    })
+    }
 
-    from ckan.common import config, asbool
+    from ckan.common import config
     use_hdx_reindex = config.get('hdx.reindexing.enabled')
     if use_hdx_reindex:
         from ckanext.hdx_search.helpers.reindexing import HdxSolrReindexer
@@ -232,48 +229,48 @@ def rebuild(package_id: Optional[str] = None,
             if config.get('ckan.search.remove_deleted_packages'):
                 packages = packages.filter(model.Package.state != 'deleted')
 
-            package_ids = [r[0] for r in packages.all()]
+        package_ids = [r[0] for r in packages.all()]
 
-            if only_missing:
-                log.info('Indexing only missing packages...')
-                package_query = query_for(model.Package)
-                indexed_pkg_ids = set(package_query.get_all_entity_ids(
-                    max_results=len(package_ids)))
-                # Packages not indexed
-                package_ids = set(package_ids) - indexed_pkg_ids
+        if only_missing:
+            log.info('Indexing only missing packages...')
+            package_query = query_for(model.Package)
+            indexed_pkg_ids = set(package_query.get_all_entity_ids(
+                max_results=len(package_ids)))
+            # Packages not indexed
+            package_ids = set(package_ids) - indexed_pkg_ids
 
-                if len(package_ids) == 0:
-                    log.info('All datasets are already indexed')
-                    return
-            else:
-                log.info('Rebuilding the whole index...')
-                # When refreshing, the index is not previously cleared
-                if clear:
-                    package_index.clear()
+            if len(package_ids) == 0:
+                log.info('All datasets are already indexed')
+                return
+        else:
+            log.info('Rebuilding the whole index...')
+            # When refreshing, the index is not previously cleared
+            if clear:
+                package_index.clear()
 
-            total_packages = len(package_ids)
-            for counter, pkg_id in enumerate(package_ids):
-                if not quiet:
-                    sys.stdout.write(
-                        "\rIndexing dataset {0}/{1}".format(
-                            counter +1, total_packages)
-                    )
-                    sys.stdout.flush()
-                try:
-                    package_index.update_dict(
-                        logic.get_action('package_show')(context,
-                            {'id': pkg_id}
-                        ),
-                        defer_commit
-                    )
-                except Exception as e:
-                    log.error(u'Error while indexing dataset %s: %s' %
-                              (pkg_id, repr(e)))
-                    if force:
-                        log.error(text_traceback())
-                        continue
-                    else:
-                        raise
+        total_packages = len(package_ids)
+        for counter, pkg_id in enumerate(package_ids):
+            if not quiet:
+                sys.stdout.write(
+                    "\rIndexing dataset {0}/{1}".format(
+                        counter +1, total_packages)
+                )
+                sys.stdout.flush()
+            try:
+                package_index.update_dict(
+                    logic.get_action('package_show')(context,
+                        {'id': pkg_id}
+                    ),
+                    defer_commit
+                )
+            except Exception as e:
+                log.error(u'Error while indexing dataset %s: %s' %
+                          (pkg_id, repr(e)))
+                if force:
+                    log.error(text_traceback())
+                    continue
+                else:
+                    raise
 
     model.Session.commit()
     log.info('Finished rebuilding search index.')
@@ -327,7 +324,6 @@ def _get_schema_from_solr(file_offset: str):
 
     url = solr_url.strip('/') + file_offset
 
-    timeout = config.get('ckan.requests.timeout')
     if solr_user is not None and solr_password is not None:
         response = requests.get(
             url,

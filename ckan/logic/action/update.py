@@ -25,7 +25,7 @@ import ckan.lib.datapreview
 import ckan.lib.app_globals as app_globals
 
 from ckan.common import _, config
-from ckan.types import Context, DataDict, ErrorDict
+from ckan.types import Context, DataDict, ErrorDict, Schema
 
 if TYPE_CHECKING:
     import ckan.model as model_
@@ -280,18 +280,6 @@ def package_update(
 
     package_plugin = lib_plugins.lookup_package_plugin(pkg.type)
     schema = context.get('schema') or package_plugin.update_package_schema()
-    if 'api_version' not in context:
-        # check_data_dict() is deprecated. If the package_plugin has a
-        # check_data_dict() we'll call it, if it doesn't have the method we'll
-        # do nothing.
-        check_data_dict = getattr(package_plugin, 'check_data_dict', None)
-        if check_data_dict:
-            try:
-                package_plugin.check_data_dict(data_dict, schema)
-            except TypeError:
-                # Old plugins do not support passing the schema so we need
-                # to ensure they still work.
-                package_plugin.check_data_dict(data_dict)
 
     resource_uploads = []
     for resource in data_dict.get('resources', []):
@@ -326,7 +314,10 @@ def package_update(
     user_obj = context.get('auth_user_obj')
     if user_obj:
         plugin_data = data.get('plugin_data', False)
-        include_plugin_data = user_obj.sysadmin and plugin_data
+        include_plugin_data = (
+            user_obj.sysadmin  # type: ignore
+            and plugin_data
+        )
 
     pkg = model_save.package_dict_save(data, context, include_plugin_data)
 
@@ -526,7 +517,7 @@ def package_revise(context: Context, data_dict: DataDict) -> ActionResult.Packag
     # on update or "nothing changed" status once possible
     rval = {
         'package': _get_action('package_update')(
-            cast(Context, dict(context, package=pkg)),
+            Context(context, package=pkg),
             orig)}
     if 'include' in data_dict:
         dfunc.filter_glob_match(rval, data_dict['include'])
@@ -671,12 +662,18 @@ def _group_or_org_update(
 
     # get the schema
     group_plugin = lib_plugins.lookup_group_plugin(group.type)
-    try:
-        schema = group_plugin.form_to_db_schema_options({'type': 'update',
-                                               'api': 'api_version' in context,
-                                               'context': context})
-    except AttributeError:
-        schema = group_plugin.form_to_db_schema()
+
+    if context.get("schema"):
+        schema: Schema = context["schema"]
+    elif hasattr(group_plugin, "update_group_schema"):
+        schema: Schema = group_plugin.update_group_schema()
+    # TODO: remove these fallback deprecated methods in the next release
+    elif hasattr(group_plugin, "form_to_db_schema_options"):
+        schema: Schema = getattr(group_plugin, "form_to_db_schema_options")({
+            'type': 'update', 'api': 'api_version' in context,
+            'context': context})
+    else:
+        schema: Schema = group_plugin.form_to_db_schema()
 
     upload = uploader.get_uploader('group')
     upload.update_data_dict(data_dict, 'image_url',
@@ -686,14 +683,6 @@ def _group_or_org_update(
         _check_access('organization_update', context, data_dict)
     else:
         _check_access('group_update', context, data_dict)
-
-    if 'api_version' not in context:
-        # old plugins do not support passing the schema so we need
-        # to ensure they still work
-        try:
-            group_plugin.check_data_dict(data_dict, schema)
-        except TypeError:
-            group_plugin.check_data_dict(data_dict)
 
     data, errors = lib_plugins.plugin_validate(
         group_plugin, context, data_dict, schema,
@@ -791,7 +780,7 @@ def user_update(context: Context, data_dict: DataDict) -> ActionResult.UserUpdat
     '''Update a user account.
 
     Normal users can only update their own user accounts. Sysadmins can update
-    any user account. Can not modify exisiting user's name.
+    any user account and modify existing usernames.
 
     .. note:: Update methods may delete parameters not explicitly provided in the
         data_dict. If you want to edit only a specific attribute use `user_patch`
@@ -1126,8 +1115,7 @@ def _bulk_update_dataset(
     model = context['model']
     model.Session.query(model.package_table) \
         .filter(
-            # type_ignore_reason: incomplete SQLAlchemy types
-            model.Package.id.in_(datasets)  # type: ignore
+            model.Package.id.in_(datasets)
         ) .filter(model.Package.owner_org == org_id) \
         .update(update_dict, synchronize_session=False)
 
@@ -1234,7 +1222,6 @@ def config_option_update(
 
         get_action('config_option_update)({}, {
             'ckan.site_title': 'My Open Data site',
-            'ckan.homepage_layout': 2,
         })
 
     :param key: a configuration option key (eg ``ckan.site_title``). It must

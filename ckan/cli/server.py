@@ -12,6 +12,7 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from ckan.common import config
 from . import error_shout
+from ckan.lib.i18n import build_js_translations
 
 log = logging.getLogger(__name__)
 
@@ -26,6 +27,10 @@ DEFAULT_PORT = 5000
               help=u"Disable reloader")
 @click.option(u"-E", u"--passthrough-errors", is_flag=True,
               help=u"Disable error caching (useful to hook debuggers)")
+@click.option(
+    u"-D", u"--disable-debugger", is_flag=True,
+    help=u"Disable debugger to prevent conflict with external debug tools"
+)
 @click.option(
     u"-t", u"--threaded", is_flag=True,
     help=u"Handle each request in a separate thread"
@@ -52,10 +57,10 @@ DEFAULT_PORT = 5000
 )
 @click.pass_context
 def run(ctx: click.Context, host: str, port: str, disable_reloader: bool,
-        passthrough_errors: bool, threaded: bool, extra_files: list[str],
-        processes: int, ssl_cert: Optional[str], ssl_key: Optional[str],
-        prefix: Optional[str]):
-    u"""Runs the Werkzeug development server"""
+        passthrough_errors: bool, disable_debugger: bool, threaded: bool,
+        extra_files: list[str], processes: int, ssl_cert: Optional[str],
+        ssl_key: Optional[str], prefix: Optional[str]):
+    """Regenerate JS translations and run the Werkzeug development server"""
 
     if config.get("debug"):
         warnings.filterwarnings("default", category=CkanDeprecationWarning)
@@ -65,6 +70,9 @@ def run(ctx: click.Context, host: str, port: str, disable_reloader: bool,
         disable_reloader = True
         threaded = False
         processes = 1
+
+    # Flask/werkzeug debugger
+    use_debugger = not disable_debugger
 
     # Reloading
     use_reloader = not disable_reloader
@@ -108,6 +116,9 @@ def run(ctx: click.Context, host: str, port: str, disable_reloader: bool,
         error_shout(u"Server port must be an integer, not {}".format(port))
         raise click.Abort()
 
+    # Once automatic on startup, run only here for faster debug iterations
+    build_js_translations()
+
     log.info(u"Running CKAN on {scheme}://{host}:{port}{prefix}".format(
         scheme='https' if ssl_context else 'http', host=host, port=port_int,
         prefix=prefix))
@@ -117,6 +128,7 @@ def run(ctx: click.Context, host: str, port: str, disable_reloader: bool,
         port_int,
         ctx.obj.app,
         use_reloader=use_reloader,
+        use_debugger=use_debugger,
         use_evalex=True,
         threaded=threaded,
         processes=processes,

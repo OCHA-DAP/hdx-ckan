@@ -23,9 +23,23 @@ def _pending_task(resource_id):
     }
 
 
+@pytest.fixture()
+def with_datapusher_token(non_clean_db, ckan_config, monkeypatch):
+    """Set mandatory datapusher option.
+
+    It must be applied before `datapusher` plugin is loaded via `with_plugins`,
+    but after DB initialization via `non_clean_db`.
+
+    """
+    monkeypatch.setitem(
+        ckan_config,
+        "ckan.datapusher.api_token",
+        get_api_token(),
+    )
+
+
 @pytest.mark.ckan_config("ckan.plugins", "datapusher datastore")
-@pytest.mark.ckan_config("ckan.datapusher.api_token", get_api_token())
-@pytest.mark.usefixtures("non_clean_db", "with_plugins")
+@pytest.mark.usefixtures("non_clean_db", "with_datapusher_token", "with_plugins")
 class TestSubmit:
     def test_submit(self, monkeypatch):
         """Auto-submit when creating a resource with supported format.
@@ -327,7 +341,6 @@ class TestSubmit:
 
                 assert r_mock.call_count == 1
 
-    @pytest.mark.usefixtures("with_request_context")
     def test_task_status_changes(self, create_with_upload):
         """While updating task status, datapusher commits changes to database.
 

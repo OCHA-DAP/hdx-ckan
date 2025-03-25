@@ -15,9 +15,6 @@ from typing_extensions import Literal
 from werkzeug.datastructures import MultiDict
 from sqlalchemy import exc
 
-import six
-
-
 import ckan.model as model
 import ckan.authz as authz
 import ckan.lib.navl.dictization_functions as df
@@ -26,7 +23,7 @@ import ckan.lib.signals as signals
 
 from ckan.common import _, g
 from ckan.types import (
-    Action, ChainedAction, Model,
+    Action, ChainedAction,
     ChainedAuthFunction, DataDict, ErrorDict, Context, FlattenDataDict,
     FlattenKey, Schema, Validator, ValidatorFactory
 )
@@ -58,7 +55,7 @@ class ActionError(Exception):
         msg = self.message
         if not isinstance(msg, str):
             msg = str(msg)
-        return six.ensure_text(msg)
+        return msg
 
 
 class NotFound(ActionError):
@@ -141,6 +138,8 @@ class ValidationError(ActionError):
                 elif key == 'tags':
                     assert isinstance(error, list)
                     summary[_('Tags')] = error[0]
+                elif isinstance(error, str):
+                    summary[_(prettify(key))] = error
                 else:
                     assert isinstance(error, list)
                     summary[_(prettify(key))] = error[0]
@@ -308,7 +307,7 @@ def flatten_to_string_key(dict: dict[str, Any]) -> dict[str, Any]:
 def _prepopulate_context(context: Optional[Context]) -> Context:
     if context is None:
         context = {}
-    context.setdefault('model', cast(Model, model))
+    context.setdefault('model', model)
     context.setdefault('session', model.Session)
 
     try:
@@ -379,11 +378,12 @@ def check_access(action: str,
         context['auth_user_obj'] = None
 
     context = _prepopulate_context(context)
-    if not context.get('ignore_auth'):
-        if not context.get('__auth_user_obj_checked'):
-            if context["user"] and not context["auth_user_obj"]:
-                context['auth_user_obj'] = model.User.get(context['user'])
-            context['__auth_user_obj_checked'] = True
+
+    if not context.get('__auth_user_obj_checked'):
+        if context["user"] and not context["auth_user_obj"]:
+            context['auth_user_obj'] = model.User.get(context['user'])
+        context['__auth_user_obj_checked'] = True
+
     try:
         logic_authorization = authz.is_authorized(action, context, data_dict)
         if not logic_authorization['success']:
@@ -665,8 +665,23 @@ def get_or_bust(
 
 def validate(schema_func: Callable[[], Schema],
              can_skip_validator: bool = False) -> Callable[[Action], Action]:
-    ''' A decorator that validates an action function against a given schema
-    '''
+    """A decorator that validates an action function against a given schema.
+
+    Example::
+
+        def schema_func():
+            return {
+                "a": [get_validator("int_validator")],
+                "__extras": [get_validator("ignore")]
+            }
+
+        @validate_action_data(schema_function)
+        def my_action(context, data_dict):
+            return data_dict
+
+        data = {"a": "1", "b": "2"}
+        assert my_action({}, data) == {"a": 1}
+    """
     def action_decorator(action: Action) -> Action:
         @functools.wraps(action)
         def wrapper(context: Context, data_dict: DataDict):
@@ -839,7 +854,7 @@ def get_validator(
         _validators_cache.update(converters)
         _validators_cache.update({'OneOf': _validators_cache['one_of']})
 
-        for plugin in reversed(list(p.PluginImplementations(p.IValidators))):
+        for plugin in p.PluginImplementations(p.IValidators):
             for name, fn in plugin.get_validators().items():
                 log.debug('Validator function {0} from plugin {1} was inserted'
                           .format(name, plugin.name))
@@ -881,17 +896,12 @@ def guard_against_duplicated_email(email: str):
     except exc.IntegrityError as e:
         if e.orig.pgcode == _PG_ERR_CODE["unique_violation"]:
             model.Session.rollback()
-            raise ValidationError(
-                cast(
-                    ErrorDict,
-                    {
-                        "email": [
-                            "The email address '{email}' belongs to "
-                            "a registered user.".format(email=email)
-                        ]
-                    },
-                )
-            )
+            raise ValidationError({
+                "email": [
+                    "The email address '{email}' belongs to "
+                    "a registered user.".format(email=email)
+                ]
+            })
         raise
 
 

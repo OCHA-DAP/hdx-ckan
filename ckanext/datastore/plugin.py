@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Callable, Union, cast
+from typing import Any, Callable, Union
 
 import ckan.plugins as p
 from ckan.model.core import State
@@ -35,6 +35,7 @@ def sql_functions_allowlist_file():
 
 
 @p.toolkit.blanket.config_declarations
+@p.toolkit.blanket.validators
 class DatastorePlugin(p.SingletonPlugin):
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IConfigurer)
@@ -49,7 +50,7 @@ class DatastorePlugin(p.SingletonPlugin):
 
     resource_show_action = None
 
-    def __new__(cls: Any, *args: Any, **kwargs: Any) -> Any:
+    def __new__(cls: Any, *args: Any, **kwargs: Any):
         idatastore_extensions: Any = p.PluginImplementations(
             interfaces.IDatastore)
         idatastore_extensions = idatastore_extensions.extensions()
@@ -60,8 +61,7 @@ class DatastorePlugin(p.SingletonPlugin):
                    '"ckan.plugins" in your CKAN .ini file and try again.')
             raise DatastoreException(msg)
 
-        return cast("DatastorePlugin",
-                    super(cls, cls).__new__(cls, *args, **kwargs))
+        return super().__new__(cls, *args, **kwargs)
 
     # IDatastoreBackend
 
@@ -80,6 +80,7 @@ class DatastorePlugin(p.SingletonPlugin):
         templates_base = config.get('ckan.base_templates_folder')
 
         p.toolkit.add_template_directory(config, templates_base)
+        p.toolkit.add_resource('assets', 'ckanext_datastore')
         self.backend = DatastoreBackend.get_active_backend()
 
     # IConfigurable
@@ -95,6 +96,7 @@ class DatastorePlugin(p.SingletonPlugin):
             'datastore_create': action.datastore_create,
             'datastore_upsert': action.datastore_upsert,
             'datastore_delete': action.datastore_delete,
+            'datastore_records_delete': action.datastore_records_delete,
             'datastore_search': action.datastore_search,
             'datastore_info': action.datastore_info,
             'datastore_function_create': action.datastore_function_create,
@@ -115,6 +117,7 @@ class DatastorePlugin(p.SingletonPlugin):
             'datastore_create': auth.datastore_create,
             'datastore_upsert': auth.datastore_upsert,
             'datastore_delete': auth.datastore_delete,
+            'datastore_records_delete': auth.datastore_records_delete,
             'datastore_info': auth.datastore_info,
             'datastore_search': auth.datastore_search,
             'datastore_search_sql': auth.datastore_search_sql,
@@ -255,10 +258,12 @@ class DatastorePlugin(p.SingletonPlugin):
     def get_helpers(self) -> dict[str, Callable[..., object]]:
         conf_dictionary = datastore_helpers.datastore_dictionary
         conf_sql_enabled = datastore_helpers.datastore_search_sql_enabled
+        rw_url_types = datastore_helpers.datastore_rw_resource_url_types
 
         return {
             'datastore_dictionary': conf_dictionary,
-            'datastore_search_sql_enabled': conf_sql_enabled
+            'datastore_search_sql_enabled': conf_sql_enabled,
+            'datastore_rw_resource_url_types': rw_url_types,
         }
 
     # IForkObserver

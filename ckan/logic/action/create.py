@@ -13,8 +13,6 @@ from typing import Any, Union, cast
 
 import six
 
-import ckan.common
-
 import ckan.lib.plugins as lib_plugins
 import ckan.logic as logic
 import ckan.plugins as plugins
@@ -33,7 +31,7 @@ import ckan.lib.api_token as api_token
 import ckan.authz as authz
 import ckan.model
 
-from ckan.common import _
+from ckan.common import _, asbool
 from ckan.types import Context, DataDict, ErrorDict, Schema
 
 # FIXME this looks nasty and should be shared better
@@ -175,19 +173,6 @@ def package_create(
         'schema') or package_plugin.create_package_schema()
 
     _check_access('package_create', context, data_dict)
-
-    if 'api_version' not in context:
-        # check_data_dict() is deprecated. If the package_plugin has a
-        # check_data_dict() we'll call it, if it doesn't have the method we'll
-        # do nothing.
-        check_data_dict = getattr(package_plugin, 'check_data_dict', None)
-        if check_data_dict:
-            try:
-                check_data_dict(data_dict, schema)
-            except TypeError:
-                # Old plugins do not support passing the schema so we need
-                # to ensure they still work
-                package_plugin.check_data_dict(data_dict)
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_create')
@@ -416,8 +401,7 @@ def resource_view_create(
     last_view = model.Session.query(model.ResourceView)\
         .filter_by(resource_id=resource_id) \
         .order_by(
-            # type_ignore_reason: incomplete SQLAlchemy types
-            model.ResourceView.order.desc()  # type: ignore
+            model.ResourceView.order.desc()
         ).first()
 
     if not last_view:
@@ -471,7 +455,7 @@ def resource_create_default_resource_views(
 
     dataset_dict = data_dict.get('package')
 
-    create_datastore_views = ckan.common.asbool(
+    create_datastore_views = asbool(
         data_dict.get('create_datastore_views', False))
 
     return ckan.lib.datapreview.add_views_to_resource(
@@ -510,7 +494,7 @@ def package_create_default_resource_views(
 
     _check_access('package_create_default_resource_views', context, data_dict)
 
-    create_datastore_views = ckan.common.asbool(
+    create_datastore_views = asbool(
         data_dict.get('create_datastore_views', False))
 
     return ckan.lib.datapreview.add_views_to_dataset_resources(
@@ -625,10 +609,7 @@ def member_create(context: Context,
         filter(model.Member.table_name == obj_type).\
         filter(model.Member.table_id == obj.id).\
         filter(model.Member.group_id == group.id).\
-        order_by(
-            # type_ignore_reason: incomplete SQLAlchemy types
-            model.Member.state.asc()  # type: ignore
-        ).first()
+        order_by(model.Member.state.asc()).first()
     if member:
         user_obj = model.User.get(user)
         if user_obj and member.table_name == u'user' and \
@@ -742,20 +723,18 @@ def _group_or_org_create(context: Context,
     # get the schema
     group_type = data_dict.get('type', 'organization' if is_org else 'group')
     group_plugin = lib_plugins.lookup_group_plugin(group_type)
-    try:
-        schema: Schema = group_plugin.form_to_db_schema_options({
+
+    if context.get("schema"):
+        schema: Schema = context["schema"]
+    elif hasattr(group_plugin, "create_group_schema"):
+        schema: Schema = group_plugin.create_group_schema()
+    # TODO: remove these fallback deprecated methods in the next release
+    elif hasattr(group_plugin, "form_to_db_schema_options"):
+        schema: Schema = getattr(group_plugin, "form_to_db_schema_options")({
             'type': 'create', 'api': 'api_version' in context,
             'context': context})
-    except AttributeError:
-        schema = group_plugin.form_to_db_schema()
-
-    if 'api_version' not in context:
-        # old plugins do not support passing the schema so we need
-        # to ensure they still work
-        try:
-            group_plugin.check_data_dict(data_dict, schema)
-        except TypeError:
-            group_plugin.check_data_dict(data_dict)
+    else:
+        schema: Schema = group_plugin.form_to_db_schema()
 
     data, errors = lib_plugins.plugin_validate(
         group_plugin, context, data_dict, schema,
@@ -988,7 +967,9 @@ def user_create(context: Context,
                 }
             }
     :type plugin_extras: dict
-
+    :param with_apitoken: whether to create an API token for the user.
+                    (Optional)
+    :type with_apitoken: bool
 
     :returns: the newly created user
     :rtype: dictionary
@@ -997,6 +978,7 @@ def user_create(context: Context,
     model = context['model']
     schema = context.get('schema') or ckan.logic.schema.default_user_schema()
     session = context['session']
+    with_apitoken = data_dict.pop("with_apitoken", False)
 
     _check_access('user_create', context, data_dict)
 
@@ -1026,7 +1008,7 @@ def user_create(context: Context,
     upload.upload(uploader.get_max_image_size())
 
     if not context.get('defer_commit'):
-        with logic.guard_against_duplicated_email(data_dict['email']):
+        with logic.guard_against_duplicated_email(data["email"]):
             model.repo.commit()
     else:
         # The Dashboard object below needs the user id, and if we didn't
@@ -1055,9 +1037,20 @@ def user_create(context: Context,
 
     # Create dashboard for user.
     dashboard = model.Dashboard(user.id)
+
     session.add(dashboard)
     if not context.get('defer_commit'):
         model.repo.commit()
+
+    if with_apitoken:
+        if not context['user']:
+            context["user"] = user.name
+
+        # Create apitoken for user.
+        api_token = _get_action("api_token_create")(
+            context, {"user": user.name, "name": "default"}
+        )
+        user_dict["token"] = api_token["token"]
 
     log.debug('Created user {name}'.format(name=user.name))
     return user_dict
@@ -1102,9 +1095,7 @@ def user_invite(context: Context,
 
     data['state'] = model.State.PENDING
     user_dict = _get_action('user_create')(
-        cast(
-            Context,
-            dict(context, schema=invite_schema, ignore_auth=True)),
+        Context(context, schema=invite_schema, ignore_auth=True),
         data)
     user = model.User.get(user_dict['id'])
     assert user
@@ -1255,28 +1246,26 @@ def follow_user(context: Context,
     if not userobj:
         raise NotAuthorized(_("You must be logged in to follow users"))
 
-    schema = context.get(
-        'schema') or ckan.logic.schema.default_follow_user_schema()
+    schema = context.get('schema',
+                         ckan.logic.schema.default_follow_user_schema())
 
     validated_data_dict, errors = _validate(data_dict, schema, context)
 
     if errors:
-        model.Session.rollback()
-        raise ValidationError(errors)
+        msg = _('Error validating the schema of the user to follow.')
+        raise ValidationError(msg)
 
     # Don't let a user follow herself.
     if userobj.id == validated_data_dict['id']:
         message = _('You cannot follow yourself')
         raise ValidationError({'message': message})
 
-    # Don't let a user follow someone she is already following.
-    if model.UserFollowingUser.is_following(userobj.id,
-                                            validated_data_dict['id']):
-        followeduserobj = model.User.get(validated_data_dict['id'])
-        assert followeduserobj
-        name = followeduserobj.display_name
-        message = _('You are already following {0}').format(name)
-        raise ValidationError({'message': message})
+    # If the user is already following, return the existing follower object
+    follower = model.UserFollowingUser.get(
+        userobj.id, validated_data_dict['id']
+        )
+    if follower:
+        return model_dictize.user_following_user_dictize(follower, context)
 
     follower = model_save.follower_dict_save(
         validated_data_dict, context, model.UserFollowingUser)
@@ -1284,7 +1273,7 @@ def follow_user(context: Context,
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug(u'User {follower} started following user {object}'.format(
+    log.debug('User {follower} started following user {object}'.format(
         follower=follower.follower_id, object=follower.object_id))
 
     return model_dictize.user_following_user_dictize(follower, context)
@@ -1304,41 +1293,32 @@ def follow_dataset(context: Context,
     :rtype: dictionary
 
     '''
-
     if not context.get('user'):
-        raise NotAuthorized(
-            _("You must be logged in to follow a dataset."))
+        raise NotAuthorized(_("You must be logged in to follow users"))
 
     model = context['model']
 
     userobj = model.User.get(context['user'])
     if not userobj:
-        raise NotAuthorized(
-            _("You must be logged in to follow a dataset."))
+        raise NotAuthorized(_("You must be logged in to follow users"))
 
-    schema = context.get(
-        'schema') or ckan.logic.schema.default_follow_dataset_schema()
-
+    schema = (context.get('schema') or
+              ckan.logic.schema.default_follow_dataset_schema())
     validated_data_dict, errors = _validate(data_dict, schema, context)
-
     if errors:
-        model.Session.rollback()
-        raise ValidationError(errors)
-
-    # Don't let a user follow a dataset she is already following.
-    if model.UserFollowingDataset.is_following(userobj.id,
-                                               validated_data_dict['id']):
-        # FIXME really package model should have this logic and provide
-        # 'display_name' like users and groups
-        pkgobj = model.Package.get(validated_data_dict['id'])
-        assert pkgobj
-        name = pkgobj.title or pkgobj.name or pkgobj.id
-        message = _(
-            'You are already following {0}').format(name)
+        message = _('Error validating the schema of the dataset to follow.')
         raise ValidationError({'message': message})
 
-    follower = model_save.follower_dict_save(validated_data_dict, context,
-                                             model.UserFollowingDataset)
+    # If the user is already following, return the existing follower object.
+    follower = model.UserFollowingDataset.get(
+        userobj.id, validated_data_dict['id']
+        )
+    if follower:
+        return model_dictize.user_following_dataset_dictize(follower, context)
+
+    follower = model_save.follower_dict_save(
+        validated_data_dict, context, model.UserFollowingDataset
+        )
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -1383,11 +1363,10 @@ def _group_or_org_member_create(
         'object_type': 'user',
         'capacity': role,
     }
-    member_create_context = cast(Context, {
-        'model': model,
+    member_create_context: Context = {
         'user': user,
-        'ignore_auth': context.get('ignore_auth'),
-    })
+        'ignore_auth': context.get('ignore_auth', False),
+    }
     return logic.get_action('member_create')(member_create_context,
                                              member_dict)
 
@@ -1452,34 +1431,28 @@ def follow_group(context: Context,
 
     '''
     if not context.get('user'):
-        raise NotAuthorized(
-            _("You must be logged in to follow a group."))
+        raise NotAuthorized(_("You must be logged in to follow users"))
 
     model = context['model']
 
     userobj = model.User.get(context['user'])
     if not userobj:
-        raise NotAuthorized(
-            _("You must be logged in to follow a group."))
+        raise NotAuthorized(_("You must be logged in to follow users"))
 
     schema = context.get('schema',
                          ckan.logic.schema.default_follow_group_schema())
-
     validated_data_dict, errors = _validate(data_dict, schema, context)
 
     if errors:
-        model.Session.rollback()
-        raise ValidationError(errors)
-
-    # Don't let a user follow a group she is already following.
-    if model.UserFollowingGroup.is_following(userobj.id,
-                                             validated_data_dict['id']):
-        groupobj = model.Group.get(validated_data_dict['id'])
-        assert groupobj
-        name = groupobj.display_name
-        message = _(
-            'You are already following {0}').format(name)
+        message = _('Error validating the schema of the group to follow.')
         raise ValidationError({'message': message})
+
+    # If it's already following, return the existing follower object.
+    follower = model.UserFollowingGroup.get(
+        userobj.id, validated_data_dict['id']
+        )
+    if follower:
+        return model_dictize.user_following_group_dictize(follower, context)
 
     follower = model_save.follower_dict_save(validated_data_dict, context,
                                              model.UserFollowingGroup)
@@ -1487,7 +1460,7 @@ def follow_group(context: Context,
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    log.debug(u'User {follower} started following group {object}'.format(
+    log.debug('User {follower} started following group {object}'.format(
         follower=follower.follower_id, object=follower.object_id))
 
     return model_dictize.user_following_group_dictize(follower, context)

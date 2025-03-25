@@ -4,7 +4,7 @@ Installing CKAN
 
 .. include:: /_supported_versions.rst
 
-CKAN 2.10 supports Python 3.8 to Python 3.11.
+CKAN 2.10 supports Python 3.7 to Python 3.10.
 
 Before you can use CKAN on your own computer, you need to install it.
 There are three ways to install CKAN:
@@ -46,14 +46,14 @@ See :doc:`install-from-source`.
 Docker Compose install
 ======================
 
-The `ckan-docker <https://github.com/ckan/ckan-docker>`_ repository contains the necessary scripts 
+The `ckan-docker <https://github.com/ckan/ckan-docker>`_ repository contains the necessary scripts
 and images to install CKAN using Docker Compose. It provides a clean and quick way to deploy a
 standard CKAN instance pre-configured with the :doc:`Filestore <../filestore>` and :doc:`../datastore`.
 It also allows the addition (and customization) of extensions. The emphasis leans more towards
 a Development environment, however the base install can be used as the foundation for progressing
-to a Production environment. Please note that a fully-fledged CKAN Production system using Docker containers is 
+to a Production environment. Please note that a fully-fledged CKAN Production system using Docker containers is
 beyond the scope of the provided setup.
- 
+
 You should install CKAN from Docker Compose if:
 
 * You want to install CKAN with less effort than a source install and more flexibility than a
