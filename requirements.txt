@@ -6,13 +6,13 @@
 #
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.206#egg=ckanext-dcat
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.39#egg=ckanext-requestdata
+-e git+https://github.com/OCHA-DAP/ckanext-requestdata.git@3.0.40#egg=ckanext-requestdata
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.6.2#egg=ckanext-s3filestore
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-security.git@1.70.3#egg=ckanext-security
+-e git+https://github.com/OCHA-DAP/ckanext-security.git@1.71.0#egg=ckanext-security
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.4#egg=ckanext-showcase
+-e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
 alembic==1.13.2
     # via -r requirements.in
@@ -28,7 +28,7 @@ blinker==1.8.2
     #   flask
 boto3==1.34.77
     # via ckanext-s3filestore
-botocore==1.34.77
+botocore==1.34.162
     # via
     #   boto3
     #   s3transfer
@@ -48,7 +48,7 @@ click==8.1.7
     #   flask
     #   geomet
     #   rq
-decorator==5.1.1
+decorator==5.2.1
     # via dogpile-cache
 dogpile-cache==1.3.0
     # via -r requirements.in
@@ -73,7 +73,7 @@ flask-session==0.8.0
     # via -r requirements.in
 flask-wtf==1.2.1
     # via -r requirements.in
-geomet==1.0.0
+geomet==1.1.0
     # via -r requirements.in
 greenlet==2.0.2
     # via sqlalchemy
@@ -83,7 +83,7 @@ ijson==3.2.3
     # via -r requirements.in
 ipaddress==1.0.23
     # via -r requirements.in
-isodate==0.6.1
+isodate==0.7.2
     # via rdflib
 itsdangerous==2.1.2
     # via
@@ -94,7 +94,7 @@ jinja2==3.1.5
     #   -r requirements.in
     #   flask
     #   flask-babel
-jmespath==0.10.0
+jmespath==1.0.1
     # via
     #   boto3
     #   botocore
@@ -128,9 +128,11 @@ packaging==24.1
     #   setuptools-scm
 passlib==1.7.4
     # via -r requirements.in
-pbr==6.0.0
+pbr==6.1.1
     # via stevedore
 polib==1.2.0
+    # via -r requirements.in
+psycopg2==2.9.9
     # via -r requirements.in
 pyjwt==2.8.0
     # via -r requirements.in
@@ -159,11 +161,11 @@ pyyaml==6.0.1
     # via -r requirements.in
 rcssmin==1.1.2
     # via -r requirements.in
-rdflib==4.2.1
+rdflib==7.1.3
     # via
     #   -r requirements.in
     #   rdflib-jsonld
-rdflib-jsonld==0.4.0
+rdflib-jsonld==0.6.2
     # via -r requirements.in
 redis==3.5.3
     # via rq
@@ -174,7 +176,7 @@ requests==2.32.3
     #   pysolr
 rq==1.16.2
     # via -r requirements.in
-s3transfer==0.10.1
+s3transfer==0.10.4
     # via boto3
 setuptools-scm==8.1.0
     # via -r requirements.in
@@ -183,8 +185,6 @@ simplejson==3.19.2
 six==1.16.0
     # via
     #   bleach
-    #   geomet
-    #   isodate
     #   python-dateutil
 sqlalchemy[mypy]==1.4.52
     # via
@@ -195,7 +195,7 @@ sqlalchemy2-stubs==0.0.2a37
     # via sqlalchemy
 sqlparse==0.5.0
     # via -r requirements.in
-stevedore==5.1.0
+stevedore==5.4.1
     # via dogpile-cache
 timeago==1.0.16
     # via -r requirements.in

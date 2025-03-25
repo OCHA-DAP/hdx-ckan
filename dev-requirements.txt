@@ -7,7 +7,7 @@
 alabaster==0.7.12
     # via sphinx
 arrow==1.2.1
-    # via jinja2-time
+    # via cookiecutter
 asttokens==3.0.0
     # via stack-data
 attrs==21.2.0
@@ -18,7 +18,7 @@ babel==2.15.0
     #   sphinx
 backcall==0.2.0
     # via ipython
-beautifulsoup4==4.11.1
+beautifulsoup4==4.12.3
     # via -r dev-requirements.in
 binaryornot==0.4.4
     # via cookiecutter
@@ -26,17 +26,18 @@ blinker==1.8.2
     # via
     #   -c requirements.txt
     #   flask
-    #   flask-debugtoolbar
 boto3==1.34.77
     # via
     #   -c requirements.txt
     #   moto
-botocore==1.34.77
+botocore==1.34.162
     # via
     #   -c requirements.txt
     #   boto3
     #   moto
     #   s3transfer
+build==1.2.2.post1
+    # via pip-tools
 certifi==2024.12.14
     # via
     #   -c requirements.txt
@@ -52,13 +53,11 @@ charset-normalizer==2.1.1
 click==8.1.7
     # via
     #   -c requirements.txt
-    #   click-default-group
     #   cookiecutter
     #   flask
+    #   pip-tools
     #   towncrier
-click-default-group==1.2.4
-    # via towncrier
-cookiecutter==2.1.1
+cookiecutter==2.6.0
     # via -r dev-requirements.in
 coverage[toml]==6.5.0
     # via
@@ -68,7 +67,7 @@ coveralls==3.3.1
     # via -r dev-requirements.in
 cryptography==44.0.0
     # via moto
-decorator==5.1.1
+decorator==5.2.1
     # via
     #   -c requirements.txt
     #   ipdb
@@ -82,11 +81,11 @@ docutils==0.17
     #   sphinx-rtd-theme
 executing==2.1.0
     # via stack-data
-factory-boy==3.2.1
+factory-boy==3.3.1
     # via
     #   -r dev-requirements.in
     #   pytest-factoryboy
-faker==14.2.0
+faker==33.3.1
     # via
     #   -r dev-requirements.in
     #   factory-boy
@@ -94,9 +93,9 @@ flask==3.0.3
     # via
     #   -c requirements.txt
     #   flask-debugtoolbar
-flask-debugtoolbar==0.13.1
+flask-debugtoolbar==0.16.0
     # via -r dev-requirements.in
-freezegun==1.2.2
+freezegun==1.5.1
     # via
     #   -r dev-requirements.in
     #   pytest-freezegun
@@ -106,8 +105,6 @@ idna==2.8
     #   requests
 imagesize==1.3.0
     # via sphinx
-incremental==21.3.0
-    # via towncrier
 inflection==0.5.1
     # via pytest-factoryboy
 iniconfig==2.0.0
@@ -120,7 +117,6 @@ itsdangerous==2.1.2
     # via
     #   -c requirements.txt
     #   flask
-    #   flask-debugtoolbar
 jedi==0.18.1
     # via ipython
 jinja2==3.1.5
@@ -128,17 +124,16 @@ jinja2==3.1.5
     #   -c requirements.txt
     #   cookiecutter
     #   flask
-    #   jinja2-time
     #   moto
     #   sphinx
     #   towncrier
-jinja2-time==0.2.0
-    # via cookiecutter
-jmespath==0.10.0
+jmespath==1.0.1
     # via
     #   -c requirements.txt
     #   boto3
     #   botocore
+markdown-it-py==2.2.0
+    # via rich
 markupsafe==2.1.3
     # via
     #   -c requirements.txt
@@ -146,6 +141,8 @@ markupsafe==2.1.3
     #   werkzeug
 matplotlib-inline==0.1.3
     # via ipython
+mdurl==0.1.2
+    # via markdown-it-py
 mock==2.0.0
     # via -r dev-requirements.in
 moto==5.0.25
@@ -161,11 +158,12 @@ mypy-extensions==1.0.0
 packaging==24.1
     # via
     #   -c requirements.txt
+    #   build
     #   pytest
     #   sphinx
 parso==0.8.3
     # via jedi
-pbr==6.0.0
+pbr==6.1.1
     # via
     #   -c requirements.txt
     #   mock
@@ -173,7 +171,9 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==10.4.0
+pillow==11.1.0
+    # via -r dev-requirements.in
+pip-tools==7.4.1
     # via -r dev-requirements.in
 pluggy==0.13.1
     # via pytest
@@ -194,7 +194,12 @@ pyfakefs==5.7.3
 pygments==2.10.0
     # via
     #   ipython
+    #   rich
     #   sphinx
+pyproject-hooks==1.2.0
+    # via
+    #   build
+    #   pip-tools
 pytest==7.1.3
     # via
     #   -r dev-requirements.in
@@ -211,7 +216,7 @@ pytest-freezegun==0.4.2
     # via -r dev-requirements.in
 pytest-rerunfailures==10.2
     # via -r dev-requirements.in
-pytest-split==0.8.0
+pytest-split==0.10.0
     # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
@@ -227,6 +232,7 @@ pyyaml==6.0.1
     # via
     #   -c requirements.txt
     #   cookiecutter
+    #   responses
 requests==2.32.3
     # via
     #   -c requirements.txt
@@ -235,13 +241,15 @@ requests==2.32.3
     #   moto
     #   responses
     #   sphinx
-responses==0.21.0
+responses==0.25.6
     # via
     #   -r dev-requirements.in
     #   moto
+rich==13.2.0
+    # via cookiecutter
 ruff==0.5.5
     # via -r dev-requirements.in
-s3transfer==0.10.1
+s3transfer==0.10.4
     # via
     #   -c requirements.txt
     #   boto3
@@ -282,15 +290,19 @@ stack-data==0.6.3
     # via ipython
 text-unidecode==1.3
     # via python-slugify
+toml==0.10.2
+    # via -r dev-requirements.in
 tomli==2.2.1
     # via
     #   -c requirements.txt
+    #   build
     #   coverage
     #   ipdb
     #   mypy
+    #   pip-tools
     #   pytest
     #   towncrier
-towncrier==22.8.0
+towncrier==24.8.0
     # via -r dev-requirements.in
 traitlets==5.1.1
     # via
@@ -299,6 +311,7 @@ traitlets==5.1.1
 typing-extensions==4.12.2
     # via
     #   -c requirements.txt
+    #   faker
     #   mypy
     #   pytest-factoryboy
     #   sqlalchemy-stubs
@@ -314,10 +327,12 @@ werkzeug==3.0.6
     # via
     #   -c requirements.txt
     #   flask
-    #   flask-debugtoolbar
     #   moto
+wheel==0.45.1
+    # via pip-tools
 xmltodict==0.14.2
     # via moto
 
 # The following packages are considered to be unsafe in a requirements file:
+# pip
 # setuptools
