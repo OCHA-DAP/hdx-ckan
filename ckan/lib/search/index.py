@@ -117,18 +117,13 @@ class PackageSearchIndex(SearchIndex):
         final_dicts = []
 
         for pkg_dict in pkg_dicts:
-            # tracking summary values will be stale, never store them
-            tracking_summary = pkg_dict.pop('tracking_summary', None)
-            for r in pkg_dict.get('resources', []):
-                r.pop('tracking_summary', None)
-
             # Index validated data-dict
             package_plugin = lib_plugins.lookup_package_plugin(
                 pkg_dict.get('type'))
             schema = package_plugin.show_package_schema()
             validated_pkg_dict, _errors = lib_plugins.plugin_validate(
                 package_plugin,
-                cast(Context, {'model': model, 'session': model.Session}),
+                {'model': model, 'session': model.Session},
                 pkg_dict, schema, 'package_show')
             pkg_dict['validated_data_dict'] = json.dumps(validated_pkg_dict,
                                                          cls=ckan.lib.navl.dictization_functions.MissingNullEncoder)
@@ -164,7 +159,7 @@ class PackageSearchIndex(SearchIndex):
             # vocab_<tag name> so that they can be used in facets
             non_vocab_tag_names = []
             tags = pkg_dict.pop('tags', [])
-            context = cast(Context, {'model': model})
+            context: Context = {'model': model}
 
             for tag in tags:
                 if tag.get('vocabulary_id'):
@@ -197,13 +192,6 @@ class PackageSearchIndex(SearchIndex):
                 pkg_dict['organization'] = pkg_dict['organization']['name']
             else:
                 pkg_dict['organization'] = None
-
-            # tracking
-            if not tracking_summary:
-                tracking_summary = model.TrackingSummary.get_for_package(
-                    pkg_dict['id'])
-            pkg_dict['views_total'] = tracking_summary['total']
-            pkg_dict['views_recent'] = tracking_summary['recent']
 
             resource_fields = [('name', 'res_name'),
                                ('description', 'res_description'),
@@ -259,6 +247,7 @@ class PackageSearchIndex(SearchIndex):
                         log.warning('%r: %r value of %r is not a valid date', pkg_dict['id'], key, value)
                         continue
                 new_dict[key] = value
+
             pkg_dict = new_dict
 
             for k in ('title', 'notes', 'title_string'):
@@ -315,12 +304,13 @@ class PackageSearchIndex(SearchIndex):
             conn.add(docs=final_dicts, commit=commit)
         except pysolr.SolrError as e:
             msg = 'Solr returned an error: {0}'.format(
-                e.args[0][:1000] # limit huge responses
+                e.args[0][:1000]  # limit huge responses
             )
             raise SearchIndexError(msg)
         except socket.error as e:
             assert conn
-            err = 'Could not connect to Solr using {0}: {1}'.format(conn.url, str(e))
+            err = 'Could not connect to Solr using {0}: {1}'.format(
+                conn.url, str(e))
             log.error(err)
             raise SearchIndexError(err)
 

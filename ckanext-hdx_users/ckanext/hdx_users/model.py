@@ -62,8 +62,9 @@ def setup():
         define_validation_token_table()
         log.debug('Validation tokens table defined in memory')
 
-    if model.user_table.exists() and not validation_token_table.exists():
-        validation_token_table.create()
+    engine = model.ensure_engine()
+    if model.user_table.exists(engine) and not validation_token_table.exists(engine):
+        validation_token_table.create(engine)
         log.debug('Validation tokens table created')
 
 

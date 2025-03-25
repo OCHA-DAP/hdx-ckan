@@ -48,8 +48,9 @@ def setup():
         #     'extras': orm.relationship(MemberExtra, order_by=member_extra_table.c.id)
         # })
 
-    if model.member_table.exists() and not member_extra_table.exists():
-        member_extra_table.create()
+    engine = model.ensure_engine()
+    if model.member_table.exists(engine) and not member_extra_table.exists(engine):
+        member_extra_table.create(engine)
         log.debug('Member extra table created')
 
 

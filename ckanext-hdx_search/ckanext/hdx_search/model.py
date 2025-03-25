@@ -4,6 +4,7 @@ import logging
 from sqlalchemy import types, Table, Column, ForeignKey, UniqueConstraint, Index, desc
 
 import ckan.plugins.toolkit as tk
+import model
 
 from ckan.model import meta, domain_object
 from ckan.model import types as ckan_types
@@ -24,8 +25,9 @@ def setup():
 
 
 def create_table():
-    if user_table.exists() and searched_string_table is not None and not searched_string_table.exists():
-        searched_string_table.create()
+    engine = model.ensure_engine()
+    if user_table.exists(engine) and searched_string_table is not None and not searched_string_table.exists(engine):
+        searched_string_table.create(engine)
         log.debug('Searched strings table created')
 
 

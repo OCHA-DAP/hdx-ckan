@@ -128,17 +128,17 @@ def update_config() -> None:
     # inside IConfigured.update_config
     webassets_init()
 
+    # register core assets here, giving plugins an opportunity to override core
+    # assets inside IConfigurer.update_config
+    register_core_assets()
+
     for plugin in p.PluginImplementations(p.IConfigurer):
         # must do update in place as this does not work:
         # config = plugin.update_config(config)
         plugin.update_config(config)
 
-    # register core assets here, giving plugins an opportunity to override core
-    # assets inside IConfigurer.update_config
-    register_core_assets()
-
-        _, errors = config_declaration.validate(config)
-        if errors:
+    _, errors = config_declaration.validate(config)
+    if errors:
         msg = "\n".join(
             "{}: {}".format(key, "; ".join(issues))
             for key, issues in errors.items()

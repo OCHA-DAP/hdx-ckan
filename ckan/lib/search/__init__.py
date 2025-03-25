@@ -221,7 +221,7 @@ def rebuild(package_id: Optional[str] = None,
         elif package_ids is not None:
             for package_id in package_ids:
                 pkg_dict = logic.get_action('package_show')(context,
-                    {'id': package_id})
+                                                            {'id': package_id})
                 log.info('Indexing just package %r...', pkg_dict['name'])
                 package_index.update_dict(pkg_dict, True)
         else:

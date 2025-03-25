@@ -10,7 +10,7 @@ import re
 from typing import Union
 
 from ckan import model
-from ckan.lib.io_ import decode_path
+from ckan.lib.io import decode_path
 
 # Maximum length of a filename's extension (including the '.')
 MAX_FILENAME_EXTENSION_LENGTH = 21

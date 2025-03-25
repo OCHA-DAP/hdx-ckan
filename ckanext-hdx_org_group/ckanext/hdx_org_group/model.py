@@ -5,6 +5,7 @@ import uuid
 from sqlalchemy import types, Table, Column, ForeignKey
 from six import text_type
 
+import model
 from ckan.model import meta, domain_object
 from ckan.model import types as ckan_types
 from ckan.model.group import group_table
@@ -21,8 +22,9 @@ def setup():
 
 
 def create_table():
-    if group_table.exists() and organization_batch_table is not None and not organization_batch_table.exists():
-        organization_batch_table.create()
+    engine = model.ensure_engine()
+    if group_table.exists(engine) and organization_batch_table is not None and not organization_batch_table.exists(engine):
+        organization_batch_table.create(engine)
         # print ('Org batch table created')
 
 

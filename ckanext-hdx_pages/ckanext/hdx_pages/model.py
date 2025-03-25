@@ -196,18 +196,19 @@ def define_page_tag_association_table():
 
 
 def create_table():
-    if model.group_table.exists():
-        if not page_table.exists():
-            page_table.create()
+    engine = model.ensure_engine()
+    if model.group_table.exists(engine):
+        if not page_table.exists(engine):
+            page_table.create(engine)
             print('Page table created')
         else:
             patch_table_add_column('extras')
 
-        if not page_group_association_table.exists():
-            page_group_association_table.create()
+        if not page_group_association_table.exists(engine):
+            page_group_association_table.create(engine)
             print('page group association table created')
-        if not page_tag_association_table.exists():
-            page_tag_association_table.create()
+        if not page_tag_association_table.exists(engine):
+            page_tag_association_table.create(engine)
             print('page tag association table created')
 
 #

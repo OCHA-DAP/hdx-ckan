@@ -98,8 +98,9 @@ def create_table():
     '''
     Create user_extra table
     '''
-    if model.user_table.exists() and not user_extra_table.exists():
-        user_extra_table.create()
+    engine = model.ensure_engine()
+    if model.user_table.exists(engine) and not user_extra_table.exists(engine):
+        user_extra_table.create(engine)
         log.debug('User extra table created')
 
 

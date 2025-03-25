@@ -9,7 +9,7 @@ from hashlib import sha1, md5
 
 import passlib.utils
 from passlib.hash import pbkdf2_sha512
-from sqlalchemy.sql.expression import or_
+from sqlalchemy.sql.expression import or_, and_
 from sqlalchemy.orm import synonym, Mapped
 from sqlalchemy import types, Column, Table, func, Index
 from sqlalchemy.dialects.postgresql import JSONB
