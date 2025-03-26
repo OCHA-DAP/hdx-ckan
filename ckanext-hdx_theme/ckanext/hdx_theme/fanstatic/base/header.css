@@ -409,22 +409,21 @@ body {
   font-weight: 400;
   font-size: 14px;
   display: inline;
+}
+.base-actions-menu ul li:after {
+  content: "";
+  border-right: 1px solid #888888;
+  height: 16px;
+  margin-left: 16px;
   margin-right: 16px;
 }
 .base-actions-menu ul li:last-child {
   margin-right: 0;
 }
-.base-actions-menu ul li:first-child:before {
+.base-actions-menu ul li:last-child:after {
   border: none;
-}
-.base-actions-menu ul li:before {
-  content: "";
-  border-left: 1px solid #888888;
-  height: 16px;
-  margin-right: 16px;
-}
-.base-actions-menu ul li.d-none + li:before {
-  border-left: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 .base-actions-menu ul li.delete-override a {
   color: #f2645a;

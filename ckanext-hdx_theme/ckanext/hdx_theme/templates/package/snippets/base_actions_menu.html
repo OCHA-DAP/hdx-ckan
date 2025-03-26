@@ -21,6 +21,9 @@
     <ul data-module="hdx_click_stopper"
         data-module-link_type="dataset header"
         data-module-just_send_event="false" data-module-selector="#contact-the-contributor">
+        {% if h.hdx_dataset_supports_notifications(pkg.id) == 'true' %}
+          {{ h.snippet('notification_platform/action_menu_buttons.html') }}
+        {% endif %}
         {% if c.user %}
             {% if not hide_follow%}
                 <li>

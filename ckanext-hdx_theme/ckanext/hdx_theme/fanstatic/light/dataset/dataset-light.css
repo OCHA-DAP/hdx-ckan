@@ -133,33 +133,6 @@
   border-left: 0;
   margin-left: 0;
 }
-.notification-platform-opt-in-action-menu {
-  cursor: pointer;
-  background-color: #007CE1;
-  display: inline-block;
-  padding: 7px;
-  border-radius: 22px;
-  margin-top: -25px;
-  margin-bottom: 15px;
-}
-.notification-platform-opt-in-action-menu .icon {
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  border-radius: 15px;
-  text-align: center;
-  font-size: 18px;
-  color: #007CE1;
-  background-color: #fff;
-}
-.notification-platform-opt-in-action-menu .paragraph {
-  font-size: 14px;
-  color: #fff;
-  max-width: 240px;
-  padding-left: 10px;
-  padding-right: 10px;
-  line-height: 1.05;
-}
 .dataset-light .nav-tabs {
   margin: 0 -15px;
   padding: 0 15px;
@@ -278,6 +251,8 @@
 .dataset-light .notification-platform-opt-in-action-menu,
 .dataset-light .notification-platform-opt-out-action-menu {
   margin-top: 5px;
+  margin-bottom: 5px;
+  list-style-type: none;
 }
 @media (max-width: 375px) {
   .dataset-light .nav-tabs .hdx-tab-button {
