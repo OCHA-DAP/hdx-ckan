@@ -1,0 +1,38 @@
+{# 
+ # This snippet creates the link for the filters
+ # Arguments: 
+ # - title
+ # - param
+ # - values 
+ # - remove - if True then we'll remove the param
+ #}
+
+{% set url = request.path %}
+{% set extra_args = request.args.copy() %}
+{% set param_values = values %}
+
+{% for value in param_values %}
+  {% if remove %}
+    {% set group_args = extra_args.getlist(param) %}
+    {% if value in group_args %}
+      {% do group_args.remove(value) %}
+      {% do extra_args.setlist(param, group_args) %}
+    {% endif %}
+  {% else %}
+    {% do extra_args.update({param: value}) %}
+  {% endif %}
+{% endfor %}
+
+
+{% set query_parts = [] %}
+{% for key, values in extra_args.lists() %}
+  {% for val in values %}
+    {% do query_parts.append(key ~ '=' ~ val | urlencode) %}
+  {% endfor %}
+{% endfor %}
+
+{% if query_parts|length > 0 %}
+  {% set url = url ~ "?" ~ query_parts | join('&') %}
+{% endif %}
+
+{{ url }}
