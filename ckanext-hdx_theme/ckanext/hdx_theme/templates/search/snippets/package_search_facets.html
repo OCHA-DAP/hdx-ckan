@@ -11,7 +11,17 @@ Example:
     {% for option in items %}
       <li>
         <label class="facet">
-        <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
+          {% if option.category_key == 'cod_level' and option.name=='ALL' %}
+            {% set category_values=[] %}
+            {% for categ in option['items'] %}
+              {% do category_values.append(categ.name) %}
+            {% endfor %}
+          {% else %}
+            {% set category_values=[option.name] %}
+          {% endif %}
+          
+          <a class="facet-link" href="{% snippet 'snippets/create_filter_link.html', param=option.category_key, values=category_values, remove=option.selected %}">
+          <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
                {% if option.selected %}checked="checked"{% endif %}
                {% if option.get('items') %} class="parent-facet" {% endif %}
                {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %} />
@@ -28,6 +38,7 @@ Example:
           {% if option.get('items') %}
             {{ render_facet_list(option.get('items'), '', '') }}
           {% endif %}
+        </a>
         </label>
       </li>
     {% endfor %}
