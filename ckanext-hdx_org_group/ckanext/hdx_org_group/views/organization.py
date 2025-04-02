@@ -54,10 +54,6 @@ def read(id):
         'for_view': True,
         'with_private': False
     }
-    try:
-        check_access('site_read', context)
-    except NotAuthorized:
-        abort(403, _('Not authorized to see this page'))
 
     try:
         read_logic = OrgReadLogic(id, g.user, g.userobj)

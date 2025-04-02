@@ -104,13 +104,6 @@ def search():
 
 
 def generic_search(html_template):
-    try:
-        context = {'model': model, 'user': g.user,
-                   'auth_user_obj': g.userobj}
-        check_access('site_read', context)
-    except NotAuthorized:
-        abort(403, _('Not authorized to see this page'))
-
     search_logic = SearchLogic()
 
     try:

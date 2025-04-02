@@ -47,10 +47,6 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
         'for_view': True,
         'with_private': False
     }
-    try:
-        check_access('site_read', context)
-    except NotAuthorized:
-        abort(403, _('Not authorized to see this page'))
     # pass user info to context as needed to view private datasets of
     # orgs correctly
     # if c.userobj:
@@ -118,10 +114,6 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         'for_view': True,
         'with_private': False
     }
-    try:
-        check_access('site_read', context)
-    except NotAuthorized:
-        abort(403, _('Not authorized to see this page'))
 
     try:
         read_logic = LightOrgReadLogic(id, g.user, g.userobj)

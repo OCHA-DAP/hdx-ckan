@@ -149,17 +149,13 @@ def _populate_template_data(page_dict, show_switch_to_mobile):
 
 
 def _read(id, show_switch_to_desktop, show_switch_to_mobile):
-    try:
-        context = {
-            u'model': model,
-            u'session': model.Session,
-            u'user': g.user,
-            u'auth_user_obj': g.userobj,
-            u'for_view': True
-        }
-        check_access('site_read', context)
-    except NotAuthorized:
-        abort(403, _('Not authorized to see this page'))
+    context = {
+        u'model': model,
+        u'session': model.Session,
+        u'user': g.user,
+        u'auth_user_obj': g.userobj,
+        u'for_view': True
+    }
 
     page_dict = None
     try:

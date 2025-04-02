@@ -98,10 +98,6 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         'for_view': True,
         'with_private': False
     }
-    try:
-        check_access('site_read', context)
-    except NotAuthorized:
-        abort(403, _('Not authorized to see this page'))
 
     group_read_logic = LightGroupReadLogic(group_id=id)
     group_read_logic.read()
