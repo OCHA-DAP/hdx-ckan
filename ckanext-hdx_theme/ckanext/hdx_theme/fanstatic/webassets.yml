@@ -12,52 +12,51 @@ common-css: &common-css
 vendor-vendor:
   #original is base/vendor/webassets.yml -> vendor
   contents:
-    - vendor/jed.js
-    - vendor/moment-with-locales.js
-    # HDX Edit
-    # commented out this line to allow a new version of select2 to be integrated into our new onboarding pages
-    # vendor/select2-js (created above) is now included in hdx_theme/page-scripts
-    # - select2/select2.js
-    # END HDX Edit
-    - vendor/popperjs.js
-    - vendor/purify.js
-    - vendor/jquery.js
+    - /srv/ckan/ckan/public/base/vendor/jed.js
+    - /srv/ckan/ckan/public/base/vendor/moment-with-locales.js
+    - /srv/ckan/ckan/public/base/vendor/popperjs.js
+    - /srv/ckan/ckan/public/base/vendor/purify.js
+    - /srv/ckan/ckan/public/base/vendor/jquery.js
 
 vendor-bootstrap:
   #original is base/vendor/webassets.yml -> vendor
   contents:
-    - vendor/bootstrap/js/bootstrap.js
+    - /srv/ckan/ckan/public/base/vendor/bootstrap/js/bootstrap.js
 
 base-main:
   <<: *common-js
   output: base/%(version)s_main.js
+  extra:
+    preload:
+      - hdx_theme/vendor-vendor
+      - hdx_theme/vendor-bootstrap
   contents:
-    - vendor-vendor
-    - vendor-bootstrap
-    - apply-html-class.js
-    - plugins/jquery.inherit.js
-    - plugins/jquery.proxy-all.js
-    - plugins/jquery.url-helpers.js
-    - plugins/jquery.date-helpers.js
-    - plugins/jquery.slug.js
-    - plugins/jquery.slug-preview.js
-    - plugins/jquery.truncator.js
-    - plugins/jquery.masonry.js
-    - plugins/jquery.form-warning.js
-    - plugins/jquery.images-loaded.js
-    - sandbox.js
-    - module.js
-    - pubsub.js
-    - client.js
-    - i18n.js
-    - notify.js
-    - main.js
+    - /srv/ckan/ckan/public/base/javascript/apply-html-class.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.inherit.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.proxy-all.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.url-helpers.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.date-helpers.js
+    - vendor/ckan/jquery.slug.js
+    - vendor/ckan/jquery.slug-preview.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.truncator.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.masonry.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.form-warning.js
+    - /srv/ckan/ckan/public/base/javascript/plugins/jquery.images-loaded.js
+    - /srv/ckan/ckan/public/base/javascript/sandbox.js
+    - /srv/ckan/ckan/public/base/javascript/module.js
+    - /srv/ckan/ckan/public/base/javascript/pubsub.js
+    - /srv/ckan/ckan/public/base/javascript/client.js
+    - /srv/ckan/ckan/public/base/javascript/i18n.js
+    - /srv/ckan/ckan/public/base/javascript/notify.js
+    - /srv/ckan/ckan/public/base/javascript/main.js
 
 ckan:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_ckan.js
+  extra:
+    preload:
+    - hdx_theme/base-main
   contents:
-    - base-main
     - vendor/ckan/jquery.slug.js
     - vendor/ckan/jquery.slug-preview.js
     - vendor/ckan/slug-preview.js
@@ -69,7 +68,7 @@ ckan:
     - google-analytics.js
     - modules/data-viewer2.js
     - modules/resource-view-embed.js
-    - modules/copy-into-buffer.js
+    - /srv/ckan/ckan/public/base/javascript/modules/copy-into-buffer.js
     - hdx_confirm-action.js
     - hdx_click_stopper.js
     - hdx_terms_checkbox.js
@@ -90,8 +89,10 @@ page-common-styles:
     - widget/contribute/details.css
 
 hdx-show-more:
+  extra:
+    preload:
+    - hdx_theme/jquery-extra
   contents:
-    - jquery-extra
     - hdx_show_more.js
 
 page-scripts:
@@ -100,25 +101,27 @@ page-scripts:
   extra:
     preload:
       - hdx_theme/ckan
+      - hdx_theme/hdx-show-more
   contents:
-    - select2/select2.js
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.js
     - base/header-init.js
     - bs_popover.js
     - bs_tooltip.js
     - follow.js
     - widget/contribute/contribute.js
-    - hdx-show-more
 
 page-styles:
   output: ckanext-hdx_theme/%(version)s_page-styles.css
   <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/page-common-styles
+      - hdx_theme/search-styles
   contents:
     # - vendor-vendor-css - Fontawesome is included directly in page.html
-    - select2/select2.css
-    - page-common-styles
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.css
     - base/base.css
     - base/header.css
-    - search-styles
 
 page-light-scripts:
   <<: *common-js
@@ -126,21 +129,23 @@ page-light-scripts:
   extra:
     preload:
       - hdx_theme/ckan
+      - hdx_theme/hdx-show-more
   contents:
-#    - select2/select2.js
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.js
     - base/header-init.js
     - widget/contribute/contribute.js
-    - hdx-show-more
 
 page-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-light-styles.css
   <<: *common-css
+  extra:
+    preload:
+    - hdx_theme/page-common-styles
+    - hdx_theme/search-styles
+    - hdx_theme/adaptive-page-styles
   contents:
-#    - select2/select2.css
-    - page-common-styles
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.css
     - light/page-light.css
-    - search-styles
-    - adaptive-page-styles
 
 adaptive-page-styles:
   output: ckanext-hdx_theme/%(version)s_adaptive-page-styles.css
@@ -151,10 +156,12 @@ adaptive-page-styles:
 page-extra-light-styles:
   output: ckanext-hdx_theme/%(version)s_page-extra-light-styles.css
   <<: *common-css
+  extra:
+    preload:
+    - hdx_theme/page-common-styles
+    - hdx_theme/adaptive-page-styles
   contents:
-    - page-common-styles
     - light/page-extra-light.css
-    - adaptive-page-styles
 
 select2-4-styles:
   output: ckanext-hdx_theme/%(version)s_select2-4.css
@@ -215,7 +222,6 @@ hdx-signals-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_hdx-signals-scripts.js
   contents:
-    - bs_tooltip.js
     - landing_pages/hdx_signals.js
 
 hdx-hapi-scripts:
@@ -253,6 +259,9 @@ hdx-verify-email-scripts:
 search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_search-scripts.js
+  extra:
+    preload:
+      - hdx_theme/ckan
   contents:
     - search_/minisearch.min.js
     - search_/normalize.js
@@ -263,6 +272,7 @@ search-scripts:
 
 search-styles:
   <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_search-styles.css
   contents:
     - search_/search.css
 
@@ -300,8 +310,6 @@ custom-showcase-creation-scripts:
   contents:
     - custom_showcase_creation.js
 
-
-
 custom-org-creation-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_custom-org-creation-scripts.js
@@ -317,7 +325,6 @@ custom-org-search-facets-styles:
   <<: *common-css
   contents:
     - search_/facets/facets.css
-
 
 jquery-extra:
   output: ckanext-hdx_theme/%(version)s_jquery-extra.js
@@ -385,13 +392,15 @@ onboarding-scripts:
   extra:
     preload:
       - hdx_theme/ckan
+      - hdx_theme/popup-scripts
   contents:
     - widget/onboarding/onboarding.js
-    - popup-scripts
 
 onboarding-styles:
+  extra:
+    preload:
+      - hdx_theme/popup-styles
   contents:
-    - popup-styles
     - widget/onboarding/onboarding.css
     - widget/onboarding/two-column.css
     - widget/onboarding/notification.css
@@ -400,10 +409,13 @@ onboarding-styles:
 
 onboarding-bulk-user-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-user.css
+  extra:
+    preload:
+      - onboarding-styles
+      - onboarding-done-styles
+      - onboarding-survey-styles
   contents:
-    - onboarding-styles
-    - onboarding-done-styles
-    - onboarding-survey-styles
+    - empty.css
 
 
 onboarding-bulk-user-scripts:
@@ -413,10 +425,13 @@ onboarding-bulk-user-scripts:
 
 onboarding-bulk-anon-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-anon.css
+  extra:
+    preload:
+      - onboarding-styles
+      - onboarding-verify-styles
+      - onboarding-survey-styles
   contents:
-    - onboarding-styles
-    - onboarding-verify-styles
-    - onboarding-survey-styles
+    - empty.css
 
 onboarding-bulk-anon-scripts:
   extra:
@@ -426,6 +441,7 @@ onboarding-bulk-anon-scripts:
 
 onboarding-verify-styles:
   <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_onboarding-verify-styles.css
   contents:
     - widget/onboarding/verify.css
 
@@ -445,9 +461,11 @@ onboarding-perform-reset-scripts:
 
 onboarding-password-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-password-styles.css
+  extra:
+    preload:
+    - hdx_theme/onboarding-styles
+    - hdx_theme/onboarding-verify-styles
   contents:
-    - onboarding-styles
-    - onboarding-verify-styles
     - widget/onboarding/forgot-password.css
     - widget/onboarding/recover.css
 
@@ -457,8 +475,8 @@ onboarding-perform-reset-styles:
   extra:
     preload:
       - hdx_theme/popup-styles
+      - hdx_theme/onboarding-password-styles
   contents:
-    - onboarding-password-styles
     - widget/onboarding/perform-reset.css
 
 onboarding-done-styles:
@@ -469,15 +487,18 @@ onboarding-done-styles:
 
 onboarding-survey-styles:
   <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_onboarding-survey-styles.css
   contents:
     - widget/onboarding/survey.css
 
 signin-styles:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_singin-styles.css
+  extra:
+    preload:
+    - hdx_theme/onboarding-styles
+    - hdx_theme/onboarding-password-styles
   contents:
-    - onboarding-styles
-    - onboarding-password-styles
     - widget/signin/signin.css
 
 signin-scripts:
@@ -657,7 +678,7 @@ dataset-light-scripts:
       - hdx_theme/dataset-light-styles
   contents:
     - light/dataset/dataset.js
-    - select2/select2.js
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.js
 
 dataset-light-styles:
   <<: *common-css
@@ -702,8 +723,10 @@ requestdata-scripts:
 requestdata-styles:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_requestdata-styles.css
+  extra:
+    preload:
+      - hdx_theme/search-styles
   contents:
-    - search-styles
     - requestdata/request-data.css
 
 delete-member-styles:
@@ -921,7 +944,6 @@ faq-scripts:
     - faq_/faq.js
     - faq_/faq-search.js
     - widget/faq/faq.js
-    - https://www.google.com/recaptcha/api.js
 
 faq-styles:
   <<: *common-css
@@ -974,8 +996,10 @@ contribute-flow-scripts:
 contribute-flow-styles:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_contribute-flow-styles.css
+  extra:
+    preload:
+    - hdx_theme/search-styles
   contents:
-    - search-styles
     - contribute_flow/contribute.css
     - datepicker/jquery-ui.css
     - datepicker/jquery-ui.theme.css
@@ -1052,10 +1076,12 @@ homepage-scripts:
 homepage-styles:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_homepage-styles.css
+  extra:
+    preload:
+    - hdx_theme/adaptive-page-styles
   contents:
     - homepage/homepage.css
     - homepage/homepage-responsive.css
-    - adaptive-page-styles
 
 country-custom-scripts:
   # not preloading country-custom-styles as sometimes we need nepal-quake-country-custom-styles instead
@@ -1101,7 +1127,7 @@ group-list-scripts:
     preload:
       - hdx_theme/group-list-styles
   contents:
-    - select2/select2.js
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.js
     - vendor/leaflet-1.7.1/leaflet.js
     - map_base.js
     - browse_/world_json.js
@@ -1116,7 +1142,7 @@ group-list-styles:
     preload:
       - hdx_theme/charting-styles
   contents:
-    - select2/select2.css
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.css
     - vendor/leaflet-1.7.1/leaflet.css
     - browse_/browse.css
     - css/humanitarian_icons.css
@@ -1204,8 +1230,8 @@ organization-light-styles:
       - hdx_theme/dataset-light-styles
       - hdx_theme/dataset-search-styles
       - hdx_theme/dataset-styles
+      - hdx_theme/search-styles
   contents:
-    - search-styles
     - light/organization/org-light.css
 
 organization-members-scripts:
@@ -1341,7 +1367,6 @@ group-message-scripts:
       - hdx_theme/ckan
       - hdx_theme/group-message-styles
   contents:
-    - https://www.google.com/recaptcha/api.js
     - widget/membership/group-message.js
 
 group-message-styles:
@@ -1390,7 +1415,6 @@ request-tags-scripts:
     preload:
       - hdx_theme/ckan
   contents:
-    - https://www.google.com/recaptcha/api.js
     - widget/tags/request-tags.js
 
 notification-platform-scripts:

@@ -1,9 +1,13 @@
 {% extends "page_light.html" %}
 
 {%- block styles %}
-  {% asset 'vendor/select2-css' %}
   {{ super() }}
   {% asset 'hdx_theme/faq-styles' %}
+{% endblock %}
+
+{%- block scripts %}
+  {{ super() }}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}
 
 {% block header_core %}
@@ -170,8 +174,3 @@
     </div>
   </div>
 {% endblock %}
-
-{%- block scripts %}
-  {{ super() }}
-  {% asset 'vendor/select2-js' %}
-{% endblock -%}
