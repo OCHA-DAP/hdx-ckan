@@ -96,7 +96,8 @@ def login() -> Union[Response, str]:
 
         identity = {
             u"login": username_or_email,
-            u"password": password
+            u"password": password,
+            u"check_captcha": False,
         }
 
         user_obj = _authenticate(identity)

@@ -3,32 +3,31 @@
 {% block subtitle %}{{ _('All Users') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Users'), controller='user', action='index') }}</li>
+  <li class="active">{{ h.nav_link(_('Users'), named_route='user.index') }}</li>
 {% endblock %}
 {% block primary_content_module_margin %}{% endblock %}
 {% block primary_content_inner %}
   <article class="module">
     <div class="module-content">
-      <div class="paddingLeftHack mTop35">
       <h1 class="page-heading">
         {% block page_heading %}{{ _('Users') }}{% endblock %}
       </h1>
       {% block users_list %}
-      <ul class="user-list">
-        {% block users_list_inner %}
-        {% for user in page.items %}
-          <li>{{ h.linked_user(user['name'], maxlength=20) }} {% if g.userobj.sysadmin %}- {{user['User']['email']}} {% endif %} </li>
-        {% endfor %}
-        {% endblock %}
-      </ul>
+        <ul class="user-list">
+          {% block users_list_inner %}
+            {% for user in page.items %}
+              <li>{{ h.linked_user(user.name, maxlength=20) }}</li>
+            {% endfor %}
+          {% endblock %}
+        </ul>
       {% endblock %}
-    </div></div>
+    </div>
     {% block page_pagination %}
-    {{ page.pager(q=q, order_by=order_by) }}
+      {{ page.pager(q=q, order_by=order_by) }}
     {% endblock %}
   </article>
 {% endblock %}
 
 {% block secondary_content %}
-  {% snippet 'user/snippets/user_search.html' %}
+  {% snippet 'user/snippets/user_search.html', q=q %}
 {% endblock %}
