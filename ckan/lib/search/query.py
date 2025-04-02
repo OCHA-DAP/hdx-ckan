@@ -486,6 +486,10 @@ class PackageSearchQuery(SearchQuery):
 
             raise SearchError('SOLR returned an error running query: %r Error: %r' %
                               (query, e))
+        # Modified by HDX
+        # keep more info from Solr response
+        self.raw_response = solr_response.raw_response
+        # END - Modified by HDX #
         self.count = solr_response.hits
         self.results = cast("list[Any]", solr_response.docs)
 
