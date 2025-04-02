@@ -54,6 +54,11 @@ DATA_COVERAGE_CONSTANTS = [
         "link": "https://data.humdata.org/dataset/global-acute-food-insecurity-country-data"
     },
     {
+        "title": "INFORM Severity",
+        "organization": "ACAPS",
+        "link": "https://data.humdata.org/dataset/inform-global-crisis-severity-index"
+    },
+    {
         "title": "Internal displacement",
         "organization": "the Internal Displacement Monitoring Centre (IDMC)",
         "link": "https://data.humdata.org/organization/international-displacement-monitoring-centre-idmc"
@@ -74,6 +79,7 @@ SECTIONS_CONSTANTS = [
 ]
 
 PARTNERS_CONSTANTS = [
+    ('acaps', 'ACAPS'),
     ('european_comission', 'European Commission'),
     ('acled', 'ACLED'),
     ('ipc', 'IPC'),
