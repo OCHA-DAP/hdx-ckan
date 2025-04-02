@@ -423,14 +423,6 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
 
     data_dict['customization'] = json.dumps(data_dict['customization'])
 
-    if 'api_version' not in context:
-        # old plugins do not support passing the schema so we need
-        # to ensure they still work
-        try:
-            group_plugin.check_data_dict(data_dict, schema)
-        except TypeError:
-            group_plugin.check_data_dict(data_dict)
-
     data, errors = lib_plugins.plugin_validate(
         group_plugin, context, data_dict, schema,
         'organization_update' if is_org else 'group_update')
@@ -600,14 +592,6 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
 
     data_dict['customization'] = json.dumps(data_dict['customization'])
-
-    if 'api_version' not in context:
-        # old plugins do not support passing the schema so we need
-        # to ensure they still work
-        try:
-            group_plugin.check_data_dict(data_dict, schema)
-        except TypeError:
-            group_plugin.check_data_dict(data_dict)
 
     data, errors = lib_plugins.plugin_validate(
         group_plugin, context, data_dict, schema,

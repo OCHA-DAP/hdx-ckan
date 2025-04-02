@@ -255,18 +255,6 @@ def package_update(
 
     package_plugin = lib_plugins.lookup_package_plugin(pkg.type)
     schema = context.get('schema') or package_plugin.update_package_schema()
-    if 'api_version' not in context:
-        # check_data_dict() is deprecated. If the package_plugin has a
-        # check_data_dict() we'll call it, if it doesn't have the method we'll
-        # do nothing.
-        check_data_dict = getattr(package_plugin, 'check_data_dict', None)
-        if check_data_dict:
-            try:
-                package_plugin.check_data_dict(data_dict, schema)
-            except TypeError:
-                # Old plugins do not support passing the schema so we need
-                # to ensure they still work.
-                package_plugin.check_data_dict(data_dict)
 
     # Inject the existing package_creator as it should not be modifiable
     if hasattr(pkg, 'extras'):
