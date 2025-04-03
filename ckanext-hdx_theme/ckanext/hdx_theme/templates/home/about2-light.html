@@ -28,3 +28,8 @@
 {% endblock %}
 
 {% block secondary %}{% endblock %}
+
+{%- block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/vendor-select2-js' %}
+{% endblock -%}

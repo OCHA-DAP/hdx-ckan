@@ -23,6 +23,12 @@ vendor-bootstrap:
   contents:
     - /srv/ckan/ckan/public/base/vendor/bootstrap/js/bootstrap.js
 
+vendor-select2-js:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_vendor-select2.js
+  contents:
+    - /srv/ckan/ckan/public/base/vendor/select2/select2.js
+
 base-main:
   <<: *common-js
   output: base/%(version)s_main.js
@@ -131,7 +137,6 @@ page-light-scripts:
       - hdx_theme/ckan
       - hdx_theme/hdx-show-more
   contents:
-    - /srv/ckan/ckan/public/base/vendor/select2/select2.js
     - base/header-init.js
     - widget/contribute/contribute.js
 
@@ -144,7 +149,6 @@ page-light-styles:
     - hdx_theme/search-styles
     - hdx_theme/adaptive-page-styles
   contents:
-    - /srv/ckan/ckan/public/base/vendor/select2/select2.css
     - light/page-light.css
 
 adaptive-page-styles:
@@ -411,9 +415,9 @@ onboarding-bulk-user-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-user.css
   extra:
     preload:
-      - onboarding-styles
-      - onboarding-done-styles
-      - onboarding-survey-styles
+      - hdx_theme/onboarding-styles
+      - hdx_theme/onboarding-done-styles
+      - hdx_theme/onboarding-survey-styles
   contents:
     - empty.css
 
@@ -427,9 +431,9 @@ onboarding-bulk-anon-styles:
   output: ckanext-hdx_theme/%(version)s_onboarding-anon.css
   extra:
     preload:
-      - onboarding-styles
-      - onboarding-verify-styles
-      - onboarding-survey-styles
+      - hdx_theme/onboarding-styles
+      - hdx_theme/onboarding-verify-styles
+      - hdx_theme/onboarding-survey-styles
   contents:
     - empty.css
 
