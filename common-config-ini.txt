@@ -14,24 +14,24 @@
 use = egg:ckan
 full_stack = true
 cache_dir = /tmp/%(ckan.site_id)s/
-beaker.session.key = ckan_session
+SESSION_COOKIE_NAME = ckan_session
 
 # This is the secret token that the beaker library uses to hash the cookie sent
 # to the client. `paster make-config` generates a unique value for this each
 # time it generates a config file.
 #
-#!beaker.session.secret = 2yD+TjjiiW+VtA38OcfQJNPPO
+#!SECRET_KEY = 2yD+TjjiiW+VtA38OcfQJNPPO
 beaker.session.data_serializer = json
-beaker.session.httponly = true
-beaker.session.secure = true
+SESSION_COOKIE_HTTPONLY = true
+SESSION_COOKIE_SECURE = true
 # 3 days in seconds
-beaker.session.timeout = 259200
+PERMANENT_SESSION_LIFETIME = 259200
 beaker.session.save_accessed_time = true
-beaker.session.type = ext:redis
+# SESSION_TYPE = ext:redis
 beaker.session.url = redis://gisredis:6379/5
-beaker.session.cookie_expires = true
+SESSION_PERMANENT = false
 # Your domain should show here.
-beaker.session.cookie_domain = data.humdata.local
+SESSION_COOKIE_DOMAIN = data.humdata.local
 
 # `paster make-config` generates a unique value for this each time it generates
 # a config file.
@@ -257,7 +257,7 @@ hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d
 # The url containing a hxlated date with country topline numbers
 hdx.locations.toplines_url = https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
 
-hdx.caching.use_redis = true 
+hdx.caching.use_redis = true
 # hdx_requestdata setting
 hdx_portal = true
 #mailchimp settings - update your prod.ini with real ones

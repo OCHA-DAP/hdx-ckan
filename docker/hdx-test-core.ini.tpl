@@ -111,9 +111,8 @@ ckan.activity_list_limit = 15
 
 ckan.tracking_enabled = true
 
-beaker.session.key = ckan
+SESSION_COOKIE_NAME = ckan
 beaker.session.validate_key = ckan
-# beaker.session.secret = This_is_a_secret_or_is_it
 SECRET_KEY = This_is_a_secret_or_is_it
 # repoze.who config
 who.config_file = %(here)s/ckan/config/who.ini

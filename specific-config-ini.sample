@@ -1,12 +1,12 @@
 #
-# This is a SAMPLE config.ini to be used with our ckan. 
+# This is a SAMPLE config.ini to be used with our ckan.
 # Copy it wherever you want and name it whatever you want.
 # ( For example in could go to /etc/ckan/development.ini )
 # That copy wil be the file that you use as argument for paster, gunicorn, etc
 # Don't change this file but only its copy.
 # Please note that this file references the git stored file common-config.ini.txt
-# The path to common-config.ini.txt as well as other   
-# configurations specific to your environment must be changed 
+# The path to common-config.ini.txt as well as other
+# configurations specific to your environment must be changed
 # in the copy of this file.
 # Enjoy!
 #
@@ -30,7 +30,7 @@ sqlalchemy.url = postgresql://ckanuser:pass@localhost/ckandb
 
 ## Site Settings
 ckan.site_url = http://localhost
-beaker.session.secret = DX95Ifu/ko3ddf+/Bbxdar7t4
+SECRET_KEY = DX95Ifu/ko3ddf+/Bbxdar7t4
 app_instance_uuid = {f78aac36-9623-46af-9ca5-d8e0a39b094a}
 
 ## Search Settings
