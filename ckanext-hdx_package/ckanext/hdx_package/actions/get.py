@@ -12,6 +12,7 @@ import dateutil.parser
 import sqlalchemy
 
 from botocore.exceptions import ClientError
+from ckan.types import ActionResult, Context, DataDict
 from six import text_type
 from typing import Any, cast
 
@@ -80,7 +81,7 @@ def hdx_resource_id_list(context, data_dict):
 
 
 @logic.side_effect_free
-def package_search(context, data_dict):
+def package_search(context: Context, data_dict: DataDict) -> ActionResult.PackageSearch:
     '''
     THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN.
 
@@ -222,7 +223,7 @@ def package_search(context, data_dict):
     '''
     # sometimes context['schema'] is None
     schema = (context.get('schema') or
-              logic.schema.default_package_search_schema())
+              ckan.logic.schema.default_package_search_schema())
     data_dict, errors = _validate(data_dict, schema, context)
     # put the extras back into the data_dict so that the search can
     # report needless parameters
@@ -273,6 +274,8 @@ def package_search(context, data_dict):
             data_dict['fl'] = 'id {0}'.format(data_source)
         else:
             data_dict['fl'] = ' '.join(result_fl)
+
+        data_dict.setdefault('fq', '')
 
         # Remove before these hit solr FIXME: whitelist instead
         include_private = asbool(data_dict.pop('include_private', False))
@@ -353,7 +356,7 @@ def package_search(context, data_dict):
         results = []
         expanded = {}
 
-    search_results: dict[str, Any]  = {
+    search_results: dict[str, Any] = {
         'count': count,
         'facets': facets,
         'expanded': expanded,
@@ -368,9 +371,8 @@ def package_search(context, data_dict):
         group_names.extend(facets.get(field_name, {}).keys())
 
     groups = (session.query(model.Group.name, model.Group.title)
-                    # type_ignore_reason: incomplete SQLAlchemy types
-                    .filter(model.Group.name.in_(group_names))  # type: ignore
-                    .all()
+              .filter(model.Group.name.in_(group_names))
+              .all()
               if group_names else [])
     group_titles_by_name = dict(groups)
 

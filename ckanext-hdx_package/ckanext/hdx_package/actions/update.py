@@ -216,7 +216,7 @@ def package_update(
     :param id: the name or id of the dataset to update
     :type id: string
 
-    :returns: the updated dataset (if ``'return_package_dict'`` is ``True`` in
+    :returns: the updated dataset (if ``'return_id_only'`` is ``False`` in
               the context, which is the default. Otherwise returns just the
               dataset id)
     :rtype: dictionary
@@ -228,7 +228,6 @@ def package_update(
     remove_unwanted_csrf_field(data_dict)
 
     model = context['model']
-    session = context['session']
     name_or_id = data_dict.get('id') or data_dict.get('name')
     if name_or_id is None:
         raise ValidationError({'id': _('Missing value')})
@@ -301,9 +300,7 @@ def package_update(
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
     log.debug('package_update validate_errs=%r user=%s package=%s data=%r',
-              errors, context.get('user'),
-              context.get('package').name if context.get('package') else '',
-              data)
+              errors, user, context['package'].name, data)
 
     if errors:
         model.Session.rollback()
@@ -318,13 +315,16 @@ def package_update(
     user_obj = context.get('auth_user_obj')
     if user_obj:
         plugin_data = data.get('plugin_data', False)
-        include_plugin_data = user_obj.sysadmin and plugin_data
+        include_plugin_data = (
+            user_obj.sysadmin  # type: ignore
+            and plugin_data
+        )
 
     if 'tags' in data:
         data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
     pkg = modified_save(context, data, include_plugin_data)
-    # pkg = model_save.package_dict_save(data, context)
+    # pkg = model_save.package_dict_save(data, context, include_plugin_data)
 
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
@@ -348,17 +348,6 @@ def package_update(
         item.edit(pkg)
 
         item.after_dataset_update(context, data)
-
-    # Create activity
-    # if pkg.type == 'dataset':
-    #     user_obj = model.User.by_name(user)
-    #     if user_obj:
-    #         user_id = user_obj.id
-    #     else:
-    #         user_id = 'not logged in'
-    #
-    #     activity = pkg.activity_stream_item('changed', user_id)
-    #     session.add(activity)
 
     if not context.get('defer_commit'):
         model.repo.commit()

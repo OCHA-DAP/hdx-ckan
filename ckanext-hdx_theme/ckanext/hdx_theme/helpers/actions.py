@@ -3,6 +3,7 @@ import json
 
 import sqlalchemy
 
+from ckan.common import asbool
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
@@ -16,13 +17,14 @@ import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.hxl.transformers.transformers as transformers
 import ckan.authz as authz
 
-from ckan.types import Context, DataDict
+from ckan.types import ActionResult, Context, DataDict, Query
 
 from ckanext.activity.model.activity import Activity
 from ckanext.hdx_theme.helpers.hdx_stats import HDXStatsHelper
 from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
 
 from ckanext.hdx_theme.util.analytics_stats import HDXStats, HDXStatsAnalyticsSender
+from typing import cast
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
@@ -34,7 +36,7 @@ NotFound = logic.NotFound
 log = logging.getLogger(__name__)
 
 
-def member_list(context, data_dict=None):
+def member_list(context: Context, data_dict: DataDict) -> ActionResult.MemberList:
     '''Return the members of a group.
 
     Modified copy of the original ckan member_list action to also return
@@ -78,9 +80,9 @@ def member_list(context, data_dict=None):
     if capacity:
         q = q.filter(model.Member.capacity == capacity)
 
-    trans = new_authz.roles_trans()
+    trans = authz.roles_trans()
 
-    def translated_capacity(capacity):
+    def translated_capacity(capacity: str):
         try:
             return trans[capacity]
         except KeyError:
@@ -509,10 +511,18 @@ def hdx_organization_list_for_user(context, data_dict):
     datasets in. This takes account of when permissions cascade down an
     organization hierarchy.
 
+    :param id: the name or id of the user to get the organization list for
+        (optional, defaults to the currently authorized user (logged in or via
+        API key))
+    :type id: string
+
     :param permission: the permission the user has against the
         returned organizations, for example ``"read"`` or ``"create_dataset"``
         (optional, default: ``"edit_group"``)
     :type permission: string
+    :param include_dataset_count: include the package_count in each org
+        (optional, default: ``False``)
+    :type include_dataset_count: bool
 
     :returns: list of organizations that the user has the given permission for
     :rtype: list of dicts
@@ -535,7 +545,9 @@ def hdx_organization_list_for_user(context, data_dict):
         .filter(model.Group.is_organization == True) \
         .filter(model.Group.state == 'active')
 
-    if not sysadmin:
+    if sysadmin:
+        orgs_and_capacities = [(org, 'admin') for org in orgs_q.all()]
+    else:
         # for non-Sysadmins check they have the required permission
 
         # NB 'edit_group' doesn't exist so by default this action returns just
@@ -550,30 +562,45 @@ def hdx_organization_list_for_user(context, data_dict):
         if not user_id:
             return []
 
-        q = model.Session.query(model.Member, model.Group) \
+        q: Query[tuple[model.Member, model.Group]] = model.Session.query(model.Member, model.Group) \
             .filter(model.Member.table_name == 'user') \
-            .filter(model.Member.capacity.in_(roles)) \
+            .filter(
+                model.Member.capacity.in_(roles)
+            ) \
             .filter(model.Member.table_id == user_id) \
             .filter(model.Member.state == 'active') \
             .join(model.Group)
 
-        group_ids = set()
-        roles_that_cascade = \
+        group_ids: set[str] = set()
+        roles_that_cascade = cast(
+            "list[str]",
             authz.check_config_permission('roles_that_cascade_to_sub_groups')
+        )
+        group_ids_to_capacities: dict[str, str] = {}
         for member, group in q.all():
             if member.capacity in roles_that_cascade:
-                group_ids |= set([
+                children_group_ids = [
                     grp_tuple[0] for grp_tuple
                     in group.get_children_group_hierarchy(type='organization')
-                ])
+                ]
+                for group_id in children_group_ids:
+                    group_ids_to_capacities[group_id] = member.capacity
+                group_ids |= set(children_group_ids)
+
+            group_ids_to_capacities[group.id] = member.capacity
             group_ids.add(group.id)
 
         if not group_ids:
             return []
 
         orgs_q = orgs_q.filter(model.Group.id.in_(group_ids))
+        orgs_and_capacities = [
+            (org, group_ids_to_capacities[org.id]) for org in orgs_q.all()]
 
-    orgs_list = model_dictize.group_list_dictize(orgs_q.all(), context)
+    context['with_capacity'] = True
+    orgs_list = model_dictize.group_list_dictize(orgs_and_capacities, context,
+        with_package_counts=asbool(data_dict.get('include_dataset_count')),
+        with_member_counts=asbool(data_dict.get('include_member_count')))
     return orgs_list
 
 

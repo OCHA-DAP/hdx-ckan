@@ -3,7 +3,7 @@ import ckan.logic.action.update as _update
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_package.helpers.resource_triggers.fs_check as fs_check
-from ckan.types import Context, DataDict
+from ckan.types import ActionResult, Context, DataDict
 from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode, package_update, \
     SKIP_VALIDATION
 from ckanext.hdx_package.helpers.analytics import QAQuarantineAnalyticsSender
@@ -42,7 +42,7 @@ def resource_patch(context, data_dict):
     process_batch_mode(context, data_dict)
     process_skip_validation(context, data_dict)
 
-    show_context = {
+    show_context: Context = {
         'model': context['model'],
         'session': context['session'],
         'user': context['user'],
@@ -56,10 +56,11 @@ def resource_patch(context, data_dict):
 
     patched = dict(resource_dict)
     patched.update(data_dict)
-    return _update.resource_update(context, patched)
+    return _get_action('resource_update')(context, patched)
 
 
-def package_patch(context, data_dict):
+def package_patch(
+        context: Context, data_dict: DataDict) -> ActionResult.PackagePatch:
     '''
     Cloned from core. It's used to parse validation parameters (SKIP_VALIDATION) for special cases
     Also, changed so that it now calls "our" package_update instead of the core package_update.
@@ -72,7 +73,12 @@ def package_patch(context, data_dict):
     The difference between the update and patch methods is that the patch will
     perform an update of the provided parameters, while leaving all other
     parameters unchanged, whereas the update methods deletes all parameters
-    not explicitly provided in the data_dict
+    not explicitly provided in the data_dict.
+
+    To partially update resources or other metadata not at the top level
+    of a package use
+    :py:func:`~ckan.logic.action.update.package_revise` instead to maintain
+    existing nested values.
 
     You must be authorized to edit the dataset and the groups that it belongs
     to.
@@ -82,11 +88,13 @@ def package_patch(context, data_dict):
     # Original package patch from CKAN
     _check_access('package_patch', context, data_dict)
 
-    show_context = {
+    show_context: Context = {
         'model': context['model'],
         'session': context['session'],
         'user': context['user'],
         'auth_user_obj': context['auth_user_obj'],
+        'ignore_auth': context.get('ignore_auth', False),
+        'for_update': True
     }
 
     package_dict = _get_action('package_show')(

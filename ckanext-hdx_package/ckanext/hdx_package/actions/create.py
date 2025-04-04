@@ -204,7 +204,6 @@ def package_create(
     process_batch_mode(context, data_dict)
 
     model = context['model']
-    session = context['session']
     user = context['user']
 
     if 'type' not in data_dict:
@@ -224,19 +223,6 @@ def package_create(
         'schema') or package_plugin.create_package_schema()
 
     _check_access('package_create', context, data_dict)
-
-    if 'api_version' not in context:
-        # check_data_dict() is deprecated. If the package_plugin has a
-        # check_data_dict() we'll call it, if it doesn't have the method we'll
-        # do nothing.
-        check_data_dict = getattr(package_plugin, 'check_data_dict', None)
-        if check_data_dict:
-            try:
-                check_data_dict(data_dict, schema)
-            except TypeError:
-                # Old plugins do not support passing the schema so we need
-                # to ensure they still work
-                package_plugin.check_data_dict(data_dict)
 
     # Inject a code representing the batch within which this dataset was modified
     if (data_dict.get('type') or 'dataset') == 'dataset':
@@ -264,18 +250,15 @@ def package_create(
     plugin_data = data.get('plugin_data', False)
     include_plugin_data = False
     if user:
-
         user_obj = model.User.by_name(six.ensure_text(user))
         if user_obj:
             data['creator_user_id'] = user_obj.id
             include_plugin_data = user_obj.sysadmin and plugin_data
 
     # Replace model_save.package_dict_save() call with our wrapped version to be able to save groups
-    # pkg = model_save.package_dict_save(data, context)
+    # pkg = model_save.package_dict_save(data, context, insert_plugin_data)
     from ckanext.hdx_package.actions.update import modified_save
-    pkg = modified_save(context, data,include_plugin_data)
-
-    # pkg = model_save.package_dict_save(data, context)
+    pkg = modified_save(context, data, include_plugin_data)
 
     # Needed to let extensions know the package and resources ids
     model.Session.flush()
@@ -306,17 +289,6 @@ def package_create(
             {'model': context['model'], 'user': context['user'],
              'ignore_auth': True},
             {'package': data})
-
-    # Create activity
-    # if pkg.type == 'dataset':
-    #     user_obj = model.User.by_name(user)
-    #     if user_obj:
-    #         user_id = user_obj.id
-    #     else:
-    #         user_id = 'not logged in'
-    #
-    #     activity = pkg.activity_stream_item('new', user_id)
-    #     session.add(activity)
 
     if not context.get('defer_commit'):
         model.repo.commit()

@@ -372,7 +372,12 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     if group is None:
         raise NotFound('Group was not found.')
 
-    data_dict['type'] = group.type
+    data_dict_type = data_dict.get('type')
+    if data_dict_type is None:
+        data_dict['type'] = group.type
+    else:
+        if data_dict_type != group.type:
+            raise ValidationError({"message": "Type cannot be updated"})
 
     # get the schema
     group_plugin = lib_plugins.lookup_group_plugin(group.type)
@@ -426,9 +431,10 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     data, errors = lib_plugins.plugin_validate(
         group_plugin, context, data_dict, schema,
         'organization_update' if is_org else 'group_update')
+
+    group = context.get('group')
     log.debug('group_update validate_errs=%r user=%s group=%s data_dict=%r',
-              errors, context.get('user'),
-              context.get('group').name if context.get('group') else '',
+              errors, context.get('user'), group.name if group else '',
               data_dict)
 
     if errors:

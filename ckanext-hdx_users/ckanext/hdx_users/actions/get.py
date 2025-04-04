@@ -26,7 +26,7 @@ def hdx_user_autocomplete(context, data_dict):
     :param q: the string to search for
     :type q: string
     :param limit: the maximum number of user names to return (optional,
-        default: 20)
+        default: ``20``)
     :type limit: int
 
     :rtype: a list of user dictionaries each with keys ``'name'``,
@@ -44,8 +44,9 @@ def hdx_user_autocomplete(context, data_dict):
     limit = data_dict.get('limit', 20)
     ignore_self = data_dict.get('ignore_self', False)
 
-    query = model.User.search(q).order_by(None)
-    query = query.filter(model.User.state == model.State.ACTIVE)
+    query = model.User.search(q, user_name=user)
+    query = query.filter(model.User.state != model.State.DELETED)
+
     if ignore_self:
         query = query.filter(model.User.name != user)
 
@@ -65,11 +66,12 @@ def hdx_user_autocomplete(context, data_dict):
         query3 = query3.limit(limit)
         query = query3
 
-    user_list = []
+    user_list: ActionResult.UserAutocomplete = []
     for user in query.all():
         result_dict = {}
         for k in ['id', 'name', 'fullname']:
             result_dict[k] = getattr(user, k)
+
         user_list.append(result_dict)
 
     return user_list
