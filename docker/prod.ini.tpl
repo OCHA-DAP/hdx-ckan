@@ -112,7 +112,7 @@ hdx.qadashboard.enabled = ${HDX_QA_DASHBOARD}
 
 # P-CODE
 # hdx.p_code.new_filters.enabled = ${HDX_P_CODE_NEW_FILTERS_ENABLED}
-hdx.p_code.new_filters.enabled = false
+hdx.p_code.new_filters.enabled = true
 
 # FAQ - Wordpress
 hdx.wordpress.url = ${HDX_WORDPRESS_URL}
