@@ -1,5 +1,5 @@
 CONSTANTS = {
-    'HERO_SECTION_TITLE': '''A new product that monitors key datasets and generates automated emails when significant, negative changes are detected''',
+    'HERO_SECTION_TITLE': '''A product that monitors key datasets and generates automated emails when significant, negative changes are detected''',
     'HERO_SECTION_DESCRIPTION': '''We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
@@ -10,7 +10,7 @@ CONSTANTS = {
 
     'RESOURCES_SECTION_TITLE': '''Resources''',
     'RESOURCES_SECTION_DESCRIPTION': '''For more information about the datasets monitored by HDX Signals as well as information for developers see the following:''',
-    'RESOURCES_SECTION_PARAGRAPH': '''For more information, please contact us at <a href="{0}" title="Contact us" data-module="hdx_click_stopper" data-module-link_type="signals resources description">hdx-signals@un.org</a>.''',
+    'RESOURCES_SECTION_PARAGRAPH': '''For more information, please contact us at <a href="{0}" title="Contact us" data-module="hdx_click_stopper" data-module-link_type="signals resources description">hdx-signals@un.org</a>. Read the HDX Signals impact story <a href="{1}" title="HDX Signals Impact Story" data-module="hdx_click_stopper" data-module-link_type="signals resources description">here</a>.''',
 
     'RESOURCES_CARD_TITLE_MAP': '''Signals Map''',
     'RESOURCES_CARD_TEXT_MAP': '''See a visualiziation of present and historic Signals''',
