@@ -50,8 +50,8 @@ groups:
         default: 595
         example: 595
         description: FAQ Category ID for signals section
-  - annotation: HDX http headers whitelist 
-    options: 
+  - annotation: HDX http headers whitelist
+    options:
       - key: hdx.http_headers.routes
         type: list
         default: /country/topline/,/view/,/eaa-worldmap
@@ -67,8 +67,8 @@ groups:
         default: false
         example: false
         description: P-Code Filters feature toggle
-  - annotation: HDX Authentication - 2FA 
-    options: 
+  - annotation: HDX Authentication - 2FA
+    options:
       - key: hdx.security.2fa.redirect
         type: bool
         default: true
@@ -78,19 +78,19 @@ groups:
         default: HDX
         example: HDX
         description: Used for issuer name in the QR code for 2FA
-    options: 
+    options:
       - key: hdx.password.reset_key.expiration_in_minutes
         type: int
         default: 20
         example: 20
-        description: Valability for the reset key in minutes        
+        description: Valability for the reset key in minutes
       - key: hdx.password.invitation_reset_key.expiration_in_hours
         type: int
         default: 48
         example: 48
         description: Password reset link expiry time in hours
   - annotation: HDX specific default Solr query parameters
-    options: 
+    options:
       - key: hdx.solr.query.qf
         default: name^4 title^4 vocab_text_Topics^2 notes groups^2 text
         example: name^4 title^4 vocab_text_Topics^2 notes groups^2 text
@@ -104,7 +104,7 @@ groups:
         example: scale(log(pageviews_last_14_days),0,8)
         description: Solr Boost Function - boosts document relevance using custom functions.
   - annotation: Data Grid / Completeness
-    options: 
+    options:
       - key: hdx.datagrid.config_url_pattern
         default: https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
         example: https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
@@ -115,7 +115,7 @@ groups:
         example: true
         description: Caching will be enabled if true and the "master" branch from the github repo will be used for the Datagrid config
   - annotation: HDX Caching
-    options: 
+    options:
       - key: hdx.caching.use_redis
         type: bool
         default: true
@@ -145,9 +145,9 @@ groups:
         example: true
         description: Enable generating caches on HDX Startup (eg. licenses list)
   - annotation: Indexing & Search
-    options: 
+    options:
       - key: hdx.reindexing.enabled
-        default: true 
+        default: true
         example: true
         description: Enable HDX-specific reindexing using Solr
       - key: hdx.reindexing.batch_size
@@ -165,7 +165,7 @@ groups:
         example: 24
         description: Configure search history length in hours
   - annotation: Organization Batch / Search Grouping
-    options: 
+    options:
       - key: hdx.batch.period_in_mins
         type: int
         default: 3
@@ -182,7 +182,7 @@ groups:
         example: 1500
         description: Specific batch period for HOT
   - annotation: HDX Mailchimp Config
-    options: 
+    options:
       - key: hdx.mailchimp.api.key
         example: < regular secret key format >
         description: Mailchimp API Key
@@ -196,7 +196,7 @@ groups:
         example: <ten letters>
         description: Mailchimp ID for the Data Services interest
   - annotation: Locations
-    options: 
+    options:
       - key: hdx.locations.toplines_url
         default: https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
         example: https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
@@ -206,7 +206,7 @@ groups:
         example: 4551480e-448e-4b09-b02f-ed31d42a43d5
         description: The resource for topline data for active locations
   - annotation: HXL Related
-    options: 
+    options:
       - key: hdx.hxl_preview_app.url
         default: http://172.17.42.1/hxlpreview
         example: http://172.17.42.1/hxlpreview
@@ -220,7 +220,7 @@ groups:
         example: https://proxy.hxlstandard.org/api/source-info?url={url}
         description: HXL Proxy Source Info URL
   - annotation: Job Processing
-    options: 
+    options:
       - key: hdx.file_structure.check_url
         example: http://gislayer:5000/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
         description: URL for spreadsheet file structure checker
@@ -240,14 +240,14 @@ groups:
         example: https://data.humdata.org/mapbox
         description: Base Layer URL for Mapbox integration, actual it's the caching URL on our proxy
       - key: hdx.mapbox.baselayer.token
-        default: cacheToken 
+        default: cacheToken
         example: cacheToken or < usual token format >
         description: Provide "cacheToken" if Base URL is HDX caching, as the proxy will inject the token; otherwise add the actual Mapbox Token
       - key: hdx.change_detection.layer_url
         example: http://layer:5000/api/create-change-events
         description: Layer Change detection Url
   - annotation: Service Checks Config
-    options: 
+    options:
       - key: hdx.checks.config_path
         default: /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
         example: /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
@@ -257,7 +257,7 @@ groups:
         example: HDX-CHECKER
         description: User agent for service checker
   - annotation: Captcha
-    options: 
+    options:
       - key: hdx.captcha
         type: bool
         default: false
@@ -268,7 +268,7 @@ groups:
         example: https://www.google.com/recaptcha/api/siteverify
         description: URL for Captcha
   - annotation: Mails
-    options: 
+    options:
       - key: hdx.onboarding.send_confirmation_email
         type: bool
         default: false
@@ -292,23 +292,23 @@ groups:
         example: true
         description: Email notifications for API token creation
   - annotation: Analytics
-    options: 
+    options:
       - key: hdx.analytics.track_api
         type: bool
         default: false
         example: false
         description: HDX API tracking
       - key: hdx.analytics.track_api.exclude_browsers
-        example: 
+        example:
         description: List of user agent browser family to exclude
       - key: hdx.analytics.track_api.exclude_other
-        example: 
+        example:
         description: List of other user agent to exclude
       - key: hdx.analytics.ga.token
         default: UA-48221887-3
         example: UA-48221887-3
         description: Google Analytics Token
-      - key: hdx.analytics.enqueue_url 
+      - key: hdx.analytics.enqueue_url
         example: http://${HDX_ANALYTICS_API}/api/send-analytics
         description: Analytics enqueue url
       - key: hdx.analytics.mixpanel.token
@@ -328,13 +328,13 @@ groups:
         example: 24
         description: Mixpanel JQL Warning Treshhold
   - annotation: Custom Pages
-    options: 
+    options:
       - key: hdx.ebola.datastore.cases
         default: c59b5722-ca4b-41ca-a446-472d6d824d01
         example: c59b5722-ca4b-41ca-a446-472d6d824d01
         description: Ebola page
   - annotation: Package Related
-    options: 
+    options:
       - key: hdx.default_frequency
         default: -999
         example: -999
@@ -347,16 +347,81 @@ groups:
         example: dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
         description: Allow admins to update package without validation for certain fields
   - annotation: HDX Request Data
-    options: 
+    options:
       - key: hdx_portal
         type: bool
         default: true
         example: true
         description: The request data extension wants to know if it's running inside HDX portal or not
+      - key: email_header
+        default:
+        example:
+        description: The header text for the email
+      - key: email_body
+        default:
+        example:
+        description: The main content of the email
+      - key: email_footer
+        default:
+        example:
+        description: The footer text for the email
+  - annotation: S3 Filestore
+    options:
+      - key: ckanext.s3filestore.aws_bucket_name
+        default:
+        example: a-bucket-to-store-your-stuff
+        description: The name of the S3 bucket where files will be stored.
+      - key: ckanext.s3filestore.aws_access_key_id
+        default:
+        example: Your-Access-Key-ID
+        description: The AWS access key ID used for authentication with the S3 service.
+      - key: ckanext.s3filestore.aws_secret_access_key
+        default:
+        example: Your-Secret-Access-Key
+        description: The AWS secret access key used for authentication with the S3 service.
+      - key: ckanext.s3filestore.region_name
+        default:
+        example: region-name
+        description: The AWS region where the S3 bucket is located (e.g., us-east-1).
+      - key: ckanext.s3filestore.signature_version
+        default:
+        example: s3v4
+        description: The version of the signature to use for requests to S3 (typically 's3v4').
+      - key: ckanext.s3filestore.host_name
+        default:
+        example: host-to-S3-cloud-storage
+        description: The endpoint URL for the S3 service, usually in the format of 's3.amazonaws.com' or a regional endpoint.
+  - annotation: DCAT Configuration
+    options:
+      - key: ckanext.dcat.base_uri
+        default:
+        example: "http://example.com/data"
+        description: The base URI for the DCAT dataset. This should be a valid URI that serves as the root for all dataset links.
+      - key: ckanext.dcat.catalog_endpoint
+        default:
+        example: "/dcat/catalog/{_format}"
+        description: The endpoint for accessing the DCAT catalog. This can be customized to define how datasets are accessed in different formats (e.g., JSON, XML).
   - annotation: HDX Generic
-    options: 
+    options:
       - key: hdx.qadashboard.enabled
-        type: bool 
+        type: bool
         default: true
         example: true
         description: Feature toggle for QA Dashboard
+      - key: hdx.alert_bar_title
+        default:
+        example: "Important update"
+        description: The title text displayed in the alert bar
+      - key: hdx.alert_bar_url
+        default:
+        example: "https://www.example.com"
+        description: The URL that the alert bar title links to
+      - key: hdx.carousel.config
+        default: "[]"
+        example: '[{"image": "banner1.jpg", "url": "/page1"}]'
+        description: JSON configuration for the carousel feature, specifying images and associated links.
+
+      - key: hdx.quick_links.config
+        default: "[]"
+        example: '[{"label": "Home", "url": "/home"}]'
+        description: JSON configuration for quick links, defining labels and URLs for navigation shortcuts.
