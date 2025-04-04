@@ -73,3 +73,7 @@ def dataset_with_uploaded_resource() -> Dict:
     context = cast(Context,{'model': model, 'session': model.Session, 'user': SYSADMIN_USER})
     created_dataset_dict = _get_action('package_create')(context, dataset_dict)
     return created_dataset_dict
+
+@pytest.fixture()
+def setup_activity_migration(migrate_db_for):
+    migrate_db_for('activity')

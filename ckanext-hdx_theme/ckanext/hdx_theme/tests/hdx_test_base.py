@@ -4,6 +4,7 @@ Created on Jun 16, 2014
 @author: alexandru-m-g
 '''
 
+import pytest
 import logging
 import ckan.lib.create_test_data as ctd
 import ckan.model as model
@@ -39,7 +40,7 @@ def load_plugin(plugin):
     plugins.update(plugin.strip().split())
     config['ckan.plugins'] = ' '.join(plugins)
 
-
+@pytest.mark.usefixtures('setup_activity_migration')
 class HdxBaseTest(object):
     '''
     NOTE: Since more fields have been made mandatory for a dataset the process of creating test

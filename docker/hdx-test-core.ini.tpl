@@ -68,7 +68,7 @@ auth.blacklist = 83.222.23.234
 search_backend = sql
 
 # Change API key HTTP header to something non-standard.
-apikey_header_name = X-Non-Standard-CKAN-API-Key
+apitoken_header_name = X-Non-Standard-CKAN-API-Key
 
 # only for 2.3
 #ckan.plugins = stats
@@ -113,7 +113,8 @@ ckan.tracking_enabled = true
 
 beaker.session.key = ckan
 beaker.session.validate_key = ckan
-beaker.session.secret = This_is_a_secret_or_is_it
+# beaker.session.secret = This_is_a_secret_or_is_it
+SECRET_KEY = This_is_a_secret_or_is_it
 # repoze.who config
 who.config_file = %(here)s/ckan/config/who.ini
 who.log_level = warning
