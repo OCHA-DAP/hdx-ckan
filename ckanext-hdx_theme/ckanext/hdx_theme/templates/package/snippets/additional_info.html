@@ -17,7 +17,7 @@
         </div>
       </div>
       {% set modified_time = pkg_dict.last_modified %}
-      {% set confirmed_time = pkg_dict.review_date %}
+{#      {% set confirmed_time = pkg_dict.review_date %}#}
       {% set hdx_added_time = pkg_dict.metadata_created %}
       <div class="mb-3 d-none more-dates">
         <div class="dataset-label"><span title="{{ _('The date of the most recent change to any data or metadata.') }}"
@@ -27,17 +27,17 @@
           {{ h.render_datetime(modified_time) }}
         </div>
       </div>
-      {% if confirmed_time and confirmed_time > modified_time %}
-        <div class="mb-3 d-none more-dates">
-          <div class="dataset-label"><span
-            title="{{ _('The date when the contributor last confirmed that all resources in the dataset are up-to-date.') }}"
-            data-module="bs_tooltip" data-module-placement="top"
-            data-bs-toggle="tooltip">{{ _('Confirmed') }} [?]</span></div>
-          <div class="dataset-details">
-            {{ h.render_datetime(confirmed_time) }}
-          </div>
-        </div>
-      {% endif %}
+{#      {% if confirmed_time and confirmed_time > modified_time %}#}
+{#        <div class="mb-3 d-none more-dates">#}
+{#          <div class="dataset-label"><span#}
+{#            title="{{ _('The date when the contributor last confirmed that all resources in the dataset are up-to-date.') }}"#}
+{#            data-module="bs_tooltip" data-module-placement="top"#}
+{#            data-bs-toggle="tooltip">{{ _('Confirmed') }} [?]</span></div>#}
+{#          <div class="dataset-details">#}
+{#            {{ h.render_datetime(confirmed_time) }}#}
+{#          </div>#}
+{#        </div>#}
+{#      {% endif %}#}
       <div class="mb-3 d-none more-dates">
         <div class="dataset-label"><span title="{{ _('The date when the dataset was first added to HDX.') }}"
                                          data-module="bs_tooltip" data-module-placement="top"

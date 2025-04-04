@@ -19,7 +19,7 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
     UPDATE_STATUS_URL_FILTER, UPDATE_STATUS_UNKNOWN, UPDATE_STATUS_FRESH, UPDATE_STATUS_NEEDS_UPDATE
 from ckanext.hdx_package.helpers.reindex_helper import before_indexing_clean_resource_formats
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
-    DELINQUENT_DATASETS_FACET_NAME, PRIVATE_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
+    PRIVATE_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
     HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY, \
     ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
@@ -145,9 +145,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq(UPDATED_DATASETS_FACET_NAME,
                       generate_datetime_period_query('metadata_modified', last_x_days=7, include_leading_space=True,
                                                      include=True))
-        adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
-                      generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
-                                                     include=True))
+        # adapt_solr_fq(DELINQUENT_DATASETS_FACET_NAME,
+        #               generate_datetime_period_query('delinquent_date', last_x_days=None, include_leading_space=True,
+        #                                              include=True))
         adapt_solr_fq(PRIVATE_DATASETS_FACET_NAME, ' +capacity:private', ' -capacity:private')
         adapt_solr_fq(BULK_DATASETS_FACET_NAME, ' +extras_updated_by_script:[* TO *]',
                       ' -extras_updated_by_script:[* TO *]')
@@ -215,7 +215,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         ext_compute_freshness = search_params.get('extras', {}).get('ext_compute_freshness')
         if ext_compute_freshness in {'true', 'for-data-completeness'}:
             for dataset in search_results.get('results', []):
-                get_calculator_instance(dataset, ext_compute_freshness).populate_with_freshness()
+                get_calculator_instance(dataset).populate_with_freshness()
         return search_results
 
     # IPackageController
@@ -223,7 +223,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
         before_indexing_clean_resource_formats(pkg_dict)
 
-        pkg_dict['title_string'] = unicodedata.normalize("NFKD", pkg_dict['title']).replace(r'\xc3', 'I')
+        pkg_dict['title_string'] = unicodedata.normalize('NFKD', pkg_dict['title']).replace(r'\xc3', 'I')
         pkg_dict.pop('resource_grouping', None)
 
         self.__process_dates_in_resource_extra(pkg_dict)
@@ -244,12 +244,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     #         pkg_dict[key] = new_value
 
     def __process_dates_in_resource_extra(self, pkg_dict):
-        '''
+        """
         This is very similar to what happens in :func:`ckan.lib.search.index.index_package()`
         for '_date' fields
         :param pkg_dict:
         :type pkg_dict: dict
-        '''
+        """
         new_dict = {}
         for key, values in pkg_dict.items():
             key = six.text_type(key.encode('ascii', 'ignore'))

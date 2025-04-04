@@ -83,7 +83,7 @@ class HDXStatsHelper(object):
         one_year_ago = now - relativedelta(years=1)
 
         period_as_string = "[{}Z TO {}Z]".format(one_year_ago.isoformat(), now.isoformat())
-        date_filter = " +(last_modified:{} OR review_date:{})".format(period_as_string, period_as_string)
+        date_filter = " +(last_modified:{})".format(period_as_string)
 
         pkg_results = _get_action('package_search')(self._context, {
             'fq': '+dataset_type:dataset -extras_archived:"true"' + date_filter,

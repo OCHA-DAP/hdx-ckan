@@ -172,10 +172,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('hdx_update_data_frequency_by_archived'),
                 tk.get_converter('convert_to_extras')
             ],
-            'review_date': [tk.get_validator('ignore_missing'),
-                            tk.get_validator('isodate'),
-                            tk.get_validator('hdx_isodate_to_string_converter'),
-                            tk.get_converter('convert_to_extras')],
+            # 'review_date': [tk.get_validator('ignore_missing'),
+            #                 tk.get_validator('isodate'),
+            #                 tk.get_validator('hdx_isodate_to_string_converter'),
+            #                 tk.get_converter('convert_to_extras')],
             'qa_completed': [tk.get_validator('hdx_reset_unless_allow_qa_completed'),
                              # tk.get_validator('ignore_missing'),
                              tk.get_validator('hdx_boolean_string_converter'),
@@ -397,14 +397,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'),
                                tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
-            'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            # 'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'dataseries_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
             'last_modified': [tk.get_validator('ignore_missing')],
             # 'due_daterange': [tk.get_validator('ignore_missing')],
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
-            'overdue_date': [tk.get_validator('ignore_missing')],
+            # 'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_converter('hdx_assume_missing_is_true'),
@@ -430,9 +430,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
             'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
             'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
-            'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date,
             'hdx_render_resource_updated_date': hdx_helpers.hdx_render_resource_updated_date,
             'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
+            'hdx_end_of_dataset_date': hdx_helpers.end_of_dataset_date,
         }
 
     def get_actions(self):
