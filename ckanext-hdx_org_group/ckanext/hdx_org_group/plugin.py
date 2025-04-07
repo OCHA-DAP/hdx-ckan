@@ -109,6 +109,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     def _modify_group_schema(self, schema):
         schema.update({
+            'id': [tk.get_validator('ignore_missing'), tk.get_validator('unicode_safe')],
             'description': [tk.get_validator('not_empty')],
             'org_url': [tk.get_validator('not_missing'), tk.get_validator('hdx_url_validator'),
                         tk.get_converter('convert_to_extras')],
