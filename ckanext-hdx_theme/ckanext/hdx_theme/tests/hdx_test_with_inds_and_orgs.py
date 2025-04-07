@@ -1,8 +1,8 @@
-'''
+"""
 Created on Nov 12, 2014
 
 @author: alexandru-m-g
-'''
+"""
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 
@@ -15,67 +15,67 @@ config = tk.config
 def get_packages():
     packages = [
         {
-            "package_creator": "test function",
-            "private": False,
-            "dataset_date": "[1960-01-01 TO 2012-12-31]",
-            "indicator": "1",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_indicator_1",
-            "notes": "This is a hdxtest indicator",
-            "title": "Test Indicator 1",
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'indicator': '1',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'name': 'test_indicator_1',
+            'notes': 'This is a hdxtest indicator',
+            'title': 'Test Indicator 1',
+            'groups': [{'name': 'roger'}],
+            'owner_org': 'hdx-test-org',
         },
         {
-            "package_creator": "test function",
-            "indicator": "1",
-            "private": False,
-            "dataset_date": "[1960-01-01 TO 2012-12-31]",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_indicator_2",
-            "notes": "This is a hdxtest indicator 2",
-            "title": "Test Indicator 2",
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
+            'package_creator': 'test function',
+            'indicator': '1',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'name': 'test_indicator_2',
+            'notes': 'This is a hdxtest indicator 2',
+            'title': 'Test Indicator 2',
+            'groups': [{'name': 'roger'}],
+            'owner_org': 'hdx-test-org',
         },
         {
-            "package_creator": "test function",
-            "private": False,
-            "dataset_date": "[1960-01-01 TO 2012-12-31]",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_dataset_1",
-            "notes": "This is a hdxtest dataset 1",
-            "title": "Test Dataset 1",
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'name': 'test_dataset_1',
+            'notes': 'This is a hdxtest dataset 1',
+            'title': 'Test Dataset 1',
+            'groups': [{'name': 'roger'}],
+            'owner_org': 'hdx-test-org',
         },
         {
-            "package_creator": "test function",
-            "private": True,
-            "dataset_date": "[1960-01-01 TO 2012-12-31]",
-            "indicator": "1",
-            "caveats": "These are the caveats for private dataset",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_private_dataset_1",
-            "notes": "This is a private test dataset",
-            "title": "Test Private dataset 1",
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
+            'package_creator': 'test function',
+            'private': True,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'indicator': '1',
+            'caveats': 'These are the caveats for private dataset',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'name': 'test_private_dataset_1',
+            'notes': 'This is a private test dataset',
+            'title': 'Test Private dataset 1',
+            'groups': [{'name': 'roger'}],
+            'owner_org': 'hdx-test-org',
         }
     ]
     return packages
@@ -144,10 +144,10 @@ def get_showcases():
 
 
 class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
-    '''
+    """
     This class extends the HDX Base test class by adding additional test data.
     More precisely: datasets, organizations, members to organizations
-    '''
+    """
 
     @classmethod
     def _load_plugins(cls):
@@ -159,7 +159,7 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False, create_showcases=False):
-        '''
+        """
         This method is responsible for creating additional test data.
         Please note that the corresponding function from the parent is still called
         so all standard test data will still be available to the tests.
@@ -175,7 +175,7 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
         :param create_showcases: If the org should have showcases set this flag to True. Default False.
         :type create_showcases: boolean
 
-        '''
+        """
         super(HDXWithIndsAndOrgsTest, cls)._create_test_data()
 
         packages = get_packages()
