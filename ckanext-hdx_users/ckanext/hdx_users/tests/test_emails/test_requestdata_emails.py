@@ -56,7 +56,7 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         url = url_for('hdx_dataset.request_access', id=pkg_dict.get('name') or pkg_dict.get('id'))
 
-        res = self.app.post(url, params=post_params, extra_environ=auth)
+        res = self.app.post(url, params=post_params, headers=auth)
 
         assert 'Your request was sent' in res.body
 
@@ -112,7 +112,7 @@ class TestRequestDataEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'sender_intend': 'Research Purposes'
         }
         url = url_for('hdx_dataset.request_access', id=pkg_dict.get('name') or pkg_dict.get('id'))
-        res = self.app.post(url, params=post_params, extra_environ=auth)
+        res = self.app.post(url, params=post_params, headers=auth)
 
         assert 'Your request was sent' in res.body
 

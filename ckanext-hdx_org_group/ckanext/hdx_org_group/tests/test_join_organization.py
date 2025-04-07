@@ -87,7 +87,7 @@ class TestJoinOrg(object):
         url = h.url_for('hdx_org_join.confirm_organisation')
 
         # no user
-        result = app.post(url, data={'org_id': org_dict.get('id')}, extra_environ={})
+        result = app.post(url, data={'org_id': org_dict.get('id')}, headers={})
         assert result.status_code == 403
 
         # get with registered user
@@ -95,7 +95,7 @@ class TestJoinOrg(object):
         assert result.status_code == 404
 
         # registered user
-        result = app.post(url, data={'org_id': org_dict.get('id')}, extra_environ=auth_user)
+        result = app.post(url, data={'org_id': org_dict.get('id')}, headers=auth_user)
         assert result.status_code == 200
         assert org_dict.get('description') in result.body
         assert org_dict.get('title') in result.body
@@ -103,7 +103,7 @@ class TestJoinOrg(object):
 
         url = h.url_for('hdx_org_join.reason_request')
         # no user
-        result = app.post(url, data={'org_id': org_dict.get('id')}, extra_environ={})
+        result = app.post(url, data={'org_id': org_dict.get('id')}, headers={})
         assert result.status_code == 403
 
         # get with registered user
@@ -111,7 +111,7 @@ class TestJoinOrg(object):
         assert result.status_code == 404
 
         # registered user
-        result = app.post(url, data={'org_id': org_dict.get('id')}, extra_environ=auth_user)
+        result = app.post(url, data={'org_id': org_dict.get('id')}, headers=auth_user)
         assert result.status_code == 200
         assert CONST_REASON_REQUEST_ORG['PAGE_TITLE'] in result.body
         assert CONST_REASON_REQUEST_ORG['BODY_MAIN_TEXT'] in result.body
@@ -119,7 +119,7 @@ class TestJoinOrg(object):
 
         url = h.url_for('hdx_org_join.completed_request')
         # no user
-        result = app.post(url, data={'org_id': org_dict.get('id')}, extra_environ={})
+        result = app.post(url, data={'org_id': org_dict.get('id')}, headers={})
         assert result.status_code == 403
 
         # get with registered user
@@ -127,7 +127,7 @@ class TestJoinOrg(object):
         assert result.status_code == 404
 
         # registered user
-        result = app.post(url, data={'org_id': org_dict.get('id'), 'message':'Please let me join'}, extra_environ=auth_user)
+        result = app.post(url, data={'org_id': org_dict.get('id'), 'message':'Please let me join'}, headers=auth_user)
         assert result.status_code == 200
         assert CONST_COMPLETED_ORG_REQUEST['PAGE_TITLE'] in result.body
         assert CONST_COMPLETED_ORG_REQUEST['BODY_MAIN_TEXT'] in result.body

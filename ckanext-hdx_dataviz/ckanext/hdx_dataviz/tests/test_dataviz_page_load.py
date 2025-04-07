@@ -19,5 +19,6 @@ def test_dataviz_page_load(app):
     assert 'dataviz-gallery-2' in response.body
     assert 'Edit Showcase' not in response.body
 
-    response2 = app.get(url, environ_overrides={"REMOTE_USER": SYSADMIN})
+    response2 = app.get(url, headers={"Authorization": SYSADMIN['token']})
+
     assert 'Edit Showcase' in response2.body

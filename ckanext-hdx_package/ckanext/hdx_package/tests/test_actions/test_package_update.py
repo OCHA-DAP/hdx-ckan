@@ -95,7 +95,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         test_url = h.url_for('dataset.read', id=package['name'])
         result = self.app.get(
-            test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+            test_url, headers={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
         assert '<a class="heading" title="hdx_test.csv">' in result.body
 
@@ -124,7 +124,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
         test_url = h.url_for('dataset.delete', id=package['name'])
         test_client = self.get_backwards_compatible_test_client()
-        result = test_client.post(test_url, extra_environ={'Authorization': testsysadmin_token.get('token')})
+        result = test_client.post(test_url, headers={'Authorization': testsysadmin_token.get('token')})
         assert result.status_code == 302
 
     def test_hdx_solr_additions(self):

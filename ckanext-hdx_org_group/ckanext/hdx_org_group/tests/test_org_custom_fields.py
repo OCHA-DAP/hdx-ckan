@@ -169,7 +169,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             'save': 'save'
         }
         try:
-            result = test_client.post(new_org_url, data=new_org_params, extra_environ=sysadmin_auth)
+            result = test_client.post(new_org_url, data=new_org_params, headers=sysadmin_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert '123456' == org_dict.get('fts_id')
             assert result.status_code == 302
@@ -195,7 +195,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             'save': 'save'
         }
         try:
-            result = test_client.post(edit_org_url, data=edit_org_params, extra_environ=tester_auth)
+            result = test_client.post(edit_org_url, data=edit_org_params, headers=tester_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert '123456' == org_dict.get('fts_id')
             assert 'Test Org E' == org_dict.get('title')
@@ -213,7 +213,7 @@ class TestOrgFTSIDController(org_group_base.OrgGroupBaseTest):
             'save': 'save'
         }
         try:
-            result = test_client.post(edit_org_url, data=edit_org_params, extra_environ=tester_auth)
+            result = test_client.post(edit_org_url, data=edit_org_params, headers=tester_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert '123456' == org_dict.get('fts_id')
             assert 'Test Org E' == org_dict.get('title')
@@ -378,7 +378,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             'save': 'save'
         }
         try:
-            result = test_client.post(new_org_url, data=new_org_params, extra_environ=sysadmin_auth)
+            result = test_client.post(new_org_url, data=new_org_params, headers=sysadmin_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert self.USER_SURVEY_URL == org_dict.get('user_survey_url')
             assert result.status_code == 302
@@ -404,9 +404,9 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             'save': 'save'
         }
         try:
-            result = test_client.get(edit_org_url, extra_environ=sysadmin_auth)
+            result = test_client.get(edit_org_url, headers=sysadmin_auth)
             assert self.USER_SURVEY_URL in result.body
-            result = test_client.post(edit_org_url, data=edit_org_params, extra_environ=tester_auth)
+            result = test_client.post(edit_org_url, data=edit_org_params, headers=tester_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert self.USER_SURVEY_URL == org_dict.get('user_survey_url')
             assert 'Test Org E' == org_dict.get('title')
@@ -424,7 +424,7 @@ class TestOrgUserSurveyUrlController(org_group_base.OrgGroupBaseTest):
             'save': 'save'
         }
         try:
-            result = test_client.post(edit_org_url, data=edit_org_params, extra_environ=tester_auth)
+            result = test_client.post(edit_org_url, data=edit_org_params, headers=tester_auth)
             org_dict = self._get_action('organization_show')(context_sysadmin, {'id': 'test_org_d'})
             assert self.USER_SURVEY_URL == org_dict.get('user_survey_url')
             assert 'Test Org E' == org_dict.get('title')

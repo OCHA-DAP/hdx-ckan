@@ -166,11 +166,11 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     def test_edit_custom_orgs(self):
         url = h.url_for('organization.edit', id='hdx-test-org')
         testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
-        result = self.app.get(url, extra_environ={'Authorization': testsysadmin_token})
+        result = self.app.get(url, headers={'Authorization': testsysadmin_token})
         assert 'id="customization-trigger"' in result.body
 
         testadmin = model.User.by_name('janedoe3')
-        result = self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
+        result = self.app.get(url, headers={'Authorization': str(testadmin.apikey)})
         assert 'You don\'t have permission to access this page' in result.body
         assert result.status_code == 403
 

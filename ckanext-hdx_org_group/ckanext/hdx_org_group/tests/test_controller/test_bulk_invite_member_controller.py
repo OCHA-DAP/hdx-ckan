@@ -78,7 +78,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        result = app.post(url, data={'user': 'johndoe1'}, extra_environ=auth)
+        result = app.post(url, data={'user': 'johndoe1'}, headers=auth)
 
         member_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -91,7 +91,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
         # bulk adding members
         url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
 
-        result = app.post(url, data={'emails': 'janedoe3,johndoe1,another_test@example.com', 'role': 'editor'}, extra_environ=auth)
+        result = app.post(url, data={'emails': 'janedoe3,johndoe1,another_test@example.com', 'role': 'editor'}, headers=auth)
         context2 = {'model': model, 'session': model.Session, 'user': orgadmin}
         member_list2 = _get_action('member_list')(context2, {
             'id': 'hdx-test-org',
@@ -105,7 +105,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
         assert new_member[3] == 'editor', 'Invited user needs to be an editor'
 
         # making john doe1 a member back
-        result = app.post(url, data={'emails': 'johndoe1', 'role': 'member'}, extra_environ=auth)
+        result = app.post(url, data={'emails': 'johndoe1', 'role': 'member'}, headers=auth)
         context3 = {'model': model, 'session': model.Session, 'user': orgadmin}
         member_list3 = _get_action('member_list')(context3, {
             'id': 'hdx-test-org',

@@ -73,7 +73,7 @@ class TestHDXControllerPage(object):
 
         url = url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         try:
-            res = app.post(url, data=post_params, extra_environ={"REMOTE_USER": USER})
+            res = app.post(url, data=post_params, headers={"Authorization": USER['token']})
             assert '404 Not Found'.lower() in res.status.lower()
             assert 'Sorry, the page you are looking for could not be found.' in res.body
             assert 'Please check the URL or login to HDX if you know that you have a permission to see this page.' in res.body
@@ -86,7 +86,7 @@ class TestHDXControllerPage(object):
 
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
-                                environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+                                headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
             assert True
         except Exception as ex:
             assert False
@@ -95,7 +95,7 @@ class TestHDXControllerPage(object):
         post_params['tag_string'] = 'some_new_tag'
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
-                           environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+                           headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
             assert 'Tag some_new_tag not found' in res.body
         except Exception as ex:
             assert False
@@ -111,6 +111,6 @@ class TestHDXControllerPage(object):
         del post_params['name']
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_elnino.get('name')), data=post_params,
-                                environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+                                headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
         except Exception as ex:
             assert True

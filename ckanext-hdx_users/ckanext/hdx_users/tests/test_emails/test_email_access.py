@@ -177,11 +177,11 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
         sue_token =  factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
-        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        env = {'Authorization': sue_token}
         url_for = h.url_for('user.edit')
         response = self.app.get(
             url=url_for,
-            extra_environ=env,
+            headers=env,
         )
         # existing values in the form
         assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
@@ -200,7 +200,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params = _get_user_params(user_dict)
         params['email'] = 'new@example.com'
         auth = {'Authorization': sue_token}
-        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        user_updated = test_client.post(url_for, data=params, headers=auth)
 
         user = model.Session.query(model.User).get(sue_user['id'])
         assert_equal(user.email, 'new@example.com')
@@ -215,7 +215,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=auth,
+            headers=auth,
         )
         # existing email in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -227,7 +227,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params = _get_user_params(user_dict)
         params['email'] = 'existing@example.com'
         auth = {'Authorization': sue_token}
-        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        user_updated = test_client.post(url_for, data=params, headers=auth)
 
         # error message in response
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
@@ -245,7 +245,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=auth,
+            headers=auth,
         )
         # existing email in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -257,7 +257,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params = _get_user_params(user_dict)
         params['email'] = 'invalid.com'
         auth = {'Authorization': sue_token}
-        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        user_updated = test_client.post(url_for, data=params, headers=auth)
 
         # error message in response
         assert '<li data-field-label="Email">Email: Email {} is not a valid format</li>'.format(
@@ -277,7 +277,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=auth,
+            headers=auth,
         )
         # existing values in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -289,7 +289,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params = _get_user_params(user_dict)
         params['email'] = 'existing@example.com'
         auth = {'Authorization': sue_token}
-        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        user_updated = test_client.post(url_for, data=params, headers=auth)
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -307,7 +307,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         url_for = h.url_for('user.edit', id=sue_user['name'])
         response = self.app.get(
             url=url_for,
-            extra_environ=auth,
+            headers=auth,
         )
         # existing values in the form
         assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
@@ -319,7 +319,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params = _get_user_params(user_dict)
         params['email'] = 'EXISTING@example.com'
         auth = {'Authorization': sue_token}
-        user_updated = test_client.post(url_for, data=params, extra_environ=auth)
+        user_updated = test_client.post(url_for, data=params, headers=auth)
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])

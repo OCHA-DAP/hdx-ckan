@@ -145,7 +145,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params['save'] = 'validate-json'
 
         res = self.app.post('/contribute/validate', params=post_params,
-                            extra_environ=auth)
+                            headers=auth)
 
         json_result = json.loads(res.body)
 
@@ -155,7 +155,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
 
         res2 = self.app.post('/contribute/validate', params=post_params,
-                            extra_environ=auth)
+                            headers=auth)
 
         json_result2 = json.loads(res2.body)
         assert json_result2 and not json_result2.get('error_summary'), 'There should be no validation error'
@@ -170,7 +170,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params['save'] = 'new-dataset-json'
 
         res = self.app.post('/contribute/new', params=post_params,
-                            extra_environ=auth)
+                            headers=auth)
 
         json_result = json.loads(res.body)
 
@@ -180,7 +180,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
 
         res2 = self.app.post('/contribute/new', params=post_params,
-                             extra_environ=auth)
+                             headers=auth)
 
         json_result2 = json.loads(res2.body)
         assert json_result2 and not json_result2.get('error_summary'), 'There should be no validation error'
@@ -203,7 +203,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params["dataset_date"] = "[1960-01-01 TO 2012-12-31]"
 
         res = self.app.post('/contribute/new', params=post_params,
-                             extra_environ=auth)
+                             headers=auth)
 
         json_result = json.loads(res.body)
         assert json_result and not json_result.get('error_summary'), 'There should be no validation error'
@@ -218,7 +218,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params['customviz__0__url'] = 'http://test-domain.test/test'
 
         res2 = self.app.post('/contribute/edit/{}'.format(post_params.get('id')), params=post_params,
-                            extra_environ=auth)
+                            headers=auth)
 
         json_result2 = json.loads(res2.body)
         assert json_result2 and not json_result2.get('error_summary'), 'There should be no validation error'
@@ -247,7 +247,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params['save'] = 'update-dataset-json'
 
         res = self.app.post('/contribute/new', params=post_params,
-                            extra_environ=auth)
+                            headers=auth)
 
         json_result = json.loads(res.body)
         assert json_result and not json_result.get('error_summary'), 'There should be no validation error'
@@ -263,7 +263,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         post_params['private'] = 'true'
 
         res2 = self.app.post('/contribute/edit/{}'.format(post_params.get('id')), params=post_params,
-                             extra_environ=auth)
+                             headers=auth)
 
         json_result2 = json.loads(res2.body)
         assert json_result2 and not json_result2.get('error_summary'), 'There should be no validation error'

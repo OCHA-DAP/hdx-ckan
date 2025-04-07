@@ -68,7 +68,7 @@ class TestHDXPageController(object):
         initial_post_params = self._get_page_post_param()
 
         try:
-            res = app.post(url, data=post_params, extra_environ={"REMOTE_USER": USER})
+            res = app.post(url, data=post_params, headers={"Authorization": USER['token']})
             assert 'Page not found' in res.body
         except Exception as ex:
             assert False
@@ -76,7 +76,8 @@ class TestHDXPageController(object):
         user = model.User.by_name(SYSADMIN)
 
         try:
-            res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            res = app.post(url, data=post_params, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+
             assert True
         except Exception as ex:
             assert False
@@ -90,7 +91,8 @@ class TestHDXPageController(object):
 
         del post_params['title']
         try:
-            res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            res = app.post(url, data=post_params, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+
             assert 'Page title cannot be empty' in res.body
         except Exception as ex:
             assert False
@@ -98,7 +100,7 @@ class TestHDXPageController(object):
         post_params['title'] = initial_post_params['title']
         del post_params['name']
         try:
-            res = app.post(url, data=post_params, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            res = app.post(url, data=post_params, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
             assert 'Page name cannot be empty' in res.body
         except Exception as ex:
             assert False

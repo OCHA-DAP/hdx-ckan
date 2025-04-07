@@ -34,7 +34,7 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         url = url_for('hdx_contact.contact_members')
 
         res = self.app.post(url, params=post_params,
-                            extra_environ=auth)
+                            headers=auth)
 
         assert '{"success": true}' in res.body
 

@@ -39,7 +39,7 @@ class TestS3Metadata(HDXS3TestBase):
         with open(file_path, 'rb') as f:
             file_upload = FileStorage(f)
             result = self.app.post('/api/action/resource_create',
-                                   extra_environ={
+                                   headers={
                                        'Authorization': str(self.sysadmin_user['api_token']),
 
                                    },
@@ -55,7 +55,7 @@ class TestS3Metadata(HDXS3TestBase):
         assert resource_dict.get('download_url').split('/download/')[0] + '/download/' == resource_dict.get('alt_url')
 
         result = self.app.post('/api/action/resource_create',
-                               extra_environ={
+                               headers={
                                    'Authorization': str(self.sysadmin_user['api_token']),
 
                                },

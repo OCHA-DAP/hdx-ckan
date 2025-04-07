@@ -96,7 +96,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': tester_token}
         try:
-            res = test_client.post(url, params=permission, extra_environ=auth)
+            res = test_client.post(url, params=permission, headers=auth)
             assert False
         except Exception as ex:
             assert True
@@ -106,7 +106,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': sysadmin_token}
         try:
-            res = test_client.post(url, params=permission, extra_environ=auth)
+            res = test_client.post(url, params=permission, headers=auth)
         except Exception as ex:
             log.info(ex)
             assert False
@@ -125,7 +125,7 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert res.body.count(' checked ') == 4
 
         try:
-            res = test_client.post(url, params=permission_carousel, extra_environ=auth)
+            res = test_client.post(url, params=permission_carousel, headers=auth)
         except Exception as ex:
             log.info(ex)
             assert False

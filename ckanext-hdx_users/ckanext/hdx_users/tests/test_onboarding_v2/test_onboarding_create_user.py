@@ -69,11 +69,11 @@ class TestOnboarding(object):
         assert 'HDX account options' in result.body
         assert 'href="/signup/user-info/"' in result.body
 
-        result = app.get(url, extra_environ={'Authorization': testuser_token}, status=403)
+        result = app.get(url, headers={'Authorization': testuser_token}, status=403)
         # if user is logged in, the page should not be visible
         assert result.status_code == 403
 
-        result = app.get(url, extra_environ={'Authorization': sysadmin_token}, status=200)
+        result = app.get(url, headers={'Authorization': sysadmin_token}, status=200)
         # if user is sysadmin, page can be displayed
         assert result.status_code == 200
 
@@ -96,11 +96,11 @@ class TestOnboarding(object):
         assert 'id="user-info-submit-button"' in result.body
         assert 'id="user-info-cancel-button"' in result.body
 
-        result = app.get(url, extra_environ={'Authorization': testuser_token}, status=403)
+        result = app.get(url, headers={'Authorization': testuser_token}, status=403)
         # if user is logged in, the page should not be visible
         assert result.status_code == 403
 
-        result = app.get(url, extra_environ={'Authorization': sysadmin_token}, status=200)
+        result = app.get(url, headers={'Authorization': sysadmin_token}, status=200)
         # if user is sysadmin, page can be displayed
         assert result.status_code == 200
 
@@ -187,7 +187,7 @@ class TestOnboarding(object):
         data_dict = build_data_dict()
 
         auth = {'Authorization': testuser_token}
-        result = app.post(url, data=data_dict, extra_environ=auth)
+        result = app.post(url, data=data_dict, headers=auth)
         assert result.status_code == 403
         assert 'Sorry, you don\'t have permission to access this page' in result.body
 
@@ -233,13 +233,13 @@ class TestOnboarding(object):
         user_dict = _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
         delete_url = h.url_for('user.delete', id=user_dict.get('id'))
         auth_sysadmin = {'Authorization': sysadmin_token}
-        result = app.post(delete_url, data={'id':user_dict.get('id')}, extra_environ=auth_sysadmin)
+        result = app.post(delete_url, data={'id':user_dict.get('id')}, headers=auth_sysadmin)
 
         profile_url = h.url_for(u'hdx_user.read', id=user_dict.get('id'))
 
-        profile_result = app.get(profile_url, extra_environ=auth_sysadmin)
+        profile_result = app.get(profile_url, headers=auth_sysadmin)
         assert '<span class="label label-important">Deleted</span>' in profile_result.body
 
         auth_testuser = {'Authorization': testuser_token}
-        profile_result2 = app.get(profile_url, status=404, extra_environ=auth_testuser)
+        profile_result2 = app.get(profile_url, status=404, headers=auth_testuser)
         assert '404' in profile_result2.status

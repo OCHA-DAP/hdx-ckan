@@ -71,7 +71,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         }
 
         offset = h.url_for('hdx_org_request.new')
-        res_post = self.app.post(offset, params=postparams, extra_environ=auth)
+        res_post = self.app.post(offset, params=postparams, headers=auth)
         args, kw_args = mocked_mail_recipient.call_args
 
         assert args, 'This needs to contain the email that will be sent'
@@ -109,7 +109,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         }
 
         offset = h.url_for('hdx_org_request.new')
-        res_post = self.app.post(offset, params=postparams, extra_environ=auth)
+        res_post = self.app.post(offset, params=postparams, headers=auth)
         args0, kw_args0 = mocked_mail_recipient.call_args_list[0]
         args1, kw_args1 = mocked_mail_recipient.call_args_list[1]
 

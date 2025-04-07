@@ -86,12 +86,12 @@ class TestRequestOrg(object):
         assert CONST_REQUEST_CREATE_ORG['BODY_INFO_1ST_PARAGRAPH'] in result.body
 
         # no user
-        result = app.post(url, data=NEW_ORGANIZATION_DATA, extra_environ={})
+        result = app.post(url, data=NEW_ORGANIZATION_DATA, headers={})
         assert result.status_code == 403
 
         # registered user
         _check_request_referrer = True
-        result = app.post(url, data=NEW_ORGANIZATION_DATA, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=NEW_ORGANIZATION_DATA, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert CONST_COMPLETED_CREATE_ORG['PAGE_TITLE'] in result.body
         assert CONST_COMPLETED_CREATE_ORG['BODY_MAIN_TEXT'] in result.body
@@ -99,50 +99,50 @@ class TestRequestOrg(object):
         # registered user, wrong organization data
         new_wrong_org_dict = {}
         _check_request_referrer = True
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Missing value') == 5
 
         new_wrong_org_dict['name'] = 'New organization to be created'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Missing value') == 4
 
         new_wrong_org_dict['description'] = 'New organization description'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Missing value') == 3
 
         new_wrong_org_dict['role'] = 'Editor'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Missing value') == 2
 
         new_wrong_org_dict['data_type'] = 'excel'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Missing value') == 1
 
         new_wrong_org_dict['data_already_available'] = 'yes'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert CONST_COMPLETED_CREATE_ORG['PAGE_TITLE'] in result.body
         assert CONST_COMPLETED_CREATE_ORG['BODY_MAIN_TEXT'] in result.body
 
         new_wrong_org_dict['website'] = 'www.no.com'
         new_wrong_org_dict['data_already_available_link'] = 'www.no.com123'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Please provide a valid URL') == 0
 
         new_wrong_org_dict['website'] = 'http://www.no.com'
         new_wrong_org_dict['data_already_available_link'] = 'http://www.no.com'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Please provide a valid URL') == 0
 
         new_wrong_org_dict['website'] = 'no.com'
         new_wrong_org_dict['data_already_available_link'] = 'no.com'
-        result = app.post(url, data=new_wrong_org_dict, extra_environ=auth_user, follow_redirects=True)
+        result = app.post(url, data=new_wrong_org_dict, headers=auth_user, follow_redirects=True)
         assert result.status_code == 200
         assert result.body.count('Please provide a valid URL') == 0

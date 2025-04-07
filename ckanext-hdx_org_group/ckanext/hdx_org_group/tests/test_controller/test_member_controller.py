@@ -80,7 +80,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        result = app.post(url, data={'user': 'johndoe1'}, extra_environ=auth)
+        result = app.post(url, data={'user': 'johndoe1'}, headers=auth)
 
         member_list = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -93,7 +93,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
         # bulk adding members
         url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
 
-        result = app.post(url, data={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'}, extra_environ=auth)
+        result = app.post(url, data={'emails': 'janedoe3,johndoe1,dan@k.ro', 'role': 'editor'}, headers=auth)
         context2 = {'model': model, 'session': model.Session, 'user': orgadmin}
         member_list2 = _get_action('member_list')(context2, {
             'id': 'hdx-test-org',
@@ -107,7 +107,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
         assert new_member[3] == 'editor', 'Invited user needs to be an editor'
 
         # making john doe1 a member back
-        result = app.post(url, data={'emails': 'johndoe1', 'role': 'member'}, extra_environ=auth)
+        result = app.post(url, data={'emails': 'johndoe1', 'role': 'member'}, headers=auth)
         context3 = {'model': model, 'session': model.Session, 'user': orgadmin}
         member_list3 = _get_action('member_list')(context3, {
             'id': 'hdx-test-org',
@@ -147,7 +147,7 @@ class TestMembersController(MemberControllerBase):
 
         # By default the users should be sorted alphabetically asc
         url = h.url_for('hdx_members.members', id='hdx-test-org')
-        app.get(url, extra_environ=auth)
+        app.get(url, headers=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
@@ -159,7 +159,7 @@ class TestMembersController(MemberControllerBase):
         # Sorting alphabetically desc
         sort = 'title desc'
         url = h.url_for('hdx_members.members', id='hdx-test-org', sort=sort)
-        app.get(url, extra_environ=auth)
+        app.get(url, headers=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
@@ -171,7 +171,7 @@ class TestMembersController(MemberControllerBase):
         # Querying
         q = 'john'
         url = h.url_for('hdx_members.members', id='hdx-test-org', q=q)
-        result = app.get(url, extra_environ=auth)
+        result = app.get(url, headers=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
@@ -197,7 +197,7 @@ class TestMembersDeleteController(MemberControllerBase):
 
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
         try:
-            app.post(url, params={'user': 'johndoe1'}, extra_environ=auth)
+            app.post(url, params={'user': 'johndoe1'}, headers=auth)
         except Exception as ex:
             assert False
 
@@ -211,7 +211,7 @@ class TestMembersDeleteController(MemberControllerBase):
         assert 'John Doe1' not in (m[4] for m in member_list)
 
         url = h.url_for('hdx_members.member_new', id='hdx-test-org')
-        app.post(url, params={'username': 'johndoe1', 'role': 'editor'}, extra_environ=auth)
+        app.post(url, params={'username': 'johndoe1', 'role': 'editor'}, headers=auth)
 
         member_list2 = _get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -240,12 +240,13 @@ class TestRequestMembershipMembersController(org_group_base.OrgGroupBaseWithInds
     def test_request_membership(self, _mail_recipient_html, app):
         test_sysadmin = 'testsysadmin'
         test_username = 'johndoe1'
+        test_sysadmin_token = factories.APIToken(user=test_sysadmin, expires_in=2, unit=60 * 60)['token']
         test_username_token = factories.APIToken(user=test_username, expires_in=2, unit=60 * 60)['token']
         context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
+        app.post(url, params={'user': 'johndoe1'}, headers={"Authorization": test_sysadmin_token})
 
         member_list = self._get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -285,12 +286,13 @@ class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsT
     def test_request_membership(self, _mail_recipient_html, app):
         test_sysadmin = 'testsysadmin'
         test_username = 'johndoe1'
+        test_sysadmin_token = factories.APIToken(user=test_sysadmin, expires_in=2, unit=60 * 60)['token']
         test_username_token = factories.APIToken(user=test_username, expires_in=2, unit=60 * 60)['token']
         context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
 
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
-        app.post(url, params={'user': 'johndoe1'}, extra_environ={"REMOTE_USER": test_sysadmin})
+        app.post(url, params={'user': 'johndoe1'}, headers={"Authorization": test_username_token})
 
         member_list = self._get_action('member_list')(context, {
             'id': 'hdx-test-org',
@@ -325,7 +327,7 @@ class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsT
         url = h.url_for('hdx_members.bulk_member_new', id='hdx-test-org')
 
         self.app.post(url, params={'emails': 'johndoe1', 'role': 'editor'},
-                      extra_environ={"REMOTE_USER": test_sysadmin})
+                      headers={"Authorization": test_sysadmin_token})
         member_list = self._get_action('member_list')(context, {
             'id': 'hdx-test-org',
             'object_type': 'user',

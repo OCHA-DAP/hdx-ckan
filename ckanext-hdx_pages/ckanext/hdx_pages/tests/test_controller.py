@@ -266,7 +266,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
         context['user'] = SYSADMIN
         try:
             _url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
-            res = app.post(_url, environ_overrides={"REMOTE_USER": SYSADMIN}, follow_redirects=False)
+            res = app.post(_url, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
             assert '302 FOUND'.lower() in res.status.lower()
             _res = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
             assert False

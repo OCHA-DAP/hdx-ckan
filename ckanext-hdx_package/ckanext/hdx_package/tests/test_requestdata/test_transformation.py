@@ -80,7 +80,7 @@ class TestTransformationToRequestdata():
         api_token = factories.APIToken(user=SYSADMIN_USER, expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': api_token}
         result = app.post('/contribute/edit/{}'.format(request_data_dict.get('id')), params=request_data_dict,
-                             extra_environ=auth)
+                             headers=auth)
         assert result.status_code == 200
 
     @staticmethod
