@@ -28,8 +28,16 @@ Example:
             {% if facet.get('items') %}
               {% for fi in facet.get('items') %}
                 {% if fi.get('selected') == True %}
-                  {% do param_values.append(fi.get('name')) %}
                   {% set categkey = fi.get('category_key') %}
+                  {% if categkey == 'cod_level' and fi.get('name')=='ALL' %}
+                    {% set category_values=[] %}
+                    {% for categ in fi['items'] %}
+                      {% do param_values.append(categ.name) %}
+                    {% endfor %}
+                  {% else %}
+                    {% do param_values.append(fi.get('name')) %}
+                  {% endif %}
+
                   {% do categkey_holder.update({'key': fi.get('category_key')}) %}
                 {% endif %}
               {% endfor %}
