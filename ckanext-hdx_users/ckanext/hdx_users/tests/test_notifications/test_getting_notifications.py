@@ -1,7 +1,5 @@
 import dateutil.parser as date_parser
 import mock
-import pytest
-import six
 
 import ckan.authz as authz
 import ckan.model as model
@@ -17,7 +15,6 @@ from ckanext.hdx_users.helpers.notifications_dao import MembershipRequestsDao, R
 get_action = tk.get_action
 
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestGettingNotifications(hdx_test_base.HdxBaseTest):
     ORG_NAME = 'notification_test_org'
     ORG_TITLE = 'Notification Test Org'
@@ -203,24 +200,24 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
     @classmethod
     def _create_request_data_dataset(cls):
         package = {
-            "package_creator": "testsysadmin",
-            "private": False,
-            "dataset_date": "[1960-01-01 TO 2012-12-31]",
-            "indicator": "0",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "requestdata_package_for_notifications",
-            "notes": "This is a test activity",
-            "title": "Requestdata package for notifications",
-            "groups": [{"name": "roger"}],
-            "owner_org": cls.ORG_NAME,
-            "maintainer": cls.ADMIN_USER,
-            "is_requestdata_type": True,
-            "file_types": ["csv"],
-            "field_names": ["field1", "field2"]
+            'package_creator': 'testsysadmin',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'indicator': '0',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'name': 'requestdata_package_for_notifications',
+            'notes': 'This is a test activity',
+            'title': 'Requestdata package for notifications',
+            'groups': [{'name': 'roger'}],
+            'owner_org': cls.ORG_NAME,
+            'maintainer': cls.ADMIN_USER,
+            'is_requestdata_type': True,
+            'file_types': ['csv'],
+            'field_names': ['field1', 'field2']
         }
 
         context = {'ignore_auth': True,

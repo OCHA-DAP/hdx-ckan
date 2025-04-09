@@ -1,8 +1,11 @@
+import pytest
+
 import datetime
 
 import ckan.model as model
+
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_OVERDUE_INFO
+
 from ckanext.hdx_users.helpers.notifications import FreshnessNotificationsChecker
 
 
@@ -20,13 +23,13 @@ class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsT
 
     def test_freshness_notification(self):
         data_update_frequency = 30
-        days_in_the_past = data_update_frequency + UPDATE_FREQ_OVERDUE_INFO[str(data_update_frequency)] + 1
-        review_date = datetime.datetime.utcnow() - datetime.timedelta(days=days_in_the_past)
+        days_in_the_past = data_update_frequency + 14 + 1
+        end_dataset_date = datetime.datetime.utcnow() - datetime.timedelta(days=days_in_the_past)
         tester_user = model.User.by_name('tester')
         dataset = {
             'package_creator': 'test function',
             'private': False,
-            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'dataset_date': '[1960-01-01 TO {}]'.format(end_dataset_date.strftime('%Y-%m-%d')),
             'caveats': 'These are the caveats',
             'license_other': 'TEST OTHER LICENSE',
             'methodology': 'This is a test methodology',
@@ -38,7 +41,6 @@ class TestFreshnessNotifications(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsT
             'groups': [{'name': 'roger'}],
             'owner_org': 'hdx-test-org',
             'maintainer': tester_user.id,
-            'review_date': review_date.isoformat(),
             'data_update_frequency': data_update_frequency
 
         }

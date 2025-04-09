@@ -808,15 +808,15 @@
                         <p class="mb-0 fw-bold resources_total"><span>0 files</span> (drag and drop to sort)</p>
                       </div>
                       <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
-                        {% if data.id and not data.get('update_status') == 'unknown' %}
-                          <div id="confirm-resource-freshness" class="{% if data.get('update_status') == 'needs_update' %}alert alert-danger {% endif %}my-2">
-                            <input type="hidden" name='review_date' value='{{ data.review_date }}'>
-                            {{ h.snippet('bem.blocks/checkbox_field.html',
-                                                          label='I confirm that to the best of my knowledge these resources are up-to-date.',
-                                                          value='on',
-                                                          name="dataset_confirm_freshness") }}
-                          </div>
-                        {% endif %}
+{#                        {% if data.id and not data.get('update_status') == 'unknown' %}#}
+{#                          <div id="confirm-resource-freshness" class="{% if data.get('update_status') == 'needs_update' %}alert alert-danger {% endif %}my-2">#}
+{#                            <input type="hidden" name='review_date' value='{{ data.review_date }}'>#}
+{#                            {{ h.snippet('bem.blocks/checkbox_field.html',#}
+{#                                                          label='I confirm that to the best of my knowledge these resources are up-to-date.',#}
+{#                                                          value='on',#}
+{#                                                          name="dataset_confirm_freshness") }}#}
+{#                          </div>#}
+{#                        {% endif %}#}
                         <div>
                           {{ h.snippet('bem.blocks/form_button.html',
                                                           type="button",

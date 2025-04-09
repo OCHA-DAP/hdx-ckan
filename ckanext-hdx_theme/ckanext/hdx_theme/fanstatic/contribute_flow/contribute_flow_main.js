@@ -135,8 +135,8 @@
                                 var formDataArray;
                                 if (datasetId) { // updating existing dataset
                                     formDataArray = contributeGlobal.getFormValues('update-dataset-json');
-                                    var special = $("#confirm-resource-freshness").find(':input').serializeArray();
-                                    formDataArray = formDataArray.concat(special);
+                                    // var special = $("#confirm-resource-freshness").find(':input').serializeArray();
+                                    // formDataArray = formDataArray.concat(special);
 
                                     formDataArray.push({'name': 'id', 'value': datasetId});
 

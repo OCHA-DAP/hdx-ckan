@@ -6,7 +6,7 @@ from six import string_types
 from six.moves import reduce
 
 import ckan.logic as logic
-from ckanext.hdx_package.helpers.freshness_calculator import OVERDUE_PROPERTY
+from ckanext.hdx_package.helpers.freshness_calculator import FRESHNESS_PROPERTY
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +21,10 @@ class DataCompleteness(object):
         'rows': 500,
         'fl': ['id', 'name', 'title', 'organization',
                'extras_data_update_frequency',
-               'last_modified', 'review_date'],
+               'last_modified',
+               'dataset_date',
+               'due_date',
+               ],
         'ext_compute_freshness': 'for-data-completeness'
     }
 
@@ -128,20 +131,20 @@ class DataCompleteness(object):
 
     @staticmethod
     def __compute_goodness_flag(dataset, overrides_map):
-        '''
+        """
         This needs to be called only after freshness is populated on the dataset
 
         :param dataset:
         :param overrides_map:
         :return:
-        '''
+        """
         override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
 
         if override and override.get('display_state'):
             dataset['is_complete'] = override.get('display_state') == 'complete'
             dataset[GOODNESS_PROPERTY] = dataset.get('is_complete')
         else:
-            dataset[GOODNESS_PROPERTY] = not dataset.get(OVERDUE_PROPERTY, True)
+            dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False)
 
     @staticmethod
     def __add_general_comments(dataset, overrides_map):
@@ -149,7 +152,7 @@ class DataCompleteness(object):
         override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
         if override and override.get('comments'):
             comments.append(override.get('comments'))
-        if not dataset.get(GOODNESS_PROPERTY) and dataset.get(OVERDUE_PROPERTY):
+        if not dataset.get(GOODNESS_PROPERTY) and dataset.get(FRESHNESS_PROPERTY):
             comments.append('The dataset is not up-to-date.')
 
         dataset['general_comment'] = ' '.join(comments)
