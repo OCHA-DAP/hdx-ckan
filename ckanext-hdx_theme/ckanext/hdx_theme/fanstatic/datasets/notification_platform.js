@@ -155,7 +155,8 @@ $(document).ready(function () {
       $actionMenuButton.removeClass('d-none');
     }
     else if (optinLocation === 'floating_button') {
-      $floatingButton.removeClass('d-none');
+      $actionMenuButton.removeClass('d-none');
+      // $floatingButton.removeClass('d-none');
     }
   };
 
