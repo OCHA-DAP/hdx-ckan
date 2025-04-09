@@ -8,62 +8,11 @@ Example:
 
 {% macro render_facet_list(items, ul_name, ul_class) %}
   <ul name="{{ ul_name }}" class="{{ ul_class }}">
+    {% set extra_args = h.facet_url_extra_args(facet_list, request.args) %}
     {% for option in items %}
       <li>
         <label class="facet">
-          {% if option.category_key == 'cod_level' and option.name=='ALL' %}
-            {% set category_values=[] %}
-            {% for categ in option['items'] %}
-              {% do category_values.append(categ.name) %}
-            {% endfor %}
-          {% else %}
-            {% set category_values=[option.name] %}
-          {% endif %}
-
-          {% set extra_args = {} %}
-          {% for id in facet_list %}
-            {% set param_values = [] %}
-            {% set categkey_holder = {'key': 'KeyError'} %}
-            {% set facet = facet_list.get(id) %}
-            {% if facet.get('items') %}
-              {% for fi in facet.get('items') %}
-                {% if fi.get('selected') == True %}
-                  {% set categkey = fi.get('category_key') %}
-                  {% if categkey == 'cod_level' and fi.get('name')=='ALL' %}
-                    {% set category_values=[] %}
-                    {% for categ in fi['items'] %}
-                      {% do param_values.append(categ.name) %}
-                    {% endfor %}
-                  {% else %}
-                    {% do param_values.append(fi.get('name')) %}
-                  {% endif %}
-
-                  {% do categkey_holder.update({'key': fi.get('category_key')}) %}
-                {% endif %}
-              {% endfor %}
-              {% if param_values|length > 0 %}
-                {% do extra_args.update({categkey_holder.key: param_values}) %}
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-
-          {% set param_values = values %}
-
-          {% set existing_args = request.args.copy() %}
-          {% set arg_q = existing_args.get('q', []) %}
-          {% if arg_q %}
-            {% do extra_args.update({'q': [arg_q]}) %}
-          {% endif %}
-          {% set arg_sort = existing_args.get('sort', []) %}
-          {% if arg_sort %}
-            {% do extra_args.update({'sort': [arg_sort]}) %}
-          {% endif %}
-          {% set arg_page = existing_args.get('ext_page_size', []) %}
-          {% if arg_page %}
-            {% do extra_args.update({'ext_page_size': [arg_page]}) %}
-          {% endif %}
-          
-          <a class="facet-link" href="{% snippet 'snippets/create_filter_link.html', extra_args=extra_args, param=option.category_key, param_values=category_values, remove=option.selected %}">
+          <a class="facet-link" href="{{ h.build_facet_filter_url(option, extra_args.copy()) }}">
           <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
                {% if option.selected %}checked="checked"{% endif %}
                {% if option.get('items') %} class="parent-facet" {% endif %}
