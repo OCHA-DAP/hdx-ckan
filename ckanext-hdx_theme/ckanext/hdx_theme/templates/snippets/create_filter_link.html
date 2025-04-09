@@ -7,7 +7,7 @@
  # - remove - if True then we'll remove the param
  #}
 
-
+ {% set url = request.path %}
 
 {% for value in param_values %}
   {% if remove %}
