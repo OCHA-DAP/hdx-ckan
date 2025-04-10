@@ -152,8 +152,9 @@ class DataCompleteness(object):
         override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
         if override and override.get('comments'):
             comments.append(override.get('comments'))
-        if not dataset.get(GOODNESS_PROPERTY) and dataset.get(FRESHNESS_PROPERTY):
-            comments.append('The dataset is not up-to-date.')
+        if not dataset.get(GOODNESS_PROPERTY) and not dataset.get(FRESHNESS_PROPERTY):
+            if all("dataset is not up-to-date" not in comment for comment in comments):
+                comments.append('The dataset is not up-to-date.')
 
         dataset['general_comment'] = ' '.join(comments)
 
