@@ -72,21 +72,21 @@ $(document).ready(function() {
       filterItems.each((idx, el) => (resultsIdx.includes(idx) ? $(el).show() :$(el).hide()));
     });
 
-    $(".filter-category .categ-items li input.parent-facet").on("change", function() {
-      var childInputs = $(this).parent().find('li input');
-      if(this.checked) {
-        childInputs.prop('checked', true);
-      } else {
-        childInputs.prop('checked', false);
-      }
-      window.location = getFilterUrlNew(false);
-    });
+    // $(".filter-category .categ-items li input.parent-facet").on("change", function() {
+    //   var childInputs = $(this).parent().find('li input');
+    //   if(this.checked) {
+    //     childInputs.prop('checked', true);
+    //   } else {
+    //     childInputs.prop('checked', false);
+    //   }
+    //   window.location = getFilterUrlNew(false);
+    // });
 
-    $(".filter-category .categ-items li input").not(".parent-facet").on("change", function() {
-        var location = getFilterUrlNew(false);
-        console.log("Refresh to: " + location);
-        window.location = location;
-    });
+    // $(".filter-category .categ-items li input").not(".parent-facet").on("change", function() {
+    //     var location = getFilterUrlNew(false);
+    //     console.log("Refresh to: " + location);
+    //     window.location = location;
+    // });
 
     $("#headerSearch, .headerSearchBox").on("keydown", function(event){
         if (event.keyCode == '13'){
@@ -148,7 +148,10 @@ function getFilterUrlNew(resetFilters) {
         });
     }
 
-    //check non filter params
+    //////////////////
+    // Only add values to params2 if they are non default values, otherwise this will redirect to the non-canonical version of the page
+    // Might have SEO implications
+
     var params2 = $("#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #header-search-sort, " +
         "#ext_after_metadata_modified, #ext_batch").serialize();
     params += ((params !== "" && params2 != null) ? "&" : "") + params2;

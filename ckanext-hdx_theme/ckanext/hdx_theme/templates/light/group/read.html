@@ -7,7 +7,7 @@
 {% endblock -%}
 
 {% block links %}
-  <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
+{% snippet "snippets/add_optional_canonical_link.html", no_params=True %}
   {{ super() }}
 {% endblock %}
 

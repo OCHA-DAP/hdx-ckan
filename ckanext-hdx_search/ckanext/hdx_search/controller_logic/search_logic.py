@@ -387,7 +387,7 @@ class SearchLogic(object):
         :rtype: string
         """
         if not package_type or package_type == 'dataset':
-            url = h.url_for('search')
+            url = h.url_for('hdx_dataset.search')
         else:
             url = h.url_for('{0}_search'.format(package_type))
         return url_with_params(url, params)
@@ -469,6 +469,7 @@ class SearchLogic(object):
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
         result['selected_titles'] = []
+        result['selected_categ_keys'] = []
 
         for param in FEATURED_FACET_PARAMS:
             if param in search_extras:
@@ -545,13 +546,14 @@ class SearchLogic(object):
                     category_tooltip = 'A data series is a collection of datasets that has a shared topic usually ' \
                                        'provided by a single organization'
 
-                standard_facet_category, anything_selected, selected_titles = \
+                standard_facet_category, anything_selected, selected_titles, selected_categ_keys = \
                     self._create_standard_facet_category(category_key, category_title, category_tooltip, item_list,
                                                          selected_facets)
 
                 result['facets'][category_key] = standard_facet_category
                 result['filters_selected'] = result['filters_selected'] or anything_selected
                 result['selected_titles'].extend(selected_titles)
+                result['selected_categ_keys'].extend(selected_categ_keys)
 
         self._add_facet_query_item_to_list(featured_facet_items, HDX_HAPI_DATA_FACET_NAME, _('HDX HAPI Data'),
                                            existing_facets, search_extras, hdx_hapi_explanation)
@@ -598,6 +600,7 @@ class SearchLogic(object):
         for item in featured_facet_items:
             if item['selected']:
                 result['selected_titles'].append(item['display_name'])
+                result['selected_categ_keys'].append(item['category_key'])
 
         result['selected_titles_str'] = ' '.join([item.replace('-', ' ').capitalize() for item in result['selected_titles']])
 
@@ -641,6 +644,7 @@ class SearchLogic(object):
                                         selected_facets):
         sorted_item_list = []
         anything_selected = False
+        selected_categ_keys = []
         selected_titles = []
         for item in item_list:
             item_name = item.get('name', '')
@@ -655,6 +659,7 @@ class SearchLogic(object):
                     'selected': selected,
                 }
                 if selected:
+                    selected_categ_keys.append(new_item['category_key'])
                     selected_titles.append(new_item['display_name'])
                 sorted_item_list.append(new_item)
 
@@ -666,7 +671,7 @@ class SearchLogic(object):
             'tooltip': category_tooltip,
             'show_everything': len(sorted_item_list) < 5
         }
-        return standard_facet_category, anything_selected, selected_titles
+        return standard_facet_category, anything_selected, selected_titles, selected_categ_keys
 
     def _generate_facet_name_to_title_map(self, package_type):
         facets = OrderedDict()

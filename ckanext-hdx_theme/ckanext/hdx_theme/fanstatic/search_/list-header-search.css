@@ -63,6 +63,9 @@
   font-size: 14px;
   line-height: 20px;
 }
+.filter-category .categ-list .categ-items li label.facet .facet-link {
+  color: #333333;
+}
 .filter-category .categ-list .categ-items li label.facet .facet-option-explanation {
   color: #333333;
   cursor: default;

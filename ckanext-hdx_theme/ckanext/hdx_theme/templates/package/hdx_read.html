@@ -17,8 +17,10 @@
 {% endblock %}
 
 {% set pkg = pkg_dict %}
-{% block links %}
+{% set canonical_url = h.url_for('hdx_dataset.read', id=pkg.name) %}
+{% block links %}  
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
   {{ super() }}
 {% endblock %}
 
