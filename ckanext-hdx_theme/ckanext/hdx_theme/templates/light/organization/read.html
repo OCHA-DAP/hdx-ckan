@@ -9,7 +9,8 @@
 {% block subtitle %}{{ org.title }}{% endblock %}
 
 {% block links %}
-  <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {% set canonical_url = h.url_for('hdx_org.read', id=org_dict.name)  %}
+  {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
   {{ super() }}
 {% endblock %}
 
