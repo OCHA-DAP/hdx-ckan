@@ -208,7 +208,7 @@
     };
 
     var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
-    var NOTIFICATION_OPTIN_OPTIONS = ['action_menu', 'floating_button'];
+    var NOTIFICATION_OPTIN_OPTIONS = ['action_menu']; // ['action_menu', 'floating_button']
 
     hdxUtil.net.getNotificationOptinLocation = function (datasetId) {
       var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();

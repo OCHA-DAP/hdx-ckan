@@ -55,6 +55,228 @@
             </p>
         </div>
     </div>
+
+    <p></p>
+    <div class="section-flag">HDX APIs</div>
+    <p></p>
+    <div class="hdx-card-group">
+        <div class="card">
+            <div class="card-body">
+                <p>HDX offers multiple ways to access data through its APIs, each designed for different use cases. The
+                    table below provides a comparison of these options, highlighting their primary functions, best-use
+                    scenarios, and limitations.</p>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <p>
+                                <strong>
+                                    Resource
+                                </strong>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <strong>
+                                    Description
+                                </strong>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <strong>
+                                    Use for…
+                                </strong>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <strong>
+                                    Don’t use for…
+                                </strong>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <strong>
+                                    References
+                                </strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <a href="https://data.humdata.org/api/3/">
+                                    CKAN API
+                                </a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                The default web API for CKAN, the platform on which HDX runs.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Digital equivalent of a library card catalogue.
+                                <br/>
+                                <br/>
+                                Searching for datasets on HDX using metadata like titles, descriptions, countries, topic
+                                tags, etc.
+                                <br/>
+                                <br/>
+                                <br/>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Anything that involves looking
+                                <em>
+                                    inside
+                                </em>
+                                the data (use
+                                <em>
+                                    HAPI
+                                </em>
+                                or the
+                                <em>
+                                    HXL Proxy
+                                </em>
+                                instead).
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a href="https://data.humdata.org/dataset/2048a947-5714-4220-905b-e662cbcd14c8/resource/3b675846-d01c-4fc9-b577-b7d426d2a598/download/hdx-ckan-api-cookbook.pdf">
+                                    CKAN API Cookbook
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <a href="https://github.com/OCHA-DAP/hdx-python-api">
+                                    hdx-python-api
+                                </a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Python library on top of the
+                                <em>
+                                    CKAN API
+                                </em>
+                                , providing simplified manipulation of datasets on HDX and applying business rules.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Automating interactions with HDX, especially (but not exclusively) for data providers.
+                                <br/>
+                                <br/>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Anything that involves looking
+                                <em>
+                                    inside
+                                </em>
+                                the data (use
+                                <em>
+                                    HAPI
+                                </em>
+                                or the
+                                <em>
+                                    HXL Proxy
+                                </em>
+                                instead).
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a href="https://hdx-python-api.readthedocs.io/en/latest/">
+                                    HDX Python API documentation
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                HDX
+                                <a href="https://hapi.humdata.org/docs">
+                                    HAPI
+                                </a>
+                                (Humanitarian API)
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                A way to access standardised indicators from multiple sources to automate workflows and
+                                visualisations
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Fine-grained access to structured, high-priority humanitarian data.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Spreadsheet-style data, heterogenous, non-curated data.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a href="https://hdx-hapi.readthedocs.io/en/latest/">
+                                    HDX HAPI documentation
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <a href="https://proxy.hxlstandard.org">
+                                    HXL Proxy
+                                </a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Online data engine that can perform most database-like operations on the fly and return
+                                the results in a few seconds.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                Filtering, and transforming HXLated data on the fly; adding HXL hashtags to non-HXLated
+                                data; previewing spreadsheets.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                APIs that require extensive paging, non-tabular data like geodata.
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a href="https://github.com/HXLStandard/hxl-proxy/wiki">
+                                    HXL Proxy wiki
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
     {% snippet 'faq_others/devs/questions_sections.html', data=data.faq_data %}
 {% endblock %}
 
