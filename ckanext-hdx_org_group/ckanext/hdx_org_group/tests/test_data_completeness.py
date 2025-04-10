@@ -173,7 +173,7 @@ class TestDataCompleteness(object):
         assert subcategory1_stats['total_datasets_num'] == 2
 
         dataset = next(d for d in subcategory1['datasets'] if d['name'] == incomplete_dataset)
-        assert dataset['general_comment'] == incomplete_comment + ' The dataset is not up-to-date.'
+        assert dataset['general_comment'] == incomplete_comment
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_force_complete(self, patched_DataCompleteness):
