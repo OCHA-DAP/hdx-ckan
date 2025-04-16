@@ -9,8 +9,7 @@ _get_action = tk.get_action
 config_path = os.path.join(os.path.dirname(__file__), "test_config.json")
 config = tk.config
 
-
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures("hdx_clean_db")
 @pytest.mark.ckan_config("hdx.checks.config_path", config_path)
 @pytest.mark.ckan_config("hdx_test.url_for_passing_check", "https://google.com")
 class TestServiceCheckerApi(object):

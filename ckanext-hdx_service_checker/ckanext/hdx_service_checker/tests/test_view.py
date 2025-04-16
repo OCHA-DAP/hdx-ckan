@@ -17,17 +17,17 @@ class TestServiceCheckerController(object):
     token = None
 
     @classmethod
-    @pytest.mark.usefixtures("clean_db")
+    @pytest.mark.usefixtures("hdx_clean_db")
     def setup_class(cls):
         factories.User(name=cls.username, sysadmin=True)
         cls.token = factories.APIToken(user=cls.username, expires_in=2, unit=60 * 60)['token']
 
     def test_run_checks(self, app):
-        auth = {"Authorization": self.token}
+        headers = {"User-Agent": tk.config.get('hdx.checks.allowed_user_agent'), "Authorization": self.token}
         url = h.url_for('hdx_run_checks.run_checks')
         response = app.get(url)
         assert response.status_code == 403
-        response = app.get(url, headers=auth)
+        response = app.get(url, headers=headers)
         assert response.status_code == 200
         assert 'Dummy check -- Passed' in response.body
         assert 'Failing check -- Failed' in response.body

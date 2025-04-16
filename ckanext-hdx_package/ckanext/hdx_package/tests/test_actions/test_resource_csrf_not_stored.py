@@ -9,7 +9,7 @@ from ckan.types import Context
 _get_action = tk.get_action
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index')
 def test_csrf_not_stored_in_resource(dataset_with_uploaded_resource: Dict):
     resource_dict: Dict = dataset_with_uploaded_resource['resources'][0]
     for key in resource_dict.keys():

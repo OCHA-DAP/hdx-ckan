@@ -71,7 +71,7 @@ def setup_data():
     dataset_dict = _get_action('package_create')(context, DATASET_DICT)
 
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestPCoded(object):
 
     def test_p_coded(self):

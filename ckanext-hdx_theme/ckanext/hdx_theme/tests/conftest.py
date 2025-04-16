@@ -1,5 +1,6 @@
 import pytest
 
+import ckan.plugins
 import ckan.tests.factories as factories
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -74,6 +75,13 @@ def dataset_with_uploaded_resource() -> Dict:
     created_dataset_dict = _get_action('package_create')(context, dataset_dict)
     return created_dataset_dict
 
+@pytest.fixture(autouse=True, scope="module")
+def hdx_with_plugins() -> None:
+    ckan.plugins.load_all()
+    yield
+    ckan.plugins.unload_non_system_plugins()
+
+
 @pytest.fixture()
-def setup_activity_migration(migrate_db_for):
+def hdx_clean_db(hdx_with_plugins, clean_db, migrate_db_for) -> None:
     migrate_db_for('activity')

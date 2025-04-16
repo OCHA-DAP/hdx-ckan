@@ -66,7 +66,7 @@ def keep_db_tables_on_clean():
 
 
 @pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestFSCheckTestUser(object):
     FILE1_NAME = 'data1.xlsx'
 
@@ -144,7 +144,7 @@ class TestFSCheckTestUser(object):
 
 
 @pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestFSCheckSysadmin(object):
     FILE1_NAME = 'data1.xlsx'
 
@@ -221,7 +221,7 @@ class TestFSCheckSysadmin(object):
 
 
 @pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestFSCheckResourceReset(object):
     FILE1_NAME = 'data1.xlsx'
 
@@ -281,7 +281,7 @@ class TestFSCheckResourceReset(object):
 
 
 @pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestFSCheckPackageReset(object):
     FILE1_NAME = 'data1.xlsx'
 
@@ -335,7 +335,7 @@ class TestFSCheckPackageReset(object):
 
 
 @pytest.mark.ckan_config("hdx.gis.layer_import_url", "http://localhost/dummy-endpoint")
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestFSCheckResourceRevise(object):
     FILE1_NAME = 'data1.xlsx'
     HXL_PROXY_RESPONSE_DICT = {

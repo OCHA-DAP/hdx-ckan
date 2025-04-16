@@ -62,7 +62,7 @@ def setup_data():
     except ValidationError as e:
         assert False
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestTransformationToRequestdata():
     def test_transformation_to_requestdata(self, app):
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}

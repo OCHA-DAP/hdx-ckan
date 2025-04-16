@@ -104,7 +104,7 @@ def _get_sysadmin_context():
     return context
 
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 def test_last_modified_change_for_uploaded_resource():
     package_dict = _get_action('package_show')(_get_user_context(), {'id': DATASET_NAME_UPLOADED_RESOURCE})
 

@@ -81,7 +81,7 @@ def setup_data():
     uploaded_dataset_dict = _get_action('package_create')(context, _get_dataset_dict(external_resource=False))
 
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 def test_last_modified_change_for_external_resource():
     context: Context = {'model': model, 'session': model.Session, 'user': STANDARD_USER}
     # get the current 'last_modified' field of the resource
@@ -112,7 +112,7 @@ def test_last_modified_change_for_external_resource():
 
     assert after > before
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 def test_last_modified_change_for_uploaded_resource():
     context: Context = {'model': model, 'session': model.Session, 'user': STANDARD_USER}
     # get the current 'last_modified' field of the resource

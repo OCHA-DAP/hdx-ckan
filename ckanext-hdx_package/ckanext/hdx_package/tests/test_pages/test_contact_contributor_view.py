@@ -42,7 +42,7 @@ def get_user_context():
     return {'model': model, 'user': USER_NAME}
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'setup_data')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'setup_data')
 class TestContactContributorView(object):
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
     def test_contact_contributor(self, mock_mail_recipient, app):
