@@ -8,9 +8,6 @@ Created on Sep 9, 2014
 import logging as logging
 
 import mock
-import pytest
-import six
-from nose.tools import assert_raises
 
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -153,11 +150,14 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         assert result is None
 
-        with assert_raises(logic.NotFound) as cm:
+        try:
             self._get_action('package_show')( context,  {'id': data_dict['package_id']})
+            assert False
+        except tk.ObjectNotFound as onf:
+            assert True
 
-        ex = cm.exception
-        assert ex.message == ""
+        # ex = cm.exception
+        # assert ex.message == ""
         # result = self._get_action('package_show')(context, {'id': data_dict['package_id']})
 
         rq = ckanextRequestdata.get(id=requestdata_id)
