@@ -1,15 +1,15 @@
 import pytest
 
 import ckan.plugins.toolkit as tk
-
+import ckan.tests.factories as factories
 from ckanext.hdx_dataviz.tests import generate_test_showcase, USER, SYSADMIN, ORG, LOCATION
 
 _url_for = tk.url_for
 
 
-# @pytest.mark.skipif(six.PY3, reason=u"The user_extras plugin is not available on PY3 yet")
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 def test_dataviz_page_load(app):
+    sysadmin_token = factories.APIToken(user=SYSADMIN, expires_in=2, unit=60 * 60)['token']
     generate_test_showcase(SYSADMIN, 'dataviz-gallery-1', True)
     generate_test_showcase(SYSADMIN, 'dataviz-gallery-2', True)
     url = _url_for('hdx_dataviz_gallery.index')
@@ -19,6 +19,6 @@ def test_dataviz_page_load(app):
     assert 'dataviz-gallery-2' in response.body
     assert 'Edit Showcase' not in response.body
 
-    response2 = app.get(url, headers={"Authorization": SYSADMIN['token']})
+    response2 = app.get(url, headers={'Authorization': sysadmin_token})
 
     assert 'Edit Showcase' in response2.body
