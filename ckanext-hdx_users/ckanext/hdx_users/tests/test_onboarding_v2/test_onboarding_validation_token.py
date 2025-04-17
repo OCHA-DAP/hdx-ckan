@@ -24,7 +24,7 @@ h = tk.h
 
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
 def test_validation_token(mock_send_validation_email: MagicMock, app: CKANTestApp):
     user_detail_result = _apply_for_user_account(app)
@@ -73,7 +73,7 @@ def test_validation_token(mock_send_validation_email: MagicMock, app: CKANTestAp
     assert 'Your account has been already validated' in result.body
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
 @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
 def test_validation_token_expiration(mock_send_validation_email: MagicMock, app: CKANTestApp):
     user_detail_result = _apply_for_user_account(app)
@@ -106,7 +106,7 @@ def test_validation_token_expiration(mock_send_validation_email: MagicMock, app:
 
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
 @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
 @mock.patch('ckanext.security.authenticator.LoginThrottle')
 @mock.patch('ckanext.hdx_users.views.onboarding.send_username_confirmation_email')

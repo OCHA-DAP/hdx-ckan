@@ -93,7 +93,7 @@ def setup_data(migrate_db_for):
     _create_dataset()
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'with_request_context', 'setup_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'with_request_context', 'setup_data')
 class TestNotificationPlatform(object):
 
     @mock.patch(

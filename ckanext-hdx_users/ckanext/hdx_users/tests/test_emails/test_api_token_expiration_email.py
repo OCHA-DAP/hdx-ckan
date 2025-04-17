@@ -13,7 +13,7 @@ _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'with_request_context')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'with_request_context')
 class TestApiTokenExpirationEmail(object):
     EXPIRES_DAYS = 6  # days
 

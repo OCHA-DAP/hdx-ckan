@@ -62,7 +62,7 @@ def keep_db_tables_on_clean():
     model.repo.tables_created_and_initialised = True
 
 
-@pytest.mark.usefixtures("keep_db_tables_on_clean", "clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("keep_db_tables_on_clean", "hdx_clean_db", "clean_index", "setup_data")
 class TestDeleteuserMaintainer(object):
 
     def test_delete_user_maintainer(self):

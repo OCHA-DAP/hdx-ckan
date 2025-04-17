@@ -71,7 +71,7 @@ came_from_list = [
     },
 ]
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
 @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
 @pytest.mark.parametrize('came_from_entry', came_from_list)
 @mock.patch('ckanext.hdx_users.logic.first_login.FirstLoginAnalyticsSender.send_to_queue')

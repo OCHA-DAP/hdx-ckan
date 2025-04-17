@@ -22,7 +22,7 @@ def setup_data():
     factories.User(name=USER, email=USER_EMAIL, fullname='Test User')
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'setup_data')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'setup_data')
 class TestOnboardingChangeEmail(object):
 
     @mock.patch('ckanext.hdx_users.views.onboarding._user_can_change_email')

@@ -55,7 +55,7 @@ def build_data_dict():
     }
     return data_dict
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("hdx_clean_db", "clean_index", "setup_data")
 class TestOnboarding(object):
 
     def test_value_proposition_page_load(self, app):

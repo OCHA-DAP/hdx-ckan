@@ -14,7 +14,7 @@ from ckan.tests.helpers import CKANTestApp
 
 _THROTTLE_MAP = {}
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
 @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
 @mock.patch('ckanext.security.authenticator.LoginThrottle')
 def test_mfa(MockLoginThrottle: MagicMock, app: CKANTestApp):
@@ -62,7 +62,7 @@ class MockedThrottleClient(object):
     def delete(self, key: str) -> str:
         return self.client.pop(self.prefix + key)
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'with_request_context')
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
 @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
 @mock.patch('ckanext.security.cache.login.ThrottleClient', new=MockedThrottleClient)
 def test_lockout_by_throttle(app: CKANTestApp):
