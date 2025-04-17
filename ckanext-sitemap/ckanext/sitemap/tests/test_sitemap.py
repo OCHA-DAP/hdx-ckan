@@ -1,6 +1,7 @@
 import pytest
 from lxml import etree
 
+import ckan.cli.db as cli_db
 import ckan.lib.search as search
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -30,6 +31,8 @@ class TestSitemap(object):
         search.clear_all()
         test_helpers.reset_db()
         cls.app = test_helpers._get_test_app()
+
+        cli_db._run_migrations('activity')
 
         sysadmin = 'testsysadmin_sitemap'
         factories.Sysadmin(name=sysadmin)
