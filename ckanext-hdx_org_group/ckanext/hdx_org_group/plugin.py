@@ -14,6 +14,7 @@ import ckanext.hdx_org_group.model as org_group_model
 import ckanext.hdx_org_group.views.organization as org
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
 from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
+# from ckan.logic.schema import default_create_group_schema
 
 log = logging.getLogger(__name__)
 
@@ -141,22 +142,23 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     #     return schema
 
     # added so the update org via api tu use the same schema
-    def form_to_db_schema_api_update(self):
-        schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+    def update_group_schema(self):
+        schema = super(HDXOrgGroupPlugin, self).update_group_schema()
         schema = self._modify_group_schema(schema)
         return schema
 
     # IGroupForm
-    def form_to_db_schema(self):
-        schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+    def create_group_schema(self):
+        # schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+        schema = super(HDXOrgGroupPlugin, self).create_group_schema()
         schema = self._modify_group_schema(schema)
         return schema
 
     # IGroupForm
-    def db_to_form_schema(self):
+    def show_group_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
-            schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+            schema = super(HDXOrgGroupPlugin, self).show_group_schema()
             new_org_schema = {
                 'description': [tk.get_validator('not_empty')],
                 'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
