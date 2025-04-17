@@ -67,9 +67,6 @@ auth.blacklist = 83.222.23.234
 
 search_backend = sql
 
-# Change API key HTTP header to something non-standard.
-apitoken_header_name = X-Non-Standard-CKAN-API-Key
-
 # only for 2.3
 #ckan.plugins = stats
 # only for 2.6
