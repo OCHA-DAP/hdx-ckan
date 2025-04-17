@@ -1,6 +1,7 @@
 import pytest
 import mock
 
+import ckan.cli.db as cli_db
 import ckan.lib.search as search
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -48,6 +49,8 @@ class TestYtpRequestBase(object):
         search.clear_all()
         test_helpers.reset_db()
         cls.app = test_helpers._get_test_app()
+
+        cli_db._run_migrations('activity')
 
         sysadmin = 'testsysadmin_ytp'
         sysadmin_user = cls._create_user(sysadmin, True)
