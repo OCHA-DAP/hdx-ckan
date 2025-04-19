@@ -158,7 +158,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def show_group_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
-            schema = super(HDXOrgGroupPlugin, self).show_group_schema()
+            schema = super(HDXOrgGroupPlugin, self).update_group_schema()
             new_org_schema = {
                 'description': [tk.get_validator('not_empty')],
                 'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
@@ -186,7 +186,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             schema.update(new_org_schema)
             return schema
         except TypeError as e:
-            log.warn('Exception in db_to_form_schema: {}'.format(str(e)))
+            log.warning('Exception in db_to_form_schema: {}'.format(str(e)))
 
         return None
 
