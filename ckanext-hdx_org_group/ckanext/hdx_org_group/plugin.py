@@ -13,6 +13,7 @@ import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_org_group.model as org_group_model
 import ckanext.hdx_org_group.views.organization as org
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
+from ckan.types import Schema
 from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
 # from ckan.logic.schema import default_create_group_schema
 
@@ -266,14 +267,24 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         return schema
 
     # IGroupForm
-    def form_to_db_schema(self):
-        schema = super(HDXGroupPlugin, self).form_to_db_schema()
+    # def form_to_db_schema(self):
+    #     schema = super(HDXGroupPlugin, self).form_to_db_schema()
+    #     schema = self._modify_group_schema(schema)
+    #     return schema
+
+    # IGroupForm
+    def create_group_schema(self) -> Schema:
+        schema = super(HDXGroupPlugin, self).create_group_schema()
         schema = self._modify_group_schema(schema)
         return schema
 
-    # IGroupForm
-    def db_to_form_schema(self):
-        schema = super(HDXGroupPlugin, self).form_to_db_schema()
+    def update_group_schema(self):
+        schema = super(HDXGroupPlugin, self).update_group_schema()
+        schema = self._modify_group_schema(schema)
+        return schema
+
+    def show_group_schema(self) -> Schema:
+        schema = super(HDXGroupPlugin, self).update_group_schema()
         schema.update({
             'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
@@ -295,9 +306,40 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             ],
             'package_count': [tk.get_validator('ignore_missing')],
             'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'created': [],
+            'state': [],
 
         })
         return schema
+
+
+    # IGroupForm
+    # def db_to_form_schema(self):
+    #     schema = super(HDXGroupPlugin, self).form_to_db_schema()
+    #     schema.update({
+    #         'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #         'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #         'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #         'alert_bar_title': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #         'alert_bar_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #         'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #         'activity_level': [
+    #             tk.get_converter('convert_from_extras'),
+    #             tk.get_validator('ignore_missing')
+    #         ],
+    #         'key_figures': [
+    #             tk.get_converter('convert_from_extras'),
+    #             tk.get_validator('active_if_missing')
+    #         ],
+    #         'data_completeness': [
+    #             tk.get_converter('convert_from_extras'),
+    #             tk.get_validator('ignore_missing')
+    #         ],
+    #         'package_count': [tk.get_validator('ignore_missing')],
+    #         'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+    #
+    #     })
+    #     return schema
 
     def create(self, country):
         tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
