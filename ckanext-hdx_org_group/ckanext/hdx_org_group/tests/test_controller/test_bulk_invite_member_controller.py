@@ -66,7 +66,7 @@ def setup_data():
         org_url='https://hdx.hdxtest.org/'
     )
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("hdx_clean_db", "clean_index", "setup_data")
 class TestBulkInviteMembersController(MemberControllerBase):
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')

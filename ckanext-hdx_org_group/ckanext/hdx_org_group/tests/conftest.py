@@ -1,5 +1,5 @@
 import pytest
-from ckanext.hdx_theme.tests.conftest import hdx_with_plugins, hdx_clean_db
+from ckanext.hdx_theme.tests.conftest import hdx_with_plugins, hdx_clean_db, keep_db_tables_on_clean
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 
@@ -13,9 +13,6 @@ ORG = 'hdx-test-org'
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
-
-from ckanext.hdx_theme.tests.conftest import keep_db_tables_on_clean
-
 
 @pytest.fixture()
 def setup_user_data():

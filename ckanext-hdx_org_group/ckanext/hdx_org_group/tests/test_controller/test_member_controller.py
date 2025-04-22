@@ -2,7 +2,7 @@ import logging as logging
 
 import mock
 import pytest
-
+from ckan.types import Context
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -67,10 +67,9 @@ def setup_data():
         org_url='https://hdx.hdxtest.org/'
     )
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "setup_data")
+@pytest.mark.usefixtures("hdx_clean_db", "clean_index", "setup_data")
 class TestBulkInviteMembersController(MemberControllerBase):
 
-    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_bulk_members_invite(self, _mail_recipient_html, app):
         orgadmin = 'orgadmin'
@@ -119,15 +118,13 @@ class TestBulkInviteMembersController(MemberControllerBase):
         assert new_member[3] == 'member', 'Invited user needs to be a member'
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
-                         'with_request_context')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestMembersController(MemberControllerBase):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
-    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_org_group.views.members.render')
     def test_members(self, render, app):
         '''
@@ -135,7 +132,7 @@ class TestMembersController(MemberControllerBase):
         so the ckanext.hdx_org_group.views.members.members() returns a mock object that flask doesn't like.
         '''
         orgadmin = 'orgadmin'
-        context = {'model': model, 'session': model.Session, 'user': orgadmin}
+        context: Context = {'model': model, 'session': model.Session, 'user': orgadmin}
         orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': orgadmin_token}
 
@@ -147,7 +144,7 @@ class TestMembersController(MemberControllerBase):
 
         # By default the users should be sorted alphabetically asc
         url = h.url_for('hdx_members.members', id='hdx-test-org')
-        app.get(url, headers=auth)
+        res = app.get(url, headers=auth)
         member_list = render.call_args[0][1]['members']
         user_list = self._populate_member_names(member_list, member_with_name_list)
 
@@ -178,8 +175,7 @@ class TestMembersController(MemberControllerBase):
         assert len(user_list) == 1, "Only one user should be found for query"
         assert user_list[0] == 'John Doe1'
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
-                         'with_request_context')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestMembersDeleteController(MemberControllerBase):
 
     def _populate_member_names(self, members, member_with_name_list):
@@ -235,7 +231,6 @@ class TestRequestMembershipMembersController(org_group_base.OrgGroupBaseWithInds
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
-    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_request_membership(self, _mail_recipient_html, app):
         test_sysadmin = 'testsysadmin'
@@ -281,7 +276,6 @@ class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsT
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
         return ret
 
-    @pytest.mark.usefixtures('with_request_context')
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_request_membership(self, _mail_recipient_html, app):
         test_sysadmin = 'testsysadmin'
