@@ -9,7 +9,7 @@ import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db')
 class TestApiToken(object):
     LIMIT = 365  # days
     ADMIN_LIMIT = 180

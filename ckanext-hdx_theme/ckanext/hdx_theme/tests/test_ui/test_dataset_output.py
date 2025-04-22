@@ -5,16 +5,16 @@ Created on May 16, 2014
 
 '''
 
-import unicodedata
+# import unicodedata
 
 import ckan.tests.factories as factories
 import ckan.plugins.toolkit as tk
-import ckan.lib.helpers as h
+# import ckan.lib.helpers as h
 import ckan.model as model
 
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
-
+import ckanext.hdx_theme.tests.test_helper.helper as th
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
@@ -74,7 +74,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         self._get_action('package_create')(context, package)
 
-        page = self._getPackagePage(dataset_name)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name)
         assert not 'Deleted' in page.body, 'Page should not have deleted badge as it was not deleted'
 
         self._get_action('package_delete')(
@@ -82,16 +82,16 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
             {'id': dataset_name}
         )
 
-        deleted_page = self._getPackagePage(dataset_name, testsysadmin_token)
+        deleted_page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name, testsysadmin_token)
         # print deleted_page.response
         assert 'Deleted' in deleted_page.body, 'Page needs to have deleted badge'
 
-    def _getPackagePage(self, package_id, apitoken=None):
-        page = None
-        url = h.url_for('dataset_read', id=package_id)
-        if apitoken:
-            page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')})
-        else:
-            page = self.app.get(url)
-        return page
+    # def _getPackagePage(self, package_id, apitoken=None):
+    #     page = None
+    #     url = h.url_for('dataset_read', id=package_id)
+    #     if apitoken:
+    #         page = self.app.get(url, headers={
+    #             'Authorization': apitoken})
+    #     else:
+    #         page = self.app.get(url)
+    #     return page

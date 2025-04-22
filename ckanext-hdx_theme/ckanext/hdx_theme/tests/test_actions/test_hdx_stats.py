@@ -87,7 +87,7 @@ class FakeResponse:
 
 
 @pytest.mark.ckan_config('hdx.analytics.enqueue_url', 'http://localhost/dummy-endpoint')
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'with_request_context', 'setup_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'with_request_context', 'setup_data')
 class TestGeneralStats(object):
 
     @mock.patch('ckanext.hdx_package.actions.patch.tag_s3_version_by_resource_id')

@@ -8,7 +8,7 @@ h = tk.h
 ValidationError = tk.ValidationError
 
 
-@pytest.mark.usefixtures("with_request_context")
+# @pytest.mark.usefixtures("with_request_context")
 class TestServiceCheckerController(object):
     username = 'test_sysadmin_colored_pages_user2'
     api_token = None
@@ -31,7 +31,7 @@ class TestServiceCheckerController(object):
         assert "'authenticated': 'false'" in response.body
         assert 'background-color: #{}'.format(self.color) in response.body
 
-    @pytest.mark.usefixtures("clean_db")
+    @pytest.mark.usefixtures("hdx_clean_db")
     def test_render_with_auth(self, app):
         factories.User(name=self.username, sysadmin=True)
         api_token = factories.APIToken(user=self.username, expires_in=2, unit=60 * 60)['token']

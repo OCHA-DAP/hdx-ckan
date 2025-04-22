@@ -24,7 +24,7 @@ class TestResponsiveRedirect(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         google_desktop2_ua = 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36'
 
         test_client = self.get_backwards_compatible_test_client()
-        domain = urlparse.urlparse(config.get('ckan.site_url')).netloc
+        _domain = urlparse.urlparse(config.get('ckan.site_url')).netloc
 
         result = test_client.get(desktop_url, headers={
             'User-Agent': desktop_ua
@@ -51,12 +51,12 @@ class TestResponsiveRedirect(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         })
         assert result.status_code == 302, 'Mobile users forcing desktop layout should be redirected to desktop page'
 
-        test_client.set_cookie(domain, 'hdx_force_layout', 'desktop')
+        test_client.set_cookie(domain=_domain, key='hdx_force_layout', value='desktop')
         result = test_client.get(desktop_url, headers={
             'User-Agent': mobile_ua,
             # 'Cookie': 'hdx_force_layout=desktop'
         })
-        test_client.delete_cookie(domain, 'hdx_force_layout')
+        test_client.delete_cookie(domain=_domain, key='hdx_force_layout')
         assert result.status_code == 200, 'Mobile users with desktop cookie should get the desktop page'
 
         result = test_client.get(desktop_url + '?force_layout=light', headers={
@@ -64,12 +64,12 @@ class TestResponsiveRedirect(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         })
         assert result.status_code == 302, 'Desktop users forcing light layout should be redirected to light page'
 
-        test_client.set_cookie(domain, 'hdx_force_layout', 'light')
+        test_client.set_cookie(domain = _domain, key='hdx_force_layout', value = 'light')
         result = test_client.get(light_url, headers={
             'User-Agent': desktop_ua,
             # 'Cookie': 'hdx_force_layout=light'
         })
-        test_client.delete_cookie(domain, 'hdx_force_layout')
+        test_client.delete_cookie(domain=_domain, key='hdx_force_layout')
         assert result.status_code == 200, 'Desktop users with light cookie should get the light page'
 
         # Testing Googlebot

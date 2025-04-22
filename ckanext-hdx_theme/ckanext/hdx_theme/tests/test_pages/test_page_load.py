@@ -161,8 +161,7 @@ class TestPageLoad(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         url = url_for(*args, **kw)
         log.info('Testing url: ' + url)
         if username:
-            result = test_client.get(url, headers={'Authorization': unicodedata.normalize(
-                'NFKD', token).encode('ascii', 'ignore')})
+            result = test_client.get(url, headers={'Authorization': token})
         else:
             result = test_client.get(url)
         assert ('200' in result.status or '302' in result.status), 'HTTP OK'

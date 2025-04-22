@@ -5,11 +5,11 @@ Created on September 25, 2015
 
 '''
 import pytest
-import six
-import unicodedata
+# import six
+# import unicodedata
 
 import ckan.plugins.toolkit as tk
-import ckan.lib.helpers as h
+# import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.tests.factories as factories
 
@@ -17,7 +17,7 @@ import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-
+import ckanext.hdx_theme.tests.test_helper.helper as th
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 package = {
@@ -95,27 +95,27 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
 
         # test that anonymous users can't see the button
-        page = self._getPackagePage(dataset_name)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name)
         assert not 'contact-members' in page.body, 'Anonymous users should not see the contact members button'
 
         # test sysadmin can see the button
-        page = self._getPackagePage(dataset_name, testsysadmin_token)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name, testsysadmin_token)
         assert 'contact-members' in page.body, 'Sysadmin users should see the contact members button'
 
         # test member/owner can see the button
-        page = self._getPackagePage(dataset_name, user_token)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name, user_token)
         assert 'contact-members' in page.body, 'Member/owner should see the edit button'
 
         # test editor can see the button
         context['user'] = 'tester'
         editor_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
-        page = self._getPackagePage(dataset_name, editor_token)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name, editor_token)
         assert 'contact-members' in page.body, 'Editor should see the edit button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
         admin_token = factories.APIToken(user='joeadmin', expires_in=2, unit=60 * 60)['token']
-        page = self._getPackagePage(dataset_name, admin_token)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name, admin_token)
         assert 'contact-members' in page.body, 'Admin should see the edit button'
 
         # any logged in user and not member of organization can NOT see the button
@@ -123,15 +123,15 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         user_bob_token = factories.APIToken(user='bob', expires_in=2, unit=60 * 60)['token']
 
         context['user'] = 'bob'
-        page = self._getPackagePage(dataset_name, user_bob_token)
+        page = th._getPackagePageByBlueprint(self.app,'dataset_read', dataset_name, user_bob_token)
         assert 'contact-members' not in page.body, 'Any loggedin user & not member should NOT see the edit button'
 
-    def _getPackagePage(self, package_id, apitoken=None):
-        page = None
-        url = h.url_for('dataset_read', id=package_id)
-        if apitoken:
-            page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')})
-        else:
-            page = self.app.get(url)
-        return page
+    # def _getPackagePage(self, package_id, apitoken=None):
+    #     page = None
+    #     url = h.url_for('dataset_read', id=package_id)
+    #     if apitoken:
+    #         page = self.app.get(url, headers={
+    #             'Authorization': apitoken})
+    #     else:
+    #         page = self.app.get(url)
+    #     return page
