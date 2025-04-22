@@ -32,6 +32,7 @@ import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
 import ckanext.hdx_theme.util.jql as jql
 from openpyxl.styles import Alignment, Font
+from ckan.types import Schema
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 abort = base.abort
@@ -368,9 +369,10 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     id = _get_or_bust(data_dict, 'id')
 
     group = model.Group.get(id)
-    context['group'] = group
+
     if group is None:
         raise NotFound('Group was not found.')
+    context['group'] = group
 
     data_dict_type = data_dict.get('type')
     if data_dict_type is None:
@@ -380,13 +382,26 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
             raise ValidationError({"message": "Type cannot be updated"})
 
     # get the schema
+    # group_plugin = lib_plugins.lookup_group_plugin(group.type)
+    # try:
+    #     schema = group_plugin.form_to_db_schema_options({'type': 'update',
+    #                                                      'api': 'api_version' in context,
+    #                                                      'context': context})
+    # except AttributeError:
+    #     schema = group_plugin.form_to_db_schema()
     group_plugin = lib_plugins.lookup_group_plugin(group.type)
-    try:
-        schema = group_plugin.form_to_db_schema_options({'type': 'update',
-                                                         'api': 'api_version' in context,
-                                                         'context': context})
-    except AttributeError:
-        schema = group_plugin.form_to_db_schema()
+
+    if context.get("schema"):
+        schema: Schema = context["schema"]
+    elif hasattr(group_plugin, "update_group_schema"):
+        schema: Schema = group_plugin.update_group_schema()
+    # TODO: remove these fallback deprecated methods in the next release
+    elif hasattr(group_plugin, "form_to_db_schema_options"):
+        schema: Schema = getattr(group_plugin, "form_to_db_schema_options")({
+            'type': 'update', 'api': 'api_version' in context,
+            'context': context})
+    else:
+        schema: Schema = group_plugin.form_to_db_schema()
 
     if is_org:
         check_access('organization_update', context, data_dict)

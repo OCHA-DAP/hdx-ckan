@@ -14,8 +14,7 @@ NotAuthorized = tk.NotAuthorized
 log = logging.getLogger(__name__)
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
-                         'with_request_context')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestClosedOrg(object):
 
     def test_closed_organization(self, app):
