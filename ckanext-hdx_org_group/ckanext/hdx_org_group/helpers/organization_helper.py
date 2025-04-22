@@ -32,8 +32,10 @@ import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
 import ckanext.hdx_theme.util.jql as jql
 from openpyxl.styles import Alignment, Font
-from ckan.types import Schema
+from ckan.types import Context, DataDict, Schema
+from typing import Any, Union
 
+fresh_context = logic.fresh_context
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 abort = base.abort
 
@@ -544,7 +546,9 @@ def _manage_image_upload_for_org(image_field, customization, data_dict):
     return None
 
 
-def hdx_group_or_org_create(context, data_dict, is_org=False):
+def hdx_group_or_org_create(context: Context,
+                         data_dict: DataDict,
+                         is_org: bool = False) -> Union[str, dict[str, Any]]:
     # Overriding default so that orgs can have multiple images
 
     model = context['model']
@@ -560,12 +564,24 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     # get the schema
     group_type = data_dict.get('type')
     group_plugin = lib_plugins.lookup_group_plugin(group_type)
-    try:
-        schema = group_plugin.form_to_db_schema_options({
+    # try:
+    #     schema = group_plugin.form_to_db_schema_options({
+    #         'type': 'create', 'api': 'api_version' in context,
+    #         'context': context})
+    # except AttributeError:
+    #     schema = group_plugin.form_to_db_schema()
+
+    if context.get("schema"):
+        schema: Schema = context["schema"]
+    elif hasattr(group_plugin, "create_group_schema"):
+        schema: Schema = group_plugin.create_group_schema()
+    # TODO: remove these fallback deprecated methods in the next release
+    elif hasattr(group_plugin, "form_to_db_schema_options"):
+        schema: Schema = getattr(group_plugin, "form_to_db_schema_options")({
             'type': 'create', 'api': 'api_version' in context,
             'context': context})
-    except AttributeError:
-        schema = group_plugin.form_to_db_schema()
+    else:
+        schema: Schema = group_plugin.form_to_db_schema()
 
     # try:
     #     customization = json.loads(group.extras['customization'])
@@ -642,7 +658,9 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     else:
         activity_type = 'new group'
 
-    user_id = model.User.by_name(six.ensure_text(user)).id
+    user_obj = model.User.by_name(six.ensure_text(user))
+    assert user_obj
+    user_id = user_obj.id
 
     activity_dict = {
         'user_id': user_id,
@@ -684,12 +702,16 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
         'object_type': 'user',
         'capacity': 'admin',
     }
-    member_create_context = {
-        'model': model,
-        'user': user,
-        'ignore_auth': True,  # we are not a member of the group at this point
-        'session': session
-    }
+    # member_create_context = {
+    #     'model': model,
+    #     'user': user,
+    #     'ignore_auth': True,  # we are not a member of the group at this point
+    #     'session': session
+    # }
+    member_create_context = fresh_context(context)
+    # We are not a member of the group at this point
+    member_create_context['ignore_auth'] = True
+
     logic.get_action('member_create')(member_create_context, member_dict)
 
     log.debug('Created object %s' % group.name)

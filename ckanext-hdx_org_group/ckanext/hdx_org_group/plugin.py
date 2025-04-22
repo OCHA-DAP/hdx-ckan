@@ -169,7 +169,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 'request_membership': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'closed_organization': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
                 'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-                # 'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'less': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore')],
                 'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'hdx_org_type': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],

@@ -8,6 +8,7 @@ import pytest
 import logging as logging
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+from ckan.types import Context
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
@@ -20,7 +21,7 @@ class TestClosedOrg(object):
     def test_closed_organization(self, app):
 
         orgadmin = 'orgadmin'
-        context = {'model': model, 'session': model.Session, 'user': orgadmin}
+        context: Context = {'model': model, 'session': model.Session, 'user': orgadmin}
 
         org_dict = _get_action('organization_show')(context, {'id': 'hdx-test-org', 'include_users':True})
 
