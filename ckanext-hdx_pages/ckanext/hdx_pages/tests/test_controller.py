@@ -95,7 +95,7 @@ class TestHDXControllerPage(object):
 
         if apitoken:
             page = app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apitoken).encode('ascii', 'ignore')}, follow_redirects=True)
+                'Authorization': apitoken}, follow_redirects=True)
         else:
             page = app.get(url)
         return page
@@ -104,12 +104,9 @@ class TestHDXControllerPage(object):
         return factories.APIToken(user=username, expires_in=2, unit=60 * 60)['token']
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
-                         'with_request_context')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPageNew(TestHDXControllerPage):
 
-    # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
-    @pytest.mark.usefixtures('with_request_context')
     def test_page_new(self, app):
 
         context = {'model': model, 'session': model.Session, 'user': USER}
@@ -135,8 +132,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
         assert 'field_name' in page.body
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
-                         'with_request_context')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPageEdit(TestHDXControllerPage):
 
     # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
@@ -170,7 +166,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
         assert 'field_name' in page.body
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data',
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data',
                          'with_request_context')
 class TestHDXControllerPageRead(TestHDXControllerPage):
 
@@ -223,7 +219,7 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
         assert '<h1 class="itemTitle">El Escondite</h1>' not in elescondite_page.body
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPageDelete(TestHDXControllerPage):
 
     # @pytest.mark.skipif(six.PY3, reason=u"The hdx_theme plugin is not available on PY3 yet")
@@ -266,7 +262,7 @@ class TestHDXControllerPageDelete(TestHDXControllerPage):
         context['user'] = SYSADMIN
         try:
             _url = h.url_for(u'hdx_custom_page.delete_page', id=eldeleted_page.get('id'))
-            res = app.post(_url, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+            res = app.post(_url, headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
             assert '302 FOUND'.lower() in res.status.lower()
             _res = _get_action('page_show')(context_sysadmin, {'id': page_eldeleted.get('name')})
             assert False

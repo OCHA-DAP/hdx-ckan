@@ -6,11 +6,11 @@ Created on March 19, 2019
 
 '''
 import pytest
-import six
+# import six
 import ckan.model as model
 import logging as logging
 import ckan.logic as logic
-
+import ckan.tests.factories as factories
 from ckanext.hdx_dataviz.tests import USER, SYSADMIN, LOCATION
 from ckan.lib.helpers import url_for
 
@@ -30,9 +30,20 @@ page_elnino = {
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXPageController(object):
 
+    def _get_url(self, app, url, apitoken=None):
+
+        if apitoken:
+            page = app.get(url, headers={
+                'Authorization': apitoken}, follow_redirects=True)
+        else:
+            page = app.get(url)
+        return page
+
+    def _get_token_for_user(self, username):
+        return factories.APIToken(user=username, expires_in=2, unit=60 * 60)['token']
 
     @staticmethod
     def _get_page_post_param():
@@ -68,7 +79,7 @@ class TestHDXPageController(object):
         initial_post_params = self._get_page_post_param()
 
         try:
-            res = app.post(url, data=post_params, headers={"Authorization": USER['token']})
+            res = app.post(url, data=post_params, headers={"Authorization": self._get_token_for_user(USER)})
             assert 'Page not found' in res.body
         except Exception as ex:
             assert False
@@ -76,7 +87,7 @@ class TestHDXPageController(object):
         user = model.User.by_name(SYSADMIN)
 
         try:
-            res = app.post(url, data=post_params, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+            res = app.post(url, data=post_params, headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
 
             assert True
         except Exception as ex:
@@ -91,7 +102,7 @@ class TestHDXPageController(object):
 
         del post_params['title']
         try:
-            res = app.post(url, data=post_params, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+            res = app.post(url, data=post_params, headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
 
             assert 'Page title cannot be empty' in res.body
         except Exception as ex:
@@ -100,7 +111,7 @@ class TestHDXPageController(object):
         post_params['title'] = initial_post_params['title']
         del post_params['name']
         try:
-            res = app.post(url, data=post_params, headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+            res = app.post(url, data=post_params, headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
             assert 'Page name cannot be empty' in res.body
         except Exception as ex:
             assert False

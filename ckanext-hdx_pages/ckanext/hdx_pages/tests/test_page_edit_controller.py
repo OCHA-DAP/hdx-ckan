@@ -6,10 +6,10 @@ Created on March 19, 2019
 
 '''
 import pytest
-import six
 import ckan.model as model
 import logging as logging
 import ckan.logic as logic
+import ckan.tests.factories as factories
 from ckan.lib.helpers import url_for
 from ckanext.hdx_dataviz.tests import USER, SYSADMIN, LOCATION
 
@@ -31,8 +31,19 @@ page_elnino = {
 }
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXControllerPage(object):
+    def _get_url(self, app, url, apitoken=None):
+
+        if apitoken:
+            page = app.get(url, headers={
+                'Authorization': apitoken}, follow_redirects=True)
+        else:
+            page = app.get(url)
+        return page
+
+    def _get_token_for_user(self, username):
+        return factories.APIToken(user=username, expires_in=2, unit=60 * 60)['token']
 
     @staticmethod
     def _get_page_post_param():
@@ -73,7 +84,7 @@ class TestHDXControllerPage(object):
 
         url = url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         try:
-            res = app.post(url, data=post_params, headers={"Authorization": USER['token']})
+            res = app.post(url, data=post_params, headers={"Authorization": self._get_token_for_user(USER)})
             assert '404 Not Found'.lower() in res.status.lower()
             assert 'Sorry, the page you are looking for could not be found.' in res.body
             assert 'Please check the URL or login to HDX if you know that you have a permission to see this page.' in res.body
@@ -86,7 +97,7 @@ class TestHDXControllerPage(object):
 
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
-                                headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+                                headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
             assert True
         except Exception as ex:
             assert False
@@ -95,7 +106,7 @@ class TestHDXControllerPage(object):
         post_params['tag_string'] = 'some_new_tag'
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_dict.get('id')), data=post_params,
-                           headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+                           headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
             assert 'Tag some_new_tag not found' in res.body
         except Exception as ex:
             assert False
@@ -111,6 +122,6 @@ class TestHDXControllerPage(object):
         del post_params['name']
         try:
             res = app.post(url_for(u'hdx_custom_page.edit', id=page_elnino.get('name')), data=post_params,
-                                headers={"Authorization": SYSADMIN['token']}, follow_redirects=False)
+                                headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
         except Exception as ex:
             assert True

@@ -64,7 +64,7 @@ page_eldeleted = {
 }
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXApiPage(object):
 
     def test_page_api(self):
@@ -163,7 +163,7 @@ class TestHDXApiPage(object):
         assert True
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXPageWithGroups(object):
 
     def test_page_with_groups(self):
@@ -210,7 +210,7 @@ class TestHDXPageWithGroups(object):
             assert True
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXValidationPage(object):
 
     def test_validation_page(self):
@@ -227,7 +227,7 @@ class TestHDXValidationPage(object):
             assert True
 
 
-@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_user_data')
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXPageShow(object):
 
     def test_page_show(self):
