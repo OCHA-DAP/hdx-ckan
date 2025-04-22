@@ -85,12 +85,15 @@ class TestResourceInHapiField(hdx_test_base.HdxBaseTest):
         assert 'in_hapi' not in package_sysadmin_dict['resources'][0], 'sysadmins should be able to unset in_hapi flag'
 
     def test_sysadmin_cannot_set_invalid_in_hapi_flag(self):
+
         context_sysadmin = {'model': model, 'session': model.Session, 'user': self.SYSADMIN_USER}
 
         try:
             self._hdx_mark_resource_in_hapi(self.RESOURCE_UPLOAD_ID, 'in_hapi', 'invalid-value', self.SYSADMIN_USER)
+            assert False
         except ValidationError as e:
-            assert 'in_hapi' in e.error_dict, 'hdx_mark_resource_in_hapi should fail when using invalid values'
+            assert 'in_hapi' in e.error_dict['resources'][0], 'hdx_mark_resource_in_hapi should fail when using invalid values'
+
 
         package_sysadmin_dict = self._get_action('package_show')(context_sysadmin, {'id': self.PACKAGE_ID})
         assert 'in_hapi' not in package_sysadmin_dict['resources'][0], 'in_hapi flag should not be set on invalid value'

@@ -3,12 +3,15 @@ import pytest
 import ckan.tests.factories as factories
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+from ckan.types import Context
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 from ckanext.hdx_users.helpers.permissions import Permissions
 
+
 _get_action = tk.get_action
 ValidationError = tk.ValidationError
+NotAuthorized = tk.NotAuthorized
 
 SYSADMIN_USER = 'some_sysadmin_user'
 STANDARD_USER = 'some_standard_user'
@@ -75,7 +78,7 @@ def setup_data():
 class TestPCoded(object):
 
     def test_p_coded(self):
-        context = {'model': model, 'session': model.Session, 'user': STANDARD_USER}
+        context: Context = {'model': model, 'session': model.Session, 'user': STANDARD_USER}
         resource_dict = _create_uploaded_resource(context)
 
         # Try to set 'p_coded' to False with a standard user by using resource_patch() action.
@@ -87,7 +90,7 @@ class TestPCoded(object):
         assert 'p_coded' not in resource_dict_modified, 'Standard user is not allowed to set p_coded field'
 
         # Changing 'p_coded' should work as sysadmin
-        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+        context_sysadmin: Context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         resource_dict_modified = _get_action('resource_patch')(context_sysadmin, {
             'id': resource_dict['id'],
             'p_coded': 'true',
@@ -96,11 +99,14 @@ class TestPCoded(object):
 
         # Try to set 'p_coded' to False with a standard user by using hdx_p_coded_resource_update() action.
         # Shouldn't work
-        resource_dict_modified = _get_action('hdx_p_coded_resource_update')(context, {
-            'id': resource_dict['id'],
-            'p_coded': False,
-        })
-        assert resource_dict_modified['p_coded'] is False, 'Standard user is not allowed to set p_coded field'
+        try:
+            resource_dict_modified = _get_action('hdx_p_coded_resource_update')(context, {
+                'id': resource_dict['id'],
+                'p_coded': False,
+            })
+            assert False
+        except NotAuthorized:
+            assert resource_dict_modified['p_coded'] is True, 'Standard user is not allowed to set p_coded field'
 
         # Setting the "Manage P-Codes" permission for the standard user
         # Now this user should be able to set the "p_coded" field via the special hdx_p_coded_resource_update() action

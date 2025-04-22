@@ -19,8 +19,7 @@ class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_edit_dataset_page(self):
         url = h.url_for('hdx_contribute.edit', id='test_dataset_1')
         # user = model.User.by_name('testsysadmin')
-        result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', self.testsysadmin_token).encode('ascii', 'ignore')})
+        result = self.app.get(url, headers={'Authorization': self.testsysadmin_token})
 
         assert 200 == result.status_code
 
@@ -29,8 +28,7 @@ class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         url = h.url_for('hdx_contribute.edit', id='test_dataset_1')
         # user = model.User.by_name('testsysadmin')
-        result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', self.testsysadmin_token).encode('ascii', 'ignore')})
+        result = self.app.get(url, headers={'Authorization': self.testsysadmin_token})
 
         assert 200 == result.status_code
 
