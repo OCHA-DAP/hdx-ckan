@@ -10,7 +10,7 @@ import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds
 log = logging.getLogger(__name__)
 get_action = tk.get_action
 
-@pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
+# @pytest.mark.skipif(six.PY3, reason=u"The hdx_org_group plugin is not available on PY3 yet")
 class TestBatchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_results_are_batched(self):

@@ -39,7 +39,7 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def _get_url(self, url, apikey=None):
         if apikey:
             page = self.app.get(url, headers={
-                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
+                'Authorization': apikey})
         else:
             page = self.app.get(url)
         return page
