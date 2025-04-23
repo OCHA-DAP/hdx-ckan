@@ -213,6 +213,7 @@ pytest-cov==5.0.0
 pytest-factoryboy==2.4.0
     # via -r dev-requirements.in
 pytest-freezegun==0.4.2
+<<<<<<< HEAD
     # via -r dev-requirements.in
 pytest-rerunfailures==10.2
     # via -r dev-requirements.in
