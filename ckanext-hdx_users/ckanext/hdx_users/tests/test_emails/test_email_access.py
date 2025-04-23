@@ -9,10 +9,10 @@ import unicodedata
 
 import pytest
 import six
-from nose.tools import (assert_equal,
-                        assert_true,
-                        assert_false,
-                        assert_not_equal)
+# from nose.tools import (assert_equal,
+#                         assert_true,
+#                         assert_false,
+#                         assert_not_equal)
 from six.moves.urllib.parse import urljoin
 
 import ckan.lib.helpers as h
@@ -203,7 +203,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         user_updated = test_client.post(url_for, data=params, headers=auth)
 
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, 'new@example.com')
+        assert user.email == 'new@example.com'
 
     def test_edit_email_to_existing(self):
         '''Editing to an existing user's email is unsuccessful.'''
@@ -234,7 +234,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, 'sue@example.com')
+        assert user.email == 'sue@example.com'
 
     def test_edit_email_invalid_format(self):
         '''Editing with an invalid email format is unsuccessful.'''
@@ -265,7 +265,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, 'sue@example.com')
+        assert user.email == 'sue@example.com'
 
     def test_edit_email_saved_as_lowercase(self):
         '''Editing with an email in uppercase will be saved as lowercase.'''
@@ -293,7 +293,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, sue_user.get('email'))
+        assert user.email == sue_user.get('email')
 
     def test_edit_email_differently_case_existing(self):
         '''Editing with an existing user's email will be unsuccessful, even is
@@ -323,7 +323,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
-        assert_equal(user.email, sue_user.get('email'))
+        assert user.email == sue_user.get('email')
 
 
 class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
@@ -391,25 +391,25 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
 
         # no emails sent yet
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 0)
+        assert len(msgs) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
             result = test_client.post(url, data=params)
             res = json.loads(result.body)
-            assert_true(res['success'])
+            assert res['success']
         except Exception as ex:
             assert False
 
         # an email has been sent
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 1)
+        assert len(msgs) == 1
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], 'hdx@humdata.org')
-        assert_equal(msg[2], [user.get('email')])
-        assert_true('HDX_password_reset' in msg[3])
+        assert msg[1] == 'hdx@humdata.org'
+        assert msg[2] == [user.get('email')]
+        assert 'HDX_password_reset' in msg[3]
 
     @pytest.mark.usefixtures("with_request_context")
     def test_send_reset_email_for_email(self, mail_server):
@@ -426,25 +426,25 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
 
         # no emails sent yet
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 0)
+        assert len(msgs) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
             result = test_client.post(url, data=params)
             res = json.loads(result.body)
-            assert_true(res['success'])
+            assert res['success']
         except Exception as ex:
             assert False
 
         # an email has been sent
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 1)
+        assert len(msgs) == 1
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], 'hdx@humdata.org')
-        assert_equal(msg[2], [user.get('email')])
-        assert_true('HDX_password_reset' in msg[3])
+        assert msg[1] == 'hdx@humdata.org'
+        assert msg[2] == [user.get('email')]
+        assert 'HDX_password_reset' in msg[3]
 
     @pytest.mark.usefixtures("with_request_context")
     def test_send_reset_email_for_email_different_case(self, mail_server):
@@ -461,25 +461,25 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
 
         # no emails sent yet
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 0)
+        assert len(msgs) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
             result = test_client.post(url, data=params)
             res = json.loads(result.body)
-            assert_true(res['success'])
+            assert res['success']
         except Exception as ex:
             assert False
 
         # an email has been sent
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 1)
+        assert len(msgs) == 1
 
         # check it went to the mock smtp server
         msg = msgs[0]
-        assert_equal(msg[1], 'hdx@humdata.org')
-        assert_equal(msg[2], [user.get('email')])
-        assert_true('HDX_password_reset' in msg[3])
+        assert msg[1] == 'hdx@humdata.org'
+        assert msg[2] == [user.get('email')]
+        assert 'HDX_password_reset' in msg[3]
 
     @pytest.mark.usefixtures("with_request_context")
     def test_send_reset_email_for_email_not_existing(self, mail_server):
@@ -496,19 +496,19 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
 
         # no emails sent yet
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 0)
+        assert len(msgs) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
             result = test_client.post(url, data=params)
             res = json.loads(result.body)
-            assert_true(res['success'])
+            assert res['success']
         except Exception as ex:
             assert False
 
         # no email has been sent
         msgs = mail_server.get_smtp_messages()
-        assert_equal(len(msgs), 0)
+        assert len(msgs) == 0
 
         # TODO create user according to the last onboarding. Note CAPTCHA!
         # def test_login_not_valid(self):
