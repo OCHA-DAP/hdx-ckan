@@ -3,16 +3,9 @@ Created on Dec 8, 2014
 
 @author: alexandru-m-g
 '''
-
-import json
-import unicodedata
-
 import pytest
-import six
-# from nose.tools import (assert_equal,
-#                         assert_true,
-#                         assert_false,
-#                         assert_not_equal)
+import mock
+import json
 from six.moves.urllib.parse import urljoin
 
 import ckan.lib.helpers as h
@@ -22,53 +15,52 @@ import ckan.tests.helpers as test_helpers
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
-import ckanext.hdx_users.helpers.tokens as tkh
 from ckan.tests import factories
 
+NotAuthorized = tk.NotAuthorized
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
-class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
-    @classmethod
-    def setup_class(cls):
-        super(TestEmailAccess, cls).setup_class()
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
+class TestEmailAccess(object):
 
-        cls._get_action('user_create')({
-            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
-            {'name': 'johnfoo', 'fullname': 'John Foo',
-             'email': 'example@example.com', 'password': 'Abcdefgh12'})
+    # @classmethod
+    # def setup_class(cls):
+    #     super(TestEmailAccess, cls).setup_class()
+    #
+    #     cls._get_action('user_create')({
+    #         'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+    #         {'name': 'johnfoo', 'fullname': 'John Foo',
+    #          'email': 'example@example.com', 'password': 'Abcdefgh12'})
 
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
 
-    def test_email_access_by_page(self):
+    def test_email_access_by_page(self, app):
         admin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
 
         url = h.url_for('user.index')[:-1]
-        profile_url = h.url_for(u'hdx_user.read', id='johnfoo')
+        profile_url = h.url_for(u'hdx_user.read', id='janedoe3')
 
-        result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', admin_token).encode('ascii', 'ignore')})
+        result = app.get(url, headers={'Authorization': admin_token})
 
-        profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', admin_token).encode('ascii', 'ignore')})
+        profile_result = app.get(profile_url, headers={'Authorization': admin_token})
 
-        assert 'example@example.com' in str(result.body)
-        assert 'example@example.com' in str(profile_result.body)
+        assert 'janedoe3@hdx.hdxtest.org' in str(result.body)
+        assert 'All Sysadmins [' in str(result.body)
+        assert 'janedoe3@hdx.hdxtest.org' not in str(profile_result.body)
+        assert 'janedoe3' in str(profile_result.body)
 
-        user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
-        result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', user_token).encode('ascii', 'ignore')})
-        profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
-            'NFKD', user_token).encode('ascii', 'ignore')})
+        user_token = factories.APIToken(user='some_user', expires_in=2, unit=60 * 60)['token']
+        result = app.get(url, headers={'Authorization': user_token})
+        profile_result = app.get(profile_url, headers={'Authorization': user_token})
 
-        assert 'example@example.com' not in str(
+        assert 'some_user@hdx.hdxtest.org' not in str(
             result.body), 'emails should not be visible for normal users'
-        assert 'example@example.com' not in str(
+        assert 'some_user@hdx.hdxtest.org' not in str(
             profile_result.body), 'emails should not be visible for normal users'
 
-        result = self.app.get(url)
-        profile_result = self.app.get(profile_url)
+        result = app.get(url)
+        profile_result = app.get(profile_url)
 
         assert 'example@example.com' not in str(
             result.body), 'emails should not be visible for guests'
@@ -81,7 +73,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
             'model': model, 'session': model.Session, 'user': 'testsysadmin'}, {})
         assert self._user_list_has_email(user_list, 'testsysadmin')
         user = self._get_action('user_show')({
-            'model': model, 'session': model.Session, 'user': 'testsysadmin'}, {'id': 'johnfoo'})
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'}, {'id': 'janedoe3'})
         assert 'email' in user
 
         user_list = self._get_action('user_list')({
@@ -90,7 +82,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
             user_list, 'tester'), 'emails should not be visible for normal users'
         user = self._get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'tester'},
-            {'id': 'johnfoo'})
+            {'id': 'janedoe3'})
         assert not 'email' in user, 'emails should not be visible for normal users'
 
         try:
@@ -103,7 +95,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         try:
             user = self._get_action('user_show')({
-                'model': model, 'session': model.Session}, {'id': 'johnfoo'})
+                'model': model, 'session': model.Session}, {'id': 'janedoe3'})
             assert not 'email' in user, 'emails should not be visible for guests'
         except NotAuthorized:
             assert True, 'emails should not be visible for guests'
@@ -116,7 +108,6 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
         return False
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -131,20 +122,6 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 # The tests will be skipped for now as many functions and objects no longer available in 2.9
 
 config = tk.config
-NotAuthorized = tk.NotAuthorized
-
-
-# class SmtpServerHarness(object):
-#     pass
-#
-#
-# class PylonsTestCase(object):
-#     pass
-#
-#
-# submit_and_follow = None
-# webtest_submit = None
-
 
 def _get_user_params(user_dict):
     params = {
@@ -160,7 +137,6 @@ def _get_user_params(user_dict):
     }
     return params
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -366,7 +342,6 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
             assert False
 
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
 class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     @classmethod
     def setup_class(cls):
@@ -377,7 +352,8 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         test_helpers.search.clear_all()
 
     @pytest.mark.usefixtures("with_request_context")
-    def test_send_reset_email_for_username(self, mail_server):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_send_reset_email_for_username(self, _mail_recipient_html):
         '''Password reset email is sent for valid user username'''
 
         user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
@@ -390,8 +366,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         }
 
         # no emails sent yet
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 0
+        assert len(_mail_recipient_html.call_args_list) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
@@ -402,21 +377,19 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
             assert False
 
         # an email has been sent
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 1
+        assert len(_mail_recipient_html.call_args_list) == 1
 
         # check it went to the mock smtp server
-        msg = msgs[0]
-        assert msg[1] == 'hdx@humdata.org'
-        assert msg[2] == [user.get('email')]
-        assert 'HDX_password_reset' in msg[3]
+        assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == user.get('email')
+        assert 'HDX password reset' in _mail_recipient_html.call_args_list[0][0][3]
+
 
     @pytest.mark.usefixtures("with_request_context")
-    def test_send_reset_email_for_email(self, mail_server):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_send_reset_email_for_email(self, _mail_recipient_html):
         '''Password reset email is sent for valid email'''
 
         user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
-        # user_obj = model.User.get(user.get('name'))
 
         # send email
         url = h.url_for('hdx_user.request_reset')
@@ -425,8 +398,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         }
 
         # no emails sent yet
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 0
+        assert len(_mail_recipient_html.call_args_list) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
@@ -437,17 +409,13 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
             assert False
 
         # an email has been sent
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 1
-
-        # check it went to the mock smtp server
-        msg = msgs[0]
-        assert msg[1] == 'hdx@humdata.org'
-        assert msg[2] == [user.get('email')]
-        assert 'HDX_password_reset' in msg[3]
+        assert len(_mail_recipient_html.call_args_list) == 1
+        assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == user.get('email')
+        assert 'HDX password reset' in _mail_recipient_html.call_args_list[0][0][3]
 
     @pytest.mark.usefixtures("with_request_context")
-    def test_send_reset_email_for_email_different_case(self, mail_server):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_send_reset_email_for_email_different_case(self, _mail_recipient_html):
         '''Password reset email is sent for valid user email but with lowercase'''
 
         user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
@@ -460,8 +428,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         }
 
         # no emails sent yet
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 0
+        assert len(_mail_recipient_html.call_args_list) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
@@ -472,17 +439,15 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
             assert False
 
         # an email has been sent
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 1
+        assert len(_mail_recipient_html.call_args_list) == 1
 
         # check it went to the mock smtp server
-        msg = msgs[0]
-        assert msg[1] == 'hdx@humdata.org'
-        assert msg[2] == [user.get('email')]
-        assert 'HDX_password_reset' in msg[3]
+        assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == user.get('email')
+        assert 'HDX password reset' in _mail_recipient_html.call_args_list[0][0][3]
 
     @pytest.mark.usefixtures("with_request_context")
-    def test_send_reset_email_for_email_not_existing(self, mail_server):
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_send_reset_email_for_email_not_existing(self, _mail_recipient_html):
         '''Password reset email is sent for not a valid user email'''
 
         user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12', fullname='Sue Tester')
@@ -495,8 +460,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
         }
 
         # no emails sent yet
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 0
+        assert len(_mail_recipient_html.call_args_list) == 0
 
         test_client = self.get_backwards_compatible_test_client()
         try:
@@ -507,8 +471,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
             assert False
 
         # no email has been sent
-        msgs = mail_server.get_smtp_messages()
-        assert len(msgs) == 0
+        assert len(_mail_recipient_html.call_args_list) == 0
 
         # TODO create user according to the last onboarding. Note CAPTCHA!
         # def test_login_not_valid(self):
