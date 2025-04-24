@@ -147,6 +147,6 @@ def login() -> Union[Response, str]:
     return render('user/signin.html', extra_vars=extra_vars)
 
 
-hdx_signin.add_url_rule(u'/sign-in/', view_func=login, strict_slashes=False, methods=('GET', 'POST'))
-hdx_signin.add_url_rule(u'/login/', view_func=login, strict_slashes=False, methods=('GET', 'POST'))
-hdx_signin.add_url_rule(u'/user/login/', view_func=login, strict_slashes=False, methods=('GET', 'POST'))
+hdx_signin.add_url_rule(u'/sign-in', view_func=login, strict_slashes=False, methods=('GET', 'POST'))
+hdx_signin.add_url_rule(u'/login', view_func=login, strict_slashes=False, methods=('GET', 'POST'))
+hdx_signin.add_url_rule(u'/user/login', view_func=login, strict_slashes=False, methods=('GET', 'POST'))

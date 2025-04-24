@@ -9,8 +9,7 @@ import ckan.tests.factories as factories
 from mock.mock import MagicMock
 
 from ckanext.security.model import SecurityTOTP
-from ckan.tests.helpers import CKANTestApp
-
+from ckan.tests.helpers import CKANTestApp, CKANResponse
 
 _THROTTLE_MAP = {}
 
@@ -30,6 +29,8 @@ def test_mfa(MockLoginThrottle: MagicMock, app: CKANTestApp):
 
     logged_in = _attempt_login(email, password, '', fullname, app)
     assert logged_in, 'Log in should work, mfa is not enabled'
+
+    _logout(app)
 
     totp = _enable_totp(username)
 
@@ -83,6 +84,8 @@ def test_lockout_by_throttle(app: CKANTestApp):
     assert not _locked_out(username, app), 'user login should NOT be locked'
     assert not _locked_out(email, app), 'user login should NOT be locked'
 
+    _logout(app)
+
     # Check that we can lock out the user if we try 10 times with wrong password.
     # Doesn't matter if we use email or username
     for i in range(0, 5):
@@ -123,6 +126,12 @@ def _attempt_login(username: str, password: str, mfa: str, success_string: str,
     elif success_string in login_response:
         return True
     raise Exception('We should never get here !')
+
+def _logout(app: CKANTestApp) -> CKANResponse:
+    logout_url = tk.h.url_for('user.logout')
+    response = app.get(logout_url, follow_redirects=False)
+    return response
+
 
 def _locked_out(username: str, app: CKANTestApp) -> bool:
     lockout_url = tk.h.url_for('hdx_user_autocomplete.check_lockout', user=username)
