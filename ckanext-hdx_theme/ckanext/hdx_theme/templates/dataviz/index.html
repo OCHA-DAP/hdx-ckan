@@ -168,6 +168,8 @@
 
 {% block scripts %}
   {{ super() }}
+  {% asset 'vendor/select2-css' %}
+  {% asset 'hdx_theme/vendor-select2-js' %}
   {% asset 'hdx_theme/search-light-styles' %}
   {% asset 'hdx_theme/dataviz-styles' %}
   {% asset 'hdx_theme/dataset-search-scripts' %}
