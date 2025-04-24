@@ -199,7 +199,7 @@ def hdx_find_package_maintainer(key, data, errors, context):
 
     members = get_action('hdx_member_list')(context, {'org_id': org_id})
 
-    if user_obj and ((user_obj.id in members.get('all')) or user_obj.sysadmin):
+    if user_obj and ((members and user_obj.id in members.get('all')) or user_obj.sysadmin):
         data[key] = user_obj.id
         return data[key]
     raise df.Invalid(_('Maintainer does not exist or is not a member of current owner organization.'
