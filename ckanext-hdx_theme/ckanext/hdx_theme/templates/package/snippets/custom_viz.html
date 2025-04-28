@@ -8,13 +8,10 @@
 <div class="col-12">
   <div class="list-header">
     <span class="mL15 list-header-title">{{ _('Interactive Data') }}</span>
-{#    {% for viz in customviz %}#}
-{#      {% if loop.index > 1 %} | {% endif %}#}
-{#      <a data-module="hdx_custom_dataviz_show" data-module-index="{{ loop.index-1 }}"#}
-{#         data-module-target="custom-viz-iframe" data-module-url="{{ viz.url }}"#}
-{#         href="javascript:void(0)"#}
-{#         class="{% if loop.index == 1 %} mL30 {% endif %}">{{ _('Data Viz') }} {{ loop.index }}</a>#}
-{#    {% endfor %}#}
+    {% for viz in customviz %}
+      <a data-module="hdx_custom_dataviz_show" data-module-index="{{ loop.index-1 }}"
+         data-module-target="custom-viz-iframe" data-module-url="{{ viz.url }}" href="#" class="d-none"></a>
+    {% endfor %}
     <div style="float: right">
       <a class="fullscreen" href="#" target="_blank" id="pkg_fullscreen">Open fullscreen <i class="icon humanitarianicons-Out-of-platform"></i> </a>
     </div>
