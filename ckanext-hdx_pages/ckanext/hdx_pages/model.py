@@ -9,7 +9,7 @@ from ckan.model.domain_object import DomainObject
 from ckan.model import meta
 import ckan.model.types as _types
 
-from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
+from sqlalchemy.schema import Table, Column, ForeignKey
 from sqlalchemy.engine.reflection import Inspector
 
 mapper = orm.mapper
@@ -67,9 +67,9 @@ class PageBaseModel(DomainObject):
 
 
 class Page(PageBaseModel):
-    '''
+    """
     Page table
-    '''
+    """
 
     def __init__(self, name, title, description, type, state, sections, status, extras, modified=None):
         self.name = name
@@ -84,7 +84,7 @@ class Page(PageBaseModel):
 
     @classmethod
     def get_by_id(cls, id):
-        '''Returns a group object referenced by its id or name.'''
+        """Returns a group object referenced by its id or name."""
         query = meta.Session.query(cls).filter(cls.id == id)
         page = query.first()
         if page is None:
@@ -97,7 +97,7 @@ class Page(PageBaseModel):
         return query.filter_by(name=name).first()
 
     @classmethod
-    def check_exists(self):
+    def check_exists(cls):
         return page_table.exists()
 
 
@@ -123,9 +123,9 @@ def define_page_table():
 class PageGroupAssociation(PageBaseModel):
     @classmethod
     def get_group_ids_for_page(cls, page_id):
-        '''
+        """
         Return a list of group ids associated with the passed page_id.
-        '''
+        """
         page = Page.get_by_id(page_id)
         # associated_group_id_list = meta.Session.query(cls.group_id).filter_by(page_id=page_id).all()
 
@@ -136,9 +136,9 @@ class PageGroupAssociation(PageBaseModel):
 class PageTagAssociation(PageBaseModel):
     @classmethod
     def get_tag_ids_for_page(cls, page_id):
-        '''
+        """
         Return a list of tag ids associated with the passed page_id.
-        '''
+        """
         page = Page.get_by_id(page_id)
 
         result = [assoc.tag_id for assoc in page.tags_assoc_all]
@@ -146,9 +146,9 @@ class PageTagAssociation(PageBaseModel):
 
     @classmethod
     def get_page_ids_for_tag(cls, tag_id):
-        '''
+        """
         Return a list of page ids associated with the passed tag_id.
-        '''
+        """
 
         page_tag_list = meta.Session.query(cls.page_id).filter_by(tag_id=tag_id).all()
         result = [res.page_id for res in page_tag_list]
@@ -257,5 +257,5 @@ def patch_table_add_column(column_name):
                 'ALTER TABLE %s ADD COLUMN %s %s' % (table_name, column_name, column_type))
 
         # print('Finish to patch table %s' % table_name)
-    except Exception as e:
+    except Exception:
         print('There was an error during patching %s table. Column: %s' % (table_name, column_name))

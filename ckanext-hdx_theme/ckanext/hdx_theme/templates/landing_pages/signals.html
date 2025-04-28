@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org'), image='/images/landing_pages/logo_hdx_signals.png', sections=sections, click_stopper_link_type='signals jump nav', spacing_class="mb-3") }}
+  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx-signals@un.org', 'https://data.humdata.org/dataset/2048a947-5714-4220-905b-e662cbcd14c8/resource/029df9aa-c277-4571-9dae-dc9bc33bdd14/download/hdx-signals-impact-story.pdf'), image='/images/landing_pages/logo_hdx_signals.png', sections=sections, click_stopper_link_type='signals jump nav', spacing_class="mb-3") }}
 
   <div class="container">
 
@@ -107,6 +107,12 @@
                                              id="mce-group[4389]-4389-5" value="" checked>
                                       <label class="form-check-label" for="mce-group[4389]-4389-5">Market monitoring -
                                         WFP</label>
+                                    </li>
+                                    <li class="form-check">
+                                      <input type="checkbox" name="group[4389][32]" class="form-check-input"
+                                             id="mce-group[4389]-4389-6" value="" checked>
+                                      <label class="form-check-label" for="mce-group[4389]-4389-6">Inform Severity -
+                                        ACAPS</label>
                                     </li>
                                   </ul>
                                 </div>

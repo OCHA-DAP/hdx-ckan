@@ -1,6 +1,6 @@
 CONSTANTS = {
-    'HERO_SECTION_TITLE': '''A new product that monitors key datasets and generates automated emails when significant, negative changes are detected''',
-    'HERO_SECTION_DESCRIPTION': '''We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>''',
+    'HERO_SECTION_TITLE': '''A product that monitors key datasets and generates automated emails when significant, negative changes are detected''',
+    'HERO_SECTION_DESCRIPTION': '''We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>.  Read the HDX Signals impact story <a href="{1}" title="HDX Signals Impact Story">here</a>.''',
 
     'DATA_COVERAGE_SECTION_TITLE': '''Data Coverage''',
     'DATA_COVERAGE_SECTION_DESCRIPTION': '''Datasets monitored by HDX Signals at the moment are as follows:''',
@@ -54,6 +54,11 @@ DATA_COVERAGE_CONSTANTS = [
         "link": "https://data.humdata.org/dataset/global-acute-food-insecurity-country-data"
     },
     {
+        "title": "INFORM Severity",
+        "organization": "ACAPS",
+        "link": "https://data.humdata.org/dataset/inform-global-crisis-severity-index"
+    },
+    {
         "title": "Internal displacement",
         "organization": "the Internal Displacement Monitoring Centre (IDMC)",
         "link": "https://data.humdata.org/organization/international-displacement-monitoring-centre-idmc"
@@ -74,6 +79,7 @@ SECTIONS_CONSTANTS = [
 ]
 
 PARTNERS_CONSTANTS = [
+    ('acaps', 'ACAPS'),
     ('european_comission', 'European Commission'),
     ('acled', 'ACLED'),
     ('ipc', 'IPC'),

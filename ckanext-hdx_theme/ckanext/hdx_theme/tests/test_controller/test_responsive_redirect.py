@@ -8,6 +8,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 config = tk.config
+MOBILE_UA = 'Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'
 
 
 # @pytest.mark.skipif(six.PY3, reason=u"The hdx_dataset plugin is not available on PY3 yet")
@@ -17,7 +18,7 @@ class TestResponsiveRedirect(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         desktop_url = h.url_for('dataset_read', id='test_dataset_1')
         light_url = h.url_for('hdx_light_dataset.read', id='test_dataset_1')
 
-        mobile_ua = 'Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'
+        mobile_ua = MOBILE_UA
         desktop_ua = 'Mozilla/5.0 (X11; Linux x86_64; rv:67.0) Gecko/20100101 Firefox/67.0'
         googlebot_mobile_ua = 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
         google_desktop1_ua = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'

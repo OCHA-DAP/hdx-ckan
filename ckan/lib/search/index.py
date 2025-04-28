@@ -234,7 +234,7 @@ class PackageSearchIndex(SearchIndex):
             for key, value in pkg_dict.items():
                 key = six.ensure_str(key)
                 if key in non_simple_date_field:
-                    continue
+                    pass
                 if key.endswith('_date'):
                     if not value:
                         continue
@@ -437,9 +437,12 @@ class PackageSearchIndex(SearchIndex):
 
         # clean the dict fixing keys and dates
         new_dict = {}
+        non_simple_date_field = ['dataset_date', 'extras_dataset_date']
         for key, value in pkg_dict.items():
             key = six.ensure_str(key)
-            if key.endswith('_date'):
+            if key in non_simple_date_field:
+                pass
+            elif key.endswith('_date'):
                 if not value:
                     continue
                 try:
