@@ -5,6 +5,7 @@ from werkzeug.datastructures import FileStorage
 import boto3 as boto3
 from moto import mock_aws
 
+import ckan.cli.db as cli_db
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -48,6 +49,7 @@ class HDXS3TestBase(object):
         cls.conn.create_bucket(Bucket=cls.bucket_name, CreateBucketConfiguration={'LocationConstraint': '{}'.format(region_name)})
 
         cls.app = helpers._get_test_app()
+        cli_db._run_migrations('activity')
 
         sysadmin = 'testsysadmin'
         factories.Sysadmin(name=sysadmin)

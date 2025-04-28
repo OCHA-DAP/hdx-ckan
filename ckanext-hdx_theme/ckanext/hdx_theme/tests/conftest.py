@@ -13,7 +13,7 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 
 _get_action = tk.get_action
-TestInfo = namedtuple('TestInfo', ['sysadmin_id', 'user_id', 'dataset_id'])
+UserToken = namedtuple('UserToken', ['username', 'token'])
 
 SYSADMIN_USER = 'test_hdx_sysadmin_user'
 STANDARD_USER = 'test_hdx_standard_user'
@@ -47,9 +47,15 @@ def _get_dataset_dict() -> Dict:
 
 
 @pytest.fixture()
-def dataset_with_uploaded_resource() -> Dict:
+def sysadmin_user_with_token() -> UserToken:
+    user = factories.User(name=SYSADMIN_USER, email='test_hdx_sysadmin_user@hdx.hdxtest.org', sysadmin=True)
+    token = factories.APIToken(user=SYSADMIN_USER, expires_in=2, unit=60 * 60)
+    return UserToken(user['name'], token['token'])
+
+@pytest.fixture()
+def dataset_with_uploaded_resource(sysadmin_user_with_token) -> Dict:
     factories.User(name=STANDARD_USER, email='test_hdx_standard_user@hdx.hdxtest.org')
-    factories.User(name=SYSADMIN_USER, email='test_hdx_sysadmin_user@hdx.hdxtest.org', sysadmin=True)
+    # factories.User(name=SYSADMIN_USER, email='test_hdx_sysadmin_user@hdx.hdxtest.org', sysadmin=True)
     group = factories.Group(name=LOCATION_NAME)
     factories.Organization(
         name=ORG_NAME,
