@@ -22,6 +22,7 @@ import ckan.lib.plugins as lib_plugins
 import ckan.lib.search as search
 import ckan.logic as logic
 import ckan.logic.action.get as logic_get
+import ckan.logic.schema
 import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
