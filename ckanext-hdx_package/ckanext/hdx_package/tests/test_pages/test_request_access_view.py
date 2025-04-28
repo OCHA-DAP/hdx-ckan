@@ -76,7 +76,7 @@ class TestRequestAccessView(object):
 
         # GET request without user (anonymous access)
         response = app.get(request_access_url, headers={})
-        assert '/sign-in/?info_message_type=hdx-connect' in response.request.url, \
+        assert '/sign-in?info_message_type=hdx-connect' in response.request.url, \
             'Anonymous users should be redirected to the sign-in page with the hdx-connect parameter'
         assert CONST_SIGNIN['hdx-connect'] in response.body, 'Anonymous users should see the HDX Connect info message'
 
@@ -94,7 +94,7 @@ class TestRequestAccessView(object):
 
         # POST request without user (anonymous access)
         response = app.post(request_access_url, data={})
-        assert '/sign-in/?info_message_type=hdx-connect' in response.request.url, \
+        assert '/sign-in?info_message_type=hdx-connect' in response.request.url, \
             'Anonymous users should be redirected to the sign-in page with the hdx-connect parameter'
         assert CONST_SIGNIN['hdx-connect'] in response.body,  'Anonymous users should see the HDX Connect info message'
 

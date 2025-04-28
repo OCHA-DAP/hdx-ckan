@@ -80,7 +80,7 @@ class TestContactContributorView(object):
 
         # GET request without user (anonymous access)
         response = app.get(contact_contributor_url, headers={})
-        assert '/sign-in/?info_message_type=contact-contributor' in response.request.url, \
+        assert '/sign-in?info_message_type=contact-contributor' in response.request.url, \
             'Anonymous users should be redirected to the sign-in page with the contact-contributor parameter'
         assert CONST_SIGNIN['contact-contributor'] in response.body, 'Anonymous users should see the contact contributor info message'
 
@@ -96,7 +96,7 @@ class TestContactContributorView(object):
 
         # POST request without user (anonymous access)
         response = app.post(contact_contributor_url, data={})
-        assert '/sign-in/?info_message_type=contact-contributor' in response.request.url, \
+        assert '/sign-in?info_message_type=contact-contributor' in response.request.url, \
             'Anonymous users should be redirected to the sign-in page with the contact-contributor parameter'
         assert CONST_SIGNIN['contact-contributor'] in response.body,  'Anonymous users should see the contact contributor info message'
 
