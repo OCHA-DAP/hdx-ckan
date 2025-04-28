@@ -7,7 +7,6 @@ import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
-from ckanext.hdx_org_group.tests.test_controller.member_controller_base import MemberControllerBase
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
@@ -67,7 +66,7 @@ def setup_data():
     )
 
 @pytest.mark.usefixtures("hdx_clean_db", "clean_index", "setup_data")
-class TestBulkInviteMembersController(MemberControllerBase):
+class TestBulkInviteMembersController():
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_bulk_members_invite(self, _mail_recipient_html, app):

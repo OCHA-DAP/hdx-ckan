@@ -8,7 +8,6 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 import ckanext.hdx_org_group.tests as org_group_base
-from ckanext.hdx_org_group.tests.test_controller.member_controller_base import MemberControllerBase
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
@@ -68,7 +67,7 @@ def setup_data():
     )
 
 @pytest.mark.usefixtures("hdx_clean_db", "clean_index", "setup_data")
-class TestBulkInviteMembersController(MemberControllerBase):
+class TestBulkInviteMembersController():
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_bulk_members_invite(self, _mail_recipient_html, app):
@@ -119,7 +118,7 @@ class TestBulkInviteMembersController(MemberControllerBase):
 
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
-class TestMembersController(MemberControllerBase):
+class TestMembersController():
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
@@ -176,7 +175,7 @@ class TestMembersController(MemberControllerBase):
         assert user_list[0] == 'John Doe1'
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
-class TestMembersDeleteController(MemberControllerBase):
+class TestMembersDeleteController():
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
