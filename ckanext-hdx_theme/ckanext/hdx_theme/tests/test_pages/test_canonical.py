@@ -20,7 +20,7 @@ no_canonical_pages = [
     {'url':'dataset_read','id': 'test_dataset_1', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'dataset_read'},
     # mobile page has canonical
     {'url':'hdx_light_dataset.read','id': 'test_dataset_1', 'mobile': True, 'canonical': True, 'canonical_url':'dataset_read'},
-    
+
     ### Location pages
     {'url':'hdx_group.read','id': 'roger', 'canonical': False},
     {'url':'hdx_group.read','id': 'roger', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_group.read'},
@@ -36,11 +36,11 @@ no_canonical_pages = [
     # any filter group should not generate canonical
     {'url':'hdx_search.search', 'params':{'groups':'roger', 'organization':'hdx-test-org'}, 'canonical': False},
     # search queries do generate canonical, for now
-    {'url':'hdx_search.search', 'params':{'q':'d', 'sort': 'last_modified desc'}, 'canonical': True, 'canonical_url':'hdx_search.search'},
-    {'url':'hdx_search.search', 'params':{'q':'d'}, 'canonical': True, 'canonical_url':'hdx_search.search'},
+    {'url':'hdx_search.search', 'params':{'q':'test', 'sort': 'last_modified desc'}, 'canonical': True, 'canonical_url':'hdx_search.search'},
+    {'url':'hdx_search.search', 'params':{'q':'test'}, 'canonical': True, 'canonical_url':'hdx_search.search'},
     # search queries do generate canonical, for now but take into consideration allowed params
-    {'url':'hdx_search.search', 'params':{'groups':'roger', 'q':'d'}, 'canonical': True, 'canonical_url':'hdx_search.search', 'canonical_params':{'groups':'roger'}},
-    {'url':'hdx_search.search', 'params':{'groups':'roger', 'organization':'hdx-test-org', 'q':'d'}, 'canonical': True, 'canonical_url':'hdx_search.search',  'canonical_params':{'groups':'roger', 'organization':'hdx-test-org'}},
+    {'url':'hdx_search.search', 'params':{'groups':'roger', 'q':'test'}, 'canonical': True, 'canonical_url':'hdx_search.search', 'canonical_params':{'groups':'roger'}},
+    {'url':'hdx_search.search', 'params':{'groups':'roger', 'organization':'hdx-test-org', 'q':'test'}, 'canonical': True, 'canonical_url':'hdx_search.search',  'canonical_params':{'groups':'roger', 'organization':'hdx-test-org'}},
     # search should add the correct canonical when accepted params are passed, and ignore all the rest (eg. last_modified desc, number of results)
     {'url':'hdx_search.search', 'params':{'groups':'roger', 'organization':'hdx-test-org', 'sort': 'last_modified desc', 'ext_page_size': '50'}, 'canonical': True, 'canonical_url':'hdx_search.search',  'canonical_params':{'groups':'roger', 'organization':'hdx-test-org'}},
     # search should ignore pagination
@@ -55,11 +55,7 @@ no_canonical_pages = [
 
 ]
 
-class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
-    @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_users hdx_search hdx_package hdx_theme')
-
+class TestCanonicalLinks(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @pytest.mark.parametrize(
         "item",
@@ -71,7 +67,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             url = h.url_for(item['url'], id=item['id'])
         else:
             url = h.url_for(item['url'])
-        
+
         if item.get('params'):
             url += "?"+urllib.parse.urlencode(item['params'], doseq=True)
 
@@ -87,12 +83,12 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         canonical_str = '<link rel="canonical"'
 
-        if item['canonical'] == False: 
+        if item['canonical'] == False:
             assert canonical_str not in page
-        else: 
+        else:
             if item.get('id'):
                 canonical_url = h.url_for(item['canonical_url'], id=item['id'])
-            else: 
+            else:
                 canonical_url = h.url_for(item['canonical_url'])
 
             if item.get('canonical_params'):
