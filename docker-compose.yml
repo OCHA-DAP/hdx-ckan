@@ -3,7 +3,7 @@ networks:
 
 services:
   solr:
-    image: solr:7.7.3-slim
+    image: solr:8-slim
     environment:
       SOLR_OPTS: -Dsolr.jetty.request.header.size=65536 -Dsolr.dns.prevent.reverse.lookup
       ZK_HOST: zookeeper:2181
