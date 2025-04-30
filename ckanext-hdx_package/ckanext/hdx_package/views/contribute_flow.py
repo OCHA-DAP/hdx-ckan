@@ -190,6 +190,8 @@ def validate(package_type=None):
         # data_dict = self.process_resources(data_dict)
 
         data_dict['batch'] = 'FAKE_ORG_BATCH_FOR_VALIDATION'
+        if not data_dict.get('id'):
+            data_dict.pop('id', None)
         pkg_dict = _get_action('package_validate')(context, data_dict)
         return _prepare_and_render(save_type=save_type, data=data_dict, errors={},
                                         error_summary={})
