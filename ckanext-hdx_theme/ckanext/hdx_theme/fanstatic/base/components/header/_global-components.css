@@ -1189,11 +1189,6 @@ ul.dataset-resources li + li.label-icons {
   margin: 0;
   padding: 0;
 }
-.list-items.search-form h2 {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-}
 .list-items.search-form .search-input.search-giant input {
   border-radius: 14px;
   background-color: #ffffff;
