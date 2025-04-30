@@ -294,7 +294,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['{!ex=cod_level,batch}cod_level'] = _('CODs')
 
         if are_new_p_code_filters_enabled():
-            facets_dict['{!ex=batch,archived}res_extras_p_coded'] = _('Datasets with P-Codes')
+            facets_dict['{!ex=batch}res_extras_p_coded'] = _('Datasets with P-Codes')
 
 
 
