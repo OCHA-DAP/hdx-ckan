@@ -787,12 +787,12 @@ class PerformResetView(MethodView):
             # MODIFIED BY HDX
             # We need ignore_auth in context because we're using: ckan.auth.public_user_details=false
             # and logic.auth.restrict_anon() sees no logged in user in the request
-            hdx_user_show_context = cast(Context, {
+            hdx_user_show_context: Context = {
                 'model': model,
                 'session': model.Session,
                 'keep_email': True,
                 'ignore_auth': True,
-            })
+            }
             user_dict = logic.get_action(u'user_show')(hdx_user_show_context, {u'id': id})
             context['user_obj'] = hdx_user_show_context.get('user_obj')
             # END - MODIFIED BY HDX
