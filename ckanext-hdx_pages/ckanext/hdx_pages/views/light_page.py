@@ -1,7 +1,5 @@
 import json
 import logging
-import six
-from decorator import decorator
 from flask import Blueprint
 from flask.views import MethodView
 from six import string_types
@@ -14,14 +12,8 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckanext.hdx_search.cli.click_feature_search_command as lunr
 from ckan.common import _, config, g, request
 import ckanext.hdx_pages.helpers.helper as page_h
-# import ckanext.hdx_package.helpers.helpers as pkg_h
 
-# if not six.PY3:
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-# else:
-#     @decorator
-#     def check_redirect_needed(original_action, *args, **kw):
-#         return original_action(*args, **kw)
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -37,12 +29,12 @@ NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
 
 section_types = {
-    "empty": '',
-    "description": '',
-    "map": '',
-    "key_figures": '',
-    "interactive_data": '',
-    "data_list": ''
+    'empty': '',
+    'description': '',
+    'map': '',
+    'key_figures': '',
+    'interactive_data': '',
+    'data_list': ''
 }
 
 # Blueprints definitions
@@ -119,12 +111,17 @@ def _populate_template_data(page_dict, show_switch_to_mobile):
         for section in sections:
             page_h._compute_iframe_style(section, is_mobile=True)
             if section.get('type', '') == 'data_list':
-                saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
+                try:
+                    saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
 
-                cp_search_logic = CustomPagesSearchLogic(page_dict.get('name'), page_dict.get('type'))
-                search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'),
-                                                                saved_filters)
-                cp_search_logic._search(**search_params)
+                    cp_search_logic = CustomPagesSearchLogic(page_dict.get('name'), page_dict.get('type'))
+                    search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'),
+                                                                    saved_filters)
+                    cp_search_logic._search(**search_params)
+                except NotFound as e:
+                    log.error(str(e))
+                    abort(404, _('Page not found'))
+
                 archived_url_helper = cp_search_logic.add_archived_url_helper()
                 redirect_result = archived_url_helper.redirect_if_needed()
                 if redirect_result:
