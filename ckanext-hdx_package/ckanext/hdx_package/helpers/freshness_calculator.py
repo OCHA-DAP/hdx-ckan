@@ -15,46 +15,21 @@ UPDATE_FREQ_NEVER = '-1'
 
 UPDATE_FREQ_INFO = OrderedDict(
     (
-        ('1', {
-            'title': 'Every day',
-            'special': False
-        }),
-        ('7', {
-            'title': 'Every week',
-            'special': False
-        }),
-        ('14', {
-            'title': 'Every two weeks',
-            'special': False
-        }),
-        ('30', {
-            'title': 'Every month',
-            'special': False
-        }),
-        ('90', {
-            'title': 'Every three months',
-            'special': False
-        }),
-        ('180', {
-            'title': 'Every six months',
-            'special': False
-        }),
-        ('365', {
-            'title': 'Every year',
-            'special': False
-        }),
-        (UPDATE_FREQ_LIVE, {
-            'title': 'Live',
-            'special': True
-        }),
-        (UPDATE_FREQ_AS_NEEDED, {
-            'title': 'As needed',
-            'special': True
-        }),
-        (UPDATE_FREQ_NEVER, {
-            'title': 'Never',
-            'special': True
-        }),
+        ('1', {'title': 'Every day', 'special': False}),
+        ('2', {'title': 'Every two days', 'special': False}),
+        ('7', {'title': 'Every week', 'special': False}),
+        ('14', {'title': 'Every two weeks', 'special': False}),
+        ('30', {'title': 'Every month', 'special': False}),
+        ('60', {'title': 'Every two months', 'special': False}),
+        ('90', {'title': 'Every three months', 'special': False}),
+        ('120', {'title': 'Every fourth months', 'special': False}),
+        ('180', {'title': 'Every six months', 'special': False}),
+        ('300', {'title': 'Every ten months', 'special': False}),
+        ('365', {'title': 'Every year', 'special': False}),
+        ('730', {'title': 'Every two years', 'special': False}),
+        (UPDATE_FREQ_LIVE, {'title': 'Live', 'special': True}),
+        (UPDATE_FREQ_AS_NEEDED, {'title': 'As needed', 'special': True}),
+        (UPDATE_FREQ_NEVER, {'title': 'Never', 'special': True}),
     )
 )
 
