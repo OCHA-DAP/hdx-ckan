@@ -1,24 +1,29 @@
 CONSTANTS = {
-    'PAGE_TITLE': '''HDX account options''',
+    'PAGE_TITLE': '''Choose the way you want to use the Humanitarian Data Exchange''',
 
-    'ROW_SEARCH_DOWNLOAD_LABEL': '''Search and download data''',
-    'ROW_SEARCH_DOWNLOAD_HELP': '''Explore and use over 20,000 datasets on HDX.''',
-    'ROW_CONTACT_CONTRIBUTOR_LABEL': '''Contact the Contributor''',
-    'ROW_CONTACT_CONTRIBUTOR_HELP': '''Ask questions about data through the ‘Contact the Contributor’ form.''',
-    'ROW_HDX_CONNECT_LABEL': '''HDX Connect request''',
-    'ROW_HDX_CONNECT_HELP': '''Request access to sensitive data through the ‘HDX Connect’ form.''',
-    'ROW_ADD_DATA_LABEL': '''Add data''',
-    'ROW_ADD_DATA_HELP': '''Data is shared on HDX through approved organisations. Request to join or create an organisation to share data.''',
+    'FEATURE_PUBLIC_DATASETS': '''Access all public humanitarian datasets on HDX''',
+    'FEATURE_VIZ_TOOLS': '''Use data visualisation tools''',
+    'FEATURE_REGISTRATION_REQUIRED': '''No registration required''',
 
-    'COLUMN_NO_ACCOUNT_LABEL': '''No account needed''',
+    'FEATURE_CONTACT_CONTRIBUTOR': '''Ask questions to data contributors''',
+    'FEATURE_REQUEST_DATA': '''Request access to sensitive datasets''',
+    'FEATURE_MANAGE_NOTIFICATIONS': '''COMING SOON - Manage notifications about data updates''',
+
+    'STEP_CREATE_ACCOUNT': '''First <a href="{0}" id="{1}" data-module="{2}" data-value-proposition-page="{3}">create an individual HDX account</a>''',
+    'STEP_APPLICATION_REVIEWED': '''Your application will be reviewed''',
+    'STEP_SAMPLE_DATA': '''Provide sample data for verification''',
+
+    'COLUMN_NO_ACCOUNT_LABEL': '''Search and download data''',
+    'COLUMN_NO_ACCOUNT_HELP': '''Explore and use thousands of datasets on HDX without an account''',
     'COLUMN_NO_ACCOUNT_BUTTON': '''SEARCH DATA''',
 
-    'COLUMN_INDIVIDUAL_ACCOUNT_LABEL': '''Individual HDX account''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_LABEL': '''Create an HDX Account''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_HELP': '''Access additional features with an individual HDX account''',
     'COLUMN_INDIVIDUAL_ACCOUNT_BUTTON': '''SIGN UP''',
 
-    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL': '''Individual HDX account+''',
-    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP': '''associated with an organisation''',
-    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_BUTTON': '''SIGN UP''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL': '''Share data''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP': '''For organisations that need to publish data on HDX''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_INFO': '''If you already have an individual account, <a href="{0}" id="{1}" title="log in">log in</a> and click "Add Data"''',
 
-    'ALREADY_HAVE_ACCOUNT_HELP': '''Already have an account? <a href="{0}" title="Log in" id="value-proposition-login-link">Log in</a>''',
+    'ALREADY_HAVE_ACCOUNT_HELP': '''Already have an account? <a href="{0}" title="Login" id="{1}">Login</a>''',
 }

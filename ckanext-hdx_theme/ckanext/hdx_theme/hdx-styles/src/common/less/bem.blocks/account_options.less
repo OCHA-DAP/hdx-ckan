@@ -3,139 +3,105 @@
 .account-options {
 
   > .row {
-    .col {
-      .account-options__cell:last-child {
-        border-bottom: 1px solid @black-color;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
+    .col-12 {
+      .account-options__cell {
+        &:last-child {
+          border-bottom: 1px solid @black-color;
+          border-bottom-left-radius: 20px;
+          border-bottom-right-radius: 20px;
+        }
+
+        &_type_blue {
+          &:last-child {
+            border-color: @blue-light-color;
+          }
+        }
+
+        &_type_grey {
+          &:last-child {
+            border-color: @grey-lighter-color;
+          }
+        }
       }
     }
   }
 
   &__cell {
-    display: flex;
-    align-items: center;
-    padding-left: 17px;
-    padding-right: 17px;
-    height: 110px;
-    border-bottom: 1px solid @grey-light-color;
-    @media (max-width: @breakpoint-xl) {
-      height: 130px;
-    }
-    @media (max-width: @breakpoint-lg) {
-      padding-left: 40px;
-      padding-right: 40px;
-      height: auto;
-      padding-top: 28px;
-      padding-bottom: 28px;
-    }
+    padding-left: 30px;
+    padding-right: 30px;
+    border-left: 1px solid @black-color;
+    border-right: 1px solid @black-color;
 
-    &_state_highlight {
-      background-color: @blue-extra-light-color;
-    }
-
-    &_state_empty {
-      border-bottom-color: transparent;
-    }
-
-    &_size_big {
-      height: 132px;
-
-      @media (max-width: @breakpoint-xl) {
-        height: 162px;
-      }
+    &_type_cozy {
+      height: 110px;
+      padding-top: 24px;
       @media (max-width: @breakpoint-lg) {
         height: auto;
+        padding-bottom: 24px;
       }
     }
 
-    &_content_type {
+    &_type_title {
       border-top: 1px solid @black-color;
-      border-left: 1px solid @black-color;
-      border-right: 1px solid @black-color;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
     }
 
-    &_content_feature {
-    }
-
-    &_content_button {
-      border-left: 1px solid @black-color;
-      border-right: 1px solid @black-color;
-    }
-
-    &_content_icon {
-      border-left: 1px solid @black-color;
-      border-right: 1px solid @black-color;
-
-      .fa-solid {
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 22px;
-        @media (max-width: @breakpoint-lg) {
-          padding-right: 30px;
-        }
-
-        &.fa-circle-check {
-          color: @green-color;
-        }
-
-        &.fa-minus {
-          color: @grey-dark-color;
-        }
-
+    &_type_features {
+      min-height: 250px;
+      @media (max-width: @breakpoint-lg) {
+        min-height: auto;
       }
+    }
+
+    &_type_blue {
+      background-color: @blue-light-color;
+      border-color: @blue-light-color;
+
+      .heading .heading__title,
+      .account-options__title,
+      .account-options__subtitle,
+      .account-options__icon {
+        color: @white-color;
+      }
+    }
+
+    &_type_grey {
+      background-color: @grey-lighter-color;
+      border-color: @grey-lighter-color;
     }
   }
 
   &__title {
-    color: @blue-medium-dark-color;
     font-family: 'Gotham-Bold', sans-serif;
     font-size: 14px;
     font-weight: 400;
-    text-transform: uppercase;
+    display: inline-block;
+    vertical-align: middle;
+    width: calc(100% - 32px);
     @media (max-width: @breakpoint-lg) {
       font-size: 16px;
     }
   }
 
-  &__title_icon {
+  &__icon {
     color: @blue-medium-dark-color;
-    margin-left: 5px;
-    flex: 1;
-    text-align: right;
-    font-size: 20px;
-
-    &_state_inactive {
-      color: @grey-color;
-    }
+    font-size: 18px;
+    width: 18px;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
   }
 
   &__subtitle {
     color: @blue-medium-dark-color;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
-    font-size: 14px;
-    text-transform: uppercase;
-
-    @media (max-width: @breakpoint-xl) {
-      font-size: 12px;
-    }
-    @media (max-width: @breakpoint-lg) {
-      font-size: 20px;
-    }
+    font-size: 16px;
   }
 
-  &__description {
-    color: @blue-medium-dark-color;
-    font-size: 16px;
-    @media (max-width: @breakpoint-xl) {
-      font-size: 14px;
-    }
-    @media (max-width: @breakpoint-lg) {
-      font-size: 16px;
-    }
+  &__feature {
+    padding-bottom: 24px;
   }
 
   &__help {
