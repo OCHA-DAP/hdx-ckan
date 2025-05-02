@@ -1,47 +1,49 @@
 @import "../base/variables";
 @import "../base/mixins";
 
-.new-header {
-  .hdx-header {
-    .navbar-header {
-      .hdxLogo {
-        @media (max-width: @cut-point-laptop-m) {
-          width: 45px;
-          .logo {
-            .logo-img {
-              background-image: url("@{imagePath}/homepage/logo-hdx-mobile.svg");
-              background-size: 28px 31px;
-              width: 28px;
+.navbar {
+  &.new-header {
+    .hdx-header {
+      .navbar-header {
+        .hdxLogo {
+          @media (max-width: @cut-point-laptop-m) {
+            width: 45px;
+            .logo {
+              .logo-img {
+                background-image: url("@{imagePath}/homepage/logo-hdx-mobile.svg");
+                background-size: 28px 31px;
+                width: 28px;
+              }
+            }
+          }
+        }
+
+        .submit-data {
+
+          .submitData {
+            @media (max-width: @cut-point-laptop-s) {
+              display: none;
             }
           }
         }
       }
 
-      .submit-data {
-
-        .submitData {
-          @media (max-width: @cut-point-laptop-s) {
-            display: none;
-          }
+      .navbar-toggler {
+        @media (max-width: @cut-point-laptop-s) {
+          display: block;
         }
       }
     }
+  }
 
-    .navbar-toggler {
-      @media (max-width: @cut-point-laptop-s) {
-        display: block;
-      }
+  .mainLinks {
+    @media (max-width: @cut-point-laptop-s) {
+      display: none;
     }
   }
 }
 
-.mainLinks {
-  @media (max-width: @cut-point-laptop-s) {
-    display: none;
-  }
-}
-
-.hdx-footer {
+footer.hdx-footer {
   .social-footer {
 
     .terms {
