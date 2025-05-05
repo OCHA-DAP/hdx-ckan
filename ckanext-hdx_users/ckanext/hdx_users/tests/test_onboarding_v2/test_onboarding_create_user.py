@@ -66,7 +66,7 @@ class TestOnboarding(object):
         result = app.get(url)
         assert '<title>Account options ' in result.body
         # this might change from translation
-        assert 'HDX account options' in result.body
+        assert 'Choose the way you want to use the Humanitarian Data Exchange' in result.body
         assert 'href="/signup/user-info/"' in result.body
 
         result = app.get(url, headers={'Authorization': testuser_token}, status=403)

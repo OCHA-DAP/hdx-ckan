@@ -1,132 +1,86 @@
-.account-options > .row .col .account-options__cell:last-child {
+.account-options > .row .col-12 .account-options__cell:last-child {
   border-bottom: 1px solid #000;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.account-options > .row .col-12 .account-options__cell_type_blue:last-child {
+  border-color: #007CE1;
+}
+.account-options > .row .col-12 .account-options__cell_type_grey:last-child {
+  border-color: #EEE;
 }
 .account-options__cell {
-  display: flex;
-  align-items: center;
-  padding-left: 17px;
-  padding-right: 17px;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+}
+.account-options__cell_type_cozy {
   height: 110px;
-  border-bottom: 1px solid #D1D5DB;
-}
-@media (max-width: 1200px) {
-  .account-options__cell {
-    height: 130px;
-  }
+  padding-top: 24px;
 }
 @media (max-width: 992px) {
-  .account-options__cell {
-    padding-left: 40px;
-    padding-right: 40px;
+  .account-options__cell_type_cozy {
     height: auto;
-    padding-top: 28px;
-    padding-bottom: 28px;
+    padding-bottom: 24px;
   }
 }
-.account-options__cell_state_highlight {
-  background-color: #EDF6FD;
-}
-.account-options__cell_state_empty {
-  border-bottom-color: transparent;
-}
-.account-options__cell_size_big {
-  height: 132px;
-}
-@media (max-width: 1200px) {
-  .account-options__cell_size_big {
-    height: 162px;
-  }
-}
-@media (max-width: 992px) {
-  .account-options__cell_size_big {
-    height: auto;
-  }
-}
-.account-options__cell_content_type {
+.account-options__cell_type_title {
   border-top: 1px solid #000;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
-.account-options__cell_content_button {
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-}
-.account-options__cell_content_icon {
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-}
-.account-options__cell_content_icon .fa-solid {
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 22px;
+.account-options__cell_type_features {
+  min-height: 250px;
 }
 @media (max-width: 992px) {
-  .account-options__cell_content_icon .fa-solid {
-    padding-right: 30px;
+  .account-options__cell_type_features {
+    min-height: auto;
   }
 }
-.account-options__cell_content_icon .fa-solid.fa-circle-check {
-  color: #10B981;
+.account-options__cell_type_blue {
+  background-color: #007CE1;
+  border-color: #007CE1;
 }
-.account-options__cell_content_icon .fa-solid.fa-minus {
-  color: #888;
+.account-options__cell_type_blue .heading .heading__title,
+.account-options__cell_type_blue .account-options__title,
+.account-options__cell_type_blue .account-options__subtitle,
+.account-options__cell_type_blue .account-options__icon {
+  color: #FFF;
+}
+.account-options__cell_type_grey {
+  background-color: #EEE;
+  border-color: #EEE;
 }
 .account-options__title {
-  color: #1F2937;
   font-family: 'Gotham-Bold', sans-serif;
   font-size: 14px;
   font-weight: 400;
-  text-transform: uppercase;
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 32px);
 }
 @media (max-width: 992px) {
   .account-options__title {
     font-size: 16px;
   }
 }
-.account-options__title_icon {
+.account-options__icon {
   color: #1F2937;
-  margin-left: 5px;
-  flex: 1;
-  text-align: right;
-  font-size: 20px;
-}
-.account-options__title_icon_state_inactive {
-  color: #CCCCCC;
+  font-size: 18px;
+  width: 18px;
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .account-options__subtitle {
   color: #1F2937;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-@media (max-width: 1200px) {
-  .account-options__subtitle {
-    font-size: 12px;
-  }
-}
-@media (max-width: 992px) {
-  .account-options__subtitle {
-    font-size: 20px;
-  }
-}
-.account-options__description {
-  color: #1F2937;
   font-size: 16px;
 }
-@media (max-width: 1200px) {
-  .account-options__description {
-    font-size: 14px;
-  }
-}
-@media (max-width: 992px) {
-  .account-options__description {
-    font-size: 16px;
-  }
+.account-options__feature {
+  padding-bottom: 24px;
 }
 .account-options__help {
   color: #000;
