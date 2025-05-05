@@ -20,8 +20,8 @@ def trigger_4_resource_changes(before_resource_change_actions, after_resource_ch
             # the resource list from the dataset_dict. In this case geopreview should be skipped.
             new_resources = package_dict.get('resources', [])
 
-            old_package_dict = fetch_previous_package_dict_with_context(context, package_dict.get('id')) \
-                if 'id' in package_dict else {}
+            id_or_name = package_dict.get('id') or package_dict.get('name')
+            old_package_dict = fetch_previous_package_dict_with_context(context, id_or_name) if id_or_name else {}
 
             resource_id_to_modified_map = {}
             if new_resources:
@@ -73,7 +73,7 @@ def trigger_4_resource_changes(before_resource_change_actions, after_resource_ch
                 log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
 
             # cleanup the context
-            remove_previous_package_dict_from_context(context, package_dict.get('id'))
+            remove_previous_package_dict_from_context(context, id_or_name)
 
             return result_dict
 
@@ -86,8 +86,9 @@ def trigger_4_dataset_delete(version_changes_actions):
     def package_action_wrapper(original_package_action):
         def package_action(context, package_dict):
 
-            old_package_dict = fetch_previous_package_dict_with_context(context, package_dict.get('id')) \
-                if 'id' in package_dict else {}
+            id_or_name = package_dict.get('id') or package_dict.get('name')
+
+            old_package_dict = fetch_previous_package_dict_with_context(context, id_or_name) if id_or_name else {}
 
             result_dict = original_package_action(context, package_dict)
 
