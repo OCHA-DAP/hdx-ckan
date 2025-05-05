@@ -31,6 +31,7 @@ class TestBrokenLinkInResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTes
                                                          {'id': 'test_private_dataset_1', 'notes': 'modified'})
         assert 'broken_link' not in package_dict['resources'][0]
 
+
     def test_broken_link_reset_on_resource_patch(self):
         package_dict = self._get_action('package_show')(self.context_sysadmin, {'id': 'test_private_dataset_1'})
         resource_id = package_dict['resources'][0]['id']
@@ -39,3 +40,8 @@ class TestBrokenLinkInResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTes
 
         resource_dict = self._get_action('resource_patch')(self.context, {'id': resource_id, 'broken_link': True})
         assert 'broken_link' not in resource_dict
+
+        resource_dict = self._get_action('resource_patch')(
+            {'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': resource_id, 'broken_link': True})
+        assert 'broken_link' in resource_dict
