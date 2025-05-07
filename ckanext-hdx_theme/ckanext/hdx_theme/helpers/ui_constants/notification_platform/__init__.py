@@ -2,13 +2,12 @@ CONSTANTS = {
     'OPT_IN_TEXT': '''Subscribe''',
     'OPT_OUT_TEXT': '''Unsubscribe''',
 
-    'SIGNUP_MODAL_TITLE': '''Sign up for email notifications on this dataset''',
-    'SIGNUP_MODAL_INTRO_TEXT': '''Would you like to receive email notifications when resources (files) in this
-    dataset are added, changed or deleted on HDX? If so, please enter your email address below:''',
+    'SIGNUP_MODAL_TITLE': '''Subscribe to notifications on this dataset''',
+    'SIGNUP_MODAL_INTRO_TEXT': '''Would you like to receive notifications when resources (files) in this dataset change?''',
+    'SIGNUP_MODAL_INTRO_SECOND_TEXT': '''If so, please <a href="{0}" title="login">log in</a> or enter your email address below:''',
+    'SIGNUP_MODAL_ALREADY_HAVE_ACCOUNT_TEXT': '''Already have an account? <a href="{0}" title="login">Log in</a>''',
     'SIGNUP_MODAL_UPDATE_FREQUENCY_TEXT': '''This dataset updates approximately: {0}''',
-    'SIGNUP_MODAL_BETA_TEXT': '''Beta - We are currently testing email notifications for dataset updates across a
-    select number of datasets. This feature is not available on all datasets.''',
-    'SIGNUP_MODAL_CLOSE_BUTTON_TEXT': '''No thanks''',
+    'SIGNUP_MODAL_CLOSE_BUTTON_TEXT': '''Cancel''',
     'SIGNUP_MODAL_SUBMIT_BUTTON_TEXT': '''Verify email address''',
 
     'SIGNUP_INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
