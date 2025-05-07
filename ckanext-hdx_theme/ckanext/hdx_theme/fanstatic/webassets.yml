@@ -18,11 +18,6 @@ vendor-vendor:
     - /srv/ckan/ckan/public/base/vendor/purify.js
     - /srv/ckan/ckan/public/base/vendor/jquery.js
 
-vendor-bootstrap:
-  #original is base/vendor/webassets.yml -> vendor
-  contents:
-    - /srv/ckan/ckan/public/base/vendor/bootstrap/js/bootstrap.js
-
 vendor-select2-js:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_vendor-select2.js
@@ -35,7 +30,7 @@ base-main:
   extra:
     preload:
       - hdx_theme/vendor-vendor
-      - hdx_theme/vendor-bootstrap
+      - vendor/bootstrap
   contents:
     - /srv/ckan/ckan/public/base/javascript/apply-html-class.js
     - /srv/ckan/ckan/public/base/javascript/plugins/jquery.inherit.js
