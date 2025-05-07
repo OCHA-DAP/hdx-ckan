@@ -27,19 +27,21 @@
                   {{ data['hdx.quick_links.config'] }}
                 </div>
                 <script type="text/template" id="quick_links-item-tpl">
-                  <div class="<%= (tab_open?'col-12':'col-4') %>">
+                  <div class="<%= (tab_open?'col-12':'col-12') %>">
                     <div class="row quick_links-item">
                       <div class="col-12">
                         <div class="quick_links-item-header">
                           <div class="row">
                             <div class="col-9">
                               <div class="drag-handle">
+                                <i class="fa fa-arrows-v grey"></i>
+                                <i class="fa fa fa-align-justify grey mx-2"></i>
                                 Quick Links Item <%= order %>
                                 <input type="hidden" name="id" value="<%= id %>">
                               </div>
                             </div>
                             <div class="col-3 text-end">
-                              <a href="#" class="delete-item"><i class="fa fa-trash"></i></a>
+                              <a href="#" class="mx-2 delete-item"><i class="fa fa-trash"></i></a>
                               <a href="#" class="toggle-tab-state"><i
                                       class="fa <%= (tab_open?'fa-chevron-down':'fa-chevron-up') %> "></i></a>
                             </div>
