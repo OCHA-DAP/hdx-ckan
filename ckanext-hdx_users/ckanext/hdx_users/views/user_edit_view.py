@@ -130,7 +130,8 @@ class HDXEditView(EditView):
             and data_dict[u'password2']) or email_changed:
             identity = {
                 u'login': g.user,
-                u'password': data_dict[u'old_password']
+                u'password': data_dict[u'old_password'],
+                u'check_captcha': False
             }
             # auth = authenticator.UsernamePasswordAuthenticator()
 
