@@ -76,9 +76,6 @@
     font-family: 'Gotham-Bold', sans-serif;
     font-size: 14px;
     font-weight: 400;
-    display: inline-block;
-    vertical-align: middle;
-    width: calc(100% - 32px);
     @media (max-width: @breakpoint-lg) {
       font-size: 16px;
     }
@@ -88,9 +85,7 @@
     color: @blue-medium-dark-color;
     font-size: 18px;
     width: 18px;
-    margin-right: 10px;
-    display: inline-block;
-    vertical-align: middle;
+    margin-right: 8px;
   }
 
   &__subtitle {
@@ -102,6 +97,8 @@
 
   &__feature {
     padding-bottom: 24px;
+    display: flex;
+    align-items: center;
   }
 
   &__help {
