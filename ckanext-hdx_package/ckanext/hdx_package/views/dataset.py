@@ -141,10 +141,11 @@ def read(id):
     analytics_supports_notifications = analytics.supports_notifications(pkg_dict)
 
     # changes done for indicator
-    act_data_dict = {'id': pkg_dict['id'], 'limit': 7}
-    log.debug('Reading dataset {}: getting activity list for dataset'.format(pkg_dict.get('name')))
-
-    hdx_activities = get_action(u'package_activity_list')(context, act_data_dict)
+    # act_data_dict = {'id': pkg_dict['id'], 'limit': 7}
+    # log.debug('Reading dataset {}: getting activity list for dataset'.format(pkg_dict.get('name')))
+    #
+    # hdx_activities = get_action(u'package_activity_list')(context, act_data_dict)
+    hdx_activities = []
 
     pkg_dict['approx_total_downloads'] = find_approx_download(pkg_dict.get('total_res_downloads', 0))
 
@@ -796,9 +797,9 @@ class DatasetRequestAccessView(MethodView):
             return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
 
 
-hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
-hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
-hdx_dataset.add_url_rule(u'<id>', view_func=read)
+hdx_search.add_url_rule(u'', view_func=search, strict_slashes=False)
+hdx_dataset.add_url_rule(u'', view_func=search, strict_slashes=False)
+hdx_dataset.add_url_rule(u'/<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'/<id>/contact/',
                          view_func=DatasetContactContributorView.as_view(str(u'contact_contributor')),

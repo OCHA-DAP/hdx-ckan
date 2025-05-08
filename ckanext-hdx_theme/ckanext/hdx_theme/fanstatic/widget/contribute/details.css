@@ -1,9 +1,11 @@
+body.contribute-mode {
+  overflow: hidden;
+}
 .popup.popup-contribute {
   z-index: 90000;
   overflow: auto;
 }
 .popup.popup-contribute .content {
-  max-width: 1260px;
   height: 100%;
   padding: 0;
   position: static;
@@ -15,24 +17,6 @@
   -ms-transform: none;
   -webkit-transform: none;
   overflow: hidden;
-}
-.popup.popup-contribute .content .custom-close-container {
-  position: absolute;
-  width: 100%;
-  max-width: 1260px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.popup.popup-contribute .content .custom-close-container i.close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 20px;
-  color: #888888;
-  opacity: 0.8;
-}
-.popup.popup-contribute .content .custom-close-container i.close.white {
-  color: #fff;
 }
 .popup.popup-contribute .content .details-content {
   height: 100%;

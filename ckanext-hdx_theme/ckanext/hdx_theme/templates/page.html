@@ -32,7 +32,9 @@
     {% endif %}
 
     {% if c.userobj %}
-      {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
+      {% block contribute_widget %}
+        {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
+      {% endblock %}
     {% else %}
       {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup")}}
 {#      {{ h.snippet('widget/onboarding/login.html', id="loginPopup", login_came_from=data.login_came_from if data else None) }}#}

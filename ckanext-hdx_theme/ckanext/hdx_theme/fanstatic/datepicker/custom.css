@@ -1,0 +1,25 @@
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+  top: 2px;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+  right: 2px;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+  left: 2px;
+}
+.ui-datepicker .ui-datepicker-header {
+  border-bottom: 1px solid #cccccc;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+  padding: 0.5em;
+}
+.ui-datepicker select {
+  border-color: #cccccc;
+  background-color: #fff;
+}
+.ui-datepicker select :focus-visible,
+.ui-datepicker select :focus-within {
+  box-shadow: none;
+}

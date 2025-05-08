@@ -134,8 +134,7 @@ def detect_format(key, data, errors, context):
         if file_format:
             data[key] = file_format
             return file_format
-        err_message = "We couldn't determine your file type. If it is a compressed format (zip, etc), please  \
-                      indicate the primary format of the data files inside compressed file."
+        err_message = "Please specify the file format."
         errors[key].append(_(err_message))
         raise df.StopOnError()
 
@@ -861,3 +860,11 @@ def hdx_update_last_modified_if_url_changed(key: FlattenKey, data: FlattenDataDi
             prev_url_value = prev_resource_dict.get('url')
             if prev_url_value != url_value:
                 data[key] = datetime.datetime.utcnow()
+
+def hdx_comma_separated_validator(value):
+    if isinstance(value, list):
+        return ','.join(value)
+    elif isinstance(value, str):
+        return value
+    else:
+        raise tk.ValidationError('Value must be a string or a list.')

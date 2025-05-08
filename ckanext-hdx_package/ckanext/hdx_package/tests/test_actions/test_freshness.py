@@ -1,4 +1,3 @@
-import datetime
 
 import ckan.tests.factories as factories
 
@@ -18,17 +17,29 @@ class TestFreshness(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         result = self._get_action('package_patch')(context, {
             'id': 'test_dataset_1',
+            'data_update_frequency': '0'
+        })
+
+        dataset_2 = self._get_action('package_show')({}, {'id': 'test_dataset_1'})
+        assert dataset_2.get('is_fresh') is True, 'any live dataset should be fresh'
+
+        result = self._get_action('package_patch')(context, {
+            'id': 'test_dataset_1',
             'data_update_frequency': '7'
         })
 
         dataset_2 = self._get_action('package_show')({}, {'id': 'test_dataset_1'})
-        assert dataset_2.get('is_fresh') is True, 'last_modified is null, so revision_last_modified is used'
+        assert dataset_2.get('is_fresh') is False, 'end of dataset date is used'
 
-        res_last_modified = (datetime.datetime.now() - datetime.timedelta(days=15)).isoformat()
-        self._get_action('resource_patch')(context, {
-            'id': res1['id'],
-            'last_modified': res_last_modified
-        })
+        start_date_str = '2020-03-11T21:16:48.838'
+        end_date_str = '*'
+
+        date_range = '[{} TO {}]'.format(start_date_str, end_date_str)
+        pkg_dict = self._get_action('package_patch')(context,
+                                                     {
+                                                         'id': 'test_dataset_1',
+                                                         'dataset_date': date_range
+                                                     })
 
         dataset_3 = self._get_action('package_show')({}, {'id': 'test_dataset_1'})
-        assert dataset_3.get('is_fresh') is False, 'needs to be False, last_modified is more than 7+7 days in the past'
+        assert dataset_3.get('is_fresh') is True, 'needs to be True as end date is today'

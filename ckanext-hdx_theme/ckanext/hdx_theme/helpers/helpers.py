@@ -14,6 +14,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.activity.model.activity as activity_model
 import ckanext.requestdata.model as requestdata_model
 import ckanext.hdx_theme.version as version
+from urllib.parse import urlencode
 
 from six import text_type
 
@@ -1035,3 +1036,62 @@ def hdx_generate_basemap_config_string() -> str:
 def hdx_dataset_supports_notifications(pkg_id: str) -> str:
     supports_notifications = check_notifications_enabled_for_dataset(pkg_id)
     return str(supports_notifications).lower()
+
+def facet_url_extra_args(facet_list, request_args):
+    extra_args = {}
+
+    for facet_id, facet in facet_list.items():
+        param_values = []
+        categkey_holder = {'key': 'KeyError'}
+
+        items = facet.get('items', [])
+        for fi in items:
+            if fi.get('selected') is True:
+                categkey = fi.get('category_key')
+                if categkey == 'cod_level' and fi.get('name') == 'ALL':
+                    # Flatten sub-items if 'ALL' is selected
+                    param_values.extend([subitem['name'] for subitem in fi.get('items', [])])
+                else:
+                    param_values.append(fi.get('name'))
+
+                categkey_holder['key'] = categkey
+
+        if param_values:
+            extra_args[categkey_holder['key']] = param_values
+
+    # Also include preserved request arguments
+    for key in ['q', 'sort', 'ext_page_size']:
+        val = request_args.get(key)
+        if val:
+            extra_args[key] = [val] if not isinstance(val, list) else val
+
+    return extra_args
+
+
+def build_facet_filter_url(option, extra_args):
+    category_key = option.get('category_key')
+    remove = option.get('selected')
+    base_path = request.path
+
+    if category_key == 'cod_level' and option.get('name') == 'ALL':
+        param_values = [c.get('name') for c in option.get('items', [])]
+    else:
+        param_values = [option.get('name')]
+
+    group_args = extra_args.get(category_key, []).copy()
+
+    if remove:
+        group_args = [v for v in group_args if v not in param_values]
+    else:
+        group_args += [v for v in param_values if v not in group_args]
+
+    extra_args[category_key] = group_args
+
+    query_parts = []
+    for key, values in extra_args.items():
+        for val in values:
+            query_parts.append((key, val))
+
+    if query_parts:
+        return f"{base_path}?{urlencode(query_parts)}"
+    return base_path

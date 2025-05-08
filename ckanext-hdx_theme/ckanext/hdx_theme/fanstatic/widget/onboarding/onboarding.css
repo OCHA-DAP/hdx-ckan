@@ -17,6 +17,9 @@
     opacity: 1;
   }
 }
+.popup#privateDatasetInfoPopup .content {
+  max-width: 600px;
+}
 .popup.popup-onboarding .content {
   min-width: 380px;
   padding: 0 15px;

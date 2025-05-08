@@ -68,7 +68,7 @@ def _generate_license_list():
         license.License(
             hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
         license.License(hdx_licenses.LicenseHDXCreativeCommonsAttributionInternational()),
-        license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
+        license.License(hdx_licenses.LicenseHDXCreativeCommonsAttributionShareAlike()),
         license.License(hdx_licenses.LicenseHdxOpenDatabaseLicense()),
         license.License(
             hdx_licenses.LicenseHdxOpenDataCommonsAttributionLicense()),
@@ -172,10 +172,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('hdx_update_data_frequency_by_archived'),
                 tk.get_converter('convert_to_extras')
             ],
-            'review_date': [tk.get_validator('ignore_missing'),
-                            tk.get_validator('isodate'),
-                            tk.get_validator('hdx_isodate_to_string_converter'),
-                            tk.get_converter('convert_to_extras')],
+            # 'review_date': [tk.get_validator('ignore_missing'),
+            #                 tk.get_validator('isodate'),
+            #                 tk.get_validator('hdx_isodate_to_string_converter'),
+            #                 tk.get_converter('convert_to_extras')],
             'qa_completed': [tk.get_validator('hdx_reset_unless_allow_qa_completed'),
                              # tk.get_validator('ignore_missing'),
                              tk.get_validator('hdx_boolean_string_converter'),
@@ -397,14 +397,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'),
                                tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
-            'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            # 'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'dataseries_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_showcases': [tk.get_validator('ignore_missing')],
             'last_modified': [tk.get_validator('ignore_missing')],
             # 'due_daterange': [tk.get_validator('ignore_missing')],
             # 'overdue_daterange': [tk.get_validator('ignore_missing')],
             'due_date': [tk.get_validator('ignore_missing')],
-            'overdue_date': [tk.get_validator('ignore_missing')],
+            # 'overdue_date': [tk.get_validator('ignore_missing')],
             'qa_completed': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_converter('hdx_assume_missing_is_true'),
@@ -430,9 +430,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
             'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
             'hdx_get_due_overdue_date': hdx_helpers.hdx_get_due_overdue_date,
-            'hdx_get_last_modification_date': hdx_helpers.hdx_get_last_modification_date,
             'hdx_render_resource_updated_date': hdx_helpers.hdx_render_resource_updated_date,
             'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
+            'hdx_end_of_dataset_date': hdx_helpers.end_of_dataset_date,
         }
 
     def get_actions(self):
@@ -553,6 +553,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_resource_in_hapi_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper(
                 'allow_resource_in_hapi_field', resource_level=True),
+            'hdx_comma_separated_validator': vd.hdx_comma_separated_validator,
         }
 
     def get_auth_functions(self):
@@ -659,8 +660,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     schema.update(requestdata_schema)
 
         schema.update({
-            'field_names': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
-            'file_types': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'field_names': [tk.get_validator('not_empty'), tk.get_validator('hdx_comma_separated_validator'),
+                            tk.get_converter('convert_to_extras')],
+            'file_types': [tk.get_validator('not_empty'), tk.get_validator('hdx_comma_separated_validator'),
+                           tk.get_converter('convert_to_extras')],
             'num_of_rows': [tk.get_validator('ignore_missing'), tk.get_validator('is_positive_integer'),
                             tk.get_converter('convert_to_extras')],
             'data_update_frequency': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],

@@ -197,6 +197,8 @@ bem-blocks-styles:
     - bem.blocks/table.css
     - bem.blocks/select2_field.css
     - bem.blocks/textarea_field.css
+    - bem.blocks/hr.css
+    - bem.blocks/radio_field.css
 
 bem-blocks-scripts:
   <<: *common-js
@@ -205,8 +207,9 @@ bem-blocks-scripts:
     preload:
       - hdx_theme/select2-4-scripts
   contents:
-    - bem.blocks/select2_field.js
+    - hdx-select2-field.js
     - bem.blocks/textarea_field.js
+#    - bs_tooltip.js
 
 hdx-signals-scripts:
   <<: *common-js
@@ -954,7 +957,7 @@ contribute-flow-scripts:
     - jquery.ui.datepicker.js
     - hdx-datepicker.js
 #    - bs_tooltip.js (it's in the page-scripts)
-    - contribute_flow/form_element_manager.js
+    - contribute_flow/form_element_manager_bem.js
     - contribute_flow/tag_recommender.js
     - contribute_flow/error_block_manager.js
     - contribute_flow/hdx_custom_dataviz_manager.js
@@ -966,6 +969,7 @@ contribute-flow-scripts:
     - vendor/sortable/Sortable.js
 #    - vendor/ckan/autocomplete.js (it's in ckan)
     - contribute_flow/contribute_flow_main.js
+#    - widget/contribute/contribute.js
 
 contribute-flow-styles:
   <<: *common-css
@@ -973,6 +977,9 @@ contribute-flow-styles:
   contents:
     - search-styles
     - contribute_flow/contribute.css
+    - datepicker/jquery-ui.css
+    - datepicker/jquery-ui.theme.css
+    - datepicker/custom.css
 
 country-scripts:
   <<: *common-js

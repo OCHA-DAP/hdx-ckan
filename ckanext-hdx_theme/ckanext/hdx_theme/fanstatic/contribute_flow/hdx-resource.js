@@ -121,8 +121,8 @@ $(function(){
 
             sandbox.subscribe('hdx-resource-information', function (message) {
                 if (message.type == 'dataset_preview_resource_change' && message.newValue!=null) {
-                    let resIdx = Number(message.newValue);                    
-                    this.models.forEach((model, idx) => { 
+                    let resIdx = Number(message.newValue);
+                    this.models.forEach((model, idx) => {
                         const value = !isNaN(resIdx) && idx === resIdx; //true for selected resource
                         model.set({ 'dataset_preview_enabled': value });
                     });
@@ -256,7 +256,9 @@ $(function(){
         el: '#resource-list',
 
         events: {
-            'sort-updated': 'onSortOrderChange'
+            'sort-updated': 'onSortOrderChange',
+            'click .move-up': 'moveResourceUp',
+            'click .move-down': 'moveResourceDown',
         },
 
         initialize: function(options) {
@@ -297,6 +299,7 @@ $(function(){
                 onEnd: function(e){
                     console.log("Drag Area Enable");
                     this.$el.find(".drag-drop-component").trigger("drag-area-enable");
+                    this.render();
                 }.bind(this)
             });
         },
@@ -322,8 +325,8 @@ $(function(){
         },
 
         updateTotal: function() {
-            var total_text = this.collection.length == 1 ? "1 Resource" : this.collection.length + " Resources";
-            this.$('.resources_total').text(total_text);
+            var total_text = this.collection.length == 1 ? "1 file" : this.collection.length + " files";
+            this.$('.resources_total').find('span').text(total_text);
         },
 
         showUserWaitingMessage: function(msg) {
@@ -331,9 +334,33 @@ $(function(){
           console.log('User waiting msg: ' + msg);
         },
 
+        moveResourceUp: function (event) {
+          var $clickedButton = $(event.currentTarget);
+          var $resourceEl = $clickedButton.closest('.drag-drop-component');
+          var currentIndex = $resourceEl.index();
+
+          if (currentIndex > 0) {
+            var $prevResourceEl = $resourceEl.prev();
+            $resourceEl.insertBefore($prevResourceEl);
+            this.$el.trigger('sort-updated');
+          }
+        },
+
+        moveResourceDown: function (event) {
+          var $clickedButton = $(event.currentTarget);
+          var $resourceEl = $clickedButton.closest('.drag-drop-component');
+          var currentIndex = $resourceEl.index();
+          var lastIndex = this.resource_list.children().length - 1;
+
+          if (currentIndex < lastIndex) {
+            var $nextResourceEl = $resourceEl.next();
+            $resourceEl.insertAfter($nextResourceEl);
+            this.$el.trigger('sort-updated');
+          }
+        },
+
         onSortOrderChange: function(e) {
-            // Sort order may be changed either by drag n drop reordering, or
-            // by removing a resource.
+            // Sort order may be changed by drag n drop reordering, sorting arrows or by removing a resource.
             var has_changed = false;
             this.collection.each(function(resource, i) {
                 var new_pos = resource.view.$el.index();
@@ -374,7 +401,7 @@ $(function(){
             'change input[type=radio].resource-source': 'onSourceChange',
             'change input[type=checkbox][name=pii]': 'onPiiChange',
             'change input[type=checkbox][name=microdata]': 'onMicrodataChange',
-            'change .source-file-fields .form-control': 'onFieldEdit',
+            'change .source-file-fields .form-field': 'onFieldEdit',
             'click .dropbox a': 'onDropboxBtn',
             'click .googledrive a': 'onGoogleDriveBtn'
         },
@@ -394,7 +421,8 @@ $(function(){
 
             this.el.addEventListener("dragstart", function(e) {
                 dragGhost = document.createElement("div");
-                $(dragGhost).addClass("hdx-form");
+                // $(dragGhost).addClass("hdx-form");
+                $(dragGhost).addClass("hdx-contribute-form");
                 $(dragGhost).removeClass("drag-drop-ghost");
                 $(dragGhost).css("width", $(e.target).parent().width());
                 $(dragGhost).css("position","absolute");
@@ -476,9 +504,9 @@ $(function(){
                 this._setUpForSourceType('source-file');
             }
 
-            if (template_data.pii && template_data.pii === 'true') {
-              this.$el.addClass('orange');
-            }
+            // if (template_data.pii && template_data.pii === 'true') {
+            //   this.$el.addClass('orange');
+            // }
 
             this._showFormatWarningIfNeeded();
 
@@ -487,12 +515,16 @@ $(function(){
 
         display_errors: function(field_errors) {
             _.each(field_errors, function(error_text, field_name) {
-                var error_block = this.$("[name='" + field_name + "'] ~ .error-block");
+                var $input = this.$("[name='" + field_name + "']");
+                var error_block = $input.parent().find('.invalid-feedback');
                 error_block.html(error_text);
                 if (error_text) {
-                    var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
-                    parent_el.addClass('error');
-                    parent_el.closest('.source-file').addClass('error');
+                    $input.addClass('is-invalid');
+                    $input.closest('.source-file').addClass('error');
+                }
+                else {
+                    $input.removeClass('is-invalid');
+                    $input.closest('.source-file').removeClass('error');
                 }
             }.bind(this));
 
@@ -514,6 +546,7 @@ $(function(){
         },
         _updatePiiCount: function(value){
           let terms = $("#terms-of-service-label");
+          let $termsCheckbox = terms.parent().find('input[type="checkbox"]');
           let count = parseInt(terms.attr("piiCount"));
           if (!count) {
             count = 0;
@@ -521,12 +554,11 @@ $(function(){
           count = Math.max(0, count + value);
           terms.attr("piiCount", count);
           if (count > 0) {
-            terms.addClass('disabled');
-            terms.find('input[type="checkbox"]').prop("disabled", true);
-            terms.find('input[type="checkbox"]').prop("checked", false).change();
+            $termsCheckbox.attr('disabled', 'disabled');
+            $termsCheckbox.prop("checked", false).change();
           } else {
-            terms.removeClass('disabled');
-            terms.find('input[type="checkbox"]').prop("disabled", false);
+            $termsCheckbox.removeAttr('disabled');
+            $termsCheckbox.prop("disabled", false);
           }
         },
 
@@ -535,7 +567,7 @@ $(function(){
           this.model.set('pii', value);
           this._updatePiiCount(value ? 1 : -1);
           $(e.target).closest('.controls').find('.item-description').toggle(value);
-          $(e.target).closest('.drag-drop-component').toggleClass("orange", value);
+          // $(e.target).closest('.drag-drop-component').toggleClass("orange", value);
         },
 
         onMicrodataChange: function (e) {
@@ -949,7 +981,7 @@ $(function(){
                 // if (isMetadataOnly.length === 1) {
                 if(isMetadataOnly.length === 1 || this.contribute_global!=null && !this.contribute_global._datasetId){
                   var req_type_notification = $('#requestdata_type_notification');
-                  req_type_notification.addClass('hdx-invisible-element');
+                  req_type_notification.addClass('d-none');
                 }
               }
               else{
@@ -1011,7 +1043,7 @@ $(function(){
                 privacyPublicRadioBtn.click();
                 this._prepareFormForMetadataOnly({isEdit: false}, true);
                 var req_type_notification = $('#requestdata_type_notification');
-                req_type_notification.addClass('hdx-invisible-element');
+                req_type_notification.addClass('d-none');
 
             }.bind(this));
 
@@ -1022,7 +1054,7 @@ $(function(){
             if (isMetadataOnly.length === 1) {
                 this._prepareFormForMetadataOnly({isEdit: true}, true);
                 var req_type_notification = $('#requestdata_type_notification');
-                req_type_notification.addClass('hdx-invisible-element');
+                req_type_notification.addClass('d-none');
             }
         },
         initGooglePicker: function() {
@@ -1072,7 +1104,6 @@ $(function(){
             var selectMethodology = $('#field_methodology');
             var methodologySelectModule = $('.methodology-select');
             var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen');
-            var formBody = $('#contribute-flow-form-body');
             var selectUpdateFrequency = $('#field_data_update_frequency');
             var updateFrequencySelectModule = $('.update-frequency-select');
             var currentlySelectedUpdateFrequency = updateFrequencySelectModule.find('.select2-chosen');
@@ -1083,10 +1114,6 @@ $(function(){
             var selectNumOfRows = $('.num-of-rows-select');
             var isEdit = data.isEdit;
             var req_type_notification = $('#requestdata_type_notification');
-
-
-            // // We set the type so that the right schema is used in the backend
-            // formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
 
 
             if(is_req_dataset) {
@@ -1118,10 +1145,10 @@ $(function(){
               // These are already created fields in the DOM, but they are
               // initially hidden, and are only shown for metadata-only datasets
               // Make sure Firefox is showing the fields by setting the display attribute
-              selectFieldNames.show().css('display', 'block');
-              selectFileTypes.show().css('display', 'block');
-              selectNumOfRows.show().css('display', 'block');
-              req_type_notification.removeClass('hdx-invisible-element');
+              selectFieldNames.parent().parent().removeClass('d-none');
+              selectFileTypes.parent().parent().removeClass('d-none');
+              selectNumOfRows.parent().removeClass('d-none');
+              req_type_notification.removeClass('d-none');
             }
             else{
               // Resources are not required for metadata-only datasets
@@ -1151,10 +1178,10 @@ $(function(){
 
               // These are already created fields in the DOM, but they are
               // initially hidden, and are only shown for metadata-only datasets
-              selectFieldNames.hide();
-              selectFileTypes.hide();
-              selectNumOfRows.hide();
-              req_type_notification.addClass('hdx-invisible-element');
+              selectFieldNames.parent().parent().addClass('d-none');
+              selectFileTypes.parent().parent().addClass('d-none');
+              selectNumOfRows.parent().addClass('d-none');
+              req_type_notification.addClass('d-none');
             }
 
 
@@ -1167,5 +1194,6 @@ $(function(){
         initial_resource_data = JSON.parse($('#resource-list-json').html());
     }
     this.app = new AppView({sandbox: sandbox, data: initial_resource_data});
+    return true;
 
 }());

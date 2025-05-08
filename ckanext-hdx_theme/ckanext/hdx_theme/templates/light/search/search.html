@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block links %}
-  <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
+  {% snippet "snippets/add_optional_canonical_link.html", params=data.full_facet_info.get('selected_categ_keys'), canonical_url=canonical_url, no_params=False %}
   {{ super() }}
 {% endblock %}
 

@@ -266,6 +266,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_user_orgs_dict': hdx_helpers.hdx_user_orgs_dict,
             'hdx_dataset_supports_notifications': hdx_helpers.hdx_dataset_supports_notifications,
             'HDX_CONST': const,
+            'facet_url_extra_args': hdx_helpers.facet_url_extra_args,
+            'build_facet_filter_url': hdx_helpers.build_facet_filter_url, 
         }
 
     def get_actions(self):
@@ -303,6 +305,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_package_links_settings_show': hdx_actions.package_links_settings_show,
             'hdx_package_links_settings_update': hdx_actions.package_links_settings_update,
             'hdx_package_links_by_id_list': hdx_actions.package_links_by_id_list,
+            'hdx_package_activity_stream': hdx_actions.hdx_package_activity_stream,
             # 'activity_detail_list': hdx_actions.hdx_activity_detail_list,
             'cached_approved_tags_list': hdx_actions.cached_approved_tags_list,
         }

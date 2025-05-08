@@ -705,3 +705,17 @@ def hdx_organization_statistics(context, data_dict):
 def cached_approved_tags_list(context, data_dict):
     tags = caching.cached_approved_tags_list()
     return tags
+
+@logic.side_effect_free
+def hdx_package_activity_stream(context, data_dict):
+    dataset_id = data_dict.get('id')
+    limit = data_dict.get('limit', 7)
+
+    act_data_dict = {'id': dataset_id, 'limit': limit}
+    activities = tk.get_action('package_activity_list')(context, act_data_dict)
+
+    return tk.render('package/snippets/activity_stream.html', {
+        'activity_stream': activities,
+        'id': dataset_id,
+        'object_type': 'package'
+    })

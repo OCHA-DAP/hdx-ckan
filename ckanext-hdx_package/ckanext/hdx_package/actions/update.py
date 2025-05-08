@@ -245,8 +245,8 @@ def package_update(
     if 'groups' in data_dict:
         data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
 
-    if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
-        data_dict['review_date'] = datetime.datetime.utcnow()
+    # if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
+    #     data_dict['review_date'] = datetime.datetime.utcnow()
 
     _check_access('package_update', context, data_dict)
 
@@ -428,14 +428,22 @@ def flag_if_file_uploaded(context, resource_dict):
         context[FILE_WAS_UPLOADED].add(resource_dict.get('id', 'NEW'))
 
 
-def process_skip_validation(context, data_dict):
+def process_skip_validation(context: Context, data_dict: DataDict):
     if SKIP_VALIDATION in data_dict:
         context[SKIP_VALIDATION] = data_dict[SKIP_VALIDATION]
         del data_dict[SKIP_VALIDATION]
 
+    # allow sysadmins to set the broken link field
+    user_obj: model.User = context.get('auth_user_obj')
+    broken_link_field_set = (data_dict.get('broken_link') is not None) or \
+                            any('broken_link' in resource for resource in data_dict.get('resources', []))
+    is_sysadmin = user_obj and not user_obj.is_anonymous and user_obj.sysadmin
+    if is_sysadmin and broken_link_field_set:
+        context['allow_broken_link_field'] = True
+
 
 def modified_save(
-        context: Context, data: dict[str, Any],
+        context: Context, data: DataDict,
         include_plugin_data: bool = False) -> 'model.Package':
     """
     Wrapper around lib.dictization.model_save.package_dict_save
