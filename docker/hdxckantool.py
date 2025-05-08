@@ -981,8 +981,11 @@ def token_revoke(ctx, token_id):
 @click.argument('user', type=str)
 @click.argument('email', type=str)
 @click.argument('password', type=str)
+@click.argument('fullname', type=str)
 @click.pass_context
-def user_add(ctx, user, email, password):
+def user_add(ctx, user, email, password, fullname):
+
+
     """Add a new user.
 
     USER        New user's username.
@@ -990,9 +993,11 @@ def user_add(ctx, user, email, password):
     EMAIL       New user's email.
 
     PASSWORD    New user's password.
+
+    FULLNAME    New user's full name.
     """
-    (user, email, password) = (str(user), str(email), str(password))
-    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'add', str(user), 'email=' + str(email), 'password=' + str(password)]
+    (user, email, password, fullname) = (str(user), str(email), str(password), str(fullname))
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'add', str(user), 'email=' + str(email), 'password=' + str(password), 'fullname=' + str(fullname)]
     try:
         with open(os.devnull, 'wb') as devnull:
             # subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
