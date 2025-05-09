@@ -27,6 +27,7 @@ class MemberExtra(domain_object.DomainObject):
 def setup():
     global member_extra_table
     if member_extra_table is None:
+        log.info('member_extra table init')
         member_extra_table = Table('member_extra', meta.metadata,
                                    Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                    Column('member_id', types.UnicodeText, ForeignKey('member.id')),
