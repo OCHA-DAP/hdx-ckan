@@ -57,9 +57,9 @@ RUN apt-get -qq -y update && \
     chown -R www-data ckan/public/base/i18n && \
     cp -a docker/run_unit /etc/services.d/unit/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
-    cp -a docker/hdxckantool-ng.py /srv/hdxckantool-ng.py && \
-    chmod +x /srv/hdxckantool-ng.py && \
-    ln -s /srv/hdxckantool-ng.py /usr/sbin/hdxckantool && \
+    cp -a docker/hdxckantool.py /srv/hdxckantool.py && \
+    chmod +x /srv/hdxckantool.py && \
+    ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
     apt-get -qq -y remove \
         build-essential \
