@@ -52,6 +52,7 @@ $(document).ready(function () {
     });
 
     var email = formData.email;
+    var is_authenticated = formData.is_authenticated.toLowerCase() === 'true';
 
     $.ajax({
       url: '/notifications/subscription-confirmation',
@@ -63,21 +64,28 @@ $(document).ready(function () {
         'g-recaptcha-response': formData['g-recaptcha-response'],
       },
       success: function (data) {
-        grecaptcha.reset();
+        if(!is_authenticated) {
+          grecaptcha.reset();
+        }
         if (data.success) {
           hideAlert($signupDangerAlert);
           notificationsSignupModal.hide();
 
-          verificationModal.show();
+          if (!data.token) {
+            verificationModal.show();
 
-          hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
-            'confirm popup',
-            'subscribe to notifications',
-            formData.popup_source,
-            datasetId,
-            datasetName,
-            hdxUtil.compute.strHash(email, 'notification_platform')
-          );
+            hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
+              'confirm popup',
+              'subscribe to notifications',
+              formData.popup_source,
+              datasetId,
+              datasetName,
+              hdxUtil.compute.strHash(email, 'notification_platform')
+            );
+          }
+          else {
+            window.location.href='/notifications/subscribe-to-dataset?token=' + data.token;
+          }
 
         }
         else {
@@ -85,7 +93,9 @@ $(document).ready(function () {
         }
       },
       error: function (xhr, status, error) {
-        grecaptcha.reset();
+        if(!is_authenticated) {
+          grecaptcha.reset();
+        }
         showAlert($signupDangerAlert, 'An error occurred. Please try again later.');
         console.log(xhr);
       },

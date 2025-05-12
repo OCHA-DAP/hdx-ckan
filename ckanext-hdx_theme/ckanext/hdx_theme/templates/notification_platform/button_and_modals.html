@@ -4,6 +4,7 @@
 
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 {% set unsubscribe_token = unsubscribe_token or {} %}
+{% set logged_in = true if c.userobj else false %}
 
 <span
   class="d-none"
@@ -20,12 +21,13 @@
 {#  icon="bell",#}
 {#  text=CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT) }}#}
 
+{% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT if not logged_in else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_LOGGED_IN_SUBMIT_BUTTON_TEXT %}
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsSignupBemModal",
   title=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE,
   content=h.snippet('notification_platform/signup_modal_content.html', pkg=pkg),
   close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_CLOSE_BUTTON_TEXT,
-  submit_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT) }}
+  submit_btn_text=submit_btn_text) }}
 
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsVerificationBemModal",
