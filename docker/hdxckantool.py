@@ -1,842 +1,325 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
-import datetime
-import gzip
-import psycopg2
+import getpass
 import os
-import re
 import subprocess
 import sys
 import tarfile
 
-from shutil import rmtree
+import click
+import psycopg2
+import requests
+from bs4 import BeautifulSoup
 
-APP = "ckan"
-BASEDIR = "/srv/ckan"
-if isinstance(os.getenv('HDX_CKAN_BASEDIR'), str):
-    BASEDIR = os.getenv('HDX_CKAN_BASEDIR')
-# BRANCH = str(os.getenv('HDX_CKAN_BRANCH'))
-BACKUP_AS = 'dev'
-if isinstance(os.getenv('HDX_TYPE'), str):
-    BACKUP_AS = os.getenv('HDX_TYPE')
-INI_FILE = "/srv/prod.ini"
-if isinstance(os.getenv('INI_FILE'), str):
-    INI_FILE = os.getenv('INI_FILE')
+# import ckan.cli.sysadmin as ckan_sysadmin
+# import ckan.cli.user as ckan_user
 
-TS = ''
+BASEDIR = os.getenv('HDX_CKAN_BASEDIR', "/srv/ckan")
+INI_FILE = os.getenv('INI_FILE', "/etc/ckan/prod.ini")
+VERBOSE_INI_FILE = os.getenv('VERBOSE_INI_FILE', "/etc/ckan/less.ini")
 
 SQL = dict(
     HOST=str(os.getenv('HDX_CKANDB_ADDR')),
     PORT='5432',
+    SUPERUSER='postgres',
+    SUPERPASS=str(os.getenv('POSTGRES_PASSWORD')),
     USER=str(os.getenv('HDX_CKANDB_USER')),
     PASSWORD=str(os.getenv('HDX_CKANDB_PASS')),
     DB=str(os.getenv('HDX_CKANDB_DB')),
     USER_DATASTORE=str(os.getenv('HDX_CKANDB_USER_DATASTORE')),
     DB_DATASTORE=str(os.getenv('HDX_CKANDB_DB_DATASTORE')),
-    DB_TEST='ckan_test', DB_DATASTORE_TEST='datastore_test'
 )
 
-if isinstance(os.getenv('HDX_CKANDB_DB_TEST'), str):
-    SQL['DB_TEST'] = os.getenv('HDX_CKANDB_DB_TEST')
-if isinstance(os.getenv('HDX_CKANDB_DB_TEST_DATASTORE'), str):
-    SQL['DB_DATASTORE_TEST'] = os.getenv('HDX_CKANDB_DB_TEST_DATASTORE')
-
-# to get the snapshot
-RESTORE = dict(
-    FROM='prod',
-    SERVER=str(os.getenv('HDX_BACKUP_SERVER')),
-    USER=str(os.getenv('HDX_BACKUP_USER')),
-    TMP_DIR='/tmp/ckan-restore'
+SOLR =  dict(
+    ADDR = str(os.getenv('HDX_SOLR_ADDR', 'solr')),
+    PORT = str(os.getenv('HDX_SOLR_PORT', '8983')),
+    CORE = str(os.getenv('HDX_SOLR_CORE', 'ckan')),
+    CONFIGSET = str(os.getenv('HDX_SOLR_CONFIGSET', 'hdx-solr'))
 )
 
-RESTORE['DIR'] = str(os.getenv('HDX_BACKUP_BASE_DIR')) + '/' + RESTORE['FROM']
-RESTORE['PREFIX'] = RESTORE['FROM'] + '.' + APP
-RESTORE['DB_PREFIX'] = RESTORE['PREFIX'] + '.db'
-RESTORE['DB_PREFIX_MAIN'] = RESTORE['DB_PREFIX'] + '.' + SQL['DB']
-RESTORE['DB_PREFIX_DATASTORE'] = RESTORE['DB_PREFIX'] + '.' + SQL['DB_DATASTORE']
-RESTORE['FILESTORE_PREFIX'] = RESTORE['PREFIX'] + '.filestore'
-
-BACKUP = dict(
-    AS=BACKUP_AS,
-    DIR='/srv/backup',
-    FILESTORE_DIR='/srv/filestore'
-)
-if isinstance(os.getenv('HDX_BACKUP_DIR'), str):
-    BACKUP['DIR'] = os.getenv('HDX_BACKUP_DIR')
-if isinstance(os.getenv('HDX_FILESTORE_DIR'), str):
-    BACKUP['FILESTORE_DIR'] = os.getenv('HDX_FILESTORE_DIR')
-BACKUP['PREFIX'] = BACKUP['AS'] + '.' + APP
-BACKUP['DB_PREFIX'] = BACKUP['PREFIX'] + '.db'
-BACKUP['DB_PREFIX_MAIN'] = BACKUP['DB_PREFIX'] + '.' + SQL['DB']
-BACKUP['DB_PREFIX_DATASTORE'] = BACKUP['DB_PREFIX'] + '.' + SQL['DB_DATASTORE']
-BACKUP['FILESTORE_PREFIX'] = BACKUP['PREFIX'] + '.filestore'
-
-SUFFIX = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-TODAY = datetime.datetime.now().strftime('%Y%m%d')
-CURRPATH = os.getcwd()
-
-
-def show_usage():
-    doc = """
-    Usage:
-
-        hdxckantool CMD [SUBCMD] [OPTIONS]
-
-    Ckan ini file, if not added as last option, defaults to /srv/prod.ini
-
-    Commands, subcommands and options:
-        backup [quiet]- backup (optionally no output)
-            db        - backup ckan and datastore db
-            <wip> gis - backup gis db
-            fs        - backup ckan's filestore
-
-        db
-            clean     - empty the databases (ckan and datastore)
-            set-perms - restore permissions on datastore side
-            get       - get latest snapshot of the databases (ckan and datastore)
-
-        deploy        - *DISABLED* just deploy
-            test      - *DISABLED* deploy then run tests
-
-        feature       - hdx-feature-search rebuild
-
-        less compile  - compiles less resource defined in prod.ini
-            [verbose] - uses less.ini which is more verbose than prod.ini
-
-        log           - shows ALL ckan logs
-           noaccess   - shows only error and pain log
-           pain       - shows only pain log
-           access     - shows only access log
-           error      - shows only error log
-
-        pgpass        - create the pgpass entry required to operate on postgres
-
-        plugins       - reinstall plugins
-
-        reindex       - run solr reindex
-            [fast]    - run a fast, multicore solr reindex
-            [refresh] - only refresh index (do not remove index prior to reindexing)
-
-        restart       - restart ckan service
-
-        restore
-            db        - overwrite ckan and datastore db content from the latest snapshot
-            fs        - overwrite the filestore content from the latest snapshot
-            <wip> gis - overwrite gis db content from the latest snapshot
-            cleanup   - remove temporary folder used for restore
-            [local]   - restore dbs from local archives
-
-        start         - start ckan service
-
-        stop          - stop ckan service
-
-        sysadmin
-            enable    - make a user sysadmin
-            disable   - revoke a user's sysadmin privileges
-
-        test          - run nose tests with WARNING loglevel
-            DEBUG     - run nose tests with DEBUG loglevel
-            INFO      - run nose tests with INFO loglevel
-            CRITICAL  - run nose tests with CRITICAL loglevel
-
-        tracking      - update tracking summary
-
-        user
-            add       - add user
-            delete    - remove user
-            search    - search username list for pattern
-            show      - show details for a user
-            list      - list users
-    """
-    print(doc)
-
-
-def query_yes_no(question, default="yes"):
-    """Ask a yes/no question via raw_input() and return their answer.
-
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
-
-    The "answer" return value is True for "yes" or False for "no".
-    """
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "
-                             "(or 'y' or 'n').\n")
-
-
-def get_input(text='what?', lower=True, empty=''):
-    sys.stdout.flush()
-    if lower:
-        text = text + ' (case insensitive)'
-    if empty:
-        text = text + ' [' + empty + ']'
-    sys.stdout.write(text + ': ')
-    result = input().strip()
-    if lower:
-        result = result.lower()
-    if len(result) == 0:
-        result = empty
-    return result
-
-
-def control(cmd):
-    line = ["sv", cmd, 'ckan']
-    try:
-        subprocess.call(line)
-    except:
-        print(cmd + " failed.")
-        exiting(1)
-
-
-def db_submenu():
-    # db
-    #  clean
-    #  get snapshot
-    #  overwrite from snapshot
-    # print opts
-    if len(opts) == 0:
-        exiting(1)
-    subcmd = opts.pop(0)
-    subcmds = ['clean', 'set-perms', 'get']
-    if subcmd not in subcmds:
-        print(subcmd + ' not implemented yet. Exiting.')
-        exiting(1)
-    elif subcmd == 'clean':
-        print('Dropping and recreating databases!!!')
-        if query_yes_no(' Are you sure?', 'no'):
-            db_clean()
-        else:
-            print("Databases are still intact. :)")
-            exiting(0)
-    elif subcmd == 'set-perms':
-        db_set_perms()
-    elif subcmd == 'get':
-        db_get_last_backups()
-
-    exiting(0)
-
-
-def db_clean(dbckan=SQL['DB'], dbdatastore=SQL['DB_DATASTORE']):
-    for dbname in [dbckan, dbdatastore]:
-        print('db_drop(' + dbname + ')')
-        db_drop(dbname)
-    db_set_perms()
-
-
-def db_set_perms():
-    con = db_connect_to_postgres(dbname=SQL['DB_DATASTORE'])
-    cur = con.cursor()
-    query_list = [
-        'REVOKE CREATE ON SCHEMA public FROM PUBLIC;',
-        'REVOKE USAGE ON SCHEMA public FROM PUBLIC;',
-        'GRANT CREATE ON SCHEMA public TO ' + SQL['USER'] + ';',
-        'GRANT USAGE ON SCHEMA public TO ' + SQL['USER'] + ';',
-        'GRANT CREATE ON SCHEMA public TO ' + SQL['USER'] + ';',
-        'GRANT USAGE ON SCHEMA public TO ' + SQL['USER'] + ';',
-        'REVOKE CONNECT ON DATABASE ' + SQL['DB'] + ' FROM ' + SQL['USER_DATASTORE'] + ';',
-        'GRANT CONNECT ON DATABASE ' + SQL['DB_DATASTORE'] + ' TO ' + SQL['USER_DATASTORE'] + ';',
-        'GRANT USAGE ON SCHEMA public TO ' + SQL['USER_DATASTORE'] + ';',
-        'GRANT SELECT ON ALL TABLES IN SCHEMA public TO ' + SQL['USER_DATASTORE'] + ';',
-        'ALTER DEFAULT PRIVILEGES FOR USER ' + SQL['USER'] + ' IN SCHEMA public GRANT SELECT ON TABLES TO ' + SQL['USER_DATASTORE'] + ';'
-    ]
-    try:
-        print('restoring proper permissions on db', SQL['USER_DATASTORE'])
-        for query in query_list:
-            # print(query)
-            cur.execute(query)
-        con.commit()
-    except:
-        print("Failed to set proper permissions. Exiting.")
-        exiting(2)
-    finally:
-        con.close()
-
-    print("Datastore permissions have been reset to default.")
-
-
-def db_list_backups(listonly=True, ts=TODAY, server=RESTORE['SERVER'], directory=RESTORE['DIR'], user=RESTORE['USER'], ckandb=SQL['DB'], datastoredb=SQL['DB_DATASTORE']):
-    print(server)
-    print(directory)
-    print(RESTORE['DB_PREFIX'])
-    if listonly:
-        line = ["rsync", '--list-only', user + '@' + server + ':' + directory + '/' + RESTORE['DB_PREFIX'] + '*' + ts + '*']
-    else:
-        line = ["rsync", "-a", "--progress", user + '@' + server + ':' + directory + '/' + RESTORE['DB_PREFIX'] + '*' + ts + '*', RESTORE['TMP_DIR'] + '/']
-        # empty the temp dir first.
-        if os.path.isdir(RESTORE['TMP_DIR']):
-            rmtree(RESTORE['TMP_DIR'])
-        os.makedirs(RESTORE['TMP_DIR'], exist_ok=True)
-    # print(str(line))
-    try:
-        if listonly:
-            result = subprocess.check_output(line, stderr=subprocess.STDOUT)
-        else:
-            result = subprocess.call(line, stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as exc:
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print("Can't find archives from", ts, "or can't connect.")
-        print('The error encountered was:')
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print(str(exc.output.decode("utf-8").strip()))
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        q = 'Would you like to search again?'
-        if not query_yes_no(q, default='no'):
-            print("Aborting restore operation.")
-            exiting(0)
-        return False
-    if listonly:
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print('Listing backups found:')
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        result = result.decode("utf-8").rstrip('\n\n')
-        print(("Output: \n{}\n".format(result)))
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    return result
-
-
-def db_get_last_backups():
-    list = db_list_backups().split('\n')
-    list_db = []
-    list_db_datastore = []
-    for line in list:
-        name = line.split()[4]
-        # print(name)
-        if name.startswith(RESTORE['DB_PREFIX'] + '.' + SQL['DB']):
-            list_db.append(name)
-        elif name.startswith(RESTORE['DB_PREFIX'] + '.' + SQL['DB_DATASTORE']):
-            list_db_datastore.append(name)
-    # print(list_db)
-    # print(list_db_datastore)
-    backup = []
-    ts = ''
-    for db_name in list_db:
-        # print(db_name)
-        ts = db_name.split('.')[4]
-        for db_datastore_name in list_db_datastore:
-            # print(db_datastore_name)
-            if db_datastore_name.endswith(ts + '.plsql.gz'):
-                backup.append(db_name)
-                backup.append(db_datastore_name)
-                break
-        else:
-            continue
-        break
-    if len(backup) != 2:
-        print("Can't figure out a pair of main ckan db and datastore db having the same timestamps. Aborting...")
-        exiting(0)
-    print('Trying to get for you the following backups:')
-    print(backup[0])
-    print(backup[1])
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    db_list_backups(False, ts)
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    print('Done. Backups are available in', RESTORE['TMP_DIR'])
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    global TS
-    TS = ts
-
-
-def dbs_restore(from_local):
-    q = 'Are you sure you want to overwrite ckan databases? '
-    if not query_yes_no(q, default='no'):
-        print("Aborting restore operation.")
-        exiting(0)
-    # print(from_local)
-    if not from_local:
-        db_get_last_backups()
-    # unzip the files
-    control('stop')
-    for file in os.listdir(RESTORE['TMP_DIR']):
-        archive_full_path = os.path.join(RESTORE['TMP_DIR'], file)
-        print(archive_full_path)
-        file_full_path = archive_full_path.replace('.gz', '')
-        decompress_file(archive_full_path, file_full_path, False)
-        if file.startswith(RESTORE['DB_PREFIX'] + '.' + SQL['DB']):
-            # restore main db
-            db_restore(filename=file_full_path, db=SQL['DB'])
-        elif file.startswith(RESTORE['DB_PREFIX'] + '.' + SQL['DB_DATASTORE']):
-            # restore datastore db
-            db_restore(filename=file_full_path, db=SQL['DB_DATASTORE'])
-            # restore permissions on datastore db
-            db_set_perms()
-        else:
-            print("I don't know what to do with the file", file)
-            print('Skipping...')
-    control('start')
-
-
-def db_restore(host=SQL['HOST'], port=SQL['PORT'], user=SQL['USER'], db='', prefix='', verbose=True, filename=''):
-    if not filename or not db:
-        print('No filename to restore from or no db found. Aborting...')
-        exiting(0)
-    print('Please wait. This may take a while...')
-    db_drop(db)
-    db_create(db)
-    print('Restoring database', db, 'from', filename)
-    print('Please wait. This may take a while...')
-    cmd = ['pg_restore', '-vOx', '-h', host, '-p', port, '-U', user, '-d', db, filename]
-    # print(cmd)
-    with open(os.devnull, 'wb') as devnull:
-        subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
-
-
-def backup_db(host=SQL['HOST'], port=SQL['PORT'], user=SQL['USER'], db='', prefix='', verbose=True):
-    if not db or not prefix:
-        print('backup_db called with empty archive or prefix')
-        exiting(0)
-    # backup main db
-    if not os.path.isdir(BACKUP['DIR']):
-        print('Backup directory (' + BACKUP['DIR'] + ') does not exists.')
-        exiting(0)
-    archive_name = BACKUP['DIR'] + '/' + prefix + '.' + db + '.' + SUFFIX + '.plsql'
-    if verbose:
-        sys.stdout.write('Archiving ' + db + ' db under ' + archive_name + '.gz\n')
-    sys.stdout.flush()
-    try:
-        cmd = 'pg_dump -vFt -h ' + host + ' -p ' + port + ' -U ' + user + ' -f  ' + archive_name + ' ' + db
-        with open(os.devnull, 'wb') as devnull:
-            subprocess.call(cmd.split(), stdout=devnull, stderr=subprocess.STDOUT)
-    except IOError:
-        sys.stdout.write('Error on ' + db + ' db backup... Please try again.\n')
-        sys.stdout.flush()
-    else:
-        if os.path.isfile(archive_name):
-            # compress it
-            if verbose:
-                sys.stdout.write('compressing ' + archive_name + '\n')
-                sys.stdout.flush()
-            compress_file(archive_name, remove=True)
-        else:
-            sys.stdout.write(archive_name + ' not found\n')
-            sys.stdout.flush()
-
-
-def backup_filestore(verbose=True):
-    # backup filestore
-    if not os.path.isdir(BACKUP['DIR']):
-        print('Backup directory (' + BACKUP['DIR'] + ') does not exists.')
-        exiting(0)
-    filestore_archive = BACKUP['DIR'] + '/' + BACKUP['FILESTORE_PREFIX'] + '.' + SUFFIX + '.tar'
-    if verbose:
-        sys.stdout.write('Archiving filestore from ' + BACKUP['FILESTORE_DIR'] + ' under ' + filestore_archive + '\n')
-        sys.stdout.flush()
-    try:
-        tar = tarfile.open(filestore_archive, 'w')
-        os.chdir(BACKUP['FILESTORE_DIR'])
-        # print(os.listdir('.'))
-        # print(os.cwd())
-        for folder in ['storage', 'resources']:
-            if os.path.isdir(folder):
-                tar.add(folder)
-            else:
-                raise NameError('filestore backup:', 'folder "' + folder + '" not found under ' + BACKUP['FILESTORE_DIR'])
-        # tar.add('storage')
-        tar.add('test')
-        # tar.add('.', arcname='filestore')
-    except IOError:
-        sys.stdout.write('Filestore content changed while I was reading it... Please try again.\n')
-        sys.stdout.flush()
-        exiting(0)
-    except NameError as err:
-        phase, reason = err.args
-        sys.stdout.write('An error has occured: ' + reason + '\n')
-        sys.stdout.flush()
-        exiting(0)
-    else:
-        tar.close()
-        if verbose:
-            sys.stdout.write('compressing ' + filestore_archive + '\n')
-            sys.stdout.flush()
-        if os.path.isfile(filestore_archive):
-            # compress it
-            compress_file(filestore_archive, remove=True)
-        else:
-            sys.stdout.write(filestore_archive + 'not found\n')
-            sys.stdout.flush()
-            exiting(0)
-
-
-def decompress_file(f_in='', f_out='', remove=False):
-    if not f_in:
-        return False
-    if not f_out:
-        f_out = f_in.replace('.gz', '', 1)
-    try:
-        with gzip.open(f_in, 'rb') as file_in:
-            with open(f_out, 'wb') as file_out:
-                file_out.writelines(file_in)
-    except IOError:
-        sys.stdout.write('Error decompressing ' + f_in + ' ... Please try again.\n')
-        sys.stdout.flush()
-    else:
-        if remove:
-            # print(f_in)
-            os.remove(f_in)
-
-
-def compress_file(f_in='', f_out='', remove=False):
-    if not f_in:
-        return False
-    if not f_out:
-        f_out = f_in + '.gz'
-    try:
-        with open(f_in, 'rb') as file_in:
-            with gzip.open(f_out, 'wb') as file_out:
-                file_out.writelines(file_in)
-    except IOError:
-        sys.stdout.write('Error compressing ' + f_in + ' ... Please try again.\n')
-        sys.stdout.flush()
-    else:
-        if remove:
-            # print(f_in)
-            os.remove(f_in)
-
-
-def db_test_refresh():
-    for dbname in [SQL['DB_TEST'], SQL['DB_DATASTORE_TEST']]:
-        # db_drop(dbname)
-        # db_create(dbname)
-        db_empty(dbname)
-
+SNAPSHOTS_TOKEN = None
 
 def db_connect_to_postgres(host=SQL['HOST'], port=SQL['PORT'], dbname=SQL['DB'], user=SQL['USER'], password=SQL['PASSWORD']):
-    # try:
-    con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
-    # except:
-    #     print("I am unable to connect to the database, exiting.")
-    #     exiting(2)
-    return con
+    """connects to postgres"""
 
-
-def db_empty(dbname):
-    '''removes all tables from a database'''
     try:
+        con = psycopg2.connect(host=host, port=port, database=dbname, user=user, password=password)
+        return con
+    except:
+        raise click.ClickException("I am unable to connect to the database, exiting.")
+
+def db_schema_owner(dbname, schema='public', owner=SQL['USER'], verbose=False):
+    """assign a new owner to a schema."""
+
+    try:
+        if verbose:
+            print("Assigning {} as owner of {} schema of {} database...".format(owner, schema, dbname))
+        con = db_connect_to_postgres(dbname=dbname, user=SQL['SUPERUSER'], password=SQL['SUPERPASS'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        query = "alter schema {} owner to {};".format(schema, owner)
+        cur.execute(query)
+        con.commit()
+        if verbose:
+            print("Done.")
+    except:
+        raise click.ClickException("I can't assign a new owner")
+    finally:
+        con.close()
+
+
+
+def db_empty(dbname, verbose=False):
+    """Recreate the schema for a database."""
+
+    try:
+        if verbose:
+            print("Flushing database {}...".format(dbname))
         con = db_connect_to_postgres(dbname=dbname)
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        query = "drop schema public cascade; create schema public;"
+        cur.execute(query)
+        con.commit()
+        if verbose:
+            print("Done.")
     except:
-        print("Can't connect to the database" + dbname)
-        con.close()
-        exiting(2)
-
-    #con.set_isolation_level(0)
-    cur = con.cursor()
-    drop_db = 'drop schema public cascade; create schema public;'
-    # print(drop_db)
-
-    try:
-        cur.execute(drop_db)
-        print('Database ' + dbname + ' has been flushed.')
-    except:
-        print("I can't flush database " + dbname)
+        raise click.ClickException("I can't flush database {} as {}, try sudo :)".format(dbname, SQL['USER']))
     finally:
         con.close()
 
 
-def db_drop(dbname):
-    con = db_connect_to_postgres()
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    drop_db = 'DROP DATABASE IF EXISTS ' + dbname
-    # print(drop_db)
+def db_query(query):
     try:
-        cur.execute(drop_db)
-        print('Database ' + dbname + ' has been dropped.')
-    except:
-        print("I can't drop database " + dbname)
-    finally:
-        con.close()
-
-
-def db_create(dbname, owner=SQL['USER']):
-    # list databases
-    # SELECT datname FROM pg_database
-    # WHERE datistemplate = false;
-    con = db_connect_to_postgres()
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    create_db = 'CREATE DATABASE ' + dbname + ' OWNER ' + owner
-    options = " ENCODING 'UTF-8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8'"
-    # print(create_db + options)
-    cur.execute(create_db + options)
-    # try:
-    #     cur.execute(create_db + options)
-    #     print('Database ' + dbname + ' has been created.')
-    # except:
-    #     print("I can't create database " + dbname)
-    #     exiting(2)
-    # finally:
-    #     con.close()
-
-
-# def deploy():
-#     control('stop')
-#     print('changing dir to', BASEDIR)
-#     os.chdir(BASEDIR)
-#     #print('fetching branch or tag', BRANCH)
-#     #cmd_line = ['git', 'fetch', 'origin', BRANCH]
-#     print('fetching branches and tags')
-#     cmd_line = ['git', 'fetch']
-#     subprocess.call(cmd_line)
-#     print('hopping onto', BRANCH)
-#     cmd_line = ['git', 'checkout', BRANCH]
-#     subprocess.call(cmd_line)
-#     print("pulling latest changes of ", BRANCH)
-#     cmd_line = ['git', 'pull', 'origin', BRANCH]
-#     subprocess.call(cmd_line)
-#     print('done. starting', APP)
-#     control('start')
-#     if (len(opts) != 0) and (opts[0] == 'test'):
-#         tests()
-
-
-def feature():
-    '''rebuilds the feature-index.js'''
-    cmd = ['ckan', '-c', INI_FILE, 'hdx-feature-search']
-    os.chdir(BASEDIR)
-    print('Rebuilding feature index...')
-    subprocess.call(cmd)
-    print('Fixing permissions on feature-index.js...')
-    lunr_folder = os.path.join(BASEDIR, 'ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr')
-    if os.path.isdir(lunr_folder):
-        feature_index_file = os.path.join(lunr_folder,'feature-index.js')
-    else:
-        feature_index_file = os.path.join(BASEDIR, 'ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr/feature-index.js')
-    os.chown(feature_index_file, 33, 0)
-    print('Done.')
-
-
-def filestore_restore(ts=TODAY, server=RESTORE['SERVER'], directory=RESTORE['DIR'], user=RESTORE['USER'], clean=False):
-    # print('This doesn\'t do anything right now...')
-    # exiting(0)
-    line = ["rsync", "-a", "--progress", user + '@' + server + ':' + directory + '/' + RESTORE['FILESTORE_PREFIX'] + '*' + ts + '*', RESTORE['TMP_DIR'] + '/']
-    # if os.path.isdir(RESTORE['TMP_DIR']):
-    #     for the_file in os.listdir(RESTORE['TMP_DIR']):
-    #         file_path = os.path.join(RESTORE['TMP_DIR'], the_file)
-    #         try:
-    #             # if os.path.isfile(file_path):
-    #             os.unlink(file_path)
-    #         except Exception as e:
-    #             print(e)
-    #     #rmtree(RESTORE['TMP_DIR'])
-    # else:
-    os.makedirs(RESTORE['TMP_DIR'], exist_ok=True)
-    print('Getting the filestore archive...')
-    try:
-        result = subprocess.call(line, stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as exc:
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print("Can't find archive from", ts, "or can't connect.")
-        print('The error encountered was:')
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print(str(exc.output.decode("utf-8").strip()))
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        # q = 'Would you like to get anothr backup?'
-        # if not query_yes_no(q, default='no'):
-        #     print("Aborting restore operation.")
-        #     exiting(0)
-        print('try another timestamp')
-        return False
-    print('Done.')
-    #tfilename =  os.path.join(RESTORE['TMP_DIR'], os.listdir(RESTORE['TMP_DIR'])[0])
-    # changed per Steven Merrill suggestion
-    tf = []
-    for f in os.listdir(RESTORE['TMP_DIR']):
-        if re.search('.tar.gz$', f):
-            tf.append(f)
-    #tf = [f in os.listdir(RESTORE['TMP_DIR']) if re.search('.tpl$', f)]
-    tfilename = os.path.join(RESTORE['TMP_DIR'], tf[0])
-    if tarfile.is_tarfile(tfilename):
-        if clean:
-            filestore_dir = BACKUP['FILESTORE_DIR']
-            for root, dirs, files in os.walk(filestore_dir, topdown=False):
-                for item in files:
-                    try:
-                        os.remove(os.path.join(root, item))
-                    except Exception as e:
-                        print(e)
-                        print('error removing ' + item)
-                if root != filestore_dir:
-                    try:
-                        os.rmdir(root)
-                    except Exception as e:
-                        print(e)
-                        print('error removing ' + root)
-
-                        # for the_file in os.listdir(filestore_dir):
-            #     file_path = os.path.join(filestore_dir, the_file)
-            #     try:
-                    # if os.path.isfile(file_path):
-                    # os.unlink(file_path)
-                # except Exception as e:
-                #     print(e)
-            # rmtree('/srv/filestore')
-            # os.makedirs('/srv/filestore', exist_ok=True)
-            # exiting(0)
-        tfile = tarfile.open(tfilename, 'r:gz')
-        print('Restoring filestore from ' + tfilename)
-        print('It will take a while...')
-        try:
-            tfile.extractall('/srv')
-        except:
-            print('some error occured. bailing out...')
-            exiting(0)
-    else:
-        print(tfilename + ' is not a valid archive.')
-        exiting(0)
-    print('Fixing permissions on filestore')
-    for root, dirs, files in os.walk(BACKUP['FILESTORE_DIR']):
-        for item in dirs:
-            os.chown(os.path.join(root, item), 33, 33)
-            os.chmod(os.path.join(root, item), 0o755)
-        for item in files:
-            os.chown(os.path.join(root, item), 33, 33)
-            os.chmod(os.path.join(root, item), 0o644)
-    print('All done! Please do not forget to remove the archives in ' + RESTORE['TMP_DIR'])
-
-
-def gis_init():
-    gis_envs = ['HDX_GISDB_ADDR', 'HDX_GISDB_PORT', 'HDX_GISDB_DB', 'HDX_GISDB_USER', 'HDX_GISDB_PASS']
-    gis_db_details = []
-    for env in gis_envs:
-        if isinstance(os.getenv(env), str):
-            gis_db_details.append(os.getenv(env))
-        else:
-            print('Error. Env var', env, 'not found. Exiting.\n')
-            exiting(0)
-    return gis_db_details
-
-
-def gis_db_clear():
-    '''empty the gis database'''
-
-    if not query_yes_no('Clearing gis db. Are you sure?', default='no'):
-        print('Nothing changed.')
-        exiting(0)
-
-    host, port, db, user, password = gis_init()
-    refresh_pgpass(host=host, port=port, user=user, password=password, verbose=False)
-    # psql -h $HDX_GISDB_ADDR -p $HDX_GISDB_PORT -U $HDX_GISDB_USER $HDX_GISDB_DB -ntc '\dt' | awk -F \|
-    # '{ print $2 }' | sed -e 's/^ //g' | grep -E "^pre_" | more
-    con = db_connect_to_postgres(host=host, port=port, user=user, dbname=db)
-    con.set_isolation_level(0)
-    cur = con.cursor()
-
-    cur.execute('DROP EXTENSION postgis CASCADE;')
-
-    try:
-        query = "SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = 'public';"
+        con = db_connect_to_postgres(dbname=SQL['DB'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
         cur.execute(query)
         con.commit()
         rows = cur.fetchall()
-        if len(rows) > 1:
-            print('Removing', len(rows), 'tables...')
-        for row in rows:
-            table_name, table_type = row
-            if table_type == 'BASE TABLE':
-                query = "DROP TABLE " + row[0] + " CASCADE;"
-                cur.execute(query)
-            else:
-                print('Not a table... What could it be?. Skipping.')
-
-        cur.execute('CREATE EXTENSION postgis;')
-        cur.execute('CREATE EXTENSION postgis_topology;')
-
     except:
-        print("I can't query that")
-        exiting(2)
+        raise click.ClickException("I can't query that")
     finally:
         con.close()
+    return rows
 
 
-def gis_restore():
-    gis_db_clear()
-    host, port, db, user, password = gis_init()
-
-    archive_name = '/srv/backup/gis.plsql.gz'
-    filename = '/srv/backup/gis.plsql'
-
-    decompress_file(archive_name, filename, False)
-
-    print('Restoring database', db, 'from', filename)
-    print('Please wait. This may take a while...')
-    cmd = ['pg_restore', '-vOx', '-h', host, '-p', port, '-U', user, '-d', db, filename]
-    # print(cmd)
-    with open(os.devnull, 'wb') as devnull:
-        subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
-    db_restore(host=host, port=port, user=user, db=db, filename='/srv/backup/gis.psql')
+def sysadmin_exists(user):
+    query = "select sysadmin from public.user where name='{}';".format(user)
+    rows = db_query(query)
+    if len(rows) == 1:
+        sysadmin = rows[0][0]
+        if sysadmin:
+            return True
+    return False
 
 
-def gis_backup(verbose=True):
-    '''wrapper for backup_db for now'''
-    host, port, db, user, password = gis_init()
-    refresh_pgpass(host=host, port=port, user=user, password=password, verbose=False)
-    backup_db(host=host, port=port, user=user, db=db, prefix=BACKUP['DB_PREFIX'], verbose=True)
+def control(cmd):
+    flag = dict(
+        start="-u",
+        stop="-d",
+        restart="-r"
+    )
+    service_folder = '/var/run/s6/services/unit'
+    if not os.path.exists(service_folder):
+        print("Probably in local environment. Nothing to do.")
+        return
+
+    line = ["s6-svc", flag[cmd], service_folder]
+    try:
+        subprocess.call(line)
+    except:
+        raise click.ClickException("ckan {} failed.".format(cmd))
+        sys.exit(1)
 
 
-def less_compile(verbose=False):
-    if verbose:
-        ini_file = '/etc/ckan/less.ini'
+def user_exists(user):
+    """Check if user exists."""
+    query = "select name,fullname,email,state,sysadmin from public.user where name='{}';".format(user)
+    rows = db_query(query)
+    if len(rows) == 1:
+        return True
     else:
-        ini_file = INI_FILE
-    cmd = ['ckan', '-c', ini_file, 'custom-less-compile']
-    os.chdir(BASEDIR)
-    less_wr_dirs = ["ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated", "/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp"]
-    # for location in less_wr_dirs:
-    os.makedirs(RESTORE['TMP_DIR'], exist_ok=True)
-    print('Compiling...')
-    subprocess.call(cmd)
-    print('Fixing permissions on writeable folders...')
-    for location in less_wr_dirs:
-        os.chown(location, 33, 0)
-        for root, dirs, files in os.walk(os.path.join(BASEDIR, location)):
-            for item in dirs:
-                os.chown(os.path.join(root, item), 33, 0)
-            for item in files:
-                os.chown(os.path.join(root, item), 33, 0)
-    print('Done.')
+        return False
 
 
-def refresh_pgpass(host=SQL['HOST'], port=SQL['PORT'], user=SQL['USER'], password=SQL['PASSWORD'], verbose=True):
+def user_pretty_list(userlist):
+    for row in userlist:
+        print('+++++++++++++++++++++++++++++++++++++++++++++++')
+        (username, displayname, email, state, sysadmin, apikey) = row
+        print('User: {}'.format(username))
+        print('Full Name: {}'.format(displayname))
+        print('Email: {}'.format(email))
+        print('State: {}'.format(state))
+        print('Sysadmin: {}'.format(sysadmin))
+        print('API Key: {}'.format(apikey))
+    print('+++++++++++++++++++++++++++++++++++++++++++++++')
+    if len(userlist) > 1:
+        print('Got a total of ' + str(len(userlist)) + ' users.')
 
+
+def get_snapshot_token():
+    """Get the authorization token for the snapshots"""
+    global SNAPSHOTS_TOKEN
+    if SNAPSHOTS_TOKEN:
+        return SNAPSHOTS_TOKEN
+
+    args = {
+        'grant_type': 'password',
+        'client_id': 'token',
+        'username': os.getenv('SNAPSHOTS_USERNAME', input('Snapshots username: ')),
+        'password': os.getenv('SNAPSHOTS_PASSWORD', getpass.getpass('Snapshots password: '))
+    }
+    try:
+        r = requests.post('https://auth.ahconu.org/oauth2/token', args)
+        # print(r.json())
+        if 'access_token' in r.json().keys():
+            print('Token aquired...')
+            SNAPSHOTS_TOKEN = r.json()['access_token']
+            return r.json()['access_token']
+    except:
+        raise click.ClickException('can\'t get the token')
+
+
+def download(url, headers, filename):
+    """Get the requested snapshot file"""
+    with open(filename, 'wb') as f:
+        response = requests.get(url, headers=headers, stream=True)
+        total = response.headers.get('content-length')
+
+        if total is None:
+            f.write(response.content)
+        else:
+            downloaded = 0
+            total = int(total)
+            for data in response.iter_content(chunk_size=max(int(total/1000), 1024*1024)):
+                downloaded += len(data)
+                f.write(data)
+                done = int(50*downloaded/total)
+                sys.stdout.write('\r[{}{}]'.format('=' * done, '.' * (50-done)))
+                sys.stdout.flush()
+    sys.stdout.write('\n')
+
+
+def get_latest_snapshot_name(url, headers, prefix='prod.min.ckan'):
+    """Get the most recent snapshot name"""
+    url = 'https://snapshots.aws.ahconu.org/api/hdx/ckan/'
+    r = requests.get(url, headers=headers)
+    if r.status_code != 200:
+        raise click.ClickException("Failed to get the snapshots list from {}".format(url))
+    html = r.text
+    parsed_html = BeautifulSoup(html, "html.parser")
+    a_list = [a.get('href') for a in parsed_html.body.pre.find_all('a') ]
+    relevant_list = list(filter(lambda item: item.startswith(prefix), a_list))
+    if len(relevant_list) < 1:
+        raise click.ClickException("Can't find any item with this prefix ({})".format(prefix))
+    relevant_list.reverse()
+    return relevant_list[0]
+
+
+def get_snapshot(prefix):
+    token = get_snapshot_token()
+    if not token:
+        raise click.ClickException('something went wrong. can\'t get the token or something.')
+    chunk_size = 4096
+    headers = {'Authorization': 'Bearer {}'.format(token)}
+    url = 'https://snapshots.aws.ahconu.org/api/hdx/ckan/'
+
+    filename = get_latest_snapshot_name(url, headers, prefix=prefix)
+
+    if filename.startswith('prod.min.ckan') or filename.startswith('prod.ckan'):
+        fname = 'ckan.pg_restore'
+    elif filename.startswith('prod.datastore'):
+        fname = 'datastore.pg_restore'
+    else:
+        fname = 'files.tar'
+
+    local_file = '/srv/backup/{}'.format(fname)
+    print('Getting {} as {}'.format(filename, local_file))
+    download('{}{}'.format(url, filename), headers, local_file)
+
+
+@click.group()
+# @click.option('--config', default=INI_FILE, show_default=True, help="Config file to use for ckan cli commands.")
+@click.option('-v', '--verbose', is_flag=True, default=False, show_default=True, help="Make ckan cli commands more verbose.")
+@click.pass_context
+def cli(ctx, verbose):
+    ctx.ensure_object(dict)
+    ctx.obj['CONFIG'] = INI_FILE
+    ctx.obj['VERBOSE'] = verbose
+    if verbose:
+        ctx.obj['CONFIG'] = VERBOSE_INI_FILE
+
+
+@cli.group()
+def db():
+    """Database related commands."""
+    pass
+
+@cli.group()
+def files():
+    """File assets related commands."""
+    pass
+
+@cli.group()
+def filestore():
+    """S3 filestore related commands."""
+    pass
+
+@cli.group()
+def solr():
+    """SOLR related commands."""
+    pass
+
+
+@cli.command()
+def restart():
+    """Restart ckan service (gunicorn)."""
+    control('restart')
+
+
+@cli.command()
+def start():
+    """Start ckan service (gunicorn)."""
+    control('start')
+
+
+@cli.command()
+def stop():
+    """Stop ckan service (gunicorn)."""
+    control('stop')
+
+
+@cli.group()
+def sysadmin():
+    """Manage sysadmins."""
+    pass
+
+
+@cli.group()
+def user():
+    """Manage users."""
+    pass
+
+
+@cli.group()
+def token():
+    """Manage API tokens."""
+    pass
+
+
+@db.command(name='pgpass')
+@click.pass_context
+def refresh_pgpass_command(ctx):
+    """Make sure the pgpass file is up to date."""
+    verbose = ctx.obj['VERBOSE']
+    if verbose:
+        print("Refreshing .pgpass file...")
+    (host, port, user, password)=(SQL['HOST'], SQL['PORT'], SQL['USER'], SQL['PASSWORD'])
     pgpass = '/root/.pgpass'
-    partial_line = ''.join([':*:', user, ':'])
     correct_line = ':'.join([host, port, '*', user, password])
-
-    newpgpass = []
-    if os.path.isfile(pgpass):
-        with open(pgpass) as f:
-            content = f.readlines()
-        for line in content:
-            if len(line):   # just skip the empty lines
-                line = line.strip()
-                if correct_line == line:
-                    if verbose:
-                        print("The pgpass file has the right content.")
-                    # exiting(0)
-                    return True
-                if partial_line not in line:
-                    newpgpass.append(line)
-    newpgpass.append(correct_line)
-    # print(newpgpass)
+    super_line = ':'.join([host,port,'*', SQL['SUPERUSER'], SQL['SUPERPASS']])
+    newpgpass = [super_line, correct_line]
     with open(pgpass, 'w') as f:
         for line in newpgpass:
             f.write("%s\n" % line)
@@ -850,13 +333,253 @@ def refresh_pgpass(host=SQL['HOST'], port=SQL['PORT'], user=SQL['USER'], passwor
         print('Done.')
 
 
-def reinstall_plugins():
+@db.command(name='pull')
+@click.option('-p', '--prefix', default='prod.datastore', show_default=True, help="File name prefix to pull")
+@click.option('-a', '--all', is_flag=True, show_default=True, default=False, help="Get _all_ we need (ckan and datastore).")
+@click.pass_context
+def db_pull(ctx, prefix, all):
+    """Pulls the latest database backups from the snapshots site"""
+    if not all:
+        get_snapshot(prefix)
+        return
+    prefixes = [ 'prod.datastore', 'prod.min.ckan']
+    for p in prefixes:
+        get_snapshot(p)
+
+
+@db.command(name='restore')
+@click.option('-S', '--server', default=SQL['HOST'], show_default=True, help="Server to retore to")
+@click.option('-d', '--database', default=SQL['DB'], show_default=True, help="Database to restore")
+@click.option('-f', '--filename', default='/srv/backup/{}.pg_restore'.format(SQL['DB']), show_default=True, help="File name to restore from")
+@click.option('-m', '--minimal', is_flag=True, default=False, show_default=True, help="Skip larger tables (like activity).")
+@click.option('-s', '--skip-tables', default='activity,activity_detail,12d7c8e3-eff9-4db0-93b7-726825c4fe9a', show_default=True, help="Skip these specific tables.")
+@click.option('-k', '--keep-ckan-running', is_flag=True, show_default=True, default=False, help="Do not stop ckan during restore.")
+@click.option('-c', '--clear-database', is_flag=True, show_default=True, default=False, help="Recreate the schema.")
+@click.pass_context
+def db_restore(ctx, server, database, filename, minimal, skip_tables, keep_ckan_running, clear_database):
+    """Restore a database from the backup"""
+    # click.echo('{} {}'.format(database,file))
+    if not keep_ckan_running:
+        print('Stopping ckan ...')
+        control('stop')
+    else:
+        print('Ckan will keep running in the background.')
+
+    restore = "pg_restore -h {} -vOx -n public".format(server).split()
+    if clear_database:
+        db_empty(database)
+        # two hammers should be better than one hammer
+        # but you get lots of erros from pg_restore not being able to drop
+        # things that were already dropped.
+        # you would think it makes send to drop if exists but meh.
+        # restore.append('-c')
+
+    skip_tables_data = skip_tables.split(',')
+    if minimal:
+        print('Restoring minimal database {} from {} ...'.format(database,filename))
+        cmd0 = 'pg_restore -l {}'.format(filename).split()
+        get_tables = subprocess.check_output(cmd0).decode("utf-8").split('\n')
+        schema_only = []
+        full_tables = []
+        for line in get_tables:
+            skip_it = False
+            for table in skip_tables_data:
+                if "TABLE DATA public {} ".format(table) in line:
+                    skip_it = True
+                    break
+            if skip_it:
+                schema_only.append(line)
+                continue
+            if not len(line):
+                continue
+            full_tables.append(str(line))
+        with open('{}.tables'.format(filename), 'w') as f:
+            for line in full_tables:
+                f.write('{}\n'.format(str(line)))
+        with open('{}.schema_only'.format(filename), 'w') as f:
+            for line in schema_only:
+                f.write('{}\n'.format(str(line)))
+        restore.extend("-U {} -d {} -L {}.tables {}" \
+            .format(SQL['USER'], database, filename, filename).split())
+    else:
+        print('Restoring minimal database {} from {} ...'.format(database,filename))
+        restore.extend("-U {} -d {} {}" \
+            .format(SQL['USER'], database, filename).split())
+    if ctx.obj['VERBOSE']:
+        subprocess.call(restore, stderr=subprocess.STDOUT)
+    else:
+        with open(os.devnull, 'wb') as devnull:
+            subprocess.call(restore, stdout=devnull, stderr=subprocess.STDOUT)
+    print('Restore completed.')
+
+    if database == SQL['DB_DATASTORE']:
+        ctx.invoke(db_set_perms)
+
+    if not keep_ckan_running:
+        print('Starting ckan ...')
+        control('start')
+
+
+@db.command(name='schema')
+@click.pass_context
+def db_set_schema(ctx):
+    """Set the owner of the ckan and datastore databases schema"""
+    verbose = ctx.obj['VERBOSE']
+    db_schema_owner(dbname='datastore', schema='public', owner=SQL['USER'], verbose=verbose)
+    db_schema_owner(dbname='ckan', schema='public', owner=SQL['USER'], verbose=verbose)
+
+
+@db.command(name='perms')
+def db_set_perms():
+    """Set proper permissions on the ckan and datastore databases"""
+    with open('{}/ckanext/datastore/set_permissions.sql'.format(BASEDIR), 'r') as fin:
+        query = (
+            fin.read()
+            .split('\connect {datastoredb}\n')[1]
+            .replace('{mainuser}', SQL['USER'])
+            .replace('{writeuser}', SQL['USER'])
+            .replace('{readuser}', SQL['USER_DATASTORE'])
+            .replace('{maindb}', SQL['DB'])
+            .replace('{datastoredb}', SQL['DB_DATASTORE'])
+        )
+
+    try:
+        con = db_connect_to_postgres(dbname=SQL['DB_DATASTORE'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        cur.execute(query)
+        con.commit()
+    except:
+        raise click.ClickException("Failed to set proper permissions. Exiting.")
+    finally:
+        con.close()
+
+    print("Datastore permissions have been reset to default.")
+
+
+@cli.command()
+@click.pass_context
+def feature(ctx):
+    '''Rebuild the feature index.'''
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'hdx-feature-search']
+    os.chdir(BASEDIR)
+    print('Rebuilding feature index...')
+    subprocess.call(cmd)
+    print('Fixing permissions on feature-index.js...')
+    lunr_folder = os.path.join(BASEDIR, 'ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr')
+    if os.path.isdir(lunr_folder):
+        feature_index_file = os.path.join(lunr_folder,'feature-index.js')
+    else:
+        feature_index_file = os.path.join(BASEDIR, 'ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr/feature-index.js')
+    os.chown(feature_index_file, 33, 0)
+    print('Done.')
+
+
+@files.command(name='pull')
+@click.option('-p', '--prefix', default='prod.files', show_default=True, help="File name prefix to pull")
+@click.pass_context
+def files_pull(ctx, prefix):
+    """Download the files snapshot."""
+    get_snapshot(prefix)
+
+
+@files.command(name='restore')
+@click.option('-f', '--filename', default='/srv/backup/{}.tar'.format('files'), show_default=True, help="File name to restore from")
+@click.option('-t', '--targetdir', default='/srv/filestore', show_default=True, help="Target directory to restore in")
+@click.pass_context
+def files_restore(ctx, filename, targetdir):
+    """Unpack the files archive into the targetdir."""
+    try:
+        with tarfile.open(filename) as t:
+            print("Restoring {} content into {} ...".format(filename, targetdir))
+            t.extractall(targetdir)
+        print("Done.")
+    except:
+        raise click.ClickException("Can't unpack {} into {}".format(filename, targetdir))
+
+
+@filestore.command(name='sync')
+@click.option('-s', '--source', default='hdx-dev-filestore', show_default=True, help="Source bucket name")
+@click.option('-d', '--destination', default='hdx-ckan-inno-filestore', show_default=True, help="Destination bucket name")
+@click.option('-x', '--source-region', default='us-east-1', show_default=True, help="Source bucket region")
+@click.option('-r', '--region', default='eu-central-1', show_default=True, help="Destination bucket region")
+@click.option('-c', '--clear', is_flag=True, show_default=True, default=False, help="Remove differences from the destination bucket.")
+@click.pass_context
+def filestore_sync(ctx, source, destination, source_region, region, clear):
+    """Performs a simple S3 sync"""
+
+    command = ['aws', 's3', 'sync']
+    if clear:
+        command.append('--delete')
+    print("Syncing {} from {} region to {} from {} region...".format(source, source_region, destination, region))
+    sync_array = [
+        *command,
+        's3://{}/'.format(source), 's3://{}/'.format(destination),
+        '--source-region', source_region, '--region', region
+    ]
+    try:
+        print(' '.join(sync_array))
+        subprocess.check_call(sync_array)
+    except:
+        raise click.ClickException("S3 sync failed.")
+
+
+@cli.command(name='less')
+@click.argument('compile', required=False)
+@click.argument('verbose', required=False)
+@click.pass_context
+def less_compile(ctx, compile, verbose):
+    """Compile the custom stylesheets.
+
+    COMPILE     Deprecated option. Skip it.
+
+    VERBOSE     Deprecated option. Use -v on script level instead.
+
+    """
+    click.echo("Deprecated. Don't have any less anymore. Exiting...")
+    return
+    if compile:
+        click.echo("Deprecated argument 'compile'. Just skip it.")
+    if verbose:
+        click.echo("Deprecated argument 'verbose'. Use -v at script level instead.")
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'custom-less-compile']
+    os.chdir(BASEDIR)
+    less_wr_dirs = ["ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated", "/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/less/tmp"]
+    print('Compiling...')
+    subprocess.call(cmd)
+    print('Fixing permissions on writeable folders...')
+    for location in less_wr_dirs:
+        os.chown(location, 33, 0)
+        for root, dirs, files in os.walk(os.path.join(BASEDIR, location)):
+            for item in dirs:
+                os.chown(os.path.join(root, item), 33, 0)
+            for item in files:
+                os.chown(os.path.join(root, item), 33, 0)
+    print('Done.')
+
+
+@cli.command(name='logs')
+def show_logs():
+    """Just a glorified tail -f /var/log/ckan/*log"""
+    logs = ['/var/log/ckan/access.log', '/var/log/ckan/error.log', '/var/log/ckan/ckan.log']
+    cmd = ['tail', '-f']
+    cmd.extend(logs)
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++')
+    print('      Stop following the logs with Ctrl+C')
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++')
+    subprocess.call(cmd)
+
+
+@cli.command(name='plugins')
+@click.option('-d', '--develop', is_flag=True, default=False, show_default=True, help="Install plugins in develop mode.")
+def reinstall_plugins(develop):
+    """Reinstall the ckan plugins."""
     path = BASEDIR
     cmd = ['python', 'setup.py']
-    if len(opts) == 1:
-        if opts.pop(0) in ['dev', 'develop']:
-            cmd.append('develop')
-    if len(cmd) == 2:
+    if develop:
+        cmd.append('develop')
+        print('Installing plugins in develop mode.')
+    else:
         cmd.append('install')
     for item in os.listdir(path):
         fullpath = os.path.join(path, item)
@@ -869,429 +592,533 @@ def reinstall_plugins():
                         subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
 
 
-def restore_cleanup():
-    print('Cleaning up temporary directory used for restore (' + RESTORE['TMP_DIR'] + ')')
-    if os.path.isdir(RESTORE['TMP_DIR']):
-        rmtree(RESTORE['TMP_DIR'])
+
+@solr.command(name='add')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
+@click.option('-s', '--config-set', default=SOLR['CONFIGSET'], show_default=True, help="SOLR Configset to use.")
+@click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Overwrite collection if exists.")
+@click.pass_context
+def solr_add(ctx, host, port, collection, config_set, force):
+    """Create a SOLR collection"""
+    try:
+        if ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+            if not force:
+                print("Collection {} already exists.".format(collection))
+                raise click.ClickException("Collection {} already exists. Use --force to forcibly recreate it.".format(collection))
+            else:
+                ctx.invoke(solr_del)
+        query = "http://{}:{}/solr/admin/collections?action=CREATE&name={}&collection.configName={}&numShards=1" \
+            .format(host, port, collection, config_set)
+        r = requests.get(query)
+        if r.status_code != 200:
+            raise click.ClickException(r.json()["error"]["msg"])
+        print("The collection {} has been created successfully.".format(collection))
+    except Exception as e:
+        raise click.ClickException("Can't query SOLR: {}".format(str(e)))
+
+
+@solr.command(name='del')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection to add.")
+@click.pass_context
+def solr_del(ctx, host, port, collection):
+    """Create a SOLR collection"""
+    try:
+        if not ctx.invoke(solr_exists, host=host, port=port, collection=collection):
+            raise click.ClickException("Collection {} does not exists.".format(collection))
+        query = "http://{}:{}/solr/admin/collections?action=DELETE&name={}" \
+            .format(host, port, collection)
+        r = requests.get(query)
+        if r.status_code != 200:
+            raise click.ClickException(r.json()["error"]["msg"])
+        print("The collection {} has been removed successfully.".format(collection))
+    except Exception as e:
+        raise click.ClickException("Can't query SOLR: {}".format(str(e)))
+
+@solr.command(name='check')
+@click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
+@click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Core (Collection actually).")
+def solr_exists(host, port, collection):
+    """Check the status of SOLR"""
+    try:
+        query = "http://{}:{}/solr/admin/collections?action=CLUSTERSTATUS" \
+            .format(host, port)
+        r = requests.get(query)
+        if r.status_code != 200:
+            raise click.ClickException(r.json()["error"]["msg"])
+        collections = r.json()["cluster"]["collections"].keys()
+        if collection not in collections:
+            return False
+        return True
+    except Exception as e:
+        raise click.ClickException("Can't query SOLR: {}".format(str(e)))
+
+
+@solr.command(name='reindex')
+@click.option('--clear', is_flag=True, default=False, show_default=True, help="Clear solr index first.")
+@click.option('--fast', is_flag=True, default=False, show_default=True, help="Use multiple threaded processes.")
+@click.option('--refresh', is_flag=True, default=False, show_default=True, help="Will only refresh. Not usable with fast option.")
+@click.pass_context
+def solr_reindex(ctx, fast, refresh, clear):
+    """Reindex solr."""
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'search-index']
+    if clear:
+        print("Clearing solr index...")
+        subprocess.call(cmd + ['clear'])
+    if fast:
+        cmd.append('rebuild-fast')
+        if refresh:
+            print('Ignoring refresh option when doing a fast reindex.')
+    else:
+        cmd.append('rebuild')
+        if refresh:
+            cmd.append('-r')
+    os.chdir(BASEDIR)
+    subprocess.call(cmd)
+
+
+@sysadmin.command(name='enable')
+@click.argument('user')
+@click.pass_context
+def sysadmin_enable(ctx, user):
+    if sysadmin_exists(user):
+        print('User ' + user + ' is already sysadmin.')
+        sys.exit(0)
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'sysadmin', 'add', user]
+    subprocess.call(cmd)
+
+
+@sysadmin.command(name='disable')
+@click.argument('user')
+@click.pass_context
+def sysadmin_disable(ctx, user):
+    if not sysadmin_exists(user):
+        print('User ' + user + ' is not sysadmin.')
+        sys.exit(0)
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'sysadmin', 'remove', user]
+    subprocess.call(cmd)
+
+
+@sysadmin.command(name='list')
+def sysadmin_list():
+    query = "select name,fullname,email,state,sysadmin,apikey from public.user where sysadmin='True' order by name asc;"
+    rows = db_query(query)
+    user_pretty_list(rows)
+
+
+@token.command(name='add')
+@click.argument('user')
+@click.argument('name')
+@click.argument('expire')
+@click.pass_context
+def token_add(ctx, user, name, expire):
+    """Add a new token for a user.
+
+    USER        Username.
+
+    NAME        New token name.
+
+    EXPIRE      Expires after this many days (max 180).
+    """
+    if int(expire) > 180:
+        print('Maximum token validity is 180 days.')
+        sys.exit(0)
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'add', user, name, 'expires_in='+str(expire), 'unit=86400']
+    subprocess.call(cmd)
+
+
+@token.command(name='list')
+@click.argument('user')
+@click.option('--show-full-token', '-f', is_flag=True, help='Show full token ID instead of truncated version')
+@click.pass_context
+def token_list(ctx, user, show_full_token):
+    """List tokens belonging to a user.
+
+    USER    The user to list tokens for.
+    """
+    # Check if user exists
+    if not user_exists(user):
+        print(f"User '{user}' does not exist")
+        return
+    
+    # Fetch tokens for the specified user, sorted by expiration date descending
+    query = f"""
+    SELECT at.id, at.name, at.last_access, at.plugin_extras
+    FROM api_token at
+    JOIN "user" u ON at.user_id = u.id
+    WHERE u.name = '{user}'
+    ORDER BY (at.plugin_extras->'expire_api_token'->>'exp')::timestamp DESC
+    """
+    rows = db_query(query)
+    
+    if not rows:
+        print(f"No tokens found for user '{user}'")
+        return
+    
+    print(f"Tokens for user '{user}':")
+    
+    # Function to truncate token ID
+    def truncate_token(token_id):
+        if not show_full_token and len(token_id) > 6:
+            return f"{token_id[:3]}***{token_id[-3:]}"
+        return token_id
+    
+    # Format table header - TOKEN ID before TOKEN NAME
+    token_label = "TOKEN ID (FULL)" if show_full_token else "TOKEN ID"
+    print(f"{'EXPIRATION':<19} {'LAST ACCESS':<19} {token_label:<15} {'TOKEN NAME'}")
+    print("-" * 80)
+    
+    for row in rows:
+        token_id, token_name, last_access, plugin_extras = row
+        
+        # Format expiration date
+        exp_data = plugin_extras.get('expire_api_token', {}) if plugin_extras else {}
+        exp_date_str = exp_data.get('exp', 'No expiration')
+        
+        # Convert ISO format to simplified format if date exists
+        if exp_date_str != 'No expiration':
+            try:
+                from datetime import datetime
+                exp_date = datetime.fromisoformat(exp_date_str.replace('Z', '+00:00'))
+                exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
+            except (ValueError, TypeError):
+                pass
+        
+        # Format last access date
+        last_access_str = 'Never'
+        if last_access:
+            try:
+                last_access_str = last_access.strftime('%Y-%m-%d %H:%M:%S')
+            except (AttributeError, ValueError):
+                last_access_str = str(last_access)
+        
+        # Format token name (could be None)
+        token_name_str = token_name if token_name else 'N/A'
+        
+        # Truncate token ID
+        display_token = truncate_token(token_id)
+        
+        # Print table row - TOKEN ID before TOKEN NAME
+        print(f"{exp_date_str:<19} {last_access_str:<19} {display_token:<15} {token_name_str}")
+
+
+@token.command(name='expiring')
+@click.option('--days', '-d', default=30, help='Number of days to look ahead for expiring tokens')
+@click.option('--username-match', '-u', help='Show only users whose username contains this substring')
+@click.option('--show-full-columns', '-f', is_flag=True, help='Show full token IDs, usernames and token names instead of truncated versions')
+@click.option('--include-expired', '-e', is_flag=True, help='Include already expired tokens')
+@click.pass_context
+def token_expiring(ctx, days, username_match, show_full_columns, include_expired):
+    """Show newest tokens of each user that are about to expire.
+    
+    By default, shows newest tokens expiring in the next 30 days.
+    If none are expiring, shows the user whose newest token will expire next.
+    
+    Use --username-match to filter users by a substring in their username.
+    Use --show-full-columns to display complete token IDs, usernames and token names.
+    Use --include-expired to show tokens that have already expired.
+    """
+    from datetime import datetime, timedelta
+    
+    # Calculate the date threshold (current date + specified days)
+    now = datetime.now()
+    threshold = now + timedelta(days=days)
+    threshold_str = threshold.isoformat()
+    
+    # Build the query with optional username filter
+    username_filter = ""
+    if username_match:
+        username_filter = f"AND u.name LIKE '%{username_match}%'"
+    
+    # Query to get the newest token (with most recent expiration date) for each user
+    query = f"""
+    WITH latest_tokens AS (
+        SELECT at.user_id, u.name as username,
+               MAX((at.plugin_extras->'expire_api_token'->>'exp')::timestamp) as latest_exp
+        FROM api_token at
+        JOIN "user" u ON at.user_id = u.id
+        WHERE at.plugin_extras->'expire_api_token'->>'exp' IS NOT NULL
+        {username_filter}
+        GROUP BY at.user_id, u.name
+    ),
+    newest_tokens AS (
+        SELECT at.id, at.name as token_name, lt.username, 
+               at.plugin_extras->'expire_api_token'->>'exp' as expiration
+        FROM api_token at
+        JOIN "user" u ON at.user_id = u.id
+        JOIN latest_tokens lt ON at.user_id = lt.user_id 
+                             AND (at.plugin_extras->'expire_api_token'->>'exp')::timestamp = lt.latest_exp
+        WHERE at.plugin_extras->'expire_api_token'->>'exp' IS NOT NULL
+        {'' if include_expired else "AND (at.plugin_extras->'expire_api_token'->>'exp')::timestamp > NOW()"}
+    )
+    SELECT * FROM newest_tokens
+    ORDER BY (expiration)::timestamp ASC
+    """
+    
+    all_newest_tokens = db_query(query)
+    
+    # Filter tokens expiring within the threshold
+    expiring_rows = [
+        row for row in all_newest_tokens
+        if row[3] and  # Ensure expiration exists
+           datetime.fromisoformat(row[3].replace('Z', '+00:00')) <= threshold
+    ]
+    
+    # Function to truncate token ID
+    def truncate_token(token_id):
+        if not show_full_columns and len(token_id) > 6:
+            return f"{token_id[:3]}***{token_id[-3:]}"
+        return token_id
+    
+    # Function to truncate username and token name
+    def truncate_text(text, max_length=24):
+        if not show_full_columns and text and len(text) > max_length:
+            return text[:max_length-3] + "..."
+        return text
+    
+    # Prepare title message with username filter and expired info if applicable
+    filter_msg = f" matching '{username_match}'" if username_match else ""
+    expired_msg = " (including expired tokens)" if include_expired else ""
+    
+    if expiring_rows:
+        # Case 1: There are newest tokens expiring within the specified days
+        total_count = len(expiring_rows)
+        display_rows = expiring_rows[:10]  # Take only the first 10
+        
+        print(f"Found {total_count} user(s){filter_msg} whose newest token will expire in the next {days} days{expired_msg}.")
+        print(f"Showing first {min(10, total_count)}:")
+        
+        # Format table header - TOKEN ID before USERNAME
+        token_label = "TOKEN ID" + (" (FULL)" if show_full_columns else "")
+        print(f"{'EXPIRATION':<19} {token_label:<15} {'USERNAME':<24} {'TOKEN NAME':<24}")
+        print("-" * 90)
+        
+        for row in display_rows:
+            token_id, token_name, username, exp_date_str = row
+            
+            # Format expiration date
+            try:
+                exp_date = datetime.fromisoformat(exp_date_str.replace('Z', '+00:00'))
+                exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
+                
+                # Indicate if token has already expired
+                if include_expired and exp_date < now:
+                    exp_date_str = f"{exp_date_str} [EXPIRED]"
+            except (ValueError, TypeError):
+                pass
+            
+            # Format and truncate token name (could be None)
+            token_name_str = token_name if token_name else 'N/A'
+            token_name_str = truncate_text(token_name_str)
+            
+            # Truncate username
+            username_str = truncate_text(username)
+            
+            # Truncate token ID
+            display_token = truncate_token(token_id)
+            
+            # Print table row - TOKEN ID before USERNAME
+            print(f"{exp_date_str:<19} {display_token:<15} {username_str:<24} {token_name_str:<24}")
+    
+    elif all_newest_tokens:
+        # Case 2: No newest tokens expiring within the threshold, show the next one
+        next_row = all_newest_tokens[0]  # The list is already sorted by expiration
+        
+        print(f"No users{filter_msg} have newest tokens expiring in the next {days} days{expired_msg}.")
+        print("The user whose newest token will expire next:")
+        
+        # Format table header - TOKEN ID before USERNAME
+        token_label = "TOKEN ID" + (" (FULL)" if show_full_columns else "")
+        print(f"{'EXPIRATION':<19} {token_label:<15} {'USERNAME':<24} {'TOKEN NAME':<24}")
+        print("-" * 90)
+        
+        token_id, token_name, username, exp_date_str = next_row
+        
+        # Format expiration date
+        try:
+            exp_date = datetime.fromisoformat(exp_date_str.replace('Z', '+00:00'))
+            exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
+            
+            # Indicate if token has already expired
+            if include_expired and exp_date < now:
+                exp_date_str = f"{exp_date_str} [EXPIRED]"
+        except (ValueError, TypeError):
+            pass
+        
+        # Format and truncate token name (could be None)
+        token_name_str = token_name if token_name else 'N/A'
+        token_name_str = truncate_text(token_name_str)
+        
+        # Truncate username
+        username_str = truncate_text(username)
+        
+        # Truncate token ID
+        display_token = truncate_token(token_id)
+        
+        # Print table row - TOKEN ID before USERNAME
+        print(f"{exp_date_str:<19} {display_token:<15} {username_str:<24} {token_name_str:<24}")
+    else:
+        print(f"No tokens with expiration dates found{filter_msg}{expired_msg}.")
+
+
+@token.command(name='revoke')
+@click.argument('token_id')
+@click.pass_context
+def token_revoke(ctx, token_id):
+    """Revoke a token.
+
+    TOKEN_ID    The ID of the token to be revoked.
+    """
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'revoke', token_id]
+    subprocess.call(cmd)
+
+
+@user.command(name='add')
+@click.argument('user', type=str)
+@click.argument('email', type=str)
+@click.argument('password', type=str)
+@click.argument('fullname', type=str)
+@click.pass_context
+def user_add(ctx, user, email, password, fullname):
+
+
+    """Add a new user.
+
+    USER        New user's username.
+
+    EMAIL       New user's email.
+
+    PASSWORD    New user's password.
+
+    FULLNAME    New user's full name.
+    """
+    (user, email, password, fullname) = (str(user), str(email), str(password), str(fullname))
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'add', str(user), 'email=' + str(email), 'password=' + str(password), 'fullname=' + str(fullname)]
+    try:
+        with open(os.devnull, 'wb') as devnull:
+            # subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
+            subprocess.check_call(cmd)
+        if user_exists(user):
+            print('New user has been created:')
+            ctx.invoke(user_show, user=user)
+    except:
+        raise click.ClickException('User %s has not been created' % user)
+
+
+@user.command(name='list')
+def user_list():
+    """List all users."""
+    query = "select name,fullname,email,state,sysadmin,apikey from public.user order by name asc;"
+    rows = db_query(query)
+    user_pretty_list(rows)
+
+
+@user.command(name='search')
+@click.argument('string')
+def user_search(string):
+    """Search users by a partial string.
+
+    STRING  Search users with username containing this string.
+    """
+    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name like '%{}%';".format(string)
+    rows = db_query(query)
+    if len(rows) == 0:
+        print('No users were found searching for ' + string)
+    else:
+        user_pretty_list(rows)
+
+
+@user.command(name='show')
+@click.argument('user')
+def user_show(user):
+    """Show a specific user details.
+
+    USER    Show details for this user.
+    """
+    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name='{}';".format(user)
+    rows = db_query(query)
+    user_pretty_list(rows)
+
+
+@cli.command(name='webassets')
+@click.pass_context
+def webassets(ctx):
+    """Builds the webassts."""
+
+    cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'asset', 'build']
+    print('Building the webassets...')
+    subprocess.call(cmd)
+    print('Fixing permissions on writeable folders...')
+    # assuming the webassets location is in /srv/webassets...
+    location = '/srv/webassets'
+    os.chown(location, 33, 0)
+    for root, dirs, files in os.walk(location):
+        for item in dirs:
+            os.chown(os.path.join(root, item), 33, 0)
+        for item in files:
+            os.chown(os.path.join(root, item), 33, 0)
     print('Done.')
 
+@cli.command(name='magic')
+@click.option('-f', '--force', is_flag=True, default=False, show_default=True, help="Just go.")
+@click.option('-s', '--solr-config', default=SOLR['CONFIGSET'], show_default=True, help="SOLR configset name")
+@click.pass_context
+def do_magic(ctx, force, solr_config):
+    """Automagically sets things up for you"""
 
-def solr_reindex():
-    valid_subcommands = ['fast', 'refresh']
-    cmd = ['ckan', 'search-index']
-    cmd_suffix = ['rebuild', '-c', INI_FILE]
-    while len(valid_subcommands) > 0:
-        if len(opts) > 0:
-            subcmd = opts.pop(0)
-        else:
-            break
-        if subcmd in valid_subcommands:
-            if subcmd == 'fast':
-                cmd_suffix.pop(0)
-                cmd_suffix.insert(0, 'rebuild_fast')
-            if subcmd == 'refresh':
-                cmd.append('-r')
-            valid_subcommands.remove(subcmd)
-    cmd.extend(cmd_suffix)
-    os.chdir(BASEDIR)
-    subprocess.call(cmd)
+    print('Will do all the initial setup for you. Or just refresh the dbs and files for you')
+    print('    - pulls the latest db backup')
+    print('    - restores the database')
+    print('    - pulls the latest files backup (other than the filestore)')
+    print('    - restores the files (other than filestore)')
+    print('    - syncronizes the filestore from the dev filestore')
+    print('    - creates a new solr collection')
+    print('    - reindex solr')
+    print('Please be warned this will take quite a while')
+    print('    (especially the filestore sync and the solr reindex)')
 
+    if not force:
+        whee = input('Do you want to proceed? [y/n]: ')
+        if whee not in ['y', 'Y']:
+            print('Maybe later then.')
+            return
 
-def show_logs():
-    logs = ['/var/log/ckan/access.log', '/var/log/ckan/error.log', '/var/log/ckan/ckan.log']
-    if len(opts) == 1:
-        opt = opts.pop(0)
-        if opt == 'noaccess':
-            logs.pop(0)
-        elif opt == 'pain':
-            logs.pop(0)
-            logs.pop(0)
-        elif opt == 'access':
-            logs.pop(-1)
-            logs.pop(-1)
-        elif opt == 'error':
-            logs.pop(0)
-            logs.pop(-1)
-    cmd = ['tail', '-f']
-    cmd.extend(logs)
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++')
-    print('      Stop following the logs with Ctrl+C')
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++')
-    subprocess.call(cmd)
+    print('You will be asked to enter your username and password used to get the database snapshots.')
+    # pull latest dbs
+    ctx.invoke(db_pull, all=True)
+    # pull latest files
+    ctx.invoke(files_pull)
 
+    # add pgpass
+    ctx.invoke(refresh_pgpass_command)
+    # fix schemas
+    ctx.invoke(db_set_schema)
+    # create solr collection
+    ctx.invoke(solr_add, force=True, config_set=solr_config) # fix or parametrize this. innovation has 'hdx-solr-main'
 
-def sysadmin():
-    if len(opts) == 0:
-        exiting(1)
-    subcmd = opts.pop(0)
-    subcmds = ['enable', 'disable', 'list']
-    if subcmd not in subcmds:
-        print(subcmd + ' not implemented yet. Exiting.')
-        exiting(1)
-    if subcmd == 'list':
-        sysadmins_list()
-        exiting(0)
-    if len(opts) == 0:
-        print('No user has been specified. Exiting.')
-        exiting(1)
-    user = opts.pop(0)
-    if not user_exists(user):
-        print('User ' + user + ' has not been found.')
-        exiting(1)
-    if subcmd == 'enable':
-        sysadmin_enable(user)
-    else:
-        sysadmin_disable(user)
+    # restore dbs and files
+    ctx.invoke(db_restore, database='datastore', filename='/srv/backup/datastore.pg_restore', clear_database=True)
+    ctx.invoke(db_restore, database='ckan', filename='/srv/backup/ckan.pg_restore', minimal=True, clear_database=True)
+    # fix datastore permissions
+    ctx.invoke(db_set_perms)
 
+    # restore files
+    ctx.invoke(files_restore, targetdir='/srv/filestore', filename='/srv/backup/files.tar')
+    # sync filestore
+    ctx.invoke(filestore_sync,
+        source='hdx-dev-filestore',
+        destination=os.getenv('AWS_BUCKET_NAME'),
+        source_region='us-east-1',
+        region=os.getenv('REGION_NAME'),
+        clear=True)
 
-def sysadmin_enable(user):
-    if is_sysadmin(user):
-        print('User ' + user + ' is already sysadmin.')
-        exiting(0)
-    cmd = ['ckan', 'sysadmin', 'add', user]
-    os.chdir(BASEDIR)
-    subprocess.call(cmd)
-    exiting(0)
-
-
-def sysadmin_disable(user):
-    if not is_sysadmin(user):
-        print('User ' + user + ' is not sysadmin.')
-        exiting(0)
-    cmd = ['ckan', 'sysadmin', 'remove', user]
-    os.chdir(BASEDIR)
-    subprocess.call(cmd)
-    exiting(0)
-
-
-def sysadmins_list():
-    con = db_connect_to_postgres(dbname=SQL['DB'])
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where sysadmin='True' order by name asc;"
-    try:
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        exiting(2)
-    finally:
-        con.close()
-
-    user_pretty_list(rows)
-    exiting(0)
-
-
-def is_sysadmin(user):
-    con = db_connect_to_postgres(dbname=SQL['DB'])
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    query = "select sysadmin from public.user where name='" + user + "';"
-    try:
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        exiting(2)
-    finally:
-        con.close()
-    if len(rows) == 1:
-        sysadmin = rows[0][0]
-        if sysadmin:
-            return True
-    return False
-
-
-def tests():
-    db_test_refresh()
-    os.chdir(BASEDIR)
-    # get hdx plugin list
-    dirs = sorted(os.listdir('.'))
-    res = 0
-    for dirname in dirs:
-        if dirname.startswith('ckanext-hdx_'):
-            print("++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            print("Running tests for plugin", dirname)
-            res += tests_nose(dirname)
-    if res:
-        print(" FAILURES: ", res)
-    exit(res)
-
-
-def tests_nose(dirname):
-    plugin = dirname.replace('ckanext-', '')
-    loglevel = 'WARNING'
-    if len(opts) == 1:
-        opt = opts.pop(0)
-        if opt in ['DEBUG', 'INFO', 'CRITICAL']:
-            loglevel = opt
-    test_call = [
-        'nosetests', '-ckan', dirname + '/ckanext/' + plugin + '/tests',
-        '--with-xunit', '--xunit-file=' + dirname + '/ckanext/' + plugin + '/tests/nose_results.xml',
-        '--logging-level', loglevel,
-        '--with-pylons=' + dirname + '/test.ini.sample',
-        '--with-coverage', '--cover-package=ckanext.' + plugin
-    ]
-    os.chdir(BASEDIR)
-    # I need to return this for jenkins
-    return subprocess.call(test_call)
-
-
-def tracking_update():
-    cmd = ['paster', 'tracking', 'update', '-c', INI_FILE]
-    os.chdir(BASEDIR)
-    subprocess.call(cmd)
-
-
-def users():
-    if len(opts) == 0:
-        exiting(1)
-    subcmd = opts.pop(0)
-    subcmds = ['add', 'delete', 'list', 'search', 'show']
-    if subcmd not in subcmds:
-        print(subcmd + ' not implemented yet. Exiting.')
-        exiting(1)
-    if subcmd == 'list':
-        users_list()
-        exiting(0)
-    if len(opts) == 0:
-        print('No user has been specified. Exiting.')
-        exiting(1)
-    user = opts.pop(0)
-    if subcmd == 'add':
-        if user_exists(user):
-            print('User ' + user + ' already exists.')
-        else:
-            user_add(user)
-    elif subcmd == 'delete':
-        if not user_exists(user):
-            print('User ' + user + ' has not been found.')
-        else:
-            user_delete(user)
-    elif subcmd == 'show':
-        if not user_exists(user):
-            print('User ' + user + ' has not been found.')
-        else:
-            user_show(user)
-    elif subcmd == 'search':
-        user_search(user)
-    exiting(0)
-
-
-def users_list():
-    con = db_connect_to_postgres(dbname=SQL['DB'])
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin from public.user order by name asc;"
-    try:
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        exiting(2)
-    finally:
-        con.close()
-
-    user_pretty_list(rows)
-
-
-def user_show(user):
-    con = db_connect_to_postgres(dbname=SQL['DB'])
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name='" + user + "';"
-    try:
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        exiting(2)
-    finally:
-        con.close()
-
-    user_pretty_list(rows)
-
-
-def user_search(user):
-    con = db_connect_to_postgres(dbname=SQL['DB'])
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name like '%" + user + "%';"
-    try:
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        exiting(2)
-    finally:
-        con.close()
-    if len(rows) == 0:
-        print('No users were found searching for ' + user)
-        exiting(0)
-    user_pretty_list(rows)
-
-
-def user_add(user):
-    email = get_input('Email')
-    password = get_input('Password', lower=False)
-    cmd = ['ckan', 'user', 'add', user, 'email=' + email, 'password=' + password]
-    os.chdir(BASEDIR)
-    with open(os.devnull, 'wb') as devnull:
-        subprocess.call(cmd, stdout=devnull, stderr=subprocess.STDOUT)
-    if user_exists(user):
-        print('New user has been created:')
-        user_show(user)
-    else:
-        print('I could not create the user ' + user)
-    exiting(0)
-
-
-def user_delete(user):
-    if is_sysadmin(user):
-        sysadmin_disable(user)
-    cmd = ['ckan', 'user', 'remove', user]
-    os.chdir(BASEDIR)
-    subprocess.call(cmd)
-
-
-def user_pretty_list(userlist):
-    for row in userlist:
-        print('+++++++++++++++++++++++++++++++++++++++++++++++')
-        (username, displayname, email, state, sysadmin, apikey) = row
-        print('User: ' + str(username))
-        print('Full Name: ' + str(displayname))
-        print('Email: ' + str(email))
-        print('State: ' + str(state))
-        print('Sysadmin: ' + str(sysadmin))
-        print('API Key: ' + str(apikey))
-    print('+++++++++++++++++++++++++++++++++++++++++++++++')
-    if len(userlist) > 1:
-        print('Got a total of ' + str(len(userlist)) + ' users.')
-
-
-def user_exists(user):
-    con = db_connect_to_postgres(dbname=SQL['DB'])
-    con.set_isolation_level(0)
-    cur = con.cursor()
-    query = "select name,fullname,email,state,sysadmin from public.user where name='" + user + "';"
-    try:
-        cur.execute(query)
-        con.commit()
-        rows = cur.fetchall()
-    except:
-        print("I can't query that")
-        exiting(2)
-    finally:
-        con.close()
-
-    if len(rows) == 1:
-        return True
-    else:
-        return False
-
-
-def exiting(code=0):
-    if code == 1:
-        show_usage()
-    os.chdir(CURRPATH)
-    sys.exit(code)
-
-
-def main():
-    cmd = opts.pop(0)
-    no_subcommands_list = ['restart', 'start', 'status', 'stop']
-    if cmd == 'db':
-        db_submenu()
-    # elif cmd == 'deploy':
-    #     deploy()
-    elif cmd == 'feature':
-        feature()
-    elif cmd == 'pgpass':
-        refresh_pgpass()
-        host, port, db, user, password = gis_init()
-        refresh_pgpass(host=host, port=port, user=user, password=password)
-    elif cmd == 'backup':
-        if 'quiet' in opts:
-            opts.remove('quiet')
-            verbose = False
-        else:
-            verbose = True
-        if len(opts):
-            if opts[0] == 'db':
-                refresh_pgpass(host=SQL['HOST'], port=SQL['PORT'], user=SQL['USER'],
-                               password=SQL['PASSWORD'], verbose=False)
-                backup_db(db=SQL['DB'], prefix=BACKUP['DB_PREFIX'], verbose=verbose)
-                backup_db(db=SQL['DB_DATASTORE'], prefix=BACKUP['DB_PREFIX'], verbose=verbose)
-            elif opts[0] == 'fs':
-                backup_filestore(verbose)
-            elif opts[0] == 'gis':
-                gis_backup()
-            else:
-                exiting(1)
-        else:
-            exiting(1)
-    elif cmd in no_subcommands_list:
-        control(cmd)
-    elif cmd == 'reindex':
-        solr_reindex()
-    # elif cmd == 'filestore':
-    #     if len(opts) and opts[0] == 'restore':
-    #         if len(opts) > 1 and opts[1] == 'clean':
-    #             filestore_restore(clean=True)
-    #         else:
-    #             filestore_restore()
-    elif cmd == 'plugins':
-        reinstall_plugins()
-    elif cmd == 'restore':
-        if len(opts):
-            from_local = False
-            if 'local' in opts:
-                opts.remove('local')
-                from_local = True
-            if opts[0] == 'db':
-                dbs_restore(from_local)
-            elif opts[0] == 'fs':
-                filestore_restore()
-            elif opts[0] == 'gis':
-                gis_restore()
-                # print('gis restore not yet implemented')
-            elif opts[0] == 'cleanup':
-                restore_cleanup()
-            else:
-                exiting(1)
-        else:
-            exiting(1)
-    elif cmd == 'less':
-        if len(opts) >= 1 and 'compile' in opts:
-            if 'verbose' in opts:
-                less_compile(verbose=True)
-            else:
-                less_compile()
-        else:
-            exiting(1)
-    elif cmd == 'log':
-        show_logs()
-    elif cmd == 'sysadmin':
-        sysadmin()
-    elif cmd == 'test':
-        tests()
-    elif cmd == 'tracking':
-        tracking_update()
-    elif cmd == 'user':
-        users()
-    else:
-        exiting(1)
+    # solr reindex time
+    ctx.invoke(solr_reindex, clear=True, fast=True)
 
 
 if __name__ == '__main__':
-    opts = sys.argv
-    script = opts.pop(0)
-    # print(os.path.realpath(__file__))
-    if len(opts) == 0:
-        exiting(1)
-    main()
+    cli()
