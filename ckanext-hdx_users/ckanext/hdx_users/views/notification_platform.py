@@ -6,6 +6,7 @@ import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from flask import Blueprint, make_response
+from ckan.common import current_user
 from ckan.lib.mailer import MailerException
 from ckan.types import Response, DataDict, Context
 from ckan.views.api import CONTENT_TYPES
@@ -89,7 +90,8 @@ def subscription_confirmation() -> Response:
     dataset_id = tk.request.form.get('dataset_id')
 
     try:
-        usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
+        if not current_user.is_authenticated:
+            usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
 
         if not email:
             raise tk.Invalid(tk._('Email address is missing'))
@@ -98,18 +100,22 @@ def subscription_confirmation() -> Response:
         dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
         token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, dataset_dict['id'])
 
-        subject = u'Please verify your email address'
-        verify_email_link = _h.url_for(
-            'hdx_notifications.subscribe_to_dataset',
-            token=token_obj.token, qualified=True
-        )
-        email_data = {
-            'verify_email_link': verify_email_link,
-            'dataset_title': dataset_dict.get('title'),
-            'dataset_id': dataset_id
-        }
-        hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
-                                  snippet='email/content/notification_platform/verify_email.html')
+        if not current_user.is_authenticated:
+            subject = u'Please verify your email address'
+            verify_email_link = _h.url_for(
+                'hdx_notifications.subscribe_to_dataset',
+                token=token_obj.token, qualified=True
+            )
+            email_data = {
+                'verify_email_link': verify_email_link,
+                'dataset_title': dataset_dict.get('title'),
+                'dataset_id': dataset_id
+            }
+            hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
+                                      snippet='email/content/notification_platform/verify_email.html')
+        else:
+            return _build_json_response({'success': True, 'token': token_obj.token})
+
 
     except tk.ValidationError as e:
         return _build_json_response(

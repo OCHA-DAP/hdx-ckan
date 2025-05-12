@@ -9,6 +9,7 @@ CONSTANTS = {
     'SIGNUP_MODAL_UPDATE_FREQUENCY_TEXT': '''This dataset updates approximately: {0}''',
     'SIGNUP_MODAL_CLOSE_BUTTON_TEXT': '''Cancel''',
     'SIGNUP_MODAL_SUBMIT_BUTTON_TEXT': '''Verify email address''',
+    'SIGNUP_MODAL_LOGGED_IN_SUBMIT_BUTTON_TEXT': '''Subscribe''',
 
     'SIGNUP_INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
     'SIGNUP_INPUT_EMAIL_ERROR': '''Please enter a valid email address''',
