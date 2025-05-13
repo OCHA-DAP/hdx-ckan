@@ -20,7 +20,7 @@ babel==2.15.0
     # via
     #   -r requirements.in
     #   flask-babel
-bleach==6.1.0
+bleach==6.2.0
     # via -r requirements.in
 blinker==1.8.2
     # via
@@ -83,8 +83,6 @@ ijson==3.2.3
     # via -r requirements.in
 ipaddress==1.0.23
     # via -r requirements.in
-isodate==0.7.2
-    # via rdflib
 itsdangerous==2.1.2
     # via
     #   flask
@@ -183,9 +181,7 @@ setuptools-scm==8.1.0
 simplejson==3.19.2
     # via -r requirements.in
 six==1.16.0
-    # via
-    #   bleach
-    #   python-dateutil
+    # via python-dateutil
 sqlalchemy[mypy]==1.4.52
     # via
     #   -r requirements.in
@@ -200,15 +196,11 @@ stevedore==5.4.1
 timeago==1.0.16
     # via -r requirements.in
 tomli==2.2.1
-    # via
-    #   -r requirements.in
-    #   mypy
-    #   setuptools-scm
+    # via -r requirements.in
 typing-extensions==4.12.2
     # via
     #   -r requirements.in
     #   alembic
-    #   dogpile-cache
     #   mypy
     #   sqlalchemy2-stubs
 tzlocal==5.2
