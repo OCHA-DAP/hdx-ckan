@@ -83,8 +83,6 @@ ijson==3.2.3
     # via -r requirements.in
 ipaddress==1.0.23
     # via -r requirements.in
-isodate==0.7.2
-    # via rdflib
 itsdangerous==2.1.2
     # via
     #   flask
@@ -200,23 +198,21 @@ stevedore==5.4.1
 timeago==1.0.16
     # via -r requirements.in
 tomli==2.2.1
-    # via
-    #   -r requirements.in
-    #   mypy
-    #   setuptools-scm
+    # via -r requirements.in
 typing-extensions==4.12.2
     # via
     #   -r requirements.in
     #   alembic
-    #   dogpile-cache
     #   mypy
     #   sqlalchemy2-stubs
 tzlocal==5.2
     # via -r requirements.in
-ua-parser==0.18.0
+ua-parser==1.0.1
     # via
     #   -r requirements.in
     #   user-agents
+ua-parser-builtins==0.18.0.post1
+    # via ua-parser
 urllib3==1.26.6
     # via
     #   botocore
