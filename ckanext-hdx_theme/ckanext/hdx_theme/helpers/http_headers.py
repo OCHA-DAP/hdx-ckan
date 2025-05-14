@@ -15,5 +15,5 @@ def set_http_headers(response):
         if request and request.url:
             url_contains_route = any(route in request.url for route in ROUTES_LIST)
         if not url_contains_route:
-            response.headers[b'X-Frame-Options'] = b'SAMEORIGIN'
+            response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     return response
