@@ -7,6 +7,7 @@ import ckanext.hdx_theme.helpers.helpers as theme_h
 
 from ckan.types import DataDict, Context
 from ckanext.hdx_users.helpers.notification_platform import read_novu_config
+from ckanext.hdx_users.notifications_subscription_model import delete_notification_subscription
 
 _get_or_bust = tk.get_or_bust
 ValidationError = tk.ValidationError
@@ -98,3 +99,19 @@ def hdx_delete_notification_subscription(context: Context, data_dict: DataDict):
         raise Exception(f'Failed to remove subscriber from dataset')
 
     return {'message': f' {email}  unsubscribed from further notifications.'}
+
+def hdx_notifications_subscription_delete(context: Context, data_dict: DataDict) -> DataDict:
+    """
+    Deletes a notification subscription for a user by its ID.
+
+    Regular users can only delete subscriptions for themselves
+    Sysadmins can delete subscriptions for any user
+
+    """
+    log.info('Deleting subscription for user %s', data_dict.get('user_id'))
+    subscription_id = tk.get_or_bust(data_dict, 'id')
+    _check_access('hdx_notifications_subscription_delete', context, data_dict)
+
+    delete_notification_subscription(context['session'], subscription_id)
+
+    return {'message': f'Subscription {subscription_id} deleted successfully'}

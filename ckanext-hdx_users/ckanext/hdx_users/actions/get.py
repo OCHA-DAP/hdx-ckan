@@ -1,10 +1,13 @@
 import logging
+import datetime
+from typing import Optional, List
 
 import ckan.logic as logic
-import ckan.logic.action.get as user_get
+import ckan.authz as authz
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_users.model as user_model
 from ckan.types import ActionResult, Context, DataDict
+
+from ckanext.hdx_users.notifications_subscription_model import list_notifications_subscriptions
 
 config = tk.config
 log = logging.getLogger(__name__)
@@ -75,3 +78,39 @@ def hdx_user_autocomplete(context, data_dict):
         user_list.append(result_dict)
 
     return user_list
+
+
+@tk.side_effect_free
+def hdx_notifications_subscription_list(context: Context, data_dict: DataDict) -> List[DataDict]:
+    """
+    Return a list of notifications subscriptions.
+
+    Non-sysadmin users will see only their own subscriptions.
+    Parameters in data_dict:
+      - user_id: Optional[str]
+      - updated: Optional[datetime.datetime]
+      - page: Optional[int]
+      - page_size: Optional[int]
+    """
+    _check_access('hdx_notifications_subscription_list', context, data_dict)
+
+    user: str = context['user']
+
+    # Only sysadmins can call without a user_id; non-sysadmins will override with their user id.
+    user_id_param = data_dict.get('user_id')
+    if not authz.is_sysadmin(user):
+        user_id_param = user
+
+    updated_str = data_dict.get('updated')
+    updated = datetime.datetime.fromisoformat(updated_str) if updated_str else None
+    page: Optional[int] = data_dict.get('page', 0)
+    page_size: int = data_dict.get('page_size', 1000)
+
+    session = context['session']
+    return list_notifications_subscriptions(
+        session,
+        user_id=user_id_param,
+        updated=updated,
+        page=page,
+        page_size=page_size
+    )
