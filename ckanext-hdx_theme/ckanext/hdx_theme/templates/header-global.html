@@ -180,7 +180,7 @@
                                 </ul>
                               </li>
                             {% endif %}
-                            {% if def_url and h.hdx_get_ckan_config('hdx.qadashboard.enabled') == 'true'  and c.userobj.sysadmin %}
+                            {% if def_url and h.hdx_get_ckan_config('hdx.qadashboard.enabled') and user_is_sysadmin %}
                               <li>
                                 <a href="/qa_dashboard?ext_bulk_datasets=0&ext_qa_completed=0&ext_private_datasets=0"
                                    class="dropdown-item"
