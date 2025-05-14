@@ -7,6 +7,7 @@ import ckan.lib.dictization.model_dictize as model_dictize
 from ckanext.hdx_users.helpers.reset_password import make_key
 from ckanext.hdx_users.helpers.helpers import generate_password, generate_username, NotAuthorized
 from ckanext.hdx_users.logic.schema import onboarding_default_user_schema
+from ckanext.security.schema import default_update_user_schema
 
 _get_or_bust = tk.get_or_bust
 ValidationError = tk.ValidationError
@@ -72,6 +73,7 @@ def hdx_shadow_user_create(context, data_dict):
             user_dict['action_performed'] = 'none'
             return user_dict
         if user_obj.state == core_model.State.PENDING:
+            context['schema'] = default_update_user_schema()
             user_dict = get_action('user_patch')(
                 context,
                 {
