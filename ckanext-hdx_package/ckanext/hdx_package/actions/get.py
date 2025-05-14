@@ -660,7 +660,7 @@ def _additional_hdx_package_show_processing(context, package_dict, just_for_rein
                 if all_dates:
                     package_dict['last_modified'] = max(all_dates).isoformat()
 
-        __inject_qa_completed_in_old_datasets(context, package_dict)
+        #__inject_qa_completed_in_old_datasets(context, package_dict)
 
         freshness_calculator = freshness.get_calculator_instance(package_dict)
         if _should_manually_load_property_value(context, package_dict, 'due_date'):
