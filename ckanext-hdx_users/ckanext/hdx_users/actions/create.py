@@ -1,12 +1,19 @@
 import json
+import logging
+
 from sqlalchemy import case
 import ckan.model as core_model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.authz as authz
+from ckan.types import Context, DataDict
+
 from ckanext.hdx_users.helpers.reset_password import make_key
 from ckanext.hdx_users.helpers.helpers import generate_password, generate_username, NotAuthorized
 from ckanext.hdx_users.logic.schema import onboarding_default_user_schema
+from ckanext.hdx_users.notifications_subscription_model import TargetType, EventType, generate_notifications_subscription, \
+    notifications_subscription_dictize
 from ckanext.security.schema import default_update_user_schema
 
 _get_or_bust = tk.get_or_bust
@@ -17,6 +24,7 @@ get_action = tk.get_action
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
 OnbSuccess = json.dumps({'success': True})
 
+log = logging.getLogger(__name__)
 USER_STATE_SHADOW = 'shadow'
 
 def token_create(context, user):
@@ -97,3 +105,96 @@ def hdx_shadow_user_create(context, data_dict):
         return user_dict
 
     raise NotFound
+
+def hdx_notifications_subscription_create(context: Context, data_dict: DataDict) -> DataDict:
+    """
+    Creates a notification subscription for a user to receive notifications based on
+    specified target and event types.
+
+    Regular users can only create subscriptions for themselves
+    Sysadmins can create subscriptions for any user by specifying a user_id
+    :param context:
+    :type context: Context
+    :param data_dict:
+    :type data_dict: DataDict
+
+    Required keys in data_dict:
+        - target_type: Type of entity to subscribe to (dataset, group, organization, crisis)
+        - target: ID of the entity
+        - event_type: Type of event to subscribe to (new-dataset-added, dataset-updated)
+
+    Optional keys in data_dict:
+        - user_id: ID of user that we want to create the subscription for (sysadmins only)
+        - query_params: Additional parameters for general-search subscriptions (as dict)
+
+    :returns: the created subscription
+    :rtype: DataDict
+    """
+
+    log.info('Creating new subscription for user %s', data_dict.get('user_id'))
+    _check_access('hdx_notifications_subscription_create', context, data_dict)
+    tk.get_or_bust(data_dict, ['target_type', 'target', 'event_type'])
+
+    current_user: str = context['user']
+
+    # Only sysadmins can create subscriptions for other users
+    user_id = current_user
+    user_id_param: str = data_dict.get('user_id')
+    if user_id_param and authz.is_sysadmin(current_user):
+        user_id = user_id_param
+
+
+
+    session = context['session']
+
+    if data_dict.get('target_type') == 'general-search':
+        query_params = data_dict.get('query_params')
+        if isinstance(query_params, dict):
+            data_dict['query_params'] = query_params
+        else:
+            log.warning('Expected a dictionary for query_params')
+            data_dict['query_params'] = None
+
+    try:
+        target_type = TargetType(data_dict['target_type'])
+    except ValueError:
+        raise tk.ValidationError(f'Invalid target_type: {data_dict["target_type"]}')
+
+    action = None
+    if target_type == TargetType.DATASET:
+        action = 'package_show'
+    elif target_type == TargetType.GROUP:
+        action = 'group_show'
+    elif target_type == TargetType.ORGANIZATION:
+        action = 'organization_show'
+    elif target_type == TargetType.CRISIS:
+        action = 'page_show'
+    else:
+        raise tk.ValidationError(f'Invalid target_type: {data_dict["target_type"]}')
+
+    try:
+        target_obj = get_action(action)(context, {'id': data_dict['target']})
+        user_dict = get_action('user_show')(context, {'id': user_id})
+    except tk.ObjectNotFound:
+        raise tk.ValidationError(f'{target_type} {data_dict["target"]} does not exist')
+    except Exception as e:
+        log.error(f'Error retrieving target or user: {e}')
+        raise e
+
+    try:
+        event_type_enum = EventType(data_dict['event_type'])
+    except ValueError:
+        raise tk.ValidationError(f'Invalid event_type: {data_dict["event_type"]}')
+
+
+    subscription = generate_notifications_subscription(
+        session=session,
+        user_id=user_dict['id'],
+        target_type=target_type,
+        target=data_dict['target'],
+        event_type=event_type_enum,
+        query_params=data_dict.get('query_params')
+    )
+
+
+    return notifications_subscription_dictize(subscription)

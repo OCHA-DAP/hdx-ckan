@@ -102,6 +102,9 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'notify_users_about_api_token_expiration': update.notify_users_about_api_token_expiration,
             'hdx_add_notification_subscription': update.hdx_add_notification_subscription,
             'hdx_delete_notification_subscription': delete.hdx_delete_notification_subscription,
+            'hdx_notifications_subscription_create': create.hdx_notifications_subscription_create,
+            'hdx_notifications_subscription_list': get.hdx_notifications_subscription_list,
+            'hdx_notifications_subscription_delete': delete.hdx_notifications_subscription_delete,
         }
 
     def get_auth_functions(self):
@@ -113,6 +116,9 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'hdx_send_request_data_auto_approval': auth.hdx_send_request_data_auto_approval,
             'hdx_add_notification_subscription': auth.hdx_add_notification_subscription,
             'hdx_delete_notification_subscription': auth.hdx_delete_notification_subscription,
+            'hdx_notifications_subscription_create': auth.hdx_notifications_subscription_create,
+            'hdx_notifications_subscription_list': auth.hdx_notifications_subscription_list,
+            'hdx_notifications_subscription_delete': auth.hdx_notifications_subscription_delete,
         }
 
     def get_validators(self):
