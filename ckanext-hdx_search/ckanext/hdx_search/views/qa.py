@@ -38,7 +38,11 @@ def dashboard():
     except (NotFound, NotAuthorized):
         abort(403, _('Not authorized to see this page'))
 
-    search_logic = QASearchLogic().search().init_archived_url_helper()
+    try:
+        search_logic = QASearchLogic().search().init_archived_url_helper()
+    except NotFound:
+        abort(404, _('Page not found'))
+
     redirect_result = search_logic.redirect_if_needed()
     if redirect_result:
         return redirect_result

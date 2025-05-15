@@ -6,6 +6,9 @@ from ckanext.hdx_theme.controller_logic.ebola_search_logic import EbolaSearchLog
 get_action = tk.get_action
 g = tk.g
 config = tk.config
+NotFound = tk.ObjectNotFound
+abort = tk.abort
+_ = tk._
 
 
 class EbolaReadLogic(object):
@@ -19,7 +22,11 @@ class EbolaReadLogic(object):
         self.cases_datastore_id = None
 
     def generate_dataset_results(self):
-        search_logic = EbolaSearchLogic(self.flask_route_name).search().init_archived_url_helper()
+        try:
+            search_logic = EbolaSearchLogic(self.flask_route_name).search().init_archived_url_helper()
+        except NotFound:
+            abort(404, _('Page not found'))
+
         redirect_result = search_logic.redirect_if_needed()
         if redirect_result:
             self.redirect_result = redirect_result
