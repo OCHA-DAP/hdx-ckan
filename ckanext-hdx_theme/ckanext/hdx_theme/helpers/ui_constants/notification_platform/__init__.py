@@ -9,13 +9,15 @@ CONSTANTS = {
     'SIGNUP_MODAL_UPDATE_FREQUENCY_TEXT': '''This dataset updates approximately: {0}''',
     'SIGNUP_MODAL_CLOSE_BUTTON_TEXT': '''Cancel''',
     'SIGNUP_MODAL_SUBMIT_BUTTON_TEXT': '''Verify email address''',
-    'SIGNUP_MODAL_LOGGED_IN_SUBMIT_BUTTON_TEXT': '''Subscribe''',
+    'SIGNUP_MODAL_SUBMIT_BUTTON_TEXT_AUTHENTICATED': '''Subscribe''',
 
     'SIGNUP_INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
     'SIGNUP_INPUT_EMAIL_ERROR': '''Please enter a valid email address''',
 
     'VERIFICATION_MODAL_TITLE': '''Verification email has been sent''',
+    'VERIFICATION_MODAL_TITLE_AUTHENTICATED': '''Subscription confirmed''',
     'VERIFICATION_MODAL_TEXT': '''Please click the link in the email we have sent you to confirm your email address''',
+    'VERIFICATION_MODAL_TEXT_AUTHENTICATED': '''You have successfully set up your email notifications''',
     'VERIFICATION_MODAL_CLOSE_BUTTON_TEXT': '''Close''',
 
     'CONFIRMATION_ALERT_TEXT': '''You have successfully set up email alerts for this dataset. These will be sent to {

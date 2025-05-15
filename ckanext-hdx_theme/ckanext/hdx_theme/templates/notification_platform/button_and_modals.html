@@ -21,7 +21,7 @@
 {#  icon="bell",#}
 {#  text=CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT) }}#}
 
-{% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT if not logged_in else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_LOGGED_IN_SUBMIT_BUTTON_TEXT %}
+{% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT if not logged_in else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT_AUTHENTICATED %}
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsSignupBemModal",
   title=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE,
@@ -29,10 +29,12 @@
   close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_CLOSE_BUTTON_TEXT,
   submit_btn_text=submit_btn_text) }}
 
+{% set verification_modal_title = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE if not logged_in else CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE_AUTHENTICATED %}
+{% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT if not logged_in else CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_AUTHENTICATED %}
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsVerificationBemModal",
-  title=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE,
-  text=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT,
+  title=verification_modal_title,
+  text=verification_modal_text,
   close_btn_text=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_CLOSE_BUTTON_TEXT) }}
 
 {{ h.snippet('bem.blocks/modal.html',

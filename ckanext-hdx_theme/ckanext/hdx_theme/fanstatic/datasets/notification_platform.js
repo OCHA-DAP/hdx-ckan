@@ -71,21 +71,16 @@ $(document).ready(function () {
           hideAlert($signupDangerAlert);
           notificationsSignupModal.hide();
 
-          if (!data.token) {
-            verificationModal.show();
+          verificationModal.show();
 
-            hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
-              'confirm popup',
-              'subscribe to notifications',
-              formData.popup_source,
-              datasetId,
-              datasetName,
-              hdxUtil.compute.strHash(email, 'notification_platform')
-            );
-          }
-          else {
-            window.location.href='/notifications/subscribe-to-dataset?token=' + data.token;
-          }
+          hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
+            'confirm popup',
+            'subscribe to notifications',
+            formData.popup_source,
+            datasetId,
+            datasetName,
+            hdxUtil.compute.strHash(email, 'notification_platform')
+          );
 
         }
         else {
