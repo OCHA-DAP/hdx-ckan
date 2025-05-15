@@ -97,10 +97,10 @@ def subscription_confirmation() -> Response:
             raise tk.Invalid(tk._('Email address is missing'))
         hdx_validate_email(email)
 
-        dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
-        token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, dataset_dict['id'])
-
         if not current_user.is_authenticated:
+            dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
+            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, dataset_dict['id'])
+
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(
                 'hdx_notifications.subscribe_to_dataset',
@@ -114,8 +114,18 @@ def subscription_confirmation() -> Response:
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
                                       snippet='email/content/notification_platform/verify_email.html')
         else:
-            return _build_json_response({'success': True, 'token': token_obj.token})
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
+            data_dict = {
+                'email': email,
+                'dataset_id': dataset_id,
+                'unsubscribe_token': unsubscribe_token.token,
+            }
 
+            context: Context = {'ignore_auth': True}
+            result = _add_notification_subscription(context, data_dict)
+
+            email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
+            EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
 
     except tk.ValidationError as e:
         return _build_json_response(
