@@ -331,6 +331,7 @@ def _process_request(context, member, action, new_role=None):
     if new_role:
         member.capacity = new_role
 
+    log.debug('member.extras: {0}'.format(member.extras if hasattr(member, 'extras') and member.extras else None))
     for extra in member.extras:
         if extra.key == 'created':
             extra.delete()

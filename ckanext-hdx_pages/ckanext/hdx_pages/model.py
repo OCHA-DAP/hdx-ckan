@@ -167,12 +167,8 @@ def define_page_group_association_table():
                ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
     )
 
-    meta.mapper(PageGroupAssociation, page_group_association_table,
-                properties={
-                    'page': orm.relation(Page,
-                                         backref=orm.backref('countries_assoc_all',
-                                                             cascade='all, delete-orphan'))
-                })
+    meta.registry.map_imperatively(PageGroupAssociation, page_group_association_table, properties={
+        'page': orm.relationship(Page, backref=orm.backref('countries_assoc_all', cascade='all, delete-orphan'))})
 
 
 def define_page_tag_association_table():
@@ -187,12 +183,8 @@ def define_page_tag_association_table():
                ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
     )
 
-    meta.mapper(PageTagAssociation, page_tag_association_table,
-                properties={
-                    'page': orm.relation(Page,
-                                         backref=orm.backref('tags_assoc_all',
-                                                             cascade='all, delete-orphan'))
-                })
+    meta.registry.map_imperatively(PageTagAssociation, page_tag_association_table, properties={
+        'page': orm.relationship(Page, backref=orm.backref('tags_assoc_all', cascade='all, delete-orphan'))})
 
 
 def create_table():

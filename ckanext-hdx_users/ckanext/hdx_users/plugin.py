@@ -53,6 +53,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_delete': delete.hdx_user_delete,
             'user_update': update.user_update,
             'user_create': create.user_create,
+            'hdx_shadow_user_create': create.hdx_shadow_user_create,
         }
 
     def get_auth_functions(self):
@@ -60,6 +61,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_register': authorize.user_can_register,
             'user_can_validate': authorize.user_can_validate,
             'onboarding_user_can_register': authorize.onboarding_user_can_register,
+            'hdx_shadow_user_create': authorize.hdx_shadow_user_create,
         }
 
     # IConfigurable

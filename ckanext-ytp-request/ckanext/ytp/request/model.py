@@ -27,21 +27,36 @@ class MemberExtra(domain_object.DomainObject):
 def setup():
     global member_extra_table
     if member_extra_table is None:
+        log.debug('member_extra table init')
         member_extra_table = Table('member_extra', meta.metadata,
                                    Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                    Column('member_id', types.UnicodeText, ForeignKey('member.id')),
                                    Column('key', types.UnicodeText),
                                    Column('value', types.UnicodeText))
 
-        meta.mapper(
-            MemberExtra, member_extra_table,
+        meta.registry.map_imperatively(
+            MemberExtra,
+            member_extra_table,
             properties={
-                'member': orm.relation(
+                'member': orm.relationship(
                     group.Member,
-                    backref=orm.backref('extras', cascade='all, delete, delete-orphan', order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
-                )
+                    backref=orm.backref(
+                        'extras',
+                        cascade='all, delete, delete-orphan',
+                    ),
+                ),
             },
         )
+
+        # meta.mapper(
+        #     MemberExtra, member_extra_table,
+        #     properties={
+        #         'member': orm.relation(
+        #             group.Member,
+        #             backref=orm.backref('extras', cascade='all, delete, delete-orphan', order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
+        #         )
+        #     },
+        # )
                     # order_by=[member_extra_table.c.member_id, member_extra_table.c.key])
 
         # meta.mapper(group.Member, group.member_table, properties={

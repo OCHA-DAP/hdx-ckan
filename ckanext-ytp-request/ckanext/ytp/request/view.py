@@ -34,7 +34,7 @@ def show(member_id):
         if not member or member.state != 'pending':
             abort(404, _('Request not found'))
 
-        role = request.params.get('role', None)
+        role = request.args.get('role', None)
         if role:
             check_access('member_request_process', {'member': member_id})
             member.capacity = role
@@ -70,7 +70,7 @@ def new(data=None, errors=None, error_summary=None):
     context = {'model': model, 'session': model.Session,
                'user': g.user or g.author,
                'save': 'save' in request.form,
-               'parent': request.params.get('parent', None)}
+               'parent': request.args.get('parent', None)}
     try:
         check_access('member_request_create', context)
     except NotAuthorized:
@@ -82,7 +82,7 @@ def new(data=None, errors=None, error_summary=None):
     data = data or {}
 
     extra_vars = {'data': data, 'errors': errors or {}, 'error_summary': error_summary or {}, 'action': 'new',
-                  'selected_organization': request.params.get('selected_organization', None)}
+                  'selected_organization': request.args.get('selected_organization', None)}
 
     g.roles = _get_available_roles()
     g.user_role = 'editor'
@@ -107,8 +107,8 @@ def approve(member_id):
 
 def process():
     """ Process (reject or approve) membership request """
-    member_id = request.params.get('member_id')
-    approve_status = request.params.get('approve')
+    member_id = request.args.get('member_id')
+    approve_status = request.args.get('approve')
     return _process(member_id, approve_status == 'true')
 
 

@@ -157,7 +157,7 @@ def member_delete(id):
         - flash msg changed to reflect it's an org member ( not group member )
         - the delete confirmation is done with js ( DHTML )
     '''
-    if 'cancel' in request.params:
+    if 'cancel' in request.args:
         return redirect('hdx_members.members', id=id)
 
     context = _get_context()
@@ -285,7 +285,7 @@ def member_new(id):
                     the email of the person you wish to invite'''))
             return redirect('hdx_members.members', id=id)
 
-        if not request.params['username']:
+        if not request.args['username']:
             return abort(404, _('User not found'))
     except NotAuthorized:
         return abort(403, _('Unauthorized to add member to group %s') % '')
@@ -300,7 +300,7 @@ def bulk_member_new(id):
 
     try:
         req_dict = clean_dict(dict_fns.unflatten(
-            tuplize_dict(parse_params(request.params or request.form))))
+            tuplize_dict(parse_params(request.args or request.form))))
         role = req_dict.get('role')
         emails = req_dict.get('emails', '').strip()
         new_members = []
