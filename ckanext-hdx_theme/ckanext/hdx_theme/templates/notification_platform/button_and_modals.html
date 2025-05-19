@@ -1,6 +1,10 @@
 {% asset 'hdx_theme/bem-blocks-styles' %}
-
+{% asset 'hdx_theme/bem-blocks-scripts' %}
+{% asset 'hdx_theme/notification-platform-styles' %}
 {% asset 'hdx_theme/notification-platform-scripts' %}
+{% asset 'hdx_theme/hdx-form-validator' %}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 {% set unsubscribe_token = unsubscribe_token or {} %}
@@ -15,11 +19,6 @@
   data-unsubscribe-token-validated="{{ unsubscribe_token_validated }}"
   data-unsubscribe-email="{{ unsubscribe_token['user_id'] }}"
 ></span>
-
-{#{{ h.snippet('bem.blocks/floating_button.html',#}
-{#  container_classes=['notification-platform-opt-in-floating-button', 'd-none'],#}
-{#  icon="bell",#}
-{#  text=CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT) }}#}
 
 {% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT if not logged_in else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT_AUTHENTICATED %}
 {{ h.snippet('bem.blocks/modal.html',
@@ -49,7 +48,3 @@
   title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE,
   text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT,
   close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_CLOSE_BUTTON_TEXT) }}
-
-{% asset 'hdx_theme/bem-blocks-scripts' %}
-{% asset 'hdx_theme/hdx-form-validator' %}
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>

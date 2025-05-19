@@ -1,30 +1,36 @@
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 
-<div class="notification-platform-opt-in-action-menu d-none">
-  <div class="row align-items-center g-0">
-  <div class="col-auto">
-      <div class="icon">
-        <i class="fa-solid fa-fw fa-bell"></i>
-      </div>
-    </div>
+<div class="notification-platform-wrapper">
+  <div class="notification-platform-opt-in-action-menu d-none">
+    <div class="row align-items-center g-0">
     <div class="col-auto">
-      <div class="paragraph">
-        <p class="mb-0">{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT }}</p>
+        <div class="icon">
+          <i class="fa-solid fa-fw fa-bell"></i>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="paragraph">
+          <p class="mb-0">
+            {{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT }}
+            <span class="explanation" title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_SEARCH_RESULTS_EXPLANATION }}"
+                  data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">[?]</span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="notification-platform-opt-out-action-menu d-none">
-  <div class="row align-items-center g-0">
-  <div class="col-auto">
-      <div class="icon">
-        <i class="fa-solid fa-fw fa-bell"></i>
-      </div>
-    </div>
+  <div class="notification-platform-opt-out-action-menu d-none">
+    <div class="row align-items-center g-0">
     <div class="col-auto">
-      <div class="paragraph">
-        <p class="mb-0"><a href="#" title="Unsubscribe">{{ CONST_NOTIFICATION_PLATFORM.OPT_OUT_TEXT }}</a></p>
+        <div class="icon">
+          <i class="fa-solid fa-fw fa-bell"></i>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="paragraph">
+          <p class="mb-0"><a href="#" title="Unsubscribe">{{ CONST_NOTIFICATION_PLATFORM.OPT_OUT_TEXT }}</a></p>
+        </div>
       </div>
     </div>
   </div>
