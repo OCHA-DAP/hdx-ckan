@@ -1,5 +1,6 @@
 CONSTANTS = {
     'OPT_IN_TEXT': '''Subscribe''',
+    'OPT_IN_SEARCH_RESULTS_EXPLANATION': '''Get notifications when datasets for this results update''',
     'OPT_OUT_TEXT': '''Unsubscribe''',
 
     'SIGNUP_MODAL_TITLE': '''Subscribe to notifications on this dataset''',
@@ -16,8 +17,8 @@ CONSTANTS = {
 
     'VERIFICATION_MODAL_TITLE': '''Verification email has been sent''',
     'VERIFICATION_MODAL_TITLE_AUTHENTICATED': '''Subscription confirmed''',
-    'VERIFICATION_MODAL_TEXT': '''Please click the link in the email we have sent you to confirm your email address''',
-    'VERIFICATION_MODAL_TEXT_AUTHENTICATED': '''You have successfully set up your email notifications''',
+    'VERIFICATION_MODAL_TEXT': '''Please click the link in the email we have sent you to confirm your email address.''',
+    'VERIFICATION_MODAL_TEXT_AUTHENTICATED': '''You have successfully set up your email notifications.''',
     'VERIFICATION_MODAL_CLOSE_BUTTON_TEXT': '''Close''',
 
     'CONFIRMATION_ALERT_TEXT': '''You have successfully set up email alerts for this dataset. These will be sent to {

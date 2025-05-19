@@ -1421,3 +1421,9 @@ notification-platform-scripts:
   output: ckanext-hdx_theme/%(version)s_notification-platform-scripts.js
   contents:
     - datasets/notification_platform.js
+
+notification-platform-styles:
+  <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_notification-platform-styles.css
+  contents:
+    - notification_platform/buttons.css

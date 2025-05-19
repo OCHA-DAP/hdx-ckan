@@ -1,0 +1,18 @@
+.notification-platform-wrapper .notification-platform-opt-in-action-menu,
+.notification-platform-wrapper .notification-platform-opt-out-action-menu {
+  cursor: pointer;
+  display: inline-block;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu .icon,
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .icon {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 16px;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu .paragraph,
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .paragraph {
+  padding-left: 10px;
+  line-height: 1.05;
+}
