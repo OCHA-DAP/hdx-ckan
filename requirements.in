@@ -56,7 +56,7 @@ rcssmin==1.1.2
 # future==0.18.2
 
 # Below lines are needed for ckanext-powerview
-# ckantoolkit==0.0.3
+# ckantoolkit==0.0.7
 # -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@0.1.0#egg=ckanext-powerview
 
 # request data plugin
@@ -73,7 +73,7 @@ timeago==1.0.16
 rdflib==7.1.3
 rdflib-jsonld==0.6.2
 geomet>=0.2.0
-ckantoolkit==0.0.3
+ckantoolkit==0.0.7
 # ckanext-dcat
 -e git+https://github.com/OCHA-DAP/ckanext-dcat.git@1.1.206#egg=ckanext-dcat
 
