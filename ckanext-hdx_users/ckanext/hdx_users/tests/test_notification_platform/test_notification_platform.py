@@ -83,8 +83,7 @@ def _create_org():
 
 
 @pytest.fixture()
-def setup_data(migrate_db_for):
-    migrate_db_for('hdx_users')
+def setup_data():
     factories.User(name=SYSADMIN_USER, email='some_user@hdx.hdxtest.org', sysadmin=True)
     g.userobj = model.User.by_name(SYSADMIN_USER)
     group = factories.Group(name=LOCATION_NAME)
