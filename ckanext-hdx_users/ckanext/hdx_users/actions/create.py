@@ -55,11 +55,12 @@ def user_create(up_func, context, data_dict):
     result = up_func(context, data_dict)
     return result
 
-def hdx_shadow_user_create(context, data_dict):
+def hdx_shadow_user_create(context: Context, data_dict: DataDict) -> DataDict:
     _check_access('hdx_shadow_user_create', context, None)
 
     email = _get_or_bust(data_dict, 'email')
 
+    # Define a priority order for user states: ACTIVE → SHADOW → DELETED → PENDING → others
     state_order = case(
         (core_model.User.state == core_model.State.ACTIVE, 1),
         (core_model.User.state == USER_STATE_SHADOW, 2),

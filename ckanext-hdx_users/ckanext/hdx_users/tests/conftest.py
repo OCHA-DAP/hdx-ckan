@@ -62,3 +62,8 @@ def setup_user_data():
         hdx_org_type='donor',
         org_url='https://hdx.hdxtest.org/'
     )
+
+
+@pytest.fixture(autouse=True)
+def migrate_hdx_users(migrate_db_for):
+    migrate_db_for('hdx_users')
