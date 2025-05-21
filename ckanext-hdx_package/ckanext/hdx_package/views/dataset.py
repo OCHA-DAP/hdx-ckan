@@ -188,7 +188,6 @@ def read(id):
         logo_config = {}
 
     # notification platform
-    supports_notifications = check_notifications_enabled_for_dataset(pkg_dict['id'])
     unsubscribe_token = request.args.get('unsubscribe_token', None)
     unsubscribe_token_validated = None
     if unsubscribe_token:
@@ -220,7 +219,6 @@ def read(id):
         'stats_downloads_last_weeks': stats_downloads_last_weeks,
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
-        'supports_notifications': supports_notifications,
     }
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:

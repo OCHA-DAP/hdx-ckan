@@ -71,7 +71,7 @@
                  data-resource-id="{{ res.id }}"
                  data-dataset-id="{{ pkg.id }}"
                  data-dataset-name="{{ pkg.name }}"
-                 data-dataset-supports-notifications="{{ h.hdx_dataset_supports_notifications(pkg.id) }}"
+                 data-dataset-supports-notifications="{{ h.hdx_supports_notifications('dataset', pkg.id) }}"
                  data-user-survey-url="{{ pkg.user_survey_url }}"
                  tracking-type="{{res.url_type}}"
               >
