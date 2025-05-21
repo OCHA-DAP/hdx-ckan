@@ -27,6 +27,8 @@
 {% set page_title = pkg.title or pkg.name %}
 {% block subtitle %}{{ page_title }} | Humanitarian Dataset{% endblock %}
 
+{% set supports_notifications = h.hdx_supports_notifications('dataset', pkg.id) == 'true' %}
+
 {% block meta %}
     {{ super() }}
     <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
@@ -43,7 +45,7 @@
 <div class="dataset-light">
   <div class="container">
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 title-actions-container">
         <h1 class="mTop20">{{ dataset_dict.title }}</h1>
         {%  if pkg.page_list %}
           <div class="itemSubTitle" style="display: flex;">
@@ -80,6 +82,8 @@
             {% endif %}
           </div>
         {% endif %}
+      </div>
+      <div class="col-12">
         {% block package_resources %}
           <div class="list-header crisis-list-header">
             <span class="mL15 list-header-title">
