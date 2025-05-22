@@ -30,14 +30,16 @@ $(document).ready(function () {
 
   // notification platform data
   var $notificationPlatformData = $('#notification_platform_data');
-  var datasetId = null;
-  var datasetName = null;
+  var objectId = null;
+  var objectName = null;
+  var objectType = null;
   var unsubscribeToken = null;
   var unsubscribeTokenValidated = null;
   var unsubscribeEmail = null;
   if ($notificationPlatformData.length > 0) {
-    datasetId = $notificationPlatformData.data('dataset-id');
-    datasetName = $notificationPlatformData.data('dataset-name');
+    objectId = $notificationPlatformData.data('object-id');
+    objectName = $notificationPlatformData.data('object-name');
+    objectType = $notificationPlatformData.data('object-type');
     unsubscribeToken = $notificationPlatformData.data('unsubscribe-token').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token') : null;
     unsubscribeTokenValidated = $notificationPlatformData.data('unsubscribe-token-validated').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token-validated') : null;
     unsubscribeEmail = $notificationPlatformData.data('unsubscribe-email').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-email') : null;
@@ -60,7 +62,7 @@ $(document).ready(function () {
       headers: hdxUtil.net.getCsrfTokenAsObject(),
       data: {
         'email': email,
-        'dataset_id': datasetId,
+        'dataset_id': objectId,
         'g-recaptcha-response': formData['g-recaptcha-response'],
       },
       success: function (data) {
@@ -77,11 +79,15 @@ $(document).ready(function () {
             'confirm popup',
             'subscribe to notifications',
             formData.popup_source,
-            datasetId,
-            datasetName,
+            objectId,
+            objectName,
+            objectType,
             hdxUtil.compute.strHash(email, 'notification_platform')
           );
 
+          if (data.unsubscribe_token) {
+            hdxUtil.net.addNotificationSubscribedTarget(objectId, data.unsubscribe_token);
+          }
         }
         else {
           showAlert($signupDangerAlert, data.error.message);
@@ -114,14 +120,15 @@ $(document).ready(function () {
           unsubscribeModal.hide();
           unsubscribedModal.show();
 
-          hdxUtil.net.removeNotificationSubscribedDataset(datasetId);
+          hdxUtil.net.removeNotificationSubscribedTarget(objectId);
 
           hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
             'confirm popup',
             'unsubscribe from notifications',
             null,
-            datasetId,
-            datasetName,
+            objectId,
+            objectName,
+            objectType,
             hdxUtil.compute.strHash(unsubscribeEmail, 'notification_platform')
           );
         }
@@ -151,10 +158,10 @@ $(document).ready(function () {
     var cameFrom = urlParams.get('came_from');
     var unsubscribeToken = urlParams.get('u');
     if ((cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') && unsubscribeToken) {
-      hdxUtil.net.addNotificationSubscribedDataset(datasetId, unsubscribeToken);
+      hdxUtil.net.addNotificationSubscribedTarget(objectId, unsubscribeToken);
     }
 
-    var optinLocation = hdxUtil.net.getNotificationOptinLocation(datasetId);
+    var optinLocation = hdxUtil.net.getNotificationOptinLocation(objectId);
 
     if (optinLocation === 'action_menu') {
       $actionMenuButton.removeClass('d-none');
@@ -166,10 +173,10 @@ $(document).ready(function () {
   };
 
   var displayNotificationOptoutOption = function () {
-    var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-    if (subscribedDatasets[datasetId]) {
-      var unsubscribeToken = subscribedDatasets[datasetId];
-      var unsubscribeUrl = '/dataset/' + datasetId + '?unsubscribe_token=' + unsubscribeToken;
+    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects();
+    if (subscribedTargets[objectId]) {
+      var unsubscribeToken = subscribedTargets[objectId];
+      var unsubscribeUrl = '/dataset/' + objectId + '?unsubscribe_token=' + unsubscribeToken;
       $optOutButton.find('a').attr('href', unsubscribeUrl);
       $optOutButton.removeClass('d-none');
     }
@@ -182,12 +189,12 @@ $(document).ready(function () {
 
   $actionMenuButton.on('click', function(e) {
     e.preventDefault();
-    showNotificationsSignupModal('action menu', datasetId, datasetName);
+    showNotificationsSignupModal('action menu', objectId, objectName, objectType);
     return false;
   });
   $floatingButton.on('click', function(e) {
     e.preventDefault();
-    showNotificationsSignupModal('floating button', datasetId, datasetName);
+    showNotificationsSignupModal('floating button', objectId, objectName, objectType);
     return false;
   });
 
@@ -196,7 +203,7 @@ $(document).ready(function () {
   });
 
   if(unsubscribeTokenValidated && unsubscribeTokenValidated.toLowerCase() === 'false') {
-    hdxUtil.net.removeNotificationSubscribedDataset(datasetId);
+    hdxUtil.net.removeNotificationSubscribedTarget(objectId);
   }
 
   if(unsubscribeToken) {
@@ -206,8 +213,9 @@ $(document).ready(function () {
       'show popup',
       'unsubscribe from notifications',
       null,
-      datasetId,
-      datasetName,
+      objectId,
+      objectName,
+      objectType,
       null
     );
   }
@@ -217,24 +225,25 @@ $(document).ready(function () {
   }
 });
 
-var showNotificationsSignupModal = function (popupSource, datasetId, datasetName) {
+var showNotificationsSignupModal = function (popupSource, objectId, objectName, objectType) {
   var modalShownData = hdxUtil.net.getNotificationModalData() || {};
 
-  if (!modalShownData[datasetId] || popupSource !== 'download') {
+  if (!modalShownData[objectId] || popupSource !== 'download') {
     notificationsSignupModal.show();
     $signupFormPopupSourceInput.val(popupSource);
     hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
       'show popup',
       'subscribe to notifications',
       popupSource,
-      datasetId,
-      datasetName,
+      objectId,
+      objectName,
+      objectType,
       null
     );
 
     if(popupSource === 'download') {
       var newData = {};
-      newData[datasetId] = true;
+      newData[objectType] = true;
       hdxUtil.net.updateNotificationModalData(newData);
     }
   }

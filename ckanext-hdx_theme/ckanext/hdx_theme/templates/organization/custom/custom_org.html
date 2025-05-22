@@ -146,7 +146,7 @@
     <div class="row paddingRowHack whiteBackground">
         <div class="col-12 paddingLeftHack paddingRightHack">
             {% snippet 'search/snippets/search_results_wrapper.html',
-                    tracking_enabled=g.tracking_enabled, my_c=data.search_template_data %}
+                    tracking_enabled=g.tracking_enabled, my_c=data.search_template_data, object_id=data.org_info.id, object_name=data.org_info.name, object_type='organization' %}
         </div>
     </div>
 

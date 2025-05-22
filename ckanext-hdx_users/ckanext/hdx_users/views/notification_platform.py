@@ -127,6 +127,8 @@ def subscription_confirmation() -> Response:
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
 
+            return _build_json_response({'success': True, 'unsubscribe_token': unsubscribe_token.token})
+
     except tk.ValidationError as e:
         return _build_json_response(
             {
