@@ -13,8 +13,9 @@
 <span
   class="d-none"
   id="notification_platform_data"
-  data-dataset-id="{{ pkg.id }}"
-  data-dataset-name="{{ pkg.name }}"
+  data-object-id="{{ object_id }}"
+  data-object-name="{{ object_name }}"
+  data-object-type="{{ object_type }}"
   data-unsubscribe-token="{{ unsubscribe_token['token'] }}"
   data-unsubscribe-token-validated="{{ unsubscribe_token_validated }}"
   data-unsubscribe-email="{{ unsubscribe_token['user_id'] }}"
@@ -23,8 +24,8 @@
 {% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT if not logged_in else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_SUBMIT_BUTTON_TEXT_AUTHENTICATED %}
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsSignupBemModal",
-  title=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE,
-  content=h.snippet('notification_platform/signup_modal_content.html', pkg=pkg),
+  title=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE.format(object_type),
+  content=h.snippet('notification_platform/signup_modal_content.html', update_frequency=update_frequency, object_type=object_type, num_of_datasets=num_of_datasets),
   close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_CLOSE_BUTTON_TEXT,
   submit_btn_text=submit_btn_text) }}
 

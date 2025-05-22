@@ -27,7 +27,10 @@
 {% set page_title = pkg.title or pkg.name %}
 {% block subtitle %}{{ page_title }} | Humanitarian Dataset{% endblock %}
 
-{% set supports_notifications = h.hdx_supports_notifications('dataset', pkg.id) == 'true' %}
+{% set object_id = pkg.id %}
+{% set object_name = pkg.name %}
+{% set object_type = 'dataset' %}
+{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) == 'true' %}
 
 {% block meta %}
     {{ super() }}
@@ -69,7 +72,7 @@
           </a>
         </div>
         {% if supports_notifications %}
-          {{ h.snippet('notification_platform/action_menu_buttons.html') }}
+          {{ h.snippet('notification_platform/buttons.html') }}
         {% endif %}
         {% if pkg.notes %}
           <div data-module="hdx_show_more" data-module-points="70" style="visibility:hidden" class="notes embedded-content">
@@ -110,7 +113,14 @@
 </div>
 
 {% if supports_notifications %}
-  {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated %}
+  {% snippet "notification_platform/modals.html",
+      object_type=object_type,
+      object_id=object_id,
+      object_name=object_name,
+      update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
+      unsubscribe_token=unsubscribe_token,
+      unsubscribe_token_validated=unsubscribe_token_validated
+  %}
 {% endif %}
 {% endblock %}
 
