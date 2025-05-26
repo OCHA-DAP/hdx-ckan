@@ -2,6 +2,8 @@ import logging
 import re
 import datetime
 import json
+
+from typing import Dict
 from six import string_types, text_type
 from six.moves.urllib.parse import urlencode
 from collections import OrderedDict
@@ -21,13 +23,13 @@ from ckanext.hdx_search.helpers.constants import \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
-    P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY
+    P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY, \
+    HPC_DATASETS_FACET_NAME, HPC_DATASETS_FACET_QUERY
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
-from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK
-
+from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK, HPC_VALUES_MAP
 
 FEATURED_FACETS = [
     COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME,
@@ -297,11 +299,12 @@ class SearchLogic(object):
             'facet.field': facet_keys,
             'facet.query': [
                 '{{!key={} ex=batch}} {}'.format(HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY),
-                '{{!key={} ex=batch}} {}'.format(SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY),
+                # '{{!key={} ex=batch}} {}'.format(SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY),
-                '{{!key={} ex=batch}} {}'.format(ADMIN_DIVISIONS_DATASETS_FACET_NAME,
-                                                 ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
+                # '{{!key={} ex=batch}} {}'.format(ADMIN_DIVISIONS_DATASETS_FACET_NAME,
+                #                                  ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY),
+                '{{!key={} ex=vocab_Topics,batch}} {}'.format(HPC_DATASETS_FACET_NAME, HPC_DATASETS_FACET_QUERY),
             ],
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
             'facet.limit': 2000,
@@ -321,7 +324,7 @@ class SearchLogic(object):
         query = get_action('package_search')(context, data_dict)
 
         if not query.get('results', None):
-            log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
+            log.warning('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
                 str(data_dict), str(query), datetime.datetime.now()))
 
         self._process_found_package_list(query['results'])
@@ -562,6 +565,12 @@ class SearchLogic(object):
             modified_cod_category = self.__create_featured_cod_facet_category(cod_category)
             featured_facet_items.append(modified_cod_category)
 
+        # add the HPC featured facets
+        vocab_topics_category = result['facets'].get('vocab_Topics', None)
+        if vocab_topics_category:
+            hpc_category = self.__create_featured_hpc_facet_category(vocab_topics_category, existing_facets)
+            featured_facet_items.append(hpc_category)
+
         # if not new_cod_filters_enabled:
         #     self._add_facet_query_item_to_list(featured_facet_items, COD_DATASETS_FACET_NAME, _('CODs'),
         #                                        existing_facets, search_extras)
@@ -747,7 +756,7 @@ class SearchLogic(object):
         # change the data in the package or its resources
         pass
 
-    def __create_featured_cod_facet_category(self, cod_category):
+    def __create_featured_cod_facet_category(self, cod_category: Dict) -> Dict:
         real_cod_items = [
             item for item in cod_category.get('items') if COD_VALUES_MAP.get(item.get('name'), {}).get('is_cod')
         ]
@@ -764,6 +773,46 @@ class SearchLogic(object):
         cod_category['selected'] = all((item.get('selected') for item in real_cod_items)) if real_cod_items else False
         cod_category['explanation_link'] = COD_GROUP_EXPLANATION_LINK
         return cod_category
+
+    def __create_featured_hpc_facet_category(self, vocab_topics_category: Dict, existing_facets: Dict) -> Dict:
+        """
+        Creates a featured HPC filter category based on the given tags.
+        :param vocab_topics_category: a list with all the tags and their counts
+        :type vocab_topics_category: Dict
+        :param existing_facets: a dictionary containing the existing facets, including the query facets counts
+        :type existing_facets: Dict
+        :return: the processed HPC category
+        :rtype: Dict
+        """
+        initial_hpc_tags = (
+            item for item in vocab_topics_category.get('items', []) if HPC_VALUES_MAP.get(item.get('name'))
+        )
+
+        hpc_items = []
+        for item in initial_hpc_tags:
+            hpc_information = HPC_VALUES_MAP.get(item.get('name'), {})
+            new_item = {
+                'count': item.get('count'),
+                'category_key': item.get('category_key'),
+                'name': item.get('name'),
+                'selected': item.get('selected'),
+                'display_name': hpc_information.get('title'),
+                'explanation': hpc_information.get('explanation')
+            }
+            hpc_items.append(new_item)
+        total_count = next(
+            (i for i in existing_facets.get('queries', []) if i.get('name') == 'hpc'), {}
+        ).get('count', 0)
+        hpc_items.sort(key=lambda item: HPC_VALUES_MAP.get(item.get('name'), {}).get('index', -1))
+        hpc_category = {
+            'items': hpc_items,
+            'count': total_count,
+            'name': 'ALL',
+            'display_name': 'HPC',
+            'category_key': 'vocab_Topics',
+            'selected': all((item.get('selected') for item in hpc_items)) if hpc_items else False
+        }
+        return hpc_category
 
 
 class DictProxy(dict):
