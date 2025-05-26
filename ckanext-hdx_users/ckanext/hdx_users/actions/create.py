@@ -59,6 +59,7 @@ def hdx_shadow_user_create(context: Context, data_dict: DataDict) -> DataDict:
     _check_access('hdx_shadow_user_create', context, None)
 
     email = _get_or_bust(data_dict, 'email')
+    email = email.lower()
 
     # Define a priority order for user states: ACTIVE → SHADOW → DELETED → PENDING → others
     state_order = case(
