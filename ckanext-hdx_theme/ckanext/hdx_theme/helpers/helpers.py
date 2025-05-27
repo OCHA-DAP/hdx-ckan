@@ -1073,7 +1073,7 @@ def build_facet_filter_url(option, extra_args):
     remove = option.get('selected')
     base_path = request.path
 
-    if category_key == 'cod_level' and option.get('name') == 'ALL':
+    if category_key in {'cod_level', 'vocab_Topics'} and option.get('name') == 'ALL':
         param_values = [c.get('name') for c in option.get('items', [])]
     else:
         param_values = [option.get('name')]

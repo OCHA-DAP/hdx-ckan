@@ -19,6 +19,7 @@ Example:
                {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %} />
           {% if option.category_key == 'ext_archived' %}<label class="label label-small label-new-feature">NEW</label>{% endif %}
           {{ option.display_name }}
+          </a>
           {% if option.explanation %}
             <a class="facet-option-explanation" href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"
                data-bs-toggle="tooltip">[?]</a>
@@ -30,7 +31,6 @@ Example:
           {% if option.get('items') %}
             {{ render_facet_list(option.get('items'), '', '') }}
           {% endif %}
-        </a>
         </label>
       </li>
     {% endfor %}
