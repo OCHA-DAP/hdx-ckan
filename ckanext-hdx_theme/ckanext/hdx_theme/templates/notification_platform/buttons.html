@@ -1,7 +1,9 @@
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 
 <div class="notification-platform-wrapper">
-  <div class="notification-platform-opt-in-action-menu d-none">
+  <div class="notification-platform-opt-in-action-menu d-none"
+       {% if object_type == 'dataset' %}title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_DATASET }}"
+       data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"{% endif %}>
     <div class="row align-items-center g-0">
     <div class="col-auto">
         <div class="icon">
@@ -12,8 +14,11 @@
         <div class="paragraph">
           <p class="mb-0">
             {{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT }}
-            <span class="explanation" title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_SEARCH_RESULTS_EXPLANATION }}"
-                  data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">[?]</span>
+            {% if object_type != 'dataset' %}
+              <span class="explanation"
+                    title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_SEARCH_RESULTS.format(object_type) }}"
+                    data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">[?]</span>
+            {% endif %}
           </p>
         </div>
       </div>

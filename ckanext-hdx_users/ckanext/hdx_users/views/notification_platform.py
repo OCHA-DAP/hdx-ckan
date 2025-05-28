@@ -90,6 +90,7 @@ def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
     object_id = tk.request.form.get('object_id')
     object_type = tk.request.form.get('object_type')
+    dataset_updates = tk.request.form.get('dataset_updates') == 'true'
 
     try:
         if not current_user.is_authenticated:
@@ -139,6 +140,7 @@ def subscription_confirmation() -> Response:
                 'object_id': object_id,
                 'object_link': _h.url_for(endpoint, id=object_id, _external=True),
                 'object_type': object_type,
+                'dataset_updates': dataset_updates,
             }
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
                                       snippet='email/content/notification_platform/verify_email.html')

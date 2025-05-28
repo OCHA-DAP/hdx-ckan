@@ -64,6 +64,7 @@ $(document).ready(function () {
         'email': email,
         'object_id': objectId,
         'object_type': objectType,
+        'dataset_updates': formData['dataset_updates'],
         'g-recaptcha-response': formData['g-recaptcha-response'],
       },
       success: function (data) {
