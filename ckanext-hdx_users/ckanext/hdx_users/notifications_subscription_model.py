@@ -14,6 +14,8 @@ import ckan.plugins.toolkit as tk
 
 from ckan.types import AlchemySession, DataDict
 
+from ckanext.hdx_users.general_token_model import ObjectType
+
 
 log = logging.getLogger(__name__)
 
@@ -26,32 +28,26 @@ class HDXNotificationsSubscription(tk.BaseModel):
     )
     state = Column('state', types.UnicodeText, default='active', index=True, nullable=False)  # active / inactive
     user_id = Column('user_id', types.UnicodeText, ForeignKey('user.id'), index=True, nullable=False)
-    target = Column('target', types.UnicodeText, nullable=False)
-    target_type = Column('target_type', types.UnicodeText, nullable=False)
+    object = Column('object', types.UnicodeText, nullable=False)
+    object_type = Column('object_type', types.UnicodeText, nullable=False)
     event_type = Column('event_type', types.UnicodeText, nullable=False)
     query_params = Column('params', JSONB, nullable=True)
     created = Column('created', types.DateTime, default=datetime.datetime.now, nullable=False)
     updated = Column('updated', types.DateTime, default=datetime.datetime.now, index=True,
                      onupdate=datetime.datetime.now, nullable=False)
 
-class TargetType(str, Enum):
-    DATASET = 'dataset'
-    ORGANIZATION = 'organization'
-    GROUP = 'group'
-    CRISIS = 'crisis'
-    GENERAL_SEARCH = 'general-search'
 
 class EventType(str, Enum):
     NEW_DATASET_ADDED = 'new-dataset-added'
     DATASET_UPDATED = 'dataset-updated'
 
 
-def generate_notifications_subscription(session: AlchemySession, user_id: str, target_type: TargetType, target: str,
+def generate_notifications_subscription(session: AlchemySession, user_id: str, object_type: ObjectType, object: str,
                                event_type: EventType, query_params: Optional[Dict] = None) -> HDXNotificationsSubscription:
     subscription = HDXNotificationsSubscription(
         user_id=user_id,
-        target=target,
-        target_type=target_type.value,
+        object=object,
+        object_type=object_type.value,
         event_type=event_type.value,
         query_params=query_params
     )
@@ -63,8 +59,8 @@ def notifications_subscription_dictize(subscription: HDXNotificationsSubscriptio
     return {
         'id': subscription.id,
         'user_id': subscription.user_id,
-        'target': subscription.target,
-        'target_type': subscription.target_type,
+        'object': subscription.object,
+        'object_type': subscription.object_type,
         'event_type': subscription.event_type,
         'query_params': subscription.query_params,
         'created': subscription.created.isoformat(),

@@ -8,12 +8,13 @@ import ckanext.hdx_users.model as user_model
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.authz as authz
 from ckan.types import Context, DataDict
+from ckanext.hdx_users.general_token_model import ObjectType
 
 from ckanext.hdx_users.helpers.reset_password import make_key
 from ckanext.hdx_users.helpers.helpers import generate_password, generate_username, NotAuthorized
 from ckanext.hdx_users.logic.schema import onboarding_default_user_schema
-from ckanext.hdx_users.notifications_subscription_model import TargetType, EventType, generate_notifications_subscription, \
-    notifications_subscription_dictize
+from ckanext.hdx_users.notifications_subscription_model import EventType, HDXNotificationsSubscription, \
+    generate_notifications_subscription, notifications_subscription_dictize
 from ckanext.security.schema import default_update_user_schema
 
 _get_or_bust = tk.get_or_bust
@@ -111,7 +112,7 @@ def hdx_shadow_user_create(context: Context, data_dict: DataDict) -> DataDict:
 def hdx_notifications_subscription_create(context: Context, data_dict: DataDict) -> DataDict:
     """
     Creates a notification subscription for a user to receive notifications based on
-    specified target and event types.
+    specified object and event types.
 
     Regular users can only create subscriptions for themselves
     Sysadmins can create subscriptions for any user by specifying a user_id
@@ -121,8 +122,8 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     :type data_dict: DataDict
 
     Required keys in data_dict:
-        - target_type: Type of entity to subscribe to (dataset, group, organization, crisis)
-        - target: ID of the entity
+        - object_type: Type of entity to subscribe to (dataset, group, organization, crisis)
+        - object: ID of the entity
         - event_type: Type of event to subscribe to (new-dataset-added, dataset-updated)
 
     Optional keys in data_dict:
@@ -135,7 +136,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
 
     log.info('Creating new subscription for user %s', data_dict.get('user_id'))
     _check_access('hdx_notifications_subscription_create', context, data_dict)
-    tk.get_or_bust(data_dict, ['target_type', 'target', 'event_type'])
+    tk.get_or_bust(data_dict, ['object_type', 'object', 'event_type'])
 
     current_user: str = context['user']
 
@@ -149,7 +150,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
 
     session = context['session']
 
-    if data_dict.get('target_type') == 'general-search':
+    if data_dict.get('object_type') == 'general-search':
         query_params = data_dict.get('query_params')
         if isinstance(query_params, dict):
             data_dict['query_params'] = query_params
@@ -158,29 +159,29 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
             data_dict['query_params'] = None
 
     try:
-        target_type = TargetType(data_dict['target_type'])
+        object_type = ObjectType(data_dict['object_type'])
     except ValueError:
-        raise tk.ValidationError(f'Invalid target_type: {data_dict["target_type"]}')
+        raise tk.ValidationError(f'Invalid object_type: {data_dict["object_type"]}')
 
     action = None
-    if target_type == TargetType.DATASET:
+    if object_type == ObjectType.DATASET:
         action = 'package_show'
-    elif target_type == TargetType.GROUP:
+    elif object_type == ObjectType.GROUP:
         action = 'group_show'
-    elif target_type == TargetType.ORGANIZATION:
+    elif object_type == ObjectType.ORGANIZATION:
         action = 'organization_show'
-    elif target_type == TargetType.CRISIS:
+    elif object_type == ObjectType.CRISIS:
         action = 'page_show'
     else:
-        raise tk.ValidationError(f'Invalid target_type: {data_dict["target_type"]}')
+        raise tk.ValidationError(f'Invalid object_type: {data_dict["object_type"]}')
 
     try:
-        target_obj = get_action(action)(context, {'id': data_dict['target']})
+        object_obj = get_action(action)(context, {'id': data_dict['object']})
         user_dict = get_action('user_show')(context, {'id': user_id})
     except tk.ObjectNotFound:
-        raise tk.ValidationError(f'{target_type} {data_dict["target"]} does not exist')
+        raise tk.ValidationError(f'{object_type} {data_dict["object"]} does not exist')
     except Exception as e:
-        log.error(f'Error retrieving target or user: {e}')
+        log.error(f'Error retrieving object or user: {e}')
         raise e
 
     try:
@@ -188,12 +189,24 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     except ValueError:
         raise tk.ValidationError(f'Invalid event_type: {data_dict["event_type"]}')
 
+    # Check that the same subscription does not already exist
+    existing_subscription = session.query(HDXNotificationsSubscription).filter(
+        HDXNotificationsSubscription.user_id == user_dict['id'],
+        HDXNotificationsSubscription.object_type == object_type,
+        HDXNotificationsSubscription.object == data_dict['object'],
+        HDXNotificationsSubscription.event_type == event_type_enum
+    ).first()
+
+    if existing_subscription:
+        error_string = f'Subscription already exists for user {user_dict["id"]} on {object_type} {data_dict["object"]}'
+        log.warning(error_string)
+        raise tk.ValidationError(error_string)
 
     subscription = generate_notifications_subscription(
         session=session,
         user_id=user_dict['id'],
-        target_type=target_type,
-        target=data_dict['target'],
+        object_type=object_type,
+        object=object_obj['id'],
         event_type=event_type_enum,
         query_params=data_dict.get('query_params')
     )
