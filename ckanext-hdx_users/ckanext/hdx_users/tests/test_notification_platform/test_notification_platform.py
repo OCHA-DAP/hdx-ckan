@@ -14,6 +14,7 @@ from ckanext.hdx_users.general_token_model import (
     ObjectType,
     State
 )
+from ckanext.hdx_users.notifications_subscription_model import EventType, list_notifications_subscriptions
 
 _get_action = tk.get_action
 g = tk.g
@@ -164,3 +165,32 @@ class TestNotificationPlatform(object):
 
         modified_token = get_by_token(token_obj.token)
         assert modified_token.state == State.INACTIVE
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_authenticated_user_subscribe_to_object(self, current_user, app):
+        user_dict = factories.User(name='standard_user')
+        user = model.User.get(user_dict['id'])
+        org = model.Group.get(ORG_NAME)
+        current_user.return_value = user
+        # token = factories.APIToken(user='standard_user', expires_in=2, unit=60 * 60)
+        # headers = {'Authorization': token['token']}
+        subscribe_url = tk.url_for('hdx_notifications.subscribe_to_object')
+        response = app.post(
+            subscribe_url,
+            data={
+                'object_type': ObjectType.ORGANIZATION.value,
+                'object': ORG_NAME,
+                'event_types': EventType.DATASET_UPDATED.value,
+            },
+            # headers=headers
+        )
+        assert response.status_code == 200
+
+        user_subscriptions = list_notifications_subscriptions(session=model.Session, user_id=user_dict['id'])
+        assert len(user_subscriptions) == 1
+        subscription = user_subscriptions[0]
+
+        assert subscription['object_type'] == ObjectType.ORGANIZATION.value
+        assert subscription['object'] == org.id
+        assert subscription['event_type'] == EventType.DATASET_UPDATED.value
+
