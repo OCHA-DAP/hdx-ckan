@@ -62,7 +62,8 @@ $(document).ready(function () {
       headers: hdxUtil.net.getCsrfTokenAsObject(),
       data: {
         'email': email,
-        'dataset_id': objectId,
+        'object_id': objectId,
+        'object_type': objectType,
         'g-recaptcha-response': formData['g-recaptcha-response'],
       },
       success: function (data) {
