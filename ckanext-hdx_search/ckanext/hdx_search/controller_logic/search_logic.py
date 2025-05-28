@@ -18,8 +18,7 @@ import ckan.plugins.toolkit as tk
 
 from ckanext.hdx_search.helpers.constants import \
     DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE, \
-    HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY, \
-    ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
+    HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
@@ -29,13 +28,14 @@ from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
-from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK, HPC_VALUES_MAP
+from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK, HPC_VALUES_MAP, \
+    HPC_GROUP_EXPLANATION_LINK
 
 FEATURED_FACETS = [
     COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME,
     GEODATA_DATASETS_FACET_NAME, REQUESTDATA_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_NAME,
-    SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_NAME,
-    SADD_DATASETS_FACET_NAME, P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME
+    SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME,
+    P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
 
@@ -810,6 +810,7 @@ class SearchLogic(object):
             'name': 'ALL',
             'display_name': 'HPC',
             'category_key': 'vocab_Topics',
+            'explanation_link': HPC_GROUP_EXPLANATION_LINK,
             'selected': all((item.get('selected') for item in hpc_items)) if hpc_items else False
         }
         return hpc_category

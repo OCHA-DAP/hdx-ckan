@@ -11,13 +11,13 @@ PRIVATE_DATASETS_FACET_NAME = 'private_datasets'
 HXLATED_DATASETS_FACET_NAME = 'hxl'
 HXLATED_DATASETS_FACET_QUERY = 'vocab_Topics:hxl'
 
-SADD_DATASETS_FACET_NAME = 'sadd'  # sex and age disaggregated data
-SADD_DATASETS_FACET_QUERY = \
-    'vocab_Topics:("sex and age disaggregated data - sadd" OR "sex and age disaggregated data-sadd")'
+# SADD_DATASETS_FACET_NAME = 'sadd'  # sex and age disaggregated data
+# SADD_DATASETS_FACET_QUERY = \
+#     'vocab_Topics:("sex and age disaggregated data - sadd" OR "sex and age disaggregated data-sadd")'
 
-ADMIN_DIVISIONS_DATASETS_FACET_NAME = 'administrative_divisions'
-ADMIN_DIVISIONS_DATASETS_FACET_QUERY = \
-    'vocab_Topics:("administrative divisions" OR "administrative boundaries-divisions")'
+# ADMIN_DIVISIONS_DATASETS_FACET_NAME = 'administrative_divisions'
+# ADMIN_DIVISIONS_DATASETS_FACET_QUERY = \
+#     'vocab_Topics:("administrative divisions" OR "administrative boundaries-divisions")'
 
 COD_DATASETS_FACET_NAME = 'cod'
 COD_DATASETS_FACET_QUERY = 'vocab_Topics:("common operational dataset - cod" OR "common operational dataset-cod")'

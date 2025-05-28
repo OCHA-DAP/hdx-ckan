@@ -68,7 +68,7 @@ HPC_FINANCIALS = 'humanitarian financial tracking service-fts'
 HPC_VALUES_MAP = OrderedDict((
     (HPC_NEEDS_ASSESSMENT,
      {
-         'title': 'Needs Assessment',
+         'title': 'Humanitarian Needs',
          'explanation': 'Data from HPC tools reflecting the humanitarian needs of affected people. '
                         'The data is compiled by OCHA and represents a consolidated evidence base that helps '
                         'inform joint strategic response planning.',
@@ -76,7 +76,7 @@ HPC_VALUES_MAP = OrderedDict((
      ),
     (HPC_PLANNING,
      {
-         'title': 'Planning',
+         'title': 'Response Planning',
          'explanation': 'Data from HPC tools on the planned humanitarian action. This data is built upon the '
                         'humanitarian needs which provide the evidence base and analysis of the magnitude of the crisis '
                         'and identify the most pressing humanitarian needs at intercluster and at cluster level.',
@@ -84,7 +84,7 @@ HPC_VALUES_MAP = OrderedDict((
      ),
     (HPC_MONITORING,
      {
-         'title': 'Monitoring',
+         'title': 'Response Monitoring',
          'is_cod': True,
          'explanation': 'A COD that has been accepted for use by the humanitarian community, but has not yet gone '
                         'through the standardization process to become an enhanced COD. '
@@ -105,6 +105,8 @@ HPC_VALUES_MAP = OrderedDict((
 
 for i, hpc_value in enumerate(HPC_VALUES_MAP.values()):
     hpc_value['index'] = i
+
+HPC_GROUP_EXPLANATION_LINK = 'https://knowledge.base.unocha.org/wiki/spaces/hpc/pages/3993075713/About+the+HPC'
 
 S3_TAG_KEY_DATASET_NAME = 'DatasetName'
 S3_TAG_KEY_SENSITIVE = 'Sensitive'

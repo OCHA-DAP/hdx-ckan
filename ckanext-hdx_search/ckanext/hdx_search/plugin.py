@@ -20,8 +20,7 @@ from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_inst
 from ckanext.hdx_package.helpers.reindex_helper import before_indexing_clean_resource_formats
 from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATED_DATASETS_FACET_NAME, \
     PRIVATE_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
-    HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY, \
-    ADMIN_DIVISIONS_DATASETS_FACET_NAME, ADMIN_DIVISIONS_DATASETS_FACET_QUERY, \
+    HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY
@@ -132,8 +131,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                       ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
         adapt_solr_fq(SHOWCASE_DATASETS_FACET_NAME, ' +has_showcases:true', ' -has_showcases:true')
         # adapt_solr_fq('archived', ' +extras_archived:true', ' -extras_archived:true')
-        adapt_solr_fq(ADMIN_DIVISIONS_DATASETS_FACET_NAME, ' +{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
-                      ' -{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY))
+        # adapt_solr_fq(ADMIN_DIVISIONS_DATASETS_FACET_NAME, ' +{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
+        #               ' -{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY))
 
         adapt_solr_fq('qa_completed', ' +extras_qa_completed:true', ' -extras_qa_completed:true')
         adapt_solr_fq('p_coded', ' +res_extras_p_coded:true', ' -res_extras_p_coded:true')
@@ -151,8 +150,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq(PRIVATE_DATASETS_FACET_NAME, ' +capacity:private', ' -capacity:private')
         adapt_solr_fq(BULK_DATASETS_FACET_NAME, ' +extras_updated_by_script:[* TO *]',
                       ' -extras_updated_by_script:[* TO *]')
-        adapt_solr_fq(SADD_DATASETS_FACET_NAME,
-                      ' +{}'.format(SADD_DATASETS_FACET_QUERY), ' -{}'.format(SADD_DATASETS_FACET_QUERY))
+        # adapt_solr_fq(SADD_DATASETS_FACET_NAME,
+        #               ' +{}'.format(SADD_DATASETS_FACET_QUERY), ' -{}'.format(SADD_DATASETS_FACET_QUERY))
         adapt_solr_fq(HDX_HAPI_DATA_FACET_NAME,
                       ' +{}'.format(HDX_HAPI_DATA_FACET_QUERY), ' -{}'.format(HDX_HAPI_DATA_FACET_QUERY))
 
