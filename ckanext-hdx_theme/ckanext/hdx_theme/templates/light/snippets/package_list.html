@@ -43,7 +43,7 @@
           </div>
 
           {% if supports_notifications %}
-            {{ h.snippet('notification_platform/buttons.html') }}
+            {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
           {% endif %}
 
           <div class="search-list">

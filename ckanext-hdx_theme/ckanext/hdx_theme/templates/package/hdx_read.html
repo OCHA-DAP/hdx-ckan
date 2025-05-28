@@ -112,7 +112,7 @@
               {% endfor %}
             {% endif %}
             {% if supports_notifications %}
-              {{ h.snippet('notification_platform/buttons.html') }}
+              {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
             {% endif %}
                 <div class="row mBottom15">
                     <div class="col-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>

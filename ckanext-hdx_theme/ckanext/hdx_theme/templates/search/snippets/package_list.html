@@ -101,7 +101,7 @@ Example:
         {% if packages %}
             <div class="search-list">
                 {% if supports_notifications %}
-                  {{ h.snippet('notification_platform/buttons.html') }}
+                  {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
                 {% endif %}
                 {% block search_list %}
                 <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
