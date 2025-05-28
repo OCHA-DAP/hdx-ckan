@@ -72,13 +72,10 @@ $(
                  'isList': false,
                  'mandatory': false
                  },*/
-                'ext_cod': {
+                'cod_level': {
                     'name': 'cod filter',
-                    'isList': false,
-                    'mandatory': true,
-                    'valueMap': {
-                        '1': 'on'
-                    }
+                    'isList': true,
+                    'mandatory': true
                 },
                 'ext_subnational': {
                     'name': 'subnational filter',
