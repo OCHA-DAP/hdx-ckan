@@ -103,6 +103,9 @@ HPC_VALUES_MAP = OrderedDict((
      ),
 ))
 
+for i, hpc_value in enumerate(HPC_VALUES_MAP.values()):
+    hpc_value['index'] = i
+
 S3_TAG_KEY_DATASET_NAME = 'DatasetName'
 S3_TAG_KEY_SENSITIVE = 'Sensitive'
 S3_TAG_VALUE_SENSITIVE_TRUE = 'yes'
