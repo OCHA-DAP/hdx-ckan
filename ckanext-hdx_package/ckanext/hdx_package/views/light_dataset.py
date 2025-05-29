@@ -72,7 +72,6 @@ def read(id):
         dataset_dict['link_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
 
         # notification platform
-        supports_notifications = check_notifications_enabled_for_dataset(dataset_dict['id'])
         unsubscribe_token = tk.request.args.get('unsubscribe_token', None)
         unsubscribe_token_validated = None
         if unsubscribe_token:
@@ -90,7 +89,6 @@ def read(id):
             'user_survey_url': user_survey_url,
             'unsubscribe_token': unsubscribe_token,
             'unsubscribe_token_validated': unsubscribe_token_validated,
-            'supports_notifications': supports_notifications,
         }
 
         return render(u'light/dataset/read.html', template_data)

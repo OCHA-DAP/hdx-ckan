@@ -25,7 +25,7 @@
         {% for section in page.sections %}
           {% if section.type == 'data_list' %}
             <div class="row">
-              {% snippet "light/snippets/package_list.html", data=section.template_data %}
+              {% snippet "light/snippets/package_list.html", data=section.template_data, object_id=page.id, object_name=page.name, object_type='crisis' %}
             </div>
           {% elif section.type == 'description' %}
             {% if section.long_description %}

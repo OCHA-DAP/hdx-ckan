@@ -1,0 +1,74 @@
+{% asset 'hdx_theme/bem-blocks-styles' %}
+{% asset 'hdx_theme/bem-blocks-scripts' %}
+{% asset 'hdx_theme/notification-platform-styles' %}
+{% asset 'hdx_theme/notification-platform-scripts' %}
+{% asset 'hdx_theme/hdx-form-validator' %}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+{% set unsubscribe_token = unsubscribe_token or {} %}
+{% set logged_in = true if c.userobj else false %}
+
+<span
+  class="d-none"
+  id="notification_platform_data"
+  data-object-id="{{ object_id }}"
+  data-object-name="{{ object_name }}"
+  data-object-type="{{ object_type }}"
+  data-unsubscribe-token="{{ unsubscribe_token['token'] }}"
+  data-unsubscribe-token-validated="{{ unsubscribe_token_validated }}"
+  data-unsubscribe-email="{{ unsubscribe_token['user_id'] }}"
+></span>
+
+{% if object_type == 'dataset' %}
+  {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_DATASET %}
+{% else %}
+  {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_SEARCH_RESULTS.format(object_type) %}
+{% endif %}
+{% if not logged_in %}
+  {% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_SUBMIT_BUTTON %}
+{% else %}
+  {% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_SUBMIT_BUTTON_AUTHENTICATED %}
+{% endif %}
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsSignupBemModal",
+  title=submit_btn_title,
+  content=h.snippet('notification_platform/signup_modal_content.html', update_frequency=update_frequency, object_type=object_type, num_of_datasets=num_of_datasets),
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_CLOSE_BUTTON,
+  submit_btn_text=submit_btn_text) }}
+
+{% if not logged_in %}
+  {% set verification_modal_title = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE %}
+  {% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT %}
+{% else %}
+  {% set verification_modal_title = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE_AUTHENTICATED %}
+  {% if object_type == 'dataset' %}
+    {% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_DATASET_AUTHENTICATED %}
+  {% else %}
+    {% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_SEARCH_RESULTS_AUTHENTICATED.format(object_type) %}
+  {% endif %}
+{% endif %}
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsVerificationBemModal",
+  title=verification_modal_title,
+  text=verification_modal_text,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_CLOSE_BUTTON) }}
+
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsUnsubscribeBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
+  text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
+  submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON) }}
+
+{% if object_type == 'dataset' %}
+  {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}
+{% else %}
+  {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET.format(object_type) %}
+{% endif %}
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsUnsubscribedBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE,
+  text=unsubscribed_modal_text,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_CLOSE_BUTTON) }}

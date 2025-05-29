@@ -14,6 +14,7 @@ from ckan.views.api import CONTENT_TYPES
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.helpers.analytics import EmailValidationAnalyticsSender
+from ckanext.hdx_users.notifications_subscription_model import TargetType
 
 from hashlib import md5
 
@@ -87,7 +88,9 @@ def _add_notification_subscription(context: Context, data_dict: DataDict) -> Dat
 
 def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
-    dataset_id = tk.request.form.get('dataset_id')
+    object_id = tk.request.form.get('object_id')
+    object_type = tk.request.form.get('object_type')
+    dataset_updates = tk.request.form.get('dataset_updates') == 'true'
 
     try:
         if not current_user.is_authenticated:
@@ -98,8 +101,33 @@ def subscription_confirmation() -> Response:
         hdx_validate_email(email)
 
         if not current_user.is_authenticated:
-            dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
-            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, dataset_dict['id'])
+            action = None
+            endpoint = None
+            if object_type == TargetType.DATASET:
+                action = 'package_show'
+                endpoint = 'hdx_dataset.read'
+            elif object_type == TargetType.GROUP:
+                action = 'group_show'
+                endpoint = 'hdx_group.read'
+            elif object_type == TargetType.ORGANIZATION:
+                action = 'organization_show'
+                endpoint = 'hdx_org.read'
+            elif object_type == TargetType.CRISIS:
+                action = 'page_show'
+                endpoint = 'hdx_event.read_event'
+            else:
+                raise tk.ValidationError(f'Invalid target_type: {object_type}')
+
+            try:
+                context: Context = {}
+                object_dict = tk.get_action(action)(context, {'id': object_id})
+            except tk.ObjectNotFound:
+                raise tk.ValidationError(f'{object_type} {object_id} does not exist')
+            except Exception as e:
+                log.error(f'Error retrieving target or user: {e}')
+                raise e
+
+            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_dict['id'])
 
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(
@@ -108,16 +136,19 @@ def subscription_confirmation() -> Response:
             )
             email_data = {
                 'verify_email_link': verify_email_link,
-                'dataset_title': dataset_dict.get('title'),
-                'dataset_id': dataset_id
+                'object_title': object_dict.get('title'),
+                'object_id': object_id,
+                'object_link': _h.url_for(endpoint, id=object_id, _external=True),
+                'object_type': object_type,
+                'dataset_updates': dataset_updates,
             }
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
                                       snippet='email/content/notification_platform/verify_email.html')
         else:
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_id)
             data_dict = {
                 'email': email,
-                'dataset_id': dataset_id,
+                'dataset_id': object_id,
                 'unsubscribe_token': unsubscribe_token.token,
             }
 
@@ -126,6 +157,8 @@ def subscription_confirmation() -> Response:
 
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
+
+            return _build_json_response({'success': True, 'unsubscribe_token': unsubscribe_token.token})
 
     except tk.ValidationError as e:
         return _build_json_response(

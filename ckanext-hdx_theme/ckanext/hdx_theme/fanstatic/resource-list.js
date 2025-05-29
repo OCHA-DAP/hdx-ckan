@@ -69,7 +69,7 @@ function showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNo
     $("#dataUseSurveyPopup").show();
   }
   else if(datasetSupportsNotifications.toString() === 'true') {
-    showNotificationsSignupModal('download', datasetId, datasetName);
+    showNotificationsSignupModal('download', datasetId, datasetName, 'dataset');
   }
 }
 

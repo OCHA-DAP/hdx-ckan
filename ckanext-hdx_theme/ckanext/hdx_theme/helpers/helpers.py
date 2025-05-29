@@ -24,6 +24,7 @@ from ckan.plugins import toolkit
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
+from ckanext.hdx_users.notifications_subscription_model import TargetType
 from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
 
 _ = toolkit._
@@ -1033,8 +1034,23 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_dataset_supports_notifications(pkg_id: str) -> str:
-    supports_notifications = check_notifications_enabled_for_dataset(pkg_id)
+def hdx_supports_notifications(object_type: TargetType, object_id: str) -> str:
+    supports_notifications = False
+
+    if object_id:
+        if object_type == TargetType.DATASET:
+            supports_notifications = check_notifications_enabled_for_dataset(object_id)
+        elif object_type == TargetType.GROUP:
+            supports_notifications = True
+        elif object_type == TargetType.ORGANIZATION:
+            supports_notifications = True
+        elif object_type == TargetType.CRISIS:
+            supports_notifications = True
+        else:
+            log.error(f'Invalid object_type: {object_type}')
+    else:
+        log.error(f'Invalid object_id: {object_id}')
+
     return str(supports_notifications).lower()
 
 def facet_url_extra_args(facet_list, request_args):

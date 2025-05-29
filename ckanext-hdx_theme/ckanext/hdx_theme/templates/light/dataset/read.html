@@ -27,6 +27,11 @@
 {% set page_title = pkg.title or pkg.name %}
 {% block subtitle %}{{ page_title }} | Humanitarian Dataset{% endblock %}
 
+{% set object_id = pkg.id %}
+{% set object_name = pkg.name %}
+{% set object_type = 'dataset' %}
+{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) == 'true' %}
+
 {% block meta %}
     {{ super() }}
     <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
@@ -43,7 +48,7 @@
 <div class="dataset-light">
   <div class="container">
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 title-actions-container">
         <h1 class="mTop20">{{ dataset_dict.title }}</h1>
         {%  if pkg.page_list %}
           <div class="itemSubTitle" style="display: flex;">
@@ -67,7 +72,7 @@
           </a>
         </div>
         {% if supports_notifications %}
-          {{ h.snippet('notification_platform/action_menu_buttons.html') }}
+          {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
         {% endif %}
         {% if pkg.notes %}
           <div data-module="hdx_show_more" data-module-points="70" style="visibility:hidden" class="notes embedded-content">
@@ -80,6 +85,8 @@
             {% endif %}
           </div>
         {% endif %}
+      </div>
+      <div class="col-12">
         {% block package_resources %}
           <div class="list-header crisis-list-header">
             <span class="mL15 list-header-title">
@@ -106,7 +113,14 @@
 </div>
 
 {% if supports_notifications %}
-  {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated %}
+  {% snippet "notification_platform/modals.html",
+      object_type=object_type,
+      object_id=object_id,
+      object_name=object_name,
+      update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
+      unsubscribe_token=unsubscribe_token,
+      unsubscribe_token_validated=unsubscribe_token_validated
+  %}
 {% endif %}
 {% endblock %}
 

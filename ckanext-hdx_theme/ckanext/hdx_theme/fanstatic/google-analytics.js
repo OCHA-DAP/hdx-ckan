@@ -724,11 +724,12 @@ $(
      * @param interactionType {string}
      * @param popupTitle {string}
      * @param popupSource {string}
-     * @param datasetId {string}
-     * @param datasetName {string}
+     * @param objectId {string}
+     * @param objectName {string}
+     * @param objectType {string}
      * @param emailHash {string}
      */
-    function sendNotificationPlatformPopupInteractionEvent(interactionType, popupTitle, popupSource, datasetId, datasetName, emailHash) {
+    function sendNotificationPlatformPopupInteractionEvent(interactionType, popupTitle, popupSource, objectId, objectName, objectType, emailHash) {
         var mixpanelData = {
             "eventName": "popup interaction",
             "eventMeta": {
@@ -736,8 +737,9 @@ $(
                 "popup type": "notification platform",
                 "popup title": popupTitle, // subscribe to notifications / unsubscribe from notifications
                 "popup source": popupSource, // download / action menu / floating button (for subscribe)
-                "dataset id": datasetId,
-                "dataset name": datasetName,
+                "object id": objectId,
+                "object name": objectName,
+                "object type": objectType,
                 "email hash": emailHash,
             }
         };
