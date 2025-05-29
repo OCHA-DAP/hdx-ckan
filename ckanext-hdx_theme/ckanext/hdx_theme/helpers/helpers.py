@@ -1034,7 +1034,7 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> str:
+def hdx_supports_notifications(object_type: str, object_id: str) -> str:
     supports_notifications = False
 
     if object_id:

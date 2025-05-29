@@ -202,10 +202,11 @@ def subscription_confirmation() -> Response:
         if not current_user.is_authenticated:
             usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
 
-            if not email:
-                raise tk.Invalid(tk._('Email address is missing'))
-            hdx_validate_email(email)
+        if not email:
+            raise tk.Invalid(tk._('Email address is missing'))
+        hdx_validate_email(email)
 
+        if not current_user.is_authenticated:
             action = None
             if object_type == ObjectType.DATASET:
                 action = 'package_show'
@@ -230,8 +231,8 @@ def subscription_confirmation() -> Response:
             extras = {
                 NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY: EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value
             }
-            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_dict['id'],
-                                                                                           extras)
+            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_type,
+                                                                                           object_dict['id'], extras)
 
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(
@@ -252,19 +253,19 @@ def subscription_confirmation() -> Response:
         # user is authenticated
         else:
             email = current_user.email
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_id)
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
+                                                                                              object_id)
             # result = _add_notification_subscription(context, data_dict)
 
             context: Context = {'session': model.Session, 'user': current_user.name}
-            event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
-
             data_dict = {
-                'user_id': current_user.id,
-                'object': object_id,
+                'email': email,
+                'object_id': object_id,
                 'object_type': object_type,
-                'event_type': event_type,
+                'unsubscribe_token': unsubscribe_token.token,
             }
             tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
+
 
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
