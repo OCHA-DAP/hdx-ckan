@@ -224,8 +224,8 @@ def subscription_confirmation() -> Response:
             extras = {
                 NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY: EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value
             }
-            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_dict['id'],
-                                                                                           extras)
+            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_type,
+                                                                                           object_dict['id'], extras)
 
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(
@@ -243,10 +243,12 @@ def subscription_confirmation() -> Response:
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
                                       snippet='email/content/notification_platform/verify_email.html')
         else:
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_id)
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
+                                                                                              object_id)
             data_dict = {
                 'email': email,
-                'dataset_id': object_id,
+                'object_id': object_id,
+                'object_type': object_type,
                 'unsubscribe_token': unsubscribe_token.token,
             }
 

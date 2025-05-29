@@ -41,8 +41,8 @@ class State(str, Enum):
 
 
 class TokenType(str, Enum):
-    EMAIL_VALIDATION_FOR_DATASET = 'email-validation-for-dataset'
-    UNSUBSCRIBE_FOR_DATASET = 'unsubscribe-for-dataset'
+    EMAIL_VALIDATION_FOR_NOTIFICATION = 'email-validation-for-notification'
+    UNSUBSCRIBE_FOR_NOTIFICATION = 'unsubscribe-for-notification'
 
 
 class ObjectType(str, Enum):
@@ -56,7 +56,7 @@ def generate_new_token_obj(session: AlchemySession,
                        token_type: TokenType,
                        user_id: str,
                        state: State = State.ACTIVE,
-                       object_type: Optional[ObjectType] = None,
+                       object_type: Optional[str] = None,
                        object_id: Optional[str] = None,
                        extras: Optional[Dict] = None,
                        days_till_expiration: Optional[int] = None) -> HDXGeneralToken:
@@ -69,7 +69,7 @@ def generate_new_token_obj(session: AlchemySession,
     if extras:
         new_token.extras = extras
     if object_type:
-        new_token.object_type = object_type.value
+        new_token.object_type = object_type
         new_token.object_id = object_id
     if days_till_expiration:
         new_token.expires = datetime.datetime.now() + datetime.timedelta(days=days_till_expiration)
@@ -104,14 +104,14 @@ def get_by_type_and_user_id(token_type: TokenType, user_id: str) -> Optional[Lis
 
 
 def get_by_type_and_user_id_and_object(token_type: TokenType, user_id: str,
-                                       object_type: ObjectType, object_id: str) -> Optional[HDXGeneralToken]:
+                                       object_type: str, object_id: str) -> Optional[HDXGeneralToken]:
     if not token_type or not user_id or not object_type or not object_id:
         return None
 
     return meta.Session.query(HDXGeneralToken) \
         .filter(HDXGeneralToken.token_type == token_type.value) \
         .filter(HDXGeneralToken.user_id == user_id) \
-        .filter(HDXGeneralToken.object_type == object_type.value) \
+        .filter(HDXGeneralToken.object_type == object_type) \
         .filter(HDXGeneralToken.object_id == object_id) \
         .filter(HDXGeneralToken.state == 'active') \
         .first()
