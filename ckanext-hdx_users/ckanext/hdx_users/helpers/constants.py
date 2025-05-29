@@ -9,3 +9,5 @@ ONBOARDING_CAME_FROM_EXTRAS_KEY = 'hdx_onboarding_came_from'
 ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY = 'hdx_onboarding_came_from_state'
 
 ONBOARDING_MAILCHIMP_OPTIN_KEY = 'hdx_onboarding_mailchimp_optin'
+
+NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY = 'hdx_notifications_event_type'
