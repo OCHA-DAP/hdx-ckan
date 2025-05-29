@@ -18,7 +18,8 @@ from ckan.views.api import CONTENT_TYPES
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.helpers.analytics import EmailValidationAnalyticsSender
-from ckanext.hdx_users.notifications_subscription_model import TargetType
+from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY
+from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
 from hashlib import md5
 
@@ -109,59 +110,59 @@ def subscribe_to_object() -> Response:
     return tk.redirect_to(redirect_url)
 
 
-def subscribe_to_dataset() -> Response:
-    # Get parameters from the URL
-    # email = tk.request.args.get('email')
-    # dataset_id = tk.request.args.get('dataset_id')
-
-    if request.user_agent.string.strip() and request.method == 'GET':
-        # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
-        token = tk.request.args.get('token')
-
-        dataset_list_url = tk.url_for('dataset.search')
-        try:
-            token_obj = notification_platform_logic.verify_email_validation_token(token)
-        except Exception as e:
-            _h.flash_error('Your token is invalid. Your email address might have already been validated.')
-            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
-            return tk.redirect_to(dataset_list_url)
-
-        email = token_obj.user_id
-        dataset_id = token_obj.object_id
-        if not email or not dataset_id:
-            _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
-            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
-            return tk.redirect_to(dataset_list_url)
-
-        context = {'ignore_auth': True}
-
-        try:
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
-            data_dict = {
-                'email': email,
-                'dataset_id': dataset_id,
-                'unsubscribe_token': unsubscribe_token.token,
-            }
-            result = _add_notification_subscription(context, data_dict)
-            _h.flash_success(tk._(
-                u'You have successfully set up email notifications for this dataset. These will be sent to {0} when the '
-                u'dataset is updated on HDX.'.format(
-                    email)))
-        except tk.ValidationError as e:
-            log.error('An exception occurred:' + str(e))
-            _h.flash_error(str(e))
-        except Exception as e:
-            log.error('An exception occurred:' + str(e))
-            _h.flash_error('An error occurred: ' + str(e))
-
-        email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
-        EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
-
-        # Redirect to the dataset page
-        dataset_url = tk.url_for('dataset.read', id=dataset_id, came_from='notification_platform_subscription',
-                                 u=data_dict.get('unsubscribe_token'))
-        return tk.redirect_to(dataset_url)
-    return abort(404, 'Page not found')
+# def subscribe_to_dataset() -> Response:
+#     # Get parameters from the URL
+#     # email = tk.request.args.get('email')
+#     # dataset_id = tk.request.args.get('dataset_id')
+#
+#     if request.user_agent.string.strip() and request.method == 'GET':
+#         # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
+#         token = tk.request.args.get('token')
+#
+#         dataset_list_url = tk.url_for('dataset.search')
+#         try:
+#             token_obj = notification_platform_logic.verify_email_validation_token(token)
+#         except Exception as e:
+#             _h.flash_error('Your token is invalid. Your email address might have already been validated.')
+#             EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
+#             return tk.redirect_to(dataset_list_url)
+#
+#         email = token_obj.user_id
+#         dataset_id = token_obj.object_id
+#         if not email or not dataset_id:
+#             _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
+#             EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
+#             return tk.redirect_to(dataset_list_url)
+#
+#         context = {'ignore_auth': True}
+#
+#         try:
+#             unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, dataset_id)
+#             data_dict = {
+#                 'email': email,
+#                 'dataset_id': dataset_id,
+#                 'unsubscribe_token': unsubscribe_token.token,
+#             }
+#             result = _add_notification_subscription(context, data_dict)
+#             _h.flash_success(tk._(
+#                 u'You have successfully set up email notifications for this dataset. These will be sent to {0} when the '
+#                 u'dataset is updated on HDX.'.format(
+#                     email)))
+#         except tk.ValidationError as e:
+#             log.error('An exception occurred:' + str(e))
+#             _h.flash_error(str(e))
+#         except Exception as e:
+#             log.error('An exception occurred:' + str(e))
+#             _h.flash_error('An error occurred: ' + str(e))
+#
+#         email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
+#         EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
+#
+#         # Redirect to the dataset page
+#         dataset_url = tk.url_for('dataset.read', id=dataset_id, came_from='notification_platform_subscription',
+#                                  u=data_dict.get('unsubscribe_token'))
+#         return tk.redirect_to(dataset_url)
+#     return abort(404, 'Page not found')
 
 def _generate_url_for(object_type: str, object: str) -> str:
     if object_type == ObjectType.DATASET.value:
@@ -200,21 +201,16 @@ def subscription_confirmation() -> Response:
 
         if not current_user.is_authenticated:
             action = None
-            endpoint = None
-            if object_type == TargetType.DATASET:
+            if object_type == ObjectType.DATASET:
                 action = 'package_show'
-                endpoint = 'hdx_dataset.read'
-            elif object_type == TargetType.GROUP:
+            elif object_type == ObjectType.GROUP:
                 action = 'group_show'
-                endpoint = 'hdx_group.read'
-            elif object_type == TargetType.ORGANIZATION:
+            elif object_type == ObjectType.ORGANIZATION:
                 action = 'organization_show'
-                endpoint = 'hdx_org.read'
-            elif object_type == TargetType.CRISIS:
+            elif object_type == ObjectType.CRISIS:
                 action = 'page_show'
-                endpoint = 'hdx_event.read_event'
             else:
-                raise tk.ValidationError(f'Invalid target_type: {object_type}')
+                raise tk.ValidationError(f'Invalid object_type: {object_type}')
 
             try:
                 context: Context = {}
@@ -225,18 +221,22 @@ def subscription_confirmation() -> Response:
                 log.error(f'Error retrieving target or user: {e}')
                 raise e
 
-            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_dict['id'])
+            extras = {
+                NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY: EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value
+            }
+            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_dict['id'],
+                                                                                           extras)
 
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(
-                'hdx_notifications.subscribe_to_dataset',
+                'hdx_notifications.subscribe_to_object',
                 token=token_obj.token, qualified=True
             )
             email_data = {
                 'verify_email_link': verify_email_link,
                 'object_title': object_dict.get('title'),
                 'object_id': object_id,
-                'object_link': _h.url_for(endpoint, id=object_id, _external=True),
+                'object_link': _generate_url_for(object_type, object_id),
                 'object_type': object_type,
                 'dataset_updates': dataset_updates,
             }
@@ -344,7 +344,7 @@ def _build_json_response(data_dict: DataDict, status=200):
     return response
 
 
-hdx_notifications.add_url_rule(u'/subscribe-to-dataset', view_func=subscribe_to_dataset)
+# hdx_notifications.add_url_rule(u'/subscribe-to-dataset', view_func=subscribe_to_dataset)
 hdx_notifications.add_url_rule(u'/subscribe-to-object', view_func=subscribe_to_object, methods=['GET', 'POST'])
 hdx_notifications.add_url_rule(u'/subscription-confirmation', view_func=subscription_confirmation, methods=['POST'])
 hdx_notifications.add_url_rule(u'/unsubscribe-confirmation', view_func=unsubscribe_confirmation, methods=['POST'])
