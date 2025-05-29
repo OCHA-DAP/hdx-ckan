@@ -1,7 +1,11 @@
 import logging
 import json
 
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.notifications_subscription_model import EventType
+
 import ckan.plugins.toolkit as tk
+import ckan.model as model
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
@@ -25,6 +29,84 @@ request = tk.request
 log = logging.getLogger(__name__)
 
 hdx_notifications = Blueprint(u'hdx_notifications', __name__, url_prefix=u'/notifications')
+
+def subscribe_to_object() -> Response:
+    '''
+    Subscribe to an object (dataset, organization, group, crisis) for notifications.
+    There are 3 cases:
+    1. User is logged in - we can directly register the new subscription
+    2. User is not logged in but has an account either shadow or active - we need the email validation token to find the
+       user and to register the new subscription
+    3. User is not logged in and doesn't have an account - we need the email validation token to create a shadow account
+       and to register the new subscription
+    '''
+
+
+
+    dataset_list_url = tk.url_for('dataset.search')
+    # if user is logged in
+    if current_user.is_authenticated and request.method == 'POST':
+        user_id = current_user.id
+        context: Context = {'session': model.Session, 'user': current_user.name}
+        object_type = request.form.get('object_type')
+        object = request.form.get('object')
+        event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
+        if not object_type or not object or not event_type:
+            log.error('Couldn\'t find all required parameters: object_type, object and event_type.')
+            _h.flash_error('Couldn\'t find all required parameters: object_type, object and event_type.')
+            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
+            return tk.redirect_to(dataset_list_url)
+
+    # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
+    elif request.user_agent.string.strip() and request.method == 'GET':
+        token = request.args.get('token')
+        try:
+            token_obj = notification_platform_logic.verify_email_validation_token(token)
+        except Exception as e:
+            _h.flash_error('Your token is invalid. Your email address might have already been validated.')
+            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
+            return tk.redirect_to(dataset_list_url)
+
+        email = token_obj.user_id
+        object_type = token_obj.object_type
+        object = token_obj.object_id
+        if not email or not object:
+            _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
+            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
+            return tk.redirect_to(dataset_list_url)
+
+        # create shadow account if needed
+        context: Context = {'model': model,'session': model.Session, 'ignore_auth': True}
+        user_dict = tk.get_action('hdx_shadow_user_create')(context, {'email': email})
+        user_id = user_dict['id']
+    else:
+        return abort(404, 'Page not found')
+
+    try:
+        redirect_url = _generate_url_for(object_type, object)
+    except Exception as e:
+        log.error('An exception occurred:' + str(e))
+        return abort(500, 'An error occurred')
+
+    data_dict = {
+        'user_id': user_id,
+        'object': object,
+        'object_type': object_type,
+        'event_type': EventType.DATASET_UPDATED.value,
+    }
+    try:
+        tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
+        _h.flash_success(tk._(
+            u'You have successfully set up email notifications. These will be sent to {0} when there '
+            u'is an update.'.format(
+                current_user.email)))
+    except tk.ValidationError as e:
+        log.error('An exception occurred:' + str(e))
+        _h.flash_error(str(e))
+    except Exception as e:
+        log.error('An exception occurred:' + str(e))
+        _h.flash_error('An error occurred: ' + str(e))
+    return tk.redirect_to(redirect_url)
 
 
 def subscribe_to_dataset() -> Response:
@@ -80,6 +162,22 @@ def subscribe_to_dataset() -> Response:
                                  u=data_dict.get('unsubscribe_token'))
         return tk.redirect_to(dataset_url)
     return abort(404, 'Page not found')
+
+def _generate_url_for(object_type: str, object: str) -> str:
+    if object_type == ObjectType.DATASET.value:
+        return tk.url_for('dataset.read', id=object)
+    elif object_type == ObjectType.ORGANIZATION.value:
+        return tk.url_for('organization.read', id=object)
+    elif object_type == ObjectType.GROUP.value:
+        return tk.url_for('group.read', id=object)
+    elif object_type == ObjectType.CRISIS.value:
+        page_dict = tk.get_action('page_show')({}, {'id': object})
+        if page_dict.get('type') == 'event':
+            return tk.url_for('hdx_light_event.read_light_event', id=object)
+        else:
+            return tk.url_for('hdx_light_dashboard.read_light_dashboard', id=object)
+    else:
+        raise tk.ValidationError(f'Invalid object_type: {object_type}')
 
 def _add_notification_subscription(context: Context, data_dict: DataDict) -> DataDict:
     result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
@@ -247,5 +345,6 @@ def _build_json_response(data_dict: DataDict, status=200):
 
 
 hdx_notifications.add_url_rule(u'/subscribe-to-dataset', view_func=subscribe_to_dataset)
+hdx_notifications.add_url_rule(u'/subscribe-to-object', view_func=subscribe_to_object, methods=['GET', 'POST'])
 hdx_notifications.add_url_rule(u'/subscription-confirmation', view_func=subscription_confirmation, methods=['POST'])
 hdx_notifications.add_url_rule(u'/unsubscribe-confirmation', view_func=unsubscribe_confirmation, methods=['POST'])

@@ -47,6 +47,9 @@ class TokenType(str, Enum):
 
 class ObjectType(str, Enum):
     DATASET = 'dataset'
+    ORGANIZATION = 'organization'
+    GROUP = 'group'
+    CRISIS = 'crisis'
 
 
 def generate_new_token_obj(session: AlchemySession,
