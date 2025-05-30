@@ -89,7 +89,7 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     """
 
     query = session.query(HDXNotificationsSubscription).filter(HDXNotificationsSubscription.state == 'active')
-    query.limit(page_size)
+    query = query.limit(page_size)
     if page:
         query = query.offset((page - 1) * page_size)
     if user_id:
