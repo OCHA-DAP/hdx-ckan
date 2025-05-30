@@ -19,7 +19,7 @@ get_action = tk.get_action
 def get_or_generate_email_validation_token(email: str, object_type: ObjectType, object_id: str,
                                            extras: Optional[Dict] = None) -> HDXGeneralToken:
     object_supports_notifications = hdx_supports_notifications(object_type, object_id)
-    if object_supports_notifications == 'true':
+    if object_supports_notifications:
         email_validation_token = get_by_type_and_user_id_and_object(TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION, email,
                                                                     object_type, object_id)
         if email_validation_token:

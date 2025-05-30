@@ -30,7 +30,7 @@
 {% set object_id = pkg.id %}
 {% set object_name = pkg.name %}
 {% set object_type = 'dataset' %}
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) == 'true' %}
+{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
 
 {% block meta %}
     {{ super() }}

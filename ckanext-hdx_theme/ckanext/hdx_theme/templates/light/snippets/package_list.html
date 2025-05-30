@@ -1,6 +1,6 @@
   {% set facet_list = data.full_facet_info.get('facets') %}
   {% set searchValue = request.args.get('q') if request.args.get('q') else '' %}
-  {% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) == 'true' %}
+  {% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
   <div class="mobile-facets" style="display: none;">
     <div class="actions">
       <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
