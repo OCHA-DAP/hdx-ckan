@@ -255,7 +255,6 @@ def subscription_confirmation() -> Response:
                                                                                               object_id)
 
             context: Context = {'session': model.Session, 'user': current_user.name}
-            event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
 
             # data_dict = {
             #     'email': email,
@@ -269,7 +268,7 @@ def subscription_confirmation() -> Response:
                 'user_id': current_user.id,
                 'object': object_id,
                 'object_type': object_type,
-                'event_type': event_type,
+                'event_type': EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value,
             }
 
             tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
