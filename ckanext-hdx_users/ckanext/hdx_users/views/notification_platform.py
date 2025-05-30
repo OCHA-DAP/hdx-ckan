@@ -1,5 +1,6 @@
 import logging
 import json
+from typing import Dict
 
 from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.notifications_subscription_model import EventType
@@ -191,15 +192,20 @@ def subscription_confirmation() -> Response:
     object_type = tk.request.form.get('object_type')
     dataset_updates = tk.request.form.get('dataset_updates') == 'true'
 
+    json_response_dict: Dict[str: any] = {
+        'success': True
+    }
+    error_message = None
+
     try:
+
         if not current_user.is_authenticated:
             usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
 
-        if not email:
-            raise tk.Invalid(tk._('Email address is missing'))
-        hdx_validate_email(email)
+            if not email:
+                raise tk.Invalid(tk._('Email address is missing'))
+            hdx_validate_email(email)
 
-        if not current_user.is_authenticated:
             action = None
             if object_type == ObjectType.DATASET:
                 action = 'package_show'
@@ -242,61 +248,47 @@ def subscription_confirmation() -> Response:
             }
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
                                       snippet='email/content/notification_platform/verify_email.html')
-        else:
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_id)
-            data_dict = {
-                'email': email,
-                'dataset_id': object_id,
-                'unsubscribe_token': unsubscribe_token.token,
-            }
 
-            context: Context = {'ignore_auth': True}
-            result = _add_notification_subscription(context, data_dict)
+        # user is authenticated
+        else:
+            email = current_user.email
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_id)
+            # result = _add_notification_subscription(context, data_dict)
+
+            context: Context = {'session': model.Session, 'user': current_user.name}
+            event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
+
+            data_dict = {
+                'user_id': current_user.id,
+                'object': object_id,
+                'object_type': object_type,
+                'event_type': event_type,
+            }
+            tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
 
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
 
-            return _build_json_response({'success': True, 'unsubscribe_token': unsubscribe_token.token})
+            json_response_dict['unsubscribe_token'] = unsubscribe_token.token
 
     except tk.ValidationError as e:
-        return _build_json_response(
-            {
-                'success': False,
-                'error': {
-                    'message': e.error_summary
-                }
-            }
-        )
+        error_message =  e.error_summary
     except tk.Invalid as e:
-        return _build_json_response(
-            {
-                'success': False,
-                'error': {
-                    'message': e.error
-                }
-            }
-        )
+        error_message = e.error
     except MailerException as e:
         log.error(e)
-        return _build_json_response(
-            {
-                'success': False,
-                'error': {
-                    'message': u'Error sending the confirmation email, please try again.'
-                }
-            }
-        )
+        error_message = 'Error sending the confirmation email, please try again.'
     except Exception as e:
         log.error(e)
-        return _build_json_response(
-            {
-                'success': False,
-                'error': {
-                    'message': str(e)
-                }
+        error_message = str(e)
+    if error_message:
+        json_response_dict = {
+            'success': False,
+            'error': {
+                'message': error_message
             }
-        )
-    return _build_json_response({'success': True})
+        }
+    return _build_json_response(json_response_dict)
 
 
 def unsubscribe_confirmation() -> Response:
