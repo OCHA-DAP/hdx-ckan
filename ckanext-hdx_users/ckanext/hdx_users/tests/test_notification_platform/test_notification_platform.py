@@ -127,7 +127,7 @@ class TestNotificationPlatform(object):
         requester_email_address = 'test_validation@test.test'
         token_obj = generate_new_token_obj(
             model.Session, TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION,
-            requester_email_address, object_type=ObjectType.DATASET.value, object_id=DATASET_ID
+            requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
         )
         assert token_obj.state == State.ACTIVE
 
@@ -151,7 +151,7 @@ class TestNotificationPlatform(object):
         requester_email_address = 'test_unsubscribing@test.test'
         token_obj = generate_new_token_obj(
             model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION,
-            requester_email_address, object_type=ObjectType.DATASET.value, object_id=DATASET_ID
+            requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
         )
         assert token_obj.state == State.ACTIVE
 

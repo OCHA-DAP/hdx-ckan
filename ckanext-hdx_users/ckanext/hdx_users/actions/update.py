@@ -6,6 +6,7 @@ import ckanext.hdx_users.helpers.reset_password as reset_password
 import ckanext.hdx_users.model as umodel
 from ckan.types import Context, DataDict
 from ckanext.hdx_users.controller_logic import notification_platform_logic
+from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset, read_novu_config
 from ckanext.hdx_users.helpers.token_expiration_helper import find_expiring_api_tokens, send_emails_for_expiring_tokens
 from ckanext.hdx_users.logic.schema import onboarding_default_update_user_schema
@@ -132,7 +133,8 @@ def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
 
     email = data_dict.get('email')
     object_id = data_dict.get('object_id')
-    object_type = data_dict.get('object_type')
+    object_type_str = data_dict.get('object_type')
+    object_type = ObjectType(object_type_str)
     unsubscribe_token = data_dict.get('unsubscribe_token')
     if not unsubscribe_token:
         unsubscribe_toke_obj = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
