@@ -16,7 +16,7 @@ config = tk.config
 get_action = tk.get_action
 
 
-def get_or_generate_email_validation_token(email: str, object_type: str, object_id: str,
+def get_or_generate_email_validation_token(email: str, object_type: ObjectType, object_id: str,
                                            extras: Optional[Dict] = None) -> HDXGeneralToken:
     object_supports_notifications = hdx_supports_notifications(object_type, object_id)
     if object_supports_notifications == 'true':
@@ -33,7 +33,7 @@ def get_or_generate_email_validation_token(email: str, object_type: str, object_
         raise Exception(f'{object_type} {object_id} does not support notifications')
 
 
-def get_or_generate_unsubscribe_token(email: str, object_type: str, object_id: str) -> HDXGeneralToken:
+def get_or_generate_unsubscribe_token(email: str, object_type: ObjectType, object_id: str) -> HDXGeneralToken:
     existing_unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, email,
                                                                     object_type, object_id)
     if existing_unsubscribe_token:

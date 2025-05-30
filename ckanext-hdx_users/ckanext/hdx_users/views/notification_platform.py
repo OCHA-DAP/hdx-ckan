@@ -189,7 +189,8 @@ def _add_notification_subscription(context: Context, data_dict: DataDict) -> Dat
 def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
     object_id = tk.request.form.get('object_id')
-    object_type = tk.request.form.get('object_type')
+    object_type_str = tk.request.form.get('object_type')
+    object_type = ObjectType(object_type_str)
     dataset_updates = tk.request.form.get('dataset_updates') == 'true'
 
     json_response_dict: Dict[str: any] = {
@@ -208,22 +209,20 @@ def subscription_confirmation() -> Response:
 
         if not current_user.is_authenticated:
             action = None
-            if object_type == ObjectType.DATASET:
+            if object_type == ObjectType.DATASET.value:
                 action = 'package_show'
-            elif object_type == ObjectType.GROUP:
+            elif object_type == ObjectType.GROUP.value:
                 action = 'group_show'
-            elif object_type == ObjectType.ORGANIZATION:
+            elif object_type == ObjectType.ORGANIZATION.value:
                 action = 'organization_show'
-            elif object_type == ObjectType.CRISIS:
+            elif object_type == ObjectType.CRISIS.value:
                 action = 'page_show'
-            else:
-                raise tk.ValidationError(f'Invalid object_type: {object_type}')
 
             try:
                 context: Context = {}
                 object_dict = tk.get_action(action)(context, {'id': object_id})
             except tk.ObjectNotFound:
-                raise tk.ValidationError(f'{object_type} {object_id} does not exist')
+                raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
             except Exception as e:
                 log.error(f'Error retrieving target or user: {e}')
                 raise e
@@ -243,8 +242,8 @@ def subscription_confirmation() -> Response:
                 'verify_email_link': verify_email_link,
                 'object_title': object_dict.get('title'),
                 'object_id': object_id,
-                'object_link': _generate_url_for(object_type, object_id),
-                'object_type': object_type,
+                'object_link': _generate_url_for(object_type.value, object_id),
+                'object_type': object_type.value,
                 'dataset_updates': dataset_updates,
             }
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
