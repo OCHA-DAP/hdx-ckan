@@ -89,7 +89,6 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     """
 
     query = session.query(HDXNotificationsSubscription).filter(HDXNotificationsSubscription.state == 'active')
-    query = query.limit(page_size)
     if page:
         query = query.offset((page - 1) * page_size)
     if user_id:
@@ -102,6 +101,8 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
             query = query.join(model.User).filter(model.User.name == user_id)
     if updated:
         query = query.filter(HDXNotificationsSubscription.updated >= updated)
+
+    query = query.limit(page_size)
     subscriptions = query.all()
     return [notifications_subscription_dictize(subscription) for subscription in subscriptions]
 
