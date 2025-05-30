@@ -41,8 +41,8 @@ class State(str, Enum):
 
 
 class TokenType(str, Enum):
-    EMAIL_VALIDATION_FOR_DATASET = 'email-validation-for-dataset'
-    UNSUBSCRIBE_FOR_DATASET = 'unsubscribe-for-dataset'
+    EMAIL_VALIDATION_FOR_NOTIFICATION = 'email-validation-for-notification'
+    UNSUBSCRIBE_FOR_NOTIFICATION = 'unsubscribe-for-notification'
 
 
 class ObjectType(str, Enum):
@@ -103,8 +103,8 @@ def get_by_type_and_user_id(token_type: TokenType, user_id: str) -> Optional[Lis
             .all()
 
 
-def get_by_type_and_user_id_and_object(token_type: TokenType, user_id: str,
-                                       object_type: ObjectType, object_id: str) -> Optional[HDXGeneralToken]:
+def get_by_type_and_user_id_and_object(token_type: TokenType, user_id: str, object_type: ObjectType, object_id: str) -> \
+Optional[HDXGeneralToken]:
     if not token_type or not user_id or not object_type or not object_id:
         return None
 

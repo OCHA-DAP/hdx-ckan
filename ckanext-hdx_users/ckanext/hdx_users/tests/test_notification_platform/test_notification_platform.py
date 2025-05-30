@@ -117,41 +117,41 @@ class TestNotificationPlatform(object):
 
         # Check that the validation token was created and is active
         tokens = get_by_type_and_user_id(
-            TokenType.EMAIL_VALIDATION_FOR_DATASET,
+            TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION,
             'test@test.test'
         )
         assert len(tokens) == 1
         assert tokens[0].state == State.ACTIVE
 
-    # @mock.patch('ckanext.hdx_users.views.notification_platform._add_notification_subscription')
-    # def test_user_validates_email(self, add_notification_subscription_mock, app):
-    #     requester_email_address = 'test_validation@test.test'
-    #     token_obj = generate_new_token_obj(
-    #         model.Session, TokenType.EMAIL_VALIDATION_FOR_DATASET,
-    #         requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
-    #     )
-    #     assert token_obj.state == State.ACTIVE
-    #
-    #     validate_url = tk.url_for('hdx_notifications.subscribe_to_dataset', token=token_obj.token)
-    #     response = app.get(
-    #         validate_url,
-    #         headers={
-    #             'User-Agent': 'TEST USER AGENT'
-    #         },
-    #     )
-    #
-    #     modified_token = get_by_token(token_obj.token)
-    #     assert modified_token.state == State.INACTIVE
-    #
-    #     unsubscribe_tokens = get_by_type_and_user_id(TokenType.UNSUBSCRIBE_FOR_DATASET, requester_email_address)
-    #     assert len(unsubscribe_tokens) == 1
-    #     assert unsubscribe_tokens[0].state == State.ACTIVE
+    @mock.patch('ckanext.hdx_users.views.notification_platform._add_notification_subscription')
+    def test_user_validates_email(self, add_notification_subscription_mock, app):
+        requester_email_address = 'test_validation@test.test'
+        token_obj = generate_new_token_obj(
+            model.Session, TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION,
+            requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
+        )
+        assert token_obj.state == State.ACTIVE
+
+        validate_url = tk.url_for('hdx_notifications.subscribe_to_dataset', token=token_obj.token)
+        response = app.get(
+            validate_url,
+            headers={
+                'User-Agent': 'TEST USER AGENT'
+            },
+        )
+
+        modified_token = get_by_token(token_obj.token)
+        assert modified_token.state == State.INACTIVE
+
+        unsubscribe_tokens = get_by_type_and_user_id(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, requester_email_address)
+        assert len(unsubscribe_tokens) == 1
+        assert unsubscribe_tokens[0].state == State.ACTIVE
 
     @mock.patch('ckanext.hdx_users.views.notification_platform._delete_notification_subscription')
     def test_user_unsubscribing_from_dataset(self, delete_notification_subscription, app):
         requester_email_address = 'test_unsubscribing@test.test'
         token_obj = generate_new_token_obj(
-            model.Session, TokenType.UNSUBSCRIBE_FOR_DATASET,
+            model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION,
             requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
         )
         assert token_obj.state == State.ACTIVE
