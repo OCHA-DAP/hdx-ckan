@@ -203,11 +203,10 @@ def subscription_confirmation() -> Response:
         if not current_user.is_authenticated:
             usr_h.is_valid_captcha(tk.request.form.get('g-recaptcha-response'))
 
-        if not email:
-            raise tk.Invalid(tk._('Email address is missing'))
-        hdx_validate_email(email)
+            if not email:
+                raise tk.Invalid(tk._('Email address is missing'))
+            hdx_validate_email(email)
 
-        if not current_user.is_authenticated:
             action = None
             if object_type == ObjectType.DATASET.value:
                 action = 'package_show'
@@ -254,14 +253,22 @@ def subscription_confirmation() -> Response:
             email = current_user.email
             unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
                                                                                               object_id)
-            # result = _add_notification_subscription(context, data_dict)
 
             context: Context = {'session': model.Session, 'user': current_user.name}
+
+            # data_dict = {
+            #     'email': email,
+            #     'object_id': object_id,
+            #     'object_type': object_type,
+            #     'unsubscribe_token': unsubscribe_token.token,
+            # }
+            # result = _add_notification_subscription(context, data_dict)
+
             data_dict = {
-                'email': email,
-                'object_id': object_id,
+                'user_id': current_user.id,
+                'object': object_id,
                 'object_type': object_type,
-                'unsubscribe_token': unsubscribe_token.token,
+                'event_type': EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value,
             }
             tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
 
