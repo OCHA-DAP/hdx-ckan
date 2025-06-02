@@ -51,12 +51,13 @@ def download_resource_first(id):
     return download_at_position(id, 0)
 
 
-hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource/<resource_id>/download/', view_func=download,
+hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource/<resource_id>/download', view_func=download,
                                   strict_slashes=False)
-hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource/<resource_id>/download/<filename>/', view_func=download,
+hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource/<resource_id>/download/<filename>', view_func=download,
                                   strict_slashes=False)
 
 hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource_at_position/<int:n>/download',
-                                  view_func=download_at_position)
+                                  view_func=download_at_position, strict_slashes=False)
 
-hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource_first/download', view_func=download_resource_first)
+hdx_download_wrapper.add_url_rule(u'/dataset/<id>/resource_first/download', view_func=download_resource_first,
+                                 strict_slashes=False)
