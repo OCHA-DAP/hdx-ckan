@@ -165,21 +165,23 @@ def subscribe_to_object() -> Response:
 #         return tk.redirect_to(dataset_url)
 #     return abort(404, 'Page not found')
 
-def _generate_url_for(object_type: str, object: str) -> str:
+def _generate_url_for(object_type: str, object: str, external: bool = False) -> str:
     if object_type == ObjectType.DATASET.value:
-        return tk.url_for('dataset.read', id=object)
+        endpoint = 'dataset.read'
     elif object_type == ObjectType.ORGANIZATION.value:
-        return tk.url_for('organization.read', id=object)
+        endpoint = 'organization.read'
     elif object_type == ObjectType.GROUP.value:
-        return tk.url_for('group.read', id=object)
+        endpoint = 'group.read'
     elif object_type == ObjectType.CRISIS.value:
         page_dict = tk.get_action('page_show')({}, {'id': object})
         if page_dict.get('type') == 'event':
-            return tk.url_for('hdx_light_event.read_light_event', id=object)
+            endpoint = 'hdx_light_event.read_light_event'
         else:
-            return tk.url_for('hdx_light_dashboard.read_light_dashboard', id=object)
+            endpoint = 'hdx_light_dashboard.read_light_dashboard'
     else:
         raise tk.ValidationError(f'Invalid object_type: {object_type}')
+
+    return tk.url_for(endpoint, id=object, _external=external)
 
 def _add_notification_subscription(context: Context, data_dict: DataDict) -> DataDict:
     result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
@@ -241,7 +243,7 @@ def subscription_confirmation() -> Response:
                 'verify_email_link': verify_email_link,
                 'object_title': object_dict.get('title'),
                 'object_id': object_id,
-                'object_link': _generate_url_for(object_type.value, object_id),
+                'object_link': _generate_url_for(object_type.value, object_id, True),
                 'object_type': object_type.value,
                 'dataset_updates': dataset_updates,
             }
