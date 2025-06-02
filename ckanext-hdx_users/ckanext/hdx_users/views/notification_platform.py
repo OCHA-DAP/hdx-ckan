@@ -33,34 +33,21 @@ log = logging.getLogger(__name__)
 hdx_notifications = Blueprint(u'hdx_notifications', __name__, url_prefix=u'/notifications')
 
 def subscribe_to_object() -> Response:
-    '''
-    Subscribe to an object (dataset, organization, group, crisis) for notifications.
-    There are 3 cases:
-    1. User is logged in - we can directly register the new subscription
-    2. User is not logged in but has an account either shadow or active - we need the email validation token to find the
+    """
+    Subscribe to an object (dataset, organization, group, crisis) for notifications as a guest user
+    using an email validation token.
+    There are 2 cases:
+    1. User has an account either shadow or active - we need the email validation token to find the
        user and to register the new subscription
-    3. User is not logged in and doesn't have an account - we need the email validation token to create a shadow account
+    2. User doesn't have an account - we need the email validation token to create a shadow account
        and to register the new subscription
-    '''
+    """
 
 
 
     dataset_list_url = tk.url_for('dataset.search')
-    # if user is logged in
-    if current_user.is_authenticated and request.method == 'POST':
-        user_id = current_user.id
-        context: Context = {'session': model.Session, 'user': current_user.name}
-        object_type = request.form.get('object_type')
-        object = request.form.get('object')
-        event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
-        if not object_type or not object or not event_type:
-            log.error('Couldn\'t find all required parameters: object_type, object and event_type.')
-            _h.flash_error('Couldn\'t find all required parameters: object_type, object and event_type.')
-            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
-            return tk.redirect_to(dataset_list_url)
-
     # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
-    elif request.user_agent.string.strip() and request.method == 'GET':
+    if request.user_agent.string.strip() and request.method == 'GET':
         token = request.args.get('token')
         try:
             token_obj = notification_platform_logic.verify_email_validation_token(token)
@@ -72,6 +59,7 @@ def subscribe_to_object() -> Response:
         email = token_obj.user_id
         object_type = token_obj.object_type
         object = token_obj.object_id
+        event_type = token_obj.extras.get(NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY, EventType.DATASET_UPDATED.value)
         if not email or not object:
             _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
             EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
@@ -94,7 +82,7 @@ def subscribe_to_object() -> Response:
         'user_id': user_id,
         'object': object,
         'object_type': object_type,
-        'event_type': EventType.DATASET_UPDATED.value,
+        'event_type': event_type,
     }
     try:
         tk.get_action('hdx_notifications_subscription_create')(context, data_dict)

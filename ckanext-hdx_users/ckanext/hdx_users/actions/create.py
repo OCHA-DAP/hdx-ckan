@@ -138,15 +138,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     _check_access('hdx_notifications_subscription_create', context, data_dict)
     tk.get_or_bust(data_dict, ['object_type', 'object', 'event_type'])
 
-    current_user: str = context['user']
-
-    # Only sysadmins can create subscriptions for other users
-    user_id = current_user
-    user_id_param: str = data_dict.get('user_id')
-    if user_id_param and authz.is_sysadmin(current_user):
-        user_id = user_id_param
-
-
+    user_id = data_dict.get('user_id') or context.get('user')
 
     session = context['session']
 
@@ -176,7 +168,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
         raise tk.ValidationError(f'Invalid object_type: {data_dict["object_type"]}')
 
     try:
-        object_obj = get_action(action)(context, {'id': data_dict['object']})
+        object_obj = get_action(action)({}, {'id': data_dict['object']})
         user_dict = get_action('user_show')(context, {'id': user_id})
     except tk.ObjectNotFound:
         raise tk.ValidationError(f'{object_type} {data_dict["object"]} does not exist')
