@@ -17,10 +17,10 @@
     </div>
     <div class="col-6">
       <div class="float-end">
-        {{ h.snippet('bem.blocks/checkbox_field.html',
-          label="Enable Notifications",
-          name="enable_notifications",
-          checked=True) }}
+        {#        {{ h.snippet('bem.blocks/checkbox_field.html',#}
+        {#          label="Enable Notifications",#}
+        {#          name="enable_notifications",#}
+        {#          checked=True) }}#}
       </div>
     </div>
   </div>
@@ -31,62 +31,59 @@
     </div>
 
     <div class="col-12">
-      <div class="row">
-        <div class="col-8">
-            <a href="#" class="fw-bold" title="GDACS RSS Information">GDACS RSS Information</a>
+      {% if subscriptions|length < 1 %}
+        <div class="text-center">
+          <p class="empty" style="min-height: 200px;">
+            {{ _("You have no subscriptions in your account.") }}
+          </p>
         </div>
-        <div class="col-4 text-end">
-          <a href="#" class="fw-bold text-danger" title="Unsubscribe">Unsubscribe <i class="fa-solid fa-trash ms-2"></i></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
-    </div>
-
-    <div class="col-12">
-      <div class="row">
-        <div class="col-8">
-            <a href="#" class="fw-bold" title="GDACS RSS Information">GDACS RSS Information</a>
-        </div>
-        <div class="col-4 text-end">
-          <a href="#" class="fw-bold" title="Manage">Manage</a>
-          <span class="separator mx-2">|</span>
-          <a href="#" class="fw-bold text-danger" title="Unsubscribe">Unsubscribe <i class="fa-solid fa-trash ms-2"></i></a>
-        </div>
-        <div class="col-8">
+      {% else %}
+        {% for subscription in subscriptions %}
           <div class="row">
-            <div class="col-4">
-              <p class="mb-0 mt-2"><strong>Update type:</strong></p>
-              <p class="mb-0">New dataset is added</p>
-              <p class="mb-0">Any dataset is updated</p>
+            <div class="col-8">
+              <a href="{{ subscription.object_link }}" class="fw-bold"
+                 title="{{ subscription.object_dict.title }}">{{ subscription.object_dict.title }}</a>
             </div>
-            <div class="col-4">
-              <p class="mb-0 mt-2"><strong>Channel:</strong></p>
-              <p class="mb-0">By Email</p>
-            </div>
-            <div class="col-4">
-              <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
-              <p class="mb-0">Daily</p>
+            <div class="col-4 text-end">
+              {% if subscription.object_type == 'dataset' %}
+                <a href="{{ subscription.object_link }}?unsubscribe_token={{ subscription.unsubscribe_token }}" class="fw-bold text-danger" title="Unsubscribe">Unsubscribe <i class="fa-solid fa-trash ms-2"></i></a>
+              {% else %}
+                <a href="#" class="fw-bold" title="Manage">Manage</a>
+                <span class="separator mx-2">|</span>
+                <a href="#" class="fw-bold text-danger" title="Unsubscribe">Unsubscribe <i class="fa-solid fa-trash ms-2"></i></a>
+              {% endif %}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+          {% if subscription.object_type != 'dataset' %}
+            <div class="col-8">
+              <div class="row">
+                <div class="col-4">
+                  <p class="mb-0 mt-2"><strong>Update type:</strong></p>
+                  <p class="mb-0">
+                    {% if subscription.event_type == 'new-dataset-added' %}
+                    New dataset is added
+                    {% elif subscription.event_type == 'dataset-updated' %}
+                    Any dataset is updated
+                    {% else %}
+                    {{ subscription.event_type }}
+                  {% endif %}
+                  </p>
+                </div>
+                <div class="col-4">
+                  <p class="mb-0 mt-2"><strong>Channel:</strong></p>
+                  <p class="mb-0">By Email</p>
+                </div>
+                <div class="col-4">
+                  <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
+                  <p class="mb-0">-</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
 
-    <div class="col-12">
-      {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-12">
-      <div class="text-center">
-        <p class="empty" style="min-height: 200px;">
-          {{ _("You have no subscriptions in your account.") }}
-        </p>
-      </div>
+          {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 
