@@ -33,14 +33,15 @@ def get_or_generate_email_validation_token(email: str, object_type: ObjectType, 
         raise Exception(f'{object_type} {object_id} does not support notifications')
 
 
-def get_or_generate_unsubscribe_token(email: str, object_type: ObjectType, object_id: str) -> HDXGeneralToken:
+def get_or_generate_unsubscribe_token(email: str, object_type: ObjectType, object_id: str,
+                                      extras: Optional[Dict] = None) -> HDXGeneralToken:
     existing_unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, email,
                                                                     object_type, object_id)
     if existing_unsubscribe_token:
         return existing_unsubscribe_token
     else:
         return generate_new_token_obj(model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, email,
-                                      object_type=object_type, object_id=object_id)
+                                      object_type=object_type, object_id=object_id, extras=extras)
 
 
 def verify_email_validation_token(token: str) -> HDXGeneralToken:

@@ -41,16 +41,16 @@
         </div>
       {% else %}
         {% for subscription in subscriptions %}
-          <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token }}">
+          <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}">
             <div class="col-8">
               <a href="{{ subscription.object_link }}" class="fw-bold"
                  title="{{ subscription.object_dict.title }}">{{ subscription.object_dict.title }}</a>
             </div>
             <div class="col-4 text-end">
-              {% if subscription.object_type != 'dataset' %}
-                <a href="#" class="fw-bold" title="Manage">Manage</a>
-                <span class="separator mx-2">|</span>
-              {% endif %}
+{#              {% if subscription.object_type != 'dataset' %}#}
+{#                <a href="#" class="fw-bold" title="Manage">Manage</a>#}
+{#                <span class="separator mx-2">|</span>#}
+{#              {% endif %}#}
               <a
                 href="#"
                 data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}"
@@ -80,12 +80,12 @@
                     {% endif %}
                   </div>
                   <div class="col-4">
-                    <p class="mb-0 mt-2"><strong>Channel:</strong></p>
+                    <p class="mb-0 mt-2"><strong>Receive notifications:</strong></p>
                     <p class="mb-0">By Email</p>
                   </div>
                   <div class="col-4">
                     <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
-                    <p class="mb-0">-</p>
+                    <p class="mb-0">As soon as possible</p>
                   </div>
                 </div>
               </div>

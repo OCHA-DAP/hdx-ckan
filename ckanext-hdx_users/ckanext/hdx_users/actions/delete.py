@@ -58,11 +58,14 @@ def hdx_delete_notification_subscription(context: Context, data_dict: DataDict):
 
     email = data_dict.get('email')
     dataset_id = data_dict.get('dataset_id')
+    subscription_id = data_dict.get('subscription_id')
 
-    if not email or not dataset_id:
-        raise tk.ValidationError('Missing required parameters: email and dataset_id')
+    if not email or not dataset_id or not subscription_id:
+        raise tk.ValidationError('Missing required parameters: email, dataset_id and subscription_id')
 
+    tk.get_action('hdx_notifications_subscription_delete')(context, {'id': subscription_id})
 
+    # TODO: update the Novu part
     headers = {
         'Authorization': f'ApiKey {novu_api_key}',
         'Content-Type': 'application/json'
