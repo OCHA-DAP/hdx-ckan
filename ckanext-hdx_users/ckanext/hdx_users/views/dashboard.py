@@ -69,7 +69,7 @@ def notifications():
             unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.email, object_type, object_id)
             subscription['object_dict'] = object_dict
             subscription['object_link'] = _generate_url_for(object_type, object_id, True)
-            subscription['unsubscribe_token'] = unsubscribe_token.token if unsubscribe_token else None
+            subscription['unsubscribe_token'] = unsubscribe_token
         except tk.ObjectNotFound:
             raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
         except Exception as e:

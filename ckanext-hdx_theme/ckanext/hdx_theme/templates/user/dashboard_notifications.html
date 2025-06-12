@@ -3,6 +3,8 @@
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/bem-blocks-styles' %}
+  {% asset 'hdx_theme/ckan' %}
+  {% asset 'hdx_theme/notification-platform-scripts' %}
 {% endblock %}
 
 {% block dashboard_activity_stream_context %}{% endblock %}
@@ -39,52 +41,64 @@
         </div>
       {% else %}
         {% for subscription in subscriptions %}
-          <div class="row">
+          <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token }}">
             <div class="col-8">
               <a href="{{ subscription.object_link }}" class="fw-bold"
                  title="{{ subscription.object_dict.title }}">{{ subscription.object_dict.title }}</a>
             </div>
             <div class="col-4 text-end">
-              {% if subscription.object_type == 'dataset' %}
-                <a href="{{ subscription.object_link }}?unsubscribe_token={{ subscription.unsubscribe_token }}" class="fw-bold text-danger" title="Unsubscribe">Unsubscribe <i class="fa-solid fa-trash ms-2"></i></a>
-              {% else %}
+              {% if subscription.object_type != 'dataset' %}
                 <a href="#" class="fw-bold" title="Manage">Manage</a>
                 <span class="separator mx-2">|</span>
-                <a href="#" class="fw-bold text-danger" title="Unsubscribe">Unsubscribe <i class="fa-solid fa-trash ms-2"></i></a>
               {% endif %}
+              <a
+                href="#"
+                data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}"
+                data-unsubscribe-email="{{ subscription.unsubscribe_token.user_id }}"
+                data-unsubscribe-source="hub"
+                data-object-id="{{ subscription.object }}"
+                data-object-name="{{ subscription.object_type }}"
+                data-object-type="{{ subscription.object_dict.name }}"
+                class="fw-bold text-danger hub-unsubscribe-link"
+                title="Unsubscribe"
+              >
+                Unsubscribe <i class="fa-solid fa-trash ms-2"></i>
+              </a>
             </div>
-          </div>
-          {% if subscription.object_type != 'dataset' %}
-            <div class="col-8">
-              <div class="row">
-                <div class="col-4">
-                  <p class="mb-0 mt-2"><strong>Update type:</strong></p>
-                  <p class="mb-0">
+            {% if subscription.object_type != 'dataset' %}
+              <div class="col-8">
+                <div class="row">
+                  <div class="col-4">
+                    <p class="mb-0 mt-2"><strong>Update type:</strong></p>
                     {% if subscription.event_type == 'new-dataset-added' %}
-                    New dataset is added
+                      <p class="mb-0">New dataset is added</p>
                     {% elif subscription.event_type == 'dataset-updated' %}
-                    Any dataset is updated
+                      <p class="mb-0">New dataset is added</p>
+                      <p class="mb-0">Any dataset is updated</p>
                     {% else %}
-                    {{ subscription.event_type }}
-                  {% endif %}
-                  </p>
-                </div>
-                <div class="col-4">
-                  <p class="mb-0 mt-2"><strong>Channel:</strong></p>
-                  <p class="mb-0">By Email</p>
-                </div>
-                <div class="col-4">
-                  <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
-                  <p class="mb-0">-</p>
+                      <p class="mb-0">{{ subscription.event_type }}</p>
+                    {% endif %}
+                  </div>
+                  <div class="col-4">
+                    <p class="mb-0 mt-2"><strong>Channel:</strong></p>
+                    <p class="mb-0">By Email</p>
+                  </div>
+                  <div class="col-4">
+                    <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
+                    <p class="mb-0">-</p>
+                  </div>
                 </div>
               </div>
+            {% endif %}
+            <div class="col-12">
+              {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
             </div>
-          {% endif %}
-
-          {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
+          </div>
         {% endfor %}
       {% endif %}
     </div>
   </div>
+
+  {% snippet "notification_platform/modals.html" %}
 
 {% endblock %}
