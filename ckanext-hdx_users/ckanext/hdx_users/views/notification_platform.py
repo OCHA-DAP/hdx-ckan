@@ -19,7 +19,8 @@ from ckan.views.api import CONTENT_TYPES
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.helpers.analytics import EmailValidationAnalyticsSender
-from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY
+from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY, \
+    NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
 from hashlib import md5
@@ -240,10 +241,6 @@ def subscription_confirmation() -> Response:
 
         # user is authenticated
         else:
-            email = current_user.email
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
-                                                                                              object_id)
-
             context: Context = {'session': model.Session, 'user': current_user.name}
 
             # data_dict = {
@@ -261,7 +258,14 @@ def subscription_confirmation() -> Response:
                 'event_type': EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value,
             }
 
-            tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
+            subscription = tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
+
+            email = current_user.email
+            extras = {
+                NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY: subscription.get('id')
+            }
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
+                                                                                              object_id, extras)
 
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
@@ -295,7 +299,8 @@ def unsubscribe_confirmation() -> Response:
         token_obj = notification_platform_logic.verify_unsubscribe_token(token, inactivate=True)
 
         context = {'ignore_auth': True}
-        data_dict = {'email': token_obj.user_id, 'dataset_id': token_obj.object_id}
+        data_dict = {'email': token_obj.user_id, 'dataset_id': token_obj.object_id,
+                     'subscription_id': token_obj.extras.get(NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY)}
         result = _delete_notification_subscription(context, data_dict)
     except tk.ValidationError as e:
         log.error('An exception occurred:' + str(e))
