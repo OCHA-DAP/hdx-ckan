@@ -180,10 +180,15 @@
         localStorage.setItem(NOTIFICATION_MODAL_SHOWN_KEY, JSON.stringify(notificationModalData));
     };
 
-    var NOTIFICATION_SUBSCRIBED_OBJECTS_KEY = 'notification_platform_subscribed_datasets';
+    const NOTIFICATION_SUBSCRIBED_KEYS = {
+      dataset: 'notification_platform_subscribed_datasets',
+      organization: 'notification_platform_subscribed_organizations',
+      group: 'notification_platform_subscribed_groups',
+      crisis: 'notification_platform_subscribed_crisis'
+    };
 
-    hdxUtil.net.getNotificationSubscribedObjects = function () {
-      var subscribedObjects = localStorage.getItem(NOTIFICATION_SUBSCRIBED_OBJECTS_KEY);
+    hdxUtil.net.getNotificationSubscribedObjects = function (objectType) {
+      var subscribedObjects = localStorage.getItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType]);
       if (subscribedObjects) {
         return JSON.parse(subscribedObjects);
       } else {
@@ -191,27 +196,27 @@
       }
     };
 
-    hdxUtil.net.addNotificationSubscribedTarget = function (object, unsubscribeToken) {
-      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects();
+    hdxUtil.net.addNotificationSubscribedTarget = function (object, objectType, unsubscribeToken) {
+      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
       if (!subscribedObjects[object]) {
         subscribedObjects[object] = unsubscribeToken;
-        localStorage.setItem(NOTIFICATION_SUBSCRIBED_OBJECTS_KEY, JSON.stringify(subscribedObjects));
+        localStorage.setItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType], JSON.stringify(subscribedObjects));
       }
     };
 
-    hdxUtil.net.removeNotificationSubscribedTarget = function (object) {
-      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects();
+    hdxUtil.net.removeNotificationSubscribedTarget = function (object, objectType) {
+      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
       if (subscribedObjects[object]) {
         delete subscribedObjects[object];
-        localStorage.setItem(NOTIFICATION_SUBSCRIBED_OBJECTS_KEY, JSON.stringify(subscribedObjects));
+        localStorage.setItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType], JSON.stringify(subscribedObjects));
       }
     };
 
     var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
     var NOTIFICATION_OPTIN_OPTIONS = ['action_menu']; // ['action_menu', 'floating_button']
 
-    hdxUtil.net.getNotificationOptinLocation = function (object) {
-      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects();
+    hdxUtil.net.getNotificationOptinLocation = function (object, objectType) {
+      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
       if(subscribedObjects[object]) {
           return false;
       }

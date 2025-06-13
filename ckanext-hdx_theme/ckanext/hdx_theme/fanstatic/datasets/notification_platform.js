@@ -86,7 +86,7 @@ $(document).ready(function () {
           );
 
           if (data.unsubscribe_token) {
-            hdxUtil.net.addNotificationSubscribedTarget(objectId, data.unsubscribe_token);
+            hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, data.unsubscribe_token);
           }
         }
         else {
@@ -131,7 +131,7 @@ $(document).ready(function () {
 
           if(isFromHub) $('.hub-unsubscribe-row[data-unsubscribe-token="' + unsubscribeToken + '"]').remove();
 
-          hdxUtil.net.removeNotificationSubscribedTarget(objectId);
+          hdxUtil.net.removeNotificationSubscribedTarget(objectId, objectType);
 
           hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
             'confirm popup',
@@ -171,10 +171,10 @@ $(document).ready(function () {
     var cameFrom = urlParams.get('came_from');
     var urlUnsubscribeToken = urlParams.get('u');
     if ((cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') && urlUnsubscribeToken) {
-      hdxUtil.net.addNotificationSubscribedTarget(objectId, urlUnsubscribeToken);
+      hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, urlUnsubscribeToken);
     }
 
-    var optinLocation = hdxUtil.net.getNotificationOptinLocation(objectId);
+    var optinLocation = hdxUtil.net.getNotificationOptinLocation(objectId, objectType);
 
     if (optinLocation === 'action_menu') {
       $actionMenuButton.removeClass('d-none');
@@ -186,10 +186,10 @@ $(document).ready(function () {
   };
 
   var displayNotificationOptoutOption = function () {
-    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects();
+    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects(objectType);
     if (subscribedTargets[objectId]) {
       var lSUnsubscribeToken = subscribedTargets[objectId];
-      var unsubscribeUrl = '/dataset/' + objectId + '?unsubscribe_token=' + lSUnsubscribeToken;
+      var unsubscribeUrl = '/' + objectType + '/' + objectId + '?unsubscribe_token=' + lSUnsubscribeToken;
       $optOutButton.find('a').attr('href', unsubscribeUrl);
       $optOutButton.removeClass('d-none');
     }
@@ -230,8 +230,8 @@ $(document).ready(function () {
     );
   }
   else {
-    displayNotificationOptinOption();
-    displayNotificationOptoutOption();
+    displayNotificationOptinOption(objectType);
+    displayNotificationOptoutOption(objectType);
   }
 });
 
