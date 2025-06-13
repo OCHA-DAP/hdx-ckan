@@ -129,7 +129,12 @@ $(document).ready(function () {
           unsubscribeModal.hide();
           unsubscribedModal.show();
 
-          if(isFromHub) $('.hub-unsubscribe-row[data-unsubscribe-token="' + unsubscribeToken + '"]').remove();
+          if(isFromHub) {
+            $('.hub-unsubscribe-row[data-unsubscribe-token="' + unsubscribeToken + '"]').remove();
+            if($('.hub-unsubscribe-row').length === 0) {
+              $('.hub-no-subscriptions').removeClass('d-none');
+            }
+          }
 
           hdxUtil.net.removeNotificationSubscribedTarget(objectId, objectType);
 

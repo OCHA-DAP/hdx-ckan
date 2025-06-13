@@ -33,13 +33,12 @@
     </div>
 
     <div class="col-12">
-      {% if subscriptions|length < 1 %}
-        <div class="text-center">
-          <p class="empty" style="min-height: 200px;">
-            {{ _("You have no subscriptions in your account.") }}
-          </p>
-        </div>
-      {% else %}
+      <div class="text-center">
+        <p class="empty hub-no-subscriptions{% if subscriptions|length > 0 %} d-none{% endif %}" style="min-height: 200px;">
+          {{ _("You have no subscriptions in your account.") }}
+        </p>
+      </div>
+      {% if subscriptions|length > 0 %}
         {% for subscription in subscriptions %}
           <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}">
             <div class="col-8">
