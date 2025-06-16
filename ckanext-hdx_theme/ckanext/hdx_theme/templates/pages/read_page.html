@@ -53,7 +53,7 @@
         </div>
         <div class="col-12 paddingLeftHack paddingRightHack">
             {% for section in data.sections %}
-                  {% snippet 'pages/snippets/section_item.html', section=section, data=data, errors=errors, error_summary=error_summary %}
+                  {% snippet 'pages/snippets/section_item.html', section=section, data=data, errors=errors, error_summary=error_summary, unsubscribe_token=unsubscribe_token %}
             {% endfor %}
         </div>
     </div>
