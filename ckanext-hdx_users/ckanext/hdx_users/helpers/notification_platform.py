@@ -10,10 +10,6 @@ log = logging.getLogger(__name__)
 
 h = tk.h
 
-def check_notifications_enabled_for_dataset(dataset_id: str) -> bool:
-    datasets = cached_datasets_with_notifications()
-    return dataset_id in datasets
-
 
 def read_novu_config() -> Tuple[str, str]:
     # Novu API configuration

@@ -5,9 +5,10 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
 import ckanext.hdx_users.model as umodel
 from ckan.types import Context, DataDict
+from ckanext.hdx_theme.helpers.helpers import hdx_supports_notifications
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.general_token_model import ObjectType
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset, read_novu_config
+from ckanext.hdx_users.helpers.notification_platform import read_novu_config
 from ckanext.hdx_users.helpers.token_expiration_helper import find_expiring_api_tokens, send_emails_for_expiring_tokens
 from ckanext.hdx_users.logic.schema import onboarding_default_update_user_schema
 
@@ -146,7 +147,7 @@ def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
     if not email or not object_id:
         raise tk.ValidationError('Missing required parameters: email and object_id')
 
-    notifications_enabled = check_notifications_enabled_for_dataset(object_id)
+    notifications_enabled = hdx_supports_notifications(object_type, object_id)
     if not notifications_enabled:
         raise tk.ValidationError('Notifications are not enabled for the dataset')
 
