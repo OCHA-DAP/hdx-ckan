@@ -28,7 +28,8 @@ $(document).ready(function () {
   var $floatingButton = $('.notification-platform-opt-in-floating-button');
 
   // opt out button
-  var $optOutButton = $('.notification-platform-opt-out-action-menu');
+  var $optOutContainer = $('.notification-platform-opt-out-action-menu');
+  var $optOutButton = $optOutContainer.find('a');
 
   // notification platform data
   var $notificationPlatformData = $('#notification_platform_data');
@@ -194,9 +195,10 @@ $(document).ready(function () {
     var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects(objectType);
     if (subscribedTargets[objectId]) {
       var lSUnsubscribeToken = subscribedTargets[objectId];
-      var unsubscribeUrl = '/' + objectType + '/' + objectId + '?unsubscribe_token=' + lSUnsubscribeToken;
-      $optOutButton.find('a').attr('href', unsubscribeUrl);
-      $optOutButton.removeClass('d-none');
+      var objectEndpoint = objectType === 'crisis' ? 'event' : objectType;
+      var unsubscribeUrl = '/' + objectEndpoint + '/' + objectId + '?_unsubscribe_token=' + lSUnsubscribeToken;
+      $optOutButton.attr('href', unsubscribeUrl);
+      $optOutContainer.removeClass('d-none');
     }
   };
 

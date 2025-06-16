@@ -20,6 +20,7 @@ from ckanext.hdx_org_group.controller_logic.organization_stats_logic import (
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import NoRecipientException
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 g = tk.g
 config = tk.config
@@ -78,6 +79,7 @@ def read(id):
             template_data = {
                 'org_dict': org_dict,
             }
+            add_unsubscribe_token(request, template_data)
             template_file = _get_group_template('read_template', 'organization')
             return render(template_file, template_data)
     except NotFound:
