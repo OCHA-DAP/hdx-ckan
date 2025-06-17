@@ -41,6 +41,7 @@ from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
+from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 log = logging.getLogger(__name__)
@@ -206,7 +207,7 @@ def read(id):
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
     }
-    add_unsubscribe_token(request, template_data)
+    add_unsubscribe_token(request, ObjectType.DATASET, id, template_data)
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
         view_enabled_resources = [r for r in pkg_dict['resources'] if

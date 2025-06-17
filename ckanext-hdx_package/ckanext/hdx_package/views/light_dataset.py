@@ -12,6 +12,7 @@ import ckanext.hdx_package.helpers.custom_pages as cp_h
 from ckanext.hdx_search.controller_logic.search_logic import SearchLogic, ArchivedUrlHelper
 from ckanext.hdx_theme.util.http_exception_helper import catch_http_exceptions
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 get_action = tk.get_action
@@ -75,7 +76,7 @@ def read(id):
             'analytics': analytics_dict,
             'user_survey_url': user_survey_url,
         }
-        add_unsubscribe_token(tk.request, template_data)
+        add_unsubscribe_token(tk.request, ObjectType.DATASET, id, template_data)
 
         return render(u'light/dataset/read.html', template_data)
     else:

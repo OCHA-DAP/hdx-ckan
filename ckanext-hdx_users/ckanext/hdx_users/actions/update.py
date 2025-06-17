@@ -138,9 +138,9 @@ def hdx_add_notification_subscription(context: Context, data_dict: DataDict):
     object_type = ObjectType(object_type_str)
     unsubscribe_token = data_dict.get('unsubscribe_token')
     if not unsubscribe_token:
-        unsubscribe_toke_obj = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
-                                                                                             object_id)
-        data_dict['unsubscribe_token'] = unsubscribe_token = unsubscribe_toke_obj.token
+        unsubscribe_token_obj = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
+                                                                                              object_id)
+        data_dict['unsubscribe_token'] = unsubscribe_token = unsubscribe_token_obj.token
         log.warning('unsubscribe token was not provided for: ' + email + ' and ' + object_id)
     unsubscribe_token_key = 'unsubscribe_token_' + object_id.replace('-', '_')
 

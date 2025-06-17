@@ -14,6 +14,7 @@ from ckan.common import _, config, g, request
 import ckanext.hdx_pages.helpers.helper as page_h
 
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 tuplize_dict = logic.tuplize_dict
@@ -171,7 +172,7 @@ def _read(id, show_switch_to_desktop, show_switch_to_mobile):
         'page_has_desktop_version': show_switch_to_desktop,
         'page_has_mobile_version': show_switch_to_mobile,
     }
-    add_unsubscribe_token(request, template_data)
+    add_unsubscribe_token(request, ObjectType.CRISIS, id, template_data)
 
     if show_switch_to_mobile:
         return render(u'pages/read_page.html', template_data)

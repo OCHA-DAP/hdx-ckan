@@ -1,10 +1,11 @@
 import logging
+from ckan.common import current_user
 from ckan.types import Request
 from typing import Any, Dict, Tuple
 
 from ckan.plugins import toolkit as tk
-from ckanext.hdx_package.helpers.caching import cached_datasets_with_notifications
 from ckanext.hdx_users.controller_logic.notification_platform_logic import verify_unsubscribe_token
+from ckanext.hdx_users.general_token_model import ObjectType, get_by_type_and_user_id_and_object, TokenType
 
 log = logging.getLogger(__name__)
 
@@ -21,13 +22,20 @@ def read_novu_config() -> Tuple[str, str]:
     return novu_api_key, novu_api_url
 
 
-def add_unsubscribe_token(request: Request, template_data: Dict[str, Any]) -> None:
+def add_unsubscribe_token(request: Request, object_type: ObjectType, object_id: str,
+                          template_data: Dict[str, Any]) -> None:
     unsubscribe_token = request.args.get('_unsubscribe_token', None)
+    unsubscribe_token_validated = request.args.get('_unsubscribe_token', None)
     if unsubscribe_token:
         try:
             unsubscribe_token = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
+            unsubscribe_token_validated = True
         except Exception as e:
             unsubscribe_token = None
             h.flash_error('Your token is invalid or has expired.')
+    else:
+        unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.email, object_type, object_id)
+
 
     template_data['unsubscribe_token'] = unsubscribe_token
+    template_data['unsubscribe_token_validated'] = unsubscribe_token_validated

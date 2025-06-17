@@ -22,6 +22,7 @@ $(document).ready(function () {
   var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
   var $unsubscribeHubLink = $('.hub-unsubscribe-link');
   var unsubscribeToken = $unsubscribeSubmitButton.data('unsubscribe-token').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token') : null;
+  var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
 
   // opt in buttons
   var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
@@ -224,17 +225,23 @@ $(document).ready(function () {
   });
 
   if(unsubscribeToken) {
-    unsubscribeModal.show();
+    if(unsubscribeTokenValidated) {
+      unsubscribeModal.show();
 
-    hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
-      'show popup',
-      'unsubscribe from notifications',
-      null,
-      objectId,
-      objectName,
-      objectType,
-      null
-    );
+      hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
+        'show popup',
+        'unsubscribe from notifications',
+        null,
+        objectId,
+        objectName,
+        objectType,
+        null
+      );
+    }
+    else {
+      hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, unsubscribeToken);
+      displayNotificationOptoutOption(objectType);
+    }
   }
   else {
     displayNotificationOptinOption(objectType);

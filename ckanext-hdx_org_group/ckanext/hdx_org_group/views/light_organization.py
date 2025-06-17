@@ -11,6 +11,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import LightOrgReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 g = common.g
@@ -134,7 +135,7 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
             'page_has_desktop_version': show_switch_to_desktop,
             'page_has_mobile_version': show_switch_to_mobile,
         }
-        add_unsubscribe_token(request, template_data)
+        add_unsubscribe_token(request, ObjectType.ORGANIZATION, id, template_data)
         return render(template_file, template_data)
     except NotFound as e:
         abort(404, _('Page not found'))
