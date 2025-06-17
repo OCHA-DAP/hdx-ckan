@@ -79,7 +79,8 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         return group_read_logic.redirect_result
     else:
         template_data = group_read_logic.widgets_data
-        add_unsubscribe_token(request, ObjectType.GROUP, id, template_data)
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.GROUP, id, template_data)
         return render(template_file, template_data)
 
 

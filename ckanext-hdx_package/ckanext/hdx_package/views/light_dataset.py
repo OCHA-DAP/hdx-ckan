@@ -76,7 +76,8 @@ def read(id):
             'analytics': analytics_dict,
             'user_survey_url': user_survey_url,
         }
-        add_unsubscribe_token(tk.request, ObjectType.DATASET, id, template_data)
+        unsubscribe_token = tk.request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.DATASET, id, template_data)
 
         return render(u'light/dataset/read.html', template_data)
     else:

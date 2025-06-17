@@ -80,7 +80,8 @@ def read(id):
             template_data = {
                 'org_dict': org_dict,
             }
-            add_unsubscribe_token(request, ObjectType.ORGANIZATION, id, template_data)
+            unsubscribe_token = request.args.get('_unsubscribe_token', None)
+            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, id, template_data)
             template_file = _get_group_template('read_template', 'organization')
             return render(template_file, template_data)
     except NotFound:

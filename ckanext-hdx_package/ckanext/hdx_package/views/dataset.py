@@ -207,7 +207,8 @@ def read(id):
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
     }
-    add_unsubscribe_token(request, ObjectType.DATASET, id, template_data)
+    unsubscribe_token = request.args.get('_unsubscribe_token', None)
+    add_unsubscribe_token(unsubscribe_token, ObjectType.DATASET, id, template_data)
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
         view_enabled_resources = [r for r in pkg_dict['resources'] if

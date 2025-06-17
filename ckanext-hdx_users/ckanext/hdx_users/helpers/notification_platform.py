@@ -1,7 +1,6 @@
 import logging
 from ckan.common import current_user
-from ckan.types import Request
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from ckan.plugins import toolkit as tk
 from ckanext.hdx_users.controller_logic.notification_platform_logic import verify_unsubscribe_token
@@ -22,10 +21,9 @@ def read_novu_config() -> Tuple[str, str]:
     return novu_api_key, novu_api_url
 
 
-def add_unsubscribe_token(request: Request, object_type: ObjectType, object_id: str,
+def add_unsubscribe_token(unsubscribe_token: Optional[str], object_type: ObjectType, object_id: str,
                           template_data: Dict[str, Any]) -> None:
-    unsubscribe_token = request.args.get('_unsubscribe_token', None)
-    unsubscribe_token_validated = request.args.get('_unsubscribe_token', None)
+    unsubscribe_token_validated = False
     if unsubscribe_token:
         try:
             unsubscribe_token = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
