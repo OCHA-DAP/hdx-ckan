@@ -91,3 +91,8 @@ def hdx_with_plugins() -> None:
 @pytest.fixture()
 def hdx_clean_db(hdx_with_plugins, clean_db, migrate_db_for) -> None:
     migrate_db_for('activity')
+
+
+@pytest.fixture(autouse=True)
+def migrate_hdx_users(migrate_db_for):
+    migrate_db_for('hdx_users')
