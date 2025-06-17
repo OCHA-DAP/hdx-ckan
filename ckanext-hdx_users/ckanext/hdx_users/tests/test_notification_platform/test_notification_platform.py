@@ -168,14 +168,14 @@ class TestNotificationPlatform(object):
         assert modified_token.state == State.INACTIVE
 
     @mock.patch('flask_login.utils._get_user')
-    def test_authenticated_user_subscribe_to_object(self, current_user, app):
+    def test_authenticated_user_subscription_to_object(self, current_user, app):
         user_dict = factories.User(name='standard_user')
         user = model.User.get(user_dict['id'])
         org = model.Group.get(ORG_NAME)
         current_user.return_value = user
         # token = factories.APIToken(user='standard_user', expires_in=2, unit=60 * 60)
         # headers = {'Authorization': token['token']}
-        subscribe_url = tk.url_for('hdx_notifications.subscribe_to_object')
+        subscribe_url = tk.url_for('hdx_notifications.subscription_confirmation')
         response = app.post(
             subscribe_url,
             data={
