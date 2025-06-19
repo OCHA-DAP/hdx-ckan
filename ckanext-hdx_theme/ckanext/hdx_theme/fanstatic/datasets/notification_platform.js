@@ -22,7 +22,7 @@ $(document).ready(function () {
   var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
   var $unsubscribeHubLink = $('.hub-unsubscribe-link');
   var unsubscribeToken = $unsubscribeSubmitButton.data('unsubscribe-token').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token') : null;
-  var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
+  var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
 
   // opt in buttons
   var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
