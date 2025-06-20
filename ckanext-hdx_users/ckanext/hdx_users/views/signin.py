@@ -2,6 +2,7 @@ from typing import Union, Any, Optional, Mapping
 from urllib.parse import quote
 import logging
 from flask import Blueprint, Response
+from urllib.parse import urlparse, urljoin
 
 from ckan.common import session
 from ckan.types import Context
@@ -79,9 +80,11 @@ def login() -> Union[Response, str]:
     - after a successful login, we check that the user validated their email
     '''
 
+    came_from = request.args.get('came_from', '')
+    safe_url = came_from if _is_safe_url(came_from) else h.url_for('hdx_splash.index')
     extra_vars: dict[str, Any] = {
         'data': {
-            'login_came_from': request.args.get('came_from')
+            'login_came_from': safe_url
         },
     }
 
@@ -145,6 +148,19 @@ def login() -> Union[Response, str]:
         info_message = h.HDX_CONST('UI_CONSTANTS')['SIGNIN'].get(info_message_type)
         extra_vars['info_message'] = info_message
     return render('user/signin.html', extra_vars=extra_vars)
+
+
+def _is_safe_url(user_input_url: str) -> bool:
+    current_site_url = request.host_url
+    full_redirect_url = urljoin(current_site_url, user_input_url)
+
+    site_parts = urlparse(current_site_url)
+    redirect_parts = urlparse(full_redirect_url)
+
+    is_same_scheme = redirect_parts.scheme == site_parts.scheme
+    is_same_domain = redirect_parts.netloc == site_parts.netloc
+
+    return is_same_scheme and is_same_domain
 
 
 hdx_signin.add_url_rule(u'/sign-in', view_func=login, strict_slashes=False, methods=('GET', 'POST'))
