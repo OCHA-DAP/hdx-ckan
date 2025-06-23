@@ -136,7 +136,7 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
             'page_has_mobile_version': show_switch_to_mobile,
         }
         unsubscribe_token = request.args.get('_unsubscribe_token', None)
-        add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, id, template_data)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
         return render(template_file, template_data)
     except NotFound as e:
         abort(404, _('Page not found'))

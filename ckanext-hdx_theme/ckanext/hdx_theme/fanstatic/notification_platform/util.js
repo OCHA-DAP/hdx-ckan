@@ -12,12 +12,14 @@ var unsubscribedModal = bootstrap.Modal.getOrCreateInstance($unsubscribedModal.g
 
 // signup
 var $signupDangerAlert = $notificationsSignupModal.find('.alert-danger');
-var $signupSubmitButton = $notificationsSignupModal.find('button[type="submit"]');
+var $signupSubmitButton = $notificationsSignupModal.find('#notificationsSignupButton');
 var $signupForm = $notificationsSignupModal.find('#notification-platform-form');
 var $signupFormPopupSourceInput = $signupForm.find('input[name="popup_source"]');
 
 // unsubscribe
 var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
+var $unsubscribeSubmitButton = $unsubscribeModal.find('#notificationsUnsubscribeButton');
+var $unsubscribeHubLink = $('.hub-unsubscribe-link');
 
 // opt in buttons
 var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
@@ -27,16 +29,7 @@ var $floatingButton = $('.notification-platform-opt-in-floating-button');
 var $optOutContainer = $('.notification-platform-opt-out-action-menu');
 var $optOutButton = $optOutContainer.find('a');
 
-var onUnsubscribeSubmit = function (e) {
-  e.preventDefault();
-
-  var objectId = $(this).data('object-id');
-  var objectName = $(this).data('object-name');
-  var objectType = $(this).data('object-type');
-
-  var unsubscribeToken = $(this).data('unsubscribe-token');
-  var unsubscribeEmail = $(this).data('unsubscribe-email');
-  var unsubscribeSource = $(this).data('unsubscribe-source');
+var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource) {
   var isFromHub = unsubscribeSource === 'hub';
 
   $.ajax({
@@ -81,7 +74,6 @@ var onUnsubscribeSubmit = function (e) {
       console.log(xhr);
     },
   });
-  return false;
 };
 
 var onSignupSubmit = function (objectId, objectName, objectType) {
@@ -141,7 +133,6 @@ var onSignupSubmit = function (objectId, objectName, objectType) {
       console.log(xhr);
     },
   });
-  return false;
 };
 
 var showAlert = function ($alert, text) {

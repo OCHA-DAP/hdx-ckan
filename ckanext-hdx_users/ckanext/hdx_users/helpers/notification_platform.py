@@ -31,7 +31,7 @@ def add_unsubscribe_token(unsubscribe_token: Optional[str], object_type: ObjectT
         except Exception as e:
             unsubscribe_token = None
             h.flash_error('Your token is invalid or has expired.')
-    else:
+    elif current_user.is_authenticated:
         unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.email, object_type, object_id)
 
 

@@ -1,33 +1,29 @@
 $(document).ready(function () {
-  var objectId = null;
-  var objectName = null;
-  var objectType = null;
-
   // notification platform data
-  var $notificationPlatformData = $('#notification_platform_data');
-  if ($notificationPlatformData.length > 0) {
-    objectId = $notificationPlatformData.data('object-id');
-    objectName = $notificationPlatformData.data('object-name');
-    objectType = $notificationPlatformData.data('object-type');
-  }
+  const $notificationPlatformData = $('#notification_platform_data');
+  const subscribeObjectId = $notificationPlatformData.data('object-id');
+  const subscribeObjectName = $notificationPlatformData.data('object-name');
+  const subscribeObjectType = $notificationPlatformData.data('object-type');
 
   $signupForm.on('submit', function (e) {
     e.preventDefault();
-    onSignupSubmit(objectId, objectName, objectType);
+    onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType);
+    return false;
   });
   $signupSubmitButton.on('click', function (e) {
     e.preventDefault();
-    onSignupSubmit(objectId, objectName, objectType);
+    onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType);
+    return false;
   });
 
   $actionMenuButton.on('click', function (e) {
     e.preventDefault();
-    showNotificationsSignupModal('action menu', objectId, objectName, objectType);
+    showNotificationsSignupModal('action menu', subscribeObjectId, subscribeObjectName, subscribeObjectType);
     return false;
   });
   $floatingButton.on('click', function (e) {
     e.preventDefault();
-    showNotificationsSignupModal('floating button', objectId, objectName, objectType);
+    showNotificationsSignupModal('floating button', subscribeObjectId, subscribeObjectName, subscribeObjectType);
     return false;
   });
 

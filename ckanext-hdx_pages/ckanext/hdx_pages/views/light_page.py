@@ -173,7 +173,7 @@ def _read(id, show_switch_to_desktop, show_switch_to_mobile):
         'page_has_mobile_version': show_switch_to_mobile,
     }
     unsubscribe_token = request.args.get('_unsubscribe_token', None)
-    add_unsubscribe_token(unsubscribe_token, ObjectType.CRISIS, id, template_data)
+    add_unsubscribe_token(unsubscribe_token, ObjectType.CRISIS, page_dict.get('id'), template_data)
 
     if show_switch_to_mobile:
         return render(u'pages/read_page.html', template_data)

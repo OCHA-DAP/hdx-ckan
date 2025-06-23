@@ -34,6 +34,7 @@
   title=submit_btn_title,
   content=h.snippet('notification_platform/signup_modal_content.html', update_frequency=update_frequency, object_type=object_type, num_of_datasets=num_of_datasets),
   close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_CLOSE_BUTTON,
+  submit_btn_id='notificationsSignupButton',
   submit_btn_text=submit_btn_text) }}
 
 {% if not logged_in %}
@@ -58,6 +59,7 @@
   title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
   text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT,
   close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
+  submit_btn_id='notificationsUnsubscribeButton',
   submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON,
   submit_btn_data_attributes={"unsubscribe-token": unsubscribe_token['token'], "unsubscribe-token-validated": unsubscribe_token_validated, "unsubscribe-email": unsubscribe_token['user_id'], "object-id": object_id, "object-type": object_type, "object-name": object_name}) }}
 
