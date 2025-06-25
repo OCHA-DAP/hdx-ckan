@@ -11,7 +11,8 @@ from ckan.views.group import _get_group_template, CreateGroupView
 from ckanext.hdx_org_group.controller_logic.group_read_logic import GroupIndexReadLogic, GroupReadLogic, \
     CountryToplineReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
-
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 g = common.g
 request = common.request
@@ -78,6 +79,8 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         return group_read_logic.redirect_result
     else:
         template_data = group_read_logic.widgets_data
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.GROUP, id, template_data)
         return render(template_file, template_data)
 
 

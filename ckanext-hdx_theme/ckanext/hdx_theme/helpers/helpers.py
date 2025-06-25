@@ -21,11 +21,11 @@ from six import text_type
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
+from ckanext.hdx_package.helpers.caching import cached_datasets_with_notifications
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
 
 _ = toolkit._
 request = toolkit.request
@@ -1034,12 +1034,12 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> str:
+def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> bool:
     supports_notifications = False
 
     if object_id:
         if object_type == ObjectType.DATASET:
-            supports_notifications = check_notifications_enabled_for_dataset(object_id)
+            supports_notifications = _check_notifications_enabled_for_dataset(object_id)
         elif object_type == ObjectType.GROUP:
             supports_notifications = True
         elif object_type == ObjectType.ORGANIZATION:
@@ -1051,7 +1051,13 @@ def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> str:
     else:
         log.error(f'Invalid object_id: {object_id}')
 
-    return str(supports_notifications).lower()
+    return supports_notifications
+
+
+def _check_notifications_enabled_for_dataset(dataset_id: str) -> bool:
+    datasets = cached_datasets_with_notifications()
+    return dataset_id in datasets
+
 
 def facet_url_extra_args(facet_list, request_args):
     extra_args = {}
@@ -1089,7 +1095,7 @@ def build_facet_filter_url(option, extra_args):
     remove = option.get('selected')
     base_path = request.path
 
-    if category_key == 'cod_level' and option.get('name') == 'ALL':
+    if category_key in {'cod_level', 'vocab_Topics'} and option.get('name') == 'ALL':
         param_values = [c.get('name') for c in option.get('items', [])]
     else:
         param_values = [option.get('name')]

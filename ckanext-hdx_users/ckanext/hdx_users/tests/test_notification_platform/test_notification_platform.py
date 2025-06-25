@@ -26,21 +26,21 @@ DATASET_ID = None
 LOCATION_NAME = 'some_location_for_notification_platform'
 ORG_NAME = 'org_name_for_notification_platform'
 DATASET_DICT = {
-    "package_creator": "test function",
-    "private": False,
-    "dataset_date": "[1960-01-01 TO 2012-12-31]",
-    "caveats": "These are the caveats",
-    "license_other": "TEST OTHER LICENSE",
-    "methodology": "This is a test methodology",
-    "dataset_source": "Test data",
-    "license_id": "hdx-other",
+    'package_creator': 'test function',
+    'private': False,
+    'dataset_date': '[1960-01-01 TO 2012-12-31]',
+    'caveats': 'These are the caveats',
+    'license_other': 'TEST OTHER LICENSE',
+    'methodology': 'This is a test methodology',
+    'dataset_source': 'Test data',
+    'license_id': 'hdx-other',
     # "name": DATASET_NAME,
-    "notes": "This is a test dataset",
+    'notes': 'This is a test dataset',
     # "title": "Test Dataset " + DATASET_NAME,
     # "owner_org": ORG_NAME,
-    "groups": [{"name": LOCATION_NAME}],
-    "data_update_frequency": "30",
-    "maintainer": SYSADMIN_USER
+    'groups': [{'name': LOCATION_NAME}],
+    'data_update_frequency': '30',
+    'maintainer': SYSADMIN_USER
 }
 
 RESOURCE_LIST = [
@@ -58,7 +58,7 @@ def _create_dataset(with_resources=True):
     context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
     dataset_dict = dict(DATASET_DICT)
     dataset_dict['name'] = DATASET_NAME
-    dataset_dict['title'] = "Test Dataset " + dataset_dict['name'],
+    dataset_dict['title'] = 'Test Dataset ' + dataset_dict['name'],
     dataset_dict['owner_org'] = ORG_NAME
 
     if with_resources:
@@ -99,10 +99,10 @@ class TestNotificationPlatform(object):
     @mock.patch(
         'ckanext.hdx_users.views.notification_platform.hdx_mailer')
     @mock.patch(
-        'ckanext.hdx_users.controller_logic.notification_platform_logic.check_notifications_enabled_for_dataset')
-    def test_user_subscribing_to_dataset(self, check_dataset_enabled_mock, hdx_mailer_mock, app):
+        'ckanext.hdx_users.controller_logic.notification_platform_logic.hdx_supports_notifications')
+    def test_user_subscribing_to_dataset(self, check_supports_notification, hdx_mailer_mock, app):
         requester_email_address = 'test@test.test'
-        check_dataset_enabled_mock.return_value = True
+        check_supports_notification.return_value = True
         subscribe_url = tk.url_for('hdx_notifications.subscription_confirmation')
         #User subscribes to the dataset
         response = app.post(
@@ -117,7 +117,7 @@ class TestNotificationPlatform(object):
 
         # Check that the validation token was created and is active
         tokens = get_by_type_and_user_id(
-            TokenType.EMAIL_VALIDATION_FOR_DATASET,
+            TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION,
             'test@test.test'
         )
         assert len(tokens) == 1
@@ -127,7 +127,7 @@ class TestNotificationPlatform(object):
     # def test_user_validates_email(self, add_notification_subscription_mock, app):
     #     requester_email_address = 'test_validation@test.test'
     #     token_obj = generate_new_token_obj(
-    #         model.Session, TokenType.EMAIL_VALIDATION_FOR_DATASET,
+    #         model.Session, TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION,
     #         requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
     #     )
     #     assert token_obj.state == State.ACTIVE
@@ -143,7 +143,7 @@ class TestNotificationPlatform(object):
     #     modified_token = get_by_token(token_obj.token)
     #     assert modified_token.state == State.INACTIVE
     #
-    #     unsubscribe_tokens = get_by_type_and_user_id(TokenType.UNSUBSCRIBE_FOR_DATASET, requester_email_address)
+    #     unsubscribe_tokens = get_by_type_and_user_id(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, requester_email_address)
     #     assert len(unsubscribe_tokens) == 1
     #     assert unsubscribe_tokens[0].state == State.ACTIVE
 
@@ -151,7 +151,7 @@ class TestNotificationPlatform(object):
     def test_user_unsubscribing_from_dataset(self, delete_notification_subscription, app):
         requester_email_address = 'test_unsubscribing@test.test'
         token_obj = generate_new_token_obj(
-            model.Session, TokenType.UNSUBSCRIBE_FOR_DATASET,
+            model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION,
             requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
         )
         assert token_obj.state == State.ACTIVE
@@ -181,7 +181,7 @@ class TestNotificationPlatform(object):
             data={
                 'object_type': ObjectType.ORGANIZATION.value,
                 'object_id': ORG_NAME,
-                'event_types': EventType.DATASET_UPDATED.value,
+                'dataset_updates': 'true',
             },
             # headers=headers
         )
@@ -195,29 +195,52 @@ class TestNotificationPlatform(object):
         assert subscription['object'] == org.id
         assert subscription['event_type'] == EventType.DATASET_UPDATED.value
 
-    # @mock.patch(
-    #     'ckanext.hdx_users.views.notification_platform.hdx_mailer')
-    # @mock.patch(
-    #     'ckanext.hdx_users.controller_logic.notification_platform_logic.check_notifications_enabled_for_dataset')
-    # def test_anon_user_subscribe_to_object(self, check_dataset_enabled_mock, hdx_mailer_mock, app):
-    #     requester_email_address = 'test@test.test'
-    #     check_dataset_enabled_mock.return_value = True
-    #     subscribe_url = tk.url_for('hdx_notifications.subscription_confirmation')
-    #     # User subscribes to the dataset
-    #     response = app.post(
-    #         subscribe_url,
-    #         data={
-    #             'email': requester_email_address,
-    #             'dataset_id': DATASET_NAME,
-    #         },
-    #     )
-    #     assert response.json.get('success')
-    #
-    #     # Check that the validation token was created and is active
-    #     tokens = get_by_type_and_user_id(
-    #         TokenType.EMAIL_VALIDATION_FOR_DATASET,
-    #         'test@test.test'
-    #     )
-    #     assert len(tokens) == 1
-    #     assert tokens[0].state == State.ACTIVE
+    # @mock.patch('ckanext.hdx_users.views.notification_platform._add_notification_subscription')
+    @mock.patch(
+        'ckanext.hdx_users.views.notification_platform.hdx_mailer')
+    @mock.patch(
+        'ckanext.hdx_users.controller_logic.notification_platform_logic.hdx_supports_notifications')
+    def test_anon_user_subscribe_to_object(self, check_supports_notification, hdx_mailer_mock, app):
+
+        # Create email validation request (and email validation token)
+        requester_email_address = 'test@test.test'
+        check_supports_notification.return_value = True
+        subscribe_url = tk.url_for('hdx_notifications.subscription_confirmation')
+        # User subscribes to the dataset
+        response = app.post(
+            subscribe_url,
+            data={
+                'email': requester_email_address,
+                'object_id': DATASET_NAME,
+                'object_type': ObjectType.DATASET.value,
+                'dataset_updates': 'true',
+            },
+        )
+        assert response.json.get('success')
+
+        # Subscribe to object using the email validation token
+        tokens = get_by_type_and_user_id(
+            TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION,
+            'test@test.test'
+        )
+        assert len(tokens) == 1
+        subscribe_to_object_url = tk.url_for(
+            'hdx_notifications.subscribe_to_object',
+            token=tokens[0].token
+        )
+        response = app.get(
+            subscribe_to_object_url,
+            data={'token': tokens[0].token},
+            headers={'User-Agent': 'TEST USER AGENT'},
+        )
+
+        assert response.status_code == 200
+
+        user_subscriptions = list_notifications_subscriptions(session=model.Session)
+        assert len(user_subscriptions) == 1
+        subscription = user_subscriptions[0]
+
+        assert subscription['object_type'] == ObjectType.DATASET.value
+        assert subscription['object'] == DATASET_ID
+        assert subscription['event_type'] == EventType.DATASET_UPDATED.value
 

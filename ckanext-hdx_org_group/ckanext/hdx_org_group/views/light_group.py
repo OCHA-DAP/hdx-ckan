@@ -11,7 +11,8 @@ import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 from ckanext.hdx_org_group.controller_logic.group_read_logic import LightGroupReadLogic, get_all_countries_world_first
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed, switch_url_path
-
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 lookup_group_plugin = ckan.lib.plugins.lookup_group_plugin
 
@@ -110,6 +111,8 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
             'page_has_mobile_version': show_switch_to_mobile,
             'widgets_data': group_read_logic.widgets_data
         }
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.GROUP, id, template_data)
         return render(template_file, template_data)
 
 

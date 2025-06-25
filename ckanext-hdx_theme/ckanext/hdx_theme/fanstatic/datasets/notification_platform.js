@@ -20,29 +20,27 @@ $(document).ready(function () {
   // unsubscribe
   var $unsubscribeSubmitButton = $unsubscribeModal.find('button[type="submit"]');
   var $unsubscribeDangerAlert = $unsubscribeModal.find('.alert-danger');
+  var $unsubscribeHubLink = $('.hub-unsubscribe-link');
+  var unsubscribeToken = $unsubscribeSubmitButton.data('unsubscribe-token').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token') : null;
+  var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
 
   // opt in buttons
   var $actionMenuButton = $('.notification-platform-opt-in-action-menu');
   var $floatingButton = $('.notification-platform-opt-in-floating-button');
 
   // opt out button
-  var $optOutButton = $('.notification-platform-opt-out-action-menu');
+  var $optOutContainer = $('.notification-platform-opt-out-action-menu');
+  var $optOutButton = $optOutContainer.find('a');
 
   // notification platform data
   var $notificationPlatformData = $('#notification_platform_data');
   var objectId = null;
   var objectName = null;
   var objectType = null;
-  var unsubscribeToken = null;
-  var unsubscribeTokenValidated = null;
-  var unsubscribeEmail = null;
   if ($notificationPlatformData.length > 0) {
     objectId = $notificationPlatformData.data('object-id');
     objectName = $notificationPlatformData.data('object-name');
     objectType = $notificationPlatformData.data('object-type');
-    unsubscribeToken = $notificationPlatformData.data('unsubscribe-token').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token') : null;
-    unsubscribeTokenValidated = $notificationPlatformData.data('unsubscribe-token-validated').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-token-validated') : null;
-    unsubscribeEmail = $notificationPlatformData.data('unsubscribe-email').toLowerCase() !== 'none' ? $notificationPlatformData.data('unsubscribe-email') : null;
   }
 
   var onSignupSubmit = function (e) {
@@ -75,6 +73,8 @@ $(document).ready(function () {
           hideAlert($signupDangerAlert);
           notificationsSignupModal.hide();
 
+          $actionMenuButton.addClass('d-none');
+
           verificationModal.show();
 
           hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
@@ -88,7 +88,7 @@ $(document).ready(function () {
           );
 
           if (data.unsubscribe_token) {
-            hdxUtil.net.addNotificationSubscribedTarget(objectId, data.unsubscribe_token);
+            hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, data.unsubscribe_token);
           }
         }
         else {
@@ -109,6 +109,15 @@ $(document).ready(function () {
   var onUnsubscribeSubmit = function (e) {
     e.preventDefault();
 
+    var objectId = $(this).data('object-id');
+    var objectName = $(this).data('object-name');
+    var objectType = $(this).data('object-type');
+
+    var unsubscribeToken = $(this).data('unsubscribe-token');
+    var unsubscribeEmail = $(this).data('unsubscribe-email');
+    var unsubscribeSource = $(this).data('unsubscribe-source');
+    var isFromHub = unsubscribeSource === 'hub';
+
     $.ajax({
       url: '/notifications/unsubscribe-confirmation',
       method: 'POST',
@@ -122,7 +131,14 @@ $(document).ready(function () {
           unsubscribeModal.hide();
           unsubscribedModal.show();
 
-          hdxUtil.net.removeNotificationSubscribedTarget(objectId);
+          if(isFromHub) {
+            $('.hub-unsubscribe-row[data-unsubscribe-token="' + unsubscribeToken + '"]').remove();
+            if($('.hub-unsubscribe-row').length === 0) {
+              $('.hub-no-subscriptions').removeClass('d-none');
+            }
+          }
+
+          hdxUtil.net.removeNotificationSubscribedTarget(objectId, objectType);
 
           hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
             'confirm popup',
@@ -136,10 +152,12 @@ $(document).ready(function () {
         }
         else {
           showAlert($unsubscribeDangerAlert, data.error.message);
+          if(isFromHub) unsubscribeModal.show();
         }
       },
       error: function (xhr, status, error) {
         showAlert($unsubscribeDangerAlert, 'An error occurred. Please try again later.');
+        if(isFromHub) unsubscribeModal.show();
         console.log(xhr);
       },
     });
@@ -158,12 +176,12 @@ $(document).ready(function () {
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
     var cameFrom = urlParams.get('came_from');
-    var unsubscribeToken = urlParams.get('u');
-    if ((cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') && unsubscribeToken) {
-      hdxUtil.net.addNotificationSubscribedTarget(objectId, unsubscribeToken);
+    var urlUnsubscribeToken = urlParams.get('u');
+    if ((cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') && urlUnsubscribeToken) {
+      hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, urlUnsubscribeToken);
     }
 
-    var optinLocation = hdxUtil.net.getNotificationOptinLocation(objectId);
+    var optinLocation = hdxUtil.net.getNotificationOptinLocation(objectId, objectType);
 
     if (optinLocation === 'action_menu') {
       $actionMenuButton.removeClass('d-none');
@@ -175,12 +193,13 @@ $(document).ready(function () {
   };
 
   var displayNotificationOptoutOption = function () {
-    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects();
+    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects(objectType);
     if (subscribedTargets[objectId]) {
-      var unsubscribeToken = subscribedTargets[objectId];
-      var unsubscribeUrl = '/dataset/' + objectId + '?unsubscribe_token=' + unsubscribeToken;
-      $optOutButton.find('a').attr('href', unsubscribeUrl);
-      $optOutButton.removeClass('d-none');
+      var lSUnsubscribeToken = subscribedTargets[objectId];
+      var objectEndpoint = objectType === 'crisis' ? 'event' : objectType;
+      var unsubscribeUrl = '/' + objectEndpoint + '/' + objectId + '?_unsubscribe_token=' + lSUnsubscribeToken;
+      $optOutButton.attr('href', unsubscribeUrl);
+      $optOutContainer.removeClass('d-none');
     }
   };
 
@@ -188,6 +207,7 @@ $(document).ready(function () {
   $signupSubmitButton.on('click', onSignupSubmit);
 
   $unsubscribeSubmitButton.on('click', onUnsubscribeSubmit);
+  $unsubscribeHubLink.on('click', onUnsubscribeSubmit);
 
   $actionMenuButton.on('click', function(e) {
     e.preventDefault();
@@ -204,26 +224,28 @@ $(document).ready(function () {
     $signupFormPopupSourceInput.val('');
   });
 
-  if(unsubscribeTokenValidated && unsubscribeTokenValidated.toLowerCase() === 'false') {
-    hdxUtil.net.removeNotificationSubscribedTarget(objectId);
-  }
-
   if(unsubscribeToken) {
-    unsubscribeModal.show();
+    if(unsubscribeTokenValidated) {
+      unsubscribeModal.show();
 
-    hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
-      'show popup',
-      'unsubscribe from notifications',
-      null,
-      objectId,
-      objectName,
-      objectType,
-      null
-    );
+      hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
+        'show popup',
+        'unsubscribe from notifications',
+        null,
+        objectId,
+        objectName,
+        objectType,
+        null
+      );
+    }
+    else {
+      hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, unsubscribeToken);
+      displayNotificationOptoutOption(objectType);
+    }
   }
   else {
-    displayNotificationOptinOption();
-    displayNotificationOptoutOption();
+    displayNotificationOptinOption(objectType);
+    displayNotificationOptoutOption(objectType);
   }
 });
 

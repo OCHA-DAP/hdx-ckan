@@ -101,5 +101,42 @@ def test_subscription_not_accesible_by_different_user():
 
 
 
+# Test that a subscription cannot be created by a different user
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'dataset_with_uploaded_resource')
+def test_different_user_cannot_create_subscription():
+    # Create a subscription for NORMAL_USER
+    factories.User(name=NORMAL_USER, sysadmin=False)
+    context: Context = {'session': model.Session, 'user': NORMAL_USER}
+
+    data_dict1 = {
+        'user_id': NORMAL_USER,
+        'object': DATASET_NAME,
+        'object_type': ObjectType.DATASET.value,
+        'event_type': EventType.DATASET_UPDATED.value,
+    }
+
+    tk.get_action('hdx_notifications_subscription_create')(context, data_dict1)
+
+    # Try to create a subscription for NORMAL_USER by another user
+    another_user = factories.User(name='another_user', sysadmin=False)
+    data_dict1['user_id'] = another_user['name']
+
+    with pytest.raises(tk.NotAuthorized):
+        tk.get_action('hdx_notifications_subscription_create')(context, data_dict1)
 
 
+# Test that a subscription cannot be created by an anonymous user
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'dataset_with_uploaded_resource')
+def test_anonymous_user_cannot_create_subscription():
+    factories.User(name=NORMAL_USER, sysadmin=False)
+    context: Context = {'session': model.Session}
+
+    data_dict1 = {
+        'user_id': NORMAL_USER,
+        'object': DATASET_NAME,
+        'object_type': ObjectType.DATASET.value,
+        'event_type': EventType.DATASET_UPDATED.value,
+    }
+
+    with pytest.raises(tk.NotAuthorized):
+        tk.get_action('hdx_notifications_subscription_create')(context, data_dict1)

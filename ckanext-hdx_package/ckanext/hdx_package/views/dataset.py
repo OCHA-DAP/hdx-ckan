@@ -41,7 +41,8 @@ from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 log = logging.getLogger(__name__)
 
@@ -187,18 +188,6 @@ def read(id):
     else:
         logo_config = {}
 
-    # notification platform
-    unsubscribe_token = request.args.get('unsubscribe_token', None)
-    unsubscribe_token_validated = None
-    if unsubscribe_token:
-        try:
-            unsubscribe_token = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
-            unsubscribe_token_validated = True
-        except Exception as e:
-            unsubscribe_token = None
-            unsubscribe_token_validated = False
-            h.flash_error('Your token is invalid or has expired.')
-
     template_data = {
         'pkg_dict': pkg_dict,
         'pkg': pkg,
@@ -206,8 +195,6 @@ def read(id):
         'hdx_activities': hdx_activities,
         'membership': membership,
         'user_has_edit_rights': user_has_edit_rights,
-        'unsubscribe_token': unsubscribe_token,
-        'unsubscribe_token_validated': unsubscribe_token_validated,
         'analytics_is_cod': analytics_is_cod,
         'analytics_is_indicator': 'false',
         'analytics_is_archived': analytics_is_archived,
@@ -220,6 +207,8 @@ def read(id):
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
     }
+    unsubscribe_token = request.args.get('_unsubscribe_token', None)
+    add_unsubscribe_token(unsubscribe_token, ObjectType.DATASET, id, template_data)
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
         view_enabled_resources = [r for r in pkg_dict['resources'] if

@@ -58,45 +58,48 @@ def hdx_delete_notification_subscription(context: Context, data_dict: DataDict):
 
     email = data_dict.get('email')
     dataset_id = data_dict.get('dataset_id')
+    subscription_id = data_dict.get('subscription_id')
 
-    if not email or not dataset_id:
-        raise tk.ValidationError('Missing required parameters: email and dataset_id')
+    if not email or not dataset_id or not subscription_id:
+        raise tk.ValidationError('Missing required parameters: email, dataset_id and subscription_id')
 
+    tk.get_action('hdx_notifications_subscription_delete')(context, {'id': subscription_id})
 
-    headers = {
-        'Authorization': f'ApiKey {novu_api_key}',
-        'Content-Type': 'application/json'
-    }
-
-    # Use the email as the subscriber ID
-    subscriber_id = email
-
-    topic_key = f'dataset-{dataset_id}'
-
-    # Check if the topic exists
-    response = requests.get(f'{novu_api_url}/topics/{topic_key}', headers=headers)
-    if response.status_code == 200:
-        topic_subscribers = response.json().get('data', {}).get('subscribers', [])
-        remove_subscriber_data = {
-            'subscribers': [subscriber_id]
-        }
-        subscriber_removal_response = requests.post(f'{novu_api_url}/topics/{topic_key}/subscribers/removal',
-                                                    json=remove_subscriber_data, headers=headers)
-
-        if subscriber_removal_response.status_code not in (200, 204):
-            raise Exception(
-                f'Failed to remove subscriber {subscriber_id} from dataset: {subscriber_removal_response.text}')
-        elif len(topic_subscribers) == 1 and topic_subscribers[0] == subscriber_id:
-            topic_removal_response = requests.delete(f'{novu_api_url}/topics/{topic_key}', headers=headers)
-            if topic_removal_response.status_code not in (200, 204):
-                raise Exception(f'Failed to remove topic {topic_key} from dataset: {subscriber_removal_response.text}')
-
-    else:
-        if response.status_code == 404:
-            log.error(f'Topic was not found in Novu')
-        log.error(
-            f'Got status code {response.status_code} when checking if the database exists. Response: {response.text}')
-        raise Exception(f'Failed to remove subscriber from dataset')
+    # TODO: update the Novu part
+    # headers = {
+    #     'Authorization': f'ApiKey {novu_api_key}',
+    #     'Content-Type': 'application/json'
+    # }
+    #
+    # # Use the email as the subscriber ID
+    # subscriber_id = email
+    #
+    # topic_key = f'dataset-{dataset_id}'
+    #
+    # # Check if the topic exists
+    # response = requests.get(f'{novu_api_url}/topics/{topic_key}', headers=headers)
+    # if response.status_code == 200:
+    #     topic_subscribers = response.json().get('data', {}).get('subscribers', [])
+    #     remove_subscriber_data = {
+    #         'subscribers': [subscriber_id]
+    #     }
+    #     subscriber_removal_response = requests.post(f'{novu_api_url}/topics/{topic_key}/subscribers/removal',
+    #                                                 json=remove_subscriber_data, headers=headers)
+    #
+    #     if subscriber_removal_response.status_code not in (200, 204):
+    #         raise Exception(
+    #             f'Failed to remove subscriber {subscriber_id} from dataset: {subscriber_removal_response.text}')
+    #     elif len(topic_subscribers) == 1 and topic_subscribers[0] == subscriber_id:
+    #         topic_removal_response = requests.delete(f'{novu_api_url}/topics/{topic_key}', headers=headers)
+    #         if topic_removal_response.status_code not in (200, 204):
+    #             raise Exception(f'Failed to remove topic {topic_key} from dataset: {subscriber_removal_response.text}')
+    #
+    # else:
+    #     if response.status_code == 404:
+    #         log.error(f'Topic was not found in Novu')
+    #     log.error(
+    #         f'Got status code {response.status_code} when checking if the database exists. Response: {response.text}')
+    #     raise Exception(f'Failed to remove subscriber from dataset')
 
     return {'message': f' {email}  unsubscribed from further notifications.'}
 

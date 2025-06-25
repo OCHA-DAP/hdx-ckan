@@ -4,8 +4,9 @@ import six.moves.urllib.parse as urlparse
 import datetime
 
 from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD
+from ckanext.hdx_theme.helpers.helpers import hdx_supports_notifications
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
+from ckanext.hdx_users.general_token_model import ObjectType
 
 from typing import Any, Dict, Optional
 
@@ -77,7 +78,7 @@ def came_from(request_args: Dict[str, str]) -> Optional[str]:
 
 
 def supports_notifications(pkg_dict: dict[str, Any]) -> str:
-    dataset_supports_notifications = check_notifications_enabled_for_dataset(pkg_dict['id'])
+    dataset_supports_notifications = hdx_supports_notifications(ObjectType.DATASET, pkg_dict['id'])
 
     return str(dataset_supports_notifications).lower()
 

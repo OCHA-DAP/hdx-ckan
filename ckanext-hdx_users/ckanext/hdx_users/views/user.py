@@ -2,6 +2,7 @@
 import logging
 from typing import Any, Optional, Mapping
 
+from ckan.types import Context
 from flask import Blueprint, url_for
 
 import ckan.authz as new_authz
@@ -16,9 +17,10 @@ from ckan.views.user import (
 )
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
+from ckanext.hdx_users.general_token_model import ObjectType, get_by_type_and_user_id_and_object, TokenType
+from ckanext.hdx_users.views.notification_platform import _generate_url_for
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
 from ckanext.hdx_users.views.user_view_helper import *
-
 
 log = logging.getLogger(__name__)
 
@@ -220,6 +222,71 @@ def _extra_template_variables(context, data_dict):
 def logged_out_page():
     return redirect(url_for('home.index'))
 
+
+def notifications(id=None):
+    """
+    "Notifications" tab
+    """
+
+    if not current_user.is_authenticated:
+        h.flash_error(_(u'Not authorized to see this page'))
+        return h.redirect_to(u'home.index')
+
+    context: Context = {'model': model, 'session': model.Session, 'user': current_user.name}
+
+    data_dict = {'id': id, 'include_num_followers': True}
+    try:
+        user_dict = get_action('user_show')(context, data_dict)
+    except NotFound:
+        abort(404, _(u'User not found'))
+    except NotAuthorized:
+        abort(403, _(u'Not authorized to see this page'))
+
+    try:
+        subscriptions = tk.get_action('hdx_notifications_subscription_list')(context, {'user_id': id})
+        for subscription in subscriptions:
+            object_type = ObjectType(subscription.get('object_type'))
+            object_id = subscription.get('object')
+
+            try:
+                object_dict = _get_object_dict(object_type, object_id)
+                unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.email, object_type, object_id)
+                subscription['object_dict'] = object_dict
+                subscription['object_link'] = _generate_url_for(object_type, object_id, True)
+                subscription['unsubscribe_token'] = unsubscribe_token
+            except tk.ObjectNotFound:
+                raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
+            except Exception as e:
+                log.error(f'Error retrieving target or user: {e}')
+                raise e
+    except NotAuthorized:
+        abort(403, _(u'Not authorized to see this page'))
+
+    return render('user/notifications.html', extra_vars={
+        'subscriptions': subscriptions,
+        'user_dict':  user_dict
+    })
+
+
+def _get_object_dict(object_type, object_id):
+    context: Context = {}
+
+    action = None
+    if object_type == ObjectType.DATASET.value:
+        action = 'package_show'
+    elif object_type == ObjectType.GROUP.value:
+        action = 'group_show'
+    elif object_type == ObjectType.ORGANIZATION.value:
+        action = 'organization_show'
+    elif object_type == ObjectType.CRISIS.value:
+        action = 'page_show'
+
+    if action:
+        return tk.get_action(action)(context, {'id': object_id})
+    else:
+        return {}
+
+
 user.add_url_rule(u'/reset', view_func=HDXRequestResetView.as_view(str(u'request_reset')))
 user.add_url_rule(u'/reset/<id>', view_func=HDXPerformResetView.as_view(str(u'perform_reset')))
 
@@ -245,3 +312,5 @@ user.add_url_rule(u'/<id>', view_func=read)
 user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])
 user.add_url_rule('/configure_mfa/<id>/new', view_func=HDXTwoStep.new, methods=['GET', 'POST'])
 user.add_url_rule('/configure_mfa/<id>/delete', view_func=HDXTwoStep.delete, methods=['GET'])
+
+user.add_url_rule(u'/notifications/<id>', view_func=notifications)

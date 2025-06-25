@@ -7,7 +7,9 @@ import ckanext.hdx_org_group.helpers.caching as caching
 from ckanext.hdx_org_group.controller_logic.group_search_logic import GroupSearchLogic
 
 get_action = tk.get_action
-
+NotFound = tk.ObjectNotFound
+abort = tk.abort
+_ = tk._
 
 class LightGroupReadLogic(object):
 
@@ -28,7 +30,10 @@ class LightGroupReadLogic(object):
     def _fetch_group_info_and_datasets(self):
         country_dict = grp_h.get_country(self.id)
         country_code = country_dict.get('name', self.id)
-        search_logic = GroupSearchLogic(country_code, self.flask_route_name).search().init_archived_url_helper()
+        try:
+            search_logic = GroupSearchLogic(country_code, self.flask_route_name).search().init_archived_url_helper()
+        except NotFound as e:
+            abort(404, _('Page not found'))
         redirect_result = search_logic.redirect_if_needed()
         if redirect_result:
             self.redirect_result = redirect_result

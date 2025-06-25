@@ -30,7 +30,7 @@
 {% set object_id = pkg.id %}
 {% set object_name = pkg.name %}
 {% set object_type = 'dataset' %}
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) == 'true' %}
+{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
 
 {% block meta %}
     {{ super() }}
@@ -118,8 +118,7 @@
       object_id=object_id,
       object_name=object_name,
       update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
-      unsubscribe_token=unsubscribe_token,
-      unsubscribe_token_validated=unsubscribe_token_validated
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
   %}
 {% endif %}
 {% endblock %}

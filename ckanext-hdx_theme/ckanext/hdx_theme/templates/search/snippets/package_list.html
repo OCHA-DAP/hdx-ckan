@@ -28,7 +28,7 @@ Example:
 
 {% set searchValue = h.hdx_get_request_param('q', '') %}
 
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) == 'true' %}
+{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
 
 <div style="display: none;" id="analytics-number-of-results">{{packages_count}}</div>
 {%  set current_page_url = other_links.get('current_page_url') if 'current_page_url' in other_links else '' %}
@@ -155,7 +155,6 @@ Example:
       object_id=object_id,
       object_name=object_name,
       num_of_datasets=full_facet_info.get('num_of_unarchived'),
-      unsubscribe_token=None,
-      unsubscribe_token_validated=None
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
   %}
 {% endif %}

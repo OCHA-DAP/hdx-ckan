@@ -16,9 +16,6 @@
   data-object-id="{{ object_id }}"
   data-object-name="{{ object_name }}"
   data-object-type="{{ object_type }}"
-  data-unsubscribe-token="{{ unsubscribe_token['token'] }}"
-  data-unsubscribe-token-validated="{{ unsubscribe_token_validated }}"
-  data-unsubscribe-email="{{ unsubscribe_token['user_id'] }}"
 ></span>
 
 {% if object_type == 'dataset' %}
@@ -60,7 +57,8 @@
   title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
   text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT,
   close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
-  submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON) }}
+  submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON,
+  submit_btn_data_attributes={"unsubscribe-token": unsubscribe_token['token'], "unsubscribe-token-validated": unsubscribe_token_validated, "unsubscribe-email": unsubscribe_token['user_id'], "object-id": object_id, "object-type": object_type, "object-name": object_name}) }}
 
 {% if object_type == 'dataset' %}
   {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}

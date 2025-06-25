@@ -19,7 +19,8 @@ from ckan.views.api import CONTENT_TYPES
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.helpers.analytics import EmailValidationAnalyticsSender
-from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY
+from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY, \
+    NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
 from hashlib import md5
@@ -33,34 +34,21 @@ log = logging.getLogger(__name__)
 hdx_notifications = Blueprint(u'hdx_notifications', __name__, url_prefix=u'/notifications')
 
 def subscribe_to_object() -> Response:
-    '''
-    Subscribe to an object (dataset, organization, group, crisis) for notifications.
-    There are 3 cases:
-    1. User is logged in - we can directly register the new subscription
-    2. User is not logged in but has an account either shadow or active - we need the email validation token to find the
+    """
+    Subscribe to an object (dataset, organization, group, crisis) for notifications as a guest user
+    using an email validation token.
+    There are 2 cases:
+    1. User has an account either shadow or active - we need the email validation token to find the
        user and to register the new subscription
-    3. User is not logged in and doesn't have an account - we need the email validation token to create a shadow account
+    2. User doesn't have an account - we need the email validation token to create a shadow account
        and to register the new subscription
-    '''
+    """
 
 
 
     dataset_list_url = tk.url_for('dataset.search')
-    # if user is logged in
-    if current_user.is_authenticated and request.method == 'POST':
-        user_id = current_user.id
-        context: Context = {'session': model.Session, 'user': current_user.name}
-        object_type = request.form.get('object_type')
-        object = request.form.get('object')
-        event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
-        if not object_type or not object or not event_type:
-            log.error('Couldn\'t find all required parameters: object_type, object and event_type.')
-            _h.flash_error('Couldn\'t find all required parameters: object_type, object and event_type.')
-            EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
-            return tk.redirect_to(dataset_list_url)
-
     # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
-    elif request.user_agent.string.strip() and request.method == 'GET':
+    if request.user_agent.string.strip() and request.method == 'GET':
         token = request.args.get('token')
         try:
             token_obj = notification_platform_logic.verify_email_validation_token(token)
@@ -72,6 +60,7 @@ def subscribe_to_object() -> Response:
         email = token_obj.user_id
         object_type = token_obj.object_type
         object = token_obj.object_id
+        event_type = token_obj.extras.get(NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY, EventType.DATASET_UPDATED.value)
         if not email or not object:
             _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
             EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
@@ -94,7 +83,7 @@ def subscribe_to_object() -> Response:
         'user_id': user_id,
         'object': object,
         'object_type': object_type,
-        'event_type': EventType.DATASET_UPDATED.value,
+        'event_type': event_type,
     }
     try:
         tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
@@ -165,21 +154,23 @@ def subscribe_to_object() -> Response:
 #         return tk.redirect_to(dataset_url)
 #     return abort(404, 'Page not found')
 
-def _generate_url_for(object_type: str, object: str) -> str:
+def _generate_url_for(object_type: str, object: str, external: bool = False) -> str:
     if object_type == ObjectType.DATASET.value:
-        return tk.url_for('dataset.read', id=object)
+        endpoint = 'dataset.read'
     elif object_type == ObjectType.ORGANIZATION.value:
-        return tk.url_for('organization.read', id=object)
+        endpoint = 'organization.read'
     elif object_type == ObjectType.GROUP.value:
-        return tk.url_for('group.read', id=object)
+        endpoint = 'group.read'
     elif object_type == ObjectType.CRISIS.value:
         page_dict = tk.get_action('page_show')({}, {'id': object})
         if page_dict.get('type') == 'event':
-            return tk.url_for('hdx_light_event.read_light_event', id=object)
+            endpoint = 'hdx_light_event.read_light_event'
         else:
-            return tk.url_for('hdx_light_dashboard.read_light_dashboard', id=object)
+            endpoint = 'hdx_light_dashboard.read_light_dashboard'
     else:
         raise tk.ValidationError(f'Invalid object_type: {object_type}')
+
+    return tk.url_for(endpoint, id=object, _external=external)
 
 def _add_notification_subscription(context: Context, data_dict: DataDict) -> DataDict:
     result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
@@ -189,7 +180,8 @@ def _add_notification_subscription(context: Context, data_dict: DataDict) -> Dat
 def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
     object_id = tk.request.form.get('object_id')
-    object_type = tk.request.form.get('object_type')
+    object_type_str = tk.request.form.get('object_type')
+    object_type = ObjectType(object_type_str)
     dataset_updates = tk.request.form.get('dataset_updates') == 'true'
 
     json_response_dict: Dict[str: any] = {
@@ -207,22 +199,20 @@ def subscription_confirmation() -> Response:
             hdx_validate_email(email)
 
             action = None
-            if object_type == ObjectType.DATASET:
+            if object_type == ObjectType.DATASET.value:
                 action = 'package_show'
-            elif object_type == ObjectType.GROUP:
+            elif object_type == ObjectType.GROUP.value:
                 action = 'group_show'
-            elif object_type == ObjectType.ORGANIZATION:
+            elif object_type == ObjectType.ORGANIZATION.value:
                 action = 'organization_show'
-            elif object_type == ObjectType.CRISIS:
+            elif object_type == ObjectType.CRISIS.value:
                 action = 'page_show'
-            else:
-                raise tk.ValidationError(f'Invalid object_type: {object_type}')
 
             try:
                 context: Context = {}
                 object_dict = tk.get_action(action)(context, {'id': object_id})
             except tk.ObjectNotFound:
-                raise tk.ValidationError(f'{object_type} {object_id} does not exist')
+                raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
             except Exception as e:
                 log.error(f'Error retrieving target or user: {e}')
                 raise e
@@ -230,8 +220,8 @@ def subscription_confirmation() -> Response:
             extras = {
                 NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY: EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value
             }
-            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_dict['id'],
-                                                                                           extras)
+            token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_type,
+                                                                                           object_dict['id'], extras)
 
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(
@@ -242,8 +232,8 @@ def subscription_confirmation() -> Response:
                 'verify_email_link': verify_email_link,
                 'object_title': object_dict.get('title'),
                 'object_id': object_id,
-                'object_link': _generate_url_for(object_type, object_id),
-                'object_type': object_type,
+                'object_link': _generate_url_for(object_type.value, object_id, True),
+                'object_type': object_type.value,
                 'dataset_updates': dataset_updates,
             }
             hdx_mailer.mail_recipient([{'email': email}], subject, email_data, footer=None,
@@ -251,20 +241,31 @@ def subscription_confirmation() -> Response:
 
         # user is authenticated
         else:
-            email = current_user.email
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_id)
-            # result = _add_notification_subscription(context, data_dict)
-
             context: Context = {'session': model.Session, 'user': current_user.name}
-            event_type = request.form.get('event_type', EventType.DATASET_UPDATED.value)
+
+            # data_dict = {
+            #     'email': email,
+            #     'object_id': object_id,
+            #     'object_type': object_type,
+            #     'unsubscribe_token': unsubscribe_token.token,
+            # }
+            # result = _add_notification_subscription(context, data_dict)
 
             data_dict = {
                 'user_id': current_user.id,
                 'object': object_id,
                 'object_type': object_type,
-                'event_type': event_type,
+                'event_type': EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value,
             }
-            tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
+
+            subscription = tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
+
+            email = current_user.email
+            extras = {
+                NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY: subscription.get('id')
+            }
+            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
+                                                                                              object_id, extras)
 
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
@@ -298,7 +299,8 @@ def unsubscribe_confirmation() -> Response:
         token_obj = notification_platform_logic.verify_unsubscribe_token(token, inactivate=True)
 
         context = {'ignore_auth': True}
-        data_dict = {'email': token_obj.user_id, 'dataset_id': token_obj.object_id}
+        data_dict = {'email': token_obj.user_id, 'dataset_id': token_obj.object_id,
+                     'subscription_id': token_obj.extras.get(NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY)}
         result = _delete_notification_subscription(context, data_dict)
     except tk.ValidationError as e:
         log.error('An exception occurred:' + str(e))
