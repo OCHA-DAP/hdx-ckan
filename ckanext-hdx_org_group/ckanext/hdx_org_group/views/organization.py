@@ -66,6 +66,8 @@ def read(id):
         if read_logic.org_meta.is_custom:
             template_data = _generate_template_data_for_custom_org(read_logic)
             result = render('organization/custom/custom_org.html', template_data)
+            unsubscribe_token = request.args.get('_unsubscribe_token', None)
+            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, read_logic.org_meta.org_dict.get('id'), template_data)
             return result
         else:
             org_dict = read_logic.org_meta.org_dict
@@ -81,7 +83,7 @@ def read(id):
                 'org_dict': org_dict,
             }
             unsubscribe_token = request.args.get('_unsubscribe_token', None)
-            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, id, template_data)
+            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
             template_file = _get_group_template('read_template', 'organization')
             return render(template_file, template_data)
     except NotFound:
