@@ -205,12 +205,12 @@ def invalidate_cached_approved_tags():
     cached_approved_tags_list.invalidate()
 
 @dogpile_requests_region.cache_on_arguments()
-def cached_datasets_with_notifications() -> Set[str]:
-    log.info('Creating cache list of datasets with notifications')
-    return hdx_retrieve_datasets_with_notifications(None, None)
+def cached_objects_without_notifications() -> Set[str]:
+    log.info('Creating cache list of objects without notifications')
+    return hdx_retrieve_objects_without_notifications(None, None)
 
-def hdx_retrieve_datasets_with_notifications(context, data_dict) -> Set[str]:
-    url = config.get('hdx.notifications.enabled_datasets_csv')
+def hdx_retrieve_objects_without_notifications(context, data_dict) -> Set[str]:
+    url = config.get('hdx.notifications.disabled_objects_csv')
     if url:
         try:
             response = requests.get(url)
@@ -218,13 +218,13 @@ def hdx_retrieve_datasets_with_notifications(context, data_dict) -> Set[str]:
         except requests.exceptions.RequestException as e:
             error_msg = str(e)
             log.error(f"An error occurred: {error_msg}")
-            raise Exception(f'Couldn\'t fetch datasets with notifications from Google Spreadsheets: {error_msg}')
+            raise Exception(f'Couldn\'t fetch objects without notifications from Google Spreadsheets: {error_msg}')
 
         csv_data = response.text
         csv_reader = csv.reader(csv_data.splitlines())
 
-        datasets = {row[0] for row in csv_reader}
-        return datasets
+        objects = {f"{row[1]}_{row[0]}" for row in csv_reader}
+        return objects
     else:
-        log.error('No URL for notification-enabled datasets found in config')
+        log.error('No URL for notification-enabled objects found in config')
         return set()

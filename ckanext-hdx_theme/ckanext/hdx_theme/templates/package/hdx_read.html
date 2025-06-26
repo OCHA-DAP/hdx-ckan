@@ -55,7 +55,6 @@
 {% set object_id = pkg.id %}
 {% set object_name = pkg.name %}
 {% set object_type = 'dataset' %}
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
@@ -111,9 +110,7 @@
                 </div>
               {% endfor %}
             {% endif %}
-            {% if supports_notifications %}
-              {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
-            {% endif %}
+            {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type) }}
                 <div class="row mBottom15">
                     <div class="col-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>
                         {% if pkg.notes %}
@@ -227,15 +224,13 @@
     {% endblock %}
   </div>
   {% snippet "package/hdx_resources_list.html", pkg=pkg %}
-  {% if supports_notifications %}
-    {% snippet "notification_platform/modals.html",
-        object_type=object_type,
-        object_id=object_id,
-        object_name=object_name,
-        update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
-        unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
-    %}
-  {% endif %}
+  {% snippet "notification_platform/modals.html",
+      object_type=object_type,
+      object_id=object_id,
+      object_name=object_name,
+      update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
+  %}
 
 {% endblock %}
 
