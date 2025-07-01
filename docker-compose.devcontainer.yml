@@ -108,14 +108,14 @@ services:
     - database:/var/lib/postgresql/data:rw
 
   redis:
-    cpu_quota: 400000
+    cpu_quota: 100000
     environment:
       HDX_DOMAIN: data.humdata.local
       PS1: '\h \w ~> '
       TERM: xterm
     hostname: hdx-local-redis
-    image: public.ecr.aws/unocha/redis:5
-    mem_limit: 16g
+    image: valkey/valkey:alpine
+    mem_limit: 1g
     restart: always
     volumes:
     - "redis-data:/var/lib/redis"

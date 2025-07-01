@@ -15,7 +15,7 @@ services:
   ckan-redis:
     networks:
       - default
-    image: "redis:3"
+    image: "valkey/valkey:alpine"
 
   ckan-solr:
     networks:
