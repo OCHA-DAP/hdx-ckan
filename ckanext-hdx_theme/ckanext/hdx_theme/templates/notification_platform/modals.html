@@ -1,6 +1,7 @@
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
+{% set object_supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
+{% set is_from_hub = unsubscribe_source == 'hub' if unsubscribe_source else False %}
 
-{% if supports_notifications %}
+{% if object_supports_notifications or is_from_hub %}
 
   {% asset 'hdx_theme/bem-blocks-styles' %}
   {% asset 'hdx_theme/bem-blocks-scripts' %}

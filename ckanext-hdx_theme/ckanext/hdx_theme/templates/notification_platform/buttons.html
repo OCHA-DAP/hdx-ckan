@@ -1,6 +1,6 @@
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
+{% set object_supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
 
-{% if supports_notifications %}
+{% if object_supports_notifications %}
 
   {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 
