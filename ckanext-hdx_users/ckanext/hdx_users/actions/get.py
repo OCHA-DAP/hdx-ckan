@@ -103,8 +103,8 @@ def hdx_notifications_subscription_list(context: Context, data_dict: DataDict) -
 
     updated_str = data_dict.get('updated')
     updated = datetime.datetime.fromisoformat(updated_str) if updated_str else None
-    page: Optional[int] = data_dict.get('page', 0)
-    page_size: int = data_dict.get('page_size', 1000)
+    page: Optional[int] = int(data_dict.get('page', 0) or 0)
+    page_size: int = int(data_dict.get('page_size', 1000))
 
     session = context['session']
     return list_notifications_subscriptions(
