@@ -26,7 +26,7 @@ jobs:
           POSTGRES_DB: ckan_test
 
       ckan-redis:
-        image: valkey/valkey:alpine
+        image: redis
         ports:
           - 6379:6379
       ckan-solr:
