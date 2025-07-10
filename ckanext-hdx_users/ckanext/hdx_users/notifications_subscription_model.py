@@ -5,7 +5,7 @@ import uuid
 from enum import Enum
 from typing import Optional, Dict, List
 
-from sqlalchemy import Column, types, ForeignKey
+from sqlalchemy import func, Column, types, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 
 import ckan.model as model
@@ -105,6 +105,42 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     query = query.limit(page_size)
     subscriptions = query.all()
     return [notifications_subscription_dictize(subscription) for subscription in subscriptions]
+
+
+def get_grouped_notification_subscriptions(session: AlchemySession) -> List[DataDict]:
+    """
+    Retrieve active notification subscriptions grouped by object and object_type.
+
+    :param session: The active database session.
+    :type session: AlchemySession
+    :return: A list of grouped subscription data
+    :rtype: List[DataDict]
+    """
+
+    query = (
+        session.query(
+            HDXNotificationsSubscription.object.label('object'),
+            HDXNotificationsSubscription.object_type.label('object_type'),
+            func.jsonb_agg(
+                func.jsonb_build_object(
+                    'user_id', HDXNotificationsSubscription.user_id,
+                    'subscription_id', HDXNotificationsSubscription.id,
+                    'event_type', HDXNotificationsSubscription.event_type
+                )
+            ).label('user_list')
+        )
+        .filter(HDXNotificationsSubscription.state == 'active')
+        .group_by(HDXNotificationsSubscription.object, HDXNotificationsSubscription.object_type)
+    )
+
+    return [
+        {
+            'object': row.object,
+            'object_type': row.object_type,
+            'user_list': row.user_list,
+        }
+        for row in query.all()
+    ]
 
 def delete_notification_subscription(session: AlchemySession, subscription_id: str) -> bool:
     """
