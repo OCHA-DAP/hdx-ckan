@@ -19,7 +19,7 @@
     {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}
   {% else %}
     {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_SEARCH_RESULTS.format(object_type) %}
-    {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET.format(object_type) %}
+    {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_SEARCH_RESULTS.format(object_type) %}
   {% endif %}
 
   {% if not logged_in %}

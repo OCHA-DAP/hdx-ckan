@@ -21,7 +21,7 @@ from six import text_type
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
-from ckanext.hdx_package.helpers.caching import cached_objects_without_notifications
+from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
@@ -1049,9 +1049,14 @@ def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> bool:
 
 
 def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str) -> bool:
-    objects = cached_objects_without_notifications()
     object_identifier = f"{object_type}_{object_id}"
-    return object_identifier not in objects
+    if config.get('hdx.notifications.enabled_objects_csv'):
+        objects_with_notifications = cached_objects_with_notifications()
+        return object_identifier in objects_with_notifications
+    elif config.get('hdx.notifications.disabled_objects_csv'):
+        objects_without_notifications = cached_objects_without_notifications()
+        return object_identifier not in objects_without_notifications
+    return False
 
 
 def facet_url_extra_args(facet_list, request_args):

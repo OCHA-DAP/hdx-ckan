@@ -205,12 +205,19 @@ def invalidate_cached_approved_tags():
     cached_approved_tags_list.invalidate()
 
 @dogpile_requests_region.cache_on_arguments()
+def cached_objects_with_notifications() -> Set[str]:
+    log.info('Creating cache list of objects with notifications')
+    return hdx_retrieve_notification_objects_from_spreadsheet(None, None, notifications_enabled=True)
+
+@dogpile_requests_region.cache_on_arguments()
 def cached_objects_without_notifications() -> Set[str]:
     log.info('Creating cache list of objects without notifications')
-    return hdx_retrieve_objects_without_notifications(None, None)
+    return hdx_retrieve_notification_objects_from_spreadsheet(None, None, notifications_enabled=False)
 
-def hdx_retrieve_objects_without_notifications(context, data_dict) -> Set[str]:
-    url = config.get('hdx.notifications.disabled_objects_csv')
+def hdx_retrieve_notification_objects_from_spreadsheet(context, data_dict, notifications_enabled: bool) -> Set[str]:
+    url_key = 'hdx.notifications.enabled_objects_csv' if notifications_enabled else 'hdx.notifications.disabled_objects_csv'
+    url = config.get(url_key)
+
     if url:
         try:
             response = requests.get(url)
@@ -218,13 +225,19 @@ def hdx_retrieve_objects_without_notifications(context, data_dict) -> Set[str]:
         except requests.exceptions.RequestException as e:
             error_msg = str(e)
             log.error(f"An error occurred: {error_msg}")
-            raise Exception(f'Couldn\'t fetch objects without notifications from Google Spreadsheets: {error_msg}')
+            raise Exception(f'Couldn\'t fetch objects {"with" if notifications_enabled else "without"} notifications from Google Spreadsheets: {error_msg}')
 
         csv_data = response.text
         csv_reader = csv.reader(csv_data.splitlines())
 
-        objects = {f"{row[1]}_{row[0]}" for row in csv_reader}
+        # Validate headers and map column names to indices
+        headers = next(csv_reader, None)
+        if headers is None or 'object_id' not in headers or 'object_type' not in headers:
+            raise Exception("CSV file is missing required headers: 'object_id' and 'object_type'")
+        id_index = headers.index('object_id')
+        type_index = headers.index('object_type')
+
+        objects = {f"{row[type_index]}_{row[id_index]}" for row in csv_reader}
         return objects
     else:
-        log.error('No URL for notification-enabled objects found in config')
         return set()
