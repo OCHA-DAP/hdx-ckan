@@ -64,7 +64,16 @@ def hdx_notifications_subscription_list(context: Context, data_dict: DataDict) -
         }
         return core_auth_update.user_update(context, core_data_dict)
     else:
-        return {'success': True}
+        user_obj = context.get('auth_user_obj') or context.get('user_obj')
+        if user_obj and user_obj.is_authenticated:
+            return {'success': True}
+    return {'success': False}
+
+def hdx_notifications_grouped_subscription_list(context: Context, data_dict: DataDict) -> AuthResult:
+    user = context['user']
+    if not new_authz.is_sysadmin(user):
+        return {'success': False, 'msg': _('Only sysadmins can access this endpoint.')}
+    return {'success': True}
 
 def hdx_notifications_subscription_delete(context: Context, data_dict: DataDict) -> AuthResult:
     # user = context['user']

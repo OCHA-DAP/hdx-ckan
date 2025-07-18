@@ -104,6 +104,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'hdx_delete_notification_subscription': delete.hdx_delete_notification_subscription,
             'hdx_notifications_subscription_create': create.hdx_notifications_subscription_create,
             'hdx_notifications_subscription_list': get.hdx_notifications_subscription_list,
+            'hdx_notifications_grouped_subscription_list': get.hdx_notifications_grouped_subscription_list,
             'hdx_notifications_subscription_delete': delete.hdx_notifications_subscription_delete,
         }
 
@@ -118,6 +119,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'hdx_delete_notification_subscription': auth.hdx_delete_notification_subscription,
             'hdx_notifications_subscription_create': auth.hdx_notifications_subscription_create,
             'hdx_notifications_subscription_list': auth.hdx_notifications_subscription_list,
+            'hdx_notifications_grouped_subscription_list': auth.hdx_notifications_grouped_subscription_list,
             'hdx_notifications_subscription_delete': auth.hdx_notifications_subscription_delete,
         }
 

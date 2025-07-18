@@ -7,7 +7,8 @@ import ckan.authz as authz
 import ckan.plugins.toolkit as tk
 from ckan.types import ActionResult, Context, DataDict
 
-from ckanext.hdx_users.notifications_subscription_model import list_notifications_subscriptions
+from ckanext.hdx_users.notifications_subscription_model import list_notifications_subscriptions, \
+    get_grouped_notification_subscriptions
 
 config = tk.config
 log = logging.getLogger(__name__)
@@ -114,3 +115,19 @@ def hdx_notifications_subscription_list(context: Context, data_dict: DataDict) -
         page=page,
         page_size=page_size
     )
+
+
+@tk.side_effect_free
+def hdx_notifications_grouped_subscription_list(context: Context, data_dict: DataDict) -> List[DataDict]:
+    """
+    Return a list of active subscriptions grouped by object and object_type.
+
+    Each group includes a list of users subscribed to that object, along with
+    their subscription ID and event type.
+
+    Only accessible to sysadmins.
+    """
+    _check_access('hdx_notifications_grouped_subscription_list', context, data_dict)
+
+    session = context['session']
+    return get_grouped_notification_subscriptions(session)
