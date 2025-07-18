@@ -1,6 +1,5 @@
   {% set facet_list = data.full_facet_info.get('facets') %}
   {% set searchValue = request.args.get('q') if request.args.get('q') else '' %}
-  {% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
   <div class="mobile-facets" style="display: none;">
     <div class="actions">
       <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
@@ -42,9 +41,7 @@
             </div>
           </div>
 
-          {% if supports_notifications %}
-            {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
-          {% endif %}
+          {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type) }}
 
           <div class="search-list">
             <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
@@ -66,12 +63,10 @@
     {% endblock %}
   </div>
 
-{% if supports_notifications %}
-  {% snippet "notification_platform/modals.html",
-      object_type=object_type,
-      object_id=object_id,
-      object_name=object_name,
-      num_of_datasets=data.full_facet_info.get('num_of_unarchived'),
-      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
-  %}
-{% endif %}
+{% snippet "notification_platform/modals.html",
+    object_type=object_type,
+    object_id=object_id,
+    object_name=object_name,
+    num_of_datasets=data.full_facet_info.get('num_of_unarchived'),
+    unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
+%}

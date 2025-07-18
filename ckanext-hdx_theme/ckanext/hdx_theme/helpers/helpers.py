@@ -21,7 +21,7 @@ from six import text_type
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
-from ckanext.hdx_package.helpers.caching import cached_datasets_with_notifications
+from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
@@ -1038,14 +1038,8 @@ def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> bool:
     supports_notifications = False
 
     if object_id:
-        if object_type == ObjectType.DATASET:
-            supports_notifications = _check_notifications_enabled_for_dataset(object_id)
-        elif object_type == ObjectType.GROUP:
-            supports_notifications = True
-        elif object_type == ObjectType.ORGANIZATION:
-            supports_notifications = True
-        elif object_type == ObjectType.CRISIS:
-            supports_notifications = True
+        if object_type in (ObjectType.DATASET, ObjectType.GROUP, ObjectType.ORGANIZATION, ObjectType.CRISIS):
+            supports_notifications = _check_notifications_enabled_for_object(object_type, object_id)
         else:
             log.error(f'Invalid object_type: {object_type}')
     else:
@@ -1054,9 +1048,15 @@ def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> bool:
     return supports_notifications
 
 
-def _check_notifications_enabled_for_dataset(dataset_id: str) -> bool:
-    datasets = cached_datasets_with_notifications()
-    return dataset_id in datasets
+def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str) -> bool:
+    object_identifier = f"{object_type}_{object_id}"
+    if config.get('hdx.notifications.enabled_objects_csv'):
+        objects_with_notifications = cached_objects_with_notifications()
+        return object_identifier in objects_with_notifications
+    elif config.get('hdx.notifications.disabled_objects_csv'):
+        objects_without_notifications = cached_objects_without_notifications()
+        return object_identifier not in objects_without_notifications
+    return False
 
 
 def facet_url_extra_args(facet_list, request_args):

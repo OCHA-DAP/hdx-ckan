@@ -28,8 +28,6 @@ Example:
 
 {% set searchValue = h.hdx_get_request_param('q', '') %}
 
-{% set supports_notifications = h.hdx_supports_notifications(object_type, object_id) %}
-
 <div style="display: none;" id="analytics-number-of-results">{{packages_count}}</div>
 {%  set current_page_url = other_links.get('current_page_url') if 'current_page_url' in other_links else '' %}
 <form id="dataset-filter-form" style="display: inline;">
@@ -100,9 +98,7 @@ Example:
     <div id="search-page-results" class="col-9">
         {% if packages %}
             <div class="search-list">
-                {% if supports_notifications %}
-                  {{ h.snippet('notification_platform/buttons.html', object_type=object_type) }}
-                {% endif %}
+                {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type) }}
                 {% block search_list %}
                 <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
 
@@ -149,12 +145,10 @@ Example:
     </div>
 </div>
 
-{% if supports_notifications %}
-  {% snippet "notification_platform/modals.html",
-      object_type=object_type,
-      object_id=object_id,
-      object_name=object_name,
-      num_of_datasets=full_facet_info.get('num_of_unarchived'),
-      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
-  %}
-{% endif %}
+{% snippet "notification_platform/modals.html",
+    object_type=object_type,
+    object_id=object_id,
+    object_name=object_name,
+    num_of_datasets=full_facet_info.get('num_of_unarchived'),
+    unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
+%}
