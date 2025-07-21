@@ -38,6 +38,7 @@ class HDXGeneralToken(tk.BaseModel):
 class State(str, Enum):
     ACTIVE = 'active'
     INACTIVE = 'inactive'
+    DELETED = 'deleted'
 
 
 class TokenType(str, Enum):

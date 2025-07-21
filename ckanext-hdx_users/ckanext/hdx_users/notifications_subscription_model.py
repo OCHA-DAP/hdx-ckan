@@ -15,7 +15,7 @@ import ckan.plugins.toolkit as tk
 
 from ckan.types import AlchemySession, DataDict
 
-from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.general_token_model import ObjectType, State
 
 
 log = logging.getLogger(__name__)
@@ -95,7 +95,7 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     :param updated: Filter subscriptions updated on or after this datetime.
     :type updated: Optional[datetime.datetime]
     :param active: Filter by the subscription's "active" state. If set to 'True', fetches only subscriptions with the
-    state 'active'. If 'False', fetches subscriptions that are not 'active'. Defaults to 'True'.
+    state 'active'. If 'False', fetch subscriptions that are not 'active'. Defaults to 'True'.
     :type active: bool
     :param page: The page number for pagination. Defaults to 0 (first page)
     :type page: Optional[int]
@@ -106,7 +106,8 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     """
 
     query = session.query(HDXNotificationsSubscription).filter(
-        HDXNotificationsSubscription.state == 'active' if active else HDXNotificationsSubscription.state != 'active'
+        HDXNotificationsSubscription.state == State.ACTIVE.value
+        if active else HDXNotificationsSubscription.state != State.ACTIVE.value
     )
 
     if user_id:
@@ -149,7 +150,7 @@ def get_grouped_notification_subscriptions(session: AlchemySession) -> List[Data
                 )
             ).label('user_list')
         )
-        .filter(HDXNotificationsSubscription.state == 'active')
+        .filter(HDXNotificationsSubscription.state == State.ACTIVE.value)
         .group_by(HDXNotificationsSubscription.object, HDXNotificationsSubscription.object_type)
     )
 
@@ -162,9 +163,9 @@ def get_grouped_notification_subscriptions(session: AlchemySession) -> List[Data
         for row in query.all()
     ]
 
-def delete_notification_subscription(session: AlchemySession, subscription_id: str, commit_tx: bool) -> bool:
+def mark_as_deleted(session: AlchemySession, subscription_id: str, commit_tx: bool) -> bool:
     """
-    Delete a notification subscription by its ID.
+    Mark a notification subscription as deleted by changing its state to 'deleted'.
 
     :param session: The active database session.
     :type session: AlchemySession
@@ -179,7 +180,7 @@ def delete_notification_subscription(session: AlchemySession, subscription_id: s
     if not subscription:
         return False
 
-    session.delete(subscription)
+    subscription.state = State.DELETED.value
     if commit_tx:
         session.commit()
     return True

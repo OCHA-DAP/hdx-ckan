@@ -1,5 +1,4 @@
 import json
-import requests
 import logging
 
 import ckan.plugins.toolkit as tk
@@ -7,9 +6,8 @@ import ckanext.hdx_theme.helpers.helpers as theme_h
 
 from ckan.types import DataDict, Context
 from ckanext.hdx_users.helpers import novu_interaction
-from ckanext.hdx_users.helpers.notification_platform import read_novu_config
 from ckanext.hdx_users.general_token_model import get_by_token_with_checks, validate_token, TokenType, ObjectType
-from ckanext.hdx_users.notifications_subscription_model import (delete_notification_subscription,
+from ckanext.hdx_users.notifications_subscription_model import (mark_as_deleted,
                                                                 get_by_unsubscribe_token)
 
 _get_or_bust = tk.get_or_bust
@@ -74,7 +72,7 @@ def hdx_notifications_subscription_delete(context: Context, data_dict: DataDict)
     subscription_id = subscription.id
     _check_access('hdx_notifications_subscription_delete', context, {'id': subscription_id})
 
-    delete_notification_subscription(session, subscription_id, commit_tx=False)
+    mark_as_deleted(session, subscription_id, commit_tx=False)
     validate_token(session, token, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, commit_tx=False)
 
     object_type = ObjectType(subscription.object_type)
