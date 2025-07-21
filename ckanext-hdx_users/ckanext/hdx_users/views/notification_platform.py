@@ -19,8 +19,7 @@ from ckan.views.api import CONTENT_TYPES
 from ckanext.hdx_theme.util.mail import hdx_validate_email
 from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.helpers.analytics import EmailValidationAnalyticsSender
-from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY, \
-    NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY
+from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
 from hashlib import md5
@@ -172,10 +171,6 @@ def _generate_url_for(object_type: str, object: str, external: bool = False) -> 
 
     return tk.url_for(endpoint, id=object, _external=external)
 
-def _add_notification_subscription(context: Context, data_dict: DataDict) -> DataDict:
-    result = tk.get_action('hdx_add_notification_subscription')(context, data_dict)
-    return result
-
 
 def subscription_confirmation() -> Response:
     email = tk.request.form.get('email')
@@ -261,19 +256,14 @@ def subscription_confirmation() -> Response:
             subscription = tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
 
             email = current_user.email
-            extras = {
-                NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY: subscription.get('id')
-            }
-            unsubscribe_token = notification_platform_logic.get_or_generate_unsubscribe_token(email, object_type,
-                                                                                              object_id, extras)
 
             email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
             EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
 
-            json_response_dict['unsubscribe_token'] = unsubscribe_token.token
+            json_response_dict['unsubscribe_token'] = subscription.get('unsubscribe_token')
 
     except tk.ValidationError as e:
-        error_message =  e.error_summary
+        error_message =  e.error_dict.get('message')
     except tk.Invalid as e:
         error_message = e.error
     except MailerException as e:
@@ -296,12 +286,11 @@ def unsubscribe_confirmation() -> Response:
     token = tk.request.form.get('token')
 
     try:
-        token_obj = notification_platform_logic.verify_unsubscribe_token(token, inactivate=True)
+        # We let anybody (guest users included) that has the token to unsubscribe, so we ignore auth
+        context: Context = {'ignore_auth': True}
+        data_dict = {'token': token}
+        result = tk.get_action('hdx_notifications_subscription_delete')(context, data_dict)
 
-        context = {'ignore_auth': True}
-        data_dict = {'email': token_obj.user_id, 'dataset_id': token_obj.object_id,
-                     'subscription_id': token_obj.extras.get(NOTIFICATION_PLATFORM_SUBSCRIPTION_ID_EXTRAS_KEY)}
-        result = _delete_notification_subscription(context, data_dict)
     except tk.ValidationError as e:
         log.error('An exception occurred:' + str(e))
         return _build_json_response(
@@ -325,9 +314,9 @@ def unsubscribe_confirmation() -> Response:
     return _build_json_response({'success': True})
 
 
-def _delete_notification_subscription(context: Context, data_dict: DataDict) -> DataDict:
-    result = tk.get_action('hdx_delete_notification_subscription')(context, data_dict)
-    return result
+# def _delete_notification_subscription(context: Context, data_dict: DataDict) -> DataDict:
+#     result = tk.get_action('hdx_delete_notification_subscription')(context, data_dict)
+#     return result
 
 def _build_json_response(data_dict: DataDict, status=200):
     headers = {

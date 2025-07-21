@@ -26,12 +26,6 @@ def hdx_send_new_org_request(context, data_dict):
 def manage_permissions(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can view user permission page')}
 
-def hdx_add_notification_subscription(context: Context, data_dict: DataDict) -> AuthResult:
-    return {'success': False, 'msg': _('Only sysadmins can manage notification subscriptions')}
-
-def hdx_delete_notification_subscription(context: Context, data_dict: DataDict) -> AuthResult:
-    return {'success': False, 'msg': _('Only sysadmins can manage notification subscriptions')}
-
 
 @tk.auth_allow_anonymous_access
 def user_update(context, data_dict):

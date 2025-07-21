@@ -6,9 +6,10 @@ import ckan.model as core_model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.model as user_model
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.authz as authz
 from ckan.types import Context, DataDict
+from ckanext.hdx_users.controller_logic import notification_platform_logic
 from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers import novu_interaction
 
 from ckanext.hdx_users.helpers.reset_password import make_key
 from ckanext.hdx_users.helpers.helpers import generate_password, generate_username, NotAuthorized
@@ -190,18 +191,36 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     ).first()
 
     if existing_subscription:
-        error_string = f'Subscription already exists for user {user_dict["id"]} on {object_type} {data_dict["object"]}'
-        log.warning(error_string)
-        raise tk.ValidationError(error_string)
+        log.warning(f'Subscription already exists for user {user_dict["name"]} '
+                        f'on {object_type.value} {data_dict["object"]}')
+        raise tk.ValidationError(f'Subscription already exists for user {user_dict["name"]} '
+                        f'on this {object_type.value}')
 
+    # create unsubscribe token
+    unsubscribe_token_obj = notification_platform_logic.get_or_generate_unsubscribe_token(
+        session,
+        user_dict['email'],
+        object_type,
+        object_obj['id'],
+        commit_tx=False
+    )
+
+    # create the subscription in HDX database
     subscription = generate_notifications_subscription(
         session=session,
         user_id=user_dict['id'],
         object_type=object_type,
         object=object_obj['id'],
         event_type=event_type_enum,
-        query_params=data_dict.get('query_params')
+        unsubscribe_token_id=unsubscribe_token_obj.id,
+        query_params=data_dict.get('query_params'),
+        commit_tx=False
     )
 
 
-    return notifications_subscription_dictize(subscription)
+    novu_interaction.add_subscription_info(user_dict['email'], object_type, object_obj['id'], unsubscribe_token_obj)
+
+    session.commit()
+    subscription_dict =  notifications_subscription_dictize(subscription)
+    subscription_dict['unsubscribe_token'] = unsubscribe_token_obj.token
+    return subscription_dict

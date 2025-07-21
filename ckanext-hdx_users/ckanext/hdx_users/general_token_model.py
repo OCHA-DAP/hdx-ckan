@@ -59,7 +59,8 @@ def generate_new_token_obj(session: AlchemySession,
                        object_type: Optional[ObjectType] = None,
                        object_id: Optional[str] = None,
                        extras: Optional[Dict] = None,
-                       days_till_expiration: Optional[int] = None) -> HDXGeneralToken:
+                       days_till_expiration: Optional[int] = None,
+                       commit_tx: bool = True ) -> HDXGeneralToken:
 
     new_token = HDXGeneralToken(
         token_type=token_type.value,
@@ -75,7 +76,10 @@ def generate_new_token_obj(session: AlchemySession,
         new_token.expires = datetime.datetime.now() + datetime.timedelta(days=days_till_expiration)
 
     session.add(new_token)
-    session.commit()
+    # we want the token to be generated so we need to flush the session
+    session.flush()
+    if commit_tx:
+        session.commit()
     return new_token
 
 
@@ -117,40 +121,28 @@ Optional[HDXGeneralToken]:
         .first()
 
 
-def validate_token(session: AlchemySession, token: str, token_type: TokenType, inactivate=True) -> HDXGeneralToken:
+def validate_token(session: AlchemySession, token: str, token_type: TokenType, commit_tx: bool) -> HDXGeneralToken:
+    token_obj = get_by_token_with_checks(token, token_type)
+
+    token_obj.state = State.INACTIVE.value
+
+    session.add(token_obj)
+    if commit_tx:
+        session.commit()
+
+    return token_obj
+
+
+def get_by_token_with_checks(token: str, token_type: TokenType) -> HDXGeneralToken:
     token_obj = get_by_token(token)
     if not token_obj:
         log.warning(f'Token object not found for token string {token}')
         raise Exception(f'Token object not found for given token string')
-
     if token_obj.state != State.ACTIVE.value:
         log.warning(f'Token object found for token string {token} but it is inactive')
         raise Exception(f'Token object found for given token string but it is inactive')
-
     if token_obj.token_type != token_type:
         log.warning(f'Token object found for token string {token} '
                     f'but it is of type {token_obj.token_type} instead of {token_type}')
         raise Exception(f'Token object found for given token string but the type is wrong')
-
-    # if token_obj.user_id != user_id:
-    #     log.warning(f'Token object found for token string {token} '
-    #                 f'but it has user id {token_obj.user_id} instead of {user_id}')
-    #     raise Exception(f'Token object found for given token string but the user id is wrong')
-    #
-    # if token_obj.object_type and token_obj.object_type != object_type:
-    #     log.warning(f'Token object found for token string {token} but it has object type {token_obj.object_type} '
-    #                 f'instead of {object_type}')
-    #     raise Exception(f'Token object found for given token string but it had wrong object type')
-    #
-    # if token_obj.object_type and token_obj.object_id and token_obj.object_id != object_id:
-    #     log.warning(f'Token object found for token string {token} but it has object id {token_obj.object_id} '
-    #                 f'instead of {object_id}')
-    #     raise Exception(f'Token object found for given token string but it had wrong object id')
-
-    if inactivate:
-        token_obj.state = State.INACTIVE.value
-
-    session.add(token_obj)
-    session.commit()
-
     return token_obj
