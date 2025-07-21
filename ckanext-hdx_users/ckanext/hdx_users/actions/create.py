@@ -15,7 +15,7 @@ from ckanext.hdx_users.helpers.reset_password import make_key
 from ckanext.hdx_users.helpers.helpers import generate_password, generate_username, NotAuthorized
 from ckanext.hdx_users.logic.schema import onboarding_default_user_schema
 from ckanext.hdx_users.notifications_subscription_model import EventType, HDXNotificationsSubscription, \
-    generate_notifications_subscription, notifications_subscription_dictize
+    generate_notifications_subscription, notifications_subscription_dictize, State
 from ckanext.security.schema import default_update_user_schema
 
 _get_or_bust = tk.get_or_bust
@@ -187,7 +187,8 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
         HDXNotificationsSubscription.user_id == user_dict['id'],
         HDXNotificationsSubscription.object_type == object_type,
         HDXNotificationsSubscription.object == data_dict['object'],
-        HDXNotificationsSubscription.event_type == event_type_enum
+        HDXNotificationsSubscription.event_type == event_type_enum,
+        HDXNotificationsSubscription.state == State.ACTIVE.value
     ).first()
 
     if existing_subscription:
@@ -199,7 +200,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     # create unsubscribe token
     unsubscribe_token_obj = notification_platform_logic.get_or_generate_unsubscribe_token(
         session,
-        user_dict['email'],
+        user_dict['id'],
         object_type,
         object_obj['id'],
         commit_tx=False
@@ -218,7 +219,9 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     )
 
 
-    novu_interaction.add_subscription_info(user_dict['email'], object_type, object_obj['id'], unsubscribe_token_obj)
+    novu_interaction.add_subscription_info(
+        user_dict['id'], user_dict['email'], object_type, object_obj['id'], unsubscribe_token_obj
+    )
 
     session.commit()
     subscription_dict =  notifications_subscription_dictize(subscription)

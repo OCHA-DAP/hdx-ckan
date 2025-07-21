@@ -72,7 +72,7 @@ class NovuDAO:
         :raises Exception: If subscriber deletion fails
         """
         response = requests.delete(f'{self.novu_api_url}/subscribers/{subscriber_id}', headers=self.headers)
-        if response.status_code != 204:
+        if response.status_code not in [200, 204]:
             raise Exception(f'Failed to delete subscriber: {response.text}')
 
     def subscriber_exists(self, subscriber_id: str) -> bool:
@@ -90,6 +90,7 @@ class NovuDAO:
 
 
 def add_subscription_info(
+    subscriber_id: str,
     email: str,
     object_type: ObjectType,
     object_id: str,
@@ -98,15 +99,12 @@ def add_subscription_info(
     novu_dao = NovuDAO()
     unsubscribe_token_key = _generate_unsubscribe_token_key(object_id, object_type)
 
-    if not email or not object_id:
-        raise tk.ValidationError('Missing required parameters: email and object_id')
+    if not subscriber_id or not email or not object_id:
+        raise tk.ValidationError('Missing required parameters: subscriber_id, email or object_id')
 
     notifications_enabled = hdx_supports_notifications(object_type, object_id)
     if not notifications_enabled:
         raise tk.ValidationError('Notifications are not enabled for the dataset')
-
-    # Use the email as the subscriber ID
-    subscriber_id = email
 
     subscriber_data = novu_dao.get_subscriber(subscriber_id)
 
@@ -132,11 +130,9 @@ def add_subscription_info(
     return {'message': f'You have successfully subscribed to notifications for this dataset.'}
 
 
-def remove_subscription_info(email: str, object_id: str, object_type: ObjectType):
+def remove_subscription_info(subscriber_id: str, object_id: str, object_type: ObjectType):
     novu_dao = NovuDAO()
 
-    # Use the email as the subscriber ID
-    subscriber_id = email
     unsubscribe_token_key = _generate_unsubscribe_token_key(object_id, object_type)
 
     subscriber_data = novu_dao.get_subscriber(subscriber_id)
@@ -154,10 +150,10 @@ def remove_subscription_info(email: str, object_id: str, object_type: ObjectType
             update_data = {
                 'data': existing_data
             }
-            novu_dao.update_subscriber(email, update_data)
+            novu_dao.update_subscriber(subscriber_id, update_data)
         else:
             # If no data remains, remove the subscriber entirely
-            novu_dao.delete_subscriber(email)
+            novu_dao.delete_subscriber(subscriber_id)
     else:
         log.warning(f'Unsubscribe token key {unsubscribe_token_key} not found in subscriber data')
 
