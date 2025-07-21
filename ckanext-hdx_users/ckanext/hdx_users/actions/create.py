@@ -171,6 +171,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     try:
         object_obj = get_action(action)({}, {'id': data_dict['object']})
         user_dict = get_action('user_show')(context, {'id': user_id})
+        user_email = data_dict.get('email') or user_dict.get('email')
     except tk.ObjectNotFound:
         raise tk.ValidationError(f'{object_type} {data_dict["object"]} does not exist')
     except Exception as e:
@@ -220,7 +221,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
 
 
     novu_interaction.add_subscription_info(
-        user_dict['id'], user_dict['email'], object_type, object_obj['id'], unsubscribe_token_obj
+        user_dict['id'], user_email, object_type, object_obj['id'], unsubscribe_token_obj
     )
 
     session.commit()

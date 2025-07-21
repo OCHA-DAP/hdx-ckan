@@ -123,6 +123,9 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     if page:
         query = query.offset((page - 1) * page_size)
 
+    # sort query by updated date descending
+    query = query.order_by(HDXNotificationsSubscription.updated.desc())
+
     query = query.limit(page_size)
     subscriptions = query.all()
     return [notifications_subscription_dictize(subscription) for subscription in subscriptions]

@@ -31,8 +31,8 @@ def get_or_generate_email_validation_token(email: str, object_type: ObjectType, 
                                           object_type=object_type, object_id=object_id, extras=extras)
     else:
         log.warning(
-            f'Tried to generate token for {object_type} {object_id} but {object_type} does not support notifications')
-        raise Exception(f'{object_type} {object_id} does not support notifications')
+            f'Tried to generate token for {object_type.value} {object_id} but it does not support notifications')
+        raise Exception(f'{object_type.value} {object_id} does not support notifications')
 
 
 def get_or_generate_unsubscribe_token(session: AlchemySession, email: str, object_type: ObjectType, object_id: str,
@@ -47,7 +47,7 @@ def get_or_generate_unsubscribe_token(session: AlchemySession, email: str, objec
 
 
 def verify_email_validation_token(token: str) -> HDXGeneralToken:
-    return validate_token(model.Session, token, TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION)
+    return validate_token(model.Session, token, TokenType.EMAIL_VALIDATION_FOR_NOTIFICATION, True)
 
 
 def get_unsubscribe_token(token: str) -> HDXGeneralToken:

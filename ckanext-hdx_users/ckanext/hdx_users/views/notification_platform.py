@@ -83,6 +83,7 @@ def subscribe_to_object() -> Response:
         'object': object,
         'object_type': object_type,
         'event_type': event_type,
+        'email': email,
     }
     try:
         tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
@@ -183,6 +184,7 @@ def subscription_confirmation() -> Response:
         'success': True
     }
     error_message = None
+    http_status = 200
 
     try:
 
@@ -263,13 +265,17 @@ def subscription_confirmation() -> Response:
             json_response_dict['unsubscribe_token'] = subscription.get('unsubscribe_token')
 
     except tk.ValidationError as e:
+        http_status = 400
         error_message =  e.error_dict.get('message')
     except tk.Invalid as e:
+        http_status = 400
         error_message = e.error
     except MailerException as e:
+        http_status = 500
         log.error(e)
         error_message = 'Error sending the confirmation email, please try again.'
     except Exception as e:
+        http_status = 500
         log.error(e)
         error_message = str(e)
     if error_message:
@@ -279,7 +285,7 @@ def subscription_confirmation() -> Response:
                 'message': error_message
             }
         }
-    return _build_json_response(json_response_dict)
+    return _build_json_response(json_response_dict, status=http_status)
 
 
 def unsubscribe_confirmation() -> Response:
