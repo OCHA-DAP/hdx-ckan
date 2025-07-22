@@ -69,7 +69,7 @@ def notifications_subscription_dictize(subscription: HDXNotificationsSubscriptio
 
 
 def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[str] = None,
-                            updated: Optional[datetime.datetime] = None, active: Optional[bool] = True,
+                            updated: Optional[datetime.datetime] = None, active: bool = True,
                             page: Optional[int] = 0, page_size: Optional[int] = 1000) -> List[DataDict]:
     """
     List subscriptions with optional filters.
@@ -82,7 +82,7 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     :type updated: Optional[datetime.datetime]
     :param active: Filter by the subscription's "active" state. If set to 'True', fetches only subscriptions with the
     state 'active'. If 'False', fetches subscriptions that are not 'active'. Defaults to 'True'.
-    :type active: Optional[bool]
+    :type active: bool
     :param page: The page number for pagination. Defaults to 0 (first page)
     :type page: Optional[int]
     :param page_size: The number of subscriptions per page, defaults to 1000 if not provided.
