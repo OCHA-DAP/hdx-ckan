@@ -11,7 +11,20 @@
 
 {% block links %}
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
-  {% snippet "snippets/add_optional_canonical_link.html", params=data.full_facet_info.get('selected_categ_keys') %}
+  
+  {# Filter out org/location filters from SEO and limit to max 2 content filters #}
+  {% set all_categ_keys = data.full_facet_info.get('selected_categ_keys') %}
+  {% set seo_excluded_categories = ['groups', 'organization'] %}
+  {% set filtered_categ_keys = [] %}
+  {% for key in all_categ_keys %}
+    {% if key not in seo_excluded_categories %}
+      {% do filtered_categ_keys.append(key) %}
+    {% endif %}
+  {% endfor %}
+  
+  {# Pass filtered keys if 2 or fewer, empty array if more #}
+  {% set canonical_params = filtered_categ_keys if filtered_categ_keys|length <= 2 else [] %}
+  {% snippet "snippets/add_optional_canonical_link.html", params=canonical_params %}
 
   {{ super() }}
 {% endblock %}
