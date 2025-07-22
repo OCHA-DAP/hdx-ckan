@@ -225,6 +225,6 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     )
 
     session.commit()
-    subscription_dict =  notifications_subscription_dictize(subscription)
+    subscription_dict = notifications_subscription_dictize(subscription)
     subscription_dict['unsubscribe_token'] = unsubscribe_token_obj.token
     return subscription_dict

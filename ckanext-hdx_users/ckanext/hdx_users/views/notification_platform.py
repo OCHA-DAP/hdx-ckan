@@ -266,7 +266,7 @@ def subscription_confirmation() -> Response:
 
     except tk.ValidationError as e:
         http_status = 400
-        error_message =  e.error_dict.get('message')
+        error_message = e.error_dict.get('message')
     except tk.Invalid as e:
         http_status = 400
         error_message = e.error

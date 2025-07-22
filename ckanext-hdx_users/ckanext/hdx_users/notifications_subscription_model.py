@@ -205,7 +205,6 @@ def get_by_unsubscribe_token(unsubscribe_token_id: str) -> Optional[HDXNotificat
     """
     Get a notification subscription by its unsubscribe token ID.
 
-    :param session: The active database session.
     :param unsubscribe_token_id: The ID of the unsubscribe token.
     :return: The subscription object if found, None otherwise.
     """

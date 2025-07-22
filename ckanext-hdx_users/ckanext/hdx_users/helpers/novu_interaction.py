@@ -125,7 +125,7 @@ def add_subscription_info(
         update_data = {
             'data': existing_data
         }
-        novu_dao.update_subscriber(email, update_data)
+        novu_dao.update_subscriber(subscriber_id, update_data)
 
     return {'message': f'You have successfully subscribed to notifications for this dataset.'}
 
