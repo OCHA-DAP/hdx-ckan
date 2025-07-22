@@ -69,10 +69,10 @@ def notifications_subscription_dictize(subscription: HDXNotificationsSubscriptio
 
 
 def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[str] = None,
-                            updated: Optional[datetime.datetime] = None, page: Optional[int] = 0,
-                            page_size: Optional[int] = 1000) -> List[DataDict]:
+                            updated: Optional[datetime.datetime] = None, active: Optional[bool] = True,
+                            page: Optional[int] = 0, page_size: Optional[int] = 1000) -> List[DataDict]:
     """
-    List active subscriptions with optional filters.
+    List subscriptions with optional filters.
 
     :param session: The active database session.
     :type session: AlchemySession
@@ -80,6 +80,9 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     :type user_id: Optional[str]
     :param updated: Filter subscriptions updated on or after this datetime.
     :type updated: Optional[datetime.datetime]
+    :param active: Filter by the subscription's "active" state. If set to 'True', fetches only subscriptions with the
+    state 'active'. If 'False', fetches subscriptions that are not 'active'. Defaults to 'True'.
+    :type active: Optional[bool]
     :param page: The page number for pagination. Defaults to 0 (first page)
     :type page: Optional[int]
     :param page_size: The number of subscriptions per page, defaults to 1000 if not provided.
@@ -88,9 +91,10 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     :rtype: List[DataDict]
     """
 
-    query = session.query(HDXNotificationsSubscription).filter(HDXNotificationsSubscription.state == 'active')
-    if page:
-        query = query.offset((page - 1) * page_size)
+    query = session.query(HDXNotificationsSubscription).filter(
+        HDXNotificationsSubscription.state == 'active' if active else HDXNotificationsSubscription.state != 'active'
+    )
+
     if user_id:
         try:
             # Check if user_id is a valid UUID
@@ -101,6 +105,8 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
             query = query.join(model.User).filter(model.User.name == user_id)
     if updated:
         query = query.filter(HDXNotificationsSubscription.updated >= updated)
+    if page:
+        query = query.offset((page - 1) * page_size)
 
     query = query.limit(page_size)
     subscriptions = query.all()
