@@ -178,7 +178,8 @@ def subscription_confirmation() -> Response:
     object_id = tk.request.form.get('object_id')
     object_type_str = tk.request.form.get('object_type')
     object_type = ObjectType(object_type_str)
-    dataset_updates = tk.request.form.get('dataset_updates') == 'true'
+    # dataset_updates = tk.request.form.get('dataset_updates') == 'true'
+    dataset_updates = False
 
     json_response_dict: Dict[str: any] = {
         'success': True
