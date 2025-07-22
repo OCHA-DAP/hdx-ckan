@@ -250,7 +250,7 @@ def notifications(id=None):
 
             try:
                 object_dict = _get_object_dict(object_type, object_id)
-                unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.email, object_type, object_id)
+                unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.id, object_type, object_id)
                 subscription['object_dict'] = object_dict
                 subscription['object_link'] = _generate_url_for(object_type, object_id, True)
                 subscription['unsubscribe_token'] = unsubscribe_token

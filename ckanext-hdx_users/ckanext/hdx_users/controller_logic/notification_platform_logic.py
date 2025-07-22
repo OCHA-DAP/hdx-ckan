@@ -35,9 +35,9 @@ def get_or_generate_email_validation_token(email: str, object_type: ObjectType, 
         raise Exception(f'{object_type.value} {object_id} does not support notifications')
 
 
-def get_or_generate_unsubscribe_token(session: AlchemySession, email: str, object_type: ObjectType, object_id: str,
+def get_or_generate_unsubscribe_token(session: AlchemySession, user_id: str, object_type: ObjectType, object_id: str,
                                       extras: Optional[Dict] = None, commit_tx: bool = True) -> HDXGeneralToken:
-    existing_unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, email,
+    existing_unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, user_id,
                                                                     object_type, object_id)
     if existing_unsubscribe_token:
         return existing_unsubscribe_token
