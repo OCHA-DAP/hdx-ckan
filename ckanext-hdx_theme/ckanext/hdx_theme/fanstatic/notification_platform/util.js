@@ -54,6 +54,8 @@ var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscrib
 
         hdxUtil.net.removeNotificationSubscribedTarget(objectId, objectType);
 
+        displayNotificationOptinOption(objectId, objectType);
+
         hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
           'confirm popup',
           'unsubscribe from notifications',
@@ -120,6 +122,7 @@ var onSignupSubmit = function (objectId, objectName, objectType) {
 
         if (data.unsubscribe_token) {
           hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, data.unsubscribe_token);
+          displayNotificationOptoutOption(objectId, objectType);
         }
       } else {
         showAlert($signupDangerAlert, data.error.message);

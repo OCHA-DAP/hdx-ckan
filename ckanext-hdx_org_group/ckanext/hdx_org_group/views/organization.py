@@ -65,9 +65,9 @@ def read(id):
 
         if read_logic.org_meta.is_custom:
             template_data = _generate_template_data_for_custom_org(read_logic)
-            result = render('organization/custom/custom_org.html', template_data)
             unsubscribe_token = request.args.get('_unsubscribe_token', None)
             add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, read_logic.org_meta.org_dict.get('id'), template_data)
+            result = render('organization/custom/custom_org.html', template_data)
             return result
         else:
             org_dict = read_logic.org_meta.org_dict

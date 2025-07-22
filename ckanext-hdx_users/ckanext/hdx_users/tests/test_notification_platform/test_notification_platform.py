@@ -211,7 +211,8 @@ class TestNotificationPlatform(object):
 
         assert subscription['object_type'] == ObjectType.ORGANIZATION.value
         assert subscription['object'] == org.id
-        assert subscription['event_type'] == EventType.DATASET_UPDATED.value
+        # assert subscription['event_type'] == EventType.DATASET_UPDATED.value
+        assert subscription['event_type'] == EventType.NEW_DATASET_ADDED.value
 
     # @mock.patch('ckanext.hdx_users.views.notification_platform._add_notification_subscription')
     @mock.patch(
@@ -264,5 +265,6 @@ class TestNotificationPlatform(object):
 
         assert subscription['object_type'] == ObjectType.DATASET.value
         assert subscription['object'] == DATASET_ID
-        assert subscription['event_type'] == EventType.DATASET_UPDATED.value
+        # assert subscription['event_type'] == EventType.DATASET_UPDATED.value
+        assert subscription['event_type'] == EventType.NEW_DATASET_ADDED.value
 

@@ -42,7 +42,7 @@ def get_or_generate_unsubscribe_token(session: AlchemySession, user_id: str, obj
     if existing_unsubscribe_token:
         return existing_unsubscribe_token
     else:
-        return generate_new_token_obj(session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, email,
+        return generate_new_token_obj(session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, user_id,
                                       object_type=object_type, object_id=object_id, extras=extras, commit_tx=commit_tx)
 
 
