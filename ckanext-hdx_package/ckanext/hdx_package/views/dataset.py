@@ -26,7 +26,6 @@ import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
 from ckanext.hdx_package.controller_logic.dataset_contact_contributor_logic import DatasetContactContributorLogic
 from ckanext.hdx_package.controller_logic.dataset_request_access_logic import DatasetRequestAccessLogic
-from ckanext.hdx_users.controller_logic.notification_platform_logic import verify_unsubscribe_token
 
 from ckan.views.dataset import _setup_template_variables
 

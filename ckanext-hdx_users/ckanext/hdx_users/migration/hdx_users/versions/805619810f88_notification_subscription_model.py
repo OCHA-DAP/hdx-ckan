@@ -22,6 +22,8 @@ def upgrade():
         sa.Column('id', sa.UnicodeText, primary_key=True),
         sa.Column('state', sa.UnicodeText, index=True, nullable=False),
         sa.Column('user_id', sa.UnicodeText, sa.ForeignKey('user.id'), index=True, nullable=False),
+        sa.Column('unsubscribe_token_id',
+                  sa.UnicodeText, sa.ForeignKey('hdx_general_token.id'), index=True, nullable=False, unique=True),
         sa.Column('object', sa.UnicodeText, nullable=False),
         sa.Column('object_type', sa.UnicodeText, nullable=False),
         sa.Column('event_type', sa.UnicodeText, nullable=False),

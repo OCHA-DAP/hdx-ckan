@@ -9,12 +9,13 @@ from sqlalchemy import func, Column, types, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 
 import ckan.model as model
+import ckan.model.meta as meta
 import ckan.model.types as ckan_types
 import ckan.plugins.toolkit as tk
 
 from ckan.types import AlchemySession, DataDict
 
-from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.general_token_model import ObjectType, State
 
 
 log = logging.getLogger(__name__)
@@ -35,24 +36,37 @@ class HDXNotificationsSubscription(tk.BaseModel):
     created = Column('created', types.DateTime, default=datetime.datetime.now, nullable=False)
     updated = Column('updated', types.DateTime, default=datetime.datetime.now, index=True,
                      onupdate=datetime.datetime.now, nullable=False)
-
+    unsubscribe_token_id = Column(
+        'unsubscribe_token_id',
+        types.UnicodeText, ForeignKey('hdx_general_token.id'), index=True, nullable=False, unique=True
+    )
 
 class EventType(str, Enum):
     NEW_DATASET_ADDED = 'new-dataset-added'
     DATASET_UPDATED = 'dataset-updated'
 
 
-def generate_notifications_subscription(session: AlchemySession, user_id: str, object_type: ObjectType, object: str,
-                               event_type: EventType, query_params: Optional[Dict] = None) -> HDXNotificationsSubscription:
+def generate_notifications_subscription(
+    session: AlchemySession,
+    user_id: str,
+    object_type: ObjectType,
+    object: str,
+    event_type: EventType,
+    unsubscribe_token_id: str,
+    query_params: Optional[Dict] = None,
+    commit_tx: bool = True,
+) -> HDXNotificationsSubscription:
     subscription = HDXNotificationsSubscription(
         user_id=user_id,
         object=object,
         object_type=object_type.value,
         event_type=event_type.value,
+        unsubscribe_token_id=unsubscribe_token_id,
         query_params=query_params
     )
     session.add(subscription)
-    session.commit()
+    if commit_tx:
+        session.commit()
     return subscription
 
 def notifications_subscription_dictize(subscription: HDXNotificationsSubscription) -> Dict:
@@ -81,7 +95,7 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     :param updated: Filter subscriptions updated on or after this datetime.
     :type updated: Optional[datetime.datetime]
     :param active: Filter by the subscription's "active" state. If set to 'True', fetches only subscriptions with the
-    state 'active'. If 'False', fetches subscriptions that are not 'active'. Defaults to 'True'.
+    state 'active'. If 'False', fetch subscriptions that are not 'active'. Defaults to 'True'.
     :type active: bool
     :param page: The page number for pagination. Defaults to 0 (first page)
     :type page: Optional[int]
@@ -92,7 +106,8 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     """
 
     query = session.query(HDXNotificationsSubscription).filter(
-        HDXNotificationsSubscription.state == 'active' if active else HDXNotificationsSubscription.state != 'active'
+        HDXNotificationsSubscription.state == State.ACTIVE.value
+        if active else HDXNotificationsSubscription.state != State.ACTIVE.value
     )
 
     if user_id:
@@ -107,6 +122,9 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
         query = query.filter(HDXNotificationsSubscription.updated >= updated)
     if page:
         query = query.offset((page - 1) * page_size)
+
+    # sort query by updated date descending
+    query = query.order_by(HDXNotificationsSubscription.updated.desc())
 
     query = query.limit(page_size)
     subscriptions = query.all()
@@ -135,7 +153,7 @@ def get_grouped_notification_subscriptions(session: AlchemySession) -> List[Data
                 )
             ).label('user_list')
         )
-        .filter(HDXNotificationsSubscription.state == 'active')
+        .filter(HDXNotificationsSubscription.state == State.ACTIVE.value)
         .group_by(HDXNotificationsSubscription.object, HDXNotificationsSubscription.object_type)
     )
 
@@ -148,14 +166,16 @@ def get_grouped_notification_subscriptions(session: AlchemySession) -> List[Data
         for row in query.all()
     ]
 
-def delete_notification_subscription(session: AlchemySession, subscription_id: str) -> bool:
+def mark_as_deleted(session: AlchemySession, subscription_id: str, commit_tx: bool) -> bool:
     """
-    Delete a notification subscription by its ID.
+    Mark a notification subscription as deleted by changing its state to 'deleted'.
 
     :param session: The active database session.
     :type session: AlchemySession
     :param subscription_id: The ID of the subscription to delete.
     :type subscription_id: str
+    :param commit_tx: Whether to commit the transaction after deletion.
+    :type commit_tx: bool
     :return: True if the subscription was deleted, False otherwise.
     :rtype: bool
     """
@@ -163,8 +183,9 @@ def delete_notification_subscription(session: AlchemySession, subscription_id: s
     if not subscription:
         return False
 
-    session.delete(subscription)
-    session.commit()
+    subscription.state = State.DELETED.value
+    if commit_tx:
+        session.commit()
     return True
 
 def get(session: AlchemySession, id: str) -> Optional[HDXNotificationsSubscription]:
@@ -179,3 +200,14 @@ def get(session: AlchemySession, id: str) -> Optional[HDXNotificationsSubscripti
     :rtype: Optional[HDXNotificationsSubscription]
     """
     return session.query(HDXNotificationsSubscription).get(id)
+
+def get_by_unsubscribe_token(unsubscribe_token_id: str) -> Optional[HDXNotificationsSubscription]:
+    """
+    Get a notification subscription by its unsubscribe token ID.
+
+    :param unsubscribe_token_id: The ID of the unsubscribe token.
+    :return: The subscription object if found, None otherwise.
+    """
+    return meta.Session.query(HDXNotificationsSubscription).filter(
+        HDXNotificationsSubscription.unsubscribe_token_id == unsubscribe_token_id
+    ).first()

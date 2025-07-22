@@ -14,7 +14,8 @@ from ckanext.hdx_users.general_token_model import (
     ObjectType,
     State
 )
-from ckanext.hdx_users.notifications_subscription_model import EventType, list_notifications_subscriptions
+from ckanext.hdx_users.notifications_subscription_model import EventType, list_notifications_subscriptions, \
+    generate_notifications_subscription, get
 
 _get_action = tk.get_action
 g = tk.g
@@ -92,7 +93,6 @@ def setup_data():
 
     _create_dataset()
 
-
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'with_request_context', 'setup_data')
 class TestNotificationPlatform(object):
 
@@ -147,28 +147,46 @@ class TestNotificationPlatform(object):
     #     assert len(unsubscribe_tokens) == 1
     #     assert unsubscribe_tokens[0].state == State.ACTIVE
 
-    @mock.patch('ckanext.hdx_users.views.notification_platform._delete_notification_subscription')
-    def test_user_unsubscribing_from_dataset(self, delete_notification_subscription, app):
-        requester_email_address = 'test_unsubscribing@test.test'
-        token_obj = generate_new_token_obj(
-            model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION,
-            requester_email_address, object_type=ObjectType.DATASET, object_id=DATASET_ID
-        )
-        assert token_obj.state == State.ACTIVE
+    @mock.patch('ckanext.hdx_users.helpers.novu_interaction.NovuDAO')
+    def test_user_unsubscribing_from_dataset(self, mock_novu_dao, app):
+        user_dict = factories.User(name='standard_user')
 
-        unsubscribe_url = tk.url_for('hdx_notifications.unsubscribe_confirmation', token=token_obj.token)
+        unsubscribe_token_obj = generate_new_token_obj(
+            model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION,
+            user_dict['id'], object_type=ObjectType.DATASET, object_id=DATASET_ID
+        )
+        assert unsubscribe_token_obj.state == State.ACTIVE
+
+
+        subscription = generate_notifications_subscription(
+            session=model.Session,
+            user_id=user_dict['id'],
+            object_type=ObjectType.DATASET,
+            object=DATASET_ID,
+            event_type=EventType.NEW_DATASET_ADDED,
+            unsubscribe_token_id=unsubscribe_token_obj.id,
+        )
+
+        unsubscribe_url = tk.url_for('hdx_notifications.unsubscribe_confirmation')
         response = app.post(
             unsubscribe_url,
             data={
-                'token': token_obj.token
+                'token': unsubscribe_token_obj.token
             },
         )
 
-        modified_token = get_by_token(token_obj.token)
+        modified_token = get_by_token(unsubscribe_token_obj.token)
         assert modified_token.state == State.INACTIVE
 
+        modified_subscription = get(model.Session, subscription.id)
+        assert modified_subscription.state == State.DELETED
+
     @mock.patch('flask_login.utils._get_user')
-    def test_authenticated_user_subscription_to_object(self, current_user, app):
+    @mock.patch('ckanext.hdx_users.helpers.novu_interaction.NovuDAO')
+    @mock.patch('ckanext.hdx_users.helpers.novu_interaction.hdx_supports_notifications')
+    def test_authenticated_user_subscription_to_object(
+        self, mock_supports_notifications, mock_novu_dao, current_user, app
+    ):
         user_dict = factories.User(name='standard_user')
         user = model.User.get(user_dict['id'])
         org = model.Group.get(ORG_NAME)
@@ -198,9 +216,13 @@ class TestNotificationPlatform(object):
     # @mock.patch('ckanext.hdx_users.views.notification_platform._add_notification_subscription')
     @mock.patch(
         'ckanext.hdx_users.views.notification_platform.hdx_mailer')
+    @mock.patch('ckanext.hdx_users.helpers.novu_interaction.NovuDAO')
+    @mock.patch('ckanext.hdx_users.helpers.novu_interaction.hdx_supports_notifications')
     @mock.patch(
         'ckanext.hdx_users.controller_logic.notification_platform_logic.hdx_supports_notifications')
-    def test_anon_user_subscribe_to_object(self, check_supports_notification, hdx_mailer_mock, app):
+    def test_anon_user_subscribe_to_object(
+        self, check_supports_notification, mock_supports_notifications, mock_novu_dao, hdx_mailer_mock, app
+    ):
 
         # Create email validation request (and email validation token)
         requester_email_address = 'test@test.test'
