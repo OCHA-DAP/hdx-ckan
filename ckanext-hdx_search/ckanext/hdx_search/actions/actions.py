@@ -69,7 +69,7 @@ def hdx_search_by_object(context, data_dict):
     object_type = _get_or_bust(data_dict, 'object_type')
     object_id = _get_or_bust(data_dict, 'object_id')
 
-    fq_filter = f''
+    fq_filter = ''
     dataset_ids_list = []
 
     # get by object_type
