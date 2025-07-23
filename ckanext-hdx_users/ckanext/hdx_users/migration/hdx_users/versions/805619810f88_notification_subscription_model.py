@@ -32,6 +32,20 @@ def upgrade():
         sa.Column('updated', sa.DateTime, index=True, nullable=False),
     )
 
+    # Create a partial unique index for active subscriptions only
+    op.create_index(
+        'ix_hdx_notifications_subscription_unique_active',
+        'hdx_notifications_subscription',
+        ['user_id', 'object', 'object_type'],
+        unique=True,
+        postgresql_where=sa.text("state = 'active'")
+    )
+
 
 def downgrade():
+    op.drop_index(
+        'ix_hdx_notifications_subscription_unique_active',
+        'hdx_notifications_subscription',
+        if_exists=True
+    )
     op.drop_table('hdx_notifications_subscription')

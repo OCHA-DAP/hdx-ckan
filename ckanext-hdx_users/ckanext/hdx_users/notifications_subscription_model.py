@@ -5,7 +5,7 @@ import uuid
 from enum import Enum
 from typing import Optional, Dict, List
 
-from sqlalchemy import func, Column, types, ForeignKey
+from sqlalchemy import func, Column, types, ForeignKey, Index
 from sqlalchemy.dialects.postgresql import JSONB
 
 import ckan.model as model
@@ -40,6 +40,16 @@ class HDXNotificationsSubscription(tk.BaseModel):
         'unsubscribe_token_id',
         types.UnicodeText, ForeignKey('hdx_general_token.id'), index=True, nullable=False, unique=True
     )
+
+    __table_args__ = (
+        Index(
+            'ix_hdx_notifications_subscription_unique_active',
+            'user_id', 'object', 'object_type',
+            unique=True,
+            postgresql_where=types.UnicodeText("state = 'active'")
+        ),
+    )
+
 
 class EventType(str, Enum):
     NEW_DATASET_ADDED = 'new-dataset-added'
