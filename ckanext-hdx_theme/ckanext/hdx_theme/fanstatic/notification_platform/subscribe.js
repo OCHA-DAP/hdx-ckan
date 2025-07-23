@@ -5,29 +5,39 @@ $(document).ready(function () {
   const subscribeObjectName = $notificationPlatformData.data('object-name');
   const subscribeObjectType = $notificationPlatformData.data('object-type');
 
-  $signupForm.on('submit', function (e) {
-    e.preventDefault();
-    onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType);
-    return false;
-  });
-  $signupSubmitButton.on('click', function (e) {
-    e.preventDefault();
-    onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType);
-    return false;
-  });
+  if($signupForm) {
+    $signupForm.on('submit', function (e) {
+      e.preventDefault();
+      onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType);
+      return false;
+    });
+  }
+  if($signupSubmitButton) {
+    $signupSubmitButton.on('click', function (e) {
+      e.preventDefault();
+      onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType);
+      return false;
+    });
+  }
 
-  $actionMenuButton.on('click', function (e) {
-    e.preventDefault();
-    showNotificationsSignupModal('action menu', subscribeObjectId, subscribeObjectName, subscribeObjectType);
-    return false;
-  });
-  $floatingButton.on('click', function (e) {
-    e.preventDefault();
-    showNotificationsSignupModal('floating button', subscribeObjectId, subscribeObjectName, subscribeObjectType);
-    return false;
-  });
+  if($actionMenuButton) {
+    $actionMenuButton.on('click', function (e) {
+      e.preventDefault();
+      showNotificationsSignupModal('action menu', subscribeObjectId, subscribeObjectName, subscribeObjectType);
+      return false;
+    });
+  }
+  if($floatingButton) {
+    $floatingButton.on('click', function (e) {
+      e.preventDefault();
+      showNotificationsSignupModal('floating button', subscribeObjectId, subscribeObjectName, subscribeObjectType);
+      return false;
+    });
+  }
 
-  $notificationsSignupModal.on('hide.bs.modal', function () {
-    $signupFormPopupSourceInput.val('');
-  });
+  if($notificationsSignupModal) {
+    $notificationsSignupModal.on('hide.bs.modal', function () {
+      $signupFormPopupSourceInput.val('');
+    });
+  }
 });

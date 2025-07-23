@@ -198,10 +198,8 @@
 
     hdxUtil.net.addNotificationSubscribedTarget = function (object, objectType, unsubscribeToken) {
       var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
-      if (!subscribedObjects[object]) {
-        subscribedObjects[object] = unsubscribeToken;
-        localStorage.setItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType], JSON.stringify(subscribedObjects));
-      }
+      subscribedObjects[object] = unsubscribeToken;
+      localStorage.setItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType], JSON.stringify(subscribedObjects));
     };
 
     hdxUtil.net.removeNotificationSubscribedTarget = function (object, objectType) {

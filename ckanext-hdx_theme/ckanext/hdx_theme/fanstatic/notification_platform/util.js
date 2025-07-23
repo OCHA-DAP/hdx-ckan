@@ -5,8 +5,8 @@ var $unsubscribeModal = $('#notificationsUnsubscribeBemModal');
 var $unsubscribedModal = $('#notificationsUnsubscribedBemModal');
 
 // BS modals
-var notificationsSignupModal = bootstrap.Modal.getOrCreateInstance($notificationsSignupModal.get(0));
-var verificationModal = bootstrap.Modal.getOrCreateInstance($verificationModal.get(0));
+var notificationsSignupModal = $notificationsSignupModal.length > 0 ? bootstrap.Modal.getOrCreateInstance($notificationsSignupModal.get(0)) : null;
+var verificationModal = $verificationModal.length > 0 ? bootstrap.Modal.getOrCreateInstance($verificationModal.get(0)) : null;
 var unsubscribeModal = bootstrap.Modal.getOrCreateInstance($unsubscribeModal.get(0));
 var unsubscribedModal = bootstrap.Modal.getOrCreateInstance($unsubscribedModal.get(0));
 
