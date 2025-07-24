@@ -17,12 +17,13 @@ import ckanext.hdx_theme.version as version
 from urllib.parse import urlencode
 
 from six import text_type
+from typing import Any, Optional
 
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
 from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO, UPDATE_FREQ_NEVER
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
@@ -1034,12 +1035,13 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> bool:
+def hdx_supports_notifications(object_type: ObjectType, object_id: str,
+                               object_dict: Optional[dict[str, Any]] = None) -> bool:
     supports_notifications = False
 
     if object_id:
         if object_type in (ObjectType.DATASET, ObjectType.GROUP, ObjectType.ORGANIZATION, ObjectType.CRISIS):
-            supports_notifications = _check_notifications_enabled_for_object(object_type, object_id)
+            supports_notifications = _check_notifications_enabled_for_object(object_type, object_id, object_dict)
         else:
             log.error(f'Invalid object_type: {object_type}')
     else:
@@ -1048,14 +1050,25 @@ def hdx_supports_notifications(object_type: ObjectType, object_id: str) -> bool:
     return supports_notifications
 
 
-def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str) -> bool:
+def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str,
+                                            object_dict: Optional[dict[str, Any]] = None) -> bool:
     object_identifier = f"{object_type}_{object_id}"
+
+    if object_type == ObjectType.DATASET and object_dict:
+        is_hdx_connect = str(object_dict.get('is_requestdata_type', False)).lower() == 'true'
+        is_private = str(object_dict.get('private', False)).lower() == 'true'
+        is_archived = str(object_dict.get('archived', False)).lower() == 'true'
+        is_update_frequency_never = object_dict.get('data_update_frequency', '') == UPDATE_FREQ_NEVER
+        if is_hdx_connect or is_private or is_archived or is_update_frequency_never:
+            return False
+
     if config.get('hdx.notifications.enabled_objects_csv'):
         objects_with_notifications = cached_objects_with_notifications()
         return object_identifier in objects_with_notifications
     elif config.get('hdx.notifications.disabled_objects_csv'):
         objects_without_notifications = cached_objects_without_notifications()
         return object_identifier not in objects_without_notifications
+
     return False
 
 

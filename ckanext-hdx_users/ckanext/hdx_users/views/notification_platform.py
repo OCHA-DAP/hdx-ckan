@@ -219,7 +219,8 @@ def subscription_confirmation() -> Response:
                 NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY: EventType.DATASET_UPDATED.value if dataset_updates else EventType.NEW_DATASET_ADDED.value
             }
             token_obj = notification_platform_logic.get_or_generate_email_validation_token(email, object_type,
-                                                                                           object_dict['id'], extras)
+                                                                                           object_dict['id'],
+                                                                                           object_dict, extras)
 
             subject = u'Please verify your email address'
             verify_email_link = _h.url_for(

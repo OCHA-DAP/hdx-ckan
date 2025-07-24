@@ -70,7 +70,7 @@
             {{ org_title }}
           </a>
         </div>
-        {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type) }}
+        {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type, object_dict=pkg) }}
         {% if pkg.notes %}
           <div data-module="hdx_show_more" data-module-points="70" style="visibility:hidden" class="notes embedded-content">
               {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
@@ -113,6 +113,7 @@
     object_type=object_type,
     object_id=object_id,
     object_name=object_name,
+    object_dict=pkg,
     update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
     unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated
 %}

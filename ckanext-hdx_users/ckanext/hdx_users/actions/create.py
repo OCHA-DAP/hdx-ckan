@@ -221,7 +221,7 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
 
 
     novu_interaction.add_subscription_info(
-        user_dict['id'], user_email, object_type, object_obj['id'], unsubscribe_token_obj
+        user_dict['id'], user_email, unsubscribe_token_obj, object_type, object_obj['id'], object_obj
     )
 
     session.commit()

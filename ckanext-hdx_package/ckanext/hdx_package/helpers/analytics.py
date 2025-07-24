@@ -78,7 +78,7 @@ def came_from(request_args: Dict[str, str]) -> Optional[str]:
 
 
 def supports_notifications(pkg_dict: dict[str, Any]) -> str:
-    dataset_supports_notifications = hdx_supports_notifications(ObjectType.DATASET, pkg_dict['id'])
+    dataset_supports_notifications = hdx_supports_notifications(ObjectType.DATASET, pkg_dict['id'], pkg_dict)
 
     return str(dataset_supports_notifications).lower()
 

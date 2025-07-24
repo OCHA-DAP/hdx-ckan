@@ -92,9 +92,10 @@ class NovuDAO:
 def add_subscription_info(
     subscriber_id: str,
     email: str,
+    unsubscribe_token_obj: HDXGeneralToken,
     object_type: ObjectType,
     object_id: str,
-    unsubscribe_token_obj: HDXGeneralToken,
+    object_dict: Optional[dict[str, Any]] = None,
 ):
     novu_dao = NovuDAO()
     unsubscribe_token_key = _generate_unsubscribe_token_key(object_id, object_type)
@@ -102,7 +103,7 @@ def add_subscription_info(
     if not subscriber_id or not email or not object_id:
         raise tk.ValidationError('Missing required parameters: subscriber_id, email or object_id')
 
-    notifications_enabled = hdx_supports_notifications(object_type, object_id)
+    notifications_enabled = hdx_supports_notifications(object_type, object_id, object_dict)
     if not notifications_enabled:
         raise tk.ValidationError('Notifications are not enabled for the dataset')
 
