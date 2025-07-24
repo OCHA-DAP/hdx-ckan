@@ -133,4 +133,7 @@ def hdx_notifications_grouped_subscription_list(context: Context, data_dict: Dat
     _check_access('hdx_notifications_grouped_subscription_list', context, data_dict)
 
     session = context['session']
-    return get_grouped_notification_subscriptions(session)
+    page: Optional[int] = int(data_dict.get('page', 0) or 0)
+    page_size: int = int(data_dict.get('page_size', 1000))
+
+    return get_grouped_notification_subscriptions(session, page=page, page_size=page_size)

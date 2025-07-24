@@ -141,12 +141,17 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
     return [notifications_subscription_dictize(subscription) for subscription in subscriptions]
 
 
-def get_grouped_notification_subscriptions(session: AlchemySession) -> List[DataDict]:
+def get_grouped_notification_subscriptions(session: AlchemySession, page: Optional[int] = None,
+                                           page_size: Optional[int] = 1000) -> List[DataDict]:
     """
-    Retrieve active notification subscriptions grouped by object and object_type.
+    Retrieve active notification subscriptions grouped by object and object_type with optional pagination.
 
     :param session: The active database session.
     :type session: AlchemySession
+    :param page: The page number for pagination. If None, pagination is not applied.
+    :type page: Optional[int]
+    :param page_size: The number of subscriptions per page. Defaults to 1000 if not provided.
+    :type page_size: Optional[int]
     :return: A list of grouped subscription data
     :rtype: List[DataDict]
     """
@@ -166,6 +171,13 @@ def get_grouped_notification_subscriptions(session: AlchemySession) -> List[Data
         .filter(HDXNotificationsSubscription.state == State.ACTIVE.value)
         .group_by(HDXNotificationsSubscription.object, HDXNotificationsSubscription.object_type)
     )
+
+    if page:
+        query = query.offset((page - 1) * page_size)
+
+    query = query.order_by(func.max(HDXNotificationsSubscription.updated).desc())
+
+    query = query.limit(page_size)
 
     return [
         {
