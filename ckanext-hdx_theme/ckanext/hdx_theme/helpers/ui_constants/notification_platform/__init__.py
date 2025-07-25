@@ -1,12 +1,12 @@
 CONSTANTS = {
     'OPT_IN_TEXT': '''Subscribe''',
     'OPT_IN_EXPLANATION_DATASET': '''Get notifications when this dataset updates''',
-    'OPT_IN_EXPLANATION_SEARCH_RESULTS': '''Get notifications when datasets for this {0} update''',
+    'OPT_IN_EXPLANATION_SEARCH_RESULTS': '''Get notifications when datasets for this {0} are added''',
     'OPT_OUT_TEXT': '''Unsubscribe''',
 
     'SIGNUP_MODAL_TITLE_DATASET': '''Subscribe to notifications on this dataset''',
     'SIGNUP_MODAL_TITLE_SEARCH_RESULTS': '''Subscribe to dataset notifications on this {0}''',
-    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when dataset resources (files) for this {0} are added or removed?''',
+    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when datasets for this {0} are added?''',
     'SIGNUP_MODAL_TEXT_INTRO_DATASET': '''Would you like to receive notifications when resources (files) in this dataset change?''',
     'SIGNUP_MODAL_TEXT_INTRO_SECOND': '''If so, please <a href="{0}" title="login">log in</a> or enter your email address below:''',
     'SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT': '''Already have an account? <a href="{0}" title="login">Log in</a>''',
@@ -29,7 +29,8 @@ CONSTANTS = {
     'VERIFICATION_MODAL_TEXT_CLOSE_BUTTON': '''Close''',
 
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE': '''Unsubscribe''',
-    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT': '''Please confirm that you want to unsubscribe email notifications when this dataset is updated on HDX.''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET': '''Please confirm that you want to unsubscribe from email notifications for updates to this dataset on HDX.''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS': '''Please confirm that you want to unsubscribe from email notifications when datasets are added to this {0} on HDX.''',
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON': '''Cancel''',
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON': '''Unsubscribe''',
 

@@ -3,7 +3,7 @@
 {% if data.object_type == 'dataset' %}
   <p>You're subscribing to the <a href="{{ data.object_link }}" target="_blank"> {{ data.object_title }}</a> {{ data.object_type }}. You will receive emails when a new resource is added or removed and when any resource is updated.</p>
 {% else %}
-  <p>You're subscribing to dataset notifications on the <a href="{{ data.object_link }}" target="_blank"> {{ data.object_title }}</a> page. You will receive emails when new datasets are added or removed{% if data.dataset_updates %} and when any dataset is updated{% endif %}.</p>
+  <p>You're subscribing to dataset notifications on the <a href="{{ data.object_link }}" target="_blank"> {{ data.object_title }}</a> page. You will receive emails when new datasets are added{% if data.dataset_updates %} and when any dataset is updated{% endif %}.</p>
 {% endif %}
 <p>Please verify your email by clicking the button below:</p>
 

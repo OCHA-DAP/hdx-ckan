@@ -1,8 +1,9 @@
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 {% set is_dataset_subscription = true if object_type and object_type == 'dataset' else false %}
+{% set ui_object_type = 'location' if object_type == 'group' else object_type %}
 {% set logged_in = true if c.userobj else false %}
 
-{% set intro_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO_DATASET if is_dataset_subscription else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO.format(object_type) %}
+{% set intro_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO_DATASET if is_dataset_subscription else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO.format(ui_object_type) %}
 {{ h.snippet('bem.blocks/paragraph.html',
   paragraph_classes=['mb-0'],
   text=intro_text) }}
@@ -46,11 +47,11 @@
     }}
 
     {{ h.snippet('bem.blocks/checkbox_field.html',
-        label=CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_LABEL.format(object_type),
+        label=CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_LABEL.format(ui_object_type),
         name="dataset_updates",
         checked=False,
         value='true',
-        container_title=CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_EXPLANATION.format(object_type),
+        container_title=CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_EXPLANATION.format(ui_object_type),
         container_data_attributes={'module': "bs_tooltip", 'module-placement': 'top', 'bs-toggle': "tooltip"},
         spacing_class="mb-3")
     }}
