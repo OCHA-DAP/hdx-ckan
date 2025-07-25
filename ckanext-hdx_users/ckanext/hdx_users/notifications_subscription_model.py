@@ -130,11 +130,12 @@ def list_notifications_subscriptions(session: AlchemySession, user_id: Optional[
             query = query.join(model.User).filter(model.User.name == user_id)
     if updated:
         query = query.filter(HDXNotificationsSubscription.updated >= updated)
-    if page:
-        query = query.offset((page - 1) * page_size)
 
     # sort query by updated date descending
     query = query.order_by(HDXNotificationsSubscription.updated.desc())
+
+    if page:
+        query = query.offset((page - 1) * page_size)
 
     query = query.limit(page_size)
     subscriptions = query.all()
