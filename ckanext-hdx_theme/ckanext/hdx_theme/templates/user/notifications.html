@@ -41,10 +41,11 @@
         </div>
         {% if subscriptions|length > 0 %}
           {% for subscription in subscriptions %}
+            {% set ui_object_type = 'location' if subscription.object_type == 'group' else subscription.object_type %}
             <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}">
               <div class="col-8">
                 <a href="{{ subscription.object_link }}" class="fw-bold"
-                   title="{{ subscription.object_dict.title }}">{{ subscription.object_type|capitalize }}: {{ subscription.object_dict.title }}</a>
+                   title="{{ subscription.object_dict.title }}">{{ ui_object_type|capitalize }}: {{ subscription.object_dict.title }}</a>
               </div>
               <div class="col-4 text-end">
 {#                {% if subscription.object_type != 'dataset' %}#}

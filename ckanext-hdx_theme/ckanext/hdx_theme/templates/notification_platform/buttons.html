@@ -1,4 +1,5 @@
 {% set object_supports_notifications = h.hdx_supports_notifications(object_type, object_id, object_dict) %}
+{% set ui_object_type = 'location' if object_type == 'group' else object_type %}
 
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
 
@@ -20,7 +21,7 @@
               {{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT }}
               {% if object_type != 'dataset' %}
                 <span class="explanation"
-                      title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_SEARCH_RESULTS.format(object_type) }}"
+                      title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_SEARCH_RESULTS.format(ui_object_type) }}"
                       data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">[?]</span>
               {% endif %}
             </p>
