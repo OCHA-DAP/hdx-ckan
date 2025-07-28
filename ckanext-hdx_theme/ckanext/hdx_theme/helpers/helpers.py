@@ -46,6 +46,20 @@ def is_downloadable(resource):
     return False
 
 
+def filter_search_seo_category_keys(all_categ_keys):
+    """
+    Filter category keys for SEO purposes by excluding organization and location filters.
+    Returns filtered keys if 2 or fewer, empty array if more than 2.
+    """
+    if not all_categ_keys:
+        return []
+    
+    seo_excluded_categories = ['groups', 'organization']
+    filtered_categ_keys = [key for key in all_categ_keys if key not in seo_excluded_categories]
+    
+    return filtered_categ_keys if len(filtered_categ_keys) <= 2 else []
+
+
 def is_not_zipped(res):
     url = res.get('url', 'zip').strip().lower()  # Default to zip so preview doesn't show if there is no url
     if re.search(r'zip$', url) or re.search(r'rar$', url):
