@@ -16,7 +16,7 @@ Example:
           <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
                {% if option.selected %}checked="checked"{% endif %}
                {% if option.get('items') %} class="parent-facet" {% endif %}
-               {% if option.count == 0 and not option.selected %}disabled="disabled"{% endif %} />
+               {% if option.count == 0 and not option.selected %}disabled="disabled" {% else %} onclick="this.parentElement.click()" {% endif %} />
           {% if option.category_key == 'ext_archived' %}<label class="label label-small label-new-feature">NEW</label>{% endif %}
           {{ option.display_name }}
           </a>
