@@ -43,7 +43,7 @@
   ["ODB","OpenDocument Database","application/vnd.oasis.opendocument.database",[".odb"]],
   ["ODS","OpenDocument Spreadsheet","application/vnd.oasis.opendocument.spreadsheet",[".ods"]],
   ["OSMand OBF","An OBF file is a data file used by OsmAnd which is a GPS navigation application for Android devices",null,[".obf","obf"]],
-  ["Parquet","Parquet Columnar Storage","application/x-parquet",[".parquet","parquet"]],
+  ["Parquet","Parquet Columnar Storage","application/vnd.apache.parquet",[".parquet","parquet"]],
   ["PBF","Protocolbuffer Binary Format; for large OSM data files",null,[".pbf"]],
   ["PDF","PDF File","application/pdf",[".pdf"]],
   ["Perl","Perl Script","text/x-perl",[]],
