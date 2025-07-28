@@ -88,7 +88,8 @@ def notifications_subscription_dictize(subscription: HDXNotificationsSubscriptio
         'event_type': subscription.event_type,
         'query_params': subscription.query_params,
         'created': subscription.created.isoformat(),
-        'updated': subscription.updated.isoformat()
+        'updated': subscription.updated.isoformat(),
+        'state': subscription.state,
     }
 
 
