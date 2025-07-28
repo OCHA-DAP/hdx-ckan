@@ -7,6 +7,13 @@
   <li class="breadcrumb-item active">{{ h.nav_link(_('Ebola'), named_route='hdx_ebola.read') }}</li>
 {% endblock %}
 
+{% block links %}
+  {% set canonical_url = h.url_for('hdx_ebola.read')  %}
+  {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
+  {{ super() }}
+{% endblock %}
+
+
 
 {% block crisis_data %}
 {#    <div class="row mTop25">#}

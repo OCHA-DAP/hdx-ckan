@@ -442,6 +442,7 @@ ul.dataset-resources li + li.label-icons {
 }
 .format-label[data-format=geo],
 .format-label[data-format=shp],
+.format-label[data-format=pmtiles],
 .format-label[data-format*=geo] {
   width: 60px;
   height: 65px;

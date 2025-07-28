@@ -63,8 +63,8 @@ log = logging.getLogger(__name__)
 
 GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service',
                                  'file geodatabase',
-                                 'garmin img', 'gdb', 'geodatabase', 'geonode', 'geotiff', 'map server', 'map service',
-                                 'obf',
+                                 'garmin img', 'gdb', 'geodatabase', 'geonode', 'geoparquet', 'geotiff', 'map server', 'map service',
+                                 'obf', 'pmtiles'
                                  'topojson', 'wkt', 'zipped gdb', 'zipped geodatabase', 'geopackage', 'zipped geotiff',
                                  'arc/info grid', 'zipped img', 'zipped kml', 'zipped raster', 'zipped shapefiles']
 
