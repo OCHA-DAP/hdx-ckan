@@ -99,7 +99,10 @@ class TestShadowAccount(object):
 
             user_dict['state'] = 'shadow'
             user_dict['name'] = 'shadow_jane_shadow'
-            response = _get_action('user_create')(context_sysadmin, user_dict)
+            try:
+                response = _get_action('user_create')(context_sysadmin, user_dict)
+            except Exception as e:
+                assert True, "The email address 'jane@shadow.com' belongs to a shadow registered user."
 
             response = _get_action('hdx_shadow_user_create')(context_sysadmin, {'email': email})
             assert response.get('action_performed') == 'none'

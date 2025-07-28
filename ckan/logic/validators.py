@@ -658,7 +658,8 @@ def user_name_validator(key: FlattenKey, data: FlattenDataDict,
         if requester and authz.is_sysadmin(requester.name):
             return
         old_user = model.User.get(user_obj_from_context.id)
-        if old_user is not None and old_user.state != model.State.PENDING:
+        #changed by HDX
+        if old_user is not None and old_user.state not in (model.State.PENDING, 'shadow'):
             errors[key].append(_('That login name can not be modified.'))
         else:
             return

@@ -70,6 +70,7 @@ def send_validation_email(user: Dict, token: Dict, subject: str, template_path: 
     except Exception as e:
         error_summary = str(e)
         log.error(error_summary)
+        log.error(e)
         return False
 
 
