@@ -832,6 +832,9 @@ class PerformResetView(MethodView):
             username = request.form.get(u'name')
             if (username is not None and username != u''):
                 user_dict[u'name'] = username
+            # workaround for early users that weren't required to fill in Full Name
+            if (user_dict[u'fullname'] is None or user_dict[u'fullname'] == ''):
+                user_dict[u'fullname'] = user_dict[u'display_name']
             user_dict[u'reset_key'] = g.reset_key
             updated_user = logic.get_action("user_update")(context, user_dict)
             # Users can not change their own state, so we need another edit
