@@ -26,7 +26,9 @@
 {% endblock %}
 
 {% block links %}
-  {% snippet "snippets/add_optional_canonical_link.html", params=data.full_facet_info.get('selected_categ_keys'), canonical_url=canonical_url, no_params=False %}
+  {# Filter out org/location filters from SEO and limit to max 2 content filters #}
+  {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
+  {% snippet "snippets/add_optional_canonical_link.html", params=canonical_params %}
   {{ super() }}
 {% endblock %}
 
