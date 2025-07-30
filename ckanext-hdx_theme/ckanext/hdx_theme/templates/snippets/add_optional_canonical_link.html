@@ -7,51 +7,8 @@
  # - on_mobile_page - if on the mobile page, then we need to remove the prefix "/m/"
  #}
 
+{% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, params, no_params) %}
 
-{% if not canonical_url %}
-  {% set canonical_url = request.path %}
-{% endif %}
-
-{% if canonical_url.startswith('/m/') %}
-  {% set canonical_url = canonical_url | replace('/m/', '/', 1) %}
-{% endif %}
-
-{% if no_params and request.path != canonical_url %}
-  {# where current URL base differs and it's not about the params #}
-  {% set add_canonical = True %}
-{% else %}
-  
-  {% set extra_args = request.args.copy() %}
-  
-  {% if no_params %}
-    {# if we have any params we need to set canonical #}
-    {% set add_canonical = request.args|length > 0 %}
-  {% else %}
-    {% for param in params %}
-      {% do extra_args.pop(param, None) %}
-    {% endfor %}
-
-    {# if we have any params beyond the whitelisted ones then we need to set canonical or if we have a different path (on mobile) #}
-    {% set add_canonical = extra_args|length > 0 or request.path != canonical_url %}
-
-    {# prep args to keep #}
-    {% set keep_args = request.args.copy() %}
-    
-    {% for param in extra_args %}
-      {% do keep_args.pop(param, None) %}
-    {% endfor %}
-    {% set query_parts = [] %}
-    {% for key, values in keep_args.lists() %}
-      {% for value in values %}
-        {% do query_parts.append(key ~ '=' ~ value | urlencode) %}
-      {% endfor %}
-    {% endfor %}
-    {% if query_parts|length > 0 %}
-      {% set canonical_url = canonical_url ~ "?" ~ query_parts | join('&') %}
-    {% endif %}
-  {% endif %}
-{% endif %}
-
-{% if add_canonical %}
-  <link rel="canonical" href="{{ canonical_url }}">
+{% if canonical_info.add_canonical %}
+  <link rel="canonical" href="{{ canonical_info.canonical_url }}">
 {% endif %}

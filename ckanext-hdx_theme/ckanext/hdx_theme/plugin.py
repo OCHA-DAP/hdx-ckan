@@ -195,6 +195,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_facet_items_dict': hdx_helpers.get_facet_items_dict,
             'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
             'get_filtered_params_list': hdx_helpers.get_filtered_params_list,
+            'filter_search_seo_category_keys': hdx_helpers.filter_search_seo_category_keys,
+            'generate_canonical_link': hdx_helpers.generate_canonical_link,
             # 'get_last_revision_package': hdx_helpers.get_last_revision_package,
             # 'get_last_revision_group': hdx_helpers.get_last_revision_group,
             'get_group_followers': hdx_helpers.get_group_followers,
