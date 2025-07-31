@@ -1,4 +1,4 @@
-import model as core_model
+import ckan.model as core_model
 from ckanext.hdx_users.actions.create import USER_STATE_SHADOW
 
 

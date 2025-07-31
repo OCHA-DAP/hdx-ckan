@@ -11,7 +11,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.user_notifications as user_notif_h
 import ckanext.hdx_users.helpers.tokens as tokens
-import ckanext.hdx_users.helpers.user_notifications
+
 from ckan.common import (
     config, current_user, session
 )
@@ -218,7 +218,7 @@ def get_or_create_token(context, user_dict):
         if old_token:
             return tokens.refresh_token(context, old_token)
         else:
-            get_action('token_create')(context, user_dict)
+            return get_action('token_create')(context, user_dict)
     except NotFound:
         return get_action('token_create')(context, user_dict)
     except Exception as e:
@@ -240,7 +240,7 @@ def verify_email(user_id: str) -> str:
 
         user_dict = get_action('user_show')(context, {'id': user_id})
 
-        if user_dict.get('state') in ('pending','shadow'):
+        if user_dict.get('state') in ('pending', 'shadow'):
             return render('onboarding/signup/verify-email.html')
         elif user_dict.get('state') == 'active':
             return redirect('hdx_user_onboarding.validated_account', user_id=user_id)
