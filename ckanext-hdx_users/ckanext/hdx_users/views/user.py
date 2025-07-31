@@ -229,8 +229,7 @@ def notifications(id=None):
     """
 
     if not current_user.is_authenticated:
-        h.flash_error(_(u'Not authorized to see this page'))
-        return h.redirect_to(u'home.index')
+        return h.redirect_to('user.login', came_from=h.url_for('hdx_user.notifications', id=id))
 
     context: Context = {'model': model, 'session': model.Session, 'user': current_user.name}
 
