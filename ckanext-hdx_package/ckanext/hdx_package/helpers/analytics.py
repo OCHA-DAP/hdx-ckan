@@ -72,7 +72,7 @@ def came_from(request_args: Dict[str, str]) -> Optional[str]:
         'notification_platform_email': 'notification platform email',
     }
 
-    came_from_arg = request_args.get('came_from')
+    came_from_arg = request_args.get('_came_from')
 
     return source_mapping.get(came_from_arg, '')
 

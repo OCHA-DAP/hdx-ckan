@@ -160,8 +160,8 @@ var displayNotificationOptoutOption = function (objectId, objectType) {
 var displayNotificationOptinOption = function (objectId, objectType) {
   var queryString = window.location.search;
   var urlParams = new URLSearchParams(queryString);
-  var cameFrom = urlParams.get('came_from');
-  var urlUnsubscribeToken = urlParams.get('u');
+  var cameFrom = urlParams.get('_came_from');
+  var urlUnsubscribeToken = urlParams.get('_u');
   if ((cameFrom === 'notification_platform_subscription' || cameFrom === 'notification_platform_email') && urlUnsubscribeToken) {
     hdxUtil.net.addNotificationSubscribedTarget(objectId, objectType, urlUnsubscribeToken);
   }
