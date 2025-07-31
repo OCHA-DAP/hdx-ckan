@@ -92,8 +92,8 @@ def subscribe_to_object() -> Response:
             u'is an update.'.format(
                 current_user.email)))
     except tk.ValidationError as e:
-        log.error('An exception occurred:' + str(e))
-        _h.flash_error(str(e))
+        msg = e.error_dict.get('message', str(e))
+        _h.flash_error(msg)
     except Exception as e:
         log.error('An exception occurred:' + str(e))
         _h.flash_error('An error occurred: ' + str(e))

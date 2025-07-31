@@ -52,6 +52,12 @@ class ObjectType(str, Enum):
     GROUP = 'group'
     CRISIS = 'crisis'
 
+    def __init__(self, value: str):
+        if value == 'group':
+            self.display_name = 'location'
+        else:
+            self.display_name = value
+
 
 def generate_new_token_obj(session: AlchemySession,
                        token_type: TokenType,

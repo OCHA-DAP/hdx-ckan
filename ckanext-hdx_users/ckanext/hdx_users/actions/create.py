@@ -195,8 +195,8 @@ def hdx_notifications_subscription_create(context: Context, data_dict: DataDict)
     if existing_subscription:
         log.warning(f'Subscription already exists for user {user_dict["name"]} '
                         f'on {object_type.value} {data_dict["object"]}')
-        raise tk.ValidationError(f'Subscription already exists for user {user_dict["name"]} '
-                        f'on this {object_type.value}')
+        raise tk.ValidationError(f'Subscription already exists '
+                        f'on this {object_type.display_name}')
 
     # create unsubscribe token if it does not exist
     unsubscribe_token_obj = notification_platform_logic.get_or_generate_unsubscribe_token(
