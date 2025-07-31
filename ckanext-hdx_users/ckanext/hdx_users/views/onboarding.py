@@ -9,7 +9,9 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.helpers as usr_h
+import ckanext.hdx_users.helpers.user_notifications as user_notif_h
 import ckanext.hdx_users.helpers.tokens as tokens
+
 from ckan.common import (
     config, current_user, session
 )
@@ -127,25 +129,52 @@ class UserOnboardingView(MethodView):
             log.error(e)
             return error_message('Something went wrong. Please contact support.')
 
-        # user create
-        try:
-            data_dict['state'] = model.State.PENDING
-            user_dict = get_action(u'user_create')(context, data_dict)
-            # save came from in user extras
-            _save_user_info_in_extras(user_dict, data_dict)
-        except NotAuthorized:
-            abort(403, _(u'Unauthorized to create user %s') % u'')
-        except NotFound:
-            abort(404, _(u'User not found'))
-        except ValidationError as e:
-            errors = e.error_dict
-            error_summary = e.error_summary
-            return self.get(data_dict, errors, error_summary)
-        except Exception as e:
-            log.error(e)
-            abort(404, _(u'Something went wrong. Please contact support'))
+        _ignore_auth = _auth_user_obj = None
+        user_obj = user_notif_h.get_shadow_user_obj_by_email(data_dict.get('email'))
+        if user_obj:
+            # user update for a shadow user
+            try:
+                _ignore_auth = context.get('ignore_auth')
+                _auth_user_obj = context.get('auth_user_obj')
+                context['ignore_auth'] = True
+                context['auth_user_obj'] = user_obj
+                data_dict['id'] = user_obj.id
+                user_dict = get_action('user_update')(context, data_dict)
+                user_dict['email'] = data_dict.get('email')
+                _save_user_info_in_extras(user_dict, data_dict)
+            except NotAuthorized:
+                abort(403, _('Unauthorized to update user %s') % '')
+            except NotFound:
+                abort(404, _('User not found'))
+            except ValidationError as e:
+                errors = e.error_dict
+                error_summary = e.error_summary
+                return self.get(data_dict, errors, error_summary)
+            except Exception as e:
+                log.error(e)
+                abort(404, _('Something went wrong. Please contact support'))
 
-        token = get_action('token_create')(context, user_dict)
+        else:
+            # user create
+            try:
+                data_dict['state'] = model.State.PENDING
+                user_dict = get_action(u'user_create')(context, data_dict)
+                # save came from in user extras
+                _save_user_info_in_extras(user_dict, data_dict)
+            except NotAuthorized:
+                abort(403, _(u'Unauthorized to create user %s') % u'')
+            except NotFound:
+                abort(404, _(u'User not found'))
+            except ValidationError as e:
+                errors = e.error_dict
+                error_summary = e.error_summary
+                return self.get(data_dict, errors, error_summary)
+            except Exception as e:
+                log.error(e)
+                abort(404, _(u'Something went wrong. Please contact support'))
+
+        token = get_or_create_token(context, user_dict)
+
         subject = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['EMAIL_SUBJECTS']['EMAIL_CONFIRMATION']
         tokens.send_validation_email(
             user_dict,
@@ -158,6 +187,9 @@ class UserOnboardingView(MethodView):
         session['user_info_id'] = user_dict.get('id')
         session['user_info_email'] = user_dict.get('email')
 
+        if user_obj and _ignore_auth and _auth_user_obj:
+            context['ignore_auth'] = _ignore_auth
+            context['auth_user_obj'] = _auth_user_obj
         return redirect('hdx_user_onboarding.verify_email', user_id=user_dict.get('id'))
 
     def get(self,
@@ -167,6 +199,11 @@ class UserOnboardingView(MethodView):
 
         _prepare()
 
+        s_email_address = request.params.get('s_email_address')
+        if s_email_address:
+            data = data or {}
+            data.update({'email': s_email_address, 'email2': s_email_address})
+
         extra_vars = {
             u'data': data or {},
             u'errors': errors or {},
@@ -175,6 +212,18 @@ class UserOnboardingView(MethodView):
         aux = render('onboarding/signup/user-info.html', extra_vars=extra_vars)
         return aux
 
+def get_or_create_token(context, user_dict):
+    try:
+        old_token = tokens.token_show(context, user_dict)
+        if old_token:
+            return tokens.refresh_token(context, old_token)
+        else:
+            return get_action('token_create')(context, user_dict)
+    except NotFound:
+        return get_action('token_create')(context, user_dict)
+    except Exception as e:
+        log.error(f"Token error for {user_dict.get('name')}: {e}")
+        abort(404, _('Something went wrong. Please contact support'))
 
 def value_proposition() -> str:
     _prepare()
@@ -191,7 +240,7 @@ def verify_email(user_id: str) -> str:
 
         user_dict = get_action('user_show')(context, {'id': user_id})
 
-        if user_dict.get('state') == 'pending':
+        if user_dict.get('state') in ('pending', 'shadow'):
             return render('onboarding/signup/verify-email.html')
         elif user_dict.get('state') == 'active':
             return redirect('hdx_user_onboarding.validated_account', user_id=user_id)
