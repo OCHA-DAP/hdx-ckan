@@ -33,7 +33,7 @@ def get_or_generate_email_validation_token(email: str, object_type: ObjectType, 
     else:
         log.warning(
             f'Tried to generate token for {object_type.value} {object_id} but it does not support notifications')
-        raise Exception(f'{object_type.value} {object_id} does not support notifications')
+        raise Exception(f'{object_type.display_name} {object_id} does not support notifications')
 
 
 def get_or_generate_unsubscribe_token(session: AlchemySession, user_id: str, object_type: ObjectType, object_id: str,

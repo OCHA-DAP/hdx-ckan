@@ -105,7 +105,7 @@ def add_subscription_info(
 
     notifications_enabled = hdx_supports_notifications(object_type, object_id, object_dict)
     if not notifications_enabled:
-        raise tk.ValidationError('Notifications are not enabled for the dataset')
+        raise tk.ValidationError(f'Notifications are not enabled for the {object_type.display_name}')
 
     subscriber_data = novu_dao.get_subscriber(subscriber_id)
 
