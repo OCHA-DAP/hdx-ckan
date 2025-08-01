@@ -1063,9 +1063,11 @@ def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: 
             return False
 
     if config.get('hdx.notifications.enabled_objects_csv'):
+        log.info(f'using cache for enabled objects for notifications')
         objects_with_notifications = cached_objects_with_notifications()
         return object_identifier in objects_with_notifications
     elif config.get('hdx.notifications.disabled_objects_csv'):
+        log.info(f'using cache for disabled objects for notifications')
         objects_without_notifications = cached_objects_without_notifications()
         return object_identifier not in objects_without_notifications
 
