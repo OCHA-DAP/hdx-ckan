@@ -17,7 +17,7 @@ import ckanext.hdx_theme.version as version
 from urllib.parse import urlencode
 
 from six import text_type
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from collections import OrderedDict
 from ckan.lib import munge
@@ -1035,9 +1035,17 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_supports_notifications(object_type: ObjectType, object_id: str,
+def hdx_supports_notifications(object_type: Union[ObjectType, str], object_id: str,
                                object_dict: Optional[dict[str, Any]] = None) -> bool:
     supports_notifications = False
+
+    # Convert object_type to ObjectType if it's a string
+    if isinstance(object_type, str):
+        try:
+            object_type = ObjectType(object_type)
+        except ValueError:
+            log.error(f'Invalid string for object_type: {object_type}')
+            return supports_notifications
 
     log.info(f'Checking if notifications are supported for object_id: {object_id} of type: {object_type}')
 
@@ -1054,7 +1062,7 @@ def hdx_supports_notifications(object_type: ObjectType, object_id: str,
 
 def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str,
                                             object_dict: Optional[dict[str, Any]] = None) -> bool:
-    object_identifier = f"{object_type}_{object_id}"
+    object_identifier = f"{object_type.value}_{object_id}"
     log.info(f'Checking notifications for object: {object_identifier}')
 
     if object_type == ObjectType.DATASET and object_dict:
