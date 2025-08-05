@@ -2,7 +2,7 @@ import logging
 import json
 from typing import Dict
 
-from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.general_token_model import get_by_type_and_user_id_and_object, HDXGeneralToken, TokenType
 from ckanext.hdx_users.notifications_subscription_model import EventType
 
 import ckan.plugins.toolkit as tk
@@ -72,12 +72,6 @@ def subscribe_to_object() -> Response:
     else:
         return abort(404, 'Page not found')
 
-    try:
-        redirect_url = _generate_url_for(object_type, object)
-    except Exception as e:
-        log.error('An exception occurred:' + str(e))
-        return abort(500, 'An error occurred')
-
     data_dict = {
         'user_id': user_id,
         'object': object,
@@ -97,6 +91,15 @@ def subscribe_to_object() -> Response:
     except Exception as e:
         log.error('An exception occurred:' + str(e))
         _h.flash_error('An error occurred: ' + str(e))
+
+    try:
+        unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, user_id,
+                                                               ObjectType(object_type), object)
+        redirect_url = _generate_url_for(object_type, object, False, unsubscribe_token)
+    except Exception as e:
+        log.error('An exception occurred:' + str(e))
+        return abort(500, 'An error occurred')
+
     return tk.redirect_to(redirect_url)
 
 
@@ -154,7 +157,7 @@ def subscribe_to_object() -> Response:
 #         return tk.redirect_to(dataset_url)
 #     return abort(404, 'Page not found')
 
-def _generate_url_for(object_type: str, object: str, external: bool = False) -> str:
+def _generate_url_for(object_type: str, object: str, external: bool = False, unsubscribe_token: HDXGeneralToken = None) -> str:
     if object_type == ObjectType.DATASET.value:
         endpoint = 'dataset.read'
     elif object_type == ObjectType.ORGANIZATION.value:
@@ -169,6 +172,10 @@ def _generate_url_for(object_type: str, object: str, external: bool = False) -> 
             endpoint = 'hdx_light_dashboard.read_light_dashboard'
     else:
         raise tk.ValidationError(f'Invalid object_type: {object_type}')
+
+    if unsubscribe_token:
+        return tk.url_for(endpoint, id=object, _came_from='notification_platform_subscription',
+                          _u=unsubscribe_token.token, _external=external)
 
     return tk.url_for(endpoint, id=object, _external=external)
 
