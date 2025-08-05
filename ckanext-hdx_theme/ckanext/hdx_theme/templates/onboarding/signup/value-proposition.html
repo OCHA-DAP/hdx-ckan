@@ -105,29 +105,10 @@
               {{ h.snippet('bem.blocks/heading.html', title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL, heading_type=5) }}
             </div>
             <div class="account-options__cell account-options__cell_type_cozy account-options__cell_type_grey">
-              <div class="account-options__subtitle">{{ CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP }}</div>
+              <div class="account-options__subtitle">{{ CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP | safe }}</div>
             </div>
             <div class="account-options__cell account-options__cell_type_features account-options__cell_type_grey">
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-1 fa-fw"></i>
-                <div class="account-options__title">
-                  <div data-module="hdx_click_stopper"
-                       data-module-link_type="onboarding value proposition"
-                       data-module-label="individual account with org"
-                       data-module-just_send_event="true"
-                       data-module-selector="#value-proposition-individual-account-with-org-button-below">
-                    {{ CONST.STEP_CREATE_ACCOUNT.format(h.url_for('hdx_user_onboarding.user-info'), 'value-proposition-individual-account-with-org-button-below', "hdx-onboarding-flow", ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG)|safe }}
-                  </div>
-                </div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-2 fa-fw"></i>
-                <div class="account-options__title">{{ CONST.STEP_APPLICATION_REVIEWED }}</div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-3 fa-fw"></i>
-                <div class="account-options__title">{{ CONST.STEP_SAMPLE_DATA }}</div>
-              </div>
+              
             </div>
             <div class="account-options__cell account-options__cell_type_cozy account-options__cell_type_grey"
                  data-module="hdx_click_stopper"
