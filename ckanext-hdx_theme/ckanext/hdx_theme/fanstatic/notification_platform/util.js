@@ -197,7 +197,7 @@ var displayNotificationOptinOption = function (objectId, objectType) {
 var showNotificationsSignupModal = function (popupSource, objectId, objectName, objectType) {
   var modalShownData = hdxUtil.net.getNotificationModalData() || {};
 
-  if (!modalShownData[objectId] || popupSource !== 'download') {
+  if (!modalShownData[objectType + '_' + objectId] || popupSource !== 'download') {
     notificationsSignupModal.show();
     $signupFormPopupSourceInput.val(popupSource);
     hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
@@ -212,7 +212,7 @@ var showNotificationsSignupModal = function (popupSource, objectId, objectName, 
 
     if (popupSource === 'download') {
       var newData = {};
-      newData[objectType] = true;
+      newData[objectType + '_' + objectId] = true;
       hdxUtil.net.updateNotificationModalData(newData);
     }
   }
