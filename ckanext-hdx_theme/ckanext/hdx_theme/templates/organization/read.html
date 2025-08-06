@@ -7,8 +7,11 @@
 {# The lines below are for analytics #}
 {% block analytics_org_name %}{{ org_dict.name }}{% endblock %}
 {% block analytics_org_id %}{{ org_dict.id }}{% endblock %}
-{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
-{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+{% set analytics = analytics or None %}
+{% if analytics %}
+  {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+  {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+{% endif %}
 
 {% set can_create_dataset = h.check_access('package_create', {'organization_id': org_dict.id, 'owner_org': org_dict.id}) %}
 {% set can_edit = h.check_access('organization_update', {'id': org_dict.id}) %}
