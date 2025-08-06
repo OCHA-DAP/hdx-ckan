@@ -253,6 +253,7 @@ def notifications(id=None):
                 subscription['object_dict'] = object_dict
                 subscription['object_link'] = _generate_url_for(object_type, object_id, True)
                 subscription['unsubscribe_token'] = unsubscribe_token
+                subscription['unsubscribe_email'] = user_dict.get('email')
             except tk.ObjectNotFound:
                 raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
             except Exception as e:
