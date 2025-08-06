@@ -3,6 +3,9 @@
 {% set data = page_dict %}
 {% set page_title = data.title if data.title and data.title!='' else data.name %}
 
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+
 {% block subtitle %}{{ data.title or data.name }} | Crisis Datasets{% endblock %}
 {% block meta %}
     {{ super() }}

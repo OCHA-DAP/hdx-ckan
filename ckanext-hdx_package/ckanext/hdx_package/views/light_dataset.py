@@ -115,7 +115,7 @@ def _compute_analytics(dataset_dict: DataDict, request: Request):
         'analytics_group_ids': (analytics.extract_locations_in_json(dataset_dict))[1],
         'analytics_dataset_availability': analytics.dataset_availability(dataset_dict),
         'analytics_came_from': analytics.came_from(request.args),
-        'analytics_supports_notifications': analytics.supports_notifications(dataset_dict),
+        'analytics_supports_notifications': analytics.supports_notifications(ObjectType.DATASET, dataset_dict),
     }
     return result
 

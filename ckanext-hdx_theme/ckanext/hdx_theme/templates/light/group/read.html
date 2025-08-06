@@ -17,6 +17,8 @@
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
 {% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
 {% set num_of_pack = data.stats_section.num_of_datasets %}
 {% set num_of_orgs = data.stats_section.num_of_organizations %}

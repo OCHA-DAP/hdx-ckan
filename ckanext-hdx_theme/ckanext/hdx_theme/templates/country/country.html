@@ -7,6 +7,8 @@
 
 {% set num_of_pack = data.stats_section.num_of_datasets %}
 {% set num_of_orgs = data.stats_section.num_of_organizations %}
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
 {% block subtitle %}{{ data.country_dict.display_name }} Humanitarian Data | Crisis Response Datasets{% endblock %}
 {% block meta %}
