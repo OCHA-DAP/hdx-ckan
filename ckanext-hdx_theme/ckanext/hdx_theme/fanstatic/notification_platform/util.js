@@ -71,7 +71,16 @@ var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscrib
       }
     },
     error: function (xhr, status, error) {
-      showAlert($unsubscribeDangerAlert, 'An error occurred. Please try again later.');
+      let errorMessage = 'An error occurred. Please try again later.';
+      try {
+          const response = JSON.parse(xhr.responseText);
+          if (response.error && response.error.message) {
+              errorMessage = response.error.message;
+          }
+      } catch (e) {
+          console.error('Failed to parse response: ', e);
+      }
+      showAlert($unsubscribeDangerAlert, errorMessage);
       if (isFromHub) unsubscribeModal.show();
       console.log(xhr);
     },
@@ -132,7 +141,16 @@ var onSignupSubmit = function (objectId, objectName, objectType) {
       if (!is_authenticated) {
         grecaptcha.reset();
       }
-      showAlert($signupDangerAlert, 'An error occurred. Please try again later.');
+      let errorMessage = 'An error occurred. Please try again later.';
+      try {
+          const response = JSON.parse(xhr.responseText);
+          if (response.error && response.error.message) {
+              errorMessage = response.error.message;
+          }
+      } catch (e) {
+          console.error('Failed to parse response: ', e);
+      }
+      showAlert($signupDangerAlert, errorMessage);
       console.log(xhr);
     },
   });
