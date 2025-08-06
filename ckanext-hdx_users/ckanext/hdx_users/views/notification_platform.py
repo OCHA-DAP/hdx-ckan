@@ -22,8 +22,6 @@ from ckanext.hdx_users.helpers.analytics import EmailValidationAnalyticsSender
 from ckanext.hdx_users.helpers.constants import NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
-from hashlib import md5
-
 _h = tk.h
 abort = tk.abort
 request = tk.request
@@ -69,6 +67,8 @@ def subscribe_to_object() -> Response:
         context: Context = {'model': model,'session': model.Session, 'ignore_auth': True}
         user_dict = tk.get_action('hdx_shadow_user_create')(context, {'email': email})
         user_id = user_dict['id']
+
+        EmailValidationAnalyticsSender('notification platform', True, email).send_to_queue()
     else:
         return abort(404, 'Page not found')
 
@@ -267,9 +267,7 @@ def subscription_confirmation() -> Response:
             subscription = tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
 
             email = current_user.email
-
-            email_hash = md5(email.strip().lower().encode('utf8')).hexdigest()
-            EmailValidationAnalyticsSender('notification platform', True, email_hash).send_to_queue()
+            EmailValidationAnalyticsSender('notification platform', True, email).send_to_queue()
 
             json_response_dict['unsubscribe_token'] = subscription.get('unsubscribe_token')
 

@@ -1,3 +1,5 @@
+from hashlib import md5
+
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
 
@@ -34,9 +36,11 @@ class FirstLoginAnalyticsSender(AbstractAnalyticsSender):
 
 class EmailValidationAnalyticsSender(AbstractAnalyticsSender):
 
-    def __init__(self, validation_type: str, validation_status: bool, email_hash: str):
+    def __init__(self, validation_type: str, validation_status: bool, email: str):
         super(EmailValidationAnalyticsSender, self).__init__()
         event_name = 'email validation'
+        email = email.strip().lower() if email else ''
+        email_hash = md5(email.encode('utf8')).hexdigest() if email else ''
         self.analytics_dict = {
             'event_name': event_name,
             'mixpanel_meta': {
