@@ -14,7 +14,7 @@ CONSTANTS = {
     'COLUMN_NO_ACCOUNT_BUTTON': '''SEARCH DATA''',
 
     'COLUMN_INDIVIDUAL_ACCOUNT_LABEL': '''Create an HDX account''',
-    'COLUMN_INDIVIDUAL_ACCOUNT_HELP': '''Access additional features with an individual HDX account''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_HELP': '''Access additional features''',
     'COLUMN_INDIVIDUAL_ACCOUNT_BUTTON': '''SIGN UP''',
 
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL': '''Share data''',
