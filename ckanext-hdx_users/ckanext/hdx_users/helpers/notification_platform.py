@@ -30,6 +30,8 @@ def add_unsubscribe_token(unsubscribe_token: Optional[str], object_type: ObjectT
     """
     unsubscribe_token_validated = False
     unsubscribe_email = ''
+    unsubscribe_token_invalidate = False
+
     if unsubscribe_token:
         try:
             unsubscribe_token = get_unsubscribe_token(unsubscribe_token)
@@ -37,15 +39,17 @@ def add_unsubscribe_token(unsubscribe_token: Optional[str], object_type: ObjectT
             unsubscribe_email = _get_user_email_from_unsubscribe_token(unsubscribe_token)
         except Exception as e:
             unsubscribe_token = None
+            unsubscribe_token_invalidate = True
             h.flash_error('Your token is invalid or has expired.')
     elif current_user.is_authenticated:
         unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.id, object_type, object_id)
         unsubscribe_email = current_user.email
-
+        unsubscribe_token_invalidate = True
 
     template_data['unsubscribe_token'] = unsubscribe_token
     template_data['unsubscribe_email'] = unsubscribe_email
     template_data['unsubscribe_token_validated'] = unsubscribe_token_validated
+    template_data['unsubscribe_token_invalidate'] = unsubscribe_token_invalidate
 
 
 def _get_user_email_from_unsubscribe_token(unsubscribe_token: HDXGeneralToken) -> str:

@@ -247,7 +247,11 @@
                     </div>
                 {% endif %}
 	        	<div class="col-12">
-                    {% snippet 'search/snippets/search_results_wrapper.html', object_id=data.country_dict.id, object_name=data.country_dict.name, object_type='group', unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated, unsubscribe_email=unsubscribe_email, tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data %}
+                    {% snippet 'search/snippets/search_results_wrapper.html',
+                        object_id=data.country_dict.id, object_name=data.country_dict.name, object_type='group',
+                        unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+                        unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate,
+                        tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data %}
 	        	</div>
     		</div>
         </div>

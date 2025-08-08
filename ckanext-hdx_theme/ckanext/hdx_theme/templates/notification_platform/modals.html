@@ -71,6 +71,13 @@
 
 {% endif %}
 
+{% set submit_btn_attrs = {
+  "unsubscribe-token": unsubscribe_token['token'],
+  "unsubscribe-token-validated": unsubscribe_token_validated,
+  "unsubscribe-email": unsubscribe_email,
+  "unsubscribe-token-invalidate": unsubscribe_token_invalidate,
+  "object-id": object_id, "object-type": object_type, "object-name": object_name
+} %}
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsUnsubscribeBemModal",
   title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
@@ -78,7 +85,7 @@
   close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
   submit_btn_id='notificationsUnsubscribeButton',
   submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON,
-  submit_btn_data_attributes={"unsubscribe-token": unsubscribe_token['token'], "unsubscribe-token-validated": unsubscribe_token_validated, "unsubscribe-email": unsubscribe_email, "object-id": object_id, "object-type": object_type, "object-name": object_name}) }}
+  submit_btn_data_attributes=submit_btn_attrs) }}
 
 {{ h.snippet('bem.blocks/modal.html',
   id="notificationsUnsubscribedBemModal",

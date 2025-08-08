@@ -28,7 +28,10 @@
         {% for section in page.sections %}
           {% if section.type == 'data_list' %}
             <div class="row">
-              {% snippet "light/snippets/package_list.html", data=section.template_data, object_id=page.id, object_name=page.name, object_type='crisis', unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated, unsubscribe_email=unsubscribe_email %}
+              {% snippet "light/snippets/package_list.html",
+                  data=section.template_data, object_id=page.id, object_name=page.name, object_type='crisis',
+                  unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+                  unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
             </div>
           {% elif section.type == 'description' %}
             {% if section.long_description %}
