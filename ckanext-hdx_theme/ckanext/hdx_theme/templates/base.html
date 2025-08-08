@@ -31,8 +31,8 @@
           'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}',
           'datasetAvailability': '{% block analytics_dataset_availability %}None{% endblock %}',
           'cameFrom': '{% block analytics_came_from %}{% endblock %}',
-          'supportsNotifications': {% block analytics_supports_notifications %}null{% endblock %},
-          'authenticated': '{{ "true" if c.userobj else "false" }}'
+          'supportsNotifications': '{% block analytics_supports_notifications %}{% endblock %}',
+          'authenticated': '{{ "true" if c.userobj else "false" }}',
 
       };
     </script>
