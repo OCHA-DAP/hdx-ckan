@@ -6,6 +6,8 @@ import ckan.common as common
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
+import ckanext.hdx_package.helpers.analytics as analytics
+
 from ckan.views.group import _get_group_template, CreateGroupView
 
 from ckanext.hdx_org_group.controller_logic.group_read_logic import GroupIndexReadLogic, GroupReadLogic, \
@@ -79,6 +81,11 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         return group_read_logic.redirect_result
     else:
         template_data = group_read_logic.widgets_data
+        template_data['analytics'] = {
+            'analytics_came_from': analytics.came_from(request.args),
+            'analytics_supports_notifications': analytics.supports_notifications(ObjectType.GROUP,
+                                                                                 group_read_logic.country_dict),
+        }
         unsubscribe_token = request.args.get('_unsubscribe_token', None)
         add_unsubscribe_token(unsubscribe_token, ObjectType.GROUP, group_read_logic.country_dict.get('id'), template_data)
         return render(template_file, template_data)

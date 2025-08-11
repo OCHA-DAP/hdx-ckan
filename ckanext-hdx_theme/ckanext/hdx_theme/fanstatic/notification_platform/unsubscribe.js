@@ -2,10 +2,15 @@ $(document).ready(function () {
   // unsubscribe
   var unsubscribeToken = $unsubscribeSubmitButton.data('unsubscribe-token').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token') : null;
   var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
+  var unsubscribeTokenInvalidate = $unsubscribeSubmitButton.data('unsubscribe-token-invalidate').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-invalidate') : false;
 
   const unsubscribeObjectId = $unsubscribeSubmitButton.data('object-id');
   const unsubscribeObjectName = $unsubscribeSubmitButton.data('object-name');
   const unsubscribeObjectType = $unsubscribeSubmitButton.data('object-type');
+
+  if (unsubscribeTokenInvalidate) {
+    hdxUtil.net.removeNotificationSubscribedTarget(unsubscribeObjectId, unsubscribeObjectType);
+  }
 
   if (unsubscribeToken) {
     if (unsubscribeTokenValidated) {

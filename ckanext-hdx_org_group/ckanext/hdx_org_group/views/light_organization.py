@@ -9,6 +9,7 @@ import ckan.plugins.toolkit as tk
 
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_package.helpers.analytics as analytics
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import LightOrgReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_users.general_token_model import ObjectType
@@ -134,6 +135,10 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
             'org_dict': org_dict,
             'page_has_desktop_version': show_switch_to_desktop,
             'page_has_mobile_version': show_switch_to_mobile,
+            'analytics': {
+                'analytics_came_from': analytics.came_from(request.args),
+                'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION, org_dict),
+            }
         }
         unsubscribe_token = request.args.get('_unsubscribe_token', None)
         add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)

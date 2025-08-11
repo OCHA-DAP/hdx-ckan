@@ -70,6 +70,7 @@ def dataset_availability(pkg_dict):
 def came_from(request_args: Dict[str, str]) -> Optional[str]:
     source_mapping = {
         'notification_platform_email': 'notification platform email',
+        'notification_platform_subscription': 'notification platform subscription',
     }
 
     came_from_arg = request_args.get('_came_from')
@@ -77,10 +78,11 @@ def came_from(request_args: Dict[str, str]) -> Optional[str]:
     return source_mapping.get(came_from_arg, '')
 
 
-def supports_notifications(pkg_dict: dict[str, Any]) -> str:
-    dataset_supports_notifications = hdx_supports_notifications(ObjectType.DATASET, pkg_dict['id'], pkg_dict)
+def supports_notifications(object_type: ObjectType, object_dict: dict[str, Any]) -> str:
+    object_id = object_dict.get('id')
+    object_supports_notifications = hdx_supports_notifications(ObjectType(object_type), object_id, object_dict)
 
-    return str(dataset_supports_notifications).lower()
+    return str(object_supports_notifications).lower()
 
 
 def extract_locations(pkg_dict):
@@ -142,7 +144,7 @@ def generate_analytics_data(dataset_dict):
         analytics_dict['groupNames'], analytics_dict['groupIds'] = extract_locations_in_json(dataset_dict)
         analytics_dict['datasetAvailability'] = dataset_availability(dataset_dict)
         analytics_dict['cameFrom'] = ''
-        analytics_dict['supportsNotifications'] = supports_notifications(dataset_dict)
+        analytics_dict['supportsNotifications'] = supports_notifications(ObjectType.DATASET, dataset_dict)
     else:
         analytics_dict['datasetId'] = ''
         analytics_dict['datasetName'] = ''

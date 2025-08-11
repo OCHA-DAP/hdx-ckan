@@ -69,7 +69,11 @@ function showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNo
     $("#dataUseSurveyPopup").show();
   }
   else if(datasetSupportsNotifications.toString() === 'true') {
-    showNotificationsSignupModal('download', datasetId, datasetName, 'dataset');
+    var objectType = 'dataset';
+    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects(objectType);
+    if (!subscribedTargets[datasetId]) {
+        showNotificationsSignupModal('download', datasetId, datasetName, objectType);
+    }
   }
 }
 

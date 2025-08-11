@@ -138,7 +138,7 @@ def read(id):
     analytics_group_names, analytics_group_ids = analytics.extract_locations_in_json(pkg_dict)
     analytics_dataset_availability = analytics.dataset_availability(pkg_dict)
     analytics_came_from = analytics.came_from(request.args)
-    analytics_supports_notifications = analytics.supports_notifications(pkg_dict)
+    analytics_supports_notifications = analytics.supports_notifications(ObjectType.DATASET, pkg_dict)
 
     # changes done for indicator
     # act_data_dict = {'id': pkg_dict['id'], 'limit': 7}
