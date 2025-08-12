@@ -725,8 +725,9 @@ $(
      * @param objectName {string}
      * @param objectType {string}
      * @param emailHash {string}
+     * @param authenticated {string}
      */
-    function sendNotificationPlatformPopupInteractionEvent(interactionType, popupTitle, popupSource, objectId, objectName, objectType, emailHash) {
+    function sendNotificationPlatformPopupInteractionEvent(interactionType, popupTitle, popupSource, objectId, objectName, objectType, emailHash, authenticated) {
         var mixpanelData = {
             "eventName": "popup interaction",
             "eventMeta": {
@@ -738,6 +739,7 @@ $(
                 "object name": objectName,
                 "object type": objectType,
                 "email hash": emailHash,
+                "authenticated": authenticated && authenticated.toLowerCase() === 'true',
             }
         };
         return sendAnalyticsEventsAsync(mixpanelData);

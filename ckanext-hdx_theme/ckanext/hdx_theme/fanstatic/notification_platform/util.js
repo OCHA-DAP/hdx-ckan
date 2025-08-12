@@ -29,7 +29,7 @@ var $floatingButton = $('.notification-platform-opt-in-floating-button');
 var $optOutContainer = $('.notification-platform-opt-out-action-menu');
 var $optOutButton = $optOutContainer.find('a');
 
-var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource) {
+var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource, authenticated) {
   var isFromHub = unsubscribeSource === 'hub';
 
   $.ajax({
@@ -63,7 +63,8 @@ var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscrib
           objectId,
           objectName,
           objectType,
-          hdxUtil.compute.strHash(unsubscribeEmail, 'notification_platform')
+          hdxUtil.compute.strHash(unsubscribeEmail, 'notification_platform'),
+          authenticated
         );
       } else {
         showAlert($unsubscribeDangerAlert, data.error.message);
@@ -87,14 +88,13 @@ var onUnsubscribeSubmit = function (objectId, objectName, objectType, unsubscrib
   });
 };
 
-var onSignupSubmit = function (objectId, objectName, objectType) {
+var onSignupSubmit = function (objectId, objectName, objectType, authenticated) {
   var formDataArray = $signupForm.serializeArray(), formData = {};
   $(formDataArray).each(function (i, field) {
     formData[field.name] = field.value;
   });
 
   var email = formData.email;
-  var is_authenticated = formData.is_authenticated.toLowerCase() === 'true';
 
   $.ajax({
     url: '/notifications/subscription-confirmation',
@@ -108,7 +108,7 @@ var onSignupSubmit = function (objectId, objectName, objectType) {
       'g-recaptcha-response': formData['g-recaptcha-response'],
     },
     success: function (data) {
-      if (!is_authenticated) {
+      if (!authenticated.toLowerCase() === 'true') {
         grecaptcha.reset();
       }
       if (data.success) {
@@ -126,7 +126,8 @@ var onSignupSubmit = function (objectId, objectName, objectType) {
           objectId,
           objectName,
           objectType,
-          hdxUtil.compute.strHash(email, 'notification_platform')
+          hdxUtil.compute.strHash(email, 'notification_platform'),
+          authenticated
         );
 
         if (data.unsubscribe_token) {
@@ -138,7 +139,7 @@ var onSignupSubmit = function (objectId, objectName, objectType) {
       }
     },
     error: function (xhr, status, error) {
-      if (!is_authenticated) {
+      if (!authenticated.toLowerCase() === 'true') {
         grecaptcha.reset();
       }
       let errorMessage = 'An error occurred. Please try again later.';
@@ -194,7 +195,7 @@ var displayNotificationOptinOption = function (objectId, objectType) {
   }
 };
 
-var showNotificationsSignupModal = function (popupSource, objectId, objectName, objectType) {
+var showNotificationsSignupModal = function (popupSource, objectId, objectName, objectType, authenticated) {
   var modalShownData = hdxUtil.net.getNotificationModalData() || {};
 
   if (!modalShownData[objectType + '_' + objectId] || popupSource !== 'download') {
@@ -207,7 +208,8 @@ var showNotificationsSignupModal = function (popupSource, objectId, objectName, 
       objectId,
       objectName,
       objectType,
-      null
+      null,
+      authenticated
     );
 
     if (popupSource === 'download') {

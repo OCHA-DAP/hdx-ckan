@@ -3,6 +3,7 @@ $(document).ready(function () {
   var unsubscribeToken = $unsubscribeSubmitButton.data('unsubscribe-token').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token') : null;
   var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
   var unsubscribeTokenInvalidate = $unsubscribeSubmitButton.data('unsubscribe-token-invalidate').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-invalidate') : false;
+  var authenticated = $unsubscribeSubmitButton.data('is-authenticated');
 
   const unsubscribeObjectId = $unsubscribeSubmitButton.data('object-id');
   const unsubscribeObjectName = $unsubscribeSubmitButton.data('object-name');
@@ -23,7 +24,8 @@ $(document).ready(function () {
         unsubscribeObjectId,
         unsubscribeObjectName,
         unsubscribeObjectType,
-        null
+        null,
+        authenticated
       );
     } else {
       hdxUtil.net.addNotificationSubscribedTarget(unsubscribeObjectId, unsubscribeObjectType, unsubscribeToken);
@@ -45,7 +47,9 @@ $(document).ready(function () {
     var unsubscribeEmail = $(this).data('unsubscribe-email');
     var unsubscribeSource = $(this).data('unsubscribe-source');
 
-    onUnsubscribeSubmit(objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource);
+    var authenticated = $(this).data('is-authenticated');
+
+    onUnsubscribeSubmit(objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource, authenticated);
     return false;
   });
   $unsubscribeHubLink.on('click', function (e) {
@@ -59,7 +63,9 @@ $(document).ready(function () {
     var unsubscribeEmail = $(this).data('unsubscribe-email');
     var unsubscribeSource = $(this).data('unsubscribe-source');
 
-    onUnsubscribeSubmit(objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource);
+    var authenticated = $(this).data('is-authenticated');
+
+    onUnsubscribeSubmit(objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource, authenticated);
     return false;
   });
 });

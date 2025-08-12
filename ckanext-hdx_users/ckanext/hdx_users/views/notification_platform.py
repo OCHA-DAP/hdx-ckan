@@ -59,7 +59,7 @@ def subscribe_to_object() -> Response:
         object = token_obj.object_id
         event_type = token_obj.extras.get(NOTIFICATION_PLATFORM_EVENT_TYPE_EXTRAS_KEY, EventType.DATASET_UPDATED.value)
         if not email or not object:
-            _h.flash_error('Couldn\'t find required parameters: email and dataset_id.')
+            _h.flash_error('Couldn\'t find required parameters: email and object_id.')
             EmailValidationAnalyticsSender('notification platform', False, '').send_to_queue()
             return tk.redirect_to(dataset_list_url)
 
@@ -68,7 +68,7 @@ def subscribe_to_object() -> Response:
         user_dict = tk.get_action('hdx_shadow_user_create')(context, {'email': email})
         user_id = user_dict['id']
 
-        EmailValidationAnalyticsSender('notification platform', True, email).send_to_queue()
+        EmailValidationAnalyticsSender('notification platform', True, email, object_type, object).send_to_queue()
     else:
         return abort(404, 'Page not found')
 
@@ -267,7 +267,7 @@ def subscription_confirmation() -> Response:
             subscription = tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
 
             email = current_user.email
-            EmailValidationAnalyticsSender('notification platform', True, email).send_to_queue()
+            EmailValidationAnalyticsSender('notification platform', True, email, object_type, object_id).send_to_queue()
 
             json_response_dict['unsubscribe_token'] = subscription.get('unsubscribe_token')
 
