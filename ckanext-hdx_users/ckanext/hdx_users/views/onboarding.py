@@ -329,6 +329,7 @@ def change_email() -> str:
 
 
 def validate_account(token: str) -> str:
+    is_shadow_account = False
     if request.user_agent.string.strip() and request.method == 'GET':
         # we don't want to run this for 'HEAD' requests or for requests that don't come from a browser
         try:
@@ -339,11 +340,16 @@ def validate_account(token: str) -> str:
                 'ignore_auth': True
             }
             user_dict = get_action('user_show')(context, {'id': user_id})
+            if user_dict.get('state') == 'shadow':
+                is_shadow_account = True
 
             is_user_validated_and_token_disabled = tokens.is_user_validated_and_token_disabled(user_dict)
             if is_user_validated_and_token_disabled:
                 template_data = {
-                    'already_validated': True
+                    'already_validated': True,
+                    'analytics': {
+                        'analytics_account_type': 'validation failed',
+                    }
                 }
                 return render('onboarding/signup/account-validated.html', extra_vars=template_data)
         except NotFound:
@@ -369,7 +375,10 @@ def validate_account(token: str) -> str:
             session.pop('user_info_id')
 
         template_data = {
-            'fullname': user_dict.get('fullname', '')
+            'fullname': user_dict.get('fullname', ''),
+            'analytics': {
+                'analytics_account_type': 'shadow' if is_shadow_account else 'new',
+            }
         }
         return render('onboarding/signup/account-validated.html', extra_vars=template_data)
 
@@ -389,7 +398,10 @@ def validated_account(user_id: str) -> str:
         is_user_validated_and_token_disabled = tokens.is_user_validated_and_token_disabled(user_dict)
         if is_user_validated_and_token_disabled:
             template_data = {
-                'already_validated': True
+                'already_validated': True,
+                'analytics': {
+                    'analytics_account_type': 'already validated',
+                }
             }
             return render('onboarding/signup/account-validated.html', extra_vars=template_data)
     except NotFound:

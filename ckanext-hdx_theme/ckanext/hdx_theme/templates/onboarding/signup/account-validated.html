@@ -2,6 +2,10 @@
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['ACCOUNT_VALIDATED'] %}
 
+{% if analytics %}
+  {% block analytics_account_type %}{{ analytics.analytics_account_type }}{% endblock %}
+{% endif %}
+
 {% block subtitle %}{{ _('Account validated') }}{% endblock %}
 
 {% block breadcrumb_content %}
