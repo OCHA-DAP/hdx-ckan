@@ -41,8 +41,6 @@
             </div>
           </div>
 
-          {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type, object_dict=package) }}
-
           <div class="search-list">
             <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
               {% for package in data.page.items %}

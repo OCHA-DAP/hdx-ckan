@@ -43,6 +43,7 @@
         <div class="list-items dataset-content mTB15">
             <div class="col-12">
                 <h1 class="country-title">{{ data.country_dict.display_name }}</h1>
+                {{ h.snippet('notification_platform/buttons.html', object_id=data.country_dict.id, object_type='group' ) }}
             </div>
             <div class="row">
               <div class="col-6 mTop8">

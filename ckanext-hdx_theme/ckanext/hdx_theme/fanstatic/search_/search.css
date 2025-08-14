@@ -234,20 +234,6 @@
   width: 20px;
   margin-top: 3px;
 }
-.search-list .notification-platform-wrapper {
-  text-align: right;
-  border-bottom: 1px solid #ccc;
-  padding-top: 16px;
-  padding-bottom: 16px;
-}
-.search-list .notification-platform-wrapper .notification-platform-opt-in-action-menu .icon,
-.search-list .notification-platform-wrapper .notification-platform-opt-out-action-menu .icon {
-  color: #007CE1;
-}
-.search-list .notification-platform-wrapper .notification-platform-opt-in-action-menu .paragraph,
-.search-list .notification-platform-wrapper .notification-platform-opt-out-action-menu .paragraph {
-  color: #007CE1;
-}
 /* END Dataset list */
 /* Fix search spacing between tabs and results number */
 .search-nav > li > a {

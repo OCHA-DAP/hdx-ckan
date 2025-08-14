@@ -1,12 +1,12 @@
 CONSTANTS = {
-    'OPT_IN_TEXT': '''Subscribe''',
+    'OPT_IN_TEXT': '''Get Notified''',
     'OPT_IN_EXPLANATION_DATASET': '''Get notifications when this dataset updates''',
     'OPT_IN_EXPLANATION_SEARCH_RESULTS': '''Get notifications when datasets for this {0} are added''',
     'OPT_OUT_TEXT': '''Unsubscribe''',
 
     'SIGNUP_MODAL_TITLE_DATASET': '''Subscribe to notifications on this dataset''',
-    'SIGNUP_MODAL_TITLE_SEARCH_RESULTS': '''Subscribe to dataset notifications on this {0}''',
-    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when datasets for this {0} are added?''',
+    'SIGNUP_MODAL_TITLE_SEARCH_RESULTS': '''Get notified about new datasets on this {0}''',
+    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when new datasets are added to this {0}? <a href="https://docs.google.com/document/d/1bdgEtb0cqdfwAl4CFJPrekWwnsOO6sh1XGQZc9Wyjjc" target="_blank">Learn more</a> about notifications.''',
     'SIGNUP_MODAL_TEXT_INTRO_DATASET': '''Would you like to receive notifications when resources (files) in this dataset change?''',
     'SIGNUP_MODAL_TEXT_INTRO_SECOND': '''If so, please <a href="{0}" title="login">log in</a> or enter your email address below:''',
     'SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT': '''Already have an account? <a href="{0}" title="login">Log in</a>''',
@@ -14,7 +14,7 @@ CONSTANTS = {
     'SIGNUP_MODAL_TEXT_ALSO_NOTIFY': '''Also notify me when:''',
     'SIGNUP_MODAL_TEXT_CLOSE_BUTTON': '''Cancel''',
     'SIGNUP_MODAL_TEXT_SUBMIT_BUTTON': '''Verify email address''',
-    'SIGNUP_MODAL_TEXT_SUBMIT_BUTTON_AUTHENTICATED': '''Subscribe''',
+    'SIGNUP_MODAL_TEXT_SUBMIT_BUTTON_AUTHENTICATED': '''Get Notified''',
 
     'SIGNUP_INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
     'SIGNUP_INPUT_EMAIL_ERROR': '''Please enter a valid email address''',

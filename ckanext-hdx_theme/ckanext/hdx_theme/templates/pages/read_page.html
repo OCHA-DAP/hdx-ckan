@@ -45,6 +45,7 @@
                                     <div><span class="label label-small label-default">{{ data.state }}</span></div>
                                 {% endif %}
 {#                                <div class="notes embedded-content">{{ data.description }}</div>#}
+                                {{ h.snippet('notification_platform/buttons.html', object_id=data.id, object_type='crisis' ) }}
                             </div>
                         </div>
                     </div>

@@ -42,19 +42,6 @@
   height: 20px;
   margin-bottom: 0;
 }
-.search-light .notification-platform-wrapper {
-  text-align: right;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.search-light .notification-platform-wrapper .notification-platform-opt-in-action-menu .icon,
-.search-light .notification-platform-wrapper .notification-platform-opt-out-action-menu .icon {
-  color: #007CE1;
-}
-.search-light .notification-platform-wrapper .notification-platform-opt-in-action-menu .paragraph,
-.search-light .notification-platform-wrapper .notification-platform-opt-out-action-menu .paragraph {
-  color: #007CE1;
-}
 #search-recs {
   font-family: 'Source Sans Pro', sans-serif !important;
   font-weight: 400 !important;
