@@ -3,7 +3,7 @@ import ckan.authz as new_authz
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
 import ckan.plugins.toolkit as tk
-from ckan.types import Context, DataDict
+from ckan.types import Context, DataDict, AuthResult, AuthFunction
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 log = logging.getLogger(__name__)
@@ -181,6 +181,43 @@ def hdx_request_access(context: Context, data_dict: DataDict):
         return {'success': True}
 
     return {'success': False, 'msg': _('Not authorized to perform this request.')}
+
+
+
+@tk.chained_auth_function
+# @tk.auth_disallow_anonymous_access
+def datastore_search(next_auth: AuthFunction, context: Context, data_dict: DataDict) -> AuthResult:
+    """
+    Override the default authorization for the datastore_search_sql action, so that anonymous users cannot access it.
+    """
+    return _datastore_search_only_for_authenticated_users(
+        'datastore_search', next_auth, context, data_dict)
+
+
+@tk.chained_auth_function
+# @tk.auth_disallow_anonymous_access
+def datastore_search_sql(next_auth: AuthFunction, context: Context, data_dict: DataDict) -> AuthResult:
+    """
+    Override the default authorization for the datastore_search_sql action, so that anonymous users cannot access it.
+    """
+    return _datastore_search_only_for_authenticated_users(
+        'datastore_search_sql', next_auth, context, data_dict)
+
+
+def _datastore_search_only_for_authenticated_users(
+    datastore_action_name: str,
+    next_auth: AuthFunction,
+    context: Context,
+    data_dict: DataDict) -> AuthResult:
+    """
+    Theoretically, @tk.auth_disallow_anonymous_access should've been enough, but `not context.get('auth_user_obj')` from
+    https://github.com/ckan/ckan/blob/095f0779a3f989789c2301e7398bfb27ff0764ed/ckan/authz.py#L232 returns True for
+    anonymous users
+    """
+    if context.get('auth_user_obj').is_authenticated:
+        return next_auth(context, data_dict)
+    else:
+        return {'success': False, 'msg': f'Action {datastore_action_name} requires an authenticated user'}
 
 
 def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
