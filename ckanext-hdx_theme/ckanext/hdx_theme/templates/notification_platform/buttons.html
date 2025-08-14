@@ -2,13 +2,13 @@
 {% set ui_object_type = 'location' if object_type == 'group' else object_type %}
 
 {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+{% set tooltip = CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_DATASET if object_type == 'dataset' else CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_SEARCH_RESULTS.format(ui_object_type) %}
 
 <div class="notification-platform-wrapper">
 
 {% if object_supports_notifications %}
-    <div class="notification-platform-opt-in-action-menu d-none"
-         {% if object_type == 'dataset' %}title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_DATASET }}"
-         data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"{% endif %}>
+  <div class="notification-platform-opt-in-action-menu d-none" title="{{ tooltip }}" data-module="bs_tooltip"
+       data-module-placement="top" data-bs-toggle="tooltip">
       <div class="row align-items-center g-0">
       <div class="col-auto">
           <div class="icon">
@@ -19,11 +19,6 @@
           <div class="paragraph">
             <p class="mb-0">
               {{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT }}
-              {% if object_type != 'dataset' %}
-                <span class="explanation"
-                      title="{{ CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_SEARCH_RESULTS.format(ui_object_type) }}"
-                      data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">[?]</span>
-              {% endif %}
             </p>
           </div>
         </div>

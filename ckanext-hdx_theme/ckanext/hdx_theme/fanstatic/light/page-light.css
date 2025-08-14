@@ -1960,6 +1960,10 @@ body {
   box-shadow: 0 0 0 0;
   margin: 0;
 }
+.hdx-wrapper.wrapper .intro-section .notification-platform-wrapper .notification-platform-opt-in-action-menu,
+.hdx-wrapper.wrapper .intro-section .notification-platform-wrapper .notification-platform-opt-out-action-menu {
+  margin-top: 10px;
+}
 /* END Fix main content */
 /* Main Content */
 .mainContent > .row {
