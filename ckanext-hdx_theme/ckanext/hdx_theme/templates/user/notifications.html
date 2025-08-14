@@ -7,6 +7,8 @@
   {% asset 'hdx_theme/notification-platform-unsubscribe-scripts' %}
 {% endblock %}
 
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+
 {% block dashboard_activity_stream_context %}{% endblock %}
 {% block page_header_inner %}{% endblock %}
 {% block add_action_content %}{% endblock %}
@@ -60,6 +62,7 @@
                   data-object-id="{{ subscription.object }}"
                   data-object-name="{{ subscription.object_dict.name }}"
                   data-object-type="{{ subscription.object_type }}"
+                  data-is-authenticated="True"
                   class="fw-bold text-danger hub-unsubscribe-link"
                   title="Unsubscribe"
                 >

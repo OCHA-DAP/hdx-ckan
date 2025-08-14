@@ -65,7 +65,7 @@
                    data-dataset-id="{{ pkg.id }}"
                    data-dataset-name="{{ pkg.name }}"
                    data-dataset-supports-notifications="{{ supports_notifications | lower }}"
-                   data-user-survey-url="{{ user_survey_url }}"
+                   data-is-authenticated="{{ current_user.is_authenticated }}"
                    tracking-type="{{res.url_type}}"
                 >
                 {% if btn_dict.type == 'download' %}

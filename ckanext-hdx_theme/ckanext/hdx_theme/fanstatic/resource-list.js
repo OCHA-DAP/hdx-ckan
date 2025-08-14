@@ -26,7 +26,7 @@ function showDataCheck(url){
   iframe.focus();
 }
 var DATA_USE_SURVEY_LOAD_COUNT;
-function showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNotifications, userSurveyUrl) {
+function showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNotifications, userSurveyUrl, authenticated) {
   const orgName = $("#dataUseSurveyOrgName").text();
 
   const SURVEY_KEY = "/organization:" + "hdx-data-use-survey-popup-" + orgName;
@@ -72,7 +72,7 @@ function showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNo
     var objectType = 'dataset';
     var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects(objectType);
     if (!subscribedTargets[datasetId]) {
-        showNotificationsSignupModal('download', datasetId, datasetName, objectType);
+        showNotificationsSignupModal('download', datasetId, datasetName, objectType, authenticated);
     }
   }
 }
@@ -83,8 +83,9 @@ $('.resource-download-button').on('click', function (event) {
   var datasetName = $(this).data('dataset-name');
   var datasetSupportsNotifications = $(this).data('dataset-supports-notifications');
   var userSurveyUrl = $(this).data('user-survey-url');
+  var authenticated = $(this).data('is-authenticated');
 
-  showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNotifications, userSurveyUrl);
+  showDataUseSurveyPopup(resId, datasetId, datasetName, datasetSupportsNotifications, userSurveyUrl, authenticated);
 
   return true;
 });

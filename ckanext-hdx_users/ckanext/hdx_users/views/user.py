@@ -7,6 +7,7 @@ from flask import Blueprint, url_for
 
 import ckan.authz as new_authz
 import ckan.model as model
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
@@ -264,7 +265,10 @@ def notifications(id=None):
 
     return render('user/notifications.html', extra_vars={
         'subscriptions': subscriptions,
-        'user_dict':  user_dict
+        'user_dict':  user_dict,
+        'analytics': {
+            'analytics_came_from': analytics.came_from(request.args),
+        }
     })
 
 

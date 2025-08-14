@@ -15,7 +15,6 @@
 
 <form method="post" id="notification-platform-form" novalidate data-module="hdx-form-validator">
   <input type="hidden" name="popup_source" value="">
-  <input type="hidden" name="is_authenticated" value="{{ current_user.is_authenticated }}">
 
   {{ h.snippet('bem.blocks/input_field.html',
     type='hidden' if logged_in else 'email',

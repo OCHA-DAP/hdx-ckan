@@ -53,6 +53,7 @@
     data-object-id="{{ object_id }}"
     data-object-name="{{ object_name }}"
     data-object-type="{{ object_type }}"
+    data-is-authenticated="{{ current_user.is_authenticated }}"
   ></span>
 
   {{ h.snippet('bem.blocks/modal.html',
@@ -76,6 +77,7 @@
   "unsubscribe-token-validated": unsubscribe_token_validated,
   "unsubscribe-email": unsubscribe_email,
   "unsubscribe-token-invalidate": unsubscribe_token_invalidate,
+  "is-authenticated": current_user.is_authenticated,
   "object-id": object_id, "object-type": object_type, "object-name": object_name
 } %}
 {{ h.snippet('bem.blocks/modal.html',
