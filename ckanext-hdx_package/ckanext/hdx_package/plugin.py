@@ -578,6 +578,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_mark_resource_in_hapi': authorize.hdx_mark_resource_in_hapi,
             'hdx_request_access': authorize.hdx_request_access,
             'hdx_qa_hapi_report_view': authorize.hdx_qa_hapi_report_view,
+            'datastore_search_sql': authorize.datastore_search_sql,
+            'datastore_search': authorize.datastore_search,
         }
 
     def make_middleware(self, app, config):
