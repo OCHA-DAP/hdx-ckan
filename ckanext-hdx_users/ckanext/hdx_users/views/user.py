@@ -256,12 +256,17 @@ def notifications(id=None):
                 subscription['unsubscribe_token'] = unsubscribe_token
                 subscription['unsubscribe_email'] = user_dict.get('email')
             except tk.ObjectNotFound:
-                raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
+                subscription['object_dict'] = None
+                log.warning(f'{object_type.value} {object_id} does not exist for user {id}. Skipping subscription.')
+                # raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
             except Exception as e:
                 log.error(f'Error retrieving target or user: {e}')
                 raise e
     except NotAuthorized:
         abort(403, _(u'Not authorized to see this page'))
+
+    # remove any subscriptiohns with problems (like missing object)
+    subscriptions = [s for s in subscriptions if s.get('object_dict')]
 
     return render('user/notifications.html', extra_vars={
         'subscriptions': subscriptions,
