@@ -12,7 +12,9 @@ export HDX_QA_DASHBOARD=${HDX_QA_DASHBOARD:-false}
 [ -f /srv/ckan/hdx-test-core.ini ] || envsubst < /srv/ckan/docker/hdx-test-core.ini.tpl > /srv/ckan/hdx-test-core.ini
 
 # fix permissions on filestore
-mkdir -p /srv/filestore /srv/backup /var/log/ckan
+[ -d /srv/filestore ] || mkdir -p /srv/filestore
+[ -d /srv/backup ] || mkdir -p /srv/backup
+[ -d /var/log/ckan ] || mkdir -p /var/log/ckan
 #chown www-data:www-data -R /srv/filestore/
 #chown www-data:www-data -R /var/log/ckan
 #chown root:root -R /srv/backup
