@@ -2,6 +2,7 @@
 
 import getpass
 import os
+import re
 import subprocess
 import sys
 import tarfile
@@ -143,6 +144,40 @@ def user_exists(user):
         return False
 
 
+def validate_fullname_safe_only(fullname: str) -> bool:
+
+    if not fullname or len(fullname.strip()) == 0:
+        # print("Full name is empty or whitespace only.")
+        return True
+        # We don't care about empty names, but we do care about long names
+        return False
+
+    if len(fullname) > 120:
+        print("Full name is too long: {} characters. Maximum allowed is 48.".format(len(fullname)))
+        return False
+
+    # Check ONLY for dangerous HTML/script characters
+    dangerous_patterns = [
+        r'<[^>]*>',           # HTML tags
+        r'javascript:',       # JavaScript
+        r'on\w+\s*=',        # Event handlers
+        r'<script',           # Script tags
+        r'<iframe',           # Iframe tags
+    ]
+
+    for pattern in dangerous_patterns:
+        if re.search(pattern, fullname, re.IGNORECASE):
+            print("Full name contains dangerous patterns: {}".format(pattern))
+            return False
+
+    # Check for very dangerous characters (the '&' char is allowed...)
+    dangerous_chars = ['<', '>', '{', '}', ';', '=', '|', '`', '$']
+    if any(char in fullname for char in dangerous_chars):
+        print("Full name contains dangerous characters: {}".format(dangerous_chars))
+        return False
+
+    return True
+
 def user_pretty_list(userlist):
     for row in userlist:
         print('+++++++++++++++++++++++++++++++++++++++++++++++')
@@ -160,12 +195,12 @@ def user_pretty_list(userlist):
 
 def user_simple_list(userlist):
     # we dont care for api keys
-    header = f"{'State':<8} {'Sysadmin':<8} {'User':<20} {'Full Name':<32} {'Email':<32}"
+    header = f"{'State':<8} {'Sysadmin':<8} {'User':<20} {'Email':<32} 'Full Name'"
     print(header)
     print('-' * 120)
     for row in userlist:
         (username, displayname, email, state, sysadmin, apikey) = row
-        print(f"{str(state):<8} {str(sysadmin):<8} {str(username):<20} {str(displayname):<32} {str(email):<32}")
+        print(f"{str(state):<8} {str(sysadmin):<8} {str(username):<20} {str(email):<32} {str(displayname)}")
         # print(state.ljust(8), str(sysadmin).ljust(8), username.ljust(20), displayname.ljust(30), email.ljust(30))
     print('+++++++++++++++++++++++++++++++++++++++++++++++')
     if len(userlist) > 1:
@@ -1067,6 +1102,24 @@ def user_show(user: str, all_users: bool = False):
     query = f"select name,fullname,email,state,sysadmin,apikey from public.user where name='{user}' {filter};"
     rows = db_query(query)
     user_simple_list(rows)
+
+
+@user.command(name='validate')
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
+def user_validate(all_users: bool = False):
+    """Show a specific user details.
+
+    USER    Show details for this user.
+    """
+    filter = "WHERE state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user {filter} order by name asc;"
+    rows = db_query(query)
+
+    problematic_users = [
+        row for row in rows
+        if not validate_fullname_safe_only(row[1])
+    ]
+    user_simple_list(problematic_users)
 
 
 @cli.command(name='webassets')
