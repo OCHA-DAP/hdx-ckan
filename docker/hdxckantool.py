@@ -158,6 +158,20 @@ def user_pretty_list(userlist):
         print('Got a total of ' + str(len(userlist)) + ' users.')
 
 
+def user_simple_list(userlist):
+    # we dont care for api keys
+    header = f"{'State':<8} {'Sysadmin':<8} {'User':<20} {'Full Name':<32} {'Email':<32}"
+    print(header)
+    print('-' * 120)
+    for row in userlist:
+        (username, displayname, email, state, sysadmin, apikey) = row
+        print(f"{str(state):<8} {str(sysadmin):<8} {str(username):<20} {str(displayname):<32} {str(email):<32}")
+        # print(state.ljust(8), str(sysadmin).ljust(8), username.ljust(20), displayname.ljust(30), email.ljust(30))
+    print('+++++++++++++++++++++++++++++++++++++++++++++++')
+    if len(userlist) > 1:
+        print('Got a total of ' + str(len(userlist)) + ' users.')
+
+
 def get_snapshot_token():
     """Get the authorization token for the snapshots"""
     global SNAPSHOTS_TOKEN
@@ -1015,38 +1029,44 @@ def user_add(ctx, user, email, password, fullname):
 
 
 @user.command(name='list')
-def user_list():
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
+def user_list(all_users: bool = False):
     """List all users."""
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user order by name asc;"
+    filter = " WHERE state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user {filter} order by name asc;"
     rows = db_query(query)
-    user_pretty_list(rows)
+    user_simple_list(rows)
 
 
 @user.command(name='search')
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
 @click.argument('string')
-def user_search(string):
+def user_search(string: str, all_users: bool = False):
     """Search users by a partial string.
 
     STRING  Search users with username containing this string.
     """
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name like '%{}%';".format(string)
+    filter = " AND state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user where name like '%{string}%' {filter};"
     rows = db_query(query)
     if len(rows) == 0:
         print('No users were found searching for ' + string)
     else:
-        user_pretty_list(rows)
+        user_simple_list(rows)
 
 
 @user.command(name='show')
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
 @click.argument('user')
-def user_show(user):
+def user_show(user: str, all_users: bool = False):
     """Show a specific user details.
 
     USER    Show details for this user.
     """
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name='{}';".format(user)
+    filter = " AND state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user where name='{user}' {filter};"
     rows = db_query(query)
-    user_pretty_list(rows)
+    user_simple_list(rows)
 
 
 @cli.command(name='webassets')
