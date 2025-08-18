@@ -84,7 +84,8 @@ Example:
           </div>
 
           {% set facet_list = full_facet_info.get('facets') %}
-          {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  %}
+
+          {% snippet 'search/snippets/package_search_facets.html', facet_list=facet_list, show_url=show_url %}
           {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
           {%  if ext_after_metadata_modified %}
               <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
