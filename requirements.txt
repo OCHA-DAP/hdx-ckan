@@ -83,8 +83,6 @@ ijson==3.2.3
     # via -r requirements.in
 ipaddress==1.0.23
     # via -r requirements.in
-isodate==0.7.2
-    # via rdflib
 itsdangerous==2.1.2
     # via
     #   flask
@@ -178,7 +176,7 @@ rq==1.16.2
     # via -r requirements.in
 s3transfer==0.10.4
     # via boto3
-setuptools-scm==8.1.0
+setuptools-scm==9.2.0
     # via -r requirements.in
 simplejson==3.19.2
     # via -r requirements.in
@@ -200,15 +198,11 @@ stevedore==5.4.1
 timeago==1.0.16
     # via -r requirements.in
 tomli==2.2.1
-    # via
-    #   -r requirements.in
-    #   mypy
-    #   setuptools-scm
+    # via -r requirements.in
 typing-extensions==4.12.2
     # via
     #   -r requirements.in
     #   alembic
-    #   dogpile-cache
     #   mypy
     #   sqlalchemy2-stubs
 tzlocal==5.2
