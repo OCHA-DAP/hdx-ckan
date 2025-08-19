@@ -1,7 +1,7 @@
 """Notification Subscription Model
 
 Revision ID: 805619810f88
-Revises: e76394fad066
+Revises: 2e61553d5362
 Create Date: 2025-05-13 08:14:12.724835
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 # revision identifiers, used by Alembic.
 revision = '805619810f88'
-down_revision = 'e76394fad066'
+down_revision = '2e61553d5362'
 branch_labels = None
 depends_on = None
 
