@@ -7,6 +7,8 @@
 
 {% set num_of_pack = data.stats_section.num_of_datasets %}
 {% set num_of_orgs = data.stats_section.num_of_organizations %}
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
 {% block subtitle %}{{ data.country_dict.display_name }} Humanitarian Data | Crisis Response Datasets{% endblock %}
 {% block meta %}
@@ -41,6 +43,7 @@
         <div class="list-items dataset-content mTB15">
             <div class="col-12">
                 <h1 class="country-title">{{ data.country_dict.display_name }}</h1>
+                {{ h.snippet('notification_platform/buttons.html', object_id=data.country_dict.id, object_type='group' ) }}
             </div>
             <div class="row">
               <div class="col-6 mTop8">
@@ -245,7 +248,11 @@
                     </div>
                 {% endif %}
 	        	<div class="col-12">
-                    {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data %}
+                    {% snippet 'search/snippets/search_results_wrapper.html',
+                        object_id=data.country_dict.id, object_name=data.country_dict.name, object_type='group',
+                        unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+                        unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate,
+                        tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data %}
 	        	</div>
     		</div>
         </div>

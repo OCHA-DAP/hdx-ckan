@@ -1,5 +1,7 @@
 {% set input_id = id if id else "checkbox-" ~ name %}
-<div class="checkbox-field form-check{% if spacing_class %} {{ spacing_class }}{% endif %}">
+<div class="checkbox-field form-check{% if spacing_class %} {{ spacing_class }}{% endif %}"
+  {% if container_title %}title="{{ container_title }}"{% endif %}
+  {% if container_data_attributes %}{% for key, value in container_data_attributes.items() %} data-{{ key }}="{{ value }}"{% endfor %}{% endif %}>
   <div>
     <input
             class="form-field checkbox-field__input form-check-input"

@@ -64,8 +64,8 @@
                    data-resource-id="{{ res.id }}"
                    data-dataset-id="{{ pkg.id }}"
                    data-dataset-name="{{ pkg.name }}"
-                   data-dataset-supports-notifications="{{ h.hdx_dataset_supports_notifications(pkg.id) }}"
-                   data-user-survey-url="{{ user_survey_url }}"
+                   data-dataset-supports-notifications="{{ supports_notifications | lower }}"
+                   data-is-authenticated="{{ current_user.is_authenticated }}"
                    tracking-type="{{res.url_type}}"
                 >
                 {% if btn_dict.type == 'download' %}

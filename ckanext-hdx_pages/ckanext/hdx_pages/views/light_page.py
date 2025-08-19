@@ -11,9 +11,12 @@ import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckanext.hdx_search.cli.click_feature_search_command as lunr
 from ckan.common import _, config, g, request
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_pages.helpers.helper as page_h
 
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -169,7 +172,13 @@ def _read(id, show_switch_to_desktop, show_switch_to_mobile):
         'page_dict': page_dict,
         'page_has_desktop_version': show_switch_to_desktop,
         'page_has_mobile_version': show_switch_to_mobile,
+        'analytics': {
+            'analytics_came_from': analytics.came_from(request.args),
+            'analytics_supports_notifications': analytics.supports_notifications(ObjectType.CRISIS, page_dict),
+        }
     }
+    unsubscribe_token = request.args.get('_unsubscribe_token', None)
+    add_unsubscribe_token(unsubscribe_token, ObjectType.CRISIS, page_dict.get('id'), template_data)
 
     if show_switch_to_mobile:
         return render(u'pages/read_page.html', template_data)

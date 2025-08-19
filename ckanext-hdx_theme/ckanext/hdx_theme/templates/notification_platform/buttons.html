@@ -1,0 +1,43 @@
+{% set object_supports_notifications = h.hdx_supports_notifications(object_type, object_id, object_dict) %}
+{% set ui_object_type = 'location' if object_type == 'group' else object_type %}
+
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+{% set tooltip = CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_DATASET if object_type == 'dataset' else CONST_NOTIFICATION_PLATFORM.OPT_IN_EXPLANATION_SEARCH_RESULTS.format(ui_object_type) %}
+
+<div class="notification-platform-wrapper">
+
+{% if object_supports_notifications %}
+  <div class="notification-platform-opt-in-action-menu d-none" title="{{ tooltip }}" data-module="bs_tooltip"
+       data-module-placement="top" data-bs-toggle="tooltip">
+      <div class="row align-items-center g-0">
+      <div class="col-auto">
+          <div class="icon">
+            <i class="fa-solid fa-fw fa-bell"></i>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="paragraph">
+            <p class="mb-0">
+              {{ CONST_NOTIFICATION_PLATFORM.OPT_IN_TEXT }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endif %}
+
+  <div class="notification-platform-opt-out-action-menu d-none">
+    <div class="row align-items-center g-0">
+    <div class="col-auto">
+        <div class="icon">
+          <i class="fa-solid fa-fw fa-bell"></i>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="paragraph">
+          <p class="mb-0"><a href="#" title="Unsubscribe">{{ CONST_NOTIFICATION_PLATFORM.OPT_OUT_TEXT }}</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

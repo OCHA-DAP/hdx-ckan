@@ -28,7 +28,16 @@
             </div>
             <div class="col-6 text-end">
               {% if submit_btn_text %}
-                <button type="submit" class="btn btn-primary">{{ submit_btn_text }}</button>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  {% if submit_btn_id %}id="{{ submit_btn_id }}"{% endif %}
+                  {% if submit_btn_data_attributes %}
+                    {% for key, value in submit_btn_data_attributes.items() %}data-{{ key }}="{{ value }}"{% endfor %}
+                  {% endif %}
+                >
+                  {{ submit_btn_text }}
+                </button>
               {% else %}
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ close_btn_text }}</button>
               {% endif %}

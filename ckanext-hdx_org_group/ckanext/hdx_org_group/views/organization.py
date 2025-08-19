@@ -6,6 +6,7 @@ from six.moves.urllib.parse import urlencode
 import ckan.lib.plugins as lib_plugins
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_org_group.helpers.analytics as org_analytics
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
@@ -20,6 +21,8 @@ from ckanext.hdx_org_group.controller_logic.organization_stats_logic import (
 from ckanext.hdx_org_group.views.light_organization import _index
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_theme.util.mail import NoRecipientException
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 g = tk.g
 config = tk.config
@@ -63,6 +66,13 @@ def read(id):
 
         if read_logic.org_meta.is_custom:
             template_data = _generate_template_data_for_custom_org(read_logic)
+            template_data['analytics'] = {
+                'analytics_came_from': analytics.came_from(request.args),
+                'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION,
+                                                                                     read_logic.org_meta.org_dict),
+            }
+            unsubscribe_token = request.args.get('_unsubscribe_token', None)
+            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, read_logic.org_meta.org_dict.get('id'), template_data)
             result = render('organization/custom/custom_org.html', template_data)
             return result
         else:
@@ -77,7 +87,14 @@ def read(id):
 
             template_data = {
                 'org_dict': org_dict,
+                'analytics': {
+                    'analytics_came_from': analytics.came_from(request.args),
+                    'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION,
+                                                                                         org_dict),
+                }
             }
+            unsubscribe_token = request.args.get('_unsubscribe_token', None)
+            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
             template_file = _get_group_template('read_template', 'organization')
             return render(template_file, template_data)
     except NotFound:

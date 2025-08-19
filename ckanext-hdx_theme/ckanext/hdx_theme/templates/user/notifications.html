@@ -1,0 +1,111 @@
+{% extends "user/read_base.html" %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/bem-blocks-styles' %}
+  {% asset 'hdx_theme/ckan' %}
+  {% asset 'hdx_theme/notification-platform-unsubscribe-scripts' %}
+{% endblock %}
+
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+
+{% block dashboard_activity_stream_context %}{% endblock %}
+{% block page_header_inner %}{% endblock %}
+{% block add_action_content %}{% endblock %}
+
+{% block primary_content_inner %}
+
+  <div class="pt-4 ps-4">
+    <div class="row align-items-center">
+      <div class="col-6">
+        {{ h.snippet('bem.blocks/heading.html', title='Subscriptions', heading_type=6, spacing_class="mb-1") }}
+      </div>
+      <div class="col-6">
+        <div class="float-end">
+{#          {{ h.snippet('bem.blocks/checkbox_field.html',#}
+{#            label="Enable Notifications",#}
+{#            name="enable_notifications",#}
+{#            checked=True) }}#}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
+      </div>
+
+      <div class="col-12">
+        <div class="text-center">
+          <p class="empty hub-no-subscriptions{% if subscriptions|length > 0 %} d-none{% endif %}" style="min-height: 200px;">
+            {{ _("To set up notifications use the “Subscribe” button on dataset, crisis, organisation or location pages.") }}
+          </p>
+        </div>
+        {% if subscriptions|length > 0 %}
+          {% for subscription in subscriptions %}
+            {% set ui_object_type = 'location' if subscription.object_type == 'group' else subscription.object_type %}
+            <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}">
+              <div class="col-8">
+                <a href="{{ subscription.object_link }}" class="fw-bold"
+                   title="{{ subscription.object_dict.title }}">{{ ui_object_type|capitalize }}: {{ subscription.object_dict.title }}</a>
+              </div>
+              <div class="col-4 text-end">
+{#                {% if subscription.object_type != 'dataset' %}#}
+{#                  <a href="#" class="fw-bold" title="Manage">Manage</a>#}
+{#                  <span class="separator mx-2">|</span>#}
+{#                {% endif %}#}
+                <a
+                  href="#"
+                  data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}"
+                  data-unsubscribe-email="{{ subscription.unsubscribe_email }}"
+                  data-unsubscribe-source="hub"
+                  data-object-id="{{ subscription.object }}"
+                  data-object-name="{{ subscription.object_dict.name }}"
+                  data-object-type="{{ subscription.object_type }}"
+                  data-is-authenticated="True"
+                  class="fw-bold text-danger hub-unsubscribe-link"
+                  title="Unsubscribe"
+                >
+                  Unsubscribe <i class="fa-solid fa-trash ms-2"></i>
+                </a>
+              </div>
+              <div class="col-8">
+                <div class="row">
+                  <div class="col-4">
+                    <p class="mb-0 mt-2"><strong>Update type:</strong></p>
+                    {% if subscription.object_type == 'dataset' %}
+                        <p class="mb-0">Dataset is updated</p>
+                    {% else %}
+                      {% if subscription.event_type == 'new-dataset-added' %}
+                        <p class="mb-0">New dataset is added</p>
+                      {% elif subscription.event_type == 'dataset-updated' %}
+                        <p class="mb-0">New dataset is added</p>
+                        <p class="mb-0">Any dataset is updated</p>
+                      {% else %}
+                        <p class="mb-0">{{ subscription.event_type }}</p>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                  <div class="col-4">
+                    <p class="mb-0 mt-2"><strong>Receive notifications:</strong></p>
+                    <p class="mb-0">By Email</p>
+                  </div>
+                  <div class="col-4">
+                    <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
+                    <p class="mb-0">As soon as possible</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% snippet "notification_platform/modals.html" %}
+
+{% endblock %}

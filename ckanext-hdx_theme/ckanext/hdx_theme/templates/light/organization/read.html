@@ -8,6 +8,9 @@
 
 {% block subtitle %}{{ org.title }}{% endblock %}
 
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+
 {% block links %}
   {% set canonical_url = h.url_for('hdx_org.read', id=org_dict.name)  %}
   {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
@@ -32,6 +35,7 @@
     <div class="row org-details">
       <div class="col-9 col-lg-8 ">
         <h1 class="mTop20">{{ org.title }}</h1>
+        {{ h.snippet('notification_platform/buttons.html', object_id=org.id, object_type='organization' ) }}
         <div class="list-items mTop20 mBottom20">
           {% if org.package_count or org.datasets_num %}
               {% if org.package_count is number %}
@@ -73,7 +77,10 @@
       </div>
     </div>
     <div class="row">
-      {% snippet "light/snippets/package_list.html", data=org.template_data %}
+      {% snippet "light/snippets/package_list.html",
+            data=org.template_data, object_id=org.id, object_name=org.name, object_type='organization',
+            unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+            unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
     </div>
   </div>
 </div>

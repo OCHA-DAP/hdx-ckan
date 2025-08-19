@@ -1,5 +1,8 @@
 {% extends "page.html" %}
 
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+
 {%- block styles %}
   {{ super() }}
   {% asset 'hdx_theme/homepage-styles' %}
@@ -81,7 +84,7 @@
                   <div class="col-4">
                     <div class="row">
                       <div class="col-12 item-count">
-                        <a 
+                        <a
                            data-module="count hdx_click_stopper" data-module-link_type="find data box"
                            data-url="{% url_for 'hdx_count.source' %}">
                           {{ count.sources }}

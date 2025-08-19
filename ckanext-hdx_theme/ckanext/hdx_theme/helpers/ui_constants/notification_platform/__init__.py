@@ -1,34 +1,41 @@
 CONSTANTS = {
-    'OPT_IN_TEXT': '''Subscribe''',
+    'OPT_IN_TEXT': '''Get Notified''',
+    'OPT_IN_EXPLANATION_DATASET': '''Get notifications when this dataset updates''',
+    'OPT_IN_EXPLANATION_SEARCH_RESULTS': '''Get notifications when datasets for this {0} are added''',
     'OPT_OUT_TEXT': '''Unsubscribe''',
 
-    'SIGNUP_MODAL_TITLE': '''Sign up for email notifications on this dataset''',
-    'SIGNUP_MODAL_INTRO_TEXT': '''Would you like to receive email notifications when resources (files) in this
-    dataset are added, changed or deleted on HDX? If so, please enter your email address below:''',
-    'SIGNUP_MODAL_UPDATE_FREQUENCY_TEXT': '''This dataset updates approximately: {0}''',
-    'SIGNUP_MODAL_BETA_TEXT': '''Beta - We are currently testing email notifications for dataset updates across a
-    select number of datasets. This feature is not available on all datasets.''',
-    'SIGNUP_MODAL_CLOSE_BUTTON_TEXT': '''No thanks''',
-    'SIGNUP_MODAL_SUBMIT_BUTTON_TEXT': '''Verify email address''',
+    'SIGNUP_MODAL_TITLE_DATASET': '''Subscribe to notifications on this dataset''',
+    'SIGNUP_MODAL_TITLE_SEARCH_RESULTS': '''Get notified about new datasets on this {0}''',
+    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when new datasets are added to this {0}? <a href="https://docs.google.com/document/d/1bdgEtb0cqdfwAl4CFJPrekWwnsOO6sh1XGQZc9Wyjjc" target="_blank">Learn more</a> about notifications.''',
+    'SIGNUP_MODAL_TEXT_INTRO_DATASET': '''Would you like to receive notifications when resources (files) in this dataset change?''',
+    'SIGNUP_MODAL_TEXT_INTRO_SECOND': '''If so, please <a href="{0}" title="login">log in</a> or enter your email address below:''',
+    'SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT': '''Already have an account? <a href="{0}" title="login">Log in</a>''',
+    'SIGNUP_MODAL_TEXT_UPDATE_FREQUENCY': '''This dataset updates approximately: {0}''',
+    'SIGNUP_MODAL_TEXT_ALSO_NOTIFY': '''Also notify me when:''',
+    'SIGNUP_MODAL_TEXT_CLOSE_BUTTON': '''Cancel''',
+    'SIGNUP_MODAL_TEXT_SUBMIT_BUTTON': '''Verify email address''',
+    'SIGNUP_MODAL_TEXT_SUBMIT_BUTTON_AUTHENTICATED': '''Get Notified''',
 
     'SIGNUP_INPUT_EMAIL_PLACEHOLDER': '''Your email address''',
     'SIGNUP_INPUT_EMAIL_ERROR': '''Please enter a valid email address''',
+    'SIGNUP_CHECKBOX_DATASET_UPDATES_LABEL': '''Any dataset on this {0} is updated''',
+    'SIGNUP_CHECKBOX_DATASET_UPDATES_EXPLANATION': '''Select “any dataset on this {0} is updated” to get notified about any changes to datasets listed here.''',
 
     'VERIFICATION_MODAL_TITLE': '''Verification email has been sent''',
-    'VERIFICATION_MODAL_TEXT': '''Please click the link in the email we have sent you to confirm your email address''',
-    'VERIFICATION_MODAL_CLOSE_BUTTON_TEXT': '''Close''',
-
-    'CONFIRMATION_ALERT_TEXT': '''You have successfully set up email alerts for this dataset. These will be sent to {
-    0} when the dataset is updated on HDX.''',
+    'VERIFICATION_MODAL_TITLE_AUTHENTICATED': '''Subscription confirmed''',
+    'VERIFICATION_MODAL_TEXT': '''Please click the link in the email we have sent you to confirm your email address.''',
+    'VERIFICATION_MODAL_TEXT_DATASET_AUTHENTICATED': '''You have successfully subscribed to dataset notifications.''',
+    'VERIFICATION_MODAL_TEXT_SEARCH_RESULTS_AUTHENTICATED': '''You have successfully subscribed to dataset notifications on this {0} page''',
+    'VERIFICATION_MODAL_TEXT_CLOSE_BUTTON': '''Close''',
 
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE': '''Unsubscribe''',
-    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT': '''Please confirm that you want to unsubscribe email notifications when
-    this dataset is updated on HDX.''',
-    'UNSUBSCRIBE_CONFIRMATION_MODAL_CLOSE_BUTTON_TEXT': '''Cancel''',
-    'UNSUBSCRIBE_CONFIRMATION_MODAL_SUBMIT_BUTTON_TEXT': '''Unsubscribe''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET': '''Please confirm that you want to unsubscribe from email notifications for updates to this dataset on HDX.''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS': '''Please confirm that you want to unsubscribe from email notifications when datasets are added to this {0} on HDX.''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON': '''Cancel''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON': '''Unsubscribe''',
 
     'UNSUBSCRIBED_MODAL_TITLE': '''You have unsubscribed''',
-    'UNSUBSCRIBED_MODAL_TEXT': '''Thank you. You will no longer receive email notifications when this dataset is
-    updated on HDX.''',
-    'UNSUBSCRIBED_MODAL_CLOSE_BUTTON_TEXT': '''Close''',
+    'UNSUBSCRIBED_MODAL_TEXT_DATASET': '''You have successfully unsubscribed to dataset notifications.''',
+    'UNSUBSCRIBED_MODAL_TEXT_SEARCH_RESULTS': '''You have successfully unsubscribed to dataset notifications on this {0} page''',
+    'UNSUBSCRIBED_MODAL_TEXT_CLOSE_BUTTON': '''Close''',
 }
