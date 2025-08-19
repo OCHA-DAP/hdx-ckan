@@ -2,6 +2,7 @@
 
 import getpass
 import os
+import re
 import subprocess
 import sys
 import tarfile
@@ -143,6 +144,40 @@ def user_exists(user):
         return False
 
 
+def validate_fullname_safe_only(fullname: str) -> bool:
+
+    if not fullname or len(fullname.strip()) == 0:
+        # print("Full name is empty or whitespace only.")
+        return True
+        # We don't care about empty names, but we do care about long names
+        return False
+
+    if len(fullname) > 120:
+        print("Full name is too long: {} characters. Maximum allowed is 48.".format(len(fullname)))
+        return False
+
+    # Check ONLY for dangerous HTML/script characters
+    dangerous_patterns = [
+        r'<[^>]*>',           # HTML tags
+        r'javascript:',       # JavaScript
+        r'on\w+\s*=',        # Event handlers
+        r'<script',           # Script tags
+        r'<iframe',           # Iframe tags
+    ]
+
+    for pattern in dangerous_patterns:
+        if re.search(pattern, fullname, re.IGNORECASE):
+            print("Full name contains dangerous patterns: {}".format(pattern))
+            return False
+
+    # Check for very dangerous characters (the '&' char is allowed...)
+    dangerous_chars = ['<', '>', '{', '}', ';', '=', '|', '`', '$']
+    if any(char in fullname for char in dangerous_chars):
+        print("Full name contains dangerous characters: {}".format(dangerous_chars))
+        return False
+
+    return True
+
 def user_pretty_list(userlist):
     for row in userlist:
         print('+++++++++++++++++++++++++++++++++++++++++++++++')
@@ -153,6 +188,20 @@ def user_pretty_list(userlist):
         print('State: {}'.format(state))
         print('Sysadmin: {}'.format(sysadmin))
         print('API Key: {}'.format(apikey))
+    print('+++++++++++++++++++++++++++++++++++++++++++++++')
+    if len(userlist) > 1:
+        print('Got a total of ' + str(len(userlist)) + ' users.')
+
+
+def user_simple_list(userlist):
+    # we dont care for api keys
+    header = f"{'State':<8} {'Sysadmin':<8} {'User':<20} {'Email':<32} 'Full Name'"
+    print(header)
+    print('-' * 120)
+    for row in userlist:
+        (username, displayname, email, state, sysadmin, apikey) = row
+        print(f"{str(state):<8} {str(sysadmin):<8} {str(username):<20} {str(email):<32} {str(displayname)}")
+        # print(state.ljust(8), str(sysadmin).ljust(8), username.ljust(20), displayname.ljust(30), email.ljust(30))
     print('+++++++++++++++++++++++++++++++++++++++++++++++')
     if len(userlist) > 1:
         print('Got a total of ' + str(len(userlist)) + ' users.')
@@ -744,7 +793,7 @@ def token_list(ctx, user, show_full_token):
     if not user_exists(user):
         print(f"User '{user}' does not exist")
         return
-    
+
     # Fetch tokens for the specified user, sorted by expiration date descending
     query = f"""
     SELECT at.id, at.name, at.last_access, at.plugin_extras
@@ -754,31 +803,31 @@ def token_list(ctx, user, show_full_token):
     ORDER BY (at.plugin_extras->'expire_api_token'->>'exp')::timestamp DESC
     """
     rows = db_query(query)
-    
+
     if not rows:
         print(f"No tokens found for user '{user}'")
         return
-    
+
     print(f"Tokens for user '{user}':")
-    
+
     # Function to truncate token ID
     def truncate_token(token_id):
         if not show_full_token and len(token_id) > 6:
             return f"{token_id[:3]}***{token_id[-3:]}"
         return token_id
-    
+
     # Format table header - TOKEN ID before TOKEN NAME
     token_label = "TOKEN ID (FULL)" if show_full_token else "TOKEN ID"
     print(f"{'EXPIRATION':<19} {'LAST ACCESS':<19} {token_label:<15} {'TOKEN NAME'}")
     print("-" * 80)
-    
+
     for row in rows:
         token_id, token_name, last_access, plugin_extras = row
-        
+
         # Format expiration date
         exp_data = plugin_extras.get('expire_api_token', {}) if plugin_extras else {}
         exp_date_str = exp_data.get('exp', 'No expiration')
-        
+
         # Convert ISO format to simplified format if date exists
         if exp_date_str != 'No expiration':
             try:
@@ -787,7 +836,7 @@ def token_list(ctx, user, show_full_token):
                 exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
             except (ValueError, TypeError):
                 pass
-        
+
         # Format last access date
         last_access_str = 'Never'
         if last_access:
@@ -795,13 +844,13 @@ def token_list(ctx, user, show_full_token):
                 last_access_str = last_access.strftime('%Y-%m-%d %H:%M:%S')
             except (AttributeError, ValueError):
                 last_access_str = str(last_access)
-        
+
         # Format token name (could be None)
         token_name_str = token_name if token_name else 'N/A'
-        
+
         # Truncate token ID
         display_token = truncate_token(token_id)
-        
+
         # Print table row - TOKEN ID before TOKEN NAME
         print(f"{exp_date_str:<19} {last_access_str:<19} {display_token:<15} {token_name_str}")
 
@@ -814,26 +863,26 @@ def token_list(ctx, user, show_full_token):
 @click.pass_context
 def token_expiring(ctx, days, username_match, show_full_columns, include_expired):
     """Show newest tokens of each user that are about to expire.
-    
+
     By default, shows newest tokens expiring in the next 30 days.
     If none are expiring, shows the user whose newest token will expire next.
-    
+
     Use --username-match to filter users by a substring in their username.
     Use --show-full-columns to display complete token IDs, usernames and token names.
     Use --include-expired to show tokens that have already expired.
     """
     from datetime import datetime, timedelta
-    
+
     # Calculate the date threshold (current date + specified days)
     now = datetime.now()
     threshold = now + timedelta(days=days)
     threshold_str = threshold.isoformat()
-    
+
     # Build the query with optional username filter
     username_filter = ""
     if username_match:
         username_filter = f"AND u.name LIKE '%{username_match}%'"
-    
+
     # Query to get the newest token (with most recent expiration date) for each user
     query = f"""
     WITH latest_tokens AS (
@@ -842,15 +891,16 @@ def token_expiring(ctx, days, username_match, show_full_columns, include_expired
         FROM api_token at
         JOIN "user" u ON at.user_id = u.id
         WHERE at.plugin_extras->'expire_api_token'->>'exp' IS NOT NULL
+        AND u.state = 'active'
         {username_filter}
         GROUP BY at.user_id, u.name
     ),
     newest_tokens AS (
-        SELECT at.id, at.name as token_name, lt.username, 
+        SELECT at.id, at.name as token_name, lt.username,
                at.plugin_extras->'expire_api_token'->>'exp' as expiration
         FROM api_token at
         JOIN "user" u ON at.user_id = u.id
-        JOIN latest_tokens lt ON at.user_id = lt.user_id 
+        JOIN latest_tokens lt ON at.user_id = lt.user_id
                              AND (at.plugin_extras->'expire_api_token'->>'exp')::timestamp = lt.latest_exp
         WHERE at.plugin_extras->'expire_api_token'->>'exp' IS NOT NULL
         {'' if include_expired else "AND (at.plugin_extras->'expire_api_token'->>'exp')::timestamp > NOW()"}
@@ -858,109 +908,113 @@ def token_expiring(ctx, days, username_match, show_full_columns, include_expired
     SELECT * FROM newest_tokens
     ORDER BY (expiration)::timestamp ASC
     """
-    
+
     all_newest_tokens = db_query(query)
-    
+
     # Filter tokens expiring within the threshold
     expiring_rows = [
         row for row in all_newest_tokens
         if row[3] and  # Ensure expiration exists
            datetime.fromisoformat(row[3].replace('Z', '+00:00')) <= threshold
     ]
-    
+
     # Function to truncate token ID
     def truncate_token(token_id):
         if not show_full_columns and len(token_id) > 6:
             return f"{token_id[:3]}***{token_id[-3:]}"
         return token_id
-    
+
     # Function to truncate username and token name
-    def truncate_text(text, max_length=24):
+    def truncate_text(text, max_length=32):
         if not show_full_columns and text and len(text) > max_length:
             return text[:max_length-3] + "..."
         return text
-    
+
     # Prepare title message with username filter and expired info if applicable
     filter_msg = f" matching '{username_match}'" if username_match else ""
     expired_msg = " (including expired tokens)" if include_expired else ""
-    
+
+    token_label = "TOKEN ID" + (" (FULL)" if show_full_columns else "")
+    token_width = 43 if show_full_columns else 9
+    header = f"{'EXPIRATION':<19} {token_label:<{token_width}} {'USERNAME':<32} {'TOKEN NAME':<32}"
+    br = 120 if show_full_columns else 90
+
     if expiring_rows:
         # Case 1: There are newest tokens expiring within the specified days
         total_count = len(expiring_rows)
         display_rows = expiring_rows[:10]  # Take only the first 10
-        
+
         print(f"Found {total_count} user(s){filter_msg} whose newest token will expire in the next {days} days{expired_msg}.")
         print(f"Showing first {min(10, total_count)}:")
-        
-        # Format table header - TOKEN ID before USERNAME
-        token_label = "TOKEN ID" + (" (FULL)" if show_full_columns else "")
-        print(f"{'EXPIRATION':<19} {token_label:<15} {'USERNAME':<24} {'TOKEN NAME':<24}")
-        print("-" * 90)
-        
+
+        print(header)
+        print("-" * br)
+
         for row in display_rows:
             token_id, token_name, username, exp_date_str = row
-            
+
             # Format expiration date
             try:
                 exp_date = datetime.fromisoformat(exp_date_str.replace('Z', '+00:00'))
                 exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
-                
+
                 # Indicate if token has already expired
                 if include_expired and exp_date < now:
                     exp_date_str = f"{exp_date_str} [EXPIRED]"
             except (ValueError, TypeError):
                 pass
-            
+
             # Format and truncate token name (could be None)
             token_name_str = token_name if token_name else 'N/A'
             token_name_str = truncate_text(token_name_str)
-            
+
             # Truncate username
             username_str = truncate_text(username)
-            
+
             # Truncate token ID
             display_token = truncate_token(token_id)
-            
+
+            token_width = 43 if show_full_columns else 9
+
             # Print table row - TOKEN ID before USERNAME
-            print(f"{exp_date_str:<19} {display_token:<15} {username_str:<24} {token_name_str:<24}")
-    
+            print(f"{exp_date_str:<19} {display_token:<{token_width}} {username_str:<32} {token_name_str:<32}")
+
     elif all_newest_tokens:
         # Case 2: No newest tokens expiring within the threshold, show the next one
         next_row = all_newest_tokens[0]  # The list is already sorted by expiration
-        
+
         print(f"No users{filter_msg} have newest tokens expiring in the next {days} days{expired_msg}.")
         print("The user whose newest token will expire next:")
-        
+
         # Format table header - TOKEN ID before USERNAME
-        token_label = "TOKEN ID" + (" (FULL)" if show_full_columns else "")
-        print(f"{'EXPIRATION':<19} {token_label:<15} {'USERNAME':<24} {'TOKEN NAME':<24}")
-        print("-" * 90)
-        
+        print(header)
+        print("-" * br)
+
         token_id, token_name, username, exp_date_str = next_row
-        
+
         # Format expiration date
         try:
             exp_date = datetime.fromisoformat(exp_date_str.replace('Z', '+00:00'))
             exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
-            
+
             # Indicate if token has already expired
             if include_expired and exp_date < now:
                 exp_date_str = f"{exp_date_str} [EXPIRED]"
         except (ValueError, TypeError):
             pass
-        
+
         # Format and truncate token name (could be None)
         token_name_str = token_name if token_name else 'N/A'
         token_name_str = truncate_text(token_name_str)
-        
+
         # Truncate username
         username_str = truncate_text(username)
-        
+
         # Truncate token ID
         display_token = truncate_token(token_id)
-        
+
         # Print table row - TOKEN ID before USERNAME
-        print(f"{exp_date_str:<19} {display_token:<15} {username_str:<24} {token_name_str:<24}")
+        print(f"{exp_date_str:<19} {display_token:<{token_width}} {username_str:<32} {token_name_str:<32}")
     else:
         print(f"No tokens with expiration dates found{filter_msg}{expired_msg}.")
 
@@ -1010,38 +1064,62 @@ def user_add(ctx, user, email, password, fullname):
 
 
 @user.command(name='list')
-def user_list():
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
+def user_list(all_users: bool = False):
     """List all users."""
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user order by name asc;"
+    filter = " WHERE state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user {filter} order by name asc;"
     rows = db_query(query)
-    user_pretty_list(rows)
+    user_simple_list(rows)
 
 
 @user.command(name='search')
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
 @click.argument('string')
-def user_search(string):
+def user_search(string: str, all_users: bool = False):
     """Search users by a partial string.
 
     STRING  Search users with username containing this string.
     """
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name like '%{}%';".format(string)
+    filter = " AND state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user where name like '%{string}%' {filter};"
     rows = db_query(query)
     if len(rows) == 0:
         print('No users were found searching for ' + string)
     else:
-        user_pretty_list(rows)
+        user_simple_list(rows)
 
 
 @user.command(name='show')
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
 @click.argument('user')
-def user_show(user):
+def user_show(user: str, all_users: bool = False):
     """Show a specific user details.
 
     USER    Show details for this user.
     """
-    query = "select name,fullname,email,state,sysadmin,apikey from public.user where name='{}';".format(user)
+    filter = " AND state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user where name='{user}' {filter};"
     rows = db_query(query)
-    user_pretty_list(rows)
+    user_simple_list(rows)
+
+
+@user.command(name='validate')
+@click.option('--all-users', '-a', is_flag=True, help='Include all users, not just the active ones')
+def user_validate(all_users: bool = False):
+    """Show a specific user details.
+
+    USER    Show details for this user.
+    """
+    filter = "WHERE state = 'active'" if not all_users else ""
+    query = f"select name,fullname,email,state,sysadmin,apikey from public.user {filter} order by name asc;"
+    rows = db_query(query)
+
+    problematic_users = [
+        row for row in rows
+        if not validate_fullname_safe_only(row[1])
+    ]
+    user_simple_list(problematic_users)
 
 
 @cli.command(name='webassets')
