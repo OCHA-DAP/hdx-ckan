@@ -4,13 +4,15 @@
 <div class="row">
   <div class="col-6">
     {% if not package.get('update_status') == 'unknown' %}
-      <div>
-        <span class="info-label {% if package.is_fresh %}inverted{% endif %}">
-          <i class="fa fa-clock-o"></i>
-          {% set due_date = h.hdx_get_due_overdue_date(package)  %}
-          {{ due_date | default("N/A", True) }}
-        </span>
-      </div>
+      {% if not h.hdx_is_ongoing_dataset_date(package) %}
+        <div>
+          <span class="info-label {% if package.is_fresh %}inverted{% endif %}">
+              <i class="fa fa-clock-o"></i>
+              {% set due_date = h.hdx_get_due_overdue_date(package)  %}
+              {{ due_date | default("N/A", True) }}
+          </span>
+        </div>
+      {% endif %}
       <div class="mTop8">
         {% if package.is_fresh %}
           The dataset is up to date.
