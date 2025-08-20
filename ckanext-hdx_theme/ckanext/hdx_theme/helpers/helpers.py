@@ -1208,6 +1208,6 @@ def build_facet_filter_url(option, extra_args):
 
 def hdx_dataset_has_datastore_resources(resource_list: list[Any]) -> bool:
     for resource in resource_list:
-        if resource.get('preview'):
+        if resource.get('datastore_active'):
             return True
     return False
