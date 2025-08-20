@@ -269,7 +269,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_supports_notifications': hdx_helpers.hdx_supports_notifications,
             'HDX_CONST': const,
             'facet_url_extra_args': hdx_helpers.facet_url_extra_args,
-            'build_facet_filter_url': hdx_helpers.build_facet_filter_url, 
+            'build_facet_filter_url': hdx_helpers.build_facet_filter_url,
+            'hdx_dataset_has_datastore_resources': hdx_helpers.hdx_dataset_has_datastore_resources,
         }
 
     def get_actions(self):
