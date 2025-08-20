@@ -62,7 +62,7 @@ ckan:
     - vendor/ckan/jquery.slug-preview.js
     - vendor/ckan/slug-preview.js
     - vendor/ckan/autocomplete.js
-    - vendor/ckan/api-info.js
+    - vendor/datastore/api-info.js
     - vendor/lazysizes/lazysizes.js
     - vendor/jquery.cookie/jquery.cookie.js
     - base/hdx-util-lib.js
