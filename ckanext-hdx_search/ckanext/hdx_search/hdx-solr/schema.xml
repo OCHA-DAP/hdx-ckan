@@ -25,7 +25,7 @@
 schema. We used to use the `version` attribute for this but this is an internal
 attribute that should not be used so starting from CKAN 2.10 we use the `name`
 attribute with the form `ckan-X.Y` -->
-<schema name="ckan-2.10" version="1.6">
+<schema name="ckan-2.11" version="1.6">
 
 <types>
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
@@ -139,12 +139,11 @@ attribute with the form `ckan-X.Y` -->
     <field name="maintainer_email" type="text_general" indexed="true" stored="true" />
     <field name="license" type="string" indexed="true" stored="true" />
     <field name="license_id" type="string" indexed="true" stored="true" />
-    <!-- <field name="ratings_count" type="int" indexed="true" stored="false" />
-    <field name="ratings_average" type="float" indexed="true" stored="false" /> -->
+    <field name="ratings_count" type="int" indexed="true" stored="false" />
+    <field name="ratings_average" type="float" indexed="true" stored="false" />
     <field name="tags" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="groups" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="organization" type="string" indexed="true" stored="true" multiValued="false"/>
-    <field name="creator_user_id" type="string" indexed="true" stored="true"/>
 
     <field name="capacity" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="permission_labels" type="string" indexed="true" stored="false" multiValued="true"/>
@@ -174,8 +173,8 @@ attribute with the form `ckan-X.Y` -->
     <field name="resources_accessed_recent" type="int" indexed="true" stored="false"/>
 
     <field name="methodology" type="string" indexed="true" stored="true" />
-    <field name="total_res_downloads" type="int" indexed="true" stored="true" docValues="true"/>
-    <field name="pageviews_last_14_days" type="int" indexed="true" stored="true" docValues="true"/>
+    <field name="total_res_downloads" type="int" indexed="true" stored="true"/>
+    <field name="pageviews_last_14_days" type="int" indexed="true" stored="true"/>
     <field name="has_quickcharts" type="boolean" indexed="true" stored="true"/>
     <field name="has_geodata" type="boolean" indexed="true" stored="true"/>
     <field name="has_showcases" type="boolean" indexed="true" stored="true"/>
@@ -198,8 +197,9 @@ attribute with the form `ckan-X.Y` -->
     <field name="_version_" type="string" indexed="true" stored="true"/>
 
     <field name="dataset_date" type="daterange" indexed="true" stored="true" />
+    <field name="extras_dataset_date" type="daterange" indexed="true" stored="true" />
 
-    <dynamicField name="*_date" type="date" indexed="true" stored="true" multiValued="false" sortMissingLast="true"/>
+    <dynamicField name="*_date" type="date" indexed="true" stored="true" multiValued="false"/>
 
     <dynamicField name="*_daterange" type="daterange" indexed="true" stored="true" multiValued="false"/>
 

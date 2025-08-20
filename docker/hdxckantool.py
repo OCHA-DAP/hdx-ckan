@@ -690,7 +690,7 @@ def solr_del(ctx, host, port, collection):
 @solr.command(name='check')
 @click.option('-h', '--host', default=SOLR['ADDR'], show_default=True, help="SOLR hostname / IP address.")
 @click.option('-p', '--port', default=SOLR['PORT'], show_default=True, help="SOLR Port.")
-@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Core (Collection actually).")
+@click.option('-c', '--collection', default=SOLR['CORE'], show_default=True, help="SOLR Collection.")
 def solr_exists(host, port, collection):
     """Check the status of SOLR"""
     try:

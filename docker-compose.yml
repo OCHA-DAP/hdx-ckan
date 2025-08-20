@@ -3,10 +3,12 @@ networks:
 
 services:
   solr:
-    image: solr:8-slim
+    image: solr:9.8.1
+    command:
+      - solr-foreground
+      - -c
     environment:
       SOLR_OPTS: -Dsolr.jetty.request.header.size=65536 -Dsolr.dns.prevent.reverse.lookup
-      ZK_HOST: zookeeper:2181
     ulimits:
       nofile:
         soft: 65000
@@ -14,19 +16,10 @@ services:
     hostname: solr
     container_name: solr
     volumes:
-      - "./ckanext-hdx_search/ckanext/hdx_search/:/configsets"
-
-  zookeeper:
-    image: zookeeper:3.6
-    hostname: zookeeper
-    container_name: zookeeper
-    environment:
-      ZOO_SERVERS: server.1=zookeeper:2888:3888;2181
-      ZOO_STANDALONE_ENABLED: 'true'
-      ZOO_LOG4J_PROP: 'INFO,ROLLINGFILE'
+      - "./ckanext-hdx_search/ckanext/hdx_search/schema.xml:/opt/solr/server/solr/configsets/_default/conf/managed-schema"
 
   db:
-    image: unocha/alpine-postgres:201703-PR116
+    image: postgis/postgis:14-3.4-alpine
     hostname: db
     container_name: db
     environment:
