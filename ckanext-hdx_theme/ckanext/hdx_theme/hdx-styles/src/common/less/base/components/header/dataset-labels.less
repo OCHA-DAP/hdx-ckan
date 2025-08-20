@@ -56,6 +56,9 @@
       & ~ li {
         margin-left: 3px;
       }
+      &.datastore-icon {
+        margin-left: 10px;
+      }
     }
 
     [class^="icon-"], [class*=" icon-"], [class^="humanitarianicons-"] {
@@ -93,6 +96,20 @@
   &.download-counts {
     font-size: 12px;
     white-space: nowrap;
+  }
+}
+
+.datastore-icon {
+  border-left: 1px solid @grayColor;
+  span {
+    margin-left: 10px;
+    cursor: default;
+    &.label {
+      padding: 0 4px;
+      background-color: @whiteColor;
+      color: @blueColor;
+      border: 1px solid @blueColor;
+    }
   }
 }
 

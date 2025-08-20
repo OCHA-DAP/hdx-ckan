@@ -736,6 +736,9 @@ body {
 .dataset-resources li ~ li {
   margin-left: 3px;
 }
+.dataset-resources li.datastore-icon {
+  margin-left: 10px;
+}
 .dataset-resources [class^="icon-"],
 .dataset-resources [class*=" icon-"],
 .dataset-resources [class^="humanitarianicons-"] {
@@ -770,6 +773,19 @@ body {
 .label-icons span.download-counts {
   font-size: 12px;
   white-space: nowrap;
+}
+.datastore-icon {
+  border-left: 1px solid #888888;
+}
+.datastore-icon span {
+  margin-left: 10px;
+  cursor: default;
+}
+.datastore-icon span.label {
+  padding: 0 4px;
+  background-color: #fff;
+  color: #007CE0;
+  border: 1px solid #007CE0;
 }
 span.icn-txt-cods,
 ul.dataset-resources li.label-icons span.icn-txt-cods {
