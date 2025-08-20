@@ -1,5 +1,8 @@
 {% extends "page_light.html" %}
 
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+
 {% block links %}
   <link rel="canonical" href="{{ h.hdx_switch_url_path(force=False) }}">
   {{ super() }}
@@ -22,10 +25,14 @@
     <div class="row">
       <div class="col-12">
         <h1>{{ page.title }}</h1>
+        {{ h.snippet('notification_platform/buttons.html', object_id=page.id, object_type='crisis' ) }}
         {% for section in page.sections %}
           {% if section.type == 'data_list' %}
             <div class="row">
-              {% snippet "light/snippets/package_list.html", data=section.template_data %}
+              {% snippet "light/snippets/package_list.html",
+                  data=section.template_data, object_id=page.id, object_name=page.name, object_type='crisis',
+                  unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+                  unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
             </div>
           {% elif section.type == 'description' %}
             {% if section.long_description %}

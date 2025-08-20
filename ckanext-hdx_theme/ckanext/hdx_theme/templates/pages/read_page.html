@@ -3,6 +3,9 @@
 {% set data = page_dict %}
 {% set page_title = data.title if data.title and data.title!='' else data.name %}
 
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+
 {% block subtitle %}{{ data.title or data.name }} | Crisis Datasets{% endblock %}
 {% block meta %}
     {{ super() }}
@@ -42,6 +45,7 @@
                                     <div><span class="label label-small label-default">{{ data.state }}</span></div>
                                 {% endif %}
 {#                                <div class="notes embedded-content">{{ data.description }}</div>#}
+                                {{ h.snippet('notification_platform/buttons.html', object_id=data.id, object_type='crisis' ) }}
                             </div>
                         </div>
                     </div>
@@ -53,7 +57,10 @@
         </div>
         <div class="col-12 paddingLeftHack paddingRightHack">
             {% for section in data.sections %}
-                  {% snippet 'pages/snippets/section_item.html', section=section, data=data, errors=errors, error_summary=error_summary %}
+                  {% snippet 'pages/snippets/section_item.html',
+                        section=section, data=data, errors=errors, error_summary=error_summary,
+                        unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+                        unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
             {% endfor %}
         </div>
     </div>

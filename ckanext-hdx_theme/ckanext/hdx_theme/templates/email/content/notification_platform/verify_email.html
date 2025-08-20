@@ -1,6 +1,10 @@
 <p>Dear HDX User,</p>
 
-<p>You're subscribing to the <a href="{{ h.url_for('hdx_dataset.read', id=data.dataset_id, _external=True) }}" target="_blank"> {{ data.dataset_title }}</a> dataset.</p>
+{% if data.object_type == 'dataset' %}
+  <p>You're subscribing to the <a href="{{ data.object_link }}" target="_blank"> {{ data.object_title }}</a> {{ data.object_type }}. You will receive emails when a new resource is added or removed and when any resource is updated.</p>
+{% else %}
+  <p>You're subscribing to dataset notifications on the <a href="{{ data.object_link }}" target="_blank"> {{ data.object_title }}</a> page. You will receive emails when new datasets are added{% if data.dataset_updates %} and when any dataset is updated{% endif %}.</p>
+{% endif %}
 <p>Please verify your email by clicking the button below:</p>
 
 <a href="{{ data.verify_email_link }}" target="_blank" title="Verify email" class="button">Verify email</a>

@@ -1,12 +1,14 @@
 import json
-import requests
 import logging
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_theme.helpers.helpers as theme_h
 
 from ckan.types import DataDict, Context
-from ckanext.hdx_users.helpers.notification_platform import read_novu_config
+from ckanext.hdx_users.helpers import novu_interaction
+from ckanext.hdx_users.general_token_model import get_by_token_with_checks, validate_token, TokenType, ObjectType
+from ckanext.hdx_users.notifications_subscription_model import (mark_as_deleted,
+                                                                get_by_unsubscribe_token)
 
 _get_or_bust = tk.get_or_bust
 ValidationError = tk.ValidationError
@@ -50,51 +52,32 @@ def hdx_user_delete(original_action, context, data_dict):
 
     return original_action(context, data_dict)
 
-def hdx_delete_notification_subscription(context: Context, data_dict: DataDict):
-    tk.check_access('hdx_delete_notification_subscription', context, {})
 
-    novu_api_key, novu_api_url = read_novu_config()
+def hdx_notifications_subscription_delete(context: Context, data_dict: DataDict) -> DataDict:
+    """
+    Deletes a notification subscription for a user by its ID.
 
-    email = data_dict.get('email')
-    dataset_id = data_dict.get('dataset_id')
+    Regular users can only delete subscriptions for themselves
+    Sysadmins can delete subscriptions for any user
 
-    if not email or not dataset_id:
-        raise tk.ValidationError('Missing required parameters: email and dataset_id')
+    """
+    session = context['session']
+    log.info('Deleting subscription for user %s', data_dict.get('user_id'))
 
+    token = tk.get_or_bust(data_dict, 'token')
+    token_obj = get_by_token_with_checks(token, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION)
+    subscription = get_by_unsubscribe_token(token_obj.id)
+    if not subscription:
+        raise NotFound(f'Subscription with token {token} not found')
+    subscription_id = subscription.id
+    _check_access('hdx_notifications_subscription_delete', context, {'id': subscription_id})
 
-    headers = {
-        'Authorization': f'ApiKey {novu_api_key}',
-        'Content-Type': 'application/json'
-    }
+    mark_as_deleted(session, subscription_id, commit_tx=False)
+    validate_token(session, token, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, commit_tx=False)
 
-    # Use the email as the subscriber ID
-    subscriber_id = email
+    object_type = ObjectType(subscription.object_type)
+    novu_interaction.remove_subscription_info(token_obj.user_id, subscription.object, object_type)
 
-    topic_key = f'dataset-{dataset_id}'
+    session.commit()
 
-    # Check if the topic exists
-    response = requests.get(f'{novu_api_url}/topics/{topic_key}', headers=headers)
-    if response.status_code == 200:
-        topic_subscribers = response.json().get('data', {}).get('subscribers', [])
-        remove_subscriber_data = {
-            'subscribers': [subscriber_id]
-        }
-        subscriber_removal_response = requests.post(f'{novu_api_url}/topics/{topic_key}/subscribers/removal',
-                                                    json=remove_subscriber_data, headers=headers)
-
-        if subscriber_removal_response.status_code not in (200, 204):
-            raise Exception(
-                f'Failed to remove subscriber {subscriber_id} from dataset: {subscriber_removal_response.text}')
-        elif len(topic_subscribers) == 1 and topic_subscribers[0] == subscriber_id:
-            topic_removal_response = requests.delete(f'{novu_api_url}/topics/{topic_key}', headers=headers)
-            if topic_removal_response.status_code not in (200, 204):
-                raise Exception(f'Failed to remove topic {topic_key} from dataset: {subscriber_removal_response.text}')
-
-    else:
-        if response.status_code == 404:
-            log.error(f'Topic was not found in Novu')
-        log.error(
-            f'Got status code {response.status_code} when checking if the database exists. Response: {response.text}')
-        raise Exception(f'Failed to remove subscriber from dataset')
-
-    return {'message': f' {email}  unsubscribed from further notifications.'}
+    return {'message': f'Subscription {subscription_id} deleted successfully'}

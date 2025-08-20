@@ -26,7 +26,6 @@ import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.controller_logic.dataset_view_logic as dataset_view_logic
 from ckanext.hdx_package.controller_logic.dataset_contact_contributor_logic import DatasetContactContributorLogic
 from ckanext.hdx_package.controller_logic.dataset_request_access_logic import DatasetRequestAccessLogic
-from ckanext.hdx_users.controller_logic.notification_platform_logic import verify_unsubscribe_token
 
 from ckan.views.dataset import _setup_template_variables
 
@@ -41,7 +40,8 @@ from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 log = logging.getLogger(__name__)
 
@@ -138,7 +138,7 @@ def read(id):
     analytics_group_names, analytics_group_ids = analytics.extract_locations_in_json(pkg_dict)
     analytics_dataset_availability = analytics.dataset_availability(pkg_dict)
     analytics_came_from = analytics.came_from(request.args)
-    analytics_supports_notifications = analytics.supports_notifications(pkg_dict)
+    analytics_supports_notifications = analytics.supports_notifications(ObjectType.DATASET, pkg_dict)
 
     # changes done for indicator
     # act_data_dict = {'id': pkg_dict['id'], 'limit': 7}
@@ -187,19 +187,6 @@ def read(id):
     else:
         logo_config = {}
 
-    # notification platform
-    supports_notifications = check_notifications_enabled_for_dataset(pkg_dict['id'])
-    unsubscribe_token = request.args.get('unsubscribe_token', None)
-    unsubscribe_token_validated = None
-    if unsubscribe_token:
-        try:
-            unsubscribe_token = verify_unsubscribe_token(unsubscribe_token, inactivate=False)
-            unsubscribe_token_validated = True
-        except Exception as e:
-            unsubscribe_token = None
-            unsubscribe_token_validated = False
-            h.flash_error('Your token is invalid or has expired.')
-
     template_data = {
         'pkg_dict': pkg_dict,
         'pkg': pkg,
@@ -207,8 +194,6 @@ def read(id):
         'hdx_activities': hdx_activities,
         'membership': membership,
         'user_has_edit_rights': user_has_edit_rights,
-        'unsubscribe_token': unsubscribe_token,
-        'unsubscribe_token_validated': unsubscribe_token_validated,
         'analytics_is_cod': analytics_is_cod,
         'analytics_is_indicator': 'false',
         'analytics_is_archived': analytics_is_archived,
@@ -220,8 +205,9 @@ def read(id):
         'stats_downloads_last_weeks': stats_downloads_last_weeks,
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
-        'supports_notifications': supports_notifications,
     }
+    unsubscribe_token = request.args.get('_unsubscribe_token', None)
+    add_unsubscribe_token(unsubscribe_token, ObjectType.DATASET, pkg_dict.get('id'), template_data)
 
     if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
         view_enabled_resources = [r for r in pkg_dict['resources'] if
@@ -797,8 +783,8 @@ class DatasetRequestAccessView(MethodView):
             return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
 
 
-hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
-hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
+hdx_search.add_url_rule(u'', view_func=search, strict_slashes=False)
+hdx_dataset.add_url_rule(u'', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'/<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'/<id>/contact/',

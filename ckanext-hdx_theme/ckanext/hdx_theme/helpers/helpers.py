@@ -14,17 +14,19 @@ import ckan.plugins.toolkit as tk
 import ckanext.activity.model.activity as activity_model
 import ckanext.requestdata.model as requestdata_model
 import ckanext.hdx_theme.version as version
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote_plus
 
 from six import text_type
+from typing import Any, Optional, Union
 
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
+from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO, UPDATE_FREQ_NEVER
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
+from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
 _ = toolkit._
 request = toolkit.request
@@ -44,6 +46,71 @@ def is_downloadable(resource):
     if format in downloadable_formats:
         return True
     return False
+
+
+def filter_search_seo_category_keys(all_categ_keys):
+    """
+    Filter category keys for SEO purposes by excluding organization and location filters.
+    Returns filtered keys if 2 or fewer, empty array if more than 2.
+    """
+    if not all_categ_keys:
+        return []
+    
+    seo_excluded_categories = ['groups', 'organization']
+    filtered_categ_keys = [key for key in all_categ_keys if key not in seo_excluded_categories]
+    
+    return filtered_categ_keys if len(filtered_categ_keys) <= 2 else []
+
+
+def generate_canonical_link(request_path, request_args, canonical_url=None, params=None, no_params=False):
+    """
+    Generate canonical link information for SEO purposes.
+    
+    Args:
+        request_path: current request path
+        request_args: current request args
+        canonical_url: set a specific canonical url (not automatic); checks current path (w/o params) versus canonical_url -> useful for pages that are available via /page/{item} where the item should be name, but can be id
+        params: array of whitelisted params to remove, but keep others
+        no_params: if True then we'll remove all params
+    """
+    if not canonical_url:
+        canonical_url = request_path
+    
+    # canonical urls are the desktop pages
+    if canonical_url.startswith('/m/'):
+        canonical_url = canonical_url.replace('/m/', '/', 1)
+    
+    if no_params and request_path != canonical_url:
+        # where current URL base differs and it's not about the params
+        return {'add_canonical': True, 'canonical_url': canonical_url}
+    
+    if no_params:
+        # if we have any params we need to set canonical
+        add_canonical = len(request_args) > 0 if request_args else False
+        return {'add_canonical': add_canonical, 'canonical_url': canonical_url}
+    
+    extra_args = dict(request_args) if request_args else {}
+    # remove whitelisted params from extra_args
+    if params:
+        for param in params:
+            extra_args.pop(param, None)
+    
+    # if we have any params beyond the whitelisted ones then we need to set canonical
+    # or if we have a different path (on mobile)
+    add_canonical = len(extra_args) > 0 or request_path != canonical_url
+    
+    if add_canonical and params and request_args:
+        query_parts = []
+        for param in params:
+            values = request_args.getlist(param)
+            for value in values:
+                if value is not None:
+                    query_parts.append(f"{param}={quote_plus(str(value))}")
+        
+        if query_parts:
+            canonical_url = f"{canonical_url}?{'&'.join(query_parts)}"
+    
+    return {'add_canonical': add_canonical, 'canonical_url': canonical_url}
 
 
 def is_not_zipped(res):
@@ -1033,9 +1100,61 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_dataset_supports_notifications(pkg_id: str) -> str:
-    supports_notifications = check_notifications_enabled_for_dataset(pkg_id)
-    return str(supports_notifications).lower()
+def hdx_supports_notifications(object_type: Union[ObjectType, str], object_id: str,
+                               object_dict: Optional[dict[str, Any]] = None) -> bool:
+    supports_notifications = False
+
+    # Convert object_type to ObjectType if it's a string
+    if isinstance(object_type, str):
+        try:
+            object_type = ObjectType(object_type)
+        except ValueError:
+            log.error(f'Invalid string for object_type: {object_type}')
+            return supports_notifications
+
+    log.info(f'Checking if notifications are supported for object_id: {object_id} of type: {object_type}')
+
+    if object_id:
+        if object_type in (ObjectType.DATASET, ObjectType.GROUP, ObjectType.ORGANIZATION, ObjectType.CRISIS):
+            supports_notifications = _check_notifications_enabled_for_object(object_type, object_id, object_dict)
+        else:
+            log.error(f'Invalid object_type: {object_type}')
+    else:
+        log.error(f'Invalid object_id: {object_id}')
+
+    return supports_notifications
+
+
+def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str,
+                                            object_dict: Optional[dict[str, Any]] = None) -> bool:
+    object_identifier = f"{object_type.value}_{object_id}"
+    log.info(f'Checking notifications for object: {object_identifier}')
+
+    if object_type == ObjectType.DATASET and object_dict:
+        is_hdx_connect = str(object_dict.get('is_requestdata_type', False)).lower() == 'true'
+        is_private = str(object_dict.get('private', False)).lower() == 'true'
+        is_archived = str(object_dict.get('archived', False)).lower() == 'true'
+        is_update_frequency_never = object_dict.get('data_update_frequency', '') == UPDATE_FREQ_NEVER
+
+        log.debug(f'Object properties - is_hdx_connect: {is_hdx_connect}, is_private: {is_private}, '
+                  f'is_archived: {is_archived}, is_update_frequency_never: {is_update_frequency_never}')
+
+        if is_hdx_connect or is_private or is_archived or is_update_frequency_never:
+            log.info(f'Notifications disabled for object: {object_identifier}')
+            return False
+
+    if config.get('hdx.notifications.enabled_objects_csv'):
+        log.info('Using cache for enabled objects for notifications')
+        objects_with_notifications = cached_objects_with_notifications()
+        return object_identifier in objects_with_notifications
+    elif config.get('hdx.notifications.disabled_objects_csv'):
+        log.info('Using cache for disabled objects for notifications')
+        objects_without_notifications = cached_objects_without_notifications()
+        return object_identifier not in objects_without_notifications
+
+    log.info(f'No notifications configuration found for object: {object_identifier}')
+    return False
+
 
 def facet_url_extra_args(facet_list, request_args):
     extra_args = {}

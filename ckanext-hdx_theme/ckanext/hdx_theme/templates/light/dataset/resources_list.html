@@ -25,8 +25,9 @@ Example:
       <ul class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
         {% block resource_list_inner %}
           {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
+          {% set supports_notifications = h.hdx_supports_notifications('dataset', pkg.id, pkg) %}
           {% for resource in resources %}
-            {% snippet 'light/dataset/resource_item.html', pkg=pkg, res=resource, user_survey_url=user_survey_url %}
+            {% snippet 'light/dataset/resource_item.html', pkg=pkg, res=resource, supports_notifications=supports_notifications, user_survey_url=user_survey_url %}
           {% endfor %}
         {% endblock %}
       </ul>

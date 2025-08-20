@@ -18,7 +18,7 @@
 
 {% set pkg = pkg_dict %}
 {% set canonical_url = h.url_for('hdx_dataset.read', id=pkg.name) %}
-{% block links %}  
+{% block links %}
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
   {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
   {{ super() }}
@@ -52,6 +52,10 @@
 {% set page_has_mobile_version = True %}
 {% set edit_mode = h.check_access('package_update', {'id':pkg.id })  %}
 
+{% set object_id = pkg.id %}
+{% set object_name = pkg.name %}
+{% set object_type = 'dataset' %}
+
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
@@ -65,9 +69,9 @@
 
 
     {% block title_and_actions %}
-    <div class="col-12 paddingLeftHack paddingRightHack {% block title_and_actions_container_class %}{% endblock %}">
+    <div class="col-12 paddingLeftHack paddingRightHack">
         <div class="row">
-            <div class="col-8 {% block title_and_desc_container_class %}{% endblock %}">
+            <div class="col-8">
                 <div class="row">
                     <div class="col-12 mTop35 mBottom30" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{pkg.id}}"{% endif %}>
                         <h1 class="itemTitle dataset-title">
@@ -106,9 +110,7 @@
                 </div>
               {% endfor %}
             {% endif %}
-            {% if supports_notifications %}
-              {{ h.snippet('notification_platform/action_menu_buttons.html') }}
-            {% endif %}
+            {{ h.snippet('notification_platform/buttons.html', object_id=object_id, object_type=object_type, object_dict=pkg) }}
                 <div class="row mBottom15">
                     <div class="col-12" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{pkg.id}}"{% endif %}>
                         {% if pkg.notes %}
@@ -222,9 +224,15 @@
     {% endblock %}
   </div>
   {% snippet "package/hdx_resources_list.html", pkg=pkg %}
-  {% if supports_notifications %}
-    {% snippet "notification_platform/button_and_modals.html", pkg=pkg, unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated %}
-  {% endif %}
+  {% snippet "notification_platform/modals.html",
+      object_type=object_type,
+      object_id=object_id,
+      object_name=object_name,
+      object_dict=pkg,
+      update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+      unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
+  %}
 
 {% endblock %}
 

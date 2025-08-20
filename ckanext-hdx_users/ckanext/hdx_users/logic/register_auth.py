@@ -46,3 +46,6 @@ def onboarding_user_can_register(context, data_dict=None):
     if context.get('user') or (auth_user_obj and auth_user_obj.is_authenticated):
         return {'success': False, 'msg': 'User logged in, it can not register another user'}
     return {'success': True}
+
+def hdx_shadow_user_create(context, data_dict):
+    return {'success': False, 'msg': 'Only sysadmins can view user permission page'}

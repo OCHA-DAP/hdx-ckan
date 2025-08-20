@@ -17,6 +17,8 @@
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
 {% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
 {% set num_of_pack = data.stats_section.num_of_datasets %}
 {% set num_of_orgs = data.stats_section.num_of_organizations %}
@@ -42,6 +44,7 @@
     <div class="row">
       <div class="col-12">
         <h1 class="mTop20">{{ grp.title }}</h1>
+        {{ h.snippet('notification_platform/buttons.html', object_id=data.country_dict.id, object_type='group' ) }}
       </div>
     </div>
     <div class="row">
@@ -138,7 +141,11 @@
   <!-- END DATA COMPLETENESS -->
 
     <div class="row">
-      {% snippet "light/snippets/package_list.html", data=grp.template_data %}
+      {% snippet "light/snippets/package_list.html",
+            data=grp.template_data, object_id=data.country_dict.id, object_name=data.country_dict.name,
+            object_type='group', unsubscribe_token=unsubscribe_token,
+            unsubscribe_token_validated=unsubscribe_token_validated, unsubscribe_email=unsubscribe_email,
+            unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
     </div>
   </div>
 </div>

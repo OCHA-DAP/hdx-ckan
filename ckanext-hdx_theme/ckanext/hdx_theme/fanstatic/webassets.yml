@@ -1416,8 +1416,32 @@ request-tags-scripts:
   contents:
     - widget/tags/request-tags.js
 
-notification-platform-scripts:
+notification-platform-util-scripts:
   <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_notification-platform-scripts.js
+  output: ckanext-hdx_theme/%(version)s_notification-platform-util-scripts.js
   contents:
-    - datasets/notification_platform.js
+    - notification_platform/util.js
+
+notification-platform-subscribe-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_notification-platform-subscribe-scripts.js
+  extra:
+    preload:
+      - hdx_theme/notification-platform-util-scripts
+  contents:
+    - notification_platform/subscribe.js
+
+notification-platform-unsubscribe-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_notification-platform-unsubscribe-scripts.js
+  extra:
+    preload:
+      - hdx_theme/notification-platform-util-scripts
+  contents:
+    - notification_platform/unsubscribe.js
+
+notification-platform-styles:
+  <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_notification-platform-styles.css
+  contents:
+    - notification_platform/buttons.css

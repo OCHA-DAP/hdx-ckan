@@ -3,6 +3,7 @@ from rdflib import Graph, Literal, BNode, RDF
 from rdflib.namespace import Namespace
 
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_theme.views.count as count
 from ckan.common import config
 import json
@@ -15,6 +16,7 @@ get_action = tk.get_action
 abort = tk.abort
 redirect = tk.redirect_to
 render = tk.render
+request = tk.request
 
 NotAuthorized = tk.NotAuthorized
 ValidationError = tk.ValidationError
@@ -105,6 +107,9 @@ def index():
             'datasets': datasets['count'],
             'locations': locations['count'],
             'sources': sources['count']
+        },
+        'analytics': {
+            'analytics_came_from': analytics.came_from(request.args)
         }
     }
     return render('home/index.html', template_data)

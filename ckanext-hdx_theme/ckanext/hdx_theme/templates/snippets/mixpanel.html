@@ -58,6 +58,10 @@
       "supports notifications": analyticsInfo.supportsNotifications,
     };
 
+    if(analyticsInfo.accountType) {
+      mixpanelTrackData['account type'] = analyticsInfo.accountType;
+    }
+
     mixpanel.track("page view", mixpanelTrackData);
 </script>
 <!-- end Mixpanel -->

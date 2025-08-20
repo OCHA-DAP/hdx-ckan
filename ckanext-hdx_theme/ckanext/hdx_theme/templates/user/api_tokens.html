@@ -15,7 +15,7 @@
         {% if h.check_access('api_token_create', {'user': user['name']}) %}
           <form method="POST" class="form">
             {{ h.csrf_input() }}
-            <legend>{{ _('API Tokens') }}</legend>
+            <legend>{{ _('Manage API Tokens') }}</legend>
             {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
 
             {% block base_fields %}
