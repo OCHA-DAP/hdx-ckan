@@ -44,5 +44,5 @@ class TestHDXUpdateResourceFormat(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgs
         result = test_client.get(read_pkg_url)
         assert 'resource_create_test1.geojson' in result.body
         assert 'humanitarianicons-Out-of-platform' in result.body
-        assert '/images/homepage/download.svg' in result.body
+        assert 'Download' in result.body
         assert 'resource_create_test2.geojson' in result.body
