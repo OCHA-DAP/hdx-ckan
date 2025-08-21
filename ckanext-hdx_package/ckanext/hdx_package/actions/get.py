@@ -14,7 +14,7 @@ import sqlalchemy
 from botocore.exceptions import ClientError
 from ckan.types import ActionResult, Context, DataDict
 from six import text_type
-from typing import Any, cast
+from typing import Any, cast, Set
 
 import ckan.authz as authz
 import ckan.lib.helpers as h
@@ -34,6 +34,7 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
 from ckan.lib.munge import munge_filename
+from ckanext.hdx_package.helpers.caching import cached_objects_allowed_for_datastore
 from ckanext.hdx_package.actions.authorize import hdx_manage_resource_sdd_report
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS
@@ -1155,3 +1156,19 @@ def resource_view_list(up_func, context, data_dict):
 
     result = up_func(context, data_dict)
     return result
+
+
+def hdx_is_resource_allowed_for_datastore(context: Context, data_dict: DataDict) -> bool:
+    package_id = get_or_bust(data_dict, 'package_id')
+    dataset_dict = get_action('package_show')(context, {'id': package_id})
+
+    if dataset_dict:
+        dataset_key = f'dataset_{dataset_dict["id"]}'
+        organization_key = f'organization_{dataset_dict["owner_org"]}'
+
+        allowed_set = cached_objects_allowed_for_datastore()
+
+        return dataset_key in allowed_set or organization_key in allowed_set
+
+    else:
+        return False
