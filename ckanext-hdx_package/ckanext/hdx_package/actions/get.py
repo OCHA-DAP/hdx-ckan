@@ -1158,7 +1158,7 @@ def resource_view_list(up_func, context, data_dict):
     return result
 
 
-def hdx_is_resource_allowed_for_datastore(context: Context, data_dict: DataDict) -> bool:
+def hdx_is_package_allowed_for_datastore(context: Context, data_dict: DataDict) -> bool:
     package_id = get_or_bust(data_dict, 'package_id')
     dataset_dict = get_action('package_show')(context, {'id': package_id})
 

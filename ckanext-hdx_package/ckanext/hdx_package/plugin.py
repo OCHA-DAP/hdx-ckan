@@ -499,7 +499,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
             'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': hdx_patch.hdx_mark_resource_in_hapi,
-            'hdx_is_resource_allowed_for_datastore': hdx_get.hdx_is_resource_allowed_for_datastore,
+            'hdx_is_package_allowed_for_datastore': hdx_get.hdx_is_package_allowed_for_datastore,
         }
 
     # IValidators

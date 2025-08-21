@@ -202,21 +202,21 @@ def invalidate_cached_approved_tags():
 @dogpile_requests_region.cache_on_arguments()
 def cached_objects_with_notifications() -> Set[str]:
     log.info('Creating cache list of objects with notifications')
-    return _retrieve_objets_from_spreadsheet('hdx.notifications.enabled_objects_csv')
+    return _retrieve_objects_from_spreadsheet('hdx.notifications.enabled_objects_csv')
 
 @dogpile_requests_region.cache_on_arguments()
 def cached_objects_without_notifications() -> Set[str]:
     log.info('Creating cache list of objects without notifications')
-    return _retrieve_objets_from_spreadsheet('hdx.notifications.disabled_objects_csv')
+    return _retrieve_objects_from_spreadsheet('hdx.notifications.disabled_objects_csv')
 
 
 @dogpile_requests_region.cache_on_arguments()
 def cached_objects_allowed_for_datastore() -> Set[str]:
-    log.info('Creating cache list of objects without notifications')
-    return _retrieve_objets_from_spreadsheet('hdx.datastore.enabled_objects_csv')
+    log.info('Creating cache list of objects allowed for datastore')
+    return _retrieve_objects_from_spreadsheet('hdx.datastore.enabled_objects_csv')
 
 
-def _retrieve_objets_from_spreadsheet(url_key: str) -> Set[str]:
+def _retrieve_objects_from_spreadsheet(url_key: str) -> Set[str]:
     url = config.get(url_key)
 
     if url:
