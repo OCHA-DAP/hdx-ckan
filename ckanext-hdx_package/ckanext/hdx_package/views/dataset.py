@@ -783,8 +783,8 @@ class DatasetRequestAccessView(MethodView):
             return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
 
 
-hdx_search.add_url_rule(u'', view_func=search, strict_slashes=False)
-hdx_dataset.add_url_rule(u'', view_func=search, strict_slashes=False)
+hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
+hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'/<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'/<id>/contact/',
