@@ -1127,7 +1127,7 @@ def hdx_send_mail_request_tags(context, data_dict):
     return None
 
 
-def hdx_is_resource_allowed_for_datastore(context: Context, data_dict: DataDict) -> bool:
+def hdx_is_package_allowed_for_datastore(context: Context, data_dict: DataDict) -> bool:
     package_id = get_or_bust(data_dict, 'package_id')
     dataset_dict = get_action('package_show')(context, {'id': package_id})
 
