@@ -1,8 +1,3 @@
-'''
-Created on Jun 2, 2014
-
-@author: alexandru-m-g
-'''
 import csv
 import logging
 import unicodedata
@@ -48,7 +43,7 @@ def strip_accents(s):
 
 @dogpile_org_group_lists_region.cache_on_arguments()
 def cached_group_iso_to_title():
-    log.info("Creating cache for group iso to title mapping")
+    log.info('Creating cache for group iso to title mapping')
     groups = cached_group_list()
 
     result = {g.get('name'): g.get('title') for g in groups}
@@ -58,7 +53,7 @@ def cached_group_iso_to_title():
 
 @dogpile_org_group_lists_region.cache_on_arguments()
 def cached_group_list():
-    log.info("Creating cache for group list ")
+    log.info('Creating cache for group list ')
     groups = tk.get_action('group_list')({'user': '127.0.0.1'},
                                          {
                                              'all_fields': True,
@@ -75,7 +70,7 @@ def cached_group_list():
 
 
 def invalidate_cached_group_list():
-    log.info("Invalidating cache for group list")
+    log.info('Invalidating cache for group list')
     # bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_list')
     # bcache.region_invalidate(cached_group_iso_to_title, 'hdx_memory_cache', 'cached_grp_iso_to_title')
     cached_group_list.invalidate()
@@ -115,7 +110,7 @@ group_invalidation_functions = [invalidate_cached_group_list]
 
 @dogpile_org_group_lists_region.cache_on_arguments()
 def cached_organization_list():
-    log.info("Creating cache for organization list")
+    log.info('Creating cache for organization list')
     orgs = tk.get_action('organization_list')({'user': '127.0.0.1'},
                                               {
                                                   'all_fields': True,
@@ -130,7 +125,7 @@ def _sort_orgs_by_display_name(orgs):
 
 
 def invalidate_cached_organization_list():
-    log.info("Invalidating cache for org list")
+    log.info('Invalidating cache for org list')
     # bcache.region_invalidate(cached_organization_list, 'hdx_memory_cache', 'cached_organization_list')
     cached_organization_list.invalidate()
 
@@ -175,7 +170,7 @@ def add_org_in_cache_organization_list(org_id):
 
 @dogpile_pkg_external_region.cache_on_arguments()
 def cached_resource_id_apihighways():
-    log.info("Creating cache for HDX resource_id to apihighways dataset_id mapping")
+    log.info('Creating cache for HDX resource_id to apihighways dataset_id mapping')
 
     result = {}
     # if config.get('hdx.apihighways.enabled') == 'true':
@@ -189,7 +184,7 @@ def cached_resource_id_apihighways():
 
 
 def invalidate_cached_resource_id_apihighways():
-    log.info("Invalidating cache for apihighways")
+    log.info('Invalidating cache for apihighways')
     cached_resource_id_apihighways.invalidate()
 
 
@@ -207,15 +202,21 @@ def invalidate_cached_approved_tags():
 @dogpile_requests_region.cache_on_arguments()
 def cached_objects_with_notifications() -> Set[str]:
     log.info('Creating cache list of objects with notifications')
-    return hdx_retrieve_notification_objects_from_spreadsheet(None, None, notifications_enabled=True)
+    return _retrieve_objets_from_spreadsheet('hdx.notifications.enabled_objects_csv')
 
 @dogpile_requests_region.cache_on_arguments()
 def cached_objects_without_notifications() -> Set[str]:
     log.info('Creating cache list of objects without notifications')
-    return hdx_retrieve_notification_objects_from_spreadsheet(None, None, notifications_enabled=False)
+    return _retrieve_objets_from_spreadsheet('hdx.notifications.disabled_objects_csv')
 
-def hdx_retrieve_notification_objects_from_spreadsheet(context, data_dict, notifications_enabled: bool) -> Set[str]:
-    url_key = 'hdx.notifications.enabled_objects_csv' if notifications_enabled else 'hdx.notifications.disabled_objects_csv'
+
+@dogpile_requests_region.cache_on_arguments()
+def cached_objects_allowed_for_datastore() -> Set[str]:
+    log.info('Creating cache list of objects without notifications')
+    return _retrieve_objets_from_spreadsheet('hdx.datastore.enabled_objects_csv')
+
+
+def _retrieve_objets_from_spreadsheet(url_key: str) -> Set[str]:
     url = config.get(url_key)
 
     if url:
@@ -224,8 +225,10 @@ def hdx_retrieve_notification_objects_from_spreadsheet(context, data_dict, notif
             response.raise_for_status()  # Raise an exception for HTTP errors
         except requests.exceptions.RequestException as e:
             error_msg = str(e)
-            log.error(f"An error occurred: {error_msg}")
-            raise Exception(f'Couldn\'t fetch objects {"with" if notifications_enabled else "without"} notifications from Google Spreadsheets: {error_msg}')
+            log.error(f'An error occurred: {error_msg}')
+            raise Exception(
+                f'Couldn\'t fetch objects for {url_key} from Google Spreadsheets: {error_msg}'
+            )
 
         csv_data = response.text
         csv_reader = csv.reader(csv_data.splitlines())
@@ -237,7 +240,8 @@ def hdx_retrieve_notification_objects_from_spreadsheet(context, data_dict, notif
         id_index = headers.index('object_id')
         type_index = headers.index('object_type')
 
-        objects = {f"{row[type_index]}_{row[id_index]}" for row in csv_reader}
+        objects = {f'{row[type_index]}_{row[id_index]}' for row in csv_reader}
         return objects
     else:
+        log.error(f'No URL configured for url_key: {url_key}')
         return set()

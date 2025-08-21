@@ -377,3 +377,7 @@ hdx.notifications.novu.api_key =
 hdx.notifications.disabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=558881647&single=true&output=csv
 
 hdx.approved_tags.csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25NZAIQELrFnUhVnL-7SxC8SwW9I6usm5Xvwyw00zRC-DhlLh74EVniX732w_BDFoQLrNDKKL/pub?gid=1261258630&single=true&output=csv
+
+
+# Datapusher Plus - HDX specific settings
+hdx.datastore.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vRYS8exO-C_8t53bWf8R62ft1hn4yThWnCLGCtvPNbkrmidL8qu0j3sQnMDF8ypzKQ8xV5JhYgijRp7/pub?gid=0&single=true&output=csv
