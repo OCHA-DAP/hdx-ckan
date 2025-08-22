@@ -83,8 +83,6 @@ ijson==3.2.3
     # via -r requirements.in
 ipaddress==1.0.23
     # via -r requirements.in
-isodate==0.7.2
-    # via rdflib
 itsdangerous==2.1.2
     # via
     #   flask
@@ -169,6 +167,8 @@ rdflib-jsonld==0.6.2
     # via -r requirements.in
 redis==3.5.3
     # via rq
+regex==2025.7.34
+    # via -r requirements.in
 requests==2.32.3
     # via
     #   -r requirements.in
@@ -200,15 +200,11 @@ stevedore==5.4.1
 timeago==1.0.16
     # via -r requirements.in
 tomli==2.2.1
-    # via
-    #   -r requirements.in
-    #   mypy
-    #   setuptools-scm
+    # via -r requirements.in
 typing-extensions==4.12.2
     # via
     #   -r requirements.in
     #   alembic
-    #   dogpile-cache
     #   mypy
     #   sqlalchemy2-stubs
 tzlocal==5.2
@@ -239,3 +235,6 @@ wtforms==3.1.1
     # via flask-wtf
 zope-interface==6.4.post2
     # via -r requirements.in
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
