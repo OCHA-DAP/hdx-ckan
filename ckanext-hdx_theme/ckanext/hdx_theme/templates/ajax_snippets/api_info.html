@@ -1,0 +1,88 @@
+{#
+Displays information about accessing a resource via the API.
+
+resource_id - The resource id
+embedded - If true will not include the "modal" classes on the snippet.
+
+Example
+
+    {% snippet 'ajax_snippets/api_info.html', resource_id=resource_id, embedded=true %}
+
+#}
+
+{% set resource_id = h.sanitize_id(resource_id) %}
+
+<div {% if not embedded %} class="bem-modal modal"{% endif %} tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="bem-modal__content modal-content">
+      <div class="bem-modal__header modal-header">
+        <h6 class="modal-title">
+          {{ _('Access this data via API') }}
+        </h6>
+      </div>
+      <div {% if not embedded %} class="bem-modal__body modal-body"{% endif %}>
+        <p class="mb-1"><strong>{{ _('You can connect directly to this data via API.') }}</strong></p>
+        <p>Have any questions? See the <a href="#" target="_blank" title="documentation">documentation</a>.</p>
+
+        {% set token_paragraph = 'Get your token <a href="{0}" target="_blank" title="API tokens">here</a>.' %}
+        {% if c.userobj %}
+          {% set token_management_url = h.url_for('user.api_tokens', id=c.userobj.name) %}
+        {% else %}
+          {% set token_management_url = h.url_for('user.login', came_from=h.url_for('hdx_redirect_manager.redirect_page', page_name='api_tokens_management')) %}
+        {% endif %}
+        {{ h.snippet('bem.blocks/info_box.html',
+          compact=True,
+          rounded=True,
+          icon=True,
+          paragraphs=[
+            '<strong>You need an API token to access this data.</strong>',
+            token_paragraph.format(token_management_url)
+          ],
+          paragraph_classes=['mb-0'],
+          spacing_class="mb-4") }}
+
+        <p class="mb-1"><strong>{{ _('Resource ID') }}</strong></p>
+        <p>The Resource ID is a unique identifier that tells the API which file you want to query.</p>
+        <div class="alert border-grey">
+          <div class="row">
+            <div class="col-10">
+              <code>{{ resource_id }}</code>
+            </div>
+            <div class="col-2 text-end">
+              <button type="button" class="btn btn-default btn-sm copy-into-buffer"
+                      data-copy-into-buffer-value="{{ resource_id }}"><i class="fa fa-copy"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <p class="mb-1">
+          <strong>{{ _('Example query') }}</strong>
+          <small><a href="#" target="_blank" title="query info">more info</a></small>
+        </p>
+
+        {% block query_examples %}
+        {% endblock %}
+
+        {% block get_query_examples %}
+          {% set query_url = h.url_for('api.action', logic_function='datastore_search', resource_id=resource_id, limit=10, qualified=True) %}
+          <div class="alert border-light bg-light">
+            <div class="row">
+              <div class="col-10">
+                <code>
+                  <a href="{{ query_url }}" target="_blank" rel="noreferrer">{{ query_url }}</a>
+                </code>
+
+              </div>
+              <div class="col-2 text-end align-self-center">
+                <button type="button" class="btn btn-default btn-sm copy-into-buffer"
+                        data-copy-into-buffer-value="{{ query_url }}"><i class="fa fa-copy"></i></button>
+              </div>
+            </div>
+          </div>
+        {% endblock %}
+
+      </div>
+    </div>
+  </div>
+
+</div>

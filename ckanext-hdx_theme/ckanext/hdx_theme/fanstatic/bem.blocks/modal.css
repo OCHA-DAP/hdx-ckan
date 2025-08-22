@@ -1,6 +1,10 @@
 .bem-modal__content .bem-modal__header {
   border-radius: 0;
 }
+.bem-modal__content .bem-modal__body {
+  font-size: 16px;
+  color: #000;
+}
 .bem-modal__content .bem-modal__footer .btn-link {
   background-color: unset;
   padding-left: 0;
