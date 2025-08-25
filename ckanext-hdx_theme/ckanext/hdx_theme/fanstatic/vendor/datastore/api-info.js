@@ -63,11 +63,19 @@ this.ckan.module('api-info', function (jQuery) {
 
       this.loadTemplate().done(function (html) {
         module.modal = jQuery(html);
-        module.modal.find('.modal-header').append('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>');
+        module.modal.find('.modal-header').append('<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>');
         module.modal.find('.btn-close').attr("aria-label", module._('Close'));
         module.modal.modal().appendTo(sandbox.body);
         module.modal.modal('show');
         // hljs.highlightAll();
+        module.modal.find('.copy-into-buffer').on('click', function () {
+          let value = $(this).data('copy-into-buffer-value');
+          navigator.clipboard.writeText(value).then(function () {
+            console.log('Copying to clipboard was successful!');
+          }, function () {
+            alert('Failed to copy to clipboard.')
+          });
+        })
       });
     },
 

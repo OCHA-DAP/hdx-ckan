@@ -25,6 +25,7 @@ from ckanext.hdx_theme.views.faqs import hdx_faqs, hdx_main_faq
 from ckanext.hdx_theme.views.image_server import hdx_global_file_server, hdx_local_image_server
 from ckanext.hdx_theme.views.landing_pages import hdx_landing_pages
 from ckanext.hdx_theme.views.package_links_custom_settings import hdx_package_links
+from ckanext.hdx_theme.views.redirect_manager import hdx_redirect_manager
 from ckanext.hdx_theme.views.quick_links_custom_settings import hdx_quick_links
 from ckanext.hdx_theme.views.splash_page import hdx_splash
 import ckan.plugins.toolkit as tk
@@ -398,7 +399,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server, hdx_local_image_server,
                 hdx_carousel, hdx_custom_pages, hdx_quick_links, hdx_package_links, hdx_archived_quick_links,
-                hdx_splash, hdx_count, hdx_landing_pages]
+                hdx_splash, hdx_count, hdx_landing_pages, hdx_redirect_manager]
 
     # IClick
     def get_commands(self):
