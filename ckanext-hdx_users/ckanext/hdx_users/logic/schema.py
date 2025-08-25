@@ -1,8 +1,8 @@
-'''
+"""
 Created on July 2nd, 2015
 
 @author: dan
-'''
+"""
 
 import ckan.plugins.toolkit as tk
 from ckan.logic.schema import validator_args
@@ -24,11 +24,11 @@ def register_user_schema(not_empty, user_email_validator):
 @validator_args
 def register_details_user_schema(ignore_missing, not_empty, name_validator, user_name_validator,
                                  user_password_validator, user_password_not_empty,
-                                 user_email_validator):
+                                 user_email_validator, hdx_fullname_unicode_validator):
     schema = {
         'id': [ignore_missing, unicode_safe],
         'name': [not_empty, name_validator, user_name_validator, unicode_safe],
-        'fullname': [ignore_missing, unicode_safe],
+        'fullname': [ignore_missing, hdx_fullname_unicode_validator, unicode_safe],
         'password': [user_password_validator, user_password_not_empty, ignore_missing, unicode_safe],
         'email': [not_empty, user_email_validator, unicode_safe],
         'state': [ignore_missing],
@@ -64,9 +64,9 @@ def register_details_user_schema(ignore_missing, not_empty, name_validator, user
 
 
 @validator_args
-def onboarding_user_new_form_schema(not_empty, strip_value, user_email_validator, user_emails_match):
+def onboarding_user_new_form_schema(not_empty, strip_value, user_email_validator, user_emails_match, hdx_fullname_unicode_validator):
     schema = user_new_form_schema()
-    schema['fullname'] = [not_empty, strip_value, unicode_safe]
+    schema['fullname'] = [not_empty, strip_value, hdx_fullname_unicode_validator, unicode_safe]
     schema['email'] = [not_empty, strip_value, user_email_validator, user_emails_match, unicode_safe]
     schema['email2'] = [unicode_safe]
 
@@ -74,27 +74,27 @@ def onboarding_user_new_form_schema(not_empty, strip_value, user_email_validator
 
 
 @validator_args
-def onboarding_default_user_schema(not_empty, strip_value, user_email_validator):
+def onboarding_default_user_schema(not_empty, strip_value, user_email_validator, hdx_fullname_unicode_validator):
     schema = default_user_schema()
-    schema['fullname'] = [not_empty, strip_value, unicode_safe]
+    schema['fullname'] = [not_empty, strip_value, hdx_fullname_unicode_validator, unicode_safe]
     schema['email'] = [not_empty, strip_value, user_email_validator, unicode_safe]
 
     return schema
 
 
 @validator_args
-def onboarding_default_update_user_schema(not_empty, strip_value, user_email_validator, ignore_missing):
+def onboarding_default_update_user_schema(not_empty, strip_value, user_email_validator, ignore_missing, hdx_fullname_unicode_validator):
     schema = default_update_user_schema()
-    schema['fullname'] = [ignore_missing, not_empty, strip_value, unicode_safe]
+    schema['fullname'] = [ignore_missing, not_empty, strip_value, hdx_fullname_unicode_validator, unicode_safe]
     schema['email'] = [not_empty, strip_value, user_email_validator, unicode_safe]
 
     return schema
 
 
 @validator_args
-def onboarding_user_edit_form_schema(not_empty, strip_value, user_email_validator):
+def onboarding_user_edit_form_schema(not_empty, strip_value, user_email_validator, hdx_fullname_unicode_validator):
     schema = user_edit_form_schema()
-    schema['fullname'] = [not_empty, strip_value, unicode_safe]
+    schema['fullname'] = [not_empty, strip_value, hdx_fullname_unicode_validator, unicode_safe]
     schema['email'] = [not_empty, strip_value, user_email_validator, unicode_safe]
 
     return schema

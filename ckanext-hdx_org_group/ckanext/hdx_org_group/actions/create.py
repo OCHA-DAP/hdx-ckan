@@ -1,6 +1,6 @@
 # import random
 from socket import error as socket_error
-from ckanext.hdx_users.helpers.helpers import generate_password
+from ckanext.hdx_users.helpers.helpers import generate_password, generate_username
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.navl.dictization_functions as core_df
 import ckan.logic as logic
@@ -78,6 +78,7 @@ def hdx_user_invite(context, data_dict):
     data['password'] = password
     # the "Full name" field is now mandatory. since we don't have the name here, we use the username instead
     data['fullname'] = name
+    # data['fullname'] = generate_username(12, 24).replace('-', '').replace('_', '')
     data['state'] = core_model.State.PENDING
     user_dict = _get_action('user_create')(context, data)
     user = core_model.User.get(user_dict['id'])

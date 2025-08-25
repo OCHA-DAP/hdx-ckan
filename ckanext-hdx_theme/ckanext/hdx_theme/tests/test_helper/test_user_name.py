@@ -37,8 +37,10 @@ class TestUserNames(hdx_test_base.HdxBaseTest):
         u1 = factories.User(name='johnfoo', fullname='Simple user', email='example@example.com')
         u2 = factories.User(name='adambar', fullname='Test user â', email='example1@example.com')
 
-        u3 = factories.User(name='frenchuser', fullname='Test ùûüÿ€àâæçéèêëïîôœ', email='example2@example.com')
-        u4 = factories.User(name='romanianuser', fullname='Test user ăâîşșţț„”«»“”', email='example3@example.com')
+        u3 = factories.User(name='frenchuser', fullname='Test ùûüÿàâæçéèêëïîôœ', email='example2@example.com')
+        # u4 = factories.User(name='romanianuser', fullname='Test user ăâîşșţț„”«»“”', email='example3@example.com')
+        # removing „”«»“” from fullname test as they are not supported by validator
+        u4 = factories.User(name='romanianuser', fullname='Test user ăâîşșţț_-', email='example3@example.com')
 
         return [u1, u2, u3, u4]
 

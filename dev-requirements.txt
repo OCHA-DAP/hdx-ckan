@@ -233,6 +233,9 @@ pyyaml==6.0.1
     #   -c requirements.txt
     #   cookiecutter
     #   responses
+regex==2025.7.34
+    # via
+    #   -c requirements.txt
 requests==2.32.3
     # via
     #   -c requirements.txt
