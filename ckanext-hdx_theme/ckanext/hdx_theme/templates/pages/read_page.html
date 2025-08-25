@@ -58,12 +58,18 @@
         <div class="col-12 paddingLeftHack paddingRightHack">
             {% for section in data.sections %}
                   {% snippet 'pages/snippets/section_item.html',
-                        section=section, data=data, errors=errors, error_summary=error_summary,
-                        unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
-                        unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
+                        section=section, data=data, errors=errors, error_summary=error_summary %}
             {% endfor %}
         </div>
     </div>
+
+  {% snippet "notification_platform/modals.html",
+      object_type='crisis',
+      object_id=data.id,
+      object_name=data.name,
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+      unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
+  %}
 {% endblock %}
 
 
